@@ -1,0 +1,141 @@
+Culture/Sports/Loisirs/Cadeaux
+  magasin de journaux du coin
+  golf de jouy en josas
+  tennis bidule
+  tps
+  fnac
+  virgin
+  toys'r'us
+  score games
+  abonnement xbox
+  eveil et jeux
+  sarl forfaits ski
+  UGC
+  euromickey
+  parc asterix
+  tour eiffel
+  louvre
+  bateau mouche
+  abonnement prolomag
+  amazon
+  alapage
+  canal+
+  decathlon (+ habillement)
+  nature & decouverte
+  florajet
+  cartedevoeux.com
+
+Informatique/Audio/Video/Electromenager (equipement)
+  la maison du gsm
+  hifi.com
+  pixmania.com
+  encresimprimante.com
+  boulanger
+  surcouf
+  apple
+
+Alimentation/Courses
+  starbuck
+  le paradis du fruit
+  kalistea
+  auchan
+  monops
+  cora
+  caron bio palaiseau
+  marche bidule
+  mc do
+  nespresso
+
+Divers
+   lcl sceaux
+
+Habillement
+  mister mint
+  C&A
+  rolex ???
+  vertbaudet
+  gemo
+  la halle chaussures
+
+Transports
+  taxi bidule
+  sncf
+  air france
+  websncf
+  rerb centre
+
+Voyages
+  thomas cook
+
+???
+  hotel
+  cofidis
+
+Hypervariable
+  paypal xxx
+  ebay xxx
+  Galeries Lafayette
+  BHV
+  la redoute
+  darty
+
+Maison
+  tip edf
+  truffaut
+  leroy merlin
+  castorama
+  plombier desuza
+
+Sante
+  cheque docteur
+  agf mutuelle
+  ram pl
+    les opticiens conseil
+
+Automobile
+  cap+in 10674 QQ (credit auto)
+  sarl duchnoc gasol
+  sapn
+  toyota xxx assurance
+  tresor public option amendes
+
+Soins/Beaute
+  jeanlouis david
+
+Animaux
+  le paradis des animaux
+
+Education
+  crpa scolarite
+
+Telecom
+  orange
+  free
+  neuf
+
+Puericulture
+  aubert
+  autour de bebe
+  cheque nounou
+
+Investissement / Epargne
+  finaref vie
+  virement vers ING Direct
+  cheque vers ING Direct
+  gan vie prevoyance (vie / retraite)
+
+Banque
+  frais bancaires douteux
+  societe generale interets
+  societe generale agios
+
+Impots/Taxes
+  tresor public
+  urssaf
+
+
+----
+
+  remboursement de frais pro
+
+  virement / credit

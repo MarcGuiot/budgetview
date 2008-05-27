@@ -1,0 +1,7 @@
+<splits>
+  <column margin="20" opaque="false">
+    <component ref="exoPanel" marginBottom="5" weightX="1.0" fill="horizontal" anchor="north"
+               opaque="true" background="background"/>
+    <button opaque="false" action="next"/>
+  </column>
+</splits>

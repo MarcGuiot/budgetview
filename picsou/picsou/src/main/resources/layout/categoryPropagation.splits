@@ -1,0 +1,49 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styledPanel border="matte(1,1,1,1,#666666)" topColor="dialog.bg.top" bottomColor="dialog.bg.bottom" opaque="false">
+
+    <column margin="20">
+
+      <styledPanel topColor="dialog.block.top" bottomColor="dialog.block.bottom"
+                   borderColor="dialog.block.border" borderWidth="1" cornerRadius="10"
+                   opaque="true" weightY="0" anchor="north" fill="both" marginTop="0" marginBottom="5">
+        <column margin="10">
+          <label text="Apprentissage des catégories" anchor="west" icon="bullet.png"/>
+          <styledPanel marginTop="5" opaque="false" anchor="north"
+                       border="etched" weightY="0" topColor="dialog.block.internal" bottomColor="dialog.block.internal">
+            <column margin="10">
+              <row>
+                <textArea lineWrap="true" opaque="false"
+                          text="Le module d'apprentissage automatique de categorisation a detecte d'autres transactions dont le libelle presente des similitudes avec la transaction que vous souhaitez categoriser actuellement. Le tableau ci-dessous montre l'ensemble de ces transactions. Si vous le souhaitez, le module d'apprentissage peut se charger de modifier la categorie sur l'ensemble de ces transactions. Pour ce faire, vous devez valider en cliquant sur 'OK'. Si vous ne souhaitez pas modifier la categorie de ces transactions, vous devez cliquer sur 'Annuler'."/>
+              </row>
+            </column>
+          </styledPanel>
+        </column>
+      </styledPanel>
+
+      <styledPanel topColor="dialog.block.top" bottomColor="dialog.block.bottom"
+                   borderColor="dialog.block.border" borderWidth="1" cornerRadius="10"
+                   opaque="true" anchor="north" weightY="100" fill="both" marginTop="5" marginBottom="5">
+        <column margin="10">
+          <label text="Tableau des transactions impactées" anchor="west" icon="bullet.png"/>
+
+          <row marginTop="5" marginBottom="5" marginLeft="5" marginRight="5" weightY="100">
+            <scrollPane viewportBackground="transactions.bg" border="etched">
+              <table ref="transaction" background="transactions.bg" intercellSpacing="(0,0)" showGrid="false"/>
+            </scrollPane>
+          </row>
+
+        </column>
+      </styledPanel>
+
+      <row marginTop="10" defaultMarginLeft="10">
+        <filler fill="horizontal"/>
+        <button action="ok"/>
+        <button action="cancel"/>
+        <filler fill="horizontal"/>
+      </row>
+
+    </column>
+
+  </styledPanel>
+</splits>

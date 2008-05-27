@@ -1,0 +1,16 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.crossbowlabs</groupId>
+  <packaging>pom</packaging>
+  <artifactId>picsou-root</artifactId>
+  <name>root</name>
+  <version>1.0</version>
+  <url>http://www.design-up.com</url>
+
+  <modules>
+    <module>picsou</module>
+    <module>picsou_server</module>
+    <module>morphograph</module>
+  </modules>
+
+</project>

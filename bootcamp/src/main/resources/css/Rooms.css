@@ -1,0 +1,77 @@
+body {
+  background: #FCF9EF;
+  background-image: url( '/images/banner_bg.png' );
+  background-repeat: repeat-x;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  font-family: Arial, sans-serif;
+}
+
+a:link {
+  text-decoration: none;
+  color: #0000FF
+}
+
+a:visited {
+  text-decoration: none;
+  color: #800080
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #FF0000
+}
+
+div.logo {
+  float: right;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  width: 48%;
+}
+
+div.logo img {
+  float: right;
+}
+
+div.index {
+  float: left;
+  padding: 10px;
+  margin: 0;
+  top: 0;
+  width: 50%;
+  margin-top: 35px;
+}
+
+div.index a {
+  font-size: 10pt;
+  font-weight: bold;
+  margin-left: 15px;
+}
+
+div.index a:link {
+  color: #FFF
+}
+
+div.index a:visited {
+  color: #FFF
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #8888FF
+}
+
+div.connectionInfo {
+  float:right;
+  margin-top: 40px;
+  margin-right: 30px;
+}
+
+div.bodyContent {
+  float: left;
+  margin-top: 90px;
+  margin-left: 30px;
+  margin-right: 30px;
+}

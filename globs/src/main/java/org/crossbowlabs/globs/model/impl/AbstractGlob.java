@@ -1,0 +1,176 @@
+package org.crossbowlabs.globs.model.impl;
+
+import org.crossbowlabs.globs.metamodel.Field;
+import org.crossbowlabs.globs.metamodel.GlobType;
+import org.crossbowlabs.globs.metamodel.Link;
+import org.crossbowlabs.globs.metamodel.links.FieldMappingFunctor;
+import org.crossbowlabs.globs.model.*;
+import org.crossbowlabs.globs.utils.Ref;
+import org.crossbowlabs.globs.utils.Utils;
+import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
+import org.crossbowlabs.globs.utils.exceptions.InvalidState;
+import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
+
+import java.util.List;
+import java.util.Map;
+
+public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
+
+  protected GlobType type;
+  protected Object[] values;
+  private boolean disposed = false;
+  private Key key;
+
+  protected AbstractGlob(GlobType type) {
+    this(type, new Object[type.getFieldCount()]);
+  }
+
+  public AbstractGlob(GlobType type, Object[] values) {
+    this.type = type;
+    this.values = values;
+  }
+
+  protected AbstractGlob(final GlobType type, FieldValues fieldValues) {
+    this(type);
+    fieldValues.safeApply(new FieldValues.Functor() {
+      public void process(Field field, Object value) throws Exception {
+        if (field.getGlobType().equals(type)) {
+          values[field.getIndex()] = value;
+        }
+      }
+    });
+  }
+
+  public GlobType getType() {
+    return type;
+  }
+
+  public boolean exists() {
+    return !disposed;
+  }
+
+  public boolean contains(Field field) {
+    return field.getGlobType().equals(type);
+  }
+
+  public int size() {
+    return values.length;
+  }
+
+  public void apply(Functor functor) throws Exception {
+    for (Field field : type.getFields()) {
+      functor.process(field, values[field.getIndex()]);
+    }
+  }
+
+  public Map<Field, Object> getMap() {
+    return getValues(true).getMap();
+  }
+
+  public FieldValue[] toArray() {
+    FieldValue[] array = new FieldValue[values.length];
+    int index = 0;
+    for (Field field : type.getFields()) {
+      array[index] = new FieldValue(field, values[index]);
+      index++;
+    }
+    return array;
+  }
+
+  public FieldValues getTargetValues(Link link) {
+    if (!link.getSourceType().equals(type)) {
+      throw new InvalidParameter("Link '" + link + " cannot be used with " + this);
+    }
+    final FieldValuesBuilder builder = FieldValuesBuilder.init();
+    link.apply(new FieldMappingFunctor() {
+      public void process(Field sourceField, Field targetField) {
+        builder.setObject(targetField, getValue(sourceField));
+      }
+    });
+    return builder.get();
+  }
+
+  public Object doGet(Field field) {
+    if (disposed) {
+      throw new InvalidState("Using a deleted instance of '" + type.getName() + "'");
+    }
+    if (!field.getGlobType().equals(type)) {
+      throw new ItemNotFound("Field '" + field.getName() + "' is declared for type '" +
+                             field.getGlobType().getName() + "' and not for '" + type.getName() + "'");
+    }
+    return values[field.getIndex()];
+  }
+
+  public FieldValues getValues(boolean includeKeyFields) {
+    FieldValuesBuilder builder = FieldValuesBuilder.init();
+    for (Field field : type.getFields()) {
+      if (includeKeyFields || !field.isKeyField()) {
+        builder.setObject(field, values[field.getIndex()]);
+      }
+    }
+    return builder.get();
+  }
+
+  public String toString() {
+    return getKey().toString();
+  }
+
+  public final boolean matches(FieldValues values) {
+    final Ref<Boolean> result = new Ref<Boolean>(true);
+    values.safeApply(new FieldValues.Functor() {
+      public void process(Field field, Object value) {
+        if (!Utils.equal(value, getValue(field))) {
+          result.set(false);
+        }
+      }
+    });
+    return result.get();
+  }
+
+  public boolean matches(FieldValue... values) {
+    for (FieldValue value : values) {
+      if (!Utils.equal(value.getValue(), getValue(value.getField()))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public Key getKey() {
+       if (key == null) {
+         KeyBuilder keyBuilder = KeyBuilder.init(type);
+         List<Field> keyFields = type.getKeyFields();
+         for (Field field : keyFields) {
+           keyBuilder.add(field, values[field.getIndex()]);
+         }
+         key = keyBuilder.get();
+       }
+       return key;
+     }
+
+  void dispose() {
+       disposed = true;
+     }
+
+  public boolean equals(Object o) {
+       if (this == o) {
+         return true;
+       }
+       if (o == null || getClass() != o.getClass()) {
+         return false;
+       }
+
+       Glob otherGlob = (Glob) o;
+       if (!type.equals(otherGlob.getType())) {
+         return false;
+       }
+
+       Key key = getKey();
+       Key otherKey = otherGlob.getKey();
+       return key.equals(otherKey);
+     }
+
+  public int hashCode() {
+       return getKey().hashCode();
+     }
+}

@@ -1,0 +1,12 @@
+<frame title="Login" size="(300,200)">
+  <column margin="20">
+    <grid>
+      <label text="User name" gridPos="(0,0)" anchor="east" marginRight="10" marginBottom="5"/>
+      <component ref="userField" gridPos="(1, 0)"/>
+      <label text="Password" gridPos="(0,1)" anchor="east" marginRight="10"/>
+      <component ref="passwordField" gridPos="(1,1)"/>
+    </grid>
+    <component ref="createAccountCheckBox" margin="5"/>
+    <component ref="loginButton" margin="5"/>
+  </column>
+</frame>

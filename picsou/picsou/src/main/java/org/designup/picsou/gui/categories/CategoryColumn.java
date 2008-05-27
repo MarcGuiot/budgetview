@@ -1,0 +1,138 @@
+package org.designup.picsou.gui.categories;
+
+import org.crossbowlabs.globs.gui.SelectionService;
+import org.crossbowlabs.globs.gui.views.CellPainter;
+import org.crossbowlabs.globs.gui.views.GlobTableView;
+import org.crossbowlabs.globs.model.Glob;
+import org.crossbowlabs.globs.model.GlobRepository;
+import org.crossbowlabs.globs.model.format.DescriptionService;
+import org.crossbowlabs.globs.model.format.GlobStringifier;
+import org.crossbowlabs.globs.utils.directory.Directory;
+import org.crossbowlabs.splits.layout.Anchor;
+import org.crossbowlabs.splits.layout.Fill;
+import org.crossbowlabs.splits.layout.GridBagBuilder;
+import org.crossbowlabs.splits.utils.TransparentIcon;
+import org.designup.picsou.gui.utils.AbstractRolloverEditor;
+import org.designup.picsou.model.Category;
+
+import javax.swing.*;
+import javax.swing.plaf.PanelUI;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+class CategoryColumn extends AbstractRolloverEditor {
+  private static final TransparentIcon SUBCATEGORY_MARGIN_ICON = new TransparentIcon(10, 5);
+
+  private CreateCategoryAction addCategoryAction;
+  private RenameCategoryAction renameCategoryAction;
+  private DeleteCategoryAction deleteCategoryAction;
+  private GlobStringifier categoryStringifier;
+  private CategoryLabelCustomizer customizer;
+  private CategoryBackgroundPainter backgroundPainter;
+
+  CategoryColumn(CategoryLabelCustomizer customizer, CategoryBackgroundPainter painter, GlobTableView view,
+                 DescriptionService descriptionService, GlobRepository repository, Directory directory) {
+    super(view, descriptionService, repository, directory);
+    this.customizer = customizer;
+    this.backgroundPainter = painter;
+    addCategoryAction = new CreateCategoryAction(repository, directory);
+    renameCategoryAction = new RenameCategoryAction(repository, directory);
+    deleteCategoryAction = new DeleteCategoryAction(repository, directory);
+    categoryStringifier = descriptionService.getStringifier(Category.TYPE);
+  }
+
+  protected Component getComponent(final Glob category) {
+    JPanel panel = new JPanel();
+    panel.setOpaque(false);
+    panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+    JLabel label = addCategoryLabel(category, panel);
+    panel.add(Box.createRigidArea(new Dimension(2, 0)));
+
+    final CategoryButtonsPanel buttonsPanel = new CategoryButtonsPanel(category,
+                                                                       label,
+                                                                       panel,
+                                                                       createActionWrapper(category, addCategoryAction),
+                                                                       createActionWrapper(category, renameCategoryAction),
+                                                                       createActionWrapper(category, deleteCategoryAction),
+                                                                       selectionService);
+    panel.add(buttonsPanel.getPanel());
+
+    JPanel fillPanel = new JPanel();
+    fillPanel.setOpaque(false);
+
+    GridBagBuilder builder = GridBagBuilder.init().setOpaque(false);
+    builder.add(panel, 0, 0, 1, 1, 0, 1, Fill.NONE, Anchor.CENTER, new Insets(0, 0, 0, 0));
+    builder.add(fillPanel, 1, 0, 1, 1, 1, 1, Fill.HORIZONTAL, Anchor.CENTER, new Insets(0, 0, 0, 0));
+    JPanel mainPanel = builder.getPanel();
+    paintBackground(mainPanel, category);
+    return mainPanel;
+  }
+
+  private void paintBackground(JPanel panel, Glob category) {
+    panel.setUI(new PainterUI(backgroundPainter, category, row, column, isSelected, hasFocus));
+  }
+
+  private ActionWrapper createActionWrapper(Glob category, AbstractAction action) {
+    return new ActionWrapper(selectionService, action, category);
+  }
+
+  private JLabel addCategoryLabel(final Glob category, JPanel panel) {
+    String categoryToDisplay = categoryStringifier.toString(category, repository);
+    JLabel label = new JLabel(categoryToDisplay);
+    customizer.process(label, category, isSelected, hasFocus, row, column);
+    label.setIcon(Category.isMaster(category) ? null : SUBCATEGORY_MARGIN_ICON);
+    label.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent e) {
+        selectionService.select(category);
+        stopCellEditing();
+      }
+    });
+
+    panel.add(label);
+    return label;
+  }
+
+  private class PainterUI extends PanelUI {
+    private CellPainter cellPainter;
+    private Glob category;
+    private int row;
+    private int column;
+    private boolean selected;
+    private boolean hasFocus;
+
+    public PainterUI(CellPainter cellPainter, Glob category, int row, int column, boolean selected, boolean hasFocus) {
+      this.cellPainter = cellPainter;
+      this.category = category;
+      this.row = row;
+      this.column = column;
+      this.selected = selected;
+      this.hasFocus = hasFocus;
+    }
+
+    public void paint(Graphics g, JComponent c) {
+      cellPainter.paint(g, category, row, column, selected, hasFocus, c.getWidth(), c.getHeight());
+      super.paint(g, c);
+    }
+  }
+
+  private class ActionWrapper extends AbstractAction {
+    private SelectionService selectionService;
+    private AbstractAction action;
+    private Glob category;
+
+    public ActionWrapper(SelectionService selectionService, AbstractAction action, Glob category) {
+      this.selectionService = selectionService;
+      this.action = action;
+      this.category = category;
+    }
+
+    public void actionPerformed(ActionEvent event) {
+      tableView.getComponent().requestFocus();
+      selectionService.select(category);
+      action.actionPerformed(event);
+    }
+  }
+}

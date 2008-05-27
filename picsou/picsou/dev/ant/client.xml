@@ -1,0 +1,117 @@
+<project name="Picsou Client" default="Predeliver" basedir="../..">
+
+  <taskdef name="jarbundler"
+           classname="net.sourceforge.jarbundler.JarBundler"/>
+
+  <property name="version" value="0.2"/>
+  <property name="picsou.jar" value="picsou-${version}.jar"/>
+  <property name="reflibdir" value=".."/>
+  <property name="globsdir" value="../../globs"/>
+  <property name="splitsdir" value="../../splits"/>
+  <property name="packaging" value="dev/deploy/"/>
+
+  <path id="client.classpath">
+    <fileset dir="lib">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${reflibdir}/lib">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset file="${globsdir}/generated/globs-0.7.jar"/>
+    <fileset dir="${globsdir}/lib">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset file="${splitsdir}/generated/splits-0.7.jar"/>
+  </path>
+
+  <target name="Clean">
+    <delete dir="classes"/>
+    <mkdir dir="classes"/>
+    <delete dir="generated"/>
+    <mkdir dir="generated"/>
+  </target>
+
+  <target name="Compile">
+    <javac destdir="classes"
+           classpathref="client.classpath"
+           debug="on"
+           failonerror="true">
+      <src path="src/java"/>
+    </javac>
+    <copy todir="classes">
+      <fileset dir="resources">
+        <include name="**/**"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="GenerateJar" depends="Compile">
+    <mkdir dir="generated"/>
+    <java fork="yes" classname="org.designup.shrinker.JarShrinker" failonerror="true">
+      <classpath>
+        <pathelement location="classes"/>
+        <path refid="client.classpath"/>
+        <pathelement location="${reflibdir}/lib/dev/jarshrinker-0.7.jar"/>
+        <pathelement location="${reflibdir}/lib/dev/asm-3.0.jar"/>
+      </classpath>
+      <arg line="generated/${picsou.jar} dev/ant/inputClient.txt dev/ant/ignoreClient.txt"/>
+    </java>
+    <manifest file="classes/MANIFEST.MF">
+      <attribute name="Main-Class" value="org.designup.picsou.gui.PicsouApplication"/>
+    </manifest>
+    <jar update="true" jarfile="generated/${picsou.jar}" manifest="classes/MANIFEST.MF"/>
+  </target>
+
+  <target name="CreateMacPackage">
+    <property name="appDir" value="generated/macosx/Picsou"/>
+    <property name="dmgFile" value="generated/macosx/picsou-${version}.dmg"/>
+
+    <delete dir="${appDir}"/>
+
+    <mkdir dir="${appDir}"/>
+
+    <jarbundler dir="${appDir}"
+                name="Picsou"
+                mainclass="org.designup.picsou.gui.PicsouApplication"
+                jar="generated/${picsou.jar}"
+                icon="dev/images/picsou_icon.icns"
+                jvmversion="1.5*">
+      <documenttype name="OFX Document"
+                    extensions="ofx"
+                    role="Viewer"/>
+    </jarbundler>
+
+    <exec executable="hdiutil">
+      <arg line="create -srcfolder ${appDir} ${dmgFile}"/>
+    </exec>
+
+  </target>
+
+
+  <target name="Predeliver" depends="Clean,Compile,GenerateJar,CreateMacPackage">
+  </target>
+
+  <target name="Publish">
+    <delete dir="generated/web"/>
+    <mkdir dir="generated/web"/>
+    <copy todir="generated/web">
+      <fileset dir="dev/web">
+        <include name="index.html"/>
+        <include name="styles.css"/>
+      </fileset>
+      <fileset file="dev/images/picsou_icon_128.png"/>
+      <fileset file="generated/macosx/picsou-${version}.dmg"/>
+      <fileset file="generated/picsou-${version}.jar"/>
+    </copy>
+    <ftp
+      server="privftp.pro.proxad.net" userid="webmaster@design-up.com" password="zx-600r"
+      remotedir="picsou"
+      passive="yes"
+      verbose="yes">
+      <fileset dir="generated/web">
+        <include name="*.*"/>
+      </fileset>
+    </ftp>
+  </target>
+
+</project>

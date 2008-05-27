@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="unqualified">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
+
+  <!-- ====================================  -->
+  <!-- Root element                          -->
+  <!-- ====================================  -->
+
+  <xs:element name="splits">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        Root elements for Splits XML files
+      </xs:documentation>
+    </xs:annotation>
+
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="frame"/>
+        <xs:group ref="splitsComponents"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ====================================  -->
+  <!-- Container/ component lists            -->
+  <!-- ====================================  -->
+
+  <xs:group name="splitsContainers">
+    <xs:choice>
+      <xs:element ref="column"/>
+      <xs:element ref="row"/>
+      <xs:element ref="grid"/>
+      <xs:element ref="borderLayout"/>
+      <xs:element ref="horizontalSplit"/>
+      <xs:element ref="verticalSplit"/>
+      <xs:element ref="styledPanel"/>
+      <xs:element ref="scrollPane"/>
+      <xs:element ref="tabs"/>
+      <xs:element ref="cards"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:group name="splitsComponents">
+    <xs:choice>
+      <xs:group ref="splitsContainers"/>
+      <xs:element ref="component"/>
+      <xs:element ref="button"/>
+      <xs:element ref="toggleButton"/>
+      <xs:element ref="label"/>
+      <xs:element ref="checkBox"/>
+      <xs:element ref="comboBox"/>
+      <xs:element ref="table"/>
+      <xs:element ref="list"/>
+      <xs:element ref="textField"/>
+      <xs:element ref="textArea"/>
+      <xs:element ref="editorPane"/>
+      <xs:element ref="htmlEditorPane"/>
+      <xs:element ref="filler"/>
+    </xs:choice>
+  </xs:group>
+
+  <!-- ====================================  -->
+  <!-- Top-level window elements             -->
+  <!-- ====================================  -->
+
+  <xs:element name="frame">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        Represents a JFrame component
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attribute name="title" type="xs:string" use="optional"/>
+      <xs:attributeGroup ref="jComponentAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="dialog">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        Represents a JDialog component
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attribute name="title" type="xs:string" use="optional"/>
+      <xs:attributeGroup ref="jComponentAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+
+  <!-- ====================================  -->
+  <!-- Containers                            -->
+  <!-- ====================================  -->
+
+  <xs:element name="grid">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attributeGroup ref="gridContainerAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="column">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attributeGroup ref="gridContainerAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="row">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attributeGroup ref="gridContainerAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="borderLayout">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="horizontalSplit">
+    <xs:complexType>
+      <xs:sequence minOccurs="2" maxOccurs="2">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attributeGroup ref="splitPaneAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="verticalSplit">
+    <xs:complexType>
+      <xs:sequence minOccurs="2" maxOccurs="2">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attributeGroup ref="splitPaneAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="styledPanel">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attribute name="color" type="xs:string"/>
+      <xs:attribute name="topColor" type="xs:string"/>
+      <xs:attribute name="bottomColor" type="xs:string"/>
+      <xs:attribute name="borderColor" type="xs:string"/>
+      <xs:attribute name="borderWidth" type="xs:integer"/>
+      <xs:attribute name="cornerRadius" type="xs:integer"/>
+      <xs:attribute name="shadowWidth" type="xs:integer"/>
+      <xs:attribute name="opacity" type="xs:float"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="scrollPane">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attribute name="viewportBackground" type="xs:string"/>
+      <xs:attribute name="viewportOpaque" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="tabs">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:element ref="tab"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="tab">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attribute name="title" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="cards">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:element ref="card"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="card">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:attributeGroup name="gridAttributes">
+    <xs:attribute name="margin" type="xs:integer">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Margin introduced around the component (in pixels). If the component is not yet included
+          in a gridbag panel, Splits will automatically create one.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="marginTop" type="xs:integer">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Margin introduced above the component (in pixels). If the component is not yet included
+          in a gridbag panel, Splits will automatically create one.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="marginBottom" type="xs:integer">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Margin introduced below the component (in pixels). If the component is not yet included
+          in a gridbag panel, Splits will automatically create one.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="marginLeft" type="xs:integer">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Margin introduced at the left of the component (in pixels). If the component is not yet included
+          in a gridbag panel, Splits will automatically create one.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="marginRight" type="xs:integer">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Margin introduced at the right of the component (in pixels). If the component is not yet included
+          in a gridbag panel, Splits will automatically create one.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="fill" type="fillType">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          "fill" property used in the GridBag constraints of the component in the parent panel.
+          Value can be one of: horizontal, vertical, none, both.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="anchor" type="anchorType">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          "anchor" property used in the GridBag constraints of the component in the parent panel.
+          Value can be one of: center, east, west, north, northeast, northwest, south, southeast, southwest.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="gridPos" type="xs:string">
+    </xs:attribute>
+
+    <xs:attribute name="weightX" type="xs:float">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          "weightx" property used in the GridBag constraints of the component in the parent panel.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="weightY" type="xs:float">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          "weighty" property used in the GridBag constraints of the component in the parent panel.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="gridContainerAttributes">
+    <xs:attribute name="defaultFill" type="xs:string">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Default "fill" value for children components.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="defaultAnchor" type="xs:string">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Default "anchor" value for children components.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="defaultMargin" type="xs:string">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Default "margin" value for children components.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="defaultMarginTop" type="xs:string">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Default "marginTop" value for children components.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="defaultMarginBottom" type="xs:string">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Default "marginBottom" value for children components.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="defaultMarginLeft" type="xs:string">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Default "marginLeft" value for children components.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="defaultMarginRight" type="xs:string">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Default "marginRight" value for children components.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="splitPaneAttributes">
+    <xs:attribute name="dividerSize" type="xs:integer"/>
+    <xs:attribute name="dividerLocation" type="xs:float"/>
+    <xs:attribute name="continuousLayout" type="xs:boolean"/>
+  </xs:attributeGroup>
+
+  <!-- ====================================  -->
+  <!-- Components                            -->
+  <!-- ====================================  -->
+
+  <xs:element name="component">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="button">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attributeGroup ref="iconAttributes"/>
+      <xs:attribute name="action" type="xs:string"/>
+      <xs:attribute name="text" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="toggleButton">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attributeGroup ref="iconAttributes"/>
+      <xs:attribute name="action" type="xs:string"/>
+      <xs:attribute name="text" type="xs:string"/>
+      <xs:attribute name="selected" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="checkBox">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attributeGroup ref="iconAttributes"/>
+      <xs:attribute name="action" type="xs:string"/>
+      <xs:attribute name="text" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="comboBox">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attributeGroup ref="iconAttributes"/>
+      <xs:attribute name="action" type="xs:string"/>
+      <xs:attribute name="text" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="label">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attributeGroup ref="iconAttributes"/>
+      <xs:attribute name="action" type="xs:string"/>
+      <xs:attribute name="text" type="xs:string"/>
+      <xs:attribute name="horizontalAlignment" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">
+            Can be one of SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.LEADING,
+            SwingConstants.TRAILING
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="verticalAlignment" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="textField">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attribute name="action" type="xs:string"/>
+      <xs:attribute name="text" type="xs:string"/>
+      <xs:attribute name="editable" type="xs:boolean"/>
+      <xs:attribute name="columns" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="textArea">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attribute name="text" type="xs:string"/>
+      <xs:attribute name="editable" type="xs:boolean"/>
+      <xs:attribute name="columns" type="xs:integer"/>
+      <xs:attribute name="rows" type="xs:integer"/>
+      <xs:attribute name="lineWrap" type="xs:boolean"/>
+      <xs:attribute name="wrapStyleWord" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="editorPane">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attribute name="text" type="xs:string"/>
+      <xs:attribute name="editable" type="xs:boolean"/>
+      <xs:attribute name="contentType" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="htmlEditorPane">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        Manages a JEditorPane configured to display HTML with the same font used by JLabel components
+        in the application.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attribute name="text" type="xs:string"/>
+      <xs:attribute name="editable" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="table">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attribute name="intercellSpacing" type="sizeType"/>
+      <xs:attribute name="showGrid" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="list">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="filler">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:attributeGroup name="jComponentAttributes">
+    <xs:attribute name="ref" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="background" type="xs:string"/>
+    <xs:attribute name="foreground" type="xs:string"/>
+    <xs:attribute name="opaque" type="xs:boolean"/>
+    <xs:attribute name="size" type="sizeType"/>
+    <xs:attribute name="minimumSize" type="sizeType"/>
+    <xs:attribute name="maximumSize" type="sizeType"/>
+    <xs:attribute name="font" type="xs:string"/>
+    <xs:attribute name="visible" type="xs:boolean"/>
+    <xs:attribute name="enabled" type="xs:boolean"/>
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="componentAttributes">
+    <xs:attributeGroup ref="gridAttributes"/>
+    <xs:attributeGroup ref="jComponentAttributes"/>
+
+    <xs:attribute name="borderPos" type="xs:string">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Indicates the location of the component when placed inside a &lt;border&gt; layout tag. Value can be one of
+          north/center/south/left/right.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="border" type="xs:string">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Adds a Border around the component. Value can be one of "none", "etched", "bevel(lowered)", "bevel(raised)"
+          or "matte(top,left,bottom,right,#color)".
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+    <xs:anyAttribute/>
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="iconAttributes">
+    <xs:attribute name="icon" type="xs:string"/>
+    <xs:attribute name="rolloverIcon" type="xs:string"/>
+    <xs:attribute name="pressedIcon" type="xs:string"/>
+  </xs:attributeGroup>
+
+  <!-- ====================================  -->
+  <!-- Attribute types                       -->
+  <!-- ====================================  -->
+
+  <xs:simpleType name="sizeType">
+    <xs:restriction base="xs:string">
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="fillType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="horizontal"/>
+      <xs:enumeration value="vertical"/>
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="both"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="anchorType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="center"/>
+      <xs:enumeration value="east"/>
+      <xs:enumeration value="west"/>
+      <xs:enumeration value="north"/>
+      <xs:enumeration value="northeast"/>
+      <xs:enumeration value="northwest"/>
+      <xs:enumeration value="south"/>
+      <xs:enumeration value="southeast"/>
+      <xs:enumeration value="southwest"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

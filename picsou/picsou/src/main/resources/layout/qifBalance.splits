@@ -1,0 +1,13 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <column margin="20">
+    <label text="Saisissez le solde du compte pour le fichier"/>
+    <label ref="transactionImport"/>
+    <textField ref="balance" marginTop="10" marginBottom="10" action="OK"/>
+    <row>
+      <button action="OK" name="OK"/>
+      <button action="unknown" name="unknown"/>
+    </row>
+  </column>
+
+</splits>

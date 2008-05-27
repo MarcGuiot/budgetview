@@ -1,0 +1,5 @@
+C org.designup.picsou.PicsouServer
+C org.mortbay.jetty.RetryRequest
+C javax.servlet.SingleThreadModel
+R javax/servlet/LocalStrings.properties
+R javax/servlet/http/LocalStrings.properties

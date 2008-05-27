@@ -1,0 +1,79 @@
+<morphograph>
+  <topic name="Synthèse -age, -ier, -ière, -eur, -euse, -rice, -ette">
+
+    <series name="Séance 1">
+
+      <exercise name="Perception 1"
+                exerciseTypeName="select"
+                title="Vrai ou faux"
+                description="Cliquer sur vrai ou faux pour répondre aux affirmations suivantes.">
+        <select title="Un aéroglisseur glisse" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Une muette mue" alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="Un fuselage fuse" alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="Une novatrice innove" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Un limier lime" alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="Une rosette rosit" alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="Un bélier bêle" alt1="Vrai" alt2="Faux" answers="2"/>
+      </exercise>
+
+      <exercise name="Perception 2"
+                exerciseTypeName="select"
+                title="Classement"
+                description=" Cliquer sur les mots qui appartiennent à la même famille que le mot initial.">
+        <select title="Déviatrice" alt1="dévier" alt2="évier" alt3="déviation" alt4="aviaire" alt5="déviant"
+                answers="1,3,5"/>
+        <select title="Gardiennage" alt1="garde" alt2="regard" alt3="gardienne" alt4="garderie"
+                alt5="gardon" answers="1,3,4"/>
+        <select title="Epoussetage" alt1="époux" alt2="poussière" alt3="repousser" alt4="poussiéreux"
+                alt5="poussier" answers="2,4"/>
+        <select title="Tapissier" alt1="détapisser" alt2="tapis" alt3="tapage" alt4="tapisser"
+                alt5="tapette" answers="1,2,4"/>
+        <select title="Cavalière" alt1="cavalcade" alt2="caveau" alt3="caviste" alt4="cavalerie"
+                alt5="chevauchée" answers="1,4,5"/>
+        <select title="Tirette" alt1="tirade" alt2="tiroir" alt3="tiret" alt4="tirer"
+                alt5="tirelire" answers="2,4,5"/>
+      </exercise>
+
+      <exercise name="Perception 3"
+                exerciseTypeName="select"
+                title="Recherche d'intrus"
+                description="Trouver l'intrus : quel mot ne renvoie pas à une action ?">
+        <select title="1" alt1="manieur" alt2="écolière" alt3="chiffrage" alt4="trempette" answers="2"/>
+        <select title="1" alt1="broyage" alt2="sucette" alt3="matelassière" alt4="pudeur" answers="4"/>
+        <select title="1" alt1="lurette" alt2="bombardier" alt3="vainqueur" alt4="saccage" answers="1"/>
+        <select title="1" alt1="tambourinage" alt2="espalier" alt3="claquette" alt4="instructrice" answers="2"/>
+        <select title="1" alt1="footballeur" alt2="patinette" alt3="barbouillage" alt4="salière" answers="1"/>
+        <select title="1" alt1="lorgnette" alt2="simulatrice" alt3="graveur" alt4="verbiage" answers="4"/>
+      </exercise>
+
+      <exercise name="Production 1"
+                exerciseTypeName="input"
+                title="Compléter les phrases suivantes"
+                description="Compléter la phrase en produisant un mot obtenu à partir du mot initial.">
+        <input title="Une femme qui sème est une" answer="semeuse"/>
+        <input title="Un homme qui braconne est un" answer="braconnier"/>
+        <input title="L'action de rincer est le" answer="rinçage"/>
+        <input title="Une femme en vacances est une" answer="vacancière"/>
+        <input title="Une petite femme est une" answer="femmelette"/>
+        <input title="Un homme qui connaît est un" answer="connaisseur"/>
+      </exercise>
+
+      <exercise name="Production 2"
+                exerciseTypeName="input"
+                title="Extraction de la forme de base"
+                description="Quel mot reconnaît-on dans les mots suivants ?">
+        <input title="réflecteur" answer="reflet"/>
+        <input title="pacificatrice" answer="paix"/>
+        <input title="forestier" answer="forêt"/>
+        <input title="cépage" answer="cep"/>
+        <input title="ressemelage" answer="semelle"/>
+        <input title="montagnette" answer="mont"/>
+      </exercise>
+
+
+    </series>
+
+
+  </topic>
+
+</morphograph>

@@ -1,0 +1,30 @@
+<splits>
+  <frame title="Yet Another Address Book!" size="(700,400)">
+    <column margin="20">
+
+      <horizontalSplit dividerLocation="500" opaque="false">
+        <scrollPane>
+          <table ref="contact"/>
+        </scrollPane>
+        <column defaultAnchor="west" marginLeft="20">
+          <label text="First Name"/>
+          <component ref="firstName"/>
+          <label text="Last Name"/>
+          <component ref="lastName"/>
+          <label text="Phone"/>
+          <component ref="phone"/>
+          <label text="Email"/>
+          <component ref="email"/>
+        </column>
+      </horizontalSplit>
+
+      <row marginTop="10">
+        <button action="newContact" opaque="false"/>
+        <button action="deleteContact" opaque="false"/>
+        <filler fill="horizontal"/>
+      </row>
+
+
+    </column>
+  </frame>
+</splits>

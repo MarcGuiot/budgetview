@@ -1,0 +1,124 @@
+OFXHEADER:100
+DATA:OFXSGML
+VERSION:102
+SECURITY:NONE
+ENCODING:USASCII
+CHARSET:1252
+COMPRESSION:NONE
+OLDFILEUID:NONE
+NEWFILEUID:NONE
+
+<OFX>
+  <SIGNONMSGSRSV1>
+    <SONRS>
+      <STATUS>
+        <CODE>0
+        <SEVERITY>INFO
+      </STATUS>
+      <DTSERVER>20060810152838
+      <LANGUAGE>FRA
+    </SONRS>
+  </SIGNONMSGSRSV1>
+  <BANKMSGSRSV1>
+    <STMTTRNRS>
+      <TRNUID>F4263056-3CAC-4CCC-8E0A-7EF5E85487B
+      <STATUS>
+        <CODE>0
+        <SEVERITY>INFO
+      </STATUS>
+      <CLTCOOKIE>2
+      <STMTRS>
+        <CURDEF>EUR
+        <BANKACCTFROM>
+          <BANKID>20041
+          <BRANCHID>01014
+          <ACCTID>123123
+          <ACCTTYPE>CHECKING
+          <ACCTKEY>1
+        </BANKACCTFROM>
+        <BANKTRANLIST>
+          <DTSTART>20060810
+          <DTEND>20060810
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060809
+            <TRNAMT>-5.00
+            <FITID>id_mvt1
+            <NAME>ACHAT CB SANEMA                         08.08.06
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060803
+            <TRNAMT>292.82
+            <FITID>id_mvt8
+            <NAME>REMISE DE CHEQUES DU 02/08/2006
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060803
+            <TRNAMT>-60.00
+            <FITID>id_mvt9
+            <NAME>CARTE MASTERCA 02/08/06 A 09H59
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060803
+            <TRNAMT>-56.14
+            <FITID>id_mvt10
+            <NAME>CHEQUE N. 6557005
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060801
+            <TRNAMT>-11.00
+            <FITID>id_mvt11
+            <NAME>CHEQUE N. 6557002
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060801
+            <TRNAMT>-60.00
+            <FITID>id_mvt12
+            <NAME>CHEQUE N. 6557004
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060731
+            <TRNAMT>-11.35
+            <FITID>id_mvt13
+            <NAME>ACHAT CB ATAC MAG GAILL 30.07.06
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060731
+            <TRNAMT>-27.20
+            <FITID>id_mvt14
+            <NAME>ACHAT CB COINTIN ET CIE 30.07.06
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060731
+            <TRNAMT>-32.22
+            <FITID>id_mvt15
+            <NAME>ACHAT CB ST MARCEL DIST 28.07.06
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060731
+            <TRNAMT>-61.85
+            <FITID>id_mvt16
+            <NAME>ACHAT CB CENTRE E LECLE 29.07.06
+          </STMTTRN>
+        </BANKTRANLIST>
+        <LEDGERBAL>
+          <BALAMT>12345.67
+          <DTASOF>20060810
+        </LEDGERBAL>
+        <AVAILBAL>
+          <BALAMT>12345.67
+          <DTASOF>20060810
+        </AVAILBAL>
+      </STMTRS>
+    </STMTTRNRS>
+  </BANKMSGSRSV1>
+</OFX>

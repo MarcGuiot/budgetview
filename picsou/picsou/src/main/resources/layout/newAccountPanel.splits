@@ -1,0 +1,45 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styledPanel topColor="login.bg.top" bottomColor="login.bg.bottom" opaque="true">
+    <column>
+
+      <filler fill="vertical" weightY="10"/>
+
+      <styledPanel topColor="login.block.top" bottomColor="login.block.bottom"
+                   borderColor="login.block.border" borderWidth="2" cornerRadius="10"
+                   opaque="true" anchor="center" fill="none" weightY="20">
+        <column margin="20" anchor="center" fill="none">
+
+          <label icon="import_sequence.png" fill="none" anchor="center"
+                 marginBottom="20" marginLeft="100" marginRight="100"/>
+
+          <htmlEditorPane text="$login.initial.file"/>
+
+          <row marginTop="10" defaultAnchor="center">
+            <label ref="fileLabel" text="Fichier" anchor="east"/>
+            <textField ref="fileField" marginLeft="5" marginRight="5" anchor="center" weightX="1000"/>
+            <button ref="fileButton" text="$browse" anchor="west"/>
+            <button text="?" action="toggleHelp"/>
+          </row>
+
+          <styledPanel ref="helpPanel" visible="false"
+                       topColor="login.fileblock.top" bottomColor="login.fileblock.bottom"
+                       borderColor="login.fileblock.border" borderWidth="2" cornerRadius="10"
+                       opaque="true" anchor="center" fill="both"
+                       marginTop="20" marginBottom="10">
+            <htmlEditorPane text="$login.initial.file.help" margin="10"/>
+          </styledPanel>
+
+          <label ref="message" margin="5" horizontalAlignment="center"/>
+
+          <button ref="login" text="Connexion" margin="5"/>
+
+        </column>
+      </styledPanel>
+
+      <filler fill="vertical" weightY="20"/>
+
+    </column>
+  </styledPanel>
+
+</splits>

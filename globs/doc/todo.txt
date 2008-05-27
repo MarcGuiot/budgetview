@@ -1,0 +1,26 @@
+- Probl�matique des ID typ�s Integer (voir BigDecimal, long, etc) : voir impacts sur GlobIdGenerator et LinkField.
+
+- Bazar DescriptionService + Formats + FieldConverter
+
+- Probleme de la merge de version :
+On part d'un repository sur le serveur
+On se deconnecte
+On fait des changements en local
+On cherche a envoyer les changements au serveur.
+On y arrive
+Mais le serveur a deja recu d'autre changement
+Donc il faut refuser ces nouveaux changement, et retourner l'information.
+(il faut un identifiant de la version du repository. Comme cela le client envoit son etat de référence et le serveur
+ peux decider de refuser le changement).
+
+Alors, le client demande les nouveaux changements
+il peut recevoir des ajouts de transactions qu'il a aussi ==> ok
+il peut recevoir des modifications (label) : Comme le client connait l'etat anterieur a la modification il peut
+ decider de l'issue du conflit.
+Si on a des delta il peut revevoir des deletes de transactions qu'il aurait creer en double. Idealement il faudrait
+pouvoir appliquer le delete (ne pas creer la transaction)
+Si on n'est pas en mode delta le delete n'est pas identifié (la transaction est absente du repository)
+ dans ce cas on ne peux pas savoir que la transaction a deja ete importer puis detruite.
+  creation par deux personnes
+
+utiliser le temps comme ordonenceur

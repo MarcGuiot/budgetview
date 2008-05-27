@@ -1,0 +1,77 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+  <column background="frame.bg.bottom" opaque="true">
+
+    <styledPanel name="header" topColor="frame.bg.top" bottomColor="frame.bg.bottom" opaque="false"
+                 border="matte(0,0,1,0,#888888)" weightY="0">
+      <column marginLeft="20" marginRight="10" marginTop="10">
+        <label ref="accountView" opaque="false" horizontalAlignment="center" anchor="center" weightY="0"/>
+        <grid weightY="10" marginTop="5" marginBottom="20">
+          <button ref="firstPeriod" gridPos="(0,0)" fill="none" anchor="southeast" size="(15,20)"
+                  icon="first.png" rolloverIcon="firstrollover.png" pressedIcon="firstpressed.png"/>
+          <button ref="prevPeriod" gridPos="(0,1)" fill="none" anchor="northeast" size="(15,20)"
+                  icon="prev.png" rolloverIcon="prevrollover.png" pressedIcon="prevpressed.png"/>
+          <component ref="month" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
+                     marginLeft="10" weightX="1000.0" weightY="100.0" border="etched"/>
+          <button ref="lastPeriod" gridPos="(2,0)" fill="none" anchor="southeast" size="(15,20)"
+                  icon="last.png" rolloverIcon="lastrollover.png" pressedIcon="lastpressed.png"/>
+          <button ref="nextPeriod" gridPos="(2,1)" fill="none" anchor="northeast" size="(15,20)"
+                  icon="next.png" rolloverIcon="nextrollover.png" pressedIcon="nextpressed.png"/>
+        </grid>
+      </column>
+    </styledPanel>
+
+    <horizontalSplit ref="horizontalSplit" background="categories.bg" dividerSize="3" dividerLocation="280"
+                     continuousLayout="true">
+      <scrollPane viewportBackground="categories.bg" border="empty">
+        <table ref="category" background="categories.bg" intercellSpacing="(0,0)" showGrid="false"/>
+      </scrollPane>
+      <styledPanel topColor="chartarea.bg.top" bottomColor="chartarea.bg.bottom" opaque="true">
+        <column>
+          <row marginTop="10" marginBottom="30">
+            <label ref="title" opaque="false" font="Arial,plain,20"
+                   fill="horizontal" anchor="center" weightX="1000"
+                   horizontalAlignment="center" foreground="title"/>
+            <toggleButton ref="dataCardToggle" opaque="false" weightX="1"/>
+            <toggleButton ref="overviewCardToggle" opaque="false" weightX="1"/>
+          </row>
+          <cards ref="cardView" opaque="false">
+            <card name="data">
+              <column>
+                <component ref="intraMonthChart" opaque="false"
+                           fill="both" anchor="center" margin="10" marginTop="0" weightY="0"/>
+                <scrollPane borderPos="center" viewportBackground="transactions.bg" border="empty" opaque="false">
+                  <table ref="transaction" background="transactions.bg" intercellSpacing="(0,0)" showGrid="false"/>
+                </scrollPane>
+              </column>
+            </card>
+            <card name="overview">
+              <column>
+                <row margin="10" marginLeft="30" marginRight="30">
+                  <htmlEditorPane ref="scorecard" font="Arial,plain,11" weightX="1" foreground="title"/>
+                  <component ref="categoriesChart" opaque="false" fill="both" weightX="10"/>
+                </row>
+                <component ref="historicalChart" opaque="false" fill="both" anchor="center" margin="10"/>
+              </column>
+            </card>
+            <card name="noData">
+              <row marginLeft="20">
+                <component ref="noData" opaque="false" foreground="title"/>
+              </row>
+            </card>
+          </cards>
+        </column>
+      </styledPanel>
+    </horizontalSplit>
+
+    <styledPanel topColor="footer.bg.top" bottomColor="footer.bg.bottom"
+                 opaque="true" border="matte(1,0,0,0,#CCCCCC)"
+                 weightY="0">
+      <row marginTop="5" marginBottom="5" marginRight="20">
+        <filler fill="horizontal"/>
+        <component ref="informationPanel" margin="1" opaque="false"/>
+        <label ref="balanceInfo" opaque="false" horizontalAlignment="right"/>
+      </row>
+    </styledPanel>
+
+  </column>
+</splits>

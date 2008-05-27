@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<document>
+  <properties>
+    <title>SAXStack - XML SAX parsing made simple!</title>
+  </properties>
+  <meta name="keyword" content="Java,GUI,Swing,testing,JUnit"/>
+
+  <body>
+    <section name="SAXStack overview">
+      <p>SaxStack is a Java library designed to help programmers make a simple and efficient use of XML SAX parsers,
+        and also to help them generate XML streams.</p>
+      <p>Its main design driver is the modelling of the parsing/generation as a stack of XML node handlers,
+        which let the programmers focus on one XML node at a time and end up with an clean and
+        efficient design.</p>
+    </section>
+  </body>
+</document>

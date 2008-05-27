@@ -1,0 +1,37 @@
+<splits>
+  <frame title="Blog App" size="(700,400)">
+    <horizontalSplit margin="20"  dividerLocation="300">
+
+      <verticalSplit opaque="false">
+        <column>
+          <row>
+            <label text="Pending posts"/>
+            <filler fill="horizontal"/>
+            <button action="newPost"/>
+          </row>
+          <scrollPane>
+            <table ref="draftPosts"/>
+          </scrollPane>
+        </column>
+        <column>
+          <label text="Published posts" anchor="west"/>
+          <scrollPane>
+            <table ref="publishedPosts"/>
+          </scrollPane>
+        </column>
+      </verticalSplit>
+
+      <column marginTop="10" marginLeft="20" defaultAnchor="west">
+        <label text="Title"/>
+        <textField ref="titleField"/>
+
+        <label text="Content"/>
+        <scrollPane>
+          <textArea ref="contentField"/>
+        </scrollPane>
+
+        <button action="publish" anchor="east"/>
+      </column>
+    </horizontalSplit>
+  </frame>
+</splits>

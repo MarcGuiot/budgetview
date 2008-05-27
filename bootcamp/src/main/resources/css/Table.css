@@ -1,0 +1,36 @@
+table /* Le tableau en lui-même */
+{
+  border: 1px solid silver; /* Bordure du tableau avec effet 3D (outset) */
+  border-collapse: collapse; /* Colle les bordures entre elles */
+  background: #FFF;
+}
+
+th {
+  background-color: #224A5F;
+  color: white;
+  font-size: 0.8em;
+  padding: 5px;
+}
+
+th a:link {
+  text-decoration: none;
+  color: white;
+}
+
+th a:visited {
+  text-decoration: none;
+  color: white;
+}
+
+th a:hover {
+  text-decoration: underline;
+  color: #8888FF;
+}
+
+td {
+  border: 1px solid #888;
+  text-align: center; /* Tous les textes des cellules seront centrés*/
+  padding: 5px; /* Petite marge intérieure aux cellules pour éviter que le texte touche les bordures */
+  font-size: 0.8em;
+  width:80px;
+}

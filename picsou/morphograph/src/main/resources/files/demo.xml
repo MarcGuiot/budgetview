@@ -1,0 +1,76 @@
+<morphograph>
+  <topic name="Suffixe -ette">
+
+    <series name="Séance de démonstration">
+
+      <exercise name="Perception 1"
+                exerciseTypeName="select"
+                title="Vrai ou faux"
+                description="Cliquer sur vrai ou faux pour répondre aux affirmations suivantes">
+        <select title="Une barquette est une petite barque" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Une baguette est une petite bague" alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="Une facette est une petite face" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Une amourette est un petit amour" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Une chouette est un petit chou" alt1="Vrai" alt2="Faux" answers="2"/>
+      </exercise>
+
+      <exercise name="Perception 2"
+                exerciseTypeName="select"
+                title="Recherche d'intrus"
+                description="Trouver l'intrus selon que -ette veuille dire -petit ou petite - Attention, le critère change selon les séries">
+        <select title="1" alt1="courette" alt2="nuisette" alt3="bordurette" answers="2"/>
+        <select title="2" alt1="brouette" alt2="assiette" alt3="chambrette" answers="3"/>
+        <select title="3" alt1="crevette" alt2="colonnette" alt3="cuvette" answers="1"/>
+        <select title="4" alt1="chaussette" alt2="barbichette" alt3="blette" answers="3"/>
+        <select title="5" alt1="lingette" alt2="serviette" alt3="vedette" answers="1"/>
+      </exercise>
+
+      <exercise name="Perception 3"
+                exerciseTypeName="select"
+                title="Classement"
+                description=" Cliquer sur les mots qui appartiennent à la même famille que le mot de départ"
+                example="">
+        <select title="Gouttelette" alt1="goutte" alt2="bagout" alt3="égouttoir" alt4="gouttière" alt5="dégoûter"
+                answers="1,3,4"/>
+        <select title="Fermette" alt1="fermier" alt2="fermage" alt3="fermeté" alt4="affermir"
+                alt5="enfermer" answers="1,2,5"/>
+      </exercise>
+
+      <exercise name="Production 1"
+                exerciseTypeName="input"
+                title="Compléter les phrases suivantes"
+                description="Compléter la phrase en produisant un mot obtenu avec le mot donné au départ auquel on ajoute un suffixe"
+                example="Une petite malle est une mallette.">
+        <input title="Une petite fille est une" answer="fillette"/>
+        <input title="Une petite boule est une" answer="boulette"/>
+        <input title="Une petite chemise est une" answer="chemisette"/>
+        <input title="Une petite voiture est une" answer="voiturette"/>
+        <input title="Une petite boucle est une" answer="bouclette"/>
+      </exercise>
+
+      <exercise name="Production 2"
+                exerciseTypeName="input"
+                title="Extraction de la forme de base"
+                description="Quel petit mot reconnais-tu dans les mots suivants?"
+                example="cigarette => cigare">
+        <input title="ailette" answer="aile"/>
+        <input title="chaînette" answer="chaîne"/>
+        <input title="briquette" answer="brique"/>
+        <input title="flèchette" answer="flèche"/>
+        <input title="pendulette" answer="pendule"/>
+      </exercise>
+
+      <exercise name="Production 3"
+                exerciseTypeName="input"
+                title="Dérivation lexicale"
+                description="Trouver des mots de la même famille que"
+                example="son = sonnette, sonneur, sonnerie, sonner,..">
+        <input title="Lavette"/>
+        <input title="Chaussette"/>
+      </exercise>
+
+    </series>
+
+  </topic>
+
+</morphograph>

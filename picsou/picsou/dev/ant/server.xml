@@ -1,0 +1,71 @@
+<project name="Picsou Server" default="GenerateJar" basedir="../..">
+
+  <property name="version" value="0.2"/>
+  <property name="picsou.jar" value="picsou-${version}.jar"/>
+  <property name="reflibdir" value=".."/>
+  <property name="globsdir" value="../../globs"/>
+  <property name="splitsdir" value="../../splits"/>
+  <property name="packaging" value="dev/deploy/"/>
+
+  <path id="client.classpath">
+    <fileset dir="lib">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${reflibdir}/lib">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset file="${globsdir}/generated/globs-0.7.jar"/>
+    <fileset dir="${globsdir}/lib">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset file="${splitsdir}/generated/splits-0.7.jar"/>
+  </path>
+
+  <path id="server.classpath">
+    <fileset dir="${globsdir}/lib/web">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="Clean">
+    <delete dir="classes"/>
+    <mkdir dir="classes"/>
+    <delete dir="generated"/>
+    <mkdir dir="generated"/>
+    <delete dir="../picsou_server/classes"/>
+    <mkdir dir="../picsou_server/classes"/>
+  </target>
+
+  <target name="Compile">
+    <mkdir dir="../picsou_server/classes"/>
+    <javac destdir="../picsou_server/classes" debug="no">
+      <src path="../picsou_server/src/java"/>
+      <classpath>
+        <pathelement location="classes"/>
+        <path refid="client.classpath"/>
+        <path refid="server.classpath"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="GenerateJar" depends="Compile">
+    <java fork="yes" classname="org.designup.shrinker.JarShrinker" failonerror="true">
+      <classpath>
+        <pathelement location="classes"/>
+        <pathelement location="../picsou_server/classes"/>
+        <path refid="client.classpath"/>
+        <path refid="server.classpath"/>
+        <pathelement location="${reflibdir}/lib/dev/jarshrinker-0.7.jar"/>
+        <pathelement location="${reflibdir}/lib/dev/asm-3.0.jar"/>
+      </classpath>
+      <arg line="generated/picsou_server.jar dev/ant/inputServer.txt dev/ant/ignoreServer.txt"/>
+    </java>
+    <manifest file="../picsou_server/classes/MANIFEST.MF">
+      <attribute name="Main-Class" value="org.designup.picsou.PicsouServer"/>
+    </manifest>
+    <jar update="true" jarfile="generated/picsou_server.jar"
+         manifest="../picsou_server/classes/MANIFEST.MF"/>
+
+  </target>
+
+</project>

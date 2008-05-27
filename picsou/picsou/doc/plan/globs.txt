@@ -1,0 +1,26 @@
+|CLEAN UP
+--------
+
+- Supprimer les "Exception" a la fin des noms d'exceptions
+
+- SelectionService ==> GlobSelector
+
+- Deplacer les tests SQL a la racine "sql" et les orienter plutot "TF"
+
+- Mettre isKeyField sur Field plutot que sur GlobType ?
+
+
+FEATURES
+--------
+
+- Gerer les liens de contenance (notamment pour l'XML)
+
+
+OPTIMS
+------
+
+- Utiliser l'implementation de Glob elle-meme comme implementation de Key
+  * on a ainsi l'impression de travailler avec le Glob lui-meme quand on fait un GlobSet.update
+  * perfs mem: normalement, puisqu'on garde les Globs par Key dans le globRepository, on aura toujours une Key
+   en memoire pour chaque Glob. En utilisant la même instance, on s'economise la creation
+   et le stockage des Key

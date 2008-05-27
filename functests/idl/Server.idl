@@ -1,0 +1,9 @@
+module functests4j {
+
+interface Server {
+
+  boolean callMe(in string val);
+
+};
+
+};

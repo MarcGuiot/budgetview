@@ -1,0 +1,292 @@
+package org.designup.picsou.gui.graphics;
+
+import org.crossbowlabs.globs.gui.GlobSelection;
+import org.crossbowlabs.globs.model.*;
+import org.crossbowlabs.globs.utils.directory.Directory;
+import org.crossbowlabs.splits.SplitsBuilder;
+import org.crossbowlabs.splits.color.ColorChangeListener;
+import org.crossbowlabs.splits.color.ColorSource;
+import org.designup.picsou.gui.model.MonthStat;
+import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Category;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.utils.Lang;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.labels.XYToolTipGenerator;
+import org.jfree.chart.plot.IntervalMarker;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.ui.Layer;
+import org.jfree.util.ShapeUtilities;
+
+import java.awt.*;
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+
+public class HistoricalChart extends AbstractLineChart {
+
+  private java.util.List<Integer> months = new ArrayList<Integer>();
+  private GlobList selectedCategories = GlobList.EMPTY;
+
+  private Color markerOutlineColor;
+  private Color markerColor;
+
+  public static final String INCOME_ROW = "Revenus";
+  public static final String AVERAGE_INCOME_ROW = "Revenus moyens";
+  public static final String EXPENSES_ROW = "Depenses";
+  public static final String AVERAGE_EXPENSES_ROW = "Depenses moyennes";
+  private Integer[] selectedMonths = {};
+
+  public HistoricalChart(GlobRepository repository, Directory directory) {
+    super(repository, directory);
+    selectionService.addListener(this, Category.TYPE, Month.TYPE);
+  }
+
+  public void registerComponents(SplitsBuilder builder) {
+    builder.add("historicalChart", getPanel());
+  }
+
+  public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
+    if (changeSet.containsChanges(MonthStat.TYPE)) {
+      updateChart();
+      return;
+    }
+  }
+
+  public void selectionUpdated(GlobSelection selection) {
+    if (selection.isRelevantForType(Category.TYPE)) {
+      selectedCategories = selection.getAll(Category.TYPE);
+      updateChart();
+    }
+    if (selection.isRelevantForType(Month.TYPE)) {
+      selectedMonths = selection.getAll(Month.TYPE).getSortedArray(Month.ID);
+      updateMonthMarkers();
+    }
+  }
+
+  public void colorsChanged(ColorSource colorSource) {
+    markerOutlineColor = colorSource.get(PicsouColors.CHART_MARKER_OUTLINE);
+    markerColor = colorSource.get(PicsouColors.CHART_MARKER);
+  }
+
+  protected void updateChart() {
+    updateDataset();
+    updateMonthMarkers();
+  }
+
+  private void updateMonthMarkers() {
+    plot.clearDomainMarkers();
+    if (selectedMonths.length == 0) {
+      return;
+    }
+    java.util.List<Integer> indexes = getSortedIndexes(selectedMonths);
+    Iterator<Integer> iter = indexes.iterator();
+    int start = iter.next();
+    int last = start;
+    while (iter.hasNext()) {
+      int current = iter.next();
+      if (current - last == 1) {
+        last = current;
+      }
+      else {
+        addMarker(start - 0.5, last + 0.5);
+        start = current;
+        last = current;
+      }
+    }
+    addMarker(start - 0.5, last + 0.5);
+  }
+
+  private void addMarker(double start, double end) {
+    IntervalMarker marker = new IntervalMarker(start, end);
+    marker.setOutlinePaint(markerOutlineColor);
+    marker.setPaint(markerColor);
+    marker.setAlpha(0.2f);
+    plot.addDomainMarker(marker, Layer.BACKGROUND);
+  }
+
+  protected void configurePanel(ChartPanel panel) {
+    panel.setMinimumSize(new Dimension(400, 180));
+  }
+
+  protected void configureChart() {
+    colorService.addListener(new ColorChangeListener() {
+      public void colorsChanged(ColorSource colorSource) {
+        plot.setBackgroundPaint(new GradientPaint(100.0f, 0.0f, colorSource.get(PicsouColors.CHART_BG_TOP),
+                                                  100.0f, 200.0f, colorSource.get(PicsouColors.CHART_BG_BOTTOM)));
+
+        updateMonthMarkers();
+      }
+    });
+
+    NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
+    domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+    domainAxis.setNumberFormatOverride(new MonthFormat());
+
+    NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+    rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+    rangeAxis.setAutoRangeIncludesZero(false);
+  }
+
+  private void configureSeries() {
+    XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
+    renderer.setSeriesShapesVisible(0, true);
+    renderer.setSeriesShapesVisible(1, false);
+    renderer.setSeriesShapesVisible(2, true);
+    renderer.setSeriesShapesVisible(3, false);
+
+    renderer.setSeriesLinesVisible(0, true);
+    renderer.setSeriesLinesVisible(2, true);
+    renderer.setSeriesStroke(0, new BasicStroke(1.0f));
+    renderer.setSeriesStroke(2, new BasicStroke(1.0f));
+    renderer.setSeriesStroke(1, new BasicStroke(2.0f));
+    renderer.setSeriesStroke(3, new BasicStroke(2.0f));
+
+    renderer.setSeriesToolTipGenerator(0, new ToolTipGenerator(Lang.get("expenses")));
+    renderer.setSeriesToolTipGenerator(1, new ToolTipGenerator(Lang.get("average.expenses")));
+    renderer.setSeriesToolTipGenerator(2, new ToolTipGenerator(Lang.get("income")));
+    renderer.setSeriesToolTipGenerator(3, new ToolTipGenerator(Lang.get("average.income")));
+
+    setRowColor(INCOME_ROW, PicsouColors.CHART_INCOME_LINE, renderer, dataset);
+    setRowColor(AVERAGE_INCOME_ROW, PicsouColors.CHART_INCOME_AVERAGE_LINE, renderer, dataset);
+    setRowColor(EXPENSES_ROW, PicsouColors.CHART_EXPENSES_LINE, renderer, dataset);
+    setRowColor(AVERAGE_EXPENSES_ROW, PicsouColors.CHART_EXPENSES_AVERAGE_LINE, renderer, dataset);
+
+    setShapeColor(INCOME_ROW, PicsouColors.CHART_INCOME_SHAPE, renderer, dataset);
+    setShapeColor(EXPENSES_ROW, PicsouColors.CHART_EXPENSES_SHAPE, renderer, dataset);
+
+    renderer.setSeriesShape(2, ShapeUtilities.createDiamond(4.0f));
+    renderer.setSeriesShape(3, ShapeUtilities.createDiamond(4.0f));
+
+    renderer.setDrawOutlines(true);
+    renderer.setUseFillPaint(true);
+  }
+
+  private int getMonthIndex(Integer yyyymm) {
+    int index = months.indexOf(yyyymm);
+    if (index < 0) {
+      return -1;
+    }
+    return index + 1;
+  }
+
+  private java.util.List<Integer> getSortedIndexes(Integer[] yyyymms) {
+    java.util.List<Integer> indexes = new ArrayList<Integer>();
+    for (Integer month : yyyymms) {
+      indexes.add(getMonthIndex(month));
+    }
+    Collections.sort(indexes);
+    return indexes;
+  }
+
+  private int getYyyymmMonth(double number) {
+    int index = (int) number - 1;
+    if (index < 0) {
+      return -1;
+    }
+    return months.get(index);
+  }
+
+  private void updateDataset() {
+
+    dataset.removeAllSeries();
+
+    XYSeries expenseSeries = new XYSeries(EXPENSES_ROW);
+    XYSeries incomeSeries = new XYSeries(INCOME_ROW);
+
+    XYSeries averageExpenseSeries = new XYSeries(AVERAGE_EXPENSES_ROW);
+    XYSeries averageIncomeSeries = new XYSeries(AVERAGE_INCOME_ROW);
+
+    months.clear();
+    boolean hasExpenses = false;
+    boolean hasIncome = false;
+    int index = 1;
+    for (Glob month : repository.getAll(Month.TYPE).sort(Month.ID)) {
+      months.add(month.get(Month.ID));
+      double expenses = 0;
+      double income = 0;
+      double averageExpenses = 0;
+      double averageIncome = 0;
+      for (Glob category : selectedCategories) {
+        if (!category.exists()) {
+          continue;
+        }
+        Key key = MonthStat.getKey(month.get(Month.ID), category.get(Category.ID), Account.SUMMARY_ACCOUNT_ID);
+        Glob stat = repository.get(key);
+        expenses += stat.get(MonthStat.EXPENSES);
+        averageExpenses += stat.get(MonthStat.EXPENSES_AVERAGE);
+        income += stat.get(MonthStat.INCOME);
+        averageIncome += stat.get(MonthStat.INCOME_AVERAGE);
+      }
+      hasExpenses |= expenses > 0;
+      expenseSeries.add(index, expenses);
+      averageExpenseSeries.add(index, averageExpenses);
+      hasIncome |= income > 0;
+      incomeSeries.add(index, income);
+      averageIncomeSeries.add(index, averageIncome);
+      index++;
+    }
+
+    if (hasExpenses) {
+      dataset.addSeries(expenseSeries);
+      dataset.addSeries(averageExpenseSeries);
+    }
+    if (hasIncome) {
+      dataset.addSeries(incomeSeries);
+      dataset.addSeries(averageIncomeSeries);
+    }
+
+    configureSeries();
+  }
+
+  private class MonthFormat extends NumberFormat {
+    public StringBuffer format(double number, StringBuffer toAppendTo, FieldPosition pos) {
+      if ((number <= 1) || (number > months.size())) {
+        return toAppendTo;
+      }
+
+      int month = getYyyymmMonth(number);
+      toAppendTo.append(Lang.get("month." + Month.toMonth(month) + ".medium"));
+      if (Month.toMonth(month) == 1) {
+        toAppendTo.append('/');
+        toAppendTo.append(Month.toYearString(month));
+      }
+      return toAppendTo;
+    }
+
+    public StringBuffer format(long number, StringBuffer toAppendTo, FieldPosition pos) {
+      return toAppendTo;
+    }
+
+    public Number parse(String source, ParsePosition parsePosition) {
+      return null;
+    }
+  }
+
+  private class ToolTipGenerator implements XYToolTipGenerator {
+    private String prefix;
+
+    public ToolTipGenerator(String prefix) {
+      this.prefix = prefix;
+    }
+
+    public String generateToolTip(XYDataset dataset, int series, int item) {
+      double value = dataset.getYValue(series, item);
+      StringBuilder builder = new StringBuilder();
+      return builder.append(prefix)
+        .append(": ")
+        .append(PicsouDescriptionService.DECIMAL_FORMAT.format(value))
+        .append(Gui.EURO)
+        .toString();
+    }
+  }
+}

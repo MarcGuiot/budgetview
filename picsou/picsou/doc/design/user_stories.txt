@@ -1,0 +1,34 @@
+      User Stories
+      ============
+
+Objectif : lister les objectifs de l'outil, du point de vue de l'utilisateur
+(aussi independamment que possible d'une solution IHM donnee)
+
+Remarque : dans ce qui suit on utilise le terme "categorie" au sens large (inclut les tags)
+pour essayer de ne pas presenter la separation categorie/tag comme un besoin (c'est plutot une solution)
+
+Stories :
+
+- Importer un fichier OFX / QIF
+- Voir la repartition des depenses suivant certaines categories
+- Verifier les categorisations faites automatiquement par l'outil
+- Identifier les principaux postes de depenses
+- Identifier les depenses grattables
+- Identifier les depenses fixes / variables / superflues
+- Trouver facilement combien me coute mon portable (recharges)
+- Trouver facilement combien me coute un week-end a Etretat
+- Controler les operations rapportees par la banque (pointage)
+- Surveiller les depenses (alertes)
+- Masquer les virements internes
+- Voir les positions de tous les comptes
+- Creer ses propres categories
+- Exporter les donnees pour backup perso et pour les recuperer dans d'autres outils
+- Vision "budget mensuel / budget annuel" : "quelle est la repartition type de mes depenses ?"
+- Preparer un budget cible, puis suivre les depenses en fonction de cette cible
+- Notifier les depenses arrivees a echeance
+
+
+Autres (plus tard ? out ?) :
+- Scenarios "what-if"
+  * Que se passerait-il si je gagnais tant ? Si je prenais tel credit ? Si j'achetais ca ?
+- 

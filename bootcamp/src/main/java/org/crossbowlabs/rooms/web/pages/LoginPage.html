@@ -1,0 +1,31 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+  <link rel="stylesheet" media="screen" type="text/css" href="/css/Login.css"/>
+</head>
+<body>
+<div class="loginPanel">
+  <img src="/images/login_banner.png" width="344" height="78" id="loginBanner">
+
+  <div class="loginForm">
+    <form wicket:id="loginForm">
+      <table>
+        <tr>
+          <td><label wicket:id="trUserName" for="loginUserName">[UserName]</label></td>
+          <td><input type="text" wicket:id="loginUserName" id="loginUserName"/></td>
+        </tr>
+        <tr>
+          <td><label wicket:id="trPassword" for="loginPassword">[password]</label></td>
+          <td><input type="password" wicket:id="loginPassword" id="loginPassword"/></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td style="text-align:right"><input type="submit" wicket:id="submitPassword" value="submit" id="submitId"/></td>
+        </tr>
+      </table>
+
+    </form>
+  </div>
+</div>
+</body>
+</html>

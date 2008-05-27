@@ -1,0 +1,100 @@
+  TAXES
+  HOUSING
+  HEALTH
+  LEISURES
+  PUERICULTURE
+  TELECOMS
+  BANK
+  TRANSPORTS
+  FOOD
+  INTERNAL
+  CLOTHING
+  SAVINGS
+  MULTIMEDIA
+  BEAUTY
+  CAR
+  EDUCATION
+  TRAVEL
+  MISC_SPENDINGS
+  INCOME
+
+---
+
+Banque
+Impôts/Taxes
+
+Logement
+  EDF/GDF
+  Credit/Loyer
+  Deco/Brico
+  Electromenager
+  Assurance
+
+Equipement
+  Informatique/Multimedia
+
+Santé
+  Mutuelle
+  Medecin
+  Pharma
+
+Loisirs
+  Hifi/Video/Photo
+  Jeux
+  Sports
+  Musique
+  Spectacles
+  Sorties
+  Receptions
+  Canal+
+  Voyages
+
+Télécoms
+  Mobile
+  Fixe
+  Internet
+
+Transports
+
+Alimentation/Courses
+
+Virements internes
+
+Cadeaux
+
+Habillement
+
+Investissements/Epargne
+
+Divers
+  Retraits
+  Animaux
+
+Revenus
+
+Soins/Beauté
+
+Automobile
+  Credit
+  Assurance
+  Essence
+  Peage
+  Entretien/Reparations
+
+Education
+  Ecole
+  Livres
+
+----
+
+Vacances
+
+Assurance
+
+Frais Professionnels
+
+Crédits
+
+Frais Fixes
+
+Enfants

@@ -1,0 +1,45 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styledPanel topColor="login.bg.top" bottomColor="login.bg.bottom" opaque="true">
+    <column>
+
+      <filler fill="vertical" weightY="10"/>
+
+      <styledPanel topColor="login.block.top" bottomColor="login.block.bottom"
+                   borderColor="login.block.border" borderWidth="2" cornerRadius="10"
+                   opaque="true" anchor="center" fill="none" weightY="20">
+
+        <column margin="20" anchor="center" fill="none" marginBottom="60">
+
+          <label icon="picsou_icon_128.png" fill="none" anchor="center" marginBottom="10"/>
+
+          <checkBox ref="createAccountCheckBox" margin="5" marginBottom="15" opaque="false"
+                    text="$login.create.user.checkbox"/>
+
+          <grid background="#00FF00" defaultMarginBottom="5">
+            <label text="Identifiant" gridPos="(0,0)" anchor="east" marginRight="10"/>
+            <component ref="name" gridPos="(1, 0)"/>
+
+            <label text="Mot de passe" gridPos="(0,1)" anchor="east" marginRight="10"/>
+            <component ref="password" gridPos="(1,1)"/>
+
+            <label text="Confirmez votre mot de passe" gridPos="(0,2)"
+                   ref="confirmLabel" anchor="east" marginRight="10"/>
+            <component ref="confirmPassword" gridPos="(1,2)"/>
+          </grid>
+
+          <label ref="message" margin="5" horizontalAlignment="center"/>
+
+          <button ref="login" text="Connexion" margin="5"/>
+
+        </column>
+
+      </styledPanel>
+
+      <filler fill="vertical" weightY="20"/>
+
+    </column>
+
+  </styledPanel>
+
+</splits>

@@ -1,0 +1,318 @@
+<OFX>
+  <SIGNONMSGSRSV1>
+    <SONRS>
+      <STATUS>
+        <CODE>0
+        <SEVERITY>INFO
+      </STATUS>
+      <DTSERVER>20060815180446
+      <LANGUAGE>FRA
+    </SONRS>
+  </SIGNONMSGSRSV1>
+  <BANKMSGSRSV1>
+    <STMTTRNRS>
+      <TRNUID>91269997001
+      <STATUS>
+        <CODE>0
+        <SEVERITY>INFO
+      </STATUS>
+      <STMTRS>
+        <CURDEF>EUR
+        <BANKACCTFROM>
+          <BANKID>13006
+          <BRANCHID>00040
+          <ACCTID>123123123123
+          <ACCTTYPE>CHECKING
+        </BANKACCTFROM>
+        <BANKTRANLIST>
+          <DTSTART>20060617000000
+          <DTEND>20060816235959
+          <STMTTRN>
+            <TRNTYPE>PAYMENT
+            <DTPOSTED>20060814
+            <TRNAMT>-45.78
+            <FITID>2006081400271
+            <NAME>Prel 459654 Free Telecom
+            <MEMO>Free Hautdebit 44804529
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>INT
+            <DTPOSTED>20060811
+            <TRNAMT>-2.25
+            <FITID>2006081400270
+            <NAME>Interets Debiteurs
+            <MEMO>De Juillet 2006
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DEP
+            <DTPOSTED>20060809
+            <TRNAMT>+6828.50
+            <FITID>2006080900269
+            <NAME>Remise 6125145
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060807
+            <TRNAMT>-600.00
+            <FITID>2006080700268
+            <CHECKNUM>0000119
+            <NAME>Cheque 0000119
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>REPEATPMT
+            <DTPOSTED>20060804
+            <TRNAMT>-238.00
+            <FITID>2006080400267
+            <NAME>Vir. Permanent
+            <MEMO>Sarl 2 Ab Audit
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DIRECTDEBIT
+            <DTPOSTED>20060802
+            <TRNAMT>-2.32
+            <FITID>2006080200266
+            <NAME>Rbt Adi 08-2006/prets Contrat D
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>ATM
+            <DTPOSTED>20060801
+            <TRNAMT>-100.00
+            <FITID>2006080100264
+            <NAME>Retrait Nimes Coupole  31/07 162
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>SRVCHG
+            <DTPOSTED>20060801
+            <TRNAMT>-17.34
+            <FITID>2006080100265
+            <NAME>*cotis Csca Pro Non Soumis A Tva
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DIRECTDEBIT
+            <DTPOSTED>20060731
+            <TRNAMT>-137.77
+            <FITID>2006073100263
+            <NAME>Reglem Echeance Pret 610458019pr
+            <MEMO>072006 Capital            120,
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060728
+            <TRNAMT>-26.79
+            <FITID>2006072800262
+            <CHECKNUM>0000118
+            <NAME>Cheque 0000118
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060725
+            <TRNAMT>-266.00
+            <FITID>2006072500261
+            <CHECKNUM>0000116
+            <NAME>Cheque 0000116
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>PAYMENT
+            <DTPOSTED>20060721
+            <TRNAMT>-40.19
+            <FITID>2006072100260
+            <NAME>Tip France Telecom Montpelli0023
+            <MEMO>099533m00000000066210660306580
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060719
+            <TRNAMT>-239.20
+            <FITID>2006071900259
+            <CHECKNUM>0000115
+            <NAME>Cheque 0000115
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060717
+            <TRNAMT>-150.60
+            <FITID>2006071700258
+            <CHECKNUM>0000114
+            <NAME>Cheque 0000114
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DEP
+            <DTPOSTED>20060713
+            <TRNAMT>+3064.60
+            <FITID>2006071300256
+            <NAME>Remise 6125144
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>INT
+            <DTPOSTED>20060713
+            <TRNAMT>-0.68
+            <FITID>2006071700257
+            <NAME>Interets Debiteurs
+            <MEMO>De Juin 2006
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>PAYMENT
+            <DTPOSTED>20060712
+            <TRNAMT>-33.98
+            <FITID>2006071200254
+            <NAME>Prel 459654 Free Telecom
+            <MEMO>Free Hautdebit 42915631
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>POS
+            <DTPOSTED>20060712
+            <TRNAMT>-1342.02
+            <FITID>2006071300255
+            <NAME>Reg Releve Carte Bancaire 19162
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060711
+            <TRNAMT>-8.54
+            <FITID>2006071100253
+            <CHECKNUM>0000113
+            <NAME>Cheque 0000113
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>REPEATPMT
+            <DTPOSTED>20060705
+            <TRNAMT>-238.00
+            <FITID>2006070500252
+            <NAME>Vir. Permanent
+            <MEMO>Sarl 2 Ab Audit
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DIRECTDEBIT
+            <DTPOSTED>20060704
+            <TRNAMT>-2.40
+            <FITID>2006070400251
+            <NAME>Rbt Adi 07-2006/prets Contrat D
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DEP
+            <DTPOSTED>20060703
+            <TRNAMT>+855.00
+            <FITID>2006070300248
+            <NAME>Remise 8371278
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060703
+            <TRNAMT>-502.32
+            <FITID>2006070300249
+            <CHECKNUM>0000111
+            <NAME>Cheque 0000111
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>SRVCHG
+            <DTPOSTED>20060703
+            <TRNAMT>-17.34
+            <FITID>2006070300250
+            <NAME>*cotis Csca Pro Non Soumis A Tva
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DIRECTDEBIT
+            <DTPOSTED>20060630
+            <TRNAMT>-137.77
+            <FITID>2006063000247
+            <NAME>Reglem Echeance Pret 610458019pr
+            <MEMO>062006 Capital            119,
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060626
+            <TRNAMT>-592.00
+            <FITID>2006062600246
+            <CHECKNUM>0000112
+            <NAME>Cheque 0000112
+            <MEMO>.
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CHECK
+            <DTPOSTED>20060619
+            <TRNAMT>-80.00
+            <FITID>2006061900245
+            <CHECKNUM>0000110
+            <NAME>Cheque 0000110
+            <MEMO>.
+          </STMTTRN>
+        </BANKTRANLIST>
+        <LEDGERBAL>
+          <BALAMT>+6242.10
+          <DTASOF>20060814
+        </LEDGERBAL>
+        <AVAILBAL>
+          <BALAMT>+6244.35
+          <DTASOF>20060814
+        </AVAILBAL>
+      </STMTRS>
+    </STMTTRNRS>
+  </BANKMSGSRSV1>
+  <CREDITCARDMSGSRSV1>
+    <CCSTMTTRNRS>
+      <TRNUID>5341113026119162
+      <STATUS>
+        <CODE>0
+        <SEVERITY>INFO
+      </STATUS>
+      <CCSTMTRS>
+        <CURDEF>EUR
+        <CCACCTFROM>
+          <ACCTID>5341113026119162
+        </CCACCTFROM>
+        <BANKTRANLIST>
+          <DTSTART>20060617000000
+          <DTEND>20060816235959
+          <STMTTRN>
+            <TRNTYPE>POS
+            <DTPOSTED>20060806
+            <TRNAMT>-420.90
+            <FITID>0621922116017
+            <NAME>Grosbill
+            <MEMO>Paris
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>POS
+            <DTPOSTED>20060811
+            <TRNAMT>-233.00
+            <FITID>0622622071935
+            <NAME>Websncf
+            <MEMO>Lille
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>POS
+            <DTPOSTED>20060811
+            <TRNAMT>-162.80
+            <FITID>0622622071936
+            <NAME>Websncf
+            <MEMO>Lille
+          </STMTTRN>
+        </BANKTRANLIST>
+        <LEDGERBAL>
+          <BALAMT>-54321.34
+          <DTASOF>20060814
+        </LEDGERBAL>
+        <AVAILBAL>
+          <BALAMT>+123456.78
+          <DTASOF>20060814
+        </AVAILBAL>
+      </CCSTMTRS>
+    </CCSTMTTRNRS>
+  </CREDITCARDMSGSRSV1>
+</OFX>

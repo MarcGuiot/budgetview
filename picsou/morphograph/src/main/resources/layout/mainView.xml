@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<splits>
+  <frame title="Morphographe - v1" size="(800,600)" background="background">
+    <column opaque="true" background="background">
+      <row weighty="0.1">
+        <label icon="morpho.jpg" anchor="center" marginLeft="20"/>
+        <styledPanel topColor="titlebar.top" bottomColor="titlebar.bottom" borderColor="titlebar.border"
+                     weightx="0.5" weightY="0.1" margin="20" borderWidth="1"
+                     cornerRadius="10" distance="1" anchor="center">
+          <row marginTop="5" marginBottom="3" opaque="false">
+            <comboBox ref="topic" opaque="false" fill="none" anchor="center" size="(300,20)"/>
+            <comboBox ref="series" opaque="false" fill="none" anchor="center" size="(300,20)"/>
+          </row>
+        </styledPanel>
+      </row>
+      <component ref="seriesPanel" opaque="true" background="background" weighty="10"/>
+    </column>
+  </frame>
+</splits>

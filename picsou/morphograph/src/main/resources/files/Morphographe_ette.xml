@@ -1,0 +1,248 @@
+<morphograph>
+  <topic name="Suffixe -ette">
+
+    <series name="Séance 1">
+
+      <exercise name="Perception 1"
+                exerciseTypeName="select"
+                title="Vrai ou faux"
+                description="Cliquer sur vrai ou faux pour répondre aux affirmations suivantes.">
+        <select title="Une barquette est une petite barque" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Une baguette est une petite bague" alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="Une facette est une petite face" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Une amourette est un petit amour" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Une chouette est un petit chou" alt1="Vrai" alt2="Faux" answers="2"/>
+      </exercise>
+
+      <exercise name="Perception 2"
+                exerciseTypeName="select"
+                title="Recherche d'intrus"
+                description="Trouver l'intrus selon que -ette veuille dire -petit ou petite - Attention, le critère change selon les séries.">
+        <select title="1" alt1="courette" alt2="nuisette" alt3="bordurette" answers="2"/>
+        <select title="2" alt1="brouette" alt2="assiette" alt3="chambrette" answers="3"/>
+        <select title="3" alt1="crevette" alt2="colonnette" alt3="cuvette" answers="1"/>
+        <select title="4" alt1="chaussette" alt2="barbichette" alt3="blette" answers="3"/>
+        <select title="5" alt1="lingette" alt2="serviette" alt3="vedette" answers="1"/>
+      </exercise>
+
+      <exercise name="Production 1"
+                exerciseTypeName="input"
+                title="Compléter les phrases suivantes"
+                description="Compléter la phrase en produisant un mot obtenu à partir du mot initial."
+                example="Une petite malle est une mallette.">
+        <input title="Une petite fille est une" answer="fillette"/>
+        <input title="Une petite boule est une" answer="boulette"/>
+        <input title="Une petite chemise est une" answer="chemisette"/>
+        <input title="Une petite voiture est une" answer="voiturette"/>
+        <input title="Une petite boucle est une" answer="bouclette"/>
+      </exercise>
+
+      <exercise name="Production 2"
+                exerciseTypeName="input"
+                title="Extraction de la forme de base"
+                description="Quel mot reconnaît-on dans les mots suivants ?"
+                example="cigarette => cigare">
+        <input title="ailette" answer="aile"/>
+        <input title="chaînette" answer="chaîne"/>
+        <input title="briquette" answer="brique"/>
+        <input title="fléchette" answer="flèche"/>
+        <input title="pendulette" answer="pendule"/>
+      </exercise>
+
+      <exercise name="Production 3"
+                exerciseTypeName="input"
+                title="Dérivation lexicale"
+                description="Trouver des mots de la même famille que..."
+                example="sonnette => son, sonneur, sonnerie, sonner,...">
+        <input title="Lavette"/>
+        <input title="Lancette"/>
+      </exercise>
+
+
+    </series>
+
+    <series name="Séance 2">
+
+      <exercise name="Perception 1"
+                exerciseTypeName="select"
+                title="Vrai ou faux"
+                description="Cliquer sur vrai ou faux pour répondre aux affirmations suivantes.">
+        <select title="Une placette est une petite place " alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Une brochette est une petite broche " alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Une couette est un petit cou " alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="Une navette est un petit navet " alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="Une cuisinette est une petite cuisine " alt1="Vrai" alt2="Faux" answers="1"/>
+      </exercise>
+
+      <exercise name="Perception 2"
+                exerciseTypeName="select"
+                title="Recherche d'intrus"
+                description="Trouver l'intrus selon que -ette veuille dire -petit ou petite - Attention, le critère change selon les séries.">
+        <select title="1" alt1="belette" alt2="blondinette" alt3="silhouette" answers="2"/>
+        <select title="2" alt1="caissette" alt2="recette" alt3="sucrette" answers="2"/>
+        <select title="3" alt1="pirouette" alt2="raquette" alt3="pincette" answers="3"/>
+        <select title="4" alt1="goélette" alt2="lingette" alt3="opérette" answers="1"/>
+        <select title="5" alt1="clarinette" alt2="violette" alt3="coquillette" answers="3"/>
+      </exercise>
+
+      <exercise name="Production 1"
+                exerciseTypeName="input"
+                title="Compléter les phrases suivantes"
+                description="Compléter la phrase en produisant un mot obtenu avec le mot initial."
+                example="Une petite malle est une mallette.">
+        <input title="Une petite tarte est une" answer="tartelette"/>
+        <input title="Une petite goutte est une" answer="gouttelette"/>
+        <input title="Une petite corde est une" answer="cordelette"/>
+        <input title="Une petite malle est une" answer="mallette"/>
+        <input title="Une petite vague est une" answer="vaguelette"/>
+      </exercise>
+
+      <exercise name="Production 2"
+                exerciseTypeName="input"
+                title="Extraction de la forme de base"
+                description="Quel mot d'action reconnaît-on dans les mots suivants ?"
+                example="cachette => cacher">
+        <input title="allumette" answer="allumer"/>
+        <input title="couchette" answer="coucher"/>
+        <input title="devinette" answer="deviner"/>
+        <input title="sellette" answer="seller"/>
+        <input title="poussette" answer="pousser"/>
+      </exercise>
+
+      <exercise name="Production 3"
+                exerciseTypeName="input"
+                title="Dérivation lexicale"
+                description="Trouver des mots de la même famille que..."
+                example="sonnette => son, sonneur, sonnerie, sonner,...">
+        <input title="Tablette"/>
+        <input title="Bandelette"/>
+      </exercise>
+
+
+    </series>
+
+    <series name="Séance 3">
+
+
+      <exercise name="Perception 1"
+                exerciseTypeName="select"
+                title="Recherche d'intrus"
+                description="Trouver l'intrus selon que -ette veuille dire -petit ou petite - Attention, le critère change selon les séries.">
+        <select title="1" alt1="palette" alt2="galipette" alt3="réglette" answers="3"/>
+        <select title="2" alt1="jambette" alt2="gourmette" alt3="limette" answers="2"/>
+        <select title="3" alt1="tapette" alt2="marionnette" alt3="omelette" answers="1"/>
+        <select title="4" alt1="gazette" alt2="chenillette" alt3="fermette" answers="1"/>
+        <select title="5" alt1="squelette" alt2="moulinette" alt3="dette" answers="2"/>
+      </exercise>
+
+      <exercise name="Perception 2"
+                exerciseTypeName="select"
+                title="Classement"
+                description=" Cliquer sur les mots qui appartiennent à la même famille que le mot initial.">
+        <select title="Devinette" alt1="deviner" alt2="ravin" alt3="évincer" alt4="divinatoire" alt5="deviser"
+                answers="1,4"/>
+        <select title="Chaufferette" alt1="chauffage" alt2="chaumière" alt3="chauffeur" alt4="échafaud"
+                alt5="rechauffer" answers="1,3,5"/>
+      </exercise>
+
+      <exercise name="Production 1"
+                exerciseTypeName="input"
+                title="Compléter les phrases suivantes"
+                description="Compléter la phrase en produisant un mot obtenu avec le mot initial."
+                example="Une petite malle est une mallette.">
+        <input title="Un petit camion est une" answer="camionnette"/>
+        <input title="Une petite maison est une" answer="maisonnette"/>
+        <input title="Un petit savon est une" answer="savonnette"/>
+        <input title="Une petite chanson est une" answer="chansonnette"/>
+        <input title="Une petite brune est une" answer="brunette"/>
+      </exercise>
+
+      <exercise name="Production 2"
+                exerciseTypeName="input"
+                title="Extraction de la forme de base"
+                description="Quel mot d'action reconnaît-on dans les mots suivants ?"
+                example="cachette => cacher">
+        <input title="oubliette" answer="oublier"/>
+        <input title="causette" answer="causer"/>
+        <input title="grimpette" answer="grimper"/>
+        <input title="cueillette" answer="cueillir"/>
+        <input title="buvette" answer="boire"/>
+      </exercise>
+
+      <exercise name="Production 3"
+                exerciseTypeName="input"
+                title="Dérivation lexicale"
+                description="Trouver des mots de la même famille que..."
+                example="sonnette => son, sonneur, sonnerie, sonner,...">
+        <input title="Brochette"/>
+        <input title="Courbette"/>
+      </exercise>
+
+
+    </series>
+
+    <series name="Séance 4">
+
+      <exercise name="Perception 1"
+                exerciseTypeName="select"
+                title="Classement"
+                description=" Cliquer sur les mots qui appartiennent à la même famille que le mot initial.">
+        <select title="Piécette" alt1="apprécier" alt2="pièce" alt3="rapiécer" alt4="dépecer" alt5="piastre"
+                answers="2,3"/>
+        <select title="Fleurette" alt1="feuillage" alt2="fleuriste" alt3="flétrir" alt4="fleurir"
+                alt5="floral" answers="2,4,5"/>
+      </exercise>
+
+
+      <exercise name="Perception 2"
+                exerciseTypeName="select"
+                title="Recherche d'intrus"
+                description="Trouver l'intrus selon que -ette veuille dire -petit ou petite - Attention, le critère change selon les séries.">
+        <select title="1" alt1="côtelette" alt2="réglette" alt3="moquette" answers="3"/>
+        <select title="2" alt1="éprouvette" alt2="galette" alt3="talonnette" answers="1"/>
+        <select title="3" alt1="pochette" alt2="maquette" alt3="fourgonnette" answers="2"/>
+        <select title="4" alt1="girouette" alt2="manchette" alt3="noisette" answers="1"/>
+        <select title="5" alt1="languette" alt2="socquette" alt3="planchette" answers="2"/>
+      </exercise>
+
+
+      <exercise name="Production 1"
+                exerciseTypeName="input"
+                title="Compléter les phrases suivantes"
+                description="Compléter la phrase en produisant un mot obtenu avec le mot initial."
+                example="Une petite malle est une mallette.">
+        <input title="Une petite coquille est une" answer="coquillette"/>
+        <input title="Une petite souris est une" answer="souricette"/>
+        <input title="Une petite cloche est une" answer="clochette"/>
+        <input title="Une petite hache est une" answer="hachette"/>
+        <input title="Une petite jupe est une" answer="jupette"/>
+      </exercise>
+
+      <exercise name="Production 2"
+                exerciseTypeName="input"
+                title="Extraction de la forme de base"
+                description="Quel mot reconnaît-on dans les mots suivants ?"
+                example="cigarette => cigare">
+        <input title="courgette" answer="courge"/>
+        <input title="facturette" answer="facture"/>
+        <input title="balayette" answer="balai"/>
+        <input title="mignonnette" answer="mignon"/>
+        <input title="paillette" answer="paille"/>
+      </exercise>
+
+      <exercise name="Production 3"
+                exerciseTypeName="input"
+                title="Dérivation lexicale"
+                description="Trouver des mots de la même famille que..."
+                example="sonnette => son, sonneur, sonnerie, sonner,...">
+        <input title="Scénette"/>
+        <input title="Voilette"/>
+      </exercise>
+
+
+    </series>
+
+
+  </topic>
+
+</morphograph>

@@ -1,0 +1,21 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+  <frame size="(800,440)">
+    <row marginTop="20">
+      <label text="File" marginLeft="20" marginRight="10" anchor="east" fill="none"/>
+      <comboBox ref="colorSets" fill="none" anchor="west"/>
+    </row>
+    <horizontalSplit dividerLocation="300">
+      <scrollPane margin="20">
+        <list ref="colorList"/>
+      </scrollPane>
+      <column margin="20">
+        <row>
+          <label text="Value:" anchor="northeast"/>
+          <textField ref="colorName" marginLeft="10" marginRight="30" marginBottom="10"/>
+        </row>
+        <component ref="colorChooser" weightX="100" weightY="100" fill="both" opaque="false"/>
+        <button ref="printButton" opaque="false"/>
+      </column>
+    </horizontalSplit>
+  </frame>
+</splits>

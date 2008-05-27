@@ -1,0 +1,16 @@
+PrevalenceBase*
+prevayler.i*
+*.log
+target
+bin
+dependencies
+build.properties
+log4j.xml
+maven.log
+build.dot
+build.png
+demo*
+Test*
+ScalabilityTest*
+Query*
+TransactionTest

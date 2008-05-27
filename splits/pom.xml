@@ -1,0 +1,84 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.crossbowlabs</groupId>
+  <artifactId>splits</artifactId>
+  <name>ui xml designer</name>
+  <version>1.0</version>
+  <url>http://www.design-up.com</url>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <excludes>
+          <include>**/*.*</include>
+        </excludes>
+      </testResource>
+      <testResource>
+        <directory>src/test/java</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+          <include>**/*.colors</include>
+          <include>**/*.splits</include>
+        </excludes>
+      </testResource>
+    </testResources>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.crossbowlabs</groupId>
+      <artifactId>saxstack</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.uispec4j</groupId>
+      <artifactId>uispec</artifactId>
+      <version>2.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <scm>
+    <connection>scm:cvs::</connection>
+    <developerConnection>
+      scm:cvs::
+    </developerConnection>
+    <tag/>
+    <url/>
+  </scm>
+
+  <!--<ciManagement>-->
+  <!--<system>continuum</system>-->
+  <!--<notifiers>-->
+  <!--<notifier>-->
+  <!--<type>mail</type>-->
+  <!--<sendOnError>true</sendOnError>-->
+  <!--<sendOnFailure>true</sendOnFailure>-->
+  <!--<sendOnSuccess>false</sendOnSuccess>-->
+  <!--<sendOnWarning>false</sendOnWarning>-->
+  <!--<configuration>-->
+  <!--<address>severine.tardif@bi-sam.com</address>-->
+  <!--</configuration>-->
+  <!--</notifier>-->
+  <!--</notifiers>-->
+  <!--</ciManagement>-->
+
+</project>

@@ -1,0 +1,41 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>crossbowloab</groupId>
+  <artifactId>root</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>globs</module>
+    <module>splits</module>
+    <module>shrinker</module>
+    <module>picsou</module>
+    <module>uispec4j</module>
+    <module>saxstack</module>
+    <module>prevayler</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-idea-plugin</artifactId>
+        <version>2.0</version>
+        <configuration>
+          <downloadSources>true</downloadSources>
+          <!--<downloadJavadocs>true</downloadJavadocs>-->
+          <dependenciesAsLibraries>true</dependenciesAsLibraries>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+

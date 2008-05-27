@@ -1,0 +1,116 @@
+package com.gnosia.morphograph.gui;
+
+import com.gnosia.morphograph.model.Exercise;
+import com.gnosia.morphograph.model.ExerciseType;
+import com.gnosia.morphograph.model.Series;
+import org.crossbowlabs.globs.gui.GlobSelection;
+import org.crossbowlabs.globs.gui.GlobSelectionListener;
+import org.crossbowlabs.globs.gui.SelectionService;
+import org.crossbowlabs.globs.model.Glob;
+import org.crossbowlabs.globs.model.GlobList;
+import org.crossbowlabs.globs.model.GlobRepository;
+import org.crossbowlabs.globs.utils.directory.Directory;
+import org.crossbowlabs.splits.IconLocator;
+import org.crossbowlabs.splits.SplitsBuilder;
+import org.crossbowlabs.splits.color.ColorService;
+import org.crossbowlabs.splits.layout.GridBagBuilder;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+
+public class SeriesView implements GlobSelectionListener {
+  private GlobRepository repository;
+  private Directory directory;
+  private JPanel exoPanelContainer = new JPanel();
+  private JPanel panel;
+  private GlobList exercises;
+  private int currentExerciseCount;
+  private NextAction nextAction;
+  private JFrame frame;
+
+  public SeriesView(GlobRepository globRepository, Directory directory) {
+    this.repository = globRepository;
+    this.directory = directory;
+    directory.get(SelectionService.class).addListener(this, Series.TYPE, Exercise.TYPE);
+
+    SplitsBuilder builder = new SplitsBuilder(directory.get(ColorService.class), directory.get(IconLocator.class));
+    builder.add("exoPanel", exoPanelContainer);
+    nextAction = new NextAction();
+    builder.add("next", nextAction);
+    panel = (JPanel)parseSplitsFile(builder, "/layout/series.xml");
+    panel.setOpaque(true);
+    exoPanelContainer.setOpaque(true);
+  }
+
+  public Container createPanel() {
+    return panel;
+  }
+
+  public void selectionUpdated(GlobSelection selection) {
+    if (selection.isRelevantForType(Series.TYPE)) {
+      GlobList series = selection.getAll(Series.TYPE);
+      if (series.isEmpty()) {
+        return;
+      }
+      clearPanel();
+      exercises = repository.findLinkedTo(series.get(0), Exercise.SERIES).sort(Exercise.NAME);
+      currentExerciseCount = 0;
+      nextAction.reset();
+      updateExoPanel();
+    }
+  }
+
+  private void updateExoPanel() {
+    if (exercises.size() <= currentExerciseCount) {
+      GridBagBuilder.setSingleCell(exoPanelContainer, new JLabel("Aucun exercice")).setOpaque(true);
+      return;
+    }
+
+    Glob exo = exercises.get(currentExerciseCount);
+
+    ExoView exoView = null;
+    switch (ExerciseType.get(exo)) {
+      case INPUT:
+        exoView = new InputExoView(exo, repository, directory);
+        break;
+      case SELECT:
+        exoView = new SelectExoView(exo, repository, directory);
+        break;
+    }
+
+    GridBagBuilder.setSingleCell(exoPanelContainer, exoView.getPanel()).setOpaque(true);
+    frame.validate();
+    frame.repaint();
+  }
+
+  private Component parseSplitsFile(SplitsBuilder builder, String fileName) {
+    return builder.parse(getClass().getResourceAsStream(fileName));
+  }
+
+  private void clearPanel() {
+    exoPanelContainer.removeAll();
+  }
+
+  public void setFrame(JFrame frame) {
+    this.frame = frame;
+  }
+
+  private class NextAction extends AbstractAction {
+    public NextAction() {
+      super("Suivant");
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      currentExerciseCount++;
+      updateExoPanel();
+      if (currentExerciseCount >= exercises.size() - 1) {
+        setEnabled(false);
+      }
+    }
+
+    public void reset() {
+      setEnabled(currentExerciseCount < exercises.size() - 1);
+    }
+  }
+}

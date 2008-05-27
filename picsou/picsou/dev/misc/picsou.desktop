@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Picsou
+Comment=personnal finance
+Exec=java -jar /home/guiot/dev/java/designUp/picsou/generated/picsou-0.1.jar %U
+Icon=firefox-icon.png
+Terminal=false
+Type=Application
+MimeType=text/ofx;application/x-qw
+Categories=Application;Finance;

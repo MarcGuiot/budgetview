@@ -1,0 +1,10 @@
+P com/java
+P com/sun
+P sun
+P javax
+D rt.jar
+C org.designup.picsou.client.local.LocalClientTransport
+M org.designup.picsou.gui.MainWindow initLocal
+P banks/.svn
+P i18n/.svn
+P images/.svn

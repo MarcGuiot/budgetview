@@ -1,0 +1,33 @@
+Dans cette partie, on doit differencier deux parties distinctes :
+ - trouver un nom pour le produit lui-même
+ - trouver un nom pour la boite
+
+On peut considerer en effet que les contraintes ne sont pas les memes.
+Pour le nom de la boite, il faut trouver un nom de domaine libre en .fr, .com, .org, etc.
+Pour le nom du produit, il suffit de trouver un nom qui ne soit pas deja pris en tant que produit. Par contre, il n'est
+pas necessaire que le nom de domaine soit disponible.
+
+=================================
+Axes de recherche pour le produit
+=================================
+
+ - Chercher des mots qui rappellent le monde de la finance. Je ne fais volontairement aucun commentaire sur les noms
+ ci-dessous pour ne pas influencer vos avis.
+  * ginko (ça veut dire banque en japonais)
+  * iNuts (nuts = noisettes)
+
+ - Chercher des mots n'ayant pas forcement de rapport avec l'argent mais avec un son cool. Pas facile.
+ J'ai essaye de vagabonder de mots en sons mais ça n'a pour l'instant pas donne grand-chose.
+
+=========================================
+Axes de recherche pour le nom de la boite
+=========================================
+ - Sygmalion
+ - Mots pour associations
+   * silver
+   * pulse
+   * wave
+   * iron
+   * light
+   * thunder
+ - BrainSteam, SteamBrain, les cerveaux qui fument

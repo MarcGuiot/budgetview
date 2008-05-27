@@ -1,0 +1,58 @@
+        *********************************************************
+        **                     BUSINESS MODEL
+        *********************************************************
+
+
+
+Il y a plusieurs approches possibles, a experimenter / affiner au cours de la vie du projet.
+
+
+==========
+ABONNEMENT
+==========
+
+  Principe :
+   1. version free pour ceux qui n'ont pas une grande utilisation de l'outil
+   2. version avec abonnement pour ceux qui utilisent les fonctions de budgetisation, etc.
+
+--- FREE : Suivi de depenses ---
+
+- Import de fichiers, donnees de synthese (repartition par categories, etc.)
+- Allocation personnalisee (par exemple pour les credits)
+- Echanges securises
+- Donnees limitees dans le temps (trois mois ? six mois ?)
+- Cette version est complètement utilisable sans limite de duree. L'objectif est d'avoir un très grand nombre
+  d'utilisateurs, que l'on peut ensuite valoriser par d'autres moyens (cf ci-dessous).
+
+--- FULL : Definition et suivi de budget (4€ par mois)
+
+- Les donnes sont enregistrees sur le serveur sans limite de duree ou de volume
+- Definition de budget (enveloppes, depenses recurrentes, operations previsionnelles type cadeaux/vacances/projets)
+- Alarmes en cas de depassement
+
+
+=========
+PUBLICITE
+=========
+
+Affichage de pubs dans la version free de l'outil. A etudier selon les volumes d'utilisateurs de cette version.
+
+
+=======================================
+VENTE "MARQUE BLANCHE" POUR DES BANQUES
+=======================================
+
+On propose a des banques de fournir l'outil complet gratuitement à leurs clients.
+
+Eventuellement, on peut ainsi proposer des downloads automatiques de fichiers à partir de leurs serveurs,
+evitant a ces utilisateurs le passage par le site Web de la banque.
+
+
+==========================
+VENTE DE DONNEES DE MARCHE
+==========================
+
+Par exemple, on peut vendre à une boite comme Decathlon des infos du type :
+ - revenus moyens des gens qui achetent chez eux
+ - part des depenses par rapport a des concurrents type Go Sport
+ - depenses annuelles moyennes

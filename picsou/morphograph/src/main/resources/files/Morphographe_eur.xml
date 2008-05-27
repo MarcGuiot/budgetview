@@ -1,0 +1,248 @@
+<morphograph>
+  <topic name="Suffixe -eur, -euse, -rice">
+
+    <series name="Séance 1">
+
+      <exercise name="Perception 1"
+                exerciseTypeName="select"
+                title="Vrai ou faux"
+                description="Cliquer sur vrai ou faux pour répondre aux affirmations suivantes.">
+        <select title="Un donneur est une personne qui donne" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Une couleur est une personne qui coule" alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="Un penseur est une personne qui pense" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Un veilleur est une personne qui veille" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Un opérateur est une personne qui opère" alt1="Vrai" alt2="Faux" answers="2"/>
+      </exercise>
+
+      <exercise name="Perception 2"
+                exerciseTypeName="select"
+                title="Classement"
+                description=" Cliquer sur les mots qui appartiennent à la même famille que le mot initial.">
+        <select title="Conducteur" alt1="conduire" alt2="condition" alt3="conduction" alt4="conductrice"
+                alt5="condiment"
+                answers="1,3,4"/>
+        <select title="Correctrice" alt1="correcteur" alt2="corruption" alt3="corriger" alt4="corrosion"
+                alt5="correction" answers="1,3,5"/>
+      </exercise>
+
+      <exercise name="Production 1"
+                exerciseTypeName="input"
+                title="Compléter les phrases suivantes"
+                description="Compléter la phrase en produisant un mot obtenu à partir du mot initial."
+                example="Un homme qui agit est un acteur.">
+        <input title="Un homme qui bricole est un" answer="bricoleur"/>
+        <input title="Un homme qui cherche est un" answer="chercheur"/>
+        <input title="Une femme qui nage est une" answer="nageuse"/>
+        <input title="Un homme qui crée est un" answer="créateur"/>
+        <input title="Une femme qui adore est une" answer="adoratrice"/>
+      </exercise>
+
+      <exercise name="Production 2"
+                exerciseTypeName="input"
+                title="Extraction de la forme de base"
+                description="Quel mot reconnaît-on dans les mots suivants ?"
+                example="enquêteur => enquête">
+        <input title="baladeur" answer="balade"/>
+        <input title="conteuse" answer="conte"/>
+        <input title="baigneur" answer="bain"/>
+        <input title="charmeuse" answer="charme"/>
+        <input title="parfumeuse" answer="parfum"/>
+      </exercise>
+
+      <exercise name="Production 3"
+                exerciseTypeName="input"
+                title="Dérivation lexicale"
+                description="Trouver des mots de la même famille que..."
+                example="Migratrice => migrateur, migratoire, émigration,...">
+        <input title="Soigneur"/>
+        <input title="Actrice"/>
+      </exercise>
+
+
+    </series>
+
+    <series name="Séance 2">
+
+      <exercise name="Perception 1"
+                exerciseTypeName="select"
+                title="Recherche d'intrus"
+                description="Trouver l'intrus : quel mot ne renvoie pas à une action ?"
+                example="Peur renvoie à apeurer.">
+        <select title="1" alt1="promeneur" alt2="ardeur" alt3="honneur" answers="2"/>
+        <select title="2" alt1="blondeur" alt2="campeur" alt3="tumeur" answers="3"/>
+        <select title="3" alt1="dormeur" alt2="faveur" alt3="équateur" answers="3"/>
+        <select title="4" alt1="odeur" alt2="horreur" alt3="menteur" answers="1"/>
+        <select title="5" alt1="lueur" alt2="fumeur" alt3="aviateur" answers="3"/>
+      </exercise>
+
+      <exercise name="Perception 2"
+                exerciseTypeName="select"
+                title="Classement"
+                description="Cliquer sur les mots qui appartiennent à la même famille que le mot initial.">
+        <select title="Lecteur" alt1="leçon" alt2="lisière" alt3="lecture" alt4="illisible" alt5="lire"
+                answers="3,4,5"/>
+        <select title="Protectrice" alt1="protection" alt2="protester" alt3="protéger" alt4="détectrice"
+                alt5="projecteur" answers="1,3"/>
+      </exercise>
+
+      <exercise name="Production 1"
+                exerciseTypeName="input"
+                title="Compléter les phrases suivantes"
+                description="Compléter la phrase en produisant un mot obtenu avec le mot initial."
+                example="Un homme qui agit est un acteur.">
+        <input title="Une femme qui joue est une" answer="joueuse"/>
+        <input title="Une femme qui campe est une" answer="campeuse"/>
+        <input title="Un homme qui éduque est un" answer="éducateur"/>
+        <input title="Un homme qui skie est un" answer="skieur"/>
+        <input title="Une femme qui vérifie est une" answer="vérificatrice"/>
+      </exercise>
+
+      <exercise name="Production 2"
+                exerciseTypeName="input"
+                title="Extraction de la forme de base"
+                description="Quel mot reconnaît-on dans les mots suivants ?"
+                example="enquêteur => enquête">
+        <input title="camionneur" answer="camion"/>
+        <input title="cultivateur" answer="culture"/>
+        <input title="modulatrice" answer="module"/>
+        <input title="totalisateur" answer="total"/>
+        <input title="créditrice" answer="crédit"/>
+      </exercise>
+
+      <exercise name="Production 3"
+                exerciseTypeName="input"
+                title="Dérivation lexicale"
+                description="Trouver des mots de la même famille que..."
+                example="Migratrice => migrateur, migratoire, émigration,...">
+        <input title="Eleveur"/>
+        <input title="Moralisatrice"/>
+      </exercise>
+
+
+    </series>
+
+    <series name="Séance 3">
+
+      <exercise name="Perception 1"
+                exerciseTypeName="select"
+                title="Vrai ou faux"
+                description="Cliquer sur vrai ou faux pour répondre aux affirmations suivantes.">
+        <select title="Le déménageur déménage" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Le pasteur passe" alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="La matrice mate" alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="L'humeur hume " alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="La directrice dirige" alt1="Vrai" alt2="Faux" answers="1"/>
+      </exercise>
+
+      <exercise name="Perception 2"
+                exerciseTypeName="select"
+                title="Classement"
+                description=" Cliquer sur les mots qui appartiennent à la même famille que le mot initial.">
+        <select title="Producteur" alt1="produit" alt2="prodiguer" alt3="prodigieuse" alt4="production"
+                alt5="reproduire"
+                answers="1,4,5"/>
+        <select title="Destructrice" alt1="déstructurer" alt2="destruction" alt3="construire" alt4="destructeur"
+                alt5="instruction" answers="2,3,4"/>
+      </exercise>
+
+      <exercise name="Production 1"
+                exerciseTypeName="input"
+                title="Compléter les phrases suivantes"
+                description="Compléter la phrase en produisant un mot obtenu avec le mot initial."
+                example="Un homme qui agit est un acteur.">
+        <input title="Un homme qui sert est un" answer="serveur"/>
+        <input title="Une femme qui ment est une" answer="menteuse"/>
+        <input title="Un homme qui dort est un" answer="dormeur"/>
+        <input title="Un homme qui balaie est un" answer="balayeur"/>
+        <input title="Un homme qui boit est un" answer="buveur"/>
+      </exercise>
+
+      <exercise name="Production 2"
+                exerciseTypeName="input"
+                title="Extraction de la forme de base"
+                description="Quel mot reconnaît-on dans les mots suivants ?"
+                example="enquêteur => enquête">
+        <input title="fabulatrice" answer="fable"/>
+        <input title="triomphatrice" answer="triomphe"/>
+        <input title="donateur" answer="don"/>
+        <input title="compteur" answer="compte"/>
+        <input title="fossoyeuse" answer="fosse"/>
+      </exercise>
+
+      <exercise name="Production 3"
+                exerciseTypeName="input"
+                title="Dérivation lexicale"
+                description="Trouver des mots de la même famille que..."
+                example="Migratrice => migrateur, migratoire, émigration,...">
+        <input title="Baveuse"/>
+        <input title="Chauffeur"/>
+      </exercise>
+
+
+    </series>
+
+    <series name="Séance 4">
+
+      <exercise name="Perception 1"
+                exerciseTypeName="select"
+                title="Vrai ou faux"
+                description="Cliquer sur vrai ou faux pour répondre aux affirmations suivantes.">
+        example="Un homme qui agit est un acteur.">
+        <select title="Une motrice invente des mots" alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="Un livreur livre" alt1="Vrai" alt2="Faux" answers="1"/>
+        <select title="Un tuteur tutoie" alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="Une délatrice délace" alt1="Vrai" alt2="Faux" answers="2"/>
+        <select title="Une poudreuse poudre " alt1="Vrai" alt2="Faux" answers="1"/>
+      </exercise>
+
+
+      <exercise name="Perception 2"
+                exerciseTypeName="select"
+                title="Classement"
+                description=" Cliquer sur les mots qui appartiennent à la même famille que le mot initial.">
+        <select title="Mâcheuse" alt1="mâchoire" alt2="machine" alt3="machette" alt4="mâchement" alt5="mâchonner"
+                answers="1,4,5"/>
+        <select title="Fondeur" alt1="fondation" alt2="fonderie" alt3="fonte" alt4="fondatrice"
+                alt5="fondrière" answers="2,3"/>
+      </exercise>
+
+
+      <exercise name="Production 1"
+                exerciseTypeName="input"
+                title="Compléter les phrases suivantes"
+                description="Compléter la phrase en produisant un mot obtenu avec le mot initial.">
+        <input title="Une femme qui guérit des personnes est une" answer="guérisseuse"/>
+        <input title="Un homme qui bâtit des maisons est un" answer="bâtisseur"/>
+        <input title="Une femme qui protège est une" answer="protectrice"/>
+        <input title="Une femme qui blanchit du linge est une" answer="blanchisseuse"/>
+        <input title="Un homme qui perçoit des impôts est un" answer="percepteur"/>
+      </exercise>
+
+      <exercise name="Production 2"
+                exerciseTypeName="input"
+                title="Extraction de la forme de base"
+                description="Quel mot reconnaît-on dans les mots suivants ?"
+                example="enquêteur => enquête">
+        <input title="mineur" answer="mine"/>
+        <input title="oratrice" answer="oral"/>
+        <input title="novateur" answer="nouveau"/>
+        <input title="législateur" answer="loi"/>
+        <input title="aviatrice" answer="avion"/>
+      </exercise>
+
+      <exercise name="Production 3"
+                exerciseTypeName="input"
+                title="Dérivation lexicale"
+                description="Trouver des mots de la même famille que..."
+                example="Migratrice => migrateur, migratoire, émigration,...">
+        <input title="Monteuse"/>
+        <input title="Batteur"/>
+      </exercise>
+
+
+    </series>
+
+
+  </topic>
+
+</morphograph>

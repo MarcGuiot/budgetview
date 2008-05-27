@@ -1,0 +1,24 @@
+
+       Picsou : une vision claire de vos depenses en quelques minutes
+
+                              ---
+
+Picsou est un logiciel de supervision de comptes bancaires.
+
+Son but est d'aider des particuliers à controler leurs depenses, en
+necessitant un investissement minimum en temps.
+
+Le controle des d�penses s'appuie sur deux principes :
+- donner une vision de synth�se des d�penses selon diverses cat�gories
+- donner des outils de suivi de ces d�penses (en particulier des alertes)
+
+La r�duction de l'investissement en temps s'appuie sur deux principes :
+- minimiser � l'extr�me les saisies utilisateur en s'appuyant sur les fichiers de donn�es
+  propos�s par les sites web des grandes banques
+- automatiser au maximum l'activit� de cat�gorisation des op�rations bancaires en
+  utilisant un service centralis� aliment� de mani�re transparente
+  par la communaut� des utilisateurs
+
+Objectif du projet : un client potentiel doit pouvoir d�couvrir le logiciel, l'installer, r�cup�rer
+ses donn�es bancaires et obtenir une vision synh�tique de ses d�penses sur les trois derniers
+mois en moins de 10 minutes.

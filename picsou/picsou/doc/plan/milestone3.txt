@@ -1,0 +1,61 @@
+        *********************************************************
+        **       P I C S O U  ---  M I L E S T O N E  3        **
+        *********************************************************
+        ** Contenu non fige -- cette page a pour but de
+        ** garder une trace des fonctionnalités
+        ** que nous imaginons pour la suite, mais qui ne font
+        ** pas partie de la toute première version livrable
+        *********************************************************
+
+  Undo/redo
+    Affectation de transactions
+    Annuler un import
+
+  Separer les colonnes debit/credit
+
+  Scenarios de type "what if" pour evaluer l'impact d'un emprunt par exemple
+
+  Calculs de ratios à la Kiyosaki.
+
+  Afficher des histogrammes entrees/sorties pour les periodes
+
+  Affichage et selection de mois "futurs"
+    "En aout, je peux consulter et definir le contenu planifie du mois de septembre"
+
+  Definir des operations recurrentes
+
+  Definir des enveloppes par categorie (pour chaque mois)
+
+  Definir des depenses extraordinaires pour un mois donne
+    Exemple : enveloppe supplementaire pour les vacances ou pour un gros achat
+
+  Etre averti d'un dépassement sur une catégorie
+
+  Recherche de transactions
+    Zone de recherche => recherche incrémentale dans la table des transactions
+
+  Supprimer un compte
+    Supprime toutes les transactions associées
+
+  Gestion d'un "projet" (un week-end à Etretat par exemple)
+    On crée un projet associé à une activité, et on lui affecte des transactions.
+    Dans la vision de chaque projet, on a un coût global, ou par catégorie.
+
+  Fixer un plafond sur une catégorie
+    L'utilisateur met lui-même un "watchdog", un seuil d'alerte, sur une catégorie.
+
+  Visualiser l'évolution des dépenses sur les derniers mois
+
+  Visualiser l'évolution des dépenses sur le mois comparées aux mois précédents
+
+  Internationalisation
+
+  Montée en charge : répartition de charge sur les serveurs, etc ?
+
+  Detecter automatiquement des variations anormales sur une categorie
+    Le système réalise par lui-même que les dépenses d'une catégorie donnée dépassent
+    de n% les dépenses sur les mois précédents (moyenne mobile ?)
+
+  Export CSV
+    Objectif : exploiter les données dans Excel
+

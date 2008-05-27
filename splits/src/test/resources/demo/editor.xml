@@ -1,0 +1,26 @@
+<splits xmlns="file://Users/rmedina/Code/splits/resources/splits.xsd">
+
+  <frame title="Login" size="(800,500)">
+
+    <column margin="10">
+
+      <row>
+        <component ref="button1"/>
+        <component ref="button2"/>
+        <filler fill="horizontal"/>
+        <component ref="button3"/>
+      </row>
+
+      <horizontalSplit marginTop="10">
+        <scrollPane margin="5">
+          <component ref="myList"/>
+        </scrollPane>
+        <scrollPane margin="5">
+          <component ref="myTable"/>
+        </scrollPane>
+      </horizontalSplit>
+
+    </column>
+
+  </frame>
+</splits>

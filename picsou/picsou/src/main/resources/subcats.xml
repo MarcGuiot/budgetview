@@ -1,0 +1,67 @@
+<globs>
+  <category masterName="food" name="Courant" id="51"/>
+  <category masterName="food" name="Restaurant" id="52"/>
+  <category masterName="food" name="Livraison / A emporter" id="53"/>
+  <category masterName="food" name="Réceptions" id="54"/>
+
+  <category masterName="house" name="Crédit / Loyer" id="60"/>
+  <category masterName="house" name="Assurance multi-risques" id="61"/>
+  <category masterName="house" name="Electro-ménager" id="62"/>
+  <category masterName="house" name="Bricolage" id="63"/>
+  <category masterName="house" name="Entretien" id="64"/>
+  <category masterName="house" name="Mobilier" id="65"/>
+  <category masterName="house" name="Equipements divers" id="66"/>
+
+  <category masterName="telecoms" name="Téléphone fixe" id="70"/>
+  <category masterName="telecoms" name="Téléphone mobile" id="71"/>
+  <category masterName="telecoms" name="Internet" id="72"/>
+
+  <category masterName="transports" name="Assurance" id="80"/>
+  <category masterName="transports" name="Crédit auto" id="81"/>
+  <category masterName="transports" name="Transports en commun" id="82"/>
+  <category masterName="transports" name="Entretien/Réparations" id="83"/>
+  <category masterName="transports" name="Essence" id="84"/>
+  <category masterName="transports" name="Péages" id="85"/>
+  <category masterName="transports" name="Voyages" id="86"/>
+  <category masterName="transports" name="Parking" id="87"/>
+
+  <category masterName="income" name="Salaires et revenus non salariés" system="true" id="90"/>
+  <category masterName="income" name="Droits d'auteur" system="true" id="91"/>
+  <category masterName="income" name="Revenus d'investissement" system="true" id="92"/>
+  <category masterName="income" name="Revenus immobiliers" system="true" id="93"/>
+
+  <category masterName="health" name="Médecin" id="100"/>
+  <category masterName="health" name="Pharmacie" id="101"/>
+  <category masterName="health" name="Mutuelle" id="102"/>
+  <category masterName="health" name="Remboursements" id="103"/>
+  <category masterName="health" name="Hopital" id="104"/>
+
+  <category masterName="education" name="Ecole / Université" id="110"/>
+  <category masterName="education" name="Livres" id="111"/>
+  <category masterName="education" name="Visites / musées" id="112"/>
+
+  <category masterName="leisures" name="Cinéma" id="120"/>
+  <category masterName="leisures" name="TV" id="121"/>
+  <category masterName="leisures" name="Musique" id="122"/>
+  <category masterName="leisures" name="Sorties" id="123"/>
+  <category masterName="leisures" name="Lecture" id="124"/>
+  <category masterName="leisures" name="Equipement sportif" id="125"/>
+  <category masterName="leisures" name="Activités sportives" id="126"/>
+
+  <category masterName="taxes" name="Impôts sur le revenu" id="130"/>
+  <category masterName="taxes" name="Taxe d'habitation" id="131"/>
+  <category masterName="taxes" name="Taxe foncière" id="132"/>
+
+  <category masterName="beauty" name="Produits soin" id="140"/>
+  <category masterName="beauty" name="Coiffeur" id="141"/>
+  <category masterName="beauty" name="Maquillage" id="142"/>
+
+  <category masterName="clothing" name="Vêtements" id="150"/>
+  <category masterName="clothing" name="Chaussures" id="151"/>
+  <category masterName="clothing" name="Accessoires" id="152"/>
+
+  <category masterName="savings" name="Assurance vie" id="160"/>
+  <category masterName="savings" name="Epargne" id="161"/>
+  <category masterName="savings" name="Titres" id="162"/>
+
+</globs>

@@ -1,0 +1,21 @@
+        *********************************************************
+        **       P I C S O U  ---  M I L E S T O N E  2        **
+        *********************************************************
+        ** `Definition et suivi de budget
+        **
+        ** Objectif : ? (a affiner le moment venu)
+        *********************************************************
+
+
+  Splitter une transaction
+    Exemple : une dépense donnée de 200€ chez Auchan ou Carouf comporte en fait 120€
+    de "informatique", alors qu'il s'agit habituellement de "alimentation".
+
+  Apprentissage des types de banques
+
+  Copier/coller des JTable vers Excel
+
+  Donner un nom a un compte
+
+
+

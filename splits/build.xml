@@ -1,0 +1,77 @@
+<project name="Splits" default="GenerateAll" basedir=".">
+
+  <property name="version" value="0.7"/>
+  <property name="splits.jar" value="splits-${version}.jar"/>
+  <property name="splits.src" value="splits-${version}-sources.zip"/>
+
+  <path id="ref.classpath">
+    <fileset dir="lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="ref.test.classpath">
+    <path refid="ref.classpath"/>
+    <fileset dir="lib/test">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="Compile">
+    <delete failonerror="false">
+      <fileset dir="classes">
+        <include name="**/**"/>
+      </fileset>
+    </delete>
+    <mkdir dir="classes"/>
+    <javac destdir="classes"
+           classpathref="ref.classpath"
+           debug="on">
+      <src path="src/java"/>
+    </javac>
+    <copy todir="classes">
+      <fileset dir="resources">
+        <include name="**/**"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="GenerateJar" depends="Compile, CompileTests">
+    <mkdir dir="generated"/>
+    <jar update="true" jarfile="generated/${splits.jar}" basedir="classes"/>
+  </target>
+
+  <target name="GenerateSrcZip" depends="Compile">
+    <mkdir dir="generated"/>
+    <zip update="true" destfile="generated/${splits.src}">
+      <fileset dir="src/java">
+        <include name="**/*.java"/>
+      </fileset>
+      <fileset dir="src/test">
+        <include name="**/*.java"/>
+      </fileset>
+    </zip>
+  </target>
+
+  <target name="CompileTests">
+    <javac destdir="classes"
+           classpathref="ref.test.classpath"
+           debug="on">
+      <src path="src/test"/>
+    </javac>
+  </target>
+
+  <target name="RunTests" depends="Compile" if="junit.present">
+    <junit>
+      <classpath refid="classpath.test"/>
+
+      <formatter type="brief" usefile="false"/>
+      <batchtest>
+        <fileset dir="${tst-dir}" includes="**/Test*.class"/>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="GenerateAll" depends="GenerateJar, GenerateSrcZip"/>
+
+</project>

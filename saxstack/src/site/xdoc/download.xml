@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<document>
+  <properties>
+    <title>Download</title>
+  </properties>
+  <body>
+    <section name="Download">
+
+      <subsection name="Licensing">
+        <p>
+          SAXStack is an open source software released under the terms of the
+          <a href="license.html">Common Public License</a> (version 1.0).
+        </p>
+      </subsection>
+
+      <subsection name="Dependencies">
+        <p>SAXStack does not depend on any particular SAX parser - you simply provide your own
+          parser, implementing the <code>org.xml.sax.XMLReader</code>
+          interface. We do use Xerces for testing this library.
+        </p>
+      </subsection>
+
+      <subsection name="Binaries">
+        <p>SAXStack is available here: <a href="saxstack-1.0.jar">saxstack-1.0.jar</a>.</p>
+      </subsection>
+
+      <subsection name="Sources">
+      </subsection>
+    </section>
+  </body>
+</document>

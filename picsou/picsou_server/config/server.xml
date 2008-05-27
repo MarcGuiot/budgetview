@@ -1,0 +1,38 @@
+<Server port="8005" shutdown="SHUTDOWN">
+  <GlobalNamingResources>
+    <!-- Used by Manager webapp -->
+    <Resource name="UserDatabase" auth="Container"
+              type="org.apache.catalina.UserDatabase"
+      description="User database that can be updated and saved">
+    </Resource>
+    <ResourceParams name="UserDatabase">
+      <parameter> 
+        <name>factory</name>
+        <value>org.apache.catalina.users.MemoryUserDatabaseFactory</value>
+      </parameter>
+      <parameter>
+        <name>pathname</name>
+        <value>conf/tomcat-users.xml</value>
+      </parameter>
+    </ResourceParams>
+  </GlobalNamingResources>
+
+  <Service name="Catalina">
+    <!--<Connector port="9000" />-->
+
+    <Connector port="8443"
+               maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+               enableLookups="false" disableUploadTimeout="true"
+               acceptCount="100" debug="0" scheme="https" secure="true"
+               clientAuth="false" sslProtocol="TLS" keystorePass="ninja600"
+               keystoreFile="/home/guiot/.keystore"/>
+    
+
+    <!-- This is here for compatibility only, not required -->
+    <Engine name="Catalina" defaultHost="localhost">
+      <Logger className="org.apache.catalina.logger.FileLogger" />
+
+      <Host name="localhost" autoDeploy="true" unpackWARs="true"/>
+    </Engine>
+  </Service>
+</Server>

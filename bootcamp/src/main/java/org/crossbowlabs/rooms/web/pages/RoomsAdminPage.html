@@ -1,0 +1,43 @@
+<wicket:head>
+  <title>rooms</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+  <link rel="stylesheet" media="screen" type="text/css" href="/css/Table.css"/>
+  <link rel="stylesheet" media="screen" type="text/css" href="/css/RoomsAdmin.css"/>
+</wicket:head>
+
+<wicket:extend>
+
+  <div wicket:id="RoomsDiv" id="RoomsDivId">
+    <label for="RoomNameFilter">filter</label>
+    <input wicket:id="RoomNameFilter" type="text" id="RoomNameFilter" class="RoomNameFilter" autocomplete='off'/>
+    <br/><br/>
+    <table wicket:id="RoomsTable">
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>size</th>
+          <th>remove</th>
+        </tr>
+      </thead>
+      <tr wicket:id="ShowRooms">
+        <td wicket:id="name">[room name]</td>
+        <td wicket:id="size">[10]</td>
+        <td wicket:id="remove"><a href="#">remove</a></td>
+      </tr>
+    </table>
+  </div>
+
+  <div wicket:id="NewRoom" Id="NewRoomId">
+    <p>Adding new room</p>
+
+    <form wicket:id="NewRoom">
+      <label for="roomName">Name</label>
+      <input wicket:id="roomName" type="text" id="roomName" class="roomName"/>
+      <br/><br/>
+      <label for="roomSize">Size</label>
+      <input wicket:id="roomSize" type="text" id="roomSize" class="roomSize"/><br/><br/>
+      <input type="submit" class="roomAdd" id="roomAdd" value="create"/>
+    </form>
+  </div>
+
+</wicket:extend>

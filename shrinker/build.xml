@@ -1,0 +1,33 @@
+<project name="jarshrinker" default="GenerateJar" basedir=".">
+
+  <property name="version" value="0.7"/>
+  <property name="jarshrinker.jar" value="jarshrinker-${version}.jar"/>
+  <property name="jarshrinker.src.jar" value="jarshrinker-${version}-sources.jar"/>
+
+  <path id="ref.classpath">
+    <fileset dir="lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="Compile">
+    <delete>
+      <fileset dir="classes">
+        <include name="**/**"/>
+      </fileset>
+    </delete>
+    <mkdir dir="classes"/>
+    <javac destdir="classes"
+           classpathref="ref.classpath"
+           debug="on">
+      <src path="src/java"/>
+    </javac>
+  </target>
+
+  <target name="GenerateJar" depends="Compile">
+    <mkdir dir="generated"/>
+    <jar update="true" jarfile="generated/${jarshrinker.jar}" basedir="classes"/>
+    <jar update="true" jarfile="generated/${jarshrinker.src.jar}" basedir="src/java" excludes=".svn"/>
+  </target>
+
+</project>

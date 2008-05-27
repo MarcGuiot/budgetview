@@ -1,0 +1,9 @@
+module functests4j {
+
+interface Client {
+
+  boolean callToClient(in string arg, out string otherResult);
+
+};
+
+};

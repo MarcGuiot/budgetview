@@ -1,0 +1,58 @@
+<globs>
+  <account number="(SummaryAccount)" name="Tous les comptes" balance="12345.67" updateDate="2006/08/10"/>
+  <bank id="20041">
+    <account number="123123" balance="12345.67" isCardAccount="false"
+             name="Compte 123123" updateDate="2006/08/10"/>
+  </bank>
+
+  <transaction accountNumber="123123" amount="-5.0" month="200608" day="9"
+               originalLabel="ACHAT CB SANEMA                         08.08.06"
+               labelForCategorisation="SANEMA"
+               label="SANEMA                         08.08.06" transactionTypeName="credit_card"/>
+
+  <transaction accountNumber="123123" amount="292.82" month="200608" day="3"
+               originalLabel="REMISE DE CHEQUES DU 02/08/2006"
+               labelForCategorisation=""
+               label="REMISE DE CHEQUES DU 02/08/2006" transactionTypeName="deposit"/>
+
+  <transaction accountNumber="123123" amount="-60.0" month="200608" day="3"
+               originalLabel="CARTE MASTERCA 02/08/06 A 09H59"
+               labelForCategorisation="CARTE MASTERCA A"
+               label="CARTE MASTERCA 02/08/06 A 09H59" transactionTypeName="prelevement"/>
+
+  <transaction accountNumber="123123" amount="-56.14" month="200608" day="3"
+               originalLabel="CHEQUE N. 6557005"
+               labelForCategorisation=""
+               label="6557005" transactionTypeName="check"/>
+
+  <transaction accountNumber="123123" amount="-11.0" month="200608" day="1"
+               originalLabel="CHEQUE N. 6557002"
+               labelForCategorisation=""
+               label="6557002" transactionTypeName="check"/>
+
+  <transaction accountNumber="123123" amount="-60.0" month="200608" day="1"
+               originalLabel="CHEQUE N. 6557004"
+               labelForCategorisation=""
+               label="6557004" transactionTypeName="check"/>
+
+  <transaction accountNumber="123123" amount="-11.35" month="200607" day="31" categoryName="food"
+               originalLabel="ACHAT CB ATAC MAG GAILL 30.07.06"
+               labelForCategorisation="ATAC MAG GAILL"
+               label="ATAC MAG GAILL 30.07.06" transactionTypeName="credit_card"/>
+
+  <transaction accountNumber="123123" amount="-27.2" month="200607" day="31"
+               originalLabel="ACHAT CB COINTIN ET CIE 30.07.06"
+               labelForCategorisation="COINTIN ET CIE"
+               label="COINTIN ET CIE 30.07.06" transactionTypeName="credit_card"/>
+
+  <transaction accountNumber="123123" amount="-32.22" month="200607" day="31"
+               originalLabel="ACHAT CB ST MARCEL DIST 28.07.06"
+               labelForCategorisation="ST MARCEL DIST"
+               label="ST MARCEL DIST 28.07.06" transactionTypeName="credit_card"/>
+
+  <transaction accountNumber="123123" amount="-61.85" month="200607" day="31"
+               originalLabel="ACHAT CB CENTRE E LECLE 29.07.06"
+               labelForCategorisation="CENTRE E LECLE"
+               label="CENTRE E LECLE 29.07.06" transactionTypeName="credit_card"/>
+
+</globs>

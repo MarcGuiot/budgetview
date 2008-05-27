@@ -1,0 +1,31 @@
+<splits>
+  <frame title="Repeat Demo" size="(900,500)">
+    <column margin="20">
+
+      <row>
+        <horizontalSplit dividerLocation="500" opaque="false">
+          <scrollPane>
+            <table ref="movie"/>
+          </scrollPane>
+          <column defaultAnchor="west" marginLeft="20">
+            <label text="Title"/>
+            <component ref="title"/>
+            <label text="Director"/>
+            <component ref="director"/>
+          </column>
+        </horizontalSplit>
+        <scrollPane minimumSize="(200,50)">
+          <component ref="repeat"/>
+        </scrollPane>
+      </row>
+
+      <row marginTop="10">
+        <button action="newMovie" opaque="false"/>
+        <button action="deleteMovie" opaque="false"/>
+        <filler fill="horizontal"/>
+      </row>
+
+
+    </column>
+  </frame>
+</splits>

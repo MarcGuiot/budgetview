@@ -1,0 +1,31 @@
+<project name="functests" basedir=".." default="">
+
+  <path id="CORBA_PATH">
+    <pathelement location="lib/JacORB/"/>
+    <pathelement location="lib/JacORB/wrapper.jar"/>
+    <pathelement location="lib/JacORB/idl.jar"/>
+    <pathelement location="lib/JacORB/jacorb.jar"/>
+    <pathelement location="lib/JacORB/avalon-framework.jar"/>
+    <pathelement location="lib/JacORB/concurrent.jar"/>
+    <pathelement location="lib/JacORB/logkit.jar"/>
+  </path>
+
+  <property name="CORBA_PATH" refid="CORBA_PATH"/>
+
+  <target name="generate idl jar">
+    <mkdir dir="tmp/generated"/>
+    <mkdir dir="tmp/classes"/>
+    <apply executable="java" failonerror="no">
+      <arg line="-cp ${CORBA_PATH} org.jacorb.idl.parser"/>
+      <arg line="-d tmp/generated"/>
+      <fileset dir="idl">
+        <include name="**/*.idl"/>
+      </fileset>
+    </apply>
+    <javac srcdir="tmp/generated" destdir="tmp/classes" classpath="${CORBA_PATH}"/>
+    <jar basedir="tmp/classes" destfile="lib/funtestsIdl.jar"/>
+    <delete dir="tmp/generated"/>
+    <delete dir="tmp/classes"/>
+  </target>
+
+</project>
