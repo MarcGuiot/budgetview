@@ -95,6 +95,9 @@ public class PopupMenuInterceptorTest extends InterceptionTestCase {
   }
 
   public void testNothingHappensWhenAPopupAppearsWithoutInterception() throws Throwable {
+    if (System.getProperty("os.name").equalsIgnoreCase("linux")){
+      return ;
+    }
     final JButton button = new JButton();
     showLargeDialogWithComponent(button);
     try {
