@@ -3,11 +3,14 @@ package org.designup.picsou.gui.actions;
 import org.crossbowlabs.globs.gui.SelectionService;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.model.Key;
+import org.crossbowlabs.globs.model.GlobList;
 import org.crossbowlabs.globs.utils.Log;
+import org.crossbowlabs.globs.utils.logging.Debug;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.importer.PicsouImportService;
 import org.designup.picsou.importer.TypedInputStream;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.model.Transaction;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -77,7 +80,9 @@ public class ImportFileAction extends AbstractAction {
 
     try {
       repository.enterBulkDispatchingMode();
+      GlobList all1 = repository.getAll(Transaction.TYPE);
       final Key importKey = importService.run(new TypedInputStream(file), repository);
+      GlobList all2 = repository.getAll(Transaction.TYPE);
       if (file.getName().toLowerCase().endsWith("qif") && isLastFile) {
         showQifDialog(importKey);
       }

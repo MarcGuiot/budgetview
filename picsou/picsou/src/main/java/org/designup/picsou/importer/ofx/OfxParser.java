@@ -15,7 +15,7 @@ public class OfxParser {
 
   public void parse(Reader reader, OfxFunctor functor) throws IOException {
     BufferedReader buffer = new BufferedReader(reader);
-    while (buffer.ready()) {
+    while (true) {
       String nextLine = buffer.readLine();
       if (nextLine == null) {
         break;

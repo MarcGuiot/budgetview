@@ -15,8 +15,11 @@ public class Files {
     try {
       fileReader = new FileReader(fileName);
       reader = new BufferedReader(fileReader);
-      while (reader.ready()) {
+      while (true) {
         String line = reader.readLine();
+        if (line == null){
+          break;
+        }
         builder.append(line).append(Strings.LINE_SEPARATOR);
       }
       return builder.toString();

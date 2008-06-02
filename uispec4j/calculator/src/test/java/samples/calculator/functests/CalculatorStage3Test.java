@@ -18,26 +18,29 @@ public class CalculatorStage3Test {
   private BufferedReader reader;
 
 
-    @BeforeMethod()
-    public void readTestData() throws Exception {
+  @BeforeMethod()
+  public void readTestData() throws Exception {
     InputStream inputStream = getClass().getResourceAsStream("testdata.txt");
     reader = new BufferedReader(new InputStreamReader(inputStream));
   }
 
 
-    @AfterMethod()
-    protected void closeReader() throws Exception {
+  @AfterMethod()
+  protected void closeReader() throws Exception {
     if (reader != null) {
       reader.close();
     }
   }
 
 
-    @Test
-    public void dataFromFile() throws Exception {
+  @Test
+  public void dataFromFile() throws Exception {
     int lineCount = 0;
-    while (reader.ready()) {
+    while (true) {
       String line = reader.readLine();
+      if (line == null) {
+        break;
+      }
       int commaIndex = line.indexOf(',');
       if (commaIndex == -1) {
         throw new RuntimeException("Error at line " + lineCount + ": no comma separator found");

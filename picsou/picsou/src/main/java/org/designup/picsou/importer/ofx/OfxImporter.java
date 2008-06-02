@@ -128,9 +128,17 @@ public class OfxImporter implements AccountFileImporter {
           categoriesForTransaction.put(currentCategory, null);
         }
         processCategories();
+        checkTransaction();
       }
 
       currentTransactionKey = null;
+    }
+
+    private void checkTransaction() {
+      Glob glob = repository.get(currentTransactionKey);
+      if (glob.get(Transaction.AMOUNT) == null) {
+        repository.update(currentTransactionKey, Transaction.AMOUNT, (double) 0);
+      }
     }
 
     private void processSplitTransactions() {

@@ -236,7 +236,6 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .splitTransaction("2006/01/15", "Auchan", -10, "DVD", MasterCategory.LEISURES.getName())
       .load();
 
-    Debug.print(repository, Transaction.TYPE);
     transactions
       .initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "RAS", -10, MasterCategory.FOOD)
