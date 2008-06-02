@@ -18,7 +18,7 @@ import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.JModalWindow;
+import org.designup.picsou.gui.utils.PicsouDialog;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import static org.designup.picsou.model.Transaction.LABEL;
@@ -33,7 +33,7 @@ public class CategoryPropagationDialog {
   private static final int DATE_COLUMN_INDEX = 0;
   private static final int LABEL_COLUMN_INDEX = 2;
 
-  private JModalWindow dialog;
+  private PicsouDialog dialog;
   private LocalGlobRepository localRepository;
   private CategoryPropagationCallback callback;
   private GlobList transactions;
@@ -67,7 +67,7 @@ public class CategoryPropagationDialog {
     builder.add("cancel", new CancelAction());
 
     JPanel panel = (JPanel) builder.parse(getClass(), "/layout/categoryPropagation.splits");
-    dialog = JModalWindow.create(directory.get(JFrame.class));
+    dialog = PicsouDialog.create(directory.get(JFrame.class));
     dialog.getContentPane().add(panel);
   }
 

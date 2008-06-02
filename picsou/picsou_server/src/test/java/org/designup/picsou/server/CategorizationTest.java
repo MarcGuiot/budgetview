@@ -8,6 +8,7 @@ import org.uispec4j.TableCellValueConverter;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.interception.WindowHandler;
 import org.designup.picsou.functests.checkers.DataChecker;
 import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.functests.checkers.MonthChecker;
@@ -29,10 +30,16 @@ public class CategorizationTest extends ServerFuncTestCase {
                            fileName);
     createAndLogUser("user", "_passd1", fileName);
     Table transactionTable = window.getTable(Transaction.TYPE.getName());
-    Window dialog = WindowInterceptor.run(
-      transactionTable.editCell(2, TransactionView.CATEGORY_COLUMN_INDEX)
-        .getButton("Add").triggerClick());
-    TransactionChecker.CategoryChooserDialog.selectCategory(dialog, DataChecker.getCategoryName(MasterCategory.FOOD));
+    WindowInterceptor.init(transactionTable.editCell(2, TransactionView.CATEGORY_COLUMN_INDEX)
+        .getButton("Add").triggerClick()).process(new WindowHandler() {
+      public Trigger process(final Window window) throws Exception {
+          return new Trigger() {
+            public void run() throws Exception {
+              TransactionChecker.CategoryChooserDialog.selectCategory(window, DataChecker.getCategoryName(MasterCategory.FOOD));
+            }
+          };
+      }
+    });
 
     checkTransactionChange();
     ((JFrame) window.getAwtComponent()).dispose();

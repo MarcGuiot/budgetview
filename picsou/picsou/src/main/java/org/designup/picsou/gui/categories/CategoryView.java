@@ -21,6 +21,7 @@ import org.designup.picsou.utils.Lang;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 
 public class CategoryView extends View {
   public static final int EXPANSION_COLUMN_INDEX = 0;
@@ -35,10 +36,19 @@ public class CategoryView extends View {
   private DeleteCategoryAction deleteCategoryAction;
   protected CategoryExpansionModel expansionModel;
 
-  public CategoryView(GlobRepository repository, Directory directory) {
+  public CategoryView(GlobRepository repository, final Directory directory) {
     super(repository, directory);
-    createCategoryAction = new CreateCategoryAction(repository, directory);
-    renameCategoryAction = new RenameCategoryAction(repository, directory);
+    createCategoryAction = new CreateCategoryAction(repository, directory){
+      public JDialog getDialog(ActionEvent e) {
+        return PicsouDialog.create(directory.get(JFrame.class));
+      }
+    };
+    renameCategoryAction = new RenameCategoryAction(repository, directory){
+      public JDialog getDialog(ActionEvent e) {
+        return PicsouDialog.create(directory.get(JFrame.class));
+      }
+      
+    };
     deleteCategoryAction = new DeleteCategoryAction(repository, directory);
     createTable();
   }

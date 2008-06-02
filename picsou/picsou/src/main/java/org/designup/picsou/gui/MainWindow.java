@@ -12,8 +12,6 @@ import javax.swing.*;
 
 public class MainWindow {
   private JFrame frame;
-  private PicsouDialogPainter painter = new PicsouDialogPainter();
-
   static {
     try {
       if (Gui.isMacOSX()) {
@@ -40,9 +38,6 @@ public class MainWindow {
   public MainWindow() throws Exception {
     frame = new JFrame("Picsou");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setUndecorated(false);
-//    Gui.installWindowTitle(frame.getRootPane(), painter, frame.getTitle(), 0);
-//    Gui.installMovingWindowTitle(frame);
   }
 
   public void setPanel(JPanel panel) {

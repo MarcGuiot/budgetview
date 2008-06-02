@@ -16,7 +16,7 @@ import org.crossbowlabs.splits.layout.GridBagBuilder;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.gui.categories.*;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.JModalWindow;
+import org.designup.picsou.gui.utils.PicsouDialog;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -41,7 +41,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private Icon iconSelected;
   private Icon iconNotSelected;
   private Icon iconRollover;
-  private JModalWindow dialog;
+  private PicsouDialog dialog;
   private JFrame mainFrame;
   private GlobList firstPartCategories = new GlobList();
   private GlobList secondPartCategories = new GlobList();
@@ -72,14 +72,22 @@ public class CategoryChooserDialog implements ChangeSetListener {
     iconRollover = iconLocator.get("menucheckboxrollover.png");
     iconNotSelected = iconLocator.get("menucheckboxblank.png");
     colorService = localDirectory.get(ColorService.class);
-    addCategoryAction = new CreateCategoryAction(repository, localDirectory);
+    addCategoryAction = new CreateCategoryAction(repository, localDirectory) {
+      public JDialog getDialog(ActionEvent e) {
+        return PicsouDialog.create(dialog);
+      }
+    };
     deleteCategoryAction = new DeleteCategoryAction(repository, localDirectory);
-    renameCategoryAction = new RenameCategoryAction(repository, localDirectory);
+    renameCategoryAction = new RenameCategoryAction(repository, localDirectory) {
+      public JDialog getDialog(ActionEvent e) {
+        return PicsouDialog.create(dialog);
+      }
+    };
     mainFrame = localDirectory.get(JFrame.class);
   }
 
   public void show(GlobList selectedTransactions) {
-    dialog = JModalWindow.create(mainFrame, Lang.get("choose.category.title"));
+    dialog = PicsouDialog.create(mainFrame, Lang.get("choose.category.title"));
     if (contentPanel == null || needToRebuild) {
       contentPanel = prepareDialogContent();
       needToRebuild = false;
@@ -127,7 +135,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
       }
     });
 
-    return (JPanel)splitsBuilder.parse(getClass(), "/layout/categoryChooser.splits");
+    return (JPanel) splitsBuilder.parse(getClass(), "/layout/categoryChooser.splits");
   }
 
   private JPanel getCategoriesPanel(GlobList categories) {

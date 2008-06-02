@@ -24,7 +24,7 @@ import org.crossbowlabs.splits.color.ColorSource;
 import org.crossbowlabs.splits.components.JStyledPanel;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.JModalWindow;
+import org.designup.picsou.gui.utils.PicsouDialog;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
@@ -67,7 +67,7 @@ public class SplitTransactionDialog {
   private JTextField amountField;
   private JTextField noteField;
   private JCheckBox dispensableBox = new JCheckBox();
-  private JModalWindow dialog;
+  private PicsouDialog dialog;
   private JLabel categoryLabel = new JLabel();
   private JButton categoryChooserButton;
   private AddAction addAction = new AddAction();
@@ -111,7 +111,7 @@ public class SplitTransactionDialog {
     builder.add("cancel", new CancelAction());
 
     JPanel panel = (JPanel) builder.parse(getClass(), "/layout/splitTransaction.splits");
-    dialog = JModalWindow.create(directory.get(JFrame.class), Lang.get("split.transaction.title"));
+    dialog = PicsouDialog.create(directory.get(JFrame.class), Lang.get("split.transaction.title"));
     dialog.getContentPane().add(panel);
 
     toggleButton.setSelected(true);

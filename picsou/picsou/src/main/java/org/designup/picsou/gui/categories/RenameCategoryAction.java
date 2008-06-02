@@ -11,7 +11,7 @@ import org.crossbowlabs.globs.model.format.DescriptionService;
 import org.crossbowlabs.globs.model.format.GlobStringifier;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
-import org.designup.picsou.gui.utils.JModalWindow;
+import org.designup.picsou.gui.utils.PicsouDialog;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 
@@ -20,25 +20,21 @@ import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RenameCategoryAction extends RenameGlobAction implements GlobSelectionListener {
+public abstract class RenameCategoryAction extends RenameGlobAction implements GlobSelectionListener {
   private GlobStringifier categoryStringifier;
-  private JFrame jFrame;
 
   public RenameCategoryAction(GlobRepository repository, Directory directory) {
     super("T", Category.NAME, repository, directory);
     directory.get(SelectionService.class).addListener(this, Category.TYPE);
     categoryStringifier = directory.get(DescriptionService.class).getStringifier(Category.TYPE);
     setEnabled(false);
-    jFrame = directory.get(JFrame.class);
   }
 
   protected boolean accept(Glob category) {
     return !Category.isMaster(category);
   }
 
-  public JDialog getDialog(ActionEvent e) {
-    return JModalWindow.create(jFrame);
-  }
+  public abstract JDialog getDialog(ActionEvent e);
 
 
   protected void validateName(GlobType type, StringField namingField, String name, GlobRepository repository) throws InvalidParameter {

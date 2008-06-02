@@ -23,13 +23,8 @@ public abstract class StringInputDialog {
   protected OkAction okAction;
   private JDialog dialog;
 
-  public StringInputDialog(JDialog dialog,
-                           String initialValue,
-                           String title,
-                           String inputLabel,
-                           String okLabel,
-                           String cancelLabel,
-                           Directory directory) {
+  public StringInputDialog(JDialog dialog, String initialValue, String title, String inputLabel,
+                           String okLabel, String cancelLabel, Directory directory) {
     this.dialog = dialog;
     dialog.setTitle(title);
     

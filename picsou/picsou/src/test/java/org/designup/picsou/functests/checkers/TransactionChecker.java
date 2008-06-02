@@ -16,6 +16,7 @@ import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.interception.WindowHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,7 +82,7 @@ public class TransactionChecker extends DataChecker {
   }
 
   public SplitDialog openSplitDialog(final int row) {
-    return new SplitDialog(WindowInterceptor.run(new Trigger() {
+    return new SplitDialog(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         getTable().editCell(row, TransactionView.AMOUNT_COLUMN_INDEX).getButton().click();
       }
@@ -90,7 +91,7 @@ public class TransactionChecker extends DataChecker {
 
   public CategoryChooserDialog openCategoryChooserDialog(final int... rows) {
     getTable().selectRows(rows);
-    return new CategoryChooserDialog(WindowInterceptor.run(new Trigger() {
+    return new CategoryChooserDialog(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         getTable().editCell(rows[0], TransactionView.CATEGORY_COLUMN_INDEX).getButton("Add").click();
       }
@@ -98,7 +99,7 @@ public class TransactionChecker extends DataChecker {
   }
 
   private void chooseCategoryViaButtonClick(String categoryName, final int row) {
-    CategoryChooserDialog dialog = new CategoryChooserDialog(WindowInterceptor.run(new Trigger() {
+    CategoryChooserDialog dialog = new CategoryChooserDialog(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         getTable().editCell(row, TransactionView.CATEGORY_COLUMN_INDEX).getButton("Add").click();
       }
@@ -107,7 +108,7 @@ public class TransactionChecker extends DataChecker {
   }
 
   private void chooseCategoryViaKeyboard(String categoryName, final int modifier) {
-    CategoryChooserDialog dialog = new CategoryChooserDialog(WindowInterceptor.run(new Trigger() {
+    CategoryChooserDialog dialog = new CategoryChooserDialog(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         GuiUtils.pressKey(getTable().getJTable(), KeyEvent.VK_SPACE, modifier);
       }
@@ -233,7 +234,7 @@ public class TransactionChecker extends DataChecker {
     }
 
     public SplitDialog selectCategory(MasterCategory category) {
-      CategoryChooserDialog dialog = new CategoryChooserDialog(WindowInterceptor.run(new Trigger() {
+      CategoryChooserDialog dialog = new CategoryChooserDialog(WindowInterceptor.getModalDialog(new Trigger() {
         public void run() throws Exception {
           window.getButton("categoryChooser").click();
         }

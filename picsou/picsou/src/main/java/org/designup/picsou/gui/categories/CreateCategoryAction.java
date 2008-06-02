@@ -14,7 +14,6 @@ import org.crossbowlabs.globs.model.format.DescriptionService;
 import org.crossbowlabs.globs.model.format.GlobStringifier;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
-import org.designup.picsou.gui.utils.JModalWindow;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 
@@ -23,17 +22,15 @@ import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CreateCategoryAction extends CreateGlobAction implements GlobSelectionListener {
+public abstract class CreateCategoryAction extends CreateGlobAction implements GlobSelectionListener {
   private GlobStringifier categoryStringifier;
   private Glob selectedCategory;
-  private JFrame jFrame;
 
   public CreateCategoryAction(GlobRepository repository, Directory directory) {
     super("+", Category.TYPE, repository, directory);
     directory.get(SelectionService.class).addListener(this, Category.TYPE);
     categoryStringifier = directory.get(DescriptionService.class).getStringifier(Category.TYPE);
     setEnabled(false);
-    jFrame = directory.get(JFrame.class);
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -49,9 +46,7 @@ public class CreateCategoryAction extends CreateGlobAction implements GlobSelect
     setEnabled(selectedCategory != null);
   }
 
-  public JDialog getDialog(ActionEvent e) {
-    return JModalWindow.create(jFrame);
-  }
+  public abstract JDialog getDialog(ActionEvent e);
 
   protected void validateName(GlobType type, StringField namingField, String name, GlobRepository repository) throws InvalidParameter {
     Set<String> existingNames = new HashSet<String>();

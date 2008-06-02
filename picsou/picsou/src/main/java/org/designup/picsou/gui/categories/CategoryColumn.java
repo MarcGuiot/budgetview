@@ -13,6 +13,7 @@ import org.crossbowlabs.splits.layout.Fill;
 import org.crossbowlabs.splits.layout.GridBagBuilder;
 import org.crossbowlabs.splits.utils.TransparentIcon;
 import org.designup.picsou.gui.utils.AbstractRolloverEditor;
+import org.designup.picsou.gui.utils.PicsouDialog;
 import org.designup.picsou.model.Category;
 
 import javax.swing.*;
@@ -33,12 +34,23 @@ class CategoryColumn extends AbstractRolloverEditor {
   private CategoryBackgroundPainter backgroundPainter;
 
   CategoryColumn(CategoryLabelCustomizer customizer, CategoryBackgroundPainter painter, GlobTableView view,
-                 DescriptionService descriptionService, GlobRepository repository, Directory directory) {
+                 DescriptionService descriptionService, GlobRepository repository, final Directory directory) {
     super(view, descriptionService, repository, directory);
     this.customizer = customizer;
     this.backgroundPainter = painter;
-    addCategoryAction = new CreateCategoryAction(repository, directory);
-    renameCategoryAction = new RenameCategoryAction(repository, directory);
+    addCategoryAction = new CreateCategoryAction(repository, directory) {
+
+      public JDialog getDialog(ActionEvent e) {
+        return PicsouDialog.create(directory.get(JFrame.class));
+      }
+    };
+    renameCategoryAction = new RenameCategoryAction(repository, directory) {
+      public JDialog getDialog(ActionEvent e) {
+        {
+          return PicsouDialog.create(directory.get(JFrame.class));
+        }
+      }
+    };
     deleteCategoryAction = new DeleteCategoryAction(repository, directory);
     categoryStringifier = descriptionService.getStringifier(Category.TYPE);
   }

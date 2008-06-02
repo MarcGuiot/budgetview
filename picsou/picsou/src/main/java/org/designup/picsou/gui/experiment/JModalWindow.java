@@ -1,6 +1,8 @@
-package org.designup.picsou.gui.utils;
+package org.designup.picsou.gui.experiment;
 
 import org.crossbowlabs.splits.utils.GuiUtils;
+import org.designup.picsou.gui.utils.PicsouDialogPainter;
+import org.designup.picsou.gui.utils.Gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +47,7 @@ public class JModalWindow extends JDialog {
   public void setVisible(boolean visible) {
     if (!windows.isEmpty()) {
       if (!windows.peek().check(this)) {
-        System.out.println("JModalWindow.setVisible on " + getTitle() + " but " +
+        System.out.println("PicsouDialog.setVisible on " + getTitle() + " but " +
                            windows.peek().getName() + " is in frame stack");
       }
     }
@@ -109,7 +111,7 @@ public class JModalWindow extends JDialog {
       }
     }
     else {
-      System.out.println("ERROR IN JModalWindow.hideDialog");
+      System.out.println("ERROR IN PicsouDialog.hideDialog");
     }
   }
 
