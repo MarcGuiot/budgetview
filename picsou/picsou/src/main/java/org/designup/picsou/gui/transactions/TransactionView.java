@@ -4,7 +4,6 @@ import org.crossbowlabs.globs.gui.GlobSelection;
 import org.crossbowlabs.globs.gui.GlobSelectionListener;
 import org.crossbowlabs.globs.gui.utils.TableUtils;
 import org.crossbowlabs.globs.gui.views.GlobTableView;
-import org.crossbowlabs.globs.gui.views.utils.LabelCustomizers;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.model.ChangeSet;
 import org.crossbowlabs.globs.model.ChangeSetListener;
@@ -31,8 +30,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
   public static final int DATE_COLUMN_INDEX = 0;
   public static final int CATEGORY_COLUMN_INDEX = 1;
   public static final int AMOUNT_COLUMN_INDEX = 3;
-  public static final int DISPENSABLE_COLUMN_INDEX = 5;
-  public static final int NOTE_COLUMN_INDEX = 6;
+  public static final int NOTE_COLUMN_INDEX = 4;
 
   private GlobTableView view;
 
@@ -112,16 +110,12 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
     TransactionAmountColumn amountColumn =
       new TransactionAmountColumn(view, rendererColors, descriptionService, repository, directory);
 
-    DispensabilityColumn dispensabilityColumn = new DispensabilityColumn(rendererColors, repository);
-
     return view
       .addColumn(Lang.get("date"), new TransactionDateStringifier(comparator))
       .addColumn(descriptionService.getLabel(Category.TYPE), categoryColumn, categoryColumn,
                  new TransactionCategoriesStringifier(categoryStringifier).getComparator(repository))
       .addColumn(LABEL)
       .addColumn(Lang.get("amount"), amountColumn, amountColumn, amountStringifier.getComparator(repository))
-      .addColumn(Lang.get("time"), new TransactionTimeCostStringifier(), LabelCustomizers.alignRight())
-      .addColumn("", dispensabilityColumn, dispensabilityColumn, new GlobFieldComparator(Transaction.DISPENSABLE))
       .addColumn(NOTE, new TransactionNoteEditor(repository, directory));
   }
 

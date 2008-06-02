@@ -25,7 +25,7 @@ public class Transaction {
   public static StringField LABEL;
   public static StringField NOTE;
   public static StringField ORIGINAL_LABEL;
-  public static BooleanField DISPENSABLE;
+  public static BooleanField DISPENSABLE; // unused
   public static StringField LABEL_FOR_CATEGORISATION;
 
   @Target(Category.class)

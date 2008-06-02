@@ -87,19 +87,6 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testManagesDispensability() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addDispensableTransaction("2006/01/10", -1.0, "Chez Lulu")
-      .load();
-
-    categories.select(MasterCategory.ALL);
-    transactions
-      .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", true, "", -1.0)
-      .check();
-  }
-
   public void testImportingTheSameFileTwiceDoesNotDuplicateTransactions() throws Exception {
     OfxBuilder
       .init(this)

@@ -1,6 +1,6 @@
-package org.designup.picsou.gui.transactions;
+package org.designup.picsou.gui.utils;
 
-public class TimeCost {
+public class TimeUtils {
 
   public static String get(double amount, double rate, int workingHoursPerDay) {
     if ((amount == 0) || (rate == 0) || (workingHoursPerDay == 0)) {

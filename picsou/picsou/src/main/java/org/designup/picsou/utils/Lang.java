@@ -23,17 +23,25 @@ public class Lang {
   }
 
   public static String get(String key, Object... arguments) throws ItemNotFound {
+    if (arguments.length == 0) {
+      return getMessage(key);
+    }
+    return getFormat(key).format(arguments);
+  }
+
+  public static MessageFormat getFormat(String key) {
+    String message = getMessage(key);
+    MessageFormat formatter = new MessageFormat(message);
+    formatter.setLocale(LOCALE);
+    return formatter;
+  }
+
+  private static String getMessage(String key) {
     String message = find(key);
     if (message == null) {
       throw new ItemNotFound("Key '" + key + "' not found in language file: " + LOCALE);
     }
-    if (arguments.length == 0) {
       return message;
-    }
-
-    MessageFormat formatter = new MessageFormat(message);
-    formatter.setLocale(LOCALE);
-    return formatter.format(arguments);
   }
 
   public static String find(String key) {

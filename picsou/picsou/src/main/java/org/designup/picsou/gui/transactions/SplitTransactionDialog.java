@@ -13,7 +13,6 @@ import org.crossbowlabs.globs.model.GlobList;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.model.format.DescriptionService;
 import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.model.utils.GlobFieldComparator;
 import org.crossbowlabs.globs.model.utils.LocalGlobRepository;
 import org.crossbowlabs.globs.model.utils.LocalGlobRepositoryBuilder;
 import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
@@ -44,9 +43,8 @@ import java.awt.event.*;
 public class SplitTransactionDialog {
   public static final int CATEGORY_COLUMN_INDEX = 0;
   public static final int LABEL_COLUMN_INDEX = 1;
-  public static final int DISPENSABLE_COLUMN_INDEX = 3;
-  public static final int NOTE_COLUMN_INDEX = 4;
-  public static final int REMOVE_SPLIT_COLUMN_INDEX = 5;
+  public static final int NOTE_COLUMN_INDEX = 3;
+  public static final int REMOVE_SPLIT_COLUMN_INDEX = 4;
 
   public static Icon EXPANDED_ICON = Gui.ICON_LOCATOR.get("arrowdown.png");
   public static Icon COLLAPSED_ICON = Gui.ICON_LOCATOR.get("arrowright.png");
@@ -242,8 +240,6 @@ public class SplitTransactionDialog {
             new DeleteSplitTransactionColumn(transaction, view, rendererColors, descriptionService,
                                              localRepository, localDirectory);
 
-    DispensabilityColumn dispensabilityColumn = new DispensabilityColumn(rendererColors, localRepository);
-
     view
             .addColumn(descriptionService.getLabel(Category.TYPE), categoryColumn, categoryColumn,
                        categoriesStringifier.getComparator(localRepository))
@@ -251,7 +247,6 @@ public class SplitTransactionDialog {
             .addColumn(Lang.get("amount"),
                        amountStringifier,
                        chain(alignRight(), LabelCustomizers.stringifier(amountStringifier, localRepository)))
-            .addColumn("", dispensabilityColumn, dispensabilityColumn, new GlobFieldComparator(Transaction.DISPENSABLE))
             .addColumn(NOTE, new TransactionNoteEditor(localRepository, localDirectory))
             .addColumn(" ", deleteSplitColumn, deleteSplitColumn, transactionComparator);
 
@@ -269,7 +264,6 @@ public class SplitTransactionDialog {
 
   private void adjustColumnsSize(JTable table) {
     adjustColumnSize(table, LABEL_COLUMN_INDEX);
-    adjustColumnSize(table, DISPENSABLE_COLUMN_INDEX);
     adjustColumnSize(table, REMOVE_SPLIT_COLUMN_INDEX);
   }
 
@@ -282,7 +276,7 @@ public class SplitTransactionDialog {
   private void doSplit() {
     Double initialAmount = transaction.get(Transaction.AMOUNT);
 
-    double amount = 0;
+    double amount;
     try {
       amount = getEnteredAmount() * Math.signum(initialAmount);
     }

@@ -3,26 +3,23 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.splits.utils.GuiUtils;
-import org.uispec4j.Button;
-import org.uispec4j.*;
-import org.uispec4j.Panel;
-import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.*;
-import org.uispec4j.interception.WindowInterceptor;
-import org.designup.picsou.gui.transactions.DispensabilityColumn;
 import org.designup.picsou.gui.transactions.SplitTransactionDialog;
-import org.designup.picsou.gui.transactions.TimeCost;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.utils.PicsouDescriptionService;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
+import org.uispec4j.Button;
+import org.uispec4j.*;
+import org.uispec4j.Panel;
+import org.uispec4j.Window;
+import static org.uispec4j.assertion.UISpecAssert.*;
+import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +49,6 @@ public class TransactionChecker extends DataChecker {
       table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
       table.setCellValueConverter(TransactionView.CATEGORY_COLUMN_INDEX, new CategoryCellConverter());
       table.setCellValueConverter(TransactionView.AMOUNT_COLUMN_INDEX, new AmountCellConverter());
-      table.setCellValueConverter(TransactionView.DISPENSABLE_COLUMN_INDEX, new DispensableCellConverter());
     }
     return table;
   }
@@ -119,12 +115,6 @@ public class TransactionChecker extends DataChecker {
     dialog.selectCategory(categoryName);
   }
 
-  public void toggleDispensable(int row) {
-    JLabel label = (JLabel) getTable().getSwingEditorComponentAt(row, TransactionView.DISPENSABLE_COLUMN_INDEX);
-    MouseEvent event = new MouseEvent(label, MouseEvent.MOUSE_PRESSED, 1, 0, 0, 0, 1, false);
-    label.dispatchEvent(event);
-  }
-
   private static String stringifyCategoryNames(MasterCategory... categories) {
     int index = 0;
     StringBuilder builder = new StringBuilder();
@@ -156,11 +146,9 @@ public class TransactionChecker extends DataChecker {
     }
 
     public ContentChecker add(String date, TransactionType type, String label,
-                              String note, double amount, String ...category) {
+                              String note, double amount, String... category) {
       content.add(new Object[]{date, stringifySubCategoryNames(category), label,
                                TransactionChecker.this.toString(amount),
-                               TimeCost.get(amount, 15, 12),
-                               Boolean.FALSE,
                                note});
       return this;
     }
@@ -169,18 +157,6 @@ public class TransactionChecker extends DataChecker {
                               String note, double amount, MasterCategory master, String category) {
       content.add(new Object[]{date, stringifyCategoryNames(master) + ", " + category, label,
                                TransactionChecker.this.toString(amount),
-                               TimeCost.get(amount, 15, 12),
-                               Boolean.FALSE,
-                               note});
-      return this;
-    }
-
-    public ContentChecker add(String date, TransactionType type, String label, boolean dispensable,
-                              String note, double amount, MasterCategory... categories) {
-      content.add(new Object[]{date, stringifyCategoryNames(categories), label,
-                               TransactionChecker.this.toString(amount),
-                               TimeCost.get(amount, 15, 12),
-                               dispensable,
                                note});
       return this;
     }
@@ -188,10 +164,9 @@ public class TransactionChecker extends DataChecker {
     public ContentChecker add(String date, TransactionType type, String label,
                               String note, double amount, MasterCategory categorie, MasterCategory... categories) {
       add(date, type, label, note, amount, getCategoryName(categorie) + (categories.length != 0 ? ", " : "") +
-          stringifyCategoryNames(categories));
+                                           stringifyCategoryNames(categories));
       return this;
     }
-
 
     public void check() {
       Object[][] expectedContent = content.toArray(new Object[content.size()][]);
@@ -211,7 +186,6 @@ public class TransactionChecker extends DataChecker {
       this.window = window;
       splitsTable = window.getTable();
       splitsTable.setCellValueConverter(SplitTransactionDialog.CATEGORY_COLUMN_INDEX, new CategoryCellConverter());
-      splitsTable.setCellValueConverter(SplitTransactionDialog.DISPENSABLE_COLUMN_INDEX, new DispensableCellConverter());
       splitsTable.setCellValueConverter(SplitTransactionDialog.REMOVE_SPLIT_COLUMN_INDEX, new TableCellValueConverter() {
         public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
           return "";
@@ -324,14 +298,18 @@ public class TransactionChecker extends DataChecker {
     }
 
     public SplitDialog checkTable(Object[][] objects) {
-      Object[][] expected = new Object[objects.length][6];
+      Object[][] expected = new Object[objects.length][5];
       for (int i = 0; i < objects.length; i++) {
-        expected[i][0] = stringifyCategoryNames(((MasterCategory) objects[i][0]));
-        expected[i][1] = objects[i][1];
-        expected[i][2] = PicsouDescriptionService.DECIMAL_FORMAT.format(objects[i][2]);
-        expected[i][3] = objects[i][3];
-        expected[i][4] = objects[i][4];
-        expected[i][5] = "";
+        int column = 0;
+        expected[i][column] = stringifyCategoryNames(((MasterCategory)objects[i][column]));
+        column++;
+        expected[i][column] = objects[i][column];
+        column++;
+        expected[i][column] = PicsouDescriptionService.DECIMAL_FORMAT.format(objects[i][column]);
+        column++;
+        expected[i][column] = objects[i][column];
+        column++;
+        expected[i][column] = "";
       }
       assertTrue(splitsTable.contentEquals(expected));
       return this;
@@ -396,7 +374,7 @@ public class TransactionChecker extends DataChecker {
 
   private static class DateCellConverter implements TableCellValueConverter {
     public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-      Glob transaction = (Glob) modelObject;
+      Glob transaction = (Glob)modelObject;
       int yearMonth = transaction.get(Transaction.MONTH);
       int year = Month.toYear(yearMonth);
       int month = Month.toMonth(yearMonth);
@@ -411,12 +389,12 @@ public class TransactionChecker extends DataChecker {
     public Object getValue(int row, int column,
                            Component renderedComponent, Object modelObject) {
       org.uispec4j.Panel panel =
-        new org.uispec4j.Panel((JPanel) renderedComponent);
+        new org.uispec4j.Panel((JPanel)renderedComponent);
       UIComponent[] categoryLabels = panel.getUIComponents(TextBox.class);
       int index = 0;
       StringBuilder builder = new StringBuilder();
       for (int i = 0; i < categoryLabels.length; i++) {
-        TextBox label = (TextBox) categoryLabels[i];
+        TextBox label = (TextBox)categoryLabels[i];
         if (index++ > 0) {
           builder.append(", ");
         }
@@ -429,14 +407,8 @@ public class TransactionChecker extends DataChecker {
   private static class AmountCellConverter implements TableCellValueConverter {
     public Object getValue(int row, int column,
                            Component renderedComponent, Object modelObject) {
-      org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel) renderedComponent);
+      org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
       return panel.getTextBox("amount").getText();
-    }
-  }
-
-  private static class DispensableCellConverter implements TableCellValueConverter {
-    public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-      return DispensabilityColumn.CHECKBOX_SELECTED_ICON.equals(((JLabel) renderedComponent).getIcon());
     }
   }
 }
