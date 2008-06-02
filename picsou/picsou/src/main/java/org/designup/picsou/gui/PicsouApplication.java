@@ -26,6 +26,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class PicsouApplication {
 
@@ -50,6 +51,7 @@ public class PicsouApplication {
   }
 
   public static void main(String... args) throws Exception {
+    Locale.setDefault(Locale.FRANCE);
     if (System.getProperty("mrj.version") != null) {
       System.setProperty("apple.laf.useScreenMenuBar", "true");
     }

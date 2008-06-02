@@ -300,7 +300,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
 
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
 
-    categories.select(MasterCategory.FOOD, "Apero");
+    categories.select(MasterCategory.FOOD);
     categories.assertDeletionNotAvailable();
   }
 
@@ -394,12 +394,6 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.assertRenameNotAvailable();
   }
 
-  public void testCannotRenameSystemCategories() throws Exception {
-    categories.toggleExpanded(MasterCategory.INCOME);
-    categories.select(MasterCategory.INCOME, "Droits d'auteur");
-    categories.assertRenameNotAvailable();
-  }
-
   public void testPopupMenu() throws Exception {
     WindowInterceptor.init(
       PopupMenuInterceptor.run(categories.triggerPopup(MasterCategory.FOOD))
@@ -461,7 +455,18 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
   }
 
   public void testGenericCategoriesCannotBeExpanded() throws Exception {
-    categories.assertExpansionDisabled(MasterCategory.ALL);
-    categories.assertExpansionDisabled(MasterCategory.NONE);
+    categories.assertExpansionEnabled(MasterCategory.ALL, false);
+    categories.assertExpansionEnabled(MasterCategory.NONE, false);
+  }
+
+  public void testDeletingAllSubcategoriesDisablesExpansion() throws Exception {
+    categories.assertExpansionEnabled(MasterCategory.MISC_SPENDINGS, false);
+
+    categories.createSubCategory(MasterCategory.MISC_SPENDINGS, "Misc");
+    categories.assertExpansionEnabled(MasterCategory.MISC_SPENDINGS, true);
+
+    categories.select("Misc");
+    categories.deleteSelected();
+    categories.assertExpansionEnabled(MasterCategory.MISC_SPENDINGS, false);
   }
 }

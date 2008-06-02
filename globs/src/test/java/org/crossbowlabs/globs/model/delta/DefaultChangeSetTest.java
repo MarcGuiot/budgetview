@@ -44,7 +44,7 @@ public class DefaultChangeSetTest extends TestCase {
 
   public void testChangesAnalysisForEmptyChangeSet() throws Exception {
     assertFalse(changeSet.containsChanges(DummyObject.TYPE));
-    assertFalse(changeSet.containsCreationsAndDeletions(DummyObject.TYPE));
+    assertFalse(changeSet.containsCreationsOrDeletions(DummyObject.TYPE));
     assertFalse(changeSet.containsUpdates(DummyObject.NAME));
     assertEquals(0, changeSet.size());
   }
@@ -55,7 +55,7 @@ public class DefaultChangeSetTest extends TestCase {
     changeSet.processCreation(DummyObject.TYPE, creationValues);
     assertTrue(changeSet.containsChanges(key1));
     assertTrue(changeSet.containsChanges(DummyObject.TYPE));
-    assertTrue(changeSet.containsCreationsAndDeletions(DummyObject.TYPE));
+    assertTrue(changeSet.containsCreationsOrDeletions(DummyObject.TYPE));
     assertFalse(changeSet.containsUpdates(DummyObject.NAME));
     assertFalse(changeSet.containsChanges(DummyObject2.TYPE));
     assertEquals(1, changeSet.size());
@@ -75,7 +75,7 @@ public class DefaultChangeSetTest extends TestCase {
     assertTrue(changeSet.containsChanges(key1));
     TestUtils.assertEquals(changeSet.getUpdated(DummyObject.TYPE), key1);
     assertTrue(changeSet.containsChanges(DummyObject.TYPE));
-    assertFalse(changeSet.containsCreationsAndDeletions(DummyObject.TYPE));
+    assertFalse(changeSet.containsCreationsOrDeletions(DummyObject.TYPE));
     assertTrue(changeSet.containsUpdates(DummyObject.VALUE));
     assertFalse(changeSet.containsUpdates(DummyObject.NAME));
     assertFalse(changeSet.containsChanges(DummyObject2.TYPE));
@@ -104,7 +104,7 @@ public class DefaultChangeSetTest extends TestCase {
     changeSet.processDeletion(key1, FieldValues.EMPTY);
     assertTrue(changeSet.containsChanges(key1));
     assertTrue(changeSet.containsChanges(DummyObject.TYPE));
-    assertTrue(changeSet.containsCreationsAndDeletions(DummyObject.TYPE));
+    assertTrue(changeSet.containsCreationsOrDeletions(DummyObject.TYPE));
     assertFalse(changeSet.containsUpdates(DummyObject.NAME));
     assertEquals(1, changeSet.size());
 

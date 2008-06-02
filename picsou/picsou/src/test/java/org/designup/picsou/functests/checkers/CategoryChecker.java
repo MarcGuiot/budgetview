@@ -47,10 +47,6 @@ public class CategoryChecker extends DataChecker {
     select(new MasterCategory[0]);
   }
 
-  public void select(MasterCategory master, String subcategory) {
-    table.selectRows(org.crossbowlabs.globs.utils.Utils.append(getIndexes(master), getIndexes(subcategory)));
-  }
-
   public void select(String... categoryNames) {
     table.selectRows(getIndexes(categoryNames));
   }
@@ -192,9 +188,11 @@ public class CategoryChecker extends DataChecker {
     return getIndexes(master)[0];
   }
 
-  public void assertExpansionDisabled(MasterCategory master) {
+  public void assertExpansionEnabled(MasterCategory master, boolean enabled) {
     JButton button = (JButton) table.getSwingRendererComponentAt(getIndex(master), 0);
-    Assert.assertNull(button.getIcon());
+    Assert.assertEquals(enabled,
+                        (button.getIcon() != null) &&
+                        (button.getIcon() != CategoryExpansionColumn.DISABLED_ICON));
   }
 
   public void assertExpanded(MasterCategory master, boolean expanded) {

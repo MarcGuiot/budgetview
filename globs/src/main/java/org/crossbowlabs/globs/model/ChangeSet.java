@@ -9,7 +9,7 @@ public interface ChangeSet {
 
   boolean containsChanges(GlobType type);
 
-  boolean containsCreationsAndDeletions(GlobType type);
+  boolean containsCreationsOrDeletions(GlobType type);
 
   boolean containsUpdates(Field field);
 

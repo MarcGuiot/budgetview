@@ -33,7 +33,7 @@ class CategoryExpansionModel implements GlobMatcher, ChangeSetListener {
       boolean expandable = Category.hasChildren(categoryId, repository);
       expandableMap.put(categoryId, expandable);
       if (!expandable) {
-        expandableMap.put(categoryId, false);
+        expandedMap.put(categoryId, false);
       }
     }
   }
@@ -80,7 +80,7 @@ class CategoryExpansionModel implements GlobMatcher, ChangeSetListener {
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (!changeSet.containsCreationsAndDeletions(Category.TYPE)) {
+    if (!changeSet.containsCreationsOrDeletions(Category.TYPE)) {
       return;
     }
     updateExpandabilities();

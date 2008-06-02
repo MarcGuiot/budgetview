@@ -6,7 +6,7 @@ import org.crossbowlabs.globs.model.GlobRepository;
 public class Debug {
 
   private static HtmlLogger logger;
-  private static boolean enabled = true;
+  private static boolean enabled = false;
 
   public static void setEnabled(boolean enabled) {
     Debug.enabled = enabled;

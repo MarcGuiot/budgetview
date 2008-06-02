@@ -171,7 +171,7 @@ public class DefaultChangeSet implements MutableChangeSet {
     return result;
   }
 
-  public boolean containsCreationsAndDeletions(GlobType type) {
+  public boolean containsCreationsOrDeletions(GlobType type) {
     for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.values()) {
       if (deltaGlob.getType().equals(type) &&
           (deltaGlob.isCreated() || deltaGlob.isDeleted())) {

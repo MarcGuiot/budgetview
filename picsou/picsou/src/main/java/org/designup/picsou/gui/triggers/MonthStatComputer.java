@@ -29,7 +29,7 @@ public class MonthStatComputer implements ChangeSetListener {
         changeSet.containsUpdates(Transaction.AMOUNT) ||
         changeSet.containsUpdates(Transaction.MONTH) ||
         changeSet.containsChanges(Category.TYPE) ||
-        changeSet.containsCreationsAndDeletions(Transaction.TYPE)) {
+        changeSet.containsCreationsOrDeletions(Transaction.TYPE)) {
       run();
     }
   }
