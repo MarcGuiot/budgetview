@@ -218,7 +218,7 @@
      <id>mac</id>
      <activation>
        <os>
-	     <name>mac</name>
+	     <name>Mac OS X</name>
          <family>unix</family>
        </os>
      </activation>

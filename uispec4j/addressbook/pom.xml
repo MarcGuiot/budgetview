@@ -85,6 +85,7 @@
       <id>linux</id>
       <activation>
         <os>
+          <name>Linux</name>
           <family>unix</family>
         </os>
       </activation>
@@ -96,6 +97,7 @@
      <id>mac</id>
      <activation>
        <os>
+         <name>Mac OS X</name>
          <family>unix</family>
        </os>
      </activation>
