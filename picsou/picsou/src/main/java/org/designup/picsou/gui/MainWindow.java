@@ -42,10 +42,7 @@ public class MainWindow {
 
   public void setPanel(JPanel panel) {
     frame.setContentPane(panel);
-  }
-
-  public void fadeTo(JPanel panel) {
-    FadingSwapper.init(frame).swapTo(panel);
+    frame.validate();
   }
 
   public JFrame getFrame() {

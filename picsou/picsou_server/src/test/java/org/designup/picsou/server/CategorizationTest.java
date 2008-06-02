@@ -31,7 +31,8 @@ public class CategorizationTest extends ServerFuncTestCase {
     createAndLogUser("user", "_passd1", fileName);
     Table transactionTable = window.getTable(Transaction.TYPE.getName());
     WindowInterceptor.init(transactionTable.editCell(2, TransactionView.CATEGORY_COLUMN_INDEX)
-        .getButton("Add").triggerClick()).process(new WindowHandler() {
+        .getButton("Add").triggerClick())
+      .process(new WindowHandler() {
       public Trigger process(final Window window) throws Exception {
           return new Trigger() {
             public void run() throws Exception {
@@ -39,8 +40,7 @@ public class CategorizationTest extends ServerFuncTestCase {
             }
           };
       }
-    });
-
+    }).run();
     checkTransactionChange();
     ((JFrame) window.getAwtComponent()).dispose();
     window = WindowInterceptor.run(new Trigger() {

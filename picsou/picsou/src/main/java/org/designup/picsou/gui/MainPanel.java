@@ -50,7 +50,7 @@ public class MainPanel {
       }
     }
     PicsouApplication.initialFile = null;
-    mainWindow.fadeTo(panel.panel);
+    mainWindow.setPanel(panel.panel);
     PicsouApplication.listenForFile(panel);
   }
 

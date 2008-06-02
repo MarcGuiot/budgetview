@@ -32,7 +32,7 @@ public class NewAccountPanel {
 
   public static void show(GlobRepository repository, Directory directory, MainWindow mainWindow) {
     NewAccountPanel panel = new NewAccountPanel(repository, directory, mainWindow);
-    mainWindow.fadeTo(panel.panel);
+    mainWindow.setPanel(panel.panel);
   }
 
   private NewAccountPanel(GlobRepository repository, Directory directory, MainWindow mainWindow) {
