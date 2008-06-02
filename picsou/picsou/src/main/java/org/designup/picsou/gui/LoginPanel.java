@@ -134,10 +134,9 @@ public class LoginPanel {
     }
     catch (Exception e) {
       displayErrorMessage("login.server.connection.failure");
-      StringWriter w = new StringWriter();
-      PrintWriter writer = new PrintWriter(w);
+      PrintWriter writer = new PrintWriter(new StringWriter());
       e.printStackTrace(writer);
-      JTextArea textArea = new JTextArea(w.toString());
+      JTextArea textArea = new JTextArea(writer.toString());
       GuiUtils.show(textArea);
     }
     finally {

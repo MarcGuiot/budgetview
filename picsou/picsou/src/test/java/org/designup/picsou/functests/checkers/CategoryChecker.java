@@ -225,16 +225,6 @@ public class CategoryChecker extends DataChecker {
     table.doubleClick(getIndex(category), 1);
   }
 
-  public void assertDispensabilityEquals(double value, MasterCategory master) {
-    String expected = value == 0.0 ? "" : PicsouDescriptionService.INTEGER_FORMAT.format(value);
-    Assert.assertEquals(expected, table.getContentAt(getIndex(master), CategoryView.DISPENSABLE_COLUMN_INDEX));
-  }
-
-  public void assertDispensabilityEquals(double value, String category) {
-    String expected = value == 0.0 ? "" : PicsouDescriptionService.INTEGER_FORMAT.format(value);
-    assertTrue(table.cellEquals(getIndex(category), CategoryView.DISPENSABLE_COLUMN_INDEX, expected));
-  }
-
   private Trigger triggerButton(final String name) {
     return new Trigger() {
       public void run() throws Exception {
@@ -275,7 +265,7 @@ public class CategoryChecker extends DataChecker {
 
     private String[][] computeExpectedArray() {
       List<MasterCategory> categories = getSortedCategories();
-      String[][] expectedArray = new String[MasterCategory.values().length][4];
+      String[][] expectedArray = new String[MasterCategory.values().length][3];
       int index = 0;
       for (MasterCategory category : categories) {
         Values values = expectedValues.get(category);
@@ -285,7 +275,6 @@ public class CategoryChecker extends DataChecker {
         expectedArray[index][0] = "";
         expectedArray[index][1] = getCategoryName(category);
         expectedArray[index][2] = toString(values);
-        expectedArray[index][3] = "";
         index++;
       }
       return expectedArray;

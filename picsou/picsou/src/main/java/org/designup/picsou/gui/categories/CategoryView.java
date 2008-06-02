@@ -27,7 +27,6 @@ public class CategoryView extends View {
   public static final int EXPANSION_COLUMN_INDEX = 0;
   public static final int CATEGORY_COLUMN_INDEX = 1;
   public static final int AMOUNT_COLUMN_INDEX = 2;
-  public static final int DISPENSABLE_COLUMN_INDEX = 3;
 
   private GlobTableView tableView;
   private JTable table;
@@ -68,7 +67,6 @@ public class CategoryView extends View {
     GlobStringifier categoryStringifier = descriptionService.getStringifier(Category.TYPE);
     CategoryDataProvider provider = new CategoryDataProvider(repository, directory);
     GlobStringifier amountStringifier = new AmountStringifier(provider);
-    GlobStringifier dispensabilityStringifier = new DispensabilityStringifier(provider);
     CategoryComparator categoryComparator = new CategoryComparator(repository, categoryStringifier);
 
     tableView = GlobTableView.init(Category.TYPE, repository, categoryComparator, directory);
@@ -82,7 +80,6 @@ public class CategoryView extends View {
     tableView.addColumn(" ", expandColumn, expandColumn, categoryStringifier.getComparator(repository))
       .addColumn(Lang.get("category"), categoryColumn, categoryColumn, categoryComparator)
       .addColumn(Lang.get("amount"), amountStringifier, chain(alignRight(), customizer), backgroundPainter)
-      .addColumn("", dispensabilityStringifier, chain(alignRight(), customizer), backgroundPainter)
       .setHeaderCustomizer(new PicsouTableHeaderCustomizer(directory, PicsouColors.CATEGORY_TABLE_HEADER_TITLE),
                            new PicsouTableHeaderPainter(directory,
                                                         PicsouColors.CATEGORY_TABLE_HEADER_DARK,
@@ -125,7 +122,6 @@ public class CategoryView extends View {
     JLabel renderer = (JLabel) TableUtils.getRenderedComponentAt(table, 0, AMOUNT_COLUMN_INDEX);
     renderer.setText(format(PicsouSamples.AMOUNT_SAMPLE));
     TableUtils.setSize(table, AMOUNT_COLUMN_INDEX, TableUtils.getPreferredWidth(renderer));
-    TableUtils.setSize(table, DISPENSABLE_COLUMN_INDEX, TableUtils.getPreferredWidth(renderer));
 
     TableUtils.autosizeColumn(table, CATEGORY_COLUMN_INDEX);
   }
@@ -151,18 +147,6 @@ public class CategoryView extends View {
 
     public String toString(Glob category, GlobRepository repository) {
       return format(dataProvider.getAmount(category.get(Category.ID)));
-    }
-  }
-
-  private class DispensabilityStringifier extends AbstractGlobStringifier {
-    private CategoryDataProvider dataProvider;
-
-    public DispensabilityStringifier(CategoryDataProvider dataProvider) {
-      this.dataProvider = dataProvider;
-    }
-
-    public String toString(Glob category, GlobRepository repository) {
-      return format(dataProvider.getDispensability(category.get(Category.ID)));
     }
   }
 
