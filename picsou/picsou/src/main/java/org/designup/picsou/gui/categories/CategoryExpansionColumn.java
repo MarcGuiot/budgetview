@@ -84,7 +84,6 @@ public class CategoryExpansionColumn
 
   public void actionPerformed(ActionEvent e) {
     Glob category = view.getSelectedCategory();
-    selectionService.select(category);
     expansionModel.toggleExpansion(category);
     stopCellEditing();
   }
