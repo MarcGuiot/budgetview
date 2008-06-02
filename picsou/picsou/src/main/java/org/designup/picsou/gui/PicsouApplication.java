@@ -83,7 +83,7 @@ public class PicsouApplication {
   }
 
   private static String getServerAddress() {
-    return getSystemValue(DEFAULT_ADDRESS_PROPERTY, DEFAULT_ADDRESS);
+    return getSystemValue(DEFAULT_ADDRESS_PROPERTY, "");
   }
 
   public static String getLocalPrevaylerPath() {
