@@ -60,7 +60,7 @@ public class LoginTest extends ServerFunctionalTestCase {
     userField = window.getInputTextBox("name");
     passwordField = window.getPasswordField("password");
     createUserCheckbox = window.getCheckBox();
-    loginButton = window.getButton("Connexion");
+    loginButton = window.getButton("Entrer");
   }
 
   public void testCreatingAUserAndLoggingInAgain() throws Exception {
@@ -154,7 +154,7 @@ public class LoginTest extends ServerFunctionalTestCase {
     loginButton.click();
 
     TextBox fileField = window.getInputTextBox("fileField");
-    Button connectButton = window.getButton("Connexion");
+    Button connectButton = window.getButton("IMporter");
 
     TextBox fileMessage = (TextBox) window.findUIComponent(TextBox.class, "Indiquez l'emplacement");
     assertTrue(fileMessage != null);
@@ -223,7 +223,7 @@ public class LoginTest extends ServerFunctionalTestCase {
 
     window.getInputTextBox("fileField").setText(filePath);
     TextBox textBox = window.getTextBox("message");
-    window.getButton("Connexion").click();
+    window.getButton("Importer").click();
     assertTrue(textBox.textIsEmpty());
   }
 

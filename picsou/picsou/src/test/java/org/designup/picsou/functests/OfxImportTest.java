@@ -4,7 +4,6 @@ import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.utils.GlobFieldMatcher;
 import org.crossbowlabs.globs.utils.Files;
 import org.crossbowlabs.globs.utils.TestUtils;
-import org.crossbowlabs.globs.utils.logging.Debug;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowHandler;
@@ -456,7 +455,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testInvalidFileExtension() throws Exception {
+  public void   testInvalidFileExtension() throws Exception {
     WindowInterceptor
       .init(new Trigger() {
         public void run() throws Exception {

@@ -5,6 +5,7 @@ import org.crossbowlabs.globs.utils.Strings;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorService;
+import org.crossbowlabs.splits.color.ColorServiceEditor;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadPassword;
@@ -13,6 +14,7 @@ import org.designup.picsou.client.exceptions.UserNotRegistered;
 import org.designup.picsou.client.http.*;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 
@@ -84,6 +86,7 @@ public class LoginPanel {
 
     ColorService colorService = directory.get(ColorService.class);
     SplitsBuilder builder = new SplitsBuilder(colorService, Gui.ICON_LOCATOR, Lang.TEXT_LOCATOR);
+    builder.add("wave", new JWavePanel(colorService));
     builder.add("name", userField);
     builder.add("password", passwordField);
     builder.add("confirmPassword", confirmPasswordField);

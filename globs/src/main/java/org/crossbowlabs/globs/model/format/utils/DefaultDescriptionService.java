@@ -71,7 +71,6 @@ public class DefaultDescriptionService implements DescriptionService {
         }
       }
       catch (MissingResourceException e) {
-        ;
       }
     }
     return defaultValue;

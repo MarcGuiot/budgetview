@@ -32,7 +32,7 @@
 
           <label ref="message" margin="5" horizontalAlignment="center"/>
 
-          <button ref="login" text="Connexion" margin="5"/>
+          <button ref="login" text="Importer" margin="5"/>
 
         </column>
       </styledPanel>

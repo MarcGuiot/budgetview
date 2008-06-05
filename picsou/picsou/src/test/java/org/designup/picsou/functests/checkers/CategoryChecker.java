@@ -43,6 +43,10 @@ public class CategoryChecker extends DataChecker {
     });
   }
 
+  public Table getTable() {
+    return table;
+  }
+
   public void selectNone() {
     select(new MasterCategory[0]);
   }

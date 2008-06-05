@@ -589,6 +589,35 @@ public class SplitsBuilderTest extends TestCase {
     assertTrue(parse("<label text='foo' opaque='true'/>").isOpaque());
   }
 
+  public void testPanel() throws Exception {
+    builder.add("btn", aButton);
+    MyPanel myPanel = new MyPanel();
+    builder.add("myPanel", myPanel);
+    MyPanel panel = (MyPanel) parse(
+      "<panel ref='myPanel'>" +
+      "  <button ref='btn'/>" +
+      "</panel>");
+    assertSame(aButton, panel.getComponent(0));
+  }
+
+  public void testAPanelCanHaveOnlyOneChild() throws Exception {
+    MyPanel myPanel = new MyPanel();
+    builder.add("myPanel", myPanel);
+    try {
+      MyPanel panel = (MyPanel) parse(
+        "<panel ref='myPanel'>" +
+        "  <button/>" +
+        "  <button/>" +
+        "</panel>");
+    }
+    catch (Exception e) {
+      assertEquals("panel components cannot have more than one subcomponent", e.getMessage());
+    }
+  }
+
+  private static class MyPanel extends JPanel {
+  }
+
   public void testStyledPanel() throws Exception {
     builder.add("btn", aButton);
     JStyledPanel panel = (JStyledPanel) parse(
@@ -611,7 +640,6 @@ public class SplitsBuilderTest extends TestCase {
 
     assertSame(aButton, panel.getComponent(0));
   }
-
   public void testScrollPane() throws Exception {
     builder.add(aTable);
     JScrollPane scrollPane = (JScrollPane) parse(

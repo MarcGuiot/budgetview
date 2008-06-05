@@ -17,12 +17,14 @@ public class ColorServiceEditorDemo {
 
     JFrame frame =
       (JFrame)builder.parse(new StringReader(
-        "<frame background='form.bg'>" +
-        "  <row margin='15'>" +
-        "    <label text='Name' foreground='label.fg' marginRight='20'/>" +
-        "    <textField/>" +
-        "  </row>" +
-        "</frame>"));
+        "<splits>" +
+        "  <frame background='form.bg'>" +
+        "    <row margin='15'>" +
+        "      <label text='Name' foreground='label.fg' marginRight='20'/>" +
+        "      <textField/>" +
+        "    </row>" +
+        "  </frame>" +
+        "</splits>"));
     frame.pack();
     frame.setVisible(true);
 

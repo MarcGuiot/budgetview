@@ -10,9 +10,7 @@ import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.security.AccessController;
 
 public class Gui {
@@ -123,6 +121,7 @@ public class Gui {
         }
       }
     });
+
   }
 
   public static JPanel createHorizontalBoxLayoutPanel() {
@@ -213,5 +212,12 @@ public class Gui {
     public void mouseExited(MouseEvent e) {
       label.setIcon(originalIcon);
     }
+  }
+
+  public static boolean hasModifiers(ActionEvent e) {
+    return ((e.getModifiers() & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) ||
+           ((e.getModifiers() & InputEvent.SHIFT_MASK) == InputEvent.SHIFT_MASK) ||
+           ((e.getModifiers() & InputEvent.ALT_MASK) == InputEvent.ALT_MASK) ||
+           ((e.getModifiers() & InputEvent.META_MASK) == InputEvent.META_MASK);
   }
 }

@@ -1,6 +1,6 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
-  <styledPanel topColor="login.bg.top" bottomColor="login.bg.bottom" opaque="true">
+  <panel ref="wave" opaque="true">
     <column>
 
       <filler fill="vertical" weightY="10"/>
@@ -30,7 +30,7 @@
 
           <label ref="message" margin="5" horizontalAlignment="center"/>
 
-          <button ref="login" text="Connexion" margin="5"/>
+          <button ref="login" text="Entrer" margin="5"/>
 
         </column>
 
@@ -40,6 +40,6 @@
 
     </column>
 
-  </styledPanel>
+  </panel>
 
 </splits>

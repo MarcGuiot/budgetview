@@ -3,10 +3,7 @@ package org.designup.picsou.functests;
 import static org.crossbowlabs.globs.utils.Utils.remove;
 import org.crossbowlabs.globs.utils.Files;
 import org.crossbowlabs.globs.utils.TestUtils;
-import org.uispec4j.Button;
-import org.uispec4j.TextBox;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
@@ -457,6 +454,22 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
   public void testGenericCategoriesCannotBeExpanded() throws Exception {
     categories.assertExpansionEnabled(MasterCategory.ALL, false);
     categories.assertExpansionEnabled(MasterCategory.NONE, false);
+  }
+
+  public void testCanShiftSelectFromExpansionColumn() throws Exception {
+    Table table = categories.getTable();
+    categories.createSubCategory(MasterCategory.MISC_SPENDINGS, "a1");
+    categories.createSubCategory(MasterCategory.MISC_SPENDINGS, "a2");
+    categories.createSubCategory(MasterCategory.MISC_SPENDINGS, "a3");
+
+    String[] categoryNames = {"a1", "a2", "a3"};
+    int[] rows = categories.getIndexes(categoryNames);
+
+    table.clearSelection();
+    table.click(rows[0], 0);
+    table.click(rows[2], 0, Key.Modifier.SHIFT);
+
+    assertTrue(categories.getTable().rowsAreSelected(rows));
   }
 
   public void testDeletingAllSubcategoriesDisablesExpansion() throws Exception {

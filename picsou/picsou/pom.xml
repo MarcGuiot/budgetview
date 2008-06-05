@@ -217,20 +217,4 @@
     <url/>
   </scm>
 
-  <!--<ciManagement>-->
-  <!--<system>continuum</system>-->
-  <!--<notifiers>-->
-  <!--<notifier>-->
-  <!--<type>mail</type>-->
-  <!--<sendOnError>true</sendOnError>-->
-  <!--<sendOnFailure>true</sendOnFailure>-->
-  <!--<sendOnSuccess>false</sendOnSuccess>-->
-  <!--<sendOnWarning>false</sendOnWarning>-->
-  <!--<configuration>-->
-  <!--<address>severine.tardif@bi-sam.com</address>-->
-  <!--</configuration>-->
-  <!--</notifier>-->
-  <!--</notifiers>-->
-  <!--</ciManagement>-->
-
 </project>

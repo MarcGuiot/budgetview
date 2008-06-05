@@ -52,6 +52,9 @@ public class DefaultSplitterFactory implements SplitterFactory {
     else if (name.equals("frame")) {
       return new FrameComponent(properties, subSplitters, context);
     }
+    else if (name.equals("panel")) {
+      return new PanelComponent(properties, subSplitters, context);
+    }
     else if (name.equals("styledPanel")) {
       return new StyledPanelComponent(properties, subSplitters, context);
     }
