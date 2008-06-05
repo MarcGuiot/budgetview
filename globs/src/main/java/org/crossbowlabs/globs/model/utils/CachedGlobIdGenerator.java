@@ -9,6 +9,8 @@ public class CachedGlobIdGenerator implements GlobIdGenerator {
   private GlobIdGenerator innerGenerator;
   private Map<IntegerField, Id> moreData = new HashMap<IntegerField, Id>();
   public static final int MIN_COUNT = 5;
+  private static final int MAX_STEP = 40;
+
 
   public CachedGlobIdGenerator(GlobIdGenerator innerGenerator) {
     this.innerGenerator = innerGenerator;
@@ -39,7 +41,9 @@ public class CachedGlobIdGenerator implements GlobIdGenerator {
       if (currentId + idCount > nextMaxId) {
         currentId = innerGenerator.getNextId(keyField, idCount + currentStep);
         nextMaxId = currentId + idCount + currentStep;
-        currentStep *= 2;
+        if (currentStep < MAX_STEP) {
+          currentStep *= 2;
+        }
       }
       try {
         return currentId;

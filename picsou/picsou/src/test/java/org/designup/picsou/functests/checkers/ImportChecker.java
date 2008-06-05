@@ -25,6 +25,6 @@ public class ImportChecker extends DataChecker {
       }
     });
     Assert.assertEquals(1, imports.size());
-    Assert.assertEquals(imports.get(0).get(TransactionImport.BALANCE), balance);
+    Assert.assertEquals(balance, imports.get(0).get(TransactionImport.BALANCE));
   }
 }

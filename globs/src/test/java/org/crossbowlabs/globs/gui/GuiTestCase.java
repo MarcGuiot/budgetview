@@ -11,6 +11,7 @@ import org.crossbowlabs.splits.color.ColorService;
 import org.uispec4j.UISpecTestCase;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -26,7 +27,7 @@ public abstract class GuiTestCase extends UISpecTestCase {
                   new DefaultDescriptionService(
                     new Formats(new SimpleDateFormat("yyyy/MM/dd"),
                                 new SimpleDateFormat("yyyy/MM/dd hh:mm:ss"),
-                                new DecimalFormat("#.##"),
+                                new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.US)),
                                 "yes", "no")));
     directory.add(SelectionService.class, selectionService);
     directory.add(new ColorService());

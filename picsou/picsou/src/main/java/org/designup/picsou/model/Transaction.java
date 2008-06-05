@@ -1,10 +1,11 @@
 package org.designup.picsou.model;
 
 import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.index.NotUniqueIndex;
+import org.crossbowlabs.globs.metamodel.annotations.DefaultInteger;
 import org.crossbowlabs.globs.metamodel.annotations.Key;
 import org.crossbowlabs.globs.metamodel.annotations.Target;
 import org.crossbowlabs.globs.metamodel.fields.*;
+import org.crossbowlabs.globs.metamodel.index.NotUniqueIndex;
 import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobList;
@@ -29,6 +30,7 @@ public class Transaction {
   public static StringField LABEL_FOR_CATEGORISATION;
 
   @Target(Category.class)
+  @DefaultInteger(0)
   public static LinkField CATEGORY;
 
   @Target(TransactionType.class)

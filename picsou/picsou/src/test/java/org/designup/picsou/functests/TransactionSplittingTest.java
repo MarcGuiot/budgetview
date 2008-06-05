@@ -15,7 +15,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     transactions.openSplitDialog(0)
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -20.00, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -20.00, ""},
       })
       .assertAddAmountPanelVisible(true)
       .toggleAddAmountPanel()
@@ -28,17 +28,17 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .toggleDispensable()
       .add()
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -7.50, ""},
-        {MasterCategory.LEISURES, "Auchan", -12.50, "DVD"},
+        {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -7.50, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, "DVD"},
       })
       .enterAmount("2.50")
       .selectCategory(MasterCategory.BEAUTY)
       .enterNote("Youth Elixir")
       .add()
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -5.0, ""},
-        {MasterCategory.LEISURES, "Auchan", -12.50, "DVD"},
-        {MasterCategory.BEAUTY, "Auchan", -2.50, "Youth Elixir"},
+        {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -5.0, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, "DVD"},
+        {TransactionType.PRELEVEMENT, MasterCategory.BEAUTY, "Auchan", -2.50, "Youth Elixir"},
       })
       .ok();
 
@@ -87,8 +87,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .selectCategory(MasterCategory.LEISURES)
       .add()
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -7.50, ""},
-        {MasterCategory.LEISURES, "Auchan", -12.50, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -7.50, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, ""},
       })
       .cancel();
 
@@ -111,14 +111,14 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     transactions.openSplitDialog(1)
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -7.50, ""},
-        {MasterCategory.LEISURES, "Auchan", -12.50, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -7.50, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, ""},
       })
       .add("2.50", MasterCategory.BANK, "")
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -5.00, ""},
-        {MasterCategory.LEISURES, "Auchan", -12.50, ""},
-        {MasterCategory.BANK, "Auchan", -2.50, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -5.00, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.BANK, "Auchan", -2.50, ""},
       })
       .ok();
 
@@ -218,14 +218,14 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .enterAmount("12")
       .add()
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -8.0, ""},
-        {MasterCategory.NONE, "Auchan", -12.0, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -8.0, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.NONE, "Auchan", -12.0, ""},
       })
       .enterAmount("15")
       .checkErrorMessage("Le montant doit être inférieur à 8€")
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -8.0, ""},
-        {MasterCategory.NONE, "Auchan", -12.0, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -8.0, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.NONE, "Auchan", -12.0, ""},
       })
       .cancel();
   }
@@ -238,12 +238,12 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     transactions.openSplitDialog(0)
       .checkTable(new Object[][]{
-        {MasterCategory.NONE, "Auchan", -20.0, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.NONE, "Auchan", -20.0, ""},
       })
       .add("12", MasterCategory.LEISURES, "DVD")
       .checkTable(new Object[][]{
-        {MasterCategory.NONE, "Auchan", -8.0, ""},
-        {MasterCategory.LEISURES, "Auchan", -12.0, "DVD"},
+        {TransactionType.PRELEVEMENT, MasterCategory.NONE, "Auchan", -8.0, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.0, "DVD"},
       })
       .ok();
 
@@ -303,22 +303,22 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .add("8", MasterCategory.BEAUTY, "Youth Elixir")
       .add("3", MasterCategory.TRANSPORTS, "Cool Sticker")
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -4.0, ""},
-        {MasterCategory.LEISURES, "Auchan", -5.0, "DVD"},
-        {MasterCategory.BEAUTY, "Auchan", -8.0, "Youth Elixir"},
-        {MasterCategory.TRANSPORTS, "Auchan", -3.0,  "Cool Sticker"},
+        {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -4.0, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -5.0, "DVD"},
+        {TransactionType.PRELEVEMENT, MasterCategory.BEAUTY, "Auchan", -8.0, "Youth Elixir"},
+        {TransactionType.PRELEVEMENT, MasterCategory.TRANSPORTS, "Auchan", -3.0, "Cool Sticker"},
       })
 
       .deleteRow(1)
       .deleteRow(2)
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -12.0, ""},
-        {MasterCategory.BEAUTY, "Auchan", -8.0, "Youth Elixir"},
+        {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -12.0, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.BEAUTY, "Auchan", -8.0, "Youth Elixir"},
       })
 
       .deleteRow(1)
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -20.0, ""}
+        {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -20.0, ""}
       })
 
       .add("7", MasterCategory.LEISURES, "Another DVD")
@@ -341,8 +341,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .checkDeleteEnabled(false, 0)
       .add("12.50", MasterCategory.LEISURES, "DVD")
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -7.50, ""},
-        {MasterCategory.LEISURES, "Auchan", -12.50, "DVD"},
+        {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -7.50, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, "DVD"},
       })
       .checkDeleteEnabled(false, 0)
       .cancel();

@@ -13,12 +13,12 @@ public class OfxExporterTest extends PicsouTestCase {
       "         balance='12345' updateDate='2006/07/02'/>" +
       "<category name='Dentifrice' masterName='health'/>" +
       "" +
-      "<bank id='30066'>" +
+      "<bankEntity id='30066'>" +
       "  <account number='00012312345' id='2' branchId='10674'" +
       "           balance='1789.75' updateDate='2006/07/03'/>" +
       "  <account number='4976005004123456' id='3'" +
       "           balance='-683.25' updateDate='2006/07/04' isCardAccount='true'/>" +
-      "</bank>" +
+      "</bankEntity>" +
       "" +
       "<transaction id='1' month='200601' day='21' amount='-1.1' " +
       "             originalLabel='label1' account='2'/>" +

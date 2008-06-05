@@ -6,10 +6,8 @@ import org.crossbowlabs.globs.metamodel.annotations.NamingField;
 import org.crossbowlabs.globs.metamodel.annotations.Target;
 import org.crossbowlabs.globs.metamodel.fields.*;
 import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
-import org.crossbowlabs.globs.model.FieldValuesBuilder;
+import static org.crossbowlabs.globs.model.FieldValue.value;
 import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.FieldValue;
-import static org.crossbowlabs.globs.model.FieldValue.*;
 
 public class Account {
   public static final String SUMMARY_ACCOUNT_NUMBER = "(SummaryAccount)";
@@ -23,8 +21,8 @@ public class Account {
   @NamingField
   public static StringField NUMBER;
 
-  @Target(Bank.class)
-  public static LinkField BANK;
+  @Target(BankEntity.class)
+  public static LinkField BANK_ENTITY;
 
   public static IntegerField BRANCH_ID;
 

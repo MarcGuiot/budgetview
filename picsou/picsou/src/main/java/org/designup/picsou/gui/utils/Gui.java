@@ -35,7 +35,7 @@ public class Gui {
     if (isMacOSX()) {
       DEFAULT_TABLE_FONT = labelFont.deriveFont(Font.PLAIN, ((float)labelFont.getSize() - 2));
     }
-    else if (isLinux()){
+    else if (isLinux()) {
       DEFAULT_TABLE_FONT = labelFont.deriveFont(Font.PLAIN);
     }
     else {

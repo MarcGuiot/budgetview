@@ -1,11 +1,11 @@
 <globs>
   <account number="(SummaryAccount)" name="Tous les comptes" balance="571.8" updateDate="2006/07/04"/>
-  <bank id="30066">
+  <bankEntity id="30066">
     <account number="123000456" name="Compte 123000456" balance="1250.75"
              updateDate="2006/07/13" isCardAccount="false"/>
     <account number="4976050012344321" name="Carte 4976-0500-1234-4321" balance="-678.95"
              updateDate="2006/07/04" isCardAccount="true"/>
-  </bank>
+  </bankEntity>
 
   <transaction amount="-63.0" month="200605" day="17"
                transactionTypeName="check"

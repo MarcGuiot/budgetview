@@ -4,17 +4,16 @@ import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.utils.GlobFieldMatcher;
 import org.crossbowlabs.globs.utils.Files;
 import org.crossbowlabs.globs.utils.TestUtils;
-import org.crossbowlabs.globs.utils.logging.Debug;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
-import org.uispec4j.interception.WindowHandler;
-import org.uispec4j.interception.WindowInterceptor;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.importer.ofx.OfxWriter;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
+import org.uispec4j.Trigger;
+import org.uispec4j.Window;
+import org.uispec4j.interception.WindowHandler;
+import org.uispec4j.interception.WindowInterceptor;
 
 import java.io.FileWriter;
 
@@ -215,7 +214,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     String fileName = TestUtils.getFileName(this, "_setup.ofx");
     OfxWriter writer = new OfxWriter(new FileWriter(fileName));
     writer.writeHeader();
-    writer.writeBankMsgHeader(12345, 12, "1111");
+    writer.writeBankMsgHeader(12345, 12345, "1111");
     writer.startTransaction("20060524000000", -99.0, 1, "blah")
       .add("category", MasterCategory.FOOD.getName())
       .end();

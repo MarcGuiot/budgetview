@@ -66,7 +66,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
     // Optimization
     if (link instanceof LinkField) {
-      Integer value = source.get((LinkField) link);
+      Integer value = source.get((LinkField)link);
       if (value == null) {
         return null;
       }
@@ -85,15 +85,14 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   }
 
   public GlobList findLinkedTo(Glob target, Link link) {
-    GlobList result = new GlobList();
-
     if (link instanceof LinkField) {
-      LinkField linkField = (LinkField) link;
+      LinkField linkField = (LinkField)link;
       IntegerField targetKeyField = linkField.getTargetKeyField();
       Integer id = target.get(targetKeyField);
-      return getAll(link.getSourceType(), GlobMatchers.fieldEquals((LinkField) link, id));
+      return getAll(link.getSourceType(), GlobMatchers.fieldEquals((LinkField)link, id));
     }
 
+    GlobList result = new GlobList();
     for (Glob glob : getAll(link.getSourceType())) {
       if (target.matches(glob.getTargetValues(link))) {
         result.add(glob);
@@ -123,8 +122,13 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     for (Glob glob : globs.values(type)) {
       if (glob.matches(values)) {
         if (result != null) {
+          StringBuilder builder = new StringBuilder();
+          for (int i = 0; i < values.length; i++) {
+            FieldValue value = values[i];
+            builder.append("(").append(value.getField()).append(",").append(value.getValue()).append(")");
+          }
           throw new ItemAmbiguity("There are several objects of type " + type.getName() +
-                                  " with values " + values);
+                                  " with values " + builder.toString());
         }
         result = glob;
       }
@@ -232,7 +236,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     if ((values[field.getIndex()] != null) || !(field instanceof IntegerField)) {
       return;
     }
-    IntegerField keyField = (IntegerField) field;
+    IntegerField keyField = (IntegerField)field;
     values[keyField.getIndex()] = idGenerator.getNextId(keyField, 1);
   }
 
@@ -319,7 +323,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     GlobType sourceType = sourceKey.getGlobType();
     if (!link.getSourceType().equals(sourceType)) {
       throw new InvalidParameter(
-              "Type '" + sourceType.getName() + "' is not a valid source for link  '" + link + "'");
+        "Type '" + sourceType.getName() + "' is not a valid source for link  '" + link + "'");
     }
     if (targetKey != null) {
       GlobType targetType = targetKey.getGlobType();
@@ -401,7 +405,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
           Glob glob = entry.getValue();
           disable(glob);
           toBeRemoved
-                  .add(new Pair<Key, FieldValues>(entry.getKey(), entry.getValue().getValues(false)));
+            .add(new Pair<Key, FieldValues>(entry.getKey(), entry.getValue().getValues(false)));
         }
         IndexTables indexTables = indexManager.getAssociatedTable(type);
         if (indexTables != null) {
@@ -458,7 +462,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   private void disable(Glob glob) {
     if (glob instanceof AbstractGlob) {
-      ((AbstractGlob) glob).dispose();
+      ((AbstractGlob)glob).dispose();
     }
   }
 
@@ -574,7 +578,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     if (!glob.getClass().equals(DefaultGlob.class) && !MutableGlob.class.isInstance(glob)) {
       throw new OperationDenied("Object '" + key + "' cannot be modified");
     }
-    return (MutableGlob) glob;
+    return (MutableGlob)glob;
   }
 
   private void checkKeyDoesNotExist(Key key) throws ItemAlreadyExists {

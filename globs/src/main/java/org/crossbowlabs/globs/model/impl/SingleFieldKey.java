@@ -32,7 +32,7 @@ public class SingleFieldKey extends Key {
   static void checkValue(Field field, Object value) throws MissingInfo {
     if (value == null) {
       throw new MissingInfo("Field '" + field.getName() +
-                            "' missing for identifying a Glob of type: " + field.getGlobType().getName());
+                            "' missing (should not be NULL) for identifying a Glob of type: " + field.getGlobType().getName());
     }
   }
 
@@ -82,7 +82,7 @@ public class SingleFieldKey extends Key {
 
   public byte[] get(BlobField field) {
     checkIsKeyField(field);
-    return (byte[]) value;
+    return (byte[])value;
   }
 
   public Boolean get(BooleanField field, boolean defaultIfNull) {
@@ -90,22 +90,22 @@ public class SingleFieldKey extends Key {
     if (value == null) {
       return defaultIfNull;
     }
-    return (Boolean) value;
+    return (Boolean)value;
   }
 
   public Boolean get(BooleanField field) {
     checkIsKeyField(field);
-    return (Boolean) value;
+    return (Boolean)value;
   }
 
   public Date get(DateField field) {
     checkIsKeyField(field);
-    return (Date) value;
+    return (Date)value;
   }
 
   public Double get(DoubleField field) {
     checkIsKeyField(field);
-    return (Double) value;
+    return (Double)value;
   }
 
   public Object getValue(Field field) {
@@ -115,26 +115,26 @@ public class SingleFieldKey extends Key {
 
   public Integer get(IntegerField field) {
     checkIsKeyField(field);
-    return (Integer) value;
+    return (Integer)value;
   }
 
   public Integer get(LinkField field) {
-    return get((IntegerField) field);
+    return get((IntegerField)field);
   }
 
   public Long get(LongField field) {
     checkIsKeyField(field);
-    return (Long) value;
+    return (Long)value;
   }
 
   public String get(StringField field) {
     checkIsKeyField(field);
-    return (String) value;
+    return (String)value;
   }
 
   public Date get(TimeStampField field) {
     checkIsKeyField(field);
-    return (Date) value;
+    return (Date)value;
   }
 
   private void checkIsKeyField(Field field) {
@@ -152,7 +152,7 @@ public class SingleFieldKey extends Key {
       return false;
     }
     if (o.getClass().equals(SingleFieldKey.class)) {
-      SingleFieldKey otherSingleFieldKey = (SingleFieldKey) o;
+      SingleFieldKey otherSingleFieldKey = (SingleFieldKey)o;
       return otherSingleFieldKey.keyField.equals(keyField) &&
              Utils.equal(otherSingleFieldKey.value, value);
     }
@@ -160,7 +160,7 @@ public class SingleFieldKey extends Key {
     if (!Key.class.isAssignableFrom(o.getClass())) {
       return false;
     }
-    Key otherKey = (Key) o;
+    Key otherKey = (Key)o;
     return keyField.getGlobType().equals(otherKey.getGlobType())
            && Utils.equal(value, otherKey.getValue(keyField));
   }
@@ -176,7 +176,7 @@ public class SingleFieldKey extends Key {
 
   public FieldValue[] toArray() {
     return new FieldValue[]{
-            new FieldValue(keyField, value),
+      new FieldValue(keyField, value),
     };
   }
 

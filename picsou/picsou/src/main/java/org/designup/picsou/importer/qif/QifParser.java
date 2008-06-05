@@ -1,52 +1,38 @@
 package org.designup.picsou.importer.qif;
 
-import static org.crossbowlabs.globs.model.FieldValue.value;
-import org.crossbowlabs.globs.model.*;
+import org.crossbowlabs.globs.model.FieldValuesBuilder;
+import org.crossbowlabs.globs.model.Glob;
+import org.crossbowlabs.globs.model.GlobList;
+import org.crossbowlabs.globs.model.GlobRepository;
+import org.crossbowlabs.globs.model.utils.CachedGlobIdGenerator;
+import org.crossbowlabs.globs.model.utils.GlobIdGenerator;
 import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class QifParser {
   public static final SimpleDateFormat QIF_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
-  private static NumberFormat AMOUNT_FORMAT = DecimalFormat.getNumberInstance(Locale.FRANCE);
-  private static final String DEFAULT_ACCOUNT_ID = "0";
-  private static final String DEFAULT_ACCOUNT_NAME = "Compte principal";
 
   public static GlobList read(Reader reader, GlobRepository globRepository) {
     QifParser qifParser = new QifParser(reader, globRepository);
     return qifParser.run();
   }
 
-  private Integer defaultAccountId;
   private BufferedReader reader;
   private GlobRepository globRepository;
+  private GlobIdGenerator globIdGenerator;
 
   private QifParser(Reader reader, GlobRepository globRepository) {
     this.globRepository = globRepository;
     this.reader = new BufferedReader(reader);
-    defaultAccountId = createDefaultAccountIfNeeded(globRepository).get(Account.ID);
-  }
-
-  public static Glob createDefaultAccountIfNeeded(GlobRepository globRepository) {
-    Glob glob = globRepository.findUnique(Account.TYPE, value(Account.NUMBER, DEFAULT_ACCOUNT_ID));
-    if (glob == null) {
-      glob = globRepository.create(Key.create(Account.TYPE, globRepository.getIdGenerator().getNextId(Account.ID, 1)),
-                                   value(Account.NUMBER, DEFAULT_ACCOUNT_ID),
-                                   value(Account.NAME, DEFAULT_ACCOUNT_NAME),
-                                   value(Account.BANK, QifImporter.DEFAULT_BANK_ID));
-    }
-    return glob;
+    globIdGenerator = new CachedGlobIdGenerator(globRepository.getIdGenerator());
   }
 
   private GlobList run() {
@@ -61,8 +47,7 @@ public class QifParser {
     try {
       FieldValuesBuilder values =
         FieldValuesBuilder.init()
-          .set(Transaction.ID, globRepository.getNextId(Transaction.ID, 1))
-          .set(Transaction.ACCOUNT, defaultAccountId);
+          .set(Transaction.ID, globIdGenerator.getNextId(Transaction.ID, 1));
       boolean updated = false;
       while (true) {
         int start = reader.read();

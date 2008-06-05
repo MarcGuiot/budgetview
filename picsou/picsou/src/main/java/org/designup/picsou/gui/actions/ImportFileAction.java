@@ -1,24 +1,35 @@
 package org.designup.picsou.gui.actions;
 
 import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.model.GlobList;
+import org.crossbowlabs.globs.model.*;
+import static org.crossbowlabs.globs.model.FieldValue.value;
+import org.crossbowlabs.globs.model.utils.ChangeSetAggregator;
 import org.crossbowlabs.globs.utils.Log;
-import org.crossbowlabs.globs.utils.logging.Debug;
+import org.crossbowlabs.globs.utils.MultiMap;
 import org.crossbowlabs.globs.utils.directory.Directory;
+import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.importer.PicsouImportService;
 import org.designup.picsou.importer.TypedInputStream;
+import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
+import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.model.Transaction;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 public class ImportFileAction extends AbstractAction {
+
+  private static final String DEFAULT_ACCOUNT_ID = "0";
+  private static final String DEFAULT_ACCOUNT_NAME = "Compte principal";
+  public static final int DEFAULT_BANK_ID = 99999;
+  public static final int DEFAULT_BANK_ENTITY_ID = 30003;
+
   private GlobRepository repository;
   private Directory directory;
   private Frame frame;
@@ -57,13 +68,15 @@ public class ImportFileAction extends AbstractAction {
     int returnVal = chooser.showOpenDialog(parent);
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       File[] selectedFiles = chooser.getSelectedFiles();
-      if (selectedFiles == null || selectedFiles.length == 0){
+      if (selectedFiles == null || selectedFiles.length == 0) {
         System.out.println("no file selected ");
-      } else
-      for (int i = 0; i < selectedFiles.length; i++) {
-        File selectedFile = selectedFiles[i];
-        if (!selectedFile.exists()){
-          System.out.println("erreur : file " + selectedFile.getName() + " not found");
+      }
+      else {
+        for (int i = 0; i < selectedFiles.length; i++) {
+          File selectedFile = selectedFiles[i];
+          if (!selectedFile.exists()) {
+            System.out.println("erreur : file " + selectedFile.getName() + " not found");
+          }
         }
       }
       return selectedFiles;
@@ -80,11 +93,56 @@ public class ImportFileAction extends AbstractAction {
 
     try {
       repository.enterBulkDispatchingMode();
-      GlobList all1 = repository.getAll(Transaction.TYPE);
-      final Key importKey = importService.run(new TypedInputStream(file), repository);
-      GlobList all2 = repository.getAll(Transaction.TYPE);
-      if (file.getName().toLowerCase().endsWith("qif") && isLastFile) {
-        showQifDialog(importKey);
+      GlobRepository targetRepository =
+        GlobRepositoryBuilder.init(repository.getIdGenerator())
+          .add(repository.getAll(Bank.TYPE))
+          .add(repository.getAll(BankEntity.TYPE))
+          .add(repository.getAll(Account.TYPE))
+          .add(repository.getAll(Category.TYPE))
+          .get();
+
+      ChangeSetAggregator importChangeSetAggregator = new ChangeSetAggregator(targetRepository);
+      targetRepository.enterBulkDispatchingMode();
+
+      final Key importKey = importService.run(new TypedInputStream(file), repository, targetRepository);
+      targetRepository.completeBulkDispatchingMode();
+      ChangeSet importChangeSet = importChangeSetAggregator.dispose();
+
+      ChangeSetAggregator updateImportAggregator = new ChangeSetAggregator(targetRepository);
+      targetRepository.enterBulkDispatchingMode();
+//      importChangeSet.getCreated(BankEntity.TYPE);
+      if (file.getName().toLowerCase().endsWith("qif")) {
+        if (isLastFile) {
+          showQifDialog(targetRepository, importKey);
+        }
+        Integer accountId = createDefaultAccountIfNeeded(targetRepository).get(Account.ID);
+        for (Key key : importChangeSet.getCreated(Transaction.TYPE)) {
+          targetRepository.update(key, Transaction.ACCOUNT, accountId);
+        }
+      }
+      TransactionAnalyzer transactionAnalyzer = directory.get(TransactionAnalyzerFactory.class).getAnalyzer();
+      MultiMap<Integer, Glob> transactionByAccountId = new MultiMap<Integer, Glob>();
+      for (Key key : importChangeSet.getCreated(Transaction.TYPE)) {
+        Glob transaction = targetRepository.get(key);
+        transactionByAccountId.put(transaction.get(Transaction.ACCOUNT), transaction);
+      }
+      for (Map.Entry<Integer, List<Glob>> accountIdAndTransactions : transactionByAccountId.values()) {
+        Glob account = targetRepository.get(Key.create(Account.TYPE, accountIdAndTransactions.getKey()));
+        Glob bankEntity = targetRepository.findLinkTarget(account, Account.BANK_ENTITY);
+        Glob bank = targetRepository.findLinkTarget(bankEntity, BankEntity.BANK);
+        Integer id = Bank.UNKNOWN_BANK_ID;
+        if (bank != null) {
+          id = bank.get(Bank.ID);
+        }
+        transactionAnalyzer.processTransactions(id, accountIdAndTransactions.getValue(), targetRepository);
+      }
+      targetRepository.completeBulkDispatchingMode();
+      ChangeSet updateImportChangeSet = updateImportAggregator.dispose();
+      repository.apply(importChangeSet);
+      repository.apply(updateImportChangeSet);
+      AllocationLearningService learningService = directory.get(AllocationLearningService.class);
+      for (Map.Entry<Integer, List<Glob>> transactions : transactionByAccountId.values()) {
+        learningService.setCategories(transactions.getValue(), repository);
       }
     }
     catch (Exception e) {
@@ -97,12 +155,23 @@ public class ImportFileAction extends AbstractAction {
     }
   }
 
-  private void showQifDialog(Key importKey) {
+  private void showQifDialog(GlobRepository targetRepository, Key importKey) {
     QifBalancePanel detailPanel =
-      new QifBalancePanel(repository, directory, importKey);
+      new QifBalancePanel(targetRepository, directory, importKey);
     directory.get(SelectionService.class)
-      .select(repository.get(importKey));
+      .select(targetRepository.get(importKey));
     detailPanel.showDialog(frame);
+  }
+
+  public static Glob createDefaultAccountIfNeeded(GlobRepository globRepository) {
+    Glob account = globRepository.findUnique(Account.TYPE, value(Account.BANK_ENTITY, DEFAULT_BANK_ENTITY_ID));
+    if (account == null) {
+      return globRepository.create(Key.create(Account.TYPE, 0),
+                                   value(Account.NUMBER, DEFAULT_ACCOUNT_ID),
+                                   value(Account.NAME, DEFAULT_ACCOUNT_NAME),
+                                   value(Account.BANK_ENTITY, DEFAULT_BANK_ENTITY_ID));
+    }
+    return account;
   }
 
 }

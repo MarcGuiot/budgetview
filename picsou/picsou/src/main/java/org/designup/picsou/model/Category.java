@@ -11,6 +11,7 @@ import org.crossbowlabs.globs.metamodel.fields.StringField;
 import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobRepository;
+import org.crossbowlabs.globs.model.ReadOnlyGlobRepository;
 import org.crossbowlabs.globs.model.utils.GlobMatchers;
 
 public class Category {
@@ -44,7 +45,7 @@ public class Category {
     return (category != null) && NONE.equals(category.get(Category.ID));
   }
 
-  public static Integer findId(String categoryName, GlobRepository repository) {
+  public static Integer findId(String categoryName, ReadOnlyGlobRepository repository) {
     Glob category = find(categoryName, repository);
     if (category == null) {
       return null;
@@ -52,7 +53,7 @@ public class Category {
     return category.get(Category.ID);
   }
 
-  public static Glob find(String categoryName, GlobRepository repository) {
+  public static Glob find(String categoryName, ReadOnlyGlobRepository repository) {
     return repository.findUnique(Category.TYPE, GlobMatchers.fieldEqualsIgnoreCase(Category.NAME, categoryName));
   }
 

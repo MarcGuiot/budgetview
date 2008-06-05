@@ -1,12 +1,15 @@
 package org.crossbowlabs.globs.utils;
 
+import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
+import java.util.Locale;
 
 public class TablePrinter {
 
@@ -75,7 +78,7 @@ public class TablePrinter {
       return "";
     }
     if (cell instanceof Double) {
-      return new DecimalFormat("#.00").format(cell);
+      return new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US)).format(cell);
     }
     return cell.toString();
   }

@@ -9,7 +9,8 @@ import java.util.Locale;
 public class Formats {
   public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
   public static final SimpleDateFormat DEFAULT_TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-  public static final DecimalFormat DEFAULT_DECIMAL_FORMAT = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
+  public static final DecimalFormat DEFAULT_DECIMAL_FORMAT =
+    new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
   public static final String DEFAULT_YES_VALUE = "yes";
   public static final String DEFAULT_NO_VALUE = "no";
 

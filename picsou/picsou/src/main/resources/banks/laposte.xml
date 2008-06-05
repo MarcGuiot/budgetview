@@ -1,0 +1,18 @@
+<globs>
+  <bank name="La poste">
+    <bankEntity id="20041"/>
+
+    <transactionTypeMatcher regexp="ACHAT CB (.*)"
+                            transactionTypeName="credit_card" groupForLabel="1"/>
+
+    <transactionTypeMatcher regexp="REMISE DE CHEQUES DU (.*)"
+                            transactionTypeName="deposit"/>
+
+    <transactionTypeMatcher regexp="CHEQUE N. (.*)"
+                            transactionTypeName="check" groupForLabel="1"/>
+
+    <transactionTypeMatcher regexp="CARTE (.*)"
+                            transactionTypeName="withdrawal"/>
+
+  </bank>
+</globs>

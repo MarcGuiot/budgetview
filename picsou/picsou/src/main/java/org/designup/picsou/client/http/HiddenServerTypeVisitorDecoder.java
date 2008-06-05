@@ -181,7 +181,7 @@ public class HiddenServerTypeVisitorDecoder implements HiddenServerTypeVisitor {
 
   private void readAccountV1(GlobBuilder builder, SerializedInput serializedInput) {
     builder.set(Account.NUMBER, serializedInput.readString());
-    builder.set(Account.BANK, serializedInput.readInteger());
+    builder.set(Account.BANK_ENTITY, serializedInput.readInteger());
     builder.set(Account.BRANCH_ID, serializedInput.readInteger());
     builder.set(Account.IS_CARD_ACCOUNT, serializedInput.readBoolean());
     builder.set(Account.NAME, serializedInput.readString());

@@ -1,0 +1,29 @@
+<globs>
+  <bank name="cic">
+    <bankEntity id="30066"/>
+
+    <transactionTypeMatcher regexp="F COM INTERVENTION (.*)"
+                            transactionTypeName="bank_fees"/>
+
+    <transactionTypeMatcher regexp="ABON FBQ (.*)"
+                            transactionTypeName="bank_fees"/>
+
+    <transactionTypeMatcher regexp="RETRAIT DAB [0-9]* (.*)"
+                            transactionTypeName="withdrawal" groupForLabel="1"/>
+
+    <transactionTypeMatcher regexp="RETRAIT (.*)"
+                            transactionTypeName="withdrawal" groupForLabel="1"/>
+
+    <transactionTypeMatcher regexp="ECH PRET (.*)"
+                            transactionTypeName="credit" groupForLabel="1"/>
+
+    <transactionTypeMatcher regexp="VIR (.*)"
+                            transactionTypeName="virement" groupForLabel="1"/>
+
+    <transactionTypeMatcher regexp="REM CHQ (.*)"
+                            transactionTypeName="deposit"/>
+
+    <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
+                            transactionTypeName="check" groupForLabel="1"/>
+  </bank>
+</globs>

@@ -10,7 +10,6 @@ import org.crossbowlabs.globs.utils.MultiMap;
 import org.crossbowlabs.globs.utils.Pair;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +28,7 @@ public class AccessorGlobBuilder {
 
   public List<Glob> getGlobs() {
     List globs = new ArrayList();
-    for (Iterator iterator = accessors.values(); iterator.hasNext();) {
-      Map.Entry<GlobType, List<Pair<Field, Accessor>>> entry = (Map.Entry<GlobType, List<Pair<Field, Accessor>>>)iterator.next();
+    for (Map.Entry<GlobType, List<Pair<Field, Accessor>>> entry : accessors.values()) {
       DefaultGlob defaultGlob = new DefaultGlob(entry.getKey());
       globs.add(defaultGlob);
       for (Pair<Field, Accessor> pair : entry.getValue()) {

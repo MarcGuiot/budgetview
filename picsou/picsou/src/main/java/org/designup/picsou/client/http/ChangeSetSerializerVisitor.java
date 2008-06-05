@@ -17,7 +17,7 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   public static final int CURRENT_VERSION_FOR_ACCOUNT = 1;
   public static final int CURRENT_VERSION_FOR_IMPORT = 1;
   public static final int CURRENT_VERSION_FOR_CATEGORY = 1;
-  
+
 
   public ChangeSetSerializerVisitor(SerializedRemoteAccess.ChangeVisitor globChangeVisitor, GlobRepository globRepository,
                                     PasswordBasedEncryptor passwordBasedEncryptor) {
@@ -103,6 +103,7 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
           .add(HiddenCategory.HIDDEN_USER_ID, -1).get(), values);
     }
   }
+
   private class ServerTypeVisitorCoder implements ServerTypeVisitor {
     private final SerializedRemoteAccess.ChangeVisitor globChangeVisitor;
 
@@ -174,6 +175,7 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
     public void visitOther(Key key, FieldValues values) throws Exception {
     }
   }
+
   private FieldValues createHiddenImportForUpdate(Key key, FieldValues values, GlobRepository globRepository) {
     FieldValuesBuilder builder = new FieldValuesBuilder();
     builder.set(HiddenImport.ID, key.get(TransactionImport.ID));
@@ -203,8 +205,8 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
 
   private FieldValues createHiddenTransactionForUpdate(Key key, FieldValues values, GlobRepository globRepository) {
     FieldValuesBuilder builder = new FieldValuesBuilder();
-      builder.set(HiddenTransaction.ENCRYPTED_INFO,
-                  getEncryptedTransactionInfo(globRepository.get(key).getValues(true)));
+    builder.set(HiddenTransaction.ENCRYPTED_INFO,
+                getEncryptedTransactionInfo(globRepository.get(key).getValues(true)));
     return builder.get();
   }
 
@@ -270,7 +272,7 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   private void writeAccountV1(SerializedOutput outputStream, FieldValues accountValues) {
     outputStream.write(CURRENT_VERSION_FOR_ACCOUNT);
     outputStream.writeString(accountValues.get(Account.NUMBER));
-    outputStream.writeInteger(accountValues.get(Account.BANK));
+    outputStream.writeInteger(accountValues.get(Account.BANK_ENTITY));
     outputStream.writeInteger(accountValues.get(Account.BRANCH_ID));
     outputStream.writeBoolean(accountValues.get(Account.IS_CARD_ACCOUNT));
     outputStream.writeString(accountValues.get(Account.NAME));

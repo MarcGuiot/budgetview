@@ -5,23 +5,22 @@ import org.crossbowlabs.globs.metamodel.annotations.Key;
 import org.crossbowlabs.globs.metamodel.annotations.Target;
 import org.crossbowlabs.globs.metamodel.fields.IntegerField;
 import org.crossbowlabs.globs.metamodel.fields.LinkField;
-import org.crossbowlabs.globs.metamodel.fields.StringField;
+import org.crossbowlabs.globs.metamodel.index.NotUniqueIndex;
 import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
 
-public class Tag {
+public class BankEntity {
   public static GlobType TYPE;
 
   @Key
   public static IntegerField ID;
+  @Target(Bank.class)
+  public static LinkField BANK;
 
-  public static StringField NAME;
-
-  @Target(TagCategory.class)
-  public static LinkField CATEGORY_ID;
-
-  public static StringField VALUE;
+  public static NotUniqueIndex BANK_INDEX;
 
   static {
-    GlobTypeLoader.init(Tag.class);
+    GlobTypeLoader.init(BankEntity.class)
+      .defineNotUniqueIndex(BANK_INDEX, BANK);
   }
+
 }
