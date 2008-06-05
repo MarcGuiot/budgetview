@@ -81,8 +81,7 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
   }
 
   public void complete(List<String> ressources, List<String> pathToIgnore) {
-    for (Iterator<Map.Entry<String, List<String>>> iterator = dependencies.values(); iterator.hasNext();) {
-      Map.Entry<String, List<String>> entry = iterator.next();
+    for (Map.Entry<String, List<String>> entry : dependencies.values()) {
       System.out.println("Key " + entry.getKey());
       for (String s : entry.getValue()) {
         System.out.println("     " + s);
@@ -372,7 +371,7 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
         JarFile jarFile = new JarFile(file);
         Enumeration entries = jarFile.entries();
         while (entries.hasMoreElements()) {
-          ZipEntry entry = (ZipEntry) entries.nextElement();
+          ZipEntry entry = (ZipEntry)entries.nextElement();
           DirectoryNode node = entryNode;
           String[] name = entry.getName().split("/");
           for (int i = 0; i < name.length - 1; i++) {

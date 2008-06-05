@@ -95,6 +95,36 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testNoLearningForLabelWithNumberOnly() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2006/01/10", -1.0, "123")
+      .load();
+    transactions.assignCategory(MasterCategory.FOOD, 0);
+
+    OfxBuilder.init(this)
+      .addTransaction("2006/01/11", -2.0, "123")
+      .load();
+    transactions
+      .initContent()
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "123", "", -2.0)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "123", "", -1.0, MasterCategory.FOOD)
+      .check();
+  }
+
+  public void testNoPropagationForLabelWithNumberOnly() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2006/01/10", -1.0, "123")
+      .addTransaction("2006/01/11", -2.0, "123")
+      .load();
+    transactions.assignCategory(MasterCategory.FOOD, 0);
+
+    transactions
+      .initContent()
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "123", "", -2.0, MasterCategory.FOOD)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "123", "", -1.0)
+      .check();
+  }
+
   public void testLearningWithAmbiguity() throws Exception {
     OfxBuilder
       .init(this)

@@ -1,13 +1,15 @@
 package org.designup.picsou.utils.generator;
 
-import org.crossbowlabs.globs.model.*;
+import org.crossbowlabs.globs.model.FieldValue;
+import org.crossbowlabs.globs.model.Glob;
+import org.crossbowlabs.globs.model.GlobRepository;
+import org.crossbowlabs.globs.model.GlobRepositoryBuilder;
 import org.crossbowlabs.globs.model.format.GlobPrinter;
 import org.designup.picsou.importer.ofx.OfxExporter;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.utils.generator.AmountGenerator.*;
-import static org.designup.picsou.utils.generator.AmountGenerator.between;
 import static org.designup.picsou.utils.generator.CountGenerator.*;
-import static org.designup.picsou.utils.generator.DayGenerator.*;
+import static org.designup.picsou.utils.generator.DayGenerator.any;
 import static org.designup.picsou.utils.generator.DayGenerator.between;
 
 import java.io.File;
@@ -98,13 +100,13 @@ public class PicsouSampleGenerator {
   private void setAccount(String accountNumber, boolean isCardAccount) {
     accountId = repository.create(Account.TYPE,
                                   FieldValue.value(Account.NAME, accountNumber),
-                                    FieldValue.value(Account.BANK, BANK_ID),
-                                    FieldValue.value(Account.BRANCH_ID, BRANCH_ID),
-                                    FieldValue.value(Account.NUMBER, accountNumber),
-                                    FieldValue.value(Account.IS_CARD_ACCOUNT, isCardAccount),
-                                    FieldValue.value(Account.UPDATE_DATE, new Date()),
-                                    FieldValue.value(Account.BALANCE, -1050.12))
-            .get(Account.ID);
+                                  FieldValue.value(Account.BANK_ENTITY, BANK_ID),
+                                  FieldValue.value(Account.BRANCH_ID, BRANCH_ID),
+                                  FieldValue.value(Account.NUMBER, accountNumber),
+                                  FieldValue.value(Account.IS_CARD_ACCOUNT, isCardAccount),
+                                  FieldValue.value(Account.UPDATE_DATE, new Date()),
+                                  FieldValue.value(Account.BALANCE, -1050.12))
+      .get(Account.ID);
   }
 
   private void add(final MasterCategory category,
@@ -143,11 +145,11 @@ public class PicsouSampleGenerator {
   private Glob create(Integer month, int day, double amount, String label, int accountId) {
     return repository.create(Transaction.TYPE,
                              FieldValue.value(Transaction.ACCOUNT, accountId),
-                               FieldValue.value(Transaction.AMOUNT, amount),
-                               FieldValue.value(Transaction.ORIGINAL_LABEL, label),
-                               FieldValue.value(Transaction.LABEL, label),
-                               FieldValue.value(Transaction.MONTH, month),
-                               FieldValue.value(Transaction.DAY, day));
+                             FieldValue.value(Transaction.AMOUNT, amount),
+                             FieldValue.value(Transaction.ORIGINAL_LABEL, label),
+                             FieldValue.value(Transaction.LABEL, label),
+                             FieldValue.value(Transaction.MONTH, month),
+                             FieldValue.value(Transaction.DAY, day));
   }
 
   private void run(int min, int max) {

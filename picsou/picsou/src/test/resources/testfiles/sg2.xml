@@ -1,19 +1,19 @@
 <globs>
   <account number="(SummaryAccount)" name="Tous les comptes" balance="0.0"/>
-  <bank id="30003">
+  <bankEntity id="30003">
     <account number="0" name="Compte principal"/>
-  </bank>
+  </bankEntity>
 
   <transaction amount="-100.0" month="200604" day="24" accountNumber="0"
                label="SARL KALISTEA" categoryName="food"
-    labelForCategorisation="SARL KALISTEA"
+               labelForCategorisation="SARL KALISTEA"
                originalLabel="FAC.FRANCE 4561409787231717 24/04/06  SARL KALISTEA"
                transactionTypeName="credit_card">
   </transaction>
 
   <transaction amount="-45.83" month="200607" day="22" accountNumber="0"
                label="ANTONYCARBURANT"
-    labelForCategorisation="ANTONYCARBURANT"
+               labelForCategorisation="ANTONYCARBURANT"
                originalLabel="CARTE 4973019864194027 22/07/06  ANTONYCARBURANT"
                transactionTypeName="credit_card"/>
 
@@ -39,7 +39,7 @@
 
   <transaction amount="-34.5" month="200606" day="5" accountNumber="0"
                label="TPS FRA01107365A040606/T.P.S. 000103017914"
-    labelForCategorisation="TPS"
+               labelForCategorisation="TPS"
                originalLabel="PRELEVEMENT 6661529970  TPS FRA01107365A040606/T.P.S. 000103017914"
                transactionTypeName="prelevement"/>
 
@@ -51,7 +51,7 @@
   <transaction amount="-1000.0" month="200607" day="21" accountNumber="0"
                label="SG 04042 CPT 00050741769"
                originalLabel="VIR.LOGITEL 21.07 SG 04042 CPT 00050741769"
-    labelForCategorisation="SG CPT"
+               labelForCategorisation="SG CPT"
                transactionTypeName="virement"/>
 
   <transaction amount="1000.0" month="200607" day="21" accountNumber="0"

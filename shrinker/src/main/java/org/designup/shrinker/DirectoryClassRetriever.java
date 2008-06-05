@@ -5,7 +5,6 @@ import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +40,7 @@ public class DirectoryClassRetriever implements DependExtractor.ClassRetreiver {
   }
 
   void complete() {
-    for (Iterator<Map.Entry<String, List<String>>> iterator = dependencies.values(); iterator.hasNext();) {
-      Map.Entry<String, List<String>> entry = iterator.next();
+    for (Map.Entry<String, List<String>> entry : dependencies.values()) {
       System.out.println("Key " + entry.getKey());
       for (String s : entry.getValue()) {
         System.out.println("     " + s);

@@ -35,7 +35,7 @@ public class OfxExporter {
         continue;
       }
       if (!Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT))) {
-        writer.writeBankMsgHeader(account.get(Account.BANK), account.get(Account.BRANCH_ID), account.get(Account.NUMBER));
+        writer.writeBankMsgHeader(account.get(Account.BANK_ENTITY), account.get(Account.BRANCH_ID), account.get(Account.NUMBER));
         writeTransactions(account);
         Date updateDate = account.get(Account.UPDATE_DATE);
         writer.writeBankMsgFooter(account.get(Account.BALANCE), toString(updateDate != null ? updateDate : new Date()));

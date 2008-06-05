@@ -16,7 +16,6 @@ import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
-import org.uispec4j.interception.WindowHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -148,7 +147,7 @@ public class TransactionChecker extends DataChecker {
 
     public ContentChecker add(String date, TransactionType type, String label,
                               String note, double amount, String... category) {
-      content.add(new Object[]{date, stringifySubCategoryNames(category), label,
+      content.add(new Object[]{date, "(" + type.getName() + ")" + stringifySubCategoryNames(category), label,
                                TransactionChecker.this.toString(amount),
                                note});
       return this;
@@ -156,7 +155,7 @@ public class TransactionChecker extends DataChecker {
 
     public ContentChecker add(String date, TransactionType type, String label,
                               String note, double amount, MasterCategory master, String category) {
-      content.add(new Object[]{date, stringifyCategoryNames(master) + ", " + category, label,
+      content.add(new Object[]{date, "(" + type.getName() + ")" + stringifyCategoryNames(master) + ", " + category, label,
                                TransactionChecker.this.toString(amount),
                                note});
       return this;
@@ -302,13 +301,14 @@ public class TransactionChecker extends DataChecker {
       Object[][] expected = new Object[objects.length][5];
       for (int i = 0; i < objects.length; i++) {
         int column = 0;
-        expected[i][column] = stringifyCategoryNames(((MasterCategory)objects[i][column]));
+        expected[i][column] = "(" + ((TransactionType)objects[i][column]).getName() + ")" +
+                              stringifyCategoryNames(((MasterCategory)objects[i][column + 1]));
         column++;
-        expected[i][column] = objects[i][column];
+        expected[i][column] = objects[i][column + 1];
         column++;
-        expected[i][column] = PicsouDescriptionService.DECIMAL_FORMAT.format(objects[i][column]);
+        expected[i][column] = PicsouDescriptionService.DECIMAL_FORMAT.format(objects[i][column + 1]);
         column++;
-        expected[i][column] = objects[i][column];
+        expected[i][column] = objects[i][column + 1];
         column++;
         expected[i][column] = "";
       }
@@ -394,6 +394,11 @@ public class TransactionChecker extends DataChecker {
       UIComponent[] categoryLabels = panel.getUIComponents(TextBox.class);
       int index = 0;
       StringBuilder builder = new StringBuilder();
+
+      Integer transactionType = ((Glob)modelObject).get(Transaction.TRANSACTION_TYPE);
+      builder.append("(");
+      builder.append(TransactionType.getType(transactionType).getName());
+      builder.append(")");
       for (int i = 0; i < categoryLabels.length; i++) {
         TextBox label = (TextBox)categoryLabels[i];
         if (index++ > 0) {

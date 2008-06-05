@@ -39,12 +39,13 @@ public class PicsouInit {
   private PicsouInit(ServerAccess serverAccess, String user, boolean newUser, Directory directory) throws IOException {
     this.directory = directory;
 
-    initDirectory(serverAccess);
-
+    ServerAccessGlobIdGenerator generator = new ServerAccessGlobIdGenerator(serverAccess);
     repository =
-            GlobRepositoryBuilder.init(new CachedGlobIdGenerator(new ServerAccessGlobIdGenerator(serverAccess)))
-                    .add(directory.get(GlobModel.class).getConstants())
-                    .get();
+      GlobRepositoryBuilder.init(new CachedGlobIdGenerator(generator))
+        .add(directory.get(GlobModel.class).getConstants())
+        .get();
+    generator.set(repository);
+
 
     repository.addTrigger(new SummaryAccountCreationTrigger());
 
@@ -61,18 +62,20 @@ public class PicsouInit {
     if (newUser) {
       userData.addAll(loadDefaultSubcategories());
     }
-    repository.reset(userData, Transaction.TYPE, Account.TYPE, Bank.TYPE,
+    repository.reset(userData, Transaction.TYPE, Account.TYPE, Bank.TYPE, BankEntity.TYPE,
                      TransactionToCategory.TYPE, LabelToCategory.TYPE, Category.TYPE);
     serverAccess.applyChanges(changeSet, repository);
 
+    initDirectory(repository);
   }
 
-  private void initDirectory(ServerAccess serverAccess) {
-    AllocationLearningService learningService = new AllocationLearningService(serverAccess);
+  private void initDirectory(GlobRepository repository) {
+    AllocationLearningService learningService = new AllocationLearningService();
     directory.add(AllocationLearningService.class, learningService);
 
-    TransactionAnalyzerFactory factory = new TransactionAnalyzerFactory(PicsouGuiModel.get());
-    PicsouImportService importService = new PicsouImportService(factory, learningService);
+    TransactionAnalyzerFactory factory = new TransactionAnalyzerFactory(PicsouGuiModel.get(), repository);
+    directory.add(TransactionAnalyzerFactory.class, factory);
+    PicsouImportService importService = new PicsouImportService();
     directory.add(PicsouImportService.class, importService);
   }
 

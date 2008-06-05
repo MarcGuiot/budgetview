@@ -30,8 +30,8 @@ public class MultiMap<K, V> {
     return Collections.unmodifiableList(values);
   }
 
-  public Iterator<Map.Entry<K, List<V>>> values() {
-    return map.entrySet().iterator();
+  public Set<Map.Entry<K, List<V>>> values() {
+    return map.entrySet();
   }
 
   public String toString() {
@@ -61,9 +61,9 @@ public class MultiMap<K, V> {
 
   public boolean removeValue(K key, V value) {
     List<V> list = map.get(key);
-    if (list != null){
+    if (list != null) {
       boolean find = list.remove(value);
-      if (list.isEmpty()){
+      if (list.isEmpty()) {
         map.remove(key);
       }
       return find;
@@ -71,9 +71,9 @@ public class MultiMap<K, V> {
     return false;
   }
 
-  public void putUnique(K key, V value){
+  public void putUnique(K key, V value) {
     List<V> list = map.get(key);
-    if (list != null){
+    if (list != null) {
       if (!list.contains(value)) {
         list.add(value);
       }

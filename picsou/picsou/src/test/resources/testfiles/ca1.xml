@@ -1,11 +1,11 @@
 <globs>
   <account number="(SummaryAccount)" name="Tous les comptes" balance="9007.54" updateDate="2006/08/14"/>
-  <bank id="13006">
+  <bankEntity id="13006">
     <account balance="10242.1" number="123123123123" isCardAccount="false"
              name="Compte 123123123123" updateDate="2006/08/14"/>
     <account balance="-1234.56" number="5341113026111111" isCardAccount="true"
              name="Carte 5341-1130-2611-1111" updateDate="2006/08/14"/>
-  </bank>
+  </bankEntity>
 
   <transaction accountNumber="123123123123" amount="-45.78" month="200608" day="14" categoryName="telecoms"
                originalLabel="Prel 459654 Free Telecom"

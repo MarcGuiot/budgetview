@@ -26,11 +26,15 @@ public class ChangeSetAggregator {
     return changeSet;
   }
 
-  public void dispose() {
+  public ChangeSet dispose() {
     repository.removeChangeListener(listener);
     repository = null;
-    listener = null;
-    changeSet = null;
+    try {
+      return changeSet;
+    }
+    finally {
+      changeSet = null;
+    }
   }
 
   public void reset() {

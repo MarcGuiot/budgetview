@@ -65,7 +65,7 @@ public class EncrypterToTransportServerAccessTest extends ServerFunctionalTestCa
     GlobRepository repository = init(categorizer);
 
     Glob expected = repository.create(Key.create(Account.TYPE, 123),
-                                      FieldValue.value(Account.BANK, 1),
+                                      FieldValue.value(Account.BANK_ENTITY, 1),
                                       FieldValue.value(Account.NUMBER, "main account"),
                                       FieldValue.value(Account.BALANCE, 100.),
                                       FieldValue.value(Account.BRANCH_ID, 2));
@@ -74,7 +74,7 @@ public class EncrypterToTransportServerAccessTest extends ServerFunctionalTestCa
       assertEquals(1, accounts.size());
       assertEquals(123, accounts.get(0).get(HiddenAccount.ID).intValue());
       Glob actualAccount = categorizer.getUserData(new DefaultChangeSet()).get(0);
-      assertEquals(1, actualAccount.get(Account.BANK).intValue());
+      assertEquals(1, actualAccount.get(Account.BANK_ENTITY).intValue());
       assertEquals(123, actualAccount.get(Account.ID).intValue());
       assertEquals(2, actualAccount.get(Account.BRANCH_ID).intValue());
       assertEquals(100.0, actualAccount.get(Account.BALANCE), 0.1);
@@ -94,7 +94,7 @@ public class EncrypterToTransportServerAccessTest extends ServerFunctionalTestCa
     Glob hiddenGlob = getHiddenUser(glob);
     Integer userId = hiddenGlob.get(HiddenUser.USER_ID);
     Glob expected = GlobBuilder.init(org.designup.picsou.model.Bank.TYPE)
-            .set(Bank.ID, 12).get();
+      .set(Bank.ID, 12).get();
 
     GlobRepository repository = init(categorizer);
 
@@ -110,8 +110,8 @@ public class EncrypterToTransportServerAccessTest extends ServerFunctionalTestCa
 
   private Glob getATransaction() {
     return GlobBuilder.init(Transaction.TYPE)
-            .set(Transaction.ID, 1).set(Transaction.LABEL, "some info").set(Transaction.AMOUNT, 100.0)
-            .set(Transaction.CATEGORY, 3).get();
+      .set(Transaction.ID, 1).set(Transaction.LABEL, "some info").set(Transaction.AMOUNT, 100.0)
+      .set(Transaction.CATEGORY, 3).get();
   }
 
   public void testCannotCreateTheSameUserTwice() throws Exception {
@@ -165,7 +165,7 @@ public class EncrypterToTransportServerAccessTest extends ServerFunctionalTestCa
     Integer userId = hiddenGlob.get(HiddenUser.USER_ID);
 
     Glob expected = GlobBuilder.init(Category.TYPE)
-            .set(Category.ID, 1).set(Category.NAME, "category name").set(Category.MASTER, 3).get();
+      .set(Category.ID, 1).set(Category.NAME, "category name").set(Category.MASTER, 3).get();
 
     GlobRepository repository = init(serverAccess);
     repository.create(expected.getKey(), expected.toArray());
@@ -206,7 +206,7 @@ public class EncrypterToTransportServerAccessTest extends ServerFunctionalTestCa
 
   private Glob getHiddenUser(Glob glob) {
     PasswordBasedEncryptor passwordBasedEncryptor =
-            new PasswordBasedEncryptor(EncrypterToTransportServerAccess.salt, "password".toCharArray(), 20);
+      new PasswordBasedEncryptor(EncrypterToTransportServerAccess.salt, "password".toCharArray(), 20);
     byte[] cryptedLinkInfo = passwordBasedEncryptor.encrypt(glob.get(User.LINK_INFO));
     Persistence persistence = directory.get(Persistence.class);
     return persistence.getHiddenUser(cryptedLinkInfo);

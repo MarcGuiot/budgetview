@@ -1,10 +1,10 @@
 package org.designup.picsou.client;
 
+import static org.crossbowlabs.globs.model.FieldValue.value;
 import org.crossbowlabs.globs.model.*;
-import static org.crossbowlabs.globs.model.FieldValue.*;
 import org.crossbowlabs.globs.model.utils.GlobFunctor;
-import org.crossbowlabs.globs.model.utils.GlobMatcher;
 import org.crossbowlabs.globs.utils.MultiMap;
+import org.crossbowlabs.globs.utils.Strings;
 import org.crossbowlabs.globs.utils.Utils;
 import org.designup.picsou.model.*;
 
@@ -12,18 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AllocationLearningService {
-  private ServerAccess serverAccess;
-
-  public AllocationLearningService(ServerAccess serverAccess) {
-    this.serverAccess = serverAccess;
-  }
 
   public void learn(final Glob transaction, final Integer categoryId, final GlobRepository repository) {
     Integer previousCategory = transaction.get(Transaction.CATEGORY);
 
     Transaction.setCategory(transaction, categoryId, repository);
     String label = extractCategorisationPattern(transaction);
-    if (label == null) {
+    if (Strings.isNullOrEmpty(label)) {
       return;
     }
     if (previousCategory != null) {
@@ -43,7 +38,7 @@ public class AllocationLearningService {
       return GlobList.EMPTY;
     }
 
-    return  repository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX, label);
+    return repository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX, label);
   }
 
   public void deleteCategory(Integer deletedCategory, Integer parentCategory, GlobRepository repository) {
@@ -124,13 +119,15 @@ public class AllocationLearningService {
     return transaction.get(Transaction.LABEL_FOR_CATEGORISATION);
   }
 
-  public void setCategories(GlobList transactions, GlobRepository repository) {
+  public void setCategories(List<Glob> transactions, GlobRepository repository) {
     for (Glob transaction : transactions) {
       if (TransactionType.isOfType(transaction, TransactionType.CREDIT_CARD)
           || TransactionType.isOfType(transaction, TransactionType.PRELEVEMENT)
           || TransactionType.isOfType(transaction, TransactionType.VIREMENT)) {
         String label = transaction.get(Transaction.LABEL_FOR_CATEGORISATION);
-        propagateLocal(label, transaction, repository);
+        if (!Strings.isNullOrEmpty(label)) {
+          propagateLocal(label, transaction, repository);
+        }
       }
       else if (TransactionType.isOfType(transaction, TransactionType.BANK_FEES)) {
         Transaction.setCategory(transaction, MasterCategory.BANK.getId(), repository);

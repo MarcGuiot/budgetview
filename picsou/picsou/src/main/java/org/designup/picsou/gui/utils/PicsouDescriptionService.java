@@ -12,6 +12,7 @@ import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -19,7 +20,7 @@ import java.util.Locale;
 
 public class PicsouDescriptionService extends DefaultDescriptionService {
   public static final DecimalFormat INTEGER_FORMAT = new DecimalFormat("0");
-  public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
+  public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
   private static SimpleDateFormat YEAR_MONTH_FORMAT = new SimpleDateFormat("MMMMMMMMMM yyyy", Locale.FRANCE);
 

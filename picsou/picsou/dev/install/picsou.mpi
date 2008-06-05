@@ -180,10 +180,10 @@ test
 
 }
 FileGroup ::8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 Solaris-sparc Windows TarArchive} -name {Program Files} -parent FileGroups
-File ::F56B1EB7-E593-4BD3-84D9-6BACDD58A4DA -name {picsou.exe} -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
-File ::50BE3C17-029A-4A6A-BC74-2130C6ABA4C7 -name {../images/picsou_icon_32.ico} -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
-File ::2B46BFAC-3F00-4290-B80A-D790CCEB6778 -name {msvcr71.dll} -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
-File ::09B3F2A4-3934-FAA3-B4DF-514E8A7332E9 -name {license.txt} -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
+File ::F56B1EB7-E593-4BD3-84D9-6BACDD58A4DA -name picsou.exe -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
+File ::50BE3C17-029A-4A6A-BC74-2130C6ABA4C7 -name ../images/picsou_icon_32.ico -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
+File ::2B46BFAC-3F00-4290-B80A-D790CCEB6778 -name msvcr71.dll -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
+File ::09B3F2A4-3934-FAA3-B4DF-514E8A7332E9 -name license.txt -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 Component ::89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 Solaris-sparc Windows} -name {Default Component} -parent Components
 SetupType ::C40711B9-D384-4BA7-BD59-C41C7FDE9BA0 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 Solaris-sparc Windows} -name Typical -parent SetupTypes
 
@@ -263,6 +263,7 @@ Condition F9F8544A-00C4-4D56-9CEC-78583AF08CED -active Yes -parent 558A3861-E155
 InstallComponent C02FF264-188D-4CAA-9DB6-68552CDEE2A2 -setup Install -type action -title {Add Windows File Command} -component AddWindowsFileCommand -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
 InstallComponent 4A6ADC8C-83B7-433C-AE38-4A306C5E9671 -setup Install -type action -title {Add Windows File Type} -component AddWindowsFileType -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
 InstallComponent FF3EF8C5-8C31-4041-86ED-9FF2438E09ED -setup Install -type action -title {Add Windows File Extension} -component AddWindowsFileExtension -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
+InstallComponent 24425BCE-2911-1D9A-E802-E3A88C29ACF8 -setup Install -type action -title {Add Windows File Extension} -component AddWindowsFileExtension -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
 InstallComponent 5C84A8D4-43AB-41B6-9CDC-9781830C8A2F -setup Install -type actiongroup -title {Finish Actions} -active Yes -parent ActionGroupsInstall
 InstallComponent 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5 -setup Install -type action -conditions {9E4980CE-B568-4899-8C00-F0CC4FB23064 A7803762-CFE9-4AF2-A2A0-27178E998501} -title {Install Desktop Shortcut} -component InstallDesktopShortcut -command insert -active Yes -parent 5C84A8D4-43AB-41B6-9CDC-9781830C8A2F
 Condition 9E4980CE-B568-4899-8C00-F0CC4FB23064 -active Yes -parent 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5 -title {String Is Condition} -component StringIsCondition
@@ -485,6 +486,12 @@ false
 
 24204D7D-347F-44E4-B071-60E62A7A62E9,Conditions
 {0 conditions}
+
+24425BCE-2911-1D9A-E802-E3A88C29ACF8,Conditions
+{0 conditions}
+
+24425BCE-2911-1D9A-E802-E3A88C29ACF8,FileExtension
+.ofx
 
 284882F5-D1C4-4F0F-B087-725D8A13FDC8,CheckCondition
 {Before Action is Executed}

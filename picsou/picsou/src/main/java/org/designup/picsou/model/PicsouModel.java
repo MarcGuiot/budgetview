@@ -7,6 +7,7 @@ public class PicsouModel {
   private static GlobModel model =
     GlobModelBuilder.init(Account.TYPE,
                           Bank.TYPE,
+                          BankEntity.TYPE,
                           Category.TYPE,
                           Month.TYPE,
                           Transaction.TYPE,

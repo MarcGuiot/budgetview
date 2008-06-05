@@ -10,7 +10,9 @@ import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
 import org.designup.picsou.utils.TransactionComparator;
 
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class TransactionFilter implements AccountFileImporter {
@@ -20,29 +22,20 @@ public class TransactionFilter implements AccountFileImporter {
     this.innerImporter = accountFileImporter;
   }
 
-  public GlobList loadTransactions(Reader reader, GlobRepository repository) {
-    GlobRepository tmpRepository =
-      GlobRepositoryBuilder.init(repository.getIdGenerator())
-        .add(repository.getAll(Bank.TYPE))
-        .add(repository.getAll(Account.TYPE))
-        .add(repository.getAll(Category.TYPE))
-        .get();
+  public GlobList loadTransactions(Reader reader, GlobRepository repository, ReadOnlyGlobRepository initialRepository) {
+    GlobList createdTransactions = loadTransactionsToCreate(reader, repository, initialRepository);
 
-    GlobList tmpTransactions = getTransactionsToCreate(tmpRepository, reader, repository);
-    retrieveObjects(Account.TYPE, tmpRepository, repository);
+    retrieveObjects(Account.TYPE, repository, repository);
     SummaryAccountCreationTrigger.updateSummary(repository);
-    retrieveObjects(Bank.TYPE, tmpRepository, repository);
-    retrieveCategories(repository, tmpRepository);
+    retrieveObjects(Bank.TYPE, repository, repository);
+    retrieveCategories(repository, repository);
 
-    GlobList createdTransactions = new GlobList();
-    for (Glob tmpTransaction : tmpTransactions) {
-      createdTransactions.add(repository.create(tmpTransaction.getKey(), tmpTransaction.toArray()));
+    for (Glob transaction : createdTransactions) {
       Set<Integer> categoryIds =
-        tmpRepository.findByIndex(TransactionToCategory.TRANSACTION_INDEX,
-                                  tmpTransaction.get(Transaction.ID))
+        repository.findByIndex(TransactionToCategory.TRANSACTION_INDEX, transaction.get(Transaction.ID))
           .getValueSet(TransactionToCategory.CATEGORY);
       TransactionToCategory.link(repository,
-                                 tmpTransaction.get(Transaction.ID),
+                                 transaction.get(Transaction.ID),
                                  categoryIds.toArray(new Integer[categoryIds.size()]));
     }
     return createdTransactions;
@@ -55,13 +48,14 @@ public class TransactionFilter implements AccountFileImporter {
     }
   }
 
-  private GlobList getTransactionsToCreate(GlobRepository tempRepository, Reader reader, GlobRepository globRepository) {
+  private GlobList loadTransactionsToCreate(Reader reader, GlobRepository targetRepository,
+                                            ReadOnlyGlobRepository initialRepository) {
     GlobList importedTransactions =
-      innerImporter.loadTransactions(reader, tempRepository).sort(TransactionComparator.ASCENDING);
+      innerImporter.loadTransactions(reader, targetRepository, initialRepository).sort(TransactionComparator.ASCENDING);
     if (importedTransactions.isEmpty()) {
       return GlobList.EMPTY;
     }
-    GlobList actualTransactions = globRepository.getAll(Transaction.TYPE).sort(TransactionComparator.ASCENDING);
+    GlobList actualTransactions = initialRepository.getAll(Transaction.TYPE).sort(TransactionComparator.ASCENDING);
     if (actualTransactions.isEmpty()) {
       return importedTransactions;
     }
@@ -69,7 +63,18 @@ public class TransactionFilter implements AccountFileImporter {
         firstIsAfterLast(actualTransactions, importedTransactions)) {
       return importedTransactions;
     }
-    return new TransactionChecker(importedTransactions.toArray(), actualTransactions.toArray()).getNewTransactions();
+    GlobList newTransactions = new TransactionChecker(importedTransactions.toArray(), actualTransactions.toArray())
+      .getNewTransactions();
+    Map<Key, Glob> transactions = new HashMap<Key, Glob>();
+    for (Glob newTransaction : newTransactions) {
+      transactions.put(newTransaction.getKey(), newTransaction);
+    }
+    for (Glob importedTransaction : importedTransactions) {
+      if (!transactions.containsKey(importedTransaction.getKey())) {
+        targetRepository.delete(importedTransaction.getKey());
+      }
+    }
+    return newTransactions;
   }
 
   private void retrieveObjects(GlobType globType, GlobRepository tempRepository, GlobRepository repository) {
@@ -167,8 +172,7 @@ public class TransactionFilter implements AccountFileImporter {
       return equal(actualTransaction.get(Transaction.ORIGINAL_LABEL),
                    importedTransaction.get(Transaction.ORIGINAL_LABEL))
              && equal(getAmount(actualTransaction, this.actualSplitedTransaction),
-                      getAmount(importedTransaction, this.importedSplitedTransaction))
-             && equal(actualTransaction.get(Transaction.TRANSACTION_TYPE), importedTransaction.get(Transaction.TRANSACTION_TYPE));
+                      getAmount(importedTransaction, this.importedSplitedTransaction));
     }
 
     private Double getAmount(Glob transaction, MultiMap<Integer, Glob> transactions) {

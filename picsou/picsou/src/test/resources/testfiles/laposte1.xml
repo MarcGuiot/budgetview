@@ -1,9 +1,9 @@
 <globs>
   <account number="(SummaryAccount)" name="Tous les comptes" balance="12345.67" updateDate="2006/08/10"/>
-  <bank id="20041">
+  <bankEntity id="20041">
     <account number="123123" balance="12345.67" isCardAccount="false"
              name="Compte 123123" updateDate="2006/08/10"/>
-  </bank>
+  </bankEntity>
 
   <transaction accountNumber="123123" amount="-5.0" month="200608" day="9"
                originalLabel="ACHAT CB SANEMA                         08.08.06"

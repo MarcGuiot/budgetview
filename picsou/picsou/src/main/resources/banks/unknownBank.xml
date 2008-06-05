@@ -1,0 +1,17 @@
+<globs>
+  <bank name="unknown bank" id="-123456">
+    <bankEntity id="-1"/>
+
+    <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
+                            transactionTypeName="check" groupForLabel="1"/>
+
+    <transactionTypeMatcher regexp="VIR (.*)"
+                            transactionTypeName="virement" groupForLabel="1"/>
+
+    <transactionTypeMatcher regexp="REM CHQ (.*)"
+                            transactionTypeName="deposit"/>
+
+    <transactionTypeMatcher regexp="RETRAIT (.*)"
+                            transactionTypeName="withdrawal" groupForLabel="1"/>
+  </bank>
+</globs>

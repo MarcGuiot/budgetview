@@ -22,6 +22,9 @@ public class TransactionTypeMatcher {
   @Target(TransactionType.class)
   public static LinkField TRANSACTION_TYPE;
 
+  @Target(Bank.class)
+  public static LinkField BANK;
+
   static {
     GlobTypeLoader.init(TransactionTypeMatcher.class);
   }

@@ -1,0 +1,39 @@
+<globs>
+  <bank name="Societe generale" id="99999">
+    <bankEntity id="30003"/>
+
+    <transactionTypeMatcher regexp="VIR.LOGITEL[ ]*"
+                            transactionTypeName="virement"/>
+
+    <transactionTypeMatcher regexp="VIR.LOGITEL[ ]+[^ ]+(.*)"
+                            transactionTypeName="virement" groupForLabel="1"/>
+
+    <transactionTypeMatcher regexp="PRELEVEMENT[ ]+[\w]+[ ]+(.*)"
+                            transactionTypeName="prelevement" groupForLabel="1"/>
+
+    <transactionTypeMatcher regexp="CARTE[ ]+[0-9]+[ ]+RETRAIT DAB[ ]*[\w]*[ ]+([0-9/]+)[ ]+(.*)"
+                            transactionTypeName="withdrawal" groupForLabel="2" groupForDate="1"/>
+
+    <transactionTypeMatcher regexp="RET\. DAB[ ]+[\w]+[ ]+([0-9/]+)[ ]+(.*)"
+                            transactionTypeName="withdrawal" groupForLabel="2" groupForDate="1"/>
+
+    <transactionTypeMatcher regexp="RET ECLAIR[ ]+[\w]+[ ]+([0-9/]+)[ ]+(.*)"
+                            transactionTypeName="withdrawal" groupForLabel="2" groupForDate="1"/>
+
+    <transactionTypeMatcher regexp="FAC\.FRANCE[ ]+[\w]+[ ]+([0-9/]+)[ ]+(.*)"
+                            transactionTypeName="credit_card" groupForLabel="2" groupForDate="1"/>
+
+    <transactionTypeMatcher regexp="CARTE[ ]+[0-9]+[ ]+([0-9/]+)[ ]+(.*)"
+                            transactionTypeName="credit_card" groupForLabel="2" groupForDate="1"/>
+
+    <transactionTypeMatcher regexp="VIREMENT[ ]+[\w]+[ ]+(.*)"
+                            transactionTypeName="virement" groupForLabel="1"/>
+
+    <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
+                            transactionTypeName="check" groupForLabel="1"/>
+
+    <transactionTypeMatcher regexp="VIR (.*)"
+                            transactionTypeName="virement" groupForLabel="1"/>
+
+  </bank>
+</globs>

@@ -6,8 +6,11 @@ import org.crossbowlabs.globs.metamodel.annotations.Target;
 import org.crossbowlabs.globs.metamodel.fields.LinkField;
 import org.crossbowlabs.globs.metamodel.index.NotUniqueIndex;
 import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
-import org.crossbowlabs.globs.model.*;
 import static org.crossbowlabs.globs.model.FieldValue.value;
+import org.crossbowlabs.globs.model.Glob;
+import org.crossbowlabs.globs.model.GlobList;
+import org.crossbowlabs.globs.model.GlobRepository;
+import org.crossbowlabs.globs.model.KeyBuilder;
 import org.crossbowlabs.globs.model.utils.GlobMatchers;
 
 import java.util.Set;
@@ -27,7 +30,7 @@ public class TransactionToCategory {
 
   static {
     GlobTypeLoader.init(TransactionToCategory.class)
-            .defineNotUniqueIndex(TRANSACTION_INDEX, TRANSACTION);
+      .defineNotUniqueIndex(TRANSACTION_INDEX, TRANSACTION);
   }
 
   public static void link(GlobRepository repository, Glob transaction, MasterCategory... categories) {
@@ -44,7 +47,11 @@ public class TransactionToCategory {
 
   public static void link(GlobRepository repository, Integer transactionId, Integer[] categoryIds) {
     for (Integer categoryId : categoryIds) {
-      link(repository, transactionId, categoryId);
+      if (!categoryId.equals(Category.NONE) && !categoryId.equals(Category.ALL)) {
+        repository.findOrCreate(KeyBuilder.createFromValues(TYPE,
+                                                            value(TRANSACTION, transactionId),
+                                                            value(CATEGORY, categoryId)));
+      }
     }
   }
 
@@ -82,7 +89,7 @@ public class TransactionToCategory {
   public static boolean hasCategories(Glob transaction, GlobRepository repository) {
     GlobList categories = getCategories(transaction, repository);
     if (categories.isEmpty() ||
-        ((categories.size() == 1) && (categories.get(0).get(Category.ID) == Category.NONE))) {
+        ((categories.size() == 1) && (categories.get(0).get(Category.ID).equals(Category.NONE)))) {
       return false;
     }
     return true;
@@ -90,8 +97,8 @@ public class TransactionToCategory {
 
   public static GlobList getCategories(int transactionId, GlobRepository repository) {
     Set<Integer> categoryIds = repository
-            .getAll(TYPE, GlobMatchers.fieldEquals(TRANSACTION, transactionId))
-            .getValueSet(CATEGORY);
+      .getAll(TYPE, GlobMatchers.fieldEquals(TRANSACTION, transactionId))
+      .getValueSet(CATEGORY);
 
     return repository.getAll(Category.TYPE, GlobMatchers.contained(Category.ID, categoryIds));
   }

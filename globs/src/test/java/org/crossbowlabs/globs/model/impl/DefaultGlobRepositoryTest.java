@@ -112,10 +112,10 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     );
 
     Glob target = repository.get(
-            KeyBuilder
-                    .init(DummyObjectWithCompositeKey.ID1, 1)
-                    .setValue(DummyObjectWithCompositeKey.ID2, 2)
-                    .get());
+      KeyBuilder
+        .init(DummyObjectWithCompositeKey.ID1, 1)
+        .setValue(DummyObjectWithCompositeKey.ID2, 2)
+        .get());
 
     Glob source0 = repository.get(Key.create(DummyObjectWithLinks.TYPE, 0));
     Glob source1 = repository.get(Key.create(DummyObjectWithLinks.TYPE, 1));
@@ -126,10 +126,10 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     initRepository();
 
     FieldValues values = FieldValuesBuilder
-            .init(DummyObject.ID, 1)
-            .set(DummyObject.NAME, "name1")
-            .set(DummyObject.PRESENT, true)
-            .get();
+      .init(DummyObject.ID, 1)
+      .set(DummyObject.NAME, "name1")
+      .set(DummyObject.PRESENT, true)
+      .get();
 
     Glob glob = repository.create(DummyObject.TYPE, values.toArray());
     assertTrue(glob.matches(values));
@@ -192,9 +192,9 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     assertEquals(3.14159265, glob.get(DummyObjectWithDefaultValues.DOUBLE));
     assertEquals(5l, glob.get(DummyObjectWithDefaultValues.LONG).longValue());
     assertEquals(true, glob.get(DummyObjectWithDefaultValues.BOOLEAN).booleanValue());
-    TestUtils.assertDateEquals((Date) DummyObjectWithDefaultValues.DATE.getDefaultValue(),
+    TestUtils.assertDateEquals((Date)DummyObjectWithDefaultValues.DATE.getDefaultValue(),
                                glob.get(DummyObjectWithDefaultValues.DATE), 500);
-    TestUtils.assertDateEquals((Date) DummyObjectWithDefaultValues.DATE.getDefaultValue(),
+    TestUtils.assertDateEquals((Date)DummyObjectWithDefaultValues.DATE.getDefaultValue(),
                                glob.get(DummyObjectWithDefaultValues.TIMESTAMP), 500);
   }
 
@@ -206,7 +206,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                       value(DummyObject.NAME, "name1"));
 
     changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='1' name='name1'/>"
+      "<create type='dummyObject' id='1' name='name1'/>"
     );
   }
 
@@ -251,7 +251,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
   public void testNoIdGenerationForCompositeKeys() throws Exception {
     checkCreationWithMissingKeyError(DummyObjectWithCompositeKey.TYPE,
-                                     "Field 'id1' missing for identifying a Glob of type: dummyObjectWithCompositeKey");
+                                     "Field 'id1' missing (should not be NULL) for identifying a Glob of type: dummyObjectWithCompositeKey");
   }
 
   public void testNoIdGenerationForNonIntegerKeys() throws Exception {
@@ -278,7 +278,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     checker.assertEquals(repository, "<dummyObject id='0' name='newName'/>");
 
     changeListener.assertLastChangesEqual(
-            "<update type='dummyObject' id='0' name='newName'/>"
+      "<update type='dummyObject' id='0' name='newName'/>"
     );
   }
 
@@ -291,7 +291,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     checker.assertEquals(repository, "<dummyObject id='0' name='newName' present='true' link='7'/>");
 
     changeListener.assertLastChangesEqual(
-            "<update type='dummyObject' id='0' name='newName' present='true' link='7'/>"
+      "<update type='dummyObject' id='0' name='newName' present='true' link='7'/>"
     );
   }
 
@@ -354,7 +354,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     repository.setTarget(getKey(1), DummyObject.LINK, getKey(3));
     assertEquals(3, repository.get(getKey(1)).get(DummyObject.LINK).intValue());
     changeListener.assertLastChangesEqual(
-            "<update type='dummyObject' id='1' link='3'/>"
+      "<update type='dummyObject' id='1' link='3'/>"
     );
   }
 
@@ -393,7 +393,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     repository.delete(getKey(1));
     checker.assertEquals(repository, "");
     changeListener.assertLastChangesEqual(
-            "<delete type='dummyObject' id='1' name='name'/>"
+      "<delete type='dummyObject' id='1' name='name'/>"
     );
   }
 
@@ -407,8 +407,8 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     repository.delete(new GlobList(glob1, glob2));
     checker.assertEquals(repository, "<dummyObject id='3'/>");
     changeListener.assertLastChangesEqual(
-            "<delete type='dummyObject' id='1' name='obj1'/>" +
-            "<delete type='dummyObject' id='2' name='obj2'/>"
+      "<delete type='dummyObject' id='1' name='obj1'/>" +
+      "<delete type='dummyObject' id='2' name='obj2'/>"
     );
     checkDummyObjectDisabled(glob1);
     checkDummyObjectDisabled(glob2);
@@ -483,50 +483,50 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
   public void testDeleteAll() throws Exception {
     init(
-            "<dummyObject id='1'/>" +
-            "<dummyObject id='2'/>" +
-            "<dummyObject2 id='1'/>" +
-            "<dummyObjectWithCompositeKey id1='1' id2='2'/>"
+      "<dummyObject id='1'/>" +
+      "<dummyObject id='2'/>" +
+      "<dummyObject2 id='1'/>" +
+      "<dummyObjectWithCompositeKey id1='1' id2='2'/>"
     );
     repository.deleteAll(DummyObject.TYPE, DummyObjectWithCompositeKey.TYPE);
     changeListener.assertLastChangesEqual(
-            "<delete type='dummyObject' id='2'/>" +
-            "<delete type='dummyObject' id='1'/>" +
-            "<delete type='dummyObjectWithCompositeKey' id1='1' id2='2'/>"
+      "<delete type='dummyObject' id='2'/>" +
+      "<delete type='dummyObject' id='1'/>" +
+      "<delete type='dummyObjectWithCompositeKey' id1='1' id2='2'/>"
     );
   }
 
   public void testChangeSetIsResetAtEachStep() throws Exception {
     init(
-            "<dummyObject id='1' name='name1'/>" +
-            "<dummyObject id='2' name='name2'/>"
+      "<dummyObject id='1' name='name1'/>" +
+      "<dummyObject id='2' name='name2'/>"
     );
 
     createDummyObject(repository, 3);
     changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='3'/>"
+      "<create type='dummyObject' id='3'/>"
     );
 
     repository.update(getKey(1), DummyObject.NAME, "newName");
     changeListener.assertLastChangesEqual(
-            "<update type='dummyObject' id='1' name='newName'/>"
+      "<update type='dummyObject' id='1' name='newName'/>"
     );
 
     repository.delete(getKey(2));
     changeListener.assertLastChangesEqual(
-            "<delete type='dummyObject' id='2' name='name2'/>"
+      "<delete type='dummyObject' id='2' name='name2'/>"
     );
 
     createDummyObject(repository, 4);
     changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='4'/>"
+      "<create type='dummyObject' id='4'/>"
     );
   }
 
   public void testBulkModifications() throws Exception {
     init(
-            "<dummyObject id='1' name='name1'/>" +
-            "<dummyObject id='2' name='name2'/>"
+      "<dummyObject id='1' name='name1'/>" +
+      "<dummyObject id='2' name='name2'/>"
     );
 
     repository.enterBulkDispatchingMode();
@@ -541,16 +541,16 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
     repository.completeBulkDispatchingMode();
     changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='3'/>" +
-            "<update type='dummyObject' id='1' name='newName'/>" +
-            "<delete type='dummyObject' id='2' name='name2'/>"
+      "<create type='dummyObject' id='3'/>" +
+      "<update type='dummyObject' id='1' name='newName'/>" +
+      "<delete type='dummyObject' id='2' name='name2'/>"
     );
   }
 
   public void testImbricatedBulkModes() throws Exception {
     init(
-            "<dummyObject id='1' name='name1'/>" +
-            "<dummyObject id='2' name='name2'/>"
+      "<dummyObject id='1' name='name1'/>" +
+      "<dummyObject id='2' name='name2'/>"
     );
 
     repository.enterBulkDispatchingMode();
@@ -576,9 +576,9 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
     repository.completeBulkDispatchingMode();
     changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='3'/>" +
-            "<update type='dummyObject' id='1' name='newName'/>" +
-            "<delete type='dummyObject' id='2' name='name2'/>"
+      "<create type='dummyObject' id='3'/>" +
+      "<update type='dummyObject' id='1' name='newName'/>" +
+      "<delete type='dummyObject' id='2' name='name2'/>"
     );
   }
 
@@ -609,8 +609,8 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                       value(DummyObject.ID, 1),
                       value(DummyObject.NAME, "name1"));
     changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='1' name='name1-created'/>" +
-            "<create type='dummyObject2' id='1' label='dummyObject[id=1] created'/>");
+      "<create type='dummyObject' id='1' name='name1-created'/>" +
+      "<create type='dummyObject2' id='1' label='dummyObject[id=1] created'/>");
     clearTaggingObjects(repository, changeListener);
 
     repository.enterBulkDispatchingMode();
@@ -620,16 +620,16 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     repository.update(getKey(1), DummyObject.VALUE, 1.1);
     repository.completeBulkDispatchingMode();
     changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='2' name='name2-created'/>" +
-            "<create type='dummyObject2' id='1' label='dummyObject[id=1] updated'/>" +
-            "<update type='dummyObject' id='1' name='null-updated' value='1.1'/>" +
-            "<create type='dummyObject2' id='2' label='dummyObject[id=2] created'/>");
+      "<create type='dummyObject' id='2' name='name2-created'/>" +
+      "<create type='dummyObject2' id='1' label='dummyObject[id=1] updated'/>" +
+      "<update type='dummyObject' id='1' name='null-updated' value='1.1'/>" +
+      "<create type='dummyObject2' id='2' label='dummyObject[id=2] created'/>");
     clearTaggingObjects(repository, changeListener);
 
     repository.delete(getKey(1));
     changeListener.assertLastChangesEqual(
-            "<delete type='dummyObject' id='1' name='null-updated' value='1.1'/>" +
-            "<create type='dummyObject2' id='1' label='dummyObject[id=1] deleted'/>");
+      "<delete type='dummyObject' id='1' name='null-updated' value='1.1'/>" +
+      "<create type='dummyObject2' id='1' label='dummyObject[id=1] deleted'/>");
   }
 
   private void createObj2(GlobRepository repository, Key referenceKey, String text) {
@@ -640,13 +640,13 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
   public void testReset() throws Exception {
     init(
-            "<dummyObject id='1'/>" +
-            "<dummyObject id='2'/>" +
-            "<dummyObject2 id='1'/>"
+      "<dummyObject id='1'/>" +
+      "<dummyObject id='2'/>" +
+      "<dummyObject2 id='1'/>"
     );
 
     Glob dummyObject3 =
-            GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3).get();
+      GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3).get();
     repository.reset(new GlobList(dummyObject3), DummyObject.TYPE);
 
     changeListener.assertResetListEquals(DummyObject.TYPE);
@@ -658,9 +658,9 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
   public void testResetAlsoResetsTypesWhenNoCorrespondingGlobsAreInTheGlobsList() throws Exception {
     init(
-            "<dummyObject id='1'/>" +
-            "<dummyObject id='2'/>" +
-            "<dummyObject2 id='1'/>"
+      "<dummyObject id='1'/>" +
+      "<dummyObject id='2'/>" +
+      "<dummyObject2 id='1'/>"
     );
     repository.reset(GlobList.EMPTY, DummyObject.TYPE);
 
@@ -673,14 +673,14 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
   public void testResetOnlyReplacesGlobsWithSpecifiedType() throws Exception {
     init(
-            "<dummyObject id='1'/>" +
-            "<dummyObject id='2'/>" +
-            "<dummyObject2 id='1'/>"
+      "<dummyObject id='1'/>" +
+      "<dummyObject id='2'/>" +
+      "<dummyObject2 id='1'/>"
     );
     Glob newDummyObject =
-            GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3).get();
+      GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3).get();
     Glob newDummyObject2 =
-            GlobBuilder.init(DummyObject2.TYPE).set(DummyObject2.ID, 2).get();
+      GlobBuilder.init(DummyObject2.TYPE).set(DummyObject2.ID, 2).get();
     repository.reset(new GlobList(newDummyObject, newDummyObject2), DummyObject2.TYPE);
 
     changeListener.assertResetListEquals(DummyObject2.TYPE);
@@ -694,9 +694,9 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
   public void testChangesMadeWithinResetEventAreDispatchedAfterTheResetNotification() throws Exception {
     init(
-            "<dummyObject id='1'/>" +
-            "<dummyObject id='2'/>" +
-            "<dummyObject2 id='1'/>"
+      "<dummyObject id='1'/>" +
+      "<dummyObject id='2'/>" +
+      "<dummyObject2 id='1'/>"
     );
     final List<String> log = new ArrayList<String>();
     final DefaultGlobIdGenerator idGenerator = new DefaultGlobIdGenerator();
@@ -727,31 +727,31 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     });
 
     Glob dummyObject3 =
-            GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3).get();
+      GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3).get();
     repository.reset(new GlobList(dummyObject3), DummyObject.TYPE);
 
     TestUtils.assertEquals(Arrays.asList(
-            "trigger.globsReset.begin 4",
-            "trigger.globsReset.end 4",
-            "listener.globsReset",
-            "trigger.globsChanged.begin 5",
-            "trigger.globsChanged.end 5",
-            "listener.globsChanged"
+      "trigger.globsReset.begin 4",
+      "trigger.globsReset.end 4",
+      "listener.globsReset",
+      "trigger.globsChanged.begin 5",
+      "trigger.globsChanged.end 5",
+      "listener.globsChanged"
     ), log);
   }
 
   public void testApplyChangeSet() throws Exception {
     init(
-            "<dummyObject id='1' name='obj1'/>" +
-            "<dummyObject2 id='2'/>"
+      "<dummyObject id='1' name='obj1'/>" +
+      "<dummyObject2 id='2'/>"
     );
 
     DefaultChangeSet changeSet = new DefaultChangeSet();
     changeSet.processCreation(DummyObject.TYPE,
                               FieldValuesBuilder.init()
-                                      .set(DummyObject.ID, 3)
-                                      .set(DummyObject.NAME, "obj3")
-                                      .get());
+                                .set(DummyObject.ID, 3)
+                                .set(DummyObject.NAME, "obj3")
+                                .get());
 
     changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1");
     changeSet.processDeletion(getKey2(2), FieldValues.EMPTY);
@@ -764,16 +764,16 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
   public void testApplyChangeSetDoesNotChangeTheRepositoryInCaseOfError() throws Exception {
     init(
-            "<dummyObject id='1' name='obj1'/>" +
-            "<dummyObject2 id='2'/>"
+      "<dummyObject id='1' name='obj1'/>" +
+      "<dummyObject2 id='2'/>"
     );
 
     DefaultChangeSet changeSet = new DefaultChangeSet();
     changeSet.processCreation(DummyObject.TYPE,
                               FieldValuesBuilder.init()
-                                      .set(DummyObject.ID, 3)
-                                      .set(DummyObject.NAME, "obj3")
-                                      .get());
+                                .set(DummyObject.ID, 3)
+                                .set(DummyObject.NAME, "obj3")
+                                .get());
 
     changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1");
     changeSet.processDeletion(getKey2(2), FieldValues.EMPTY);
@@ -793,21 +793,21 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
   public void testApplyChangeSetErrorOnCreate() throws Exception {
     init(
-            "<dummyObject id='1' name='obj1'/>"
+      "<dummyObject id='1' name='obj1'/>"
     );
 
     DefaultChangeSet changeSet = new DefaultChangeSet();
     changeSet.processCreation(DummyObject.TYPE,
                               FieldValuesBuilder.init()
-                                      .set(DummyObject.ID, 1)
-                                      .set(DummyObject.NAME, "obj3")
-                                      .get());
+                                .set(DummyObject.ID, 1)
+                                .set(DummyObject.NAME, "obj3")
+                                .get());
     checkApplyChangeSetError(changeSet, "Object dummyObject[id=1] already exists");
   }
 
   public void testApplyChangeSetErrorOnUpdate() throws Exception {
     init(
-            "<dummyObject id='1' name='obj1'/>"
+      "<dummyObject id='1' name='obj1'/>"
     );
 
     MutableChangeSet changeSet = new DefaultChangeSet();
@@ -817,7 +817,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
   public void testApplyChangeSetErrorOnDelete() throws Exception {
     init(
-            "<dummyObject id='1' name='obj1'/>"
+      "<dummyObject id='1' name='obj1'/>"
     );
 
     MutableChangeSet changeSet = new DefaultChangeSet();
@@ -836,7 +836,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
   }
 
   private void createDummyObject(GlobRepository repository, long nextId) {
-    repository.create(DummyObject.TYPE, value(DummyObject.ID, (int) nextId));
+    repository.create(DummyObject.TYPE, value(DummyObject.ID, (int)nextId));
   }
 
   private void clearTaggingObjects(GlobRepository repository, DummyChangeSetListener listener) {
