@@ -14,15 +14,15 @@ public abstract class DayGenerator {
     return new DayGenerator() {
       public int get(Integer month) {
         int actualMaximum = Month.getCalendar(month).getActualMaximum(Calendar.DAY_OF_MONTH);
-        return (int) (1 + Math.random() * actualMaximum);
+        return (int)(1 + Math.random() * actualMaximum);
       }
     };
   }
 
-  public static DayGenerator between(final int min, final int max) {
+  public static DayGenerator dayBetween(final int min, final int max) {
     return new DayGenerator() {
       public int get(Integer month) {
-        return min + (int) ((max - min) * Math.random());
+        return min + (int)((max - min) * Math.random());
       }
     };
   }

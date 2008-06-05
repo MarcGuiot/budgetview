@@ -10,7 +10,7 @@ import org.designup.picsou.model.*;
 import static org.designup.picsou.utils.generator.AmountGenerator.*;
 import static org.designup.picsou.utils.generator.CountGenerator.*;
 import static org.designup.picsou.utils.generator.DayGenerator.any;
-import static org.designup.picsou.utils.generator.DayGenerator.between;
+import static org.designup.picsou.utils.generator.DayGenerator.dayBetween;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -42,30 +42,30 @@ public class PicsouSampleGenerator {
 
     setAccount("23412342234", false);
 
-    add(MasterCategory.INCOME, "WORLDCO SLAVE COMPENSATION 346Z45GF346", once(), between(3500.0, 4500.0), between(1, 5));
-    add(MasterCategory.INCOME, "YETANOTHERCO EMPLOY. 233 2A34F2", once(), between(1500.0, 2500.0), between(1, 8));
+    add(MasterCategory.INCOME, "WORLDCO SLAVE COMPENSATION 346Z45GF346", once(), between(3500.0, 4500.0), dayBetween(1, 5));
+    add(MasterCategory.INCOME, "YETANOTHERCO EMPLOY. 233 2A34F2", once(), between(1500.0, 2500.0), dayBetween(1, 8));
     add(MasterCategory.HEALTH, "VIR ASS.GENERALES DE FRANCE AGFS", upTo(8), between(5.0, 100.0), any());
     add(MasterCategory.INCOME, "REM CHQ REF10674R04", upTo(5), anyOf(55.0, 35.0, 72.0, 100.0), any());
 
     add(MasterCategory.MISC_SPENDINGS, "RETRAIT DAB 1805 REF10674A01 CAR", upTo(6), anyOf(-20.0, -40.0, -60.0), any());
     add(new MasterCategory[]{MasterCategory.MISC_SPENDINGS, MasterCategory.FOOD, MasterCategory.TRANSPORTS},
         "RETRAIT DAB 1805 REF10674A01 CAR", upTo(6), anyOf(-20.0, -40.0, -60.0), any());
-    add(MasterCategory.TELECOMS, "TIP FRANCE TELECOM MASSY NOR 107", once(), between(-70.0, -100.0), between(1, 5));
-    add(MasterCategory.TELECOMS, "PRLV FREE TELECOM FREE HAUTDEBIT", once(), value(-35.5), between(3, 10));
+    add(MasterCategory.TELECOMS, "TIP FRANCE TELECOM MASSY NOR 107", once(), between(-70.0, -100.0), dayBetween(1, 5));
+    add(MasterCategory.TELECOMS, "PRLV FREE TELECOM FREE HAUTDEBIT", once(), value(-35.5), dayBetween(3, 10));
     add(MasterCategory.HOUSE, "PRET IMMO 10674 131234 23", once(), value(-1742.34), any());
     add(MasterCategory.NONE, "CHEQUE 123123", upTo(10), between(-30.0, -150.0), any());
-    add(MasterCategory.TELECOMS, "PRLV ORANGE FRANCE SA %s", several(2), between(-35.0, -70.0), between(11, 16));
+    add(MasterCategory.TELECOMS, "PRLV ORANGE FRANCE SA %s", several(2), between(-35.0, -70.0), dayBetween(11, 16));
     add(MasterCategory.MISC_SPENDINGS, "RETRAIT DAB 1805 REF10674A01 CAR", sometimes(), anyOf(-20.0, -40.0, -60.0), any());
-    add(MasterCategory.BANK, "ABON FBQ ALERTES, ABON T", once(), between(-1.0, -12.0), between(6, 8));
-    add(MasterCategory.HEALTH, "PRLV ASS VIE 15515580008302", once(), value(-85.0), between(6, 8));
-    add(MasterCategory.HOUSE, "TIP EDF/GDF CENTRE 04 190225", once(), between(-55.0, -95.0), between(6, 10));
-    add(MasterCategory.HOUSE, "TIP GAZ DE FRANCE CENTRE 04 1902", once(), between(-20.0, -50.0), between(6, 10));
-    add(MasterCategory.PUERICULTURE, "PRLV C R P A SCOLARITE", once(), value(-217.0), between(12, 15));
-    add(MasterCategory.TRANSPORTS, "ECH PRET CAP+IN 10674 101147 06", once(), value(-454.21), between(15, 20));
-    add(MasterCategory.TRANSPORTS, "VROUMBOUM ASSURANCES", once(), value(-74.0), between(15, 20));
-    add(MasterCategory.BANK, "F COM INTERVENTION DECE 200", sometimes(), between(-4.0, -20.0), between(15, 20));
-    add(MasterCategory.TAXES, "PRLV TRESOR PUBLIC 92 IMPOT MENM", once(), value(-334.7), between(15, 20));
-    add(MasterCategory.SAVINGS, "ING DIRECT 2134 F324 GDE165", once(), value(-200.0), between(10, 13));
+    add(MasterCategory.BANK, "ABON FBQ ALERTES, ABON T", once(), between(-1.0, -12.0), dayBetween(6, 8));
+    add(MasterCategory.HEALTH, "PRLV ASS VIE 15515580008302", once(), value(-85.0), dayBetween(6, 8));
+    add(MasterCategory.HOUSE, "TIP EDF/GDF CENTRE 04 190225", once(), between(-55.0, -95.0), dayBetween(6, 10));
+    add(MasterCategory.HOUSE, "TIP GAZ DE FRANCE CENTRE 04 1902", once(), between(-20.0, -50.0), dayBetween(6, 10));
+    add(MasterCategory.PUERICULTURE, "PRLV C R P A SCOLARITE", once(), value(-217.0), dayBetween(12, 15));
+    add(MasterCategory.TRANSPORTS, "ECH PRET CAP+IN 10674 101147 06", once(), value(-454.21), dayBetween(15, 20));
+    add(MasterCategory.TRANSPORTS, "VROUMBOUM ASSURANCES", once(), value(-74.0), dayBetween(15, 20));
+    add(MasterCategory.BANK, "F COM INTERVENTION DECE 200", sometimes(), between(-4.0, -20.0), dayBetween(15, 20));
+    add(MasterCategory.TAXES, "PRLV TRESOR PUBLIC 92 IMPOT MENM", once(), value(-334.7), dayBetween(15, 20));
+    add(MasterCategory.SAVINGS, "ING DIRECT 2134 F324 GDE165", once(), value(-200.0), dayBetween(10, 13));
 
     setAccount("1234234534564567", true);
     add(MasterCategory.HEALTH, "PHARMADISCOUNT SAINT LOUIS", upTo(5), between(-8.0, -60.0), any());
