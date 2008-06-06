@@ -1,10 +1,8 @@
 package org.crossbowlabs.globs.model.delta;
 
 import org.crossbowlabs.globs.metamodel.Field;
-import org.crossbowlabs.globs.model.ChangeSetVisitor;
-import org.crossbowlabs.globs.model.FieldValues;
-import org.crossbowlabs.globs.model.FieldValuesBuilder;
-import org.crossbowlabs.globs.model.Key;
+import org.crossbowlabs.globs.metamodel.GlobType;
+import org.crossbowlabs.globs.model.*;
 import org.crossbowlabs.globs.model.impl.AbstractMutableGlob;
 import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
 
@@ -23,6 +21,10 @@ public class DefaultDeltaGlob extends AbstractMutableGlob implements DeltaGlob {
     super(key.getGlobType());
     setValues(key);
     resetValues();
+  }
+
+  private DefaultDeltaGlob(GlobType type, Object[] values) {
+    super(type, values);
   }
 
   public boolean isModified() {
@@ -105,5 +107,9 @@ public class DefaultDeltaGlob extends AbstractMutableGlob implements DeltaGlob {
     catch (Exception e) {
       throw new UnexpectedApplicationState(e);
     }
+  }
+
+  public Glob duplicate() {
+    return new DefaultDeltaGlob(type, duplicateValues());
   }
 }

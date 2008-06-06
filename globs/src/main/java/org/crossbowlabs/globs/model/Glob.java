@@ -19,4 +19,6 @@ public interface Glob extends FieldValues, Serializable {
   FieldValues getValues(boolean includeKeyFields);
 
   boolean exists();
+
+  Glob duplicate();
 }

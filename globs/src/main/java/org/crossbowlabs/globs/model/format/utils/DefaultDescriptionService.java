@@ -22,7 +22,6 @@ import org.crossbowlabs.globs.model.format.DescriptionService;
 import org.crossbowlabs.globs.model.format.Formats;
 import org.crossbowlabs.globs.model.format.GlobLinkStringifier;
 import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.model.utils.GlobFieldComparator;
 import org.crossbowlabs.globs.utils.Ref;
 
 public class DefaultDescriptionService implements DescriptionService {
@@ -170,28 +169,4 @@ public class DefaultDescriptionService implements DescriptionService {
     return new GlobLinkStringifier(link, getStringifier(link.getTargetType()));
   }
 
-  private abstract class AbstractGlobFieldStringifier<F extends Field, T> implements GlobStringifier {
-    private F field;
-
-    public AbstractGlobFieldStringifier(F field) {
-      this.field = field;
-    }
-
-    public String toString(Glob glob, GlobRepository globRepository) {
-      if (glob == null) {
-        return "";
-      }
-      T value = (T)glob.getValue(field);
-      if (value == null) {
-        return "";
-      }
-      return valueToString(value);
-    }
-
-    protected abstract String valueToString(T value);
-
-    public Comparator<Glob> getComparator(GlobRepository globRepository) {
-      return new GlobFieldComparator(field);
-    }
-  }
 }

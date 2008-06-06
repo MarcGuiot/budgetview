@@ -51,12 +51,15 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     return globs.values(globType);
   }
 
-  public GlobList getAll() {
-    return new GlobList(globs.values());
-  }
-
-  public GlobList getAll(GlobType type) {
-    return new GlobList(globs.values(type));
+  public GlobList getAll(GlobType... types) {
+    if (types.length == 0) {
+      return new GlobList(globs.values());
+    }
+    GlobList result = new GlobList();
+    for (GlobType type : types) {
+      result.addAll(globs.values(type));
+    }
+    return result;
   }
 
   public Glob findLinkTarget(Glob source, Link link) {
@@ -497,7 +500,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     for (Glob glob : newGlobs) {
       Key key = glob.getKey();
       if (typesList.contains(key.getGlobType())) {
-        globs.put(key.getGlobType(), key, glob);
+        globs.put(key.getGlobType(), key, glob.duplicate());
       }
     }
     for (ChangeSetListener listener : triggers) {

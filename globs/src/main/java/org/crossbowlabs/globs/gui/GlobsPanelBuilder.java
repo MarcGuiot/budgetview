@@ -5,15 +5,13 @@ import org.crossbowlabs.globs.gui.actions.DeleteGlobAction;
 import org.crossbowlabs.globs.gui.editors.GlobNumericEditor;
 import org.crossbowlabs.globs.gui.editors.GlobPasswordEditor;
 import org.crossbowlabs.globs.gui.editors.GlobTextEditor;
-import org.crossbowlabs.globs.gui.views.GlobComboView;
-import org.crossbowlabs.globs.gui.views.GlobLabelView;
-import org.crossbowlabs.globs.gui.views.GlobListView;
-import org.crossbowlabs.globs.gui.views.GlobTableView;
+import org.crossbowlabs.globs.gui.views.*;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.metamodel.fields.DoubleField;
 import org.crossbowlabs.globs.metamodel.fields.StringField;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobRepository;
+import org.crossbowlabs.globs.model.format.GlobListStringifier;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.IconLocator;
 import org.crossbowlabs.splits.SplitsBuilder;
@@ -75,7 +73,7 @@ public class GlobsPanelBuilder {
     return store(GlobPasswordEditor.init(field, repository, directory));
   }
 
-  public GlobLabelView addLabel(GlobType type, GlobLabelView.Stringifier stringifier) {
+  public GlobLabelView addLabel(GlobType type, GlobListStringifier stringifier) {
     return store(GlobLabelView.init(type, repository, directory, stringifier));
   }
 

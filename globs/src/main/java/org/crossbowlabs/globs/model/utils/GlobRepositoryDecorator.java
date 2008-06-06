@@ -30,11 +30,7 @@ public class GlobRepositoryDecorator implements GlobRepository {
     return getRepository().findUnique(type, values);
   }
 
-  public GlobList getAll() {
-    return getRepository().getAll();
-  }
-
-  public GlobList getAll(GlobType type) {
+  public GlobList getAll(GlobType... type) {
     return getRepository().getAll(type);
   }
 

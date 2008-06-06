@@ -17,9 +17,7 @@ public interface ReadOnlyGlobRepository {
   Glob get(Key key)
     throws ItemNotFound;
 
-  GlobList getAll();
-
-  GlobList getAll(GlobType type);
+  GlobList getAll(GlobType... type);
 
   GlobList getAll(GlobType type, GlobMatcher matcher);
 

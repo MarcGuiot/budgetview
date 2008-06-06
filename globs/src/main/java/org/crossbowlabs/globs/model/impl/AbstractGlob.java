@@ -111,6 +111,12 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
     return builder.get();
   }
 
+  protected Object[] duplicateValues() {
+    Object[] newValues = new Object[values.length];
+    System.arraycopy(values, 0, newValues, 0, values.length);
+    return newValues;
+  }
+
   public String toString() {
     return getKey().toString();
   }
@@ -137,40 +143,40 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
   }
 
   public Key getKey() {
-       if (key == null) {
-         KeyBuilder keyBuilder = KeyBuilder.init(type);
-         List<Field> keyFields = type.getKeyFields();
-         for (Field field : keyFields) {
-           keyBuilder.add(field, values[field.getIndex()]);
-         }
-         key = keyBuilder.get();
-       }
-       return key;
-     }
+    if (key == null) {
+      KeyBuilder keyBuilder = KeyBuilder.init(type);
+      List<Field> keyFields = type.getKeyFields();
+      for (Field field : keyFields) {
+        keyBuilder.add(field, values[field.getIndex()]);
+      }
+      key = keyBuilder.get();
+    }
+    return key;
+  }
 
   void dispose() {
-       disposed = true;
-     }
+    disposed = true;
+  }
 
   public boolean equals(Object o) {
-       if (this == o) {
-         return true;
-       }
-       if (o == null || getClass() != o.getClass()) {
-         return false;
-       }
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
-       Glob otherGlob = (Glob) o;
-       if (!type.equals(otherGlob.getType())) {
-         return false;
-       }
+    Glob otherGlob = (Glob)o;
+    if (!type.equals(otherGlob.getType())) {
+      return false;
+    }
 
-       Key key = getKey();
-       Key otherKey = otherGlob.getKey();
-       return key.equals(otherKey);
-     }
+    Key key = getKey();
+    Key otherKey = otherGlob.getKey();
+    return key.equals(otherKey);
+  }
 
   public int hashCode() {
-       return getKey().hashCode();
-     }
+    return getKey().hashCode();
+  }
 }

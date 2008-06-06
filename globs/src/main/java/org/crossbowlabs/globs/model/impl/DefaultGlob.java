@@ -2,6 +2,7 @@ package org.crossbowlabs.globs.model.impl;
 
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.model.FieldValues;
+import org.crossbowlabs.globs.model.Glob;
 
 public class DefaultGlob extends AbstractMutableGlob {
 
@@ -16,5 +17,9 @@ public class DefaultGlob extends AbstractMutableGlob {
   public DefaultGlob(GlobType type, FieldValues values) {
     super(type);
     setValues(values);
+  }
+
+  public Glob duplicate() {
+    return new DefaultGlob(type, duplicateValues());
   }
 }
