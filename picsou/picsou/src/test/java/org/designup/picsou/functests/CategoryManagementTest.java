@@ -410,7 +410,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       PopupMenuInterceptor.run(categories.triggerPopup("Apero"))
         .getSubMenu("Supprimer")
         .triggerClick())
-      .processWithButtonClick("Yes")
+      .processWithButtonClick("Oui")
       .run();
 
     categories.assertCategoryNotFound("Apero");

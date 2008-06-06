@@ -14,6 +14,7 @@ import org.crossbowlabs.globs.model.utils.GlobMatcher;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.SplitsBuilder;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.utils.*;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;

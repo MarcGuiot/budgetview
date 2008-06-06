@@ -1,14 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
-import org.crossbowlabs.globs.model.format.Formats;
 import org.uispec4j.MenuItem;
-import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.Button;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
-import org.designup.picsou.model.TransactionImport;
 
 public class OperationChecker {
   private MenuItem importMenu;
@@ -28,25 +26,45 @@ public class OperationChecker {
     importFile(name, balance);
   }
 
-  private void importFile(String[] name, final Double balance) {
-    WindowInterceptor interceptor = WindowInterceptor
+  private void importFile(final String[] fileNames, final Double balance) {
+    WindowInterceptor
       .init(importMenu.triggerClick())
-      .process(FileChooserHandler.init().select(name));
-    if (name[0].endsWith(".qif")) {
-      interceptor.process("Solde", new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          if (balance != null) {
-            TextBox textBox = window.getTextBox(TransactionImport.BALANCE.getName());
-            textBox.setText(Formats.DEFAULT_DECIMAL_FORMAT.format(balance));
-            return window.getButton("OK").triggerClick();
+      .process(new WindowHandler() {
+
+        public Trigger process(Window importDialog) throws Exception {
+
+          WindowInterceptor.init(importDialog.getButton("Parcourir").triggerClick())
+            .process(FileChooserHandler.init().select(fileNames))
+            .run();
+
+          importDialog.getButton("Importer").click();
+
+          Button okButton = importDialog.getButton("OK");
+          for (int i = 0; i < fileNames.length - 1; i++) {
+            okButton.click();
           }
-          else {
-            return window.getButton("Inconnu").triggerClick();
-          }
+
+          return okButton.triggerClick();
         }
-      });
-    }
-    interceptor.run();
+      })
+      .run();
+
+    // TODO: QIF
+//    if (name[0].endsWith(".qif")) {
+//      interceptor.process("Solde", new WindowHandler() {
+//        public Trigger process(Window window) throws Exception {
+//          if (balance != null) {
+//            TextBox textBox = window.getTextBox(TransactionImport.BALANCE.getName());
+//            textBox.setText(Formats.DEFAULT_DECIMAL_FORMAT.format(balance));
+//            return window.getButton("OK").triggerClick();
+//          }
+//          else {
+//            return window.getButton("Inconnu").triggerClick();
+//          }
+//        }
+//      });
+//    }
+
   }
 
   public void exportFile(String name) {

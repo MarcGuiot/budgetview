@@ -18,7 +18,7 @@ import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouDialog;
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import static org.designup.picsou.model.Transaction.LABEL;

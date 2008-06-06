@@ -5,7 +5,6 @@ import org.crossbowlabs.globs.utils.Strings;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorService;
-import org.crossbowlabs.splits.color.ColorServiceEditor;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadPassword;
@@ -110,7 +109,7 @@ public class LoginPanel {
         PicsouInit init = PicsouInit.init(serverAccess, user, creationCheckBox.isSelected(), directory);
         if (PicsouApplication.initialFile != null && PicsouApplication.initialFile.length != 0) {
           MainPanel.show(init.getRepository(), init.getDirectory(),
-                         mainWindow, PicsouApplication.initialFile);
+                         mainWindow);
         }
         else {
           NewAccountPanel.show(init.getRepository(), init.getDirectory(), mainWindow);
@@ -120,7 +119,7 @@ public class LoginPanel {
         serverAccess.initConnection(user, password, false);
         PicsouInit init = PicsouInit.init(serverAccess, user, creationCheckBox.isSelected(), directory);
         MainPanel.show(init.getRepository(), init.getDirectory(),
-                       mainWindow, PicsouApplication.initialFile);
+                       mainWindow);
       }
     }
     catch (UserAlreadyExists e) {
@@ -137,9 +136,11 @@ public class LoginPanel {
     }
     catch (Exception e) {
       displayErrorMessage("login.server.connection.failure");
-      PrintWriter writer = new PrintWriter(new StringWriter());
+      StringWriter stringWriter = new StringWriter();
+      PrintWriter writer = new PrintWriter(stringWriter);
       e.printStackTrace(writer);
-      JTextArea textArea = new JTextArea(writer.toString());
+      e.printStackTrace();
+      JTextArea textArea = new JTextArea(stringWriter.toString());
       GuiUtils.show(textArea);
     }
     finally {

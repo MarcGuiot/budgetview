@@ -16,7 +16,7 @@ import org.crossbowlabs.splits.layout.GridBagBuilder;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.gui.categories.*;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouDialog;
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;

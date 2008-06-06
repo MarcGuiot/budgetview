@@ -7,5 +7,5 @@ import org.crossbowlabs.globs.model.ReadOnlyGlobRepository;
 import java.io.Reader;
 
 public interface AccountFileImporter {
-  GlobList loadTransactions(Reader reader, GlobRepository targetRepository, ReadOnlyGlobRepository initialRepository);
+  GlobList loadTransactions(Reader reader, ReadOnlyGlobRepository initialRepository, GlobRepository targetRepository);
 }

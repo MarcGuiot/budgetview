@@ -68,7 +68,7 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
     WindowInterceptor
       .init(operations.getExportTrigger())
       .process(FileChooserHandler.init().select(fileName))
-      .processWithButtonClick("Confirmation", "No")
+      .processWithButtonClick("Confirmation", "Non")
       .run();
 
     assertEquals("Blah", Files.loadFileToString(fileName).trim());
@@ -76,7 +76,7 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
     WindowInterceptor
       .init(operations.getExportTrigger())
       .process(FileChooserHandler.init().select(fileName))
-      .processWithButtonClick("Confirmation", "Yes")
+      .processWithButtonClick("Confirmation", "Oui")
       .run();
 
     assertTrue(Files.loadFileToString(fileName).startsWith("<OFX>"));

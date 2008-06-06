@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.utils;
+package org.designup.picsou.gui.components;
 
 import javax.swing.*;
 import java.awt.*;

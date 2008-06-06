@@ -1,11 +1,11 @@
 package org.designup.picsou.server;
 
+import org.crossbowlabs.globs.utils.Files;
+import org.crossbowlabs.globs.utils.TestUtils;
+import org.uispec4j.*;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
-import org.uispec4j.*;
-import org.crossbowlabs.globs.utils.Files;
-import org.crossbowlabs.globs.utils.TestUtils;
 
 import javax.swing.*;
 import java.io.File;
@@ -18,7 +18,7 @@ public class LoginFuncTest extends ServerFuncTestCase {
     Button loginButton = window.getButton("login");
     loginButton.click();
 
-    JLabel label = (JLabel) window.findSwingComponent(JLabel.class, "message");
+    JLabel label = (JLabel)window.findSwingComponent(JLabel.class, "message");
     assertFalse(label.getText().equals(""));
   }
 
@@ -40,19 +40,15 @@ public class LoginFuncTest extends ServerFuncTestCase {
 
     window.getButton("login").click();
 
-    Button find = window.getButton("fileButton");
+    Button find = window.getButton("Parcourir");
     File file = new File(fileName);
     WindowInterceptor
       .init(find.triggerClick())
       .process(FileChooserHandler.init().select(new File[]{file}))
       .run();
 
-    Button connection = window.getButton("login");
-    WindowInterceptor.init(connection.triggerClick()).process(new WindowHandler() {
-      public Trigger process(final Window window) throws Exception {
-        return window.getButton("unknown").triggerClick();
-      }
-    }).run();
+    window.getButton("Importer").click();
+    window.getButton("OK").click();
 
     Table table = window.getTable("category");
     assertTrue(table.cellEquals(0, 2, "-100"));

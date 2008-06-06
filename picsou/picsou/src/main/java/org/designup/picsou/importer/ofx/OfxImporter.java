@@ -23,7 +23,7 @@ public class OfxImporter implements AccountFileImporter {
   public OfxImporter() {
   }
 
-  public GlobList loadTransactions(Reader reader, GlobRepository targetRepository, ReadOnlyGlobRepository initialRepository) {
+  public GlobList loadTransactions(Reader reader, ReadOnlyGlobRepository initialRepository, GlobRepository targetRepository) {
     OfxParser parser = new OfxParser();
     try {
       Functor functor = new Functor(targetRepository, initialRepository);

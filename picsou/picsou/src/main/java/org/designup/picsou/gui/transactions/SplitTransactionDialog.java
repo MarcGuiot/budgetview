@@ -24,7 +24,7 @@ import org.crossbowlabs.splits.color.ColorSource;
 import org.crossbowlabs.splits.components.JStyledPanel;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouDialog;
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;

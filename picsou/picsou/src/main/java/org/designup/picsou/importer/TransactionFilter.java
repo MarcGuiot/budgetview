@@ -22,19 +22,21 @@ public class TransactionFilter implements AccountFileImporter {
     this.innerImporter = accountFileImporter;
   }
 
-  public GlobList loadTransactions(Reader reader, GlobRepository repository, ReadOnlyGlobRepository initialRepository) {
-    GlobList createdTransactions = loadTransactionsToCreate(reader, repository, initialRepository);
+  public GlobList loadTransactions(Reader reader,
+                                   ReadOnlyGlobRepository initialRepository,
+                                   GlobRepository targetRepository) {
+    GlobList createdTransactions = loadTransactionsToCreate(reader, targetRepository, initialRepository);
 
-    retrieveObjects(Account.TYPE, repository, repository);
-    SummaryAccountCreationTrigger.updateSummary(repository);
-    retrieveObjects(Bank.TYPE, repository, repository);
-    retrieveCategories(repository, repository);
+    retrieveObjects(Account.TYPE, targetRepository, targetRepository);
+    SummaryAccountCreationTrigger.updateSummary(targetRepository);
+    retrieveObjects(Bank.TYPE, targetRepository, targetRepository);
+    retrieveCategories(targetRepository, targetRepository);
 
     for (Glob transaction : createdTransactions) {
       Set<Integer> categoryIds =
-        repository.findByIndex(TransactionToCategory.TRANSACTION_INDEX, transaction.get(Transaction.ID))
+        targetRepository.findByIndex(TransactionToCategory.TRANSACTION_INDEX, transaction.get(Transaction.ID))
           .getValueSet(TransactionToCategory.CATEGORY);
-      TransactionToCategory.link(repository,
+      TransactionToCategory.link(targetRepository,
                                  transaction.get(Transaction.ID),
                                  categoryIds.toArray(new Integer[categoryIds.size()]));
     }
@@ -51,7 +53,9 @@ public class TransactionFilter implements AccountFileImporter {
   private GlobList loadTransactionsToCreate(Reader reader, GlobRepository targetRepository,
                                             ReadOnlyGlobRepository initialRepository) {
     GlobList importedTransactions =
-      innerImporter.loadTransactions(reader, targetRepository, initialRepository).sort(TransactionComparator.ASCENDING);
+      innerImporter
+        .loadTransactions(reader, initialRepository, targetRepository)
+        .sort(TransactionComparator.ASCENDING);
     if (importedTransactions.isEmpty()) {
       return GlobList.EMPTY;
     }

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.sandbox;
 
-import org.designup.picsou.gui.utils.FadingSwapper;
+import org.designup.picsou.gui.components.FadingSwapper;
 
 import javax.swing.*;
 import java.awt.*;

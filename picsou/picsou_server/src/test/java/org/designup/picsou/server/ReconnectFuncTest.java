@@ -8,14 +8,12 @@ import org.crossbowlabs.globs.utils.Files;
 import org.designup.picsou.PicsouServer;
 import org.designup.picsou.functests.checkers.OperationChecker;
 
-import java.io.File;
-
 public class ReconnectFuncTest extends ServerFuncTestCase {
 
   public void test() throws Exception {
     String fileName = TestUtils.getFileName(this, ".qif");
 
-    Files.copyStreamTofile(ReconnectFuncTest.class.getResourceAsStream(PICSOU_DEV_TESTFILES_SG1_QIF),
+    Files.copyStreamTofile(ReconnectFuncTest.class.getResourceAsStream(PICSOU_DEV_TESTFILES_CIC1_OFX),
                            fileName);
 
     createAndLogUser("user", "_passd1", fileName);
@@ -25,11 +23,7 @@ public class ReconnectFuncTest extends ServerFuncTestCase {
     picsouServer.start();
 
     OperationChecker operations = new OperationChecker(window);
-    WindowInterceptor
-      .init(operations.getImportTrigger())
-      .process(FileChooserHandler.init().select(new String[]{fileName}))
-      .processWithButtonClick("Solde inconnu")
-      .run();
+    operations.importOfxFile(fileName);
 
     Table table = window.getTable("category");
     assertTrue(table.cellEquals(0, 2, "-100"));

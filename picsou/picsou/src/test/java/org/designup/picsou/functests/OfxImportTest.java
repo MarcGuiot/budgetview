@@ -459,17 +459,14 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void   testInvalidFileExtension() throws Exception {
+  public void testInvalidFileExtension() throws Exception {
     WindowInterceptor
-      .init(new Trigger() {
-        public void run() throws Exception {
-          operations.importOfxFile("file.dat");
-        }
-      })
+      .init(operations.getImportTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
+          window.getInputTextBox().setText("file.dat");
           assertTrue(window.containsLabel("seules les extensions OFX et QIF sont acceptées"));
-          return window.getButton("OK").triggerClick();
+          return window.getButton("Fermer").triggerClick();
         }
       })
       .run();

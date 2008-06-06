@@ -12,6 +12,7 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
   protected Window window;
   protected PicsouServer picsouServer;
   protected static final String PICSOU_DEV_TESTFILES_SG1_QIF = "/testfiles/sg1.qif";
+  protected static final String PICSOU_DEV_TESTFILES_CIC1_OFX = "/testfiles/cic1.ofx";
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -49,19 +50,15 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     createAccount.click();
     confirmPassword.setPassword(userPassword);
 
-    window.getButton("login").click();
+    window.getButton("Entrer").click();
 
-    Button find = window.getButton("fileButton");
+    Button find = window.getButton("Importer");
     File file = new File(fileName);
     WindowInterceptor
       .init(find.triggerClick())
       .process(FileChooserHandler.init().select(new File[]{file}))
       .run();
 
-    Button connection = window.getButton("login");
-    WindowInterceptor
-      .init(connection.triggerClick())
-      .processWithButtonClick("unknown")
-      .run();
+    window.getButton("OK").click();
   }
 }

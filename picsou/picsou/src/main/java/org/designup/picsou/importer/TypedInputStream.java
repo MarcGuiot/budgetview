@@ -3,7 +3,7 @@ package org.designup.picsou.importer;
 import java.io.*;
 
 public class TypedInputStream {
-  private TYPE type;
+  private BankFileType type;
   private RepetableInputStream stream;
   private boolean notUTF8;
   private static final String DEFAULT_ENCODING = "ISO-8859-15";
@@ -14,10 +14,10 @@ public class TypedInputStream {
     checkCoding();
     fileName = file.getName().toLowerCase();
     if (fileName.endsWith(".ofx")) {
-      type = TYPE.ofx;
+      type = BankFileType.OFX;
     }
     else if (fileName.endsWith(".qif")) {
-      type = TYPE.qif;
+      type = BankFileType.QIF;
     }
   }
 
@@ -31,11 +31,11 @@ public class TypedInputStream {
     while ((line = bufferedReader.readLine()) != null) {
       String loLine = line.trim().toLowerCase();
       if (loLine.startsWith("!type:bank")) {
-        type = TYPE.qif;
+        type = BankFileType.QIF;
         break;
       }
       if (loLine.startsWith("<ofx>")) {
-        type = TYPE.ofx;
+        type = BankFileType.OFX;
         break;
       }
     }
@@ -45,7 +45,7 @@ public class TypedInputStream {
     return stream;
   }
 
-  public TYPE getType() {
+  public BankFileType getType() {
     return type;
   }
 
@@ -55,11 +55,6 @@ public class TypedInputStream {
 
   public String getName() {
     return fileName;
-  }
-
-  enum TYPE {
-    ofx,
-    qif
   }
 
   public Reader getBestProbableReader() {

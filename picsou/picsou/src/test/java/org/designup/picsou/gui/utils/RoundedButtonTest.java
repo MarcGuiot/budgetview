@@ -5,6 +5,8 @@ import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.IconLocator;
 import org.crossbowlabs.splits.color.ColorService;
 import org.crossbowlabs.splits.color.ColorServiceEditor;
+import org.designup.picsou.gui.components.JGradientPanel;
+import org.designup.picsou.gui.components.RoundedButton;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

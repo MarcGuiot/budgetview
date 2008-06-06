@@ -17,7 +17,7 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.ServerAccessGlobIdGenerator;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.triggers.MonthStatComputer;
-import org.designup.picsou.importer.PicsouImportService;
+import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
@@ -75,8 +75,8 @@ public class PicsouInit {
 
     TransactionAnalyzerFactory factory = new TransactionAnalyzerFactory(PicsouGuiModel.get(), repository);
     directory.add(TransactionAnalyzerFactory.class, factory);
-    PicsouImportService importService = new PicsouImportService();
-    directory.add(PicsouImportService.class, importService);
+    ImportService importService = new ImportService();
+    directory.add(ImportService.class, importService);
   }
 
   private static class ServerChangeSetListener extends DefaultChangeSetListener {

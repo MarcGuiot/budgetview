@@ -4,9 +4,7 @@ import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PicsouWindowsLookAndFeel;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
-import org.designup.picsou.gui.utils.FadingSwapper;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouDialogPainter;
 
 import javax.swing.*;
 

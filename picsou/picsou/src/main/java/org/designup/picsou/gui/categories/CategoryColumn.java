@@ -13,7 +13,7 @@ import org.crossbowlabs.splits.layout.Fill;
 import org.crossbowlabs.splits.layout.GridBagBuilder;
 import org.crossbowlabs.splits.utils.TransparentIcon;
 import org.designup.picsou.gui.utils.AbstractRolloverEditor;
-import org.designup.picsou.gui.utils.PicsouDialog;
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.Category;
 
 import javax.swing.*;
@@ -46,9 +46,7 @@ class CategoryColumn extends AbstractRolloverEditor {
     };
     renameCategoryAction = new RenameCategoryAction(repository, directory) {
       public JDialog getDialog(ActionEvent e) {
-        {
-          return PicsouDialog.create(directory.get(JFrame.class));
-        }
+        return PicsouDialog.create(directory.get(JFrame.class));
       }
     };
     deleteCategoryAction = new DeleteCategoryAction(repository, directory);

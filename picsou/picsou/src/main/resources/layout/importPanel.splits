@@ -1,0 +1,42 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <cards ref="cardHandler">
+    <card name="step1">
+      <column margin="20" anchor="center" fill="none">
+
+        <filler fill="vertical"/>
+
+        <comboBox ref="bankCombo"/>
+
+        <htmlEditorPane ref="downloadUrl"/>
+
+        <htmlEditorPane text="$login.initial.file"/>
+
+        <row marginTop="10" defaultAnchor="center">
+          <label ref="fileLabel" text="Fichier" anchor="east"/>
+          <textField ref="fileField" marginLeft="5" marginRight="5" anchor="center" weightX="1000"/>
+          <button ref="fileButton" text="$browse" anchor="west"/>
+        </row>
+
+        <label ref="message" margin="5" horizontalAlignment="center"/>
+
+        <button ref="importButton" text="Importer" margin="5"/>
+
+        <filler fill="vertical"/>
+
+      </column>
+    </card>
+
+    <card name="step2">
+      <column>
+        <label ref="fileName"/>
+        <scrollPane>
+          <table ref="table"/>
+        </scrollPane>
+        <button ref="finishButton"/>
+      </column>
+    </card>
+  </cards>
+
+
+</splits>

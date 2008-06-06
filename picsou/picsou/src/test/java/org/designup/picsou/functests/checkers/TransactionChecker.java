@@ -1,15 +1,16 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.gui.transactions.SplitTransactionDialog;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.utils.PicsouDescriptionService;
 import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.functests.checkers.converters.AmountCellConverter;
+import org.designup.picsou.functests.checkers.converters.CategoryCellConverter;
+import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
@@ -17,7 +18,6 @@ import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -370,51 +370,6 @@ public class TransactionChecker extends DataChecker {
         Assert.assertNotNull(window.getTextBox(expectedCategories[i]));
       }
       return this;
-    }
-  }
-
-  private static class DateCellConverter implements TableCellValueConverter {
-    public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-      Glob transaction = (Glob)modelObject;
-      int yearMonth = transaction.get(Transaction.MONTH);
-      int year = Month.toYear(yearMonth);
-      int month = Month.toMonth(yearMonth);
-      int day = transaction.get(Transaction.DAY);
-      return (day < 10 ? "0" : "") + day +
-             "/" + (month < 10 ? "0" : "") + month +
-             "/" + year;
-    }
-  }
-
-  private static class CategoryCellConverter implements TableCellValueConverter {
-    public Object getValue(int row, int column,
-                           Component renderedComponent, Object modelObject) {
-      org.uispec4j.Panel panel =
-        new org.uispec4j.Panel((JPanel)renderedComponent);
-      UIComponent[] categoryLabels = panel.getUIComponents(TextBox.class);
-      int index = 0;
-      StringBuilder builder = new StringBuilder();
-
-      Integer transactionType = ((Glob)modelObject).get(Transaction.TRANSACTION_TYPE);
-      builder.append("(");
-      builder.append(TransactionType.getType(transactionType).getName());
-      builder.append(")");
-      for (int i = 0; i < categoryLabels.length; i++) {
-        TextBox label = (TextBox)categoryLabels[i];
-        if (index++ > 0) {
-          builder.append(", ");
-        }
-        builder.append(label.getText());
-      }
-      return builder.toString().trim();
-    }
-  }
-
-  private static class AmountCellConverter implements TableCellValueConverter {
-    public Object getValue(int row, int column,
-                           Component renderedComponent, Object modelObject) {
-      org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
-      return panel.getTextBox("amount").getText();
     }
   }
 }

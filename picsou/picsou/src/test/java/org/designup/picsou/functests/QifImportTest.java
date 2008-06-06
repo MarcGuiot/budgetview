@@ -20,7 +20,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
                            fileName);
 
     operations.importQifFile(100.0, fileName);
-//    imports.check("2006/04/20", 100.0);
+// TODO:   imports.check("2006/04/20", 100.0);
     transactions
       .initContent()
       .add("20/04/2006", TransactionType.CREDIT_CARD, "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", "", -49.00, MasterCategory.FOOD)

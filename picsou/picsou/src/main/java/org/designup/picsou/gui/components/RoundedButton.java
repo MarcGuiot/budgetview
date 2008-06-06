@@ -1,8 +1,9 @@
-package org.designup.picsou.gui.utils;
+package org.designup.picsou.gui.components;
 
 import org.crossbowlabs.splits.color.ColorChangeListener;
 import org.crossbowlabs.splits.color.ColorService;
 import org.crossbowlabs.splits.color.ColorSource;
+import org.designup.picsou.gui.utils.PicsouColors;
 
 import javax.swing.*;
 import java.awt.*;

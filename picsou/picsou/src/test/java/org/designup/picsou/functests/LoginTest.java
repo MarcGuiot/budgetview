@@ -1,16 +1,17 @@
 package org.designup.picsou.functests;
 
 import org.crossbowlabs.globs.utils.Files;
-import org.uispec4j.*;
-import org.uispec4j.interception.FileChooserHandler;
-import org.uispec4j.interception.WindowInterceptor;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.SingleApplicationInstanceListener;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
+import org.uispec4j.*;
+import org.uispec4j.interception.FileChooserHandler;
+import org.uispec4j.interception.WindowInterceptor;
 
 import java.io.File;
 
@@ -31,7 +32,7 @@ public class LoginTest extends ServerFunctionalTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "");
 
     Files.deleteSubtree(new File(ServerFunctionalTestCase.getUrl()));
-    System.setProperty(PicsouApplication.SINGLE_INSTANCE_DISABLED, "true");
+    System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
         return WindowInterceptor.run(new Trigger() {
@@ -49,7 +50,7 @@ public class LoginTest extends ServerFunctionalTestCase {
 
   protected void tearDown() throws Exception {
     PicsouApplication.shutdown();
-    System.setProperty(PicsouApplication.SINGLE_INSTANCE_DISABLED, "false");
+    System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "false");
   }
 
   private void openNewLoginWindow() throws Exception {
@@ -149,23 +150,15 @@ public class LoginTest extends ServerFunctionalTestCase {
   }
 
   public void testDataFileMustBeSelectedWhenCreatingAnAccount() throws Exception {
-    createUserCheckbox.select();
-    enterUserPassword("toto", "p4ssw0rd", true);
-    loginButton.click();
+    createNewUser();
+
+    ComboBox bankCombo = window.getComboBox("bankCombo");
+    bankCombo.select("CIC");
+
+    assertNotNull(window.getTextBox("http://www.cic.fr/telechargements.cgi"));
 
     TextBox fileField = window.getInputTextBox("fileField");
-    Button connectButton = window.getButton("IMporter");
-
-    TextBox fileMessage = (TextBox) window.findUIComponent(TextBox.class, "Indiquez l'emplacement");
-    assertTrue(fileMessage != null);
-    assertTrue(fileMessage.isVisible());
-
-    connectButton.click();
-    checkErrorMessage("login.data.file.required");
-
-    fileField.setText("blah");
-    connectButton.click();
-    checkErrorMessage("login.data.file.not.found");
+    Button importButton = window.getButton("Importer");
 
     final String path = OfxBuilder
       .init(this)
@@ -176,11 +169,29 @@ public class LoginTest extends ServerFunctionalTestCase {
       .run();
 
     assertTrue(fileField.textEquals(path));
-    connectButton.click();
+    importButton.click();
+
+    Table table = window.getTable();
+    assertTrue(table.contentEquals(new Object[][]{
+      {"10/01/2006", "Menu K", "-1.10"}
+    }));
+
+    window.getButton("OK").click();
+
     new TransactionChecker(window)
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
+  }
+
+  public void testImportSeveralFiles() throws Exception {
+    fail();
+  }
+
+  private void createNewUser() {
+    createUserCheckbox.select();
+    enterUserPassword("toto", "p4ssw0rd", true);
+    loginButton.click();
   }
 
   public void testTransactionAndCategorisationWorkAfterReload() throws Exception {
@@ -222,9 +233,10 @@ public class LoginTest extends ServerFunctionalTestCase {
     loginButton.click();
 
     window.getInputTextBox("fileField").setText(filePath);
-    TextBox textBox = window.getTextBox("message");
+    TextBox messageBox = window.getTextBox("message");
     window.getButton("Importer").click();
-    assertTrue(textBox.textIsEmpty());
+    assertTrue(messageBox.textIsEmpty());
+    window.getButton("OK").click();
   }
 
   private void enterUserPassword(String user, String password, boolean confirm) {

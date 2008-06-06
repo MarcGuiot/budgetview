@@ -41,17 +41,11 @@ public class MainPanel {
   private ExportFileAction exportFileAction;
   private ExitAction exitAction;
 
-  public static void show(GlobRepository repository, Directory directory, MainWindow mainWindow,
-                          File[] initialFile) throws IOException {
+  public static void show(GlobRepository repository, Directory directory,
+                          MainWindow mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow.getFrame());
-    if (initialFile != null) {
-      for (int i = 0; i < initialFile.length; i++) {
-        panel.openFile(initialFile[i], i + 1 == initialFile.length);
-      }
-    }
     PicsouApplication.initialFile = null;
     mainWindow.setPanel(panel.panel);
-    PicsouApplication.listenForFile(panel);
   }
 
   public MainPanel(GlobRepository repository, Directory directory, JFrame parent) {
@@ -90,7 +84,7 @@ public class MainPanel {
     categoryView.select(Category.ALL);
     MRJAdapter.addOpenDocumentListener(new AbstractAction() {
       public void actionPerformed(ActionEvent event) {
-        importFileAction.processFile(((ApplicationEvent)event).getFile(), false);
+        openFile(((ApplicationEvent)event).getFile(), false);
       }
     });
 
@@ -139,7 +133,8 @@ public class MainPanel {
   }
 
   public void openFile(File file, boolean lastFile) {
-    importFileAction.processFile(file, lastFile);
+    throw new RuntimeException();
+// TODO:   importFileAction.processFile(file, lastFile);
   }
 
   public void openInFront() {

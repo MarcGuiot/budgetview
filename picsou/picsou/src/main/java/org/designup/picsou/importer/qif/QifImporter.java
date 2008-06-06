@@ -11,7 +11,7 @@ public class QifImporter implements AccountFileImporter {
   public QifImporter() {
   }
 
-  public GlobList loadTransactions(Reader reader, GlobRepository targetRepository, ReadOnlyGlobRepository initialRepository) {
+  public GlobList loadTransactions(Reader reader, ReadOnlyGlobRepository initialRepository, GlobRepository targetRepository) {
     return QifParser.read(reader, targetRepository);
   }
 }

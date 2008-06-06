@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.gui.views.GlobLabelView;
+import org.crossbowlabs.globs.model.format.GlobListStringifier;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobList;
 import org.crossbowlabs.globs.model.GlobRepository;
@@ -17,7 +17,7 @@ import org.designup.picsou.model.Transaction;
 
 import java.awt.*;
 
-public class BalanceStringifier implements GlobLabelView.Stringifier, ColorChangeListener {
+public class BalanceStringifier implements GlobListStringifier, ColorChangeListener {
   private GlobStringifier amountStringifier;
 
   private Color positiveAmountColor;

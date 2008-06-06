@@ -9,10 +9,10 @@ public class PicsouMacLookAndFeel extends AquaLookAndFeel {
   protected void initClassDefaults(UIDefaults defaults) {
     super.initClassDefaults(defaults);
     try {
-      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouButtonUI", "ButtonUI");
-      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouOptionPaneUI", "OptionPaneUI");
-      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouMacFileChooserUI", "FileChooserUI");
-      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouRootPaneUI", "RootPaneUI");
+//      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouButtonUI", "ButtonUI");
+//      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouOptionPaneUI", "OptionPaneUI");
+//      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouMacFileChooserUI", "FileChooserUI");
+//      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouRootPaneUI", "RootPaneUI");
     }
     catch (Exception e) {
       e.printStackTrace();

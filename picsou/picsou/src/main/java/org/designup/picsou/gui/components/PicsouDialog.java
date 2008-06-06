@@ -1,4 +1,7 @@
-package org.designup.picsou.gui.utils;
+package org.designup.picsou.gui.components;
+
+import org.designup.picsou.gui.utils.PicsouDialogPainter;
+import org.designup.picsou.gui.utils.Gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,13 +36,13 @@ public class PicsouDialog extends JDialog {
     return modalWindow;
   }
 
-  private PicsouDialog(JFrame parentFrame) {
-    super(parentFrame, true);
+  private PicsouDialog(JFrame parent) {
+    super(parent, true);
     setUndecorated(true);
   }
 
-  private PicsouDialog(JDialog parentFrame) {
-    super(parentFrame, true);
+  private PicsouDialog(JDialog parent) {
+    super(parent, true);
     setUndecorated(true);
   }
 

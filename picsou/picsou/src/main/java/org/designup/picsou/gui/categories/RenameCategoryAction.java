@@ -11,7 +11,6 @@ import org.crossbowlabs.globs.model.format.DescriptionService;
 import org.crossbowlabs.globs.model.format.GlobStringifier;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
-import org.designup.picsou.gui.utils.PicsouDialog;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 
