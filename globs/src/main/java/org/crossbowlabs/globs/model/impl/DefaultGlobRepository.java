@@ -542,24 +542,24 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     if (bulkDispatchingModeLevel > 0) {
       return;
     }
-    if (changeSetToDispatch.isEmpty()) {
+    if (this.changeSetToDispatch.isEmpty()) {
       return;
     }
     bulkDispatchingModeLevel++;
-    MutableChangeSet changeSetToDispatch = this.changeSetToDispatch;
+    MutableChangeSet currentChangeSetToDispatch = this.changeSetToDispatch;
     try {
       this.changeSetToDispatch = new DefaultChangeSet();
       for (ChangeSetListener trigger : triggers) {
-        trigger.globsChanged(changeSetToDispatch, this);
+        trigger.globsChanged(currentChangeSetToDispatch, this);
       }
-      changeSetToDispatch.merge(this.changeSetToDispatch);
+      currentChangeSetToDispatch.merge(this.changeSetToDispatch);
     }
     finally {
       bulkDispatchingModeLevel--;
     }
     this.changeSetToDispatch = new DefaultChangeSet();
     for (ChangeSetListener listener : changeListeners) {
-      listener.globsChanged(changeSetToDispatch, this);
+      listener.globsChanged(currentChangeSetToDispatch, this);
     }
   }
 
