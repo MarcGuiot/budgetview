@@ -21,25 +21,26 @@
     </styledPanel>
 
     <styledPanel ref="chartAreaPanel">
-      <horizontalSplit ref="horizontalSplit" dividerSize="3" dividerLocation="240"
-                       continuousLayout="true" opaque="false" margin="15">
-          <scrollPane border="matte(2,2,2,2,#3A3A3A)" marginRight="5" viewportBackground="categories.bg">
+      <column>
+
+        <row marginTop="10" marginBottom="30" marginLeft="20">
+          <label ref="title" opaque="false" font="Arial,bold,24"
+                 horizontalAlignment="center" foreground="title"/>
+          <filler fill="horizontal"/>
+          <toggleButton ref="dataCardToggle" opaque="false" weightX="1"/>
+          <toggleButton ref="overviewCardToggle" opaque="false" weightX="1"/>
+        </row>
+
+        <horizontalSplit ref="horizontalSplit" dividerSize="3" dividerLocation="240"
+                         continuousLayout="true" opaque="false" margin="15">
+          <scrollPane border="matte(2,2,2,2,#3A3A3A)" viewportBackground="categories.bg" background="categories.bg">
             <table ref="category" intercellSpacing="(0,0)" showGrid="false" opaque="false"/>
           </scrollPane>
-
-        <column>
-          <row marginTop="10" marginBottom="30">
-            <label ref="title" opaque="false" font="Arial,plain,20"
-                   fill="horizontal" anchor="center" weightX="1000"
-                   horizontalAlignment="center" foreground="title"/>
-            <toggleButton ref="dataCardToggle" opaque="false" weightX="1"/>
-            <toggleButton ref="overviewCardToggle" opaque="false" weightX="1"/>
-          </row>
           <cards ref="cardView" opaque="false">
             <card name="data">
               <column>
                 <scrollPane borderPos="center" viewportBackground="transactions.bg" border="empty" opaque="false"
-                  marginLeft="5">
+                            marginLeft="5">
                   <table ref="transaction" background="transactions.bg"
                          intercellSpacing="(0,0)" showGrid="false" rowHeight="18"/>
                 </scrollPane>
@@ -60,8 +61,8 @@
               </row>
             </card>
           </cards>
-        </column>
-      </horizontalSplit>
+        </horizontalSplit>
+      </column>
     </styledPanel>
 
     <styledPanel topColor="footer.bg.top" bottomColor="footer.bg.bottom"
