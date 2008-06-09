@@ -30,6 +30,9 @@ public class DummyObjectWithDefaultValues {
   @DefaultDate()
   public static TimeStampField TIMESTAMP;
 
+  @DefaultString("Hello")
+  public static StringField STRING;
+
   static {
     GlobTypeLoader.init(DummyObjectWithDefaultValues.class);
   }

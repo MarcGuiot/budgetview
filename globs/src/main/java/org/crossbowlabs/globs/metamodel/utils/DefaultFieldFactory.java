@@ -8,13 +8,7 @@ import org.crossbowlabs.globs.metamodel.Field;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.metamodel.Link;
 import org.crossbowlabs.globs.metamodel.index.*;
-import org.crossbowlabs.globs.metamodel.annotations.DefaultBoolean;
-import org.crossbowlabs.globs.metamodel.annotations.DefaultDate;
-import org.crossbowlabs.globs.metamodel.annotations.DefaultDouble;
-import org.crossbowlabs.globs.metamodel.annotations.DefaultInteger;
-import org.crossbowlabs.globs.metamodel.annotations.DefaultLong;
-import org.crossbowlabs.globs.metamodel.annotations.MaxSize;
-import org.crossbowlabs.globs.metamodel.annotations.Target;
+import org.crossbowlabs.globs.metamodel.annotations.*;
 import org.crossbowlabs.globs.metamodel.fields.BlobField;
 import org.crossbowlabs.globs.metamodel.fields.BooleanField;
 import org.crossbowlabs.globs.metamodel.fields.DateField;
@@ -42,7 +36,7 @@ class DefaultFieldFactory {
 
   private static Class[] defaultValuesAnnotations =
         {DefaultInteger.class, DefaultBoolean.class, DefaultDouble.class, DefaultDate.class,
-         DefaultLong.class};
+         DefaultLong.class, DefaultString.class};
 
   DefaultFieldFactory(MutableGlobType type) {
     this.type = type;
@@ -420,6 +414,7 @@ class DefaultFieldFactory {
       else {
         maxSize = 255;
       }
+      setDefaultValue(computeDefaultValue(this, annotations, DefaultString.class));
     }
 
     public void visit(FieldVisitor visitor) throws Exception {
