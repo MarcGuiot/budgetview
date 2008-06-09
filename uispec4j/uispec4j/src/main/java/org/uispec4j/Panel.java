@@ -499,10 +499,8 @@ public class Panel extends AbstractUIComponent {
     return new Assertion() {
       public void check() throws Exception {
         Component[] result = getSwingComponents(and(
-            new ComponentMatcher[]{
-                fromClass(JLabel.class),
-                displayedNameSubstring(text)
-            }));
+          fromClass(JLabel.class),
+          displayedNameSubstring(text)));
         if (result.length == 0) {
           throw new AssertionFailedError("No label found with text '" + text + "'");
         }
@@ -511,10 +509,8 @@ public class Panel extends AbstractUIComponent {
   }
 
   private static ComponentMatcher getMatcherFromName(String componentName) {
-    return or(new ComponentMatcher[]{
-        innerNameIdentity(componentName),
-        innerNameSubstring(componentName),
-        innerNameRegexp(componentName)
-    });
+    return or(innerNameIdentity(componentName),
+              innerNameSubstring(componentName),
+              innerNameRegexp(componentName));
   }
 }

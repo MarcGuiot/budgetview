@@ -199,13 +199,13 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
   public void testInvalidValueInAmountField() throws Exception {
     openDialogWithSampleTransaction()
       .enterAmount(" . . ")
-      .checkErrorMessage("Le montant est invalide");
+      .checkErrorMessage("Invalid amount");
   }
 
   public void testAmountGreaterThanInitialTransactionAmount() throws Exception {
     openDialogWithSampleTransaction()
       .enterAmount("100")
-      .checkErrorMessage("Le montant doit être inférieur à 20€")
+      .checkErrorMessage("Amount must be less than 20€")
       .cancel();
     transactions
       .initContent()
@@ -222,7 +222,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
         {TransactionType.PRELEVEMENT, MasterCategory.NONE, "Auchan", -12.0, ""},
       })
       .enterAmount("15")
-      .checkErrorMessage("Le montant doit être inférieur à 8€")
+      .checkErrorMessage("Amount must be less than 8€")
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -8.0, ""},
         {TransactionType.PRELEVEMENT, MasterCategory.NONE, "Auchan", -12.0, ""},

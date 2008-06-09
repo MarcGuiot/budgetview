@@ -377,7 +377,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, "Alimentation/Courses", "sub1", "sub2")
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, "Groceries", "sub1", "sub2")
       .check();
 
   }
@@ -440,15 +440,13 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     final String fileName = TestUtils.getFileName(this, ".ofx");
     Files.dumpStringToFile(fileName, fileContent);
     WindowInterceptor
-      .init(new Trigger() {
-        public void run() throws Exception {
-          operations.importOfxFile(fileName);
-        }
-      })
+      .init(operations.getImportTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          assertTrue(window.containsLabel("Le contenu du fichier " + fileName + " est invalide"));
-          return window.getButton("OK").triggerClick();
+          window.getInputTextBox("fileField").setText(fileName);
+          window.getButton("Import").click();
+          assertTrue(window.containsLabel("Invalid content for file"));
+          return window.getButton("Close").triggerClick();
         }
       })
       .run();
@@ -464,9 +462,10 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .init(operations.getImportTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          window.getInputTextBox().setText("file.dat");
-          assertTrue(window.containsLabel("seules les extensions OFX et QIF sont acceptées"));
-          return window.getButton("Fermer").triggerClick();
+          window.getInputTextBox("fileField").setText("file.dat");
+          window.getButton("Import").click();
+          assertTrue(window.containsLabel("only OFX and QIF files are supported"));
+          return window.getButton("Close").triggerClick();
         }
       })
       .run();

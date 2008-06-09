@@ -17,20 +17,20 @@
                     text="$login.create.user.checkbox"/>
 
           <grid background="#00FF00" defaultMarginBottom="5">
-            <label text="Identifiant" gridPos="(0,0)" anchor="east" marginRight="10"/>
+            <label text="$login.id" gridPos="(0,0)" anchor="east" marginRight="10"/>
             <component ref="name" gridPos="(1, 0)"/>
 
-            <label text="Mot de passe" gridPos="(0,1)" anchor="east" marginRight="10"/>
+            <label text="$login.password" gridPos="(0,1)" anchor="east" marginRight="10"/>
             <component ref="password" gridPos="(1,1)"/>
 
-            <label text="Confirmez votre mot de passe" gridPos="(0,2)"
+            <label text="$login.confirmation" gridPos="(0,2)"
                    ref="confirmLabel" anchor="east" marginRight="10"/>
             <component ref="confirmPassword" gridPos="(1,2)"/>
           </grid>
 
           <label ref="message" margin="5" horizontalAlignment="center"/>
 
-          <button ref="login" text="Entrer" margin="5"/>
+          <button ref="login" text="$login.enter" margin="5"/>
 
         </column>
 

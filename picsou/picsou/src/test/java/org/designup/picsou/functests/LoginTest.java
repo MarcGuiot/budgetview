@@ -61,7 +61,7 @@ public class LoginTest extends ServerFunctionalTestCase {
     userField = window.getInputTextBox("name");
     passwordField = window.getPasswordField("password");
     createUserCheckbox = window.getCheckBox();
-    loginButton = window.getButton("Entrer");
+    loginButton = window.getButton("Enter");
   }
 
   public void testCreatingAUserAndLoggingInAgain() throws Exception {
@@ -158,13 +158,13 @@ public class LoginTest extends ServerFunctionalTestCase {
     assertNotNull(window.getTextBox("http://www.cic.fr/telechargements.cgi"));
 
     TextBox fileField = window.getInputTextBox("fileField");
-    Button importButton = window.getButton("Importer");
+    Button importButton = window.getButton("Import");
 
     final String path = OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
-    WindowInterceptor.init(window.getButton("Parcourir").triggerClick())
+    WindowInterceptor.init(window.getButton("Browse").triggerClick())
       .process(FileChooserHandler.init().select(new String[]{path}))
       .run();
 
@@ -234,7 +234,7 @@ public class LoginTest extends ServerFunctionalTestCase {
 
     window.getInputTextBox("fileField").setText(filePath);
     TextBox messageBox = window.getTextBox("message");
-    window.getButton("Importer").click();
+    window.getButton("Import").click();
     assertTrue(messageBox.textIsEmpty());
     window.getButton("OK").click();
   }

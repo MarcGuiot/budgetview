@@ -6,6 +6,7 @@ import static org.crossbowlabs.globs.model.FieldValue.value;
 import org.crossbowlabs.globs.model.utils.ChangeSetAggregator;
 import org.crossbowlabs.globs.utils.Log;
 import org.crossbowlabs.globs.utils.MultiMap;
+import org.crossbowlabs.globs.utils.exceptions.TruncatedFile;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
@@ -45,7 +46,7 @@ public class ImportSession {
     return targetRepository;
   }
 
-  public void loadFile(File file) throws IOException {
+  public void loadFile(File file) throws IOException, TruncatedFile {
     targetRepository.reset(GlobList.EMPTY,
                            Transaction.TYPE, TransactionToCategory.TYPE, LabelToCategory.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE};
@@ -63,6 +64,7 @@ public class ImportSession {
 
   public void importTransactions() {
     try {
+      repository.enterBulkDispatchingMode();
       ChangeSetAggregator updateImportAggregator = new ChangeSetAggregator(targetRepository);
       targetRepository.enterBulkDispatchingMode();
 // TODO:     importChangeSet.getCreated(BankEntity.TYPE);

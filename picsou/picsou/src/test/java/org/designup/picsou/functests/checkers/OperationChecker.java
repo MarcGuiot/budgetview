@@ -13,9 +13,9 @@ public class OperationChecker {
   private MenuItem exportMenu;
 
   public OperationChecker(Window window) {
-    MenuItem fileMenu = window.getMenuBar().getMenu("Fichier");
-    importMenu = fileMenu.getSubMenu("Importer");
-    exportMenu = fileMenu.getSubMenu("Exporter");
+    MenuItem fileMenu = window.getMenuBar().getMenu("File");
+    importMenu = fileMenu.getSubMenu("Import");
+    exportMenu = fileMenu.getSubMenu("Export");
   }
 
   public void importOfxFile(String name) {
@@ -33,11 +33,11 @@ public class OperationChecker {
 
         public Trigger process(Window importDialog) throws Exception {
 
-          WindowInterceptor.init(importDialog.getButton("Parcourir").triggerClick())
+          WindowInterceptor.init(importDialog.getButton("Browse").triggerClick())
             .process(FileChooserHandler.init().select(fileNames))
             .run();
 
-          importDialog.getButton("Importer").click();
+          importDialog.getButton("Import").click();
 
           Button okButton = importDialog.getButton("OK");
           for (int i = 0; i < fileNames.length - 1; i++) {

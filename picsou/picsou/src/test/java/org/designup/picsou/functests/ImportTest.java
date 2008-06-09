@@ -20,16 +20,16 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     assertNotNull(window.getTextBox("http://www.cic.fr/telechargements.cgi"));
 
     TextBox fileField = window.getInputTextBox("fileField");
-    Button importButton = window.getButton("Importer");
+    Button importButton = window.getButton("Import");
 
-    TextBox fileMessage = (TextBox)window.findUIComponent(TextBox.class, "Indiquez l'emplacement");
+    TextBox fileMessage = (TextBox)window.findUIComponent(TextBox.class, "Select an OFX or QIF file to import");
     assertTrue(fileMessage != null);
     assertTrue(fileMessage.isVisible());
 
     importButton.click();
     checkErrorMessage(window, "login.data.file.required");
 
-    fileField.setText("blah");
+    fileField.setText("blah.ofx");
     importButton.click();
     checkErrorMessage(window, "login.data.file.not.found");
 
@@ -37,7 +37,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .init(ImportTest.this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
-    WindowInterceptor.init(window.getButton("Parcourir").triggerClick())
+    WindowInterceptor.init(window.getButton("Browse").triggerClick())
       .process(FileChooserHandler.init().select(new String[]{path}))
       .run();
 

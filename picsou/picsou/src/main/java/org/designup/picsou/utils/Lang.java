@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 
 public class Lang {
   private static ResourceBundle bundle;
-  private static final Locale LOCALE = Locale.FRANCE;
+  private static Locale LOCALE = Locale.ENGLISH;
 
   public static TextLocator TEXT_LOCATOR = new TextLocator() {
     public String get(String code) {
@@ -20,6 +20,10 @@ public class Lang {
   };
 
   private Lang() {
+  }
+
+  public static void setLocale(Locale locale) {
+    LOCALE = locale;
   }
 
   public static String get(String key, Object... arguments) throws ItemNotFound {

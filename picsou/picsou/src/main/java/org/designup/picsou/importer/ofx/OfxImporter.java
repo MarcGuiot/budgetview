@@ -6,6 +6,7 @@ import org.crossbowlabs.globs.model.utils.GlobIdGenerator;
 import org.crossbowlabs.globs.utils.MultiMap;
 import org.crossbowlabs.globs.utils.Strings;
 import org.crossbowlabs.globs.utils.exceptions.InvalidFormat;
+import org.crossbowlabs.globs.utils.exceptions.TruncatedFile;
 import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
@@ -23,11 +24,16 @@ public class OfxImporter implements AccountFileImporter {
   public OfxImporter() {
   }
 
-  public GlobList loadTransactions(Reader reader, ReadOnlyGlobRepository initialRepository, GlobRepository targetRepository) {
+  public GlobList loadTransactions(Reader reader,
+                                   ReadOnlyGlobRepository initialRepository,
+                                   GlobRepository targetRepository) throws TruncatedFile {
     OfxParser parser = new OfxParser();
     try {
       Functor functor = new Functor(targetRepository, initialRepository);
       parser.parse(reader, functor);
+      if (!functor.fileCompleted) {
+        throw new TruncatedFile();
+      }
       return functor.createdTransactions;
     }
     catch (IOException e) {
@@ -54,6 +60,7 @@ public class OfxImporter implements AccountFileImporter {
     private String currentCategory;
     private MultiMap<String, String> categoriesForTransaction = new MultiMap<String, String>();
     private GlobIdGenerator generator;
+    private boolean fileCompleted;
 
 
     public Functor(GlobRepository targetRepository, ReadOnlyGlobRepository initialRepository) {
@@ -127,6 +134,9 @@ public class OfxImporter implements AccountFileImporter {
         }
         processCategories();
         checkTransaction();
+      }
+      if (tag.equals("OFX")) {
+        fileCompleted = true;
       }
 
       currentTransactionKey = null;

@@ -18,6 +18,7 @@ import org.designup.picsou.gui.transactions.TransactionDateStringifier;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.importer.ImportSession;
+import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.Bank;
 import static org.designup.picsou.model.Transaction.*;
@@ -41,29 +42,13 @@ public abstract class ImportPanel {
   private JTextField fileField = new JTextField();
   private JButton fileButton = new JButton();
   private JPanel panel;
-  private JButton importButton = new JButton(new ImportAction());
   protected CardHandler cardHandler;
   private JLabel fileNameLabel = new JLabel();
-  private JButton finishButton = new JButton(new FinishAction());
   private ImportSession importSession;
   private List<File> files = new ArrayList();
 
   protected ImportPanel(GlobRepository repository, Directory directory) {
-    fileButton.setAction(new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        File[] files = queryFile(panel);
-        if (files != null) {
-          StringBuffer buffer = new StringBuffer();
-          for (int i = 0; i < files.length; i++) {
-            buffer.append(files[i].getPath());
-            if (i + 1 < files.length) {
-              buffer.append(";");
-            }
-          }
-          fileField.setText(buffer.toString());
-        }
-      }
-    });
+    fileButton.setAction(new BrowseFilesAction());
 
     importSession = new ImportSession(repository, directory);
 
@@ -87,10 +72,10 @@ public abstract class ImportPanel {
                 GlobComboView.init(Bank.TYPE, repository, directory).getComponent());
     builder.add("downloadUrl",
                 GlobHtmlView.init(Bank.TYPE, repository, directory, new BankUrlStringifier()).getComponent());
-    builder.add("importButton", importButton);
+    builder.add("import", new ImportAction());
     builder.add("table", transactionTable);
     builder.add("fileName", fileNameLabel);
-    builder.add("finishButton", finishButton);
+    builder.add("finish", new FinishAction());
     builder.add("close", new AbstractAction("Fermer") {
       public void actionPerformed(ActionEvent e) {
         complete();
@@ -124,8 +109,12 @@ public abstract class ImportPanel {
     }
 
     String[] strings = path.split(";");
-    for (String string : strings) {
-      File file = new File(string);
+    for (String fileName : strings) {
+      File file = new File(fileName);
+      if (BankFileType.getTypeFromName(fileName) == null) {
+        displayErrorMessage("import.invalid.extension");
+        return false;
+      }
       if (!file.exists()) {
         displayErrorMessage("login.data.file.not.found");
         return false;
@@ -153,19 +142,21 @@ public abstract class ImportPanel {
       }
       File[] file = getInitialFiles();
       files.addAll(Arrays.asList(file));
-      cardHandler.show("step2");
-      nextImport();
+      if (nextImport()) {
+        cardHandler.show("step2");
+      }
     }
   }
 
-  private void nextImport() {
+  private boolean nextImport() {
     if (files.isEmpty()) {
       try {
         complete();
-        return;
+        return true;
       }
       catch (Exception e) {
         displayErrorMessage("");
+        return false;
       }
     }
 
@@ -173,11 +164,12 @@ public abstract class ImportPanel {
     try {
       fileNameLabel.setText(file.getAbsolutePath());
       importSession.loadFile(file);
+      return true;
     }
-    catch (IOException e) {
+    catch (Exception e) {
       String message = Lang.get("import.file.error", file.getAbsolutePath());
-      Log.write(message, e);
-      JOptionPane.showMessageDialog(panel, message);
+      messageLabel.setText(message);
+      return false;
     }
 
   }
@@ -235,4 +227,19 @@ public abstract class ImportPanel {
     return null;
   }
 
+  private class BrowseFilesAction extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+      File[] files = queryFile(panel);
+      if (files != null) {
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < files.length; i++) {
+          buffer.append(files[i].getPath());
+          if (i + 1 < files.length) {
+            buffer.append(";");
+          }
+        }
+        fileField.setText(buffer.toString());
+      }
+    }
+  }
 }

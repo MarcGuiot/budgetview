@@ -15,6 +15,7 @@ import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
+import org.uispec4j.finder.ComponentMatchers;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -258,7 +259,7 @@ public class TransactionChecker extends DataChecker {
     }
 
     public SplitDialog checkCurrentCategory(MasterCategory category) {
-      assertTrue(window.getTextBox("category").textEquals(DataChecker.getCategoryName(category)));
+      assertTrue(window.getTextBox(ComponentMatchers.innerNameIdentity("category")).textEquals(DataChecker.getCategoryName(category)));
       return this;
     }
 
@@ -340,7 +341,7 @@ public class TransactionChecker extends DataChecker {
     }
 
     private Button getAddButton() {
-      return window.getButton("Ajouter");
+      return window.getButton("Add");
     }
 
     private Panel getAddAmountPanel() {

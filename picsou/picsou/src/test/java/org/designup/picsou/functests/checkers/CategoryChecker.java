@@ -176,7 +176,7 @@ public class CategoryChecker extends DataChecker {
 
   public void deleteSelected() {
     WindowInterceptor.init(triggerButton("Delete"))
-      .processWithButtonClick("Oui")
+      .processWithButtonClick("Yes")
       .run();
   }
 

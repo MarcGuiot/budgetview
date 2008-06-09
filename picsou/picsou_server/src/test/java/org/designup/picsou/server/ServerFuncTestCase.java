@@ -1,12 +1,11 @@
 package org.designup.picsou.server;
 
-import org.uispec4j.*;
-import org.uispec4j.interception.FileChooserHandler;
-import org.uispec4j.interception.WindowInterceptor;
 import org.designup.picsou.PicsouServer;
 import org.designup.picsou.gui.PicsouApplication;
-
-import java.io.File;
+import org.uispec4j.*;
+import org.uispec4j.finder.ComponentMatchers;
+import org.uispec4j.interception.FileChooserHandler;
+import org.uispec4j.interception.WindowInterceptor;
 
 public abstract class ServerFuncTestCase extends UISpecTestCase {
   protected Window window;
@@ -38,7 +37,7 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     PicsouApplication.shutdown();
   }
 
-  public void createAndLogUser(String user, String userPassword, String fileName) {
+  public void createAndLogUser(String user, String userPassword, final String fileName) {
     TextBox textBox = window.getTextBox("name");
     textBox.setText(user);
 
@@ -49,15 +48,17 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     password.setPassword(userPassword);
     createAccount.click();
     confirmPassword.setPassword(userPassword);
+    window.getButton("Enter").click();
 
-    window.getButton("Entrer").click();
-
-    Button find = window.getButton("Importer");
-    File file = new File(fileName);
-    WindowInterceptor
-      .init(find.triggerClick())
-      .process(FileChooserHandler.init().select(new File[]{file}))
+    WindowInterceptor.init(window.getButton("Browse").triggerClick())
+      .process(FileChooserHandler.init().select(new String[]{fileName}))
       .run();
+
+    window.getButton("Import").click();
+    TextBox message = (TextBox)window.findUIComponent(ComponentMatchers.innerNameIdentity("message"));
+    if (message != null) {
+      assertTrue(message.textIsEmpty());
+    }
 
     window.getButton("OK").click();
   }

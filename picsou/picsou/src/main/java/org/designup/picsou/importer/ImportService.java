@@ -2,6 +2,7 @@ package org.designup.picsou.importer;
 
 import org.crossbowlabs.globs.model.*;
 import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
+import org.crossbowlabs.globs.utils.exceptions.TruncatedFile;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.importer.ofx.OfxImporter;
 import org.designup.picsou.importer.qif.QifImporter;
@@ -16,7 +17,7 @@ import java.util.Date;
 public class ImportService {
 
   public Key run(TypedInputStream fileStream, ReadOnlyGlobRepository initialRepository,
-                 GlobRepository targetRepository) throws IOException, ItemNotFound {
+                 GlobRepository targetRepository) throws IOException, ItemNotFound, TruncatedFile {
     AccountFileImporter importer = getImporter(fileStream.getType());
     GlobList createdTransactions =
       importer.loadTransactions(fileStream.getBestProbableReader(), initialRepository, targetRepository);

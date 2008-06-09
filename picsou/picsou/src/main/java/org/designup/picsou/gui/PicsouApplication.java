@@ -15,6 +15,7 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.PicsouDescriptionService;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
+import org.designup.picsou.utils.Lang;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -45,7 +46,10 @@ public class PicsouApplication {
   }
 
   public static void main(String... args) throws Exception {
-    Locale.setDefault(Locale.FRANCE);
+    Locale.setDefault(Locale.ENGLISH);
+    if (args.length > 1) {
+      args = parseLanguage(args);
+    }
     if (SingleApplicationInstanceListener.sendAlreadyOpen(args)) {
       return;
     }
@@ -75,6 +79,19 @@ public class PicsouApplication {
       }
     });
     window.show();
+  }
+
+  private static String[] parseLanguage(String... args) {
+    if (args[0].equals("-l")){
+      if (args[1].equals("fr")){
+        Locale.setDefault(Locale.FRANCE);
+        Lang.setLocale(Locale.FRANCE);
+      }
+      String[] strings = new String[args.length - 2];
+      System.arraycopy(args, 2, strings, 0, args.length - 2);
+      args = strings;
+    }
+    return args;
   }
 
   private static String getServerAddress() {

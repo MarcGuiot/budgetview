@@ -40,14 +40,14 @@ public class LoginFuncTest extends ServerFuncTestCase {
 
     window.getButton("login").click();
 
-    Button find = window.getButton("Parcourir");
+    Button find = window.getButton("Browse");
     File file = new File(fileName);
     WindowInterceptor
       .init(find.triggerClick())
       .process(FileChooserHandler.init().select(new File[]{file}))
       .run();
 
-    window.getButton("Importer").click();
+    window.getButton("Import").click();
     window.getButton("OK").click();
 
     Table table = window.getTable("category");

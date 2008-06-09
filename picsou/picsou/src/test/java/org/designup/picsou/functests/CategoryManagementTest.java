@@ -1,17 +1,17 @@
 package org.designup.picsou.functests;
 
-import static org.crossbowlabs.globs.utils.Utils.remove;
 import org.crossbowlabs.globs.utils.Files;
 import org.crossbowlabs.globs.utils.TestUtils;
-import org.uispec4j.*;
-import org.uispec4j.interception.PopupMenuInterceptor;
-import org.uispec4j.interception.WindowHandler;
-import org.uispec4j.interception.WindowInterceptor;
+import static org.crossbowlabs.globs.utils.Utils.remove;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
+import org.uispec4j.*;
+import org.uispec4j.interception.PopupMenuInterceptor;
+import org.uispec4j.interception.WindowHandler;
+import org.uispec4j.interception.WindowInterceptor;
 
 public class CategoryManagementTest extends LoggedInFunctionalTestCase {
   public void testFiltering() throws Exception {
@@ -20,12 +20,11 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     learn("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", MasterCategory.TRANSPORTS);
     learn("SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", MasterCategory.FOOD);
 
-
     String fileName = TestUtils.getFileName(this, ".qif");
 
     Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"),
                            fileName);
-    
+
     operations.importOfxFile(fileName);
 
     categories.select(MasterCategory.TRANSPORTS);
@@ -133,29 +132,31 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.createSubCategory(MasterCategory.TRANSPORTS, "Moto");
 
     String[] expectedCategories = {
-      "Toutes catégories",
-      "A classer",
-      "Alimentation/Courses",
+      "All categories",
+      "Unassigned",
+      "Bank",
+      "Beauty",
+      "Clothing",
+      "Education",
+      "Gifts",
+      "Groceries",
       "Apero",
       "Courant",
       "Livraison / A emporter",
       "Receptions",
       "Restaurant",
       "Réceptions",
-      "Banque",
-      "Cadeaux/Dons",
-      "Divers",
-      "Education",
-      "Habillement",
-      "Impôts/Taxes",
-      "Informatique/Multimedia",
-      "Investissements/Epargne",
-      "Logement",
-      "Loisirs",
+      "Health",
+      "Housing",
+      "Income",
+      "Internal transfers",
+      "Leisures",
+      "Miscellaneous",
+      "Multimedia",
       "Puericulture",
-      "Revenus",
-      "Santé",
-      "Soins/Beauté",
+      "Savings",
+      "Taxes",
+      "Telecommunications",
       "Transports",
       "Assurance",
       "Crédit auto",
@@ -166,8 +167,6 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       "Péages",
       "Transports en commun",
       "Voyages",
-      "Télécoms",
-      "Virements internes"
     };
 
     categories.assertCategoryNamesEqual(expectedCategories);
@@ -177,7 +176,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -2.0, "MenuK", MasterCategory.FOOD)
       .load();
     categories.select(MasterCategory.ALL);
-    transactions.openCategoryChooserDialog(0).checkContains(remove(expectedCategories, "Toutes catégories"));
+    transactions.openCategoryChooserDialog(0).checkContains(remove(expectedCategories, "All categories"));
   }
 
   public void testCreatingASiblingSubCategory() throws Exception {
@@ -209,7 +208,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
           Button okButton = window.getButton("OK");
           assertFalse(okButton.isEnabled());
           assertTrue(window.containsLabel(Lang.get("category.name.already.used")));
-          return window.getButton("Fermer").triggerClick();
+          return window.getButton("Close").triggerClick();
         }
       })
       .run();
@@ -223,7 +222,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
           window.getInputTextBox().setText("");
           Button okButton = window.getButton("OK");
           assertFalse(okButton.isEnabled());
-          return window.getButton("Fermer").triggerClick();
+          return window.getButton("Close").triggerClick();
         }
       })
       .run();
@@ -336,7 +335,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
           TextBox input = window.getInputTextBox();
           input.clear();
           input.appendText("Apero");
-          return window.getButton("Fermer").triggerClick();
+          return window.getButton("Close").triggerClick();
         }
       })
       .run();
@@ -355,7 +354,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
           Button okButton = window.getButton("OK");
           assertFalse(okButton.isEnabled());
           assertTrue(window.containsLabel(Lang.get("category.name.already.used")));
-          return window.getButton("Fermer").triggerClick();
+          return window.getButton("Close").triggerClick();
         }
       })
       .run();
@@ -372,7 +371,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
           TextBox input = window.getInputTextBox();
           input.clear();
           input.appendText("Pastis");
-          return window.getButton("Fermer").triggerClick();
+          return window.getButton("Close").triggerClick();
         }
       })
       .run();
@@ -394,7 +393,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
   public void testPopupMenu() throws Exception {
     WindowInterceptor.init(
       PopupMenuInterceptor.run(categories.triggerPopup(MasterCategory.FOOD))
-        .getSubMenu("Nouvelle")
+        .getSubMenu("New")
         .triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
@@ -408,9 +407,9 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
 
     WindowInterceptor.init(
       PopupMenuInterceptor.run(categories.triggerPopup("Apero"))
-        .getSubMenu("Supprimer")
+        .getSubMenu("Delete")
         .triggerClick())
-      .processWithButtonClick("Oui")
+      .processWithButtonClick("Yes")
       .run();
 
     categories.assertCategoryNotFound("Apero");

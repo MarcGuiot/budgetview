@@ -11,7 +11,7 @@ import org.designup.picsou.functests.checkers.OperationChecker;
 public class ReconnectFuncTest extends ServerFuncTestCase {
 
   public void test() throws Exception {
-    String fileName = TestUtils.getFileName(this, ".qif");
+    String fileName = TestUtils.getFileName(this, ".ofx");
 
     Files.copyStreamTofile(ReconnectFuncTest.class.getResourceAsStream(PICSOU_DEV_TESTFILES_CIC1_OFX),
                            fileName);
@@ -26,6 +26,6 @@ public class ReconnectFuncTest extends ServerFuncTestCase {
     operations.importOfxFile(fileName);
 
     Table table = window.getTable("category");
-    assertTrue(table.cellEquals(0, 2, "-100"));
+    assertTrue(table.cellEquals(0, 2, "-50"));
   }
 }

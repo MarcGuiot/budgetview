@@ -21,7 +21,7 @@ public abstract class PicsouTestCase extends ServicesTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    Locale.setDefault(Locale.US);
+    Locale.setDefault(Locale.ENGLISH);
     model = getModel();
     this.directory.add(GlobModel.class, model);
     this.checker = new GlobChecker(model);
