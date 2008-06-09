@@ -20,12 +20,13 @@
       </column>
     </styledPanel>
 
-    <horizontalSplit ref="horizontalSplit" background="categories.bg" dividerSize="3" dividerLocation="280"
-                     continuousLayout="true">
-      <scrollPane viewportBackground="categories.bg" border="empty">
-        <table ref="category" background="categories.bg" intercellSpacing="(0,0)" showGrid="false"/>
-      </scrollPane>
-      <styledPanel topColor="chartarea.bg.top" bottomColor="chartarea.bg.bottom" opaque="true">
+    <styledPanel ref="chartAreaPanel">
+      <horizontalSplit ref="horizontalSplit" dividerSize="3" dividerLocation="240"
+                       continuousLayout="true" opaque="false" margin="15">
+          <scrollPane border="matte(2,2,2,2,#3A3A3A)" marginRight="5" viewportBackground="categories.bg">
+            <table ref="category" intercellSpacing="(0,0)" showGrid="false" opaque="false"/>
+          </scrollPane>
+
         <column>
           <row marginTop="10" marginBottom="30">
             <label ref="title" opaque="false" font="Arial,plain,20"
@@ -37,10 +38,10 @@
           <cards ref="cardView" opaque="false">
             <card name="data">
               <column>
-                <component ref="intraMonthChart" opaque="false"
-                           fill="both" anchor="center" margin="10" marginTop="0" weightY="0"/>
-                <scrollPane borderPos="center" viewportBackground="transactions.bg" border="empty" opaque="false">
-                  <table ref="transaction" background="transactions.bg" intercellSpacing="(0,0)" showGrid="false"/>
+                <scrollPane borderPos="center" viewportBackground="transactions.bg" border="empty" opaque="false"
+                  marginLeft="5">
+                  <table ref="transaction" background="transactions.bg"
+                         intercellSpacing="(0,0)" showGrid="false" rowHeight="18"/>
                 </scrollPane>
               </column>
             </card>
@@ -60,8 +61,8 @@
             </card>
           </cards>
         </column>
-      </styledPanel>
-    </horizontalSplit>
+      </horizontalSplit>
+    </styledPanel>
 
     <styledPanel topColor="footer.bg.top" bottomColor="footer.bg.bottom"
                  opaque="true" border="matte(1,0,0,0,#CCCCCC)"

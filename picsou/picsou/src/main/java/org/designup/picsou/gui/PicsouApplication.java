@@ -14,6 +14,7 @@ import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -34,6 +35,7 @@ public class PicsouApplication {
   public static File[] initialFile;
 
   static {
+    PicsouMacLookAndFeel.initApplicationName();
     MRJAdapter.addOpenDocumentListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         ApplicationEvent event = (ApplicationEvent) e;
@@ -44,9 +46,6 @@ public class PicsouApplication {
 
   public static void main(String... args) throws Exception {
     Locale.setDefault(Locale.FRANCE);
-    if (System.getProperty("mrj.version") != null) {
-      System.setProperty("apple.laf.useScreenMenuBar", "true");
-    }
     if (SingleApplicationInstanceListener.sendAlreadyOpen(args)) {
       return;
     }
@@ -86,9 +85,13 @@ public class PicsouApplication {
     return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.picsou/data");
   }
 
+  public static void clearRepository() {
+    Files.deleteSubtree(new File(getLocalPrevaylerPath()));
+  }
+
   public static void clearRepositoryIfNeeded() {
     if ("true".equalsIgnoreCase(System.getProperty(DELETE_LOCAL_PREVAYLER_PROPERTY))) {
-      Files.deleteSubtree(new File(getLocalPrevaylerPath()));
+      clearRepository();
     }
   }
 

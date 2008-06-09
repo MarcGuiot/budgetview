@@ -3,6 +3,7 @@ package org.designup.picsou.gui.actions;
 import org.crossbowlabs.globs.model.*;
 import static org.crossbowlabs.globs.model.FieldValue.value;
 import org.crossbowlabs.globs.utils.directory.Directory;
+import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.ImportPanel;
@@ -30,9 +31,8 @@ public class ImportFileAction extends AbstractAction {
         dialog.setVisible(false);
       }
     };
-
     dialog.setContentPane(panel.getPanel());
     dialog.pack();
-    dialog.setVisible(true);
+    GuiUtils.showCentered(dialog);
   }
 }

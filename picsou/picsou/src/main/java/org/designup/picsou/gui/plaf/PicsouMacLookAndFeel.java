@@ -6,8 +6,16 @@ import javax.swing.*;
 import javax.swing.plaf.InsetsUIResource;
 
 public class PicsouMacLookAndFeel extends AquaLookAndFeel {
+
+  public static void initApplicationName() {
+      System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Picsou");
+  }
+
   protected void initClassDefaults(UIDefaults defaults) {
     super.initClassDefaults(defaults);
+    if (System.getProperty("mrj.version") != null) {
+      System.setProperty("apple.laf.useScreenMenuBar", "true");
+    }
     try {
 //      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouButtonUI", "ButtonUI");
 //      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouOptionPaneUI", "OptionPaneUI");

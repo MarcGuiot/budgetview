@@ -1,6 +1,6 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
-  <panel ref="wave" opaque="true">
+  <styledPanel ref="wave" opaque="true">
     <column>
 
       <filler fill="vertical" weightY="10"/>
@@ -40,6 +40,6 @@
 
     </column>
 
-  </panel>
+  </styledPanel>
 
 </splits>

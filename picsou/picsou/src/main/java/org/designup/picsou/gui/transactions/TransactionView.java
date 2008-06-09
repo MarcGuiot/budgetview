@@ -4,6 +4,9 @@ import org.crossbowlabs.globs.gui.GlobSelection;
 import org.crossbowlabs.globs.gui.GlobSelectionListener;
 import org.crossbowlabs.globs.gui.utils.TableUtils;
 import org.crossbowlabs.globs.gui.views.GlobTableView;
+import org.crossbowlabs.globs.gui.views.LabelCustomizer;
+import org.crossbowlabs.globs.gui.views.CellPainter;
+import org.crossbowlabs.globs.gui.views.utils.LabelCustomizers;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.model.ChangeSet;
 import org.crossbowlabs.globs.model.ChangeSetListener;
@@ -114,7 +117,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
       .addColumn(Lang.get("date"), new TransactionDateStringifier(comparator))
       .addColumn(descriptionService.getLabel(Category.TYPE), categoryColumn, categoryColumn,
                  new TransactionCategoriesStringifier(categoryStringifier).getComparator(repository))
-      .addColumn(LABEL)
+      .addColumn(LABEL, LabelCustomizers.bold(), CellPainter.NULL)
       .addColumn(Lang.get("amount"), amountColumn, amountColumn, amountStringifier.getComparator(repository))
       .addColumn(NOTE, new TransactionNoteEditor(repository, directory));
   }

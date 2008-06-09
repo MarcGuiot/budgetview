@@ -23,6 +23,7 @@ import org.designup.picsou.gui.transactions.BalanceView;
 import org.designup.picsou.gui.transactions.InformationView;
 import org.designup.picsou.gui.transactions.TransactionSelection;
 import org.designup.picsou.gui.transactions.TransactionView;
+import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 
@@ -75,7 +76,6 @@ public class MainPanel {
                         categoryView,
                         new CardView(repository, directory, transactionSelection),
                         new HistoricalChart(repository, directory),
-                        new IntraMonthChart(repository, directory, transactionSelection),
                         new CategoriesChart(repository, directory, transactionSelection),
                         new ScorecardView(repository, directory, transactionSelection));
 
@@ -97,6 +97,7 @@ public class MainPanel {
     for (View view : views) {
       view.registerComponents(builder);
     }
+    builder.add("chartAreaPanel", new JWavePanel(colorService));
     builder.add("verticalSplit", createSplitPane());
     builder.add("horizontalSplit", createSplitPane());
     return (JPanel)builder.parse(MainPanel.class, "/layout/picsou.splits");

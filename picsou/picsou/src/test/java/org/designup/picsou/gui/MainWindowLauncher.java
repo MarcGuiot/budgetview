@@ -8,6 +8,7 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.server.ServerDirectory;
+import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 
 import java.awt.*;
 import java.io.File;
@@ -15,8 +16,12 @@ import java.io.File;
 public class MainWindowLauncher {
   private static final String COLOR_SELECTOR_PROPERTY = "ENABLE_COLOR_SELECTOR";
 
+  static {
+    PicsouMacLookAndFeel.initApplicationName();
+  }
+
   public static void main(String[] args) throws Exception {
-    PicsouApplication.clearRepositoryIfNeeded();
+    PicsouApplication.clearRepository();
     ServerDirectory serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), false);
     Directory directory = serverDirectory.getServiceDirectory();
     ServerAccess serverAccess =
