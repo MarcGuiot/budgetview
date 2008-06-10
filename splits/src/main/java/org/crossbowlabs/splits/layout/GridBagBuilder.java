@@ -39,7 +39,7 @@ public class GridBagBuilder {
     panel.setLayout(new GridBagLayout());
   }
 
-  public void add(Component component,
+  public GridBagBuilder add(Component component,
                   int gridx, int gridy,
                   int gridwidth, int gridheight,
                   Insets insets) {
@@ -50,6 +50,7 @@ public class GridBagBuilder {
         stretch.getWeightX(), stretch.getWeightY(),
         stretch.getFill(), stretch.getAnchor(),
         insets);
+    return this;
   }
 
   public GridBagBuilder add(Component component,
