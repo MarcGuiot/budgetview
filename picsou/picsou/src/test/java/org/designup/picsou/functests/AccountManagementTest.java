@@ -178,8 +178,8 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
   public void testNothingShownForQifFiles() throws Exception {
     QifBuilder.init(this)
-      .addTransaction("foo", 12.35, "2006/01/01")
-      .addTransaction("foo", -7.50, "2006/02/01")
+      .addTransaction("2006/01/01", 12.35, "foo")
+      .addTransaction("2006/02/01", -7.50, "foo")
       .load(null);
 
     accounts.assertDisplayEquals("Compte principal");

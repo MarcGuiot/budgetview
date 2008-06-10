@@ -38,9 +38,9 @@ public class OfxWriter {
       "      <STMTRS>\n" +
       "        <CURDEF>EUR\n" +
       "        <BANKACCTFROM>\n" +
-      "          <BANKID>" + bank + "\n" +
-      "          <BRANCHID>" + branchId + "\n" +
-      "          <ACCTID>" + accountNumber + "\n" +
+      "          <BANKID>" + Strings.toString(bank) + "\n" +
+      "          <BRANCHID>" + Strings.toString(branchId) + "\n" +
+      "          <ACCTID>" + Strings.toString(accountNumber) + "\n" +
       "          <ACCTTYPE>CHECKING\n" +
       "        </BANKACCTFROM>\n" +
       "        <BANKTRANLIST>\n" +
@@ -87,7 +87,7 @@ public class OfxWriter {
     write(
       "     </BANKTRANLIST>\n" +
       "     <LEDGERBAL>\n" +
-      "      <BALAMT>" + accountBalance + "\n" +
+      "      <BALAMT>" + Strings.toString(accountBalance) + "\n" +
       "      <DTASOF>" + updateDate + "\n" +
       "     </LEDGERBAL>\n" +
       "     <AVAILBAL>\n" +

@@ -26,7 +26,7 @@ public class QifBuilder {
     writer.write(Strings.LINE_SEPARATOR);
   }
 
-  public QifBuilder addTransaction(String label, double amount, String yyyyMMdd) throws IOException {
+  public QifBuilder addTransaction(String yyyyMMdd, double amount, String label) throws IOException {
     writer.write("D");
     writer.write(QifParser.QIF_DATE_FORMAT.format(Dates.parse(yyyyMMdd)));
     writer.write(Strings.LINE_SEPARATOR);
@@ -42,6 +42,11 @@ public class QifBuilder {
     writer.write("^");
     writer.write(Strings.LINE_SEPARATOR);
     return this;
+  }
+
+  public String save() throws IOException {
+    writer.close();
+    return fileName;
   }
 
   public void load(Double balance) {

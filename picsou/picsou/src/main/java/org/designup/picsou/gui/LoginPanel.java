@@ -112,7 +112,7 @@ public class LoginPanel {
                          mainWindow);
         }
         else {
-          NewAccountPanel.show(init.getRepository(), init.getDirectory(), mainWindow);
+          NewUserPanel.show(init.getRepository(), init.getDirectory(), mainWindow);
         }
       }
       else {

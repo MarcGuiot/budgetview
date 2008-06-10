@@ -7,7 +7,6 @@ import org.crossbowlabs.globs.model.delta.DefaultChangeSet;
 import org.crossbowlabs.globs.model.delta.MutableChangeSet;
 import org.crossbowlabs.globs.model.utils.CachedGlobIdGenerator;
 import org.crossbowlabs.globs.model.utils.DefaultChangeSetListener;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
 import static org.crossbowlabs.globs.model.utils.GlobMatchers.isNotNull;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.globs.utils.exceptions.ResourceAccessFailed;
@@ -108,7 +107,7 @@ public class PicsouInit {
     XmlGlobParser.parse(PicsouModel.get(), repository, reader, "globs");
     GlobList result = new GlobList();
     for (Glob subcat : repository.getAll(Category.TYPE, isNotNull(Category.MASTER))) {
-      result.add(GlobBuilder.copy(subcat));
+      result.add(subcat.duplicate());
     }
     return result;
   }

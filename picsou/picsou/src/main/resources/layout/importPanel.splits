@@ -36,6 +36,12 @@
         <scrollPane>
           <table ref="table"/>
         </scrollPane>
+
+        <row>
+          <comboBox ref="accountCombo"/>
+          <button ref="newAccount"/>
+        </row>
+        <panel ref="accountEditionPanel"/>
         <button action="finish"/>
       </column>
     </card>

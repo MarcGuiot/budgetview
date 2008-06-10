@@ -25,8 +25,9 @@ public class ImportSession {
   private static final String DEFAULT_ACCOUNT_ID = "0";
   private static final String DEFAULT_ACCOUNT_NAME = "Compte principal";
   public static final int DEFAULT_BANK_ID = 99999;
-  public static final int DEFAULT_BANK_ENTITY_ID = 30003;
+  private static final int DEFAULT_BRANCH_ID = 10000;
 
+  public static final int DEFAULT_BANK_ENTITY_ID = 30003;
   private GlobRepository repository;
   private Directory directory;
   private ImportService importService;
@@ -111,6 +112,7 @@ public class ImportSession {
       return globRepository.create(Key.create(Account.TYPE, 0),
                                    value(Account.NUMBER, DEFAULT_ACCOUNT_ID),
                                    value(Account.NAME, DEFAULT_ACCOUNT_NAME),
+                                   value(Account.BRANCH_ID, DEFAULT_BRANCH_ID),
                                    value(Account.BANK_ENTITY, DEFAULT_BANK_ENTITY_ID));
     }
     return account;

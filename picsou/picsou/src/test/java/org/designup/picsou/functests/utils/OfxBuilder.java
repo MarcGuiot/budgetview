@@ -32,11 +32,11 @@ public class OfxBuilder {
   }
 
   public static OfxBuilder init(TestCase testCase) {
-    return new OfxBuilder(TestUtils.getFileName(testCase, "_setup.ofx"), null);
+    return new OfxBuilder(TestUtils.getFileName(testCase, ".ofx"), null);
   }
 
   public static OfxBuilder init(TestCase testCase, OperationChecker operations) {
-    return new OfxBuilder(TestUtils.getFileName(testCase, "_setup.ofx"), operations);
+    return new OfxBuilder(TestUtils.getFileName(testCase, ".ofx"), operations);
   }
 
   private OfxBuilder(String fileName, OperationChecker operations) {
@@ -210,6 +210,6 @@ public class OfxBuilder {
   }
 
   public static String getFileName(TestCase testCase) {
-    return TestUtils.getFileName(testCase, "_setup.ofx");
+    return TestUtils.getFileName(testCase, ".ofx");
   }
 }

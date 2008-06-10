@@ -222,7 +222,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     writer.startTransaction("20060524000000", -99.0, 1, "blah")
       .add("category", MasterCategory.FOOD.getName())
       .end();
-    writer.writeBankMsgFooter(123.56, "2006052(000000");
+    writer.writeBankMsgFooter(123.56, "20060525000000");
     writer.writeFooter();
     operations.importOfxFile(fileName);
 

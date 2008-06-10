@@ -1,12 +1,16 @@
 package org.designup.picsou.gui.actions;
 
 import org.crossbowlabs.globs.model.*;
+import org.crossbowlabs.globs.model.utils.LocalGlobRepository;
+import org.crossbowlabs.globs.model.utils.LocalGlobRepositoryBuilder;
 import static org.crossbowlabs.globs.model.FieldValue.value;
 import org.crossbowlabs.globs.utils.directory.Directory;
+import org.crossbowlabs.globs.gui.SelectionService;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.ImportPanel;
+import org.designup.picsou.model.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +18,6 @@ import java.awt.event.ActionEvent;
 public class ImportFileAction extends AbstractAction {
 
   private Directory directory;
-  private JFrame frame;
   private GlobRepository repository;
 
   public ImportFileAction(GlobRepository repository, Directory directory) {
@@ -24,9 +27,10 @@ public class ImportFileAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent event) {
-    final PicsouDialog dialog = PicsouDialog.create(directory.get(JFrame.class), "import");
+    JFrame frame = directory.get(JFrame.class);
+    final PicsouDialog dialog = PicsouDialog.create(frame, Lang.get("import"));
 
-    ImportPanel panel = new ImportPanel(repository, directory) {
+    ImportPanel panel = new ImportPanel(dialog, repository, directory) {
       protected void complete() {
         dialog.setVisible(false);
       }

@@ -3,6 +3,7 @@ package org.designup.picsou.importer.ofx;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobList;
 import org.crossbowlabs.globs.model.GlobRepository;
+import org.crossbowlabs.globs.model.format.GlobPrinter;
 import org.crossbowlabs.globs.model.utils.GlobUtils;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;

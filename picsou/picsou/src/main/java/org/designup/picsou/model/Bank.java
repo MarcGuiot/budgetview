@@ -3,6 +3,7 @@ package org.designup.picsou.model;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.metamodel.annotations.Key;
 import org.crossbowlabs.globs.metamodel.annotations.NamingField;
+import org.crossbowlabs.globs.metamodel.annotations.DefaultString;
 import org.crossbowlabs.globs.metamodel.fields.IntegerField;
 import org.crossbowlabs.globs.metamodel.fields.StringField;
 import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
@@ -18,6 +19,7 @@ public class Bank {
   @NamingField
   public static StringField NAME;
 
+  @DefaultString("")
   public static StringField DOWNLOAD_URL;
 
   static {

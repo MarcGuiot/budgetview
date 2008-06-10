@@ -1,5 +1,5 @@
 <globs>
-  <bank name="unknown bank" id="-123456">
+  <bank name="Autre" id="-123456">
     <bankEntity id="-1"/>
 
     <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"

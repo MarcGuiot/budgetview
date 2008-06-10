@@ -1,5 +1,5 @@
 <globs>
-  <bank name="La poste">
+  <bank name="La Poste">
     <bankEntity id="20041"/>
 
     <transactionTypeMatcher regexp="ACHAT CB (.*)"

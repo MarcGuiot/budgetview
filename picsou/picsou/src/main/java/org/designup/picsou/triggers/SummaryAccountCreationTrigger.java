@@ -2,6 +2,7 @@ package org.designup.picsou.triggers;
 
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.model.*;
+import static org.crossbowlabs.globs.model.FieldValue.value;
 import org.crossbowlabs.globs.utils.Utils;
 import org.designup.picsou.model.Account;
 import static org.designup.picsou.model.Account.*;
@@ -22,8 +23,8 @@ public class SummaryAccountCreationTrigger implements ChangeSetListener {
     updateSummary(globRepository);
   }
 
-  public static void updateSummary(GlobRepository globRepository) {
-    GlobList accounts = globRepository.getAll(TYPE);
+  public static void updateSummary(GlobRepository repository) {
+    GlobList accounts = repository.getAll(TYPE);
 
     double balance = 0;
     Date updateDate = null;
@@ -36,11 +37,11 @@ public class SummaryAccountCreationTrigger implements ChangeSetListener {
       updateDate = Utils.min(updateDate, account.get(UPDATE_DATE));
     }
 
-    Glob account = globRepository.findOrCreate(KeyBuilder.newKey(TYPE, SUMMARY_ACCOUNT_ID),
-                                                 FieldValue.value(NUMBER, SUMMARY_ACCOUNT_NUMBER),
-                                                 FieldValue.value(NAME, Lang.get("account.all")));
+    Glob account = repository.findOrCreate(KeyBuilder.newKey(Account.TYPE, SUMMARY_ACCOUNT_ID),
+                                           value(NUMBER, SUMMARY_ACCOUNT_NUMBER),
+                                           value(NAME, Lang.get("account.all")));
     Key summaryKey = account.getKey();
-    globRepository.update(summaryKey, BALANCE, balance);
-    globRepository.update(summaryKey, UPDATE_DATE, updateDate);
+    repository.update(summaryKey, BALANCE, balance);
+    repository.update(summaryKey, UPDATE_DATE, updateDate);
   }
 }

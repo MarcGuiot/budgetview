@@ -1,4 +1,4 @@
-unknownBank.xml
+otherBank.xml
 cic.xml
 sg.xml
 laposte.xml

@@ -27,10 +27,7 @@ public class TransactionFilter implements AccountFileImporter {
                                    GlobRepository targetRepository) {
     GlobList createdTransactions = loadTransactionsToCreate(reader, targetRepository, initialRepository);
 
-    retrieveObjects(Account.TYPE, targetRepository, targetRepository);
     SummaryAccountCreationTrigger.updateSummary(targetRepository);
-    retrieveObjects(Bank.TYPE, targetRepository, targetRepository);
-    retrieveCategories(targetRepository, targetRepository);
 
     for (Glob transaction : createdTransactions) {
       Set<Integer> categoryIds =
@@ -41,13 +38,6 @@ public class TransactionFilter implements AccountFileImporter {
                                  categoryIds.toArray(new Integer[categoryIds.size()]));
     }
     return createdTransactions;
-  }
-
-  private void retrieveCategories(GlobRepository repository, GlobRepository tmpRepository) {
-    for (Glob account : tmpRepository.getAll(Category.TYPE, GlobMatchers.isNotNull(Category.MASTER))) {
-      Glob created = repository.findOrCreate(account.getKey());
-      repository.update(created.getKey(), account.toArray());
-    }
   }
 
   private GlobList loadTransactionsToCreate(Reader reader, GlobRepository targetRepository,
@@ -81,10 +71,10 @@ public class TransactionFilter implements AccountFileImporter {
     return newTransactions;
   }
 
-  private void retrieveObjects(GlobType globType, GlobRepository tempRepository, GlobRepository repository) {
-    for (Glob glob : tempRepository.getAll(globType)) {
-      Glob created = repository.findOrCreate(glob.getKey());
-      repository.update(created.getKey(), glob.toArray());
+  private void retrieveObjects(GlobType globType, GlobRepository source, GlobRepository target) {
+    for (Glob glob : source.getAll(globType)) {
+      Glob created = target.findOrCreate(glob.getKey());
+      target.update(created.getKey(), glob.toArray());
     }
   }
 

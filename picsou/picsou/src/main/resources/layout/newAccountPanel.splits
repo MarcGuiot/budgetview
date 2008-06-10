@@ -1,19 +1,10 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
-  <styledPanel ref="wave">
     <column>
 
-      <filler fill="vertical" weightY="10"/>
-
-      <styledPanel topColor="login.block.top" bottomColor="login.block.bottom"
-                   borderColor="login.block.border" borderWidth="2" cornerRadius="10"
-                   opaque="true" anchor="center" fill="none" weightY="20">
-
-        <styledPanel ref="content"/>
-
-      </styledPanel>
-
-      <filler fill="vertical" weightY="20"/>
+      <comboBox ref="bank"/>
+      <textField ref="name"/>
+      <textField ref="number"/>
 
     </column>
-  </styledPanel>
+
 </splits>

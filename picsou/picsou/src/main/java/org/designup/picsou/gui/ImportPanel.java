@@ -1,36 +1,41 @@
 package org.designup.picsou.gui;
 
-import org.crossbowlabs.globs.gui.views.GlobTableView;
+import org.crossbowlabs.globs.gui.GlobSelection;
+import org.crossbowlabs.globs.gui.GlobSelectionListener;
+import org.crossbowlabs.globs.gui.SelectionService;
 import org.crossbowlabs.globs.gui.views.GlobComboView;
 import org.crossbowlabs.globs.gui.views.GlobHtmlView;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.GlobList;
+import org.crossbowlabs.globs.gui.views.GlobTableView;
 import org.crossbowlabs.globs.model.Glob;
+import org.crossbowlabs.globs.model.GlobList;
+import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.model.format.GlobListStringifier;
-import org.crossbowlabs.globs.utils.Strings;
+import org.crossbowlabs.globs.model.utils.LocalGlobRepository;
+import org.crossbowlabs.globs.model.utils.LocalGlobRepositoryBuilder;
 import org.crossbowlabs.globs.utils.Log;
+import org.crossbowlabs.globs.utils.Strings;
+import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorService;
 import org.crossbowlabs.splits.components.JStyledPanel;
 import org.crossbowlabs.splits.layout.CardHandler;
+import org.crossbowlabs.splits.utils.GuiUtils;
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.transactions.TransactionDateStringifier;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.importer.ImportSession;
 import org.designup.picsou.importer.BankFileType;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.Bank;
+import org.designup.picsou.importer.ImportSession;
+import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import java.awt.event.ActionEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,24 +49,40 @@ public abstract class ImportPanel {
   private JPanel panel;
   protected CardHandler cardHandler;
   private JLabel fileNameLabel = new JLabel();
+
   private ImportSession importSession;
   private List<File> files = new ArrayList();
+  private LocalGlobRepository localRepository;
+  private Directory localDirectory;
+  protected AccountEditionPanel accountEditionPanel;
+  private Glob bank;
+  protected JButton newAccountButton;
+  protected JComboBox accountComboBox;
 
-  protected ImportPanel(GlobRepository repository, Directory directory) {
+  protected ImportPanel(final Window owner, GlobRepository repository, Directory directory) {
+
+    this.localRepository = LocalGlobRepositoryBuilder.init(repository)
+      .copy(Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE, Transaction.TYPE,
+            TransactionToCategory.TYPE, TransactionTypeMatcher.TYPE, LabelToCategory.TYPE)
+      .get();
+
+    this.localDirectory = new DefaultDirectory(directory);
+    localDirectory.add(new SelectionService());
     fileButton.setAction(new BrowseFilesAction());
 
-    importSession = new ImportSession(repository, directory);
+    importSession = new ImportSession(localRepository, localDirectory);
 
     TransactionComparator comparator = new TransactionComparator(false);
 
+    GlobRepository tempRepository = importSession.getTempRepository();
     JTable transactionTable =
-      GlobTableView.init(Transaction.TYPE, importSession.getTempRepository(), comparator, directory)
+      GlobTableView.init(Transaction.TYPE, tempRepository, comparator, localDirectory)
         .addColumn(Lang.get("date"), new TransactionDateStringifier(comparator))
         .addColumn(LABEL)
         .addColumn(AMOUNT)
         .getComponent();
 
-    ColorService colorService = PicsouColors.createColorService();
+    ColorService colorService = localDirectory.get(ColorService.class);
     SplitsBuilder builder = new SplitsBuilder(colorService, Gui.ICON_LOCATOR, Lang.TEXT_LOCATOR);
     builder.add("message", messageLabel);
     builder.add("filePanel", filePanel);
@@ -69,20 +90,36 @@ public abstract class ImportPanel {
     builder.add("fileField", fileField);
     builder.add("fileButton", fileButton);
     builder.add("bankCombo",
-                GlobComboView.init(Bank.TYPE, repository, directory).getComponent());
+                GlobComboView.init(Bank.TYPE, localRepository, localDirectory).setShowEmptyOption(true).getComponent());
     builder.add("downloadUrl",
-                GlobHtmlView.init(Bank.TYPE, repository, directory, new BankUrlStringifier()).getComponent());
+                GlobHtmlView.init(Bank.TYPE, localRepository, localDirectory, new BankUrlStringifier()).getComponent());
     builder.add("import", new ImportAction());
     builder.add("table", transactionTable);
     builder.add("fileName", fileNameLabel);
+
+    newAccountButton = new JButton(new NewAccountAction(owner));
+    builder.add("newAccount", newAccountButton);
+
+    accountComboBox = GlobComboView.init(Account.TYPE, localRepository, localDirectory).setShowEmptyOption(true).getComponent();
+    builder.add("accountCombo", accountComboBox);
+
+    accountEditionPanel = new AccountEditionPanel(localRepository, localDirectory);
+    builder.add("accountEditionPanel", accountEditionPanel.getPanel());
     builder.add("finish", new FinishAction());
-    builder.add("close", new AbstractAction("Fermer") {
+    builder.add("close", new AbstractAction(Lang.get("close")) {
       public void actionPerformed(ActionEvent e) {
         complete();
       }
     });
     cardHandler = builder.addCardHandler("cardHandler");
     panel = (JPanel)builder.parse(getClass(), "/layout/importPanel.splits");
+
+    localDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        GlobList banks = selection.getAll();
+        bank = banks.isEmpty() ? null : banks.get(0);
+      }
+    }, Bank.TYPE);
   }
 
   protected abstract void complete();
@@ -151,6 +188,7 @@ public abstract class ImportPanel {
   private boolean nextImport() {
     if (files.isEmpty()) {
       try {
+        localRepository.commitChanges(true);
         complete();
         return true;
       }
@@ -162,16 +200,32 @@ public abstract class ImportPanel {
 
     File file = files.remove(0);
     try {
+      initCreationAccountFields(file);
       fileNameLabel.setText(file.getAbsolutePath());
       importSession.loadFile(file);
       return true;
     }
     catch (Exception e) {
       String message = Lang.get("import.file.error", file.getAbsolutePath());
+      Log.write("", e);
       messageLabel.setText(message);
       return false;
     }
+  }
 
+  private void initCreationAccountFields(File file) {
+    Glob account = null;
+    if (BankFileType.getTypeFromName(file.getAbsolutePath()).equals(BankFileType.QIF)) {
+      GlobList accounts = localRepository.getAll(Account.TYPE);
+      if (accounts.size() == 1) {
+        if (!accounts.get(0).get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID)) {
+          account = localRepository.create(Account.TYPE);
+        }
+      }
+    }
+    accountEditionPanel.setAccount(account, bank);
+    accountComboBox.setVisible(account != null);
+    newAccountButton.setVisible(account != null);
   }
 
   private class FinishAction extends AbstractAction {
@@ -192,7 +246,7 @@ public abstract class ImportPanel {
       }
       Glob bank = selected.get(0);
       String url = bank.get(Bank.DOWNLOAD_URL);
-      return "<a href='"+ url +"'>"+url+"</a>";
+      return "<a href='" + url + "'>" + url + "</a>";
     }
   }
 
@@ -240,6 +294,30 @@ public abstract class ImportPanel {
         }
         fileField.setText(buffer.toString());
       }
+    }
+  }
+
+  private class NewAccountAction extends AbstractAction {
+    private final Window owner;
+
+    public NewAccountAction(Window owner) {
+      super(Lang.get("new.account"));
+      this.owner = owner;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      final LocalGlobRepository tempRespository = LocalGlobRepositoryBuilder.init(localRepository)
+        .copy(Bank.TYPE, BankEntity.TYPE).get();
+      AccountEditionPanel accountEditionPanel = new AccountEditionPanel(tempRespository, localDirectory);
+      PicsouDialog dialog =
+        PicsouDialog.createWithButtons(owner, accountEditionPanel.getPanel(),
+                                       new AbstractAction(Lang.get("ok")) {
+                                         public void actionPerformed(ActionEvent e) {
+                                           tempRespository.commitChanges(true);
+                                         }
+                                       });
+      dialog.pack();
+      GuiUtils.showCentered(dialog);
     }
   }
 }

@@ -13,6 +13,7 @@ public class BankEntity {
 
   @Key
   public static IntegerField ID;
+
   @Target(Bank.class)
   public static LinkField BANK;
 
