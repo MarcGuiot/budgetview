@@ -126,8 +126,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       if (glob.matches(values)) {
         if (result != null) {
           StringBuilder builder = new StringBuilder();
-          for (int i = 0; i < values.length; i++) {
-            FieldValue value = values[i];
+          for (FieldValue value : values) {
             builder.append("(").append(value.getField()).append(",").append(value.getValue()).append(")");
           }
           throw new ItemAmbiguity("There are several objects of type " + type.getName() +

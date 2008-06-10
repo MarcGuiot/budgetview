@@ -87,8 +87,4 @@ public class GlobBuilder implements FieldValues.Functor {
   public void process(Field field, Object value) throws Exception {
     setObject(field, value);
   }
-
-  public static Glob copy(Glob glob) {
-    return new DefaultGlob(glob.getType(), glob.getValues(true));
-  }
 }

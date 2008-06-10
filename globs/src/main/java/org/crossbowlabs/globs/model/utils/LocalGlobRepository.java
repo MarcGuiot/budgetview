@@ -6,13 +6,13 @@ import org.crossbowlabs.globs.utils.exceptions.InvalidState;
 
 public class LocalGlobRepository extends GlobRepositoryDecorator {
 
-  private GlobRepository source;
+  private GlobRepository reference;
   private ChangeSetAggregator aggregator;
 
-  LocalGlobRepository(GlobRepository source, GlobRepository local) {
-    super(local);
-    this.source = source;
-    this.aggregator = new ChangeSetAggregator(getRepository());
+  LocalGlobRepository(GlobRepository reference, GlobRepository temporary) {
+    super(temporary);
+    this.reference = reference;
+    this.aggregator = new ChangeSetAggregator(temporary);
   }
 
   public ChangeSet getCurrentChanges() {
@@ -20,7 +20,7 @@ public class LocalGlobRepository extends GlobRepositoryDecorator {
   }
 
   public void commitChanges(boolean dispose) {
-    source.apply(aggregator.getCurrentChanges());
+    reference.apply(aggregator.getCurrentChanges());
     aggregator.reset();
     if (dispose) {
       dispose();

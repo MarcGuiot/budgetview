@@ -1,18 +1,13 @@
 package org.crossbowlabs.globs.utils;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.crossbowlabs.globs.metamodel.GlobType;
+
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.*;
 
 public class TestUtils {
 
@@ -156,7 +151,14 @@ public class TestUtils {
   }
 
   public static String getFileName(TestCase test, String extension) {
-    String fileName = test.getClass().getSimpleName() + "_" + test.getName().replace(".", "_");
-    return TMP_DIR + "/" + fileName + extension;
+    int index = 0;
+    while (true) {
+      String fileName = test.getClass().getSimpleName() + "_" + test.getName().replace(".", "_") + "_" + index;
+      File file = new File(TMP_DIR + "/" + fileName + extension);
+      if (!file.exists()) {
+        return file.getPath();
+      }
+      index++;
+    }
   }
 }

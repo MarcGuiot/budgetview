@@ -5,8 +5,10 @@ import org.crossbowlabs.globs.gui.actions.DeleteGlobAction;
 import org.crossbowlabs.globs.gui.editors.GlobNumericEditor;
 import org.crossbowlabs.globs.gui.editors.GlobPasswordEditor;
 import org.crossbowlabs.globs.gui.editors.GlobTextEditor;
+import org.crossbowlabs.globs.gui.editors.GlobLinkComboEditor;
 import org.crossbowlabs.globs.gui.views.*;
 import org.crossbowlabs.globs.metamodel.GlobType;
+import org.crossbowlabs.globs.metamodel.Link;
 import org.crossbowlabs.globs.metamodel.fields.DoubleField;
 import org.crossbowlabs.globs.metamodel.fields.StringField;
 import org.crossbowlabs.globs.model.Glob;
@@ -53,6 +55,10 @@ public class GlobsPanelBuilder {
 
   public GlobComboView addCombo(GlobType type) {
     return store(GlobComboView.init(type, repository, directory));
+  }
+
+  public GlobLinkComboEditor addComboEditor(Link field) {
+    return store(new GlobLinkComboEditor(field, repository, directory));
   }
 
   public GlobTextEditor addEditor(StringField field) {

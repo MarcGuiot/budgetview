@@ -7,21 +7,21 @@ import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.model.impl.DefaultGlobRepository;
 
 public class LocalGlobRepositoryBuilder {
-  private GlobRepository source;
-  private DefaultGlobRepository local;
+  private GlobRepository reference;
+  private DefaultGlobRepository temporary;
 
-  public static LocalGlobRepositoryBuilder init(GlobRepository source) {
-    return new LocalGlobRepositoryBuilder(source);
+  public static LocalGlobRepositoryBuilder init(GlobRepository reference) {
+    return new LocalGlobRepositoryBuilder(reference);
   }
 
-  private LocalGlobRepositoryBuilder(GlobRepository source) {
-    this.source = source;
-    this.local = new DefaultGlobRepository(source.getIdGenerator());
+  private LocalGlobRepositoryBuilder(GlobRepository reference) {
+    this.reference = reference;
+    this.temporary = new DefaultGlobRepository(reference.getIdGenerator());
   }
 
   public LocalGlobRepositoryBuilder copy(GlobType... types) {
     for (GlobType type : types) {
-      copy(source.getAll(type));
+      copy(reference.getAll(type));
     }
     return this;
   }
@@ -41,10 +41,10 @@ public class LocalGlobRepositoryBuilder {
   }
 
   private final void doCopy(Glob glob) {
-    local.add(GlobBuilder.copy(glob));
+    temporary.add(glob.duplicate());
   }
 
   public LocalGlobRepository get() {
-    return new LocalGlobRepository(source, local);
+    return new LocalGlobRepository(reference, temporary);
   }
 }
