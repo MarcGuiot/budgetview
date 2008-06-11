@@ -1,0 +1,7 @@
+* I18N: sous-categories
+* Mecanique pour gerer de nouvelles banques (notamment a l'international)
+
+* Reorganiser categories dans CategoryView / CatChooser
+* Enlever contrainte sur password => indicateur "password strength"
+* Mode demo (pas de connexions, fichier de donnees en dur, pas de stockage)
+* Log out

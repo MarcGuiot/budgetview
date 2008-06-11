@@ -169,7 +169,7 @@ public class CategoryView extends View {
 
     private void add(Action action, String label, JPopupMenu menu) {
       JCheckBoxMenuItem item = new JCheckBoxMenuItem(action);
-      item.setLabel(Lang.get(label));
+      item.setText(Lang.get(label));
       item.setFont(Gui.DEFAULT_TABLE_FONT);
       menu.add(item);
     }

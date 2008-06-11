@@ -1,0 +1,40 @@
+Import
+------
+* OFX: Selection de la banque quand le bank_entity est inconnu
+* QIF: Choix de la devise du compte
+* QIF: Analyse du format de date
+* QIF: Analyse du format de nombres
+* QIF: Estimation de solde final
+* Verification SMS
+* Interdire devise compte differente de devise utilisateur
+* Integrer fichiers BNP Pascal
+* Open with...
+* Import initial facultatif
+* Bug: import OFX initial invalide : rester sur page import
+* LoginPanel: error login + "new user" => effacer message
+
+
+Creation d'utilisateur
+----------------------
+* Choix de la devise de l'utilisateur
+
+
+Categorisation
+--------------
+* Taille panneau
+* Labels cliquables "A classer" dans TransactionView
+
+
+Packaging
+---------
+* Obfuscation
+* Packaging Mac
+
+
+Misc
+----
+* Frame en 1024x768
+* Joliesse fenetre split transaction
+* CategoryView: selection par drag dans colonne expand
+* CategoryView: selection par drag dans colonne name
+* CategoryView: desactiver tri
