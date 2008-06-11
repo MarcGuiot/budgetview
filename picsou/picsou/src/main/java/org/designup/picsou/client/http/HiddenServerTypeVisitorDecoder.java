@@ -39,8 +39,9 @@ public class HiddenServerTypeVisitorDecoder implements HiddenServerTypeVisitor {
 
   public void visitHiddenBank() throws Exception {
     globs.add(GlobBuilder.init(Bank.TYPE)
-      .set(Bank.ID,
-           hiddenGlob.get(HiddenBank.ID)).get());
+      .set(Bank.ID, hiddenGlob.get(HiddenBank.ID))
+      .set(Bank.DOWNLOAD_URL, hiddenGlob.get(HiddenBank.DOWNLOAD_URL))
+      .set(Bank.NAME, hiddenGlob.get(HiddenBank.NAME)).get());
   }
 
   public void visitHiddenAccount() throws Exception {

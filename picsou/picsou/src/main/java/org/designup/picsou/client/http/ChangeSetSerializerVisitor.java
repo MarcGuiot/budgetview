@@ -31,34 +31,36 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   }
 
   public void visitUpdate(Key key, FieldValues values) throws Exception {
-    if (key.getGlobType() == Transaction.TYPE) {
+    if (key.getGlobType().equals(Transaction.TYPE)) {
       FieldValues fieldValues = createHiddenTransactionForUpdate(key, values, globRepository);
       globChangeVisitor.visitUpdate(
         KeyBuilder.init(HiddenTransaction.ID, key.get(Transaction.ID))
           .add(HiddenTransaction.HIDDEN_USER_ID, -1).get(),
         fieldValues);
     }
-    else if (key.getGlobType() == Bank.TYPE) {
+    else if (key.getGlobType().equals(Bank.TYPE)) {
       globChangeVisitor.visitUpdate(
         KeyBuilder.init(HiddenBank.ID, key.get(Bank.ID))
           .add(HiddenBank.HIDDEN_USER_ID, -1).get(),
-        FieldValuesBuilder.init().get());
+        FieldValuesBuilder.init(HiddenBank.NAME, values.get(Bank.NAME))
+          .set(HiddenBank.DOWNLOAD_URL, values.get(Bank.DOWNLOAD_URL))
+          .get());
     }
-    else if (key.getGlobType() == Account.TYPE) {
+    else if (key.getGlobType().equals(Account.TYPE)) {
       FieldValues fieldValues = createHiddenAccountForUpdate(key, values, globRepository);
       globChangeVisitor.visitUpdate(
         KeyBuilder.init(HiddenAccount.ID, key.get(Account.ID))
           .add(HiddenAccount.HIDDEN_USER_ID, -1).get(),
         fieldValues);
     }
-    else if (key.getGlobType() == TransactionImport.TYPE) {
+    else if (key.getGlobType().equals(TransactionImport.TYPE)) {
       FieldValues fieldValues = createHiddenImportForUpdate(key, values, globRepository);
       globChangeVisitor.visitUpdate(
         KeyBuilder.init(HiddenImport.ID, key.get(TransactionImport.ID))
           .add(HiddenImport.HIDDEN_USER_ID, -1).get(),
         fieldValues);
     }
-    else if (key.getGlobType() == Category.TYPE) {
+    else if (key.getGlobType().equals(Category.TYPE)) {
       FieldValues fieldValues = createHiddenCategoryForUpdate(key, values, globRepository);
       globChangeVisitor.visitUpdate(
         KeyBuilder.init(HiddenCategory.ID, key.get(Category.ID))
@@ -122,7 +124,9 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
       globChangeVisitor.visitCreation(
         KeyBuilder.init(HiddenBank.ID, key.get(Bank.ID))
           .add(HiddenBank.HIDDEN_USER_ID, -1).get(),
-        FieldValuesBuilder.init().get());
+        FieldValuesBuilder.init(HiddenBank.NAME, values.get(Bank.NAME))
+          .set(HiddenBank.DOWNLOAD_URL, values.get(Bank.DOWNLOAD_URL))
+          .get());
     }
 
     public void visitAccount(Key key, FieldValues values) throws Exception {

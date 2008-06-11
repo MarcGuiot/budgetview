@@ -1,5 +1,5 @@
 <globs>
-  <bank name="Credit Agricole">
+  <bank name="Credit Agricole" id='1'>
     <bankEntity id="13006"/>
 
     <transactionTypeMatcher regexp="REGLEM ECHEANCE (.*)"

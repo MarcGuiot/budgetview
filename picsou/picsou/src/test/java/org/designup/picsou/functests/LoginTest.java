@@ -11,6 +11,7 @@ import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.interception.FileChooserHandler;
+import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import java.io.File;
@@ -86,6 +87,34 @@ public class LoginTest extends ServerFunctionalTestCase {
       .add("11/01/2006", TransactionType.CHECK, "12345", "", -12.00, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
       .check();
+  }
+
+  public void testBankAreCorrectlyReImported() throws Exception {
+    final String filePath = OfxBuilder
+      .init(this)
+      .addBankAccount(1234567, 1234, "acc1", 1.0, "2006/01/10")
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .addTransaction("2006/01/11", -12.0, "Cheque 12345")
+      .save();
+
+    createUser("toto", "p4ssw0rd", filePath);
+    checkBankOnImport();
+    openNewLoginWindow();
+    login("toto", "p4ssw0rd");
+    checkBankOnImport();
+  }
+
+  private void checkBankOnImport() {
+    OperationChecker operations = new OperationChecker(window);
+    Trigger trigger = operations.getImportTrigger();
+    WindowInterceptor.init(trigger)
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          assertTrue(window.getComboBox("bankCombo")
+            .contentEquals("", "Autre", "CIC", "Credit Agricole", "La Poste", "Societe Generale"));
+          return window.getButton("close").triggerClick();
+        }
+      }).run();
   }
 
   public void testLoginFailsIfUserNotRegistered() throws Exception {

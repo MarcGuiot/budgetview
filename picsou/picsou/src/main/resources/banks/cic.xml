@@ -1,5 +1,5 @@
 <globs>
-  <bank name="CIC" downloadUrl="http://www.cic.fr/telechargements.cgi">
+  <bank name="CIC" downloadUrl="http://www.cic.fr/telechargements.cgi" id='2'>
     <bankEntity id="30066"/>
 
     <transactionTypeMatcher regexp="F COM INTERVENTION (.*)"

@@ -3,6 +3,7 @@ package org.designup.picsou.server.model;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.metamodel.annotations.Key;
 import org.crossbowlabs.globs.metamodel.fields.IntegerField;
+import org.crossbowlabs.globs.metamodel.fields.StringField;
 import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.utils.GlobBuilder;
@@ -17,6 +18,10 @@ public class HiddenBank {
   public static IntegerField ID;
   @Key
   public static IntegerField HIDDEN_USER_ID;
+
+  public static StringField NAME;
+
+  public static StringField DOWNLOAD_URL;
 
   private static final byte V1 = 1;
 
@@ -35,12 +40,12 @@ public class HiddenBank {
   }
 
   public static void write(SerializedOutput output, Glob glob) {
-    write(output, glob, (byte) -1);
+    write(output, glob, (byte)-1);
   }
 
   static void write(SerializedOutput output, Glob glob, byte version) {
     switch (version) {
-      case-1:
+      case -1:
       case V1:
         writeV1(output, glob);
         return;

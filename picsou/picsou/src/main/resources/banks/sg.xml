@@ -1,5 +1,5 @@
 <globs>
-  <bank name="Societe Generale" id="99999">
+  <bank name="Societe Generale" id="4">
     <bankEntity id="30003"/>
 
     <transactionTypeMatcher regexp="VIR.LOGITEL[ ]*"
