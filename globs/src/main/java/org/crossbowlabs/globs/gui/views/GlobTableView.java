@@ -293,8 +293,8 @@ public class GlobTableView extends AbstractGlobComponentHolder implements GlobSe
     JTableHeader header = table.getTableHeader();
     header.setDefaultRenderer(
       new LabelTableCellRenderer(chain(headerRenderer, headerLabelCustomizer), headerBackgroundPainter));
-    header.addMouseListener(new GlobTableColumnHeaderMouseListener(table, tableModel));
     header.setReorderingAllowed(false);
+    header.addMouseListener(new GlobTableColumnHeaderMouseListener(table, tableModel));
   }
 
   private void initPopupFactory() {

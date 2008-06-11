@@ -126,6 +126,7 @@ public abstract class ImportPanel {
 
     accountEditionPanel = new AccountEditionPanel(sessionRepository, sessionDirectory);
     builder.add("accountEditionPanel", accountEditionPanel.getPanel());
+    builder.add("skipFile", new SkipFileAction());
     builder.add("finish", new FinishAction());
     builder.add("close", new AbstractAction(Lang.get("close")) {
       public void actionPerformed(ActionEvent e) {
@@ -269,11 +270,22 @@ public abstract class ImportPanel {
 
   private class FinishAction extends AbstractAction {
     public FinishAction() {
-      super("OK");
+      super(Lang.get("ok"));
     }
 
     public void actionPerformed(ActionEvent event) {
       importSession.importTransactions(currentlySelectedAccount);
+      nextImport();
+    }
+  }
+
+  private class SkipFileAction extends AbstractAction {
+    private SkipFileAction() {
+      super(Lang.get("import.skip.file"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      importSession.discard();
       nextImport();
     }
   }
@@ -335,5 +347,4 @@ public abstract class ImportPanel {
       }
     }
   }
-
 }

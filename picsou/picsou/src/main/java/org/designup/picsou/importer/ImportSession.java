@@ -101,6 +101,10 @@ public class ImportSession {
     }
   }
 
+  public void discard() {
+    importChangeSetAggregator.dispose();    
+  }
+
   public Glob createDefaultAccount() {
     return localRepository.create(Account.TYPE,
                                   value(Account.NAME, Lang.get("account.default.current.name")));

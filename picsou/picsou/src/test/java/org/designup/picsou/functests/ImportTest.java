@@ -126,6 +126,38 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testSkipFirstQifFile() throws Exception {
+    final String path1 = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "First operation")
+      .save();
+    final String path2 = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/20", -2.2, "Second operation")
+      .save();
+
+    fileField.setText(path1 + ";" + path2);
+    importButton.click();
+
+    Table table = window.getTable();
+    assertTrue(table.contentEquals(new Object[][]{
+      {"10/01/2006", "First operation", "-1.10"}
+    }));
+
+    window.getButton("Skip").click();
+
+    assertTrue(table.contentEquals(new Object[][]{
+      {"20/01/2006", "Second operation", "-2.20"}
+    }));
+
+    window.getButton("OK").click();
+
+    transactions
+      .initContent()
+      .add("20/01/2006", TransactionType.PRELEVEMENT, "Second operation", "", -2.2)
+      .check();
+  }
+
   public void testImportQifFileWithExistingAccount() throws Exception {
     bankCombo.select("Societe Generale");
     String firstQif = QifBuilder.init(this)

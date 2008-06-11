@@ -42,7 +42,10 @@
           <button ref="newAccount"/>
         </row>
         <panel ref="accountEditionPanel"/>
-        <button action="finish"/>
+        <row>
+          <button action="finish"/>
+          <button action="skipFile"/>
+        </row>
       </column>
     </card>
   </cards>

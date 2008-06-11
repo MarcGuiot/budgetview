@@ -12,6 +12,7 @@ Import
 * Import initial facultatif
 * Bug: import OFX initial invalide : rester sur page import
 * LoginPanel: error login + "new user" => effacer message
+* URL banques: lancer navigateur
 
 
 Creation d'utilisateur
