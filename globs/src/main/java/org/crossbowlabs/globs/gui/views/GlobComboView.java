@@ -28,6 +28,7 @@ public class GlobComboView extends AbstractGlobComponentHolder implements GlobSe
   private boolean showEmptyOption = false;
   private boolean updateWithIncomingSelections = true;
   private boolean selectionEnabled = true;
+  private String name;
 
   public static GlobComboView init(GlobType type, GlobRepository globRepository, Directory directory) {
     return new GlobComboView(type, globRepository, directory);
@@ -62,7 +63,7 @@ public class GlobComboView extends AbstractGlobComponentHolder implements GlobSe
       return jComboBox;
     }
     complete();
-    jComboBox.setName(type.getName());
+    jComboBox.setName(name == null ? type.getName() : name);
     model = new Model();
     jComboBox.setModel(model);
     jComboBox.setRenderer(renderer);
@@ -101,6 +102,11 @@ public class GlobComboView extends AbstractGlobComponentHolder implements GlobSe
 
   public GlobComboView setUpdateWithIncomingSelections(boolean updateWithIncomingSelections) {
     this.updateWithIncomingSelections = updateWithIncomingSelections;
+    return this;
+  }
+
+  public GlobComboView setName(String name) {
+    this.name = name;
     return this;
   }
 

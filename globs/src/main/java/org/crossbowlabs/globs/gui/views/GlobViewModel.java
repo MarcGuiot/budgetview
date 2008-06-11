@@ -49,7 +49,7 @@ public class GlobViewModel implements ChangeSetListener {
     for (Glob glob : repository.getAll(type, matcher)) {
       globs.add(glob);
     }
-    if (notify){
+    if (notify) {
       listener.globListReset();
     }
   }
@@ -111,7 +111,9 @@ public class GlobViewModel implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
-    initList(true);
+    if (changedTypes.contains(type)) {
+      initList(true);
+    }
   }
 
   public void refresh() {

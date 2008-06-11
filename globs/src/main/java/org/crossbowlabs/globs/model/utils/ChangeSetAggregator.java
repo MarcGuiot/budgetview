@@ -13,20 +13,25 @@ import java.util.List;
 public class ChangeSetAggregator {
 
   private GlobRepository repository;
-  private MutableChangeSet changeSet = new DefaultChangeSet();
+  private MutableChangeSet changeSet;
   private Listener listener;
 
   public ChangeSetAggregator(GlobRepository repository) {
+    this(repository, new DefaultChangeSet());
+  }
+
+  public ChangeSetAggregator(GlobRepository repository, MutableChangeSet importChangeSet) {
     this.repository = repository;
+    changeSet = importChangeSet;
     this.listener = new Listener();
     repository.addChangeListener(listener);
   }
 
-  public ChangeSet getCurrentChanges() {
+  public MutableChangeSet getCurrentChanges() {
     return changeSet;
   }
 
-  public ChangeSet dispose() {
+  public MutableChangeSet dispose() {
     repository.removeChangeListener(listener);
     repository = null;
     try {

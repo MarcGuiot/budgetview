@@ -2,11 +2,14 @@ package org.crossbowlabs.globs.gui;
 
 import org.crossbowlabs.globs.gui.actions.CreateGlobAction;
 import org.crossbowlabs.globs.gui.actions.DeleteGlobAction;
+import org.crossbowlabs.globs.gui.editors.GlobLinkComboEditor;
 import org.crossbowlabs.globs.gui.editors.GlobNumericEditor;
 import org.crossbowlabs.globs.gui.editors.GlobPasswordEditor;
 import org.crossbowlabs.globs.gui.editors.GlobTextEditor;
-import org.crossbowlabs.globs.gui.editors.GlobLinkComboEditor;
-import org.crossbowlabs.globs.gui.views.*;
+import org.crossbowlabs.globs.gui.views.GlobComboView;
+import org.crossbowlabs.globs.gui.views.GlobLabelView;
+import org.crossbowlabs.globs.gui.views.GlobListView;
+import org.crossbowlabs.globs.gui.views.GlobTableView;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.metamodel.Link;
 import org.crossbowlabs.globs.metamodel.fields.DoubleField;
@@ -19,6 +22,7 @@ import org.crossbowlabs.splits.IconLocator;
 import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.TextLocator;
 import org.crossbowlabs.splits.color.ColorService;
+import org.crossbowlabs.splits.layout.CardHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +41,7 @@ public class GlobsPanelBuilder {
     return new GlobsPanelBuilder(repository, directory);
   }
 
-  private GlobsPanelBuilder(GlobRepository repository, Directory directory) {
+  public GlobsPanelBuilder(GlobRepository repository, Directory directory) {
     this.directory = directory;
     this.repository = repository;
     this.splits = new SplitsBuilder(directory.get(ColorService.class),
@@ -55,6 +59,10 @@ public class GlobsPanelBuilder {
 
   public GlobComboView addCombo(GlobType type) {
     return store(GlobComboView.init(type, repository, directory));
+  }
+
+  public GlobComboView addCombo(String name, GlobType type) {
+    return addCombo(type).setName(name);
   }
 
   public GlobLinkComboEditor addComboEditor(Link field) {
@@ -88,9 +96,19 @@ public class GlobsPanelBuilder {
     return this;
   }
 
+  public GlobsPanelBuilder add(Component... component) {
+    splits.add(component);
+    return this;
+  }
+
+
   public GlobsPanelBuilder add(String name, Action action) {
     splits.add(name, action);
     return this;
+  }
+
+  public CardHandler addCardHandler(String name) {
+    return splits.addCardHandler(name);
   }
 
   public GlobsPanelBuilder addCreateAction(String label, String name, GlobType type) {

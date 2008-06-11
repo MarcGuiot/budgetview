@@ -2,8 +2,8 @@ package org.crossbowlabs.globs.model;
 
 import junit.framework.Assert;
 import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.utils.TestUtils;
 import org.crossbowlabs.globs.utils.Strings;
+import org.crossbowlabs.globs.utils.TestUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,6 +64,6 @@ public class DummyChangeSetListener implements ChangeSetListener {
     if (lastResetTypes == null) {
       Assert.fail("reset was not called");
     }
-    TestUtils.assertEquals(lastResetTypes, Arrays.asList(types));
+    TestUtils.assertSetEquals(lastResetTypes, Arrays.asList(types));
   }
 }

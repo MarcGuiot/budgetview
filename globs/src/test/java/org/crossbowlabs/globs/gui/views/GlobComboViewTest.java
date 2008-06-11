@@ -5,8 +5,11 @@ import org.crossbowlabs.globs.gui.utils.GuiComponentTestCase;
 import org.crossbowlabs.globs.metamodel.DummyObject;
 import static org.crossbowlabs.globs.metamodel.DummyObject.TYPE;
 import org.crossbowlabs.globs.metamodel.DummyObject2;
-import org.crossbowlabs.globs.model.*;
 import static org.crossbowlabs.globs.model.FieldValue.value;
+import org.crossbowlabs.globs.model.Glob;
+import org.crossbowlabs.globs.model.GlobList;
+import org.crossbowlabs.globs.model.GlobRepository;
+import org.crossbowlabs.globs.model.Key;
 import static org.crossbowlabs.globs.model.KeyBuilder.newKey;
 import org.crossbowlabs.globs.model.utils.GlobFieldComparator;
 import org.crossbowlabs.globs.model.utils.GlobMatchers;
@@ -89,7 +92,7 @@ public class GlobComboViewTest extends GuiComponentTestCase {
         .init(DummyObject.TYPE, repository, directory)
         .setRenderer(new DefaultListCellRenderer() {
           public Component getListCellRendererComponent(JList combo, Object object, int i, boolean b, boolean b1) {
-            Glob glob = (Glob) object;
+            Glob glob = (Glob)object;
             String value = "[" + glob.get(DummyObject.ID) + "] " + glob.get(DummyObject.NAME);
             return super.getListCellRendererComponent(combo, value, i, b, b1);
           }
@@ -312,8 +315,38 @@ public class GlobComboViewTest extends GuiComponentTestCase {
     assertThat(combo.selectionEquals(null));
   }
 
+  public void testReset() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject id='1' name='name1'/>" +
+                    "<dummyObject id='2' name='name2'/>");
+    view =
+      GlobComboView.init(DummyObject.TYPE, repository, directory);
+    ComboBox combo = new ComboBox(view.getComponent());
+    combo.select("name2");
+    DummyGlobSelectionHandler globSelectionHandler = new DummyGlobSelectionHandler();
+    view.setSelectionHandler(globSelectionHandler);
+    DummySelectionListener dummySelectionListener = DummySelectionListener.register(directory, DummyObject.TYPE);
+    repository.reset(GlobList.EMPTY, DummyObject2.TYPE);
+    assertThat(combo.contentEquals("name1", "name2"));
+    assertThat(combo.selectionEquals("name2"));
+    dummySelectionListener.assertEmpty();
+    assertTrue(globSelectionHandler.isEmpty());
+  }
+
   private ComboBox createCombo(GlobRepository repository) {
     view = GlobComboView.init(DummyObject.TYPE, repository, directory).setRenderer(DummyObject.NAME);
     return new ComboBox(view.getComponent());
+  }
+
+  private static class DummyGlobSelectionHandler implements GlobComboView.GlobSelectionHandler {
+    private boolean empty = true;
+
+    public void processSelection(Glob glob) {
+      empty = false;
+    }
+
+    public boolean isEmpty() {
+      return empty;
+    }
   }
 }

@@ -33,7 +33,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   private List<ChangeSetListener> triggers = new ArrayList<ChangeSetListener>();
   private int bulkDispatchingModeLevel;
   private MutableChangeSet changeSetToDispatch = new DefaultChangeSet();
-  private MutableChangeSet changeSet = new DefaultChangeSet();
   private GlobIdGenerator idGenerator = GlobIdGenerator.NONE;
 
   private IndexManager indexManager;
@@ -203,7 +202,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
     FieldValues fieldValues = new GlobArrayFieldValues(type, globValuesArray);
     changeSetToDispatch.processCreation(key, fieldValues);
-    changeSet.processCreation(key, fieldValues);
     notifyListeners();
     return glob;
   }
@@ -303,7 +301,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       indexTables.add(newValue, mutableGlob, field, oldValue);
     }
     changeSetToDispatch.processUpdate(key, field, newValue);
-    changeSet.processUpdate(key, field, newValue);
     return true;
   }
 
@@ -339,7 +336,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         Object value = targetKey != null ? targetKey.getValue(targetField) : null;
         sourceGlob.setObject(sourceField, value);
         changeSetToDispatch.processUpdate(sourceKey, sourceField, value);
-        changeSet.processUpdate(sourceKey, sourceField, value);
       }
     });
     notifyListeners();
@@ -355,7 +351,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     disable(glob);
     globs.remove(key.getGlobType(), key);
     changeSetToDispatch.processDeletion(key, glob.getValues(false));
-    changeSet.processDeletion(key, glob.getValues(false));
     notifyListeners();
   }
 
@@ -380,7 +375,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         Key key = pair.getFirst();
         globs.remove(key.getGlobType(), key);
         changeSetToDispatch.processDeletion(key, pair.getSecond());
-        changeSet.processDeletion(key, pair.getSecond());
       }
     }
     catch (OperationDenied e) {
@@ -418,7 +412,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         Key key = pair.getFirst();
         globs.remove(key.getGlobType(), key);
         changeSetToDispatch.processDeletion(key, pair.getSecond());
-        changeSet.processDeletion(key, pair.getSecond());
       }
     }
     catch (OperationDenied e) {
