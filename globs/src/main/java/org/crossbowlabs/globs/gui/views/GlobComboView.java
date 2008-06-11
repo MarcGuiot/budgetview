@@ -147,6 +147,9 @@ public class GlobComboView extends AbstractGlobComponentHolder implements GlobSe
 
   public void setFilter(GlobMatcher matcher) {
     model.model.setFilter(matcher);
+    if (model.model.size() != 0) {
+      jComboBox.setSelectedIndex(0);
+    }
   }
 
   public Glob getGlobAt(int index) {
@@ -175,7 +178,7 @@ public class GlobComboView extends AbstractGlobComponentHolder implements GlobSe
           fireContentsChanged(this, 0, model != null ? model.size() : 0);
           if (model != null) {
             if (((selected == null) || (model.indexOf(selected) < 0)) && (model.size() > 0)) {
-              select(model.get(0));
+              selected = null;
             }
           }
         }

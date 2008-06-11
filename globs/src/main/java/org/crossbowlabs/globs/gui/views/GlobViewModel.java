@@ -58,14 +58,18 @@ public class GlobViewModel implements ChangeSetListener {
     repository.removeChangeListener(this);
   }
 
-  public int indexOf(Glob glob) {
+  public int indexOf(final Glob glob) {
     if (glob == null) {
       return globs.indexOf(null);
     }
     if (!glob.getType().equals(type)) {
       return -1;
     }
-    return globs.firstIndexOf(new GlobKeyMatcher(glob.getKey()), repository);
+    return globs.firstIndexOf(new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return glob == item;
+      }
+    }, repository);
   }
 
   public GlobList getAll() {

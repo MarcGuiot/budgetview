@@ -653,7 +653,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     trigger.assertResetListEquals(DummyObject.TYPE);
 
     GlobList actualObjects = repository.getAll(DummyObject.TYPE);
-    TestUtils.assertEquals(Collections.singletonList(dummyObject3), actualObjects);
+    assertTrue(Arrays.equals(dummyObject3.toArray(), actualObjects.get(0).toArray()));
   }
 
   public void testResetAlsoResetsTypesWhenNoCorrespondingGlobsAreInTheGlobsList() throws Exception {

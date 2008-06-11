@@ -1,42 +1,36 @@
 package org.crossbowlabs.globs.metamodel.utils;
 
-import java.lang.annotation.Annotation;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import org.crossbowlabs.globs.metamodel.Field;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.metamodel.Link;
-import org.crossbowlabs.globs.metamodel.index.*;
 import org.crossbowlabs.globs.metamodel.annotations.*;
-import org.crossbowlabs.globs.metamodel.fields.BlobField;
-import org.crossbowlabs.globs.metamodel.fields.BooleanField;
-import org.crossbowlabs.globs.metamodel.fields.DateField;
-import org.crossbowlabs.globs.metamodel.fields.DoubleField;
-import org.crossbowlabs.globs.metamodel.fields.FieldValueVisitor;
-import org.crossbowlabs.globs.metamodel.fields.FieldVisitor;
-import org.crossbowlabs.globs.metamodel.fields.IntegerField;
-import org.crossbowlabs.globs.metamodel.fields.LinkField;
-import org.crossbowlabs.globs.metamodel.fields.LongField;
-import org.crossbowlabs.globs.metamodel.fields.StringField;
-import org.crossbowlabs.globs.metamodel.fields.TimeStampField;
+import org.crossbowlabs.globs.metamodel.fields.*;
+import org.crossbowlabs.globs.metamodel.index.MultiFieldNotUniqueIndex;
+import org.crossbowlabs.globs.metamodel.index.MultiFieldUniqueIndex;
+import org.crossbowlabs.globs.metamodel.index.NotUniqueIndex;
+import org.crossbowlabs.globs.metamodel.index.UniqueIndex;
 import org.crossbowlabs.globs.metamodel.links.DefaultLink;
 import org.crossbowlabs.globs.metamodel.links.FieldMappingFunctor;
 import org.crossbowlabs.globs.metamodel.links.LinkVisitor;
+import org.crossbowlabs.globs.model.FieldValues;
+import org.crossbowlabs.globs.model.Key;
+import org.crossbowlabs.globs.model.impl.SingleFieldKey;
 import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
 import org.crossbowlabs.globs.utils.exceptions.MissingInfo;
 import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
-import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.model.FieldValues;
-import org.crossbowlabs.globs.model.KeyBuilder;
-import org.crossbowlabs.globs.model.impl.SingleFieldKey;
+
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 class DefaultFieldFactory {
   private MutableGlobType type;
 
   private static Class[] defaultValuesAnnotations =
-        {DefaultInteger.class, DefaultBoolean.class, DefaultDouble.class, DefaultDate.class,
-         DefaultLong.class, DefaultString.class};
+    {DefaultInteger.class, DefaultBoolean.class, DefaultDouble.class, DefaultDate.class,
+     DefaultLong.class, DefaultString.class};
 
   DefaultFieldFactory(MutableGlobType type) {
     this.type = type;
@@ -150,7 +144,7 @@ class DefaultFieldFactory {
     return new DefaultNotUniqueIndex(name);
   }
 
-  public MultiFieldNotUniqueIndex addMultiFieldNotUniqueIndex(String name){
+  public MultiFieldNotUniqueIndex addMultiFieldNotUniqueIndex(String name) {
     return new DefaultMultiFieldNotUniqueIndex(name);
   }
 
@@ -563,6 +557,10 @@ class DefaultFieldFactory {
       catch (Exception e) {
         throw new UnexpectedApplicationState(e);
       }
+    }
+
+    public boolean valueEqual(Object o1, Object o2) {
+      return Arrays.equals(((byte[])o1), (byte[])o2);
     }
 
     public int getMaxSize() {

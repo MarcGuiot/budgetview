@@ -157,26 +157,4 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
   void dispose() {
     disposed = true;
   }
-
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Glob otherGlob = (Glob)o;
-    if (!type.equals(otherGlob.getType())) {
-      return false;
-    }
-
-    Key key = getKey();
-    Key otherKey = otherGlob.getKey();
-    return key.equals(otherKey);
-  }
-
-  public int hashCode() {
-    return getKey().hashCode();
-  }
 }

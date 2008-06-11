@@ -57,4 +57,31 @@ public class FieldValue {
   public Object getValue() {
     return value;
   }
+
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    FieldValue that = (FieldValue)o;
+
+    if (!field.equals(that.field)) {
+      return false;
+    }
+    if (value != null ? !field.valueEqual(value, that.value) : that.value != null) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public int hashCode() {
+    int result;
+    result = field.hashCode();
+    result = 31 * result + (value != null ? value.hashCode() : 0);
+    return result;
+  }
 }

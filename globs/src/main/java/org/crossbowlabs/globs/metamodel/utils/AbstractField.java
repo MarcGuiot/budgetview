@@ -3,8 +3,8 @@ package org.crossbowlabs.globs.metamodel.utils;
 import org.crossbowlabs.globs.metamodel.Field;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.metamodel.annotations.Required;
+import org.crossbowlabs.globs.utils.Utils;
 import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
-import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
@@ -80,6 +80,10 @@ abstract class AbstractField extends AnnotatedPropertyHolder<Field> implements F
 
   public String toString() {
     return globType.getName() + "." + name;
+  }
+
+  public boolean valueEqual(Object o1, Object o2) {
+    return Utils.equal(o1, o2);
   }
 
   public boolean equals(Object o) {
