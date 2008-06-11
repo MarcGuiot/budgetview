@@ -3,11 +3,11 @@
 
     <grid>
       <label text="$account.bank" gridPos="(0,0)"/>
-      <comboBox ref="accountBank" gridPos="(0,1)"/>
-      <label text="$account.name" gridPos="(1,0)"/>
+      <comboBox ref="accountBank" gridPos="(1,0)"/>
+      <label text="$account.name" gridPos="(0,1)"/>
       <textField ref="name" gridPos="(1,1)"/>
-      <label text="$account.number" gridPos="(2,0)"/>
-      <textField ref="number" gridPos="(2,1)"/>
+      <label text="$account.number" gridPos="(0,2)"/>
+      <textField ref="number" gridPos="(1,2)"/>
     </grid>
 
   </column>
