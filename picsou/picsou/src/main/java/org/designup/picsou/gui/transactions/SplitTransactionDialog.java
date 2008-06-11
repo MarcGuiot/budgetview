@@ -125,7 +125,7 @@ public class SplitTransactionDialog {
   }
 
   private void addInitialTransactionPanel(GlobsPanelBuilder builder) {
-    TransactionComparator comparator = new TransactionComparator(true);
+    TransactionComparator comparator = TransactionComparator.ASCENDING;
 
     initialLabel.setText(transaction.get(Transaction.LABEL));
     initialAmount.setText(descriptionService.getStringifier(Transaction.AMOUNT).toString(transaction, localRepository));
@@ -220,7 +220,7 @@ public class SplitTransactionDialog {
   private void addTable(GlobsPanelBuilder builder) {
     builder.add("subAmountPanel", subAmountPanel);
 
-    TransactionComparator transactionComparator = new TransactionComparator(true);
+    TransactionComparator transactionComparator = TransactionComparator.ASCENDING;
     GlobTableView view = builder.addTable(Transaction.TYPE, transactionComparator);
 
     view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
@@ -302,11 +302,13 @@ public class SplitTransactionDialog {
                              value(Transaction.NOTE, note),
                              value(Transaction.CATEGORY, selectedCategory.get(Category.ID)),
                              value(Transaction.ACCOUNT, transaction.get(Transaction.ACCOUNT)),
-                             value(Transaction.DAY, transaction.get(Transaction.DAY)),
                              value(Transaction.IMPORT, transaction.get(Transaction.IMPORT)),
                              value(Transaction.LABEL, transaction.get(Transaction.LABEL)),
                              value(Transaction.ORIGINAL_LABEL, transaction.get(Transaction.ORIGINAL_LABEL)),
                              value(Transaction.MONTH, transaction.get(Transaction.MONTH)),
+                             value(Transaction.DAY, transaction.get(Transaction.DAY)),
+                             value(Transaction.BANK_MONTH, transaction.get(Transaction.BANK_MONTH)),
+                             value(Transaction.BANK_DAY, transaction.get(Transaction.BANK_DAY)),
                              value(Transaction.TRANSACTION_TYPE, transaction.get(Transaction.TRANSACTION_TYPE)),
                              value(Transaction.SPLIT_SOURCE, transaction.get(Transaction.ID)),
                              value(Transaction.DISPENSABLE, dispensableBox.isSelected()));

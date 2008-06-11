@@ -82,25 +82,29 @@ public class OfxBuilder {
     return addTransactionWithNote(yyyyMMdd, amount, label, null, categories);
   }
 
+  public OfxBuilder addTransaction(String userDate, String bankDate, double amount, String label) {
+    return doAddTransaction(userDate, bankDate, amount, label, null, null, null, null);
+  }
+
   public OfxBuilder addTransaction(String yyyyMMdd, double amount, String label, String category, String... otherCategories) {
     String[] categoryNames = Utils.join(category, otherCategories);
-    return doAddTransaction(yyyyMMdd, amount, label, null, getIds(categoryNames), null, null);
+    return doAddTransaction(yyyyMMdd, null, amount, label, null, getIds(categoryNames), null, null);
   }
 
   public OfxBuilder addTransactionWithNote(String yyyyMMdd, double amount, String label, String note) {
-    return doAddTransaction(yyyyMMdd, amount, label, note, null, null, null);
+    return doAddTransaction(yyyyMMdd, null, amount, label, note, null, null, null);
   }
 
   public OfxBuilder addTransactionWithNote(String yyyyMMdd, double amount, String label, String category, String note) {
-    return doAddTransaction(yyyyMMdd, amount, label, note, new Integer[]{Category.findId(category, repository)}, null, null);
+    return doAddTransaction(yyyyMMdd, null, amount, label, note, new Integer[]{Category.findId(category, repository)}, null, null);
   }
 
   public OfxBuilder addTransactionWithNote(String yyyyMMdd, double amount, String label, String note, MasterCategory... categories) {
-    return doAddTransaction(yyyyMMdd, amount, label, note, getIds(categories), null, null);
+    return doAddTransaction(yyyyMMdd, null, amount, label, note, getIds(categories), null, null);
   }
 
   public OfxBuilder addDispensableTransaction(String date, double amount, String label) {
-    return doAddTransaction(date, amount, label, null, null, null, true);
+    return doAddTransaction(date, null, amount, label, null, null, null, true);
   }
 
   public OfxBuilder splitTransaction(String date, String label, double amount, String note, String category) {
@@ -113,7 +117,7 @@ public class OfxBuilder {
                                          isNull(Transaction.SPLIT_SOURCE)));
     Assert.assertEquals("transaction not found", 1, all.size());
     Glob parent = all.get(0);
-    doAddTransaction(date, amount, label, note, new Integer[]{Category.findId(category, repository)},
+    doAddTransaction(date, null, amount, label, note, new Integer[]{Category.findId(category, repository)},
                      parent.get(Transaction.ID), null);
 
     repository.update(parent.getKey(), Transaction.SPLIT, Boolean.TRUE);
@@ -145,17 +149,23 @@ public class OfxBuilder {
     return result;
   }
 
-  private OfxBuilder doAddTransaction(String yyyyMMdd, double amount, String label, String note,
+  private OfxBuilder doAddTransaction(String userDate, String bankDate, double amount, String label, String note,
                                       Integer[] categoryIds, Integer parentId, Boolean dispensable) {
     if (currentAccount == null) {
       addBankAccount(12345, 1234, DEFAULT_ACCOUNT_ID, 1.25, "2006/05/24");
     }
-    Date parsedDate = Dates.parse(yyyyMMdd);
+    if (bankDate == null) {
+      bankDate = userDate;
+    }
+    Date parsedUserDate = Dates.parse(userDate);
+    Date parsedBankDate = Dates.parse(bankDate);
     Glob transaction =
       repository.create(TYPE,
                         FieldValue.value(AMOUNT, amount),
-                        FieldValue.value(MONTH, Month.get(parsedDate)),
-                        FieldValue.value(DAY, Month.getDay(parsedDate)),
+                        FieldValue.value(MONTH, Month.get(parsedUserDate)),
+                        FieldValue.value(DAY, Month.getDay(parsedUserDate)),
+                        FieldValue.value(BANK_MONTH, Month.get(parsedBankDate)),
+                        FieldValue.value(BANK_DAY, Month.getDay(parsedBankDate)),
                         FieldValue.value(LABEL, label),
                         FieldValue.value(ORIGINAL_LABEL, label),
                         FieldValue.value(ACCOUNT, currentAccount.get(Account.ID)),

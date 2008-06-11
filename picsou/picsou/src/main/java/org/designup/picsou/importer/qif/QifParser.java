@@ -19,6 +19,7 @@ import java.util.Date;
 
 public class QifParser {
   public static final SimpleDateFormat QIF_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
+  public static final SimpleDateFormat QIF_DATE_LONG_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
   public static GlobList read(Reader reader, GlobRepository globRepository) {
     QifParser qifParser = new QifParser(reader, globRepository);
@@ -99,11 +100,17 @@ public class QifParser {
   }
 
   private void readDate(FieldValuesBuilder values) throws IOException {
-    String value = reader.readLine();
+    String value = reader.readLine().trim();
     try {
-      Date date = QIF_DATE_FORMAT.parse(value);
-      values.set(Transaction.MONTH, Month.get(date));
-      values.set(Transaction.DAY, Month.getDay(date));
+      Date date;
+      if (value.length() == 8) {
+        date = QIF_DATE_FORMAT.parse(value);
+      }
+      else {
+        date = QIF_DATE_LONG_FORMAT.parse(value);
+      }
+      values.set(Transaction.BANK_MONTH, Month.get(date));
+      values.set(Transaction.BANK_DAY, Month.getDay(date));
     }
     catch (ParseException e) {
       throw new InvalidData("Unable to parse date " + value + " in format " + "dd/mm/yy", e);

@@ -26,6 +26,7 @@ public class TransactionAnalyzerFactory {
     this.analyzer = new DefaultTransactionAnalyzer();
     loadMatchers();
     analyzer.add(new LabelForCategorizationUpdater());
+    analyzer.add(new TransactionDateUpdater());
   }
 
   public TransactionAnalyzer getAnalyzer() {

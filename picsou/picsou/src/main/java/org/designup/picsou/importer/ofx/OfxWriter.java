@@ -118,14 +118,15 @@ public class OfxWriter {
       "  </SIGNONMSGSRSV1>\n";
   }
 
-  public OfxTransactionWriter startTransaction(String stringifiedDate,
+  public OfxTransactionWriter startTransaction(String stringifiedUserDate,
+                                               String stringifiedBankDate,
                                                Double amount,
                                                Integer transactionId,
                                                String label) {
     write("          <STMTTRN>\n" +
           "            <TRNTYPE>DEBIT\n" +
-          "            <DTPOSTED>" + stringifiedDate + "\n" +
-          "            <DTUSER>" + stringifiedDate + "\n" +
+          "            <DTPOSTED>" + stringifiedBankDate + "\n" +
+          "            <DTUSER>" + stringifiedUserDate + "\n" +
           "            <TRNAMT>" + amount + "\n" +
           "            <FITID>PICSOU" + transactionId + "\n" +
           "            <NAME>" + label + "\n");

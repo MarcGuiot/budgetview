@@ -7,6 +7,7 @@ import org.crossbowlabs.globs.utils.MultiMap;
 import org.crossbowlabs.globs.utils.Strings;
 import org.crossbowlabs.globs.utils.exceptions.InvalidFormat;
 import org.crossbowlabs.globs.utils.exceptions.TruncatedFile;
+import org.crossbowlabs.globs.metamodel.fields.IntegerField;
 import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
@@ -211,7 +212,11 @@ public class OfxImporter implements AccountFileImporter {
         repository.findOrCreate(Key.create(BankEntity.TYPE, bankEntityId));
       }
       if (tag.equalsIgnoreCase("DTPOSTED")) {
-        updateDate(content);
+        updateDate(content, BANK_MONTH, BANK_DAY);
+        return;
+      }
+      if (tag.equalsIgnoreCase("DTUSER")) {
+        updateDate(content, MONTH, DAY);
         return;
       }
       if (tag.equalsIgnoreCase("TRNAMT")) {
@@ -291,10 +296,10 @@ public class OfxImporter implements AccountFileImporter {
       repository.update(currentTransactionKey, LABEL, content);
     }
 
-    private void updateDate(String content) {
+    private void updateDate(String content, IntegerField monthField, IntegerField dayField) {
       Date parsedDate = parseDate(content);
-      repository.update(currentTransactionKey, MONTH, Month.get(parsedDate));
-      repository.update(currentTransactionKey, DAY, Month.getDay(parsedDate));
+      repository.update(currentTransactionKey, monthField, Month.get(parsedDate));
+      repository.update(currentTransactionKey, dayField, Month.getDay(parsedDate));
     }
 
     private Date parseDate(String content) {

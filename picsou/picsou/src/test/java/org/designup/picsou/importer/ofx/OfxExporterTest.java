@@ -19,14 +19,14 @@ public class OfxExporterTest extends PicsouTestCase {
       "           balance='-683.25' updateDate='2006/07/04' isCardAccount='true'/>" +
       "</bankEntity>" +
       "" +
-      "<transaction id='1' month='200601' day='21' amount='-1.1' " +
+      "<transaction id='1' month='200601' day='21'  bankMonth='200601' bankDay='24' amount='-1.1' " +
       "             originalLabel='label1' account='2'/>" +
-      "<transaction id='2' month='200602' day='22' amount='-1.2' " +
+      "<transaction id='2' month='200602' day='22' bankMonth='200602' bankDay='22' amount='-1.2' " +
       "             originalLabel='label2' account='2'" +
       "             note='my note' categoryName='health' dispensable='true'/>" +
-      "<transaction id='3' month='200603' day='23' amount='-1.3' " +
+      "<transaction id='3' month='200603' day='23' bankMonth='200603' bankDay='23' amount='-1.3' " +
       "             originalLabel='card3' transactionTypeName='credit_card' account='3' categoryName='Dentifrice'/>" +
-      "<transaction id='4' month='200604' day='19' amount='-45' " +
+      "<transaction id='4' month='200604' day='19' bankMonth='200604' bankDay='19' amount='-45' " +
       "             originalLabel='card4' transactionTypeName='credit_card' account='3'>" +
       "  <transactionToCategory transaction='4' categoryName='Dentifrice'/>" +
       "  <transactionToCategory transaction='4' categoryName='food'/>" +
@@ -69,7 +69,7 @@ public class OfxExporterTest extends PicsouTestCase {
       "          <DTEND>20060203000000\n" +
       "          <STMTTRN>\n" +
       "            <TRNTYPE>DEBIT\n" +
-      "            <DTPOSTED>20060121\n" +
+      "            <DTPOSTED>20060124\n" +
       "            <DTUSER>20060121\n" +
       "            <TRNAMT>-1.1\n" +
       "            <FITID>PICSOU1\n" +

@@ -4,10 +4,6 @@ import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.utils.GlobFieldMatcher;
 import org.crossbowlabs.globs.utils.Files;
 import org.crossbowlabs.globs.utils.TestUtils;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
-import org.uispec4j.interception.WindowHandler;
-import org.uispec4j.interception.WindowInterceptor;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.importer.ofx.OfxWriter;
@@ -214,12 +210,28 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testTakesUserAndBankDatesIntoAccountWhenDetectingDuplicates() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/15", "2006/01/10", -1.1, "Operation 1")
+      .load();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/10", "2006/01/10", -1.1, "Operation 1")
+      .load();
+
+    transactions
+      .initContent()
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Operation 1", "", -1.1, MasterCategory.NONE)
+      .check();
+  }
+
   public void testUsingMasterCategoryNames() throws Exception {
     String fileName = TestUtils.getFileName(this, "_setup.ofx");
     OfxWriter writer = new OfxWriter(new FileWriter(fileName));
     writer.writeHeader();
     writer.writeBankMsgHeader(12345, 12345, "1111");
-    writer.startTransaction("20060524000000", -99.0, 1, "blah")
+    writer.startTransaction("20060524000000", "20060524000000", -99.0, 1, "blah")
       .add("category", MasterCategory.FOOD.getName())
       .end();
     writer.writeBankMsgFooter(123.56, "20060525000000");

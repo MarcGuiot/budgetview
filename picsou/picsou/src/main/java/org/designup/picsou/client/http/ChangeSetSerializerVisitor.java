@@ -255,6 +255,8 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
     output.writeString(transaction.get(Transaction.NOTE));
     output.writeInteger(transaction.get(Transaction.MONTH));
     output.writeInteger(transaction.get(Transaction.DAY));
+    output.writeInteger(transaction.get(Transaction.BANK_MONTH));
+    output.writeInteger(transaction.get(Transaction.BANK_DAY));
     output.writeDouble(transaction.get(Transaction.AMOUNT));
     output.writeInteger(transaction.get(Transaction.ACCOUNT));
     output.writeInteger(transaction.get(Transaction.TRANSACTION_TYPE));

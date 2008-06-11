@@ -1,8 +1,6 @@
 package org.designup.picsou.importer;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.model.utils.GlobMatchers;
 import org.crossbowlabs.globs.utils.MultiMap;
 import static org.crossbowlabs.globs.utils.Utils.equal;
 import org.designup.picsou.model.*;
@@ -45,11 +43,11 @@ public class TransactionFilter implements AccountFileImporter {
     GlobList importedTransactions =
       innerImporter
         .loadTransactions(reader, initialRepository, targetRepository)
-        .sort(TransactionComparator.ASCENDING);
+        .sort(TransactionComparator.ASCENDING_BANK);
     if (importedTransactions.isEmpty()) {
       return GlobList.EMPTY;
     }
-    GlobList actualTransactions = initialRepository.getAll(Transaction.TYPE).sort(TransactionComparator.ASCENDING);
+    GlobList actualTransactions = initialRepository.getAll(Transaction.TYPE).sort(TransactionComparator.ASCENDING_BANK);
     if (actualTransactions.isEmpty()) {
       return importedTransactions;
     }
@@ -71,16 +69,9 @@ public class TransactionFilter implements AccountFileImporter {
     return newTransactions;
   }
 
-  private void retrieveObjects(GlobType globType, GlobRepository source, GlobRepository target) {
-    for (Glob glob : source.getAll(globType)) {
-      Glob created = target.findOrCreate(glob.getKey());
-      target.update(created.getKey(), glob.toArray());
-    }
-  }
-
   private boolean firstIsAfterLast(GlobList list1, GlobList list2) {
-    return Transaction.fullDate(list1.get(0)) >
-           Transaction.fullDate(list2.get(list2.size() - 1));
+    return Transaction.fullBankDate(list1.get(0)) >
+           Transaction.fullBankDate(list2.get(list2.size() - 1));
   }
 
   static class TransactionChecker {
@@ -113,8 +104,8 @@ public class TransactionFilter implements AccountFileImporter {
           importedIndex++;
         }
         else {
-          long importedDate = Transaction.fullDate(sortedImported[importedIndex]);
-          long actualDate = Transaction.fullDate(sortedActual[actualIndex]);
+          long importedDate = Transaction.fullBankDate(sortedImported[importedIndex]);
+          long actualDate = Transaction.fullBankDate(sortedActual[actualIndex]);
           if (importedDate < actualDate) {
             transactionsToAdd.add(sortedImported[importedIndex]);
             importedIndex++;
@@ -150,7 +141,7 @@ public class TransactionFilter implements AccountFileImporter {
     private boolean findAndSwapWithCurrentIfEqual(Glob[] actual, int actualIndex, Glob importedTransaction) {
       int first = actualIndex;
       while (actualIndex < actual.length
-             && Transaction.fullDate(actual[actualIndex]) == Transaction.fullDate(importedTransaction)) {
+             && Transaction.fullBankDate(actual[actualIndex]) == Transaction.fullBankDate(importedTransaction)) {
         if (areEqual(actual[actualIndex], importedTransaction)) {
           Glob tmp = actual[first];
           actual[first] = actual[actualIndex];

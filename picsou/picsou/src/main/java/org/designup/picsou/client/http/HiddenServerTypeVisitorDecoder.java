@@ -162,6 +162,8 @@ public class HiddenServerTypeVisitorDecoder implements HiddenServerTypeVisitor {
     builder.set(Transaction.NOTE, input.readString());
     builder.set(Transaction.MONTH, input.readInteger());
     builder.set(Transaction.DAY, input.readInteger());
+    builder.set(Transaction.BANK_MONTH, input.readInteger());
+    builder.set(Transaction.BANK_DAY, input.readInteger());
     builder.set(Transaction.AMOUNT, input.readDouble());
     builder.set(Transaction.ACCOUNT, input.readInteger());
     builder.set(Transaction.TRANSACTION_TYPE, input.readInteger());

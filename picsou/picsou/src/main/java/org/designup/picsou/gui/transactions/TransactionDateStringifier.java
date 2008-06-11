@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.transactions;
 
+import org.crossbowlabs.globs.metamodel.fields.IntegerField;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.model.format.utils.AbstractGlobStringifier;
@@ -7,23 +8,30 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 
-import java.util.Comparator;
 import java.text.MessageFormat;
-import java.text.FieldPosition;
+import java.util.Comparator;
 
 public class TransactionDateStringifier extends AbstractGlobStringifier {
   private MessageFormat format;
+  protected IntegerField monthField;
+  protected IntegerField dayField;
 
-  public TransactionDateStringifier(Comparator<Glob> comparator) {
+  public TransactionDateStringifier(Comparator<Glob> comparator, IntegerField monthField, IntegerField dayField) {
     super(comparator);
     format = Lang.getFormat("transactionView.dateFormat");
+    this.monthField = monthField;
+    this.dayField = dayField;
+  }
+
+  public TransactionDateStringifier(Comparator<Glob> comparator) {
+    this(comparator, Transaction.MONTH, Transaction.DAY);
   }
 
   public String toString(Glob transaction, GlobRepository globRepository) {
-    int yearMonth = transaction.get(Transaction.MONTH);
+    int yearMonth = transaction.get(monthField);
     int year = Month.toYear(yearMonth);
     int month = Month.toMonth(yearMonth);
-    int day = transaction.get(Transaction.DAY);
+    int day = transaction.get(dayField);
     return toString(year, month, day);
   }
 

@@ -68,7 +68,6 @@ public abstract class ImportPanel {
     localDirectory.add(new SelectionService());
     fileButton.setAction(new BrowseFilesAction());
 
-    TransactionComparator comparator = new TransactionComparator(false);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(localRepository, localDirectory);
     //Step 1
@@ -102,9 +101,12 @@ public abstract class ImportPanel {
     importSession = new ImportSession(localRepository, sessionDirectory);
     sessionRepository = importSession.getTempRepository();
 
+    TransactionComparator comparator = TransactionComparator.DESCENDING_BANK;
+    TransactionDateStringifier dateStringifier =
+      new TransactionDateStringifier(comparator, Transaction.BANK_MONTH, Transaction.BANK_DAY);
     JTable transactionTable =
       GlobTableView.init(Transaction.TYPE, sessionRepository, comparator, sessionDirectory)
-        .addColumn(Lang.get("date"), new TransactionDateStringifier(comparator))
+        .addColumn(Lang.get("date"), dateStringifier)
         .addColumn(Transaction.LABEL)
         .addColumn(Transaction.AMOUNT)
         .getComponent();

@@ -22,6 +22,10 @@ public class Transaction {
 
   public static IntegerField MONTH; // yyyymm format
   public static IntegerField DAY; // Starts at 1
+
+  public static IntegerField BANK_MONTH; // yyyymm format
+  public static IntegerField BANK_DAY; // Starts at 1
+
   public static DoubleField AMOUNT;
   public static StringField LABEL;
   public static StringField NOTE;
@@ -56,6 +60,10 @@ public class Transaction {
 
   public static int fullDate(Glob transaction) {
     return transaction.get(MONTH) * 100 + transaction.get(DAY);
+  }
+
+  public static int fullBankDate(Glob transaction) {
+    return transaction.get(BANK_MONTH) * 100 + transaction.get(BANK_DAY);
   }
 
   public static String stringifyCategories(Glob transaction,

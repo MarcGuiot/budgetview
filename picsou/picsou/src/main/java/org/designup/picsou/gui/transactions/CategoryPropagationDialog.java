@@ -77,7 +77,7 @@ public class CategoryPropagationDialog {
   }
 
   private void addTable(GlobsPanelBuilder builder) {
-    TransactionComparator comparator = new TransactionComparator(false);
+    TransactionComparator comparator = TransactionComparator.DESCENDING;
     GlobTableView view = builder.addTable(Transaction.TYPE, comparator);
 
     view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);

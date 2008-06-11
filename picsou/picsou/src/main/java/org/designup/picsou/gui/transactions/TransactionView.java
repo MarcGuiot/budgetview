@@ -102,7 +102,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
   private static GlobTableView createGlobTableView(CategoryChooserAction categoryChooserAction, GlobRepository repository,
                                                    DescriptionService descriptionService, Directory directory,
                                                    TransactionRendererColors rendererColors) {
-    TransactionComparator comparator = new TransactionComparator(false);
+    TransactionComparator comparator = TransactionComparator.DESCENDING;
 
     GlobStringifier categoryStringifier = descriptionService.getStringifier(Category.TYPE);
     GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);

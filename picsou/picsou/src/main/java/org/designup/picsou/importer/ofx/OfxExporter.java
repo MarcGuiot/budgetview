@@ -3,7 +3,6 @@ package org.designup.picsou.importer.ofx;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobList;
 import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.format.GlobPrinter;
 import org.crossbowlabs.globs.model.utils.GlobUtils;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
@@ -58,17 +57,17 @@ public class OfxExporter {
 
   private void writeTransactions(Glob account) {
     GlobList transactionsToWrite = new GlobList(repository.findLinkedTo(account, Transaction.ACCOUNT));
-    Collections.sort(transactionsToWrite, new TransactionComparator(true));
+    Collections.sort(transactionsToWrite, TransactionComparator.ASCENDING);
     for (Glob transaction : transactionsToWrite) {
       writeTransaction(transaction);
     }
   }
 
   private void writeTransaction(Glob transaction) {
-    String stringifiedDate = Long.toString(Transaction.fullDate(transaction));
 
     OfxWriter.OfxTransactionWriter writer =
-      this.writer.startTransaction(stringifiedDate,
+      this.writer.startTransaction(Long.toString(Transaction.fullDate(transaction)),
+                                   Long.toString(Transaction.fullBankDate(transaction)),
                                    transaction.get(Transaction.AMOUNT),
                                    transaction.get(Transaction.ID),
                                    transaction.get(Transaction.ORIGINAL_LABEL));

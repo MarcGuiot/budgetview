@@ -2,6 +2,7 @@ package org.designup.picsou.utils;
 
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.utils.Utils;
+import org.crossbowlabs.globs.metamodel.fields.IntegerField;
 import org.designup.picsou.gui.transactions.TransactionSplitComparator;
 import org.designup.picsou.model.Transaction;
 
@@ -9,22 +10,33 @@ import java.util.Comparator;
 
 public class TransactionComparator implements Comparator<Glob> {
 
-  public static final TransactionComparator ASCENDING = new TransactionComparator(true);
-  public static final TransactionComparator DESCENDING = new TransactionComparator(false);
+  public static final TransactionComparator ASCENDING =
+    new TransactionComparator(true, Transaction.MONTH, Transaction.DAY);
+  public static final TransactionComparator DESCENDING =
+    new TransactionComparator(false, Transaction.MONTH, Transaction.DAY);
+
+  public static final TransactionComparator ASCENDING_BANK =
+    new TransactionComparator(true, Transaction.BANK_MONTH, Transaction.BANK_DAY);
+  public static final TransactionComparator DESCENDING_BANK =
+    new TransactionComparator(false, Transaction.BANK_MONTH, Transaction.BANK_DAY);
 
   private int dateMultiplier = 1;
   private TransactionSplitComparator splitComparator = new TransactionSplitComparator();
+  protected IntegerField monthField;
+  protected IntegerField dayField;
 
-  public TransactionComparator(boolean ascendingDates) {
-    dateMultiplier = ascendingDates ? 1 : -1;
+  public TransactionComparator(boolean ascendingDates, IntegerField monthField, IntegerField dayField) {
+    this.dateMultiplier = ascendingDates ? 1 : -1;
+    this.monthField = monthField;
+    this.dayField = dayField;
   }
 
   public int compare(Glob transaction1, Glob transaction2) {
-    long dateDiff = (transaction1.get(Transaction.MONTH) - transaction2.get(Transaction.MONTH)) * dateMultiplier;
+    long dateDiff = (transaction1.get(monthField) - transaction2.get(monthField)) * dateMultiplier;
     if (dateDiff != 0) {
       return (int) dateDiff;
     }
-    int dayDiff = (transaction1.get(Transaction.DAY) - transaction2.get(Transaction.DAY)) * dateMultiplier;
+    int dayDiff = (transaction1.get(dayField) - transaction2.get(dayField)) * dateMultiplier;
     if (dayDiff != 0) {
       return dayDiff;
     }

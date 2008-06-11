@@ -37,8 +37,8 @@ public class ImportService {
     for (Glob createdTransaction : createdTransactions) {
       targetRepository.setTarget(createdTransaction.getKey(), Transaction.IMPORT, importKey);
 
-      Integer transactionMonth = createdTransaction.get(Transaction.MONTH);
-      Integer transactionDay = createdTransaction.get(Transaction.DAY);
+      Integer transactionMonth = createdTransaction.get(Transaction.BANK_MONTH);
+      Integer transactionDay = createdTransaction.get(Transaction.BANK_DAY);
       if (lastMonth < transactionMonth || (lastMonth == transactionMonth && lastDay < transactionDay)) {
         lastMonth = transactionMonth;
         lastDay = transactionDay;
