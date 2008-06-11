@@ -10,13 +10,14 @@ import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.IconLocator;
 import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorService;
+import org.crossbowlabs.splits.color.ColorServiceEditor;
 import org.crossbowlabs.splits.layout.Anchor;
 import org.crossbowlabs.splits.layout.Fill;
 import org.crossbowlabs.splits.layout.GridBagBuilder;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.gui.categories.*;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -32,15 +33,12 @@ import java.util.HashSet;
 
 public class CategoryChooserDialog implements ChangeSetListener {
   private GlobList selectedTransactions = GlobList.EMPTY;
-  private HashMap<Integer, CategoryLabel> categoryIdToJLabel = new HashMap<Integer, CategoryLabel>();
-  private ArrayList<CategoryLabel> selectedCategories = new ArrayList<CategoryLabel>();
+  private HashMap<Integer, JLabel> categoryIdToJLabel = new HashMap<Integer, JLabel>();
+  private ArrayList<JLabel> selectedCategories = new ArrayList<JLabel>();
   private CategoryChooserCallback callback;
   private TransactionRendererColors colors;
   private GlobRepository repository;
   private GlobStringifier stringifier;
-  private Icon iconSelected;
-  private Icon iconNotSelected;
-  private Icon iconRollover;
   private PicsouDialog dialog;
   private JFrame mainFrame;
   private GlobList firstPartCategories = new GlobList();
@@ -54,6 +52,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private IconLocator iconLocator;
   private SelectionService selectionService;
   private JPanel contentPanel;
+  protected Font masterFont;
 
   public CategoryChooserDialog(CategoryChooserCallback callback, TransactionRendererColors colors,
                                GlobRepository repository, Directory directory) {
@@ -65,12 +64,12 @@ public class CategoryChooserDialog implements ChangeSetListener {
     localDirectory.add(selectionService);
 
     this.repository = repository;
+
+    this.masterFont = Gui.DEFAULT_TABLE_FONT_BOLD.deriveFont(16.0f);
+
     this.stringifier = localDirectory.get(DescriptionService.class).getStringifier(Category.TYPE);
     repository.addChangeListener(this);
     iconLocator = localDirectory.get(IconLocator.class);
-    iconSelected = iconLocator.get("menucheckbox.png");
-    iconRollover = iconLocator.get("menucheckboxrollover.png");
-    iconNotSelected = iconLocator.get("menucheckboxblank.png");
     colorService = localDirectory.get(ColorService.class);
     addCategoryAction = new CreateCategoryAction(repository, localDirectory) {
       public JDialog getDialog(ActionEvent e) {
@@ -96,6 +95,9 @@ public class CategoryChooserDialog implements ChangeSetListener {
     dialog.pack();
     this.selectedTransactions = selectedTransactions;
     setSelectedCategories();
+
+//    ColorServiceEditor.showInFrame(colorService, dialog);
+
     GuiUtils.showCentered(dialog);
   }
 
@@ -135,7 +137,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
       }
     });
 
-    return (JPanel) splitsBuilder.parse(getClass(), "/layout/categoryChooser.splits");
+    return (JPanel)splitsBuilder.parse(getClass(), "/layout/categoryChooser.splits");
   }
 
   private JPanel getCategoriesPanel(GlobList categories) {
@@ -163,22 +165,23 @@ public class CategoryChooserDialog implements ChangeSetListener {
     unselectAllCategories();
 
     for (Integer categoryId : categoryIdsForSelectedTransactions) {
-      CategoryLabel label = categoryIdToJLabel.get(categoryId);
-      label.category.setForeground(colors.getRolloverCategoryColor());
+      JLabel label = categoryIdToJLabel.get(categoryId);
+      label.setForeground(colors.getRolloverCategoryColor());
       selectedCategories.add(label);
     }
   }
 
   private void unselectAllCategories() {
-    for (CategoryLabel label : selectedCategories) {
-      label.checkbox.setIcon(iconNotSelected);
-      label.category.setForeground(colors.getCategoryColor());
+    for (JLabel label : selectedCategories) {
+      label.setForeground(colors.getCategoryColor());
     }
     selectedCategories.clear();
   }
 
   private void addCategoryPanel(GridBagBuilder builder, int y, final Glob category) {
-    int leftMargin = Category.isMaster(category) ? 2 : 20;
+    boolean isMaster = Category.isMaster(category);
+    int leftMargin = isMaster ? 2 : 20;
+    int topMargin = isMaster ? 20 : 0;
     final JPanel panel = Gui.createHorizontalBoxLayoutPanel();
 
     final JLabel label = createCategoryLabel(panel, category);
@@ -193,52 +196,28 @@ public class CategoryChooserDialog implements ChangeSetListener {
                                                                        selectionService);
     panel.add(buttonsPanel.getPanel());
 
-    builder.add(panel, 0, y, 1, 1, 0, 0, Fill.NONE, Anchor.NORTHWEST, new Insets(0, leftMargin, 0, 0));
-  }
-
-  private JLabel createCheckBoxLabel(String categoryName) {
-    final JLabel checkbox = new JLabel();
-    checkbox.setName("checkbox." + categoryName);
-    checkbox.setText(null);
-    checkbox.setIcon(iconNotSelected);
-    checkbox.setHorizontalAlignment(JLabel.LEFT);
-    Gui.setRolloverCursor(checkbox);
-    return checkbox;
+    builder.add(panel, 0, y, 1, 1, 1, 0, Fill.NONE, Anchor.NORTHWEST, new Insets(topMargin, leftMargin, 0, 0));
   }
 
   private JLabel createCategoryLabel(JPanel panel, final Glob category) {
     String categoryName = stringifier.toString(category, repository);
-    final JLabel checkbox = createCheckBoxLabel(categoryName);
     final JLabel label = new JLabel(categoryName);
-    label.setFont(Category.isMaster(category) ? Gui.DEFAULT_TABLE_FONT_BOLD : Gui.DEFAULT_TABLE_FONT);
+    label.setName("label." + categoryName);
+    label.setFont(Category.isMaster(category) ? masterFont : Gui.DEFAULT_TABLE_FONT);
     label.setHorizontalAlignment(JLabel.LEFT);
 
-    final CategoryLabel categoryLabel = new CategoryLabel(checkbox, label);
-    categoryIdToJLabel.put(category.get(Category.ID), categoryLabel);
+    categoryIdToJLabel.put(category.get(Category.ID), label);
 
     label.addMouseListener(new MouseAdapter() {
       public void mouseEntered(MouseEvent e) {
         selectionService.select(category);
-        checkbox.setIcon(iconRollover);
+        label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         label.setForeground(colors.getRolloverCategoryColor());
       }
 
       public void mouseExited(MouseEvent e) {
-        checkbox.setIcon(iconNotSelected);
-        label.setForeground(selectedCategories.contains(categoryLabel) ?
-                            colors.getRolloverCategoryColor() :
-                            colors.getCategoryColor());
-      }
-    });
-    checkbox.addMouseListener(new MouseAdapter() {
-      public void mouseEntered(MouseEvent e) {
-        checkbox.setIcon(iconSelected);
-        label.setForeground(colors.getRolloverCategoryColor());
-      }
-
-      public void mouseExited(MouseEvent e) {
-        checkbox.setIcon(iconNotSelected);
-        label.setForeground(selectedCategories.contains(categoryLabel) ?
+        label.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        label.setForeground(selectedCategories.contains(label) ?
                             colors.getRolloverCategoryColor() :
                             colors.getCategoryColor());
       }
@@ -249,8 +228,6 @@ public class CategoryChooserDialog implements ChangeSetListener {
       }
     });
 
-    panel.add(checkbox);
-    panel.add(Box.createRigidArea(new Dimension(1, 0)));
     panel.add(label);
     return label;
   }
@@ -262,57 +239,48 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private void splitCategories() {
     GlobList allCategories = repository.getAll(Category.TYPE).sort(new CategoryComparator(repository, stringifier));
     int categoryCountByColumn = allCategories.size() / 3;
-    int firstPartCount = firstPartCategories.size();
-    int secondPartCount = secondPartCategories.size();
+    int firstPartCount;
+    int secondPartCount;
     boolean forceSecondPart = false;
     boolean forceThirdPart = false;
     for (Glob category : allCategories) {
-      if (category.get(Category.ID) != Category.ALL) {
-        firstPartCount = firstPartCategories.size();
-        if (firstPartCount < categoryCountByColumn) {
-          firstPartCategories.add(category);
+      if (category.get(Category.ID).equals(Category.ALL)) {
+        continue;
+      }
+      firstPartCount = firstPartCategories.size();
+      if (firstPartCount < categoryCountByColumn) {
+        firstPartCategories.add(category);
+        continue;
+      }
+      if (forceSecondPart) {
+        secondPartCount = secondPartCategories.size();
+        if (secondPartCount < categoryCountByColumn) {
+          secondPartCategories.add(category);
           continue;
         }
-        if (forceSecondPart) {
-          secondPartCount = secondPartCategories.size();
-          if (secondPartCount < categoryCountByColumn) {
-            secondPartCategories.add(category);
-            continue;
-          }
-          if (forceThirdPart) {
-            thirdPartCategories.add(category);
-            continue;
-          }
-          if (!Category.isMaster(category)) {
-            secondPartCategories.add(category);
-          }
-          else {
-            thirdPartCategories.add(category);
-            forceThirdPart = true;
-          }
+        if (forceThirdPart) {
+          thirdPartCategories.add(category);
           continue;
         }
         if (!Category.isMaster(category)) {
-          firstPartCategories.add(category);
+          secondPartCategories.add(category);
         }
         else {
-          secondPartCategories.add(category);
-          forceSecondPart = true;
+          thirdPartCategories.add(category);
+          forceThirdPart = true;
         }
+        continue;
+      }
+      if (!Category.isMaster(category)) {
+        firstPartCategories.add(category);
+      }
+      else {
+        secondPartCategories.add(category);
+        forceSecondPart = true;
       }
     }
     firstPartCategories.sort(new CategoryComparator(repository, stringifier));
     secondPartCategories.sort(new CategoryComparator(repository, stringifier));
     thirdPartCategories.sort(new CategoryComparator(repository, stringifier));
-  }
-
-  private class CategoryLabel {
-    private JLabel category;
-    private JLabel checkbox;
-
-    public CategoryLabel(JLabel checkbox, JLabel category) {
-      this.checkbox = checkbox;
-      this.category = category;
-    }
   }
 }

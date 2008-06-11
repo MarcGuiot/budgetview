@@ -43,6 +43,6 @@ public class FadingTests {
     frame.setContentPane(above);
     frame.setPreferredSize(new Dimension(800, 600));
     frame.pack();
-    frame.show();
+    frame.setVisible(true);
   }
 }

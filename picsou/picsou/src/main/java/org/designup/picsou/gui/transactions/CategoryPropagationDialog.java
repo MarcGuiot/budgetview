@@ -72,7 +72,7 @@ public class CategoryPropagationDialog {
   }
 
   public void show() {
-    dialog.setSize(700, 600);
+    dialog.pack();
     GuiUtils.showCentered(dialog);
   }
 

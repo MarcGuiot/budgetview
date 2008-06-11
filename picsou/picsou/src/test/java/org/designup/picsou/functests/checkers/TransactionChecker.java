@@ -362,7 +362,7 @@ public class TransactionChecker extends DataChecker {
     }
 
     public static void selectCategory(Window dialog, String categoryName) {
-      Mouse.doClickInRectangle(dialog.getTextBox("checkbox." + categoryName),
+      Mouse.doClickInRectangle(dialog.getTextBox("label." + categoryName),
                                new Rectangle(5, 5), false, Key.Modifier.NONE);
     }
 

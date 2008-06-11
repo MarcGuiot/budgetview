@@ -111,7 +111,7 @@ public class TimeViewPanelTest extends TestCase {
     }
     GlobRepository repository = GlobRepositoryBuilder.init().add(months).get();
     jFrame.add(new TimeViewPanel(repository, directory));
-    jFrame.show();
+    jFrame.setVisible(true);
   }
 
   private MouseEvent getMouseEvent(int x, int y) {
