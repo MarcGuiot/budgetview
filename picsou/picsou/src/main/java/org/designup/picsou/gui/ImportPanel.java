@@ -116,11 +116,11 @@ public abstract class ImportPanel {
     builder.add("newAccount", newAccountButton);
 
     GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory);
-    accountComboBox = comboView.setShowEmptyOption(true).getComponent();
+    accountComboBox = comboView.getComponent();
     builder.add("accountCombo", accountComboBox);
     comboView.setFilter(new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
-        return item == null || !item.get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID);
+        return item != null && !item.get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID);
       }
     });
 
@@ -215,6 +215,7 @@ public abstract class ImportPanel {
 
     File file = files.remove(0);
     try {
+
       fileNameLabel.setText(file.getAbsolutePath());
       importSession.loadFile(file);
       initCreationAccountFields(file);
@@ -233,28 +234,31 @@ public abstract class ImportPanel {
 
   private void initCreationAccountFields(File file) {
     if (BankFileType.getTypeFromName(file.getAbsolutePath()).equals(BankFileType.QIF)) {
-      GlobList accounts = localRepository.getAll(Account.TYPE);
-      if (accounts.size() == 1) {
-        if (accounts.get(0).get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID)) {
-          Glob createdAccount = importSession.createDefaultAccount();
-          accountEditionPanel.setAccount(createdAccount, bank == null ? null : sessionRepository.get(bank.getKey()));
-          sessionDirectory.get(SelectionService.class).select(createdAccount);
+      GlobList accounts = sessionRepository.getAll(Account.TYPE);
+      if (accounts.size() == 1 && accounts.get(0).get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID)) {
+        Glob createdAccount = importSession.createDefaultAccount();
+        accountEditionPanel.setAccount(createdAccount, bank == null ? null : sessionRepository.get(bank.getKey()));
+        accountComboBox.setVisible(false);
+        newAccountButton.setVisible(false);
+        sessionDirectory.get(SelectionService.class).select(createdAccount);
+      }
+      else {
+        Glob account = null;
+        if (accounts.size() == 2) {
+          if (accounts.get(0).get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID)) {
+            account = accounts.get(1);
+          }
+          else {
+            account = accounts.get(0);
+          }
+        }
+        accountComboBox.setVisible(true);
+        newAccountButton.setVisible(true);
+        accountEditionPanel.setAccount(null, null);
+        if (account != null) {
+          sessionDirectory.get(SelectionService.class).select(account);
         }
       }
-      Glob account = null;
-      if (accounts.size() == 2) {
-        if (accounts.get(0).get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID)) {
-          account = accounts.get(1);
-        }
-        else {
-          account = accounts.get(0);
-        }
-      }
-      if (account != null) {
-        sessionDirectory.get(SelectionService.class).select(account);
-      }
-      accountComboBox.setVisible(account != null);
-      newAccountButton.setVisible(account != null);
     }
     else {
       accountEditionPanel.setAccount(null, null);

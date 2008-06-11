@@ -1,15 +1,13 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
 import org.crossbowlabs.globs.utils.Dates;
 import org.crossbowlabs.globs.utils.TestUtils;
-import org.uispec4j.Panel;
 import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.model.Month;
+import org.uispec4j.Panel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ public class MonthChecker extends DataChecker {
 
   public MonthChecker(Panel panel) {
     Panel table = panel.getPanel("month");
-    timeViewPanel = (TimeViewPanel) table.getAwtComponent();
+    timeViewPanel = (TimeViewPanel)table.getAwtComponent();
   }
 
   public void assertEmpty() {
@@ -32,19 +30,18 @@ public class MonthChecker extends DataChecker {
   }
 
   public void assertContains(String... elements) {
-    List<Glob> months = new ArrayList<Glob>();
+    List<Integer> ids = new ArrayList<Integer>();
     for (String element : elements) {
       int index = element.indexOf(" (");
       if (index == -1) {
         index = element.length();
       }
-      months.add(GlobBuilder.init(Month.TYPE)
-        .set(Month.ID,
-             Month.get(Dates.parseMonth(element.substring(0, index)))).get());
+      ids.add(Month.get(Dates.parseMonth(element.substring(0, index))));
     }
     GlobList list = new GlobList();
     timeViewPanel.getAllSelectableMonth(list);
-    TestUtils.assertSetEquals(list, (Glob[]) months.toArray(new Glob[months.size()]));
+    Set<Integer> valueSet = list.getValueSet(Month.ID);
+    TestUtils.assertSetEquals(valueSet, ids);
   }
 
   public void assertCellSelected(int index) {
@@ -90,7 +87,7 @@ public class MonthChecker extends DataChecker {
     timeViewPanel.selectMonth(indexes);
   }
 
-  public void selectLast(){
+  public void selectLast() {
     timeViewPanel.selectLastMonth();
   }
 

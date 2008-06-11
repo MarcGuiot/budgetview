@@ -3,13 +3,10 @@ package org.designup.picsou.server.model;
 import junit.framework.TestCase;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.utils.TestUtils;
-import org.crossbowlabs.globs.utils.serialization.SerializedByteArrayOutput;
 import org.crossbowlabs.globs.utils.serialization.SerializedInputOutputFactory;
-import org.designup.picsou.server.persistence.prevayler.users.PrevaylerTestCase;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Collections;
+import java.util.Arrays;
 
 public class HiddenTransactionTest extends TestCase {
 
@@ -18,8 +15,7 @@ public class HiddenTransactionTest extends TestCase {
     Glob expected = getHiddenTransaction();
     HiddenTransaction.write(SerializedInputOutputFactory.init(output), expected, HiddenTransaction.V1);
     Glob actual = HiddenTransaction.read(SerializedInputOutputFactory.init(output.toByteArray()));
-    TestUtils.assertEquals(Collections.singletonList(actual), Collections.singletonList(expected)
-    );
+    assertTrue(Arrays.equals(expected.toArray(), actual.toArray()));
   }
 
   public void testReadV1() throws Exception {
@@ -32,18 +28,22 @@ public class HiddenTransactionTest extends TestCase {
       110, 32, 108, 97, 98, 101, 108, 0, 3, 0, 0, 0, 4, 0, 0,
       0, 1, 2, 3, 4};
     Glob actual = HiddenTransaction.read(SerializedInputOutputFactory.init(value));
-    TestUtils.assertEquals(Collections.singletonList(actual), Collections.singletonList(expected));
+    assertTrue(Arrays.equals(expected.toArray(), actual.toArray()));
   }
 
   public void testReadV2() throws Exception {
-    Glob expected = getHiddenTransaction();
+    GlobBuilder builder = GlobBuilder.init(HiddenTransaction.TYPE);
+    builder.set(HiddenTransaction.ENCRYPTED_INFO, new byte[]{1, 2, 3, 4});
+    builder.set(HiddenTransaction.ID, 3);
+    builder.set(HiddenTransaction.HIDDEN_USER_ID, -1);
+    Glob expected = builder.get();
 //    SerializedByteArrayOutput byteArrayOutput = new SerializedByteArrayOutput();
 //    HiddenTransaction.write(byteArrayOutput.getOutput(), expected, HiddenTransaction.V2);
 //    PrevaylerTestCase.dumpToStd(byteArrayOutput.toByteArray());
     byte[] value = new byte[]{
       2, 0, 3, 0, 0, 0, 4, 0, 0, 0, 1, 2, 3, 4};
     Glob actual = HiddenTransaction.read(SerializedInputOutputFactory.init(value));
-    TestUtils.assertEquals(Collections.singletonList(actual), Collections.singletonList(expected));
+    assertTrue((Arrays.equals(expected.toArray(), actual.toArray())));
   }
 
   private Glob getHiddenTransaction() {

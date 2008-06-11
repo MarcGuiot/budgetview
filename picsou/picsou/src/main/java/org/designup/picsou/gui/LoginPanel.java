@@ -12,8 +12,8 @@ import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
 import org.designup.picsou.client.http.*;
 import org.designup.picsou.client.local.LocalClientTransport;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.components.JWavePanel;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 
@@ -76,6 +76,9 @@ public class LoginPanel {
     confirmPasswordField.addActionListener(new LoginAction());
     creationCheckBox.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
+        if (creationCheckBox.isSelected()) {
+          clearMessage();
+        }
         setVisible(creationComponents, creationCheckBox.isSelected());
         initFocus();
       }
@@ -93,7 +96,7 @@ public class LoginPanel {
     builder.add("createAccountCheckBox", creationCheckBox);
     builder.add("message", messageLabel);
     builder.add("login", loginButton);
-    panel = (JPanel) builder.parse(getClass(), "/layout/loginPanel.splits");
+    panel = (JPanel)builder.parse(getClass(), "/layout/loginPanel.splits");
   }
 
   private void login() {
@@ -184,8 +187,12 @@ public class LoginPanel {
       displayErrorMessage("login.confirm.error");
       return false;
     }
-    messageLabel.setText("");
+    clearMessage();
     return true;
+  }
+
+  private void clearMessage() {
+    messageLabel.setText("");
   }
 
   private boolean containsSpecialChar(char[] pwd) {

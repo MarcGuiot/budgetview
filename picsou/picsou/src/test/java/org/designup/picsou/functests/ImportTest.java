@@ -148,7 +148,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     bankCombo.select("Societe Generale");
     importButton.click();
     ComboBox comboBox = window.getComboBox("accountCombo");
-    assertTrue(comboBox.contentEquals("", "Main account"));
+    assertTrue(comboBox.contentEquals("Main account"));
     assertTrue(comboBox.selectionEquals("Main account"));
   }
 
