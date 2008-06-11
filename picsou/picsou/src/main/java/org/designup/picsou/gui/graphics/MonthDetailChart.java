@@ -2,11 +2,11 @@ package org.designup.picsou.gui.graphics;
 
 import org.crossbowlabs.globs.gui.GlobSelection;
 import org.crossbowlabs.globs.gui.GlobSelectionListener;
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.model.*;
 import org.crossbowlabs.globs.model.utils.GlobFieldMatcher;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorSource;
 import org.crossbowlabs.splits.color.ColorUpdater;
 import org.designup.picsou.gui.View;
@@ -84,7 +84,7 @@ public class MonthDetailChart extends View implements GlobSelectionListener, Cha
     markerColor = colorSource.get(PicsouColors.CHART_MARKER);
   }
 
-  public void registerComponents(SplitsBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("monthDetailChart", getPanel());
   }
 
@@ -221,7 +221,7 @@ public class MonthDetailChart extends View implements GlobSelectionListener, Cha
       updateExpenseFor(selectedMonth, expenses, incommes);
     }
     for (int i = 0; i < expenses.length; i++) {
-      categoryDataset.addValue(((Number) new Double(-expenses[i] / selectedMonths.size())), "expense", i);
+      categoryDataset.addValue(((Number)new Double(-expenses[i] / selectedMonths.size())), "expense", i);
     }
     for (int i = 0; i < incommes.length; i++) {
       expenses[i] = 0;
@@ -233,7 +233,7 @@ public class MonthDetailChart extends View implements GlobSelectionListener, Cha
     }
     for (int i = 0; i < expenses.length; i++) {
       double expense = expenses[i];
-      categoryDataset.addValue((Number) new Double(-expense / selectedMonths.size()), "moyenne", i);
+      categoryDataset.addValue((Number)new Double(-expense / selectedMonths.size()), "moyenne", i);
     }
 
     return categoryDataset;

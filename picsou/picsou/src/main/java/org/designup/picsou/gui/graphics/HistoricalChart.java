@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.graphics;
 
 import org.crossbowlabs.globs.gui.GlobSelection;
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.model.*;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorChangeListener;
 import org.crossbowlabs.splits.color.ColorSource;
 import org.designup.picsou.gui.model.MonthStat;
@@ -51,7 +51,7 @@ public class HistoricalChart extends AbstractLineChart {
     selectionService.addListener(this, Category.TYPE, Month.TYPE);
   }
 
-  public void registerComponents(SplitsBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("historicalChart", getPanel());
   }
 
@@ -128,17 +128,17 @@ public class HistoricalChart extends AbstractLineChart {
       }
     });
 
-    NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
+    NumberAxis domainAxis = (NumberAxis)plot.getDomainAxis();
     domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
     domainAxis.setNumberFormatOverride(new MonthFormat());
 
-    NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+    NumberAxis rangeAxis = (NumberAxis)plot.getRangeAxis();
     rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
     rangeAxis.setAutoRangeIncludesZero(false);
   }
 
   private void configureSeries() {
-    XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
+    XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer)plot.getRenderer();
     renderer.setSeriesShapesVisible(0, true);
     renderer.setSeriesShapesVisible(1, false);
     renderer.setSeriesShapesVisible(2, true);
@@ -189,7 +189,7 @@ public class HistoricalChart extends AbstractLineChart {
   }
 
   private int getYyyymmMonth(double number) {
-    int index = (int) number - 1;
+    int index = (int)number - 1;
     if (index < 0) {
       return -1;
     }

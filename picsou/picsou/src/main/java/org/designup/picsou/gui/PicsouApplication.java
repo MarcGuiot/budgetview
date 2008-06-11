@@ -9,19 +9,21 @@ import org.crossbowlabs.globs.utils.Files;
 import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.IconLocator;
+import org.crossbowlabs.splits.TextLocator;
 import org.crossbowlabs.splits.color.ColorService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
+import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.PicsouDescriptionService;
-import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.utils.Lang;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +41,7 @@ public class PicsouApplication {
     PicsouMacLookAndFeel.initApplicationName();
     MRJAdapter.addOpenDocumentListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        ApplicationEvent event = (ApplicationEvent) e;
+        ApplicationEvent event = (ApplicationEvent)e;
         initialFile = new File[]{event.getFile()};
       }
     });
@@ -82,8 +84,8 @@ public class PicsouApplication {
   }
 
   private static String[] parseLanguage(String... args) {
-    if (args[0].equals("-l")){
-      if (args[1].equals("fr")){
+    if (args[0].equals("-l")) {
+      if (args[1].equals("fr")) {
         Locale.setDefault(Locale.FRANCE);
         Lang.setLocale(Locale.FRANCE);
       }
@@ -136,6 +138,7 @@ public class PicsouApplication {
     directory.add(SelectionService.class, new SelectionService());
     PicsouColors.registerColorService(directory);
     directory.add(IconLocator.class, Gui.ICON_LOCATOR);
+    directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
 
     UIManager.put("ColorService", directory.get(ColorService.class));
 

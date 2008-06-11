@@ -2,6 +2,7 @@ package org.designup.picsou.gui.title;
 
 import org.crossbowlabs.globs.gui.GlobSelection;
 import org.crossbowlabs.globs.gui.GlobSelectionListener;
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.gui.SelectionService;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobList;
@@ -9,7 +10,6 @@ import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.model.format.DescriptionService;
 import org.crossbowlabs.globs.model.format.GlobStringifier;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
@@ -30,7 +30,7 @@ public class TitleView extends View implements GlobSelectionListener {
     categoryStringifier = directory.get(DescriptionService.class).getStringifier(Category.TYPE);
   }
 
-  public void registerComponents(SplitsBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("title", label);
   }
 

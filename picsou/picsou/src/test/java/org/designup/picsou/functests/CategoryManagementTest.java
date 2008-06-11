@@ -25,7 +25,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"),
                            fileName);
 
-    operations.importOfxFile(fileName);
+    operations.importQifFile(0., fileName, "Societe Generale");
 
     categories.select(MasterCategory.TRANSPORTS);
     transactions

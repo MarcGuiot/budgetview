@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.accounts;
 
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.model.*;
 import org.crossbowlabs.globs.model.format.GlobStringifier;
 import org.crossbowlabs.globs.utils.Strings;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorSource;
 import org.crossbowlabs.splits.color.Colors;
 import org.designup.picsou.gui.View;
@@ -30,7 +30,7 @@ public class AccountView extends View implements ChangeSetListener {
     repository.addChangeListener(this);
   }
 
-  public void registerComponents(SplitsBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("accountView", infoLabel);
   }
 

@@ -1,12 +1,14 @@
 package org.designup.picsou.functests.checkers;
 
+import org.uispec4j.Button;
 import org.uispec4j.MenuItem;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
-import org.uispec4j.Button;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
+
+import javax.swing.text.JTextComponent;
 
 public class OperationChecker {
   private MenuItem importMenu;
@@ -19,14 +21,18 @@ public class OperationChecker {
   }
 
   public void importOfxFile(String name) {
-    importFile(new String[]{name}, null);
+    importFile(new String[]{name}, null, null);
   }
 
-  public void importQifFile(Double balance, String ...name) {
-    importFile(name, balance);
+  public void importQifFile(Double balance, String file, String bank) {
+    importFile(new String[]{file}, balance, bank);
   }
 
-  private void importFile(final String[] fileNames, final Double balance) {
+  public void importQifFiles(double balance, String bank, String... files) {
+    importFile(files, balance, bank);
+  }
+
+  private void importFile(final String[] fileNames, final Double balance, final String bank) {
     WindowInterceptor
       .init(importMenu.triggerClick())
       .process(new WindowHandler() {
@@ -37,8 +43,13 @@ public class OperationChecker {
             .process(FileChooserHandler.init().select(fileNames))
             .run();
 
+          if (bank != null) {
+            importDialog.getComboBox("bank").select(bank);
+          }
           importDialog.getButton("Import").click();
-
+          if (((JTextComponent)importDialog.getInputTextBox("number").getAwtComponent()).isEditable()) {
+            importDialog.getInputTextBox("number").setText("11111");
+          }
           Button okButton = importDialog.getButton("OK");
           for (int i = 0; i < fileNames.length - 1; i++) {
             okButton.click();
@@ -81,4 +92,5 @@ public class OperationChecker {
   public Trigger getExportTrigger() {
     return exportMenu.triggerClick();
   }
+
 }

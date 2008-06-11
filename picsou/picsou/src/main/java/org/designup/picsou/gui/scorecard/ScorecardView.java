@@ -2,12 +2,12 @@ package org.designup.picsou.gui.scorecard;
 
 import org.crossbowlabs.globs.gui.GlobSelection;
 import org.crossbowlabs.globs.gui.GlobSelectionListener;
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.metamodel.fields.DoubleField;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobList;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorSource;
 import org.crossbowlabs.splits.color.Colors;
 import org.designup.picsou.gui.View;
@@ -36,7 +36,7 @@ public class ScorecardView extends View implements GlobSelectionListener {
     transactionSelection.addListener(this);
   }
 
-  public void registerComponents(SplitsBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("scorecard", editorPane);
   }
 

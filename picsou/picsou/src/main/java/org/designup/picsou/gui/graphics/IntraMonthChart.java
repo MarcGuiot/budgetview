@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.graphics;
 
 import org.crossbowlabs.globs.gui.GlobSelection;
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.model.ChangeSet;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobRepository;
@@ -8,7 +9,6 @@ import org.crossbowlabs.globs.model.Key;
 import org.crossbowlabs.globs.model.utils.GlobMatcher;
 import static org.crossbowlabs.globs.model.utils.GlobMatchers.and;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorChangeListener;
 import org.crossbowlabs.splits.color.ColorSource;
 import org.designup.picsou.gui.model.MonthStat;
@@ -43,7 +43,7 @@ public class IntraMonthChart extends AbstractLineChart {
     transactionSelection.addListener(this);
   }
 
-  public void registerComponents(SplitsBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("intraMonthChart", getPanel());
   }
 
@@ -165,17 +165,17 @@ public class IntraMonthChart extends AbstractLineChart {
       }
     });
 
-    NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
+    NumberAxis domainAxis = (NumberAxis)plot.getDomainAxis();
     domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
     domainAxis.setAutoRangeIncludesZero(false);
 
-    NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+    NumberAxis rangeAxis = (NumberAxis)plot.getRangeAxis();
     rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
     rangeAxis.setAutoRangeIncludesZero(true);
   }
 
   private void configureSeries() {
-    XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
+    XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer)plot.getRenderer();
     renderer.setSeriesShapesVisible(0, true);
     renderer.setSeriesShapesVisible(1, false);
 

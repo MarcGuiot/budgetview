@@ -2,11 +2,11 @@ package org.designup.picsou.gui.graphics;
 
 import org.crossbowlabs.globs.gui.GlobSelection;
 import org.crossbowlabs.globs.gui.GlobSelectionListener;
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.model.*;
 import org.crossbowlabs.globs.model.format.GlobStringifier;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorUpdater;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.model.MonthStat;
@@ -43,7 +43,7 @@ public class CategoriesChart extends View implements GlobSelectionListener, Chan
     repository.addChangeListener(this);
   }
 
-  public void registerComponents(SplitsBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder builder) {
     ChartPanel chartPanel = new ChartPanel(createChart());
     chartPanel.setOpaque(false);
     chartPanel.setRangeZoomable(false);
@@ -107,7 +107,7 @@ public class CategoriesChart extends View implements GlobSelectionListener, Chan
       false
     );
 
-    plot = (PiePlot) chart.getPlot();
+    plot = (PiePlot)chart.getPlot();
     for (final MasterCategory master : MasterCategory.values()) {
       if (!master.equals(MasterCategory.ALL)) {
         colorService.install("category.pie.section." + master.getName(), new ColorUpdater() {

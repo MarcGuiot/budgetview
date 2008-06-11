@@ -4,7 +4,7 @@ import org.designup.picsou.model.TransactionType;
 
 public class LaPosteTest extends SpecificBankTestCase {
   public void test() throws Exception {
-    operations.importQifFile(100.0, getFile("laposte1.ofx"));
+    operations.importOfxFile(getFile("laposte1.ofx"));
     periods.selectCells(0, 1);
     transactions
       .initContent()

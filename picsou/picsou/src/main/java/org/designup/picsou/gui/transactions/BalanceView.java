@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.transactions;
 
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.gui.views.GlobLabelView;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorChangeListener;
 import org.crossbowlabs.splits.color.ColorSource;
 import org.designup.picsou.gui.View;
@@ -31,7 +31,7 @@ public class BalanceView extends View {
     balanceLabel.setFont(new JLabel().getFont().deriveFont(Font.PLAIN));
   }
 
-  public void registerComponents(SplitsBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("balanceInfo", balanceLabel);
   }
 }

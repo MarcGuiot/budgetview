@@ -2,11 +2,11 @@ package org.designup.picsou.gui.card;
 
 import org.crossbowlabs.globs.gui.GlobSelection;
 import org.crossbowlabs.globs.gui.GlobSelectionListener;
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobList;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.layout.CardHandler;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.model.MonthStat;
@@ -27,7 +27,7 @@ public class CardView extends View implements GlobSelectionListener {
     this.transactionSelection.addListener(this);
   }
 
-  public void registerComponents(SplitsBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder builder) {
     handler = builder.addCardHandler("cardView");
     handler.show(lastSelectedCard.getName());
 

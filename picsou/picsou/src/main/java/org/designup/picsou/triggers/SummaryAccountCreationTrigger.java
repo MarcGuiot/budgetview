@@ -6,7 +6,6 @@ import static org.crossbowlabs.globs.model.FieldValue.value;
 import org.crossbowlabs.globs.utils.Utils;
 import org.designup.picsou.model.Account;
 import static org.designup.picsou.model.Account.*;
-import org.designup.picsou.utils.Lang;
 
 import java.util.Date;
 import java.util.List;
@@ -38,8 +37,7 @@ public class SummaryAccountCreationTrigger implements ChangeSetListener {
     }
 
     Glob account = repository.findOrCreate(KeyBuilder.newKey(Account.TYPE, SUMMARY_ACCOUNT_ID),
-                                           value(NUMBER, SUMMARY_ACCOUNT_NUMBER),
-                                           value(NAME, Lang.get("account.all")));
+                                           value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
     Key summaryKey = account.getKey();
     repository.update(summaryKey, BALANCE, balance);
     repository.update(summaryKey, UPDATE_DATE, updateDate);

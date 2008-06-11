@@ -2,10 +2,10 @@ package org.designup.picsou.gui.transactions;
 
 import org.crossbowlabs.globs.gui.GlobSelection;
 import org.crossbowlabs.globs.gui.GlobSelectionListener;
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.gui.utils.TableUtils;
-import org.crossbowlabs.globs.gui.views.GlobTableView;
-import org.crossbowlabs.globs.gui.views.LabelCustomizer;
 import org.crossbowlabs.globs.gui.views.CellPainter;
+import org.crossbowlabs.globs.gui.views.GlobTableView;
 import org.crossbowlabs.globs.gui.views.utils.LabelCustomizers;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.model.ChangeSet;
@@ -14,9 +14,11 @@ import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.model.format.DescriptionService;
 import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.model.utils.*;
+import org.crossbowlabs.globs.model.utils.GlobBuilder;
+import org.crossbowlabs.globs.model.utils.GlobMatcher;
+import org.crossbowlabs.globs.model.utils.LocalGlobRepository;
+import org.crossbowlabs.globs.model.utils.LocalGlobRepositoryBuilder;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorService;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.utils.Gui;
@@ -66,7 +68,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
     view.reset();
   }
 
-  public void registerComponents(SplitsBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder builder) {
     builder.add(view.getComponent());
   }
 

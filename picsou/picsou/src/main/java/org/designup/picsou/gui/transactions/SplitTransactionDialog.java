@@ -17,14 +17,13 @@ import org.crossbowlabs.globs.model.utils.LocalGlobRepository;
 import org.crossbowlabs.globs.model.utils.LocalGlobRepositoryBuilder;
 import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.TextLocator;
 import org.crossbowlabs.splits.color.ColorChangeListener;
 import org.crossbowlabs.splits.color.ColorService;
 import org.crossbowlabs.splits.color.ColorSource;
 import org.crossbowlabs.splits.components.JStyledPanel;
 import org.crossbowlabs.splits.utils.GuiUtils;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
@@ -85,17 +84,16 @@ public class SplitTransactionDialog {
     }
 
     localRepository =
-            LocalGlobRepositoryBuilder.init(repository)
-                    .copy(Category.TYPE)
-                    .copy(initialTransaction)
-                    .copy(repository.findLinkedTo(initialTransaction, Transaction.SPLIT_SOURCE))
-                    .get();
+      LocalGlobRepositoryBuilder.init(repository)
+        .copy(Category.TYPE)
+        .copy(initialTransaction)
+        .copy(repository.findLinkedTo(initialTransaction, Transaction.SPLIT_SOURCE))
+        .get();
 
     transaction = localRepository.get(initialTransaction.getKey());
 
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
-    localDirectory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     descriptionService = localDirectory.get(DescriptionService.class);
     colorService = localDirectory.get(ColorService.class);
     rendererColors = new TransactionRendererColors(localDirectory);
@@ -110,7 +108,7 @@ public class SplitTransactionDialog {
     builder.add("ok", new OkAction());
     builder.add("cancel", new CancelAction());
 
-    JPanel panel = (JPanel) builder.parse(getClass(), "/layout/splitTransaction.splits");
+    JPanel panel = (JPanel)builder.parse(getClass(), "/layout/splitTransaction.splits");
     dialog = PicsouDialog.create(directory.get(JFrame.class), Lang.get("split.transaction.title"));
     dialog.getContentPane().add(panel);
 
@@ -230,25 +228,25 @@ public class SplitTransactionDialog {
 
     GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
     GlobStringifier categoriesStringifier =
-            new TransactionCategoriesStringifier(descriptionService.getStringifier(Category.TYPE));
+      new TransactionCategoriesStringifier(descriptionService.getStringifier(Category.TYPE));
 
     TransactionCategoryColumn categoryColumn =
-            new TransactionCategoryColumn(categoryChooserAction, view, rendererColors,
-                                          descriptionService, localRepository, localDirectory);
+      new TransactionCategoryColumn(categoryChooserAction, view, rendererColors,
+                                    descriptionService, localRepository, localDirectory);
 
     DeleteSplitTransactionColumn deleteSplitColumn =
-            new DeleteSplitTransactionColumn(transaction, view, rendererColors, descriptionService,
-                                             localRepository, localDirectory);
+      new DeleteSplitTransactionColumn(transaction, view, rendererColors, descriptionService,
+                                       localRepository, localDirectory);
 
     view
-            .addColumn(descriptionService.getLabel(Category.TYPE), categoryColumn, categoryColumn,
-                       categoriesStringifier.getComparator(localRepository))
-            .addColumn(LABEL)
-            .addColumn(Lang.get("amount"),
-                       amountStringifier,
-                       chain(alignRight(), LabelCustomizers.stringifier(amountStringifier, localRepository)))
-            .addColumn(NOTE, new TransactionNoteEditor(localRepository, localDirectory))
-            .addColumn(" ", deleteSplitColumn, deleteSplitColumn, transactionComparator);
+      .addColumn(descriptionService.getLabel(Category.TYPE), categoryColumn, categoryColumn,
+                 categoriesStringifier.getComparator(localRepository))
+      .addColumn(LABEL)
+      .addColumn(Lang.get("amount"),
+                 amountStringifier,
+                 chain(alignRight(), LabelCustomizers.stringifier(amountStringifier, localRepository)))
+      .addColumn(NOTE, new TransactionNoteEditor(localRepository, localDirectory))
+      .addColumn(" ", deleteSplitColumn, deleteSplitColumn, transactionComparator);
 
     JTable table = view.getComponent();
     table.setDefaultRenderer(Glob.class,
@@ -270,7 +268,7 @@ public class SplitTransactionDialog {
   private void adjustColumnSize(JTable table, int columnIndex) {
     TableUtils.setSize(table, columnIndex,
                        TableUtils.getPreferredWidth(
-                               TableUtils.getRenderedComponent(table, transaction, 0, columnIndex)));
+                         TableUtils.getRenderedComponent(table, transaction, 0, columnIndex)));
   }
 
   private void doSplit() {
@@ -427,7 +425,7 @@ public class SplitTransactionDialog {
         amountUpdated();
       }
     });
-    ((AbstractDocument) document).setDocumentFilter(new DocumentFilter() {
+    ((AbstractDocument)document).setDocumentFilter(new DocumentFilter() {
       public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
         super.insertString(fb, offset, filterAmount(string), attr);
       }

@@ -28,8 +28,11 @@ public class AccountEditionPanel {
     localDirectory.add(selectionService);
 
     GlobsPanelBuilder builder = GlobsPanelBuilder.init(repository, localDirectory);
-    builder.addCombo(Bank.TYPE).setSelectionHandler(new GlobComboView.GlobSelectionHandler() {
+    builder.addCombo("accountBank", Bank.TYPE).setSelectionHandler(new GlobComboView.GlobSelectionHandler() {
       public void processSelection(Glob bank) {
+        if (bank == null) {
+          return;
+        }
         GlobList entities = repository.findLinkedTo(bank, BankEntity.BANK);
         Glob account = AccountEditionPanel.this.account;
         if (account != null) {

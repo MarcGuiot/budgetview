@@ -1,6 +1,5 @@
 package org.designup.picsou.importer.ofx;
 
-import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.PicsouTestCase;
 
 import java.io.StringWriter;
@@ -9,7 +8,7 @@ public class OfxExporterTest extends PicsouTestCase {
   public void test() throws Exception {
     checker.parse(
       repository,
-      "<account number='" + Account.SUMMARY_ACCOUNT_NUMBER + "' id='-1'" +
+      "<account id='-1'" +
       "         balance='12345' updateDate='2006/07/02'/>" +
       "<category name='Dentifrice' masterName='health'/>" +
       "" +

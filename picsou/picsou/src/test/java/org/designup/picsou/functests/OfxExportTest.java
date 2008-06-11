@@ -2,12 +2,12 @@ package org.designup.picsou.functests;
 
 import org.crossbowlabs.globs.utils.Files;
 import org.crossbowlabs.globs.utils.TestUtils;
-import org.uispec4j.interception.FileChooserHandler;
-import org.uispec4j.interception.WindowInterceptor;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.uispec4j.interception.FileChooserHandler;
+import org.uispec4j.interception.WindowInterceptor;
 
 public class OfxExportTest extends LoggedInFunctionalTestCase {
 
@@ -99,7 +99,7 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
 
     String fileName = TestUtils.getFileName(this, ".qif");
     Files.dumpStringToFile(fileName, content);
-    operations.importQifFile(12.50, fileName);
+    operations.importQifFile(12.50, fileName, "Societe Generale");
 
     String ofxFileName = TestUtils.getFileName(this, ".ofx");
     operations.exportFile(ofxFileName);

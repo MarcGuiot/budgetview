@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.gui.utils.PicsouDialogPainter;
-import org.designup.picsou.gui.utils.Gui;
 import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
 import org.crossbowlabs.splits.layout.GridBagBuilder;
+import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouDialogPainter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,11 +13,11 @@ public class PicsouDialog extends JDialog {
   private static PicsouDialogPainter painter = new PicsouDialogPainter();
 
   public static PicsouDialog create(Window owner) {
-    if (owner instanceof JFrame){
-      return new PicsouDialog((JFrame)owner);
+    if (owner instanceof JFrame) {
+      return create((JFrame)owner, "");
     }
-    else if (owner instanceof JDialog){
-      return new PicsouDialog((JDialog)owner);
+    else if (owner instanceof JDialog) {
+      return create((JDialog)owner, "");
     }
     throw new InvalidParameter("unknown type " + owner.getClass());
   }
@@ -55,12 +55,12 @@ public class PicsouDialog extends JDialog {
   }
 
   private static PicsouDialog initBorder(String title, PicsouDialog modalWindow) {
-    modalWindow.setTitle(title);
-    JPanel container = (JPanel) modalWindow.getContentPane();
     if (title != null) {
-      Gui.installWindowTitle(container, painter, title, 0);
-      Gui.installMovingWindowTitle(modalWindow);
+      modalWindow.setTitle(title);
     }
+    JPanel container = (JPanel)modalWindow.getContentPane();
+    Gui.installWindowTitle(container, painter, title == null ? "" : title, 0);
+    Gui.installMovingWindowTitle(modalWindow);
     return modalWindow;
   }
 
@@ -75,10 +75,8 @@ public class PicsouDialog extends JDialog {
   }
 
   public void setContentPane(Container contentPane) {
-    if (getTitle() != null) {
-      Gui.installWindowTitle((JComponent) contentPane, painter, getTitle(), 0);
-      Gui.installMovingWindowTitle(this);
-    }
+    Gui.installWindowTitle((JComponent)contentPane, painter, getTitle() == null ? "" : getTitle(), 0);
+    Gui.installMovingWindowTitle(this);
     super.setContentPane(contentPane);
   }
 }

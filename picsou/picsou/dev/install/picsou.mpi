@@ -14,6 +14,9 @@ ApplicationURL
 AutoRefreshFiles
 Yes
 
+BuildFailureAction
+{Fail (recommended)}
+
 CancelledInstallAction
 {Rollback and Stop}
 
@@ -24,7 +27,7 @@ CommandLineFailureAction
 {Fail (recommended)}
 
 Company
-{crossbow lab}
+design-up
 
 CompressionLevel
 6
@@ -45,7 +48,7 @@ DefaultLanguage
 English
 
 Ext
-{}
+.exe
 
 ExtractSolidArchivesOnStartup
 No
@@ -66,22 +69,31 @@ InstallVersion
 1.0.0.0
 
 Language,de
-Yes
+No
 
 Language,en
 Yes
 
 Language,es
-Yes
+No
 
 Language,fr
 Yes
 
+Language,hu
+No
+
+Language,it
+No
+
+Language,nl
+No
+
 Language,pl
-Yes
+No
 
 Language,pt_br
-Yes
+No
 
 LaunchApplication
 Yes
@@ -117,7 +129,7 @@ ProjectID
 949F3A01-5E23-44CB-ACF9-7AA8A633DFD8
 
 ProjectVersion
-1.2.3.1
+1.2.5.1
 
 SaveOnlyToplevelDirs
 No
@@ -179,13 +191,18 @@ test
 {Testing Switch Yes No {} {run uninstaller without uninstalling any files}}
 
 }
-FileGroup ::8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 Solaris-sparc Windows TarArchive} -name {Program Files} -parent FileGroups
+FileGroup ::8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42 -setup Install -active Yes -platforms Windows -name {Program Files} -parent FileGroups
 File ::F56B1EB7-E593-4BD3-84D9-6BACDD58A4DA -name picsou.exe -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::50BE3C17-029A-4A6A-BC74-2130C6ABA4C7 -name ../images/picsou_icon_32.ico -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::2B46BFAC-3F00-4290-B80A-D790CCEB6778 -name msvcr71.dll -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::09B3F2A4-3934-FAA3-B4DF-514E8A7332E9 -name license.txt -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
-Component ::89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 Solaris-sparc Windows} -name {Default Component} -parent Components
-SetupType ::C40711B9-D384-4BA7-BD59-C41C7FDE9BA0 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 Solaris-sparc Windows} -name Typical -parent SetupTypes
+FileGroup ::89CD3510-FDE9-0208-D7B5-DE37109ECD51 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 MacOS-X Solaris-sparc TarArchive} -name {linux program files} -parent FileGroups
+File ::2FB1AD48-CACB-8786-FF0B-91202764BB49 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/images/picsou_icon_32.png -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
+File ::4C60DC39-5780-FE0B-6BF3-22B7D15526FC -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/install/picsou.sh -permissions 00555 -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
+File ::49DA2101-38B8-6939-FCAE-79D836889D7C -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/striped_picsou.jar -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
+Component ::89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92 -setup Install -active Yes -platforms {Solaris-sparc Windows} -name {Default Component} -parent Components
+Component ::BEF85513-C17E-C854-1584-C6A50E5E906C -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 MacOS-X Solaris-sparc} -name {unix component} -parent Components
+SetupType ::C40711B9-D384-4BA7-BD59-C41C7FDE9BA0 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 Solaris-sparc Windows MacOS-X} -name Typical -parent SetupTypes
 
 InstallComponent 0223D8D5-A58F-4DB2-9C6D-014A51BDC1E4 -setup Install -type pane -title {Welcome Screen} -component Welcome -active Yes -parent StandardInstall
 InstallComponent 7752DDF1-A6AB-4D98-8DD3-D123F0C232E5 -setup Install -type pane -conditions {68D5E6ED-3DD3-4C93-AB89-AEAD65984FB3 6C0DDACC-8EE0-47C8-9EBC-6735732D37F3} -title {Select Destination} -component SelectDestination -command insert -active Yes -parent StandardInstall
@@ -358,8 +375,14 @@ disabled
 0B4AC4E6-0430-4D04-87A3-13236E4E5F2C,Widget
 {Back Button;Next Button}
 
+0BC06F61-0237-40A3-B3CB-99DB85BEAEA5,CommandLineArguments
+{-l <%Language%>}
+
 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5,Conditions
 {2 conditions}
+
+0BC06F61-0237-40A3-B3CB-99DB85BEAEA5,IconPath
+<%ProgramExecutable%>
 
 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5,ShortcutName
 <%AppName%>
@@ -435,6 +458,9 @@ No
 
 17EFB8D5-1C73-4DC7-B383-F848A837C737,ExecuteAction
 {Before Pane is Displayed}
+
+18311AA9-038B-4569-BACE-5E500A8EA7BE,Conditions
+{1 condition}
 
 18311AA9-038B-4569-BACE-5E500A8EA7BE,Prompt
 <%ConsoleSelectDestinationText%>
@@ -718,6 +744,9 @@ false
 5CA80C59-84FB-42AF-A015-38EA8489115E,String
 <%InstallStopped%>
 
+5EFCCAAE-441C-463F-9822-567A26FE8D1D,Conditions
+{0 conditions}
+
 5EFCCAAE-441C-463F-9822-567A26FE8D1D,Default
 Yes
 
@@ -904,6 +933,9 @@ CreateDesktopShortcut
 7E6D56FF-3E4A-42A3-B4D4-17AC3655D8CE,ExitType
 Finish
 
+7ED948AD-24B3-4EDB-A79B-0F00DACFAC57,CommandLineArguments
+{ -l <%Language%>}
+
 7ED948AD-24B3-4EDB-A79B-0F00DACFAC57,Conditions
 {1 condition}
 
@@ -937,7 +969,19 @@ Yes
 884FC1AE-8134-4C9E-8809-EA990FF219C1,Message,subst
 1
 
+89CD3510-FDE9-0208-D7B5-DE37109ECD51,Destination
+<%InstallDir%>
+
+89CD3510-FDE9-0208-D7B5-DE37109ECD51,FileSize
+2909900
+
+89CD3510-FDE9-0208-D7B5-DE37109ECD51,Name
+{linux program files}
+
 89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92,Description,subst
+1
+
+89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92,DisplayName,subst
 1
 
 89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92,FileGroups
@@ -953,7 +997,7 @@ Yes
 {3 conditions}
 
 8C9FCEF1-5721-4F82-B78C-4F773FD8A11C,ProgramCommandLine
-<%ProgramExecutable%>
+{<%ProgramExecutable%> -l <%Language%>}
 
 8C9FCEF1-5721-4F82-B78C-4F773FD8A11C,WaitForProgram
 No
@@ -964,11 +1008,11 @@ No
 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42,Destination
 <%InstallDir%>
 
+8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42,FileSize
+3701979
+
 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42,Name
 {Program Files}
-
-8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42,Size
-0
 
 8FCCF693-DC41-47CE-BC0B-0BF22E8B5C75,State
 disabled
@@ -1129,6 +1173,9 @@ AIX-ppc,RootInstallDir
 B4186B98-5C1C-4742-9DF4-53868C2F825F,Background
 white
 
+B4186B98-5C1C-4742-9DF4-53868C2F825F,Conditions
+{2 conditions}
+
 B4186B98-5C1C-4742-9DF4-53868C2F825F,Text,subst
 1
 
@@ -1183,8 +1230,23 @@ BAF00C7E-4561-471F-BDC9-29B784047AF3,Title,subst
 BB2D52FA-074D-4B87-A85A-E47B82DB50C2,Conditions
 {1 condition}
 
+BDFBF9DE-520E-4FC7-A948-1E338438E270,Conditions
+{1 condition}
+
+BEF85513-C17E-C854-1584-C6A50E5E906C,Description,subst
+1
+
+BEF85513-C17E-C854-1584-C6A50E5E906C,DisplayName,subst
+1
+
+BEF85513-C17E-C854-1584-C6A50E5E906C,FileGroups
+89CD3510-FDE9-0208-D7B5-DE37109ECD51
+
+BEF85513-C17E-C854-1584-C6A50E5E906C,Name
+{unix component}
+
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,Command
-{"<%InstallDir%>\picsou.exe" "%1"}
+{"<%InstallDir%>\picsou.exe"  "-l" "<%Language%>" "%1"}
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,CommandName
 Open
@@ -1240,6 +1302,9 @@ C29F13BB-24F3-4B33-A7BE-DC17856C6A9A,CheckCondition
 C29F13BB-24F3-4B33-A7BE-DC17856C6A9A,Filename
 <%ProgramExecutable%>
 
+C3370D3D-2F47-44F1-900B-89CF5199FD74,Conditions
+{0 conditions}
+
 C3370D3D-2F47-44F1-900B-89CF5199FD74,Message,subst
 1
 
@@ -1247,6 +1312,9 @@ C40711B9-D384-4BA7-BD59-C41C7FDE9BA0,Components
 89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92
 
 C40711B9-D384-4BA7-BD59-C41C7FDE9BA0,Description,subst
+1
+
+C40711B9-D384-4BA7-BD59-C41C7FDE9BA0,DisplayName,subst
 1
 
 C40711B9-D384-4BA7-BD59-C41C7FDE9BA0,Name
@@ -1354,8 +1422,14 @@ DFA04950-0DF6-4396-90C1-C931C242445A,Y
 E0F4E853-A044-473B-AD88-F372BB9BFB7F,ExitType
 Finish
 
+E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,CommandLineArguments
+{ -l <%Language%>}
+
 E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,Conditions
 {2 conditions}
+
+E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,IconPath
+<%ProgramExecutable%>
 
 E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,ShortcutDirectory
 <%QUICK_LAUNCH%>
@@ -1676,6 +1750,57 @@ Linux-x86,RequireRoot
 No
 
 Linux-x86,RootInstallDir
+/usr/local/<%ShortAppName%>
+
+MacOS-X,Active
+No
+
+MacOS-X,DefaultDirectoryPermission
+0755
+
+MacOS-X,DefaultFilePermission
+0755
+
+MacOS-X,Executable
+<%AppName%>-<%Version%>-<%Platform%>-Install<%Ext%>
+
+MacOS-X,FallBackToConsole
+Yes
+
+MacOS-X,InstallDir
+<%Home%>/<%ShortAppName%>
+
+MacOS-X,InstallMode
+Standard
+
+MacOS-X,InstallType
+Typical
+
+MacOS-X,ProgramExecutable
+{}
+
+MacOS-X,ProgramFolderAllUsers
+No
+
+MacOS-X,ProgramFolderName
+<%AppName%>
+
+MacOS-X,ProgramLicense
+<%InstallDir%>/LICENSE.txt
+
+MacOS-X,ProgramName
+{}
+
+MacOS-X,ProgramReadme
+<%InstallDir%>/README.txt
+
+MacOS-X,PromptForRoot
+Yes
+
+MacOS-X,RequireRoot
+No
+
+MacOS-X,RootInstallDir
 /usr/local/<%ShortAppName%>
 
 Solaris-sparc,Active

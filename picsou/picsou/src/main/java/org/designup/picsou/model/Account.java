@@ -2,7 +2,6 @@ package org.designup.picsou.model;
 
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.metamodel.annotations.Key;
-import org.crossbowlabs.globs.metamodel.annotations.NamingField;
 import org.crossbowlabs.globs.metamodel.annotations.Target;
 import org.crossbowlabs.globs.metamodel.fields.*;
 import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
@@ -10,7 +9,7 @@ import static org.crossbowlabs.globs.model.FieldValue.value;
 import org.crossbowlabs.globs.model.GlobRepository;
 
 public class Account {
-  public static final String SUMMARY_ACCOUNT_NUMBER = "(SummaryAccount)";
+  public static final String SUMMARY_ACCOUNT_NUMBER = null;
   public static final int SUMMARY_ACCOUNT_ID = -1;
 
   public static GlobType TYPE;
@@ -18,7 +17,6 @@ public class Account {
   @Key
   public static IntegerField ID;
 
-  @NamingField
   public static StringField NUMBER;
 
   @Target(BankEntity.class)

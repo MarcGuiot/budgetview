@@ -1,10 +1,15 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
-    <column>
+  <column>
 
-      <comboBox ref="bank"/>
-      <textField ref="name"/>
-      <textField ref="number"/>
+    <grid>
+      <label text="$account.bank" gridPos="(0,0)"/>
+      <comboBox ref="accountBank" gridPos="(0,1)"/>
+      <label text="$account.name" gridPos="(1,0)"/>
+      <textField ref="name" gridPos="(1,1)"/>
+      <label text="$account.number" gridPos="(2,0)"/>
+      <textField ref="number" gridPos="(2,1)"/>
+    </grid>
 
-    </column>
+  </column>
 
 </splits>

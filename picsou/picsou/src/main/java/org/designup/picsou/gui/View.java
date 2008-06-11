@@ -1,10 +1,10 @@
 package org.designup.picsou.gui;
 
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.gui.SelectionService;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.model.format.DescriptionService;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorChangeListener;
 import org.crossbowlabs.splits.color.ColorService;
 import org.crossbowlabs.splits.color.ColorSource;
@@ -28,5 +28,5 @@ public abstract class View implements ColorChangeListener {
   public void colorsChanged(ColorSource colorSource) {
   }
 
-  public abstract void registerComponents(SplitsBuilder builder);
+  public abstract void registerComponents(GlobsPanelBuilder builder);
 }

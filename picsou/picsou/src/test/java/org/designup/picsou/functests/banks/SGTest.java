@@ -5,7 +5,7 @@ import org.designup.picsou.model.TransactionType;
 public class SGTest extends SpecificBankTestCase {
 
   public void test1() throws Exception {
-    operations.importQifFile(100.0, getFile("sg1.qif"));
+    operations.importQifFile(100.0, getFile("sg1.qif"), "Societe Generale");
     transactions
       .initContent()
       .add("20/04/2006", TransactionType.CREDIT_CARD, "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", "", -49.00)
@@ -16,7 +16,7 @@ public class SGTest extends SpecificBankTestCase {
   }
 
   public void test2() throws Exception {
-    operations.importQifFile(100.0, getFile("sg2.qif"));
+    operations.importQifFile(100.0, getFile("sg2.qif"), "Societe Generale");
     transactions
       .initContent()
       .add("22/07/2006", TransactionType.CREDIT_CARD, "ANTONYCARBURANT", "", -45.83)

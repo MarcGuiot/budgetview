@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
-import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
@@ -108,16 +107,16 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     assertTrue(table.contentEquals(new Object[][]{
       {"10/01/2006", "Menu K", "-1.10"}
     }));
-    ComboBox accountBankCombo = window.getComboBox("bank");
+    ComboBox accountBankCombo = window.getComboBox("accountBank");
     assertThat(accountBankCombo.selectionEquals("Societe Generale"));
 
-    TextBox accountNameField = window.getInputTextBox("accountName");
+    TextBox accountNameField = window.getInputTextBox("name");
     assertThat(accountNameField.textEquals("Main account"));
     accountNameField.setText("My SG account");
 
-    window.getInputTextBox("accountNumber").setText("0123546");
+    window.getInputTextBox("number").setText("0123546");
 
-    window.getInputTextBox("balance").setText("66.50");
+//    window.getInputTextBox("balance").setText("66.50");
 
     window.getButton("OK").click();
 
@@ -125,6 +124,32 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
+  }
+
+  public void testImportQifFileWithExistingAccount() throws Exception {
+    bankCombo.select("Societe Generale");
+    String firstQif = QifBuilder.init(this)
+      .addTransaction("2006/01/01", 10, "monop")
+      .save();
+    fileField.setText(firstQif);
+    importButton.click();
+    window.getButton("OK").click();
+
+    window = WindowInterceptor.getModalDialog(operations.getImportTrigger());
+    bankCombo = window.getComboBox("bankCombo");
+    fileField = window.getInputTextBox("fileField");
+    importButton = window.getButton("Import");
+    String qifFile = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .save();
+
+    fileField.setText(qifFile);
+    bankCombo.select("Societe Generale");
+    importButton.click();
+    ComboBox comboBox = window.getComboBox("accountCombo");
+    assertTrue(comboBox.contentEquals("", "Main account"));
+    assertTrue(comboBox.selectionEquals("Main account"));
   }
 
   private void checkMessage(String message) {

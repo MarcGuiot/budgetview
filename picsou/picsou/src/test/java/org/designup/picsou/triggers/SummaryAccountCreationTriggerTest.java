@@ -1,9 +1,8 @@
 package org.designup.picsou.triggers;
 
-import org.crossbowlabs.globs.model.FieldValuesBuilder;
+import org.crossbowlabs.globs.model.FieldValue;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.model.FieldValue;
 import org.crossbowlabs.globs.utils.Dates;
 import org.designup.picsou.model.Account;
 import static org.designup.picsou.model.Account.*;
@@ -40,9 +39,10 @@ public class SummaryAccountCreationTriggerTest extends PicsouTestCase {
 
   public void testOnlyUpdatesExistingSummaryAccount() throws Exception {
     String input1 =
-          "<account number='" + Account.SUMMARY_ACCOUNT_NUMBER + "' balance='1.0' updateDate='2006/01/01' id='-1'/>" +
-          "<account number='id1' balance='1.0' updateDate='2006/05/24' id='1'/>" +
-          "<account number='id2' balance='2.0' updateDate='2006/05/26' id='2'/>";
+      "<account number='" + Account.SUMMARY_ACCOUNT_NUMBER +
+      "' balance='1.0' updateDate='2006/01/01' id='" + Account.SUMMARY_ACCOUNT_ID + "'/>" +
+      "<account number='id1' balance='1.0' updateDate='2006/05/24' id='1'/>" +
+      "<account number='id2' balance='2.0' updateDate='2006/05/26' id='2'/>";
     checker.parse(repository, input1);
     checkSummary(3.0, "2006/05/24");
 

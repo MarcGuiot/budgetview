@@ -19,7 +19,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"),
                            fileName);
 
-    operations.importQifFile(100.0, fileName);
+    operations.importQifFile(100.0, fileName, "Societe Generale");
 // TODO:   imports.check("2006/04/20", 100.0);
     transactions
       .initContent()
@@ -47,7 +47,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
 
   public void testImportsQifFilesFromCic() throws Exception {
     String fileName = createQifFile("1");
-    operations.importQifFile(12.50, fileName);
+    operations.importQifFile(12.50, fileName, "CIC");
 
     transactions.initContent()
       .add("28/03/2007", TransactionType.VIREMENT, "AVRIL", "", 12345.67)
@@ -79,6 +79,6 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
   public void testImportManyFileAndAskOnceForAmount() throws Exception {
     String file1 = createQifFile("1");
     String file2 = createQifFile("2");
-    operations.importQifFile(12.50, file1, file2);
+    operations.importQifFiles(12.50, "Societe Generale", file1, file2);
   }
 }

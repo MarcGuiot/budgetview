@@ -7,6 +7,7 @@ import org.crossbowlabs.globs.model.format.Formats;
 import org.crossbowlabs.globs.model.format.GlobStringifier;
 import org.crossbowlabs.globs.model.format.utils.DefaultDescriptionService;
 import org.crossbowlabs.globs.utils.Strings;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
@@ -75,6 +76,10 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     if (globType.equals(TransactionType.TYPE)) {
       return new BundleBasedStringifier(TransactionType.NAME, TransactionType.TYPE.getName() + ".");
     }
+    if (globType.equals(Account.TYPE)) {
+      return new AccountStringifier();
+    }
     return super.getStringifier(globType);
   }
+
 }

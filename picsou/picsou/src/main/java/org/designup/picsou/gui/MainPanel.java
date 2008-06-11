@@ -2,10 +2,9 @@ package org.designup.picsou.gui;
 
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.IconLocator;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorService;
 import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.ExitAction;
@@ -13,9 +12,9 @@ import org.designup.picsou.gui.actions.ExportFileAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.categories.CategoryView;
+import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.gui.graphics.CategoriesChart;
 import org.designup.picsou.gui.graphics.HistoricalChart;
-import org.designup.picsou.gui.graphics.IntraMonthChart;
 import org.designup.picsou.gui.scorecard.ScorecardView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
@@ -23,7 +22,6 @@ import org.designup.picsou.gui.transactions.BalanceView;
 import org.designup.picsou.gui.transactions.InformationView;
 import org.designup.picsou.gui.transactions.TransactionSelection;
 import org.designup.picsou.gui.transactions.TransactionView;
-import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 
@@ -33,7 +31,6 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
 
 public class MainPanel {
   private JFrame parent;
@@ -65,8 +62,7 @@ public class MainPanel {
     exportFileAction = new ExportFileAction(repository, directory);
     exitAction = new ExitAction(directory);
 
-    panel = createPanel(directory.get(ColorService.class),
-                        directory.get(IconLocator.class),
+    panel = createPanel(repository, directory,
                         new TitleView(repository, directory),
                         new InformationView(repository, directory, transactionSelection),
                         accountView,
@@ -91,13 +87,12 @@ public class MainPanel {
     createMenuBar(parent);
   }
 
-  public JPanel createPanel(ColorService colorService, IconLocator iconLocator,
-                            View... views) {
-    SplitsBuilder builder = new SplitsBuilder(colorService, iconLocator, Lang.TEXT_LOCATOR);
+  private JPanel createPanel(GlobRepository repository, Directory directory, View... views) {
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(repository, directory);
     for (View view : views) {
       view.registerComponents(builder);
     }
-    builder.add("chartAreaPanel", new JWavePanel(colorService));
+    builder.add("chartAreaPanel", new JWavePanel(directory.get(ColorService.class)));
     builder.add("verticalSplit", createSplitPane());
     builder.add("horizontalSplit", createSplitPane());
     return (JPanel)builder.parse(MainPanel.class, "/layout/picsou.splits");

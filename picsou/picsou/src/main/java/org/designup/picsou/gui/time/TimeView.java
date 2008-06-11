@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.time;
 
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.utils.Gui;
 
@@ -23,7 +23,7 @@ public class TimeView extends View {
     createNavigationButtons();
   }
 
-  public void registerComponents(SplitsBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("month", viewPanel);
     builder.add(gotoFirstButton, gotoLastButton, gotoNextButton, gotoPrevButton);
   }

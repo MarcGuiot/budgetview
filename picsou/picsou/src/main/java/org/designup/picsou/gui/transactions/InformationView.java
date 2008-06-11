@@ -2,6 +2,7 @@ package org.designup.picsou.gui.transactions;
 
 import org.crossbowlabs.globs.gui.GlobSelection;
 import org.crossbowlabs.globs.gui.GlobSelectionListener;
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.model.ChangeSet;
 import org.crossbowlabs.globs.model.ChangeSetListener;
@@ -9,7 +10,6 @@ import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.IconLocator;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorService;
 import org.crossbowlabs.splits.color.ForegroundColorUpdater;
 import org.designup.picsou.gui.View;
@@ -47,7 +47,7 @@ public class InformationView extends View implements GlobSelectionListener, Chan
                                               new ForegroundColorUpdater(label));
   }
 
-  public void registerComponents(SplitsBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("informationPanel", panel);
   }
 

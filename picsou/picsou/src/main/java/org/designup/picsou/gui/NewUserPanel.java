@@ -1,13 +1,10 @@
 package org.designup.picsou.gui;
 
+import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorService;
 import org.designup.picsou.gui.components.JWavePanel;
-import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.utils.Lang;
 
 import javax.swing.*;
 
@@ -20,10 +17,8 @@ public class NewUserPanel {
   }
 
   private NewUserPanel(final GlobRepository repository, final Directory directory, final MainWindow mainWindow) {
-
-    ColorService colorService = PicsouColors.createColorService();
-    SplitsBuilder builder = new SplitsBuilder(colorService, Gui.ICON_LOCATOR, Lang.TEXT_LOCATOR);
-    builder.add("wave", new JWavePanel(colorService));
+    GlobsPanelBuilder builder = GlobsPanelBuilder.init(repository, directory);
+    builder.add("wave", new JWavePanel(directory.get(ColorService.class)));
     ImportPanel importPanel = new ImportPanel(mainWindow.getFrame(), repository, directory) {
       protected void complete() {
         MainPanel.show(repository, directory, mainWindow);
