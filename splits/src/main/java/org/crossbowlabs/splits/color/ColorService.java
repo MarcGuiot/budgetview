@@ -134,7 +134,7 @@ public class ColorService implements ColorSource {
   }
 
   private void notifyListeners() {
-    for (ColorChangeListener listener : listeners) {
+    for (ColorChangeListener listener : new ArrayList<ColorChangeListener>(listeners)) {
       listener.colorsChanged(this);
     }
   }
