@@ -1,34 +1,27 @@
 Import
 ------
-* QIF: forcer la saisie de la banque et du numero lors de la creation d'un compte
 * QIF: saisie du solde
-* OFX: Selection de la banque quand le bank_entity est inconnu
+* Gerer Account.UPDATE_DATE (date de la derniere transaction importee?)
+* Import step 2: bouton "selectionner d'autres fichiers" ?
+* Test d'import QIF tronque
 * QIF: Choix de la devise du compte
 * QIF: Analyse du format de date
 * QIF: Analyse du format de nombres
 * QIF: Estimation de solde final
 * Verification SMS
-* Interdire devise compte differente de devise utilisateur
 * Integrer fichiers BNP Pascal
 * Open with...
 * URL banques: lancer navigateur
 * Import initial facultatif
 * Bug: import OFX initial invalide : rester sur page import
 * LoginPanel: error login + "new user" => effacer message
-* Gerer Account.UPDATE_DATE (date de la derniere transaction importee?)
-* Import step 2: bouton "selectionner d'autres fichiers" ?
-* Test d'import QIF tronque
 
 
-Creation d'utilisateur
-----------------------
-* Choix de la devise de l'utilisateur
-
-
-Categorisation
+Joliesse
 --------------
-* Taille panneau
-* Labels cliquables "A classer" dans TransactionView
+* Panneau import
+* Taille panneau Categorisation sous Mac
+* Taille panneau import sous Linux
 
 
 Packaging
@@ -39,7 +32,6 @@ Packaging
 
 Bugs
 ----
-* Frame en 1024x768
 * CategoryView: selection par drag dans colonne expand
 * CategoryView: selection par drag dans colonne name
 * CategoryView: desactiver tri

@@ -86,7 +86,7 @@ public class CategoryButtonsPanel {
       }
 
       public void mouseExited(MouseEvent e) {
-        if (!isMouseInButtons(convertMouseLocation(e, categoryLabel))) {
+        if (panel.isVisible() && !isMouseInButtons(convertMouseLocation(e, categoryLabel))) {
           enableButtons(HOLE_PANEL);
         }
       }

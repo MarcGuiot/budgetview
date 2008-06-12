@@ -49,7 +49,7 @@ public class MainWindow {
   }
 
   public void show() {
-    frame.setSize(1100, 800);
+    frame.setSize(Gui.getWindowSize(1100, 800));
     GuiUtils.showCentered(frame);
   }
 }

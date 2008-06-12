@@ -69,7 +69,6 @@ public class LoginTest extends ServerFunctionalTestCase {
   public void testCreatingAUserAndLoggingInAgain() throws Exception {
     String filePath = OfxBuilder
       .init(this)
-      .addBankAccount(1234567, 1234, "acc1", 1.0, "2006/01/10")
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .addTransaction("2006/01/11", -12.0, "Cheque 12345")
       .save();
@@ -93,7 +92,6 @@ public class LoginTest extends ServerFunctionalTestCase {
   public void testBankAreCorrectlyReImported() throws Exception {
     final String filePath = OfxBuilder
       .init(this)
-      .addBankAccount(1234567, 1234, "acc1", 1.0, "2006/01/10")
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .addTransaction("2006/01/11", -12.0, "Cheque 12345")
       .save();

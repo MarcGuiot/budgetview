@@ -3,11 +3,14 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
+import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
+
+import javax.swing.*;
 
 public class ImportTest extends LoggedInFunctionalTestCase {
   protected Window window;
@@ -17,6 +20,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
+    openImportDialog();
+  }
+
+  private void openImportDialog() {
     window = WindowInterceptor.getModalDialog(operations.getImportTrigger());
     bankCombo = window.getComboBox("bankCombo");
     fileField = window.getInputTextBox("fileField");
@@ -176,10 +183,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     importButton.click();
     window.getButton("OK").click();
 
-    window = WindowInterceptor.getModalDialog(operations.getImportTrigger());
-    bankCombo = window.getComboBox("bankCombo");
-    fileField = window.getInputTextBox("fileField");
-    importButton = window.getButton("Import");
+    openImportDialog();
     String qifFile = QifBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
@@ -213,8 +217,68 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     checkImportMessage("You must select the account bank");
   }
 
+  public void testOfxWithUnknownBankEntities() throws Exception {
+    String fileName = OfxBuilder.init(this)
+      .addBankAccount(666, 1024, "12345678a", 12.0, "2008/06/11")
+      .addTransaction("2008/06/10", 1.0, "V'lib", MasterCategory.TRANSPORTS)
+      .addBankAccount(666, 1024, "12345678b", 12.0, "2008/06/11")
+      .addTransaction("2008/06/12", 1.0, "V'lib", MasterCategory.TRANSPORTS)
+      .addBankAccount(777, 1027, "87654321", 21.0, "2008/06/12")
+      .addTransaction("2008/06/10", 10.0, "McDo")
+      .addCardAccount("1111222233334444", 7.5, "2008/06/12")
+      .addTransaction("2008/06/10", 71.0, "Metro")
+      .save();
+
+    fileField.setText(fileName);
+    importButton.click();
+
+    Table table = window.getTable();
+    assertTrue(table.contentEquals(new Object[][]{
+      {"12/06/2008", "V'lib", "1.00"},
+      {"10/06/2008", "McDo", "10.00"},
+      {"10/06/2008", "Metro", "71.00"},
+      {"10/06/2008", "V'lib", "1.00"}}));
+
+    assertEquals(2, window.getSwingComponents(JTextArea.class).length);
+
+    TextBox accountNames0 = window.getTextBox("accountNames0");
+    assertTrue(accountNames0.textContains(new String[]{"12345678a", "12345678b"}));
+
+    TextBox accountNames1 = window.getTextBox("accountNames1");
+    assertTrue(accountNames1.textEquals("87654321"));
+
+    window.getButton("OK").click();
+    checkImportMessage("You must associate a bank to each account");
+
+    ComboBox combo0 = window.getComboBox("bankCombo0");
+    combo0.select("CIC");
+
+    ComboBox combo1 = window.getComboBox("bankCombo1");
+    combo1.select("Societe Generale");
+
+    window.getButton("OK").click();
+
+    String secondFileName = OfxBuilder.init(this)
+      .addBankAccount(666, 2048, "77777777", 77.0, "2008/06/11")
+      .addTransaction("2008/06/14", 1.0, "V'lib", MasterCategory.TRANSPORTS)
+      .save();
+    openImportDialog();
+    fileField.setText(secondFileName);
+    importButton.click();
+    window.getButton("OK").click();
+
+    transactions
+      .initContent()
+      .add("14/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
+      .add("12/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
+      .add("10/06/2008", TransactionType.VIREMENT, "McDo", "", 10.00)
+      .add("10/06/2008", TransactionType.CREDIT_CARD, "Metro", "", 71.00)
+      .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
+      .check();
+  }
+
   private void checkImportMessage(String message) {
-    TextBox accountMessage = window.getTextBox("accountMessage");
+    TextBox accountMessage = window.getTextBox("importMessage");
     assertTrue(accountMessage.textEquals(message));
   }
 

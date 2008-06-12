@@ -174,6 +174,12 @@ public class Gui {
     g2d.drawLine(x, titleHeight, x + width, titleHeight);
   }
 
+  public static Dimension getWindowSize(int width, int height) {
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    return new Dimension(Math.min(width, screenSize.width),
+                         Math.min(height, screenSize.height));
+  }
+
   public static class RolloverColorListener extends MouseAdapter {
     private final JComponent component;
     private final Color rolloverColor;

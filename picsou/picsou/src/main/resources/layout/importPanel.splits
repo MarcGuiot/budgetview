@@ -33,15 +33,21 @@
     <card name="step2">
       <column>
         <label ref="fileName"/>
+
         <scrollPane>
           <table ref="table"/>
         </scrollPane>
+
+        <panel ref="bankEntityEditionPanel"/>
 
         <row>
           <comboBox ref="accountCombo"/>
           <button ref="newAccount"/>
         </row>
         <panel ref="accountEditionPanel"/>
+
+        <label ref="importMessage"/>
+
         <row>
           <button action="finish"/>
           <button action="skipFile"/>

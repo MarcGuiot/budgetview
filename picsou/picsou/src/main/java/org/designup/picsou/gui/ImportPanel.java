@@ -14,6 +14,7 @@ import org.crossbowlabs.globs.model.format.GlobListStringifier;
 import org.crossbowlabs.globs.model.utils.GlobMatcher;
 import org.crossbowlabs.globs.model.utils.LocalGlobRepository;
 import org.crossbowlabs.globs.model.utils.LocalGlobRepositoryBuilder;
+import org.crossbowlabs.globs.model.utils.GlobMatchers;
 import org.crossbowlabs.globs.utils.Log;
 import org.crossbowlabs.globs.utils.Strings;
 import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
@@ -49,10 +50,12 @@ public abstract class ImportPanel {
   private List<File> files = new ArrayList<File>();
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
-  protected AccountEditionPanel accountEditionPanel;
+  private AccountEditionPanel accountEditionPanel;
+  private BankEntityEditionPanel bankEntityEditionPanel;
   private Glob bank;
-  protected JButton newAccountButton;
-  protected JComboBox accountComboBox;
+  private JButton newAccountButton;
+  private JComboBox accountComboBox;
+  private JLabel importMessageLabel = new JLabel();
   private Glob currentlySelectedAccount;
   private DefaultDirectory sessionDirectory;
   private GlobRepository sessionRepository;
@@ -126,8 +129,14 @@ public abstract class ImportPanel {
       }
     });
 
-    accountEditionPanel = new AccountEditionPanel(sessionRepository, sessionDirectory);
+    bankEntityEditionPanel = new BankEntityEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
+    builder.add("bankEntityEditionPanel", bankEntityEditionPanel.getPanel());
+
+    accountEditionPanel = new AccountEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
     builder.add("accountEditionPanel", accountEditionPanel.getPanel());
+
+    builder.add("importMessage", importMessageLabel);
+
     builder.add("skipFile", new SkipFileAction());
     builder.add("finish", new FinishAction());
     builder.add("close", new AbstractAction(Lang.get("close")) {
@@ -222,6 +231,7 @@ public abstract class ImportPanel {
 
       fileNameLabel.setText(file.getAbsolutePath());
       importSession.loadFile(file);
+      initBankEntityEditionPanel();
       initCreationAccountFields(file);
       if (bank != null) {
         sessionDirectory.get(SelectionService.class).select(sessionRepository.get(bank.getKey()));
@@ -234,6 +244,11 @@ public abstract class ImportPanel {
       messageLabel.setText(message);
       return false;
     }
+  }
+
+  private void initBankEntityEditionPanel() {
+    GlobList entities = sessionRepository.getAll(BankEntity.TYPE, GlobMatchers.isNull(BankEntity.BANK));
+    bankEntityEditionPanel.init(entities);
   }
 
   private void initCreationAccountFields(File file) {
@@ -278,6 +293,9 @@ public abstract class ImportPanel {
 
     public void actionPerformed(ActionEvent event) {
       if (!accountEditionPanel.check()) {
+        return;
+      }
+      if (!bankEntityEditionPanel.check()) {
         return;
       }
       importSession.importTransactions(currentlySelectedAccount);

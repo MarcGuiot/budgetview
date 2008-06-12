@@ -196,21 +196,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testManagesUnknownBanksWithADefaultOne() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addBankAccount(1234, 56, "acc1", 1.0, "2006/01/10")
-      .addTransaction("2006/01/10", -1.1, "Menu K")
-      .addTransaction("2006/01/11", -12.0, "Cheque 12345")
-      .load();
-    transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.CHECK, "12345", "", -12.00, MasterCategory.NONE)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
-      .check();
-  }
-
-  public void testTakesUserAndBankDatesIntoAccountWhenDetectingDuplicates() throws Exception {
+ public void testTakesUserAndBankDatesIntoAccountWhenDetectingDuplicates() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/15", "2006/01/10", -1.1, "Operation 1")
@@ -230,7 +216,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     String fileName = TestUtils.getFileName(this, "_setup.ofx");
     OfxWriter writer = new OfxWriter(new FileWriter(fileName));
     writer.writeHeader();
-    writer.writeBankMsgHeader(12345, 12345, "1111");
+    writer.writeBankMsgHeader(30066, 12345, "1111");
     writer.startTransaction("20060524000000", "20060524000000", -99.0, 1, "blah")
       .add("category", MasterCategory.FOOD.getName())
       .end();

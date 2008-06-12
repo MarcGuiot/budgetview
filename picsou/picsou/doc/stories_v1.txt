@@ -1,3 +1,11 @@
+Gestion des devises
+-------------------
+* Choix de la devise de l'utilisateur
+* OFX: Interdire devise compte differente de devise utilisateur
+
+
+
+
 * I18N: sous-categories
 * Mecanique pour gerer de nouvelles banques (notamment a l'international)
 

@@ -23,8 +23,9 @@ public class AccountEditionPanel {
   private GlobRepository repository;
   private JLabel messageLabel;
 
-  public AccountEditionPanel(final GlobRepository repository, Directory directory) {
+  public AccountEditionPanel(final GlobRepository repository, Directory directory, JLabel messageLabel) {
     this.repository = repository;
+    this.messageLabel = messageLabel;
 
     Directory localDirectory = new DefaultDirectory(directory);
     selectionService = new SelectionService();
@@ -45,10 +46,8 @@ public class AccountEditionPanel {
     });
     builder.addEditor(Account.NAME);
     builder.addEditor(Account.NUMBER);
-    messageLabel = new JLabel();
-    builder.add("accountMessage", messageLabel);
 
-    panel = (JPanel)builder.parse(getClass(), "/layout/newAccountPanel.splits");
+    panel = (JPanel)builder.parse(getClass(), "/layout/accountEditionPanel.splits");
     panel.setVisible(false);
   }
 

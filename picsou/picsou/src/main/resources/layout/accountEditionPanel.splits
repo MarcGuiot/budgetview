@@ -8,7 +8,6 @@
       <label text="$account.number" gridPos="(0,2)"/>
       <textField ref="number" gridPos="(1,2)"/>
     </grid>
-    <label ref="accountMessage"/>
   </column>
 
 </splits>

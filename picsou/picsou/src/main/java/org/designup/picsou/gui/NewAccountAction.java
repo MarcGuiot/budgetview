@@ -7,6 +7,7 @@ import org.crossbowlabs.globs.model.utils.LocalGlobRepository;
 import org.crossbowlabs.globs.model.utils.LocalGlobRepositoryBuilder;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.utils.GuiUtils;
+import org.crossbowlabs.splits.layout.GridBagBuilder;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
@@ -32,19 +33,28 @@ public class NewAccountAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-    final LocalGlobRepository tempRespository = LocalGlobRepositoryBuilder.init(repository)
+    final LocalGlobRepository tempRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(Bank.TYPE, BankEntity.TYPE).get();
-    accountEditionPanel = new AccountEditionPanel(tempRespository, directory);
-    CreateAccountAction action = new CreateAccountAction(tempRespository);
+
+    CreateAccountAction action = new CreateAccountAction(tempRepository);
     CancelAction cancelAction = new CancelAction();
-    PicsouDialog dialog = PicsouDialog.createWithButtons(owner, accountEditionPanel.getPanel(), action,
+    PicsouDialog dialog = PicsouDialog.createWithButtons(owner, createEditionPanel(tempRepository), action,
                                                          cancelAction);
     action.set(dialog);
     cancelAction.set(dialog);
-    createdAccount = tempRespository.create(Account.TYPE);
+    createdAccount = tempRepository.create(Account.TYPE);
     accountEditionPanel.setAccount(createdAccount, null);
     dialog.pack();
     GuiUtils.showCentered(dialog);
+  }
+
+  private JPanel createEditionPanel(LocalGlobRepository tempRepository) {
+    JLabel messageLabel = new JLabel();
+    accountEditionPanel = new AccountEditionPanel(tempRepository, directory, messageLabel);
+    return GridBagBuilder.init()
+      .add(accountEditionPanel.getPanel(), 0, 0, 1, 1, new Insets(10,10,10,10))
+      .add(messageLabel, 0, 1, 1, 1, new Insets(10,10,10,10))
+      .getPanel();
   }
 
   private class CancelAction extends AbstractAction {

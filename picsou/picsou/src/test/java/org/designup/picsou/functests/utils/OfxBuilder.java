@@ -152,7 +152,7 @@ public class OfxBuilder {
   private OfxBuilder doAddTransaction(String userDate, String bankDate, double amount, String label, String note,
                                       Integer[] categoryIds, Integer parentId, Boolean dispensable) {
     if (currentAccount == null) {
-      addBankAccount(12345, 1234, DEFAULT_ACCOUNT_ID, 1.25, "2006/05/24");
+      addBankAccount(30066, 1234, DEFAULT_ACCOUNT_ID, 1.25, "2006/05/24");
     }
     if (bankDate == null) {
       bankDate = userDate;
