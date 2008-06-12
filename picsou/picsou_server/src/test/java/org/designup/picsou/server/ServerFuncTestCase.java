@@ -59,6 +59,10 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     if (message != null) {
       assertTrue(message.textIsEmpty());
     }
+    if (fileName.endsWith(".qif")) {
+      window.getComboBox("accountBank").select("Societe Generale");
+      window.getInputTextBox("number").setText("333");
+    }
 
     window.getButton("OK").click();
   }

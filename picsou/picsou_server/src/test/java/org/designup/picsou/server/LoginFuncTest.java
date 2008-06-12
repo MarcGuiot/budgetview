@@ -48,6 +48,7 @@ public class LoginFuncTest extends ServerFuncTestCase {
 
     window.getButton("Import").click();
     window.getInputTextBox("number").setText("1111");
+    window.getComboBox("accountBank").select("Societe Generale");
     window.getButton("OK").click();
 
     Table table = window.getTable("category");
