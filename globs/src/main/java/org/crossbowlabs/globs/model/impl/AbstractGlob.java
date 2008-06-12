@@ -99,7 +99,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
   public FieldValues getValues() {
     FieldValuesBuilder builder = FieldValuesBuilder.init();
     for (Field field : type.getFields()) {
-      if (includeKeyFields || !field.isKeyField()) {
+      if (!field.isKeyField()) {
         builder.setObject(field, values[field.getIndex()]);
       }
     }

@@ -33,9 +33,7 @@ public class GlobRepeatView implements ComponentHolder {
     this.jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
     this.model = new GlobViewModel(type, repository, comparator, new GlobViewModel.Listener() {
       public void globInserted(int index) {
-        System.out.println("GlobRepeatView.globInserted " + index);
         Glob glob = model.get(index);
-        System.out.println("GlobRepeatView.globInserted " + glob);
         ComponentHolder panel = factory.getComponent(glob, repository, directory);
         panels.add(index, panel);
         jPanel.add(panel.getComponent(), index);
@@ -43,12 +41,10 @@ public class GlobRepeatView implements ComponentHolder {
       }
 
       public void globUpdated(int index) {
-        System.out.println("GlobRepeatView.globUpdated");
         revalidate();
       }
 
       public void globRemoved(int index) {
-        System.out.println("GlobRepeatView.globRemoved");
         jPanel.remove(index);
         ComponentHolder panel = panels.remove(index);
         panel.dispose();
@@ -72,7 +68,6 @@ public class GlobRepeatView implements ComponentHolder {
   }
 
   private void initPanel() {
-    System.out.println("GlobRepeatView.initPanel");
     jPanel.removeAll();
     jPanel.repaint();
     for (ComponentHolder panel : panels) {
