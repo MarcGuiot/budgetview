@@ -37,10 +37,15 @@ Packaging
 * Packaging Mac
 
 
-Misc
+Bugs
 ----
 * Frame en 1024x768
-* Joliesse fenetre split transaction
 * CategoryView: selection par drag dans colonne expand
 * CategoryView: selection par drag dans colonne name
 * CategoryView: desactiver tri
+* CategoryView: creation d'une sous-categorie ignoree au open suivant
+
+Misc
+----
+* Joliesse fenetre split transaction
+

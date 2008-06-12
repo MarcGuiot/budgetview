@@ -35,8 +35,7 @@ public class MainWindowLauncher {
     PicsouInit init = PicsouInit.init(serverAccess, "user", true, directory);
 
     MainWindow window = new MainWindow();
-    MainPanel panel = new MainPanel(init.getRepository(), init.getDirectory(), window.getFrame());
-    window.setPanel(panel.getJPanel());
+    MainPanel panel = MainPanel.show(init.getRepository(), init.getDirectory(), window);
     if (args.length > 0) {
       panel.openFile(new File(args[0]), true);
     }

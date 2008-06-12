@@ -305,7 +305,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2, MasterCategory.NONE)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2)
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.0, MasterCategory.BEAUTY)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
       .check();

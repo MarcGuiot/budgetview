@@ -2,9 +2,11 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.crossbowlabs.splits.utils.GuiUtils;
+import org.crossbowlabs.globs.model.GlobRepository;
 import org.designup.picsou.gui.transactions.SplitTransactionDialog;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import org.designup.picsou.gui.utils.PicsouFrame;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
@@ -27,6 +29,7 @@ import java.util.List;
 public class TransactionChecker extends DataChecker {
   private Table table;
   private Window window;
+  public static final String TO_CATEGORIZE = "To categorize";
 
   public TransactionChecker(Window window) {
     this.window = window;
@@ -48,7 +51,7 @@ public class TransactionChecker extends DataChecker {
     if (table == null) {
       table = window.getTable(Transaction.TYPE.getName());
       table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
-      table.setCellValueConverter(TransactionView.CATEGORY_COLUMN_INDEX, new CategoryCellConverter());
+      table.setCellValueConverter(TransactionView.CATEGORY_COLUMN_INDEX, new CategoryCellConverter(window));
       table.setCellValueConverter(TransactionView.AMOUNT_COLUMN_INDEX, new AmountCellConverter());
     }
     return table;
@@ -117,6 +120,9 @@ public class TransactionChecker extends DataChecker {
   }
 
   private static String stringifyCategoryNames(MasterCategory... categories) {
+    if ((categories.length == 0) || ((categories.length == 1) && categories[0].equals(MasterCategory.NONE))) {
+      return TO_CATEGORIZE;
+    }
     int index = 0;
     StringBuilder builder = new StringBuilder();
     for (MasterCategory category : categories) {
@@ -129,6 +135,9 @@ public class TransactionChecker extends DataChecker {
   }
 
   private static String stringifySubCategoryNames(String... categories) {
+    if (categories.length == 0) {
+      return TO_CATEGORIZE;
+    }
     int index = 0;
     StringBuilder builder = new StringBuilder();
     for (String category : categories) {
@@ -163,10 +172,17 @@ public class TransactionChecker extends DataChecker {
     }
 
     public ContentChecker add(String date, TransactionType type, String label,
-                              String note, double amount, MasterCategory categorie, MasterCategory... categories) {
-      add(date, type, label, note, amount, getCategoryName(categorie) + (categories.length != 0 ? ", " : "") +
-                                           stringifyCategoryNames(categories));
+                              String note, double amount, MasterCategory category, MasterCategory... categories) {
+      add(date, type, label, note, amount, stringifyCategories(category, categories));
       return this;
+    }
+
+    private String stringifyCategories(MasterCategory category, MasterCategory... categories) {
+      if (MasterCategory.NONE.equals(category)) {
+        return stringifyCategoryNames(categories);
+      }
+      return getCategoryName(category) +
+             (categories.length == 0 ? "" : ", " + stringifyCategoryNames(categories));
     }
 
     public void check() {
@@ -186,7 +202,7 @@ public class TransactionChecker extends DataChecker {
     public SplitDialog(Window window) {
       this.window = window;
       splitsTable = window.getTable();
-      splitsTable.setCellValueConverter(SplitTransactionDialog.CATEGORY_COLUMN_INDEX, new CategoryCellConverter());
+      splitsTable.setCellValueConverter(SplitTransactionDialog.CATEGORY_COLUMN_INDEX, new CategoryCellConverter(window));
       splitsTable.setCellValueConverter(SplitTransactionDialog.REMOVE_SPLIT_COLUMN_INDEX, new TableCellValueConverter() {
         public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
           return "";

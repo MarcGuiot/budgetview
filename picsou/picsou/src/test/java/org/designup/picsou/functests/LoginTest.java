@@ -6,6 +6,7 @@ import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.utils.PicsouFrame;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
@@ -74,7 +75,7 @@ public class LoginTest extends ServerFunctionalTestCase {
       .save();
 
     createUser("toto", "p4ssw0rd", filePath);
-    new TransactionChecker(window)
+    getTransactionChecker()
       .initContent()
       .add("11/01/2006", TransactionType.CHECK, "12345", "", -12.00, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
@@ -82,7 +83,7 @@ public class LoginTest extends ServerFunctionalTestCase {
 
     openNewLoginWindow();
     login("toto", "p4ssw0rd");
-    new TransactionChecker(window)
+    getTransactionChecker()
       .initContent()
       .add("11/01/2006", TransactionType.CHECK, "12345", "", -12.00, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
@@ -207,7 +208,7 @@ public class LoginTest extends ServerFunctionalTestCase {
 
     window.getButton("OK").click();
 
-    new TransactionChecker(window)
+    getTransactionChecker()
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
@@ -229,12 +230,12 @@ public class LoginTest extends ServerFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
     createUser("toto", "p4ssw0rd", path);
-    new TransactionChecker(window)
+    getTransactionChecker()
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
 
-    TransactionChecker checker = new TransactionChecker(window);
+    TransactionChecker checker = getTransactionChecker();
     checker.assignCategory(MasterCategory.FOOD, 0);
 
     openNewLoginWindow();
@@ -244,7 +245,7 @@ public class LoginTest extends ServerFunctionalTestCase {
       .init(this, new OperationChecker(window))
       .addTransaction("2006/01/12", -2, "Menu K")
       .load();
-    new TransactionChecker(window)
+    getTransactionChecker()
       .initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2, MasterCategory.FOOD)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
@@ -301,4 +302,7 @@ public class LoginTest extends ServerFunctionalTestCase {
     }
   }
 
+  private TransactionChecker getTransactionChecker() {
+    return new TransactionChecker(window);
+  }
 }

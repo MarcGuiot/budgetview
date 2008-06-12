@@ -5,11 +5,12 @@ import com.jgoodies.looks.plastic.PicsouWindowsLookAndFeel;
 import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouFrame;
 
 import javax.swing.*;
 
 public class MainWindow {
-  private JFrame frame;
+  private PicsouFrame frame;
   static {
     try {
       if (Gui.isMacOSX()) {
@@ -34,7 +35,7 @@ public class MainWindow {
   }
 
   public MainWindow() throws Exception {
-    frame = new JFrame("Picsou");
+    frame = new PicsouFrame("Picsou");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
 
@@ -43,7 +44,7 @@ public class MainWindow {
     frame.validate();
   }
 
-  public JFrame getFrame() {
+  public PicsouFrame getFrame() {
     return frame;
   }
 

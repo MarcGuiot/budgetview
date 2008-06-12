@@ -12,6 +12,7 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionToCategory;
+import org.designup.picsou.utils.Lang;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,19 +45,26 @@ class TransactionCategoryColumn extends AbstractTransactionEditor {
     selectRolloverIcon = iconLocator.get("selectrollover.png");
   }
 
-  protected Component getComponent(Glob transaction) {
+  protected Component getComponent(final Glob transaction) {
     isCategoryNone = Transaction.hasNoCategory(transaction);
     isMultiCategorized = TransactionToCategory.hasCategories(transaction, repository);
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
     addCategorySelector(panel, transaction);
-    if (!isCategoryNone || isMultiCategorized) {
-      addCategoriesToPanel(panel, transaction);
+    if (!isCategoryNone && !isMultiCategorized) {
+      Glob category = repository.get(Key.create(Category.TYPE, transaction.get(Transaction.CATEGORY)));
+      JLabel label = addCategoryLabel(category, repository, panel);
+      rendererColors.setTransactionBackground(panel, isSelected, row);
     }
     else {
-      panel.add(createLabel(" ", Color.WHITE, Color.BLACK));
-    }
-    if (isCategoryNone || isMultiCategorized) {
+      JLabel label = createLabel(Lang.get("category.assignement.required"), Color.RED, Color.RED);
+      panel.add(label);
+      Gui.setRolloverColor(label, rendererColors.getRolloverCategoryColor());
+      label.addMouseListener(new MouseAdapter() {
+        public void mouseReleased(MouseEvent e) {
+          openCategoryChooser(transaction);
+        }
+      });
       if (isSelected) {
         panel.setBackground(rendererColors.getSelectionErrorBgColor());
       }
@@ -73,15 +81,19 @@ class TransactionCategoryColumn extends AbstractTransactionEditor {
     final JButton chooseCategoryButton = new JButton();
     chooseCategoryButton.setAction(new AbstractAction() {
       public void actionPerformed(ActionEvent event) {
-        tableView.getComponent().requestFocus();
-        selectTransactionIfNeeded(transaction);
-        categoryChooserAction.actionPerformed(event);
+        openCategoryChooser(transaction);
       }
     });
     Gui.setIcons(chooseCategoryButton, addIcon, addRolloverIcon, addRolloverIcon);
     Gui.configureIconButton(chooseCategoryButton, "Add", new Dimension(13, 13));
     panel.add(chooseCategoryButton);
     panel.add(Box.createRigidArea(new Dimension(3, 0)));
+  }
+
+  private void openCategoryChooser(Glob transaction) {
+    tableView.getComponent().requestFocus();
+    selectTransactionIfNeeded(transaction);
+    categoryChooserAction.actionPerformed(null);
   }
 
   private void selectTransactionIfNeeded(Glob transaction) {
@@ -96,8 +108,6 @@ class TransactionCategoryColumn extends AbstractTransactionEditor {
 
   private void addCategoriesToPanel(JPanel panel, final Glob transaction) {
     if (!isCategoryNone) {
-      final Glob category = repository.get(Key.create(Category.TYPE, transaction.get(Transaction.CATEGORY)));
-      addCategoryLabel(category, repository, panel);
     }
     else {
       GlobList categories = TransactionToCategory.getCategories(transaction, repository)

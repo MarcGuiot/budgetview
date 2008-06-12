@@ -39,16 +39,17 @@ public class MainPanel {
   private ExportFileAction exportFileAction;
   private ExitAction exitAction;
 
-  public static void show(GlobRepository repository, Directory directory,
-                          MainWindow mainWindow) {
+  public static MainPanel show(GlobRepository repository, Directory directory, MainWindow mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow.getFrame());
     PicsouApplication.initialFile = null;
     mainWindow.setPanel(panel.panel);
+    mainWindow.getFrame().setRepository(repository);
+    return panel;
   }
 
-  public MainPanel(GlobRepository repository, Directory directory, JFrame parent) {
+  private MainPanel(GlobRepository repository, Directory directory, JFrame parent) {
     this.parent = parent;
-    directory.add(parent);
+    directory.add(JFrame.class, parent);
 
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
