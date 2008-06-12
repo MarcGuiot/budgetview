@@ -1,4 +1,4 @@
-package org.designup.picsou.importer;
+package org.designup.picsou.importer.utils;
 
 import junit.framework.TestCase;
 
@@ -6,18 +6,18 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.crossbowlabs.globs.utils.TestUtils;
+import org.designup.picsou.importer.utils.RepeatableInputStream;
 
-public class RepetableInputStreamTest extends TestCase{
+public class RepeatableInputStreamTest extends TestCase{
 
   public void test() throws Exception {
     ByteArrayInputStream stream = new ByteArrayInputStream("some data".getBytes());
-    RepetableInputStream repetableInputStream = new RepetableInputStream(stream);
+    RepeatableInputStream repeatableInputStream = new RepeatableInputStream(stream);
     byte[] expected = new byte[100];
-    int expectedLength = repetableInputStream.read(expected);
-    repetableInputStream.reset();
+    int expectedLength = repeatableInputStream.read(expected);
+    repeatableInputStream.reset();
     byte[] reread = new byte[100];
-    int effectiveLength = repetableInputStream.read(reread);
+    int effectiveLength = repeatableInputStream.read(reread);
     assertEquals(expectedLength, effectiveLength);
     assertEquals(new String(expected, 0, expectedLength), new String(reread, 0, expectedLength));
   }
@@ -27,29 +27,29 @@ public class RepetableInputStreamTest extends TestCase{
     bigBuffer[bigBuffer.length -1] = 'a';
     bigBuffer[bigBuffer.length -2] = 'b';
     ByteArrayInputStream stream = new ByteArrayInputStream(bigBuffer);
-    RepetableInputStream repetableInputStream = new RepetableInputStream(stream);
-    checkContent(bigBuffer, repetableInputStream);
-    repetableInputStream.reset();
-    checkContent(bigBuffer, repetableInputStream);
+    RepeatableInputStream repeatableInputStream = new RepeatableInputStream(stream);
+    checkContent(bigBuffer, repeatableInputStream);
+    repeatableInputStream.reset();
+    checkContent(bigBuffer, repeatableInputStream);
   }
 
   public void testResetWithReader() throws Exception {
     ByteArrayInputStream stream = new ByteArrayInputStream("some data".getBytes());
     InputStreamReader streamReader = new InputStreamReader(stream);
     assertTrue(streamReader.ready());
-    RepetableInputStream repetableInputStream = new RepetableInputStream(stream);
+    RepeatableInputStream repeatableInputStream = new RepeatableInputStream(stream);
     byte[] expected = new byte[100];
-    repetableInputStream.read(expected);
-    repetableInputStream.reset();
-    InputStreamReader newStreamReader = new InputStreamReader(repetableInputStream);
+    repeatableInputStream.read(expected);
+    repeatableInputStream.reset();
+    InputStreamReader newStreamReader = new InputStreamReader(repeatableInputStream);
     assertTrue(newStreamReader.ready());
   }
 
-  private void checkContent(byte[] bigBuffer, RepetableInputStream repetableInputStream) throws IOException {
+  private void checkContent(byte[] bigBuffer, RepeatableInputStream repeatableInputStream) throws IOException {
     byte[] expected = new byte[100];
     int expectedLength;
     int total = 0;
-    while ((expectedLength = repetableInputStream.read(expected)) != -1){
+    while ((expectedLength = repeatableInputStream.read(expected)) != -1){
       total += expectedLength;
     }
     assertEquals('a', expected[total % 100  - 1]);

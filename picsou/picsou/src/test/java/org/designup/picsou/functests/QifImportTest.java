@@ -20,7 +20,6 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
                            fileName);
 
     operations.importQifFile(100.0, fileName, "Societe Generale");
-// TODO:   imports.check("2006/04/20", 100.0);
     transactions
       .initContent()
       .add("20/04/2006", TransactionType.CREDIT_CARD, "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", "", -49.00, MasterCategory.FOOD)
@@ -72,6 +71,74 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("19/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
       .check();
+  }
+
+  public void testBankDateWithFrenchFormat() throws Exception {
+    checkBankDate("20/04/2006", "20/04/2006");
+  }
+
+  public void testBankDateWithFrenchFormatAndShortDate() throws Exception {
+    checkBankDate("20/04/06", "20/04/2006");
+  }
+
+  public void testUserDateWithFrenchFormat() throws Exception {
+    String[] blocks = {
+      "D20/04/2006" + "\n" +
+      "T-17.65\n" +
+      "N\n" +
+      "PFAC.FRANCE 4561409\n" +
+      "MFAC.FRANCE 4561409787231717 19/04/06 STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS\n" +
+      "^"};
+    importBlocks(blocks);
+    transactions.initContent()
+      .add("19/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
+      .check();
+  }
+
+  public void testBankDateWithEnglishFormat() throws Exception {
+    checkBankDate("04/20/2006", "20/04/2006");
+  }
+
+  public void testBankDateWithEnglishFormatAndShortDate() throws Exception {
+    checkBankDate("04/20/06", "20/04/2006");
+  }
+
+  public void testUserDateWithEnglishFormat() throws Exception {
+    String[] blocks = {
+      "D20/04/2006" + "\n" +
+      "T-17.65\n" +
+      "N\n" +
+      "PFAC.FRANCE 4561409\n" +
+      "MFAC.FRANCE 4561409787231717 04/19/06 STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS\n" +
+      "^"};
+    importBlocks(blocks);
+    transactions.initContent()
+      .add("19/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
+      .check();
+  }
+
+  private void checkBankDate(String input, String expected) {
+    String[] blocks = {
+      "D" + input + "\n" +
+      "T-17.65\n" +
+      "N\n" +
+      "PPRELEVEMENT 666152\n" +
+      "MPRELEVEMENT 6661529970  TPS FRA01107365A040606/T.P.S. 000103017914\n" +
+      "^"};
+    importBlocks(blocks);
+    transactions.initContent()
+      .add(expected, TransactionType.PRELEVEMENT, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
+      .check();
+  }
+
+  private void importBlocks(String[] blocks) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("!Type:Bank\n");
+    for (String block : blocks) {
+      builder.append(block);
+    }
+    String file = createQifFile("file", builder.toString());
+    operations.importQifFile(12.50, file, "Societe Generale");
   }
 
   private String createQifFile(String discriminant) {

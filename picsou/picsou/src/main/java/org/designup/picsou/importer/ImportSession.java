@@ -12,6 +12,7 @@ import org.crossbowlabs.globs.utils.exceptions.TruncatedFile;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
+import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 

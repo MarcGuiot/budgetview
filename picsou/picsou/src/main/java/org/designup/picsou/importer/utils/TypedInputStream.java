@@ -1,16 +1,20 @@
-package org.designup.picsou.importer;
+package org.designup.picsou.importer.utils;
+
+import org.designup.picsou.importer.utils.RepeatableInputStream;
+import org.designup.picsou.importer.utils.UTF8Detector;
+import org.designup.picsou.importer.BankFileType;
 
 import java.io.*;
 
 public class TypedInputStream {
   private BankFileType type;
-  private RepetableInputStream stream;
+  private RepeatableInputStream stream;
   private boolean notUTF8;
   private static final String DEFAULT_ENCODING = "ISO-8859-15";
   private String fileName = "undef";
 
   public TypedInputStream(File file) throws IOException {
-    stream = new RepetableInputStream(new FileInputStream(file));
+    stream = new RepeatableInputStream(new FileInputStream(file));
     checkCoding();
     fileName = file.getName().toLowerCase();
     if (fileName.endsWith(".ofx")) {
@@ -22,7 +26,7 @@ public class TypedInputStream {
   }
 
   public TypedInputStream(InputStream inputStream) throws IOException {
-    stream = new RepetableInputStream(inputStream);
+    stream = new RepeatableInputStream(inputStream);
     checkCoding();
 
     Reader reader = new InputStreamReader(stream);
@@ -41,7 +45,7 @@ public class TypedInputStream {
     }
   }
 
-  public RepetableInputStream getRepetableStream() {
+  public RepeatableInputStream getRepetableStream() {
     return stream;
   }
 

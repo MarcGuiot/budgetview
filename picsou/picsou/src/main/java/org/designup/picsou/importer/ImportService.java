@@ -3,15 +3,14 @@ package org.designup.picsou.importer;
 import org.crossbowlabs.globs.model.*;
 import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
 import org.crossbowlabs.globs.utils.exceptions.TruncatedFile;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.importer.ofx.OfxImporter;
 import org.designup.picsou.importer.qif.QifImporter;
+import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionImport;
 
 import java.io.IOException;
-import java.io.File;
 import java.util.Date;
 
 public class ImportService {

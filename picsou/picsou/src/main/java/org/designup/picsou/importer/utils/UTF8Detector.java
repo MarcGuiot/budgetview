@@ -1,4 +1,4 @@
-package org.designup.picsou.importer;
+package org.designup.picsou.importer.utils;
 
 
 public class UTF8Detector {

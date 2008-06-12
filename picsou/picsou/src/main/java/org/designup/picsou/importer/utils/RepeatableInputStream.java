@@ -1,10 +1,10 @@
-package org.designup.picsou.importer;
+package org.designup.picsou.importer.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class RepetableInputStream extends InputStream {
+public class RepeatableInputStream extends InputStream {
   private StreamPart firstStreamPart;
   private StreamPart currentPart;
   private InputStream currentInputStream;
@@ -32,7 +32,7 @@ public class RepetableInputStream extends InputStream {
   }
 
 
-  public RepetableInputStream(InputStream stream) throws IOException {
+  public RepeatableInputStream(InputStream stream) throws IOException {
     firstStreamPart = readPart(stream);
     init();
   }

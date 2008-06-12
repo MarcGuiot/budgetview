@@ -1,6 +1,7 @@
-package org.designup.picsou.importer;
+package org.designup.picsou.importer.utils;
 
 import junit.framework.TestCase;
+import org.designup.picsou.importer.utils.UTF8Detector;
 
 public class UTF8DetectorTest extends TestCase {
 
