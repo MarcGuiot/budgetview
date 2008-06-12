@@ -58,7 +58,7 @@ public class PrevaylerPersistence implements Persistence {
     return hiddenUser.get(HiddenUser.USER_ID);
   }
 
-  public RootDataManager.UserInfo createUser(String name, boolean isRegisteredUser, byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
+  public UserInfo createUser(String name, boolean isRegisteredUser, byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
     return rootDataManager.createUserAndHiddenUser(name, isRegisteredUser, cryptedPassword, linkInfo, cryptedLinkInfo);
   }
 
@@ -94,7 +94,7 @@ public class PrevaylerPersistence implements Persistence {
   private GlobList getFiltered(int userId, GlobType globType) {
     GlobList list = accountDataManager.getUserData(userId);
     for (java.util.Iterator it = list.iterator(); it.hasNext();) {
-      Glob glob = (Glob) it.next();
+      Glob glob = (Glob)it.next();
       if (glob.getType() != globType) {
         it.remove();
       }

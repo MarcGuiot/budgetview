@@ -3,13 +3,15 @@ package org.crossbowlabs.globs.model.impl;
 import org.crossbowlabs.globs.metamodel.Field;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.metamodel.fields.*;
-import org.crossbowlabs.globs.model.Key;
 import org.crossbowlabs.globs.model.FieldValue;
+import org.crossbowlabs.globs.model.Key;
 import org.crossbowlabs.globs.model.utils.FieldValueGetter;
 import org.crossbowlabs.globs.utils.Utils;
 import org.crossbowlabs.globs.utils.exceptions.MissingInfo;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 public class CompositeKey extends Key {
   private GlobType type;
@@ -70,17 +72,6 @@ public class CompositeKey extends Key {
     catch (Exception e) {
       throw new RuntimeException(e);
     }
-  }
-
-  public Map<Field, Object> getMap() {
-    Map<Field, Object> result = new HashMap<Field, Object>();
-    List<Field> fields = type.getKeyFields();
-    int index = 0;
-    for (Field field : fields) {
-      result.put(field, values[index++]);
-    }
-
-    return result;
   }
 
   protected Object doGet(Field field) {

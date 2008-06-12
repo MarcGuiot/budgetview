@@ -2,6 +2,7 @@ package org.crossbowlabs.globs.sqlstreams.constraints.impl;
 
 import org.crossbowlabs.globs.metamodel.Field;
 import org.crossbowlabs.globs.metamodel.GlobType;
+import org.crossbowlabs.globs.model.FieldValue;
 import org.crossbowlabs.globs.model.Key;
 import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
 
@@ -17,7 +18,9 @@ public class KeyConstraint {
   }
 
   public void setValue(Key key) {
-    this.values = key.getMap();
+    for (FieldValue fieldValue : key.toArray()) {
+      this.values.put(fieldValue.getField(), fieldValue.getValue());
+    }
     if (key.getGlobType() != globType) {
       throw new UnexpectedApplicationState("Bad key received was " + key.getGlobType().getName() +
                                            " but " + globType.getName() + " was expected");

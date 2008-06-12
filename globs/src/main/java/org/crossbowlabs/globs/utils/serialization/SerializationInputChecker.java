@@ -1,8 +1,8 @@
 package org.crossbowlabs.globs.utils.serialization;
 
 import org.crossbowlabs.globs.metamodel.GlobModel;
-import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.ChangeSet;
+import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.delta.DeltaGlob;
 import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
 
@@ -109,7 +109,7 @@ public class SerializationInputChecker implements SerializedInput {
   public double readNotNullDouble() {
     String value = serializedInput.readString();
     if ("double".equals(value)) {
-      return serializedInput.readDouble();
+      return serializedInput.readNotNullDouble();
     }
     else {
       throw new UnexpectedApplicationState("Double expected but got " + value);

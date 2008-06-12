@@ -588,13 +588,14 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
       public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
         changeSet.safeVisit(DummyObject.TYPE, new ChangeSetVisitor() {
           public void visitCreation(Key key, FieldValues values) throws Exception {
-            String newValue = values.get(DummyObject.NAME) + "-created";
+            String newValue = (values.contains(DummyObject.NAME) ? values.get(DummyObject.NAME) : "null") + "-created";
             repository.update(key, DummyObject.NAME, newValue);
             createObj2(repository, key, key + " created");
           }
 
           public void visitUpdate(Key key, FieldValues values) throws Exception {
-            repository.update(key, DummyObject.NAME, values.get(DummyObject.NAME) + "-updated");
+            repository.update(key, DummyObject.NAME,
+                              (values.contains(DummyObject.NAME) ? values.get(DummyObject.NAME) : "null") + "-updated");
             createObj2(repository, key, key + " updated");
           }
 

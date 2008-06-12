@@ -42,7 +42,7 @@ public class RowPanel extends Panel implements Submittable {
                   DescriptionService descriptionService) {
     super(parentId);
     this.key = glob.getKey();
-    this.values = new DefaultFieldValues(glob.getValues(false));
+    this.values = new DefaultFieldValues(glob);
     this.submitListeners = submitListeners;
     this.tableId = tableId;
     setRenderBodyOnly(true);

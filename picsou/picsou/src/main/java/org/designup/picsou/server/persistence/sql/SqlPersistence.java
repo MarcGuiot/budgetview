@@ -30,7 +30,6 @@ import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.client.exceptions.IdentificationFailed;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.server.model.*;
-import org.designup.picsou.server.persistence.prevayler.RootDataManager;
 import org.designup.picsou.server.session.Persistence;
 
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class SqlPersistence implements Persistence {
     this.directory = directory;
   }
 
-  public RootDataManager.UserInfo createUser(String name, boolean isRegisteredUser, byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
+  public UserInfo createUser(String name, boolean isRegisteredUser, byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
     SqlConnection sqlConnection = sqlService.getDb();
     try {
       Ref<BlobAccessor> linkInfoAccessor = new Ref<BlobAccessor>();
@@ -73,7 +72,7 @@ public class SqlPersistence implements Persistence {
       boolean userIdAllocated = false;
       int userId = 0;
       while (!userIdAllocated) {
-        userId = (int) (Math.random() * Integer.MAX_VALUE);
+        userId = (int)(Math.random() * Integer.MAX_VALUE);
         hiddenUserStream = sqlConnection.getQueryBuilder(HiddenUser.TYPE, Constraints.equal(HiddenUser.USER_ID, userId))
           .getQuery().execute();
         if (!hiddenUserStream.next()) {
@@ -93,7 +92,7 @@ public class SqlPersistence implements Persistence {
         .getRequest()
         .run();
       sqlConnection.commitAndClose();
-      return new RootDataManager.UserInfo(userId, false);
+      return new UserInfo(userId, false);
     }
     finally {
       sqlConnection.commitAndClose();

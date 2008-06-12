@@ -50,12 +50,8 @@ public class DefaultGlobType extends AnnotatedPropertyHolder<GlobType> implement
     return fieldsByName.get(name);
   }
 
-  public Iterable<Field> getFields() {
-    return new Iterable<Field>() {
-      public Iterator<Field> iterator() {
-        return new ArrayIterator(fields);
-      }
-    };
+  public Field[] getFields() {
+    return fields;
   }
 
   public Field getField(int index) {

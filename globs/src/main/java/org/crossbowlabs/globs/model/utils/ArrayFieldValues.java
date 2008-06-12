@@ -4,9 +4,6 @@ import org.crossbowlabs.globs.metamodel.Field;
 import org.crossbowlabs.globs.model.FieldValue;
 import org.crossbowlabs.globs.model.impl.AbstractFieldValues;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ArrayFieldValues extends AbstractFieldValues {
 
   private FieldValue[] values;
@@ -41,14 +38,6 @@ public class ArrayFieldValues extends AbstractFieldValues {
     for (FieldValue value : values) {
       functor.process(value.getField(), value.getValue());
     }
-  }
-
-  public Map<Field, Object> getMap() {
-    Map<Field, Object> result = new HashMap<Field, Object>();
-    for (FieldValue value : values) {
-      result.put(value.getField(), value.getValue());
-    }
-    return result;
   }
 
   public FieldValue[] toArray() {

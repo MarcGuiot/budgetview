@@ -14,7 +14,6 @@ import org.crossbowlabs.globs.model.delta.MutableChangeSet;
 import org.crossbowlabs.globs.model.indexing.IndexManager;
 import org.crossbowlabs.globs.model.indexing.IndexSource;
 import org.crossbowlabs.globs.model.indexing.IndexTables;
-import org.crossbowlabs.globs.model.utils.GlobArrayFieldValues;
 import org.crossbowlabs.globs.model.utils.GlobIdGenerator;
 import org.crossbowlabs.globs.model.utils.GlobMatcher;
 import org.crossbowlabs.globs.model.utils.GlobMatchers;
@@ -200,8 +199,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       indexTables.add(glob);
     }
 
-    FieldValues fieldValues = new GlobArrayFieldValues(type, globValuesArray);
-    changeSetToDispatch.processCreation(key, fieldValues);
+    changeSetToDispatch.processCreation(key, glob);
     notifyListeners();
     return glob;
   }
@@ -350,7 +348,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     }
     disable(glob);
     globs.remove(key.getGlobType(), key);
-    changeSetToDispatch.processDeletion(key, glob.getValues(false));
+    changeSetToDispatch.processDeletion(key, glob);
     notifyListeners();
   }
 
@@ -369,7 +367,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
           indexTables.remove(glob);
         }
         disable(glob);
-        toBeRemoved.add(new Pair<Key, FieldValues>(glob.getKey(), glob.getValues(false)));
+        toBeRemoved.add(new Pair<Key, FieldValues>(glob.getKey(), glob));
       }
       for (Pair<Key, FieldValues> pair : toBeRemoved) {
         Key key = pair.getFirst();
@@ -401,7 +399,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
           Glob glob = entry.getValue();
           disable(glob);
           toBeRemoved
-            .add(new Pair<Key, FieldValues>(entry.getKey(), entry.getValue().getValues(false)));
+            .add(new Pair<Key, FieldValues>(entry.getKey(), entry.getValue()));
         }
         IndexTables indexTables = indexManager.getAssociatedTable(type);
         if (indexTables != null) {

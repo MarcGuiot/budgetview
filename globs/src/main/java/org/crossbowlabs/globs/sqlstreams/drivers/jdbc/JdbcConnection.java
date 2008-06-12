@@ -95,9 +95,10 @@ public abstract class JdbcConnection implements SqlConnection {
       .append(sqlService.getTableName(globType))
       .append(" ( ");
     SqlFieldCreationVisitor creationVisitor = getFieldVisitorCreator(writer);
-    for (Iterator<Field> it = globType.getFields().iterator(); it.hasNext();) {
-      Field field = it.next();
-      field.safeVisit(creationVisitor.appendComma(it.hasNext()));
+    int count = 1;
+    for (Field field : globType.getFields()) {
+      field.safeVisit(creationVisitor.appendComma(count != globType.getFieldCount()));
+      count++;
     }
     Iterator<Field> iterator = globType.getKeyFields().iterator();
     if (iterator.hasNext()) {

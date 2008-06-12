@@ -22,7 +22,10 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
   }
 
   public DefaultFieldValues(FieldValues newValues) {
-    this.values.putAll(newValues.getMap());
+    FieldValue[] values = newValues.toArray();
+    for (FieldValue fieldValue : values) {
+      this.values.put(fieldValue.getField(), fieldValue.getValue());
+    }
   }
 
   public boolean contains(Field field) {
@@ -41,10 +44,6 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
     for (Map.Entry<Field, Object> entry : values.entrySet()) {
       functor.process(entry.getKey(), entry.getValue());
     }
-  }
-
-  public Map<Field, Object> getMap() {
-    return new HashMap<Field, Object>(values);
   }
 
   public void setValue(Field field, Object value) throws InvalidParameter {
@@ -121,7 +120,7 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
       return false;
     }
 
-    final DefaultFieldValues that = (DefaultFieldValues) o;
+    final DefaultFieldValues that = (DefaultFieldValues)o;
 
     if (values != null ? !values.equals(that.values) : that.values != null) {
       return false;

@@ -63,9 +63,9 @@ public class PRootDataManager implements RootDataManager {
 
   public Glob getHiddenUser(final String linkInfo) {
     try {
-      return (Glob) prevayler.execute(new Query() {
+      return (Glob)prevayler.execute(new Query() {
         public Object query(Object prevalentSystem, Date executionTime) throws Exception {
-          return ((PRootData) prevalentSystem).getHiddenUser(linkInfo);
+          return ((PRootData)prevalentSystem).getHiddenUser(linkInfo);
         }
       });
     }
@@ -76,9 +76,9 @@ public class PRootDataManager implements RootDataManager {
 
   public Glob getUser(final String name) {
     try {
-      return (Glob) prevayler.execute(new Query() {
+      return (Glob)prevayler.execute(new Query() {
         public Object query(Object prevalentSystem, Date executionTime) throws Exception {
-          return ((PRootData) prevalentSystem).getUser(name);
+          return ((PRootData)prevalentSystem).getUser(name);
         }
       });
     }
@@ -87,11 +87,11 @@ public class PRootDataManager implements RootDataManager {
     }
   }
 
-  public UserInfo createUserAndHiddenUser(String name, boolean isRegisteredUser,
-                                          byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
+  public Persistence.UserInfo createUserAndHiddenUser(String name, boolean isRegisteredUser,
+                                                      byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
     try {
-      UserInfo userInfo = (UserInfo) prevayler.execute(new CreateUserAndHiddenUser(name, isRegisteredUser, cryptedPassword,
-                                                                                   linkInfo, cryptedLinkInfo));
+      Persistence.UserInfo userInfo = (Persistence.UserInfo)prevayler.execute(new CreateUserAndHiddenUser(name, isRegisteredUser, cryptedPassword,
+                                                                                                          linkInfo, cryptedLinkInfo));
       prevayler.takeSnapshot();
       return userInfo;
     }
@@ -127,7 +127,7 @@ public class PRootDataManager implements RootDataManager {
 
   public List<Persistence.CategoryInfo> getAssociatedCategory(List<String> infos, Integer userId) {
     try {
-      return (List<Persistence.CategoryInfo>) prevayler.execute(new GetAssociatedCategory(infos));
+      return (List<Persistence.CategoryInfo>)prevayler.execute(new GetAssociatedCategory(infos));
     }
     catch (GlobsException e) {
       throw e;

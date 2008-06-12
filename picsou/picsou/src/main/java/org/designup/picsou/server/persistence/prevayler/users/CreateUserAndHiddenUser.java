@@ -13,7 +13,7 @@ import org.designup.picsou.server.model.HiddenUser;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
-import org.designup.picsou.server.persistence.prevayler.RootDataManager;
+import org.designup.picsou.server.session.Persistence;
 import org.prevayler.TransactionWithQuery;
 
 import java.util.Date;
@@ -40,7 +40,7 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
   }
 
   public Object executeAndQuery(Object prevalentSystem, Date executionTime) {
-    PRootData rootData = ((PRootData) prevalentSystem);
+    PRootData rootData = ((PRootData)prevalentSystem);
     if (rootData.getUser(name) != null) {
       throw new UserAlreadyExists("User '" + name + "' already registered");
     }
@@ -61,7 +61,7 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
       .set(HiddenUser.USER_ID, newUserId)
       .get();
     rootData.addHiddenUser(encryptedLinkInfo, hiddenUser);
-    return new RootDataManager.UserInfo(newUserId, isRegisteredUser);
+    return new Persistence.UserInfo(newUserId, isRegisteredUser);
   }
 
   public String getSerializationName() {

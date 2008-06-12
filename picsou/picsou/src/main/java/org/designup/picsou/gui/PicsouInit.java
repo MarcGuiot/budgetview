@@ -9,7 +9,9 @@ import org.crossbowlabs.globs.model.utils.CachedGlobIdGenerator;
 import org.crossbowlabs.globs.model.utils.DefaultChangeSetListener;
 import static org.crossbowlabs.globs.model.utils.GlobMatchers.isNotNull;
 import org.crossbowlabs.globs.utils.directory.Directory;
+import org.crossbowlabs.globs.utils.exceptions.InvalidData;
 import org.crossbowlabs.globs.utils.exceptions.ResourceAccessFailed;
+import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
 import org.crossbowlabs.globs.xml.XmlGlobParser;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
@@ -20,11 +22,9 @@ import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
+import org.designup.picsou.utils.Lang;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 
 public class PicsouInit {
 
@@ -57,12 +57,17 @@ public class PicsouInit {
                       value(User.NAME, user));
 
     MutableChangeSet changeSet = new DefaultChangeSet();
-    GlobList userData = serverAccess.getUserData(changeSet);
-    if (newUser) {
-      userData.addAll(loadDefaultSubcategories());
+    try {
+      GlobList userData = serverAccess.getUserData(changeSet);
+      if (newUser) {
+        userData.addAll(loadDefaultSubcategories());
+      }
+      repository.reset(userData, Transaction.TYPE, Account.TYPE, Bank.TYPE, BankEntity.TYPE,
+                       TransactionToCategory.TYPE, LabelToCategory.TYPE, Category.TYPE);
     }
-    repository.reset(userData, Transaction.TYPE, Account.TYPE, Bank.TYPE, BankEntity.TYPE,
-                     TransactionToCategory.TYPE, LabelToCategory.TYPE, Category.TYPE);
+    catch (Exception e) {
+      throw new InvalidData(Lang.get("login.data.load.fail"), e);
+    }
     serverAccess.applyChanges(changeSet, repository);
 
     initDirectory(repository);
@@ -98,11 +103,18 @@ public class PicsouInit {
     return repository;
   }
 
-  private GlobList loadDefaultSubcategories() throws UnsupportedEncodingException {
+  private GlobList loadDefaultSubcategories() {
     String subcatsFile = "/subcats.xml";
-    Reader reader = new InputStreamReader(PicsouInit.class.getResourceAsStream(subcatsFile), "UTF-8");
-    if (reader == null) {
-      throw new ResourceAccessFailed("Resource file not found:" + subcatsFile);
+    Reader reader = null;
+    try {
+      InputStream stream = PicsouInit.class.getResourceAsStream(subcatsFile);
+      if (stream == null) {
+        throw new ResourceAccessFailed("Resource file not found:" + subcatsFile);
+      }
+      reader = new InputStreamReader(stream, "UTF-8");
+    }
+    catch (UnsupportedEncodingException e) {
+      throw new UnexpectedApplicationState(e);
     }
     XmlGlobParser.parse(PicsouModel.get(), repository, reader, "globs");
     GlobList result = new GlobList();

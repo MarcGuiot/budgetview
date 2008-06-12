@@ -3,6 +3,7 @@ package org.designup.picsou.gui;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.utils.Strings;
 import org.crossbowlabs.globs.utils.directory.Directory;
+import org.crossbowlabs.globs.utils.exceptions.InvalidData;
 import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorService;
 import org.crossbowlabs.splits.utils.GuiUtils;
@@ -126,19 +127,23 @@ public class LoginPanel {
       }
     }
     catch (UserAlreadyExists e) {
-      displayErrorMessage("login.user.exists");
+      displayErrorMessageFromKey("login.user.exists");
     }
     catch (BadPassword e) {
-      displayErrorMessage("login.invalid.credentials");
+      displayErrorMessageFromKey("login.invalid.credentials");
     }
     catch (UserNotRegistered e) {
-      displayErrorMessage("login.invalid.credentials");
+      displayErrorMessageFromKey("login.invalid.credentials");
     }
     catch (PasswordBasedEncryptor.EncryptFail e) {
       displayBadPasswordMessage("login.password.error", e.getMessage());
     }
+    catch (InvalidData e) {
+      displayMessage(e.getMessage());
+      e.printStackTrace();
+    }
     catch (Exception e) {
-      displayErrorMessage("login.server.connection.failure");
+      displayErrorMessageFromKey("login.server.connection.failure");
       StringWriter stringWriter = new StringWriter();
       PrintWriter writer = new PrintWriter(stringWriter);
       e.printStackTrace(writer);
@@ -154,11 +159,11 @@ public class LoginPanel {
   private boolean userIdAccepted() {
     String id = userField.getText();
     if (Strings.isNullOrEmpty(id)) {
-      displayErrorMessage("login.user.required");
+      displayErrorMessageFromKey("login.user.required");
       return false;
     }
     if (id.length() < 4) {
-      displayErrorMessage("login.user.too.short");
+      displayErrorMessageFromKey("login.user.too.short");
       return false;
     }
     return true;
@@ -167,24 +172,24 @@ public class LoginPanel {
   private boolean passwordAccepted() {
     char[] pwd = passwordField.getPassword();
     if (pwd.length == 0) {
-      displayErrorMessage("login.password.required");
+      displayErrorMessageFromKey("login.password.required");
       return false;
     }
     if (pwd.length < 6) {
-      displayErrorMessage("login.password.too.short");
+      displayErrorMessageFromKey("login.password.too.short");
       return false;
     }
     if (!containsSpecialChar(pwd)) {
-      displayErrorMessage("login.password.special.chars");
+      displayErrorMessageFromKey("login.password.special.chars");
       return false;
     }
     char[] confirm = confirmPasswordField.getPassword();
     if (confirm.length == 0) {
-      displayErrorMessage("login.confirm.required");
+      displayErrorMessageFromKey("login.confirm.required");
       return false;
     }
     if (!Arrays.equals(pwd, confirm)) {
-      displayErrorMessage("login.confirm.error");
+      displayErrorMessageFromKey("login.confirm.error");
       return false;
     }
     clearMessage();
@@ -204,7 +209,11 @@ public class LoginPanel {
     return false;
   }
 
-  private void displayErrorMessage(String key) {
+  private void displayMessage(String mesage) {
+    messageLabel.setText("<html><font color=red>" + mesage + "</font></html>");
+  }
+
+  private void displayErrorMessageFromKey(String key) {
     messageLabel.setText("<html><font color=red>" + Lang.get(key) + "</font></html>");
   }
 

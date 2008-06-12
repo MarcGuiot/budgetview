@@ -7,8 +7,6 @@ import org.crossbowlabs.globs.model.impl.AbstractFieldValues;
 import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class GlobArrayFieldValues extends AbstractFieldValues {
   private GlobType type;
@@ -40,14 +38,6 @@ public class GlobArrayFieldValues extends AbstractFieldValues {
     for (Field field : type.getFields()) {
       functor.process(field, values[field.getIndex()]);
     }
-  }
-
-  public Map<Field, Object> getMap() {
-    Map<Field, Object> result = new HashMap<Field, Object>();
-    for (Field field : type.getFields()) {
-      result.put(field, values[field.getIndex()]);
-    }
-    return result;
   }
 
   public FieldValue[] toArray() {

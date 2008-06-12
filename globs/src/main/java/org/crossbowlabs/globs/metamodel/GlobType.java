@@ -1,7 +1,7 @@
 package org.crossbowlabs.globs.metamodel;
 
-import org.crossbowlabs.globs.metamodel.properties.PropertyHolder;
 import org.crossbowlabs.globs.metamodel.index.Index;
+import org.crossbowlabs.globs.metamodel.properties.PropertyHolder;
 import org.crossbowlabs.globs.metamodel.utils.Annotable;
 import org.crossbowlabs.globs.model.GlobList;
 import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
@@ -20,7 +20,7 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotable, Serializa
 
   boolean hasField(String name);
 
-  Iterable<Field> getFields();
+  Field[] getFields();
 
   Field getField(int index);
 

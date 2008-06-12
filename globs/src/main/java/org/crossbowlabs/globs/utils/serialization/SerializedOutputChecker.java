@@ -1,7 +1,7 @@
 package org.crossbowlabs.globs.utils.serialization;
 
-import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.ChangeSet;
+import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.delta.DeltaGlob;
 
 import java.util.Date;
@@ -69,7 +69,7 @@ class SerializedOutputChecker implements SerializedOutput {
   }
 
   public void write(boolean value) {
-    serializationOutput.writeString("boolean");
+    serializationOutput.writeString("Boolean");
     serializationOutput.write(value);
   }
 

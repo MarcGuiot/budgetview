@@ -16,7 +16,7 @@ public interface Glob extends FieldValues, Serializable {
 
   boolean matches(FieldValue... values);
 
-  FieldValues getValues(boolean includeKeyFields);
+  FieldValues getValues();
 
   boolean exists();
 

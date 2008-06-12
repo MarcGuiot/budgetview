@@ -52,7 +52,7 @@ public interface DeltaState {
     }
 
     public void visit(DeltaGlob glob, ChangeSetVisitor visitor) throws Exception {
-      visitor.visitCreation(glob.getKey(), glob.getValues(false));
+      visitor.visitCreation(glob.getKey(), glob.getValues());
     }
 
     public String toString() {
@@ -75,7 +75,7 @@ public interface DeltaState {
     }
 
     public void visit(DeltaGlob glob, ChangeSetVisitor visitor) throws Exception {
-      visitor.visitUpdate(glob.getKey(), glob.getValues(false));
+      visitor.visitUpdate(glob.getKey(), glob.getValues());
     }
 
     public String toString() {
@@ -99,7 +99,7 @@ public interface DeltaState {
     }
 
     public void visit(DeltaGlob glob, ChangeSetVisitor visitor) throws Exception {
-      visitor.visitDeletion(glob.getKey(), glob.getValues(false));
+      visitor.visitDeletion(glob.getKey(), glob.getValues());
     }
 
     public String toString() {

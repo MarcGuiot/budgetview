@@ -15,10 +15,6 @@ public class FieldValuesBuilder {
     return new FieldValuesBuilder();
   }
 
-  public static FieldValuesBuilder init(FieldValues fieldValues) {
-    return init(fieldValues.getMap());
-  }
-
   public static FieldValuesBuilder init(Field field, Object value) {
     FieldValuesBuilder builder = new FieldValuesBuilder();
     return builder.setObject(field, value);
@@ -38,7 +34,9 @@ public class FieldValuesBuilder {
   }
 
   public FieldValuesBuilder set(FieldValues values) {
-    set(values.getMap());
+    for (FieldValue fieldValue : values.toArray()) {
+      setObject(fieldValue.getField(), fieldValue.getValue());
+    }
     return this;
   }
 
@@ -92,12 +90,12 @@ public class FieldValuesBuilder {
   }
 
   public static FieldValues removeKeyFields(FieldValues input) {
-       final FieldValuesBuilder builder = new FieldValuesBuilder();
-       input.safeApply(new FieldValues.Functor() {
-         public void process(Field field, Object value) throws Exception {
-           builder.setObject(field, value);
-         }
-       });
-       return builder.get();
-     }
+    final FieldValuesBuilder builder = new FieldValuesBuilder();
+    input.safeApply(new FieldValues.Functor() {
+      public void process(Field field, Object value) throws Exception {
+        builder.setObject(field, value);
+      }
+    });
+    return builder.get();
+  }
 }

@@ -3,14 +3,12 @@ package org.crossbowlabs.globs.model.impl;
 import org.crossbowlabs.globs.metamodel.Field;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.metamodel.fields.*;
-import org.crossbowlabs.globs.model.Key;
 import org.crossbowlabs.globs.model.FieldValue;
+import org.crossbowlabs.globs.model.Key;
 import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
 import org.crossbowlabs.globs.utils.exceptions.MissingInfo;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ThreeFieldKey extends Key {
   private Field keyField1;
@@ -53,14 +51,6 @@ public class ThreeFieldKey extends Key {
     return keyField1.equals(field) || keyField2.equals(field) || keyField3.equals(field);
   }
 
-  public Map<Field, Object> getMap() {
-    Map<Field, Object> result = new HashMap<Field, Object>();
-    result.put(keyField1, value1);
-    result.put(keyField2, value2);
-    result.put(keyField3, value3);
-    return result;
-  }
-
   public void safeApply(Functor functor) {
     try {
       functor.process(keyField1, value1);
@@ -79,13 +69,13 @@ public class ThreeFieldKey extends Key {
   public byte[] get(BlobField field) {
     checkIsKeyField(field);
     if (field == keyField1) {
-      return (byte[]) value1;
+      return (byte[])value1;
     }
     if (field == keyField2) {
-      return (byte[]) value2;
+      return (byte[])value2;
     }
     if (field == keyField3) {
-      return (byte[]) value3;
+      return (byte[])value3;
     }
     return null;
   }
@@ -93,13 +83,13 @@ public class ThreeFieldKey extends Key {
   public Boolean get(BooleanField field, boolean defaultIfNull) {
     checkIsKeyField(field);
     if (field == keyField1) {
-      return (Boolean) (value1 == null ? defaultIfNull : value1);
+      return (Boolean)(value1 == null ? defaultIfNull : value1);
     }
     if (field == keyField2) {
-      return (Boolean) (value2 == null ? defaultIfNull : value2);
+      return (Boolean)(value2 == null ? defaultIfNull : value2);
     }
     if (field == keyField3) {
-      return (Boolean) (value3 == null ? defaultIfNull : value3);
+      return (Boolean)(value3 == null ? defaultIfNull : value3);
     }
     return null;
   }
@@ -107,13 +97,13 @@ public class ThreeFieldKey extends Key {
   public Boolean get(BooleanField field) {
     checkIsKeyField(field);
     if (field == keyField1) {
-      return (Boolean) value1;
+      return (Boolean)value1;
     }
     if (field == keyField2) {
-      return (Boolean) value2;
+      return (Boolean)value2;
     }
     if (field == keyField3) {
-      return (Boolean) value3;
+      return (Boolean)value3;
     }
     return null;
   }
@@ -121,13 +111,13 @@ public class ThreeFieldKey extends Key {
   public Date get(DateField field) {
     checkIsKeyField(field);
     if (field == keyField1) {
-      return (Date) value1;
+      return (Date)value1;
     }
     if (field == keyField2) {
-      return (Date) value2;
+      return (Date)value2;
     }
     if (field == keyField3) {
-      return (Date) value3;
+      return (Date)value3;
     }
     return null;
   }
@@ -135,13 +125,13 @@ public class ThreeFieldKey extends Key {
   public Double get(DoubleField field) {
     checkIsKeyField(field);
     if (field == keyField1) {
-      return (Double) value1;
+      return (Double)value1;
     }
     if (field == keyField2) {
-      return (Double) value2;
+      return (Double)value2;
     }
     if (field == keyField3) {
-      return (Double) value3;
+      return (Double)value3;
     }
     return null;
   }
@@ -163,31 +153,31 @@ public class ThreeFieldKey extends Key {
   public Integer get(IntegerField field) {
     checkIsKeyField(field);
     if (field == keyField1) {
-      return (Integer) value1;
+      return (Integer)value1;
     }
     if (field == keyField2) {
-      return (Integer) value2;
+      return (Integer)value2;
     }
     if (field == keyField3) {
-      return (Integer) value3;
+      return (Integer)value3;
     }
     return null;
   }
 
   public Integer get(LinkField field) {
-    return get((IntegerField) field);
+    return get((IntegerField)field);
   }
 
   public Long get(LongField field) {
     checkIsKeyField(field);
     if (field == keyField1) {
-      return (Long) value1;
+      return (Long)value1;
     }
     if (field == keyField2) {
-      return (Long) value2;
+      return (Long)value2;
     }
     if (field == keyField3) {
-      return (Long) value3;
+      return (Long)value3;
     }
     return null;
 
@@ -196,13 +186,13 @@ public class ThreeFieldKey extends Key {
   public String get(StringField field) {
     checkIsKeyField(field);
     if (field == keyField1) {
-      return (String) value1;
+      return (String)value1;
     }
     if (field == keyField2) {
-      return (String) value2;
+      return (String)value2;
     }
     if (field == keyField3) {
-      return (String) value3;
+      return (String)value3;
     }
     return null;
   }
@@ -210,13 +200,13 @@ public class ThreeFieldKey extends Key {
   public Date get(TimeStampField field) {
     checkIsKeyField(field);
     if (field == keyField1) {
-      return (Date) value1;
+      return (Date)value1;
     }
     if (field == keyField2) {
-      return (Date) value2;
+      return (Date)value2;
     }
     if (field == keyField3) {
-      return (Date) value3;
+      return (Date)value3;
     }
     return null;
   }
@@ -236,18 +226,18 @@ public class ThreeFieldKey extends Key {
       return false;
     }
     if (o.getClass() == ThreeFieldKey.class || o.getClass().equals(ThreeFieldKey.class)) {
-      ThreeFieldKey otherSingleFieldKey = (ThreeFieldKey) o;
+      ThreeFieldKey otherSingleFieldKey = (ThreeFieldKey)o;
       return
-              otherSingleFieldKey.keyField1.getGlobType().equals(keyField1.getGlobType()) &&
-              otherSingleFieldKey.value1.equals(value1) &&
-              otherSingleFieldKey.value2.equals(value2) &&
-              otherSingleFieldKey.value3.equals(value3);
+        otherSingleFieldKey.keyField1.getGlobType().equals(keyField1.getGlobType()) &&
+        otherSingleFieldKey.value1.equals(value1) &&
+        otherSingleFieldKey.value2.equals(value2) &&
+        otherSingleFieldKey.value3.equals(value3);
     }
 
     if (!Key.class.isAssignableFrom(o.getClass())) {
       return false;
     }
-    Key otherKey = (Key) o;
+    Key otherKey = (Key)o;
     return keyField1.getGlobType().equals(otherKey.getGlobType())
            && value1.equals(otherKey.getValue(keyField1))
            && value2.equals(otherKey.getValue(keyField2))
@@ -270,10 +260,10 @@ public class ThreeFieldKey extends Key {
   }
 
   public FieldValue[] toArray() {
-    return new FieldValue[] {
-            new FieldValue(keyField1, value1),
-            new FieldValue(keyField2, value2),
-            new FieldValue(keyField3, value3)
+    return new FieldValue[]{
+      new FieldValue(keyField1, value1),
+      new FieldValue(keyField2, value2),
+      new FieldValue(keyField3, value3)
     };
   }
 

@@ -1,13 +1,12 @@
 package org.designup.picsou.server.session.impl;
 
 import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.designup.picsou.server.persistence.prevayler.RootDataManager;
 import org.designup.picsou.server.session.CreatingUserState;
 import org.designup.picsou.server.session.Persistence;
 
 public class DefaultCreatingUserState extends AbstractSessionState implements CreatingUserState {
   private Persistence persistence;
-  private RootDataManager.UserInfo userInfo;
+  private Persistence.UserInfo userInfo;
 
   public DefaultCreatingUserState(Persistence persistence,
                                   DefaultSessionService defaultSessionService, Long sessionId, byte[] privateId) {

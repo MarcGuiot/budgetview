@@ -12,9 +12,7 @@ import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
 import org.crossbowlabs.globs.utils.exceptions.MissingInfo;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SingleFieldKey extends Key {
 
@@ -59,12 +57,6 @@ public class SingleFieldKey extends Key {
 
   public boolean contains(Field field) {
     return keyField.equals(field);
-  }
-
-  public Map<Field, Object> getMap() {
-    Map<Field, Object> result = new HashMap<Field, Object>();
-    result.put(keyField, value);
-    return result;
   }
 
   public void safeApply(FieldValues.Functor functor) {

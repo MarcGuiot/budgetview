@@ -95,7 +95,7 @@ public class EncoderTest extends TestCase {
     SerializedInput input = output.getInput();
     DeltaGlob decodedGlob = input.readDeltaGlob(DummyModel.get());
     assertEquals(DeltaState.CREATED, decodedGlob.getState());
-    assertEquals(3, decodedGlob.getValues(true).size());
+    assertEquals(3, decodedGlob.size());
     assertEquals(1, decodedGlob.get(ID).intValue());
     assertEquals("titi", decodedGlob.get(NAME));
     assertEquals(3.14, decodedGlob.get(VALUE));
@@ -114,7 +114,7 @@ public class EncoderTest extends TestCase {
     SerializedInput input = output.getInput();
     DeltaGlob decodedGlob = input.readDeltaGlob(DummyModel.get());
     assertEquals(DeltaState.UPDATED, decodedGlob.getState());
-    assertEquals(4, decodedGlob.getValues(true).size());
+    assertEquals(4, decodedGlob.size());
     assertEquals(1, decodedGlob.get(ID).intValue());
     assertEquals(date, decodedGlob.get(DATE));
     assertEquals(Boolean.TRUE, decodedGlob.get(PRESENT));

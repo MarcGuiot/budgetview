@@ -12,7 +12,6 @@ import org.crossbowlabs.globs.utils.exceptions.InvalidState;
 import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
 
 import java.util.List;
-import java.util.Map;
 
 public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
 
@@ -63,10 +62,6 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
     }
   }
 
-  public Map<Field, Object> getMap() {
-    return getValues(true).getMap();
-  }
-
   public FieldValue[] toArray() {
     FieldValue[] array = new FieldValue[values.length];
     int index = 0;
@@ -101,7 +96,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
     return values[field.getIndex()];
   }
 
-  public FieldValues getValues(boolean includeKeyFields) {
+  public FieldValues getValues() {
     FieldValuesBuilder builder = FieldValuesBuilder.init();
     for (Field field : type.getFields()) {
       if (includeKeyFields || !field.isKeyField()) {

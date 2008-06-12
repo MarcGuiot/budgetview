@@ -7,14 +7,12 @@ import org.crossbowlabs.globs.utils.exceptions.InvalidData;
 import org.crossbowlabs.globs.utils.serialization.SerializedInput;
 import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.client.exceptions.IdentificationFailed;
-import org.designup.picsou.server.persistence.prevayler.RootDataManager;
 
 import java.util.Arrays;
-import java.util.List;
 
 public interface Persistence {
-  RootDataManager.UserInfo createUser(String name, boolean isRegisteredUser,
-                                      byte[] encryptedPassword, byte[] linkInfo, byte[] encryptedLinkInfo);
+  UserInfo createUser(String name, boolean isRegisteredUser,
+                      byte[] encryptedPassword, byte[] linkInfo, byte[] encryptedLinkInfo);
 
   void getData(SerializedOutput output, Integer userId);
 
@@ -82,7 +80,7 @@ public interface Persistence {
     public static CategoryInfo read(SerializedInput input) {
       byte version = input.readByte();
       switch (version) {
-        case-1:
+        case -1:
         case V1:
           return readV1(input);
         default:
@@ -91,7 +89,7 @@ public interface Persistence {
     }
 
     public static void write(SerializedOutput output, CategoryInfo categoryInfo) {
-      write(output, categoryInfo, (byte) -1);
+      write(output, categoryInfo, (byte)-1);
     }
 
     static void write(SerializedOutput output, CategoryInfo categoryInfo, byte version) {
@@ -99,7 +97,7 @@ public interface Persistence {
         categoryInfo = CategoryInfo.NULL;
       }
       switch (version) {
-        case-1:
+        case -1:
         case V1:
           writeV1(output, categoryInfo);
           return;
@@ -142,7 +140,7 @@ public interface Persistence {
         return false;
       }
 
-      CategoryInfo info = (CategoryInfo) o;
+      CategoryInfo info = (CategoryInfo)o;
 
       if (!Arrays.equals(categories, info.categories)) {
         return false;
@@ -153,6 +151,16 @@ public interface Persistence {
 
     public int hashCode() {
       return (categories != null ? Arrays.hashCode(categories) : 0);
+    }
+  }
+
+  class UserInfo {
+    final public Integer userId;
+    final public boolean isRegistered;
+
+    public UserInfo(Integer userId, boolean registered) {
+      this.userId = userId;
+      isRegistered = registered;
     }
   }
 }

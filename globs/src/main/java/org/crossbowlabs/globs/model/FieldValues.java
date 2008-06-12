@@ -5,9 +5,7 @@ import org.crossbowlabs.globs.metamodel.fields.*;
 import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Map;
 
 public interface FieldValues extends Serializable {
 
@@ -41,9 +39,6 @@ public interface FieldValues extends Serializable {
 
   void safeApply(Functor functor);
 
-  /** @deprecated */
-  Map<Field, Object> getMap();
-
   FieldValue[] toArray();
 
   interface Functor {
@@ -63,10 +58,6 @@ public interface FieldValues extends Serializable {
     }
 
     public void safeApply(Functor functor) {
-    }
-
-    public Map<Field, Object> getMap() {
-      return Collections.emptyMap();
     }
 
     public Double get(DoubleField field) throws ItemNotFound {

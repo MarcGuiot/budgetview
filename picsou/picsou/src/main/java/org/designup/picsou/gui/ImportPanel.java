@@ -211,7 +211,8 @@ public abstract class ImportPanel {
         return true;
       }
       catch (Exception e) {
-        displayErrorMessage("");
+        Log.write("", e);
+        e.printStackTrace();
         return false;
       }
     }

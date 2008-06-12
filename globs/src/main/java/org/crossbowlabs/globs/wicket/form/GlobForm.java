@@ -1,16 +1,11 @@
 package org.crossbowlabs.globs.wicket.form;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.crossbowlabs.globs.metamodel.Field;
 import org.crossbowlabs.globs.metamodel.GlobType;
 import org.crossbowlabs.globs.metamodel.Link;
-import org.crossbowlabs.globs.model.FieldValues;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.model.MutableFieldValues;
-import org.crossbowlabs.globs.model.utils.DefaultFieldValues;
+import org.crossbowlabs.globs.model.*;
 import org.crossbowlabs.globs.model.format.DescriptionService;
+import org.crossbowlabs.globs.model.utils.DefaultFieldValues;
 import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
 import org.crossbowlabs.globs.utils.exceptions.ItemAlreadyExists;
 import org.crossbowlabs.globs.utils.exceptions.MissingInfo;
@@ -26,6 +21,9 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.model.Model;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GlobForm extends Panel {
   private GlobType type;
@@ -70,9 +68,9 @@ public class GlobForm extends Panel {
       GlobRepository repository = ((GlobPage)getPage()).getRepository();
       try {
 
-        for (Field field : defaultFieldValues.getMap().keySet()) {
-          if (!values.contains(field)) {
-            values.setValue(field, defaultFieldValues.getMap().get(field));
+        for (FieldValue field : defaultFieldValues.toArray()) {
+          if (!values.contains(field.getField())) {
+            values.setValue(field.getField(), field.getValue());
           }
         }
         if (key == null) {

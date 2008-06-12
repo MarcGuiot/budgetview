@@ -183,14 +183,14 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   private FieldValues createHiddenImportForUpdate(Key key, FieldValues values, GlobRepository globRepository) {
     FieldValuesBuilder builder = new FieldValuesBuilder();
     builder.set(HiddenImport.ID, key.get(TransactionImport.ID));
-    builder.set(HiddenImport.CRYPTED_INFO, getEncryptedImport(globRepository.get(key).getValues(true)));
+    builder.set(HiddenImport.CRYPTED_INFO, getEncryptedImport(globRepository.get(key)));
     return builder.get();
   }
 
   private FieldValues createHiddenCategoryForUpdate(Key key, FieldValues values, GlobRepository globRepository) {
     FieldValuesBuilder builder = new FieldValuesBuilder();
     builder.set(HiddenCategory.ID, key.get(Category.ID));
-    builder.set(HiddenCategory.CRYPTED_INFO, getEncryptedCategory(globRepository.get(key).getValues(true)));
+    builder.set(HiddenCategory.CRYPTED_INFO, getEncryptedCategory(globRepository.get(key)));
     return builder.get();
   }
 
@@ -203,14 +203,14 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   private FieldValues createHiddenAccountForUpdate(Key key, FieldValues values, GlobRepository globRepository) {
     FieldValuesBuilder builder = new FieldValuesBuilder();
     builder.set(HiddenAccount.ID, key.get(Account.ID));
-    builder.set(HiddenAccount.CRYPTED_INFO, getEncryptedAccountInfo(globRepository.get(key).getValues(true)));
+    builder.set(HiddenAccount.CRYPTED_INFO, getEncryptedAccountInfo(globRepository.get(key)));
     return builder.get();
   }
 
   private FieldValues createHiddenTransactionForUpdate(Key key, FieldValues values, GlobRepository globRepository) {
     FieldValuesBuilder builder = new FieldValuesBuilder();
     builder.set(HiddenTransaction.ENCRYPTED_INFO,
-                getEncryptedTransactionInfo(globRepository.get(key).getValues(true)));
+                getEncryptedTransactionInfo(globRepository.get(key)));
     return builder.get();
   }
 

@@ -224,10 +224,10 @@ public class UserData implements CustomSerializable {
         public void visitUpdate(Key key, FieldValues values) throws Exception {
           GlobList list = getList(key);
           for (java.util.Iterator it = list.iterator(); it.hasNext();) {
-            Glob glob = (Glob) it.next();
+            Glob glob = (Glob)it.next();
             if (glob.getKey().equals(key)) {
               it.remove();
-              final GlobBuilder builder = GlobBuilder.init(key, glob.getValues(true));
+              final GlobBuilder builder = GlobBuilder.init(key, glob);
               values.apply(new FieldValues.Functor() {
                 public void process(Field field, Object value) throws Exception {
                   builder.setObject(field, value);
@@ -242,7 +242,7 @@ public class UserData implements CustomSerializable {
         public void visitDeletion(Key key, FieldValues values) throws Exception {
           GlobList list = getList(key);
           for (java.util.Iterator it = list.iterator(); it.hasNext();) {
-            Glob glob = (Glob) it.next();
+            Glob glob = (Glob)it.next();
             if (glob.getKey().equals(key)) {
               it.remove();
               return;

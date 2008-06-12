@@ -26,7 +26,7 @@ import java.util.Map;
 public class GlobTypeLoader {
   private DefaultGlobType type;
   private Map<String, Map<Class<? extends Annotation>, Annotation>> fieldAnnotations =
-          new HashMap<String, Map<Class<? extends Annotation>, Annotation>>();
+    new HashMap<String, Map<Class<? extends Annotation>, Annotation>>();
   private DefaultFieldFactory fieldFactory;
   private Class<?> targetClass;
 
@@ -42,7 +42,7 @@ public class GlobTypeLoader {
   }
 
   public LinkBuilder defineLink(Link link) {
-    return LinkBuilder.init((DefaultLink) link);
+    return LinkBuilder.init((DefaultLink)link);
   }
 
   private GlobTypeLoader(Class<?> targetClass) {
@@ -111,7 +111,7 @@ public class GlobTypeLoader {
 
   private void processFieldAnnotations(java.lang.reflect.Field field) {
     Map<Class<? extends Annotation>, Annotation> fieldAnnotationToClass =
-            new HashMap<Class<? extends Annotation>, Annotation>();
+      new HashMap<Class<? extends Annotation>, Annotation>();
     for (Annotation annotation : field.getAnnotations()) {
       fieldAnnotationToClass.put(annotation.annotationType(), annotation);
     }
@@ -158,7 +158,7 @@ public class GlobTypeLoader {
                                  " must implement " + GlobConstantContainer.class.getSimpleName() +
                                  " in order to declare constants");
     }
-    for (GlobConstantContainer container : ((Class<GlobConstantContainer>) targetClass).getEnumConstants()) {
+    for (GlobConstantContainer container : ((Class<GlobConstantContainer>)targetClass).getEnumConstants()) {
       type.addConstant(container.getGlob());
     }
   }
@@ -250,27 +250,27 @@ public class GlobTypeLoader {
   public void addConstants(GlobList globs) {
     for (Glob glob : globs) {
       if (glob instanceof ReadOnlyGlob) {
-        type.addConstant((ReadOnlyGlob) glob);
+        type.addConstant((ReadOnlyGlob)glob);
       }
       else {
-        type.addConstant(new ReadOnlyGlob(glob.getType(), glob.getValues(true)));
+        type.addConstant(new ReadOnlyGlob(glob.getType(), glob));
       }
     }
   }
 
   public void defineUniqueIndex(UniqueIndex index, Field field) {
-    ((DefaultUniqueIndex) type.getIndex(index.getName())).setField(field);
+    ((DefaultUniqueIndex)type.getIndex(index.getName())).setField(field);
   }
 
   public void defineNotUniqueIndex(NotUniqueIndex index, Field field) {
-    ((DefaultNotUniqueIndex) type.getIndex(index.getName())).setField(field);
+    ((DefaultNotUniqueIndex)type.getIndex(index.getName())).setField(field);
   }
 
   public void defineMultiFieldUniqueIndex(MultiFieldUniqueIndex index, Field... fields) {
-    ((DefaultMultiFieldUniqueIndex) type.getMultiFieldIndex(index.getName())).setField(fields);
+    ((DefaultMultiFieldUniqueIndex)type.getMultiFieldIndex(index.getName())).setField(fields);
   }
 
   public void defineMultiFieldNotUniqueIndex(MultiFieldNotUniqueIndex index, Field... fields) {
-    ((DefaultMultiFieldNotUniqueIndex) type.getMultiFieldIndex(index.getName())).setField(fields);
+    ((DefaultMultiFieldNotUniqueIndex)type.getMultiFieldIndex(index.getName())).setField(fields);
   }
 }

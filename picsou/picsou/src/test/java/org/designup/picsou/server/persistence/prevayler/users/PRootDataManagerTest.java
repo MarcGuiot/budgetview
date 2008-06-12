@@ -7,7 +7,7 @@ import org.designup.picsou.functests.ServerFunctionalTestCase;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.server.model.HiddenUser;
 import org.designup.picsou.server.model.User;
-import org.designup.picsou.server.persistence.prevayler.RootDataManager;
+import org.designup.picsou.server.session.Persistence;
 
 import java.util.Arrays;
 
@@ -16,7 +16,7 @@ public class PRootDataManagerTest extends ServerFunctionalTestCase {
   public void test() throws Exception {
     PRootDataManager pRootDataManager = new PRootDataManager(url, ServerDirectory.getNewDirectory(url), true);
 
-    RootDataManager.UserInfo user =
+    Persistence.UserInfo user =
       pRootDataManager.createUserAndHiddenUser("name", false, "pass".getBytes(), "linkgInfo".getBytes(), "crypted".getBytes());
 
     Glob userGlob = pRootDataManager.getUser("name");
@@ -32,7 +32,7 @@ public class PRootDataManagerTest extends ServerFunctionalTestCase {
     Directory directory = ServerDirectory.getNewDirectory(url);
     PRootDataManager pRootDataManager = new PRootDataManager(url, directory, false);
 
-    RootDataManager.UserInfo user =
+    Persistence.UserInfo user =
       pRootDataManager.createUserAndHiddenUser("name", false, "pass".getBytes(), "linkgInfo".getBytes(), "crypted".getBytes());
 
     PRootDataManager reloaded = new PRootDataManager(url, directory, false);

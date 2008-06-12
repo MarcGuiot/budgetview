@@ -7,8 +7,8 @@ import org.crossbowlabs.globs.model.*;
 import org.crossbowlabs.globs.model.delta.*;
 import org.crossbowlabs.globs.model.utils.GlobBuilder;
 import org.crossbowlabs.globs.utils.ArrayTestUtils;
-import org.crossbowlabs.globs.utils.TestUtils;
 import org.crossbowlabs.globs.utils.Dates;
+import org.crossbowlabs.globs.utils.TestUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,10 +29,10 @@ public class SerializationTest extends TestCase {
     new File(fileName).getParentFile().mkdirs();
 
     outputStream = new FileOutputStream(fileName);
-    output = new DefaultSerializationOutput(outputStream);
+    output = new SerializedOutputChecker(new DefaultSerializationOutput(outputStream));
 
     inputStream = new FileInputStream(fileName);
-    input = new DefaultSerializationInput(inputStream);
+    input = new SerializationInputChecker(new DefaultSerializationInput(inputStream));
 
     currentDate = new Date();
   }
@@ -82,7 +82,8 @@ public class SerializationTest extends TestCase {
     Glob newGlob = input.readGlob(DummyModel.get());
     assertNotSame(glob, newGlob);
 
-    assertEquals(glob.getValues(true), newGlob.getValues(true));
+    assertEquals(glob.getValues(), newGlob.getValues());
+    assertEquals(glob.getKey(), newGlob.getKey());
     assertEquals("end", input.readString());
     inputStream.close();
   }
@@ -107,17 +108,17 @@ public class SerializationTest extends TestCase {
     MutableChangeSet changeSet = new DefaultChangeSet();
     changeSet.processCreation(KeyBuilder.newKey(DummyObject.TYPE, 1),
                               FieldValuesBuilder.init()
-                                      .set(DummyObject.ID, 1)
-                                      .set(DummyObject.NAME, "name1")
-                                      .set(DummyObject.DATE, currentDate)
-                                      .get());
+                                .set(DummyObject.ID, 1)
+                                .set(DummyObject.NAME, "name1")
+                                .set(DummyObject.DATE, currentDate)
+                                .get());
     changeSet.processUpdate(KeyBuilder.newKey(DummyObject.TYPE, 2), DummyObject.NAME, "name2");
     changeSet.processDeletion(KeyBuilder.newKey(DummyObject.TYPE, 3),
                               FieldValuesBuilder.init()
-                                      .set(DummyObject.ID, 3)
-                                      .set(DummyObject.NAME, "name3")
-                                      .set(DummyObject.VALUE, 3.14156)
-                                      .get());
+                                .set(DummyObject.ID, 3)
+                                .set(DummyObject.NAME, "name3")
+                                .set(DummyObject.VALUE, 3.14156)
+                                .get());
     output.writeChangeSet(changeSet);
     outputStream.close();
 
@@ -171,13 +172,13 @@ public class SerializationTest extends TestCase {
 
   private FieldValues createSampleValues() {
     return FieldValuesBuilder.init()
-            .set(DummyObject.ID, 1)
-            .set(DummyObject.NAME, "obj1")
-            .set(DummyObject.DATE, new Date())
-            .set(DummyObject.LINK, 7)
-            .set(DummyObject.PRESENT, false)
-            .set(DummyObject.TIMESTAMP, new Date())
-            .set(DummyObject.VALUE, 6.2)
-            .get();
+      .set(DummyObject.ID, 1)
+      .set(DummyObject.NAME, "obj1")
+      .set(DummyObject.DATE, new Date())
+      .set(DummyObject.LINK, 7)
+      .set(DummyObject.PRESENT, false)
+      .set(DummyObject.TIMESTAMP, new Date())
+      .set(DummyObject.VALUE, 6.2)
+      .get();
   }
 }
