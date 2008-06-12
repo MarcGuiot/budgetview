@@ -10,7 +10,6 @@ import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.IconLocator;
 import org.crossbowlabs.splits.SplitsBuilder;
 import org.crossbowlabs.splits.color.ColorService;
-import org.crossbowlabs.splits.color.ColorServiceEditor;
 import org.crossbowlabs.splits.layout.Anchor;
 import org.crossbowlabs.splits.layout.Fill;
 import org.crossbowlabs.splits.layout.GridBagBuilder;
@@ -65,7 +64,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
     this.repository = repository;
 
-    this.masterFont = Gui.DEFAULT_TABLE_FONT_BOLD.deriveFont(16.0f);
+    this.masterFont = Gui.DEFAULT_TABLE_FONT_BOLD.deriveFont(14.0f);
 
     this.stringifier = localDirectory.get(DescriptionService.class).getStringifier(Category.TYPE);
     repository.addChangeListener(this);

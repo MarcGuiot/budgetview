@@ -1,6 +1,5 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
   <column>
-
     <grid>
       <label text="$account.bank" gridPos="(0,0)"/>
       <comboBox ref="accountBank" gridPos="(1,0)"/>
@@ -9,7 +8,7 @@
       <label text="$account.number" gridPos="(0,2)"/>
       <textField ref="number" gridPos="(1,2)"/>
     </grid>
-
+    <label ref="accountMessage"/>
   </column>
 
 </splits>

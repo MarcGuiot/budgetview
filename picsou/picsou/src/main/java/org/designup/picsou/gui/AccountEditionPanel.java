@@ -6,11 +6,13 @@ import org.crossbowlabs.globs.gui.views.GlobComboView;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobList;
 import org.crossbowlabs.globs.model.GlobRepository;
+import org.crossbowlabs.globs.utils.Strings;
 import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
+import org.designup.picsou.utils.Lang;
 
 import javax.swing.*;
 
@@ -19,6 +21,7 @@ public class AccountEditionPanel {
   private Glob account;
   protected SelectionService selectionService;
   private GlobRepository repository;
+  private JLabel messageLabel;
 
   public AccountEditionPanel(final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -42,9 +45,15 @@ public class AccountEditionPanel {
     });
     builder.addEditor(Account.NAME);
     builder.addEditor(Account.NUMBER);
+    messageLabel = new JLabel();
+    builder.add("accountMessage", messageLabel);
 
     panel = (JPanel)builder.parse(getClass(), "/layout/newAccountPanel.splits");
     panel.setVisible(false);
+  }
+
+  public void setMessage(String key) {
+    messageLabel.setText(Lang.get(key));
   }
 
   public void setAccount(Glob account, Glob bank) {
@@ -64,10 +73,26 @@ public class AccountEditionPanel {
     else {
       selectionService.select(bank);
     }
+    messageLabel.setText("");
     panel.setVisible(account != null);
   }
 
   public JPanel getPanel() {
     return panel;
+  }
+
+  public boolean check() {
+    if (panel.isVisible()) {
+      if (account.get(Account.BANK_ENTITY) == null) {
+        setMessage("account.error.missing.bank");
+        return false;
+      }
+      boolean onError = Strings.isNullOrEmpty(account.get(Account.NUMBER));
+      if (onError) {
+        setMessage("account.error.missing.number");
+      }
+      return !onError;
+    }
+    return true;
   }
 }

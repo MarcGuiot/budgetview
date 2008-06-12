@@ -22,6 +22,7 @@ public class NewAccountAction extends AbstractAction {
   private Directory directory;
   private final Window owner;
   private Glob createdAccount;
+  private AccountEditionPanel accountEditionPanel;
 
   public NewAccountAction(GlobRepository repository, Directory directory, Window owner) {
     super(Lang.get("new.account"));
@@ -33,7 +34,7 @@ public class NewAccountAction extends AbstractAction {
   public void actionPerformed(ActionEvent e) {
     final LocalGlobRepository tempRespository = LocalGlobRepositoryBuilder.init(repository)
       .copy(Bank.TYPE, BankEntity.TYPE).get();
-    AccountEditionPanel accountEditionPanel = new AccountEditionPanel(tempRespository, directory);
+    accountEditionPanel = new AccountEditionPanel(tempRespository, directory);
     CreateAccountAction action = new CreateAccountAction(tempRespository);
     CancelAction cancelAction = new CancelAction();
     PicsouDialog dialog = PicsouDialog.createWithButtons(owner, accountEditionPanel.getPanel(), action,
@@ -73,6 +74,9 @@ public class NewAccountAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
+      if (!accountEditionPanel.check()) {
+        return;
+      }
       try {
         tempRespository.commitChanges(true);
         directory.get(SelectionService.class).select(createdAccount);

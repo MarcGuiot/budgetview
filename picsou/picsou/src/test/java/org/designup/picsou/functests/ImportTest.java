@@ -28,7 +28,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     bankCombo.select("CIC");
     assertNotNull(window.getTextBox("http://www.cic.fr/telechargements.cgi"));
 
-    checkMessage("Select an OFX or QIF file to import");
+    checkLoginMessage("Select an OFX or QIF file to import");
 
     importButton.click();
     checkErrorMessage(window, "login.data.file.required");
@@ -113,7 +113,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     TextBox accountNameField = window.getInputTextBox("name");
     assertThat(accountNameField.textEquals("Main account"));
     accountNameField.setText("My SG account");
-
+    window.getButton("OK").click();
+    checkImportMessage("You must enter the account number");
     window.getInputTextBox("number").setText("0123546");
 
 //    window.getInputTextBox("balance").setText("66.50");
@@ -127,11 +128,11 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSkipFirstQifFile() throws Exception {
-    final String path1 = OfxBuilder
+    final String path1 = QifBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "First operation")
       .save();
-    final String path2 = OfxBuilder
+    final String path2 = QifBuilder
       .init(this)
       .addTransaction("2006/01/20", -2.2, "Second operation")
       .save();
@@ -144,12 +145,20 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       {"10/01/2006", "First operation", "-1.10"}
     }));
 
+    window.getButton("OK").click();
+    checkImportMessage("You must select the account bank");
+
     window.getButton("Skip").click();
+
+    checkImportMessage("");
 
     assertTrue(table.contentEquals(new Object[][]{
       {"20/01/2006", "Second operation", "-2.20"}
     }));
 
+    ComboBox comboBox = window.getComboBox("accountBank");
+    comboBox.select("Societe Generale");
+    window.getInputTextBox("number").setText("1111");
     window.getButton("OK").click();
 
     transactions
@@ -184,7 +193,32 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     assertTrue(comboBox.selectionEquals("Main account"));
   }
 
-  private void checkMessage(String message) {
+  public void testImportWithCreateAccountCheckAccountBankIsFilled() throws Exception {
+    final String path1 = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .save();
+
+    fileField.setText(path1);
+    importButton.click();
+
+    Table table = window.getTable();
+    assertTrue(table.contentEquals(new Object[][]{
+      {"10/01/2006", "Menu K", "-1.10"}
+    }));
+
+    assertTrue(window.getComboBox("accountBank").selectionEquals(null));
+    window.getInputTextBox("number").setText("0123546");
+    window.getButton("OK").click();
+    checkImportMessage("You must select the account bank");
+  }
+
+  private void checkImportMessage(String message) {
+    TextBox accountMessage = window.getTextBox("accountMessage");
+    assertTrue(accountMessage.textEquals(message));
+  }
+
+  private void checkLoginMessage(String message) {
     TextBox fileMessage = (TextBox)window.findUIComponent(TextBox.class, message);
     assertTrue(fileMessage != null);
     assertTrue(fileMessage.isVisible());

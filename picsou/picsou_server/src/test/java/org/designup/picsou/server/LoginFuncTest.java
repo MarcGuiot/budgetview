@@ -4,7 +4,6 @@ import org.crossbowlabs.globs.utils.Files;
 import org.crossbowlabs.globs.utils.TestUtils;
 import org.uispec4j.*;
 import org.uispec4j.interception.FileChooserHandler;
-import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
@@ -48,6 +47,7 @@ public class LoginFuncTest extends ServerFuncTestCase {
       .run();
 
     window.getButton("Import").click();
+    window.getInputTextBox("number").setText("1111");
     window.getButton("OK").click();
 
     Table table = window.getTable("category");

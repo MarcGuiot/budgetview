@@ -277,6 +277,9 @@ public abstract class ImportPanel {
     }
 
     public void actionPerformed(ActionEvent event) {
+      if (!accountEditionPanel.check()) {
+        return;
+      }
       importSession.importTransactions(currentlySelectedAccount);
       nextImport();
     }
