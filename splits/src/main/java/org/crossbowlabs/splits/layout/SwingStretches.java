@@ -26,12 +26,15 @@ public class SwingStretches {
     }
 
     if ((component instanceof JTextField)
-        || (component instanceof JPasswordField)
-        || (component instanceof JCheckBox)
-        || (component instanceof JComboBox)
+        || (component instanceof JCheckBox)) {
+      return new ComponentStretch(component, Fill.HORIZONTAL, Anchor.WEST,
+                                  NORMAL_WEIGHT, NULL_WEIGHT);
+    }
+
+    if ((component instanceof JComboBox)
         || (component instanceof AbstractButton)
         || (component instanceof JSpinner)) {
-      return new ComponentStretch(component, Fill.HORIZONTAL, Anchor.WEST,
+      return new ComponentStretch(component, Fill.HORIZONTAL, Anchor.CENTER,
                                   NORMAL_WEIGHT, NULL_WEIGHT);
     }
 

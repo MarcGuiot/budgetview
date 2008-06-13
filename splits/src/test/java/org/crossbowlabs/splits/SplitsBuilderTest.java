@@ -166,8 +166,8 @@ public class SplitsBuilderTest extends TestCase {
 
     checkGridPos(panel, aButton,
                  0, 0, 1, 1,
-                 SwingStretches.NULL_WEIGHT, SwingStretches.NULL_WEIGHT,
-                 Fill.NONE, Anchor.CENTER, new Insets(0, 0, 0, 0));
+                 SwingStretches.NORMAL_WEIGHT, SwingStretches.NULL_WEIGHT,
+                 Fill.HORIZONTAL, Anchor.CENTER, new Insets(0, 0, 0, 0));
     checkGridPos(panel, aList,
                  0, 1, 1, 1,
                  SwingStretches.NORMAL_WEIGHT, SwingStretches.LARGE_WEIGHT,
@@ -222,7 +222,7 @@ public class SplitsBuilderTest extends TestCase {
     assertEquals(2, panel.getComponentCount());
     checkGridPos(panel, aButton,
                  0, 0, 1, 1,
-                 SwingStretches.NULL_WEIGHT, SwingStretches.NULL_WEIGHT,
+                 SwingStretches.NORMAL_WEIGHT, SwingStretches.NULL_WEIGHT,
                  Fill.BOTH, Anchor.NORTH, new Insets(0, 0, 0, 0));
     checkGridPos(panel, aList,
                  0, 1, 1, 1,
@@ -242,7 +242,7 @@ public class SplitsBuilderTest extends TestCase {
     assertEquals(2, panel.getComponentCount());
     checkGridPos(panel, aButton,
                  0, 0, 1, 1,
-                 SwingStretches.NULL_WEIGHT, SwingStretches.NULL_WEIGHT,
+                 SwingStretches.NORMAL_WEIGHT, SwingStretches.NULL_WEIGHT,
                  Fill.BOTH, Anchor.NORTH, new Insets(0, 0, 0, 0));
     checkGridPos(panel, aList,
                  1, 0, 1, 1,
@@ -262,7 +262,7 @@ public class SplitsBuilderTest extends TestCase {
     assertEquals(2, panel.getComponentCount());
     checkGridPos(panel, aButton,
                  0, 0, 1, 1,
-                 SwingStretches.NULL_WEIGHT, SwingStretches.NULL_WEIGHT,
+                 SwingStretches.NORMAL_WEIGHT, SwingStretches.NULL_WEIGHT,
                  Fill.BOTH, Anchor.NORTH, new Insets(0, 0, 0, 0));
     checkGridPos(panel, aList,
                  0, 1, 1, 1,
@@ -283,8 +283,8 @@ public class SplitsBuilderTest extends TestCase {
     assertEquals(3, panel.getComponentCount());
     checkGridPos(panel, aButton,
                  0, 0, 1, 1,
-                 SwingStretches.NULL_WEIGHT, SwingStretches.NULL_WEIGHT,
-                 Fill.NONE, Anchor.CENTER, new Insets(10, 10, 10, 10));
+                 SwingStretches.NORMAL_WEIGHT, SwingStretches.NULL_WEIGHT,
+                 Fill.HORIZONTAL, Anchor.CENTER, new Insets(10, 10, 10, 10));
     checkGridPos(panel, aList,
                  0, 1, 1, 1,
                  SwingStretches.NORMAL_WEIGHT, SwingStretches.LARGE_WEIGHT,
