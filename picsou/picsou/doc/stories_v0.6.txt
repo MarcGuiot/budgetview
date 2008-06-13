@@ -1,0 +1,31 @@
+=== v0.6 : stabilisation + import de donnees ===
+
+Reorg vues
+----------
+* Vue releve / repartition / evolution
+* Deplacer message "vous avez n transactions non classees"
+
+
+Vue "accueil"
+-------------
+* Affichee/editer/ajouter les comptes et les positions
+* Naviguer vers le site de la banque
+
+
+Details transactions
+--------------------
+* Libelle
+* Affectation
+* Date banque / user
+* Changer date user
+* Affichage somme / affectation si multi-selection
+
+
+Vue "Repartition"
+-----------------
+* Drill-down masters / subcats / labels
+
+
+Vue "Evolution"
+---------------
+* Transformer HistoricalView en histogramme

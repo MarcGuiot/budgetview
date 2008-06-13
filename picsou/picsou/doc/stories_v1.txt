@@ -1,15 +1,20 @@
-Gestion des devises
--------------------
-* Choix de la devise de l'utilisateur
-* OFX: Interdire devise compte differente de devise utilisateur
 
+* Recherche de transactions par libelle
+* Filtrage de transactions par compte
+* Filtrage de transactions par import
 
+* Tri des categories
+* Creer/supprimer des categories
 
-
-* I18N: sous-categories
 * Mecanique pour gerer de nouvelles banques (notamment a l'international)
 
 * Reorganiser categories dans CategoryView / CatChooser
 * Enlever contrainte sur password => indicateur "password strength"
 * Mode demo (pas de connexions, fichier de donnees en dur, pas de stockage)
 * Log out
+
+* Gestion des projets
+
+* messages “Vous avez dépense 150€ de trop dans la catégorie Alimentation”
+* messages “Vous avez économisé 54€ dans la catégorie Sport” (uniquement pour les mois terminés)
+* Sensibilité des messages : inutile de parler d’une économie de 3€

@@ -83,7 +83,7 @@ public class PicsouApplication {
     window.show();
   }
 
-  private static String[] parseLanguage(String... args) {
+  public static String[] parseLanguage(String... args) {
     if (args[0].equals("-l")) {
       if (args[1].equals("fr")) {
         Locale.setDefault(Locale.FRANCE);

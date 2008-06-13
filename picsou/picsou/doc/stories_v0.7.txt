@@ -1,0 +1,6 @@
+=== v0.7 : recurrences ===
+
+* Recurrence de transactions
+* Introduction de transactions fantomes
+* Rapprochement
+* Vue du futur

@@ -1,3 +1,5 @@
+=== v0.5 : stabilisation + import de donnees ===
+
 Import
 ------
 * QIF: saisie du solde
@@ -40,4 +42,6 @@ Bugs
 Misc
 ----
 * Joliesse fenetre split transaction
+* decrossbowlabification
+* “Esc” pour fermer les boîtes de dialogue
 

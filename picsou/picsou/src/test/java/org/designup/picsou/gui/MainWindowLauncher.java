@@ -22,6 +22,9 @@ public class MainWindowLauncher {
 
   public static void main(String[] args) throws Exception {
     PicsouApplication.clearRepository();
+    if (args.length > 1) {
+      args = PicsouApplication.parseLanguage(args);
+    }
     ServerDirectory serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), false);
     Directory directory = serverDirectory.getServiceDirectory();
     ServerAccess serverAccess =

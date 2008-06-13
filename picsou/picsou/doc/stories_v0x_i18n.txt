@@ -1,0 +1,10 @@
+=== v0.x : internationalisation ===
+
+* Choix de la langue
+* I18N: sous-categories
+
+
+Gestion des devises
+-------------------
+* Choix de la devise de l'utilisateur
+* OFX: Interdire devise compte differente de devise utilisateur
