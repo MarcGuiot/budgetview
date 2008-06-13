@@ -27,10 +27,6 @@
               <name>uispec4j.test.library</name>
               <value>junit</value>
             </property>
-            <property>
-              <name>awt.toolkit</name>
-              <value>sun.awt.motif.MToolkit</value>
-            </property>
           </systemProperties>
           <includes>
             <include>**/*Test.java</include>
@@ -69,7 +65,7 @@
     </dependencies>
   </dependencyManagement>
 
-  
+
   <dependencies>
 
     <dependency>
@@ -102,19 +98,19 @@
   </scm>
 
   <!--<ciManagement>-->
-    <!--<system>continuum</system>-->
-    <!--<notifiers>-->
-      <!--<notifier>-->
-        <!--<type>mail</type>-->
-        <!--<sendOnError>true</sendOnError>-->
-        <!--<sendOnFailure>true</sendOnFailure>-->
-        <!--<sendOnSuccess>false</sendOnSuccess>-->
-        <!--<sendOnWarning>false</sendOnWarning>-->
-        <!--<configuration>-->
-          <!--<address>severine.tardif@bi-sam.com</address>-->
-        <!--</configuration>-->
-      <!--</notifier>-->
-    <!--</notifiers>-->
+  <!--<system>continuum</system>-->
+  <!--<notifiers>-->
+  <!--<notifier>-->
+  <!--<type>mail</type>-->
+  <!--<sendOnError>true</sendOnError>-->
+  <!--<sendOnFailure>true</sendOnFailure>-->
+  <!--<sendOnSuccess>false</sendOnSuccess>-->
+  <!--<sendOnWarning>false</sendOnWarning>-->
+  <!--<configuration>-->
+  <!--<address>severine.tardif@bi-sam.com</address>-->
+  <!--</configuration>-->
+  <!--</notifier>-->
+  <!--</notifiers>-->
   <!--</ciManagement>-->
 
 </project>

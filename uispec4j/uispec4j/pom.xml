@@ -115,10 +115,6 @@
               <name>uispec4j.test.library</name>
               <value>junit</value>
             </property>
-            <property>
-              <name>awt.toolkit</name>
-              <value>${Toolkit}</value>
-            </property>
           </systemProperties>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <forkMode>${forkmode}</forkMode>
@@ -188,7 +184,7 @@
       <profiles>...</profiles>
   -->
 
- <profiles>
+  <profiles>
     <profile>
       <id>windows</id>
       <activation>
@@ -197,8 +193,7 @@
         </os>
       </activation>
       <properties>
-        <Toolkit>sun.awt.windows.WToolkit</Toolkit>
-	    <forkmode>pertest</forkmode>
+        <forkmode>pertest</forkmode>
       </properties>
     </profile>
     <profile>
@@ -210,23 +205,21 @@
         </os>
       </activation>
       <properties>
-	    <Toolkit>sun.awt.motif.MToolkit</Toolkit>
-	    <forkmode>once</forkmode>
+        <forkmode>once</forkmode>
       </properties>
     </profile>
-   <profile>
-     <id>mac</id>
-     <activation>
-       <os>
-	     <name>Mac OS X</name>
-         <family>unix</family>
-       </os>
-     </activation>
-     <properties>
-     <Toolkit>apple.awt.CToolkit</Toolkit>
-     <forkmode>once</forkmode>
-     </properties>
-   </profile>
+    <profile>
+      <id>mac</id>
+      <activation>
+        <os>
+          <name>Mac OS X</name>
+          <family>unix</family>
+        </os>
+      </activation>
+      <properties>
+        <forkmode>once</forkmode>
+      </properties>
+    </profile>
   </profiles>
 
 </project>

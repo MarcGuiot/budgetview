@@ -48,10 +48,6 @@
               <name>uispec4j.test.library</name>
               <value>junit</value>
             </property>
-            <property>
-              <name>awt.toolkit</name>
-              <value>sun.awt.motif.MToolkit</value>
-            </property>
           </systemProperties>
           <includes>
             <include>**/*Test.java</include>
