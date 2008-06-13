@@ -2,17 +2,17 @@
 
 Import
 ------
-* QIF: Analyse du format de date
-* QIF: saisie du solde
-* Gerer Account.UPDATE_DATE (date de la derniere transaction importée?)
-* Import step 2: bouton "selectionner d'autres fichiers" ?
-* Test d'import QIF tronque
-* QIF: Choix de la devise du compte
-* QIF: Analyse du format de nombres
-* QIF: Estimation de solde final
-* Verification SMS
 * Integrer fichiers BNP Pascal
 * Open with...
+
+* QIF: saisie du solde + Account.UPDATE_DATE
+* QIF: Estimation de solde final / SMS
+
+* Import step 2: bouton "selectionner d'autres fichiers" ?
+
+* Test d'import QIF tronque
+
+* QIF: Analyse du format de nombres
 * URL banques: lancer navigateur
 * Import initial facultatif
 * Bug: import OFX initial invalide : rester sur page import
@@ -31,17 +31,4 @@ Packaging
 * Obfuscation
 * Packaging Mac
 
-
-Bugs
-----
-* CategoryView: selection par drag dans colonne expand
-* CategoryView: selection par drag dans colonne name
-* CategoryView: desactiver tri
-* CategoryView: creation d'une sous-categorie ignoree au open suivant
-
-Misc
-----
-* Joliesse fenetre split transaction
-* decrossbowlabification
-* “Esc” pour fermer les boîtes de dialogue
 

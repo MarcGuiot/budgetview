@@ -7,4 +7,5 @@
 Gestion des devises
 -------------------
 * Choix de la devise de l'utilisateur
+* QIF: Choix de la devise du compte
 * OFX: Interdire devise compte differente de devise utilisateur
