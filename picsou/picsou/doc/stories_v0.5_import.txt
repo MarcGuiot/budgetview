@@ -3,24 +3,23 @@
 Import
 ------
 * Integrer fichiers BNP Pascal
+* Integrer fichiers CA
 * Open with...
 
-* QIF: saisie du solde + Account.UPDATE_DATE
-* QIF: Estimation de solde final / SMS
+* QIF: saisie du solde + maj auto du Account.UPDATE_DATE
 
-* Import step 2: bouton "selectionner d'autres fichiers" ?
+* Import step 2: bouton "back" (selectionner d'autres fichiers)
+* Import step1 : bouton "close" à renommer en "skip"
 
-* Test d'import QIF tronque
+* Test d'import QIF tronque ou invalide
 
-* QIF: Analyse du format de nombres
-* URL banques: lancer navigateur
-* Import initial facultatif
+* Import step 1 : URL banques => lancer navigateur
 * Bug: import OFX initial invalide : rester sur page import
 * LoginPanel: error login + "new user" => effacer message
 
 
 Joliesse
---------------
+--------
 * Panneau import
 * Taille panneau Categorisation sous Mac
 * Taille panneau import sous Linux
@@ -29,6 +28,6 @@ Joliesse
 Packaging
 ---------
 * Obfuscation
-* Packaging Mac
+* Packaging Mac (hdiutil?)
 
 

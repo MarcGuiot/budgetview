@@ -12,14 +12,14 @@ Misc
 ----
 * Joliesse fenetre split transaction
 * decrossbowlabification
+* PicsouDialog => reintroduire headers normaux
 * “Esc” pour fermer les boîtes de dialogue (mettre PicsouDialog en abstract, avec un dispose() a surcharger)
 
 
 Reorg vues
 ----------
-* Vue releve / repartition / evolution
-* Deplacer message "vous avez n transactions non classees"
-* Supprimer footer
+* Vues accueil / operations / repartition / evolution
+* Deplacer message "vous avez n transactions non classees" + Supprimer footer
 
 
 Vue "accueil"
@@ -32,11 +32,12 @@ Vue "accueil"
 Details transactions
 --------------------
 * TransactionView: Merge colonnes libelle/note 
-* Libelle
-* Affectation
+* Affichage Libelle original + Libelle user
+* Messages clairs Affectation
 * Date banque / user
 * Changer date user
-* Affichage somme / affectation si multi-selection
+* Multi-selection: affichage somme + affectation
+* Propagation d'affectation
 
 
 Vue "Repartition"
@@ -47,3 +48,4 @@ Vue "Repartition"
 Vue "Evolution"
 ---------------
 * Transformer HistoricalView en histogramme
+* Palmarès

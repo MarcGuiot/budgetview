@@ -1,3 +1,4 @@
+* QIF: Estimation de solde final / SMS
 
 * Mecanique de backup/restore pour les utilisateurs
 

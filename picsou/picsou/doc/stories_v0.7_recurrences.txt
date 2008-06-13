@@ -1,0 +1,8 @@
+=== v0.7 : recurrences ===
+
+* Modele
+* Panneaux d'edition
+* Selection de recurrence dans le panneau d'edition des transactions
+* Rapprochement auto
+* Introduction de transactions fantomes
+* Vue du futur
