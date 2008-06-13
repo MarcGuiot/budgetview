@@ -6,5 +6,5 @@ import org.crossbowlabs.globs.model.GlobRepository;
 import java.util.List;
 
 public interface TransactionAnalyzer {
-  void processTransactions(Integer bankId, List<Glob> transactions, GlobRepository globRepository);
+  void processTransactions(Integer bankId, List<Glob> transactions, GlobRepository globRepository, String selectedDateFormat);
 }

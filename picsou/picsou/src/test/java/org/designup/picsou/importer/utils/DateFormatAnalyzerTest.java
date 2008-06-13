@@ -1,11 +1,13 @@
 package org.designup.picsou.importer.utils;
 
 import junit.framework.TestCase;
-
-import java.util.*;
-
 import org.crossbowlabs.globs.utils.Dates;
 import org.crossbowlabs.globs.utils.TestUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DateFormatAnalyzerTest extends TestCase {
   private DateFormatAnalyzer analyzer = new DateFormatAnalyzer(Dates.parse("2008/06/11"));
@@ -13,6 +15,10 @@ public class DateFormatAnalyzerTest extends TestCase {
   public void testYyyyMmDd() throws Exception {
     check("yy/MM/dd", "2006/04/20");
     check("yy/MM/dd", "99/04/03");
+  }
+
+  public void testOfx() throws Exception {
+    check("yyyyMMdd", "20060410");
   }
 
   public void testYearIsLessThanCurrentPlusOne() throws Exception {
@@ -27,7 +33,9 @@ public class DateFormatAnalyzerTest extends TestCase {
 
   public void testDdMmYyyy() throws Exception {
     check("dd/MM/yy", "20/04/2006");
+    check("dd/MM/yy", "22/07/2006");
     check("dd/MM/yy", "20/03/99");
+    check("dd/MM/yy", "24/07/06");
   }
 
   public void testMmDdYyyy() throws Exception {

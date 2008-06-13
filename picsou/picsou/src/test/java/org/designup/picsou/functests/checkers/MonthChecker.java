@@ -36,7 +36,7 @@ public class MonthChecker extends DataChecker {
       if (index == -1) {
         index = element.length();
       }
-      ids.add(Month.get(Dates.parseMonth(element.substring(0, index))));
+      ids.add(Month.getMonthId(Dates.parseMonth(element.substring(0, index))));
     }
     GlobList list = new GlobList();
     timeViewPanel.getAllSelectableMonth(list);

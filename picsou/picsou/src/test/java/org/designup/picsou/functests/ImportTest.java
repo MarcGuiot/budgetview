@@ -38,11 +38,11 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     checkLoginMessage("Select an OFX or QIF file to import");
 
     importButton.click();
-    checkErrorMessage(window, "login.data.file.required");
+    checkErrorMessage("login.data.file.required");
 
     fileField.setText("blah.ofx");
     importButton.click();
-    checkErrorMessage(window, "login.data.file.not.found");
+    checkErrorMessage("login.data.file.not.found");
 
     final String path = OfxBuilder
       .init(this)
@@ -235,9 +235,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     Table table = window.getTable();
     assertTrue(table.contentEquals(new Object[][]{
       {"12/06/2008", "V'lib", "1.00"},
-      {"10/06/2008", "McDo", "10.00"},
       {"10/06/2008", "Metro", "71.00"},
-      {"10/06/2008", "V'lib", "1.00"}}));
+      {"10/06/2008", "V'lib", "1.00"},
+      {"10/06/2008", "McDo", "10.00"},
+    }));
 
     assertEquals(2, window.getSwingComponents(JTextArea.class).length);
 
@@ -277,6 +278,36 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testSelectDateFormat() throws Exception {
+    final String path1 = QifBuilder
+      .init(this)
+      .addTransaction("01/01/01", -1.1, "Menu K")
+      .save();
+
+    bankCombo.select("Societe Generale");
+    fileField.setText(path1);
+    importButton.click();
+
+    Table table = window.getTable();
+    assertTrue(table.contentEquals(new Object[][]{
+      {"01/01/01", "Menu K", "-1.10"}
+    }));
+
+    ComboBox dateFormatCombo = window.getComboBox("dateFormatCombo");
+    assertTrue(dateFormatCombo.contentEquals("Year/Month/Day", "Month/Day/Year", "Day/Month/Year"));
+
+    window.getButton("OK").click();
+    checkErrorMessage("import.dateformat.undefined");
+
+    dateFormatCombo.select("Day/Month/Year");
+    assertTrue(table.contentEquals(new Object[][]{
+      {"01/01/2001", "Menu K", "-1.10"}
+    }));
+
+    window.getButton("OK").click();
+    window.getInputTextBox("number").setText("0123546");
+  }
+
   private void checkImportMessage(String message) {
     TextBox accountMessage = window.getTextBox("importMessage");
     assertTrue(accountMessage.textEquals(message));
@@ -288,7 +319,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     assertTrue(fileMessage.isVisible());
   }
 
-  private void checkErrorMessage(Window window, String message) {
+  private void checkErrorMessage(String message) {
     assertTrue(window.getTextBox("message").textContains(Lang.get(message)));
   }
 }

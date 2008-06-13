@@ -7,10 +7,9 @@ import org.crossbowlabs.globs.utils.MultiMap;
 import org.crossbowlabs.globs.utils.Strings;
 import org.crossbowlabs.globs.utils.exceptions.InvalidFormat;
 import org.crossbowlabs.globs.utils.exceptions.TruncatedFile;
-import org.crossbowlabs.globs.metamodel.fields.IntegerField;
 import org.designup.picsou.importer.AccountFileImporter;
+import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
-import static org.designup.picsou.model.Transaction.*;
 import org.designup.picsou.utils.PicsouUtils;
 
 import java.io.IOException;
@@ -67,7 +66,7 @@ public class OfxImporter implements AccountFileImporter {
     public Functor(GlobRepository targetRepository, ReadOnlyGlobRepository initialRepository) {
       this.repository = targetRepository;
       this.initialRepository = initialRepository;
-      generator = targetRepository.getIdGenerator();
+      generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
     }
 
     public void processHeader(String key, String value) {
@@ -101,9 +100,9 @@ public class OfxImporter implements AccountFileImporter {
       }
       else if (tag.equalsIgnoreCase("STMTTRN")) {
         Glob transaction =
-          repository.create(Transaction.TYPE,
-                            value(Transaction.ACCOUNT, currentAccount.get(Account.ID)),
-                            value(Transaction.ID, generator.getNextId(Transaction.ID, 1)));
+          repository.create(ImportedTransaction.TYPE,
+                            value(ImportedTransaction.ACCOUNT, currentAccount.get(Account.ID)),
+                            value(ImportedTransaction.ID, generator.getNextId(ImportedTransaction.ID, 1)));
         createdTransactions.add(transaction);
         transactionsForAccount.add(transaction);
         currentTransactionKey = transaction.getKey();
@@ -121,7 +120,7 @@ public class OfxImporter implements AccountFileImporter {
       }
       if (tag.equals("CREDITCARDMSGSRSV1")) {
         for (Glob transaction : transactionsForAccount) {
-          repository.update(transaction.getKey(), Transaction.TRANSACTION_TYPE, TransactionType.CREDIT_CARD.getId());
+          repository.update(transaction.getKey(), ImportedTransaction.IS_CARD, true);
         }
       }
       if (tag.equals("LEDGERBAL")) {
@@ -145,16 +144,16 @@ public class OfxImporter implements AccountFileImporter {
 
     private void checkTransaction() {
       Glob glob = repository.get(currentTransactionKey);
-      if (glob.get(Transaction.AMOUNT) == null) {
-        repository.update(currentTransactionKey, Transaction.AMOUNT, (double)0);
+      if (glob.get(ImportedTransaction.AMOUNT) == null) {
+        repository.update(currentTransactionKey, ImportedTransaction.AMOUNT, (double)0);
       }
     }
 
     private void processSplitTransactions() {
       List<Key> keysOfSplitTransactionToUpdate = splitRefToUpdate.get(fitid);
       for (Key splitTransactionKey : keysOfSplitTransactionToUpdate) {
-        repository.update(currentTransactionKey, SPLIT, Boolean.TRUE);
-        repository.update(splitTransactionKey, SPLIT_SOURCE, currentTransactionKey.get(Transaction.ID));
+        repository.update(currentTransactionKey, ImportedTransaction.SPLIT, Boolean.TRUE);
+        repository.update(splitTransactionKey, ImportedTransaction.SPLIT_SOURCE, currentTransactionKey.get(ImportedTransaction.ID));
       }
       splitRefToUpdate.remove(fitid);
     }
@@ -198,10 +197,10 @@ public class OfxImporter implements AccountFileImporter {
         }
       }
       if (categoryIds.size() == 1) {
-        repository.update(currentTransactionKey, Transaction.CATEGORY, categoryIds.iterator().next());
+        repository.update(currentTransactionKey, ImportedTransaction.CATEGORY, categoryIds.iterator().next());
       }
       else {
-        TransactionToCategory.link(repository, currentTransactionKey.get(Transaction.ID),
+        TransactionToCategory.link(repository, currentTransactionKey.get(ImportedTransaction.ID),
                                    categoryIds.toArray(new Integer[categoryIds.size()]));
       }
     }
@@ -212,11 +211,11 @@ public class OfxImporter implements AccountFileImporter {
         repository.findOrCreate(Key.create(BankEntity.TYPE, bankEntityId));
       }
       if (tag.equalsIgnoreCase("DTPOSTED")) {
-        updateDate(content, BANK_MONTH, BANK_DAY);
+        repository.update(currentTransactionKey, ImportedTransaction.BANK_DATE, content);
         return;
       }
       if (tag.equalsIgnoreCase("DTUSER")) {
-        updateDate(content, MONTH, DAY);
+        repository.update(currentTransactionKey, ImportedTransaction.DATE, content);
         return;
       }
       if (tag.equalsIgnoreCase("TRNAMT")) {
@@ -264,7 +263,7 @@ public class OfxImporter implements AccountFileImporter {
       }
       if (tag.equalsIgnoreCase("DISPENSABLE")) {
         if ("true".equalsIgnoreCase(content)) {
-          repository.update(currentTransactionKey, DISPENSABLE, true);
+          repository.update(currentTransactionKey, ImportedTransaction.DISPENSABLE, true);
         }
         return;
       }
@@ -280,8 +279,8 @@ public class OfxImporter implements AccountFileImporter {
         splitRefToUpdate.put(content, currentTransactionKey);
       }
       else {
-        repository.update(key, SPLIT, Boolean.TRUE);
-        repository.update(currentTransactionKey, SPLIT_SOURCE, key.get(Transaction.ID));
+        repository.update(key, ImportedTransaction.SPLIT, Boolean.TRUE);
+        repository.update(currentTransactionKey, ImportedTransaction.SPLIT_SOURCE, key.get(ImportedTransaction.ID));
       }
     }
 
@@ -292,14 +291,8 @@ public class OfxImporter implements AccountFileImporter {
     }
 
     private void updateName(String content) {
-      repository.update(currentTransactionKey, ORIGINAL_LABEL, content);
-      repository.update(currentTransactionKey, LABEL, content);
-    }
-
-    private void updateDate(String content, IntegerField monthField, IntegerField dayField) {
-      Date parsedDate = parseDate(content);
-      repository.update(currentTransactionKey, monthField, Month.get(parsedDate));
-      repository.update(currentTransactionKey, dayField, Month.getDay(parsedDate));
+      repository.update(currentTransactionKey, ImportedTransaction.ORIGINAL_LABEL, content);
+      repository.update(currentTransactionKey, ImportedTransaction.LABEL, content);
     }
 
     private Date parseDate(String content) {
@@ -314,7 +307,7 @@ public class OfxImporter implements AccountFileImporter {
     }
 
     private void updateAmount(String content) {
-      repository.update(currentTransactionKey, AMOUNT, Double.parseDouble(content));
+      repository.update(currentTransactionKey, ImportedTransaction.AMOUNT, Double.parseDouble(content));
     }
 
     private void updateAccount(String accountNumber) {
@@ -322,7 +315,7 @@ public class OfxImporter implements AccountFileImporter {
       if (currentAccount == null) {
         currentAccount = repository.create(Account.TYPE,
                                            value(Account.NUMBER, accountNumber),
-                                           value(Account.ID, repository.getNextId(Account.ID, 1)),
+                                           value(Account.ID, generator.getNextId(Account.ID, 1)),
                                            value(Account.NAME, getName(accountNumber, isCreditCard)),
                                            value(Account.BANK_ENTITY, bankEntityId),
                                            value(Account.IS_CARD_ACCOUNT, isCreditCard));
@@ -345,7 +338,7 @@ public class OfxImporter implements AccountFileImporter {
 
     private void updateNote(String content) {
       if (!Strings.isNullOrEmpty(content)) {
-        repository.update(currentTransactionKey, NOTE, content);
+        repository.update(currentTransactionKey, ImportedTransaction.NOTE, content);
       }
     }
 
@@ -357,5 +350,7 @@ public class OfxImporter implements AccountFileImporter {
         return "Compte " + number;
       }
     }
+
   }
+
 }

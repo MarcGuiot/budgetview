@@ -9,6 +9,7 @@ import org.designup.picsou.model.TransactionType;
 import static org.designup.picsou.model.TransactionType.PRELEVEMENT;
 import static org.designup.picsou.model.TransactionType.VIREMENT;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,23 +20,25 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
     new MultiMap<Integer, TransactionTypeFinalizer>();
   private List<TransactionTypeFinalizer> finalizers = new ArrayList<TransactionTypeFinalizer>();
 
-  public void processTransactions(Integer bankId, List<Glob> transactions, GlobRepository globRepository) {
+  public void processTransactions(Integer bankId, List<Glob> transactions,
+                                  GlobRepository globRepository, String dateFormat) {
+    SimpleDateFormat format = new SimpleDateFormat(dateFormat);
     List<TransactionTypeFinalizer> finalizerList = exclusiveFinalizers.get(bankId);
     finalizerList = (finalizerList == null ? Collections.<TransactionTypeFinalizer>emptyList() : finalizerList);
     for (Glob transaction : transactions) {
-      processTransaction(transaction, globRepository, finalizerList);
+      processTransaction(transaction, globRepository, finalizerList, format);
     }
   }
 
   private void processTransaction(Glob transaction, GlobRepository globRepository,
-                                  List<TransactionTypeFinalizer> transactionTypeFinalizers) {
+                                  List<TransactionTypeFinalizer> transactionTypeFinalizers, SimpleDateFormat format) {
     for (TransactionTypeFinalizer finalizer : transactionTypeFinalizers) {
-      if (finalizer.processTransaction(transaction, globRepository)) {
+      if (finalizer.processTransaction(transaction, globRepository, format)) {
         break;
       }
     }
     for (TransactionTypeFinalizer finalizer : finalizers) {
-      finalizer.processTransaction(transaction, globRepository);
+      finalizer.processTransaction(transaction, globRepository, format);
     }
     if (transaction.get(Transaction.TRANSACTION_TYPE) == null) {
       setDefaultType(transaction, globRepository);
@@ -55,11 +58,10 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
                            final Integer matcherGroupForLabel, final Integer matcherGroupForDate,
                            Glob glob) {
     AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp) {
-      protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher) {
+      protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher, SimpleDateFormat format) {
         String label = matcher.group(matcherGroupForLabel);
         setTransactionType(transaction, globRepository, type, label,
-                           matcher.group(matcherGroupForDate)
-        );
+                           matcher.group(matcherGroupForDate), format);
       }
     };
     exclusiveFinalizers.put(glob.get(Bank.ID), finalizer);
@@ -67,7 +69,7 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
 
   public void addExclusive(String regexp, final TransactionType type, final Integer matcherGroupForLabel, Glob bank) {
     AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp) {
-      protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher) {
+      protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher, SimpleDateFormat format) {
         setTransactionType(transaction, globRepository, type, matcher.group(matcherGroupForLabel));
       }
     };
@@ -77,7 +79,7 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
   public void addExclusive(String regexp, final TransactionType type, Glob bank) {
 
     AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp) {
-      protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher) {
+      protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher, SimpleDateFormat format) {
         setTransactionType(transaction, globRepository, type, matcher.group());
       }
     };

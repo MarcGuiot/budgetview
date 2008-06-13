@@ -1,10 +1,9 @@
 package org.designup.picsou.importer.analyzer;
 
-import org.crossbowlabs.globs.model.FieldValue;
+import static org.crossbowlabs.globs.model.FieldValue.value;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.model.Key;
-import static org.crossbowlabs.globs.model.FieldValue.value;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
@@ -24,7 +23,7 @@ public abstract class AbstractRegexpTransactionTypeFinalizer implements Transact
     this.pattern = Pattern.compile(regexp);
   }
 
-  public boolean processTransaction(Glob transaction, GlobRepository globRepository) {
+  public boolean processTransaction(Glob transaction, GlobRepository globRepository, SimpleDateFormat format) {
     String label = transaction.get(Transaction.LABEL);
     if (label == null) {
       return true;
@@ -34,25 +33,25 @@ public abstract class AbstractRegexpTransactionTypeFinalizer implements Transact
 
     Matcher matcher = pattern.matcher(upperCaseLabel);
     if (matcher.matches()) {
-      setTransactionType(transaction, globRepository, matcher);
+      setTransactionType(transaction, globRepository, matcher, format);
       return true;
     }
 
     return false;
   }
 
-  protected abstract void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher);
+  protected abstract void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher, SimpleDateFormat format);
 
   protected void setTransactionType(Glob transaction,
                                     GlobRepository globRepository,
                                     TransactionType transactionType,
                                     String label,
-                                    String date) {
+                                    String date, SimpleDateFormat format) {
     Key key = transaction.getKey();
-    Date parsedDate = getDate(date);
+    Date parsedDate = getDate(format, date);
     globRepository.update(key,
                           value(Transaction.TRANSACTION_TYPE, transactionType.getId()),
-                          value(Transaction.MONTH, Month.get(parsedDate)),
+                          value(Transaction.MONTH, Month.getMonthId(parsedDate)),
                           value(Transaction.DAY, Month.getDay(parsedDate)),
                           value(Transaction.LABEL, label.trim()));
   }
@@ -65,9 +64,9 @@ public abstract class AbstractRegexpTransactionTypeFinalizer implements Transact
                           value(Transaction.LABEL, label.trim()));
   }
 
-  private Date getDate(String date) {
+  private Date getDate(SimpleDateFormat format, String date) {
     try {
-      return DATE_FORMAT.parse(date);
+      return format.parse(date);
     }
     catch (ParseException e) {
       throw new RuntimeException(e);

@@ -1,6 +1,7 @@
 package org.designup.picsou.importer;
 
 import org.crossbowlabs.globs.metamodel.GlobType;
+import org.crossbowlabs.globs.metamodel.fields.StringField;
 import static org.crossbowlabs.globs.model.FieldValue.value;
 import org.crossbowlabs.globs.model.*;
 import org.crossbowlabs.globs.model.delta.DefaultChangeSet;
@@ -8,61 +9,83 @@ import org.crossbowlabs.globs.model.delta.MutableChangeSet;
 import org.crossbowlabs.globs.model.utils.ChangeSetAggregator;
 import org.crossbowlabs.globs.utils.MultiMap;
 import org.crossbowlabs.globs.utils.directory.Directory;
+import org.crossbowlabs.globs.utils.exceptions.InvalidData;
 import org.crossbowlabs.globs.utils.exceptions.TruncatedFile;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
+import org.designup.picsou.importer.utils.DateFormatAnalyzer;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ImportSession {
-  private GlobRepository repository;
+  private GlobRepository referenceRepository;
   private Directory directory;
   private ImportService importService;
-  protected Key importKey;
-  protected MutableChangeSet importChangeSet;
-  protected GlobRepository localRepository;
+  private MutableChangeSet importChangeSet;
+  private GlobRepository localRepository;
   private BankFileType fileType;
   private ChangeSetAggregator importChangeSetAggregator;
+  private TypedInputStream typedStream;
 
-  public ImportSession(GlobRepository repository, Directory directory) {
-    this.repository = repository;
+  public ImportSession(GlobRepository referenceRepository, Directory directory) {
+    this.referenceRepository = referenceRepository;
     this.directory = directory;
     this.importService = directory.get(ImportService.class);
-    this.localRepository = GlobRepositoryBuilder.init(repository.getIdGenerator()).get();
+    this.localRepository = GlobRepositoryBuilder.init(referenceRepository.getIdGenerator()).get();
   }
 
   public GlobRepository getTempRepository() {
     return localRepository;
   }
 
-  public void loadFile(File file) throws IOException, TruncatedFile {
+  public List<String> loadFile(File file) throws IOException, TruncatedFile {
     localRepository.reset(GlobList.EMPTY,
-                          Transaction.TYPE, TransactionToCategory.TYPE, LabelToCategory.TYPE);
+                          Transaction.TYPE, TransactionToCategory.TYPE, LabelToCategory.TYPE,
+                          ImportedTransaction.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE};
-    localRepository.reset(repository.getAll(types), types);
+    localRepository.reset(referenceRepository.getAll(types), types);
 
     importChangeSet = new DefaultChangeSet();
     importChangeSetAggregator = new ChangeSetAggregator(localRepository, importChangeSet);
     localRepository.enterBulkDispatchingMode();
 
-    TypedInputStream typedStream = new TypedInputStream(file);
+    typedStream = new TypedInputStream(file);
     fileType = typedStream.getType();
-    importKey = importService.run(typedStream, repository, localRepository);
+    importService.run(typedStream, referenceRepository, localRepository);
     localRepository.completeBulkDispatchingMode();
+    return getImportedTransactionFormat();
   }
 
-  public void importTransactions(Glob currentlySelectedAccount) {
+  private List<String> getImportedTransactionFormat() {
+    Set<String> valueSet = localRepository.getAll(ImportedTransaction.TYPE).getValueSet(ImportedTransaction.BANK_DATE);
+    DateFormatAnalyzer dateFormatAnalyzer = new DateFormatAnalyzer(new Date());
+    return dateFormatAnalyzer.parse(valueSet);
+  }
+
+  public void importTransactions(Glob currentlySelectedAccount, String selectedDateFormat) {
+
+    TransactionFilter transactionFilter = new TransactionFilter();
+    GlobList newTransactions = transactionFilter.loadTransactions(referenceRepository, localRepository,
+                                                                  convertImportedTransaction(selectedDateFormat));
+
+    createImport(typedStream, newTransactions, localRepository);
+    localRepository.deleteAll(ImportedTransaction.TYPE);
     importChangeSetAggregator.dispose();
     try {
       DefaultChangeSet updateImportChangeSet = new DefaultChangeSet();
-      repository.enterBulkDispatchingMode();
+      referenceRepository.enterBulkDispatchingMode();
       ChangeSetAggregator updateImportAggregator = new ChangeSetAggregator(localRepository, updateImportChangeSet);
       localRepository.enterBulkDispatchingMode();
 // TODO:     importChangeSet.getCreated(BankEntity.TYPE);
@@ -86,28 +109,96 @@ public class ImportSession {
         if (bank != null) {
           id = bank.get(Bank.ID);
         }
-        transactionAnalyzer.processTransactions(id, accountIdAndTransactions.getValue(), localRepository);
+        transactionAnalyzer.processTransactions(id, accountIdAndTransactions.getValue(),
+                                                localRepository, selectedDateFormat);
       }
       localRepository.completeBulkDispatchingMode();
       updateImportAggregator.dispose();
-      repository.apply(importChangeSet);
-      repository.apply(updateImportChangeSet);
+      referenceRepository.apply(importChangeSet);
+      referenceRepository.apply(updateImportChangeSet);
       AllocationLearningService learningService = directory.get(AllocationLearningService.class);
       for (Map.Entry<Integer, List<Glob>> transactions : transactionByAccountId.values()) {
-        learningService.setCategories(transactions.getValue(), repository);
+        learningService.setCategories(transactions.getValue(), referenceRepository);
       }
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      referenceRepository.completeBulkDispatchingMode();
+    }
+  }
+
+  private GlobList convertImportedTransaction(String selectedDateFormat) {
+    DateFormat dateFormat = new SimpleDateFormat(selectedDateFormat);
+    GlobList importedTransactions = localRepository.getAll(ImportedTransaction.TYPE);
+    GlobList createdTransactions = new GlobList();
+    for (Glob glob : importedTransactions) {
+      Date bankDate = parseDate(dateFormat, glob, ImportedTransaction.BANK_DATE);
+      Date userDate = parseDate(dateFormat, glob, ImportedTransaction.DATE);
+      createdTransactions.add(
+        localRepository.create(
+          Key.create(Transaction.TYPE, glob.getValue(ImportedTransaction.ID)),
+          value(Transaction.TRANSACTION_TYPE,
+                glob.get(ImportedTransaction.IS_CARD, false) ? TransactionType.getId(TransactionType.CREDIT_CARD) : null),
+          value(Transaction.BANK_MONTH, Month.getMonthId(bankDate)),
+          value(Transaction.BANK_DAY, Month.getDay(bankDate)),
+          value(Transaction.BANK_MONTH, bankDate == null ? null : Month.getMonthId(bankDate)),
+          value(Transaction.BANK_DAY, bankDate == null ? null : Month.getDay(bankDate)),
+          value(Transaction.MONTH, userDate == null ? null : Month.getMonthId(userDate)),
+          value(Transaction.DAY, userDate == null ? null : Month.getDay(userDate)),
+          value(Transaction.LABEL, glob.get(ImportedTransaction.LABEL)),
+          value(Transaction.ACCOUNT, glob.get(ImportedTransaction.ACCOUNT)),
+          value(Transaction.AMOUNT, glob.get(ImportedTransaction.AMOUNT)),
+          value(Transaction.CATEGORY, glob.get(ImportedTransaction.CATEGORY)),
+          value(Transaction.DISPENSABLE, glob.get(ImportedTransaction.DISPENSABLE)),
+          value(Transaction.LABEL_FOR_CATEGORISATION, glob.get(ImportedTransaction.LABEL_FOR_CATEGORISATION)),
+          value(Transaction.NOTE, glob.get(ImportedTransaction.NOTE)),
+          value(Transaction.ORIGINAL_LABEL, glob.get(ImportedTransaction.ORIGINAL_LABEL)),
+          value(Transaction.SPLIT, glob.get(ImportedTransaction.SPLIT)),
+          value(Transaction.SPLIT_SOURCE, glob.get(ImportedTransaction.SPLIT_SOURCE))
+        ));
+    }
+    return createdTransactions;
+  }
+
+  private Date parseDate(DateFormat dateFormat, Glob glob, StringField dateField) {
+    try {
+      String stringifiedDate = glob.get(dateField);
+      return stringifiedDate == null ? null : dateFormat.parse(stringifiedDate);
+    }
+    catch (ParseException e) {
+      throw new InvalidData("Unable to parse date " + dateField + " in format " + dateFormat, e);
     }
   }
 
   public void discard() {
-    importChangeSetAggregator.dispose();    
+    importChangeSetAggregator.dispose();
   }
 
   public Glob createDefaultAccount() {
     return localRepository.create(Account.TYPE,
                                   value(Account.NAME, Lang.get("account.default.current.name")));
+  }
+
+  public Key createImport(TypedInputStream file, GlobList createdTransactions, GlobRepository targetRepository) {
+    Glob transactionImport =
+      targetRepository.create(TransactionImport.TYPE,
+                              value(TransactionImport.IMPORT_DATE, new Date()),
+                              value(TransactionImport.SOURCE, file.getName()));
+
+    Key importKey = transactionImport.getKey();
+
+    int lastMonth = 0;
+    int lastDay = 0;
+    for (Glob createdTransaction : createdTransactions) {
+      targetRepository.setTarget(createdTransaction.getKey(), Transaction.IMPORT, importKey);
+
+      Integer transactionMonth = createdTransaction.get(Transaction.BANK_MONTH);
+      Integer transactionDay = createdTransaction.get(Transaction.BANK_DAY);
+      if (lastMonth < transactionMonth || (lastMonth == transactionMonth && lastDay < transactionDay)) {
+        lastMonth = transactionMonth;
+        lastDay = transactionDay;
+      }
+    }
+    targetRepository.update(importKey, TransactionImport.LAST_TRANSACTION_DATE, Month.toDate(lastMonth, lastDay));
+    return importKey;
   }
 }

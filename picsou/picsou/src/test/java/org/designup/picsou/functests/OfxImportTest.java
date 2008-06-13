@@ -196,7 +196,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
- public void testTakesUserAndBankDatesIntoAccountWhenDetectingDuplicates() throws Exception {
+  public void testTakesUserAndBankDatesIntoAccountWhenDetectingDuplicates() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/15", "2006/01/10", -1.1, "Operation 1")
@@ -217,7 +217,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     OfxWriter writer = new OfxWriter(new FileWriter(fileName));
     writer.writeHeader();
     writer.writeBankMsgHeader(30066, 12345, "1111");
-    writer.startTransaction("20060524000000", "20060524000000", -99.0, 1, "blah")
+    writer.startTransaction("20060524", "20060524", -99.0, 1, "blah")
       .add("category", MasterCategory.FOOD.getName())
       .end();
     writer.writeBankMsgFooter(123.56, "20060525000000");

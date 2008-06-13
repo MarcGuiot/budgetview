@@ -100,12 +100,12 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testBankDateWithEnglishFormatAndShortDate() throws Exception {
-    checkBankDate("04/20/06", "20/04/2006");
+    checkBankDate("12/20/06", "20/12/2006");
   }
 
   public void testUserDateWithEnglishFormat() throws Exception {
     String[] blocks = {
-      "D20/04/2006" + "\n" +
+      "D04/20/2006" + "\n" +
       "T-17.65\n" +
       "N\n" +
       "PFAC.FRANCE 4561409\n" +
@@ -127,7 +127,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       "^"};
     importBlocks(blocks);
     transactions.initContent()
-      .add(expected, TransactionType.PRELEVEMENT, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
+      .add(expected, TransactionType.PRELEVEMENT, "TPS FRA01107365A040606/T.P.S. 000103017914", "", -17.65)
       .check();
   }
 

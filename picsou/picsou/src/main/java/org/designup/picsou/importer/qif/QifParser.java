@@ -4,21 +4,16 @@ import org.crossbowlabs.globs.model.FieldValuesBuilder;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobList;
 import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.utils.CachedGlobIdGenerator;
 import org.crossbowlabs.globs.model.utils.GlobIdGenerator;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.designup.picsou.model.Month;
+import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
+import org.designup.picsou.model.ImportedTransaction;
 import org.designup.picsou.model.Transaction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class QifParser {
-  public static final SimpleDateFormat QIF_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
 
   public static GlobList read(Reader reader, GlobRepository globRepository) {
     QifParser qifParser = new QifParser(reader, globRepository);
@@ -32,7 +27,7 @@ public class QifParser {
   private QifParser(Reader reader, GlobRepository globRepository) {
     this.globRepository = globRepository;
     this.reader = new BufferedReader(reader);
-    globIdGenerator = new CachedGlobIdGenerator(globRepository.getIdGenerator());
+    globIdGenerator = new ImportedTransactionIdGenerator(globRepository.getIdGenerator());
   }
 
   private GlobList run() {
@@ -47,7 +42,7 @@ public class QifParser {
     try {
       FieldValuesBuilder values =
         FieldValuesBuilder.init()
-          .set(Transaction.ID, globIdGenerator.getNextId(Transaction.ID, 1));
+          .set(Transaction.ID, globIdGenerator.getNextId(ImportedTransaction.ID, 1));
       boolean updated = false;
       while (true) {
         int start = reader.read();
@@ -63,7 +58,7 @@ public class QifParser {
             break;
           case 'T':
             updated = true;
-            values.set(Transaction.AMOUNT, Double.parseDouble(reader.readLine().replaceAll(",", "")));
+            values.set(ImportedTransaction.AMOUNT, Double.parseDouble(reader.readLine().replaceAll(",", "")));
             break;
           case 'P':
             updated = true;
@@ -87,26 +82,19 @@ public class QifParser {
   }
 
   private Glob createTransaction(FieldValuesBuilder values) {
-    return globRepository.create(Transaction.TYPE, values.get().toArray());
+    return globRepository.create(ImportedTransaction.TYPE, values.get().toArray());
   }
 
   private void updateDescription(FieldValuesBuilder values, String value) {
-    String description = values.get().get(Transaction.ORIGINAL_LABEL);
+    String description = values.get().get(ImportedTransaction.ORIGINAL_LABEL);
     if (description == null || description.length() < value.length()) {
-      values.set(Transaction.ORIGINAL_LABEL, value);
-      values.set(Transaction.LABEL, value);
+      values.set(ImportedTransaction.ORIGINAL_LABEL, value);
+      values.set(ImportedTransaction.LABEL, value);
     }
   }
 
   private void readDate(FieldValuesBuilder values) throws IOException {
     String value = reader.readLine().trim();
-    try {
-      Date date = QIF_DATE_FORMAT.parse(value);
-      values.set(Transaction.BANK_MONTH, Month.get(date));
-      values.set(Transaction.BANK_DAY, Month.getDay(date));
-    }
-    catch (ParseException e) {
-      throw new InvalidData("Unable to parse date " + value + " in format " + "dd/mm/yy", e);
-    }
+    values.set(ImportedTransaction.BANK_DATE, value);
   }
 }

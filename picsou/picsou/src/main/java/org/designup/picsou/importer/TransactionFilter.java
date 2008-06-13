@@ -3,27 +3,22 @@ package org.designup.picsou.importer;
 import org.crossbowlabs.globs.model.*;
 import org.crossbowlabs.globs.utils.MultiMap;
 import static org.crossbowlabs.globs.utils.Utils.equal;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
 import org.designup.picsou.utils.TransactionComparator;
 
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class TransactionFilter implements AccountFileImporter {
-  private AccountFileImporter innerImporter;
+public class TransactionFilter {
 
-  public TransactionFilter(AccountFileImporter accountFileImporter) {
-    this.innerImporter = accountFileImporter;
-  }
-
-  public GlobList loadTransactions(Reader reader,
-                                   ReadOnlyGlobRepository initialRepository,
-                                   GlobRepository targetRepository) {
-    GlobList createdTransactions = loadTransactionsToCreate(reader, targetRepository, initialRepository);
+  public GlobList loadTransactions(ReadOnlyGlobRepository referenceRepository,
+                                   GlobRepository targetRepository,
+                                   GlobList transactionToFilter) {
+    GlobList createdTransactions = loadTransactionsToCreate(targetRepository, referenceRepository, transactionToFilter);
 
     SummaryAccountCreationTrigger.updateSummary(targetRepository);
 
@@ -38,16 +33,13 @@ public class TransactionFilter implements AccountFileImporter {
     return createdTransactions;
   }
 
-  private GlobList loadTransactionsToCreate(Reader reader, GlobRepository targetRepository,
-                                            ReadOnlyGlobRepository initialRepository) {
-    GlobList importedTransactions =
-      innerImporter
-        .loadTransactions(reader, initialRepository, targetRepository)
-        .sort(TransactionComparator.ASCENDING_BANK);
+  private GlobList loadTransactionsToCreate(GlobRepository targetRepository,
+                                            ReadOnlyGlobRepository referenceRepository, GlobList transactionToFilter) {
+    GlobList importedTransactions = transactionToFilter.sort(TransactionComparator.ASCENDING_BANK);
     if (importedTransactions.isEmpty()) {
       return GlobList.EMPTY;
     }
-    GlobList actualTransactions = initialRepository.getAll(Transaction.TYPE).sort(TransactionComparator.ASCENDING_BANK);
+    GlobList actualTransactions = referenceRepository.getAll(Transaction.TYPE).sort(TransactionComparator.ASCENDING_BANK);
     if (actualTransactions.isEmpty()) {
       return importedTransactions;
     }

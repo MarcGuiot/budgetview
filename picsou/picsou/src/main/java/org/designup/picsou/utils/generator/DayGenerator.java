@@ -13,7 +13,7 @@ public abstract class DayGenerator {
   public static DayGenerator any() {
     return new DayGenerator() {
       public int get(Integer month) {
-        int actualMaximum = Month.getCalendar(month).getActualMaximum(Calendar.DAY_OF_MONTH);
+        int actualMaximum = Month.createCalendar(month).getActualMaximum(Calendar.DAY_OF_MONTH);
         return (int)(1 + Math.random() * actualMaximum);
       }
     };

@@ -3,6 +3,8 @@ package org.designup.picsou.importer.utils;
 import org.crossbowlabs.globs.utils.exceptions.InvalidData;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DateFormatAnalyzer {
   private Date referenceDate;
@@ -12,16 +14,22 @@ public class DateFormatAnalyzer {
   }
 
   public List<String> parse(Set<String> dates) throws InvalidData {
-    List<String> result = new ArrayList<String>();
-    result.add("yy/MM/dd");
-    result.add("MM/dd/yy");
-    result.add("dd/MM/yy");
+    List<String> result = getAllFormats();
 
     int maxFirst = 0;
     int maxSecond = 0;
     int maxThird = 0;
 
+    if (dates.size() >= 1) {
+      Pattern pattern = Pattern.compile("\\d{8}+");
+      Matcher matcher = pattern.matcher(dates.iterator().next());
+      if (matcher.matches()) {
+        return Collections.singletonList("yyyyMMdd");
+      }
+    }
+
     for (String date : dates) {
+
       String[] items = date.split("[-\\./]");
       if (items.length != 3) {
         throw new InvalidData(date + " - items: " + Arrays.toString(items));
@@ -59,6 +67,14 @@ public class DateFormatAnalyzer {
       result.remove("yy/MM/dd");
     }
 
+    return result;
+  }
+
+  public static List<String> getAllFormats() {
+    List<String> result = new ArrayList<String>();
+    result.add("yy/MM/dd");
+    result.add("MM/dd/yy");
+    result.add("dd/MM/yy");
     return result;
   }
 

@@ -23,6 +23,7 @@ public class Month {
   }
 
   private static NumberFormat YEAR_FORMAT = new DecimalFormat("00");
+  private static final Calendar CALENDAR = Calendar.getInstance();
 
   public static String toString(int yyyymm) {
     return Month.toMonth(yyyymm) + "/" + toYearString(yyyymm);
@@ -44,13 +45,12 @@ public class Month {
     return year * 100 + month;
   }
 
-  public static int get(Date date) {
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(date);
-    return toYyyyMm(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+  public static int getMonthId(Date date) {
+    CALENDAR.setTime(date);
+    return toYyyyMm(CALENDAR.get(Calendar.YEAR), CALENDAR.get(Calendar.MONTH) + 1);
   }
 
-  public static Calendar getCalendar(int yyyymm) {
+  public static Calendar createCalendar(int yyyymm) {
     Calendar calendar = new GregorianCalendar();
     calendar.clear();
     calendar.set(Calendar.YEAR, toYear(yyyymm));
@@ -59,16 +59,14 @@ public class Month {
   }
 
   public static int getDay(Date date) {
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(date);
-    return calendar.get(Calendar.DAY_OF_MONTH);
+    CALENDAR.setTime(date);
+    return CALENDAR.get(Calendar.DAY_OF_MONTH);
   }
 
   public static Date toDate(int yyyymm, int day) {
-    Calendar calendar = Calendar.getInstance();
-    calendar.clear();
-    calendar.set(toYear(yyyymm), toMonth(yyyymm) - 1, day);
-    return calendar.getTime();
+    CALENDAR.clear();
+    CALENDAR.set(toYear(yyyymm), toMonth(yyyymm) - 1, day);
+    return CALENDAR.getTime();
   }
 
   public static int next(int yyyymm) {

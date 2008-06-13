@@ -38,6 +38,8 @@
           <table ref="table"/>
         </scrollPane>
 
+        <panel ref="dateSelectionPanel"/>
+
         <panel ref="bankEntityEditionPanel"/>
 
         <row>
@@ -45,7 +47,6 @@
           <button ref="newAccount"/>
         </row>
         <panel ref="accountEditionPanel"/>
-
         <label ref="importMessage"/>
 
         <row>
@@ -56,5 +57,5 @@
     </card>
   </cards>
 
-
 </splits>
+  

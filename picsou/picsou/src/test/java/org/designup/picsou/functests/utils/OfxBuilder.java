@@ -112,7 +112,7 @@ public class OfxBuilder {
 
     GlobList all = repository.getAll(Transaction.TYPE,
                                      and(fieldEquals(Transaction.DAY, Month.getDay(parsedDate)),
-                                         fieldEquals(Transaction.MONTH, Month.get(parsedDate)),
+                                         fieldEquals(Transaction.MONTH, Month.getMonthId(parsedDate)),
                                          fieldEquals(Transaction.LABEL, label),
                                          isNull(Transaction.SPLIT_SOURCE)));
     Assert.assertEquals("transaction not found", 1, all.size());
@@ -162,9 +162,9 @@ public class OfxBuilder {
     Glob transaction =
       repository.create(TYPE,
                         FieldValue.value(AMOUNT, amount),
-                        FieldValue.value(MONTH, Month.get(parsedUserDate)),
+                        FieldValue.value(MONTH, Month.getMonthId(parsedUserDate)),
                         FieldValue.value(DAY, Month.getDay(parsedUserDate)),
-                        FieldValue.value(BANK_MONTH, Month.get(parsedBankDate)),
+                        FieldValue.value(BANK_MONTH, Month.getMonthId(parsedBankDate)),
                         FieldValue.value(BANK_DAY, Month.getDay(parsedBankDate)),
                         FieldValue.value(LABEL, label),
                         FieldValue.value(ORIGINAL_LABEL, label),

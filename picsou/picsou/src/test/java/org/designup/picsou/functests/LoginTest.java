@@ -6,7 +6,6 @@ import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.SingleApplicationInstanceListener;
-import org.designup.picsou.gui.utils.PicsouFrame;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
@@ -213,7 +212,24 @@ public class LoginTest extends ServerFunctionalTestCase {
   }
 
   public void testImportSeveralFiles() throws Exception {
-    fail();
+    final String path1 = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .save();
+    final String path2 = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/20", -2.2, "Menu K")
+      .save();
+    createNewUser();
+    window.getInputTextBox("fileField").setText(path1 + ";" + path2);
+    window.getButton("Import").click();
+    window.getButton("OK").click();
+    window.getButton("OK").click();
+    getTransactionChecker()
+      .initContent()
+      .add("20/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2.2)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
+      .check();
   }
 
   private void createNewUser() {

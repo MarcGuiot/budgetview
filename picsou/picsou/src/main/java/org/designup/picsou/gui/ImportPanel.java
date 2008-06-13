@@ -4,37 +4,36 @@ import org.crossbowlabs.globs.gui.GlobSelection;
 import org.crossbowlabs.globs.gui.GlobSelectionListener;
 import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.gui.views.GlobComboView;
-import org.crossbowlabs.globs.gui.views.GlobHtmlView;
-import org.crossbowlabs.globs.gui.views.GlobTableView;
+import org.crossbowlabs.globs.gui.views.*;
 import org.crossbowlabs.globs.model.Glob;
 import org.crossbowlabs.globs.model.GlobList;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.model.format.GlobListStringifier;
 import org.crossbowlabs.globs.model.utils.GlobMatcher;
+import org.crossbowlabs.globs.model.utils.GlobMatchers;
 import org.crossbowlabs.globs.model.utils.LocalGlobRepository;
 import org.crossbowlabs.globs.model.utils.LocalGlobRepositoryBuilder;
-import org.crossbowlabs.globs.model.utils.GlobMatchers;
 import org.crossbowlabs.globs.utils.Log;
 import org.crossbowlabs.globs.utils.Strings;
+import org.crossbowlabs.globs.utils.Utils;
 import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
 import org.crossbowlabs.globs.utils.directory.Directory;
 import org.crossbowlabs.splits.components.JStyledPanel;
 import org.crossbowlabs.splits.layout.CardHandler;
-import org.designup.picsou.gui.transactions.TransactionDateStringifier;
+import org.designup.picsou.gui.utils.PicsouDescriptionService;
 import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.importer.ImportSession;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.utils.TransactionComparator;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.List;
 
 public abstract class ImportPanel {
@@ -52,6 +51,7 @@ public abstract class ImportPanel {
   private Directory localDirectory;
   private AccountEditionPanel accountEditionPanel;
   private BankEntityEditionPanel bankEntityEditionPanel;
+  private DateFormatSelectionPanel dateFormatSelectionPanel;
   private Glob bank;
   private JButton newAccountButton;
   private JComboBox accountComboBox;
@@ -59,6 +59,7 @@ public abstract class ImportPanel {
   private Glob currentlySelectedAccount;
   private DefaultDirectory sessionDirectory;
   private GlobRepository sessionRepository;
+  private ImportedTransactionDateRenderer dateRenderer;
 
   protected ImportPanel(final Window owner, GlobRepository repository, Directory directory) {
 
@@ -92,6 +93,14 @@ public abstract class ImportPanel {
     }, Bank.TYPE);
 
     //step 2
+    dateRenderer = new ImportedTransactionDateRenderer();
+    dateFormatSelectionPanel = new DateFormatSelectionPanel(repository, directory,
+                                                            new DateFormatSelectionPanel.Callback() {
+                                                              public void dateFormatSelected(String format) {
+                                                                dateRenderer.changeDateFormat(format);
+                                                              }
+                                                            }, importMessageLabel);
+    builder.add("dateSelectionPanel", dateFormatSelectionPanel.getPanel());
     sessionDirectory = new DefaultDirectory(localDirectory);
     SelectionService selectionService = new SelectionService();
     sessionDirectory.add(selectionService);
@@ -104,15 +113,13 @@ public abstract class ImportPanel {
     importSession = new ImportSession(localRepository, sessionDirectory);
     sessionRepository = importSession.getTempRepository();
 
-    TransactionComparator comparator = TransactionComparator.DESCENDING_BANK;
-    TransactionDateStringifier dateStringifier =
-      new TransactionDateStringifier(comparator, Transaction.BANK_MONTH, Transaction.BANK_DAY);
-    JTable transactionTable =
-      GlobTableView.init(Transaction.TYPE, sessionRepository, comparator, sessionDirectory)
-        .addColumn(Lang.get("date"), dateStringifier)
-        .addColumn(Transaction.LABEL)
-        .addColumn(Transaction.AMOUNT)
-        .getComponent();
+    GlobTableView importedTransactionTableView = GlobTableView.init(ImportedTransaction.TYPE, sessionRepository,
+                                                                    dateRenderer, sessionDirectory)
+      .addColumn(ImportedTransaction.BANK_DATE, dateRenderer, CellPainter.NULL)
+      .addColumn(ImportedTransaction.LABEL)
+      .addColumn(ImportedTransaction.AMOUNT);
+    JTable transactionTable = importedTransactionTableView.getComponent();
+    dateRenderer.setTable(importedTransactionTableView);
 
     builder.add("table", transactionTable);
     builder.add("fileName", fileNameLabel);
@@ -230,9 +237,10 @@ public abstract class ImportPanel {
     try {
 
       fileNameLabel.setText(file.getAbsolutePath());
-      importSession.loadFile(file);
+      List<String> dateFormat = importSession.loadFile(file);
       initBankEntityEditionPanel();
       initCreationAccountFields(file);
+      initDateFormatSelectionPanel(dateFormat);
       if (bank != null) {
         sessionDirectory.get(SelectionService.class).select(sessionRepository.get(bank.getKey()));
       }
@@ -244,6 +252,10 @@ public abstract class ImportPanel {
       messageLabel.setText(message);
       return false;
     }
+  }
+
+  private void initDateFormatSelectionPanel(List<String> dateFormats) {
+    dateFormatSelectionPanel.init(dateFormats);
   }
 
   private void initBankEntityEditionPanel() {
@@ -292,13 +304,17 @@ public abstract class ImportPanel {
     }
 
     public void actionPerformed(ActionEvent event) {
-      if (!accountEditionPanel.check()) {
+      messageLabel.setText("");
+      if (!dateFormatSelectionPanel.check()) {
         return;
       }
       if (!bankEntityEditionPanel.check()) {
         return;
       }
-      importSession.importTransactions(currentlySelectedAccount);
+      if (!accountEditionPanel.check()) {
+        return;
+      }
+      importSession.importTransactions(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
       nextImport();
     }
   }
@@ -368,6 +384,64 @@ public abstract class ImportPanel {
           }
         }
         fileField.setText(buffer.toString());
+      }
+    }
+  }
+
+  private class ImportedTransactionDateRenderer implements LabelCustomizer, Comparator<Glob> {
+    private GlobTableView transactionTable;
+    private SimpleDateFormat format;
+
+
+    public void changeDateFormat(String dateFormat) {
+      if (dateFormat == null) {
+        format = null;
+      }
+      else {
+        format = new SimpleDateFormat(dateFormat);
+      }
+      transactionTable.refresh();
+    }
+
+    public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
+      if (format == null) {
+        label.setText(glob.get(ImportedTransaction.BANK_DATE));
+        return;
+      }
+      Date date = null;
+      try {
+        date = format.parse(glob.get(ImportedTransaction.BANK_DATE));
+      }
+      catch (ParseException e) {
+        label.setText("Failed to parse date");
+      }
+      label.setText(PicsouDescriptionService.toString(date));
+    }
+
+    public void setTable(GlobTableView transactionTable) {
+      this.transactionTable = transactionTable;
+    }
+
+    public int compare(Glob o1, Glob o2) {
+      if (format == null) {
+        return Utils.compare(o1.get(ImportedTransaction.BANK_DATE), o2.get(ImportedTransaction.BANK_DATE));
+      }
+      try {
+        Date date1 = format.parse(o1.get(ImportedTransaction.BANK_DATE));
+        Date date2 = format.parse(o2.get(ImportedTransaction.BANK_DATE));
+        int compareResult = date2.compareTo(date1);
+        if (compareResult == 0) {
+          Integer id2 = o2.get(ImportedTransaction.ID);
+          Integer id1 = o1.get(ImportedTransaction.ID);
+//          System.out.println("------");
+//          System.out.println(id1 + " " + o1.get(ImportedTransaction.LABEL));
+//          System.out.println(id2 + " " + o2.get(ImportedTransaction.LABEL));
+          return Utils.compare(id2, id1);
+        }
+        return compareResult;
+      }
+      catch (ParseException e) {
+        return Utils.compare(o1.get(ImportedTransaction.BANK_DATE), o2.get(ImportedTransaction.BANK_DATE));
       }
     }
   }

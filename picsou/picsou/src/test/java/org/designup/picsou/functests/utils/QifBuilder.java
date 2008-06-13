@@ -1,10 +1,8 @@
 package org.designup.picsou.functests.utils;
 
-import org.crossbowlabs.globs.utils.Dates;
 import org.crossbowlabs.globs.utils.Strings;
 import org.crossbowlabs.globs.utils.TestUtils;
 import org.designup.picsou.functests.checkers.OperationChecker;
-import org.designup.picsou.importer.qif.QifParser;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,7 +26,7 @@ public class QifBuilder {
 
   public QifBuilder addTransaction(String yyyyMMdd, double amount, String label) throws IOException {
     writer.write("D");
-    writer.write(QifParser.QIF_DATE_FORMAT.format(Dates.parse(yyyyMMdd)));
+    writer.write(yyyyMMdd);
     writer.write(Strings.LINE_SEPARATOR);
     writer.write("T");
     writer.write(Double.toString(amount));
