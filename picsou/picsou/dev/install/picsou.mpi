@@ -280,7 +280,9 @@ Condition F9F8544A-00C4-4D56-9CEC-78583AF08CED -active Yes -parent 558A3861-E155
 InstallComponent C02FF264-188D-4CAA-9DB6-68552CDEE2A2 -setup Install -type action -title {Add Windows File Command} -component AddWindowsFileCommand -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
 InstallComponent 4A6ADC8C-83B7-433C-AE38-4A306C5E9671 -setup Install -type action -title {Add Windows File Type} -component AddWindowsFileType -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
 InstallComponent FF3EF8C5-8C31-4041-86ED-9FF2438E09ED -setup Install -type action -title {Add Windows File Extension} -component AddWindowsFileExtension -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
-InstallComponent 24425BCE-2911-1D9A-E802-E3A88C29ACF8 -setup Install -type action -title {Add Windows File Extension} -component AddWindowsFileExtension -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
+InstallComponent 518566B8-E4AF-6C59-4C80-8E4545D21CA6 -setup Install -type action -title {Add Windows File Command} -component AddWindowsFileCommand -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
+InstallComponent 49F72F92-F53E-BAA2-EEA1-FE7B07C3983E -setup Install -type action -title {Add Windows File Extension} -component AddWindowsFileExtension -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
+InstallComponent 7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C -setup Install -type action -title {Add Windows File Type} -component AddWindowsFileType -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
 InstallComponent 5C84A8D4-43AB-41B6-9CDC-9781830C8A2F -setup Install -type actiongroup -title {Finish Actions} -active Yes -parent ActionGroupsInstall
 InstallComponent 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5 -setup Install -type action -conditions {9E4980CE-B568-4899-8C00-F0CC4FB23064 A7803762-CFE9-4AF2-A2A0-27178E998501} -title {Install Desktop Shortcut} -component InstallDesktopShortcut -command insert -active Yes -parent 5C84A8D4-43AB-41B6-9CDC-9781830C8A2F
 Condition 9E4980CE-B568-4899-8C00-F0CC4FB23064 -active Yes -parent 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5 -title {String Is Condition} -component StringIsCondition
@@ -513,12 +515,6 @@ false
 24204D7D-347F-44E4-B071-60E62A7A62E9,Conditions
 {0 conditions}
 
-24425BCE-2911-1D9A-E802-E3A88C29ACF8,Conditions
-{0 conditions}
-
-24425BCE-2911-1D9A-E802-E3A88C29ACF8,FileExtension
-.ofx
-
 284882F5-D1C4-4F0F-B087-725D8A13FDC8,CheckCondition
 {Before Action is Executed}
 
@@ -648,11 +644,20 @@ No
 485A88CC-1484-45AD-BF6D-6E714752AAEE,Script
 {[llength [SetupTypes children]] > 1}
 
+49F72F92-F53E-BAA2-EEA1-FE7B07C3983E,Conditions
+{0 conditions}
+
+49F72F92-F53E-BAA2-EEA1-FE7B07C3983E,FileExtension
+.ofx
+
+49F72F92-F53E-BAA2-EEA1-FE7B07C3983E,FileType
+text/ofx
+
 4A6ADC8C-83B7-433C-AE38-4A306C5E9671,Conditions
 {0 conditions}
 
 4A6ADC8C-83B7-433C-AE38-4A306C5E9671,FileType
-Picsou.QIFFile
+text/qif
 
 4A6ADC8C-83B7-433C-AE38-4A306C5E9671,IconPath
 {<%InstallDir%>\picsou_icon_32.ico}
@@ -689,6 +694,21 @@ false
 
 4F59AF18-E186-489F-9591-0709A779682F,Permission
 {can create}
+
+518566B8-E4AF-6C59-4C80-8E4545D21CA6,Command
+{"<%InstallDir%>\picsou.exe"  "-l" "<%Language%>" "%1"}
+
+518566B8-E4AF-6C59-4C80-8E4545D21CA6,CommandName
+Open
+
+518566B8-E4AF-6C59-4C80-8E4545D21CA6,Conditions
+{0 conditions}
+
+518566B8-E4AF-6C59-4C80-8E4545D21CA6,FileType
+text/ofx
+
+518566B8-E4AF-6C59-4C80-8E4545D21CA6,MenuName
+Picsou
 
 543B491A-8B68-44DC-87A8-C63B7444E8E5,CheckCondition
 {Before Action is Executed}
@@ -924,6 +944,18 @@ CreateDesktopShortcut
 7752DDF1-A6AB-4D98-8DD3-D123F0C232E5,Title,subst
 1
 
+7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,Conditions
+{0 conditions}
+
+7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,FileType
+text/ofx
+
+7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,IconPath
+{<%InstallDir%>\picsou_icon_32.ico}
+
+7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,Title
+Picsou
+
 7E3CB86B-F5F0-40DE-9528-3A7956E7D313,Alias
 {Finish Actions}
 
@@ -973,7 +1005,7 @@ Yes
 <%InstallDir%>
 
 89CD3510-FDE9-0208-D7B5-DE37109ECD51,FileSize
-2909900
+2930723
 
 89CD3510-FDE9-0208-D7B5-DE37109ECD51,Name
 {linux program files}
@@ -1255,7 +1287,7 @@ C02FF264-188D-4CAA-9DB6-68552CDEE2A2,Conditions
 {0 conditions}
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,FileType
-Picsou.QIFFile
+text/qif
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,MenuName
 Picsou
@@ -1546,7 +1578,7 @@ FF3EF8C5-8C31-4041-86ED-9FF2438E09ED,FileExtension
 .qif
 
 FF3EF8C5-8C31-4041-86ED-9FF2438E09ED,FileType
-Picsou.QIFFile
+text/qif
 
 FreeBSD-4-x86,Active
 No
