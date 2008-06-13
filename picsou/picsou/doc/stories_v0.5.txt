@@ -2,12 +2,12 @@
 
 Import
 ------
+* QIF: Analyse du format de date
 * QIF: saisie du solde
-* Gerer Account.UPDATE_DATE (date de la derniere transaction importee?)
+* Gerer Account.UPDATE_DATE (date de la derniere transaction importée?)
 * Import step 2: bouton "selectionner d'autres fichiers" ?
 * Test d'import QIF tronque
 * QIF: Choix de la devise du compte
-* QIF: Analyse du format de date
 * QIF: Analyse du format de nombres
 * QIF: Estimation de solde final
 * Verification SMS

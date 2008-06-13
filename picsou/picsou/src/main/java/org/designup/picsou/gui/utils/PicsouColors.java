@@ -99,17 +99,20 @@ public enum PicsouColors {
   WAVE_PANEL_WAVE;
 
   private boolean canBeNull;
+  private String toString;
 
   PicsouColors() {
     this(false);
+    toString = name().toLowerCase().replaceAll("_", ".");
   }
 
   PicsouColors(boolean canBeNull) {
     this.canBeNull = canBeNull;
+    toString = name().toLowerCase().replaceAll("_", ".");
   }
 
   public String toString() {
-    return name().toLowerCase().replaceAll("_", ".");
+    return toString;
   }
 
   public static ColorService registerColorService(Directory directory) throws IOException {

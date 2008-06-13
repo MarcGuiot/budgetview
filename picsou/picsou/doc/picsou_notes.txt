@@ -1,18 +1,18 @@
-- la gestion des cat�gories est indissociable de la gestion des types de transaction :
-  * un "retrait GAB" est toujours dans la cat�gorie "Divers"
-  * un "cheque" est toujours � associer au coup par coup, sans apprentissage
-  * un "credit" est affect� � une cat�gorie par l'utilisateur, et il faut savoir retrouver toutes les occurences du cr�dit
-  * un "virement" a de bonnes chances d'�tre r�current
+- la gestion des catégories est indissociable de la gestion des types de transaction :
+  * un "retrait GAB" est toujours dans la catégorie "Divers"
+  * un "cheque" est toujours à associer au coup par coup, sans apprentissage
+  * un "credit" est affecté à une catégorie par l'utilisateur, et il faut savoir retrouver toutes les occurences du crédit
+  * un "virement" a de bonnes chances d'être récurrent
   *
 
 - deux types de politiques d'affectation :
   * globale (partag�e entre tous les utilisateurs). Ex.: Kalistea = restau
-  * personnelle (sp�cifique � un utilisateur). Ex.: Cr�dit CIC = appareil photo
+  * personnelle (sp�cifique à un utilisateur). Ex.: Crédit CIC = appareil photo
 
-- gestion des cr�dits : on reconna�t d'abord le type "cr�dit" via une regexp, et ensuite on note l'affectation
-  particuli�re pour cette transaction de mani�re � pouvoir la reconna�tre par la suite.
+- gestion des cr�dits : on reconna�t d'abord le type "crédit" via une regexp, et ensuite on note l'affectation
+  particuli�re pour cette transaction de manière à pouvoir la reconnaitre par la suite.
 
-- gestion des comptes CB : dans le cas du CIC, il s'agit de comptes s�par�s, avec des fichiers QIF s�par�s
+- gestion des comptes CB : dans le cas du CIC, il s'agit de comptes séparés, avec des fichiers QIF séparés
 
 - Lors de la lecture des fichiers il ne faut pas inserer les transactions dans le globset ==> il faut verifier
 qu'elle n'ont pas ete deja importée.
