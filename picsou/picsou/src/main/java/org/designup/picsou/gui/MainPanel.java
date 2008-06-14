@@ -1,7 +1,5 @@
 package org.designup.picsou.gui;
 
-import net.roydesign.event.ApplicationEvent;
-import net.roydesign.mac.MRJAdapter;
 import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
 import org.crossbowlabs.globs.model.GlobRepository;
 import org.crossbowlabs.globs.utils.directory.Directory;
@@ -29,8 +27,6 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.io.File;
 
 public class MainPanel {
   private JFrame parent;
@@ -79,11 +75,6 @@ public class MainPanel {
     accountView.selectFirst();
     timeView.selectLastMonth();
     categoryView.select(Category.ALL);
-    MRJAdapter.addOpenDocumentListener(new AbstractAction() {
-      public void actionPerformed(ActionEvent event) {
-        openFile(((ApplicationEvent)event).getFile(), false);
-      }
-    });
 
     createMenuBar(parent);
   }
@@ -127,11 +118,6 @@ public class MainPanel {
 
   public JPanel getJPanel() {
     return panel;
-  }
-
-  public void openFile(File file, boolean lastFile) {
-    throw new RuntimeException();
-// TODO:   importFileAction.processFile(file, lastFile);
   }
 
   public void openInFront() {

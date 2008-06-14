@@ -52,10 +52,12 @@ public class PicsouApplication {
     if (args.length > 1) {
       args = parseLanguage(args);
     }
-    if (SingleApplicationInstanceListener.sendAlreadyOpen(args)) {
-      return;
-    }
+//    if (SingleApplicationInstanceListener.sendAlreadyOpen(args)) {
+//      return;
+//    }
 //  TODO:  SingleApplicationInstanceListener.listenForFile(panel);
+//    SingleApplicationInstanceListener.listenForFile();
+
 
     List<File> fileToOpen = new ArrayList<File>();
     for (String arg : args) {

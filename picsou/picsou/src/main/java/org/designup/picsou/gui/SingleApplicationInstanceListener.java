@@ -1,18 +1,63 @@
 package org.designup.picsou.gui;
 
+import net.roydesign.event.ApplicationEvent;
+import net.roydesign.mac.MRJAdapter;
 import org.crossbowlabs.globs.utils.Log;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.InetAddress;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SingleApplicationInstanceListener {
   public static final int[] PORT = new int[]{5454, 3474, 14457, 9381};
   public static ThreadReader thread;
   public static final String SINGLE_INSTANCE_DISABLED = "SINGLE_INSTANCE_DISABLED";
+  public static final List<File> files = new ArrayList<File>();
+  private static Callback callback;
 
-  public static void listenForFile(final MainPanel mainPanel) throws IOException {
+
+  interface Callback {
+    void openFile(ArrayList<File> file);
+
+    void bringToFront();
+  }
+
+  public static void register(Callback callback) {
+    synchronized (files) {
+      SingleApplicationInstanceListener.callback = callback;
+      pushToCallback();
+    }
+  }
+
+  private static void pushToCallback() {
+    if (callback != null && !files.isEmpty()) {
+      callback.openFile(new ArrayList<File>(files));
+      files.clear();
+    }
+  }
+
+  public static void unregister() {
+    synchronized (files) {
+      callback = null;
+    }
+  }
+
+  private static void bringToFront() {
+    //TODO 
+  }
+
+  public static void listenForFile() throws IOException {
+    MRJAdapter.addOpenDocumentListener(new AbstractAction() {
+      public void actionPerformed(ActionEvent event) {
+        pushFile(((ApplicationEvent)event).getFile());
+      }
+    });
+
     if ("true".equals(System.getProperty(SINGLE_INSTANCE_DISABLED))) {
       return;
     }
@@ -35,12 +80,19 @@ public class SingleApplicationInstanceListener {
     }
     Log.write("listen " + port);
 
-    thread = new ThreadReader(serverSocket, mainPanel);
+    thread = new ThreadReader(serverSocket);
     thread.setDaemon(true);
     thread.start();
   }
 
-  public static void readFromSocket(Socket socket, MainPanel mainPanel) throws IOException {
+  private static void pushFile(File file) {
+    synchronized (files) {
+      files.add(file);
+      pushToCallback();
+    }
+  }
+
+  public static void readFromSocket(Socket socket) throws IOException {
     InetAddress remoteAddress = socket.getInetAddress();
     if (!remoteAddress.isLoopbackAddress()) {
       socket.close();
@@ -54,19 +106,19 @@ public class SingleApplicationInstanceListener {
       objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
       objectOutputStream.flush();
       try {
-        String message = (String) objectInputStream.readObject();
+        String message = (String)objectInputStream.readObject();
         if ("file".equals(message)) {
           File file = readFileName(objectInputStream);
           objectOutputStream.writeObject("OK");
           objectOutputStream.flush();
-          mainPanel.openFile(file, false);
+          pushFile(file);
           return;
         }
         if ("show".equals(message)) {
           readFileName(objectInputStream);
           objectOutputStream.writeObject("OK");
           objectOutputStream.flush();
-          mainPanel.openInFront();
+          bringToFront();
           return;
         }
         objectOutputStream.writeObject("FAIL");
@@ -101,7 +153,7 @@ public class SingleApplicationInstanceListener {
   }
 
   public static File readFileName(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
-    String fileName = (String) objectInputStream.readObject();
+    String fileName = (String)objectInputStream.readObject();
     File file = new File(fileName);
     if (file.exists() && file.isFile()) {
       tryReadToEnsureWeHaveTheRightToReadThisFile(file);
@@ -124,7 +176,7 @@ public class SingleApplicationInstanceListener {
     File tempFile = null;
     for (int port : PORT) {
       try {
-        socket = new Socket((String) null, port);
+        socket = new Socket((String)null, port);
         objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
         objectOutputStream.flush();
         objectInputStream = new ObjectInputStream(socket.getInputStream());
@@ -138,7 +190,7 @@ public class SingleApplicationInstanceListener {
           objectOutputStream.writeObject(args[0]);
         }
         objectOutputStream.flush();
-        String result = (String) objectInputStream.readObject();
+        String result = (String)objectInputStream.readObject();
         if ("OK".equals(result)) {
           return true;
         }
@@ -170,12 +222,10 @@ public class SingleApplicationInstanceListener {
 
   public static class ThreadReader extends Thread {
     private final ServerSocket serverSocket;
-    private final MainPanel mainPanel;
     private boolean shutdownRequested;
 
-    public ThreadReader(ServerSocket serverSocket, MainPanel mainPanel) {
+    public ThreadReader(ServerSocket serverSocket) {
       this.serverSocket = serverSocket;
-      this.mainPanel = mainPanel;
     }
 
     public void run() {
@@ -187,7 +237,7 @@ public class SingleApplicationInstanceListener {
             return;
           }
           Socket socket = serverSocket.accept();
-          readFromSocket(socket, mainPanel);
+          readFromSocket(socket);
         }
         catch (IOException e) {
           Log.write("accept failed");

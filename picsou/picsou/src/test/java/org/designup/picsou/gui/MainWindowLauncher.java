@@ -7,11 +7,10 @@ import org.crossbowlabs.splits.color.ColorServiceEditor;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.local.LocalClientTransport;
-import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
+import org.designup.picsou.server.ServerDirectory;
 
 import java.awt.*;
-import java.io.File;
 
 public class MainWindowLauncher {
   private static final String COLOR_SELECTOR_PROPERTY = "ENABLE_COLOR_SELECTOR";
@@ -40,7 +39,8 @@ public class MainWindowLauncher {
     MainWindow window = new MainWindow();
     MainPanel panel = MainPanel.show(init.getRepository(), init.getDirectory(), window);
     if (args.length > 0) {
-      panel.openFile(new File(args[0]), true);
+      //TODO 
+//      panel.openFile(new File(args[0]), true);
     }
     window.show();
 
