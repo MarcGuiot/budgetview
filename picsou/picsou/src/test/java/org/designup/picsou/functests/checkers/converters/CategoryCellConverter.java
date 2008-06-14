@@ -1,18 +1,20 @@
 package org.designup.picsou.functests.checkers.converters;
 
-import org.uispec4j.*;
-import org.uispec4j.Window;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.GlobList;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.model.TransactionToCategory;
-import org.designup.picsou.gui.utils.PicsouFrame;
-import org.designup.picsou.gui.utils.CategoryStringifier;
+import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.gui.categories.CategoryComparator;
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.functests.checkers.TransactionChecker;
+import org.designup.picsou.gui.utils.CategoryStringifier;
+import org.designup.picsou.gui.utils.PicsouFrame;
+import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.TransactionToCategory;
+import org.designup.picsou.model.TransactionType;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.uispec4j.TableCellValueConverter;
+import org.uispec4j.TextBox;
+import org.uispec4j.UIComponent;
+import org.uispec4j.Window;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +48,7 @@ public class CategoryCellConverter implements TableCellValueConverter {
     builder.append("(");
     builder.append(TransactionType.getType(transactionType).getName());
     builder.append(")");
-    
+
     if (categoryLabels.length == 1) {
       TextBox label = (TextBox)categoryLabels[0];
       String text = label.getText();
@@ -64,7 +66,7 @@ public class CategoryCellConverter implements TableCellValueConverter {
     GlobList categories = TransactionToCategory.getCategories(transaction, repository);
     if (categories.isEmpty()) {
       builder.append(TransactionChecker.TO_CATEGORIZE);
-      return ;
+      return;
     }
 
     categories.sort(categoryComparator);

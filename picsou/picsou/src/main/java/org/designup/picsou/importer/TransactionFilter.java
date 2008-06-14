@@ -1,12 +1,12 @@
 package org.designup.picsou.importer;
 
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.utils.MultiMap;
-import static org.crossbowlabs.globs.utils.Utils.equal;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
 import org.designup.picsou.utils.TransactionComparator;
+import org.globsframework.model.*;
+import org.globsframework.utils.MultiMap;
+import static org.globsframework.utils.Utils.equal;
 
 import java.util.HashMap;
 import java.util.List;

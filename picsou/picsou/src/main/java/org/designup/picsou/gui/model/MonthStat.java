@@ -1,18 +1,17 @@
 package org.designup.picsou.gui.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.index.MultiFieldUniqueIndex;
-import org.crossbowlabs.globs.metamodel.annotations.DefaultDouble;
-import org.crossbowlabs.globs.metamodel.annotations.Key;
-import org.crossbowlabs.globs.metamodel.annotations.Target;
-import org.crossbowlabs.globs.metamodel.fields.DoubleField;
-import org.crossbowlabs.globs.metamodel.fields.IntegerField;
-import org.crossbowlabs.globs.metamodel.fields.LinkField;
-import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
-import org.crossbowlabs.globs.model.KeyBuilder;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultDouble;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.KeyBuilder;
 
 public class MonthStat {
   public static GlobType TYPE;
@@ -47,7 +46,6 @@ public class MonthStat {
   @DefaultDouble(0.0)
   public static DoubleField DISPENSABLE_AVERAGE;
 
-
 //  public static MultiFieldUniqueIndex ACCOUNT_MONTH_CATEGORY;
 
   static {
@@ -55,7 +53,7 @@ public class MonthStat {
 //    loader.defineMultiFieldUniqueIndex(ACCOUNT_MONTH_CATEGORY, ACCOUNT, MONTH, CATEGORY);
   }
 
-  public static org.crossbowlabs.globs.model.Key getKey(Integer month, Integer categoryId, int accountId) {
+  public static org.globsframework.model.Key getKey(Integer month, Integer categoryId, int accountId) {
     return KeyBuilder.init(MONTH, month)
       .setValue(CATEGORY, categoryId)
       .setValue(ACCOUNT, accountId)

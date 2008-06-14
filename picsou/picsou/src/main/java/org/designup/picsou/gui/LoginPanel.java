@@ -1,12 +1,5 @@
 package org.designup.picsou.gui;
 
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.Strings;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.splits.SplitsBuilder;
-import org.crossbowlabs.splits.color.ColorService;
-import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadPassword;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
@@ -17,6 +10,13 @@ import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidData;
 
 import javax.swing.*;
 import java.awt.*;

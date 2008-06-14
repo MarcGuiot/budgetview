@@ -1,8 +1,5 @@
 package org.designup.picsou.server;
 
-import org.crossbowlabs.globs.metamodel.GlobModel;
-import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.server.model.ServerModel;
 import org.designup.picsou.server.persistence.prevayler.PrevaylerPersistence;
 import org.designup.picsou.server.persistence.prevayler.accounts.PAccountDataManager;
@@ -10,6 +7,9 @@ import org.designup.picsou.server.persistence.prevayler.users.PRootDataManager;
 import org.designup.picsou.server.session.Persistence;
 import org.designup.picsou.server.session.SessionService;
 import org.designup.picsou.server.session.impl.DefaultSessionService;
+import org.globsframework.metamodel.GlobModel;
+import org.globsframework.utils.directory.DefaultDirectory;
+import org.globsframework.utils.directory.Directory;
 
 public class ServerDirectory {
   private Directory serviceDirectory = new DefaultDirectory();

@@ -1,8 +1,5 @@
 package org.designup.picsou.functests.utils;
 
-import org.crossbowlabs.globs.model.FieldValue;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.Key;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
@@ -12,6 +9,9 @@ import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.MainWindowLauncher;
 import org.designup.picsou.model.LabelToCategory;
 import org.designup.picsou.model.MasterCategory;
+import org.globsframework.model.FieldValue;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
@@ -68,7 +68,7 @@ public abstract class LoggedInFunctionalTestCase extends ServerFunctionalTestCas
 
   protected void tearDown() throws Exception {
     super.tearDown();
-    ((JFrame) mainWindow.getAwtComponent()).dispose();
+    ((JFrame)mainWindow.getAwtComponent()).dispose();
     mainWindow = null;
     accounts = null;
     categories = null;
@@ -90,7 +90,7 @@ public abstract class LoggedInFunctionalTestCase extends ServerFunctionalTestCas
   public void learn(String label, MasterCategory category) {
     String anonyme = AllocationLearningService.anonymise(label, label, null);
     repository.create(Key.create(LabelToCategory.TYPE, repository.getIdGenerator()
-            .getNextId(LabelToCategory.ID, 1)),
+      .getNextId(LabelToCategory.ID, 1)),
                       FieldValue.value(LabelToCategory.LABEL, anonyme),
                       FieldValue.value(LabelToCategory.COUNT, 1),
                       FieldValue.value(LabelToCategory.CATEGORY, category.getId()));

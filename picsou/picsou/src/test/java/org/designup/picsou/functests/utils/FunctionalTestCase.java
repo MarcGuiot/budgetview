@@ -1,7 +1,7 @@
 package org.designup.picsou.functests.utils;
 
-import org.crossbowlabs.globs.utils.Log;
-import org.crossbowlabs.globs.utils.TestUtils;
+import org.globsframework.utils.Log;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.UISpecTestCase;
 
 import java.util.Locale;

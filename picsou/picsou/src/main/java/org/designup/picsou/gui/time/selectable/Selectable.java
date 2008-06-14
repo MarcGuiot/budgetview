@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.time.selectable;
 
-import org.crossbowlabs.globs.model.Glob;
+import org.globsframework.model.Glob;
 
 import java.util.Collection;
 

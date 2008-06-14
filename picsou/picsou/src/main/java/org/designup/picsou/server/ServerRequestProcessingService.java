@@ -1,9 +1,9 @@
 package org.designup.picsou.server;
 
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.client.exceptions.InvalidActionForState;
 import org.designup.picsou.client.exceptions.UnknownId;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public interface ServerRequestProcessingService {
 //  static final int UNKNOWN_ID = 1;

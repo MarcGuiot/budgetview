@@ -1,10 +1,10 @@
 package org.designup.picsou.server;
 
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.client.exceptions.InvalidActionForState;
 import org.designup.picsou.server.session.*;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public class DefaultServerRequestProcessingService implements ServerRequestProcessingService {
   private SessionService sessionService;

@@ -1,4 +1,4 @@
-package org.crossbowlabs.saxstack.parser;
+package org.globsframework.saxstack.parser;
 
 public class XmlAttributeNotFoundException extends XmlParsingException {
   private String attrName;

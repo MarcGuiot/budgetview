@@ -1,6 +1,6 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.crossbowlabs</groupId>
+  <groupId>org.globsframework</groupId>
   <packaging>jar</packaging>
   <artifactId>morphograph</artifactId>
   <name>medical exercices</name>
@@ -51,7 +51,7 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.crossbowlabs</groupId>
+        <groupId>org.globsframework</groupId>
         <artifactId>globs</artifactId>
         <version>1.0</version>
         <type>jar</type>
@@ -73,7 +73,7 @@
       <artifactId>junit</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>globs</artifactId>
     </dependency>
     <dependency>

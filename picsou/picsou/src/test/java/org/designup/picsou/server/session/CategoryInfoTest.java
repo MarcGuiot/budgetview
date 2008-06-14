@@ -1,8 +1,8 @@
 package org.designup.picsou.server.session;
 
 import junit.framework.TestCase;
-import org.crossbowlabs.globs.utils.serialization.SerializedInputOutputFactory;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;

@@ -1,7 +1,7 @@
 package org.designup.picsou.client.http;
 
-import org.crossbowlabs.globs.utils.exceptions.GlobsException;
-import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.utils.exceptions.GlobsException;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;

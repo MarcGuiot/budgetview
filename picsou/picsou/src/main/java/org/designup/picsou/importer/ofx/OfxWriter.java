@@ -1,6 +1,6 @@
 package org.designup.picsou.importer.ofx;
 
-import org.crossbowlabs.globs.utils.Strings;
+import org.globsframework.utils.Strings;
 
 import java.io.IOException;
 import java.io.Writer;

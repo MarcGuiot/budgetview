@@ -1,8 +1,8 @@
 package org.designup.picsou.server.persistence.sql;
 
-import org.crossbowlabs.globs.utils.TestUtils;
 import org.designup.picsou.server.model.DbTestCase;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.utils.TestUtils;
 
 import java.util.Arrays;
 import java.util.List;

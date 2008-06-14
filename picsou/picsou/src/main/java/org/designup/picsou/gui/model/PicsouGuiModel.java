@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.model;
 
-import org.crossbowlabs.globs.metamodel.GlobModel;
-import org.crossbowlabs.globs.metamodel.utils.DefaultGlobModel;
 import org.designup.picsou.model.PicsouModel;
+import org.globsframework.metamodel.GlobModel;
+import org.globsframework.metamodel.utils.DefaultGlobModel;
 
 public class PicsouGuiModel {
   private static GlobModel model = new DefaultGlobModel(

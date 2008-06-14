@@ -1,9 +1,9 @@
 package org.designup.picsou.functests.checkers.converters;
 
-import org.uispec4j.TableCellValueConverter;
-import org.crossbowlabs.globs.model.Glob;
-import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Transaction;
+import org.globsframework.model.Glob;
+import org.uispec4j.TableCellValueConverter;
 
 import java.awt.*;
 

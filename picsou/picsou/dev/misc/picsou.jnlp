@@ -20,5 +20,5 @@
     <j2se version="1.5+"/>
     <jar href="picsou-0.1.jar"/>
   </resources>
-  <application-desc main-class="org.crossbowlabs.picsou.gui.PicsouApplication"/>
+  <application-desc main-class="org.globsframework.picsou.gui.PicsouApplication"/>
 </jnlp>

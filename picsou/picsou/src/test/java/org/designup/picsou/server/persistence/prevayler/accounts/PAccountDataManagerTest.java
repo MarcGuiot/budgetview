@@ -1,22 +1,22 @@
 package org.designup.picsou.server.persistence.prevayler.accounts;
 
-import org.crossbowlabs.globs.metamodel.GlobModel;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.KeyBuilder;
-import org.crossbowlabs.globs.model.delta.DefaultDeltaGlob;
-import org.crossbowlabs.globs.model.delta.DeltaGlob;
-import org.crossbowlabs.globs.model.delta.DeltaState;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.serialization.SerializedByteArrayOutput;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedInputOutputFactory;
 import org.designup.picsou.functests.ServerFunctionalTestCase;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.server.model.HiddenTransaction;
 import org.designup.picsou.server.model.HiddenTransactionToCategory;
+import org.globsframework.metamodel.GlobModel;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.KeyBuilder;
+import org.globsframework.model.delta.DefaultDeltaGlob;
+import org.globsframework.model.delta.DeltaGlob;
+import org.globsframework.model.delta.DeltaState;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
 import java.util.Collections;
 

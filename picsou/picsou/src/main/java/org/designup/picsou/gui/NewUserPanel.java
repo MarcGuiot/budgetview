@@ -1,10 +1,10 @@
 package org.designup.picsou.gui;
 
-import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.color.ColorService;
 import org.designup.picsou.gui.components.JWavePanel;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 

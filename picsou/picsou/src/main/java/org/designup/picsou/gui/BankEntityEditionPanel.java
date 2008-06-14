@@ -1,18 +1,17 @@
 package org.designup.picsou.gui;
 
-import org.crossbowlabs.globs.gui.views.GlobComboView;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.model.format.GlobPrinter;
-import org.crossbowlabs.globs.model.utils.GlobFieldComparator;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.layout.GridBagBuilder;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.views.GlobComboView;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobFieldComparator;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;

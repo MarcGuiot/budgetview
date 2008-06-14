@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.model.Glob;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.model.Glob;
 
 import java.util.Comparator;
 

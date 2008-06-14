@@ -1,4 +1,4 @@
-package org.crossbowlabs.webdemo.pages;
+package org.globsframework.webdemo.pages;
 import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;

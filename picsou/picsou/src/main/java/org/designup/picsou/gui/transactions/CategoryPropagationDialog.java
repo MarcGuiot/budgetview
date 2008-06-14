@@ -1,30 +1,30 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.gui.utils.TableUtils;
-import org.crossbowlabs.globs.gui.views.GlobTableView;
-import org.crossbowlabs.globs.gui.views.utils.LabelCustomizers;
-import static org.crossbowlabs.globs.gui.views.utils.LabelCustomizers.alignRight;
-import static org.crossbowlabs.globs.gui.views.utils.LabelCustomizers.chain;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.format.DescriptionService;
-import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.model.utils.LocalGlobRepository;
-import org.crossbowlabs.globs.model.utils.LocalGlobRepositoryBuilder;
-import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.utils.GuiUtils;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import static org.designup.picsou.model.Transaction.LABEL;
 import static org.designup.picsou.model.Transaction.NOTE;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.utils.TableUtils;
+import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.gui.views.utils.LabelCustomizers;
+import static org.globsframework.gui.views.utils.LabelCustomizers.alignRight;
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.utils.directory.DefaultDirectory;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -66,7 +66,7 @@ public class CategoryPropagationDialog {
     builder.add("ok", new OkAction());
     builder.add("cancel", new CancelAction());
 
-    JPanel panel = (JPanel) builder.parse(getClass(), "/layout/categoryPropagation.splits");
+    JPanel panel = (JPanel)builder.parse(getClass(), "/layout/categoryPropagation.splits");
     dialog = PicsouDialog.create(directory.get(JFrame.class));
     dialog.getContentPane().add(panel);
   }

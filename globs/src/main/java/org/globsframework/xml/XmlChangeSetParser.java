@@ -1,0 +1,96 @@
+package org.globsframework.xml;
+
+import com.sun.org.apache.xerces.internal.parsers.SAXParser;
+import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.GlobModel;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
+import org.globsframework.model.delta.DefaultChangeSet;
+import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.saxstack.parser.*;
+import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.exceptions.ItemNotFound;
+import org.xml.sax.Attributes;
+
+import java.io.Reader;
+
+public class XmlChangeSetParser {
+
+  private XmlChangeSetParser() {
+  }
+
+  public static ChangeSet parse(GlobModel model, Reader reader) {
+    RootProxyNode rootNode = new RootProxyNode(model);
+    SaxStackParser.parse(new SAXParser(), new XmlBootstrapNode(rootNode, "changes"), reader);
+    return rootNode.getChangeSet();
+  }
+
+  private static class RootProxyNode extends DefaultXmlNode {
+    private FieldConverter fieldConverter = new FieldConverter();
+    private MutableChangeSet changeSet = new DefaultChangeSet();
+    private GlobModel model;
+
+    private RootProxyNode(GlobModel model) {
+      this.model = model;
+    }
+
+    public XmlNode getSubNode(String childName, Attributes xmlAttrs) throws ExceptionHolder {
+      String typeName = xmlAttrs.getValue("type");
+      if (typeName == null) {
+        throw new InvalidParameter("Missing attribute 'type' in tag '" + childName + "'");
+      }
+      GlobType globType = model.getType(typeName);
+      FieldValuesBuilder valuesBuilder = FieldValuesBuilder.init();
+      final KeyBuilder keyBuilder = KeyBuilder.init(globType);
+
+      processAttributes(keyBuilder, valuesBuilder, xmlAttrs, globType);
+
+      final Key key = keyBuilder.get();
+      FieldValues values = valuesBuilder.get();
+      if ("create".equals(childName)) {
+        changeSet.processCreation(key, values);
+      }
+      else if ("update".equals(childName)) {
+        changeSet.processUpdate(key, values);
+      }
+      else if ("delete".equals(childName)) {
+        changeSet.processDeletion(key, values);
+      }
+
+      return super.getSubNode(typeName, xmlAttrs);
+    }
+
+    private void processAttributes(KeyBuilder keyBuilder,
+                                   FieldValuesBuilder valuesBuilder,
+                                   Attributes xmlAttrs,
+                                   GlobType globType) {
+      int length = xmlAttrs.getLength();
+      for (int i = 0; i < length; i++) {
+        String xmlAttrName = xmlAttrs.getQName(i);
+        String xmlValue = xmlAttrs.getValue(i);
+
+        if ("type".equals(xmlAttrName)) {
+          continue;
+        }
+
+        Field field = globType.findField(xmlAttrName);
+        if (field == null) {
+          throw new ItemNotFound(
+            "Unknown field '" + xmlAttrName + "' for type '" + globType.getName() + "'");
+        }
+
+        Object value = fieldConverter.toObject(field, xmlValue);
+        if (field.isKeyField()) {
+          keyBuilder.setValue(field, value);
+        }
+        else {
+          valuesBuilder.setObject(field, value);
+        }
+      }
+    }
+
+    public ChangeSet getChangeSet() {
+      return changeSet;
+    }
+  }
+}

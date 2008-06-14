@@ -1,16 +1,16 @@
 package org.designup.picsou.utils.generator;
 
-import org.crossbowlabs.globs.model.FieldValue;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.GlobRepositoryBuilder;
-import org.crossbowlabs.globs.model.format.GlobPrinter;
 import org.designup.picsou.importer.ofx.OfxExporter;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.utils.generator.AmountGenerator.*;
 import static org.designup.picsou.utils.generator.CountGenerator.*;
 import static org.designup.picsou.utils.generator.DayGenerator.any;
 import static org.designup.picsou.utils.generator.DayGenerator.dayBetween;
+import org.globsframework.model.FieldValue;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.format.GlobPrinter;
 
 import java.io.File;
 import java.io.FileWriter;

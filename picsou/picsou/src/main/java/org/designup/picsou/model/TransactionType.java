@@ -1,18 +1,18 @@
 package org.designup.picsou.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.annotations.Key;
-import org.crossbowlabs.globs.metamodel.annotations.NamingField;
-import org.crossbowlabs.globs.metamodel.fields.IntegerField;
-import org.crossbowlabs.globs.metamodel.fields.StringField;
-import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
-import org.crossbowlabs.globs.model.FieldValuesBuilder;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.impl.ReadOnlyGlob;
-import org.crossbowlabs.globs.model.utils.GlobConstantContainer;
-import org.crossbowlabs.globs.utils.Utils;
-import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
 import static org.designup.picsou.model.TransactionTypeMatcher.TRANSACTION_TYPE;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.NamingField;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.FieldValuesBuilder;
+import org.globsframework.model.Glob;
+import org.globsframework.model.impl.ReadOnlyGlob;
+import org.globsframework.model.utils.GlobConstantContainer;
+import org.globsframework.utils.Utils;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum TransactionType implements GlobConstantContainer {
   VIREMENT(1),

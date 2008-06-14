@@ -1,17 +1,17 @@
 package org.designup.picsou.gui.accounts;
 
-import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.utils.Strings;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.color.ColorSource;
-import org.crossbowlabs.splits.color.Colors;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.utils.Html;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Account;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;

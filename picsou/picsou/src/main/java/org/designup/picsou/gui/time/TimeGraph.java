@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.time;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
 import org.designup.picsou.gui.time.selectable.ChainedSelectableElement;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.TransformationAdapter;
 import org.designup.picsou.model.Month;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

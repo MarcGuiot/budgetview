@@ -1,9 +1,9 @@
 package org.designup.picsou.server.persistence.prevayler.accounts;
 
-import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.ArrayList;
 import java.util.HashMap;

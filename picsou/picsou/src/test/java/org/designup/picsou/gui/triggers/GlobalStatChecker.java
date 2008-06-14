@@ -1,13 +1,13 @@
 package org.designup.picsou.gui.triggers;
 
 import junit.framework.Assert;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.utils.TablePrinter;
 import org.designup.picsou.gui.model.GlobalStat;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.utils.TablePrinter;
 
 import java.util.*;
 

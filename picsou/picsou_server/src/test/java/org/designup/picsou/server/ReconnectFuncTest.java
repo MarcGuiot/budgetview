@@ -1,12 +1,10 @@
 package org.designup.picsou.server;
 
-import org.uispec4j.Table;
-import org.uispec4j.interception.FileChooserHandler;
-import org.uispec4j.interception.WindowInterceptor;
-import org.crossbowlabs.globs.utils.TestUtils;
-import org.crossbowlabs.globs.utils.Files;
 import org.designup.picsou.PicsouServer;
 import org.designup.picsou.functests.checkers.OperationChecker;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.TestUtils;
+import org.uispec4j.Table;
 
 public class ReconnectFuncTest extends ServerFuncTestCase {
 

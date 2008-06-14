@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.components;
 
-import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
-import org.crossbowlabs.splits.layout.GridBagBuilder;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouDialogPainter;
+import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.awt.*;

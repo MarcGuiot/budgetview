@@ -1,16 +1,16 @@
 package org.designup.picsou.gui.categories;
 
-import org.crossbowlabs.globs.gui.GlobSelection;
-import org.crossbowlabs.globs.gui.GlobSelectionListener;
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.gui.views.GlobTableView;
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
+import org.globsframework.utils.directory.Directory;
 
 import java.util.*;
 

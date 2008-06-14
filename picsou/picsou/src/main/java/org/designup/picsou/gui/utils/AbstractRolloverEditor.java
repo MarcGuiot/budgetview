@@ -1,12 +1,12 @@
 package org.designup.picsou.gui.utils;
 
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.gui.views.GlobTableView;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.format.DescriptionService;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.IconLocator;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -64,7 +64,7 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
 
   public boolean isCellEditable(EventObject anEvent) {
     if (anEvent instanceof MouseEvent) {
-      return ((MouseEvent) anEvent).getClickCount() >= 2;
+      return ((MouseEvent)anEvent).getClickCount() >= 2;
     }
     return true;
   }
@@ -102,7 +102,7 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     this.isSelected = isSelected;
     this.row = row;
     this.column = column;
-    return getComponent((Glob) value);
+    return getComponent((Glob)value);
   }
 
   private class SelectionUpdaterListener implements ListSelectionListener {

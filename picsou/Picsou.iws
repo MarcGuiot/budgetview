@@ -431,7 +431,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.splits" />
+          <option name="myItemId" value="org.globsframework.gui.split" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -1159,7 +1159,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.webdemo" />
+          <option name="myItemId" value="org.globsframework.webdemo" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -1173,7 +1173,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.webdemo" />
+          <option name="myItemId" value="org.globsframework.webdemo" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -1191,7 +1191,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.webdemo" />
+          <option name="myItemId" value="org.globsframework.webdemo" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -1209,7 +1209,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.globs" />
+          <option name="myItemId" value="org.globsframework.globs" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -1223,7 +1223,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.globs" />
+          <option name="myItemId" value="org.globsframework.globs" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -1241,7 +1241,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.globs" />
+          <option name="myItemId" value="org.globsframework.globs" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -1259,7 +1259,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.globs" />
+          <option name="myItemId" value="org.globsframework.globs" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -1281,7 +1281,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.globs" />
+          <option name="myItemId" value="org.globsframework.globs" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -1303,7 +1303,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.globs" />
+          <option name="myItemId" value="org.globsframework.globs" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -1325,7 +1325,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.globs" />
+          <option name="myItemId" value="org.globsframework.globs" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -1343,7 +1343,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.globs" />
+          <option name="myItemId" value="org.globsframework.globs" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -1365,7 +1365,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.globs" />
+          <option name="myItemId" value="org.globsframework.globs" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -1383,7 +1383,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.globs" />
+          <option name="myItemId" value="org.globsframework.globs" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -1405,7 +1405,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="org.crossbowlabs.globs" />
+          <option name="myItemId" value="org.globsframework.globs" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -1656,7 +1656,7 @@
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="org.designup.picsou.gui.utils" />
-      <recent name="org.crossbowlabs.globs.gui.utils" />
+      <recent name="org.globsframework.globs.gui.utils" />
       <recent name="org.designup.picsou.gui" />
       <recent name="org.designup.picsou.functests.utils" />
       <recent name="org.designup.globs.wicket.list" />
@@ -1813,7 +1813,7 @@
       </method>
     </configuration>
     <configuration default="false" name="Picsou (Sample/Medium)" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" value="org.crossbowlabs.picsou.gui.MainWindowLauncher" />
+      <option name="MAIN_CLASS_NAME" value="org.globsframework.picsou.gui.MainWindowLauncher" />
       <option name="VM_PARAMETERS" value="-Dapple.laf.useScreenMenuBar=true -Xdock:name=&quot;Picsou&quot; -Dpicsou.prevayler.path=tmp/tmpPrevayler -Dpicsou.prevayler.delete=true -DDEFAULT_COLOR_SET=/color.properties -DENABLE_COLOR_SELECTOR=true -Dsplits.debug.enabled=false" />
       <option name="PROGRAM_PARAMETERS" value="picsou/dev/samples/sample_medium.ofx" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
@@ -1838,7 +1838,7 @@
       </method>
     </configuration>
     <configuration default="false" name="Picsou (Sample/Large)" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" value="org.crossbowlabs.picsou.gui.MainWindowLauncher" />
+      <option name="MAIN_CLASS_NAME" value="org.globsframework.picsou.gui.MainWindowLauncher" />
       <option name="VM_PARAMETERS" value="-Dapple.laf.useScreenMenuBar=true -Xdock:name=&quot;Picsou&quot; -Dpicsou.prevayler.path=tmp/tmpPrevayler -Dpicsou.prevayler.delete=true -DDEFAULT_COLOR_SET=/regis.properties -DENABLE_COLOR_SELECTOR=true -Dsplits.debug.enabled=false" />
       <option name="PROGRAM_PARAMETERS" value="picsou/dev/samples/sample_large.ofx" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
@@ -1856,7 +1856,7 @@
       </method>
     </configuration>
     <configuration default="false" name="Picsou (Sample/Small)" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" value="org.crossbowlabs.picsou.gui.MainWindowLauncher" />
+      <option name="MAIN_CLASS_NAME" value="org.globsframework.picsou.gui.MainWindowLauncher" />
       <option name="VM_PARAMETERS" value="-Dapple.laf.useScreenMenuBar=true -Xdock:name=&quot;Picsou&quot; -Dpicsou.prevayler.path=tmp/tmpPrevayler -Dpicsou.prevayler.delete=true -DDEFAULT_COLOR_SET=/regis.properties -DENABLE_COLOR_SELECTOR=true -Dsplits.debug.enabled=false" />
       <option name="PROGRAM_PARAMETERS" value="picsou/dev/samples/sample_small.ofx" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
@@ -1874,7 +1874,7 @@
       </method>
     </configuration>
     <configuration default="false" name="Picsou (Empty)" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" value="org.crossbowlabs.picsou.gui.MainWindowLauncher" />
+      <option name="MAIN_CLASS_NAME" value="org.globsframework.picsou.gui.MainWindowLauncher" />
       <option name="VM_PARAMETERS" value="-Dapple.laf.useScreenMenuBar=true -Xdock:name=&quot;Picsou&quot; -Dpicsou.prevayler.path=tmp/tmpPrevayler -Dpicsou.prevayler.delete=true -DDEFAULT_COLOR_SET=/color.properties -DENABLE_COLOR_SELECTOR=true -Dsplits.debug.enabled=false" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
@@ -1892,7 +1892,7 @@
       </method>
     </configuration>
     <configuration default="false" name="OfxBeautifier" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" value="org.crossbowlabs.picsou.importer.ofx.OfxBeautifier" />
+      <option name="MAIN_CLASS_NAME" value="org.globsframework.picsou.importer.ofx.OfxBeautifier" />
       <option name="VM_PARAMETERS" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
@@ -1970,7 +1970,7 @@
       </method>
     </configuration>
     <configuration default="false" name="PicsouServer" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" value="org.crossbowlabs.picsou.PicsouServer" />
+      <option name="MAIN_CLASS_NAME" value="org.globsframework.picsou.PicsouServer" />
       <option name="VM_PARAMETERS" value="" />
       <option name="PROGRAM_PARAMETERS" value="-DPREVAYLER_PATH=tmpdata -DDELETE_ALL=true" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
@@ -2060,8 +2060,8 @@
       <module name="picsou_server" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <option name="PACKAGE_NAME" value="org.crossbowlabs.picsou.server" />
-      <option name="MAIN_CLASS_NAME" value="org.crossbowlabs.picsou.server.LoginFuncTest" />
+      <option name="PACKAGE_NAME" value="org.globsframework.picsou.server" />
+      <option name="MAIN_CLASS_NAME" value="org.globsframework.picsou.server.LoginFuncTest" />
       <option name="METHOD_NAME" value="testCreateAccount" />
       <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" value="-DPREVAYLER_PATH=tmpdata -DDELETE_ALL=true" />
@@ -2318,8 +2318,8 @@
     <MESSAGE value="- Split de transactions : reactivation de la somme (plusieurs valeurs separees par des espaces) + gestion du caractere '.' du pave numerique francais qui genere des virgules&#10;- Separation des fichiers Ant client &amp; serveur&#10;- LoginPanel : affichage de la stack en cas d'exception inconnue a la connexion" />
     <MESSAGE value="- Export OFX : export propre des categories/subcategories&#10;- Import OFX : creation des subcategories manquantes&#10;- OFX : gestion de Transaction.DISPENSABLE" />
     <MESSAGE value="Changement de packages globs" />
-    <MESSAGE value="Root package moved from org.designup.splits to org.crossbowlabs.splits" />
-    <MESSAGE value="Package changes in org.crossbowlabs.splits" />
+    <MESSAGE value="Root package moved from org.designup.splits to org.globsframework.gui.split" />
+    <MESSAGE value="Package changes in org.globsframework.gui.split" />
     <MESSAGE value="mise en base et recuperation de Glob.&#10;Mise a jour du JModalWindow&#10;Attention le Directory est initialisé en plusieurs fois (deux).&#10;prise en compte de UiSpec4J 2.0&#10;J'AI TROIS TESTS FAILED je corrigerais demain (commit pour Seb)" />
     <MESSAGE value="correction test" />
     <MESSAGE value="Modiication pour faire un import par rapport a un pattern" />

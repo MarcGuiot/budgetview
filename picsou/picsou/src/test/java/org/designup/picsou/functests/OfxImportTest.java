@@ -1,15 +1,15 @@
 package org.designup.picsou.functests;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.utils.GlobFieldMatcher;
-import org.crossbowlabs.globs.utils.Files;
-import org.crossbowlabs.globs.utils.TestUtils;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.importer.ofx.OfxWriter;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.model.Glob;
+import org.globsframework.model.utils.GlobFieldMatcher;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowHandler;

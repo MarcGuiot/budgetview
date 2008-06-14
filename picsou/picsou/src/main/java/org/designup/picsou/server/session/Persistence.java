@@ -1,12 +1,12 @@
 package org.designup.picsou.server.session;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.client.exceptions.IdentificationFailed;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.Arrays;
 

@@ -1,8 +1,5 @@
 package org.designup.picsou.server;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.utils.Files;
-import org.crossbowlabs.globs.utils.TestUtils;
 import org.designup.picsou.functests.checkers.DataChecker;
 import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.gui.PicsouApplication;
@@ -10,6 +7,9 @@ import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.Table;
 import org.uispec4j.TableCellValueConverter;
 import org.uispec4j.Trigger;

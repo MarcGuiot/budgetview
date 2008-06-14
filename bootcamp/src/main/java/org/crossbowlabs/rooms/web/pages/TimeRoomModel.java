@@ -1,4 +1,4 @@
-package org.crossbowlabs.rooms.web.pages;
+package org.globsframework.rooms.web.pages;
 
 import org.apache.wicket.model.IModel;
 

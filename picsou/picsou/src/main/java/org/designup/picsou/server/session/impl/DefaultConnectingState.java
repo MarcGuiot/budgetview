@@ -1,10 +1,10 @@
 package org.designup.picsou.server.session.impl;
 
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
 import org.designup.picsou.server.session.ConnectingState;
 import org.designup.picsou.server.session.CreatingUserState;
 import org.designup.picsou.server.session.IdentifiedState;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.utils.serialization.SerializedInput;
 
 public class DefaultConnectingState extends AbstractSessionState implements ConnectingState {
   private Persistence persistence;

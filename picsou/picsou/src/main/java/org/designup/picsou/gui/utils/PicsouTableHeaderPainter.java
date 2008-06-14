@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.utils;
 
-import org.crossbowlabs.globs.gui.views.CellPainter;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.color.ColorChangeListener;
-import org.crossbowlabs.splits.color.ColorService;
-import org.crossbowlabs.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.views.CellPainter;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -44,7 +44,7 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
                     boolean isSelected, boolean hasFocus,
                     int width, int height) {
 
-    Graphics2D g2 = (Graphics2D) g;
+    Graphics2D g2 = (Graphics2D)g;
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     int middleY = height / 2;

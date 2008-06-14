@@ -1,13 +1,13 @@
 package org.designup.picsou.server.session.impl;
 
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.client.exceptions.InvalidActionForState;
 import org.designup.picsou.server.session.ConnectedState;
 import org.designup.picsou.server.session.CreatingUserState;
 import org.designup.picsou.server.session.IdentifiedState;
 import org.designup.picsou.server.session.SessionState;
+import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.Arrays;
 

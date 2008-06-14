@@ -1,7 +1,7 @@
 package org.designup.shrinker;
 
-import org.crossbowlabs.globs.utils.MultiMap;
-import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.io.*;
 import java.util.ArrayList;

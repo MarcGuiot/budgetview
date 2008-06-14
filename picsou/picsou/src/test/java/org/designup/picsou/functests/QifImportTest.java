@@ -1,10 +1,10 @@
 package org.designup.picsou.functests;
 
-import org.crossbowlabs.globs.utils.Files;
-import org.crossbowlabs.globs.utils.TestUtils;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.TestUtils;
 
 public class QifImportTest extends LoggedInFunctionalTestCase {
 

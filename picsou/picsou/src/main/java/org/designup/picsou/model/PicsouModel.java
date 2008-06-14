@@ -1,7 +1,7 @@
 package org.designup.picsou.model;
 
-import org.crossbowlabs.globs.metamodel.GlobModel;
-import org.crossbowlabs.globs.metamodel.utils.GlobModelBuilder;
+import org.globsframework.metamodel.GlobModel;
+import org.globsframework.metamodel.utils.GlobModelBuilder;
 
 public class PicsouModel {
   private static GlobModel model =

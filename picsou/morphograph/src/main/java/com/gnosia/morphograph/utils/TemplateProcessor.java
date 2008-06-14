@@ -3,7 +3,7 @@ package com.gnosia.morphograph.utils;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
-import org.crossbowlabs.globs.utils.exceptions.ResourceAccessFailed;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.io.StringWriter;
 import java.util.HashMap;

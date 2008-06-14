@@ -1,4 +1,4 @@
-package org.crossbowlabs.saxstack.writer;
+package org.globsframework.saxstack.writer;
 
 import java.io.StringWriter;
 

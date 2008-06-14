@@ -1,10 +1,10 @@
 package org.designup.picsou.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.annotations.Key;
-import org.crossbowlabs.globs.metamodel.fields.IntegerField;
-import org.crossbowlabs.globs.metamodel.fields.StringField;
-import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class User {
 

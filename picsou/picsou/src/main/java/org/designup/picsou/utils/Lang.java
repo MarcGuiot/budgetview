@@ -1,7 +1,7 @@
 package org.designup.picsou.utils;
 
-import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
-import org.crossbowlabs.splits.TextLocator;
+import org.globsframework.gui.splits.TextLocator;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.text.MessageFormat;
 import java.util.Enumeration;
@@ -45,7 +45,7 @@ public class Lang {
     if (message == null) {
       throw new ItemNotFound("Key '" + key + "' not found in language file: " + LOCALE);
     }
-      return message;
+    return message;
   }
 
   public static String find(String key) {

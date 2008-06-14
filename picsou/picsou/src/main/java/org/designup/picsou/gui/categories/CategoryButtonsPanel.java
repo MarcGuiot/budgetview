@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.categories;
 
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.model.Glob;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Icons;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.model.Glob;
 
 import javax.swing.*;
 import java.awt.*;

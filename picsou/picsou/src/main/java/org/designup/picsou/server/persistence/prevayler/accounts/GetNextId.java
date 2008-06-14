@@ -1,11 +1,11 @@
 package org.designup.picsou.server.persistence.prevayler.accounts;
 
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 import org.prevayler.SureTransactionWithQuery;
 
 import java.util.Date;
@@ -25,7 +25,7 @@ public class GetNextId implements SureTransactionWithQuery, CustomSerializable {
   }
 
   public Object executeAndQuery(Object prevalentSystem, Date executionTime) {
-    return ((UserData) prevalentSystem).getNextId(globTypeName, count);
+    return ((UserData)prevalentSystem).getNextId(globTypeName, count);
   }
 
   public String getSerializationName() {

@@ -1,7 +1,7 @@
 package org.designup.picsou.server.persistence.prevayler;
 
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.io.IOException;
 

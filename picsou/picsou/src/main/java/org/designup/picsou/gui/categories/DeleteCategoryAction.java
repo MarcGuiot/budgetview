@@ -1,18 +1,18 @@
 package org.designup.picsou.gui.categories;
 
-import static org.crossbowlabs.globs.model.FieldValue.value;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.KeyBuilder;
-import static org.crossbowlabs.globs.model.KeyBuilder.newKey;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.utils.Lang;
+import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.KeyBuilder;
+import static org.globsframework.model.KeyBuilder.newKey;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -89,9 +89,9 @@ public class DeleteCategoryAction extends AbstractCategoryAction {
     for (Glob ttc : repository.getAll(TransactionToCategory.TYPE)) {
       if (categoryId.equals(ttc.get(TransactionToCategory.CATEGORY))) {
         repository.findOrCreate(KeyBuilder.createFromValues(
-                TransactionToCategory.TYPE,
-                value(TransactionToCategory.TRANSACTION, ttc.get(TransactionToCategory.TRANSACTION)),
-                value(TransactionToCategory.CATEGORY, masterId)));
+          TransactionToCategory.TYPE,
+          value(TransactionToCategory.TRANSACTION, ttc.get(TransactionToCategory.TRANSACTION)),
+          value(TransactionToCategory.CATEGORY, masterId)));
         repository.delete(ttc.getKey());
       }
     }

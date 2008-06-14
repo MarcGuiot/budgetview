@@ -1,6 +1,6 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.crossbowlabs</groupId>
+  <groupId>org.globsframework</groupId>
   <packaging>jar</packaging>
   <artifactId>picsouServer</artifactId>
   <name>picsouServer</name>
@@ -89,12 +89,12 @@
       <version>6.1.6</version>
     </dependency>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>globs</artifactId>
       <version>1.0</version>
     </dependency>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>picsou</artifactId>
       <version>1.0</version>
     </dependency>
@@ -110,14 +110,14 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>globs</artifactId>
       <version>1.0</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>picsou</artifactId>
       <version>1.0</version>
       <type>test-jar</type>

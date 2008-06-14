@@ -1,18 +1,18 @@
 package org.designup.picsou.gui.categories;
 
-import org.crossbowlabs.globs.gui.GlobSelectionListener;
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.gui.actions.RenameGlobAction;
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.fields.StringField;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.format.DescriptionService;
-import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.actions.RenameGlobAction;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -1,14 +1,14 @@
 package org.designup.picsou.server.persistence.prevayler.users;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.server.model.HiddenUser;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -135,7 +135,7 @@ public class PRootData implements CustomSerializable {
   public int getHash(Date date, String name) {
     int result;
     long ht = date.getTime();
-    result = (int) ht ^ (int) (ht >> 32);
+    result = (int)ht ^ (int)(ht >> 32);
     int h = 0;
     for (byte val : name.getBytes()) {
       h = 31 * h + val;

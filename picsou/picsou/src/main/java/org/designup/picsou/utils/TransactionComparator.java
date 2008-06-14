@@ -1,10 +1,10 @@
 package org.designup.picsou.utils;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.utils.Utils;
-import org.crossbowlabs.globs.metamodel.fields.IntegerField;
 import org.designup.picsou.gui.transactions.TransactionSplitComparator;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.Utils;
 
 import java.util.Comparator;
 
@@ -34,7 +34,7 @@ public class TransactionComparator implements Comparator<Glob> {
   public int compare(Glob transaction1, Glob transaction2) {
     long dateDiff = (transaction1.get(monthField) - transaction2.get(monthField)) * dateMultiplier;
     if (dateDiff != 0) {
-      return (int) dateDiff;
+      return (int)dateDiff;
     }
     int dayDiff = (transaction1.get(dayField) - transaction2.get(dayField)) * dateMultiplier;
     if (dayDiff != 0) {

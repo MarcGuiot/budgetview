@@ -1,20 +1,20 @@
 package org.designup.picsou.server.persistence.sql;
 
-import org.crossbowlabs.globs.sqlstreams.SelectQuery;
-import org.crossbowlabs.globs.sqlstreams.SqlConnection;
-import org.crossbowlabs.globs.sqlstreams.SqlRequest;
-import org.crossbowlabs.globs.sqlstreams.constraints.Constraints;
-import org.crossbowlabs.globs.streams.GlobStream;
-import org.crossbowlabs.globs.streams.accessors.IntegerAccessor;
-import org.crossbowlabs.globs.streams.accessors.StringAccessor;
-import org.crossbowlabs.globs.streams.accessors.utils.ValueIntegerAccessor;
-import org.crossbowlabs.globs.streams.accessors.utils.ValueLongAccessor;
-import org.crossbowlabs.globs.streams.accessors.utils.ValueStringAccessor;
-import org.crossbowlabs.globs.utils.MultiMap;
-import org.crossbowlabs.globs.utils.Pair;
-import org.crossbowlabs.globs.utils.Ref;
 import org.designup.picsou.server.model.UserCategoryAssociation;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.sqlstreams.SelectQuery;
+import org.globsframework.sqlstreams.SqlConnection;
+import org.globsframework.sqlstreams.SqlRequest;
+import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.streams.GlobStream;
+import org.globsframework.streams.accessors.IntegerAccessor;
+import org.globsframework.streams.accessors.StringAccessor;
+import org.globsframework.streams.accessors.utils.ValueIntegerAccessor;
+import org.globsframework.streams.accessors.utils.ValueLongAccessor;
+import org.globsframework.streams.accessors.utils.ValueStringAccessor;
+import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.Pair;
+import org.globsframework.utils.Ref;
 
 import java.util.ArrayList;
 import java.util.Collections;

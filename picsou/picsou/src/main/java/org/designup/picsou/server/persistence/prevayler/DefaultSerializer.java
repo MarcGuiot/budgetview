@@ -1,6 +1,6 @@
 package org.designup.picsou.server.persistence.prevayler;
 
-import org.crossbowlabs.globs.utils.serialization.SerializedInputOutputFactory;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.prevayler.foundation.serialization.Serializer;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ public class DefaultSerializer implements Serializer {
   }
 
   public void writeObject(OutputStream stream, Object object) throws IOException {
-    policy.write(SerializedInputOutputFactory.init(stream), (CustomSerializable) object);
+    policy.write(SerializedInputOutputFactory.init(stream), (CustomSerializable)object);
   }
 
   public Object readObject(InputStream stream) throws IOException, ClassNotFoundException {

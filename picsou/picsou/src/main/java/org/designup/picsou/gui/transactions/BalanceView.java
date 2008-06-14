@@ -1,13 +1,13 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
-import org.crossbowlabs.globs.gui.views.GlobLabelView;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.color.ColorChangeListener;
-import org.crossbowlabs.splits.color.ColorSource;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.views.GlobLabelView;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;

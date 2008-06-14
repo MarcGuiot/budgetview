@@ -1,8 +1,8 @@
 package org.designup.picsou.model;
 
-import org.crossbowlabs.globs.model.FieldValues;
-import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.Key;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 public interface ServerTypeVisitor {
 

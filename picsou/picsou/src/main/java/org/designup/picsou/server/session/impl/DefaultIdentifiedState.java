@@ -1,12 +1,12 @@
 package org.designup.picsou.server.session.impl;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.utils.serialization.Encoder;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
 import org.designup.picsou.client.exceptions.IdentificationFailed;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.IdentifiedState;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.serialization.Encoder;
+import org.globsframework.utils.serialization.SerializedInput;
 
 public class DefaultIdentifiedState extends AbstractSessionState implements IdentifiedState {
   private Glob user;

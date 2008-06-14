@@ -1,4 +1,4 @@
-package org.crossbowlabs.rooms.model;
+package org.globsframework.rooms.model;
 
 import javax.persistence.*;
 import java.util.Date;

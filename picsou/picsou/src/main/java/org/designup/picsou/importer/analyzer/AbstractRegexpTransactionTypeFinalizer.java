@@ -1,12 +1,12 @@
 package org.designup.picsou.importer.analyzer;
 
-import static org.crossbowlabs.globs.model.FieldValue.value;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.Key;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
+import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

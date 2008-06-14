@@ -1,4 +1,4 @@
-package org.crossbowlabs.saxstack.parser;
+package org.globsframework.saxstack.parser;
 
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
@@ -67,7 +67,7 @@ public class SaxStackParser extends DefaultHandler {
 
   public void startElement(String uri, String local, String qName, Attributes atts) {
     charBuffer.setLength(0);
-    nodesStack.push(((XmlNode) nodesStack.peek()).getSubNode(local, atts));
+    nodesStack.push(((XmlNode)nodesStack.peek()).getSubNode(local, atts));
   }
 
   public void characters(char[] chars, int start, int length) throws SAXException {
@@ -75,7 +75,7 @@ public class SaxStackParser extends DefaultHandler {
   }
 
   public void endElement(String uri, String localName, String qName) throws SAXException {
-    XmlNode node = (XmlNode) nodesStack.pop();
+    XmlNode node = (XmlNode)nodesStack.pop();
     if (charBuffer.length() != 0) {
       node.setValue(charBuffer.toString());
     }

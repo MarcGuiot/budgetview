@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.accounts;
 
 import junit.framework.TestCase;
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.model.impl.DefaultGlobRepository;
-import org.crossbowlabs.globs.utils.TestUtils;
 import static org.designup.picsou.model.Account.*;
+import org.globsframework.model.*;
+import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.utils.TestUtils;
 
 import java.util.Collections;
 

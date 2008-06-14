@@ -1,15 +1,15 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.gui.views.GlobTableView;
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.model.format.DescriptionService;
-import org.crossbowlabs.globs.model.utils.DefaultChangeSetListener;
-import org.crossbowlabs.globs.model.utils.DefaultChangeSetVisitor;
-import org.crossbowlabs.globs.model.utils.GlobUtils;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Icons;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.model.*;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.utils.DefaultChangeSetListener;
+import org.globsframework.model.utils.DefaultChangeSetVisitor;
+import org.globsframework.model.utils.GlobUtils;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;

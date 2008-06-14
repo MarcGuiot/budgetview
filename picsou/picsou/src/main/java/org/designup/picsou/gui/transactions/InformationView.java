@@ -1,22 +1,22 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.gui.GlobSelection;
-import org.crossbowlabs.globs.gui.GlobSelectionListener;
-import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.model.ChangeSet;
-import org.crossbowlabs.globs.model.ChangeSetListener;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.IconLocator;
-import org.crossbowlabs.splits.color.ColorService;
-import org.crossbowlabs.splits.color.ForegroundColorUpdater;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.ForegroundColorUpdater;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;

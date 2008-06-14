@@ -2,15 +2,16 @@ package org.designup.picsou.gui;
 
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PicsouWindowsLookAndFeel;
-import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouFrame;
+import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 
 public class MainWindow {
   private PicsouFrame frame;
+
   static {
     try {
       if (Gui.isMacOSX()) {

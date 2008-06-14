@@ -1,14 +1,14 @@
 package org.designup.picsou.gui.actions;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.delta.DefaultChangeSet;
-import org.crossbowlabs.globs.utils.MultiMap;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.model.*;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.delta.DefaultChangeSet;
+import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

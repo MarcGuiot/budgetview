@@ -1,7 +1,7 @@
 package org.designup.picsou.importer.http;
 
-import org.crossbowlabs.globs.utils.exceptions.Rethrowable;
 import org.designup.picsou.client.exceptions.RemoteException;
+import org.globsframework.utils.exceptions.Rethrowable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

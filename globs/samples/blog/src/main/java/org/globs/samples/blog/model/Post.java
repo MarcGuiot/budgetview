@@ -1,9 +1,9 @@
 package org.globs.samples.blog.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
-import org.crossbowlabs.globs.metamodel.fields.*;
-import org.crossbowlabs.globs.metamodel.annotations.*;
+import org.globsframework.globs.metamodel.GlobType;
+import org.globsframework.globs.metamodel.utils.GlobTypeLoader;
+import org.globsframework.globs.metamodel.fields.*;
+import org.globsframework.globs.metamodel.annotations.*;
 
 public class Post {
   public static GlobType TYPE;

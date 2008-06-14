@@ -1,21 +1,21 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.gui.GlobSelection;
-import org.crossbowlabs.globs.gui.GlobSelectionListener;
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.model.utils.GlobMatcher;
-import org.crossbowlabs.globs.model.utils.GlobMatchers;
-import static org.crossbowlabs.globs.model.utils.GlobMatchers.and;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.gui.model.MonthStat;
 import static org.designup.picsou.gui.utils.PicsouMatchers.*;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import org.globsframework.utils.directory.Directory;
 
 import java.util.ArrayList;
 import java.util.Collections;

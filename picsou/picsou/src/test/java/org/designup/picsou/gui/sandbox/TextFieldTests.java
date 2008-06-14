@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.sandbox;
 
-import org.crossbowlabs.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;

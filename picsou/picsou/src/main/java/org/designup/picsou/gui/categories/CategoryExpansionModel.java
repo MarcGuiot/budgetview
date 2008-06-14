@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.categories;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.model.utils.GlobMatcher;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatcher;
 
 import java.util.HashMap;
 import java.util.Map;

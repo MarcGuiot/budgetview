@@ -1,18 +1,18 @@
 package org.globs.samples.addressbook.gui;
 
-import org.crossbowlabs.addressbook.model.Contact;
-import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.GlobRepositoryBuilder;
-import org.crossbowlabs.globs.model.format.DescriptionService;
-import org.crossbowlabs.globs.model.format.Formats;
-import org.crossbowlabs.globs.model.format.utils.DefaultDescriptionService;
-import org.crossbowlabs.globs.model.utils.GlobFieldComparator;
-import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.IconLocator;
-import org.crossbowlabs.splits.color.ColorService;
+import org.globsframework.addressbook.model.Contact;
+import org.globsframework.globs.gui.GlobsPanelBuilder;
+import org.globsframework.globs.gui.SelectionService;
+import org.globsframework.globs.model.GlobRepository;
+import org.globsframework.globs.model.GlobRepositoryBuilder;
+import org.globsframework.globs.model.format.DescriptionService;
+import org.globsframework.globs.model.format.Formats;
+import org.globsframework.globs.model.format.utils.DefaultDescriptionService;
+import org.globsframework.globs.model.utils.GlobFieldComparator;
+import org.globsframework.globs.utils.directory.DefaultDirectory;
+import org.globsframework.globs.utils.directory.Directory;
+import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.color.ColorService;
 
 import javax.swing.*;
 import java.util.Locale;

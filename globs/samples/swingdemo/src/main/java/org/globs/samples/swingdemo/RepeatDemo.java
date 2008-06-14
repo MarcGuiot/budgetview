@@ -1,20 +1,20 @@
 package org.globs.samples.swingdemo;
 
-import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.gui.ComponentHolder;
-import org.crossbowlabs.globs.gui.views.GlobRepeatView;
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.model.format.DescriptionService;
-import org.crossbowlabs.globs.model.format.Formats;
-import org.crossbowlabs.globs.model.format.utils.DefaultDescriptionService;
-import org.crossbowlabs.globs.model.utils.GlobFieldComparator;
-import org.crossbowlabs.globs.utils.Dates;
-import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.IconLocator;
-import org.crossbowlabs.splits.color.ColorService;
+import org.globsframework.globs.gui.GlobsPanelBuilder;
+import org.globsframework.globs.gui.SelectionService;
+import org.globsframework.globs.gui.ComponentHolder;
+import org.globsframework.globs.gui.views.GlobRepeatView;
+import org.globsframework.globs.metamodel.GlobType;
+import org.globsframework.globs.model.*;
+import org.globsframework.globs.model.format.DescriptionService;
+import org.globsframework.globs.model.format.Formats;
+import org.globsframework.globs.model.format.utils.DefaultDescriptionService;
+import org.globsframework.globs.model.utils.GlobFieldComparator;
+import org.globsframework.globs.utils.Dates;
+import org.globsframework.globs.utils.directory.DefaultDirectory;
+import org.globsframework.globs.utils.directory.Directory;
+import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globs.samples.swingdemo.model.Movie;
 
 import javax.swing.*;

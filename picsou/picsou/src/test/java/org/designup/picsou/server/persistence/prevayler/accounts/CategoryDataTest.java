@@ -1,8 +1,8 @@
 package org.designup.picsou.server.persistence.prevayler.accounts;
 
 import junit.framework.TestCase;
-import org.crossbowlabs.globs.utils.serialization.SerializedByteArrayOutput;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 
 import java.util.Arrays;
 import java.util.List;

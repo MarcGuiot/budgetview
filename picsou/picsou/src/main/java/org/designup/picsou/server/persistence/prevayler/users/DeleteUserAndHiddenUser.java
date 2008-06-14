@@ -1,12 +1,12 @@
 package org.designup.picsou.server.persistence.prevayler.users;
 
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
-import org.crossbowlabs.globs.utils.serialization.Encoder;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.utils.serialization.Encoder;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 import org.prevayler.Transaction;
 
 import java.util.Date;
@@ -26,7 +26,7 @@ public class DeleteUserAndHiddenUser implements Transaction, CustomSerializable 
   }
 
   public void executeOn(Object prevalentSystem, Date executionTime) {
-    PRootData rootData = ((PRootData) prevalentSystem);
+    PRootData rootData = ((PRootData)prevalentSystem);
     rootData.removeUser(name);
     rootData.removeHiddenUser(cryptedLinkInfo);
   }

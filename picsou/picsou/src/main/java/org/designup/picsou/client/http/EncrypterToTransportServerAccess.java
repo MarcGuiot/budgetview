@@ -1,21 +1,21 @@
 package org.designup.picsou.client.http;
 
-import org.crossbowlabs.globs.model.ChangeSet;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.delta.MutableChangeSet;
-import org.crossbowlabs.globs.remote.SerializedRemoteAccess;
-import org.crossbowlabs.globs.utils.exceptions.InvalidState;
-import org.crossbowlabs.globs.utils.serialization.SerializedByteArrayOutput;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.client.ClientTransport;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadConnection;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.server.model.HiddenServerTypeVisitor;
 import org.designup.picsou.server.model.ServerModel;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.remote.SerializedRemoteAccess;
+import org.globsframework.utils.exceptions.InvalidState;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.security.SecureRandom;
 
@@ -104,7 +104,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     try {
       int i = 0;
       for (char c : name) {
-        tab[i] = (byte) c;
+        tab[i] = (byte)c;
         i++;
       }
       return passwordEncryptor.encrypt(tab);

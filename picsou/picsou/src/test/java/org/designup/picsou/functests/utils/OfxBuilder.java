@@ -2,16 +2,16 @@ package org.designup.picsou.functests.utils;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import org.crossbowlabs.globs.model.*;
-import static org.crossbowlabs.globs.model.utils.GlobMatchers.*;
-import org.crossbowlabs.globs.utils.Dates;
-import org.crossbowlabs.globs.utils.TestUtils;
-import org.crossbowlabs.globs.utils.Utils;
-import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.importer.ofx.OfxExporter;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
+import org.globsframework.model.*;
+import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.utils.Dates;
+import org.globsframework.utils.TestUtils;
+import org.globsframework.utils.Utils;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.io.File;
 import java.io.FileWriter;

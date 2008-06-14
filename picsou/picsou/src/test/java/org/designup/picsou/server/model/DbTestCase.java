@@ -1,12 +1,12 @@
 package org.designup.picsou.server.model;
 
 import junit.framework.TestCase;
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.sqlstreams.SqlConnection;
-import org.crossbowlabs.globs.sqlstreams.SqlService;
-import org.crossbowlabs.globs.sqlstreams.drivers.jdbc.JdbcSqlService;
-import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
-import org.crossbowlabs.globs.utils.directory.Directory;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.sqlstreams.SqlConnection;
+import org.globsframework.sqlstreams.SqlService;
+import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
+import org.globsframework.utils.directory.DefaultDirectory;
+import org.globsframework.utils.directory.Directory;
 
 public abstract class DbTestCase extends TestCase {
   protected Directory directory = new DefaultDirectory();

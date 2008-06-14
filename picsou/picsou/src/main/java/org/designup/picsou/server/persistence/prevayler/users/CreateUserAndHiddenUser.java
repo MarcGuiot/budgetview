@@ -1,12 +1,5 @@
 package org.designup.picsou.server.persistence.prevayler.users;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
-import org.crossbowlabs.globs.utils.serialization.Encoder;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.client.exceptions.IdentificationFailed;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.server.model.HiddenUser;
@@ -14,6 +7,13 @@ import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.model.Glob;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.utils.serialization.Encoder;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 import org.prevayler.TransactionWithQuery;
 
 import java.util.Date;

@@ -1,15 +1,15 @@
 package org.designup.picsou.gui.triggers;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.model.*;
-import static org.crossbowlabs.globs.model.KeyBuilder.init;
-import static org.crossbowlabs.globs.model.KeyBuilder.newKey;
-import org.crossbowlabs.globs.model.utils.GlobUtils;
-import org.crossbowlabs.globs.utils.Utils;
 import org.designup.picsou.gui.model.GlobalStat;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.gui.utils.FloatingAverage;
 import org.designup.picsou.model.*;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
+import static org.globsframework.model.KeyBuilder.init;
+import static org.globsframework.model.KeyBuilder.newKey;
+import org.globsframework.model.utils.GlobUtils;
+import org.globsframework.utils.Utils;
 
 import static java.lang.Math.*;
 import java.util.*;
@@ -233,7 +233,7 @@ public class MonthStatComputer implements ChangeSetListener {
 
   private double computePart(double totalIncome, Double income) {
     double value = totalIncome != 0 ? income / totalIncome : 0;
-    return ((double) round(value * 100)) / 100;
+    return ((double)round(value * 100)) / 100;
   }
 
   private Glob initMonthStat(Key monthStatKey) {
@@ -242,9 +242,9 @@ public class MonthStatComputer implements ChangeSetListener {
 
   private Key getKey(int month, Integer categoryId, int accountId) {
     return
-            init(MonthStat.MONTH, month)
-                    .setValue(MonthStat.CATEGORY, categoryId != null ? categoryId : Category.NONE)
-                    .setValue(MonthStat.ACCOUNT, accountId)
-                    .get();
+      init(MonthStat.MONTH, month)
+        .setValue(MonthStat.CATEGORY, categoryId != null ? categoryId : Category.NONE)
+        .setValue(MonthStat.ACCOUNT, accountId)
+        .get();
   }
 }

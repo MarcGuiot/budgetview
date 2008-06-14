@@ -1,16 +1,5 @@
 package org.designup.picsou.importer;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.fields.StringField;
-import static org.crossbowlabs.globs.model.FieldValue.value;
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.model.delta.DefaultChangeSet;
-import org.crossbowlabs.globs.model.delta.MutableChangeSet;
-import org.crossbowlabs.globs.model.utils.ChangeSetAggregator;
-import org.crossbowlabs.globs.utils.MultiMap;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.globs.utils.exceptions.TruncatedFile;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
@@ -18,6 +7,17 @@ import org.designup.picsou.importer.utils.DateFormatAnalyzer;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.StringField;
+import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.*;
+import org.globsframework.model.delta.DefaultChangeSet;
+import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.model.utils.ChangeSetAggregator;
+import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.exceptions.TruncatedFile;
 
 import java.io.File;
 import java.io.IOException;

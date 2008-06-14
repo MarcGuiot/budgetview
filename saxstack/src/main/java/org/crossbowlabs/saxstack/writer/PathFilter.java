@@ -1,4 +1,4 @@
-package org.crossbowlabs.saxstack.writer;
+package org.globsframework.saxstack.writer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class PathFilter implements Filter {
         }
         pathTmp.add(pathInfo);
       }
-      this.path = (PathInfo[]) pathTmp.toArray(new PathInfo[pathTmp.size()]);
+      this.path = (PathInfo[])pathTmp.toArray(new PathInfo[pathTmp.size()]);
     }
   }
 

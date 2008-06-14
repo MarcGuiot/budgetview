@@ -1,9 +1,9 @@
 package org.designup.picsou.functests.banks;
 
-import org.crossbowlabs.globs.utils.Files;
-import org.crossbowlabs.globs.utils.TestUtils;
 import org.designup.picsou.functests.QifImportTest;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.TestUtils;
 
 import java.io.File;
 import java.io.IOException;

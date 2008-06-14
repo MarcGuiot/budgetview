@@ -1,16 +1,16 @@
 package org.designup.picsou.client.http;
 
-import org.crossbowlabs.globs.model.ChangeSet;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.model.delta.MutableChangeSet;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedInputOutputFactory;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.server.model.*;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.Key;
+import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
 public class HiddenServerTypeVisitorDecoder implements HiddenServerTypeVisitor {
   private GlobList globs;

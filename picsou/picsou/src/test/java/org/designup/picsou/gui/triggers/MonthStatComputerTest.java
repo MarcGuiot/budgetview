@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.triggers;
 
-import org.crossbowlabs.globs.metamodel.Field;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.PicsouTestCase;
+import org.globsframework.metamodel.Field;
 
 public class MonthStatComputerTest extends PicsouTestCase {
   public void testStandardCase() throws Exception {

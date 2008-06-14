@@ -1,13 +1,12 @@
 package org.designup.picsou.functests;
 
-import org.crossbowlabs.globs.utils.Files;
-import org.crossbowlabs.globs.utils.TestUtils;
-import static org.crossbowlabs.globs.utils.Utils.remove;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.Files;
+import static org.globsframework.utils.Utils.remove;
 import org.uispec4j.*;
 import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.interception.WindowHandler;
@@ -20,7 +19,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     learn("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", MasterCategory.TRANSPORTS);
     learn("SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", MasterCategory.FOOD);
 
-    String fileName = TestUtils.getFileName(this, ".qif");
+    String fileName = org.globsframework.utils.TestUtils.getFileName(this, ".qif");
 
     Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"),
                            fileName);

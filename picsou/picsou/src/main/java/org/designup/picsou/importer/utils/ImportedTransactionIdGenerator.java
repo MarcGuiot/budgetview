@@ -1,9 +1,9 @@
 package org.designup.picsou.importer.utils;
 
-import org.crossbowlabs.globs.metamodel.fields.IntegerField;
-import org.crossbowlabs.globs.model.utils.GlobIdGenerator;
 import org.designup.picsou.model.ImportedTransaction;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.model.utils.GlobIdGenerator;
 
 public class ImportedTransactionIdGenerator implements GlobIdGenerator {
   private final GlobIdGenerator originalGenerator;

@@ -1,15 +1,15 @@
 package com.gnosia.morphograph.gui;
 
 import com.gnosia.morphograph.model.Select;
-import org.crossbowlabs.globs.metamodel.fields.StringField;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.Strings;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.InvalidConfiguration;
-import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
-import org.crossbowlabs.splits.SplitsBuilder;
-import org.crossbowlabs.splits.color.ForegroundColorUpdater;
+import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.color.ForegroundColorUpdater;
+import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidConfiguration;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

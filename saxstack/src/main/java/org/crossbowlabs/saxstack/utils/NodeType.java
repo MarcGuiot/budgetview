@@ -1,4 +1,4 @@
-package org.crossbowlabs.saxstack.utils;
+package org.globsframework.saxstack.utils;
 
 import java.util.*;
 
@@ -17,12 +17,12 @@ public class NodeType {
   }
 
   NodeType getChild(String name) {
-    return (NodeType) children.get(name);
+    return (NodeType)children.get(name);
   }
 
   public NodeType getOrCreate(String name, Collection attrs) {
     if (children.containsKey(name)) {
-      NodeType type = ((NodeType) children.get(name));
+      NodeType type = ((NodeType)children.get(name));
       type.check(attrs);
       return type;
     }
@@ -33,7 +33,7 @@ public class NodeType {
 
   private void check(Collection attrs) {
     for (Iterator iterator = attrs.iterator(); iterator.hasNext();) {
-      String attr = (String) iterator.next();
+      String attr = (String)iterator.next();
       if (!this.attrs.contains(attr)) {
         this.attrs.add(attr);
       }
@@ -42,7 +42,7 @@ public class NodeType {
 
   public NodeType findChild(String name) {
     if (children.containsKey(name)) {
-      return (NodeType) children.get(name);
+      return (NodeType)children.get(name);
     }
     return null;
   }

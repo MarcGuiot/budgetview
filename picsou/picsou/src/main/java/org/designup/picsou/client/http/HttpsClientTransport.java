@@ -9,12 +9,12 @@ import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
-import org.crossbowlabs.globs.utils.Log;
-import org.crossbowlabs.globs.utils.exceptions.InvalidState;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedInputOutputFactory;
 import org.designup.picsou.client.ClientTransport;
 import org.designup.picsou.client.exceptions.*;
+import org.globsframework.utils.Log;
+import org.globsframework.utils.exceptions.InvalidState;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
@@ -114,7 +114,7 @@ public class HttpsClientTransport implements ClientTransport {
       int exceptionCode = objectInputStream.readInt();
       String message = null;
       try {
-        message = (String) objectInputStream.readObject();
+        message = (String)objectInputStream.readObject();
       }
       catch (ClassNotFoundException e) {
       }
@@ -254,7 +254,7 @@ public class HttpsClientTransport implements ClientTransport {
       if (trustmanagers.length == 0) {
         throw new NoSuchAlgorithmException("no trust manager found");
       }
-      this.standardTrustManager = (X509TrustManager) trustmanagers[0];
+      this.standardTrustManager = (X509TrustManager)trustmanagers[0];
     }
 
     public void checkClientTrusted(X509Certificate[] certificates, String authType) throws CertificateException {

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.time;
 
-import org.crossbowlabs.globs.utils.exceptions.ResourceAccessFailed;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.awt.*;
 import java.util.Enumeration;
@@ -79,7 +79,7 @@ public class MonthFontMetricInfo {
       if (name == null) {
         throw new ResourceAccessFailed("for month " + month + " type : " + type);
       }
-      Graphics2D d = ((Graphics2D) graphics);
+      Graphics2D d = ((Graphics2D)graphics);
       FontMetrics fontMetrics = d.getFontMetrics();
       width = fontMetrics.stringWidth(name);
       height = fontMetrics.getHeight();

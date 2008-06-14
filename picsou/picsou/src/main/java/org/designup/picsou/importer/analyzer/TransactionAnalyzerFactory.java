@@ -1,13 +1,13 @@
 package org.designup.picsou.importer.analyzer;
 
-import org.crossbowlabs.globs.metamodel.GlobModel;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.exceptions.ResourceAccessFailed;
-import org.crossbowlabs.globs.xml.XmlGlobParser;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.TransactionTypeMatcher;
 import static org.designup.picsou.model.TransactionTypeMatcher.*;
+import org.globsframework.metamodel.GlobModel;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
+import org.globsframework.xml.XmlGlobParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;

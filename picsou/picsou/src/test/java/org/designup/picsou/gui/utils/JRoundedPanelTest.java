@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.utils;
 
-import org.crossbowlabs.splits.utils.GuiUtils;
 import org.designup.picsou.gui.components.JRoundedPanel;
+import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 import java.awt.*;

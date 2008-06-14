@@ -1,13 +1,13 @@
 package org.designup.picsou.gui;
 
-import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.format.DescriptionService;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.color.ColorChangeListener;
-import org.crossbowlabs.splits.color.ColorService;
-import org.crossbowlabs.splits.color.ColorSource;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.utils.directory.Directory;
 
 public abstract class View implements ColorChangeListener {
   protected GlobRepository repository;

@@ -1,0 +1,27 @@
+package org.globsframework.model.impl;
+
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
+
+public class ReadOnlyGlob extends AbstractGlob {
+  public ReadOnlyGlob(GlobType type, FieldValues values) {
+    super(type, values);
+  }
+
+  private ReadOnlyGlob(GlobType type, Object[] values) {
+    super(type, values);
+  }
+
+  public boolean exists() {
+    return true;
+  }
+
+  void dispose() {
+  }
+
+  public Glob duplicate() {
+    return new ReadOnlyGlob(type, duplicateValues());
+  }
+
+}

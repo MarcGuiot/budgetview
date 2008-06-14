@@ -1,7 +1,7 @@
 package org.designup.picsou.server;
 
-import org.crossbowlabs.globs.utils.Files;
-import org.crossbowlabs.globs.utils.TestUtils;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;

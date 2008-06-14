@@ -1,4 +1,4 @@
-package org.crossbowlabs.saxstack.utils;
+package org.globsframework.saxstack.utils;
 
 import org.xml.sax.Attributes;
 

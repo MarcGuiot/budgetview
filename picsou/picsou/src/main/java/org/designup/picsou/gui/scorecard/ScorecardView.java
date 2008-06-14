@@ -1,15 +1,5 @@
 package org.designup.picsou.gui.scorecard;
 
-import org.crossbowlabs.globs.gui.GlobSelection;
-import org.crossbowlabs.globs.gui.GlobSelectionListener;
-import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
-import org.crossbowlabs.globs.metamodel.fields.DoubleField;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.color.ColorSource;
-import org.crossbowlabs.splits.color.Colors;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.gui.transactions.TransactionSelection;
@@ -17,6 +7,16 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.PicsouDescriptionService;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;

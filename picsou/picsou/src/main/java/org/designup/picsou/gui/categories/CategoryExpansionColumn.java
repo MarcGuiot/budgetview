@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.categories;
 
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.gui.views.CellPainter;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.splits.utils.TransparentIcon;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.utils.TransparentIcon;
+import org.globsframework.gui.views.CellPainter;
+import org.globsframework.model.Glob;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -54,7 +54,7 @@ public class CategoryExpansionColumn
   public Component getTableCellRendererComponent(JTable table, Object value,
                                                  boolean isSelected, boolean hasFocus,
                                                  int row, int column) {
-    Glob category = (Glob) value;
+    Glob category = (Glob)value;
     if (hasFocus) {
       renderButton.setForeground(table.getForeground());
       renderButton.setBackground(UIManager.getColor("Button.background"));
@@ -68,13 +68,13 @@ public class CategoryExpansionColumn
       renderButton.setBackground(UIManager.getColor("Button.background"));
     }
     setIcon(renderButton, category);
-    renderButton.setUI(new PainterUI(backgroundPainter, (Glob) value, row, column, isSelected, hasFocus));
+    renderButton.setUI(new PainterUI(backgroundPainter, (Glob)value, row, column, isSelected, hasFocus));
     return renderButton;
   }
 
   public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-    setIcon(editButton, (Glob) value);
-    editButton.setUI(new PainterUI(backgroundPainter, (Glob) value, row, column, true, true));
+    setIcon(editButton, (Glob)value);
+    editButton.setUI(new PainterUI(backgroundPainter, (Glob)value, row, column, true, true));
     return editButton;
   }
 

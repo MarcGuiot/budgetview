@@ -1,16 +1,16 @@
 package org.designup.picsou.importer.ofx;
 
-import static org.crossbowlabs.globs.model.FieldValue.value;
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.model.utils.GlobIdGenerator;
-import org.crossbowlabs.globs.utils.MultiMap;
-import org.crossbowlabs.globs.utils.Strings;
-import org.crossbowlabs.globs.utils.exceptions.InvalidFormat;
-import org.crossbowlabs.globs.utils.exceptions.TruncatedFile;
 import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.PicsouUtils;
+import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobIdGenerator;
+import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.exceptions.InvalidFormat;
+import org.globsframework.utils.exceptions.TruncatedFile;
 
 import java.io.IOException;
 import java.io.Reader;

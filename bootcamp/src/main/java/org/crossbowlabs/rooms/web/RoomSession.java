@@ -1,10 +1,10 @@
-package org.crossbowlabs.rooms.web;
+package org.globsframework.rooms.web;
 
 import org.apache.wicket.security.WaspSession;
 import org.apache.wicket.security.WaspApplication;
 import org.apache.wicket.security.strategies.LoginException;
 import org.apache.wicket.Request;
-import org.crossbowlabs.rooms.web.login.RoomContext;
+import org.globsframework.rooms.web.login.RoomContext;
 
 public class RoomSession extends WaspSession {
   private RoomContext context;

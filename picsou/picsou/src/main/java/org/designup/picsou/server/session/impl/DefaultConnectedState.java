@@ -1,9 +1,9 @@
 package org.designup.picsou.server.session.impl;
 
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.server.session.ConnectedState;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public class DefaultConnectedState extends AbstractSessionState implements ConnectedState {
   private Integer userId;

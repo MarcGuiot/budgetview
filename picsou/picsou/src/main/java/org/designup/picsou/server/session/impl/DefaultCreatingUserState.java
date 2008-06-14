@@ -1,8 +1,8 @@
 package org.designup.picsou.server.session.impl;
 
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
 import org.designup.picsou.server.session.CreatingUserState;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.utils.serialization.SerializedInput;
 
 public class DefaultCreatingUserState extends AbstractSessionState implements CreatingUserState {
   private Persistence persistence;

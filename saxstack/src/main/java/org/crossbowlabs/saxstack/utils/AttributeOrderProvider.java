@@ -1,4 +1,4 @@
-package org.crossbowlabs.saxstack.utils;
+package org.globsframework.saxstack.utils;
 
 public interface AttributeOrderProvider {
   AttributeOrderProvider NULL_ATTRIBUTE = new AttributeOrderProvider() {

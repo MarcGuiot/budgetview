@@ -1,9 +1,9 @@
 package org.designup.picsou.server.model;
 
 import junit.framework.TestCase;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.utils.serialization.SerializedInputOutputFactory;
+import org.globsframework.model.Glob;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;

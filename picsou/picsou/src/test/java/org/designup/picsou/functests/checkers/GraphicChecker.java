@@ -1,12 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.crossbowlabs.globs.utils.Range;
-import org.crossbowlabs.globs.utils.TestUtils;
-import org.uispec4j.Panel;
-import org.uispec4j.assertion.Assertion;
-import org.uispec4j.assertion.UISpecAssert;
 import org.designup.picsou.gui.graphics.HistoricalChart;
+import org.globsframework.utils.Range;
+import org.globsframework.utils.TestUtils;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.IntervalMarker;
@@ -15,6 +12,9 @@ import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.Layer;
+import org.uispec4j.Panel;
+import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class GraphicChecker extends DataChecker {
 
   private ChartPanel getChartPanel() {
     if (chartPanel == null) {
-      chartPanel = (ChartPanel) panel.findSwingComponent(ChartPanel.class, "historicalChart");
+      chartPanel = (ChartPanel)panel.findSwingComponent(ChartPanel.class, "historicalChart");
       Assert.assertNotNull(chartPanel);
     }
     return chartPanel;
@@ -91,9 +91,9 @@ public class GraphicChecker extends DataChecker {
         List<Number> actualValues = new ArrayList<Number>();
         List<Integer> actualMonths = new ArrayList<Integer>();
         for (Object item : series.getItems()) {
-          XYDataItem dataItem = (XYDataItem) item;
-          double x = (Double) dataItem.getX();
-          actualMonths.add((int) x);
+          XYDataItem dataItem = (XYDataItem)item;
+          double x = (Double)dataItem.getX();
+          actualMonths.add((int)x);
           actualValues.add(dataItem.getY());
         }
         TestUtils.assertEquals(actualValues, expected);
@@ -127,7 +127,7 @@ public class GraphicChecker extends DataChecker {
             return;
           }
           for (Object m : markers) {
-            IntervalMarker marker = (IntervalMarker) m;
+            IntervalMarker marker = (IntervalMarker)m;
             actual.add(new Range(marker.getStartValue(), marker.getEndValue()));
           }
           TestUtils.assertEquals(expectedRanges, actual);
@@ -145,7 +145,7 @@ public class GraphicChecker extends DataChecker {
 
   private XYSeriesCollection getDataset() {
     XYPlot plot = getPlot();
-    return (XYSeriesCollection) plot.getDataset();
+    return (XYSeriesCollection)plot.getDataset();
   }
 
   private XYPlot getPlot() {

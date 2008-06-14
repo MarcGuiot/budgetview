@@ -1,11 +1,11 @@
 package org.designup.picsou.client.http;
 
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.remote.SerializedRemoteAccess;
-import org.crossbowlabs.globs.utils.serialization.SerializedByteArrayOutput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.model.*;
 import org.designup.picsou.server.model.*;
+import org.globsframework.model.*;
+import org.globsframework.remote.SerializedRemoteAccess;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   private final SerializedRemoteAccess.ChangeVisitor globChangeVisitor;

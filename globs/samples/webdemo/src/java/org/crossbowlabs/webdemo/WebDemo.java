@@ -1,4 +1,4 @@
-package org.crossbowlabs.webdemo;
+package org.globsframework.webdemo;
 
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;

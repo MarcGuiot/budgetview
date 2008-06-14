@@ -1,8 +1,8 @@
-package org.crossbowlabs.saxstack.utils;
+package org.globsframework.saxstack.utils;
 
-import org.crossbowlabs.saxstack.parser.SaxStackParser;
-import org.crossbowlabs.saxstack.parser.XmlAttributeNotFoundException;
-import org.crossbowlabs.saxstack.writer.*;
+import org.globsframework.saxstack.parser.SaxStackParser;
+import org.globsframework.saxstack.parser.XmlAttributeNotFoundException;
+import org.globsframework.saxstack.writer.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.XMLReader;
 

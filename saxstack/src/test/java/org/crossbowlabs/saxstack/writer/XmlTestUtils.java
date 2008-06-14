@@ -1,9 +1,9 @@
-package org.crossbowlabs.saxstack.writer;
+package org.globsframework.saxstack.writer;
 
 import junit.framework.Assert;
 import org.apache.xerces.parsers.SAXParser;
-import org.crossbowlabs.saxstack.comparator.XmlComparator;
-import org.crossbowlabs.saxstack.utils.XmlUtils;
+import org.globsframework.saxstack.comparator.XmlComparator;
+import org.globsframework.saxstack.utils.XmlUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package org.crossbowlabs.saxstack.writer;
+package org.globsframework.saxstack.writer;
 
 import java.io.IOException;
 import java.util.List;
@@ -108,7 +108,7 @@ public class SaxStackWriterWithFixedTagNamesTest extends SaxStackWriterTestCase 
     }
 
     public XmlNodeBuilder[] processNext(XmlTag tag) throws IOException {
-      Category category = (Category) getNextItem();
+      Category category = (Category)getNextItem();
       tag.addAttribute("name", category.getName());
       if (category.getAdditionalInfo() != null) {
         tag.addValue(category.getAdditionalInfo());
@@ -131,7 +131,7 @@ public class SaxStackWriterWithFixedTagNamesTest extends SaxStackWriterTestCase 
     }
 
     public XmlNodeBuilder[] processNext(XmlTag tag) throws IOException {
-      Contact contact = (Contact) getNextItem();
+      Contact contact = (Contact)getNextItem();
       tag.addAttribute("name", contact.getName());
       tag.addAttribute("phone", contact.getPhone());
       return new XmlNodeBuilder[0];

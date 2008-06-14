@@ -1,6 +1,6 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.crossbowlabs</groupId>
+  <groupId>org.globsframework</groupId>
   <artifactId>splits</artifactId>
   <name>ui xml designer</name>
   <version>1.0</version>
@@ -38,7 +38,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>saxstack</artifactId>
       <version>2.0</version>
     </dependency>

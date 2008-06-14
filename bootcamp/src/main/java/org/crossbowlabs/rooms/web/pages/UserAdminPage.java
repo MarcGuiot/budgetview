@@ -1,4 +1,4 @@
-package org.crossbowlabs.rooms.web.pages;
+package org.globsframework.rooms.web.pages;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
@@ -10,9 +10,9 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
-import org.crossbowlabs.rooms.model.PersistenceManager;
-import org.crossbowlabs.rooms.model.User;
-import org.crossbowlabs.rooms.model.Room;
+import org.globsframework.rooms.model.PersistenceManager;
+import org.globsframework.rooms.model.User;
+import org.globsframework.rooms.model.Room;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 

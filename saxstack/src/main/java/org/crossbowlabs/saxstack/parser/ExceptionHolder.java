@@ -1,4 +1,4 @@
-package org.crossbowlabs.saxstack.parser;
+package org.globsframework.saxstack.parser;
 
 public class ExceptionHolder extends RuntimeException {
   public ExceptionHolder(Exception cause) {
@@ -6,6 +6,6 @@ public class ExceptionHolder extends RuntimeException {
   }
 
   public Exception getInner() {
-    return (Exception) getCause();
+    return (Exception)getCause();
   }
 }

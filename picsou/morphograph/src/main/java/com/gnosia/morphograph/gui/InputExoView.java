@@ -1,11 +1,11 @@
 package com.gnosia.morphograph.gui;
 
 import com.gnosia.morphograph.model.Input;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.Strings;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.color.BackgroundColorUpdater;
+import org.globsframework.gui.splits.color.BackgroundColorUpdater;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

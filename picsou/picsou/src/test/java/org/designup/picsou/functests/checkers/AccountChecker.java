@@ -1,13 +1,13 @@
 package org.designup.picsou.functests.checkers;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.utils.Dates;
+import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import static org.designup.picsou.model.Account.*;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.Dates;
 import org.uispec4j.ListBoxCellValueConverter;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.assertion.UISpecAssert;
-import org.designup.picsou.gui.utils.PicsouDescriptionService;
-import static org.designup.picsou.model.Account.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class AccountChecker extends DataChecker {
 
   private static class Converter implements ListBoxCellValueConverter {
     public String getValue(int index, Component renderedComponent, Object modelObject) {
-      Glob account = (Glob) modelObject;
+      Glob account = (Glob)modelObject;
       if (account == null) {
         return "(null)";
       }

@@ -1,16 +1,11 @@
 package org.designup.picsou.gui.actions;
 
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.model.utils.LocalGlobRepository;
-import org.crossbowlabs.globs.model.utils.LocalGlobRepositoryBuilder;
-import static org.crossbowlabs.globs.model.FieldValue.value;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.splits.utils.GuiUtils;
-import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.ImportPanel;
-import org.designup.picsou.model.*;
+import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -1,7 +1,7 @@
 package org.designup.picsou.importer.analyzer;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 
 import java.util.List;
 

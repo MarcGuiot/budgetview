@@ -1,8 +1,8 @@
 package org.designup.picsou.functests.utils;
 
-import org.crossbowlabs.globs.utils.Strings;
-import org.crossbowlabs.globs.utils.TestUtils;
 import org.designup.picsou.functests.checkers.OperationChecker;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.TestUtils;
 
 import java.io.FileWriter;
 import java.io.IOException;

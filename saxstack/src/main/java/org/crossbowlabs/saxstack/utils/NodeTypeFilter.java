@@ -1,7 +1,7 @@
-package org.crossbowlabs.saxstack.utils;
+package org.globsframework.saxstack.utils;
 
-import org.crossbowlabs.saxstack.writer.Filter;
-import org.crossbowlabs.saxstack.writer.XmlTag;
+import org.globsframework.saxstack.writer.Filter;
+import org.globsframework.saxstack.writer.XmlTag;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -16,7 +16,7 @@ public class NodeTypeFilter implements Filter {
   }
 
   public XmlTag enter(XmlTag parent, String tagName) throws IOException {
-    NodeType current = (NodeType) this.nodeType.peek();
+    NodeType current = (NodeType)this.nodeType.peek();
     NodeType child = current.findChild(tagName);
     if (child == null) {
       nodeType.push(NULL_NODE_TYPE);

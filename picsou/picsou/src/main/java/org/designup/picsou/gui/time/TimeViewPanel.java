@@ -1,13 +1,13 @@
 package org.designup.picsou.gui.time;
 
-import org.crossbowlabs.globs.gui.GlobSelection;
-import org.crossbowlabs.globs.gui.GlobSelectionListener;
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.gui.time.selectable.*;
 import org.designup.picsou.model.Month;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +52,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void paintComponent(Graphics g) {
-    Graphics2D d = (Graphics2D) g.create();
+    Graphics2D d = (Graphics2D)g.create();
     try {
       d.setPaint(new GradientPaint(0, 0, colors.backgroundTop, 0, getHeight(), colors.backgroundBottom));
       d.fillRect(0, 0, getWidth(), getHeight());

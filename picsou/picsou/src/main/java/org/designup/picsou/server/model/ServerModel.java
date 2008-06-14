@@ -1,7 +1,7 @@
 package org.designup.picsou.server.model;
 
-import org.crossbowlabs.globs.metamodel.GlobModel;
-import org.crossbowlabs.globs.metamodel.utils.DefaultGlobModel;
+import org.globsframework.metamodel.GlobModel;
+import org.globsframework.metamodel.utils.DefaultGlobModel;
 
 public class ServerModel {
   private static GlobModel model = new DefaultGlobModel(

@@ -1,13 +1,13 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.format.DescriptionService;
-import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -48,9 +48,9 @@ class TransactionNoteEditor extends DefaultCellEditor {
     removeListeners();
 
     transactions = globRepository.getAll(Transaction.TYPE);
-    currentGlob = (Glob) value;
+    currentGlob = (Glob)value;
     String valueToDisplay = noteStringifier.toString(currentGlob, globRepository);
-    textField = (JTextField) super.getTableCellEditorComponent(table, valueToDisplay, isSelected, row, column);
+    textField = (JTextField)super.getTableCellEditorComponent(table, valueToDisplay, isSelected, row, column);
     textField.setFont(getSmallerFont(table.getFont()));
 
     textField.requestFocus();
@@ -101,7 +101,7 @@ class TransactionNoteEditor extends DefaultCellEditor {
 
   private void selectPopupElement(JPopupMenu popup, int index) {
     Component menuItem = popup.getComponent(index);
-    MenuSelectionManager.defaultManager().setSelectedPath(new MenuElement[]{popup, (MenuElement) menuItem});
+    MenuSelectionManager.defaultManager().setSelectedPath(new MenuElement[]{popup, (MenuElement)menuItem});
     popup.setSelected(menuItem);
   }
 
@@ -196,7 +196,7 @@ class TransactionNoteEditor extends DefaultCellEditor {
           break;
         case KeyEvent.VK_ENTER:
           if (currentIndex != -1) {
-            JMenuItem menuToValid = (JMenuItem) popup.getComponent(currentIndex);
+            JMenuItem menuToValid = (JMenuItem)popup.getComponent(currentIndex);
             menuToValid.doClick();
           }
           break;

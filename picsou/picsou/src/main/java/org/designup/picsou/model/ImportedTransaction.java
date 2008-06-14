@@ -1,11 +1,11 @@
 package org.designup.picsou.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.annotations.DefaultInteger;
-import org.crossbowlabs.globs.metamodel.annotations.Key;
-import org.crossbowlabs.globs.metamodel.annotations.Target;
-import org.crossbowlabs.globs.metamodel.fields.*;
-import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultInteger;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.*;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class ImportedTransaction {
   public static GlobType TYPE;

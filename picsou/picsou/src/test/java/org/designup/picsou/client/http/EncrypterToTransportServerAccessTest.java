@@ -1,13 +1,5 @@
 package org.designup.picsou.client.http;
 
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.model.delta.DefaultChangeSet;
-import org.crossbowlabs.globs.model.impl.DefaultGlobRepository;
-import org.crossbowlabs.globs.model.utils.DefaultChangeSetListener;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.utils.Functor;
-import org.crossbowlabs.globs.utils.TestUtils;
-import org.crossbowlabs.globs.utils.exceptions.InvalidState;
 import org.designup.picsou.client.exceptions.BadPassword;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
@@ -17,6 +9,14 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.server.model.*;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.model.*;
+import org.globsframework.model.delta.DefaultChangeSet;
+import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.model.utils.DefaultChangeSetListener;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.Functor;
+import org.globsframework.utils.TestUtils;
+import org.globsframework.utils.exceptions.InvalidState;
 
 public class EncrypterToTransportServerAccessTest extends ServerFunctionalTestCase {
 

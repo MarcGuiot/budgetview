@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.utils;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
 import org.designup.picsou.model.Category;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 
 public class CategoryStringifier extends BundleBasedStringifier {
 

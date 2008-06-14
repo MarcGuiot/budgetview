@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components;
 
-import org.crossbowlabs.splits.utils.Java2DUtils;
+import org.globsframework.gui.splits.utils.Java2DUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +52,7 @@ public class JRoundedPanel extends JPanel {
   }
 
   protected void paintComponent(Graphics graphics) {
-    Graphics2D g2d = (Graphics2D) graphics;
+    Graphics2D g2d = (Graphics2D)graphics;
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     Insets vInsets = getInsets();
@@ -92,7 +92,7 @@ public class JRoundedPanel extends JPanel {
 
   private void setInsideComponentsLocation() {
     for (Iterator iterator = components.iterator(); iterator.hasNext();) {
-      Component component = (Component) iterator.next();
+      Component component = (Component)iterator.next();
       component.setLocation(new Point(component.getX(), bottomTitle + 5));
     }
   }

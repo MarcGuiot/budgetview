@@ -1,11 +1,11 @@
 package org.designup.picsou.triggers;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.model.*;
-import static org.crossbowlabs.globs.model.FieldValue.value;
-import org.crossbowlabs.globs.utils.Utils;
 import org.designup.picsou.model.Account;
 import static org.designup.picsou.model.Account.*;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
+import org.globsframework.utils.Utils;
 
 import java.util.Date;
 import java.util.List;

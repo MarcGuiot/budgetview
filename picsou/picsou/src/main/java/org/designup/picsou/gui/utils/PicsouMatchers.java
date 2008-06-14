@@ -1,14 +1,14 @@
 package org.designup.picsou.gui.utils;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.model.utils.GlobMatcher;
-import org.crossbowlabs.globs.model.utils.GlobMatchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionToCategory;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.Collection;
 import java.util.HashSet;

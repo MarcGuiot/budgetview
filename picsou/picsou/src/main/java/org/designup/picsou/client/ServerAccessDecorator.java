@@ -1,11 +1,11 @@
 package org.designup.picsou.client;
 
-import org.crossbowlabs.globs.model.ChangeSet;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.delta.MutableChangeSet;
 import org.designup.picsou.client.exceptions.IdentificationFailed;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.delta.MutableChangeSet;
 
 public class ServerAccessDecorator implements ServerAccess {
   private ServerAccess serverAccess;
@@ -30,7 +30,7 @@ public class ServerAccessDecorator implements ServerAccess {
     serverAccess.takeSnapshot();
   }
 
-    public GlobList getUserData(MutableChangeSet changeSet) {
+  public GlobList getUserData(MutableChangeSet changeSet) {
     return serverAccess.getUserData(changeSet);
   }
 

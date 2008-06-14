@@ -1,11 +1,11 @@
 package org.designup.picsou.server.persistence.prevayler.categories;
 
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 import org.prevayler.Transaction;
 
 import java.util.Date;
@@ -25,7 +25,7 @@ public class RegisterAssociatedCategory implements Transaction, CustomSerializab
   }
 
   public void executeOn(Object prevalentSystem, Date executionTime) {
-    ((PCategoriesData) prevalentSystem).addCategory(info, categoryId);
+    ((PCategoriesData)prevalentSystem).addCategory(info, categoryId);
   }
 
   public String getSerializationName() {

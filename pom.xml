@@ -7,7 +7,6 @@
 
   <modules>
     <module>globs</module>
-    <module>splits</module>
     <module>shrinker</module>
     <module>picsou</module>
     <module>uispec4j</module>

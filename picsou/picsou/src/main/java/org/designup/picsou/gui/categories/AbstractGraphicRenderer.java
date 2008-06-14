@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.categories;
 
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.color.ColorChangeListener;
-import org.crossbowlabs.splits.color.ColorService;
-import org.crossbowlabs.splits.color.ColorSource;
 import org.designup.picsou.gui.utils.PicsouColors;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;

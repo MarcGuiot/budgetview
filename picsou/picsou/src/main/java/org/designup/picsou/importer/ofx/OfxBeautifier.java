@@ -1,6 +1,6 @@
 package org.designup.picsou.importer.ofx;
 
-import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.io.*;
 

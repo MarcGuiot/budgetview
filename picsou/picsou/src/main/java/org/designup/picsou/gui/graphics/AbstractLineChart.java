@@ -1,14 +1,14 @@
 package org.designup.picsou.gui.graphics;
 
-import org.crossbowlabs.globs.gui.GlobSelectionListener;
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.model.ChangeSetListener;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.color.ColorUpdater;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.splits.color.ColorUpdater;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -67,7 +67,7 @@ public abstract class AbstractLineChart extends View implements GlobSelectionLis
       false  // urls
     );
 
-    plot = (XYPlot) chart.getPlot();
+    plot = (XYPlot)chart.getPlot();
     plot.setBackgroundPaint(Color.white);
     plot.setRangeGridlinePaint(Color.lightGray);
 

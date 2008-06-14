@@ -1,18 +1,18 @@
 package org.designup.picsou.server.persistence.prevayler.accounts;
 
-import org.crossbowlabs.globs.metamodel.Field;
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.model.delta.DeltaGlob;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.model.*;
 import org.designup.picsou.server.model.*;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
+import org.globsframework.metamodel.Field;
+import org.globsframework.model.*;
+import org.globsframework.model.delta.DeltaGlob;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.List;
 

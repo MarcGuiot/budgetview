@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.utils;
 
-import org.crossbowlabs.globs.gui.views.LabelCustomizer;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.color.ColorService;
-import org.crossbowlabs.splits.color.ForegroundColorUpdater;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.ForegroundColorUpdater;
+import org.globsframework.gui.views.LabelCustomizer;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 

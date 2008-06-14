@@ -1,13 +1,13 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.gui.views.LabelCustomizer;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.InvalidParameter;
-import org.crossbowlabs.splits.IconLocator;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.views.LabelCustomizer;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.awt.*;

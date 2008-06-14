@@ -2,12 +2,12 @@ package com.gnosia.morphograph.gui;
 
 import com.gnosia.morphograph.model.Exercise;
 import com.gnosia.morphograph.utils.TemplateProcessor;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.IconLocator;
-import org.crossbowlabs.splits.SplitsBuilder;
-import org.crossbowlabs.splits.color.ColorService;
+import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.io.StringReader;

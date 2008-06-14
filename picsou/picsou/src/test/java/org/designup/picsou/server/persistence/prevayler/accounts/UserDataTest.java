@@ -1,16 +1,16 @@
 package org.designup.picsou.server.persistence.prevayler.accounts;
 
 import junit.framework.TestCase;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.GlobRepositoryBuilder;
-import org.crossbowlabs.globs.model.GlobTestUtils;
-import org.crossbowlabs.globs.model.KeyBuilder;
-import org.crossbowlabs.globs.model.delta.DefaultDeltaGlob;
-import org.crossbowlabs.globs.model.delta.DeltaGlob;
-import org.crossbowlabs.globs.model.delta.DeltaState;
-import org.crossbowlabs.globs.utils.serialization.SerializedByteArrayOutput;
 import org.designup.picsou.model.*;
 import org.designup.picsou.server.model.*;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.GlobTestUtils;
+import org.globsframework.model.KeyBuilder;
+import org.globsframework.model.delta.DefaultDeltaGlob;
+import org.globsframework.model.delta.DeltaGlob;
+import org.globsframework.model.delta.DeltaState;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 
 import java.util.Arrays;
 

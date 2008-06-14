@@ -1,18 +1,18 @@
 package org.designup.picsou.gui;
 
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.utils.LocalGlobRepository;
-import org.crossbowlabs.globs.model.utils.LocalGlobRepositoryBuilder;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.utils.GuiUtils;
-import org.crossbowlabs.splits.layout.GridBagBuilder;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,8 +52,8 @@ public class NewAccountAction extends AbstractAction {
     JLabel messageLabel = new JLabel();
     accountEditionPanel = new AccountEditionPanel(tempRepository, directory, messageLabel);
     return GridBagBuilder.init()
-      .add(accountEditionPanel.getPanel(), 0, 0, 1, 1, new Insets(10,10,10,10))
-      .add(messageLabel, 0, 1, 1, 1, new Insets(10,10,10,10))
+      .add(accountEditionPanel.getPanel(), 0, 0, 1, 1, new Insets(10, 10, 10, 10))
+      .add(messageLabel, 0, 1, 1, 1, new Insets(10, 10, 10, 10))
       .getPanel();
   }
 

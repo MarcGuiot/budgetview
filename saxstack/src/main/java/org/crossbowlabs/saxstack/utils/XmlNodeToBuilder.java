@@ -1,8 +1,8 @@
-package org.crossbowlabs.saxstack.utils;
+package org.globsframework.saxstack.utils;
 
-import org.crossbowlabs.saxstack.parser.ExceptionHolder;
-import org.crossbowlabs.saxstack.parser.XmlNode;
-import org.crossbowlabs.saxstack.writer.XmlTag;
+import org.globsframework.saxstack.parser.ExceptionHolder;
+import org.globsframework.saxstack.parser.XmlNode;
+import org.globsframework.saxstack.writer.XmlTag;
 import org.xml.sax.Attributes;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class XmlNodeToBuilder implements XmlNode {
     }
     Arrays.sort(attrs, new Comparator() {
       public int compare(Object o1, Object o2) {
-        return ((Info) o1).attrName.compareTo(((Info) o2).attrName);
+        return ((Info)o1).attrName.compareTo(((Info)o2).attrName);
       }
     });
     for (int i = 0; i < attrs.length; i++) {

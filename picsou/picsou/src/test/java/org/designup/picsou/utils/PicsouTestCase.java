@@ -1,15 +1,15 @@
 package org.designup.picsou.utils;
 
-import org.crossbowlabs.globs.metamodel.GlobModel;
-import org.crossbowlabs.globs.model.DummyChangeSetListener;
-import org.crossbowlabs.globs.model.GlobChecker;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.GlobRepositoryBuilder;
-import org.crossbowlabs.globs.utils.ServicesTestCase;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.PicsouModel;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.metamodel.GlobModel;
+import org.globsframework.model.DummyChangeSetListener;
+import org.globsframework.model.GlobChecker;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.utils.ServicesTestCase;
 
 import java.util.Locale;
 

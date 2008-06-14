@@ -1,6 +1,6 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.crossbowlabs</groupId>
+  <groupId>org.globsframework</groupId>
   <packaging>jar</packaging>
   <artifactId>globs</artifactId>
   <name>Generic Object</name>
@@ -107,7 +107,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>saxstack</artifactId>
       <version>2.0</version>
     </dependency>
@@ -135,11 +135,6 @@
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <version>1.8.0.7</version>
-    </dependency>
-    <dependency>
-      <groupId>org.crossbowlabs</groupId>
-      <artifactId>splits</artifactId>
-      <version>1.0</version>
     </dependency>
   </dependencies>
 

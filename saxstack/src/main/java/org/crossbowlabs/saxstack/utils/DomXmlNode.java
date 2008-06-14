@@ -1,10 +1,10 @@
-package org.crossbowlabs.saxstack.utils;
+package org.globsframework.saxstack.utils;
 
-import org.crossbowlabs.saxstack.parser.ExceptionHolder;
-import org.crossbowlabs.saxstack.parser.XmlNode;
-import org.crossbowlabs.saxstack.writer.XmlNodeBuilder;
-import org.crossbowlabs.saxstack.writer.XmlRootBuilder;
-import org.crossbowlabs.saxstack.writer.XmlTag;
+import org.globsframework.saxstack.parser.ExceptionHolder;
+import org.globsframework.saxstack.parser.XmlNode;
+import org.globsframework.saxstack.writer.XmlNodeBuilder;
+import org.globsframework.saxstack.writer.XmlRootBuilder;
+import org.globsframework.saxstack.writer.XmlTag;
 import org.xml.sax.Attributes;
 
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class DomXmlNode implements XmlNode {
       return false;
     }
     for (Iterator iterator = attrs.entrySet().iterator(); iterator.hasNext();) {
-      Map.Entry o = (Map.Entry) iterator.next();
+      Map.Entry o = (Map.Entry)iterator.next();
       if (!actualRoot.attrs.containsKey(o.getKey())) {
         return false;
       }
@@ -65,9 +65,9 @@ public class DomXmlNode implements XmlNode {
 
     List tempList = new ArrayList(actualRoot.children);
     for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-      DomXmlNode expected = (DomXmlNode) iterator.next();
+      DomXmlNode expected = (DomXmlNode)iterator.next();
       for (Iterator actualIterator = tempList.iterator(); actualIterator.hasNext();) {
-        DomXmlNode actual = (DomXmlNode) actualIterator.next();
+        DomXmlNode actual = (DomXmlNode)actualIterator.next();
         if (expected.contains(actual)) {
           actualIterator.remove();
           break;
@@ -106,7 +106,7 @@ public class DomXmlNode implements XmlNode {
     }
 
     public String getNextTagName() {
-      child = (DomXmlNode) children.next();
+      child = (DomXmlNode)children.next();
       return child.xmlTagName;
     }
 
@@ -120,8 +120,8 @@ public class DomXmlNode implements XmlNode {
     static private void dumpAttributes(XmlTag tag, Map attrs) throws IOException {
       Collection collection = attrs.entrySet();
       for (Iterator iterator = collection.iterator(); iterator.hasNext();) {
-        Map.Entry entry = (Map.Entry) iterator.next();
-        tag.addAttribute((String) entry.getKey(), (String) entry.getValue());
+        Map.Entry entry = (Map.Entry)iterator.next();
+        tag.addAttribute((String)entry.getKey(), (String)entry.getValue());
       }
     }
   }
@@ -129,7 +129,7 @@ public class DomXmlNode implements XmlNode {
   public void populateNodeType(NodeType parent) {
     NodeType child = parent.getOrCreate(xmlTagName, this.attrs.keySet());
     for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-      DomXmlNode node = (DomXmlNode) iterator.next();
+      DomXmlNode node = (DomXmlNode)iterator.next();
       node.populateNodeType(child);
     }
   }

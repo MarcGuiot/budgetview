@@ -1,12 +1,12 @@
 package org.designup.picsou.server.persistence.prevayler.categories;
 
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
 import org.designup.picsou.server.persistence.prevayler.accounts.CategoryData;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.List;
 

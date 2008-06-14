@@ -1,6 +1,6 @@
 package org.designup.picsou.server;
 
-import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import javax.naming.*;
 import javax.naming.spi.InitialContextFactory;
@@ -113,7 +113,7 @@ public class DummyInitialContextFactory implements InitialContextFactory {
     public Context createSubcontext(Name name) throws NamingException {
       DummyContext context = getOrCreateContext(name);
       context.value = context;
-      return (Context) value;
+      return (Context)value;
     }
 
     public Context createSubcontext(String name) throws NamingException {

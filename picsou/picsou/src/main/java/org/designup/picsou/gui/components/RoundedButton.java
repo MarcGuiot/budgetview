@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.components;
 
-import org.crossbowlabs.splits.color.ColorChangeListener;
-import org.crossbowlabs.splits.color.ColorService;
-import org.crossbowlabs.splits.color.ColorSource;
 import org.designup.picsou.gui.utils.PicsouColors;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.ColorSource;
 
 import javax.swing.*;
 import java.awt.*;
@@ -121,7 +121,7 @@ public abstract class RoundedButton extends JButton implements ColorChangeListen
   }
 
   protected void paintComponent(Graphics graphics) {
-    Graphics2D g2 = (Graphics2D) graphics.create();
+    Graphics2D g2 = (Graphics2D)graphics.create();
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     if (getModel().isPressed()) {

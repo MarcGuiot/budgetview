@@ -1,19 +1,19 @@
 package org.designup.picsou.gui.triggers;
 
 import junit.framework.Assert;
-import org.crossbowlabs.globs.metamodel.Field;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.model.KeyBuilder;
-import org.crossbowlabs.globs.utils.TablePrinter;
-import org.crossbowlabs.globs.utils.TestUtils;
-import org.crossbowlabs.globs.utils.Utils;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
+import org.globsframework.metamodel.Field;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.model.KeyBuilder;
+import org.globsframework.utils.TablePrinter;
+import org.globsframework.utils.TestUtils;
+import org.globsframework.utils.Utils;
 
 import java.util.*;
 

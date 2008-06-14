@@ -1,25 +1,25 @@
 grant principal org.apache.wicket.security.hive.authorization.SimplePrincipal "basic"
 {
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.Index", "inherit, render";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.Index", "enable";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.RoomPage", "inherit, render";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.RoomPage", "enable";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.RoomsPage", "inherit, render";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.RoomsPage", "enable";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.Index", "inherit, render";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.Index", "enable";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.RoomPage", "inherit, render";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.RoomPage", "enable";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.RoomsPage", "inherit, render";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.RoomsPage", "enable";
 };
 
 grant principal org.apache.wicket.security.hive.authorization.SimplePrincipal "admin"
 {
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.Index", "inherit, render";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.Index", "enable";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.RoomPage", "inherit, render";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.RoomPage", "enable";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.RoomsPage", "inherit, render";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.RoomsPage", "enable";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.RoomsAdminPage", "inherit, render";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.RoomsAdminPage", "enable";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.BarcoAdminPage", "inherit, render";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.BarcoAdminPage", "enable";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.UserAdminPage", "inherit, render";
-    permission ${ComponentPermission} "org.crossbowlabs.rooms.web.pages.UserAdminPage", "enable";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.Index", "inherit, render";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.Index", "enable";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.RoomPage", "inherit, render";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.RoomPage", "enable";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.RoomsPage", "inherit, render";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.RoomsPage", "enable";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.RoomsAdminPage", "inherit, render";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.RoomsAdminPage", "enable";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.BarcoAdminPage", "inherit, render";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.BarcoAdminPage", "enable";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.UserAdminPage", "inherit, render";
+    permission ${ComponentPermission} "org.globsframework.rooms.web.pages.UserAdminPage", "enable";
 };

@@ -1,10 +1,10 @@
 package org.designup.picsou;
 
-import org.crossbowlabs.globs.utils.Files;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.importer.http.*;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.server.session.SessionService;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.directory.Directory;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.security.SslSocketConnector;

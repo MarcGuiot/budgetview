@@ -1,11 +1,11 @@
 package org.designup.picsou.model;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.utils.Utils;
-import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.Utils;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Arrays;
 import java.util.List;

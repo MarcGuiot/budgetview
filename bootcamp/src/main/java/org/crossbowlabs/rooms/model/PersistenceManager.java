@@ -1,4 +1,4 @@
-package org.crossbowlabs.rooms.model;
+package org.globsframework.rooms.model;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.AnnotationConfiguration;

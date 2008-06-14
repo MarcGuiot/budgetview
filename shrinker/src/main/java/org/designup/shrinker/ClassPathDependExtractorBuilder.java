@@ -1,6 +1,6 @@
 package org.designup.shrinker;
 
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
+import org.globsframework.utils.exceptions.InvalidData;
 
 import java.io.BufferedReader;
 import java.io.IOException;

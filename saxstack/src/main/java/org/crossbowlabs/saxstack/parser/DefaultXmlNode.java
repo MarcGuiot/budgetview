@@ -1,4 +1,4 @@
-package org.crossbowlabs.saxstack.parser;
+package org.globsframework.saxstack.parser;
 
 import org.xml.sax.Attributes;
 

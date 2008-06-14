@@ -1,11 +1,11 @@
 package org.designup.picsou.server.persistence.prevayler.users;
 
 import junit.framework.TestCase;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.utils.serialization.SerializedByteArrayOutput;
 import org.designup.picsou.server.model.HiddenUser;
 import org.designup.picsou.server.model.User;
+import org.globsframework.model.Glob;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 
 import java.util.Arrays;
 

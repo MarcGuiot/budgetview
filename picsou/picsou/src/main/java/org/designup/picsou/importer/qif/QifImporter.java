@@ -1,9 +1,9 @@
 package org.designup.picsou.importer.qif;
 
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.ReadOnlyGlobRepository;
 import org.designup.picsou.importer.AccountFileImporter;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.ReadOnlyGlobRepository;
 
 import java.io.Reader;
 

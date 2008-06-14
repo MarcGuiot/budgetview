@@ -1,6 +1,6 @@
-package org.crossbowlabs.saxstack.writer;
+package org.globsframework.saxstack.writer;
 
-import org.crossbowlabs.saxstack.utils.XmlUtils;
+import org.globsframework.saxstack.utils.XmlUtils;
 
 import java.io.IOException;
 import java.io.Writer;

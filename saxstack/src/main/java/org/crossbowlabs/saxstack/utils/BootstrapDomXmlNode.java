@@ -1,7 +1,7 @@
-package org.crossbowlabs.saxstack.utils;
+package org.globsframework.saxstack.utils;
 
-import org.crossbowlabs.saxstack.parser.ExceptionHolder;
-import org.crossbowlabs.saxstack.parser.XmlNode;
+import org.globsframework.saxstack.parser.ExceptionHolder;
+import org.globsframework.saxstack.parser.XmlNode;
 import org.xml.sax.Attributes;
 
 public class BootstrapDomXmlNode implements XmlNode {

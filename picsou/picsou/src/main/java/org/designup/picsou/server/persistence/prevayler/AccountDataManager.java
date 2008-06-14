@@ -1,8 +1,8 @@
 package org.designup.picsou.server.persistence.prevayler;
 
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.delta.DeltaGlob;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.delta.DeltaGlob;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.List;
 

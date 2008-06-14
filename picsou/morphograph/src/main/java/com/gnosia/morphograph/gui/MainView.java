@@ -2,19 +2,19 @@ package com.gnosia.morphograph.gui;
 
 import com.gnosia.morphograph.model.Series;
 import com.gnosia.morphograph.model.Topic;
-import org.crossbowlabs.globs.gui.GlobSelection;
-import org.crossbowlabs.globs.gui.GlobSelectionListener;
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.gui.views.GlobComboView;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.utils.GlobFieldComparator;
-import org.crossbowlabs.globs.model.utils.GlobMatcher;
-import org.crossbowlabs.globs.model.utils.GlobMatchers;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.IconLocator;
-import org.crossbowlabs.splits.SplitsBuilder;
-import org.crossbowlabs.splits.color.ColorService;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.views.GlobComboView;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobFieldComparator;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 

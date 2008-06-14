@@ -1,7 +1,7 @@
 package org.designup.picsou.server.persistence.prevayler;
 
-import org.crossbowlabs.globs.model.Glob;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.model.Glob;
 
 public interface RootDataManager {
 

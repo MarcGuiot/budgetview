@@ -1,24 +1,22 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.crossbowlabs.splits.utils.GuiUtils;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.designup.picsou.gui.transactions.SplitTransactionDialog;
-import org.designup.picsou.gui.transactions.TransactionView;
-import org.designup.picsou.gui.utils.PicsouDescriptionService;
-import org.designup.picsou.gui.utils.PicsouFrame;
-import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.functests.checkers.converters.AmountCellConverter;
 import org.designup.picsou.functests.checkers.converters.CategoryCellConverter;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
+import org.designup.picsou.gui.transactions.SplitTransactionDialog;
+import org.designup.picsou.gui.transactions.TransactionView;
+import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.TransactionType;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
-import org.uispec4j.finder.ComponentMatchers;
 import static org.uispec4j.assertion.UISpecAssert.*;
+import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
 import java.awt.*;

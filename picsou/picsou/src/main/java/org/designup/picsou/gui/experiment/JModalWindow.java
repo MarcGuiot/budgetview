@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.experiment;
 
-import org.crossbowlabs.splits.utils.GuiUtils;
-import org.designup.picsou.gui.utils.PicsouDialogPainter;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouDialogPainter;
+import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 import java.awt.*;

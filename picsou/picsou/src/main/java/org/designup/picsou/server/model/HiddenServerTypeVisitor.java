@@ -1,7 +1,7 @@
 package org.designup.picsou.server.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 public interface HiddenServerTypeVisitor {
 

@@ -1,11 +1,11 @@
 package org.designup.picsou.server.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.annotations.Key;
-import org.crossbowlabs.globs.metamodel.fields.BlobField;
-import org.crossbowlabs.globs.metamodel.fields.LongField;
-import org.crossbowlabs.globs.metamodel.fields.TimeStampField;
-import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.fields.BlobField;
+import org.globsframework.metamodel.fields.LongField;
+import org.globsframework.metamodel.fields.TimeStampField;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class Session {
   public static GlobType TYPE;

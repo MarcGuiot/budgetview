@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.accounts;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.utils.Utils;
 import static org.designup.picsou.model.Account.*;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.Utils;
 
 import java.util.Comparator;
 

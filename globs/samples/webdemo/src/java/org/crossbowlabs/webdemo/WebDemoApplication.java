@@ -1,16 +1,16 @@
-package org.crossbowlabs.webdemo;
+package org.globsframework.webdemo;
 
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.format.DescriptionService;
-import org.crossbowlabs.globs.model.format.Formats;
-import org.crossbowlabs.globs.model.format.utils.DefaultDescriptionService;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.sqlstreams.SqlConnection;
-import org.crossbowlabs.globs.sqlstreams.SqlService;
-import org.crossbowlabs.globs.sqlstreams.drivers.jdbc.JdbcSqlService;
-import org.crossbowlabs.globs.wicket.GlobApplication;
-import org.crossbowlabs.webdemo.model.Person;
-import org.crossbowlabs.webdemo.pages.HomePage;
+import org.globsframework.globs.model.GlobList;
+import org.globsframework.globs.model.format.DescriptionService;
+import org.globsframework.globs.model.format.Formats;
+import org.globsframework.globs.model.format.utils.DefaultDescriptionService;
+import org.globsframework.globs.model.utils.GlobBuilder;
+import org.globsframework.globs.sqlstreams.SqlConnection;
+import org.globsframework.globs.sqlstreams.SqlService;
+import org.globsframework.globs.sqlstreams.drivers.jdbc.JdbcSqlService;
+import org.globsframework.globs.wicket.GlobApplication;
+import org.globsframework.webdemo.model.Person;
+import org.globsframework.webdemo.pages.HomePage;
 
 import java.util.Locale;
 

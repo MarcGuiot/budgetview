@@ -1,7 +1,7 @@
 package org.designup.picsou.server.session;
 
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
 import org.designup.picsou.client.exceptions.InvalidActionForState;
+import org.globsframework.utils.serialization.SerializedInput;
 
 public interface SessionState {
 

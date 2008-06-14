@@ -1,14 +1,14 @@
 package org.designup.picsou.server.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.annotations.Key;
-import org.crossbowlabs.globs.metamodel.fields.IntegerField;
-import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.Glob;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public class HiddenTransactionToCategory {
   public static GlobType TYPE;
@@ -40,14 +40,14 @@ public class HiddenTransactionToCategory {
   }
 
   public static void write(SerializedOutput output, Glob glob) {
-    write(output, glob, (byte) -1);
+    write(output, glob, (byte)-1);
   }
 
   static void write(SerializedOutput output, Glob glob, byte version) {
     switch (version) {
       case V1:
         throw new InvalidData("V1 not supported");
-      case-1:
+      case -1:
       case V2:
         writeV2(output, glob);
         return;

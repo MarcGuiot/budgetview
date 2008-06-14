@@ -1,6 +1,6 @@
-package org.crossbowlabs.rooms;
+package org.globsframework.rooms;
 
-import org.crossbowlabs.rooms.web.RoomsApplication;
+import org.globsframework.rooms.web.RoomsApplication;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.apache.wicket.protocol.http.WicketServlet;

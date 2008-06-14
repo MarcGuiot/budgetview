@@ -1,4 +1,4 @@
-package org.crossbowlabs.saxstack.comparator;
+package org.globsframework.saxstack.comparator;
 
 import junit.framework.TestCase;
 import org.apache.xerces.parsers.SAXParser;

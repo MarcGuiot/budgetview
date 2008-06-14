@@ -1,9 +1,9 @@
 package org.designup.picsou.importer.analyzer;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 
 import java.text.SimpleDateFormat;
 

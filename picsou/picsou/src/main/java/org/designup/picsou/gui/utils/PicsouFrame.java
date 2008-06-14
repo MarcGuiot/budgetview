@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.utils;
 
-import org.crossbowlabs.globs.model.GlobRepository;
+import org.globsframework.model.GlobRepository;
 
 import javax.swing.*;
 

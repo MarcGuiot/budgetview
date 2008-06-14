@@ -1,7 +1,7 @@
 package org.designup.picsou.server.session;
 
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public interface ConnectedState extends SessionState {
   void getUserData(SerializedInput input, SerializedOutput output);

@@ -1,13 +1,13 @@
 package org.designup.picsou.importer.analyzer;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.MultiMap;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import static org.designup.picsou.model.TransactionType.PRELEVEMENT;
 import static org.designup.picsou.model.TransactionType.VIREMENT;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.MultiMap;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

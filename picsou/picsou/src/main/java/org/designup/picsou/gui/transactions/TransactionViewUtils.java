@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.gui.views.GlobTableView;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.PicsouTableHeaderCustomizer;
 import org.designup.picsou.gui.utils.PicsouTableHeaderPainter;
+import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 

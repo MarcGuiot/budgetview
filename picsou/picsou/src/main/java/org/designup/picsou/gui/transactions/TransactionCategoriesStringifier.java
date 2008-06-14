@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.model.format.utils.AbstractGlobStringifier;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.format.utils.AbstractGlobStringifier;
 
 public class TransactionCategoriesStringifier extends AbstractGlobStringifier {
   private final GlobStringifier categoryStringifier;

@@ -1,13 +1,16 @@
 package org.designup.picsou.functests.utils;
 
-import org.crossbowlabs.globs.model.ChangeSet;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.delta.MutableChangeSet;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.model.MasterCategory;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.delta.MutableChangeSet;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class DummyServerAccess implements ServerAccess {
 

@@ -1,12 +1,12 @@
 package org.designup.picsou.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.annotations.Key;
-import org.crossbowlabs.globs.metamodel.annotations.Target;
-import org.crossbowlabs.globs.metamodel.fields.*;
-import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
-import static org.crossbowlabs.globs.model.FieldValue.value;
-import org.crossbowlabs.globs.model.GlobRepository;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.*;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
+import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.GlobRepository;
 
 public class Account {
   public static final String SUMMARY_ACCOUNT_NUMBER = null;

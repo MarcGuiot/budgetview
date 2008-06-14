@@ -1,6 +1,6 @@
 package org.designup.picsou.server.persistence.prevayler.accounts;
 
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
+import org.globsframework.utils.serialization.SerializedOutput;
 import org.prevayler.Query;
 
 import java.util.Date;
@@ -13,7 +13,7 @@ class GetSerializedUserDataTransaction implements Query {
   }
 
   public Object query(Object prevalentSystem, Date executionTime) throws Exception {
-    ((UserData) prevalentSystem).getUserData(output);
+    ((UserData)prevalentSystem).getUserData(output);
     return output;
   }
 }

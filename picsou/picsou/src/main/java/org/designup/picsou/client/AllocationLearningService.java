@@ -1,12 +1,12 @@
 package org.designup.picsou.client;
 
-import static org.crossbowlabs.globs.model.FieldValue.value;
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.model.utils.GlobFunctor;
-import org.crossbowlabs.globs.utils.MultiMap;
-import org.crossbowlabs.globs.utils.Strings;
-import org.crossbowlabs.globs.utils.Utils;
 import org.designup.picsou.model.*;
+import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

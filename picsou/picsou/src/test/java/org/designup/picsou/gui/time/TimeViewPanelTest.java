@@ -1,19 +1,19 @@
 package org.designup.picsou.gui.time;
 
 import junit.framework.TestCase;
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.GlobRepositoryBuilder;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.utils.directory.DefaultDirectory;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.gui.time.selectable.MouseState;
 import org.designup.picsou.gui.time.selectable.ReleasedMouseState;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.SelectableContainer;
 import org.designup.picsou.model.Month;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.directory.DefaultDirectory;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;

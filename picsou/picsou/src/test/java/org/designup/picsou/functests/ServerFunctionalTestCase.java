@@ -1,11 +1,11 @@
 package org.designup.picsou.functests;
 
 import junit.framework.TestCase;
-import org.crossbowlabs.globs.utils.Files;
-import org.crossbowlabs.globs.utils.TestUtils;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.functests.utils.FunctionalTestCase;
 import org.designup.picsou.server.ServerDirectory;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.TestUtils;
+import org.globsframework.utils.directory.Directory;
 
 import java.io.File;
 

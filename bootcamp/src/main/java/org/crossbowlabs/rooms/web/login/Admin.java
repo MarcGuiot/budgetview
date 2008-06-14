@@ -1,4 +1,4 @@
-package org.crossbowlabs.rooms.web.login;
+package org.globsframework.rooms.web.login;
 
 import org.apache.wicket.security.actions.WaspAction;
 

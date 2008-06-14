@@ -1,6 +1,6 @@
 package org.designup.picsou.server.session;
 
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedInput;
 
 public interface CreatingUserState extends SessionState {
 

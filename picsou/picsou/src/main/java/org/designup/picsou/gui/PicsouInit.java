@@ -1,18 +1,5 @@
 package org.designup.picsou.gui;
 
-import org.crossbowlabs.globs.metamodel.GlobModel;
-import org.crossbowlabs.globs.model.*;
-import static org.crossbowlabs.globs.model.FieldValue.value;
-import org.crossbowlabs.globs.model.delta.DefaultChangeSet;
-import org.crossbowlabs.globs.model.delta.MutableChangeSet;
-import org.crossbowlabs.globs.model.utils.CachedGlobIdGenerator;
-import org.crossbowlabs.globs.model.utils.DefaultChangeSetListener;
-import static org.crossbowlabs.globs.model.utils.GlobMatchers.isNotNull;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.globs.utils.exceptions.ResourceAccessFailed;
-import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
-import org.crossbowlabs.globs.xml.XmlGlobParser;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.ServerAccessGlobIdGenerator;
@@ -23,6 +10,19 @@ import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.metamodel.GlobModel;
+import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.delta.DefaultChangeSet;
+import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.model.utils.CachedGlobIdGenerator;
+import org.globsframework.model.utils.DefaultChangeSetListener;
+import static org.globsframework.model.utils.GlobMatchers.isNotNull;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.xml.XmlGlobParser;
 
 import java.io.*;
 

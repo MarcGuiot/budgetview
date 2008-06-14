@@ -1,13 +1,13 @@
 package org.designup.picsou.importer.qif;
 
-import org.crossbowlabs.globs.model.FieldValuesBuilder;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.utils.GlobIdGenerator;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.ImportedTransaction;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.model.FieldValuesBuilder;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobIdGenerator;
 
 import java.io.BufferedReader;
 import java.io.IOException;

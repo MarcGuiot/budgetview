@@ -1,16 +1,16 @@
 package org.designup.picsou.gui.utils;
 
-import org.crossbowlabs.globs.metamodel.Field;
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.Link;
-import org.crossbowlabs.globs.model.format.Formats;
-import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.model.format.utils.DefaultDescriptionService;
-import org.crossbowlabs.globs.utils.Strings;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.Link;
+import org.globsframework.model.format.Formats;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.format.utils.DefaultDescriptionService;
+import org.globsframework.utils.Strings;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

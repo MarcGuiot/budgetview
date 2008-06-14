@@ -1,8 +1,8 @@
 package org.designup.picsou.importer.utils;
 
 import junit.framework.TestCase;
-import org.crossbowlabs.globs.utils.Dates;
-import org.crossbowlabs.globs.utils.TestUtils;
+import org.globsframework.utils.Dates;
+import org.globsframework.utils.TestUtils;
 
 import java.util.Arrays;
 import java.util.Collections;

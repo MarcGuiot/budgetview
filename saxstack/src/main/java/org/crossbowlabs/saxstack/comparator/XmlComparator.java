@@ -1,12 +1,12 @@
-package org.crossbowlabs.saxstack.comparator;
+package org.globsframework.saxstack.comparator;
 
-import org.crossbowlabs.saxstack.parser.SaxStackParser;
-import org.crossbowlabs.saxstack.parser.XmlNode;
-import org.crossbowlabs.saxstack.utils.BootstrapDomXmlNode;
-import org.crossbowlabs.saxstack.utils.NodeType;
-import org.crossbowlabs.saxstack.utils.NodeTypeFilter;
-import org.crossbowlabs.saxstack.utils.XmlUtils;
-import org.crossbowlabs.saxstack.writer.SaxStackWriter;
+import org.globsframework.saxstack.parser.SaxStackParser;
+import org.globsframework.saxstack.parser.XmlNode;
+import org.globsframework.saxstack.utils.BootstrapDomXmlNode;
+import org.globsframework.saxstack.utils.NodeType;
+import org.globsframework.saxstack.utils.NodeTypeFilter;
+import org.globsframework.saxstack.utils.XmlUtils;
+import org.globsframework.saxstack.writer.SaxStackWriter;
 import org.xml.sax.Attributes;
 import org.xml.sax.XMLReader;
 
@@ -169,7 +169,7 @@ public class XmlComparator {
       if (!(o instanceof XmlComparableNode)) {
         return false;
       }
-      final XmlComparableNode comparableXml = (XmlComparableNode) o;
+      final XmlComparableNode comparableXml = (XmlComparableNode)o;
 
       if (attributes != null ? !attributes.equals(comparableXml.attributes) : comparableXml.attributes != null) {
         return false;
@@ -207,7 +207,7 @@ public class XmlComparator {
       if (childrenOccurences.containsKey(child)) {
         Object occurence = childrenOccurences.get(child);
         if (occurence != null) {
-          val = ((Integer) occurence).intValue() + 1;
+          val = ((Integer)occurence).intValue() + 1;
         }
       }
       childrenOccurences.put(child, IntegerPool.get(val));
@@ -217,7 +217,7 @@ public class XmlComparator {
     private String childrenString() {
       StringBuffer sb = new StringBuffer();
       for (Iterator iterator = childrenOccurences.keySet().iterator(); iterator.hasNext();) {
-        XmlComparableNode node = (XmlComparableNode) iterator.next();
+        XmlComparableNode node = (XmlComparableNode)iterator.next();
         sb.append(node);
         sb.append("\n");
       }
@@ -227,7 +227,7 @@ public class XmlComparator {
     private String attributeString() {
       StringBuffer sb = new StringBuffer();
       for (Iterator iterator = attributes.entrySet().iterator(); iterator.hasNext();) {
-        Map.Entry e = (Map.Entry) iterator.next();
+        Map.Entry e = (Map.Entry)iterator.next();
         sb.append(" ").append(e.getKey()).append("=\"").append(e.getValue()).append('"');
       }
       return sb.toString();
@@ -250,7 +250,7 @@ public class XmlComparator {
     }
 
     protected boolean comparator(Object o) {
-      final XmlComparableNode comparableXml = (XmlComparableNode) o;
+      final XmlComparableNode comparableXml = (XmlComparableNode)o;
       return childrenOccurences != null ?
              childrenOccurences.equals(comparableXml.childrenOccurences)
              : comparableXml.childrenOccurences == null;
@@ -273,7 +273,7 @@ public class XmlComparator {
     }
 
     protected boolean comparator(Object o) {
-      final XmlComparableNode comparableXml = (XmlComparableNode) o;
+      final XmlComparableNode comparableXml = (XmlComparableNode)o;
       return children != null ? children.equals(comparableXml.children) : (comparableXml.children == null);
     }
   }

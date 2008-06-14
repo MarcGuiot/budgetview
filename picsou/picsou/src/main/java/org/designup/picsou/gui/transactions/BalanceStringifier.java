@@ -1,19 +1,19 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.model.format.GlobListStringifier;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.format.DescriptionService;
-import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.color.ColorChangeListener;
-import org.crossbowlabs.splits.color.ColorService;
-import org.crossbowlabs.splits.color.ColorSource;
-import org.crossbowlabs.splits.color.Colors;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 

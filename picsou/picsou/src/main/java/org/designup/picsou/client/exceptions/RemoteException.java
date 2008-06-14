@@ -1,6 +1,6 @@
 package org.designup.picsou.client.exceptions;
 
-import org.crossbowlabs.globs.utils.exceptions.GlobsException;
+import org.globsframework.utils.exceptions.GlobsException;
 
 import java.util.HashSet;
 import java.util.Set;

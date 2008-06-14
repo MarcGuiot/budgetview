@@ -1,4 +1,4 @@
-package org.crossbowlabs.rooms.web.pages;
+package org.globsframework.rooms.web.pages;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -13,7 +13,7 @@ import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.security.WaspSession;
 import org.apache.wicket.security.login.http.HttpAuthenticationLoginPage;
 import org.apache.wicket.security.strategies.LoginException;
-import org.crossbowlabs.rooms.web.login.RoomContext;
+import org.globsframework.rooms.web.login.RoomContext;
 
 import java.util.ResourceBundle;
 

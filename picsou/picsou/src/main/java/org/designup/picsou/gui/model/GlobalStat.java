@@ -1,12 +1,12 @@
 package org.designup.picsou.gui.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.annotations.Key;
-import org.crossbowlabs.globs.metamodel.annotations.Target;
-import org.crossbowlabs.globs.metamodel.fields.DoubleField;
-import org.crossbowlabs.globs.metamodel.fields.LinkField;
-import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
 import org.designup.picsou.model.Category;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class GlobalStat {
 

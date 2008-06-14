@@ -1,8 +1,8 @@
 package org.designup.picsou.server.persistence.prevayler.users;
 
 import junit.framework.TestCase;
-import org.crossbowlabs.globs.utils.Files;
-import org.crossbowlabs.globs.utils.TestUtils;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.TestUtils;
 
 import java.io.File;
 

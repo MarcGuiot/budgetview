@@ -1,6 +1,6 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.crossbowlabs</groupId>
+  <groupId>org.globsframework</groupId>
   <packaging>pom</packaging>
   <artifactId>picsou-root</artifactId>
   <name>root</name>

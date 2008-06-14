@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.actions;
 
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

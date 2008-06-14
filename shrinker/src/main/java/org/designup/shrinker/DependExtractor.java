@@ -1,14 +1,13 @@
 package org.designup.shrinker;
 
-import org.crossbowlabs.globs.utils.MultiMap;
-import org.crossbowlabs.globs.utils.Pair;
+import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.Pair;
 import org.objectweb.asm.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 public class DependExtractor {
@@ -167,7 +166,7 @@ public class DependExtractor {
 
     public void visitLdcInsn(final Object cst) {
       if (cst instanceof Type) {
-        add(((Type) cst).getClassName());
+        add(((Type)cst).getClassName());
       }
     }
   }

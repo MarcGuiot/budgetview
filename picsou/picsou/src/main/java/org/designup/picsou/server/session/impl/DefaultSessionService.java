@@ -1,12 +1,12 @@
 package org.designup.picsou.server.session.impl;
 
-import org.crossbowlabs.globs.metamodel.GlobModel;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.client.exceptions.UnknownId;
 import org.designup.picsou.server.session.ConnectingState;
 import org.designup.picsou.server.session.Persistence;
 import org.designup.picsou.server.session.SessionService;
 import org.designup.picsou.server.session.SessionState;
+import org.globsframework.metamodel.GlobModel;
+import org.globsframework.utils.directory.Directory;
 
 import java.security.SecureRandom;
 import java.util.Iterator;

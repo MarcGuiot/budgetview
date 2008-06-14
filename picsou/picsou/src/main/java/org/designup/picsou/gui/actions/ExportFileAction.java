@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.actions;
 
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.importer.ofx.OfxExporter;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;

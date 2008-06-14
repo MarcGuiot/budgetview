@@ -1,16 +1,16 @@
 package org.designup.picsou.server.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.annotations.Key;
-import org.crossbowlabs.globs.metamodel.fields.BlobField;
-import org.crossbowlabs.globs.metamodel.fields.BooleanField;
-import org.crossbowlabs.globs.metamodel.fields.StringField;
-import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.utils.GlobBuilder;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.fields.BlobField;
+import org.globsframework.metamodel.fields.BooleanField;
+import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.Glob;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public class User {
 
@@ -42,12 +42,12 @@ public class User {
   }
 
   public static void write(SerializedOutput output, Glob glob) {
-    write(output, glob, (byte) -1);
+    write(output, glob, (byte)-1);
   }
 
   static void write(SerializedOutput output, Glob glob, byte version) {
     switch (version) {
-      case-1:
+      case -1:
       case V1:
         writeV1(output, glob);
         return;

@@ -1,10 +1,11 @@
 package org.designup.picsou.gui.categories;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.utils.Utils;
 import org.designup.picsou.model.Category;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.utils.Utils;
 
 import java.util.Comparator;
 
@@ -67,7 +68,7 @@ public class CategoryComparator implements Comparator<Glob> {
   private Glob getMaster(Glob category) {
     Integer masterId = category.get(Category.MASTER);
     if (masterId != null) {
-      return repository.get(org.crossbowlabs.globs.model.Key.create(Category.TYPE, masterId));
+      return repository.get(Key.create(Category.TYPE, masterId));
     }
     return null;
   }

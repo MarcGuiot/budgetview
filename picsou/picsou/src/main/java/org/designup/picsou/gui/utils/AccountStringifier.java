@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.utils;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.format.utils.AbstractGlobStringifier;
-import org.crossbowlabs.globs.utils.Strings;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.utils.AbstractGlobStringifier;
+import org.globsframework.utils.Strings;
 
 public class AccountStringifier extends AbstractGlobStringifier {
   public String toString(Glob account, GlobRepository repository) {

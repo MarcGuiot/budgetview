@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.utils;
 
-import org.crossbowlabs.splits.IconLocator;
-import org.crossbowlabs.splits.utils.GuiUtils;
-import org.crossbowlabs.splits.utils.JarIconLocator;
+import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.utils.JarIconLocator;
 import sun.security.action.GetPropertyAction;
 
 import javax.swing.*;

@@ -1,8 +1,8 @@
-package org.crossbowlabs.saxstack.utils;
+package org.globsframework.saxstack.utils;
 
 import junit.framework.TestCase;
 import org.apache.xerces.parsers.SAXParser;
-import org.crossbowlabs.saxstack.writer.PathFilter;
+import org.globsframework.saxstack.writer.PathFilter;
 import org.xml.sax.helpers.AttributesImpl;
 
 public class XmlUtilsTest extends TestCase {

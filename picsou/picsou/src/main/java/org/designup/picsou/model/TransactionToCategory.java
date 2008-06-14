@@ -1,17 +1,17 @@
 package org.designup.picsou.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.annotations.Key;
-import org.crossbowlabs.globs.metamodel.annotations.Target;
-import org.crossbowlabs.globs.metamodel.fields.LinkField;
-import org.crossbowlabs.globs.metamodel.index.NotUniqueIndex;
-import org.crossbowlabs.globs.metamodel.utils.GlobTypeLoader;
-import static org.crossbowlabs.globs.model.FieldValue.value;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.KeyBuilder;
-import org.crossbowlabs.globs.model.utils.GlobMatchers;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.metamodel.index.NotUniqueIndex;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
+import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.KeyBuilder;
+import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.Set;
 

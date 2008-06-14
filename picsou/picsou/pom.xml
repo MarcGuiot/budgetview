@@ -1,6 +1,6 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.crossbowlabs</groupId>
+  <groupId>org.globsframework</groupId>
   <packaging>jar</packaging>
   <artifactId>picsou</artifactId>
   <name>picsou</name>
@@ -120,12 +120,12 @@
       <version>1.0.7</version>
     </dependency>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>saxstack</artifactId>
       <version>2.0</version>
     </dependency>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>shrinker</artifactId>
       <version>1.0</version>
       <scope>runtime</scope>
@@ -146,7 +146,7 @@
       <version>1.0.9</version>
     </dependency>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>prevayler</artifactId>
       <version>1.0</version>
     </dependency>
@@ -179,17 +179,17 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>saxstack</artifactId>
       <version>2.0</version>
     </dependency>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>globs</artifactId>
       <version>1.0</version>
     </dependency>
     <dependency>
-      <groupId>org.crossbowlabs</groupId>
+      <groupId>org.globsframework</groupId>
       <artifactId>globs</artifactId>
       <version>1.0</version>
       <type>test-jar</type>
@@ -219,11 +219,6 @@
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <version>1.8.0.7</version>
-    </dependency>
-    <dependency>
-      <groupId>org.crossbowlabs</groupId>
-      <artifactId>splits</artifactId>
-      <version>1.0</version>
     </dependency>
   </dependencies>
 

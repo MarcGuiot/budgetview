@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.utils;
 
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.color.ColorService;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 import java.io.IOException;

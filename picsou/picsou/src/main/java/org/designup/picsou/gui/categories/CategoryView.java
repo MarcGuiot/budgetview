@@ -1,23 +1,23 @@
 package org.designup.picsou.gui.categories;
 
-import org.crossbowlabs.globs.gui.GlobsPanelBuilder;
-import org.crossbowlabs.globs.gui.utils.PopupMenuFactory;
-import org.crossbowlabs.globs.gui.utils.TableUtils;
-import org.crossbowlabs.globs.gui.views.GlobTableView;
-import static org.crossbowlabs.globs.gui.views.utils.LabelCustomizers.alignRight;
-import static org.crossbowlabs.globs.gui.views.utils.LabelCustomizers.chain;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.Key;
-import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.model.format.utils.AbstractGlobStringifier;
-import org.crossbowlabs.globs.model.utils.GlobMatcher;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.utils.*;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.utils.PopupMenuFactory;
+import org.globsframework.gui.utils.TableUtils;
+import org.globsframework.gui.views.GlobTableView;
+import static org.globsframework.gui.views.utils.LabelCustomizers.alignRight;
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.format.utils.AbstractGlobStringifier;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -1,4 +1,4 @@
-package org.crossbowlabs.saxstack.parser;
+package org.globsframework.saxstack.parser;
 
 import junit.framework.TestCase;
 import org.apache.xerces.parsers.SAXParser;
@@ -22,7 +22,7 @@ public class SaxStackParserTest extends TestCase {
                            "  <ptf:item>Baby food</ptf:item>" +
                            "</root>"));
     assertEquals(1, node.children.size());
-    assertEquals("item", ((DummyXmlNode) node.children.get(0)).name);
+    assertEquals("item", ((DummyXmlNode)node.children.get(0)).name);
   }
 
   static class DummyXmlNode implements XmlNode {
@@ -45,7 +45,7 @@ public class SaxStackParserTest extends TestCase {
     }
 
     public DummyXmlNode get(int i) {
-      return (DummyXmlNode) children.get(0);
+      return (DummyXmlNode)children.get(0);
     }
   }
 

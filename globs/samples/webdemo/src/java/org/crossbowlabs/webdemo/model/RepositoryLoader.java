@@ -1,12 +1,12 @@
-package org.crossbowlabs.webdemo.model;
+package org.globsframework.webdemo.model;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.model.*;
-import org.crossbowlabs.globs.sqlstreams.InDbChangeSetVisitor;
-import org.crossbowlabs.globs.sqlstreams.SqlConnection;
-import org.crossbowlabs.globs.sqlstreams.SqlService;
-import org.crossbowlabs.globs.wicket.GlobRepositoryLoader;
-import org.crossbowlabs.webdemo.WebDemoApplication;
+import org.globsframework.globs.metamodel.GlobType;
+import org.globsframework.globs.model.*;
+import org.globsframework.globs.sqlstreams.InDbChangeSetVisitor;
+import org.globsframework.globs.sqlstreams.SqlConnection;
+import org.globsframework.globs.sqlstreams.SqlService;
+import org.globsframework.globs.wicket.GlobRepositoryLoader;
+import org.globsframework.webdemo.WebDemoApplication;
 import wicket.Application;
 
 import java.util.List;

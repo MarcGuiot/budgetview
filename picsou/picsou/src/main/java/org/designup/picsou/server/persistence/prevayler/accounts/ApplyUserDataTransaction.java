@@ -1,13 +1,13 @@
 package org.designup.picsou.server.persistence.prevayler.accounts;
 
-import org.crossbowlabs.globs.metamodel.GlobModel;
-import org.crossbowlabs.globs.model.delta.DeltaGlob;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedOutput;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
+import org.globsframework.metamodel.GlobModel;
+import org.globsframework.model.delta.DeltaGlob;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 import org.prevayler.Transaction;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class ApplyUserDataTransaction implements Transaction, CustomSerializable
   }
 
   public void executeOn(Object prevalentSystem, Date executionTime) {
-    UserData userData = ((UserData) prevalentSystem);
+    UserData userData = ((UserData)prevalentSystem);
     userData.apply(deltaGlobs);
   }
 

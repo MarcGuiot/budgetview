@@ -1,9 +1,14 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.utils.ArrayTestUtils;
-import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
+import org.designup.picsou.gui.categories.CategoryExpansionColumn;
+import org.designup.picsou.gui.categories.CategoryView;
+import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import org.designup.picsou.model.Category;
+import org.designup.picsou.model.MasterCategory;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.ArrayTestUtils;
+import org.globsframework.utils.exceptions.ItemNotFound;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
@@ -11,11 +16,6 @@ import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
-import org.designup.picsou.gui.categories.CategoryExpansionColumn;
-import org.designup.picsou.gui.categories.CategoryView;
-import org.designup.picsou.gui.utils.PicsouDescriptionService;
-import org.designup.picsou.model.Category;
-import org.designup.picsou.model.MasterCategory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +37,7 @@ public class CategoryChecker extends DataChecker {
     });
     table.setCellValueConverter(CategoryView.CATEGORY_COLUMN_INDEX, new TableCellValueConverter() {
       public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-        Panel panel = new Panel((Container) renderedComponent);
+        Panel panel = new Panel((Container)renderedComponent);
         return panel.getTextBox().getText();
       }
     });
@@ -63,7 +63,7 @@ public class CategoryChecker extends DataChecker {
     int rowCount = table.getRowCount();
     String[] actual = new String[rowCount];
     for (int row = 0; row < rowCount; row++) {
-      actual[row] = (String) table.getContentAt(row, NAME_COLUMN_INDEX);
+      actual[row] = (String)table.getContentAt(row, NAME_COLUMN_INDEX);
     }
     ArrayTestUtils.assertEquals(expected, actual);
   }
@@ -95,7 +95,7 @@ public class CategoryChecker extends DataChecker {
       indexes[i] = -1;
       MasterCategory targetCategory = categories[i];
       for (int tableRow = 0; tableRow < table.getRowCount(); tableRow++) {
-        Glob glob = (Glob) table.getContentAt(tableRow, NAME_COLUMN_INDEX, ModelTableCellValueConverter.INSTANCE);
+        Glob glob = (Glob)table.getContentAt(tableRow, NAME_COLUMN_INDEX, ModelTableCellValueConverter.INSTANCE);
         if (targetCategory.getId().equals(glob.get(Category.ID))) {
           indexes[i] = tableRow;
           continue;
@@ -122,7 +122,7 @@ public class CategoryChecker extends DataChecker {
 
   private int getIndex(String categoryName) {
     for (int tableRow = 0; tableRow < table.getRowCount(); tableRow++) {
-      String name = (String) table.getContentAt(tableRow, NAME_COLUMN_INDEX);
+      String name = (String)table.getContentAt(tableRow, NAME_COLUMN_INDEX);
       if (categoryName.equals(name)) {
         return tableRow;
       }
@@ -193,14 +193,14 @@ public class CategoryChecker extends DataChecker {
   }
 
   public void assertExpansionEnabled(MasterCategory master, boolean enabled) {
-    JButton button = (JButton) table.getSwingRendererComponentAt(getIndex(master), 0);
+    JButton button = (JButton)table.getSwingRendererComponentAt(getIndex(master), 0);
     Assert.assertEquals(enabled,
                         (button.getIcon() != null) &&
                         (button.getIcon() != CategoryExpansionColumn.DISABLED_ICON));
   }
 
   public void assertExpanded(MasterCategory master, boolean expanded) {
-    JButton button = (JButton) table.getSwingRendererComponentAt(getIndex(master), 0);
+    JButton button = (JButton)table.getSwingRendererComponentAt(getIndex(master), 0);
     if (expanded) {
       Assert.assertSame(CategoryExpansionColumn.EXPANDED_ICON, button.getIcon());
     }
@@ -215,7 +215,7 @@ public class CategoryChecker extends DataChecker {
 
   public void toggleExpanded(MasterCategory master) {
     select(master);
-    JButton button = (JButton) table.getSwingEditorComponentAt(getIndex(master), 0);
+    JButton button = (JButton)table.getSwingEditorComponentAt(getIndex(master), 0);
     new Button(button).click();
   }
 

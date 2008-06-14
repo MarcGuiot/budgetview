@@ -1,11 +1,11 @@
 package org.designup.picsou.client.local;
 
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.serialization.SerializedByteArrayOutput;
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
-import org.crossbowlabs.globs.utils.serialization.SerializedInputOutputFactory;
 import org.designup.picsou.client.ClientTransport;
 import org.designup.picsou.server.ServerRequestProcessingService;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
 public class LocalClientTransport implements ClientTransport {
   private ServerRequestProcessingService serverRequestProcessingService;

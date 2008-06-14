@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.transactions;
 
-import org.crossbowlabs.globs.gui.views.GlobTableView;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.format.DescriptionService;
-import org.crossbowlabs.globs.utils.directory.Directory;
 import org.designup.picsou.gui.utils.AbstractRolloverEditor;
+import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.utils.directory.Directory;
 
 public abstract class AbstractTransactionEditor extends AbstractRolloverEditor {
   protected TransactionRendererColors rendererColors;

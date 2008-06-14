@@ -1,12 +1,12 @@
 package org.designup.picsou.importer;
 
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.ReadOnlyGlobRepository;
-import org.crossbowlabs.globs.utils.exceptions.ItemNotFound;
-import org.crossbowlabs.globs.utils.exceptions.TruncatedFile;
 import org.designup.picsou.importer.ofx.OfxImporter;
 import org.designup.picsou.importer.qif.QifImporter;
 import org.designup.picsou.importer.utils.TypedInputStream;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.ReadOnlyGlobRepository;
+import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.exceptions.TruncatedFile;
 
 import java.io.IOException;
 

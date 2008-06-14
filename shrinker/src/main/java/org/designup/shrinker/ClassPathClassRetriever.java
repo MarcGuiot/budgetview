@@ -1,13 +1,13 @@
 package org.designup.shrinker;
 
 
-import org.crossbowlabs.globs.metamodel.properties.Property;
-import org.crossbowlabs.globs.metamodel.properties.PropertyHolder;
-import org.crossbowlabs.globs.metamodel.utils.DefaultPropertyHolder;
-import org.crossbowlabs.globs.metamodel.utils.IdProperty;
-import org.crossbowlabs.globs.utils.MultiMap;
-import org.crossbowlabs.globs.utils.exceptions.InvalidData;
-import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.metamodel.properties.Property;
+import org.globsframework.metamodel.properties.PropertyHolder;
+import org.globsframework.metamodel.utils.DefaultPropertyHolder;
+import org.globsframework.metamodel.utils.IdProperty;
+import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.io.*;
 import java.util.*;

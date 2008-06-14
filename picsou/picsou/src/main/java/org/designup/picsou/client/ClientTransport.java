@@ -1,7 +1,7 @@
 package org.designup.picsou.client;
 
-import org.crossbowlabs.globs.utils.serialization.SerializedInput;
 import org.designup.picsou.client.exceptions.*;
+import org.globsframework.utils.serialization.SerializedInput;
 
 public interface ClientTransport {
   SerializedInput createUser(byte[] bytes) throws UserAlreadyExists, IdentificationFailed, BadConnection;

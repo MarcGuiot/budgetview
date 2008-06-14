@@ -1,12 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.utils.Dates;
-import org.crossbowlabs.globs.utils.TestUtils;
 import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.model.Month;
+import org.globsframework.model.GlobList;
+import org.globsframework.utils.Dates;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.Panel;
 
 import java.util.ArrayList;

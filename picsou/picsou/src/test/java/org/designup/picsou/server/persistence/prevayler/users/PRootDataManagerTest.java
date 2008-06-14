@@ -1,13 +1,13 @@
 package org.designup.picsou.server.persistence.prevayler.users;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.serialization.Encoder;
 import org.designup.picsou.functests.ServerFunctionalTestCase;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.server.model.HiddenUser;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.serialization.Encoder;
 
 import java.util.Arrays;
 

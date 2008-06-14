@@ -1,9 +1,9 @@
-package org.crossbowlabs.saxstack.utils;
+package org.globsframework.saxstack.utils;
 
 import junit.framework.TestCase;
 import org.apache.xerces.parsers.SAXParser;
-import org.crossbowlabs.saxstack.parser.SaxStackParser;
-import org.crossbowlabs.saxstack.writer.PrettyPrintRootXmlTag;
+import org.globsframework.saxstack.parser.SaxStackParser;
+import org.globsframework.saxstack.writer.PrettyPrintRootXmlTag;
 
 import java.io.IOException;
 import java.io.StringReader;

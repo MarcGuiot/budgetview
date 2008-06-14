@@ -1,16 +1,16 @@
 package org.designup.picsou.server.persistence.prevayler.users;
 
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.utils.Log;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.globs.utils.exceptions.GlobsException;
-import org.crossbowlabs.globs.utils.exceptions.UnexpectedApplicationState;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializablePolicy;
 import org.designup.picsou.server.persistence.prevayler.DefaultSerializer;
 import org.designup.picsou.server.persistence.prevayler.RootDataManager;
 import org.designup.picsou.server.persistence.prevayler.categories.GetAssociatedCategory;
 import org.designup.picsou.server.persistence.prevayler.categories.RegisterAssociatedCategory;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.Log;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.GlobsException;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.prevayler.Prevayler;
 import org.prevayler.PrevaylerFactory;
 import org.prevayler.Query;

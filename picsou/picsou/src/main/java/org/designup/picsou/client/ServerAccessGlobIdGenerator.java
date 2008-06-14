@@ -1,11 +1,11 @@
 package org.designup.picsou.client;
 
-import org.crossbowlabs.globs.metamodel.GlobType;
-import org.crossbowlabs.globs.metamodel.fields.IntegerField;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.impl.DefaultGlobIdGenerator;
-import org.crossbowlabs.globs.model.utils.GlobIdGenerator;
 import org.designup.picsou.model.TransactionTypeMatcher;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.impl.DefaultGlobIdGenerator;
+import org.globsframework.model.utils.GlobIdGenerator;
 
 public class ServerAccessGlobIdGenerator implements GlobIdGenerator {
   private final ServerAccess serverAccess;

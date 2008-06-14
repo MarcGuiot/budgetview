@@ -1,12 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobList;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.utils.GlobMatcher;
-import org.crossbowlabs.globs.utils.Dates;
 import org.designup.picsou.model.TransactionImport;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.utils.Dates;
 
 import java.util.Date;
 

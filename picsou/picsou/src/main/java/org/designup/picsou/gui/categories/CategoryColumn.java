@@ -1,20 +1,20 @@
 package org.designup.picsou.gui.categories;
 
-import org.crossbowlabs.globs.gui.SelectionService;
-import org.crossbowlabs.globs.gui.views.CellPainter;
-import org.crossbowlabs.globs.gui.views.GlobTableView;
-import org.crossbowlabs.globs.model.Glob;
-import org.crossbowlabs.globs.model.GlobRepository;
-import org.crossbowlabs.globs.model.format.DescriptionService;
-import org.crossbowlabs.globs.model.format.GlobStringifier;
-import org.crossbowlabs.globs.utils.directory.Directory;
-import org.crossbowlabs.splits.layout.Anchor;
-import org.crossbowlabs.splits.layout.Fill;
-import org.crossbowlabs.splits.layout.GridBagBuilder;
-import org.crossbowlabs.splits.utils.TransparentIcon;
-import org.designup.picsou.gui.utils.AbstractRolloverEditor;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.utils.AbstractRolloverEditor;
 import org.designup.picsou.model.Category;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.layout.Anchor;
+import org.globsframework.gui.splits.layout.Fill;
+import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.utils.TransparentIcon;
+import org.globsframework.gui.views.CellPainter;
+import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.plaf.PanelUI;
