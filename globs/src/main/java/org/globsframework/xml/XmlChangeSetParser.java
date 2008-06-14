@@ -7,9 +7,9 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
-import org.globsframework.saxstack.parser.*;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.saxstack.parser.*;
 import org.xml.sax.Attributes;
 
 import java.io.Reader;

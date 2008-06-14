@@ -2,8 +2,8 @@ package org.globsframework.xml;
 
 import junit.framework.Assert;
 import org.apache.xerces.parsers.SAXParser;
-import org.globsframework.saxstack.comparator.XmlComparator;
-import org.globsframework.saxstack.utils.XmlUtils;
+import org.saxstack.comparator.XmlComparator;
+import org.saxstack.utils.XmlUtils;
 
 import java.io.IOException;
 

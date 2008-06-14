@@ -1,9 +1,9 @@
 package org.globsframework.utils.logging;
 
-import org.globsframework.saxstack.utils.XmlUtils;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.exceptions.IOFailure;
+import org.saxstack.utils.XmlUtils;
 
 import java.io.*;
 import java.util.Date;

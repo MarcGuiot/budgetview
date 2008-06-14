@@ -10,11 +10,11 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.links.FieldMappingFunctor;
 import org.globsframework.metamodel.utils.GlobTypeUtils;
 import org.globsframework.model.*;
-import org.globsframework.saxstack.parser.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.saxstack.parser.*;
 import org.xml.sax.Attributes;
 
 import java.io.Reader;

@@ -1,7 +1,7 @@
 package org.globsframework.xml;
 
-import org.globsframework.saxstack.writer.RootXmlTag;
-import org.globsframework.saxstack.writer.XmlTag;
+import org.saxstack.writer.RootXmlTag;
+import org.saxstack.writer.XmlTag;
 
 import java.io.IOException;
 import java.io.StringWriter;

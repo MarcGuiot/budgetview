@@ -4,8 +4,8 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.SplitterFactory;
-import org.globsframework.saxstack.parser.DefaultXmlNode;
-import org.globsframework.saxstack.parser.XmlNode;
+import org.saxstack.parser.DefaultXmlNode;
+import org.saxstack.parser.XmlNode;
 import org.xml.sax.Attributes;
 
 import java.awt.*;

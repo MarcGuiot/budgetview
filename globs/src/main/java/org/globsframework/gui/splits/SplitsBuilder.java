@@ -8,9 +8,9 @@ import org.globsframework.gui.splits.impl.XmlComponentNode;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.DefaultCardHandler;
 import org.globsframework.gui.splits.splitters.DefaultSplitterFactory;
-import org.globsframework.saxstack.parser.DefaultXmlNode;
-import org.globsframework.saxstack.parser.SaxStackParser;
-import org.globsframework.saxstack.parser.XmlNode;
+import org.saxstack.parser.DefaultXmlNode;
+import org.saxstack.parser.SaxStackParser;
+import org.saxstack.parser.XmlNode;
 import org.xml.sax.Attributes;
 
 import javax.swing.*;

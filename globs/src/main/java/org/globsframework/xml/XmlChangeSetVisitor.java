@@ -5,9 +5,9 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSetVisitor;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Key;
-import org.globsframework.saxstack.writer.PrettyPrintRootXmlTag;
-import org.globsframework.saxstack.writer.RootXmlTag;
-import org.globsframework.saxstack.writer.XmlTag;
+import org.saxstack.writer.PrettyPrintRootXmlTag;
+import org.saxstack.writer.RootXmlTag;
+import org.saxstack.writer.XmlTag;
 
 import java.io.IOException;
 import java.io.Writer;
