@@ -1,12 +1,10 @@
 package org.designup.picsou.gui;
 
-import net.roydesign.event.ApplicationEvent;
-import net.roydesign.mac.MRJAdapter;
+import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.globsframework.utils.Log;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.io.*;
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,85 +12,69 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SingleApplicationInstanceListener {
-  public static final int[] PORT = new int[]{5454, 3474, 14457, 9381};
-  public static ThreadReader thread;
   public static final String SINGLE_INSTANCE_DISABLED = "SINGLE_INSTANCE_DISABLED";
-  public static final List<File> files = new ArrayList<File>();
-  private static Callback callback;
+  public static final int[] PORTS = new int[]{5454, 3474, 14457, 9381};
+  private static final String USER_MESSAGE_KEY = "user";
+  private static final String FILES_MESSAGE_KEY = "file";
+  private static final String SHOW_MESSAGE_KEY = "show";
+  private static final String RESPONSE_OK = "OK";
+  private static final String RESPONSE_FAIL = "FAIL";
+  private ThreadReader threadReader;
+  private OpenRequestManager openRequestManager;
 
 
-  interface Callback {
-    void openFile(ArrayList<File> file);
-
-    void bringToFront();
+  enum ReturnState {
+    EXIT,
+    CONTINUE
   }
 
-  public static void register(Callback callback) {
-    synchronized (files) {
-      SingleApplicationInstanceListener.callback = callback;
-      pushToCallback();
-    }
+  SingleApplicationInstanceListener(OpenRequestManager openRequestManager) {
+    this.openRequestManager = openRequestManager;
   }
 
-  private static void pushToCallback() {
-    if (callback != null && !files.isEmpty()) {
-      callback.openFile(new ArrayList<File>(files));
-      files.clear();
-    }
-  }
-
-  public static void unregister() {
-    synchronized (files) {
-      callback = null;
-    }
-  }
-
-  private static void bringToFront() {
-    //TODO 
-  }
-
-  public static void listenForFile() throws IOException {
-    MRJAdapter.addOpenDocumentListener(new AbstractAction() {
-      public void actionPerformed(ActionEvent event) {
-        pushFile(((ApplicationEvent)event).getFile());
-      }
-    });
-
-    if ("true".equals(System.getProperty(SINGLE_INSTANCE_DISABLED))) {
-      return;
-    }
-
-    ServerSocket serverSocket = null;
-    int port = 0;
-    for (int i = 0; i < PORT.length; i++) {
-      port = PORT[i];
+  public ReturnState findRemoteOrListen() {
+    List<ServerSocket> serverSockets = new ArrayList<ServerSocket>();
+    for (int port : PORTS) {
       try {
-        serverSocket = null;
-        serverSocket = new ServerSocket(port);
-        break;
+        serverSockets.add(new ServerSocket(port));
+      }
+      catch (BindException bindException) {
+        try {
+          SendToRemoteCalback sendToRemoteCalback = new SendToRemoteCalback(port);
+          boolean sameApplication = sendToRemoteCalback.checkSameApplication();
+          if (sameApplication) {
+            openRequestManager.pushCallback(sendToRemoteCalback);
+            for (ServerSocket socket : serverSockets) {
+              socket.close();
+            }
+            return ReturnState.EXIT;
+          }
+        }
+        catch (Exception e) {
+        }
+      }
+      catch (Exception e) {
+      }
+    }
+
+    if (serverSockets.isEmpty()) {
+      return ReturnState.CONTINUE;
+    }
+    ServerSocket serverSocket = serverSockets.remove(0);
+    threadReader = new ThreadReader(serverSocket);
+    threadReader.start();
+    for (ServerSocket socket : serverSockets) {
+      try {
+        socket.close();
       }
       catch (IOException e) {
       }
     }
-    if (serverSocket == null) {
-      Log.write("No free port found");
-      return;
-    }
-    Log.write("listen " + port);
-
-    thread = new ThreadReader(serverSocket);
-    thread.setDaemon(true);
-    thread.start();
+    return ReturnState.CONTINUE;
   }
 
-  private static void pushFile(File file) {
-    synchronized (files) {
-      files.add(file);
-      pushToCallback();
-    }
-  }
 
-  public static void readFromSocket(Socket socket) throws IOException {
+  private void readFromSocket(Socket socket) throws IOException {
     InetAddress remoteAddress = socket.getInetAddress();
     if (!remoteAddress.isLoopbackAddress()) {
       socket.close();
@@ -106,25 +88,36 @@ public class SingleApplicationInstanceListener {
       objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
       objectOutputStream.flush();
       try {
-        String message = (String)objectInputStream.readObject();
-        if ("file".equals(message)) {
-          File file = readFileName(objectInputStream);
-          objectOutputStream.writeObject("OK");
-          objectOutputStream.flush();
-          pushFile(file);
-          return;
+        while (true) {
+          String message = (String)objectInputStream.readObject();
+          if (USER_MESSAGE_KEY.equals(message)) {
+            String identity = (String)objectInputStream.readObject();
+            if (!System.getProperty("user.name").equals(identity)) {
+              objectOutputStream.writeObject(RESPONSE_FAIL);
+              objectOutputStream.flush();
+              continue;
+            }
+          }
+          if (FILES_MESSAGE_KEY.equals(message)) {
+            List<File> files = readFileName(objectInputStream);
+            objectOutputStream.writeObject(RESPONSE_OK);
+            objectOutputStream.flush();
+            openRequestManager.openFiles(files);
+            continue;
+          }
+          if (SHOW_MESSAGE_KEY.equals(message)) {
+            readFileName(objectInputStream);
+            objectOutputStream.writeObject(RESPONSE_OK);
+            objectOutputStream.flush();
+            bringToFront();
+            continue;
+          }
+          break;
         }
-        if ("show".equals(message)) {
-          readFileName(objectInputStream);
-          objectOutputStream.writeObject("OK");
-          objectOutputStream.flush();
-          bringToFront();
-          return;
-        }
-        objectOutputStream.writeObject("FAIL");
+        objectOutputStream.writeObject(RESPONSE_FAIL);
       }
       catch (Exception e) {
-        objectOutputStream.writeObject("FAIL");
+        objectOutputStream.writeObject(RESPONSE_FAIL);
       }
       objectOutputStream.flush();
     }
@@ -144,69 +137,104 @@ public class SingleApplicationInstanceListener {
     }
   }
 
-  public static void shutdown() throws Exception {
-    if (SingleApplicationInstanceListener.thread != null) {
-      SingleApplicationInstanceListener.thread.requestShutdown();
-      SingleApplicationInstanceListener.thread.join();
-      SingleApplicationInstanceListener.thread = null;
+  private void bringToFront() {
+  }
+
+  public void shutdown() throws Exception {
+    if (threadReader != null) {
+      threadReader.requestShutdown();
+      threadReader.join();
+      threadReader = null;
     }
   }
 
-  public static File readFileName(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
-    String fileName = (String)objectInputStream.readObject();
-    File file = new File(fileName);
-    if (file.exists() && file.isFile()) {
-      tryReadToEnsureWeHaveTheRightToReadThisFile(file);
+  private List<File> readFileName(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
+    List<File> filesToOpen = new ArrayList<File>();
+    int fileCount = objectInputStream.readInt();
+    for (int i = 0; i < fileCount; i++) {
+      String fileName = (String)objectInputStream.readObject();
+      File file = new File(fileName);
+      if (file.exists() && file.isFile()) {
+        tryReadToEnsureWeHaveTheRightToReadThisFile(file);
+        filesToOpen.add(file);
+      }
     }
-    return file;
+    return filesToOpen;
   }
 
-  public static void tryReadToEnsureWeHaveTheRightToReadThisFile(File file) throws IOException {
+  private void tryReadToEnsureWeHaveTheRightToReadThisFile(File file) throws IOException {
     FileReader fileReader = new FileReader(file);
     fileReader.read();
   }
 
-  public static boolean sendAlreadyOpen(String[] args) throws IOException, ClassNotFoundException {
-    if ("true".equals(System.getProperty(SINGLE_INSTANCE_DISABLED))) {
-      return false;
+
+  static class SendToRemoteCalback implements OpenRequestManager.Callback {
+    private Socket socket;
+    private ObjectOutputStream output;
+    private ObjectInputStream input;
+    private int port;
+
+    SendToRemoteCalback(int port) throws IOException, ClassNotFoundException {
+      this.port = port;
     }
-    Socket socket = null;
-    ObjectOutputStream objectOutputStream = null;
-    ObjectInputStream objectInputStream = null;
-    File tempFile = null;
-    for (int port : PORT) {
+
+    public boolean checkSameApplication() throws IOException, ClassNotFoundException {
+      socket = new Socket((String)null, port);
+      socket.setSoTimeout(2000);
+      output = new ObjectOutputStream(socket.getOutputStream());
+      output.flush();
+      input = new ObjectInputStream(socket.getInputStream());
+      output.writeObject(USER_MESSAGE_KEY);
+      output.writeObject(System.getProperty("user.name"));
+      output.flush();
+      String answer = (String)input.readObject();
+      return socket != null && RESPONSE_OK.equals(answer);
+    }
+
+    public void close() throws IOException {
+      socket.close();
+      socket = null;
+    }
+
+    public void openFiles(List<File> file) {
+      trySendToRemote(file);
+    }
+
+    public void bringToFront() {
+    }
+
+    private boolean trySendToRemote(List<File> files) {
+      File tempFile = null;
       try {
-        socket = new Socket((String)null, port);
-        objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-        objectOutputStream.flush();
-        objectInputStream = new ObjectInputStream(socket.getInputStream());
-        if (args.length == 0) {
+        if (files.size() == 0) {
           tempFile = File.createTempFile("empty", "txt");
-          objectOutputStream.writeObject("show");
-          objectOutputStream.writeObject(tempFile.getAbsolutePath());
+          output.writeObject(SHOW_MESSAGE_KEY);
+          output.writeObject(tempFile.getAbsolutePath());
         }
         else {
-          objectOutputStream.writeObject("file");
-          objectOutputStream.writeObject(args[0]);
+          output.writeObject(FILES_MESSAGE_KEY);
+          output.writeInt(files.size());
+          for (File file : files) {
+            output.writeObject(file.getAbsolutePath());
+          }
         }
-        objectOutputStream.flush();
-        String result = (String)objectInputStream.readObject();
-        if ("OK".equals(result)) {
-          return true;
-        }
+        output.flush();
+        String result = (String)input.readObject();
+        return RESPONSE_OK.equals(result);
       }
       catch (Exception e) {
+        return false;
       }
       finally {
         try {
           if (socket != null) {
             socket.close();
           }
-          if (objectInputStream != null) {
-            objectInputStream.close();
+          if (input != null) {
+            input.close();
           }
-          if (objectOutputStream != null) {
-            objectOutputStream.close();
+          if (output != null) {
+            output.close();
           }
           if (tempFile != null) {
             tempFile.delete();
@@ -217,10 +245,9 @@ public class SingleApplicationInstanceListener {
         }
       }
     }
-    return false;
   }
 
-  public static class ThreadReader extends Thread {
+  public class ThreadReader extends Thread {
     private final ServerSocket serverSocket;
     private boolean shutdownRequested;
 

@@ -37,7 +37,6 @@ public class MainPanel {
 
   public static MainPanel show(GlobRepository repository, Directory directory, MainWindow mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow.getFrame());
-    PicsouApplication.initialFile = null;
     mainWindow.setPanel(panel.panel);
     mainWindow.getFrame().setRepository(repository);
     return panel;

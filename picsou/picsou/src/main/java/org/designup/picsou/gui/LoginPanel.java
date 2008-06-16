@@ -111,12 +111,7 @@ public class LoginPanel {
         }
         serverAccess.createUser(user, password);
         PicsouInit init = PicsouInit.init(serverAccess, user, creationCheckBox.isSelected(), directory);
-        if (PicsouApplication.initialFile != null && PicsouApplication.initialFile.length != 0) {
-          MainPanel.show(init.getRepository(), init.getDirectory(), mainWindow);
-        }
-        else {
-          NewUserPanel.show(init.getRepository(), init.getDirectory(), mainWindow);
-        }
+        NewUserPanel.show(init.getRepository(), init.getDirectory(), mainWindow);
       }
       else {
         serverAccess.initConnection(user, password, false);

@@ -4,6 +4,7 @@ import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
+import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.PicsouDescriptionService;
@@ -25,6 +26,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,14 +37,15 @@ public class PicsouApplication {
   public static String DELETE_LOCAL_PREVAYLER_PROPERTY = "picsou.prevayler.delete";
   private static String DEFAULT_ADDRESS = "https://startupxp.dynalias.org";
 
-  public static File[] initialFile;
+  private static OpenRequestManager openRequestManager = new OpenRequestManager();
+  private static SingleApplicationInstanceListener singleInstanceListener;
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
     MRJAdapter.addOpenDocumentListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         ApplicationEvent event = (ApplicationEvent)e;
-        initialFile = new File[]{event.getFile()};
+        openRequestManager.openFiles(Collections.singletonList(event.getFile()));
       }
     });
   }
@@ -52,13 +55,6 @@ public class PicsouApplication {
     if (args.length > 1) {
       args = parseLanguage(args);
     }
-//    if (SingleApplicationInstanceListener.sendAlreadyOpen(args)) {
-//      return;
-//    }
-//  TODO:  SingleApplicationInstanceListener.listenForFile(panel);
-//    SingleApplicationInstanceListener.listenForFile();
-
-
     List<File> fileToOpen = new ArrayList<File>();
     for (String arg : args) {
       File file = new File(arg);
@@ -67,12 +63,19 @@ public class PicsouApplication {
       }
     }
     if (!fileToOpen.isEmpty()) {
-      initialFile = fileToOpen.toArray(new File[fileToOpen.size()]);
+      openRequestManager.openFiles(fileToOpen);
+    }
+
+    singleInstanceListener = new SingleApplicationInstanceListener(openRequestManager);
+    if (singleInstanceListener.findRemoteOrListen() == SingleApplicationInstanceListener.ReturnState.EXIT) {
+      Thread.sleep(2000);
+      System.exit(0);
     }
 
     clearRepositoryIfNeeded();
 
     Directory directory = createDirectory();
+    directory.add(openRequestManager);
 
     final MainWindow window = new MainWindow();
     final LoginPanel loginPanel = new LoginPanel(getServerAddress(), getLocalPrevaylerPath(), window, directory);
@@ -117,7 +120,7 @@ public class PicsouApplication {
   }
 
   public static void shutdown() throws Exception {
-    SingleApplicationInstanceListener.shutdown();
+    singleInstanceListener.shutdown();
   }
 
   private static String getSystemValue(String propertyName, String defaultPropertyValue) {
