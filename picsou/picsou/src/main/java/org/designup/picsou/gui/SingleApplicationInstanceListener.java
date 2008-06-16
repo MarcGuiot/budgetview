@@ -4,10 +4,7 @@ import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.globsframework.utils.Log;
 
 import java.io.*;
-import java.net.BindException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,18 +36,13 @@ public class SingleApplicationInstanceListener {
         serverSockets.add(new ServerSocket(port));
       }
       catch (BindException bindException) {
-        try {
-          SendToRemoteCalback sendToRemoteCalback = new SendToRemoteCalback(port);
-          boolean sameApplication = sendToRemoteCalback.checkSameApplication();
-          if (sameApplication) {
-            openRequestManager.pushCallback(sendToRemoteCalback);
-            for (ServerSocket socket : serverSockets) {
-              socket.close();
-            }
-            return ReturnState.EXIT;
-          }
+        if (canConnectToSameApplication(serverSockets, port)) {
+          return ReturnState.EXIT;
         }
-        catch (Exception e) {
+      }
+      catch (SocketException bindException) {
+        if (canConnectToSameApplication(serverSockets, port)) {
+          return ReturnState.EXIT;
         }
       }
       catch (Exception e) {
@@ -73,6 +65,23 @@ public class SingleApplicationInstanceListener {
     return ReturnState.CONTINUE;
   }
 
+  private boolean canConnectToSameApplication(List<ServerSocket> serverSockets, int port) {
+    try {
+      SendToRemoteCalback sendToRemoteCalback = new SendToRemoteCalback(port);
+      boolean sameApplication = sendToRemoteCalback.checkSameApplication();
+      if (sameApplication) {
+        openRequestManager.pushCallback(sendToRemoteCalback);
+        for (ServerSocket socket : serverSockets) {
+          socket.close();
+        }
+        return true;
+      }
+    }
+    catch (Exception e) {
+    }
+    return false;
+  }
+
 
   private void readFromSocket(Socket socket) throws IOException {
     InetAddress remoteAddress = socket.getInetAddress();
@@ -80,7 +89,7 @@ public class SingleApplicationInstanceListener {
       socket.close();
       return;
     }
-    socket.setSoTimeout(1000);
+    socket.setSoTimeout(3000);
     ObjectInputStream objectInputStream = null;
     ObjectOutputStream objectOutputStream = null;
     try {
@@ -92,8 +101,8 @@ public class SingleApplicationInstanceListener {
           String message = (String)objectInputStream.readObject();
           if (USER_MESSAGE_KEY.equals(message)) {
             String identity = (String)objectInputStream.readObject();
-            if (!System.getProperty("user.name").equals(identity)) {
-              objectOutputStream.writeObject(RESPONSE_FAIL);
+            if (System.getProperty("user.name").equals(identity)) {
+              objectOutputStream.writeObject(RESPONSE_OK);
               objectOutputStream.flush();
               continue;
             }
@@ -263,8 +272,18 @@ public class SingleApplicationInstanceListener {
           if (shutdownRequested) {
             return;
           }
-          Socket socket = serverSocket.accept();
-          readFromSocket(socket);
+          final Socket socket = serverSocket.accept();
+          Thread thread = new Thread() {
+            public void run() {
+              try {
+                readFromSocket(socket);
+              }
+              catch (IOException e) {
+              }
+            }
+          };
+          thread.setDaemon(true);
+          thread.start();
         }
         catch (IOException e) {
           Log.write("accept failed");

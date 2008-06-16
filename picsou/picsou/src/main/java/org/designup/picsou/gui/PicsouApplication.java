@@ -37,20 +37,24 @@ public class PicsouApplication {
   public static String DELETE_LOCAL_PREVAYLER_PROPERTY = "picsou.prevayler.delete";
   private static String DEFAULT_ADDRESS = "https://startupxp.dynalias.org";
 
-  private static OpenRequestManager openRequestManager = new OpenRequestManager();
-  private static SingleApplicationInstanceListener singleInstanceListener;
+  private OpenRequestManager openRequestManager = new OpenRequestManager();
+  private SingleApplicationInstanceListener singleInstanceListener;
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
+  }
+
+  public static void main(String... args) throws Exception {
+    new PicsouApplication().run(args);
+  }
+
+  public void run(String... args) throws Exception {
     MRJAdapter.addOpenDocumentListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         ApplicationEvent event = (ApplicationEvent)e;
         openRequestManager.openFiles(Collections.singletonList(event.getFile()));
       }
     });
-  }
-
-  public static void main(String... args) throws Exception {
     Locale.setDefault(Locale.ENGLISH);
     if (args.length > 1) {
       args = parseLanguage(args);
@@ -69,7 +73,7 @@ public class PicsouApplication {
     singleInstanceListener = new SingleApplicationInstanceListener(openRequestManager);
     if (singleInstanceListener.findRemoteOrListen() == SingleApplicationInstanceListener.ReturnState.EXIT) {
       Thread.sleep(2000);
-      System.exit(0);
+      return;
     }
 
     clearRepositoryIfNeeded();
@@ -119,7 +123,7 @@ public class PicsouApplication {
     }
   }
 
-  public static void shutdown() throws Exception {
+  public void shutdown() throws Exception {
     singleInstanceListener.shutdown();
   }
 

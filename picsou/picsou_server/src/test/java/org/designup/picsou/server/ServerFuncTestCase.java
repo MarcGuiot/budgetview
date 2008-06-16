@@ -12,6 +12,7 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
   protected PicsouServer picsouServer;
   protected static final String PICSOU_DEV_TESTFILES_SG1_QIF = "/testfiles/sg1.qif";
   protected static final String PICSOU_DEV_TESTFILES_CIC1_OFX = "/testfiles/cic1.ofx";
+  private PicsouApplication picsouApplication;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -26,7 +27,8 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     picsouServer.start();
     window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
-        PicsouApplication.main();
+        picsouApplication = new PicsouApplication();
+        picsouApplication.run();
       }
     });
   }
@@ -34,7 +36,7 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
   protected void tearDown() throws Exception {
     super.tearDown();
     picsouServer.stop();
-    PicsouApplication.shutdown();
+    picsouApplication.shutdown();
   }
 
   public void createAndLogUser(String user, String userPassword, final String fileName) {

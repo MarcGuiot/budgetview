@@ -23,6 +23,7 @@ public class LoginTest extends ServerFunctionalTestCase {
   private PasswordField passwordField;
   private CheckBox createUserCheckbox;
   private Button loginButton;
+  private PicsouApplication picsouApplication;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -40,7 +41,8 @@ public class LoginTest extends ServerFunctionalTestCase {
           public void run() throws Exception {
             System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, ServerFunctionalTestCase.getUrl());
             System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
-            PicsouApplication.main();
+            picsouApplication = new PicsouApplication();
+            picsouApplication.run();
           }
         });
       }
@@ -50,13 +52,13 @@ public class LoginTest extends ServerFunctionalTestCase {
   }
 
   protected void tearDown() throws Exception {
-    PicsouApplication.shutdown();
+    picsouApplication.shutdown();
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "false");
   }
 
   private void openNewLoginWindow() throws Exception {
     if (window != null) {
-      PicsouApplication.shutdown();
+      picsouApplication.shutdown();
     }
     window = getMainWindow();
     userField = window.getInputTextBox("name");
