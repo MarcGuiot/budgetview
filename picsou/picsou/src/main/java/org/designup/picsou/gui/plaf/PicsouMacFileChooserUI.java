@@ -2,7 +2,7 @@ package org.designup.picsou.gui.plaf;
 
 import apple.laf.AquaFileChooserUI;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouDialogPainter;
+import org.designup.picsou.gui.components.PicsouDialogPainter;
 import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;

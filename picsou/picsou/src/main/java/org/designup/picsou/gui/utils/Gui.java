@@ -3,6 +3,8 @@ package org.designup.picsou.gui.utils;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.JarIconLocator;
+import org.designup.picsou.gui.components.DialogMovingListener;
+import org.designup.picsou.gui.components.PicsouDialogPainter;
 import sun.security.action.GetPropertyAction;
 
 import javax.swing.*;

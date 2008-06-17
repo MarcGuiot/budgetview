@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionToCategory;

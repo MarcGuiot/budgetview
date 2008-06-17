@@ -3,7 +3,7 @@ package org.designup.picsou.gui.actions;
 import org.designup.picsou.gui.startup.ImportPanel;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.startup.OpenRequestManager;
-import org.designup.picsou.gui.utils.DialogOwner;
+import org.designup.picsou.gui.components.DialogOwner;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;

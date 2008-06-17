@@ -1,6 +1,6 @@
 package org.designup.picsou.utils;
 
-import org.designup.picsou.gui.transactions.TransactionSplitComparator;
+import org.designup.picsou.gui.transactions.split.TransactionSplitComparator;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;

@@ -9,7 +9,7 @@ import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.IconLocator;

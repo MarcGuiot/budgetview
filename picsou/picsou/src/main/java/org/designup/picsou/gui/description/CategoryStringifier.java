@@ -1,0 +1,22 @@
+package org.designup.picsou.gui.description;
+
+import org.designup.picsou.model.Category;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+
+public class CategoryStringifier extends BundleBasedStringifier {
+
+  public CategoryStringifier() {
+    super(Category.NAME, Category.TYPE.getName() + ".");
+  }
+
+  public String toString(Glob glob, GlobRepository repository) {
+    if (glob == null) {
+      return "";
+    }
+    if (glob.get(Category.MASTER) == null) {
+      return super.toString(glob, repository);
+    }
+    return glob.get(Category.NAME);
+  }
+}

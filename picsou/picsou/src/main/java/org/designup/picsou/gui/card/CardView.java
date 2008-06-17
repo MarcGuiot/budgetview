@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.model.MonthStat;
-import org.designup.picsou.gui.transactions.TransactionSelection;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;

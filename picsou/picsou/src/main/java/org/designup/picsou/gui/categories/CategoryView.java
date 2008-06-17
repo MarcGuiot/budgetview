@@ -1,7 +1,15 @@
 package org.designup.picsou.gui.categories;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.description.CategoryComparator;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.categories.actions.CreateCategoryAction;
+import org.designup.picsou.gui.categories.actions.DeleteCategoryAction;
+import org.designup.picsou.gui.categories.actions.RenameCategoryAction;
+import org.designup.picsou.gui.categories.columns.*;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.PicsouTableHeaderCustomizer;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.utils.*;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
@@ -127,15 +135,15 @@ public class CategoryView extends View {
     TableUtils.autosizeColumn(table, CATEGORY_COLUMN_INDEX);
   }
 
-  Glob getSelectedCategory() {
+  public Glob getSelectedCategory() {
     return tableView.getGlobAt(table.getSelectedRow());
   }
 
-  void select(Glob category) {
+  public void select(Glob category) {
     tableView.select(category);
   }
 
-  void setFilter(GlobMatcher matcher) {
+  public void setFilter(GlobMatcher matcher) {
     tableView.setFilter(matcher);
   }
 

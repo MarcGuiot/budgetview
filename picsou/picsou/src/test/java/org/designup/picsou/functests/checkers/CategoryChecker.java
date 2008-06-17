@@ -1,9 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.designup.picsou.gui.categories.CategoryExpansionColumn;
+import org.designup.picsou.gui.categories.columns.CategoryExpansionColumn;
 import org.designup.picsou.gui.categories.CategoryView;
-import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.globsframework.model.Glob;

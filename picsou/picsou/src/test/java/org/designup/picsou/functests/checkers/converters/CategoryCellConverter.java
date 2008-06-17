@@ -1,10 +1,10 @@
 package org.designup.picsou.functests.checkers.converters;
 
 import org.designup.picsou.functests.checkers.TransactionChecker;
-import org.designup.picsou.gui.categories.CategoryComparator;
+import org.designup.picsou.gui.description.CategoryComparator;
+import org.designup.picsou.gui.description.CategoryStringifier;
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.utils.CategoryStringifier;
-import org.designup.picsou.gui.utils.PicsouFrame;
+import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.model.TransactionType;

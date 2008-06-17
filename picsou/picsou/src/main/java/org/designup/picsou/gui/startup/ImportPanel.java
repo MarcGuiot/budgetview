@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.startup.OpenRequestManager;
-import org.designup.picsou.gui.utils.DialogOwner;
-import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import org.designup.picsou.gui.components.DialogOwner;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.importer.ImportSession;
 import org.designup.picsou.model.*;

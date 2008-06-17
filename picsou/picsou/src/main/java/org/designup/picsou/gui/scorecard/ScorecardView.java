@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.scorecard;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.model.MonthStat;
-import org.designup.picsou.gui.transactions.TransactionSelection;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;

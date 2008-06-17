@@ -1,6 +1,11 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.TransactionSelection;
+import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
+import org.designup.picsou.gui.transactions.columns.*;
+import org.designup.picsou.gui.description.TransactionCategoriesStringifier;
+import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouSamples;
 import org.designup.picsou.model.*;
@@ -134,7 +139,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
         .set(CATEGORY, MasterCategory.FOOD.getId())
         .set(LABEL, PicsouSamples.LABEL_SAMPLE)
         .set(NOTE, PicsouSamples.NOTE_SAMPLE)
-        .set(AMOUNT, new Double(PicsouSamples.AMOUNT_SAMPLE))
+        .set(AMOUNT, PicsouSamples.AMOUNT_SAMPLE)
         .set(SPLIT, Boolean.TRUE)
         .get();
 

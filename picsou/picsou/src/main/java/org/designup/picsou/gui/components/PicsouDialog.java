@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouDialogPainter;
+import org.designup.picsou.gui.components.PicsouDialogPainter;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.utils.exceptions.InvalidParameter;
 

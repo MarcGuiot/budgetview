@@ -2,7 +2,7 @@ package org.designup.picsou.gui;
 
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.utils.PicsouTestCase;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobModel;

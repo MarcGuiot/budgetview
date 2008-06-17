@@ -1,6 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import static org.designup.picsou.model.Account.*;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Dates;

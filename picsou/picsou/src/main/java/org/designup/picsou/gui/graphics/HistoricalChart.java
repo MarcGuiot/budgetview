@@ -3,7 +3,7 @@ package org.designup.picsou.gui.graphics;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.gui.utils.PicsouDescriptionService;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;

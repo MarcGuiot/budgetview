@@ -14,7 +14,7 @@ import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.BalanceView;
 import org.designup.picsou.gui.transactions.InformationView;
-import org.designup.picsou.gui.transactions.TransactionSelection;
+import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;

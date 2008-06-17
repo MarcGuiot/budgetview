@@ -4,7 +4,7 @@ import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PicsouWindowsLookAndFeel;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouFrame;
+import org.designup.picsou.gui.components.PicsouFrame;
 import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;

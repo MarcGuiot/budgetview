@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.utils.DialogOwner;
+import org.designup.picsou.gui.components.DialogOwner;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.graphics;
 
 import org.designup.picsou.gui.model.MonthStat;
-import org.designup.picsou.gui.transactions.TransactionSelection;
+import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.utils.PicsouColors;
 import static org.designup.picsou.gui.utils.PicsouMatchers.*;
 import org.designup.picsou.model.Category;
