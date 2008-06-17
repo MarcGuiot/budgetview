@@ -1,6 +1,6 @@
 package org.designup.picsou.server.persistence.prevayler.users;
 
-import org.designup.picsou.functests.ServerFunctionalTestCase;
+import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.server.model.HiddenUser;
 import org.designup.picsou.server.model.User;
@@ -11,7 +11,7 @@ import org.globsframework.utils.serialization.Encoder;
 
 import java.util.Arrays;
 
-public class PRootDataManagerTest extends ServerFunctionalTestCase {
+public class PRootDataManagerTest extends FunctionalTestCase {
 
   public void test() throws Exception {
     PRootDataManager pRootDataManager = new PRootDataManager(url, ServerDirectory.getNewDirectory(url), true);

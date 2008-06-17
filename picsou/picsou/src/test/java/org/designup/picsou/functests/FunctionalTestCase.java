@@ -1,21 +1,30 @@
 package org.designup.picsou.functests;
 
 import junit.framework.TestCase;
-import org.designup.picsou.functests.utils.FunctionalTestCase;
 import org.designup.picsou.server.ServerDirectory;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.directory.Directory;
+import org.uispec4j.UISpecTestCase;
 
 import java.io.File;
+import java.util.Locale;
 
-public abstract class ServerFunctionalTestCase extends FunctionalTestCase {
+public abstract class FunctionalTestCase extends UISpecTestCase {
   protected String url;
   protected Directory directory;
   private ServerDirectory serverDirectory;
 
+  static {
+    TestUtils.clearTmpDir();
+    Locale.setDefault(Locale.ENGLISH);
+  }
+
   protected void setUp() throws Exception {
     super.setUp();
+    Locale.setDefault(Locale.ENGLISH);
+    Log.reset();
     Files.deleteSubtree(new File(createPrevaylerRepository()));
     url = initServerEnvironment(this);
   }
@@ -23,6 +32,7 @@ public abstract class ServerFunctionalTestCase extends FunctionalTestCase {
   protected void tearDown() throws Exception {
     super.tearDown();
     serverDirectory.close();
+    serverDirectory = null;
     directory = null;
     url = null;
     Files.deleteSubtree(new File(createPrevaylerRepository()));

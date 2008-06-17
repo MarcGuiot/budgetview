@@ -19,7 +19,7 @@ public class MainWindowLauncher {
     PicsouMacLookAndFeel.initApplicationName();
   }
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String... args) throws Exception {
     PicsouApplication.clearRepository();
     if (args.length > 1) {
       args = PicsouApplication.parseLanguage(args);
@@ -37,11 +37,7 @@ public class MainWindowLauncher {
     PicsouInit init = PicsouInit.init(serverAccess, "user", true, directory);
 
     MainWindow window = new MainWindow();
-    MainPanel panel = MainPanel.show(init.getRepository(), init.getDirectory(), window);
-    if (args.length > 0) {
-      //TODO 
-//      panel.openFile(new File(args[0]), true);
-    }
+    MainPanel.show(init.getRepository(), init.getDirectory(), window);
     window.show();
 
     if ("true".equalsIgnoreCase(System.getProperty(COLOR_SELECTOR_PROPERTY))) {

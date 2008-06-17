@@ -4,7 +4,7 @@ import org.designup.picsou.client.exceptions.BadPassword;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
 import org.designup.picsou.client.local.LocalClientTransport;
-import org.designup.picsou.functests.ServerFunctionalTestCase;
+import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.model.*;
 import org.designup.picsou.server.model.*;
 import org.designup.picsou.server.model.User;
@@ -18,7 +18,7 @@ import org.globsframework.utils.Functor;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.InvalidState;
 
-public class EncrypterToTransportServerAccessTest extends ServerFunctionalTestCase {
+public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
 
   private GlobRepository init(final EncrypterToTransportServerAccess createClientCategorizer) {
     GlobRepository repository = GlobRepositoryBuilder.createEmpty();

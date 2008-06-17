@@ -30,6 +30,9 @@ public class SingleApplicationInstanceListener {
   }
 
   public ReturnState findRemoteOrListen() {
+    if ("true".equalsIgnoreCase(System.getProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED))) {
+      return ReturnState.CONTINUE;
+    }
     List<ServerSocket> serverSockets = new ArrayList<ServerSocket>();
     for (int port : PORTS) {
       try {
@@ -89,7 +92,7 @@ public class SingleApplicationInstanceListener {
       socket.close();
       return;
     }
-    socket.setSoTimeout(3000);
+    socket.setSoTimeout(2000);
     ObjectInputStream objectInputStream = null;
     ObjectOutputStream objectOutputStream = null;
     try {
@@ -306,12 +309,7 @@ public class SingleApplicationInstanceListener {
 
     public void requestShutdown() throws IOException {
       shutdownRequested = true;
-      try {
-        serverSocket.close();
-      }
-      finally {
-        shutdownRequested = false;
-      }
+      serverSocket.close();
     }
   }
 }

@@ -8,15 +8,14 @@ import org.designup.picsou.gui.SingleApplicationInstanceListener;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.utils.Files;
 import org.uispec4j.*;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
-import java.io.File;
+import javax.swing.*;
 
-public class LoginTest extends ServerFunctionalTestCase {
+public class LoginTest extends StartUpFunctionalTestCase {
 
   private Window window;
   private TextBox userField;
@@ -28,19 +27,16 @@ public class LoginTest extends ServerFunctionalTestCase {
   protected void setUp() throws Exception {
     super.setUp();
 
-    System.setProperty("SINGLE_INSTANCE_DISABLED", "");
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
-    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, "");
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "");
-
-    Files.deleteSubtree(new File(ServerFunctionalTestCase.getUrl()));
+    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "");
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
+
+
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
         return WindowInterceptor.run(new Trigger() {
           public void run() throws Exception {
-            System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, ServerFunctionalTestCase.getUrl());
-            System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
             picsouApplication = new PicsouApplication();
             picsouApplication.run();
           }
@@ -52,12 +48,19 @@ public class LoginTest extends ServerFunctionalTestCase {
   }
 
   protected void tearDown() throws Exception {
+    ((JFrame)window.getAwtComponent()).dispose();
+    window = null;
+    userField = null;
+    passwordField = null;
+    createUserCheckbox = null;
+    loginButton = null;
     picsouApplication.shutdown();
-    System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "false");
+    picsouApplication = null;
   }
 
   private void openNewLoginWindow() throws Exception {
     if (window != null) {
+      ((JFrame)window.getAwtComponent()).dispose();
       picsouApplication.shutdown();
     }
     window = getMainWindow();

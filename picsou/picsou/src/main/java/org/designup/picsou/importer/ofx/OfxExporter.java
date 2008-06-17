@@ -29,7 +29,7 @@ public class OfxExporter {
   private void write() {
     writer.writeHeader();
 
-    GlobList accounts = repository.getAll(Account.TYPE);
+    GlobList accounts = repository.getAll(Account.TYPE).sort(Account.ID);
     for (Glob account : accounts) {
       if (Account.SUMMARY_ACCOUNT_ID == account.get(Account.ID)) {
         continue;

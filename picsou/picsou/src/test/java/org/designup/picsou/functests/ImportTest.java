@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.ImportChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
@@ -236,8 +237,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     assertTrue(table.contentEquals(new Object[][]{
       {"12/06/2008", "V'lib", "1.00"},
       {"10/06/2008", "Metro", "71.00"},
-      {"10/06/2008", "V'lib", "1.00"},
       {"10/06/2008", "McDo", "10.00"},
+      {"10/06/2008", "V'lib", "1.00"},
     }));
 
     assertEquals(2, window.getSwingComponents(JTextArea.class).length);
@@ -246,7 +247,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     assertTrue(accountNames0.textContains(new String[]{"12345678a", "12345678b"}));
 
     TextBox accountNames1 = window.getTextBox("accountNames1");
-    assertTrue(accountNames1.textEquals("87654321"));
+    assertTrue(accountNames1.textContains(new String[]{"1111222233334444", "87654321"}));
 
     window.getButton("OK").click();
     checkImportMessage("You must associate a bank to each account");
@@ -284,28 +285,27 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("01/01/01", -1.1, "Menu K")
       .save();
 
-    bankCombo.select("Societe Generale");
-    fileField.setText(path1);
-    importButton.click();
+    ImportChecker importPanel = new ImportChecker(window);
 
-    Table table = window.getTable();
-    assertTrue(table.contentEquals(new Object[][]{
+    importPanel.selectBank("Societe Generale");
+    importPanel.selectFiles(path1);
+    importPanel.startImport();
+
+    importPanel.checkFileContent(new Object[][]{
       {"01/01/01", "Menu K", "-1.10"}
-    }));
+    });
 
-    ComboBox dateFormatCombo = window.getComboBox("dateFormatCombo");
-    assertTrue(dateFormatCombo.contentEquals("Year/Month/Day", "Month/Day/Year", "Day/Month/Year"));
+    importPanel.checkDates("Year/Month/Day", "Month/Day/Year", "Day/Month/Year");
+    importPanel.doImport();
+    importPanel.checkErrorMessage("import.dateformat.undefined");
 
-    window.getButton("OK").click();
-    checkErrorMessage("import.dateformat.undefined");
-
-    dateFormatCombo.select("Day/Month/Year");
-    assertTrue(table.contentEquals(new Object[][]{
+    importPanel.selectDate("Day/Month/Year");
+    importPanel.checkFileContent(new Object[][]{
       {"01/01/2001", "Menu K", "-1.10"}
-    }));
+    });
 
-    window.getButton("OK").click();
-    window.getInputTextBox("number").setText("0123546");
+    importPanel.doImport();
+    importPanel.enterAccountNumber("0123546");
   }
 
   private void checkImportMessage(String message) {

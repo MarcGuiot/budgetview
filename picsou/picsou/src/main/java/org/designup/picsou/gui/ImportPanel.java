@@ -1,5 +1,7 @@
 package org.designup.picsou.gui;
 
+import org.designup.picsou.gui.startup.OpenRequestManager;
+import org.designup.picsou.gui.utils.DialogOwner;
 import org.designup.picsou.gui.utils.PicsouDescriptionService;
 import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.importer.ImportSession;
@@ -39,14 +41,14 @@ import java.util.List;
 public abstract class ImportPanel {
   private JLabel messageLabel = new JLabel();
   private JStyledPanel filePanel = new JStyledPanel();
-  private JTextField fileField = new JTextField();
+  private final JTextField fileField = new JTextField();
   private JButton fileButton = new JButton();
   private JPanel panel;
   protected CardHandler cardHandler;
   private JLabel fileNameLabel = new JLabel();
 
   private ImportSession importSession;
-  private List<File> files = new ArrayList<File>();
+  private final List<File> files = new ArrayList<File>();
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
   private AccountEditionPanel accountEditionPanel;
@@ -60,9 +62,29 @@ public abstract class ImportPanel {
   private DefaultDirectory sessionDirectory;
   private GlobRepository sessionRepository;
   private ImportedTransactionDateRenderer dateRenderer;
+  private boolean step1 = true;
+  private boolean step2 = true;
+  private OpenRequestManager openRequestManager;
 
-  protected ImportPanel(final Window owner, GlobRepository repository, Directory directory) {
-
+  protected ImportPanel(List<File> files, final DialogOwner owner, GlobRepository repository, Directory directory) {
+    updateFileField(files);
+    openRequestManager = directory.get(OpenRequestManager.class);
+    openRequestManager.pushCallback(new OpenRequestManager.Callback() {
+      public void openFiles(final List<File> files) {
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            synchronized (fileField) {
+              if (step1) {
+                updateFileField(files);
+              }
+              else {
+                openRequestManager.openFiles(files);
+              }
+            }
+          }
+        });
+      }
+    });
     this.localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE, Transaction.TYPE,
             TransactionToCategory.TYPE, TransactionTypeMatcher.TYPE, LabelToCategory.TYPE)
@@ -156,20 +178,33 @@ public abstract class ImportPanel {
 
   }
 
+  private void updateFileField(List<File> files) {
+    StringBuilder builder = new StringBuilder(fileField.getText());
+    for (File file : files) {
+      if (builder.length() != 0) {
+        builder.append(";");
+      }
+      builder.append(file.getAbsolutePath());
+    }
+    fileField.setText(builder.toString());
+  }
+
   protected abstract void complete();
 
   private File[] getInitialFiles() {
-    String path = fileField.getText();
-    String[] strings = path.split(";");
-    File[] files = new File[strings.length];
-    for (int i = 0; i < strings.length; i++) {
-      String string = strings[i];
-      files[i] = new File(string);
+    synchronized (fileField) {
+      String path = fileField.getText();
+      String[] strings = path.split(";");
+      File[] files = new File[strings.length];
+      for (int i = 0; i < strings.length; i++) {
+        String string = strings[i];
+        files[i] = new File(string);
+      }
+      if (Strings.isNullOrEmpty(path)) {
+        return null;
+      }
+      return files;
     }
-    if (Strings.isNullOrEmpty(path)) {
-      return null;
-    }
-    return files;
   }
 
   private boolean initialFileAccepted() {
@@ -211,8 +246,24 @@ public abstract class ImportPanel {
       if (!initialFileAccepted()) {
         return;
       }
+      openRequestManager.popCallback();
+      openRequestManager.pushCallback(new OpenRequestManager.Callback() {
+        public void openFiles(List<File> files) {
+          synchronized (ImportPanel.this.files) {
+            if (step2) {
+              ImportPanel.this.files.addAll(files);
+            }
+            else {
+              openRequestManager.openFiles(files);
+            }
+          }
+        }
+      });
+      step1 = false;
       File[] file = getInitialFiles();
-      files.addAll(Arrays.asList(file));
+      synchronized (files) {
+        files.addAll(Arrays.asList(file));
+      }
       if (nextImport()) {
         cardHandler.show("step2");
       }
@@ -220,8 +271,15 @@ public abstract class ImportPanel {
   }
 
   private boolean nextImport() {
-    if (files.isEmpty()) {
+
+    synchronized (files) {
+      if (files.isEmpty()) {
+        step2 = false;
+      }
+    }
+    if (!step2) {
       try {
+        openRequestManager.popCallback();
         localRepository.commitChanges(true);
         complete();
         return true;
@@ -233,7 +291,10 @@ public abstract class ImportPanel {
       }
     }
 
-    File file = files.remove(0);
+    File file;
+    synchronized (files) {
+      file = files.remove(0);
+    }
     try {
 
       fileNameLabel.setText(file.getAbsolutePath());

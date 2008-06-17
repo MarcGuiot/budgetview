@@ -11,14 +11,6 @@ public class JRoundedPanelTest {
     JRoundedPanel panel = new JRoundedPanel(10, 10, 5, 0.7f);
     panel.setTitle("Identification", new Font("Arial", Font.PLAIN, 24));
 
-//    JPanel loginPanel = new LoginPanel("", new LoginPanel.Launcher() {
-//      public void run(GlobRepository globRepository, Directory directory, File initialFile) throws Exception {
-//        JOptionPane.showMessageDialog(null, "Ca dechire pas sa race, ca ?");
-//      }
-//    }).getJPanel();
-//    loginPanel.setOpaque(false);
-//    panel.add(loginPanel);
-
     JPanel mainPanel = new JPanel();
     mainPanel.setOpaque(false);
     mainPanel.setLayout(new BorderLayout());

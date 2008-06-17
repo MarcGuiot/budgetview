@@ -13,7 +13,6 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -23,7 +22,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -48,14 +46,11 @@ public class LoginPanel {
   private Directory directory;
   private ServerDirectory serverDirectory;
 
-  public interface Launcher {
-    void run(GlobRepository globRepository, Directory directory, File initialFile) throws Exception;
-  }
-
-  public LoginPanel(String remoteAdress, String prevaylerPath, MainWindow mainWindow, Directory directory) {
+  public LoginPanel(String remoteAdress, String prevaylerPath, boolean dataInMemory,
+                    MainWindow mainWindow, Directory directory) {
     this.mainWindow = mainWindow;
     this.directory = directory;
-    initServerAccess(remoteAdress, prevaylerPath);
+    initServerAccess(remoteAdress, prevaylerPath, dataInMemory);
     mainWindow.getFrame().addWindowListener(new WindowAdapter() {
       public void windowClosed(WindowEvent e) {
         serverAccess.disconnect();
@@ -221,8 +216,8 @@ public class LoginPanel {
     components[components.length - 1].setNextFocusableComponent(components[0]);
   }
 
-  private void initServerAccess(String remoteAdress, String prevaylerPath) {
-    serverDirectory = new ServerDirectory(prevaylerPath, false);
+  private void initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
+    serverDirectory = new ServerDirectory(prevaylerPath, dataInMemory);
     EncrypterToTransportServerAccess localServerAccess =
       new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()));
     ServerAccess remoteAccess = null;

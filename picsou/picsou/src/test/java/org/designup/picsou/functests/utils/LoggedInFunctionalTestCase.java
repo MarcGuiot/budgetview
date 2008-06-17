@@ -2,11 +2,11 @@ package org.designup.picsou.functests.utils;
 
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
-import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
-import org.designup.picsou.client.local.LocalClientTransport;
-import org.designup.picsou.functests.ServerFunctionalTestCase;
+import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
-import org.designup.picsou.gui.MainWindowLauncher;
+import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.utils.PicsouFrame;
 import org.designup.picsou.model.LabelToCategory;
 import org.designup.picsou.model.MasterCategory;
 import org.globsframework.model.FieldValue;
@@ -19,7 +19,7 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 
-public abstract class LoggedInFunctionalTestCase extends ServerFunctionalTestCase {
+public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected Window mainWindow;
 
   protected AccountChecker accounts;
@@ -27,22 +27,27 @@ public abstract class LoggedInFunctionalTestCase extends ServerFunctionalTestCas
   protected MonthChecker periods;
   protected TransactionChecker transactions;
   protected OperationChecker operations;
-  protected ImportChecker imports;
   protected GraphicChecker graphics;
   protected GlobRepository repository;
   protected ServerAccess serverAccess;
   protected InformationPanelChecker informationPanel;
   protected TitleChecker title;
+  private PicsouApplication picsouApplication;
 
   protected void setUp() throws Exception {
     super.setUp();
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, FunctionalTestCase.getUrl());
+    System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "true");
+    System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
         if (mainWindow == null) {
           mainWindow = WindowInterceptor.run(new Trigger() {
             public void run() throws Exception {
-              serverAccess = new EncrypterToTransportServerAccess(new LocalClientTransport(directory));
-              repository = MainWindowLauncher.run(serverAccess, new String[0]);
+              picsouApplication = new PicsouApplication();
+              picsouApplication.run();
             }
           });
         }
@@ -51,6 +56,10 @@ public abstract class LoggedInFunctionalTestCase extends ServerFunctionalTestCas
     });
 
     mainWindow = getMainWindow();
+    LoginChecker loginChecker = new LoginChecker(mainWindow);
+    loginChecker.logNewUser("anonymous", "p@ssword");
+    loginChecker.skip();
+    repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
   }
 
@@ -63,7 +72,6 @@ public abstract class LoggedInFunctionalTestCase extends ServerFunctionalTestCas
     graphics = new GraphicChecker(mainWindow);
     informationPanel = new InformationPanelChecker(mainWindow);
     title = new TitleChecker(mainWindow);
-    imports = new ImportChecker(repository);
   }
 
   protected void tearDown() throws Exception {
@@ -75,12 +83,13 @@ public abstract class LoggedInFunctionalTestCase extends ServerFunctionalTestCas
     periods = null;
     transactions = null;
     operations = null;
-    imports = null;
     graphics = null;
-    repository = null;
     serverAccess = null;
     informationPanel = null;
     title = null;
+    repository = null;
+    picsouApplication.shutdown();
+    picsouApplication = null;
   }
 
   public OperationChecker getOperations() {

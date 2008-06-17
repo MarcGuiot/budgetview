@@ -1,6 +1,7 @@
 package org.designup.picsou.gui;
 
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.utils.DialogOwner;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
@@ -21,11 +22,11 @@ import java.awt.event.ActionEvent;
 public class NewAccountAction extends AbstractAction {
   private GlobRepository repository;
   private Directory directory;
-  private final Window owner;
+  private final DialogOwner owner;
   private Glob createdAccount;
   private AccountEditionPanel accountEditionPanel;
 
-  public NewAccountAction(GlobRepository repository, Directory directory, Window owner) {
+  public NewAccountAction(GlobRepository repository, Directory directory, DialogOwner owner) {
     super(Lang.get("new.account"));
     this.repository = repository;
     this.directory = directory;
@@ -38,7 +39,7 @@ public class NewAccountAction extends AbstractAction {
 
     CreateAccountAction action = new CreateAccountAction(tempRepository);
     CancelAction cancelAction = new CancelAction();
-    PicsouDialog dialog = PicsouDialog.createWithButtons(owner, createEditionPanel(tempRepository), action,
+    PicsouDialog dialog = PicsouDialog.createWithButtons(owner.getOwner(), createEditionPanel(tempRepository), action,
                                                          cancelAction);
     action.set(dialog);
     cancelAction.set(dialog);

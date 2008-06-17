@@ -35,6 +35,7 @@ public class PicsouApplication {
   public static final String LOCAL_PREVAYLER_PATH_PROPERTY = "picsou.prevayler.path";
   public static final String DEFAULT_ADDRESS_PROPERTY = "picsou.server.url";
   public static String DELETE_LOCAL_PREVAYLER_PROPERTY = "picsou.prevayler.delete";
+  public static String IS_DATA_IN_MEMORY = "picsou.data.in.memory";
   private static String DEFAULT_ADDRESS = "https://startupxp.dynalias.org";
 
   private OpenRequestManager openRequestManager = new OpenRequestManager();
@@ -82,7 +83,8 @@ public class PicsouApplication {
     directory.add(openRequestManager);
 
     final MainWindow window = new MainWindow();
-    final LoginPanel loginPanel = new LoginPanel(getServerAddress(), getLocalPrevaylerPath(), window, directory);
+    final LoginPanel loginPanel = new LoginPanel(getServerAddress(), getLocalPrevaylerPath(), isDataInMemory(),
+                                                 window, directory);
     window.setPanel(loginPanel.getJPanel());
     window.getFrame().addWindowListener(new WindowAdapter() {
       public void windowOpened(WindowEvent e) {
@@ -107,6 +109,10 @@ public class PicsouApplication {
 
   private static String getServerAddress() {
     return getSystemValue(DEFAULT_ADDRESS_PROPERTY, "");
+  }
+
+  public boolean isDataInMemory() {
+    return "true".equalsIgnoreCase(System.getProperty(IS_DATA_IN_MEMORY));
   }
 
   public static String getLocalPrevaylerPath() {

@@ -1,6 +1,6 @@
 package org.designup.picsou.server.persistence.prevayler.accounts;
 
-import org.designup.picsou.functests.ServerFunctionalTestCase;
+import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.server.ServerDirectory;
@@ -20,7 +20,7 @@ import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
 import java.util.Collections;
 
-public class PAccountDataManagerTest extends ServerFunctionalTestCase {
+public class PAccountDataManagerTest extends FunctionalTestCase {
 
   public void testUpdateData() throws Exception {
     Directory directory = ServerDirectory.getNewDirectory(url);
