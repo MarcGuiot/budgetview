@@ -17,6 +17,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
+import java.awt.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -239,6 +240,12 @@ public class TimeViewPanelTest extends TestCase {
         return "" + pos;
       }
     }
-
+  }
+  
+  public void testIntersection() throws Exception {
+    Rectangle r1 = new Rectangle(1, 1, 10, 10);
+    Rectangle r2 = new Rectangle(0, 0, 20, 20);
+    Rectangle rectangle = r2.intersection(r1);
+    System.out.println("TimeViewPanelTest.testIntersection "  + rectangle);
   }
 }
