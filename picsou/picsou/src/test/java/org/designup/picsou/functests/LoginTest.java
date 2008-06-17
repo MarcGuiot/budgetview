@@ -4,7 +4,7 @@ import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
@@ -12,8 +12,6 @@ import org.uispec4j.*;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
-
-import javax.swing.*;
 
 public class LoginTest extends StartUpFunctionalTestCase {
 

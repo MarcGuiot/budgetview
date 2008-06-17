@@ -5,7 +5,7 @@ import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.TransactionType;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
@@ -19,6 +19,8 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "false");
+    SingleApplicationInstanceListener.REMOTE_APPLICATION_DETECTION_TIMEOUT = 100;
+    SingleApplicationInstanceListener.ACCEPT_TIMEOUT = 100;
   }
 
   public void testOpenRequestsDuringLoginAndInitialFileImport() throws Exception {

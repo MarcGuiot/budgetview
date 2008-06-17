@@ -1,4 +1,4 @@
-package org.designup.picsou.gui;
+package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadPassword;
@@ -8,6 +8,9 @@ import org.designup.picsou.client.http.*;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.MainWindow;
+import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.MainPanel;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;

@@ -5,7 +5,7 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.utils.PicsouFrame;
 import org.designup.picsou.model.LabelToCategory;
 import org.designup.picsou.model.MasterCategory;

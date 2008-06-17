@@ -1,7 +1,9 @@
-package org.designup.picsou.gui;
+package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.gui.utils.DialogOwner;
+import org.designup.picsou.gui.MainWindow;
+import org.designup.picsou.gui.MainPanel;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepository;

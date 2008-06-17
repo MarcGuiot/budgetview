@@ -1,4 +1,4 @@
-package org.designup.picsou.gui;
+package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.globsframework.utils.Log;
@@ -11,6 +11,9 @@ import java.util.List;
 public class SingleApplicationInstanceListener {
   public static final String SINGLE_INSTANCE_DISABLED = "SINGLE_INSTANCE_DISABLED";
   public static final int[] PORTS = new int[]{5454, 3474, 14457, 9381};
+  public static int ACCEPT_TIMEOUT = 2000;
+  public static int REMOTE_APPLICATION_DETECTION_TIMEOUT = 2000;
+
   private static final String USER_MESSAGE_KEY = "user";
   private static final String FILES_MESSAGE_KEY = "file";
   private static final String SHOW_MESSAGE_KEY = "show";
@@ -19,13 +22,12 @@ public class SingleApplicationInstanceListener {
   private ThreadReader threadReader;
   private OpenRequestManager openRequestManager;
 
-
-  enum ReturnState {
+  public enum ReturnState {
     EXIT,
     CONTINUE
   }
 
-  SingleApplicationInstanceListener(OpenRequestManager openRequestManager) {
+  public SingleApplicationInstanceListener(OpenRequestManager openRequestManager) {
     this.openRequestManager = openRequestManager;
   }
 
@@ -49,6 +51,7 @@ public class SingleApplicationInstanceListener {
         }
       }
       catch (Exception e) {
+        // Port is empty
       }
     }
 
@@ -63,6 +66,7 @@ public class SingleApplicationInstanceListener {
         socket.close();
       }
       catch (IOException e) {
+        // Ignore
       }
     }
     return ReturnState.CONTINUE;
@@ -92,55 +96,55 @@ public class SingleApplicationInstanceListener {
       socket.close();
       return;
     }
-    socket.setSoTimeout(2000);
-    ObjectInputStream objectInputStream = null;
-    ObjectOutputStream objectOutputStream = null;
+    socket.setSoTimeout(ACCEPT_TIMEOUT);
+    ObjectInputStream inputStream = null;
+    ObjectOutputStream outputStream = null;
     try {
-      objectInputStream = new ObjectInputStream(socket.getInputStream());
-      objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-      objectOutputStream.flush();
+      inputStream = new ObjectInputStream(socket.getInputStream());
+      outputStream = new ObjectOutputStream(socket.getOutputStream());
+      outputStream.flush();
       try {
         while (true) {
-          String message = (String)objectInputStream.readObject();
+          String message = (String)inputStream.readObject();
           if (USER_MESSAGE_KEY.equals(message)) {
-            String identity = (String)objectInputStream.readObject();
+            String identity = (String)inputStream.readObject();
             if (System.getProperty("user.name").equals(identity)) {
-              objectOutputStream.writeObject(RESPONSE_OK);
-              objectOutputStream.flush();
+              outputStream.writeObject(RESPONSE_OK);
+              outputStream.flush();
               continue;
             }
           }
           if (FILES_MESSAGE_KEY.equals(message)) {
-            List<File> files = readFileName(objectInputStream);
-            objectOutputStream.writeObject(RESPONSE_OK);
-            objectOutputStream.flush();
+            List<File> files = readFileName(inputStream);
+            outputStream.writeObject(RESPONSE_OK);
+            outputStream.flush();
             openRequestManager.openFiles(files);
             continue;
           }
           if (SHOW_MESSAGE_KEY.equals(message)) {
-            readFileName(objectInputStream);
-            objectOutputStream.writeObject(RESPONSE_OK);
-            objectOutputStream.flush();
+            readFileName(inputStream);
+            outputStream.writeObject(RESPONSE_OK);
+            outputStream.flush();
             bringToFront();
             continue;
           }
           break;
         }
-        objectOutputStream.writeObject(RESPONSE_FAIL);
+        outputStream.writeObject(RESPONSE_FAIL);
       }
       catch (Exception e) {
-        objectOutputStream.writeObject(RESPONSE_FAIL);
+        outputStream.writeObject(RESPONSE_FAIL);
       }
-      objectOutputStream.flush();
+      outputStream.flush();
     }
     finally {
       try {
         socket.close();
-        if (objectOutputStream != null) {
-          objectOutputStream.close();
+        if (outputStream != null) {
+          outputStream.close();
         }
-        if (objectInputStream != null) {
-          objectInputStream.close();
+        if (inputStream != null) {
+          inputStream.close();
         }
       }
       catch (IOException e) {
@@ -192,7 +196,7 @@ public class SingleApplicationInstanceListener {
 
     public boolean checkSameApplication() throws IOException, ClassNotFoundException {
       socket = new Socket((String)null, port);
-      socket.setSoTimeout(2000);
+      socket.setSoTimeout(REMOTE_APPLICATION_DETECTION_TIMEOUT);
       output = new ObjectOutputStream(socket.getOutputStream());
       output.flush();
       input = new ObjectInputStream(socket.getInputStream());

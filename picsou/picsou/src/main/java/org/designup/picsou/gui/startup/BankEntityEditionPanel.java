@@ -1,4 +1,4 @@
-package org.designup.picsou.gui;
+package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;

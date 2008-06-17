@@ -2,7 +2,7 @@ package org.designup.picsou.server;
 
 import org.designup.picsou.PicsouServer;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.uispec4j.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.FileChooserHandler;
