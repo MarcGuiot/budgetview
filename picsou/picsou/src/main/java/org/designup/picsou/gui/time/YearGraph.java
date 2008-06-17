@@ -7,6 +7,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 
 public class YearGraph implements Selectable, Comparable<YearGraph> {
@@ -22,6 +23,7 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
   private String shortYearText;
   private Rectangle clickableArea = new Rectangle();
   private boolean selected = false;
+  private boolean isVisible;
 
   public YearGraph(int year, java.util.List<Glob> months,
                    MonthViewColors colors, ChainedSelectableElement monthElement,
@@ -49,10 +51,17 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
     }
   }
 
-  public int draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter, int height, int monthWidth, int monthRank) {
+  public int draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter, int height, int monthWidth,
+                  int monthRank, Rectangle visibleRectangle) {
     int monthDim = months.length * monthWidth;
     transformationAdapter.save();
     clickableArea = TimeGraph.getClickableArea(transformationAdapter.getTransform(), monthDim, height);
+    Rectangle2D intersection = visibleRectangle.createIntersection(clickableArea);
+    if (intersection.getWidth() < 0 && intersection.getHeight() < 0) {
+      isVisible = false;
+      return monthDim;
+    }
+    isVisible = true;
     try {
       if (selected) {
         Paint paint = graphics2D.getPaint();

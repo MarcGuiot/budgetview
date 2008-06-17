@@ -11,6 +11,7 @@ import org.uispec4j.*;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
+import java.net.ServerSocket;
 
 public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
@@ -61,9 +62,9 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     window.getButton("Enter").click();
     assertTrue(window.getTextBox("message").textIsEmpty());
     TextBox fileField = window.getTextBox("fileField");
-    assertTrue(fileField.textContains("SingleInstanceTest_testWithFileToOpen_0.ofx"));
-    assertTrue(fileField.textContains("SingleInstanceTest_testWithFileToOpen_1.ofx"));
-    assertTrue(fileField.textContains("SingleInstanceTest_testWithFileToOpen_2.ofx"));
+    assertTrue(fileField.textContains(files[0]));
+    assertTrue(fileField.textContains(files[1]));
+    assertTrue(fileField.textContains(files[2]));
 
     window.getButton("import").click();
 
@@ -135,6 +136,14 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .check();
     ((JFrame)window.getAwtComponent()).dispose();
     picsouApplication.shutdown();
+  }
+
+  public void testWhenFirstPortAreInUser() throws Exception {
+    ServerSocket serverSocket1 = new ServerSocket(5454);
+    ServerSocket serverSocket2 = new ServerSocket(3474);
+    testWithFileToOpen();
+    serverSocket1.close();
+    serverSocket2.close();
   }
 
   private static class ApplicationThread extends Thread {

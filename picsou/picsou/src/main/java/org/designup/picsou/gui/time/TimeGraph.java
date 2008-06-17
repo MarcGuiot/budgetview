@@ -65,6 +65,7 @@ public class TimeGraph {
 
   public void draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter,
                    int preferredHeight, int preferredWidth) {
+    Rectangle visibleRectangle = new Rectangle(0, 0, preferredWidth, preferredHeight);
     transformationAdapter.save();
     try {
       init(graphics2D);
@@ -89,7 +90,8 @@ public class TimeGraph {
       int y = preferredHeight - height;
       transformationAdapter.translate(0, y < 0 ? 0 : y);
       for (YearGraph yearGraph : years) {
-        int actualMonthPos = yearGraph.draw(graphics2D, transformationAdapter, height, monthWidth, monthRank);
+        int actualMonthPos =
+          yearGraph.draw(graphics2D, transformationAdapter, height, monthWidth, monthRank, visibleRectangle);
         transformationAdapter.translate(actualMonthPos, 0);
       }
     }

@@ -84,7 +84,7 @@ public class MonthGraph implements Selectable, Comparable<MonthGraph> {
 
     MonthGraph that = (MonthGraph)o;
 
-    return month.get(Month.ID) == that.month.get(Month.ID);
+    return month.get(Month.ID).equals(that.month.get(Month.ID));
   }
 
   public int hashCode() {

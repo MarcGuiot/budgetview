@@ -98,6 +98,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   public void mouseDragged(MouseEvent e) {
     currentState = currentState.mouseMoved(e);
     repaint();
+    //scrollToLastSelected();
   }
 
   public void mouseMoved(MouseEvent e) {
