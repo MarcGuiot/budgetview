@@ -126,8 +126,8 @@ public final class WindowInterceptor {
    * @see #process(WindowHandler)
    */
   public WindowInterceptor process(WindowHandler[] handlers) {
-    for (int i = 0; i < handlers.length; i++) {
-      process(handlers[i]);
+    for (WindowHandler handler : handlers) {
+      process(handler);
     }
     return this;
   }
