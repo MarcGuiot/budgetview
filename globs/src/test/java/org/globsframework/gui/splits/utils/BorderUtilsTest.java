@@ -1,12 +1,12 @@
 package org.globsframework.gui.splits.utils;
 
-import junit.framework.TestCase;
 import org.globsframework.gui.splits.color.ColorService;
+import org.uispec4j.UISpecTestCase;
 
 import javax.swing.border.*;
 import java.awt.*;
 
-public class BorderUtilsTest extends TestCase {
+public class BorderUtilsTest extends UISpecTestCase {
   private ColorService colorService = new ColorService();
 
   public void testNoBorder() throws Exception {

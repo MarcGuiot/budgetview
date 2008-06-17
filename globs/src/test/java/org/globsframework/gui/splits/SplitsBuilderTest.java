@@ -1,6 +1,5 @@
 package org.globsframework.gui.splits;
 
-import junit.framework.TestCase;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.components.JStyledPanel;
 import org.globsframework.gui.splits.exceptions.SplitsException;
@@ -9,6 +8,7 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.gui.splits.utils.*;
+import org.uispec4j.UISpecTestCase;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 
@@ -24,7 +24,7 @@ import java.awt.*;
 import java.io.Reader;
 import java.io.StringReader;
 
-public class SplitsBuilderTest extends TestCase {
+public class SplitsBuilderTest extends UISpecTestCase {
 
   private SplitsBuilder builder;
   private ColorService colorService = new ColorService();

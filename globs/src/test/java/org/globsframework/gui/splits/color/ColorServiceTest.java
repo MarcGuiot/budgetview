@@ -1,12 +1,12 @@
 package org.globsframework.gui.splits.color;
 
-import junit.framework.TestCase;
 import org.globsframework.gui.splits.exceptions.SplitsException;
+import org.uispec4j.UISpecTestCase;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class ColorServiceTest extends TestCase {
+public class ColorServiceTest extends UISpecTestCase {
   private ColorService service;
 
   protected void setUp() throws Exception {

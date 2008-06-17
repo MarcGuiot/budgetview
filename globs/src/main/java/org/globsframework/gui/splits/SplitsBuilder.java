@@ -24,6 +24,7 @@ public class SplitsBuilder {
 
   private DefaultSplitsContext context;
   private SplitterFactory factory = new DefaultSplitterFactory();
+  private static final SAXParser PARSER = new SAXParser();
 
   public static SplitsBuilder init(ColorService colorService, IconLocator locator) {
     return new SplitsBuilder(colorService, locator);
@@ -100,9 +101,11 @@ public class SplitsBuilder {
   }
 
   public Component parse(Reader reader) throws SplitsException {
-    SplitsBootstrapXmlNode bootstrap = new SplitsBootstrapXmlNode();
-    SaxStackParser.parse(new SAXParser(), bootstrap, reader);
-    return bootstrap.getRootComponent();
+    synchronized (PARSER) {
+      SplitsBootstrapXmlNode bootstrap = new SplitsBootstrapXmlNode();
+      SaxStackParser.parse(PARSER, bootstrap, reader);
+      return bootstrap.getRootComponent();
+    }
   }
 
   public Component getComponent(String id) {

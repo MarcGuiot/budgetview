@@ -1,17 +1,13 @@
 package org.globsframework.gui.splits.color;
 
-import junit.framework.TestCase;
-import org.uispec4j.ComboBox;
-import org.uispec4j.ListBox;
-import org.uispec4j.Panel;
-import org.uispec4j.TextBox;
+import org.uispec4j.*;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-public class ColorServiceEditorTest extends TestCase {
+public class ColorServiceEditorTest extends UISpecTestCase {
   private ColorService colorService;
   private ListBox list;
   private TextBox text;

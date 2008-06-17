@@ -1,13 +1,13 @@
 package org.globsframework.gui.splits.utils;
 
-import junit.framework.TestCase;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.GridPos;
+import org.uispec4j.UISpecTestCase;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SplitsUtilsTest extends TestCase {
+public class SplitsUtilsTest extends UISpecTestCase {
 
   public static Integer DUMMY_FIELD = 2405;
   private static Integer DUMMY_FIELD_PRIVATE = 3; // used for test below

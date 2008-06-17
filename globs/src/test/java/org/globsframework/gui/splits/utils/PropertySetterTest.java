@@ -1,15 +1,15 @@
 package org.globsframework.gui.splits.utils;
 
-import junit.framework.TestCase;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.impl.DefaultSplitProperties;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
+import org.uispec4j.UISpecTestCase;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PropertySetterTest extends TestCase {
+public class PropertySetterTest extends UISpecTestCase {
 
   private ColorService colorService;
   private DefaultSplitsContext context;
