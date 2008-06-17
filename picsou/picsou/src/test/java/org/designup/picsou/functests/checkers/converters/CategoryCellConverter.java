@@ -37,8 +37,7 @@ public class CategoryCellConverter implements TableCellValueConverter {
     this.categoryComparator = new CategoryComparator(repository, categoryStringifier);
   }
 
-  public Object getValue(int row, int column,
-                         Component renderedComponent, Object modelObject) {
+  public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
     org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
     UIComponent[] categoryLabels = panel.getUIComponents(TextBox.class);
 

@@ -59,23 +59,6 @@ public class OperationChecker {
         }
       })
       .run();
-
-    // TODO: QIF
-//    if (name[0].endsWith(".qif")) {
-//      interceptor.process("Solde", new WindowHandler() {
-//        public Trigger process(Window window) throws Exception {
-//          if (balance != null) {
-//            TextBox textBox = window.getTextBox(TransactionImport.BALANCE.getName());
-//            textBox.setText(Formats.DEFAULT_DECIMAL_FORMAT.format(balance));
-//            return window.getButton("OK").triggerClick();
-//          }
-//          else {
-//            return window.getButton("Inconnu").triggerClick();
-//          }
-//        }
-//      });
-//    }
-
   }
 
   public void exportFile(String name) {

@@ -23,3 +23,5 @@
 * Sensibilité des messages : inutile de parler d’une économie de 3€
 
 * Navigation back/forward
+
+* Mac: stocker repository prevayler dans repertoire Documents ?

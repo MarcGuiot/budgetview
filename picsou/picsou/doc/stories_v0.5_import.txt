@@ -3,10 +3,8 @@
 Import
 ------
 * Integrer fichiers BNP Pascal
-* Integrer fichiers CA
+* Integrer fichiers CA (gestion du tag "MEMO" dans l'OFX)
 * Open with...
-
-* QIF: saisie du solde + maj auto du Account.UPDATE_DATE
 
 * Import step 2: bouton "back" (selectionner d'autres fichiers)
 * Import step1 : bouton "close" à renommer en "skip"
@@ -16,6 +14,8 @@ Import
 * Import step 1 : URL banques => lancer navigateur
 * Bug: import OFX initial invalide : rester sur page import
 * LoginPanel: error login + "new user" => effacer message
+
+* LoginPanel: si aucun utilisateur, mode "accompagnement" pour la creation d'un compte
 
 
 Joliesse

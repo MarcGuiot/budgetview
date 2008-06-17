@@ -54,5 +54,4 @@ public class LoginFuncTest extends ServerFuncTestCase {
     Table table = window.getTable("category");
     assertTrue(table.cellEquals(0, 2, "-100"));
   }
-
 }

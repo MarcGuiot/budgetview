@@ -314,7 +314,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   }
 
   private void checkLoginMessage(String message) {
-    TextBox fileMessage = (TextBox)window.findUIComponent(TextBox.class, message);
+    TextBox fileMessage = window.findUIComponent(TextBox.class, message);
     assertTrue(fileMessage != null);
     assertTrue(fileMessage.isVisible());
   }
