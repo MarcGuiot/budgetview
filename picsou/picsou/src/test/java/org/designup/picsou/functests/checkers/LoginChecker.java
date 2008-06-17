@@ -25,7 +25,7 @@ public class LoginChecker {
     loginButton.click();
   }
 
-  public void skip() {
+  public void skipImport() {
     panel.getButton("Close").click();
   }
 }

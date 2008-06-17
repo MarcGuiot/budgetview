@@ -42,7 +42,7 @@ public class CategorizationTest extends ServerFuncTestCase {
         }
       }).run();
     checkTransactionChange();
-    ((JFrame)window.getAwtComponent()).dispose();
+    window.dispose();
     window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
         PicsouApplication.main();

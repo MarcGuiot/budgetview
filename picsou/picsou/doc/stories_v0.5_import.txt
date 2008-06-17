@@ -1,13 +1,15 @@
 === v0.5 : stabilisation + import de donnees ===
 
+CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
+
 Import
 ------
 * Integrer fichiers BNP Pascal
 * Integrer fichiers CA (gestion du tag "MEMO" dans l'OFX)
 * Open with...
 
-* Import step 2: bouton "back" (selectionner d'autres fichiers)
-* Import step1 : bouton "close" à renommer en "skip"
+* Import step2: bouton "back" (selectionner d'autres fichiers)
+* Import step1: bouton "close" à renommer en "skip"
 
 * Test d'import QIF tronque ou invalide
 

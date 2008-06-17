@@ -7,10 +7,11 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.SingleApplicationInstanceListener;
 import org.designup.picsou.model.TransactionType;
-import org.uispec4j.*;
+import org.uispec4j.Trigger;
+import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.utils.ThreadLauncherTrigger;
 
-import javax.swing.*;
 import java.net.ServerSocket;
 
 public class SingleInstanceTest extends StartUpFunctionalTestCase {
@@ -20,7 +21,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "false");
   }
 
-  public void testWithFileToOpen() throws Exception {
+  public void testOpenRequestsDuringLoginAndInitialFileImport() throws Exception {
     final String[] files = new String[3];
     files[0] = OfxBuilder.init(this)
       .addTransaction("2000/01/01", 1.2, "mac do")
@@ -36,13 +37,8 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     for (int i = 0; i < threads.length; i++) {
       threads[i] = new ApplicationThread(files[i]);
     }
-    final Window window = WindowInterceptor.run(new Trigger() {
-      public void run() throws Exception {
-        for (Thread thread : threads) {
-          thread.start();
-        }
-      }
-    });
+    final Window window = WindowInterceptor.run(new ThreadLauncherTrigger(threads));
+
     int errorCount = 0;
     for (ApplicationThread thread : threads) {
       thread.join();
@@ -51,31 +47,23 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       }
     }
     assertEquals(0, errorCount);
-    TextBox userField = window.getInputTextBox("name");
-    PasswordField passwordField = window.getPasswordField("password");
-    CheckBox createUserCheckbox = window.getCheckBox();
-    createUserCheckbox.select();
 
-    userField.setText("calimero");
-    passwordField.setPassword("C@limero2");
-    window.getPasswordField("confirmPassword").setPassword("C@limero2");
-    window.getButton("Enter").click();
-    assertTrue(window.getTextBox("message").textIsEmpty());
-    TextBox fileField = window.getTextBox("fileField");
-    assertTrue(fileField.textContains(files[0]));
-    assertTrue(fileField.textContains(files[1]));
-    assertTrue(fileField.textContains(files[2]));
+    LoginChecker login = new LoginChecker(window);
+    login.logNewUser("calimero", "C@limero2");
 
-    window.getButton("import").click();
+    ImportChecker importer = new ImportChecker(window);
+    importer.checkSelectedFiles(files);
+    importer.startImport();
 
     String step2File = OfxBuilder.init(this)
       .addTransaction("2000/01/04", 1.2, "menu K")
       .save();
     PicsouApplication.main(step2File);
-    window.getButton("OK").click();
-    window.getButton("OK").click();
-    window.getButton("OK").click();
-    window.getButton("OK").click();
+
+    importer.doImport();
+    importer.doImport();
+    importer.doImport();
+    importer.doImport();
 
     TransactionChecker transactionChecker = new TransactionChecker(window);
     transactionChecker.initContent()
@@ -84,13 +72,14 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .add("02/01/2000", TransactionType.VIREMENT, "quick", "", 1.20)
       .add("01/01/2000", TransactionType.VIREMENT, "mac do", "", 1.20)
       .check();
-    ((JFrame)window.getAwtComponent()).dispose();
+
+    window.dispose();
     for (ApplicationThread thread : threads) {
       thread.shutdown();
     }
   }
 
-  public void testImport() throws Exception {
+  public void testOpenRequestsWhenTheApplicationIsRunning() throws Exception {
     final PicsouApplication picsouApplication = new PicsouApplication();
     final Window window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
@@ -100,7 +89,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("calimero", "C@limero2");
-    loginChecker.skip();
+    loginChecker.skipImport();
 
     final String initialFile = OfxBuilder.init(this)
       .addTransaction("2000/01/03", 1.2, "menu K")
@@ -134,14 +123,14 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .add("02/01/2000", TransactionType.VIREMENT, "quick", "", 1.20)
       .add("01/01/2000", TransactionType.VIREMENT, "mac do", "", 1.20)
       .check();
-    ((JFrame)window.getAwtComponent()).dispose();
+    window.dispose();
     picsouApplication.shutdown();
   }
 
-  public void testWhenFirstPortAreInUser() throws Exception {
+  public void testWhenFirstPortAreInUse() throws Exception {
     ServerSocket serverSocket1 = new ServerSocket(5454);
     ServerSocket serverSocket2 = new ServerSocket(3474);
-    testWithFileToOpen();
+    testOpenRequestsDuringLoginAndInitialFileImport();
     serverSocket1.close();
     serverSocket2.close();
   }

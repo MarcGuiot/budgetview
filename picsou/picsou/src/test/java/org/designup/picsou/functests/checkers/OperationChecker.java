@@ -8,8 +8,6 @@ import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
-import javax.swing.text.JTextComponent;
-
 public class OperationChecker {
   private MenuItem importMenu;
   private MenuItem exportMenu;
@@ -47,7 +45,7 @@ public class OperationChecker {
             importDialog.getComboBox("bank").select(bank);
           }
           importDialog.getButton("Import").click();
-          if (((JTextComponent)importDialog.getInputTextBox("number").getAwtComponent()).isEditable()) {
+          if (importDialog.getInputTextBox("number").isEditable().isTrue()) {
             importDialog.getInputTextBox("number").setText("11111");
           }
           Button okButton = importDialog.getButton("OK");

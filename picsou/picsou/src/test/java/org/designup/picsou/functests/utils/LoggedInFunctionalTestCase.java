@@ -17,8 +17,6 @@ import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
-import javax.swing.*;
-
 public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected Window mainWindow;
 
@@ -58,7 +56,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     mainWindow = getMainWindow();
     LoginChecker loginChecker = new LoginChecker(mainWindow);
     loginChecker.logNewUser("anonymous", "p@ssword");
-    loginChecker.skip();
+    loginChecker.skipImport();
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
   }
@@ -76,7 +74,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected void tearDown() throws Exception {
     super.tearDown();
-    ((JFrame)mainWindow.getAwtComponent()).dispose();
+    mainWindow.dispose();
     mainWindow = null;
     accounts = null;
     categories = null;
