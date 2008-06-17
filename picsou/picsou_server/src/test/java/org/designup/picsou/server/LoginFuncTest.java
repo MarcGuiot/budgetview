@@ -8,7 +8,6 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.io.File;
-import java.net.ServerSocket;
 
 public class LoginFuncTest extends ServerFuncTestCase {
 
@@ -56,10 +55,4 @@ public class LoginFuncTest extends ServerFuncTestCase {
     assertTrue(table.cellEquals(0, 2, "-100"));
   }
 
-
-  public void testOpen() throws Exception {
-    ServerSocket serverSocket = new ServerSocket(12345);
-    serverSocket.accept();
-
-  }
 }

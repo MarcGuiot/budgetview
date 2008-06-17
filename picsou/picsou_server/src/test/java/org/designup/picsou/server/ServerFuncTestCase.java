@@ -2,6 +2,7 @@ package org.designup.picsou.server;
 
 import org.designup.picsou.PicsouServer;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.SingleApplicationInstanceListener;
 import org.uispec4j.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.FileChooserHandler;
@@ -16,7 +17,7 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    System.setProperty("SINGLE_INSTANCE_DISABLED", "true");
+    System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "http://localhost:8443");
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, "tmp/localprevayler");
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
