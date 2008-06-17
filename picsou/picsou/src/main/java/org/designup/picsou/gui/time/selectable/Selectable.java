@@ -6,6 +6,12 @@ import java.util.Collection;
 
 public interface Selectable extends ChainedSelectableElement {
 
+  enum Visibility {
+    PARTIALLY,
+    FULLY,
+    NOT_VISIBLE
+  }
+
   void select();
 
   void unSelect();
@@ -14,6 +20,7 @@ public interface Selectable extends ChainedSelectableElement {
 
   String getCommonParent();
 
-  void getObject(Collection<Glob> selected);
+  void getSelectedGlobs(Collection<Glob> selected);
 
+  Visibility isVisible();
 }

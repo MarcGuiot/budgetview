@@ -162,6 +162,14 @@ public class TimeGraph {
     }
   }
 
+  public Selectable getFirstSelectable() {
+    return years.get(0).getFirstMonth();
+  }
+
+  public Selectable getLastSelectable() {
+    return years.get(years.size() - 1).getLastMonth();
+  }
+
   private class MonthChainedSelectableElement implements ChainedSelectableElement {
     private int yearCount;
 

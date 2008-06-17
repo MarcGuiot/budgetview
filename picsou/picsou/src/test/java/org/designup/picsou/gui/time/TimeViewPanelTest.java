@@ -7,6 +7,7 @@ import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.SelectableContainer;
 import org.designup.picsou.model.Month;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -16,8 +17,8 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -101,11 +102,19 @@ public class TimeViewPanelTest extends TestCase {
     container.checkSelected(0, 1, 1, 1, 1);
   }
 
+  public void testInter() throws Exception {
+    Rectangle r1 = new Rectangle(15, 15, 10, 10);
+    Rectangle r2 = new Rectangle(10, 10, 10, 10);
+    Rectangle rectangle = r1.intersection(r2);
+    System.out.println("TimeViewPanelTest.testInter " + rectangle);
+  }
+
   public static void main(String[] args) {
     JFrame jFrame = new JFrame();
     jFrame.setBounds(0, 0, 640, 480);
     Directory directory = new DefaultDirectory();
     directory.add(SelectionService.class, new SelectionService());
+    directory.add(ColorService.class, new ColorService());
     GlobList months = new GlobList();
     for (int i = 1; i < 7; i++) {
       months.add(GlobBuilder.init(Month.TYPE).set(Month.ID, Month.toYyyyMm(2006, i)).get());
@@ -198,7 +207,11 @@ public class TimeViewPanelTest extends TestCase {
         return "unique";
       }
 
-      public void getObject(Collection<Glob> selected) {
+      public void getSelectedGlobs(Collection<Glob> selected) {
+      }
+
+      public Visibility isVisible() {
+        return Visibility.FULLY;
       }
 
       public Selectable getLeft() {
@@ -240,12 +253,5 @@ public class TimeViewPanelTest extends TestCase {
         return "" + pos;
       }
     }
-  }
-  
-  public void testIntersection() throws Exception {
-    Rectangle r1 = new Rectangle(1, 1, 10, 10);
-    Rectangle r2 = new Rectangle(0, 0, 20, 20);
-    Rectangle rectangle = r2.intersection(r1);
-    System.out.println("TimeViewPanelTest.testIntersection "  + rectangle);
   }
 }

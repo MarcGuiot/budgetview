@@ -6,8 +6,6 @@ import java.util.*;
 
 public class AbstractPressedState extends AbstractMouseState {
   protected Selectable firstSelected;
-  protected int x;
-  protected int y;
   protected java.util.List<Selectable> currentSelectable = new ArrayList<Selectable>();
 
   public AbstractPressedState(SelectableContainer container) {
@@ -77,15 +75,15 @@ public class AbstractPressedState extends AbstractMouseState {
     int removeCount = 0;
     Iterator<Selectable> listIterator = selected.iterator();
     listIterator.next();
-    ListIterator<Selectable> listIterator1 = currentSelectable.listIterator(currentSelectable.size());
-    listIterator1.previous();
-    while (listIterator.hasNext() && listIterator1.hasPrevious()) {
+    ListIterator<Selectable> reverseIterator = currentSelectable.listIterator(currentSelectable.size());
+    reverseIterator.previous();
+    while (listIterator.hasNext() && reverseIterator.hasPrevious()) {
       Selectable newSelected = listIterator.next();
       if (newSelected.equals(firstSelected)) {
         removeCount++;
         break;
       }
-      if (newSelected.equals(listIterator1.previous())) {
+      if (newSelected.equals(reverseIterator.previous())) {
         removeCount++;
       }
       else {
@@ -104,8 +102,8 @@ public class AbstractPressedState extends AbstractMouseState {
     selected.remove(0);
     currentSelectable.addAll(selected);
 
-    for (Selectable tmp : currentSelectable) {
-      tmp.select();
+    for (Selectable selectable : currentSelectable) {
+      selectable.select();
     }
     return this;
   }
@@ -119,15 +117,15 @@ public class AbstractPressedState extends AbstractMouseState {
     if (e.getKeyCode() == KeyEvent.VK_LEFT) {
       Selectable selectable = container.getLastSelected();
       if (selectable != null) {
-        Selectable selectable1 = selectable.getLeft();
-        if (selectable1 != null) {
+        Selectable newSelectable = selectable.getLeft();
+        if (newSelectable != null) {
           Set<Selectable> selectables = getCurrentlySelected();
-          for (Selectable selectable2 : selectables) {
-            selectable2.unSelect();
+          for (Selectable previouslySelected : selectables) {
+            previouslySelected.unSelect();
           }
           selectables.clear();
-          selectable1.select();
-          selectables.add(selectable1);
+          newSelectable.select();
+          selectables.add(newSelectable);
         }
       }
     }

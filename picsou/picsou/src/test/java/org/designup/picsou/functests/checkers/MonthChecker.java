@@ -49,7 +49,7 @@ public class MonthChecker extends DataChecker {
     Assert.assertEquals(1, list.size());
     Selectable selectable = list.iterator().next();
     GlobList globList = new GlobList();
-    selectable.getObject(globList);
+    selectable.getSelectedGlobs(globList);
     Assert.assertEquals(1, globList.size());
     Integer currentyymm = globList.get(0).get(Month.ID);
     GlobList currentMonths = timeViewPanel.getRepository().getAll(Month.TYPE).sort(Month.ID);
@@ -63,7 +63,7 @@ public class MonthChecker extends DataChecker {
     Set<Selectable> list = timeViewPanel.getCurrentlySelectedToUpdate();
     GlobList selectedMonth = new GlobList();
     for (Selectable selectable : list) {
-      selectable.getObject(selectedMonth);
+      selectable.getSelectedGlobs(selectedMonth);
     }
     GlobList currentMonths = timeViewPanel.getRepository().getAll(Month.TYPE).sort(Month.ID);
 

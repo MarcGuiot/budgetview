@@ -1,10 +1,10 @@
 package org.designup.picsou.functests;
 
-import org.uispec4j.Button;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.uispec4j.Button;
 
 public class MonthManagementTest extends LoggedInFunctionalTestCase {
 
@@ -127,7 +127,7 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
     transactions.assertEmpty();
   }
 
-  public void testNavigationButtons() throws Exception {
+  public void DISABLED_NOT_APPLICABLE_testNavigationButtons() throws Exception {
     Button prevButton = mainWindow.getButton("prev");
     Button nextButton = mainWindow.getButton("next");
     Button lastButton = mainWindow.getButton("last");
