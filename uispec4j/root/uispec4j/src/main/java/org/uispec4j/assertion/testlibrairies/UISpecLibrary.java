@@ -1,6 +1,6 @@
-package org.uispec4j.assertion.dependency;
+package org.uispec4j.assertion.testlibrairies;
 
-public class InternalLibrary implements TestLibrary {
+public class UISpecLibrary implements TestLibrary {
   public void fail(String message) {
     throw new RuntimeException(message);
   }
@@ -17,6 +17,10 @@ public class InternalLibrary implements TestLibrary {
 
   public void assertFalse(String description, boolean b) {
     assertTrue(description, !b);
+  }
+
+  public void assertEquals(String expected, String actual) {
+    assertEquals("", expected, actual);
   }
 
   public void assertEquals(Object expected, Object actual) {

@@ -1,4 +1,4 @@
-package org.uispec4j.assertion.dependency;
+package org.uispec4j.assertion.testlibrairies;
 
 interface TestLibrary {
   public void fail(String message);
@@ -8,6 +8,8 @@ interface TestLibrary {
   public void assertTrue(String message, boolean b);
 
   public void assertFalse(String description, boolean b);
+
+  public void assertEquals(String expected, String actual);
 
   public void assertEquals(Object expected, Object actual);
 

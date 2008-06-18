@@ -1,9 +1,9 @@
-package org.uispec4j.assertion.dependency;
+package org.uispec4j.assertion.testlibrairies;
 
-public class ErrorLibrary implements TestLibrary {
+public class InvalidLibrary implements TestLibrary {
   private String message;
 
-  public ErrorLibrary(String message) {
+  public InvalidLibrary(String message) {
     this.message = message;
   }
 
@@ -20,6 +20,10 @@ public class ErrorLibrary implements TestLibrary {
   }
 
   public void assertFalse(String description, boolean b) {
+    error();
+  }
+
+  public void assertEquals(String expected, String actual) {
     error();
   }
 

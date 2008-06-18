@@ -1,4 +1,4 @@
-package org.uispec4j.assertion.dependency;
+package org.uispec4j.assertion.testlibrairies;
 
 import junit.framework.Assert;
 
@@ -17,6 +17,10 @@ class JUnitLibrary implements TestLibrary {
 
   public void assertFalse(String description, boolean b) {
     Assert.assertFalse(description, b);
+  }
+
+  public void assertEquals(String expected, String actual) {
+    Assert.assertEquals(expected, actual);
   }
 
   public void assertEquals(Object expected, Object actual) {

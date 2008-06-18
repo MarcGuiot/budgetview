@@ -1,4 +1,4 @@
-package org.uispec4j.assertion.dependency;
+package org.uispec4j.assertion.testlibrairies;
 
 import org.testng.Assert;
 
@@ -17,6 +17,10 @@ class TestNGLibrary implements TestLibrary {
 
   public void assertFalse(String description, boolean b) {
     Assert.assertFalse(b, description);
+  }
+
+  public void assertEquals(String expected, String actual) {
+    Assert.assertEquals(expected, actual);
   }
 
   public void assertEquals(Object expected, Object actual) {

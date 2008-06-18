@@ -1,10 +1,10 @@
-package org.uispec4j.assertion.dependency;
+package org.uispec4j.assertion.testlibrairies;
 
-public class InternalAssert {
+public class AssertAdapter {
   private static final TestLibrary ASSERT;
 
   static {
-    ASSERT = Libraries.loadDependency();
+    ASSERT = TestLibraries.loadDependency();
   }
 
   public static void fail(String message) {
@@ -21,6 +21,10 @@ public class InternalAssert {
 
   public static void assertFalse(String description, boolean b) {
     ASSERT.assertFalse(description, b);
+  }
+
+  public static void assertEquals(String expected, String actual) {
+    ASSERT.assertEquals(expected, actual);
   }
 
   public static void assertEquals(Object expected, Object actual) {
