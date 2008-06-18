@@ -5,7 +5,10 @@ import org.designup.picsou.gui.time.selectable.MouseState;
 import org.designup.picsou.gui.time.selectable.ReleasedMouseState;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.SelectableContainer;
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Month;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.Glob;
@@ -24,7 +27,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class TimeViewPanelTest extends TestCase {
-  protected TimeViewPanel timeViewPanel;
 
   public void testInOut() throws Exception {
     DummySelectableContainer container = new DummySelectableContainer();
@@ -102,6 +104,63 @@ public class TimeViewPanelTest extends TestCase {
     container.checkSelected(0, 1, 1, 1, 1);
   }
 
+//  public void testReal() throws Exception {
+//    DefaultDirectory defaultDirectory = new DefaultDirectory();
+//    GlobRepository repository = GlobRepositoryBuilder.init().get();
+//    final JFrame jFrame = initPanel(defaultDirectory, repository);
+//
+//    SelectionService service = defaultDirectory.get(SelectionService.class);
+//    DummySelectionListener listener = new DummySelectionListener();
+//    service.addListener(listener, Month.TYPE);
+//    setAdapter(new UISpecAdapter() {
+//      public Window getMainWindow() {
+//        return WindowInterceptor.run(new Trigger() {
+//          public void run() throws Exception {
+//            jFrame.setVisible(true);
+//          }
+//        });
+//      }
+//    });
+//    Window mainWindow = getMainWindow();
+//    Panel panel = mainWindow.getPanel("MonthSelector");
+//    mainWindow.getAwtComponent().repaint();
+//    Thread.sleep(100);
+//    Mouse.pressed(panel, 200, 5);
+//    Mouse.released(panel, 200, 5);
+//    GlobList list = listener.getReceived();
+//    GlobList allMonth = repository.getAll(Month.TYPE).sort(Month.ID);
+//    int i = allMonth.indexOf(list.get(0));
+//    assertTrue(i != -1);
+//    GlobList expected = allMonth.subList(i, allMonth.size() - 1);
+//    Mouse.pressed(panel, 200, 5);
+//    Mouse.drag(panel, 400, 5);
+//    Thread.sleep(10000);
+//    Mouse.released(panel, 200, 5);
+//    GlobList received = listener.getReceived();
+//    org.globsframework.utils.TestUtils.assertEquals(expected, received);
+//  }
+
+  private static JFrame initPanel(Directory directory, GlobRepository repository) {
+    final JFrame jFrame = new JFrame();
+    jFrame.setBounds(0, 0, 270, 40);
+    directory.add(SelectionService.class, new SelectionService());
+    directory.add(ColorService.class, PicsouColors.createColorService());
+    GlobList months = new GlobList();
+    for (int i = 4; i < 13; i++) {
+      months.add(GlobBuilder.init(Month.TYPE).set(Month.ID, Month.toYyyyMm(2006, i)).get());
+    }
+    for (int i = 1; i < 13; i++) {
+      months.add(GlobBuilder.init(Month.TYPE).set(Month.ID, Month.toYyyyMm(2007, i)).get());
+    }
+    for (int i = 1; i < 5; i++) {
+      months.add(GlobBuilder.init(Month.TYPE).set(Month.ID, Month.toYyyyMm(2008, i)).get());
+    }
+    repository.reset(months, Month.TYPE);
+    jFrame.add(new TimeViewPanel(repository, directory));
+    return jFrame;
+  }
+
+
   public void testInter() throws Exception {
     Rectangle r1 = new Rectangle(15, 15, 10, 10);
     Rectangle r2 = new Rectangle(10, 10, 10, 10);
@@ -110,18 +169,7 @@ public class TimeViewPanelTest extends TestCase {
   }
 
   public static void main(String[] args) {
-    JFrame jFrame = new JFrame();
-    jFrame.setBounds(0, 0, 640, 480);
-    Directory directory = new DefaultDirectory();
-    directory.add(SelectionService.class, new SelectionService());
-    directory.add(ColorService.class, new ColorService());
-    GlobList months = new GlobList();
-    for (int i = 1; i < 7; i++) {
-      months.add(GlobBuilder.init(Month.TYPE).set(Month.ID, Month.toYyyyMm(2006, i)).get());
-    }
-    GlobRepository repository = GlobRepositoryBuilder.init().add(months).get();
-    jFrame.add(new TimeViewPanel(repository, directory));
-    jFrame.setVisible(true);
+    initPanel(new DefaultDirectory(), GlobRepositoryBuilder.init().get()).setVisible(true);
   }
 
   private MouseEvent getMouseEvent(int x, int y) {
@@ -251,6 +299,31 @@ public class TimeViewPanelTest extends TestCase {
 
       public String toString() {
         return "" + pos;
+      }
+    }
+  }
+
+  private static class DummySelectionListener implements GlobSelectionListener {
+    private GlobList received;
+
+    public void selectionUpdated(GlobSelection selection) {
+      synchronized (this) {
+        received = selection.getAll();
+        notify();
+      }
+    }
+
+    public GlobList getReceived() throws InterruptedException {
+      synchronized (this) {
+        if (received == null) {
+          wait(10000);
+        }
+        try {
+          return received;
+        }
+        finally {
+          received = null;
+        }
       }
     }
   }

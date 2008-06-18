@@ -33,11 +33,12 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   int translation;
   private long id = 0;
   private ScrollAndRepaint scrollRunnable = new ScrollAndRepaint();
-  private Timer timer = new Timer(300, new ActionListener() {
+  private Timer timer = new Timer(250, new ActionListener() {
     public void actionPerformed(ActionEvent e) {
       SwingUtilities.invokeLater(scrollRunnable);
     }
   });
+  private int previousWidth = -1;
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
     this.repository = globRepository;
@@ -60,6 +61,14 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void paintComponent(Graphics g) {
+    System.out.println("TimeViewPanel.paintComponent h=" + getHeight() + " w= " + getWidth());
+    if (previousWidth > 0 && getWidth() > previousWidth && translation < 0) {
+      translation += getWidth() - previousWidth;
+      if (translation > 0) {
+        translation = 0;
+      }
+    }
+    previousWidth = getWidth();
     Graphics2D d = (Graphics2D)g.create();
     try {
       d.setPaint(new GradientPaint(0, 0, colors.backgroundTop, 0, getHeight(), colors.backgroundBottom));
@@ -111,6 +120,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     if (e.getPoint().getX() < 0) {
       if (scrollLeft()) {
         scrollRunnable.set(id, e);
+        timer.stop();
         timer.start();
       }
       else {
@@ -120,6 +130,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     else if (e.getPoint().getX() > getWidth()) {
       if (scrollRigth()) {
         scrollRunnable.set(id, e);
+        timer.stop();
         timer.start();
       }
       else {
