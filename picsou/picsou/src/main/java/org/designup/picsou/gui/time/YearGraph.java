@@ -23,7 +23,7 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
   private String shortYearText;
   private Rectangle clickableArea = new Rectangle();
   private boolean selected = false;
-  private boolean isVisible;
+  private Visibility isVisible = Visibility.FULLY;
 
   public YearGraph(int year, java.util.List<Glob> months,
                    MonthViewColors colors, ChainedSelectableElement monthElement,
@@ -57,11 +57,19 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
     transformationAdapter.save();
     clickableArea = TimeGraph.getClickableArea(transformationAdapter.getTransform(), monthDim, height);
     Rectangle2D intersection = visibleRectangle.createIntersection(clickableArea);
-    if (intersection.getWidth() < 0 && intersection.getHeight() < 0) {
-      isVisible = false;
+    if (intersection.getWidth() != clickableArea.getWidth()) {
+      isVisible = Visibility.PARTIALLY;
+    }
+    else {
+      isVisible = Visibility.FULLY;
+    }
+    if (intersection.getWidth() < 0) {
+      isVisible = Visibility.NOT_VISIBLE;
+      for (MonthGraph month : months) {
+        month.setNotVisible();
+      }
       return monthDim;
     }
-    isVisible = true;
     try {
       if (selected) {
         Paint paint = graphics2D.getPaint();
@@ -70,7 +78,7 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
         graphics2D.setPaint(paint);
       }
       for (MonthGraph month : months) {
-        month.draw(graphics2D, transformationAdapter, height - yearCellHeight, monthWidth, monthRank);
+        month.draw(graphics2D, transformationAdapter, height - yearCellHeight, monthWidth, monthRank, visibleRectangle);
         transformationAdapter.translate(monthWidth, 0);
       }
     }
@@ -200,10 +208,14 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
     return "year";
   }
 
-  public void getObject(Collection<Glob> selected) {
+  public void getSelectedGlobs(Collection<Glob> selected) {
     for (MonthGraph month : months) {
       selected.add(month.getMonth());
     }
+  }
+
+  public Visibility isVisible() {
+    return isVisible;
   }
 
   public int compareTo(YearGraph yearGraph) {

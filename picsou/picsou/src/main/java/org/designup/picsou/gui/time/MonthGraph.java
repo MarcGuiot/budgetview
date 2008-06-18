@@ -7,6 +7,7 @@ import org.designup.picsou.model.Month;
 import org.globsframework.model.Glob;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 
 public class MonthGraph implements Selectable, Comparable<MonthGraph> {
@@ -16,6 +17,7 @@ public class MonthGraph implements Selectable, Comparable<MonthGraph> {
   private ChainedSelectableElement element;
   private MonthFontMetricInfo.MonthSizes monthSize;
   protected Rectangle clickableArea = new Rectangle();
+  private Visibility isVisible = Visibility.FULLY;
 
   public MonthGraph(Glob month, MonthViewColors colors, ChainedSelectableElement element) {
     this.month = month;
@@ -31,8 +33,20 @@ public class MonthGraph implements Selectable, Comparable<MonthGraph> {
     return monthSize.getNearest(widht);
   }
 
-  public void draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter, int height, int width, int monthRank) {
+  public void draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter, int height, int width,
+                   int monthRank, Rectangle visibleRectangle) {
     clickableArea = TimeGraph.getClickableArea(transformationAdapter.getTransform(), width, height);
+    Rectangle2D intersection = visibleRectangle.createIntersection(clickableArea);
+    if (intersection.getWidth() != clickableArea.getWidth()) {
+      isVisible = Visibility.PARTIALLY;
+    }
+    else {
+      isVisible = Visibility.FULLY;
+    }
+    if (intersection.getWidth() < 0) {
+      isVisible = Visibility.NOT_VISIBLE;
+      return;
+    }
     if (selected) {
       Paint previousPaint = graphics2D.getPaint();
       graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedTop, 0, height, colors.selectedBottom));
@@ -122,8 +136,12 @@ public class MonthGraph implements Selectable, Comparable<MonthGraph> {
     return "month";
   }
 
-  public void getObject(Collection<Glob> selected) {
+  public void getSelectedGlobs(Collection<Glob> selected) {
     selected.add(month);
+  }
+
+  public Visibility isVisible() {
+    return isVisible;
   }
 
   public int compareTo(MonthGraph o) {
@@ -136,5 +154,9 @@ public class MonthGraph implements Selectable, Comparable<MonthGraph> {
 
   public Selectable getRight() {
     return element.getRight();
+  }
+
+  public void setNotVisible() {
+    isVisible = Visibility.NOT_VISIBLE;
   }
 }

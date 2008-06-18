@@ -3,3 +3,6 @@ syntax : glob
 .svn
 CVS
 .idea
+.iml
+.ipr
+.iws
