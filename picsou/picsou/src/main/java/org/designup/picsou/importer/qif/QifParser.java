@@ -44,6 +44,7 @@ public class QifParser {
         FieldValuesBuilder.init()
           .set(Transaction.ID, globIdGenerator.getNextId(ImportedTransaction.ID, 1));
       boolean updated = false;
+      StringBuilder description = new StringBuilder();
       while (true) {
         int start = reader.read();
         switch (start) {
@@ -61,17 +62,18 @@ public class QifParser {
             values.set(ImportedTransaction.AMOUNT, Double.parseDouble(reader.readLine().replaceAll(",", "")));
             break;
           case 'P':
-            updated = true;
-            updateDescription(values, reader.readLine());
-            break;
-          case 'M':
-            updated = true;
-            updateDescription(values, reader.readLine());
-            break;
-          case 'N':
             reader.readLine();
             break;
+          case 'M':
+            append(description);
+            break;
+          case 'N':
+            append(description);
+            break;
           case '^':
+            String value = description.toString();
+            values.set(ImportedTransaction.ORIGINAL_LABEL, value);
+            values.set(ImportedTransaction.LABEL, value);
             return createTransaction(values);
         }
       }
@@ -81,16 +83,15 @@ public class QifParser {
     }
   }
 
-  private Glob createTransaction(FieldValuesBuilder values) {
-    return globRepository.create(ImportedTransaction.TYPE, values.get().toArray());
+  private void append(StringBuilder description) throws IOException {
+    if (description.length() > 0) {
+      description.append(" ");
+    }
+    description.append(reader.readLine());
   }
 
-  private void updateDescription(FieldValuesBuilder values, String value) {
-    String description = values.get().get(ImportedTransaction.ORIGINAL_LABEL);
-    if (description == null || description.length() < value.length()) {
-      values.set(ImportedTransaction.ORIGINAL_LABEL, value);
-      values.set(ImportedTransaction.LABEL, value);
-    }
+  private Glob createTransaction(FieldValuesBuilder values) {
+    return globRepository.create(ImportedTransaction.TYPE, values.get().toArray());
   }
 
   private void readDate(FieldValuesBuilder values) throws IOException {

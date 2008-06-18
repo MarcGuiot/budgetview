@@ -6,5 +6,5 @@ import org.globsframework.model.GlobRepository;
 import java.text.SimpleDateFormat;
 
 public interface TransactionTypeFinalizer {
-  boolean processTransaction(Glob transaction, GlobRepository globRepository, SimpleDateFormat format);
+  boolean processTransaction(Glob transaction, GlobRepository globRepository);
 }

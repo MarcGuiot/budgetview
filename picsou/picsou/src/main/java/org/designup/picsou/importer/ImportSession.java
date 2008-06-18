@@ -110,7 +110,7 @@ public class ImportSession {
           id = bank.get(Bank.ID);
         }
         transactionAnalyzer.processTransactions(id, accountIdAndTransactions.getValue(),
-                                                localRepository, selectedDateFormat);
+                                                localRepository);
       }
       localRepository.completeBulkDispatchingMode();
       updateImportAggregator.dispose();

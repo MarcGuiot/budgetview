@@ -20,57 +20,55 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
     new MultiMap<Integer, TransactionTypeFinalizer>();
   private List<TransactionTypeFinalizer> finalizers = new ArrayList<TransactionTypeFinalizer>();
 
-  public void processTransactions(Integer bankId, List<Glob> transactions,
-                                  GlobRepository globRepository, String dateFormat) {
-    SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+  public void processTransactions(Integer bankId, List<Glob> transactions, GlobRepository repository) {
     List<TransactionTypeFinalizer> finalizerList = exclusiveFinalizers.get(bankId);
     finalizerList = (finalizerList == null ? Collections.<TransactionTypeFinalizer>emptyList() : finalizerList);
     for (Glob transaction : transactions) {
-      processTransaction(transaction, globRepository, finalizerList, format);
+      processTransaction(transaction, repository, finalizerList);
     }
   }
 
-  private void processTransaction(Glob transaction, GlobRepository globRepository,
-                                  List<TransactionTypeFinalizer> transactionTypeFinalizers, SimpleDateFormat format) {
+  private void processTransaction(Glob transaction, GlobRepository repository,
+                                  List<TransactionTypeFinalizer> transactionTypeFinalizers) {
     for (TransactionTypeFinalizer finalizer : transactionTypeFinalizers) {
-      if (finalizer.processTransaction(transaction, globRepository, format)) {
+      if (finalizer.processTransaction(transaction, repository)) {
         break;
       }
     }
     for (TransactionTypeFinalizer finalizer : finalizers) {
-      finalizer.processTransaction(transaction, globRepository, format);
+      finalizer.processTransaction(transaction, repository);
     }
     if (transaction.get(Transaction.TRANSACTION_TYPE) == null) {
-      setDefaultType(transaction, globRepository);
+      setDefaultType(transaction, repository);
     }
   }
 
-  private void setDefaultType(Glob transaction, GlobRepository globRepository) {
+  private void setDefaultType(Glob transaction, GlobRepository repository) {
     double amount = transaction.get(Transaction.AMOUNT);
     TransactionType type =
       amount < 0 ? PRELEVEMENT : VIREMENT;
-    globRepository.setTarget(transaction.getKey(),
+    repository.setTarget(transaction.getKey(),
                              Transaction.TRANSACTION_TYPE,
                              type.getGlob().getKey());
   }
 
   public void addExclusive(String regexp, final TransactionType type,
-                           final Integer matcherGroupForLabel, final Integer matcherGroupForDate,
-                           Glob glob) {
+                           final String labelRegexp, final Integer matcherGroupForDate, final String dateFormat,
+                           Glob bank) {
     AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp) {
-      protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher, SimpleDateFormat format) {
-        String label = matcher.group(matcherGroupForLabel);
-        setTransactionType(transaction, globRepository, type, label,
-                           matcher.group(matcherGroupForDate), format);
+      protected void setTransactionType(Glob transaction, GlobRepository repository, Matcher matcher) {
+        String date = matcher.group(matcherGroupForDate);
+        String label = getLabel(matcher, labelRegexp);
+        setTransactionType(transaction, repository, type, label, date, new SimpleDateFormat(dateFormat));
       }
     };
-    exclusiveFinalizers.put(glob.get(Bank.ID), finalizer);
+    exclusiveFinalizers.put(bank.get(Bank.ID), finalizer);
   }
 
-  public void addExclusive(String regexp, final TransactionType type, final Integer matcherGroupForLabel, Glob bank) {
+  public void addExclusive(String regexp, final TransactionType type, final String labelRegexp, Glob bank) {
     AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp) {
-      protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher, SimpleDateFormat format) {
-        setTransactionType(transaction, globRepository, type, matcher.group(matcherGroupForLabel));
+      protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher) {
+        setTransactionType(transaction, globRepository, type, getLabel(matcher, labelRegexp));
       }
     };
     exclusiveFinalizers.put(bank.get(Bank.ID), finalizer);
@@ -79,7 +77,7 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
   public void addExclusive(String regexp, final TransactionType type, Glob bank) {
 
     AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp) {
-      protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher, SimpleDateFormat format) {
+      protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher) {
         setTransactionType(transaction, globRepository, type, matcher.group());
       }
     };
@@ -88,6 +86,10 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
 
   public void add(TransactionTypeFinalizer finalizer) {
     finalizers.add(finalizer);
+  }
+
+  private String getLabel(Matcher matcher, String labelRegexp) {
+    return matcher.replaceAll(labelRegexp);
   }
 }
 

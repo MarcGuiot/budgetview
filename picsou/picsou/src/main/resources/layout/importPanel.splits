@@ -6,21 +6,26 @@
 
         <filler fill="vertical"/>
 
-        <comboBox ref="bankCombo"/>
+        <htmlEditorPane text="$import.step1.header" marginBottom="5"/>
+
+        <row>
+          <label text="$import.bank"/>
+          <comboBox ref="bankCombo"/>
+        </row>
 
         <htmlEditorPane ref="downloadUrl"/>
 
-        <htmlEditorPane text="$login.initial.file"/>
+        <htmlEditorPane text="$login.initial.file" marginTop="20"/>
 
-        <row marginTop="10" defaultAnchor="center">
+        <row marginTop="5" defaultAnchor="center">
           <label text="$file" anchor="east"/>
           <textField ref="fileField" marginLeft="5" marginRight="5" anchor="center" weightX="1000"/>
           <button ref="fileButton" text="$browse" anchor="west"/>
         </row>
 
-        <label ref="message" margin="5" horizontalAlignment="center"/>
+        <label ref="message" margin="5" horizontalAlignment="center" foreground="#FF0000"/>
 
-        <row>
+        <row marginTop="10">
           <button action="import" text="$import" margin="5"/>
           <button action="close" text="$close" margin="5"/>
         </row>
@@ -31,10 +36,13 @@
     </card>
 
     <card name="step2">
-      <column>
-        <label ref="fileName"/>
+      <column margin="20" anchor="center" fill="none">
 
-        <scrollPane>
+        <label text="$import.file.to.import" anchor="west" fill="none" marginBottom="5"/>
+        <label ref="fileName" anchor="center" fill="none" marginBottom="10"/>
+
+        <label text="$import.file.content" anchor="west" fill="none" marginBottom="5"/>
+        <scrollPane maximumSize="(400,300)">
           <table ref="table"/>
         </scrollPane>
 
@@ -47,7 +55,7 @@
           <button ref="newAccount"/>
         </row>
         <panel ref="accountEditionPanel"/>
-        <label ref="importMessage"/>
+        <label ref="importMessage" foreground="#FF0000"/>
 
         <row>
           <button action="finish"/>

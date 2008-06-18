@@ -55,6 +55,7 @@ public class DateFormatAnalyzer {
     }
     if (maxSecond > 12) {
       result.remove("dd/MM/yy");
+      result.remove("yy/MM/dd");
     }
 
     if (maxFirst > 31) {

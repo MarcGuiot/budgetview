@@ -78,7 +78,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     createUser("toto", "p4ssw0rd", filePath);
     getTransactionChecker()
       .initContent()
-      .add("11/01/2006", TransactionType.CHECK, "12345", "", -12.00, MasterCategory.NONE)
+      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 12345", "", -12.00, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
       .check();
 
@@ -86,7 +86,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     login("toto", "p4ssw0rd");
     getTransactionChecker()
       .initContent()
-      .add("11/01/2006", TransactionType.CHECK, "12345", "", -12.00, MasterCategory.NONE)
+      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 12345", "", -12.00, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
       .check();
   }
@@ -112,7 +112,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           assertTrue(window.getComboBox("bankCombo")
-            .contentEquals("", "Autre", "CIC", "Credit Agricole", "La Poste", "Societe Generale"));
+            .contentEquals("", "Autre", "BNP", "CIC", "Credit Agricole", "La Poste", "Societe Generale"));
           return window.getButton("close").triggerClick();
         }
       }).run();

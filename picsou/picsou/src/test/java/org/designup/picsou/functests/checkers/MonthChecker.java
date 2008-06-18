@@ -95,6 +95,10 @@ public class MonthChecker extends DataChecker {
     selectCells();
   }
 
+  public void selectAll() {
+    timeViewPanel.selectAll();
+  }
+
   public class ContentChecker {
     private ContentChecker() {
     }

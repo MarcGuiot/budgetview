@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.startup;
 
-import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.components.DialogOwner;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.importer.BankFileType;
@@ -18,6 +17,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
@@ -93,7 +93,6 @@ public abstract class ImportPanel {
     this.localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
     fileButton.setAction(new BrowseFilesAction());
-
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(localRepository, localDirectory);
     //Step 1
@@ -452,7 +451,6 @@ public abstract class ImportPanel {
   private class ImportedTransactionDateRenderer implements LabelCustomizer, Comparator<Glob> {
     private GlobTableView transactionTable;
     private SimpleDateFormat format;
-
 
     public void changeDateFormat(String dateFormat) {
       if (dateFormat == null) {

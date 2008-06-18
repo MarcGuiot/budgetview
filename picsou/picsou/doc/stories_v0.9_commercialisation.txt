@@ -28,3 +28,9 @@ Vente
 -----
 * Creation compte Paypal
 * Branchement Paypal
+
+
+Legal
+-----
+* Packaging : integrer les licences open-source
+* Declaration CNIL

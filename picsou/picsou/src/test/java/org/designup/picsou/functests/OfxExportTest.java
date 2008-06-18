@@ -87,37 +87,38 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
       "!Type:Bank\n" +
       "D28/03/07\n" +
       "T12,345.67\n" +
-      "PVIR AVRIL\n" +
+      "MVIR.LOGITEL AVRIL\n" +
       "^\n" +
       "D26/03/07\n" +
       "T-45.00\n" +
-      "PCHEQUE 0416063\n" +
+      "MCHEQUE 0416063\n" +
       "^\n" +
       "D27/03/07\n" +
       "T-30.58\n" +
-      "PMONOPRIX CARTE 24371925 PAIEMENT CB 2303 SCEAUX";
+      "MFAC.FRANCE 4561409787231717 27/03/07 MONOPRIX CARTE 24371925 PAIEMENT CB 2303 SCEAUX\n" +
+      "^\n";
 
     String fileName = TestUtils.getFileName(this, ".qif");
     Files.dumpStringToFile(fileName, content);
     operations.importQifFile(12.50, fileName, "Societe Generale");
 
-    String ofxFileName = TestUtils.getFileName(this, ".ofx");
-    operations.exportFile(ofxFileName);
-
     transactions.initContent()
       .add("28/03/2007", TransactionType.VIREMENT, "AVRIL", "", 12345.67)
-      .add("27/03/2007", TransactionType.PRELEVEMENT,
+      .add("27/03/2007", TransactionType.CREDIT_CARD,
            "MONOPRIX CARTE 24371925 PAIEMENT CB 2303 SCEAUX", "", -30.58)
-      .add("26/03/2007", TransactionType.CHECK, "0416063", "", -45.0)
+      .add("26/03/2007", TransactionType.CHECK, "CHEQUE N. 0416063", "", -45.0)
       .check();
+
+    String ofxFileName = TestUtils.getFileName(this, ".ofx");
+    operations.exportFile(ofxFileName);
 
     operations.importOfxFile(ofxFileName);
 
     transactions.initContent()
       .add("28/03/2007", TransactionType.VIREMENT, "AVRIL", "", 12345.67)
-      .add("27/03/2007", TransactionType.PRELEVEMENT,
+      .add("27/03/2007", TransactionType.CREDIT_CARD,
            "MONOPRIX CARTE 24371925 PAIEMENT CB 2303 SCEAUX", "", -30.58)
-      .add("26/03/2007", TransactionType.CHECK, "0416063", "", -45.0)
+      .add("26/03/2007", TransactionType.CHECK, "CHEQUE N. 0416063", "", -45.0)
       .check();
   }
 }

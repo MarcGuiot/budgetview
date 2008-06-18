@@ -90,8 +90,8 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
       .load();
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.CHECK, "123", "", -2.0)
-      .add("10/01/2006", TransactionType.CHECK, "123", "", -1.0, MasterCategory.FOOD)
+      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 123", "", -2.0)
+      .add("10/01/2006", TransactionType.CHECK, "CHEQUE N. 123", "", -1.0, MasterCategory.FOOD)
       .check();
   }
 

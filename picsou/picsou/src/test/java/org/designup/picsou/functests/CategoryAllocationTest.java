@@ -177,8 +177,8 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     transactions.assignCategory(MasterCategory.FOOD, 0);
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.CHECK, "123", "", -1.0, MasterCategory.FOOD)
-      .add("10/01/2006", TransactionType.CHECK, "234", "", -1.0)
+      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 123", "", -1.0, MasterCategory.FOOD)
+      .add("10/01/2006", TransactionType.CHECK, "CHEQUE N. 234", "", -1.0)
       .check();
   }
 
@@ -198,12 +198,12 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     periods.selectCell(0);
     transactions
       .initContent()
-      .add("13/01/2006", TransactionType.CHECK, "1", "", -1.0, MasterCategory.PUERICULTURE)
-      .add("13/01/2006", TransactionType.CHECK, "1", "", -2.0, MasterCategory.NONE)
-      .add("12/01/2006", TransactionType.WITHDRAWAL, "12", "", -1.0, MasterCategory.PUERICULTURE)
-      .add("12/01/2006", TransactionType.WITHDRAWAL, "12", "", -2.0, MasterCategory.NONE)
-      .add("11/01/2006", TransactionType.DEPOSIT, "REM CHQ 4", "", -1.0, MasterCategory.PUERICULTURE)
-      .add("11/01/2006", TransactionType.DEPOSIT, "REM CHQ 4", "", -2.0, MasterCategory.NONE)
+      .add("13/01/2006", TransactionType.CHECK, "CHEQUE N. 1", "", -1.0, MasterCategory.PUERICULTURE)
+      .add("13/01/2006", TransactionType.CHECK, "CHEQUE N. 1", "", -2.0, MasterCategory.NONE)
+      .add("12/01/2006", TransactionType.WITHDRAWAL, "RETRAIT 12", "", -1.0, MasterCategory.PUERICULTURE)
+      .add("12/01/2006", TransactionType.WITHDRAWAL, "RETRAIT 12", "", -2.0, MasterCategory.NONE)
+      .add("11/01/2006", TransactionType.DEPOSIT, "REMISE CHEQUES 4", "", -1.0, MasterCategory.PUERICULTURE)
+      .add("11/01/2006", TransactionType.DEPOSIT, "REMISE CHEQUES 4", "", -2.0, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "2", "note 1", -1.0, MasterCategory.NONE)
       .check();
   }

@@ -4,9 +4,7 @@ CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLo
 
 Import
 ------
-* Integrer fichiers BNP Pascal
 * Integrer fichiers CA (gestion du tag "MEMO" dans l'OFX)
-* Open with...
 
 * Import step2: bouton "back" (selectionner d'autres fichiers)
 * Import step1: bouton "close" à renommer en "skip"

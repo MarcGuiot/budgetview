@@ -8,10 +8,20 @@ Bugs graphiques
 * CategoryView: creation d'une sous-categorie ignoree au open suivant
 
 
+Details transactions
+--------------------
+* TransactionView: Merge colonnes libelle/note
+* Affichage Libelle original + Libelle user
+* Messages clairs Affectation
+* Date banque / user
+* Changer date user
+* Multi-selection: affichage somme + affectation
+* Propagation d'affectation
+
+
 Misc
 ----
 * Joliesse fenetre split transaction
-* decrossbowlabification
 * PicsouDialog => reintroduire headers normaux
 * “Esc” pour fermer les boîtes de dialogue (mettre PicsouDialog en abstract, avec un dispose() a surcharger)
 
@@ -27,17 +37,6 @@ Vue "accueil"
 * Reprendre AccountView
 * Afficher/editer/ajouter les comptes et les positions
 * Naviguer vers le site de la banque
-
-
-Details transactions
---------------------
-* TransactionView: Merge colonnes libelle/note 
-* Affichage Libelle original + Libelle user
-* Messages clairs Affectation
-* Date banque / user
-* Changer date user
-* Multi-selection: affichage somme + affectation
-* Propagation d'affectation
 
 
 Vue "Repartition"

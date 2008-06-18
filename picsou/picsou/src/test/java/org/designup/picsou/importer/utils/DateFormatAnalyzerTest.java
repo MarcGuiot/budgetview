@@ -40,13 +40,13 @@ public class DateFormatAnalyzerTest extends TestCase {
 
   public void testMmDdYyyy() throws Exception {
     check("MM/dd/yy", "11/15/08");
+    check("MM/dd/yy", "05/20/08");
   }
 
   public void testUndecidable() throws Exception {
     checkUndecidable(new String[]{"dd/MM/yy", "MM/dd/yy", "yy/MM/dd"}, "01/01/01");
     checkUndecidable(new String[]{"dd/MM/yy", "MM/dd/yy", "yy/MM/dd"}, "02/03/04");
     checkUndecidable(new String[]{"dd/MM/yy", "MM/dd/yy"}, "04/10/2001");
-    checkUndecidable(new String[]{"yy/MM/dd", "MM/dd/yy"}, "06/13/08");
   }
 
   private void check(String expected, String date) {

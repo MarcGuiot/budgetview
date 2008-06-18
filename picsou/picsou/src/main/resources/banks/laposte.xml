@@ -2,17 +2,17 @@
   <bank name="La Poste" id='3'>
     <bankEntity id="20041"/>
 
-    <transactionTypeMatcher regexp="ACHAT CB (.*)"
-                            transactionTypeName="credit_card" groupForLabel="1"/>
+    <transactionTypeMatcher regexp="ACHAT CB (.*)[\s]+([0-9\.]+)"
+                            transactionTypeName="credit_card" label="$1" groupForDate="2" dateFormat="dd.MM.yy"/>
 
-    <transactionTypeMatcher regexp="REMISE DE CHEQUES DU (.*)"
-                            transactionTypeName="deposit"/>
+    <transactionTypeMatcher regexp="REMISE DE CHEQUES DU ([0-9/]+)"
+                            transactionTypeName="deposit" label="REMISE CHEQUES" groupForDate="1" dateFormat="dd/MM/yy"/>
 
     <transactionTypeMatcher regexp="CHEQUE N. (.*)"
-                            transactionTypeName="check" groupForLabel="1"/>
+                            transactionTypeName="check" label="CHEQUE N. $1"/>
 
-    <transactionTypeMatcher regexp="CARTE (.*)"
-                            transactionTypeName="withdrawal"/>
+    <transactionTypeMatcher regexp="CARTE ([\w]+) ([0-9/]+) A ([0-9H]+)"
+                            transactionTypeName="withdrawal" label="RETRAIT $1 $3" groupForDate="2" dateFormat="dd/MM/yy"/>
 
   </bank>
 </globs>

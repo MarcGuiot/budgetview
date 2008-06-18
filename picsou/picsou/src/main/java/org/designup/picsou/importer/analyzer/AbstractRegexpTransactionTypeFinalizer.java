@@ -15,7 +15,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class AbstractRegexpTransactionTypeFinalizer implements TransactionTypeFinalizer {
-  public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
 
   private Pattern pattern;
 
@@ -23,7 +22,7 @@ public abstract class AbstractRegexpTransactionTypeFinalizer implements Transact
     this.pattern = Pattern.compile(regexp);
   }
 
-  public boolean processTransaction(Glob transaction, GlobRepository globRepository, SimpleDateFormat format) {
+  public boolean processTransaction(Glob transaction, GlobRepository repository) {
     String label = transaction.get(Transaction.LABEL);
     if (label == null) {
       return true;
@@ -33,35 +32,36 @@ public abstract class AbstractRegexpTransactionTypeFinalizer implements Transact
 
     Matcher matcher = pattern.matcher(upperCaseLabel);
     if (matcher.matches()) {
-      setTransactionType(transaction, globRepository, matcher, format);
+      setTransactionType(transaction, repository, matcher);
       return true;
     }
 
     return false;
   }
 
-  protected abstract void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher, SimpleDateFormat format);
+  protected abstract void setTransactionType(Glob transaction, GlobRepository repository, Matcher matcher);
 
   protected void setTransactionType(Glob transaction,
-                                    GlobRepository globRepository,
+                                    GlobRepository repository,
                                     TransactionType transactionType,
                                     String label,
-                                    String date, SimpleDateFormat format) {
+                                    String date,
+                                    SimpleDateFormat format) {
     Key key = transaction.getKey();
     Date parsedDate = getDate(format, date);
-    globRepository.update(key,
-                          value(Transaction.TRANSACTION_TYPE, transactionType.getId()),
-                          value(Transaction.MONTH, Month.getMonthId(parsedDate)),
-                          value(Transaction.DAY, Month.getDay(parsedDate)),
-                          value(Transaction.LABEL, label.trim()));
+    repository.update(key,
+                      value(Transaction.TRANSACTION_TYPE, transactionType.getId()),
+                      value(Transaction.MONTH, Month.getMonthId(parsedDate)),
+                      value(Transaction.DAY, Month.getDay(parsedDate)),
+                      value(Transaction.LABEL, label.trim()));
   }
 
-  protected void setTransactionType(Glob transaction, GlobRepository globRepository, TransactionType transactionType,
+  protected void setTransactionType(Glob transaction, GlobRepository repository, TransactionType transactionType,
                                     String label) {
     Key key = transaction.getKey();
-    globRepository.update(key,
-                          value(Transaction.TRANSACTION_TYPE, transactionType.getId()),
-                          value(Transaction.LABEL, label.trim()));
+    repository.update(key,
+                      value(Transaction.TRANSACTION_TYPE, transactionType.getId()),
+                      value(Transaction.LABEL, label.trim()));
   }
 
   private Date getDate(SimpleDateFormat format, String date) {

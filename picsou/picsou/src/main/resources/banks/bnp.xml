@@ -1,3 +1,56 @@
 <globs>
+  <bank name="BNP" downloadUrl="" id='5'>
+    <bankEntity id="30004"/>
 
+    <transactionTypeMatcher regexp="COMMISSIONS PERCUES[ \t]*(.*)"
+                            transactionTypeName="bank_fees" label="COMMISSIONS PERCUES $1"/>
+
+    <transactionTypeMatcher regexp="COMMISS[ \t]*(.*)"
+                            transactionTypeName="bank_fees" label="COMMISSIONS PERCUES $1"/>
+
+    <transactionTypeMatcher regexp="RETRAIT DAB [0-9]* (.*)"
+                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+
+    <transactionTypeMatcher regexp="RETRAIT (.*)"
+                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+
+    <transactionTypeMatcher regexp="ECHEANCE PRET[ \t]*(.*)"
+                            transactionTypeName="credit" label="PRET $1"/>
+
+    <transactionTypeMatcher regexp="ECH.PR[ \t]*(.*)"
+                            transactionTypeName="credit" label="PRET $1"/>
+
+    <transactionTypeMatcher regexp="VIRT CPTE A CPTE RECU[\s]*(.*)"
+                            transactionTypeName="internal_transfer" label="VIR. $1"/>
+
+    <transactionTypeMatcher regexp="VI.RECU[ \t]*(.*)"
+                            transactionTypeName="internal_transfer" label="VIR. $1"/>
+
+    <transactionTypeMatcher regexp="VIRT CPTE A CPTE EMIS[\s]*(.*)"
+                            transactionTypeName="internal_transfer" label="VIR. $1"/>
+
+    <transactionTypeMatcher regexp="VI.EMIS[ \t]*(.*)"
+                            transactionTypeName="internal_transfer" label="VIR. $1"/>
+
+    <transactionTypeMatcher regexp="VIREMENT RECU TIERS[ \t]*(.*)"
+                            transactionTypeName="virement" label="$1"/>
+
+    <transactionTypeMatcher regexp="VI.TIER[ \t]*(.*)"
+                            transactionTypeName="virement" label="$1"/>
+
+    <transactionTypeMatcher regexp="PRELEVEMENT[ \t]*(.*)"
+                            transactionTypeName="prelevement" label="$1"/>
+
+    <transactionTypeMatcher regexp="PRLV.[ \t]*(.*)"
+                            transactionTypeName="prelevement" label="$1"/>
+
+    <transactionTypeMatcher regexp="CHEQUE[ ]+N.[ ]+(.*)"
+                            transactionTypeName="check" label="CHEQUE N. $1"/>
+
+    <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
+                            transactionTypeName="check" label="CHEQUE N. $1"/>
+
+    <transactionTypeMatcher regexp="CHQ NO[\s]+N.[\s]+(.*)"
+                            transactionTypeName="check" label="CHEQUE N. $1"/>
+  </bank>
 </globs>

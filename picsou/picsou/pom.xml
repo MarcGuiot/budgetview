@@ -45,6 +45,10 @@
         <configuration>
           <systemProperties>
             <property>
+              <name>file.encoding</name>
+              <value>UTF-8</value>
+            </property>
+            <property>
               <name>uispec4j.test.library</name>
               <value>junit</value>
             </property>

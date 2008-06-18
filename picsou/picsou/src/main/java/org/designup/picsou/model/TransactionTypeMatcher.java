@@ -16,8 +16,9 @@ public class TransactionTypeMatcher {
   public static IntegerField ID;
 
   public static StringField REGEXP;
-  public static IntegerField GROUP_FOR_LABEL;
+  public static StringField LABEL;
   public static IntegerField GROUP_FOR_DATE;
+  public static StringField DATE_FORMAT;
 
   @Target(TransactionType.class)
   public static LinkField TRANSACTION_TYPE;

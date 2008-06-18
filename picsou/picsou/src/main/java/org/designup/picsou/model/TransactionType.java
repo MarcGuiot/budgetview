@@ -22,7 +22,8 @@ public enum TransactionType implements GlobConstantContainer {
   PRELEVEMENT(5),
   CREDIT(6),
   CREDIT_CARD(7),
-  BANK_FEES(9);
+  BANK_FEES(9),
+  INTERNAL_TRANSFER(10);
 
   public static GlobType TYPE;
 

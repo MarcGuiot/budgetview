@@ -5,10 +5,8 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 
-import java.text.SimpleDateFormat;
-
 public class TransactionDateUpdater implements TransactionTypeFinalizer {
-  public boolean processTransaction(Glob transaction, GlobRepository repository, SimpleDateFormat format) {
+  public boolean processTransaction(Glob transaction, GlobRepository repository) {
     if ((transaction.get(Transaction.MONTH) == null) || (transaction.get(Transaction.DAY) == null)) {
       repository.update(transaction.getKey(),
                         value(Transaction.MONTH, transaction.get(Transaction.BANK_MONTH)),

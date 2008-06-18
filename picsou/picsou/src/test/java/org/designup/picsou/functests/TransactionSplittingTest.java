@@ -205,7 +205,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
   public void testAmountGreaterThanInitialTransactionAmount() throws Exception {
     openDialogWithSampleTransaction()
       .enterAmount("100")
-      .checkErrorMessage("Amount must be less than 20€")
+      .checkErrorMessage("Amount must be less than 20\u20ac")
       .cancel();
     transactions
       .initContent()

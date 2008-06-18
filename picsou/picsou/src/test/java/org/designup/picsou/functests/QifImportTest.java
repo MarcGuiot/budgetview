@@ -44,17 +44,6 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testImportsQifFilesFromCic() throws Exception {
-    String fileName = createQifFile("1");
-    operations.importQifFile(12.50, fileName, "CIC");
-
-    transactions.initContent()
-      .add("28/03/2007", TransactionType.VIREMENT, "AVRIL", "", 12345.67)
-      .add("27/03/2007", TransactionType.PRELEVEMENT, "MONOPRIX CARTE 24371925 PAIEMENT CB 2303 SCEAUX", "", -30.58)
-      .add("26/03/2007", TransactionType.CHECK, "0416063", "", -45.00)
-      .check();
-  }
-
   public void testTakesUserAndBankDatesIntoAccountWhenDetectingDuplicates() throws Exception {
     String file =
       createQifFile("file",
@@ -101,20 +90,6 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
 
   public void testBankDateWithEnglishFormatAndShortDate() throws Exception {
     checkBankDate("12/20/06", "20/12/2006");
-  }
-
-  public void testUserDateWithEnglishFormat() throws Exception {
-    String[] blocks = {
-      "D04/20/2006" + "\n" +
-      "T-17.65\n" +
-      "N\n" +
-      "PFAC.FRANCE 4561409\n" +
-      "MFAC.FRANCE 4561409787231717 04/19/06 STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS\n" +
-      "^"};
-    importBlocks(blocks);
-    transactions.initContent()
-      .add("19/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
-      .check();
   }
 
   private void checkBankDate(String input, String expected) {

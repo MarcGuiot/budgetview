@@ -7,6 +7,7 @@ import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
+import org.globsframework.utils.Strings;
 import org.globsframework.xml.XmlGlobParser;
 
 import java.io.BufferedReader;
@@ -73,14 +74,19 @@ public class TransactionAnalyzerFactory {
     for (Glob matcher : globRepository.getAll(TransactionTypeMatcher.TYPE).sort(TransactionTypeMatcher.ID)) {
       String regexp = matcher.get(REGEXP);
       TransactionType type = TransactionType.get(matcher);
-      Integer groupForLabel = matcher.get(GROUP_FOR_LABEL);
+      String labelRegexp = matcher.get(LABEL);
       Integer groupForDate = matcher.get(GROUP_FOR_DATE);
-      Glob bank = globRepository.findLinkTarget(matcher, BANK);
-      if ((groupForLabel != null) && (groupForDate != null)) {
-        analyzer.addExclusive(regexp, type, groupForLabel, groupForDate, bank);
+      String dateFormat = matcher.get(DATE_FORMAT);
+      if ((groupForDate != null) && (Strings.isNullOrEmpty(dateFormat))) {
+        throw new RuntimeException("You must specify a date format");
       }
-      else if (groupForLabel != null) {
-        analyzer.addExclusive(regexp, type, groupForLabel, bank);
+
+      Glob bank = globRepository.findLinkTarget(matcher, BANK);
+      if ((labelRegexp != null) && (groupForDate != null)) {
+        analyzer.addExclusive(regexp, type, labelRegexp, groupForDate, dateFormat, bank);
+      }
+      else if (labelRegexp != null) {
+        analyzer.addExclusive(regexp, type, labelRegexp, bank);
       }
       else {
         analyzer.addExclusive(regexp, type, bank);

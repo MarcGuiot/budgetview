@@ -3,15 +3,15 @@
     <bankEntity id="-1"/>
 
     <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
-                            transactionTypeName="check" groupForLabel="1"/>
+                            transactionTypeName="check" label="CHEQUE N. $1"/>
 
     <transactionTypeMatcher regexp="VIR (.*)"
-                            transactionTypeName="virement" groupForLabel="1"/>
+                            transactionTypeName="virement" label="$1"/>
 
     <transactionTypeMatcher regexp="REM CHQ (.*)"
-                            transactionTypeName="deposit"/>
+                            transactionTypeName="deposit" label="REMISE CHEQUES $1"/>
 
     <transactionTypeMatcher regexp="RETRAIT (.*)"
-                            transactionTypeName="withdrawal" groupForLabel="1"/>
+                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
   </bank>
 </globs>

@@ -3,21 +3,21 @@
     <bankEntity id="13006"/>
 
     <transactionTypeMatcher regexp="REGLEM ECHEANCE (.*)"
-                            transactionTypeName="credit" groupForLabel="1"/>
+                            transactionTypeName="credit" label="PRET $1"/>
 
     <transactionTypeMatcher regexp="RETRAIT(.*)"
-                            transactionTypeName="withdrawal" groupForLabel="1"/>
+                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
 
     <transactionTypeMatcher regexp="INTERETS DEBITEURS"
-                            transactionTypeName="bank_fees"/>
+                            transactionTypeName="bank_fees" label="$0"/>
 
     <transactionTypeMatcher regexp="REMISE(.*)"
-                            transactionTypeName="deposit" groupForLabel="1"/>
+                            transactionTypeName="deposit" label="REMISE CHEQUES $1"/>
 
     <transactionTypeMatcher regexp="VIR. PERMANENT"
-                            transactionTypeName="virement"/>
+                            transactionTypeName="virement" label="VIR. $1"/>
 
     <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
-                            transactionTypeName="check" groupForLabel="1"/>
+                            transactionTypeName="check"  label="CHEQUE N. $1"/>
   </bank>
 </globs>
