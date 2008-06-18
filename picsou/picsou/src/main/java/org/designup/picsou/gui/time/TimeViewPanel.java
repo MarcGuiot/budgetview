@@ -31,6 +31,13 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private MonthViewColors colors;
   private Selectable selected;
   int translation;
+  private long id = 0;
+  private ScrollAndRepaint scrollRunnable = new ScrollAndRepaint();
+  private Timer timer = new Timer(300, new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+      SwingUtilities.invokeLater(scrollRunnable);
+    }
+  });
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
     this.repository = globRepository;
@@ -71,6 +78,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void mousePressed(MouseEvent e) {
+    id++;
     currentState = currentState.mousePressed(e);
     repaint();
   }
@@ -100,46 +108,60 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
 
   public void mouseDragged(MouseEvent e) {
     currentState = currentState.mouseMoved(e);
-    Selectable selected = getLastSelected();
-    if (selected != null && !selected.isVisible().equals(Selectable.Visibility.FULLY)) {
-      int leftCount = findLeftFirstVisible(selected);
-      int rightCount = findRightFirstVisible(selected);
-//      if (leftCount != rightCount) {
-      if (leftCount == 0) {
-        translation += 10;
+    if (e.getPoint().getX() < 0) {
+      if (scrollLeft()) {
+        scrollRunnable.set(id, e);
+        timer.start();
       }
       else {
-        translation -= 10;
+        timer.stop();
       }
-//      }
+    }
+    else if (e.getPoint().getX() > getWidth()) {
+      if (scrollRigth()) {
+        scrollRunnable.set(id, e);
+        timer.start();
+      }
+      else {
+        timer.stop();
+      }
+
+    }
+    else {
+      timer.stop();
+      id++;
     }
     repaint();
   }
 
-  private int findLeftFirstVisible(Selectable lastSelected) {
-    int count = 1;
-    Selectable selectable = lastSelected.getLeft();
-    while (selectable != null && !selectable.isVisible().equals(Selectable.Visibility.FULLY)) {
-      selectable = selectable.getLeft();
-      count++;
+  private boolean scrollRigth() {
+    Selectable selected = timeGraph.getLastSelectable();
+    if (!selected.isVisible().equals(Selectable.Visibility.FULLY)) {
+      translation -= 10;
+      if (-translation + getWidth() > timeGraph.getWidth()) {
+        translation = getWidth() - timeGraph.getWidth();
+        return false;
+      }
+      else {
+        return true;
+      }
     }
-    if (selectable != null) {
-      return count;
-    }
-    return 0;
+    return false;
   }
 
-  private int findRightFirstVisible(Selectable lastSelected) {
-    int count = 0;
-    Selectable selectable = lastSelected.getRight();
-    while (selectable != null && !selectable.isVisible().equals(Selectable.Visibility.FULLY)) {
-      selectable = selectable.getRight();
-      count++;
+  private boolean scrollLeft() {
+    Selectable selected = timeGraph.getFirstSelectable();
+    if (!selected.isVisible().equals(Selectable.Visibility.FULLY)) {
+      translation += 10;
+      if (translation > 0) {
+        translation = 0;
+        return false;
+      }
+      else {
+        return true;
+      }
     }
-    if (selectable != null) {
-      return count;
-    }
-    return 0;
+    return false;
   }
 
   public void mouseMoved(MouseEvent e) {
@@ -239,36 +261,37 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void goToPrevious() {
-    Selectable selectable = timeGraph.getLastSelectable();
-    if (selectable != null && !selectable.isVisible().equals(Selectable.Visibility.FULLY)) {
-      translation += 10;
-      repaint();
-    }
-  }
-
-  private void scrollToVisible(Selectable next) {
-    int left = findLeftFirstVisible(next);
-    int right = findRightFirstVisible(next);
-    if (left != 0) {
-      translation += left * 10;
-    }
-    if (right != 0) {
-      translation -= right * 10;
-    }
+    scrollLeft();
     repaint();
   }
 
   public void goToNext() {
-    Selectable selectable = timeGraph.getFirstSelectable();
-    if (selectable != null && !selectable.isVisible().equals(Selectable.Visibility.FULLY)) {
-      translation -= 10;
-      repaint();
-    }
+    scrollRigth();
+    repaint();
   }
 
   public void focusGained(FocusEvent e) {
   }
 
   public void focusLost(FocusEvent e) {
+  }
+
+  private class ScrollAndRepaint implements Runnable {
+    private long id;
+    private MouseEvent mouseEvent;
+
+    public ScrollAndRepaint() {
+    }
+
+    public void run() {
+      if (this.id == TimeViewPanel.this.id) {
+        mouseDragged(mouseEvent);
+      }
+    }
+
+    public void set(long id, MouseEvent e) {
+      this.id = id;
+      this.mouseEvent = e;
+    }
   }
 }

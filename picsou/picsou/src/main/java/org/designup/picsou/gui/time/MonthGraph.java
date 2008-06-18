@@ -155,4 +155,8 @@ public class MonthGraph implements Selectable, Comparable<MonthGraph> {
   public Selectable getRight() {
     return element.getRight();
   }
+
+  public void setNotVisible() {
+    isVisible = Visibility.NOT_VISIBLE;
+  }
 }

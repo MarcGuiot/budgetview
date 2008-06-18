@@ -65,6 +65,9 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
     }
     if (intersection.getWidth() < 0) {
       isVisible = Visibility.NOT_VISIBLE;
+      for (MonthGraph month : months) {
+        month.setNotVisible();
+      }
       return monthDim;
     }
     try {

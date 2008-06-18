@@ -16,6 +16,7 @@ public class TimeGraph {
   protected List<YearGraph> years = Collections.emptyList();
   private GlobList months;
   private MonthFontMetricInfo monthFontMetricInfo;
+  private int monthWidth;
 
   public TimeGraph(GlobList months, MonthViewColors colors) {
     this.months = months;
@@ -79,7 +80,7 @@ public class TimeGraph {
       }
 
       int height = years.get(0).getPreferredHeight(graphics2D);
-      int monthWidth = preferredWidth / totalMonthCount;
+      monthWidth = preferredWidth / totalMonthCount;
       for (YearGraph year : years) {
         monthWidth = Math.max(monthWidth, year.getMinWidth(graphics2D));
       }
@@ -168,6 +169,10 @@ public class TimeGraph {
 
   public Selectable getLastSelectable() {
     return years.get(years.size() - 1).getLastMonth();
+  }
+
+  public int getWidth() {
+    return months.size() * monthWidth;
   }
 
   private class MonthChainedSelectableElement implements ChainedSelectableElement {
