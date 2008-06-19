@@ -1,8 +1,10 @@
 package org.globsframework.utils;
 
 import org.globsframework.utils.exceptions.IOFailure;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.io.*;
+import java.util.Properties;
 
 public class Files {
   private Files() {
@@ -105,5 +107,20 @@ public class Files {
       outputStream.write(bytes, 0, readed);
     }
     outputStream.close();
+  }
+
+  public static Properties loadProperties(Class refClass, String fileName) throws ResourceAccessFailed {
+    InputStream stream = refClass.getResourceAsStream(fileName);
+    if (stream == null) {
+      throw new ResourceAccessFailed("Resource file '" + fileName + "' not found for class: " + refClass.getName());
+    }
+    Properties properties = new Properties();
+    try {
+      properties.load(stream);
+    }
+    catch (IOException e) {
+      throw new ResourceAccessFailed("Could not load properties file");
+    }
+    return properties;
   }
 }

@@ -3,6 +3,7 @@ package org.globsframework.gui.splits.impl;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.TextLocator;
+import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 
@@ -18,11 +19,14 @@ public class DefaultSplitsContext implements SplitsContext {
   private ColorService colorService;
   private IconLocator iconLocator;
   private TextLocator textLocator;
+  private FontLocator fontLocator;
 
-  public DefaultSplitsContext(ColorService colorService, IconLocator iconLocator, TextLocator textLocator) {
+  public DefaultSplitsContext(ColorService colorService, IconLocator iconLocator,
+                              TextLocator textLocator, FontLocator fontLocator) {
     this.colorService = colorService;
     this.iconLocator = iconLocator;
     this.textLocator = textLocator;
+    this.fontLocator = fontLocator;
   }
 
   public ColorService getColorService() {
@@ -35,6 +39,10 @@ public class DefaultSplitsContext implements SplitsContext {
 
   public TextLocator getTextLocator() {
     return textLocator;
+  }
+
+  public FontLocator getFontLocator() {
+    return fontLocator;
   }
 
   public void addComponent(String id, Component component) {

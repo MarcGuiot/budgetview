@@ -1,6 +1,6 @@
 package org.globsframework.gui.splits.color;
 
-import org.globsframework.gui.splits.exceptions.SplitsException;
+import org.globsframework.utils.exceptions.InvalidParameter;
 import org.uispec4j.UISpecTestCase;
 
 import javax.swing.*;
@@ -27,7 +27,7 @@ public class ColorServiceTest extends UISpecTestCase {
       service.get(null);
       fail();
     }
-    catch (SplitsException e) {
+    catch (InvalidParameter e) {
       assertEquals("null key is not allowed", e.getMessage());
     }
   }
@@ -85,7 +85,7 @@ public class ColorServiceTest extends UISpecTestCase {
       return callCount;
     }
 
-    public void colorsChanged(ColorSource colorSource) {
+    public void colorsChanged(ColorLocator colorLocator) {
       callCount++;
     }
   }

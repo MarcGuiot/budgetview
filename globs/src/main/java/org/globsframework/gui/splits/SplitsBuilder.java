@@ -8,6 +8,8 @@ import org.globsframework.gui.splits.impl.XmlComponentNode;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.DefaultCardHandler;
 import org.globsframework.gui.splits.splitters.DefaultSplitterFactory;
+import org.globsframework.gui.splits.font.FontLocator;
+import org.globsframework.utils.directory.Directory;
 import org.saxstack.parser.DefaultXmlNode;
 import org.saxstack.parser.SaxStackParser;
 import org.saxstack.parser.XmlNode;
@@ -26,26 +28,29 @@ public class SplitsBuilder {
   private SplitterFactory factory = new DefaultSplitterFactory();
   private static final SAXParser PARSER = new SAXParser();
 
+  public static SplitsBuilder init(Directory directory) {
+    return new SplitsBuilder(directory.get(ColorService.class),
+                             directory.find(IconLocator.class),
+                             directory.find(TextLocator.class),
+                             directory.find(FontLocator.class));
+  }
+  
   public static SplitsBuilder init(ColorService colorService, IconLocator locator) {
     return new SplitsBuilder(colorService, locator);
   }
 
-  public SplitsBuilder(ColorService colorService) {
-    this(colorService, null, null);
-  }
-
   public SplitsBuilder(ColorService colorService, IconLocator locator) {
-    this(colorService, locator, null);
+    this(colorService, locator, null, null);
   }
 
-  public SplitsBuilder(ColorService colorService, IconLocator iconLocator, TextLocator textLocator) {
+  public SplitsBuilder(ColorService colorService, IconLocator iconLocator, TextLocator textLocator, FontLocator fontLocator) {
     if (iconLocator == null) {
       iconLocator = IconLocator.NULL;
     }
     if (textLocator == null) {
       textLocator = TextLocator.NULL;
     }
-    this.context = new DefaultSplitsContext(colorService, iconLocator, textLocator);
+    this.context = new DefaultSplitsContext(colorService, iconLocator, textLocator, fontLocator);
   }
 
   public SplitsBuilder add(String name, Component component) {

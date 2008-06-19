@@ -1,6 +1,7 @@
 package org.globsframework.gui.splits;
 
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.font.FontLocator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,4 +20,6 @@ public interface SplitsContext {
   IconLocator getIconLocator();
 
   TextLocator getTextLocator();
+
+  FontLocator getFontLocator();
 }

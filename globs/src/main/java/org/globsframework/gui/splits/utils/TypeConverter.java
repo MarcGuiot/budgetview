@@ -2,6 +2,7 @@ package org.globsframework.gui.splits.utils;
 
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsContext;
+import org.globsframework.gui.splits.font.Fonts;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 
 import javax.swing.*;
@@ -44,7 +45,7 @@ public class TypeConverter {
       return SplitsUtils.parseDimension(value);
     }
     if (targetClass == Font.class) {
-      return SplitsUtils.parseFont(value);
+      return Fonts.parseFont(value, context.getFontLocator());
     }
     if (targetClass == Action.class) {
       return context.getAction(value);

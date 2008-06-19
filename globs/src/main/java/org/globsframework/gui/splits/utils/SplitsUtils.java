@@ -22,15 +22,12 @@ public class SplitsUtils {
                                                        "[ ]*([0-9]+)[ ]*," +
                                                        "[ ]*([0-9]+)[ ]*" +
                                                        "\\)");
-  private static Pattern FONT_FORMAT = Pattern.compile("([A-z0-9 _]+),([a-z]+),([0-9]+)");
   private static Pattern INT_FORMAT = Pattern.compile("[0-9]+");
 
   static final String GRIDPOS_ERROR_MESSAGE =
     "GridPos should be defined as '(x,y)' or '(x,y,w,z)' - for instance '(0,2)' or '(0,2,1,1)'";
   static final String DIMENSION_ERROR_MESSAGE =
     "Dimension should be defined as '(x,y)' - for instance '(0,2)'";
-  static final String FONT_ERROR_MESSAGE =
-    "Font should be defined like 'Arial,plain,12' or 'Courier,italic,8'";
 
   public static GridPos parseGridPos(String desc) throws SplitsException {
     String trimmed = desc.trim();
@@ -88,30 +85,6 @@ public class SplitsUtils {
       return value;
     }
     return value.substring(0, 1).toUpperCase() + value.substring(1, value.length());
-  }
-
-  public static Font parseFont(String desc) {
-    String trimmed = desc.trim();
-    Matcher shortMatcher = FONT_FORMAT.matcher(trimmed);
-    if (!shortMatcher.matches()) {
-      throw new SplitsException(FONT_ERROR_MESSAGE);
-    }
-    return new Font(shortMatcher.group(1),
-                    getFontStyle(shortMatcher.group(2)),
-                    Integer.parseInt(shortMatcher.group(3)));
-  }
-
-  private static int getFontStyle(String text) {
-    if ("plain".equalsIgnoreCase(text)) {
-      return Font.PLAIN;
-    }
-    if ("bold".equalsIgnoreCase(text)) {
-      return Font.BOLD;
-    }
-    if ("italic".equalsIgnoreCase(text)) {
-      return Font.ITALIC;
-    }
-    throw new SplitsException("Unknown font style '" + text + "' - should be one of plain|bold|italic");
   }
 
   public static Integer parseInt(String value) throws NumberFormatException {

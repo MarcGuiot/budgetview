@@ -6,10 +6,7 @@ import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobPasswordEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
-import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.TextLocator;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobLabelView;
@@ -44,9 +41,7 @@ public class GlobsPanelBuilder {
   public GlobsPanelBuilder(GlobRepository repository, Directory directory) {
     this.directory = directory;
     this.repository = repository;
-    this.splits = new SplitsBuilder(directory.get(ColorService.class),
-                                    directory.find(IconLocator.class),
-                                    directory.find(TextLocator.class));
+    this.splits = SplitsBuilder.init(directory);
   }
 
   public GlobTableView addTable(GlobType type, Comparator<Glob> comparator) {
@@ -100,7 +95,6 @@ public class GlobsPanelBuilder {
     splits.add(component);
     return this;
   }
-
 
   public GlobsPanelBuilder add(String name, Action action) {
     splits.add(name, action);

@@ -31,8 +31,7 @@ public abstract class StringInputDialog {
     okAction = new OkAction(okLabel);
     messageLabel.setVisible(false);
 
-    dialog.setContentPane((Container)SplitsBuilder
-      .init(directory.get(ColorService.class), directory.get(IconLocator.class))
+    dialog.setContentPane((Container)SplitsBuilder.init(directory)
       .add("inputLabel", new JLabel(inputLabel))
       .add("input", textField)
       .add("label", messageLabel)

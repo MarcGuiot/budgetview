@@ -1,11 +1,8 @@
 package org.globsframework.gui.splits.color;
 
-import org.globsframework.gui.splits.exceptions.ResourceLoadingFailed;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 
 import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.List;
@@ -51,7 +48,7 @@ public class ColorSet {
   }
 
   public void print(PrintStream stream) {
-    List<String> keys = new ArrayList(getKeys());
+    List<String> keys = new ArrayList<String>(getKeys());
     Collections.sort(keys);
 
     for (String key : keys) {
@@ -60,15 +57,8 @@ public class ColorSet {
     }
   }
 
-  public static ColorSet load(String name, InputStream stream) throws ResourceLoadingFailed {
+  public static ColorSet load(String name, Properties props) {
     ColorSet colorSet = new ColorSet(name);
-    Properties props = new Properties();
-    try {
-      props.load(stream);
-    }
-    catch (IOException e) {
-      throw new ResourceLoadingFailed("Could not load properties file");
-    }
     for (Object key : props.keySet()) {
       String value = props.getProperty((String)key);
       try {

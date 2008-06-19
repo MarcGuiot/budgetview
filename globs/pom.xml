@@ -78,6 +78,13 @@
           <include>**/*.properties</include>
         </excludes>
       </testResource>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+          <include>**/*.properties</include>
+        </excludes>
+      </testResource>
     </testResources>
   </build>
 

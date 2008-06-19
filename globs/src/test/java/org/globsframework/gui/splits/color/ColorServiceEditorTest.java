@@ -29,7 +29,7 @@ public class ColorServiceEditorTest extends UISpecTestCase {
   }
 
   public void testSelectingColors() throws Exception {
-    assertTrue(list.contentEquals(new String[]{"color1", "color2", "color3"}));
+    assertTrue(list.contentEquals("color1", "color2", "color3"));
 
     list.select("color1");
     assertTrue(text.textEquals("0000FF"));
@@ -56,12 +56,12 @@ public class ColorServiceEditorTest extends UISpecTestCase {
   public void testChangingColorSets() throws Exception {
     assertTrue(colorSetCombo.contentEquals("set1.colors", "set2.colors"));
     assertTrue(colorSetCombo.selectionEquals("set1.colors"));
-    assertTrue(list.contentEquals(new String[]{"color1", "color2", "color3"}));
+    assertTrue(list.contentEquals("color1", "color2", "color3"));
     list.select("color2");
     assertTrue(text.textEquals("00FF00"));
 
     colorSetCombo.select("set2.colors");
-    assertTrue(list.contentEquals(new String[]{"color1", "color2", "color3", "color4"}));
+    assertTrue(list.contentEquals("color1", "color2", "color3", "color4"));
     assertTrue(list.selectionEquals("color2"));
     assertTrue(text.textEquals("00FF00"));
 
@@ -76,14 +76,14 @@ public class ColorServiceEditorTest extends UISpecTestCase {
 
   public void testMissingColorsAreAutomaticallyAddedAndInitializedToRed() throws Exception {
     colorService.addListener(new ColorChangeListener() {
-      public void colorsChanged(ColorSource colorSource) {
-        colorSource.get("new.key");
+      public void colorsChanged(ColorLocator colorLocator) {
+        colorLocator.get("new.key");
       }
     });
-    assertTrue(list.contentEquals(new String[]{"color1", "color2", "color3", "new.key"}));
+    assertTrue(list.contentEquals("color1", "color2", "color3", "new.key"));
 
     colorSetCombo.select("set2.colors");
-    assertTrue(list.contentEquals(new String[]{"color1", "color2", "color3", "color4", "new.key"}));
+    assertTrue(list.contentEquals("color1", "color2", "color3", "color4", "new.key"));
   }
 
   public void testColorSetComboIsInitializedWithTheCurrentColorSet() throws Exception {

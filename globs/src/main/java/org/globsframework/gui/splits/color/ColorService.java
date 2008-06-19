@@ -1,15 +1,16 @@
 package org.globsframework.gui.splits.color;
 
-import org.globsframework.gui.splits.exceptions.ResourceLoadingFailed;
-import org.globsframework.gui.splits.exceptions.SplitsException;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.awt.*;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ColorService implements ColorSource {
+public class ColorService implements ColorLocator {
 
   public static final String DEFAULT_COLOR_SET = "DEFAULT_COLOR_SET";
 
@@ -22,18 +23,9 @@ public class ColorService implements ColorSource {
     selectCurrentColorSet();
   }
 
-  public ColorService(String name, InputStream stream) {
-    colorSets.add(ColorSet.load(name, stream));
-    selectCurrentColorSet();
-  }
-
-  public ColorService(Class refClass, String... files) throws ResourceLoadingFailed {
+  public ColorService(Class refClass, String... files) throws ResourceAccessFailed {
     for (String file : files) {
-      InputStream stream = refClass.getResourceAsStream(file);
-      if (stream == null) {
-        throw new ResourceLoadingFailed("Resource file '" + file + "' not found for class: " + refClass.getName());
-      }
-      colorSets.add(ColorSet.load(extractName(file), stream));
+      colorSets.add(ColorSet.load(extractName(file), Files.loadProperties(refClass, file)));
     }
     selectCurrentColorSet();
   }
@@ -80,7 +72,7 @@ public class ColorService implements ColorSource {
 
   public void install(final String key, final ColorUpdater updater) {
     addListener(new ColorChangeListener() {
-      public void colorsChanged(ColorSource colorSource) {
+      public void colorsChanged(ColorLocator colorLocator) {
         updater.updateColor(get(key));
       }
     });
@@ -94,9 +86,9 @@ public class ColorService implements ColorSource {
   /**
    * The <code>toString()</code> method of the given key is used as the actual key.
    */
-  public Color get(Object key) {
+  public Color get(Object key) throws ItemNotFound, InvalidParameter {
     if (key == null) {
-      throw new SplitsException("null key is not allowed");
+      throw new InvalidParameter("null key is not allowed");
     }
     String stringKey = key.toString();
     if (!currentSet.contains(stringKey)) {
@@ -127,7 +119,7 @@ public class ColorService implements ColorSource {
 
   public void autoUpdate(final Container container) {
     addListener(new ColorChangeListener() {
-      public void colorsChanged(ColorSource colorSource) {
+      public void colorsChanged(ColorLocator colorLocator) {
         container.repaint();
       }
     });

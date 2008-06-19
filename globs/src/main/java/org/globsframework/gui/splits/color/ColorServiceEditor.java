@@ -49,7 +49,7 @@ public class ColorServiceEditor implements ColorCreationListener {
     keyList = createList();
     builder.add(keyList, textField, colorChooser, createComboBox(), createButton());
     colorService.addListener(new ColorChangeListener() {
-      public void colorsChanged(ColorSource colorSource) {
+      public void colorsChanged(ColorLocator colorLocator) {
         updateComponents();
       }
     });

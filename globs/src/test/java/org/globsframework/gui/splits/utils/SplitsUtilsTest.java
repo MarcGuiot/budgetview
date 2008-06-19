@@ -44,24 +44,6 @@ public class SplitsUtilsTest extends UISpecTestCase {
     checkDimensionParsingError("(0,2");
   }
 
-  public void testFontParsing() throws Exception {
-    checkFont("Arial,italic,24", "Arial", Font.ITALIC, 24);
-    if (System.getProperty("os.name").equalsIgnoreCase("Linux")) {
-      checkFont("Times,bold,8", "Dialog", Font.BOLD, 8);
-      checkFont("Courier,plain,12", "Monospaced", Font.PLAIN, 12);
-    }
-    else {
-      checkFont("Times,bold,8", "Times", Font.BOLD, 8);
-      checkFont("Courier,plain,12", "Courier", Font.PLAIN, 12);
-    }
-  }
-
-  public void testFontParsingErrors() throws Exception {
-    checkFontParsingError("azeaze");
-    checkFontParsingError("blah,blah,blah");
-    checkFontParsingError("blah,12,12");
-    checkFontParsingError("Arial,blah,12", "Unknown font style 'blah' - should be one of plain|bold|italic");
-  }
 
   public void testIntParsing() throws Exception {
     assertEquals(new Integer(25), SplitsUtils.parseInt("25"));
@@ -83,17 +65,6 @@ public class SplitsUtilsTest extends UISpecTestCase {
                          "Field 'DUMMY_FIELD_STRING' in class 'org.globsframework.gui.splits.utils.SplitsUtilsTest' is not an integer");
     checkIntParsingError(getClass().getName() + ".DUMMY_FIELD_NOT_SET",
                          "Field 'DUMMY_FIELD_NOT_SET' in class 'org.globsframework.gui.splits.utils.SplitsUtilsTest' is not set");
-  }
-
-  private void checkFont(String desc, String fontName, int style, int size) {
-    Font font = SplitsUtils.parseFont(desc);
-    checkFont(font, fontName, style, size);
-  }
-
-  public static void checkFont(Font font, String fontName, int style, int size) {
-    assertEquals(fontName, font.getFamily());
-    assertEquals(style, font.getStyle());
-    assertEquals(size, font.getSize());
   }
 
   private void checkIntParsingError(String desc, String expectedMessage) {
@@ -123,20 +94,6 @@ public class SplitsUtilsTest extends UISpecTestCase {
     }
     catch (SplitsException e) {
       assertEquals(SplitsUtils.DIMENSION_ERROR_MESSAGE, e.getMessage());
-    }
-  }
-
-  private void checkFontParsingError(String desc) {
-    checkFontParsingError(desc, SplitsUtils.FONT_ERROR_MESSAGE);
-  }
-
-  private void checkFontParsingError(String desc, String message) {
-    try {
-      SplitsUtils.parseFont(desc);
-      fail();
-    }
-    catch (SplitsException e) {
-      assertEquals(message, e.getMessage());
     }
   }
 }

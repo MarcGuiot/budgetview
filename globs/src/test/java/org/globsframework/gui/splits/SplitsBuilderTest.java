@@ -8,6 +8,9 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.gui.splits.utils.*;
+import org.globsframework.gui.splits.font.FontsTest;
+import org.globsframework.gui.splits.font.FontService;
+import org.globsframework.gui.splits.font.Fonts;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
@@ -28,6 +31,7 @@ public class SplitsBuilderTest extends UISpecTestCase {
 
   private SplitsBuilder builder;
   private ColorService colorService = new ColorService();
+  private FontService fontService = new FontService();
   private DummyIconLocator iconLocator = new DummyIconLocator();
   private DummyTextLocator textLocator = new DummyTextLocator();
   private JTable aTable = new JTable();
@@ -35,7 +39,7 @@ public class SplitsBuilderTest extends UISpecTestCase {
   private JButton aButton = new JButton();
 
   protected void setUp() throws Exception {
-    builder = new SplitsBuilder(colorService, iconLocator, textLocator);
+    builder = new SplitsBuilder(colorService, iconLocator, textLocator, fontService);
 
     aTable.setName("aTable");
     aList.setName("aList");
@@ -421,6 +425,7 @@ public class SplitsBuilderTest extends UISpecTestCase {
         fail("No failure reported for XML: " + xml);
       }
       catch (SplitsException e) {
+        // OK
       }
     }
   }
@@ -604,7 +609,7 @@ public class SplitsBuilderTest extends UISpecTestCase {
     MyPanel myPanel = new MyPanel();
     builder.add("myPanel", myPanel);
     try {
-      MyPanel panel = (MyPanel)parse(
+      parse(
         "<panel ref='myPanel'>" +
         "  <button/>" +
         "  <button/>" +
@@ -806,9 +811,16 @@ public class SplitsBuilderTest extends UISpecTestCase {
     assertEquals(BevelBorder.RAISED, raised.getBevelType());
   }
 
-  public void testFont() throws Exception {
+  public void testHardcodedFont() throws Exception {
     JLabel label = (JLabel)parse("<label font='Arial,italic,24'/>");
-    SplitsUtilsTest.checkFont(label.getFont(), "Arial", Font.ITALIC, 24);
+    FontsTest.checkFont(label.getFont(), "Arial", Font.ITALIC, 24);
+  }
+
+  public void testFontService() throws Exception {
+    Font font = Fonts.parseFont("Arial,italic,12");
+    fontService.set("font1", font);
+    JLabel label = (JLabel)parse("<label font='$font1'/>");
+    assertEquals(font, label.getFont());
   }
 
   public void testCardLayout() throws Exception {
