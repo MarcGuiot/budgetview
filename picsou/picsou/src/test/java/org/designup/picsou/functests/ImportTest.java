@@ -24,7 +24,17 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     openImportDialog();
   }
 
+  protected void tearDown() throws Exception {
+    super.tearDown();
+    window.getAwtComponent().setVisible(false);
+    window.dispose();
+  }
+
   private void openImportDialog() {
+    if (window != null) {
+      window.getAwtComponent().setVisible(false);
+      window.dispose();
+    }
     window = WindowInterceptor.getModalDialog(operations.getImportTrigger());
     bankCombo = window.getComboBox("bankCombo");
     fileField = window.getInputTextBox("fileField");

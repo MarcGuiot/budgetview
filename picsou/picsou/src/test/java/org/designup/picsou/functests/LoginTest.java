@@ -46,6 +46,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
   }
 
   protected void tearDown() throws Exception {
+    window.getAwtComponent().setVisible(false);
     window.dispose();
     window = null;
     userField = null;
@@ -58,6 +59,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
   private void openNewLoginWindow() throws Exception {
     if (window != null) {
+      window.getAwtComponent().setVisible(false);
       window.dispose();
       picsouApplication.shutdown();
     }
