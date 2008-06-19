@@ -78,4 +78,18 @@ public class Strings {
     }
     return builder.toString();
   }
+
+  public static String join(String... items) {
+    StringBuilder buf = new StringBuilder();
+    for (String item : items) {
+      if (isNullOrEmpty(item)) {
+        continue;
+      }
+      if (buf.length() != 0) {
+        buf.append(" ");
+      }
+      buf.append(item);
+    }
+    return buf.toString();
+  }
 }

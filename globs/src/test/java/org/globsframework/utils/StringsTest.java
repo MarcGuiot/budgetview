@@ -47,4 +47,9 @@ public class StringsTest extends TestCase {
                  + "'toto' = '1'" + Strings.LINE_SEPARATOR,
                  Strings.toString(map));
   }
+
+  public void testJoin() throws Exception {
+    assertEquals("", Strings.join("", null));
+    assertEquals("a c", Strings.join("a", null, "", "c"));
+  }
 }
