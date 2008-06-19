@@ -16,6 +16,7 @@ import org.designup.picsou.gui.transactions.BalanceView;
 import org.designup.picsou.gui.transactions.InformationView;
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.transactions.TransactionView;
+import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -50,6 +51,7 @@ public class MainPanel {
 
     AccountView accountView = new AccountView(repository, directory);
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
+    TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory); 
     BalanceView balanceView = new BalanceView(repository, directory);
     CategoryView categoryView = new CategoryView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
@@ -63,6 +65,7 @@ public class MainPanel {
                         new InformationView(repository, directory, transactionSelection),
                         accountView,
                         transactionView,
+                        transactionDetailsView,
                         balanceView,
                         timeView,
                         categoryView,

@@ -38,13 +38,17 @@
           </scrollPane>
           <cards ref="cardView" opaque="false">
             <card name="data">
-              <column>
+              <row>
                 <scrollPane borderPos="center" viewportBackground="transactions.bg" border="empty" opaque="false"
                             marginLeft="5">
                   <table ref="transaction" background="transactions.bg"
                          intercellSpacing="(0,0)" showGrid="false" rowHeight="18"/>
                 </scrollPane>
-              </column>
+                <column>
+                  <panel ref="transactionDetails"/>
+                  <filler fill="vertical"/>
+                </column>
+              </row>
             </card>
             <card name="overview">
               <column>

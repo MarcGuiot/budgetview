@@ -10,6 +10,7 @@ import org.globsframework.gui.splits.layout.DefaultCardHandler;
 import org.globsframework.gui.splits.splitters.DefaultSplitterFactory;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidData;
 import org.saxstack.parser.DefaultXmlNode;
 import org.saxstack.parser.SaxStackParser;
 import org.saxstack.parser.XmlNode;
@@ -131,7 +132,11 @@ public class SplitsBuilder {
     }
 
     public Component getRootComponent() {
-      return splitsNode.root.getComponent();
+      XmlComponentNode root = splitsNode.root;
+      if (root == null) {
+        throw new InvalidData("Empty file");
+      }
+      return root.getComponent();
     }
   }
 

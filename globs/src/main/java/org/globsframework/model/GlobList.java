@@ -119,6 +119,14 @@ public class GlobList extends ArrayList<Glob> {
     return result;
   }
 
+  public Set getValueSet(Field field) {
+    Set result = new HashSet();
+    for (Glob glob : this) {
+      result.add(glob.getValue(field));
+    }
+    return result;
+  }
+
   public Double[] getValues(DoubleField field) {
     Double[] result = new Double[size()];
     int index = 0;

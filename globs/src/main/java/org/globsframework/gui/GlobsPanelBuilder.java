@@ -91,6 +91,11 @@ public class GlobsPanelBuilder {
     return this;
   }
 
+  public GlobsPanelBuilder add(String name, ComponentHolder holder) {
+    splits.add(name, holder.getComponent());
+    return this;
+  }
+
   public GlobsPanelBuilder add(Component... component) {
     splits.add(component);
     return this;
