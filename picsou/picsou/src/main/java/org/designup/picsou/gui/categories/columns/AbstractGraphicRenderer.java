@@ -3,7 +3,7 @@ package org.designup.picsou.gui.categories.columns;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -56,20 +56,20 @@ public abstract class AbstractGraphicRenderer extends JPanel implements ColorCha
     setOpaque(false);
   }
 
-  public void colorsChanged(ColorSource colorSource) {
-    selectedBottomBgColor = colorSource.get(selectionBackgroundBottomColorId);
-    selectedTopBgColor = colorSource.get(selectionBackgroundTopColorId);
-    selectedBorderColor = colorSource.get(PicsouColors.SELECTION_BG_BORDER);
-    bottomBgColor = colorSource.get(backgroundBottomColorId);
-    topBgColor = colorSource.get(backgroundTopColorId);
-    incomeTextColor = colorSource.get(PicsouColors.INCOME_TEXT);
-    expenseTextColor = colorSource.get(PicsouColors.EXPENSE_TEXT);
-    titleColor = colorSource.get(PicsouColors.CATEGORY_TITLE);
-    grayedTitleColor = colorSource.get(PicsouColors.CATEGORY_TITLE_GRAYED);
-    errorTitleColor = colorSource.get(PicsouColors.CATEGORY_TITLE_ERROR);
-    incomeBarLightColor = colorSource.get(PicsouColors.INCOME_BAR_LIGHT);
-    incomeBarDarkColor = colorSource.get(PicsouColors.INCOME_BAR_DARK);
-    expenseBarLightColor = colorSource.get(PicsouColors.EXPENSE_BAR_LIGHT);
-    expenseBarDarkColor = colorSource.get(PicsouColors.EXPENSE_BAR_DARK);
+  public void colorsChanged(ColorLocator colorLocator) {
+    selectedBottomBgColor = colorLocator.get(selectionBackgroundBottomColorId);
+    selectedTopBgColor = colorLocator.get(selectionBackgroundTopColorId);
+    selectedBorderColor = colorLocator.get(PicsouColors.SELECTION_BG_BORDER);
+    bottomBgColor = colorLocator.get(backgroundBottomColorId);
+    topBgColor = colorLocator.get(backgroundTopColorId);
+    incomeTextColor = colorLocator.get(PicsouColors.INCOME_TEXT);
+    expenseTextColor = colorLocator.get(PicsouColors.EXPENSE_TEXT);
+    titleColor = colorLocator.get(PicsouColors.CATEGORY_TITLE);
+    grayedTitleColor = colorLocator.get(PicsouColors.CATEGORY_TITLE_GRAYED);
+    errorTitleColor = colorLocator.get(PicsouColors.CATEGORY_TITLE_ERROR);
+    incomeBarLightColor = colorLocator.get(PicsouColors.INCOME_BAR_LIGHT);
+    incomeBarDarkColor = colorLocator.get(PicsouColors.INCOME_BAR_DARK);
+    expenseBarLightColor = colorLocator.get(PicsouColors.EXPENSE_BAR_LIGHT);
+    expenseBarDarkColor = colorLocator.get(PicsouColors.EXPENSE_BAR_DARK);
   }
 }

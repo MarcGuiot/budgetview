@@ -3,7 +3,7 @@ package org.designup.picsou.gui.categories.columns;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
@@ -20,11 +20,11 @@ public class CategoryBackgroundPainter implements CellPainter, ColorChangeListen
     directory.get(ColorService.class).addListener(this);
   }
 
-  public void colorsChanged(ColorSource colorSource) {
-    selectionBorder = colorSource.get(PicsouColors.CATEGORIES_SELECTED_BORDER);
-    selectionTop = colorSource.get(PicsouColors.CATEGORIES_SELECTED_BG_TOP);
-    selectionBottom = colorSource.get(PicsouColors.CATEGORIES_SELECTED_BG_BOTTOM);
-    background = colorSource.get(PicsouColors.CATEGORIES_BG);
+  public void colorsChanged(ColorLocator colorLocator) {
+    selectionBorder = colorLocator.get(PicsouColors.CATEGORIES_SELECTED_BORDER);
+    selectionTop = colorLocator.get(PicsouColors.CATEGORIES_SELECTED_BG_TOP);
+    selectionBottom = colorLocator.get(PicsouColors.CATEGORIES_SELECTED_BG_BOTTOM);
+    background = colorLocator.get(PicsouColors.CATEGORIES_BG);
   }
 
   public void paint(Graphics g, Glob glob, int row, int column,

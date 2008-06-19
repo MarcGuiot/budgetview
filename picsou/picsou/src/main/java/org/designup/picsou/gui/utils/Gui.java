@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.utils;
 
 import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.font.FontLocator;
+import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.JarIconLocator;
 import org.designup.picsou.gui.components.DialogMovingListener;
@@ -26,6 +28,7 @@ public class Gui {
   public static char EURO = '\u20ac';
 
   public static final IconLocator ICON_LOCATOR = new JarIconLocator(Gui.class, "/images");
+  public static final FontLocator FONT_LOCATOR = new FontService(Gui.class, "/fonts.properties");
 
   private static Font font;
 

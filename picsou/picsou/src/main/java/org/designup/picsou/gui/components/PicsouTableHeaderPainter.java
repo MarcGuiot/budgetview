@@ -2,7 +2,7 @@ package org.designup.picsou.gui.components;
 
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
@@ -33,11 +33,11 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
     directory.get(ColorService.class).addListener(this);
   }
 
-  public void colorsChanged(ColorSource colorSource) {
-    headerLightColor = colorSource.get(tableHeaderLight);
-    headerMediumColor = colorSource.get(tableHeaderMedium);
-    headerDarkColor = colorSource.get(tableHeaderDark);
-    headerBorderColor = colorSource.get(tableHeaderBorder);
+  public void colorsChanged(ColorLocator colorLocator) {
+    headerLightColor = colorLocator.get(tableHeaderLight);
+    headerMediumColor = colorLocator.get(tableHeaderMedium);
+    headerDarkColor = colorLocator.get(tableHeaderDark);
+    headerBorderColor = colorLocator.get(tableHeaderBorder);
   }
 
   public void paint(Graphics g, Glob glob,

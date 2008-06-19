@@ -1,0 +1,4 @@
+<styles>
+  <default name="JLabel" text="Arial,normal,12" foreground="$"/>
+  <class name="JButton" text="Arial,normal,12" foreground="$"/>
+</styles>

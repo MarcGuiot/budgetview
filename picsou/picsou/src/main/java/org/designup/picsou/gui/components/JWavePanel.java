@@ -3,7 +3,7 @@ package org.designup.picsou.gui.components;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,10 +28,10 @@ public class JWavePanel extends JPanel implements ColorChangeListener {
     path.closePath();
   }
 
-  public void colorsChanged(ColorSource colorSource) {
-    topColor = colorSource.get(PicsouColors.WAVE_PANEL_TOP);
-    bottomColor = colorSource.get(PicsouColors.WAVE_PANEL_BOTTOM);
-    waveColor = colorSource.get(PicsouColors.WAVE_PANEL_WAVE);
+  public void colorsChanged(ColorLocator colorLocator) {
+    topColor = colorLocator.get(PicsouColors.WAVE_PANEL_TOP);
+    bottomColor = colorLocator.get(PicsouColors.WAVE_PANEL_BOTTOM);
+    waveColor = colorLocator.get(PicsouColors.WAVE_PANEL_WAVE);
   }
 
   protected void paintComponent(Graphics g) {

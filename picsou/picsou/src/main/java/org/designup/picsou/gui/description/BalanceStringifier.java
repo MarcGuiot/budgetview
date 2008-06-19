@@ -4,7 +4,7 @@ import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -49,9 +49,9 @@ public class BalanceStringifier implements GlobListStringifier, ColorChangeListe
       .toString();
   }
 
-  public void colorsChanged(ColorSource colorSource) {
-    positiveAmountColor = colorSource.get(PicsouColors.BALANCE_POSITIVE);
-    negativeAmountColor = colorSource.get(PicsouColors.BALANCE_NEGATIVE);
+  public void colorsChanged(ColorLocator colorLocator) {
+    positiveAmountColor = colorLocator.get(PicsouColors.BALANCE_POSITIVE);
+    negativeAmountColor = colorLocator.get(PicsouColors.BALANCE_NEGATIVE);
   }
 
   private String stringifyNumber(double value, GlobRepository globRepository) {

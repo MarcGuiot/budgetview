@@ -2,7 +2,7 @@ package org.designup.picsou.gui.components;
 
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.utils.Java2DUtils;
 import org.designup.picsou.gui.utils.PicsouColors;
 
@@ -47,9 +47,9 @@ public class PicsouDialogPainter implements ColorChangeListener {
     Java2DUtils.drawBorder(g2d, borderColor, 0, 0, width - 1, height - 1);
   }
 
-  public void colorsChanged(ColorSource colorSource) {
-    topColor = colorSource.get(PicsouColors.DIALOG_BG_TOP);
-    bottomColor = colorSource.get(PicsouColors.DIALOG_BG_BOTTOM);
-    borderColor = colorSource.get(PicsouColors.DIALOG_BORDER);
+  public void colorsChanged(ColorLocator colorLocator) {
+    topColor = colorLocator.get(PicsouColors.DIALOG_BG_TOP);
+    bottomColor = colorLocator.get(PicsouColors.DIALOG_BG_BOTTOM);
+    borderColor = colorLocator.get(PicsouColors.DIALOG_BORDER);
   }
 }

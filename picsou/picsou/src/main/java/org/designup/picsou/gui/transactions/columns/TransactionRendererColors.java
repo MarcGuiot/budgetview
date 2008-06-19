@@ -3,7 +3,7 @@ package org.designup.picsou.gui.transactions.columns;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
@@ -26,17 +26,17 @@ public class TransactionRendererColors implements ColorChangeListener {
     colorService.addListener(this);
   }
 
-  public void colorsChanged(ColorSource colorSource) {
-    selectionBgColor = colorSource.get(PicsouColors.TRANSACTION_SELECTED_BG);
-    evenRowsBgColor = colorSource.get(PicsouColors.TRANSACTION_EVEN_ROWS_BG);
-    oddRowsBgColor = colorSource.get(PicsouColors.TRANSACTION_ODD_ROWS_BG);
-    selectionErrorBgColor = colorSource.get(PicsouColors.TRANSACTION_SELECTED_ERROR_BG);
-    evenErrorBgColor = colorSource.get(PicsouColors.TRANSACTION_EVEN_ERROR_BG);
-    oddErrorBgColor = colorSource.get(PicsouColors.TRANSACTION_ODD_ERROR_BG);
-    rolloverCategoryColor = colorSource.get(PicsouColors.ROLLOVER_CATEGORY_LABEL);
-    categoryColor = colorSource.get(PicsouColors.CATEGORY_LABEL);
-    transactionTextColor = colorSource.get(PicsouColors.TRANSACTION_TEXT);
-    transactionSelectedTextColor = colorSource.get(PicsouColors.TRANSACTION_SELECTED_TEXT);
+  public void colorsChanged(ColorLocator colorLocator) {
+    selectionBgColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_BG);
+    evenRowsBgColor = colorLocator.get(PicsouColors.TRANSACTION_EVEN_ROWS_BG);
+    oddRowsBgColor = colorLocator.get(PicsouColors.TRANSACTION_ODD_ROWS_BG);
+    selectionErrorBgColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_ERROR_BG);
+    evenErrorBgColor = colorLocator.get(PicsouColors.TRANSACTION_EVEN_ERROR_BG);
+    oddErrorBgColor = colorLocator.get(PicsouColors.TRANSACTION_ODD_ERROR_BG);
+    rolloverCategoryColor = colorLocator.get(PicsouColors.ROLLOVER_CATEGORY_LABEL);
+    categoryColor = colorLocator.get(PicsouColors.CATEGORY_LABEL);
+    transactionTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT);
+    transactionSelectedTextColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_TEXT);
   }
 
   public Color getEvenErrorBgColor() {

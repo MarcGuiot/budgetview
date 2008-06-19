@@ -10,7 +10,7 @@ import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -159,9 +159,9 @@ public class IntraMonthChart extends AbstractLineChart {
 
   protected void configureChart() {
     colorService.addListener(new ColorChangeListener() {
-      public void colorsChanged(ColorSource colorSource) {
-        plot.setBackgroundPaint(new GradientPaint(100.0f, 0.0f, colorSource.get(PicsouColors.CHART_BG_TOP),
-                                                  100.0f, 200.0f, colorSource.get(PicsouColors.CHART_BG_BOTTOM)));
+      public void colorsChanged(ColorLocator colorLocator) {
+        plot.setBackgroundPaint(new GradientPaint(100.0f, 0.0f, colorLocator.get(PicsouColors.CHART_BG_TOP),
+                                                  100.0f, 200.0f, colorLocator.get(PicsouColors.CHART_BG_BOTTOM)));
       }
     });
 

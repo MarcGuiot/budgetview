@@ -10,7 +10,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
@@ -40,11 +40,11 @@ public class ScorecardView extends View implements GlobSelectionListener {
     builder.add("scorecard", editorPane);
   }
 
-  public void colorsChanged(ColorSource colorSource) {
-    super.colorsChanged(colorSource);
-    defaultColor = colorSource.get(PicsouColors.SCORECARD_TEXT);
-    incomeColor = colorSource.get(PicsouColors.SCORECARD_INCOME);
-    expensesColor = colorSource.get(PicsouColors.SCORECARD_EXPENSES);
+  public void colorsChanged(ColorLocator colorLocator) {
+    super.colorsChanged(colorLocator);
+    defaultColor = colorLocator.get(PicsouColors.SCORECARD_TEXT);
+    incomeColor = colorLocator.get(PicsouColors.SCORECARD_INCOME);
+    expensesColor = colorLocator.get(PicsouColors.SCORECARD_EXPENSES);
   }
 
   public void selectionUpdated(GlobSelection selection) {

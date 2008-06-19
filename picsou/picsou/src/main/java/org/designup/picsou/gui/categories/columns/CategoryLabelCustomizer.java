@@ -5,7 +5,7 @@ import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Category;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
@@ -20,8 +20,8 @@ public class CategoryLabelCustomizer implements LabelCustomizer, ColorChangeList
     directory.get(ColorService.class).addListener(this);
   }
 
-  public void colorsChanged(ColorSource source) {
-    color = source.get(PicsouColors.CATEGORY_TITLE);
+  public void colorsChanged(ColorLocator locator) {
+    color = locator.get(PicsouColors.CATEGORY_TITLE);
   }
 
   public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {

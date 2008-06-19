@@ -5,7 +5,7 @@ import org.designup.picsou.gui.utils.Html;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Account;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -34,10 +34,10 @@ public class AccountView extends View implements ChangeSetListener {
     builder.add("accountView", infoLabel);
   }
 
-  public void colorsChanged(ColorSource colorSource) {
-    accountNameColor = colorSource.get(PicsouColors.ACCOUNT_NAME);
-    positiveAmountColor = colorSource.get("balance.positive");
-    negativeAmountColor = colorSource.get("balance.negative");
+  public void colorsChanged(ColorLocator colorLocator) {
+    accountNameColor = colorLocator.get(PicsouColors.ACCOUNT_NAME);
+    positiveAmountColor = colorLocator.get("balance.positive");
+    negativeAmountColor = colorLocator.get("balance.negative");
     update();
   }
 

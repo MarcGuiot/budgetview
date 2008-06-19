@@ -20,7 +20,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.components.JStyledPanel;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.TableUtils;
@@ -451,7 +451,7 @@ public class SplitTransactionDialog {
       this.balanceStringifier = balanceStringifier;
     }
 
-    public void colorsChanged(ColorSource colorSource) {
+    public void colorsChanged(ColorLocator colorLocator) {
       updateInitialAmount(balanceStringifier);
     }
   }

@@ -10,7 +10,7 @@ import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -79,9 +79,9 @@ public class MonthDetailChart extends View implements GlobSelectionListener, Cha
     }
   }
 
-  public void colorsChanged(ColorSource colorSource) {
-    markerOutlineColor = colorSource.get(PicsouColors.CHART_MARKER_OUTLINE);
-    markerColor = colorSource.get(PicsouColors.CHART_MARKER);
+  public void colorsChanged(ColorLocator colorLocator) {
+    markerOutlineColor = colorLocator.get(PicsouColors.CHART_MARKER_OUTLINE);
+    markerColor = colorLocator.get(PicsouColors.CHART_MARKER);
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -140,9 +140,9 @@ public class MonthDetailChart extends View implements GlobSelectionListener, Cha
 //    plot.setRangeCrosshairVisible(false);
 
 //    colorService.addListener(new ColorService.Listener() {
-//      public void colorsChanged(ColorSource colorSource) {
-//        plot.setBackgroundPaint(new GradientPaint(100.0f, 0.0f, colorSource.get(PicsouColors.CHART_BG_TOP),
-//                                                  100.0f, 200.0f, colorSource.get(PicsouColors.CHART_BG_BOTTOM)));
+//      public void colorsChanged(ColorSource colorLocator) {
+//        plot.setBackgroundPaint(new GradientPaint(100.0f, 0.0f, colorLocator.get(PicsouColors.CHART_BG_TOP),
+//                                                  100.0f, 200.0f, colorLocator.get(PicsouColors.CHART_BG_BOTTOM)));
 //      }
 //    });
 

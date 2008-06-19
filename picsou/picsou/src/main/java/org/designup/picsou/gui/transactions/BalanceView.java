@@ -5,7 +5,7 @@ import org.designup.picsou.gui.description.BalanceStringifier;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -22,7 +22,7 @@ public class BalanceView extends View {
     balanceView = GlobLabelView.init(Transaction.TYPE, globRepository, directory,
                                      new BalanceStringifier(globRepository, directory));
     colorService.addListener(new ColorChangeListener() {
-      public void colorsChanged(ColorSource colorSource) {
+      public void colorsChanged(ColorLocator colorLocator) {
         balanceView.update();
       }
     });

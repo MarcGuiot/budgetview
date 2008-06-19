@@ -3,7 +3,7 @@ package org.designup.picsou.gui.components;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,9 +20,9 @@ public class JGradientPanel extends JPanel implements ColorChangeListener {
     colorService.addListener(this);
   }
 
-  public void colorsChanged(ColorSource colorSource) {
-    topColor = colorSource.get(topColorKey);
-    bottomColor = colorSource.get(bottomColorKey);
+  public void colorsChanged(ColorLocator colorLocator) {
+    topColor = colorLocator.get(topColorKey);
+    bottomColor = colorLocator.get(bottomColorKey);
   }
 
   public void update(Graphics graphics) {

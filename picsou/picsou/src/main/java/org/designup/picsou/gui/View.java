@@ -4,7 +4,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
@@ -25,7 +25,7 @@ public abstract class View implements ColorChangeListener {
     colorService.addListener(this);
   }
 
-  public void colorsChanged(ColorSource colorSource) {
+  public void colorsChanged(ColorLocator colorLocator) {
   }
 
   public abstract void registerComponents(GlobsPanelBuilder builder);

@@ -6,11 +6,10 @@ import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
 import org.designup.picsou.client.http.*;
 import org.designup.picsou.client.local.LocalClientTransport;
-import org.designup.picsou.gui.components.JWavePanel;
-import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.MainPanel;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.MainPanel;
+import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -86,15 +85,15 @@ public class LoginPanel {
     setVisible(creationComponents, false);
 
     ColorService colorService = directory.get(ColorService.class);
-    SplitsBuilder builder = new SplitsBuilder(colorService, Gui.ICON_LOCATOR, Lang.TEXT_LOCATOR);
-    builder.add("wave", new JWavePanel(colorService));
-    builder.add("name", userField);
-    builder.add("password", passwordField);
-    builder.add("confirmPassword", confirmPasswordField);
-    builder.add("confirmLabel", confirmPasswordLabel);
-    builder.add("createAccountCheckBox", creationCheckBox);
-    builder.add("message", messageLabel);
-    builder.add("login", loginButton);
+    SplitsBuilder builder = SplitsBuilder.init(directory)
+      .add("wave", new JWavePanel(colorService))
+      .add("name", userField)
+      .add("password", passwordField)
+      .add("confirmPassword", confirmPasswordField)
+      .add("confirmLabel", confirmPasswordLabel)
+      .add("createAccountCheckBox", creationCheckBox)
+      .add("message", messageLabel)
+      .add("login", loginButton);
     panel = (JPanel)builder.parse(getClass(), "/layout/loginPanel.splits");
   }
 

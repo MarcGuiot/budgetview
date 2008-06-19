@@ -11,7 +11,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorSource;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 import org.jfree.chart.ChartPanel;
@@ -73,9 +73,9 @@ public class HistoricalChart extends AbstractLineChart {
     }
   }
 
-  public void colorsChanged(ColorSource colorSource) {
-    markerOutlineColor = colorSource.get(PicsouColors.CHART_MARKER_OUTLINE);
-    markerColor = colorSource.get(PicsouColors.CHART_MARKER);
+  public void colorsChanged(ColorLocator colorLocator) {
+    markerOutlineColor = colorLocator.get(PicsouColors.CHART_MARKER_OUTLINE);
+    markerColor = colorLocator.get(PicsouColors.CHART_MARKER);
   }
 
   protected void updateChart() {
@@ -120,9 +120,9 @@ public class HistoricalChart extends AbstractLineChart {
 
   protected void configureChart() {
     colorService.addListener(new ColorChangeListener() {
-      public void colorsChanged(ColorSource colorSource) {
-        plot.setBackgroundPaint(new GradientPaint(100.0f, 0.0f, colorSource.get(PicsouColors.CHART_BG_TOP),
-                                                  100.0f, 200.0f, colorSource.get(PicsouColors.CHART_BG_BOTTOM)));
+      public void colorsChanged(ColorLocator colorLocator) {
+        plot.setBackgroundPaint(new GradientPaint(100.0f, 0.0f, colorLocator.get(PicsouColors.CHART_BG_TOP),
+                                                  100.0f, 200.0f, colorLocator.get(PicsouColors.CHART_BG_BOTTOM)));
 
         updateMonthMarkers();
       }
