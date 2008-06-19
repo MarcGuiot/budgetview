@@ -10,34 +10,29 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 
-public class YearGraph implements Selectable, Comparable<YearGraph> {
+public class YearGraph extends DefaultCompositeComponent {
   private int year;
   private MonthViewColors colors;
-  private ChainedSelectableElement monthElement;
-  private ChainedSelectableElement yearElement;
-  private MonthGraph[] months;
   protected int yearCellHeight;
   private int yearWidth;
   private int shortYearWidth;
   private String yearText;
   private String shortYearText;
-  private Rectangle clickableArea = new Rectangle();
-  private boolean selected = false;
-  private Visibility isVisible = Visibility.FULLY;
+  private MonthGraph[] monthsGraph;
 
   public YearGraph(int year, java.util.List<Glob> months,
                    MonthViewColors colors, ChainedSelectableElement monthElement,
                    ChainedSelectableElement yearElement) {
+    super(monthElement, yearElement);
     this.year = year;
     this.colors = colors;
-    this.monthElement = monthElement;
-    this.yearElement = yearElement;
-    this.months = new MonthGraph[months.size()];
+    this.monthsGraph = new MonthGraph[months.size()];
     int i = 0;
     for (Glob month : months) {
-      this.months[i] = new MonthGraph(month, colors, new MonthChainedSelectableElement(i));
+      this.monthsGraph[i] = new MonthGraph(month, colors, new DefaultChainedSelectableElement(i));
       i++;
     }
+    add(this.monthsGraph);
   }
 
   public void init(Graphics2D graphics2D, MonthFontMetricInfo monthFontMetricInfo) {
@@ -46,14 +41,14 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
     yearWidth = graphics2D.getFontMetrics().stringWidth(yearText);
     shortYearText = yearText.substring(2);
     shortYearWidth = graphics2D.getFontMetrics().stringWidth(shortYearText);
-    for (MonthGraph month : months) {
+    for (MonthGraph month : monthsGraph) {
       month.init(graphics2D, monthFontMetricInfo);
     }
   }
 
   public int draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter, int height, int monthWidth,
                   int monthRank, Rectangle visibleRectangle) {
-    int monthDim = months.length * monthWidth;
+    int monthDim = monthsGraph.length * monthWidth;
     transformationAdapter.save();
     clickableArea = TimeGraph.getClickableArea(transformationAdapter.getTransform(), monthDim, height);
     Rectangle2D intersection = visibleRectangle.createIntersection(clickableArea);
@@ -65,7 +60,7 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
     }
     if (intersection.getWidth() < 0) {
       isVisible = Visibility.NOT_VISIBLE;
-      for (MonthGraph month : months) {
+      for (AbstractComponent month : monthsGraph) {
         month.setNotVisible();
       }
       return monthDim;
@@ -77,7 +72,7 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
         graphics2D.fillRect(0, height - yearCellHeight, monthDim, yearCellHeight);
         graphics2D.setPaint(paint);
       }
-      for (MonthGraph month : months) {
+      for (MonthGraph month : monthsGraph) {
         month.draw(graphics2D, transformationAdapter, height - yearCellHeight, monthWidth, monthRank, visibleRectangle);
         transformationAdapter.translate(monthWidth, 0);
       }
@@ -100,12 +95,18 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
   }
 
   public int getMonthCount() {
-    return months.length;
+    return monthsGraph.length;
+  }
+
+  public void getSelectedGlobs(Collection<Glob> selected) {
+    for (Selectable month : monthsGraph) {
+      month.getSelectedGlobs(selected);
+    }
   }
 
   public int getPreferredHeight(Graphics2D graphics2D) {
     int maxMonthHeight = 0;
-    for (MonthGraph month : months) {
+    for (MonthGraph month : monthsGraph) {
       maxMonthHeight = Math.max(maxMonthHeight, month.getPreferredHeight(graphics2D));
     }
     return maxMonthHeight + yearCellHeight + 4;
@@ -113,7 +114,7 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
 
   public int getMaxWidth(Graphics2D graphics2D) {
     int max = 0;
-    for (MonthGraph month : months) {
+    for (MonthGraph month : monthsGraph) {
       max = Math.max(max, month.getMaxWidth(graphics2D));
     }
     return max;
@@ -121,28 +122,14 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
 
   public int getMinWidth(Graphics2D graphics2D) {
     int max = shortYearWidth;
-    for (MonthGraph month : months) {
+    for (MonthGraph month : monthsGraph) {
       max = Math.max(max, month.getMinWidth(graphics2D));
     }
     return max;
   }
 
-  public Selectable getSelectable(int x, int y) {
-    Selectable selectable;
-    if (clickableArea.contains(x, y)) {
-      for (MonthGraph month : months) {
-        selectable = month.getSelectable(x, y);
-        if (selectable != null) {
-          return selectable;
-        }
-      }
-      return this;
-    }
-    return null;
-  }
-
   public void getSelected(java.util.List<Selectable> list) {
-    for (MonthGraph month : months) {
+    for (AbstractComponent month : monthsGraph) {
       month.getSelected(list);
     }
   }
@@ -165,57 +152,23 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
   }
 
   public void select(Glob selectedMonth, Collection<Selectable> selectable) {
-    for (MonthGraph month : months) {
+    for (MonthGraph month : monthsGraph) {
       month.select(selectedMonth, selectable);
     }
   }
 
   public void getAllSelectableMonth(GlobList globList) {
-    for (MonthGraph month : months) {
+    for (MonthGraph month : monthsGraph) {
       globList.add(month.getMonth());
     }
   }
 
   public int getMinMonthRank(int monthWidth) {
     int rank = 0;
-    for (MonthGraph month : months) {
+    for (MonthGraph month : monthsGraph) {
       rank = Math.max(rank, month.getNearestRank(monthWidth));
     }
     return rank;
-  }
-
-  public Selectable getLeft() {
-    return yearElement.getLeft();
-  }
-
-  public Selectable getRight() {
-    return yearElement.getRight();
-  }
-
-  public void select() {
-    selected = true;
-  }
-
-  public void unSelect() {
-    selected = false;
-  }
-
-  public void inverseSelect() {
-    selected = !selected;
-  }
-
-  public String getCommonParent() {
-    return "year";
-  }
-
-  public void getSelectedGlobs(Collection<Glob> selected) {
-    for (MonthGraph month : months) {
-      selected.add(month.getMonth());
-    }
-  }
-
-  public Visibility isVisible() {
-    return isVisible;
   }
 
   public int compareTo(YearGraph yearGraph) {
@@ -223,32 +176,11 @@ public class YearGraph implements Selectable, Comparable<YearGraph> {
   }
 
   public Selectable getFirstMonth() {
-    return months[0];
+    return monthsGraph[0];
   }
 
   public Selectable getLastMonth() {
-    return months[months.length - 1];
+    return monthsGraph[monthsGraph.length - 1];
   }
 
-  private class MonthChainedSelectableElement implements ChainedSelectableElement {
-    private int index;
-
-    public MonthChainedSelectableElement(int index) {
-      this.index = index;
-    }
-
-    public Selectable getLeft() {
-      if (index == 0) {
-        return monthElement.getLeft();
-      }
-      return months[index - 1];
-    }
-
-    public Selectable getRight() {
-      if (index == months.length - 1) {
-        return monthElement.getRight();
-      }
-      return months[index + 1];
-    }
-  }
 }

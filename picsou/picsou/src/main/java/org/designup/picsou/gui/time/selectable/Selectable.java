@@ -5,6 +5,7 @@ import org.globsframework.model.Glob;
 import java.util.Collection;
 
 public interface Selectable extends ChainedSelectableElement {
+  Selectable getSelectable(int x, int y);
 
   enum Visibility {
     PARTIALLY,
@@ -17,8 +18,6 @@ public interface Selectable extends ChainedSelectableElement {
   void unSelect();
 
   void inverseSelect();
-
-  String getCommonParent();
 
   void getSelectedGlobs(Collection<Glob> selected);
 

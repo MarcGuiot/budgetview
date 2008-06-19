@@ -239,6 +239,10 @@ public class TimeViewPanelTest extends TestCase {
         this.pos = pos;
       }
 
+      public Selectable getSelectable(int x, int y) {
+        return null;
+      }
+
       public void select() {
         selected = true;
       }
@@ -249,10 +253,6 @@ public class TimeViewPanelTest extends TestCase {
 
       public void inverseSelect() {
         selected = !selected;
-      }
-
-      public String getCommonParent() {
-        return "unique";
       }
 
       public void getSelectedGlobs(Collection<Glob> selected) {

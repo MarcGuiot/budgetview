@@ -156,7 +156,7 @@ public class TimeGraph {
       }
     }
   }
-  
+
   public void selectAll(Collection<Selectable> selectables) {
     selectMonth(months, selectables);
   }

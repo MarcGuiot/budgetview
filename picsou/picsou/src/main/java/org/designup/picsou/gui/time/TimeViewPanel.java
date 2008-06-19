@@ -99,14 +99,14 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   private void sendSelectionEvent(boolean updateLastSelected) {
-    List<Glob> selected = new ArrayList<Glob>();
+    List<Glob> selectedGlob = new ArrayList<Glob>();
     for (Selectable selectable : currentlySelected) {
-      selectable.getSelectedGlobs(selected);
+      selectable.getSelectedGlobs(selectedGlob);
       if (updateLastSelected) {
         setLastSeletected(selectable);
       }
     }
-    selectionService.select(selected, Month.TYPE);
+    selectionService.select(selectedGlob, Month.TYPE);
   }
 
   public void mouseEntered(MouseEvent e) {

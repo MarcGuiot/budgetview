@@ -10,19 +10,15 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 
-public class MonthGraph implements Selectable, Comparable<MonthGraph> {
-  private boolean selected = false;
+public class MonthGraph extends AbstractComponent implements Comparable<MonthGraph> {
   private Glob month;
   private MonthViewColors colors;
-  private ChainedSelectableElement element;
   private MonthFontMetricInfo.MonthSizes monthSize;
-  protected Rectangle clickableArea = new Rectangle();
-  private Visibility isVisible = Visibility.FULLY;
 
   public MonthGraph(Glob month, MonthViewColors colors, ChainedSelectableElement element) {
+    super(element);
     this.month = month;
     this.colors = colors;
-    this.element = element;
   }
 
   public void init(Graphics2D graphics2D, MonthFontMetricInfo monthFontMetricInfo) {
@@ -75,19 +71,6 @@ public class MonthGraph implements Selectable, Comparable<MonthGraph> {
     return monthSize.getMinWidth() + 4;
   }
 
-  public Selectable getSelectable(int x, int y) {
-    if (clickableArea.contains(x, y)) {
-      return this;
-    }
-    return null;
-  }
-
-  public void getSelected(java.util.List<Selectable> list) {
-    if (selected) {
-      list.add(this);
-    }
-  }
-
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -120,43 +103,12 @@ public class MonthGraph implements Selectable, Comparable<MonthGraph> {
     }
   }
 
-  public void select() {
-    selected = true;
-  }
-
-  public void unSelect() {
-    selected = false;
-  }
-
-  public void inverseSelect() {
-    selected = !selected;
-  }
-
-  public String getCommonParent() {
-    return "month";
-  }
-
   public void getSelectedGlobs(Collection<Glob> selected) {
     selected.add(month);
-  }
-
-  public Visibility isVisible() {
-    return isVisible;
   }
 
   public int compareTo(MonthGraph o) {
     return getMonth().get(Month.ID).compareTo(o.getMonth().get(Month.ID));
   }
 
-  public Selectable getLeft() {
-    return element.getLeft();
-  }
-
-  public Selectable getRight() {
-    return element.getRight();
-  }
-
-  public void setNotVisible() {
-    isVisible = Visibility.NOT_VISIBLE;
-  }
 }
