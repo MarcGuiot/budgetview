@@ -61,6 +61,8 @@ public class OfxImporter implements AccountFileImporter {
     private MultiMap<String, String> categoriesForTransaction = new MultiMap<String, String>();
     private GlobIdGenerator generator;
     private boolean fileCompleted;
+    private String name;
+    private String memo;
 
 
     public Functor(GlobRepository targetRepository, ReadOnlyGlobRepository initialRepository) {
@@ -128,6 +130,7 @@ public class OfxImporter implements AccountFileImporter {
         isInLedgerBal = false;
       }
       if (tag.equalsIgnoreCase("STMTTRN")) {
+        updateTransactionLabel();
         processSplitTransactions();
         if (currentCategory != null) {
           categoriesForTransaction.put(currentCategory, null);
@@ -226,6 +229,10 @@ public class OfxImporter implements AccountFileImporter {
         updateName(content);
         return;
       }
+      if (tag.equalsIgnoreCase("MEMO")) {
+        updateMemo(content);
+        return;
+      }
       if (tag.equalsIgnoreCase("ACCTID")) {
         updateAccount(content);
         return;
@@ -291,6 +298,17 @@ public class OfxImporter implements AccountFileImporter {
     }
 
     private void updateName(String content) {
+      name = content;
+    }
+
+    private void updateMemo(String memo) {
+      if (!memo.equals(".")) {
+        this.memo = memo;
+      }
+    }
+
+    private void updateTransactionLabel() {
+      String content = Strings.join(name, memo);
       repository.update(currentTransactionKey, ImportedTransaction.ORIGINAL_LABEL, content);
       repository.update(currentTransactionKey, ImportedTransaction.LABEL, content);
     }

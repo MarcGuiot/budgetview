@@ -2,7 +2,7 @@
   <bank name="Credit Agricole" id='1'>
     <bankEntity id="13006"/>
 
-    <transactionTypeMatcher regexp="REGLEM ECHEANCE (.*)"
+    <transactionTypeMatcher regexp="REGLEM ECHEANCE PRET (.*)"
                             transactionTypeName="credit" label="PRET $1"/>
 
     <transactionTypeMatcher regexp="RETRAIT(.*)"
@@ -18,6 +18,6 @@
                             transactionTypeName="virement" label="VIR. $1"/>
 
     <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
-                            transactionTypeName="check"  label="CHEQUE N. $1"/>
+                            transactionTypeName="check" label="CHEQUE N. $1"/>
   </bank>
 </globs>
