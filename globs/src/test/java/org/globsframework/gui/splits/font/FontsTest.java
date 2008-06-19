@@ -1,12 +1,12 @@
 package org.globsframework.gui.splits.font;
 
-import junit.framework.TestCase;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.InvalidParameter;
+import org.uispec4j.UISpecTestCase;
 
 import java.awt.*;
 
-public class FontsTest extends TestCase {
+public class FontsTest extends UISpecTestCase {
   public void testFontParsing() throws Exception {
     checkFont("Arial,italic,24", "Arial", Font.ITALIC, 24);
     if (System.getProperty("os.name").equalsIgnoreCase("Linux")) {
@@ -43,7 +43,7 @@ public class FontsTest extends TestCase {
       assertEquals("Cannot resolve font '$font' with no FontLocator", e.getMessage());
     }
   }
-  
+
   private void checkFont(String desc, String fontName, int style, int size) {
     Font font = Fonts.parseFont(desc);
     checkFont(font, fontName, style, size);

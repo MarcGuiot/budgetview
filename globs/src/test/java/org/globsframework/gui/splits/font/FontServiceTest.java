@@ -1,13 +1,12 @@
 package org.globsframework.gui.splits.font;
 
-import junit.framework.TestCase;
+import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.exceptions.ItemNotFound;
+import org.uispec4j.UISpecTestCase;
 
 import java.awt.*;
 
-import org.globsframework.utils.exceptions.ItemNotFound;
-import org.globsframework.utils.exceptions.InvalidParameter;
-
-public class FontServiceTest extends TestCase {
+public class FontServiceTest extends UISpecTestCase {
 
   private static Font font1 = Fonts.parseFont("Arial,italic,24");
   protected FontService service;
