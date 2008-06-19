@@ -61,7 +61,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void paintComponent(Graphics g) {
-    System.out.println("TimeViewPanel.paintComponent h=" + getHeight() + " w= " + getWidth());
     if (previousWidth > 0 && getWidth() > previousWidth && translation < 0) {
       translation += getWidth() - previousWidth;
       if (translation > 0) {
@@ -74,7 +73,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       d.setPaint(new GradientPaint(0, 0, colors.backgroundTop, 0, getHeight(), colors.backgroundBottom));
       d.fillRect(0, 0, getWidth(), getHeight());
       TransformationAdapter transformationAdapter = new TransformationAdapter(d);
-      System.out.println("TimeViewPanel.paintComponent " + translation);
       transformationAdapter.translate(translation, 0);
       timeGraph.draw(d, transformationAdapter, getHeight(), getWidth());
     }
