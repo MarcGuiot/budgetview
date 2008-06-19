@@ -73,7 +73,7 @@ public class QifParser {
           case '^':
             String value = description.toString();
             values.set(ImportedTransaction.ORIGINAL_LABEL, value);
-            values.set(ImportedTransaction.LABEL, value);
+            values.set(ImportedTransaction.LABEL, value.trim());
             return createTransaction(values);
         }
       }

@@ -2,46 +2,48 @@
   <bank name="BNP" downloadUrl="" id='5'>
     <bankEntity id="30004"/>
 
-    <transactionTypeMatcher regexp="COMMISSIONS PERCUES[ \t]*(.*)"
+    <transactionTypeMatcher regexp="COMMISSIONS PERCUES[\s]*(.*)"
                             transactionTypeName="bank_fees" label="COMMISSIONS PERCUES $1"/>
 
-    <transactionTypeMatcher regexp="COMMISS[ \t]*(.*)"
+    <transactionTypeMatcher regexp="COMMISS[\s]*(.*)"
                             transactionTypeName="bank_fees" label="COMMISSIONS PERCUES $1"/>
 
-    <transactionTypeMatcher regexp="RETRAIT DAB [0-9]* (.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+    <transactionTypeMatcher regexp="RETRAIT DAB[\s]*([0-9/]+)[\s]*(.*)"
+                            transactionTypeName="withdrawal" label="RETRAIT $2"
+                            groupForDate="1" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="RETRAIT (.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+    <transactionTypeMatcher regexp="RETRAIT[\s]*([0-9/]+)[\s]* (.*)"
+                            transactionTypeName="withdrawal" label="RETRAIT $2"
+                            groupForDate="1" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="ECHEANCE PRET[ \t]*(.*)"
+    <transactionTypeMatcher regexp="ECHEANCE PRET[\s]*(.*)"
                             transactionTypeName="credit" label="PRET $1"/>
 
-    <transactionTypeMatcher regexp="ECH.PR[ \t]*(.*)"
+    <transactionTypeMatcher regexp="ECH.PR[\s]*(.*)"
                             transactionTypeName="credit" label="PRET $1"/>
 
     <transactionTypeMatcher regexp="VIRT CPTE A CPTE RECU[\s]*(.*)"
                             transactionTypeName="internal_transfer" label="VIR. $1"/>
 
-    <transactionTypeMatcher regexp="VI.RECU[ \t]*(.*)"
+    <transactionTypeMatcher regexp="VI.RECU[\s]*(.*)"
                             transactionTypeName="internal_transfer" label="VIR. $1"/>
 
     <transactionTypeMatcher regexp="VIRT CPTE A CPTE EMIS[\s]*(.*)"
                             transactionTypeName="internal_transfer" label="VIR. $1"/>
 
-    <transactionTypeMatcher regexp="VI.EMIS[ \t]*(.*)"
+    <transactionTypeMatcher regexp="VI.EMIS[\s]*(.*)"
                             transactionTypeName="internal_transfer" label="VIR. $1"/>
 
-    <transactionTypeMatcher regexp="VIREMENT RECU TIERS[ \t]*(.*)"
+    <transactionTypeMatcher regexp="VIREMENT RECU TIERS[\s]*(.*)"
                             transactionTypeName="virement" label="$1"/>
 
-    <transactionTypeMatcher regexp="VI.TIER[ \t]*(.*)"
+    <transactionTypeMatcher regexp="VI.TIER[\s]*(.*)"
                             transactionTypeName="virement" label="$1"/>
 
-    <transactionTypeMatcher regexp="PRELEVEMENT[ \t]*(.*)"
+    <transactionTypeMatcher regexp="PRELEVEMENT[\s]*(.*)"
                             transactionTypeName="prelevement" label="$1"/>
 
-    <transactionTypeMatcher regexp="PRLV.[ \t]*(.*)"
+    <transactionTypeMatcher regexp="PRLV.[\s]*(.*)"
                             transactionTypeName="prelevement" label="$1"/>
 
     <transactionTypeMatcher regexp="CHEQUE[ ]+N.[ ]+(.*)"
@@ -52,5 +54,12 @@
 
     <transactionTypeMatcher regexp="CHQ NO[\s]+N.[\s]+(.*)"
                             transactionTypeName="check" label="CHEQUE N. $1"/>
+
+    <transactionTypeMatcher regexp="FACTURE CARTE[\s]*(.*)"
+                            transactionTypeName="credit_card" label="$1"/>
+
+    <transactionTypeMatcher regexp="REGLEMENT TIP[\s]*(.*)"
+                            transactionTypeName="prelevement" label="$1"/>
+
   </bank>
 </globs>

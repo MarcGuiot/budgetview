@@ -311,6 +311,8 @@ public class OfxImporter implements AccountFileImporter {
       String content = Strings.join(name, memo);
       repository.update(currentTransactionKey, ImportedTransaction.ORIGINAL_LABEL, content);
       repository.update(currentTransactionKey, ImportedTransaction.LABEL, content);
+      name = null;
+      memo = null;
     }
 
     private Date parseDate(String content) {
