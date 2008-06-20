@@ -76,6 +76,9 @@ public class SelectionService {
     }
 
     public GlobList getAll(GlobType type) {
+      if (!relevantTypes.contains(type)) {
+        return new GlobList();
+      }
       GlobList result = new GlobList();
       for (Glob glob : selection) {
         if (glob.getType().equals(type)) {
