@@ -109,8 +109,16 @@ public class Month {
     return Utils.toArray(result);
   }
 
-  public static int[] getRange(GlobList months) {
-    return new int[0];
+  public static int toInt(int yyyymm, int dd) {
+    return yyyymm * 100 + dd;
+  }
+
+  public static int intToMonthId(int yyyymmdd) {
+    return yyyymmdd / 100;
+  }
+
+  public static int intToDay(int yyyymmdd) {
+    return yyyymmdd % 100;
   }
 
   private static class RangeIterator implements Iterator<Integer> {

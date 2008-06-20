@@ -50,4 +50,10 @@ public class MonthTest extends TestCase {
     catch (NoSuchElementException e) {
     }
   }
+
+  public void testToInt() throws Exception {
+    assertEquals(20080618, Month.toInt(200806, 18));
+    assertEquals(200806, Month.intToMonthId(20080618));
+    assertEquals(18, Month.intToDay(20080618));
+  }
 }

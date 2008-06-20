@@ -12,13 +12,12 @@ import java.text.MessageFormat;
 import java.util.Comparator;
 
 public class TransactionDateStringifier extends AbstractGlobStringifier {
-  private MessageFormat format;
+  private static MessageFormat DATE_FORMAT = Lang.getFormat("transactionView.dateFormat");
   protected IntegerField monthField;
   protected IntegerField dayField;
 
   public TransactionDateStringifier(Comparator<Glob> comparator, IntegerField monthField, IntegerField dayField) {
     super(comparator);
-    format = Lang.getFormat("transactionView.dateFormat");
     this.monthField = monthField;
     this.dayField = dayField;
   }
@@ -35,8 +34,8 @@ public class TransactionDateStringifier extends AbstractGlobStringifier {
     return toString(year, month, day);
   }
 
-  public String toString(int year, int month, int day) {
-    return format.format(
+  public static String toString(int year, int month, int day) {
+    return DATE_FORMAT.format(
       new Object[]{
         (day < 10 ? "0" : "") + day,
         (month < 10 ? "0" : "") + month,

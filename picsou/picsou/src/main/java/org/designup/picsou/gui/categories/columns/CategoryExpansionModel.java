@@ -9,6 +9,7 @@ import org.globsframework.model.utils.GlobMatcher;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class CategoryExpansionModel implements GlobMatcher, ChangeSetListener {
 
@@ -85,7 +86,7 @@ public class CategoryExpansionModel implements GlobMatcher, ChangeSetListener {
       return;
     }
     updateExpandabilities();
-    java.util.List<Key> createdList = changeSet.getCreated(Category.TYPE);
+    Set<Key> createdList = changeSet.getCreated(Category.TYPE);
     for (Key key : createdList) {
       Glob created = repository.get(key);
       expandedMap.put(created.get(Category.MASTER), true);

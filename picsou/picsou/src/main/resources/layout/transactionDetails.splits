@@ -1,5 +1,6 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
     <column>
       <label ref="label" font="$transaction.label" foreground="transaction.detail.text"/>
+      <label ref="date" font="$transaction.date" foreground="transaction.detail.text"/>
     </column>
 </splits>
