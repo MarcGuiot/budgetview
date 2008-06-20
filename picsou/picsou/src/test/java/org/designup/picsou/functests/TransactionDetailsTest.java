@@ -36,5 +36,28 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     transactions.getTable().selectRows(0, 2);
     transactionDetails.checkNoDate();
+
+    transactions.getTable().clearSelection();
+    transactionDetails.checkNoDate();
+  }
+
+  public void testAmount() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/18", 10.00, "Quick")
+      .addTransaction("2008/06/18", 30.00, "Quick")
+      .addTransaction("2008/06/15", 20.00, "McDo")
+      .load();
+
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkAmount("Amount", "10.00");
+    transactionDetails.checkNoAmountStatistics();
+
+    transactions.getTable().selectRows(0, 1);
+    transactionDetails.checkAmount("Total amount", "40.00");
+    transactionDetails.checkAmountStatistics("10.00", "30.00", "20.00");
+
+    transactions.getTable().clearSelection();
+    transactionDetails.checkNoAmount();
+    transactionDetails.checkNoAmountStatistics();
   }
 }

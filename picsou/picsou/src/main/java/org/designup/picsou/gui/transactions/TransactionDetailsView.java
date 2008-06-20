@@ -2,24 +2,27 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.utils.GlobListStringFieldStringifier;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 public class TransactionDetailsView extends View implements GlobSelectionListener, ChangeSetListener {
   public TransactionDetailsView(GlobRepository repository, Directory directory) {
@@ -33,13 +36,38 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
   private JPanel createPanel() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(repository, directory);
     builder.add("label",
-                GlobLabelView.init(Transaction.TYPE, repository, directory,
-                                   new GlobListStringFieldStringifier(Transaction.LABEL,
-                                                                      Lang.get("transaction.details.multilabel"))));
+                addLabel(new GlobListStringFieldStringifier(Transaction.LABEL,
+                                                            Lang.get("transaction.details.multilabel")), false));
     builder.add("date",
-                GlobLabelView.init(Transaction.TYPE, repository, directory, new TransactionDateListStringifier())
-                  .setAutoHide(true));
+                addLabel(new TransactionDateListStringifier(), true));
+
+    builder.add("amountLabel",
+                addLabel(GlobListStringifiers.singularOrPlural(Lang.get("transaction.details.amount.none"),
+                                                               Lang.get("transaction.details.amount.singular"),
+                                                               Lang.get("transaction.details.amount.plural")), true));
+    builder.add("amountValue",
+                addLabel(GlobListStringifiers.sum(Transaction.AMOUNT, PicsouDescriptionService.DECIMAL_FORMAT), true));
+
+    builder.add("amountPanel", new AutoHideOnSelectionPanel(Transaction.TYPE,
+                                                            AutoHideOnSelectionPanel.Mode.SHOW_IF_AT_LEAST_TWO,
+                                                            directory));
+
+    builder.add("minimumAmount",
+                addLabel(GlobListStringifiers.minimum(Transaction.AMOUNT, PicsouDescriptionService.DECIMAL_FORMAT), true));
+
+    builder.add("maximumAmount",
+                addLabel(GlobListStringifiers.maximum(Transaction.AMOUNT, PicsouDescriptionService.DECIMAL_FORMAT), true));
+
+    builder.add("averageAmount",
+                addLabel(GlobListStringifiers.average(Transaction.AMOUNT, PicsouDescriptionService.DECIMAL_FORMAT), true));
+
     return (JPanel)builder.parse(TransactionDetailsView.class, "/layout/transactionDetails.splits");
+  }
+
+  private GlobLabelView addLabel(GlobListStringifier stringifier, boolean autoHide) {
+    return GlobLabelView.init(Transaction.TYPE, repository, directory,
+                              stringifier)
+      .setAutoHide(autoHide);
   }
 
   public void selectionUpdated(GlobSelection selection) {

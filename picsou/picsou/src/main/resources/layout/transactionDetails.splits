@@ -1,6 +1,26 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
-    <column>
-      <label ref="label" font="$transaction.label" foreground="transaction.detail.text"/>
-      <label ref="date" font="$transaction.date" foreground="transaction.detail.text"/>
-    </column>
+  <column>
+    <label ref="label" font="$transaction.label" foreground="transaction.detail.text"/>
+    <label ref="date" font="$transaction.date" foreground="transaction.detail.text"/>
+    <row>
+      <label ref="amountLabel"/>
+      <label ref="amountValue"/>
+    </row>
+    <panel ref="amountPanel" opaque="false">
+      <column>
+        <row>
+          <label text="$transaction.details.amount.minimum"/>
+          <label ref="minimumAmount"/>
+        </row>
+        <row>
+          <label text="$transaction.details.amount.maximum"/>
+          <label ref="maximumAmount"/>
+        </row>
+        <row>
+          <label text="$transaction.details.amount.average"/>
+          <label ref="averageAmount"/>
+        </row>
+      </column>
+    </panel>
+  </column>
 </splits>
