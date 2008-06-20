@@ -63,8 +63,7 @@ public class GlobList extends ArrayList<Glob> {
 
   public GlobList filter(GlobMatcher matcher, GlobRepository repository) {
     GlobList result = new GlobList();
-    for (Iterator<Glob> iter = iterator(); iter.hasNext();) {
-      Glob glob = iter.next();
+    for (Glob glob : this) {
       if (matcher.matches(glob, repository)) {
         result.add(glob);
       }
@@ -77,6 +76,15 @@ public class GlobList extends ArrayList<Glob> {
       Glob glob = iter.next();
       if (matcher.matches(glob, repository)) {
         iter.remove();
+      }
+    }
+  }
+
+  public void removeAll(Set<Key> keys){
+    for (Iterator it = this.iterator(); it.hasNext();) {
+      Glob glob = (Glob)it.next();
+      if (keys.contains(glob.getKey())) {
+        it.remove();
       }
     }
   }

@@ -8,9 +8,9 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 
-public class GlobHtmlView extends AbstractGlobTextView {
+public class GlobHtmlView extends AbstractGlobTextView<GlobHtmlView> {
   private JEditorPane editorPane;
-
+  private String text;
 
   public static GlobHtmlView init(GlobType type, GlobRepository globRepository,
                                   Directory directory, GlobListStringifier stringifier) {
@@ -35,6 +35,11 @@ public class GlobHtmlView extends AbstractGlobTextView {
   }
 
   protected void doUpdate(String text) {
+    this.text = text;
     editorPane.setText(text);
+  }
+
+  protected String getText() {
+    return text;
   }
 }

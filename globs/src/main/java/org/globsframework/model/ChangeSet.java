@@ -4,6 +4,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ChangeSet {
 
@@ -23,11 +24,11 @@ public interface ChangeSet {
 
   int getChangeCount(GlobType type);
 
-  List<Key> getCreated(GlobType type);
+  Set<Key> getCreated(GlobType type);
 
-  List<Key> getUpdated(GlobType type);
+  Set<Key> getUpdated(GlobType type);
 
-  List<Key> getDeleted(GlobType type);
+  Set<Key> getDeleted(GlobType type);
 
   void visit(ChangeSetVisitor visitor) throws Exception;
 

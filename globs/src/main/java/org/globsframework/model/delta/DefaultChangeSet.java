@@ -138,8 +138,8 @@ public class DefaultChangeSet implements MutableChangeSet {
     return count;
   }
 
-  public List<Key> getCreated(GlobType type) {
-    List<Key> result = new ArrayList<Key>();
+  public Set<Key> getCreated(GlobType type) {
+    Set<Key> result = new HashSet<Key>();
     for (Map.Entry entry : deltaGlobsByKey.entrySet()) {
       DefaultDeltaGlob delta = (DefaultDeltaGlob)entry.getValue();
       if (delta.getType().equals(type) && delta.isCreated()) {
@@ -149,8 +149,8 @@ public class DefaultChangeSet implements MutableChangeSet {
     return result;
   }
 
-  public List<Key> getUpdated(GlobType type) {
-    List<Key> result = new ArrayList<Key>();
+  public Set<Key> getUpdated(GlobType type) {
+    Set<Key> result = new HashSet<Key>();
     for (Map.Entry entry : deltaGlobsByKey.entrySet()) {
       DefaultDeltaGlob delta = (DefaultDeltaGlob)entry.getValue();
       if (delta.getType().equals(type) && delta.isUpdated()) {
@@ -160,8 +160,8 @@ public class DefaultChangeSet implements MutableChangeSet {
     return result;
   }
 
-  public List<Key> getDeleted(GlobType type) {
-    List<Key> result = new ArrayList<Key>();
+  public Set<Key> getDeleted(GlobType type) {
+    Set<Key> result = new HashSet<Key>();
     for (Map.Entry entry : deltaGlobsByKey.entrySet()) {
       DefaultDeltaGlob delta = (DefaultDeltaGlob)entry.getValue();
       if (delta.getType().equals(type) && delta.isDeleted()) {

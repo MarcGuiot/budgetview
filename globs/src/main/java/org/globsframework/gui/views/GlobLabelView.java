@@ -7,9 +7,8 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class GlobLabelView extends AbstractGlobTextView {
+public class GlobLabelView extends AbstractGlobTextView<GlobLabelView> {
   private JLabel label;
-
 
   public static GlobLabelView init(GlobType type, GlobRepository globRepository,
                                    Directory directory, GlobListStringifier stringifier) {
@@ -30,5 +29,9 @@ public class GlobLabelView extends AbstractGlobTextView {
 
   protected void doUpdate(String text) {
     label.setText(text);
+  }
+
+  protected String getText() {
+    return label.getText();
   }
 }

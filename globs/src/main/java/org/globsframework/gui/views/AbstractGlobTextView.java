@@ -5,20 +5,20 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Strings;
 
 import java.util.List;
+import java.util.Set;
 
-public abstract class AbstractGlobTextView implements GlobSelectionListener, ChangeSetListener, ComponentHolder {
+public abstract class AbstractGlobTextView<T extends AbstractGlobTextView> implements GlobSelectionListener, ChangeSetListener, ComponentHolder {
   private GlobType type;
   private GlobRepository repository;
   private GlobListStringifier stringifier;
   private GlobList currentSelection = new GlobList();
+  private boolean autoHide;
 
   public AbstractGlobTextView(GlobType type, GlobRepository repository, Directory directory, GlobListStringifier stringifier) {
     this.type = type;
@@ -28,14 +28,30 @@ public abstract class AbstractGlobTextView implements GlobSelectionListener, Cha
     repository.addChangeListener(this);
   }
 
+  public T setAutoHide(boolean autoHide) {
+    this.autoHide = autoHide;
+    getComponent().setVisible(!autoHide || Strings.isNotEmpty(getText()));
+    return (T)this;
+  }
+
   public void update() {
-    doUpdate(stringifier.toString(currentSelection));
+    String text = stringifier.toString(currentSelection);
+    if (autoHide) {
+      getComponent().setVisible(Strings.isNotEmpty(text));
+    }
+    doUpdate(text);
   }
 
   protected abstract void doUpdate(String text);
 
+  protected abstract String getText();
+
   public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
     if (changeSet.containsChanges(type)) {
+      Set<Key> deleted = changeSet.getDeleted(type);
+      if (!deleted.isEmpty()) {
+        currentSelection.removeAll(deleted);
+      }
       update();
     }
   }

@@ -10,14 +10,10 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 public class GlobHtmlViewTest extends GlobTextViewTestCase {
-  protected TextBox init(final GlobRepository repository) {
+  protected TextBox init(final GlobRepository repository, boolean autoHide, GlobListStringifier stringifier) {
     GlobHtmlView view =
-      GlobHtmlView.init(DummyObject.TYPE, repository, directory,
-                        new GlobListStringifier() {
-                          public String toString(GlobList selected) {
-                            return repository.getAll(DummyObject.TYPE).toString() + " / " + selected.toString();
-                          }
-                        });
+      GlobHtmlView.init(DummyObject.TYPE, repository, directory, stringifier)
+      .setAutoHide(autoHide);
     return new TextBox(view.getComponent());
   }
 
