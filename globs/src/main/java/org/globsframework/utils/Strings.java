@@ -92,4 +92,11 @@ public class Strings {
     }
     return buf.toString();
   }
+
+  public static String nullIfEmpty(String text) {
+    if (isNullOrEmpty(text)) {
+      return null;
+    }
+    return text;
+  }
 }

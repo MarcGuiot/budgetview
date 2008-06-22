@@ -1,20 +1,15 @@
 package org.globsframework.gui.splits;
 
-import com.sun.org.apache.xerces.internal.parsers.SAXParser;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.exceptions.SplitsException;
+import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
-import org.globsframework.gui.splits.impl.XmlComponentNode;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.DefaultCardHandler;
+import org.globsframework.gui.splits.xml.SplitsParser;
 import org.globsframework.gui.splits.splitters.DefaultSplitterFactory;
-import org.globsframework.gui.splits.font.FontLocator;
+import org.globsframework.gui.splits.styles.StyleService;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.InvalidData;
-import org.saxstack.parser.DefaultXmlNode;
-import org.saxstack.parser.SaxStackParser;
-import org.saxstack.parser.XmlNode;
-import org.xml.sax.Attributes;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,8 +21,6 @@ import java.io.UnsupportedEncodingException;
 public class SplitsBuilder {
 
   private DefaultSplitsContext context;
-  private SplitterFactory factory = new DefaultSplitterFactory();
-  private static final SAXParser PARSER = new SAXParser();
 
   public static SplitsBuilder init(Directory directory) {
     return new SplitsBuilder(directory.get(ColorService.class),
@@ -35,7 +28,7 @@ public class SplitsBuilder {
                              directory.find(TextLocator.class),
                              directory.find(FontLocator.class));
   }
-  
+
   public static SplitsBuilder init(ColorService colorService, IconLocator locator) {
     return new SplitsBuilder(colorService, locator);
   }
@@ -51,7 +44,8 @@ public class SplitsBuilder {
     if (textLocator == null) {
       textLocator = TextLocator.NULL;
     }
-    this.context = new DefaultSplitsContext(colorService, iconLocator, textLocator, fontLocator);
+    this.context = new DefaultSplitsContext(colorService, iconLocator, textLocator, fontLocator,
+                                            new StyleService());
   }
 
   public SplitsBuilder add(String name, Component component) {
@@ -107,50 +101,11 @@ public class SplitsBuilder {
   }
 
   public Component parse(Reader reader) throws SplitsException {
-    synchronized (PARSER) {
-      SplitsBootstrapXmlNode bootstrap = new SplitsBootstrapXmlNode();
-      SaxStackParser.parse(PARSER, bootstrap, reader);
-      return bootstrap.getRootComponent();
-    }
+    SplitsParser parser = new SplitsParser(context, new DefaultSplitterFactory());
+    return parser.parse(reader);
   }
 
   public Component getComponent(String id) {
     return context.findComponent(id);
   }
-
-  private class SplitsBootstrapXmlNode extends DefaultXmlNode {
-    private SplitsXmlNode splitsNode = new SplitsXmlNode();
-
-    public SplitsBootstrapXmlNode() {
-    }
-
-    public XmlNode getSubNode(String tag, Attributes attributes) {
-      if (!tag.equals("splits")) {
-        throw new SplitsException("The root element of a Splits XML file must be <splits>");
-      }
-      return splitsNode;
-    }
-
-    public Component getRootComponent() {
-      XmlComponentNode root = splitsNode.root;
-      if (root == null) {
-        throw new InvalidData("Empty file");
-      }
-      return root.getComponent();
-    }
-  }
-
-  private class SplitsXmlNode extends DefaultXmlNode {
-    private XmlComponentNode root;
-
-    public SplitsXmlNode() {
-    }
-
-    public XmlNode getSubNode(String tag, Attributes attributes) {
-      XmlComponentNode node = new XmlComponentNode(tag, attributes, factory, context, null);
-      root = node;
-      return node;
-    }
-  }
-
 }

@@ -24,7 +24,7 @@ public abstract class AbstractSplitter implements Splitter {
   private final SplitsContext context;
   private final SplitProperties properties;
   private static final String[] DEFAULT_EXCLUDES =
-    {"ref", "gridPos", "opaque", "borderPos",
+    {"ref", "styleClass", "gridPos", "opaque", "borderPos",
      "fill", "anchor", "weightX", "weightY",
      "margin", "marginTop", "marginBottom", "marginLeft", "marginRight"};
   protected ComponentStretch stretch;

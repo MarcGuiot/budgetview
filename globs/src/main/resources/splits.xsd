@@ -15,12 +15,52 @@
     </xs:annotation>
 
     <xs:complexType>
-      <xs:choice>
-        <xs:element ref="frame"/>
-        <xs:group ref="splitsComponents"/>
-      </xs:choice>
+      <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="1">
+          <xs:element ref="styles"/>
+        </xs:choice>
+        <xs:choice minOccurs="0" maxOccurs="1">
+          <xs:element ref="frame"/>
+          <xs:group ref="splitsComponents"/>
+        </xs:choice>
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
+
+  <!-- ====================================  -->
+  <!-- Styles lists            -->
+  <!-- ====================================  -->
+
+  <xs:element name="styles">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        Root container for style definitions
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="style"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="style">
+    <xs:complexType>
+      <xs:attribute name="selector" type="xs:string" use="required">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">
+            CSS-like selector - for instance "button", "#eltName", "button.className", etc.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attributeGroup ref="iconAttributes"/>
+      <xs:attributeGroup ref="splitPaneAttributes"/>
+      <xs:attribute name="text" type="xs:string"/>
+      <xs:anyAttribute/>
+    </xs:complexType>
+  </xs:element>
+
 
   <!-- ====================================  -->
   <!-- Container/ component lists            -->
@@ -522,6 +562,7 @@
 
   <xs:attributeGroup name="jComponentAttributes">
     <xs:attribute name="ref" type="xs:string"/>
+    <xs:attribute name="styleClass" type="xs:string"/>
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="background" type="xs:string"/>
     <xs:attribute name="foreground" type="xs:string"/>

@@ -5,6 +5,7 @@ import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.impl.DefaultSplitProperties;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
 import org.globsframework.gui.splits.font.FontService;
+import org.globsframework.gui.splits.styles.StyleService;
 import org.uispec4j.UISpecTestCase;
 
 import javax.swing.*;
@@ -18,7 +19,8 @@ public class PropertySetterTest extends UISpecTestCase {
 
   protected void setUp() throws Exception {
     colorService = new ColorService();
-    context = new DefaultSplitsContext(colorService, new DummyIconLocator(), new DummyTextLocator(), new FontService());
+    context = new DefaultSplitsContext(colorService, new DummyIconLocator(), new DummyTextLocator(),
+                                       new FontService(), new StyleService());
   }
 
   public void testStringParameter() throws Exception {

@@ -1,17 +1,16 @@
 package org.globsframework.gui.splits;
 
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.components.JStyledPanel;
 import org.globsframework.gui.splits.exceptions.SplitsException;
+import org.globsframework.gui.splits.font.Fonts;
+import org.globsframework.gui.splits.font.FontsTest;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.SwingStretches;
-import org.globsframework.gui.splits.utils.*;
-import org.globsframework.gui.splits.font.FontsTest;
-import org.globsframework.gui.splits.font.FontService;
-import org.globsframework.gui.splits.font.Fonts;
-import org.uispec4j.UISpecTestCase;
+import org.globsframework.gui.splits.utils.DummyAction;
+import org.globsframework.gui.splits.utils.DummyIconLocator;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 
@@ -19,28 +18,16 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import java.awt.*;
-import java.io.Reader;
-import java.io.StringReader;
 
-public class SplitsBuilderTest extends UISpecTestCase {
+public class SplitsBuilderTest extends SplitsTestCase {
 
-  private SplitsBuilder builder;
-  private ColorService colorService = new ColorService();
-  private FontService fontService = new FontService();
-  private DummyIconLocator iconLocator = new DummyIconLocator();
-  private DummyTextLocator textLocator = new DummyTextLocator();
   private JTable aTable = new JTable();
   private JList aList = new JList();
   private JButton aButton = new JButton();
 
   protected void setUp() throws Exception {
-    builder = new SplitsBuilder(colorService, iconLocator, textLocator, fontService);
-
+    super.setUp();
     aTable.setName("aTable");
     aList.setName("aList");
     aButton.setName("aButton");
@@ -144,7 +131,7 @@ public class SplitsBuilderTest extends UISpecTestCase {
         "  <component ref='aTable' " +
         "             marginTop='1' marginBottom='2' " +
         "             marginLeft='3' marginRight='4'/>" +
-        "  <component ref='aButton' margin='10' marginTop='20'/>" +
+        "  <button ref='aButton' margin='10' marginTop='20'/>" +
         "</row>");
 
     Component[] rowComponents = row.getComponents();
@@ -952,39 +939,6 @@ public class SplitsBuilderTest extends UISpecTestCase {
     JPanel panel = (JPanel)parent;
     GridBagLayout layout = (GridBagLayout)panel.getLayout();
     return layout.getConstraints(component);
-  }
-
-  private Component parse(String xml) throws Exception {
-    validateDocument(toStream(xml));
-    return builder.parse(toStream(xml));
-  }
-
-  private Component parseWithoutSchemaValidation(String xml) throws Exception {
-    return builder.parse(toStream(xml));
-  }
-
-  private StringReader toStream(String xml) {
-    return new StringReader("<splits>" + xml + "</splits>");
-  }
-
-  private void validateDocument(Reader reader) throws Exception {
-    String schemaLang = "http://www.w3.org/2001/XMLSchema";
-    SchemaFactory factory = SchemaFactory.newInstance(schemaLang);
-    Schema schema = factory.newSchema(new StreamSource(getClass().getResourceAsStream("/splits.xsd")));
-    Validator validator = schema.newValidator();
-
-    // at last perform validation:
-    validator.validate(new StreamSource(reader));
-  }
-
-  private void checkParsingError(String xml, String error) throws Exception {
-    try {
-      parse(xml);
-      fail();
-    }
-    catch (SplitsException e) {
-      assertEquals(error, e.getMessage());
-    }
   }
 
   public static void main(String[] args) {

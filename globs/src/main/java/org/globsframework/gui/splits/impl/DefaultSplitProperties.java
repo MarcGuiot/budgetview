@@ -33,4 +33,10 @@ public class DefaultSplitProperties extends AbstractSplitProperties {
   public String toString() {
     return properties.toString();
   }
+
+  public void add(SplitProperties other) {
+    for (String name : other.getPropertyNames()) {
+      put(name, other.get(name));
+    }
+  }
 }
