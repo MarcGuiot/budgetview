@@ -16,6 +16,9 @@
 
     <xs:complexType>
       <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element ref="styleImport"/>
+        </xs:choice>
         <xs:choice minOccurs="0" maxOccurs="1">
           <xs:element ref="styles"/>
         </xs:choice>
@@ -61,6 +64,11 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="styleImport">
+    <xs:complexType>
+      <xs:attribute name="file" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
 
   <!-- ====================================  -->
   <!-- Container/ component lists            -->

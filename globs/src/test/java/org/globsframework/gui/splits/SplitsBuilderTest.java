@@ -940,11 +940,4 @@ public class SplitsBuilderTest extends SplitsTestCase {
     GridBagLayout layout = (GridBagLayout)panel.getLayout();
     return layout.getConstraints(component);
   }
-
-  public static void main(String[] args) {
-    JEditorPane editorPane = new JEditorPane();
-    editorPane.setContentType("text/html");
-    editorPane.setText("<html><p>Hello <br> <b>world</b> !</p></html>");
-    GuiUtils.show(editorPane);
-  }
 }

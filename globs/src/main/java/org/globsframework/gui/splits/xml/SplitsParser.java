@@ -21,7 +21,7 @@ public class SplitsParser {
 
   private SplitsContext context;
   private SplitterFactory factory;
-  private static final SAXParser PARSER = new SAXParser();
+  private final SAXParser PARSER = new SAXParser();
 
   public SplitsParser(SplitsContext context, SplitterFactory factory) {
     this.context = context;
@@ -65,10 +65,7 @@ public class SplitsParser {
 
     public Component getRootComponent() {
       XmlComponentNode root = splitsNode.root;
-      if (root == null) {
-        throw new InvalidData("Empty file");
-      }
-      return root.getComponent();
+      return root != null ? root.getComponent() : null;
     }
   }
 
@@ -79,6 +76,9 @@ public class SplitsParser {
     }
 
     public XmlNode getSubNode(String tag, Attributes attributes) {
+      if (tag.equals("styleImport")) {
+        return new StyleImportNode(attributes, context);
+      }
       if (tag.equals("styles")) {
         return new StylesXmlNode(context);
       }

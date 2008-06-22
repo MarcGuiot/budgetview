@@ -1,0 +1,5 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+  <styles>
+    <style selector="button" foreground="red"/>
+  </styles>
+</splits>

@@ -22,6 +22,7 @@ public class DefaultSplitsContext implements SplitsContext {
   private TextLocator textLocator;
   private FontLocator fontLocator;
   private StyleService styleService;
+  private Class referenceClass;
 
   public DefaultSplitsContext(ColorService colorService, IconLocator iconLocator,
                               TextLocator textLocator, FontLocator fontLocator, StyleService styleService) {
@@ -50,6 +51,14 @@ public class DefaultSplitsContext implements SplitsContext {
 
   public StyleService getStyleService() {
     return styleService;
+  }
+
+  public void setReferenceClass(Class referenceClass) {
+    this.referenceClass = referenceClass;
+  }
+
+  public Class getReferenceClass() {
+    return referenceClass;
   }
 
   public void addComponent(String id, Component component) {

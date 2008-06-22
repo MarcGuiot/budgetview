@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public interface SplitsContext {
+
   void addComponent(String id, Component component);
 
   Component findComponent(String id);
@@ -27,4 +28,6 @@ public interface SplitsContext {
   FontLocator getFontLocator();
 
   StyleService getStyleService();
+
+  Class getReferenceClass();
 }

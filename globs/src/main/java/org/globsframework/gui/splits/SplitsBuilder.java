@@ -10,6 +10,8 @@ import org.globsframework.gui.splits.xml.SplitsParser;
 import org.globsframework.gui.splits.splitters.DefaultSplitterFactory;
 import org.globsframework.gui.splits.styles.StyleService;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,16 +78,14 @@ public class SplitsBuilder {
     return DefaultCardHandler.init(panel);
   }
 
-  public Component parse(Class referenceClass, String resourceName) {
-    InputStream stream = referenceClass.getResourceAsStream(resourceName);
-    if (stream == null) {
-      throw new SplitsException("File '" + resourceName + "' not found in classpath");
-    }
+  public Component parse(Class referenceClass, String resourceName) throws ResourceAccessFailed {
+    context.setReferenceClass(referenceClass);
+    InputStream stream = Files.getStream(referenceClass, resourceName);
     try {
       return parse(stream);
     }
     catch (Exception e) {
-      throw new SplitsException("Error parsing file '" + resourceName + "' - " + e.getMessage(), e);
+      throw new ResourceAccessFailed("Error parsing file '" + resourceName + "' - " + e.getMessage(), e);
     }
   }
 

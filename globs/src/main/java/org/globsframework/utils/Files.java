@@ -110,10 +110,7 @@ public class Files {
   }
 
   public static Properties loadProperties(Class refClass, String fileName) throws ResourceAccessFailed {
-    InputStream stream = refClass.getResourceAsStream(fileName);
-    if (stream == null) {
-      throw new ResourceAccessFailed("Resource file '" + fileName + "' not found for class: " + refClass.getName());
-    }
+    InputStream stream = getStream(refClass, fileName);
     Properties properties = new Properties();
     try {
       properties.load(stream);
@@ -122,5 +119,13 @@ public class Files {
       throw new ResourceAccessFailed("Could not load properties file");
     }
     return properties;
+  }
+
+  public static InputStream getStream(Class refClass, String fileName) throws ResourceAccessFailed {
+    InputStream stream = refClass.getResourceAsStream(fileName);
+    if (stream == null) {
+      throw new ResourceAccessFailed("Resource file '" + fileName + "' not found for class: " + refClass.getName());
+    }
+    return stream;
   }
 }
