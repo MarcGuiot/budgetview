@@ -13,7 +13,7 @@ public class SelectionService {
   private MultiMap<GlobType, GlobSelectionListener> listenersByType =
     new MultiMap<GlobType, GlobSelectionListener>();
 
-  public void addListener(GlobSelectionListener listener, GlobType... types) {
+  public void addListener(final GlobSelectionListener listener, GlobType... types) {
     if (types.length == 0) {
       throw new InvalidParameter("Registration of " + listener + " must be done for at least one GlobType");
     }
