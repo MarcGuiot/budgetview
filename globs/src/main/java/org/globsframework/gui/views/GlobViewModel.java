@@ -24,6 +24,8 @@ public class GlobViewModel implements ChangeSetListener {
 
     void globRemoved(int index);
 
+    void globListPreReset();
+
     void globListReset();
   }
 
@@ -42,6 +44,9 @@ public class GlobViewModel implements ChangeSetListener {
   }
 
   private void initList(boolean notify) {
+    if (notify) {
+      listener.globListPreReset();
+    }
     globs.clear();
     if (showNullElement) {
       globs.add(null);
@@ -90,6 +95,7 @@ public class GlobViewModel implements ChangeSetListener {
   }
 
   public void sort(Comparator<Glob> comparator) {
+    listener.globListPreReset();
     globs.setComparator(comparator);
     listener.globListReset();
   }
@@ -222,6 +228,7 @@ public class GlobViewModel implements ChangeSetListener {
           newList.add(glob);
         }
       }
+      listener.globListPreReset();
       globs.clear();
       globs.addAll(newList);
       listener.globListReset();

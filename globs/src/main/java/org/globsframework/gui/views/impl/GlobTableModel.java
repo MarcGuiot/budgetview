@@ -23,8 +23,15 @@ public class GlobTableModel extends AbstractTableModel implements SortableTableM
   private List<GlobTableColumn> columns;
   private Comparator<Glob> initialComparator;
 
+  public interface ResetListener {
+    void preReset();
+
+    void reset();
+  }
+
   public GlobTableModel(GlobType type, GlobRepository repository,
-                        List<GlobTableColumn> columns, final JTable table, Comparator<Glob> initialComparator) {
+                        List<GlobTableColumn> columns, final JTable table, final ResetListener resetListener,
+                        Comparator<Glob> initialComparator) {
     this.type = type;
     this.repository = repository;
     this.columns = columns;
@@ -45,9 +52,13 @@ public class GlobTableModel extends AbstractTableModel implements SortableTableM
         fireTableRowsDeleted(index, index);
       }
 
+      public void globListPreReset() {
+        resetListener.preReset();
+      }
+
       public void globListReset() {
         TableUtils.stopEditing(table);
-        fireTableDataChanged();
+        resetListener.reset();
       }
     });
   }

@@ -51,8 +51,10 @@ public class GlobRepeatView implements ComponentHolder {
         revalidate();
       }
 
+      public void globListPreReset() {
+      }
+
       public void globListReset() {
-        new Exception().printStackTrace();
         initPanel();
         revalidate();
       }

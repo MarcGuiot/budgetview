@@ -202,6 +202,9 @@ public class GlobListView extends AbstractGlobComponentHolder implements GlobSel
           fireIntervalRemoved(this, index, index);
         }
 
+        public void globListPreReset() {
+        }
+
         public void globListReset() {
           fireContentsChanged(this, 0, model != null ? model.size() : 0);
         }

@@ -174,6 +174,9 @@ public class GlobComboView extends AbstractGlobComponentHolder implements GlobSe
           fireIntervalRemoved(this, index, index);
         }
 
+        public void globListPreReset() {
+        }
+
         public void globListReset() {
           fireContentsChanged(this, 0, model != null ? model.size() : 0);
           if (model != null) {

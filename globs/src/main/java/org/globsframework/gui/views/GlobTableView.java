@@ -198,7 +198,8 @@ public class GlobTableView extends AbstractGlobComponentHolder implements GlobSe
   public JTable getComponent() {
     if (table == null) {
       table = new JTable();
-      tableModel = new GlobTableModel(type, repository, columns, table, initialComparator);
+      tableModel = new GlobTableModel(type, repository, columns, table,
+                                      new TableResetListener(), initialComparator);
       table.setModel(tableModel);
       table.setName(type.getName());
       table.setFont(defaultFont);
@@ -210,6 +211,35 @@ public class GlobTableView extends AbstractGlobComponentHolder implements GlobSe
       registerEditors();
     }
     return table;
+  }
+
+  private class TableResetListener implements GlobTableModel.ResetListener {
+    private GlobList currentSelection = GlobList.EMPTY;
+
+    public void preReset() {
+      currentSelection = getCurrentSelection();
+    }
+
+    public void reset() {
+      boolean selectionChanged = false;
+      GlobList newSelection = new GlobList();
+      for (Glob glob : currentSelection) {
+        if (tableModel.indexOf(glob) >= 0) {
+          newSelection.add(glob);
+        }
+        else {
+          selectionChanged = true;
+        }
+      }
+      if (selectionChanged) {
+        select(newSelection, false);
+      }
+      else {
+        disableSelectionNotification();
+        select(newSelection, false);
+        enableSelectionNotification(false);
+      }
+    }
   }
 
   private void registerEditors() {
@@ -363,9 +393,9 @@ public class GlobTableView extends AbstractGlobComponentHolder implements GlobSe
         label.setForeground(header.getForeground());
         label.setBackground(header.getBackground());
         label.setFont(header.getFont());
+        Object value = header.getColumnModel().getColumn(column).getHeaderValue();
+        label.setText((value == null) ? " " : value.toString());
       }
-      Object value = header.getColumnModel().getColumn(column).getHeaderValue();
-      label.setText((value == null) ? " " : value.toString());
 
       label.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
       label.setHorizontalAlignment(JLabel.CENTER);
