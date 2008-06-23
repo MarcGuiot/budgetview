@@ -23,10 +23,13 @@
     <transactionTypeMatcher regexp="FAC\.FRANCE[ ]+[\w]+[ ]+([0-9/]+)[ ]+(.*)"
                             transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="CARTE[ ]+[0-9]+[ ]+([0-9/]+)[ ]+(.*)"
+    <transactionTypeMatcher regexp="CARTE[\s]+[0-9]+[\s]+([0-9/]+)[\s]+REL\.[\s]+(.*)"
                             transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="VIREMENT[ ]+[\w]+[ ]+(.*)"
+    <transactionTypeMatcher regexp="CARTE[\s]+[0-9]+[\s]+([0-9/]+)[\s]+(.*)"
+                            transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM/yy"/>
+
+    <transactionTypeMatcher regexp="VIREMENT[\s]+[\w]+[\s]+(.*)"
                             transactionTypeName="virement" label="$1"/>
 
     <transactionTypeMatcher regexp="CHEQUE[\s]+(.*)"

@@ -1,5 +1,5 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
-  <column>
+  <column minimumSize="(200, 150)" preferredSize="(200, 150)">
     <label ref="label" font="$transaction.label" foreground="transaction.detail.text"/>
     <label ref="date" font="$transaction.date" foreground="transaction.detail.text"/>
     <row>
@@ -19,6 +19,15 @@
         <row>
           <label text="$transaction.details.amount.average"/>
           <label ref="averageAmount"/>
+        </row>
+      </column>
+    </panel>
+    <panel ref="categoryChooserPanel" opaque="false">
+      <column>
+        <label text="$transacation.details.category"/>
+        <row>
+          <button icon="add.png" rolloverIcon="addrollover.png" ref="categoryChooserButton"/>
+          <hyperlink ref="categoryChooserLink"/>
         </row>
       </column>
     </panel>

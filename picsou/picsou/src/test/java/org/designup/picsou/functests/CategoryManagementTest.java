@@ -52,6 +52,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.select(MasterCategory.ALL);
     transactions
       .initContent()
+      .add("22/04/2006", TransactionType.CREDIT_CARD, "SACLAY", "", -55.49)
       .add("20/04/2006", TransactionType.CREDIT_CARD, "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", "", -49.00, MasterCategory.FOOD)
       .add("20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65, MasterCategory.TRANSPORTS)
       .add("19/04/2006", TransactionType.CREDIT_CARD, "SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", "", -14.50, MasterCategory.FOOD)

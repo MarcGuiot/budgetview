@@ -1,7 +1,7 @@
 package org.designup.picsou.server;
 
+import org.designup.picsou.functests.checkers.CategoryChooserChecker;
 import org.designup.picsou.functests.checkers.DataChecker;
-import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Category;
@@ -17,7 +17,6 @@ import org.uispec4j.Window;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class CategorizationTest extends ServerFuncTestCase {
@@ -36,7 +35,7 @@ public class CategorizationTest extends ServerFuncTestCase {
         public Trigger process(final Window window) throws Exception {
           return new Trigger() {
             public void run() throws Exception {
-              TransactionChecker.CategoryChooserDialog.selectCategory(window, DataChecker.getCategoryName(MasterCategory.FOOD));
+              CategoryChooserChecker.selectCategory(window, DataChecker.getCategoryName(MasterCategory.FOOD));
             }
           };
         }
@@ -54,7 +53,7 @@ public class CategorizationTest extends ServerFuncTestCase {
     Table categoryTable = window.getTable("category");
     MasterCategory category = MasterCategory.FOOD;
     int rowIndex = getCellRowIndex(categoryTable, category);
-    assertTrue(categoryTable.cellEquals(rowIndex, 2, "-14"));
+    assertTrue(categoryTable.cellEquals(rowIndex, 2, "-18"));
   }
 
   private int getCellRowIndex(Table categoryTable, MasterCategory category) {

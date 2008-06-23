@@ -1,9 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.Window;
+import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.utils.Lang;
+import org.uispec4j.Button;
 import org.uispec4j.Panel;
-import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import org.uispec4j.Window;
+import static org.uispec4j.assertion.UISpecAssert.*;
+import org.uispec4j.interception.WindowInterceptor;
 
 public class TransactionDetailsChecker extends DataChecker {
   private Window window;
@@ -41,14 +44,14 @@ public class TransactionDetailsChecker extends DataChecker {
   public void checkAmountStatistics(String minAmount,
                                     String maxAmount,
                                     String averageAmount) {
-    UISpecAssert.assertTrue(getPanel().getPanel("amountPanel").isVisible());
+    assertTrue(getPanel().getPanel("amountPanel").isVisible());
     checkValue("minimumAmount", minAmount);
     checkValue("maximumAmount", maxAmount);
     checkValue("averageAmount", averageAmount);
   }
 
   public void checkNoAmountStatistics() {
-    UISpecAssert.assertFalse(getPanel().getPanel("amountPanel").isVisible());
+    assertFalse(getPanel().getPanel("amountPanel").isVisible());
   }
 
   private void checkValue(String name, String label) {
@@ -56,6 +59,41 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   private void checkNotVisible(String name) {
-    UISpecAssert.assertFalse(getPanel().getTextBox(name).isVisible());
+    assertFalse(getPanel().getTextBox(name).isVisible());
+  }
+
+  public void checkToCategorize() {
+    Button hyperlink = getPanel().getButton("categoryChooserLink");
+    assertThat(hyperlink.textEquals(Lang.get("category.assignement.required")));
+    assertTrue(hyperlink.isVisible());
+    assertTrue(getPanel().getButton("categoryChooserButton").isVisible());
+  }
+
+  public void checkManyCategories() {
+    Button hyperlink = getPanel().getButton("categoryChooserLink");
+    assertThat(hyperlink.textEquals(Lang.get("transaction.details.multicategories")));
+  }
+
+  public void checkCategory(MasterCategory category) {
+    Button hyperlink = getPanel().getButton("categoryChooserLink");
+    assertThat(hyperlink.textEquals(getCategoryName(category)));
+  }
+
+  public void categorizeWithLink(MasterCategory category) {
+    categorize(category, getPanel().getButton("categoryChooserLink"));
+  }
+
+  public void categorizeWithButton(MasterCategory category) {
+    categorize(category, getPanel().getButton("categoryChooserButton"));
+  }
+
+  private void categorize(MasterCategory category, Button button) {
+    CategoryChooserChecker categoryChooserDialog =
+      new CategoryChooserChecker(WindowInterceptor.getModalDialog(button.triggerClick()));
+    categoryChooserDialog.selectCategory(getCategoryName(category));
+  }
+
+  public void checkNoCategory() {
+    assertFalse(getPanel().getPanel("categoryChooserPanel").isVisible());
   }
 }

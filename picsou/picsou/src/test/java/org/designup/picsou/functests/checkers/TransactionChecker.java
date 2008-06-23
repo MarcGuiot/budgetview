@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.checkers;
 
-import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.AmountCellConverter;
 import org.designup.picsou.functests.checkers.converters.CategoryCellConverter;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
@@ -10,7 +9,9 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
-import org.uispec4j.*;
+import org.uispec4j.Table;
+import org.uispec4j.TableCellValueConverter;
+import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.interception.WindowInterceptor;
@@ -86,9 +87,9 @@ public class TransactionChecker extends DataChecker {
     }));
   }
 
-  public CategoryChooserDialog openCategoryChooserDialog(final int... rows) {
+  public CategoryChooserChecker openCategoryChooserDialog(final int... rows) {
     getTable().selectRows(rows);
-    return new CategoryChooserDialog(WindowInterceptor.getModalDialog(new Trigger() {
+    return new CategoryChooserChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         getTable().editCell(rows[0], TransactionView.CATEGORY_COLUMN_INDEX).getButton("Add").click();
       }
@@ -96,21 +97,21 @@ public class TransactionChecker extends DataChecker {
   }
 
   private void chooseCategoryViaButtonClick(String categoryName, final int row) {
-    CategoryChooserDialog dialog = new CategoryChooserDialog(WindowInterceptor.getModalDialog(new Trigger() {
+    CategoryChooserChecker checker = new CategoryChooserChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         getTable().editCell(row, TransactionView.CATEGORY_COLUMN_INDEX).getButton("Add").click();
       }
     }));
-    dialog.selectCategory(categoryName);
+    checker.selectCategory(categoryName);
   }
 
   private void chooseCategoryViaKeyboard(String categoryName, final int modifier) {
-    CategoryChooserDialog dialog = new CategoryChooserDialog(WindowInterceptor.getModalDialog(new Trigger() {
+    CategoryChooserChecker checker = new CategoryChooserChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         GuiUtils.pressKey(getTable().getJTable(), KeyEvent.VK_SPACE, modifier);
       }
     }));
-    dialog.selectCategory(categoryName);
+    checker.selectCategory(categoryName);
   }
 
   static String stringifyCategoryNames(MasterCategory... categories) {
@@ -197,9 +198,9 @@ public class TransactionChecker extends DataChecker {
           .append(type).append(", \"")
           .append(label).append("\", \"")
           .append(note).append("\", ")
-          .append(amount).append(");\n");
+          .append(amount).append(")\n");
       }
-      builder.append(".check()");
+      builder.append(".check();\n");
       System.out.println(builder.toString());
     }
 
@@ -220,28 +221,4 @@ public class TransactionChecker extends DataChecker {
     }
   }
 
-  public static class CategoryChooserDialog {
-    private Window window;
-
-    public CategoryChooserDialog(Window window) {
-      this.window = window;
-    }
-
-    public CategoryChooserDialog selectCategory(String categoryName) {
-      selectCategory(window, categoryName);
-      return this;
-    }
-
-    public static void selectCategory(Window dialog, String categoryName) {
-      Mouse.doClickInRectangle(dialog.getTextBox("label." + categoryName),
-                               new Rectangle(5, 5), false, Key.Modifier.NONE);
-    }
-
-    public CategoryChooserDialog checkContains(String[] expectedCategories) {
-      for (int i = 0; i < expectedCategories.length; i++) {
-        Assert.assertNotNull(window.getTextBox(expectedCategories[i]));
-      }
-      return this;
-    }
-  }
 }

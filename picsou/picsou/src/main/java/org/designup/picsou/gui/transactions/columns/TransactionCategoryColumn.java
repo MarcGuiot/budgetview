@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.transactions.columns;
 
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionToCategory;
@@ -33,9 +33,9 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor {
   private CategoryChooserAction categoryChooserAction;
 
   public TransactionCategoryColumn(CategoryChooserAction action, GlobTableView view,
-                            TransactionRendererColors transactionRendererColors,
-                            DescriptionService descriptionService,
-                            GlobRepository repository, Directory directory) {
+                                   TransactionRendererColors transactionRendererColors,
+                                   DescriptionService descriptionService,
+                                   GlobRepository repository, Directory directory) {
     super(view, transactionRendererColors, descriptionService, repository, directory);
     categoryChooserAction = action;
     categoryStringifier = descriptionService.getStringifier(Category.TYPE);
@@ -61,7 +61,7 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor {
       panel.add(label);
       Gui.setRolloverColor(label, rendererColors.getRolloverCategoryColor());
       label.addMouseListener(new MouseAdapter() {
-        public void mouseReleased(MouseEvent e) {
+        public void mouseClicked(MouseEvent e) {
           openCategoryChooser(transaction);
         }
       });

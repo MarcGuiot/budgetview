@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.transactions.categorization;
 
 import org.designup.picsou.client.AllocationLearningService;
+import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -22,8 +22,8 @@ public class CategoryChooserAction extends AbstractAction implements GlobSelecti
 
   private GlobList selectedTransactions;
   private TransactionRendererColors colors;
-  private GlobRepository repository;
-  private Directory directory;
+  protected GlobRepository repository;
+  protected Directory directory;
   private AllocationLearningService learningService;
   private CategoryChooserDialog dialog;
 
@@ -48,7 +48,7 @@ public class CategoryChooserAction extends AbstractAction implements GlobSelecti
     if (dialog == null) {
       dialog = new CategoryChooserDialog(new CategoryChooserCallback() {
         public void categorySelected(final Glob category) {
-          boolean displayPropagationDialog = false;
+          boolean displayPropagationDialog;
           Set<Glob> allTransactionsToBeLearned = new HashSet<Glob>();
           for (Glob transaction : selectedTransactions) {
             GlobList toBeLearned =
@@ -89,5 +89,9 @@ public class CategoryChooserAction extends AbstractAction implements GlobSelecti
     finally {
       repository.completeBulkDispatchingMode();
     }
+  }
+
+  public GlobList getSelectedTransactions() {
+    return selectedTransactions;
   }
 }

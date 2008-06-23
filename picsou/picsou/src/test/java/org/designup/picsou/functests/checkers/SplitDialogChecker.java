@@ -1,16 +1,16 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.*;
-import org.uispec4j.Window;
-import org.uispec4j.Button;
-import org.uispec4j.Panel;
-import org.uispec4j.finder.ComponentMatchers;
-import org.uispec4j.interception.WindowInterceptor;
-import org.designup.picsou.gui.transactions.split.SplitTransactionDialog;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.functests.checkers.converters.CategoryCellConverter;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.transactions.split.SplitTransactionDialog;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.uispec4j.Button;
+import org.uispec4j.*;
+import org.uispec4j.Panel;
+import org.uispec4j.Window;
+import org.uispec4j.finder.ComponentMatchers;
+import org.uispec4j.interception.WindowInterceptor;
 
 import java.awt.*;
 
@@ -73,7 +73,7 @@ public class SplitDialogChecker {
   }
 
   public SplitDialogChecker selectCategory(MasterCategory category) {
-    TransactionChecker.CategoryChooserDialog dialog = new TransactionChecker.CategoryChooserDialog(WindowInterceptor.getModalDialog(new Trigger() {
+    CategoryChooserChecker dialog = new CategoryChooserChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         window.getButton("categoryChooser").click();
       }
@@ -83,7 +83,7 @@ public class SplitDialogChecker {
   }
 
   public SplitDialogChecker chooseCategory(final int row, MasterCategory category) {
-    TransactionChecker.CategoryChooserDialog dialog = new TransactionChecker.CategoryChooserDialog(WindowInterceptor.run(new Trigger() {
+    CategoryChooserChecker dialog = new CategoryChooserChecker(WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
         splitsTable.editCell(row, SplitTransactionDialog.CATEGORY_COLUMN_INDEX).getButton("Add").click();
       }

@@ -52,6 +52,6 @@ public class LoginFuncTest extends ServerFuncTestCase {
     window.getButton("OK").click();
 
     Table table = window.getTable("category");
-    assertTrue(table.cellEquals(0, 2, "-100"));
+    assertTrue(table.cellEquals(0, 2, "-155"));
   }
 }
