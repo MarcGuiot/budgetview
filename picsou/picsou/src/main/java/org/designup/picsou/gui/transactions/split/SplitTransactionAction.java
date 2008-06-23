@@ -24,6 +24,7 @@ public class SplitTransactionAction extends AbstractAction implements GlobSelect
     this.repository = repository;
     this.directory = directory;
     directory.get(SelectionService.class).addListener(this, Transaction.TYPE);
+    setEnabled(false);
   }
 
   public void selectionUpdated(GlobSelection selection) {

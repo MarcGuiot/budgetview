@@ -31,5 +31,6 @@
         </row>
       </column>
     </panel>
+    <hyperlink name="splitLink" action="splitLink"/>
   </column>
 </splits>

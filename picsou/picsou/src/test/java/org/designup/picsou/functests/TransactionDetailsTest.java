@@ -119,4 +119,34 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .add("14/06/2008", TransactionType.VIREMENT, "Fouquet's", "", 10.00, MasterCategory.EDUCATION)
       .check();
   }
+
+  public void testSplitNotVisible() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
+      .addTransaction("2008/06/14", 10.00, "Fouquet's", MasterCategory.EDUCATION)
+      .load();
+    transactionDetails.checkSplitNotVisible();
+    transactions.getTable().selectRows(0, 1);
+    transactionDetails.checkSplitNotVisible();
+  }
+
+  public void testSplitVisible() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
+      .load();
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkSplitVisible();
+  }
+
+  public void testSplitCallAction() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/15", 20.00, "Auchan", MasterCategory.FOOD)
+      .load();
+    transactions.getTable().selectRow(0);
+    transactionDetails.split("10", "Auchan");
+    transactions.initContent()
+      .add("15/06/2008", TransactionType.VIREMENT, "Auchan", "", 10.00)
+      .add("15/06/2008", TransactionType.VIREMENT, "Auchan", "Auchan", 10.00)
+      .check();
+  }
 }

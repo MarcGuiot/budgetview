@@ -6,6 +6,7 @@ import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.details.CategorisationHyperlinkButton;
+import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -74,9 +75,10 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
       new JButton(categoryChooserAction);
     categoryChooserButton.setText(null);
     builder.add("categoryChooserButton", categoryChooserButton);
-    HyperlinkButton hyperlinkButton = new CategorisationHyperlinkButton(categoryChooserAction, repository, directory);
-    builder.add("categoryChooserLink", hyperlinkButton);
+    HyperlinkButton categoryChooserLink = new CategorisationHyperlinkButton(categoryChooserAction, repository, directory);
+    builder.add("categoryChooserLink", categoryChooserLink);
 
+    builder.add("splitLink", new SplitTransactionAction(repository, directory));
     return (JPanel)builder.parse(TransactionDetailsView.class, "/layout/transactionDetails.splits");
   }
 

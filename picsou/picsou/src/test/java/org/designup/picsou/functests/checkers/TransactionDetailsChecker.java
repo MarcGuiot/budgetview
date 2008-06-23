@@ -96,4 +96,22 @@ public class TransactionDetailsChecker extends DataChecker {
   public void checkNoCategory() {
     assertFalse(getPanel().getPanel("categoryChooserPanel").isVisible());
   }
+
+  public void checkSplitNotVisible() {
+    assertFalse(getPanel().getButton("splitLink").isVisible());
+  }
+
+  public void checkSplitVisible() {
+    assertTrue(getPanel().getButton("splitLink").isVisible());
+  }
+
+  public void split(String amount, String label) {
+    Button splitLink = getPanel().getButton("splitLink");
+    SplitDialogChecker splitDialogChecker =
+      new SplitDialogChecker(WindowInterceptor.getModalDialog(splitLink.triggerClick()));
+    splitDialogChecker.enterAmount(amount);
+    splitDialogChecker.enterNote(label);
+    splitDialogChecker.add();
+    splitDialogChecker.ok();
+  }
 }
