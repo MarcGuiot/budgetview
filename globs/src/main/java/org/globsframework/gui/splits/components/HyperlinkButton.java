@@ -16,8 +16,6 @@ public class HyperlinkButton extends JButton {
   private Color disabledColor = Color.GRAY;
   private int descent;
 
-  static int i = 0;
-
   public HyperlinkButton() {
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     setForeground(Color.RED);
@@ -35,6 +33,11 @@ public class HyperlinkButton extends JButton {
 
   public void setDisabledColor(Color disabledColor) {
     this.disabledColor = disabledColor;
+  }
+
+  public void setEnabled(boolean b) {
+    super.setEnabled(b);
+    setVisible(b);
   }
 
   public void paint(Graphics g) {
