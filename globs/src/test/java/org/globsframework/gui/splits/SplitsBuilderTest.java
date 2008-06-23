@@ -10,7 +10,6 @@ import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.splits.utils.DummyIconLocator;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 

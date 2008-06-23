@@ -17,7 +17,7 @@ public class SplitsStylesTest extends SplitsTestCase {
   public void testTypeSelection() throws Exception {
     checkButtonStyle(
       "<styles>" +
-      "  <style selector='button' foreground='red'/>" +
+      "  <style selector='button' foreground='#FF0000'/>" +
       "</styles>" +
       "<button ref='btn'/>");
   }
@@ -25,7 +25,7 @@ public class SplitsStylesTest extends SplitsTestCase {
   public void testTypeAndClassSelection() throws Exception {
     checkButtonStyle(
       "<styles>" +
-      "  <style selector='button.btnClass' foreground='red'/>" +
+      "  <style selector='button.btnClass' foreground='#FF0000'/>" +
       "</styles>" +
       "<button ref='btn' styleClass='btnClass'/>");
   }
@@ -33,7 +33,7 @@ public class SplitsStylesTest extends SplitsTestCase {
   public void testClassSelection() throws Exception {
     checkButtonStyle(
       "<styles>" +
-      "  <style selector='.btnClass' foreground='red'/>" +
+      "  <style selector='.btnClass' foreground='#FF0000'/>" +
       "</styles>" +
       "<button ref='btn' styleClass='btnClass'/>");
   }
@@ -41,7 +41,7 @@ public class SplitsStylesTest extends SplitsTestCase {
   public void testTypeAndNameSelection() throws Exception {
     checkButtonStyle(
       "<styles>" +
-      "  <style selector='button#btn' foreground='red'/>" +
+      "  <style selector='button#btn' foreground='#FF0000'/>" +
       "</styles>" +
       "<button ref='btn' styleClass='btnClass'/>");
   }
@@ -49,7 +49,7 @@ public class SplitsStylesTest extends SplitsTestCase {
   public void testNameSelection() throws Exception {
     checkButtonStyle(
       "<styles>" +
-      "  <style selector='#btn' foreground='red'/>" +
+      "  <style selector='#btn' foreground='#FF0000'/>" +
       "</styles>" +
       "<button ref='btn' styleClass='btnClass'/>");
   }
@@ -58,7 +58,7 @@ public class SplitsStylesTest extends SplitsTestCase {
     builder.add("btn", button);
     JButton button1 = (JButton)parse(
       "<styles>" +
-      "  <style selector='unknown' foreground='red'/>" +
+      "  <style selector='unknown' foreground='#FF0000'/>" +
       "</styles>" +
       "<button ref='btn'/>");
     assertEquals(Color.BLACK, button1.getForeground());
@@ -68,7 +68,7 @@ public class SplitsStylesTest extends SplitsTestCase {
     checkButtonStyle(
       "<styles>" +
       "  <style selector='button#btn' foreground='blue'/>" +
-      "  <style selector='.class' foreground='red'/>" +
+      "  <style selector='.class' foreground='#FF0000'/>" +
       "</styles>" +
       "<button ref='btn' styleClass='btnClass'/>");
   }
@@ -76,7 +76,7 @@ public class SplitsStylesTest extends SplitsTestCase {
   public void testContainmentFiltering() throws Exception {
     org.uispec4j.Panel panel = new org.uispec4j.Panel((Container)parse(
       "<styles>" +
-      "  <style selector='.myPanel button' foreground='red'/>" +
+      "  <style selector='.myPanel button' foreground='#FF0000'/>" +
       "</styles>" +
       "<column>" +
       "  <panel styleClass='myPanel'>" +
@@ -91,7 +91,7 @@ public class SplitsStylesTest extends SplitsTestCase {
   public void testContainmentFilteringWithExtraLayers() throws Exception {
     org.uispec4j.Panel panel = new org.uispec4j.Panel((Container)parse(
       "<styles>" +
-      "  <style selector='.myPanel button' foreground='red'/>" +
+      "  <style selector='.myPanel button' foreground='#FF0000'/>" +
       "</styles>" +
       "<row>" +
       "  <panel styleClass='myPanel'>" +
@@ -112,7 +112,7 @@ public class SplitsStylesTest extends SplitsTestCase {
     try {
       parse(
         "<styles>" +
-        "  <style selector='' foreground='red'/>" +
+        "  <style selector='' foreground='#FF0000'/>" +
         "</styles>" +
         "<button name='btn1'/>");
       fail();
