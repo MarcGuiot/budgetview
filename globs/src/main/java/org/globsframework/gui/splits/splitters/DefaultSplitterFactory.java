@@ -4,6 +4,7 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.SplitterFactory;
+import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 
 import javax.swing.*;
@@ -69,6 +70,9 @@ public class DefaultSplitterFactory implements SplitterFactory {
     }
     else if (name.equals("button")) {
       return createDefaultComponent(JButton.class, "button", context, properties, subSplitters);
+    }
+    else if (name.equals("hyperlink")) {
+      return createDefaultComponent(HyperlinkButton.class, "hyperlink", context, properties, subSplitters);
     }
     else if (name.equals("toggleButton")) {
       return createDefaultComponent(JToggleButton.class, "toggleButton", context, properties, subSplitters);

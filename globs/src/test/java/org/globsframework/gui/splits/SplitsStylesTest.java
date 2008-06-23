@@ -56,12 +56,13 @@ public class SplitsStylesTest extends SplitsTestCase {
 
   public void testNoSelectorMatch() throws Exception {
     builder.add("btn", button);
+    Color color = button.getForeground();
     JButton button1 = (JButton)parse(
       "<styles>" +
       "  <style selector='unknown' foreground='#FF0000'/>" +
       "</styles>" +
       "<button ref='btn'/>");
-    assertEquals(Color.BLACK, button1.getForeground());
+    assertEquals(color, button1.getForeground());
   }
 
   public void testLastSelectorOverridesThePrevious() throws Exception {

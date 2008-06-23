@@ -95,6 +95,7 @@
       <xs:group ref="splitsContainers"/>
       <xs:element ref="component"/>
       <xs:element ref="button"/>
+      <xs:element ref="hyperlink"/>
       <xs:element ref="toggleButton"/>
       <xs:element ref="label"/>
       <xs:element ref="checkBox"/>
@@ -457,6 +458,16 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="hyperlink">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attributeGroup ref="iconAttributes"/>
+      <xs:attribute name="action" type="xs:string"/>
+      <xs:attribute name="rolloverColor" type="xs:string"/>
+      <xs:attribute name="disabledColor" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="toggleButton">
     <xs:complexType>
       <xs:attributeGroup ref="componentAttributes"/>
@@ -578,6 +589,7 @@
     <xs:attribute name="size" type="sizeType"/>
     <xs:attribute name="minimumSize" type="sizeType"/>
     <xs:attribute name="maximumSize" type="sizeType"/>
+    <xs:attribute name="preferredSize" type="sizeType"/>
     <xs:attribute name="font" type="xs:string"/>
     <xs:attribute name="visible" type="xs:boolean"/>
     <xs:attribute name="enabled" type="xs:boolean"/>
