@@ -198,6 +198,7 @@ public class GlobTableView extends AbstractGlobComponentHolder implements GlobSe
   public JTable getComponent() {
     if (table == null) {
       table = new JTable();
+      table.setAutoscrolls(true);
       tableModel = new GlobTableModel(type, repository, columns, table,
                                       new TableResetListener(), initialComparator);
       table.setModel(tableModel);
@@ -218,27 +219,24 @@ public class GlobTableView extends AbstractGlobComponentHolder implements GlobSe
 
     public void preReset() {
       currentSelection = getCurrentSelection();
+      disableSelectionNotification();
     }
 
     public void reset() {
-      boolean selectionChanged = false;
       GlobList newSelection = new GlobList();
       for (Glob glob : currentSelection) {
         if (tableModel.indexOf(glob) >= 0) {
           newSelection.add(glob);
         }
-        else {
-          selectionChanged = true;
-        }
       }
-      if (selectionChanged) {
-        select(newSelection, false);
+      select(newSelection, false);
+      if (newSelection.size() > 0) {
+        Glob first = newSelection.get(0);
+        int index = tableModel.indexOf(first);
+        Rectangle rect = table.getCellRect(index, 0, true);
+        table.scrollRectToVisible(rect);
       }
-      else {
-        disableSelectionNotification();
-        select(newSelection, false);
-        enableSelectionNotification(false);
-      }
+      enableSelectionNotification(false);
     }
   }
 

@@ -58,6 +58,7 @@ public class GlobTableModel extends AbstractTableModel implements SortableTableM
 
       public void globListReset() {
         TableUtils.stopEditing(table);
+        fireTableDataChanged();
         resetListener.reset();
       }
     });
