@@ -4,19 +4,15 @@ import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.AmountCellConverter;
 import org.designup.picsou.functests.checkers.converters.CategoryCellConverter;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
-import org.designup.picsou.gui.transactions.split.SplitTransactionDialog;
 import org.designup.picsou.gui.transactions.TransactionView;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.uispec4j.Button;
+import org.globsframework.model.Glob;
 import org.uispec4j.*;
-import org.uispec4j.Panel;
 import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.*;
-import org.uispec4j.finder.ComponentMatchers;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.interception.WindowInterceptor;
 
 import java.awt.*;
@@ -64,7 +60,7 @@ public class TransactionChecker extends DataChecker {
 
   public void assignCategory(MasterCategory category, final int... rows) {
     getTable().selectRows(rows);
-    chooseCategoryViaButtonClick(super.getCategoryName(category), rows[0]);
+    chooseCategoryViaButtonClick(DataChecker.getCategoryName(category), rows[0]);
   }
 
   public void assignCategory(String subCategory, int... rows) {
@@ -82,8 +78,8 @@ public class TransactionChecker extends DataChecker {
     chooseCategoryViaKeyboard(subCategory, modifier);
   }
 
-  public SplitDialog openSplitDialog(final int row) {
-    return new SplitDialog(WindowInterceptor.getModalDialog(new Trigger() {
+  public SplitDialogChecker openSplitDialog(final int row) {
+    return new SplitDialogChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         getTable().editCell(row, TransactionView.AMOUNT_COLUMN_INDEX).getButton().click();
       }
@@ -117,7 +113,7 @@ public class TransactionChecker extends DataChecker {
     dialog.selectCategory(categoryName);
   }
 
-  private static String stringifyCategoryNames(MasterCategory... categories) {
+  static String stringifyCategoryNames(MasterCategory... categories) {
     if ((categories.length == 0) || ((categories.length == 1) && categories[0].equals(MasterCategory.NONE))) {
       return TO_CATEGORIZE;
     }
@@ -183,183 +179,44 @@ public class TransactionChecker extends DataChecker {
              (categories.length == 0 ? "" : ", " + stringifyCategoryNames(categories));
     }
 
+    public void dumpCode() {
+      TransactionTypeDumper transactionDumper = new TransactionTypeDumper();
+
+      StringBuilder builder = new StringBuilder();
+      builder.append(".initContent()\n");
+      Table table = getTable();
+      for (int row = 0; row < table.getRowCount(); row++) {
+        String date = table.getContentAt(row, 0).toString();
+        String type = table.getContentAt(row, 1, transactionDumper).toString();
+        String label = table.getContentAt(row, 2).toString();
+        String amount = table.getContentAt(row, 3).toString();
+        String note = table.getContentAt(row, 4).toString();
+
+        builder.append(".add(\"")
+          .append(date).append("\", ")
+          .append(type).append(", \"")
+          .append(label).append("\", \"")
+          .append(note).append("\", ")
+          .append(amount).append(");\n");
+      }
+      builder.append(".check()");
+      System.out.println(builder.toString());
+    }
+
+    private class TransactionTypeDumper implements TableCellValueConverter {
+      public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
+        Glob transaction = (Glob)modelObject;
+        TransactionType type = TransactionType.getType(transaction.get(Transaction.TRANSACTION_TYPE));
+        if (type == null) {
+          return "";
+        }
+        return "TransactionType." + type.getName().toUpperCase();
+      }
+    }
+
     public void check() {
       Object[][] expectedContent = content.toArray(new Object[content.size()][]);
       assertTrue(getTable().contentEquals(expectedContent));
-    }
-  }
-
-  public static class SplitDialog {
-    private Window window;
-    private Table splitsTable;
-    private Button okButton;
-    private Button cancelButton;
-    private ToggleButton addAmountPanelToggle;
-    private CheckBox dispensableBox;
-
-    public SplitDialog(Window window) {
-      this.window = window;
-      splitsTable = window.getTable();
-      splitsTable.setCellValueConverter(SplitTransactionDialog.CATEGORY_COLUMN_INDEX, new CategoryCellConverter(window));
-      splitsTable.setCellValueConverter(SplitTransactionDialog.REMOVE_SPLIT_COLUMN_INDEX, new TableCellValueConverter() {
-        public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-          return "";
-        }
-      });
-      addAmountPanelToggle = window.getToggleButton("switchToAddAmountButton");
-      dispensableBox = window.getCheckBox("dispensableBox");
-      okButton = window.getButton("ok");
-      cancelButton = window.getButton("cancel");
-    }
-
-    public SplitDialog assertAddAmountPanelVisible(boolean expected) {
-      assertEquals(expected, getAddAmountPanel().isVisible());
-      return this;
-    }
-
-    public SplitDialog toggleAddAmountPanel() {
-      addAmountPanelToggle.click();
-      return this;
-    }
-
-    public SplitDialog enterAmount(String amount) {
-      window.getInputTextBox("amount").setText(amount);
-      return this;
-    }
-
-    public SplitDialog enterNote(String note) {
-      window.getInputTextBox("note").setText(note);
-      return this;
-    }
-
-    public SplitDialog toggleDispensable() {
-      dispensableBox.click();
-      return this;
-    }
-
-    public SplitDialog checkDispensable(boolean expected) {
-      assertEquals(expected, dispensableBox.isSelected());
-      return this;
-    }
-
-    public SplitDialog checkNote(String text) {
-      assertTrue(window.getInputTextBox("note").textEquals(text));
-      return this;
-    }
-
-    public SplitDialog selectCategory(MasterCategory category) {
-      CategoryChooserDialog dialog = new CategoryChooserDialog(WindowInterceptor.getModalDialog(new Trigger() {
-        public void run() throws Exception {
-          window.getButton("categoryChooser").click();
-        }
-      }));
-      dialog.selectCategory(getCategoryName(category));
-      return this;
-    }
-
-    public SplitDialog chooseCategory(final int row, MasterCategory category) {
-      CategoryChooserDialog dialog = new CategoryChooserDialog(WindowInterceptor.run(new Trigger() {
-        public void run() throws Exception {
-          splitsTable.editCell(row, SplitTransactionDialog.CATEGORY_COLUMN_INDEX).getButton("Add").click();
-        }
-      }));
-      dialog.selectCategory(getCategoryName(category));
-      return this;
-    }
-
-    public SplitDialog assertAddDisabled() {
-      assertFalse(getAddButton().isEnabled());
-      return this;
-    }
-
-    public SplitDialog checkCurrentCategory(MasterCategory category) {
-      assertTrue(window.getTextBox(ComponentMatchers.innerNameIdentity("category")).textEquals(DataChecker.getCategoryName(category)));
-      return this;
-    }
-
-    public SplitDialog checkErrorMessage(String expectedMessage) {
-      Button addButton = getAddButton();
-      addButton.click();
-      assertTrue(window.getTextBox("message").textEquals(expectedMessage));
-      assertAddAmountPanelVisible(true);
-      return this;
-    }
-
-    public SplitDialog checkAmount(String displayedValue) {
-      assertTrue(window.getInputTextBox("amount").textEquals(displayedValue));
-      return this;
-    }
-
-    public SplitDialog add() {
-      Button addButton = getAddButton();
-      addButton.click();
-      assertTrue(window.getTextBox("message").textIsEmpty());
-      assertAddAmountPanelVisible(true);
-      return this;
-    }
-
-    public SplitDialog cancelAddAmount() {
-      window.getButton("cancelAdd").click();
-      return this;
-    }
-
-    public void ok() {
-      okButton.click();
-      assertFalse(window.isVisible());
-    }
-
-    public void cancel() {
-      cancelButton.click();
-    }
-
-    public SplitDialog checkTable(Object[][] objects) {
-      Object[][] expected = new Object[objects.length][5];
-      for (int i = 0; i < objects.length; i++) {
-        int column = 0;
-        expected[i][column] = "(" + ((TransactionType)objects[i][column]).getName() + ")" +
-                              stringifyCategoryNames(((MasterCategory)objects[i][column + 1]));
-        column++;
-        expected[i][column] = objects[i][column + 1];
-        column++;
-        expected[i][column] = PicsouDescriptionService.DECIMAL_FORMAT.format(objects[i][column + 1]);
-        column++;
-        expected[i][column] = objects[i][column + 1];
-        column++;
-        expected[i][column] = "";
-      }
-      assertTrue(splitsTable.contentEquals(expected));
-      return this;
-    }
-
-    public SplitDialog deleteRow(int row) {
-      getDeleteButton(row).click();
-      return this;
-    }
-
-    public SplitDialog add(String amount, MasterCategory category, String note) {
-      enterAmount(amount);
-      selectCategory(category);
-      enterNote(note);
-      add();
-      return this;
-    }
-
-    public SplitDialog checkDeleteEnabled(boolean enabled, int row) {
-      assertEquals(enabled, getDeleteButton(row).isEnabled());
-      return this;
-    }
-
-    private Button getDeleteButton(int row) {
-      Table.Cell cell = splitsTable.editCell(row, SplitTransactionDialog.REMOVE_SPLIT_COLUMN_INDEX);
-      return cell.getButton();
-    }
-
-    private Button getAddButton() {
-      return window.getButton("Add");
-    }
-
-    private Panel getAddAmountPanel() {
-      return window.getPanel("addAmountPanel");
     }
   }
 

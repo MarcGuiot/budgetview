@@ -211,16 +211,15 @@ public class CategoryChooserDialog implements ChangeSetListener {
     label.setHorizontalAlignment(JLabel.LEFT);
 
     categoryIdToJLabel.put(category.get(Category.ID), label);
+    label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
     label.addMouseListener(new MouseAdapter() {
       public void mouseEntered(MouseEvent e) {
         selectionService.select(category);
-        label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         label.setForeground(colors.getRolloverCategoryColor());
       }
 
       public void mouseExited(MouseEvent e) {
-        label.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         label.setForeground(selectedCategories.contains(label) ?
                             colors.getRolloverCategoryColor() :
                             colors.getCategoryColor());

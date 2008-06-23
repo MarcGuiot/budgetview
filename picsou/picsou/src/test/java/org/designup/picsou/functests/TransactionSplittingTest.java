@@ -1,6 +1,6 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.TransactionChecker;
+import org.designup.picsou.functests.checkers.SplitDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -56,7 +56,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .load();
 
-    TransactionChecker.SplitDialog dialog = transactions.openSplitDialog(0)
+    SplitDialogChecker dialog = transactions.openSplitDialog(0)
       .enterAmount("12.50")
       .enterNote("DVD")
       .selectCategory(MasterCategory.LEISURES)
@@ -348,7 +348,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  private TransactionChecker.SplitDialog openDialogWithSampleTransaction() {
+  private SplitDialogChecker openDialogWithSampleTransaction() {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
