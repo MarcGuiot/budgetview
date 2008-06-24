@@ -69,4 +69,8 @@ public class ImportChecker {
       UISpecAssert.assertTrue(fileField.textContains(file));
     }
   }
+
+  public void back() {
+    panel.getButton("back").click();
+  }
 }

@@ -27,14 +27,20 @@
       <column>
         <label text="$transacation.details.category"/>
         <row>
-          <button icon="add.png" rolloverIcon="addrollover.png" ref="categoryChooserButton"/>
+          <filler fill="horizontal"/>
+          <!--<button icon="add.png" rolloverIcon="addrollover.png" ref="categoryChooserButton"/>-->
           <hyperlink ref="categoryChooserLink"/>
+          <filler fill="horizontal"/>
         </row>
       </column>
     </panel>
     <panel ref="detailInfo">
       <column>
-        <hyperlink name="splitLink" action="splitLink"/>
+        <row>
+          <filler fill="horizontal"/>
+          <hyperlink name="splitLink" action="splitLink"/>
+          <filler fill="horizontal"/>
+        </row>
         <label text="$transaction.details.label.original"/>
         <label ref="originalLabel"/>
       </column>

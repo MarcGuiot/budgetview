@@ -13,11 +13,11 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.components.JStyledPanel;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.views.*;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
@@ -66,7 +66,7 @@ public abstract class ImportPanel {
   private boolean step2 = true;
   private OpenRequestManager openRequestManager;
 
-  protected ImportPanel(List<File> files, final DialogOwner owner, GlobRepository repository, Directory directory) {
+  protected ImportPanel(List<File> files, final DialogOwner owner, final GlobRepository repository, Directory directory) {
     updateFileField(files);
     openRequestManager = directory.get(OpenRequestManager.class);
     openRequestManager.pushCallback(new OpenRequestManager.Callback() {
@@ -85,10 +85,7 @@ public abstract class ImportPanel {
         });
       }
     });
-    this.localRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE, Transaction.TYPE,
-            TransactionToCategory.TYPE, TransactionTypeMatcher.TYPE, LabelToCategory.TYPE)
-      .get();
+    loadLocalRepository(repository);
 
     this.localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
@@ -172,9 +169,32 @@ public abstract class ImportPanel {
         complete();
       }
     });
+    builder.add("back", new AbstractAction("back") {
+      public void actionPerformed(ActionEvent e) {
+        step1 = true;
+        step2 = true;
+        ImportPanel.this.files.clear();
+        ImportPanel.this.fileField.setText("");
+        importSession.discard();
+        loadLocalRepository(repository);
+        cardHandler.show("step1");
+      }
+    });
     cardHandler = builder.addCardHandler("cardHandler");
     panel = (JPanel)builder.parse(getClass(), "/layout/importPanel.splits");
 
+  }
+
+  private void loadLocalRepository(GlobRepository repository) {
+    GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE, Transaction.TYPE,
+                            TransactionToCategory.TYPE, TransactionTypeMatcher.TYPE, LabelToCategory.TYPE};
+    if (localRepository == null) {
+      this.localRepository = LocalGlobRepositoryBuilder.init(repository)
+        .copy(globTypes).get();
+    }
+    else {
+      this.localRepository.rollback();
+    }
   }
 
   private void updateFileField(List<File> files) {

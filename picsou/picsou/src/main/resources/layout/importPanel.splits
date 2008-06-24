@@ -1,6 +1,6 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
-<cards ref="cardHandler">
+  <cards ref="cardHandler">
     <card name="step1">
       <column margin="20" anchor="center" fill="none">
 
@@ -62,6 +62,7 @@
           <button action="finish"/>
           <button action="skipFile"/>
         </row>
+        <hyperlink action="back" text="$import.step2.back"/>
       </column>
     </card>
   </cards>
