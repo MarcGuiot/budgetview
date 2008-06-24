@@ -1,7 +1,7 @@
 package org.globsframework.gui.utils;
 
-import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.utils.directory.Directory;
@@ -12,7 +12,8 @@ public class AutoHideOnSelectionPanel extends JPanel implements GlobSelectionLis
 
   public enum Mode {
     SHOW_IF_AT_LEAST_ONE,
-    SHOW_IF_AT_LEAST_TWO
+    SHOW_IF_AT_LEAST_TWO,
+    SHOW_IF_ONLY_ONE
   }
 
   private GlobType type;
@@ -35,6 +36,8 @@ public class AutoHideOnSelectionPanel extends JPanel implements GlobSelectionLis
         return count >= 1;
       case SHOW_IF_AT_LEAST_TWO:
         return count >= 2;
+      case SHOW_IF_ONLY_ONE:
+        return count == 1;
     }
     return false;
   }
