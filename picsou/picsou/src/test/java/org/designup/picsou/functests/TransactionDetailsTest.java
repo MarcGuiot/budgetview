@@ -205,4 +205,22 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkTypeNotVisible();
     transactions.getTable().selectRow(0);
   }
+
+  public void testBankDateIsVisible() throws Exception {
+    String fileName = QifBuilder.init(this)
+      .addTransaction("2008/06/15", 20.00, "CARTE 123123 12/06/08 auchan")
+      .addTransaction("2008/06/14", 20.00, "CARTE 123123 12/06/08 auchan")
+      .save();
+    operations.importQifFiles(10, "Societe generale", fileName);
+    transactionDetails.checkBankDateNotVisible();
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkBankDate("15/06/2008");
+    transactions.getTable().selectRows(0, 1);
+    transactionDetails.checkBankDateNotVisible();
+
+    transactions.initContent()
+      .add("12/06/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", 20.00)
+      .add("12/06/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", 20.00)
+      .check();
+  }
 }

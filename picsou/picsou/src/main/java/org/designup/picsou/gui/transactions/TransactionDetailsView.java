@@ -19,6 +19,7 @@ import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
@@ -52,7 +53,7 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
                 addLabel(new GlobListStringFieldStringifier(Transaction.LABEL,
                                                             Lang.get("transaction.details.multilabel")), false));
     builder.add("date",
-                addLabel(new TransactionDateListStringifier(), true));
+                addLabel(new TransactionDateListStringifier(Transaction.MONTH, Transaction.DAY), true));
 
     builder.add("amountLabel",
                 addLabel(GlobListStringifiers.singularOrPlural(Lang.get("transaction.details.amount.none"),
@@ -93,6 +94,9 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
 
     builder.add("originalLabel",
                 addLabel(new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, ""), true));
+
+    builder.add("bankDate",
+                addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true));
     return (JPanel)builder.parse(TransactionDetailsView.class, "/layout/transactionDetails.splits");
   }
 
@@ -114,13 +118,21 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
   }
 
   private static class TransactionDateListStringifier implements GlobListStringifier {
+    private IntegerField month;
+    private IntegerField day;
+
+    private TransactionDateListStringifier(IntegerField month, IntegerField day) {
+      this.month = month;
+      this.day = day;
+    }
+
     public String toString(GlobList selected) {
       if (selected.isEmpty()) {
         return "";
       }
       Set<Integer> values = new HashSet<Integer>();
       for (Glob transaction : selected) {
-        values.add(Month.toInt(transaction.get(Transaction.MONTH), transaction.get(Transaction.DAY)));
+        values.add(Month.toInt(transaction.get(month), transaction.get(day)));
       }
       if (values.size() == 1) {
         int value = values.iterator().next();

@@ -43,6 +43,7 @@
         </row>
         <label text="$transaction.details.label.original"/>
         <label ref="originalLabel"/>
+        <label ref="bankDate"/>
       </column>
     </panel>
   </column>

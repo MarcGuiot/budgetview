@@ -134,4 +134,15 @@ public class TransactionDetailsChecker extends DataChecker {
   public void checkTypeNotVisible() {
     assertFalse(getPanel().getTextBox("transactionType").isVisible());
   }
+
+  public void checkBankDate(String yyyyMMdd) {
+    TextBox bankDate = getPanel().getTextBox("bankDate");
+    assertTrue(bankDate.isVisible());
+    assertThat(bankDate.textEquals(yyyyMMdd));
+  }
+
+  public void checkBankDateNotVisible() {
+    TextBox bankDate = getPanel().getTextBox("bankDate");
+    assertFalse(bankDate.isVisible());
+  }
 }
