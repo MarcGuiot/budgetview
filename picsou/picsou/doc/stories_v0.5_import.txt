@@ -7,9 +7,6 @@ Import
 * Integrer fichiers CA (gestion du tag "MEMO" dans l'OFX)
 * Fichier BNP Herve
 
-* Import step2: bouton "back" (selectionner d'autres fichiers)
-* Import step1: bouton "close" à renommer en "skip"
-
 * Test d'import QIF tronque ou invalide
 
 * Import step 1 : URL banques => lancer navigateur

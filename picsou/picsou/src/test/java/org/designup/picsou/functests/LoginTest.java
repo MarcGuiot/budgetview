@@ -237,6 +237,12 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .check();
   }
 
+  public void testCreateNewUserAndSkipImport() throws Exception {
+    createNewUser();
+    Button button = window.getButton("Close");
+    assertThat(button.textEquals(Lang.get("login.skip")));
+  }
+
   private void createNewUser() {
     createUserCheckbox.select();
     enterUserPassword("toto", "p4ssw0rd", true);

@@ -41,6 +41,11 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     importButton = window.getButton("Import");
   }
 
+  public void testCloseBeforeImport() throws Exception {
+    ImportChecker importPanel = new ImportChecker(window);
+    importPanel.checkCloseButton(Lang.get("import.step1.close"));
+  }
+
   public void testStandardImport() throws Exception {
 
     bankCombo.select("CIC");

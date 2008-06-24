@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.actions;
 
-import org.designup.picsou.gui.startup.ImportPanel;
-import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.components.DialogOwner;
+import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.startup.ImportPanel;
+import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;
@@ -45,7 +45,7 @@ public class ImportFileAction extends AbstractAction {
 
     public OpenRunnable(List<File> files, Directory directory, GlobRepository repository) {
       frame = directory.get(JFrame.class);
-      panel = new ImportPanel(files, new DialogOwner() {
+      panel = new ImportPanel(Lang.get("import.step1.close"), files, new DialogOwner() {
         public Window getOwner() {
           return dialog;
         }

@@ -1,9 +1,10 @@
 package org.designup.picsou.gui.startup;
 
-import org.designup.picsou.gui.components.JWavePanel;
-import org.designup.picsou.gui.components.DialogOwner;
-import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.MainPanel;
+import org.designup.picsou.gui.MainWindow;
+import org.designup.picsou.gui.components.DialogOwner;
+import org.designup.picsou.gui.components.JWavePanel;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepository;
@@ -25,7 +26,7 @@ public class NewUserPanel {
   private NewUserPanel(final GlobRepository repository, final Directory directory, final MainWindow mainWindow) {
     GlobsPanelBuilder builder = GlobsPanelBuilder.init(repository, directory);
     builder.add("wave", new JWavePanel(directory.get(ColorService.class)));
-    ImportPanel importPanel = new ImportPanel(Collections.<File>emptyList(), new DialogOwner() {
+    ImportPanel importPanel = new ImportPanel(Lang.get("login.skip"), Collections.<File>emptyList(), new DialogOwner() {
       public Window getOwner() {
         return mainWindow.getFrame();
       }

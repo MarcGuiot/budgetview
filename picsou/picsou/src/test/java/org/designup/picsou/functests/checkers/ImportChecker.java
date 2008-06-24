@@ -73,4 +73,8 @@ public class ImportChecker {
   public void back() {
     panel.getButton("back").click();
   }
+
+  public void checkCloseButton(String text) {
+    UISpecAssert.assertThat(panel.getButton("close").textEquals(text));
+  }
 }

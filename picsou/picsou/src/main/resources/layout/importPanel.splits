@@ -27,7 +27,7 @@
 
         <row marginTop="10">
           <button action="import" text="$import" margin="5"/>
-          <button action="close" text="$close" margin="5"/>
+          <button action="close" name="close" margin="5"/>
         </row>
 
         <filler fill="vertical"/>
