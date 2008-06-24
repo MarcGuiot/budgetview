@@ -9,6 +9,7 @@ import org.designup.picsou.gui.transactions.details.CategorisationHyperlinkButto
 import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -21,6 +22,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
+import org.globsframework.model.format.utils.GlobListFieldStringifier;
 import org.globsframework.model.format.utils.GlobListStringFieldStringifier;
 import org.globsframework.utils.directory.Directory;
 
@@ -40,7 +42,13 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
 
   private JPanel createPanel() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(repository, directory);
-    builder.add("label",
+    builder.add("transactionType",
+                addLabel(new GlobListFieldStringifier(Transaction.TRANSACTION_TYPE, "", "") {
+                  protected String stringify(Object value) {
+                    return Lang.get("transactionType." + TransactionType.getType((Integer)value).getName());
+                  }
+                }, true));
+    builder.add("userLabel",
                 addLabel(new GlobListStringFieldStringifier(Transaction.LABEL,
                                                             Lang.get("transaction.details.multilabel")), false));
     builder.add("date",
@@ -78,13 +86,18 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
     HyperlinkButton categoryChooserLink = new CategorisationHyperlinkButton(categoryChooserAction, repository, directory);
     builder.add("categoryChooserLink", categoryChooserLink);
 
+    builder.add("detailInfo", new AutoHideOnSelectionPanel(Transaction.TYPE,
+                                                           AutoHideOnSelectionPanel.Mode.SHOW_IF_ONLY_ONE,
+                                                           directory));
     builder.add("splitLink", new SplitTransactionAction(repository, directory));
+
+    builder.add("originalLabel",
+                addLabel(new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, ""), true));
     return (JPanel)builder.parse(TransactionDetailsView.class, "/layout/transactionDetails.splits");
   }
 
   private GlobLabelView addLabel(GlobListStringifier stringifier, boolean autoHide) {
-    return GlobLabelView.init(Transaction.TYPE, repository, directory,
-                              stringifier)
+    return GlobLabelView.init(Transaction.TYPE, repository, directory, stringifier)
       .setAutoHide(autoHide);
   }
 

@@ -1,9 +1,11 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
+import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
@@ -20,7 +22,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkLabel(String expected) {
-    checkValue("label", expected);
+    checkValue("userLabel", expected);
   }
 
   public void checkDate(String expected) {
@@ -113,5 +115,23 @@ public class TransactionDetailsChecker extends DataChecker {
     splitDialogChecker.enterNote(label);
     splitDialogChecker.add();
     splitDialogChecker.ok();
+  }
+
+  public void checkOriginalLabelNotVisible() {
+    assertFalse(getPanel().getTextBox("originalLabel").isVisible());
+  }
+
+  public void checkOriginalLabel(String originalLabel) {
+    assertThat(getPanel().getTextBox("originalLabel").textEquals(originalLabel));
+  }
+
+  public void checkType(TransactionType transactionType) {
+    TextBox box = getPanel().getTextBox("transactionType");
+    assertTrue(box.isVisible());
+    assertThat(box.textEquals(Lang.get("transactionType." + transactionType.getName())));
+  }
+
+  public void checkTypeNotVisible() {
+    assertFalse(getPanel().getTextBox("transactionType").isVisible());
   }
 }

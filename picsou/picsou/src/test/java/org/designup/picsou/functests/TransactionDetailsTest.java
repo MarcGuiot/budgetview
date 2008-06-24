@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
@@ -145,8 +146,63 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactions.getTable().selectRow(0);
     transactionDetails.split("10", "Auchan");
     transactions.initContent()
-      .add("15/06/2008", TransactionType.VIREMENT, "Auchan", "", 10.00)
+      .add("15/06/2008", TransactionType.VIREMENT, "Auchan", "", 10.00, MasterCategory.FOOD)
       .add("15/06/2008", TransactionType.VIREMENT, "Auchan", "Auchan", 10.00)
       .check();
+  }
+
+  public void testOriginalLabelNotVisible() throws Exception {
+    String fileName = QifBuilder.init(this)
+      .addTransaction("2008/06/15", 20.00, "PRELEVEMENT 123123 Auchan")
+      .addTransaction("2008/06/16", 10.00, "PRELEVEMENT 123123 ED")
+      .save();
+    operations.importQifFiles(10, "Societe generale", fileName);
+    transactionDetails.checkOriginalLabelNotVisible();
+    transactions.getTable().selectRows(0, 1);
+    transactionDetails.checkOriginalLabelNotVisible();
+  }
+
+  public void testDisplayOriginalLabel() throws Exception {
+    String fileName = QifBuilder.init(this)
+      .addTransaction("2008/06/15", 20.00, "PRELEVEMENT 123123 Auchan")
+      .save();
+    operations.importQifFiles(10, "Societe generale", fileName);
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkOriginalLabel("PRELEVEMENT 123123 Auchan");
+    transactions.initContent()
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", 20.00)
+      .check();
+  }
+
+  public void testTransactionTypeDisplay() throws Exception {
+    String fileName = QifBuilder.init(this)
+      .addTransaction("2008/06/15", 20.00, "PRELEVEMENT 123123 Auchan")
+      .addTransaction("2008/06/14", 10.00, "PRELEVEMENT 123123 Monop")
+      .addTransaction("2008/06/13", 40.00, "CHEQUE 123123")
+      .save();
+    operations.importQifFiles(10, "Societe generale", fileName);
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkType(TransactionType.PRELEVEMENT);
+    transactions.getTable().selectRows(0, 1);
+    transactionDetails.checkType(TransactionType.PRELEVEMENT);
+    transactions.getTable().selectRow(2);
+    transactionDetails.checkType(TransactionType.CHECK);
+    transactions.getTable().selectRows(1, 2);
+    transactionDetails.checkTypeNotVisible();
+    transactions
+      .initContent()
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", 20.00)
+      .add("14/06/2008", TransactionType.PRELEVEMENT, "MONOP", "", 10.00)
+      .add("13/06/2008", TransactionType.CHECK, "CHEQUE N. 123123", "", 40.00)
+      .check();
+  }
+
+  public void testTransactionTypeIsNotVisible() throws Exception {
+    String fileName = QifBuilder.init(this)
+      .addTransaction("2008/06/15", 20.00, "PRELEVEMENT 123123 Auchan")
+      .save();
+    operations.importQifFiles(10, "Societe generale", fileName);
+    transactionDetails.checkTypeNotVisible();
+    transactions.getTable().selectRow(0);
   }
 }

@@ -8,7 +8,7 @@
     <transactionTypeMatcher regexp="VIR.LOGITEL[ ]+(.*)"
                             transactionTypeName="virement" label="$1"/>
 
-    <transactionTypeMatcher regexp="PRELEVEMENT[ ]+[\d]+[ ]+(.*)"
+    <transactionTypeMatcher regexp="PRELEVEMENT[\s]+[\d]+[\s]+(.*)"
                             transactionTypeName="prelevement" label="$1"/>
 
     <transactionTypeMatcher regexp="CARTE[ ]+[0-9]+[ ]+RETRAIT DAB[ ]*[\w]*[ ]+([0-9/]+)[ ]+(.*)"
