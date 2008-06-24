@@ -7,11 +7,13 @@ import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.Files;
 import org.uispec4j.*;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
+import java.io.File;
 
 public class ImportTest extends LoggedInFunctionalTestCase {
   protected Window window;
@@ -372,6 +374,33 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .add("02/01/2001", TransactionType.PRELEVEMENT, "Big Mac", "", -2.00)
       .check();
   }
+
+
+  public void testImportQifBadFile() throws Exception {
+    String path = org.globsframework.utils.TestUtils.getFileName(this, ".qif");
+    Files.dumpStringToFile(path,
+                           "Dsdfsdf sdfsf\n" +
+                           "^sdfsf");
+    ImportChecker importPanel = new ImportChecker(window);
+
+    importPanel.selectBank("Societe Generale");
+    importPanel.selectFiles(path);
+    importPanel.startImport();
+    importPanel.checkErrorMessage("import.file.error", new File(path).getAbsolutePath());
+  }
+
+  public void testBadFormatForOfx() throws Exception {
+    String path = org.globsframework.utils.TestUtils.getFileName(this, ".ofx");
+    Files.dumpStringToFile(path,
+                           "<bad>\n" +
+                           "sdfsdfsdf\n" +
+                           "</bad>");
+    ImportChecker importPanel = new ImportChecker(window);
+    importPanel.selectFiles(path);
+    importPanel.startImport();
+    importPanel.checkErrorMessage("import.file.error", new File(path).getAbsolutePath());
+  }
+
 
   private void checkImportMessage(String message) {
     TextBox accountMessage = window.getTextBox("importMessage");

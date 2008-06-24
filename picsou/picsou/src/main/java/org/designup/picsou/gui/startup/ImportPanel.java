@@ -65,10 +65,8 @@ public abstract class ImportPanel {
   private boolean step1 = true;
   private boolean step2 = true;
   private OpenRequestManager openRequestManager;
-  private String textForCloseButton;
 
   protected ImportPanel(String textForCloseButton, List<File> files, final DialogOwner owner, final GlobRepository repository, Directory directory) {
-    this.textForCloseButton = textForCloseButton;
     updateFileField(files);
     openRequestManager = directory.get(OpenRequestManager.class);
     openRequestManager.pushCallback(new OpenRequestManager.Callback() {

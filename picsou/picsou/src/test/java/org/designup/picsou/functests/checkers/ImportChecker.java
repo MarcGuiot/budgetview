@@ -50,8 +50,8 @@ public class ImportChecker {
     panel.getButton("OK").click();
   }
 
-  public void checkErrorMessage(String message) {
-    UISpecAssert.assertTrue(panel.getTextBox("message").textContains(Lang.get(message)));
+  public void checkErrorMessage(String message, String... arg) {
+    UISpecAssert.assertTrue(panel.getTextBox("message").textContains(Lang.get(message, arg)));
   }
 
   public void selectDate(String dateFormat) {

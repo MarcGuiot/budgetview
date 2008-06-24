@@ -7,8 +7,7 @@ Import
 * Integrer fichiers CA (gestion du tag "MEMO" dans l'OFX)
 * Fichier BNP Herve
 
-* Test d'import QIF tronque ou invalide
-
+* Ajouter date banque dans transaction detail.
 * Import step 1 : URL banques => lancer navigateur
 * Bug: import OFX initial invalide : rester sur page import
 * LoginPanel: error login + "new user" => effacer message
