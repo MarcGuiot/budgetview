@@ -463,6 +463,7 @@
       <xs:attributeGroup ref="componentAttributes"/>
       <xs:attributeGroup ref="iconAttributes"/>
       <xs:attribute name="action" type="xs:string"/>
+      <xs:attribute name="text" type="xs:string"/>
       <xs:attribute name="rolloverColor" type="xs:string"/>
       <xs:attribute name="disabledColor" type="xs:string"/>
     </xs:complexType>

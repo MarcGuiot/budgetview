@@ -11,7 +11,6 @@ import org.globsframework.utils.exceptions.NotSupported;
 import java.util.List;
 
 public class ChangeSetAggregator {
-
   private GlobRepository repository;
   private MutableChangeSet changeSet;
   private Listener listener;
