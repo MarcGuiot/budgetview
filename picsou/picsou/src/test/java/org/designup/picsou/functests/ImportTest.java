@@ -51,7 +51,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   public void testStandardImport() throws Exception {
 
     bankCombo.select("CIC");
-    assertNotNull(window.getTextBox("http://www.cic.fr/telechargements.cgi"));
+    assertNotNull(window.getButton("http://www.cic.fr/telechargements.cgi"));
 
     checkLoginMessage("Select an OFX or QIF file to import");
 

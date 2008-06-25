@@ -187,7 +187,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     ComboBox bankCombo = window.getComboBox("bankCombo");
     bankCombo.select("CIC");
 
-    assertNotNull(window.getTextBox("http://www.cic.fr/telechargements.cgi"));
+    assertNotNull(window.getButton("http://www.cic.fr/telechargements.cgi"));
 
     TextBox fileField = window.getInputTextBox("fileField");
     Button importButton = window.getButton("Import");

@@ -13,7 +13,11 @@
           <comboBox ref="bankCombo"/>
         </row>
 
-        <htmlEditorPane ref="downloadUrl"/>
+        <row>
+          <filler fill="horizontal"/>
+          <hyperlink name="downloadUrl" action="downloadUrl"/>
+          <filler fill="horizontal"/>
+        </row>
 
         <htmlEditorPane text="$login.initial.file" marginTop="20"/>
 

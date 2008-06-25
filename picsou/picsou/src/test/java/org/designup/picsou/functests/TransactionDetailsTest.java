@@ -19,7 +19,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     transactions.getTable().selectRows(0, 1);
     transactionDetails.checkLabel("Quick");
-
+    transactionDetails.labelIsNotEditable();
     transactions.getTable().selectRows(0, 2);
     transactionDetails.checkLabel("...");
   }

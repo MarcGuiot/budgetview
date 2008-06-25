@@ -25,12 +25,16 @@ public class TransactionDetailsChecker extends DataChecker {
     checkValue("userLabel", expected);
   }
 
+  public void labelIsNotEditable() {
+    assertFalse(getPanel().getTextBox("userLabel").isEditable());
+  }
+
   public void checkDate(String expected) {
-    checkValue("date", expected);
+    checkValue("userDate", expected);
   }
 
   public void checkNoDate() {
-    checkNotVisible("date");
+    checkNotVisible("userDate");
   }
 
   public void checkAmount(String label, String amount) {
@@ -113,7 +117,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkOriginalLabelNotVisible() {
-    assertFalse(getPanel().getTextBox("originalLabel").isVisible());
+    assertFalse(getPanel().getPanel("detailInfo").isVisible());
   }
 
   public void checkOriginalLabel(String originalLabel) {

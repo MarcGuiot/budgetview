@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.startup;
 
+import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.DialogOwner;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.importer.BankFileType;
@@ -10,9 +11,13 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.actions.AbstractGlobSelectionAction;
 import org.globsframework.gui.splits.components.JStyledPanel;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.views.*;
+import org.globsframework.gui.views.CellPainter;
+import org.globsframework.gui.views.GlobComboView;
+import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -101,8 +106,8 @@ public abstract class ImportPanel {
     builder.add("fileButton", fileButton);
     builder.add("bankCombo",
                 GlobComboView.init(Bank.TYPE, localRepository, localDirectory).setShowEmptyOption(true).getComponent());
-    builder.add("downloadUrl",
-                GlobHtmlView.init(Bank.TYPE, localRepository, localDirectory, new BankUrlStringifier()).getComponent());
+    builder.add("downloadUrl", new DownloadAction(directory));
+
     builder.add("import", new ImportAction());
 
     localDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
@@ -522,6 +527,26 @@ public abstract class ImportPanel {
       catch (ParseException e) {
         return Utils.compare(o1.get(ImportedTransaction.BANK_DATE), o2.get(ImportedTransaction.BANK_DATE));
       }
+    }
+  }
+
+  private class DownloadAction extends AbstractGlobSelectionAction {
+    private Directory directory;
+
+    public DownloadAction(Directory directory) {
+      super(Bank.TYPE, ImportPanel.this.localDirectory);
+      this.directory = directory;
+    }
+
+    public String toString(GlobList globs) {
+      if (globs.size() != 1) {
+        return null;
+      }
+      return globs.get(0).get(Bank.DOWNLOAD_URL);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      directory.get(BrowsingService.class).launchBrowser("http://" + getName());
     }
   }
 }

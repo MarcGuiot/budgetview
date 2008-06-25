@@ -46,7 +46,6 @@
                 </scrollPane>
                 <column>
                   <panel ref="transactionDetails" marginLeft="10"/>
-                  <filler fill="vertical"/>
                 </column>
               </row>
             </card>

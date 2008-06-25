@@ -14,6 +14,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.editors.GlobMultiLineTextEditor;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
@@ -24,10 +25,8 @@ import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.utils.GlobListFieldStringifier;
-import org.globsframework.model.format.utils.GlobListStringFieldStringifier;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,9 +51,10 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
                   }
                 }, true));
     builder.add("userLabel",
-                addLabel(new GlobListStringFieldStringifier(Transaction.LABEL,
-                                                            Lang.get("transaction.details.multilabel")), false));
-    builder.add("date",
+                GlobMultiLineTextEditor.init(Transaction.LABEL, repository, directory)
+                  .setMultiSelectionText(Lang.get("transaction.details.multilabel"))
+                  .setEditable(false));
+    builder.add("userDate",
                 addLabel(new TransactionDateListStringifier(Transaction.MONTH, Transaction.DAY), true));
 
     builder.add("amountLabel",
@@ -82,10 +82,6 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
                                              AutoHideOnSelectionPanel.Mode.SHOW_IF_AT_LEAST_ONE,
                                              directory));
     CategoryChooserAction categoryChooserAction = new CategoryChooserAction(new TransactionRendererColors(directory), repository, directory);
-    final JButton categoryChooserButton =
-      new JButton(categoryChooserAction);
-    categoryChooserButton.setText(null);
-    builder.add("categoryChooserButton", categoryChooserButton);
     HyperlinkButton categoryChooserLink = new CategorisationHyperlinkButton(categoryChooserAction, repository, directory);
     builder.add("categoryChooserLink", categoryChooserLink);
 
@@ -95,7 +91,8 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
     builder.add("splitLink", new SplitTransactionAction(repository, directory));
 
     builder.add("originalLabel",
-                addLabel(new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, ""), true));
+                GlobMultiLineTextEditor.init(Transaction.ORIGINAL_LABEL, repository, directory)
+                  .setEditable(false));
     builder.add("bankDate",
                 addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true));
     return builder;

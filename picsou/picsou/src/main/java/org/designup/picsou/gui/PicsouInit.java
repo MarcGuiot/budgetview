@@ -3,6 +3,7 @@ package org.designup.picsou.gui;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.ServerAccessGlobIdGenerator;
+import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.triggers.MonthStatComputer;
 import org.designup.picsou.importer.ImportService;
@@ -74,6 +75,7 @@ public class PicsouInit {
   }
 
   private void initDirectory(GlobRepository repository) {
+    directory.add(BrowsingService.class, BrowsingService.createService());
     AllocationLearningService learningService = new AllocationLearningService();
     directory.add(AllocationLearningService.class, learningService);
 

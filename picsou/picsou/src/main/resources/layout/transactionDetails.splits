@@ -1,8 +1,9 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
   <column minimumSize="(200, 150)" preferredSize="(200, 150)">
     <label ref="transactionType"/>
-    <label ref="userLabel" font="$transaction.label" foreground="transaction.detail.text"/>
-    <label ref="date" font="$transaction.date" foreground="transaction.detail.text"/>
+    <textArea ref="userLabel" font="$transaction.label"
+              foreground="transaction.detail.text" lineWrap="true" opaque="false"/>
+    <label ref="userDate" font="$transaction.date" foreground="transaction.detail.text"/>
     <row>
       <label ref="amountLabel"/>
       <label ref="amountValue"/>
@@ -33,7 +34,7 @@
         </row>
       </column>
     </panel>
-    <panel ref="detailInfo">
+    <panel ref="detailInfo" opaque="false">
       <column>
         <row>
           <filler fill="horizontal"/>
@@ -41,9 +42,13 @@
           <filler fill="horizontal"/>
         </row>
         <label text="$transaction.details.label.original"/>
-        <label ref="originalLabel"/>
-        <label ref="bankDate"/>
+        <textArea ref="originalLabel" opaque="false" lineWrap="true"/>
+        <row>
+          <label text="$transaction.detail.bankLabel"/>
+          <label ref="bankDate"/>
+        </row>
       </column>
     </panel>
+    <filler fill="vertical"/>
   </column>
 </splits>
