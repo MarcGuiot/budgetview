@@ -7,19 +7,18 @@ import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileReader;
 
 public class SplitsStyleImportTest extends SplitsTestCase {
   public void testImportFromResource() throws Exception {
     JButton button = new JButton();
     builder.add("btn", button);
-    builder.init(getClass(), "/splits/sampleImportFile.splits").load();
+    builder.setSource(getClass(), "/splits/sampleImportFile.splits").load();
     assertEquals(Color.RED, button.getForeground());
   }
 
   public void testImportedResourceNotFound() throws Exception {
     try {
-      builder.init(getClass(), "/unknown.splits").load();
+      builder.setSource(getClass(), "/unknown.splits").load();
       fail();
     }
     catch (ResourceAccessFailed e) {
@@ -37,33 +36,29 @@ public class SplitsStyleImportTest extends SplitsTestCase {
                            "  </styles>" +
                            "</splits>");
 
-    String file = TestUtils.getFileName(this, ".splits");
-    Files.dumpStringToFile(file,
-                           "<splits>" +
-                           "  <styleImport file='" + styleFile + "'/>" +
-                           "  <button ref='btn'/>" +
-                           "</splits>");
-
     JButton button = new JButton();
     builder.add("btn", button);
-    builder.doParse(new FileReader(file));
+    builder
+      .setSource("<splits>" +
+                 "  <styleImport file='" + styleFile + "'/>" +
+                 "  <button ref='btn'/>" +
+                 "</splits>")
+      .load();
     assertEquals(Color.RED, button.getForeground());
   }
 
   public void testImportedFileNotFound() throws Exception {
-    String file = TestUtils.getFileName(this, ".splits");
-    Files.dumpStringToFile(file,
-                           "<splits>" +
-                           "  <styleImport file='/unknown.splits'/>" +
-                           "  <button ref='btn'/>" +
-                           "</splits>");
-
     try {
-      builder.doParse(new FileReader(file));
+      builder
+        .setSource("<splits>" +
+                   "  <styleImport file='/unknown.splits'/>" +
+                   "  <button ref='btn'/>" +
+                   "</splits>")
+        .load();
       fail();
     }
     catch (ItemNotFound e) {
-      assertEquals("Could not find file: /unknown.splits", e.getMessage());
+      assertTrue(e.getMessage().contains("Could not find file: /unknown.splits"));
     }
   }
 }

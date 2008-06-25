@@ -33,7 +33,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     super(directory);
     this.repository = repository;
     this.directory = directory;
-    super.init(referenceClass, file);
+    super.setSource(referenceClass, file);
   }
 
   public GlobTableView addTable(GlobType type, Comparator<Glob> comparator) {

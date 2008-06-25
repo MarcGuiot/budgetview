@@ -1,10 +1,6 @@
 package org.globsframework.gui.splits;
 
-import org.globsframework.utils.Files;
-import org.globsframework.utils.TestUtils;
-
 import javax.swing.*;
-import java.io.FileReader;
 
 public class SplitsReloadTest extends SplitsTestCase {
   public void test() throws Exception {
@@ -13,31 +9,27 @@ public class SplitsReloadTest extends SplitsTestCase {
     builder.add("button1", button1);
     builder.add("label1", label1);
 
-    String file1 = TestUtils.getFileName(this);
-    Files.dumpStringToFile(file1,
-                           "<splits>" +
-                           "  <horizontalSplit>" +
-                           "    <label ref='label1' text='label1Before'/>" +
-                           "    <button ref='button1' text='button1Before'/>" +
-                           "  </horizontalSplit>" +
-                           "</splits>");
-
-    JSplitPane splitPane = (JSplitPane)builder.doParse(new FileReader(file1));
+    JSplitPane splitPane = builder.setSource(
+        "<splits>" +
+        "  <horizontalSplit>" +
+        "    <label ref='label1' text='label1Before'/>" +
+        "    <button ref='button1' text='button1Before'/>" +
+        "  </horizontalSplit>" +
+        "</splits>")
+        .load();
     assertSame(label1, splitPane.getLeftComponent());
     assertEquals("label1Before", label1.getText());
     assertSame(button1, splitPane.getRightComponent());
     assertEquals("button1Before", button1.getText());
 
-    String file2 = TestUtils.getFileName(this);
-    Files.dumpStringToFile(file2,
-                           "<splits>" +
-                           "  <column>" +
-                           "    <label ref='label1' text='label1After'/>" +
-                           "    <button ref='button1' text='button1After'/>" +
-                           "  </column>" +
-                           "</splits>");
-
-    JPanel panel = (JPanel)builder.doParse(new FileReader(file2));
+    JPanel panel = builder.setSource(
+      "<splits>" +
+      "  <column>" +
+      "    <label ref='label1' text='label1After'/>" +
+      "    <button ref='button1' text='button1After'/>" +
+      "  </column>" +
+      "</splits>")
+      .load();
     assertSame(label1, panel.getComponent(0));
     assertEquals("label1After", label1.getText());
     assertSame(button1, panel.getComponent(1));
@@ -45,5 +37,63 @@ public class SplitsReloadTest extends SplitsTestCase {
 
     assertNull(splitPane.getRightComponent());
     assertNull(splitPane.getLeftComponent());
+  }
+
+  public void testContainedBuilders() throws Exception {
+    builder.setSource("<splits>" +
+                      "  <panel>" +
+                      "    <component ref='subBuilder'/>" +
+                      "  </panel>" +
+                      "</splits>");
+
+    SplitsBuilder subBuilder = SplitsBuilder.init(colorService, iconLocator);
+    subBuilder.setSource("<splits>" +
+                         "  <button text='btn'/>" +
+                         "</splits>");
+    builder.add("subBuilder", subBuilder);
+
+    JPanel firstPanel = builder.load();
+    assertEquals(1, firstPanel.getComponentCount());
+    assertTrue(firstPanel.getComponent(0) instanceof JButton);
+    assertEquals("btn", ((JButton)firstPanel.getComponent(0)).getText());
+
+    subBuilder.setSource("<splits>" +
+                         "  <label text='lbl'/>" +
+                         "</splits>");
+    JPanel secondPanel = builder.load();
+    assertEquals(1, secondPanel.getComponentCount());
+    assertTrue(secondPanel.getComponent(0) instanceof JLabel);
+    assertEquals("lbl", ((JLabel)secondPanel.getComponent(0)).getText());
+  }
+
+  public void testContainedBuildersWithAnonymousComponents() throws Exception {
+    builder.setSource("<splits>" +
+                      "  <panel>" +
+                      "    <component ref='subBuilder'/>" +
+                      "  </panel>" +
+                      "</splits>");
+
+    SplitsBuilder subBuilder = SplitsBuilder.init(colorService, iconLocator);
+    subBuilder.setSource("<splits>" +
+                         "  <panel name='subBuilder'>" +
+                         "    <button text='btn'/>" +
+                         "  </panel>" +
+                         "</splits>");
+    builder.add("subBuilder", subBuilder);
+
+    JPanel firstPanel = builder.load();
+    JPanel firstSubPanel = (JPanel)firstPanel.getComponent(0);
+    assertEquals(1, firstSubPanel.getComponentCount());
+    assertEquals("btn", ((JButton)firstSubPanel.getComponent(0)).getText());
+
+    subBuilder.setSource("<splits>" +
+                         "  <panel name='subBuilder'>" +
+                         "    <label text='lbl'/>" +
+                         "  </panel>" +
+                         "</splits>");
+    JPanel secondPanel = builder.load();
+    JPanel secondSubPanel = (JPanel)secondPanel.getComponent(0);
+    assertEquals(1, secondSubPanel.getComponentCount());
+    assertEquals("lbl", ((JLabel)secondSubPanel.getComponent(0)).getText());
   }
 }

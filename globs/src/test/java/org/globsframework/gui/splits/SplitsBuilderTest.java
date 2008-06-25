@@ -1,7 +1,6 @@
 package org.globsframework.gui.splits;
 
 import org.globsframework.gui.splits.components.JStyledPanel;
-import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.font.Fonts;
 import org.globsframework.gui.splits.font.FontsTest;
 import org.globsframework.gui.splits.layout.Anchor;
@@ -367,8 +366,8 @@ public class SplitsBuilderTest extends SplitsTestCase {
         "</row>");
       fail();
     }
-    catch (SplitsException e) {
-      assertEquals("No component found for ref: anUndefinedId", e.getMessage());
+    catch (Exception e) {
+      assertTrue(e.getMessage().contains("No component found for ref: anUndefinedId"));
     }
   }
 
@@ -410,7 +409,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
         parse(xml);
         fail("No failure reported for XML: " + xml);
       }
-      catch (SplitsException e) {
+      catch (Exception e) {
         // OK
       }
     }
@@ -602,7 +601,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
         "</panel>");
     }
     catch (Exception e) {
-      assertEquals("panel components cannot have more than one subcomponent", e.getMessage());
+      assertTrue(e.getMessage().contains("panel components cannot have more than one subcomponent"));
     }
   }
 
@@ -651,7 +650,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertEquals("scrollPane must have exactly one subcomponent", e.getMessage());
+      assertTrue(e.getMessage().contains("scrollPane must have exactly one subcomponent"));
     }
   }
 
@@ -662,7 +661,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertEquals("scrollPane must have exactly one subcomponent", e.getMessage());
+      assertTrue(e.getMessage().contains("scrollPane must have exactly one subcomponent"));
     }
   }
 
@@ -711,9 +710,9 @@ public class SplitsBuilderTest extends SplitsTestCase {
         "</tabs>");
       fail();
     }
-    catch (SplitsException e) {
-      assertEquals("Invalid component 'grid' found in 'tabs' component -  only 'tab' subcomponents are accepted",
-                   e.getMessage());
+    catch (Exception e) {
+      assertTrue(e.getMessage().contains("Invalid component 'grid' found in 'tabs' component -  " +
+                                         "only 'tab' subcomponents are accepted"));
     }
   }
 
@@ -728,8 +727,8 @@ public class SplitsBuilderTest extends SplitsTestCase {
         "</tabs>");
       fail();
     }
-    catch (SplitsException e) {
-      assertEquals("Tab component 'Tab 1' must have exactly one subcomponent", e.getMessage());
+    catch (Exception e) {
+      assertTrue(e.getMessage().contains("Tab component 'Tab 1' must have exactly one subcomponent"));
     }
 
     try {
@@ -739,8 +738,8 @@ public class SplitsBuilderTest extends SplitsTestCase {
         "</tabs>");
       fail();
     }
-    catch (SplitsException e) {
-      assertEquals("Tab component 'Tab 1' must have exactly one subcomponent", e.getMessage());
+    catch (Exception e) {
+      assertTrue(e.getMessage().contains("Tab component 'Tab 1' must have exactly one subcomponent"));
     }
   }
 
@@ -776,7 +775,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertEquals("Unknown direction for filler: unknown", e.getMessage());
+      assertTrue(e.getMessage().contains("Unknown direction for filler: unknown"));
     }
   }
 
@@ -857,7 +856,8 @@ public class SplitsBuilderTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertEquals("Panel 'myPanel' must use a CardLayout, preferably through a CardHandler", e.getMessage());
+      assertTrue(e.getMessage().contains("Panel 'myPanel' must use a CardLayout, " +
+                                         "preferably through a CardHandler"));
     }
   }
 
@@ -872,7 +872,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertEquals("cards components must reference a registered panel (use ref='xxx')", e.getMessage());
+      assertTrue(e.getMessage().contains("cards components must reference a registered panel (use ref='xxx')"));
     }
   }
 
@@ -888,7 +888,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertEquals("Card items must have a 'name' attribute", e.getMessage());
+      assertTrue(e.getMessage().contains("Card items must have a 'name' attribute"));
     }
   }
 

@@ -29,17 +29,21 @@ public abstract class SplitsTestCase extends UISpecTestCase {
     builder = new SplitsBuilder(colorService, iconLocator, textLocator, fontService);
   }
 
-  protected Component parse(String xml) throws Exception {
+  protected Component parse(final String xml) throws Exception {
     validateDocument(toStream(xml));
-    return builder.doParse(toStream(xml));
+    return builder.setSource(complete(xml)).load();
   }
 
   protected Component parseWithoutSchemaValidation(String xml) throws Exception {
-    return builder.doParse(toStream(xml));
+    return builder.setSource(complete(xml)).load();
   }
 
   protected StringReader toStream(String xml) {
-    return new StringReader("<splits>" + xml + "</splits>");
+    return new StringReader(complete(xml));
+  }
+
+  private String complete(String xml) {
+    return "<splits>" + xml + "</splits>";
   }
 
   protected void validateDocument(Reader reader) throws Exception {
@@ -55,8 +59,8 @@ public abstract class SplitsTestCase extends UISpecTestCase {
       parse(xml);
       fail();
     }
-    catch (SplitsException e) {
-      assertEquals(error, e.getMessage());
+    catch (Exception e) {
+      assertTrue(e.getMessage().contains(error));
     }
   }
 

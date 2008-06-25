@@ -61,12 +61,13 @@ public class Files {
     }
   }
 
-  public static void dumpStringToFile(String fileName, String content) throws IOFailure {
+  public static String dumpStringToFile(String fileName, String content) throws IOFailure {
     FileWriter writer = null;
     try {
       writer = new FileWriter(fileName);
       writer.append(content);
       writer.close();
+      return fileName;
     }
     catch (IOException e) {
       throw new IOFailure(e);

@@ -1,0 +1,8 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+  <frame title="Splits Editor">
+    <column>
+      <button action="reload" fill="horizontal" margin="20"/>
+      <panel ref="colorEditor"/>
+    </column>
+  </frame>
+</splits>

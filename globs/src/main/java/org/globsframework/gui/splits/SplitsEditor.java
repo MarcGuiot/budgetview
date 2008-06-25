@@ -14,16 +14,18 @@ public class SplitsEditor {
     ColorService colorService = builder.getContext().getColorService();
     colorService.autoUpdate(container);
 
-    JFrame frame = new JFrame("Splits Editor");
-    ColorServiceEditor colorEditor = new ColorServiceEditor(colorService);
+    JFrame frame =
+      SplitsBuilder.init(builder.getContext().getColorService(),
+                                 builder.getContext().getIconLocator())
+        .setSource(SplitsEditor.class, "/splits/splitsEditor.splits")
+        .add("reload", new AbstractAction("Reload") {
+          public void actionPerformed(ActionEvent e) {
+            builder.load();
+          }
+        })
+        .add("colorEditor", new ColorServiceEditor(colorService).getBuilder())
+        .load();
 
-    frame.getContentPane().add(new JButton(new AbstractAction("Reload") {
-      public void actionPerformed(ActionEvent e) {
-        builder.load();
-      }
-    }));
-
-    frame.getContentPane().add(colorEditor.getPanel());
     GuiUtils.showCentered(frame);
   }
 }

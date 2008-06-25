@@ -2,7 +2,6 @@ package org.globsframework.gui.splits.color;
 
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.SplitsLoader;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -29,7 +28,6 @@ public class ColorServiceEditor implements ColorCreationListener {
   private JTextField textField;
   private String currentKey;
   private JList keyList;
-  private JPanel panel;
 
   private PrintStream outputStream = System.out;
 
@@ -46,13 +44,7 @@ public class ColorServiceEditor implements ColorCreationListener {
       }
     });
     keyList.setSelectedIndex(0);
-    builder.init(getClass(), "/coloreditor.splits");
-    builder.addLoader(new SplitsLoader() {
-      public void load(Component component) {
-        panel = (JPanel)component;
-      }
-    });
-    builder.load();
+    builder.setSource(getClass(), "/splits/coloreditor.splits");
     colorService.addListener(this);
   }
 
@@ -172,8 +164,8 @@ public class ColorServiceEditor implements ColorCreationListener {
     return button;
   }
 
-  public JPanel getPanel() {
-    return panel;
+  public SplitsBuilder getBuilder() {
+    return builder;
   }
 
   public void colorCreated(String key) {

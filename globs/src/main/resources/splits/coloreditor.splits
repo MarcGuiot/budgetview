@@ -1,4 +1,4 @@
-<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
   <column size="(800,440)">
     <row marginTop="20">
       <label text="File" marginLeft="20" marginRight="10" anchor="east" fill="none"/>

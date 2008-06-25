@@ -11,6 +11,8 @@ import org.globsframework.gui.splits.styles.StyleService;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +26,8 @@ public class DefaultSplitsContext implements SplitsContext {
   private StyleService styleService;
   private Class referenceClass;
   private String resourceFile;
+
+  private java.util.List<Component> createdComponents = new ArrayList<Component>();
 
   public DefaultSplitsContext(ColorService colorService, IconLocator iconLocator,
                               TextLocator textLocator, FontLocator fontLocator, StyleService styleService) {
@@ -75,6 +79,10 @@ public class DefaultSplitsContext implements SplitsContext {
       throw new SplitsException("Component '" + id + "' already declared in the context" +
                                 dump());
     }
+    addOrReplaceComponent(id, component);
+  }
+
+  public void addOrReplaceComponent(String id, Component component) {
     componentsByName.put(id, component);
   }
 
@@ -100,6 +108,7 @@ public class DefaultSplitsContext implements SplitsContext {
     try {
       Constructor constructor = componentClass.getConstructor();
       Component newComponent = (Component)constructor.newInstance();
+      createdComponents.add(newComponent);
       if (name != null) {
         newComponent.setName(name);
         componentsByName.put(name, newComponent);
@@ -110,6 +119,17 @@ public class DefaultSplitsContext implements SplitsContext {
       throw new SplitsException("Could not invoke empty constructor of class " + componentClass.getName() +
                                 dump(), e);
     }
+  }
+
+  public void cleanUp() {
+    Collections.reverse(createdComponents);
+    for (Component component : createdComponents) {
+      Container parent = component.getParent();
+      if (parent != null) {
+        parent.remove(component);
+      }
+    }
+    createdComponents.clear();
   }
 
   public Component findComponent(String id) {

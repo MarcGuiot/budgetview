@@ -1,11 +1,14 @@
 package org.globsframework.gui.splits.color;
 
 import org.uispec4j.*;
+import org.uispec4j.Panel;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 
+import javax.swing.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.awt.*;
 
 public class ColorServiceEditorTest extends UISpecTestCase {
   private ColorService colorService;
@@ -22,10 +25,11 @@ public class ColorServiceEditorTest extends UISpecTestCase {
 
   private void initEditor() {
     editor = new ColorServiceEditor(colorService);
-    panel = new Panel(editor.getPanel());
-    list = panel.getListBox();
-    text = panel.getInputTextBox("color");
-    colorSetCombo = panel.getComboBox();
+    JPanel panel = editor.getBuilder().load();
+    this.panel = new Panel(panel);
+    list = this.panel.getListBox();
+    text = this.panel.getInputTextBox("color");
+    colorSetCombo = this.panel.getComboBox();
   }
 
   public void testSelectingColors() throws Exception {

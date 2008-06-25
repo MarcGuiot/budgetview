@@ -6,7 +6,6 @@ import org.globsframework.gui.splits.SplitsEditor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.StringReader;
 
 public class ColorServiceEditorDemo {
   public static void main(String[] args) {
@@ -17,7 +16,7 @@ public class ColorServiceEditorDemo {
     SplitsBuilder builder = new SplitsBuilder(colorService, IconLocator.NULL);
 
     JFrame frame =
-      (JFrame)builder.doParse(new StringReader(
+      builder.setSource(
         "<splits>" +
         "  <frame background='form.bg'>" +
         "    <row margin='15'>" +
@@ -25,7 +24,8 @@ public class ColorServiceEditorDemo {
         "      <textField/>" +
         "    </row>" +
         "  </frame>" +
-        "</splits>"));
+        "</splits>")
+        .load();
     frame.pack();
     frame.setVisible(true);
 

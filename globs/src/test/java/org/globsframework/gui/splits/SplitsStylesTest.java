@@ -119,7 +119,7 @@ public class SplitsStylesTest extends SplitsTestCase {
       fail();
     }
     catch (InvalidFormat e) {
-      assertEquals("A style selector cannot be empty", e.getMessage());
+      assertTrue(e.getMessage().contains("A style selector cannot be empty"));
     }
   }
 

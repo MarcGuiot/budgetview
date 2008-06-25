@@ -30,4 +30,8 @@ public interface SplitsContext {
   StyleService getStyleService();
 
   Class getReferenceClass();
+
+  void addOrReplaceComponent(String id, Component component);
+
+  void cleanUp();
 }

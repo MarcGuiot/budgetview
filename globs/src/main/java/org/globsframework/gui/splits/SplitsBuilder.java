@@ -12,14 +12,13 @@ import org.globsframework.gui.splits.xml.SplitsParser;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.GlobsException;
+import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +27,7 @@ public class SplitsBuilder {
 
   private Map<String, SplitsBuilder> children = new HashMap<String, SplitsBuilder>();
   private DefaultSplitsContext context;
-  private ResourceFileLoader resourceLoader;
+  private Source source;
   private java.util.List<SplitsLoader> loaders = new ArrayList<SplitsLoader>();
 
   public static SplitsBuilder init(Directory directory) {
@@ -99,21 +98,27 @@ public class SplitsBuilder {
     return this;
   }
 
-  public SplitsBuilder init(Class referenceClass, String resourceName) throws ResourceAccessFailed {
-    init(referenceClass, resourceName, null);
+  public SplitsBuilder setSource(Class referenceClass, String resourceName) throws ResourceAccessFailed {
+    setSource(referenceClass, resourceName, null);
     return this;
   }
 
-  public SplitsBuilder init(Class referenceClass, String resourceName, String encoding) {
+  public SplitsBuilder setSource(Class referenceClass, String resourceName, String encoding) {
     this.context.setReferenceClass(referenceClass);
     this.context.setResourceFile(resourceName);
-    this.resourceLoader = new ResourceFileLoader(referenceClass, resourceName, encoding);
+    this.source = new ResourceFileSource(referenceClass, resourceName, encoding);
     return this;
   }
 
-  public Component doParse(Reader reader) throws SplitsException {
-    SplitsParser parser = new SplitsParser(context, new DefaultSplitterFactory());
-    return parser.parse(reader);
+  public SplitsBuilder setSource(File file) {
+    this.context.setResourceFile(file.getPath());
+    this.source = new FileSource(file);
+    return this;
+  }
+
+  public SplitsBuilder setSource(String content) {
+    this.source = new StringSource(content);
+    return this;
   }
 
   public Component getComponent(String id) {
@@ -124,47 +129,63 @@ public class SplitsBuilder {
     return context;
   }
 
-  public Component load() {
+  public <T extends Component> T load() {
+    context.cleanUp();
     for (Map.Entry<String, SplitsBuilder> entry : children.entrySet()) {
       String name = entry.getKey();
-      Component component = entry.getValue().load();
+      SplitsBuilder builder = entry.getValue();
+      Component component = builder.load();
       component.setName(name);
-      context.addComponent(name, component);
+      context.addOrReplaceComponent(name, component);
     }
     complete();
-    return resourceLoader.run();
+    Component component = doLoad();
+    try {
+      return (T)component;
+    }
+    catch (ClassCastException e) {
+      throw new InvalidData("Unexpected result type", e);
+    }
   }
 
   protected void complete() {
   }
 
-  private class ResourceFileLoader {
+  public Component doLoad() {
+    Reader reader = source.getReader();
+    Component component;
+    try {
+      SplitsParser parser = new SplitsParser(context, new DefaultSplitterFactory());
+      component = parser.parse(reader);
+    }
+    catch (GlobsException e) {
+      throw e;
+    }
+    catch (Exception e) {
+      throw new ResourceAccessFailed("Error parsing Splits descriptor: " + e.getMessage() + context.dump(), e);
+    }
+    for (SplitsLoader loader : loaders) {
+      loader.load(component);
+    }
+    return component;
+  }
+
+  private interface Source {
+    Reader getReader();
+  }
+
+  private static class ResourceFileSource implements Source {
     private Class referenceClass;
     private String resourceName;
     private String encoding;
 
-    private ResourceFileLoader(Class referenceClass, String resourceName, String encoding) {
+    private ResourceFileSource(Class referenceClass, String resourceName, String encoding) {
       this.referenceClass = referenceClass;
       this.resourceName = resourceName;
       this.encoding = encoding;
     }
 
-    public Component run() {
-      Reader reader = getReader();
-      Component component;
-      try {
-        component = doParse(reader);
-      }
-      catch (Exception e) {
-        throw new ResourceAccessFailed("Error parsing file '" + resourceName + "' - " + e.getMessage(), e);
-      }
-      for (SplitsLoader loader : loaders) {
-        loader.load(component);
-      }
-      return component;
-    }
-
-    private Reader getReader() {
+    public Reader getReader() {
       InputStream stream = Files.getStream(referenceClass, resourceName);
       if (Strings.isNotEmpty(encoding)) {
         try {
@@ -177,6 +198,35 @@ public class SplitsBuilder {
       else {
         return new InputStreamReader(stream);
       }
+    }
+  }
+
+  private static class FileSource implements Source {
+    private File file;
+
+    private FileSource(File file) {
+      this.file = file;
+    }
+
+    public Reader getReader() {
+      try {
+        return new FileReader(file);
+      }
+      catch (FileNotFoundException e) {
+        throw new ResourceAccessFailed("File not found: " + file.getAbsolutePath(), e);
+      }
+    }
+  }
+
+  private static class StringSource implements Source {
+    private String content;
+
+    private StringSource(String content) {
+      this.content = content;
+    }
+
+    public Reader getReader() {
+      return new StringReader(content);
     }
   }
 }

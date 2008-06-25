@@ -11,7 +11,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.StringReader;
 
 public abstract class StringInputDialog {
 
@@ -35,7 +34,7 @@ public abstract class StringInputDialog {
       .add("label", messageLabel)
       .add("ok", okAction)
       .add("cancel", new CancelAction(cancelLabel))
-      .doParse(new StringReader(
+      .setSource(
         "<splits>" +
         "  <column marginLeft='20' marginRight='20' margin='5'>" +
         "    <row defaultMarginTop='5' defaultMarginBottom='5'>" +
@@ -50,7 +49,8 @@ public abstract class StringInputDialog {
         "    </row>" +
         "  </column>" +
         "</splits>"
-      )));
+      )
+      .load());
     dialog.setSize(300, 150);
     installInputListener();
     if (initialValue != null) {
