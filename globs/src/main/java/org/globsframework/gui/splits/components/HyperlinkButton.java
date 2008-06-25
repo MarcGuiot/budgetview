@@ -18,13 +18,13 @@ public class HyperlinkButton extends JButton {
 
   public HyperlinkButton() {
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    setForeground(Color.BLUE);
+    setForeground(Color.CYAN);
   }
 
   public HyperlinkButton(Action action) {
     super(action);
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    setForeground(Color.BLUE);
+    setForeground(Color.CYAN);
   }
 
   public void setRolloverColor(Color rolloverColor) {
