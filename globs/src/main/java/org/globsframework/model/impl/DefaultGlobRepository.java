@@ -288,7 +288,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     if (Utils.equal(oldValue, newValue)) {
       return false;
     }
-    if (globType.isKeyField(field)) {
+    if (field.isKeyField()) {
       throw new OperationDenied("Field '" + field.getName() + "' of object '" +
                                 key + "' is a key and cannot be changed");
     }

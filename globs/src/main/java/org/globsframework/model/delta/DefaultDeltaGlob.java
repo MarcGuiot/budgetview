@@ -92,7 +92,7 @@ public class DefaultDeltaGlob extends AbstractMutableGlob implements DeltaGlob {
 
   public void resetValues() {
     for (Field field : type.getFields()) {
-      if (!getType().isKeyField(field)) {
+      if (!field.isKeyField()) {
         values[field.getIndex()] = UNSET_VALUE;
       }
     }
