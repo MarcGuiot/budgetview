@@ -52,7 +52,7 @@ public class SplitsDemo {
   }
 
   private static void show(SplitsBuilder splits, String xmlFileName) {
-    JFrame frame = (JFrame)splits.parse(SplitsDemo.class.getResourceAsStream("/demo/" + xmlFileName));
+    JFrame frame = (JFrame)splits.init(SplitsDemo.class, "/demo/" + xmlFileName).load();
     frame.setVisible(true);
   }
 }

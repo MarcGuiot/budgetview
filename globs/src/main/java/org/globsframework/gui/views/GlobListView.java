@@ -21,7 +21,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GlobListView extends AbstractGlobComponentHolder implements GlobSelectionListener {
+public class GlobListView extends AbstractGlobComponentHolder<GlobListView> implements GlobSelectionListener {
   private ListCellRenderer renderer;
   private Comparator<Glob> comparator;
   private GlobSelectionHandler selectionHandler = new DefaultGlobSelectionHandler();

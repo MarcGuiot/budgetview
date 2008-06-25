@@ -2,6 +2,7 @@ package org.globsframework.gui.splits.color;
 
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.SplitsEditor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +17,7 @@ public class ColorServiceEditorDemo {
     SplitsBuilder builder = new SplitsBuilder(colorService, IconLocator.NULL);
 
     JFrame frame =
-      (JFrame)builder.parse(new StringReader(
+      (JFrame)builder.doParse(new StringReader(
         "<splits>" +
         "  <frame background='form.bg'>" +
         "    <row margin='15'>" +
@@ -28,6 +29,6 @@ public class ColorServiceEditorDemo {
     frame.pack();
     frame.setVisible(true);
 
-    ColorServiceEditor.showInFrame(colorService, frame);
+    SplitsEditor.showInFrame(builder, frame);
   }
 }

@@ -1,8 +1,6 @@
 package org.globsframework.gui.utils;
 
-import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -37,7 +35,7 @@ public abstract class StringInputDialog {
       .add("label", messageLabel)
       .add("ok", okAction)
       .add("cancel", new CancelAction(cancelLabel))
-      .parse(new StringReader(
+      .doParse(new StringReader(
         "<splits>" +
         "  <column marginLeft='20' marginRight='20' margin='5'>" +
         "    <row defaultMarginTop='5' defaultMarginBottom='5'>" +

@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class GlobComboView extends AbstractGlobComponentHolder implements GlobSelectionListener {
+public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> implements GlobSelectionListener {
   private ListCellRenderer renderer;
   private Comparator<Glob> comparator;
   private GlobSelectionHandler selectionHandler = new DefaultSelectionHandler();
@@ -28,7 +28,6 @@ public class GlobComboView extends AbstractGlobComponentHolder implements GlobSe
   private boolean showEmptyOption = false;
   private boolean updateWithIncomingSelections = true;
   private boolean selectionEnabled = true;
-  private String name;
 
   public static GlobComboView init(GlobType type, GlobRepository globRepository, Directory directory) {
     return new GlobComboView(type, globRepository, directory);
@@ -63,6 +62,7 @@ public class GlobComboView extends AbstractGlobComponentHolder implements GlobSe
       return jComboBox;
     }
     complete();
+    String name = jComboBox.getName();
     jComboBox.setName(name == null ? type.getName() : name);
     model = new Model();
     jComboBox.setModel(model);
@@ -102,11 +102,6 @@ public class GlobComboView extends AbstractGlobComponentHolder implements GlobSe
 
   public GlobComboView setUpdateWithIncomingSelections(boolean updateWithIncomingSelections) {
     this.updateWithIncomingSelections = updateWithIncomingSelections;
-    return this;
-  }
-
-  public GlobComboView setName(String name) {
-    this.name = name;
     return this;
   }
 
@@ -229,12 +224,10 @@ public class GlobComboView extends AbstractGlobComponentHolder implements GlobSe
   }
 
   private class DefaultSelectionHandler implements GlobSelectionHandler {
-
     public void processSelection(Glob glob) {
       if (selectionEnabled) {
         selectionService.select((glob != null) ? Collections.singletonList(glob) : Collections.EMPTY_LIST, type);
       }
     }
-
   }
 }

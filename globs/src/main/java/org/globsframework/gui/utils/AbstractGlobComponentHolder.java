@@ -7,7 +7,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
 
-public abstract class AbstractGlobComponentHolder implements ComponentHolder {
+public abstract class AbstractGlobComponentHolder<T extends AbstractGlobComponentHolder> implements ComponentHolder {
   protected final GlobType type;
   protected final GlobRepository repository;
   protected final SelectionService selectionService;
@@ -18,5 +18,10 @@ public abstract class AbstractGlobComponentHolder implements ComponentHolder {
     this.repository = repository;
     this.selectionService = directory.get(SelectionService.class);
     this.descriptionService = directory.get(DescriptionService.class);
+  }
+
+  public T setName(String name) {
+    getComponent().setName(name);
+    return (T)this;
   }
 }

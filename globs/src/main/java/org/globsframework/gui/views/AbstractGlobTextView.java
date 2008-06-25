@@ -42,6 +42,11 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView> imple
     doUpdate(text);
   }
 
+  public T setName(String name) {
+    getComponent().setName(name);
+    return (T)this;
+  }
+
   protected abstract void doUpdate(String text);
 
   protected abstract String getText();

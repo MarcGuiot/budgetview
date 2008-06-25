@@ -32,7 +32,7 @@ import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 
-public class GlobTableView extends AbstractGlobComponentHolder implements GlobSelectionListener {
+public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> implements GlobSelectionListener {
   private List<GlobTableColumn> columns = new ArrayList<GlobTableColumn>();
   private Comparator<Glob> initialComparator;
   private GlobTableModel tableModel;
@@ -419,7 +419,7 @@ public class GlobTableView extends AbstractGlobComponentHolder implements GlobSe
     });
   }
 
-  private GlobList getCurrentSelection() {
+  public GlobList getCurrentSelection() {
     GlobList selection = new GlobList();
     for (int index : table.getSelectedRows()) {
       selection.add(tableModel.getValueAt(index, 0));

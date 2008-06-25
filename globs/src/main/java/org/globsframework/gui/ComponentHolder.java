@@ -6,4 +6,6 @@ public interface ComponentHolder {
   public JComponent getComponent();
 
   void dispose();
+
+  ComponentHolder setName(String name);
 }

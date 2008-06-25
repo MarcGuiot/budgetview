@@ -62,6 +62,11 @@ public class GlobRepeatView implements ComponentHolder {
     initPanel();
   }
 
+  public GlobRepeatView setName(String name) {
+    jPanel.setName(name);
+    return this;
+  }
+
   private void revalidate() {
     Container parent = jPanel.getParent();
     if (parent != null) {

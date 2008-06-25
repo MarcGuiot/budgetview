@@ -20,14 +20,14 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public abstract class AbstractSplitter implements Splitter {
+  protected ComponentStretch stretch;
   private final Splitter[] subSplitters;
-  private final SplitsContext context;
   private final SplitProperties properties;
+  private final SplitsContext context;
   private static final String[] DEFAULT_EXCLUDES =
     {"ref", "styleClass", "gridPos", "opaque", "borderPos",
      "fill", "anchor", "weightX", "weightY",
      "margin", "marginTop", "marginBottom", "marginLeft", "marginRight"};
-  protected ComponentStretch stretch;
 
   protected AbstractSplitter(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
     this.properties = properties;

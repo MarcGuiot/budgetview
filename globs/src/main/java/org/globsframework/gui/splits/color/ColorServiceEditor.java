@@ -2,7 +2,7 @@ package org.globsframework.gui.splits.color;
 
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.SplitsLoader;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -29,19 +29,11 @@ public class ColorServiceEditor implements ColorCreationListener {
   private JTextField textField;
   private String currentKey;
   private JList keyList;
-  private JFrame frame;
+  private JPanel panel;
 
   private PrintStream outputStream = System.out;
 
-  public static void showInFrame(ColorService colorService, Container container) {
-    colorService.autoUpdate(container);
-
-    ColorServiceEditor editor = new ColorServiceEditor(colorService);
-    JFrame frame = editor.getFrame();
-    GuiUtils.showCentered(frame);
-  }
-
-  ColorServiceEditor(ColorService service) {
+  public ColorServiceEditor(ColorService service) {
     colorService = service;
     builder = SplitsBuilder.init(new ColorService(), IconLocator.NULL);
     colorChooser = createColorChooser();
@@ -54,7 +46,13 @@ public class ColorServiceEditor implements ColorCreationListener {
       }
     });
     keyList.setSelectedIndex(0);
-    frame = createFrame();
+    builder.init(getClass(), "/coloreditor.splits");
+    builder.addLoader(new SplitsLoader() {
+      public void load(Component component) {
+        panel = (JPanel)component;
+      }
+    });
+    builder.load();
     colorService.addListener(this);
   }
 
@@ -78,8 +76,7 @@ public class ColorServiceEditor implements ColorCreationListener {
     jList.setName("colorList");
     jList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent event) {
-        String newValue = (String)jList.getSelectedValue();
-        currentKey = newValue;
+        currentKey = (String)jList.getSelectedValue();
         updateComponents();
       }
 
@@ -90,8 +87,7 @@ public class ColorServiceEditor implements ColorCreationListener {
   private String[] getKeyNames() {
     List<String> keys = colorService.getKeys();
     Collections.sort(keys);
-    String[] listData = keys.toArray(new String[keys.size()]);
-    return listData;
+    return keys.toArray(new String[keys.size()]);
   }
 
   private JComboBox createComboBox() {
@@ -176,14 +172,8 @@ public class ColorServiceEditor implements ColorCreationListener {
     return button;
   }
 
-  private JFrame createFrame() {
-    JFrame frame = (JFrame)builder.parse(getClass(), "/coloreditor.splits");
-    frame.setTitle("Splits Color Editor");
-    return frame;
-  }
-
-  public JFrame getFrame() {
-    return frame;
+  public JPanel getPanel() {
+    return panel;
   }
 
   public void colorCreated(String key) {

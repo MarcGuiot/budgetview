@@ -1,6 +1,7 @@
 package org.globsframework.gui.views;
 
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
+import org.globsframework.gui.ComponentHolder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -15,7 +16,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GlobToggleView extends AbstractGlobComponentHolder {
+public class GlobToggleView extends AbstractGlobComponentHolder<GlobToggleView> {
   private GlobStringifier stringifier;
   private List<JToggleButton> buttons = new ArrayList<JToggleButton>();
 

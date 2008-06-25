@@ -74,20 +74,33 @@ public class GlobRepeatViewTest extends GuiComponentTestCase {
       GlobRepeatView.init(DummyObject.TYPE, repository, directory, new GlobFieldComparator(DummyObject.NAME),
                           new GlobRepeatView.Factory() {
                             public ComponentHolder getComponent(final Glob glob, GlobRepository repository, Directory directory) {
-                              return new ComponentHolder() {
-                                String name = glob.get(DummyObject.NAME);
-
-                                public JComponent getComponent() {
-                                  return new JLabel(glob.get(DummyObject.NAME) + " - " + glob.get(DummyObject.ID));
-                                }
-
-                                public void dispose() {
-                                  disposeLogger.append(name).append(";");
-                                }
-                              };
+                              return new DummyComponentHolder(glob);
                             }
                           })
         .getComponent();
     return new Panel(jPanel);
+  }
+
+  private class DummyComponentHolder implements ComponentHolder {
+    String name;
+    private final Glob glob;
+
+    public DummyComponentHolder(Glob glob) {
+      this.glob = glob;
+      name = glob.get(DummyObject.NAME);
+    }
+
+    public ComponentHolder setName(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public JComponent getComponent() {
+      return new JLabel(glob.get(DummyObject.NAME) + " - " + glob.get(DummyObject.ID));
+    }
+
+    public void dispose() {
+      disposeLogger.append(name).append(";");
+    }
   }
 }

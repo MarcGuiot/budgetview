@@ -4,6 +4,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.gui.ComponentHolder;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -24,6 +25,11 @@ public class GlobHtmlView extends AbstractGlobTextView<GlobHtmlView> {
     this.editorPane = new JEditorPane();
     this.editorPane.setContentType("text/html");
     this.editorPane.setName(type.getName());
+  }
+
+  public GlobHtmlView setName(String name) {
+    this.editorPane.setName(name);
+    return this;
   }
 
   public void addHyperlinkListener(HyperlinkListener listener) {

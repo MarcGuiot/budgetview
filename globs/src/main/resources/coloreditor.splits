@@ -1,5 +1,5 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
-  <frame size="(800,440)">
+  <column size="(800,440)">
     <row marginTop="20">
       <label text="File" marginLeft="20" marginRight="10" anchor="east" fill="none"/>
       <comboBox ref="colorSets" fill="none" anchor="west"/>
@@ -17,5 +17,5 @@
         <button ref="printButton" opaque="false"/>
       </column>
     </horizontalSplit>
-  </frame>
+  </column>
 </splits>

@@ -22,7 +22,7 @@ public class ColorServiceEditorTest extends UISpecTestCase {
 
   private void initEditor() {
     editor = new ColorServiceEditor(colorService);
-    panel = new Panel(editor.getFrame());
+    panel = new Panel(editor.getPanel());
     list = panel.getListBox();
     text = panel.getInputTextBox("color");
     colorSetCombo = panel.getComboBox();

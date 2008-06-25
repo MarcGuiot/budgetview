@@ -3,10 +3,10 @@ package org.globsframework.gui.splits.impl;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.TextLocator;
-import org.globsframework.gui.splits.styles.StyleService;
-import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.exceptions.SplitsException;
+import org.globsframework.gui.splits.font.FontLocator;
+import org.globsframework.gui.splits.styles.StyleService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +23,7 @@ public class DefaultSplitsContext implements SplitsContext {
   private FontLocator fontLocator;
   private StyleService styleService;
   private Class referenceClass;
+  private String resourceFile;
 
   public DefaultSplitsContext(ColorService colorService, IconLocator iconLocator,
                               TextLocator textLocator, FontLocator fontLocator, StyleService styleService) {
@@ -61,9 +62,18 @@ public class DefaultSplitsContext implements SplitsContext {
     return referenceClass;
   }
 
+  public String getResourceFile() {
+    return resourceFile;
+  }
+
+  public void setResourceFile(String resourceFile) {
+    this.resourceFile = resourceFile;
+  }
+
   public void addComponent(String id, Component component) {
     if (componentsByName.containsKey(id)) {
-      throw new SplitsException("Component '" + id + "' already declared in the context");
+      throw new SplitsException("Component '" + id + "' already declared in the context" +
+                                dump());
     }
     componentsByName.put(id, component);
   }
@@ -73,7 +83,8 @@ public class DefaultSplitsContext implements SplitsContext {
 
     if (ref != null) {
       if (name != null) {
-        throw new SplitsException("A component referenced with a 'ref' cannot be given a 'name' attribute");
+        throw new SplitsException("A component referenced with a 'ref' cannot be given a 'name' attribute" +
+                                  dump());
       }
 
       Component component = componentsByName.get(ref);
@@ -82,7 +93,7 @@ public class DefaultSplitsContext implements SplitsContext {
       }
       else {
         throw new SplitsException("No component registered with name '" + ref +
-                                  "' - available names: " + componentsByName.keySet());
+                                  "' - available names: " + componentsByName.keySet() + dump());
       }
     }
 
@@ -96,7 +107,8 @@ public class DefaultSplitsContext implements SplitsContext {
       return (T)newComponent;
     }
     catch (Exception e) {
-      throw new SplitsException("Could not invoke empty constructor of class " + componentClass.getName(), e);
+      throw new SplitsException("Could not invoke empty constructor of class " + componentClass.getName() +
+                                dump(), e);
     }
   }
 
@@ -111,8 +123,35 @@ public class DefaultSplitsContext implements SplitsContext {
   public Action getAction(String id) {
     Action action = actionsByName.get(id);
     if (action == null) {
-      throw new SplitsException("No action registered for id '" + id + "'");
+      throw new SplitsException("No action registered for id '" + id + "'" + dump());
     }
     return action;
+  }
+
+  public String dump() {
+    StringBuilder builder = new StringBuilder();
+    builder
+      .append("\n\n")
+      .append("Context")
+      .append("\n")
+      .append("  Class: ").append(referenceClass)
+      .append(" - file: ").append(resourceFile)
+      .append("\n");
+
+    builder.append("  Components:").append("\n");
+    for (Map.Entry<String, Component> componentEntry : componentsByName.entrySet()) {
+      builder.append("    ").append(componentEntry.getKey())
+        .append(" => ").append(componentEntry.getValue())
+        .append("\n");
+    }
+
+    builder.append("  Actions:").append("\n");
+    for (Map.Entry<String, Action> actionEntry : actionsByName.entrySet()) {
+      builder.append("    ").append(actionEntry.getKey())
+        .append(" => ").append(actionEntry.getValue())
+        .append("\n");
+    }
+
+    return builder.toString();
   }
 }

@@ -13,13 +13,13 @@ public class SplitsStyleImportTest extends SplitsTestCase {
   public void testImportFromResource() throws Exception {
     JButton button = new JButton();
     builder.add("btn", button);
-    builder.parse(getClass(), "/splits/sampleImportFile.splits");
+    builder.init(getClass(), "/splits/sampleImportFile.splits").load();
     assertEquals(Color.RED, button.getForeground());
   }
 
   public void testImportedResourceNotFound() throws Exception {
     try {
-      builder.parse(getClass(), "/unknown.splits");
+      builder.init(getClass(), "/unknown.splits").load();
       fail();
     }
     catch (ResourceAccessFailed e) {
@@ -46,7 +46,7 @@ public class SplitsStyleImportTest extends SplitsTestCase {
 
     JButton button = new JButton();
     builder.add("btn", button);
-    builder.parse(new FileReader(file));
+    builder.doParse(new FileReader(file));
     assertEquals(Color.RED, button.getForeground());
   }
 
@@ -59,7 +59,7 @@ public class SplitsStyleImportTest extends SplitsTestCase {
                            "</splits>");
 
     try {
-      builder.parse(new FileReader(file));
+      builder.doParse(new FileReader(file));
       fail();
     }
     catch (ItemNotFound e) {

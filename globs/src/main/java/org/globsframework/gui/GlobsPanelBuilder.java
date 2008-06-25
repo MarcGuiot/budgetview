@@ -7,7 +7,6 @@ import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobPasswordEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobListView;
@@ -21,27 +20,20 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class GlobsPanelBuilder {
+public class GlobsPanelBuilder extends SplitsBuilder {
   private GlobRepository repository;
   private Directory directory;
   private List<ComponentHolder> componentHolders = new ArrayList<ComponentHolder>();
-  private SplitsBuilder splits;
 
-  public static GlobsPanelBuilder init(GlobRepository repository, Directory directory) {
-    return new GlobsPanelBuilder(repository, directory);
-  }
-
-  public GlobsPanelBuilder(GlobRepository repository, Directory directory) {
-    this.directory = directory;
+  public GlobsPanelBuilder(Class referenceClass, String file, GlobRepository repository, Directory directory) {
+    super(directory);
     this.repository = repository;
-    this.splits = SplitsBuilder.init(directory);
+    this.directory = directory;
+    super.init(referenceClass, file);
   }
 
   public GlobTableView addTable(GlobType type, Comparator<Glob> comparator) {
@@ -86,37 +78,19 @@ public class GlobsPanelBuilder {
     return store(GlobLabelView.init(type, repository, directory, stringifier));
   }
 
-  public GlobsPanelBuilder add(String name, Component component) {
-    splits.add(name, component);
-    return this;
-  }
-
   public GlobsPanelBuilder add(String name, ComponentHolder holder) {
-    splits.add(name, holder.getComponent());
+    holder.setName(name);
+    store(holder);
     return this;
-  }
-
-  public GlobsPanelBuilder add(Component... component) {
-    splits.add(component);
-    return this;
-  }
-
-  public GlobsPanelBuilder add(String name, Action action) {
-    splits.add(name, action);
-    return this;
-  }
-
-  public CardHandler addCardHandler(String name) {
-    return splits.addCardHandler(name);
   }
 
   public GlobsPanelBuilder addCreateAction(String label, String name, GlobType type) {
-    splits.add(name, new CreateGlobAction(label, type, repository, directory));
+    add(name, new CreateGlobAction(label, type, repository, directory));
     return this;
   }
 
   public GlobsPanelBuilder addDeleteAction(String label, String name, GlobType type) {
-    splits.add(name, new DeleteGlobAction(label, type, repository, directory));
+    add(name, new DeleteGlobAction(label, type, repository, directory));
     return this;
   }
 
@@ -125,19 +99,10 @@ public class GlobsPanelBuilder {
     return component;
   }
 
-  public Component parse(InputStream stream) {
-    complete();
-    return splits.parse(stream);
-  }
-
-  public Component parse(Class targetClass, String resourceName) {
-    complete();
-    return splits.parse(targetClass, resourceName);
-  }
-
-  private void complete() {
+  protected void complete() {
     for (ComponentHolder componentHolder : componentHolders) {
-      splits.add(componentHolder.getComponent());
+      add(componentHolder.getComponent());
     }
+    componentHolders.clear();
   }
 }

@@ -31,11 +31,11 @@ public abstract class SplitsTestCase extends UISpecTestCase {
 
   protected Component parse(String xml) throws Exception {
     validateDocument(toStream(xml));
-    return builder.parse(toStream(xml));
+    return builder.doParse(toStream(xml));
   }
 
   protected Component parseWithoutSchemaValidation(String xml) throws Exception {
-    return builder.parse(toStream(xml));
+    return builder.doParse(toStream(xml));
   }
 
   protected StringReader toStream(String xml) {
