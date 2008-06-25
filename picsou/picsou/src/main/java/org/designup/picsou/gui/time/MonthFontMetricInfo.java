@@ -14,8 +14,7 @@ public class MonthFontMetricInfo {
   public MonthFontMetricInfo(Graphics graphics) {
     for (int i = 1; i <= 12; i++) {
       monthInfos.put(i, new MonthSizes(new Size(".long", i, Lang.getKeys(), graphics),
-                                       new Size(".medium", i, Lang.getKeys(), graphics),
-                                       new Size(".short", i, Lang.getKeys(), graphics)));
+                                       new Size(".medium", i, Lang.getKeys(), graphics)));
     }
   }
 

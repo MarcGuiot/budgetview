@@ -6,8 +6,8 @@ import org.designup.picsou.gui.utils.FloatingAverage;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.KeyBuilder.init;
 import static org.globsframework.model.KeyBuilder.newKey;
+import org.globsframework.model.impl.ThreeFieldKey;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Utils;
 
@@ -241,10 +241,8 @@ public class MonthStatComputer implements ChangeSetListener {
   }
 
   private Key getKey(int month, Integer categoryId, int accountId) {
-    return
-      init(MonthStat.MONTH, month)
-        .setValue(MonthStat.CATEGORY, categoryId != null ? categoryId : Category.NONE)
-        .setValue(MonthStat.ACCOUNT, accountId)
-        .get();
+    return new ThreeFieldKey(MonthStat.MONTH, month,
+                             MonthStat.CATEGORY, categoryId != null ? categoryId : Category.NONE,
+                             MonthStat.ACCOUNT, accountId);
   }
 }

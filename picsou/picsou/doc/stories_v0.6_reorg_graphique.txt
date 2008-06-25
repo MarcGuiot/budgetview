@@ -15,14 +15,10 @@ Details transactions
 
 TransactionView
 ---------------
-* Colonne "categories" : enlever bouton + hyperlien tout le temps
-* Retirer bouton Split
-
 
 TimeView
 --------
 * Raccourcis mois en cours / tout
-* Elargir taille min
 * Escamoter boutons
 
 

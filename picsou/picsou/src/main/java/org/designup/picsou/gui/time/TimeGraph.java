@@ -101,6 +101,10 @@ public class TimeGraph {
     }
   }
 
+  public int getYearWeigth() {
+    return monthWidth * 12;
+  }
+
   public static void drawStringIn(Graphics2D graphics2D, int x, int y, String text) {
     graphics2D.drawString(text, x, y);
   }

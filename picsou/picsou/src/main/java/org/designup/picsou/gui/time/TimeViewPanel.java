@@ -116,7 +116,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   public void mouseDragged(MouseEvent e) {
     currentState = currentState.mouseMoved(e);
     if (e.getPoint().getX() < 0) {
-      if (scrollLeft()) {
+      if (scrollLeft(10)) {
         scrollRunnable.set(id, e);
         timer.stop();
         timer.start();
@@ -126,7 +126,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       }
     }
     else if (e.getPoint().getX() > getWidth()) {
-      if (scrollRigth()) {
+      if (scrollRigth(10)) {
         scrollRunnable.set(id, e);
         timer.stop();
         timer.start();
@@ -143,10 +143,10 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     repaint();
   }
 
-  private boolean scrollRigth() {
+  private boolean scrollRigth(int shift) {
     Selectable selected = timeGraph.getLastSelectable();
     if (!selected.isVisible().equals(Selectable.Visibility.FULLY)) {
-      translation -= 10;
+      translation -= shift;
       if (-translation + getWidth() > timeGraph.getWidth()) {
         translation = getWidth() - timeGraph.getWidth();
         return false;
@@ -158,10 +158,10 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     return false;
   }
 
-  private boolean scrollLeft() {
+  private boolean scrollLeft(int shift) {
     Selectable selected = timeGraph.getFirstSelectable();
     if (!selected.isVisible().equals(Selectable.Visibility.FULLY)) {
-      translation += 10;
+      translation += shift;
       if (translation > 0) {
         translation = 0;
         return false;
@@ -269,20 +269,26 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void goToFirst() {
-    selectFirstMonth();
+    do {
+    }
+    while (scrollLeft(10));
+    repaint();
   }
 
   public void goToLast() {
-    selectLastMonth();
+    do {
+    }
+    while (scrollRigth(10));
+    repaint();
   }
 
   public void goToPrevious() {
-    scrollLeft();
+    scrollLeft(timeGraph.getYearWeigth());
     repaint();
   }
 
   public void goToNext() {
-    scrollRigth();
+    scrollRigth(timeGraph.getYearWeigth());
     repaint();
   }
 
