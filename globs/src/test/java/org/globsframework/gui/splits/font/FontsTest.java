@@ -26,6 +26,13 @@ public class FontsTest extends UISpecTestCase {
     checkFontParsingError("Arial,blah,12", "Unknown font style 'blah' - should be one of plain|bold|italic");
   }
 
+  public void testDerivedFont() throws Exception {
+    Font font = Fonts.parseFont("-,italic,44");
+    assertEquals(Fonts.DEFAULT_LABEL_FONT.getFamily(), font.getFamily());
+    assertEquals(Font.ITALIC, font.getStyle());
+    assertEquals(44, font.getSize());
+  }
+
   public void testFontLocator() throws Exception {
     FontService service = new FontService();
     Font font = Fonts.parseFont("Arial,plain,10");

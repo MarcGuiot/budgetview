@@ -1,5 +1,7 @@
 package org.globsframework.gui.splits.layout;
 
+import org.globsframework.utils.Utils;
+
 import java.awt.*;
 
 public enum Anchor {
@@ -21,5 +23,22 @@ public enum Anchor {
 
   public int getValue() {
     return value;
+  }
+
+  public static Anchor get(String anchor) {
+    if ("right".equalsIgnoreCase(anchor)) {
+      return EAST;
+    }
+    if ("left".equalsIgnoreCase(anchor)) {
+      return WEST;
+    }
+    if ("top".equalsIgnoreCase(anchor)) {
+      return NORTH;
+    }
+    if ("bottom".equalsIgnoreCase(anchor)) {
+      return SOUTH;
+    }
+
+    return Utils.toEnum(Anchor.class, anchor);
   }
 }

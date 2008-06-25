@@ -57,17 +57,6 @@ public class SplitsUtils {
     throw new SplitsException(DIMENSION_ERROR_MESSAGE);
   }
 
-  public static <T extends Enum<T>> T toEnum(Class<T> enumClass, String name) throws SplitsException {
-    if (name == null) {
-      return null;
-    }
-    T result = T.valueOf(enumClass, toNiceUpperCase(name.trim()));
-    if (result == null) {
-      throw new SplitsException("No enum " + enumClass.getSimpleName() + " found for value: " + name);
-    }
-    return result;
-  }
-
   public static String toNiceUpperCase(String value) {
     StringBuilder builder = new StringBuilder();
     for (int i = 0; i < value.length(); i++) {

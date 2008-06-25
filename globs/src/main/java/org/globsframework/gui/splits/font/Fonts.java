@@ -3,15 +3,19 @@ package org.globsframework.gui.splits.font;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Fonts {
-  private static Pattern FONT_FORMAT = Pattern.compile("([A-z0-9 _]+),([a-z]+),([0-9]+)");
+  static Font DEFAULT_LABEL_FONT = new JLabel().getFont();
 
   static final String FONT_ERROR_MESSAGE =
     "Font should be defined like 'Arial,plain,12' or 'Courier,italic,8'";
+
+  private static Pattern FONT_FORMAT = Pattern.compile("([A-z0-9 _]+),([a-z]+),([0-9]+)");
+  private static Pattern DERIVED_FONT_FORMAT = Pattern.compile("-,([a-z]+),([0-9]+)");
 
   public static Font parseFont(String value, FontLocator locator) throws InvalidParameter {
     if (value.startsWith("$")) {
@@ -25,13 +29,21 @@ public class Fonts {
 
   public static Font parseFont(String desc) throws InvalidFormat {
     String trimmed = desc.trim();
-    Matcher shortMatcher = FONT_FORMAT.matcher(trimmed);
-    if (!shortMatcher.matches()) {
-      throw new InvalidFormat(FONT_ERROR_MESSAGE);
+    Matcher completeMatcher = FONT_FORMAT.matcher(trimmed);
+    if (completeMatcher.matches()) {
+    return new Font(completeMatcher.group(1),
+                    getFontStyle(completeMatcher.group(2)),
+                    Integer.parseInt(completeMatcher.group(3)));
     }
-    return new Font(shortMatcher.group(1),
-                    getFontStyle(shortMatcher.group(2)),
-                    Integer.parseInt(shortMatcher.group(3)));
+
+    Matcher derivedMatcher = DERIVED_FONT_FORMAT.matcher(trimmed);
+    if (derivedMatcher.matches()) {
+    return new Font(DEFAULT_LABEL_FONT.getFamily(),
+                    getFontStyle(derivedMatcher.group(1)),
+                    Integer.parseInt(derivedMatcher.group(2)));
+    }
+
+    throw new InvalidFormat(FONT_ERROR_MESSAGE);
   }
 
   private static int getFontStyle(String text) throws InvalidFormat {

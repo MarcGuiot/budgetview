@@ -31,6 +31,27 @@ public class SplitsPath {
     return selectors;
   }
 
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    SplitsPath that = (SplitsPath)o;
+
+    if (!Arrays.equals(selectors, that.selectors)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public int hashCode() {
+    return Arrays.hashCode(selectors);
+  }
+
   public String toString() {
     StringBuilder builder = new StringBuilder();
     for (Selector selector : selectors) {

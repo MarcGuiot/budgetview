@@ -1,16 +1,15 @@
 package org.globsframework.gui.splits.xml;
 
+import org.globsframework.gui.splits.SplitProperties;
+import org.globsframework.gui.splits.SplitsContext;
+import org.globsframework.gui.splits.styles.Selector;
+import org.globsframework.gui.splits.styles.StyleService;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.exceptions.InvalidFormat;
 import org.saxstack.parser.DefaultXmlNode;
 import org.saxstack.parser.XmlNode;
 import org.saxstack.utils.XmlUtils;
 import org.xml.sax.Attributes;
-import org.globsframework.utils.exceptions.InvalidFormat;
-import org.globsframework.utils.Strings;
-import org.globsframework.gui.splits.styles.Style;
-import org.globsframework.gui.splits.styles.StyleService;
-import org.globsframework.gui.splits.styles.Selector;
-import org.globsframework.gui.splits.SplitProperties;
-import org.globsframework.gui.splits.SplitsContext;
 
 public class StylesXmlNode extends DefaultXmlNode {
 
@@ -35,7 +34,7 @@ public class StylesXmlNode extends DefaultXmlNode {
       throw new InvalidFormat("A style selector cannot be empty");
     }
     SplitProperties properties = SplitsParser.createProperties(xmlAttrs, "selector");
-    styleService.add(new Style(Selector.parseSequence(selector), properties));
+    styleService.createStyle(Selector.parseSequence(selector), properties);
 
     return NO_CHILD_NODE;
   }

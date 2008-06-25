@@ -656,6 +656,10 @@
       <xs:enumeration value="south"/>
       <xs:enumeration value="southeast"/>
       <xs:enumeration value="southwest"/>
+      <xs:enumeration value="left"/>
+      <xs:enumeration value="right"/>
+      <xs:enumeration value="top"/>
+      <xs:enumeration value="bottom"/>
     </xs:restriction>
   </xs:simpleType>
 </xs:schema>

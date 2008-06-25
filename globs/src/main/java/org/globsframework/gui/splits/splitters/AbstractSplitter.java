@@ -12,6 +12,7 @@ import org.globsframework.gui.splits.utils.DoubleOperation;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.PropertySetter;
 import org.globsframework.gui.splits.utils.SplitsUtils;
+import org.globsframework.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -125,12 +126,12 @@ public abstract class AbstractSplitter implements Splitter {
   private void overrideStretch(ComponentStretch stretch) {
     String fill = properties.getString("fill", "defaultFill");
     if (fill != null) {
-      stretch.setFill(SplitsUtils.toEnum(Fill.class, fill));
+      stretch.setFill(Utils.toEnum(Fill.class, fill));
     }
 
     String anchor = properties.getString("anchor", "defaultAnchor");
     if (anchor != null) {
-      stretch.setAnchor(SplitsUtils.toEnum(Anchor.class, anchor));
+      stretch.setAnchor(Anchor.get(anchor));
     }
 
     Double weightX = properties.getDouble("weightX");

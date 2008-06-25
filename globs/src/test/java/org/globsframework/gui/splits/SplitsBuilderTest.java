@@ -189,6 +189,22 @@ public class SplitsBuilderTest extends SplitsTestCase {
                  Fill.BOTH, Anchor.CENTER, new Insets(0, 0, 0, 0));
   }
 
+  public void testCanUseLeftRighTopOrBottomInAnchors() throws Exception {
+    builder.add(aTable, aList, aButton);
+
+    JPanel panel =
+      (JPanel)parse(
+        "<grid>" +
+        "  <component ref='aButton' gridPos='(0,0)' anchor='left'/>" +
+        "  <component ref='aList' gridPos='(0,1)' anchor='right'/>" +
+        "  <component ref='aTable' gridPos='(1,0,1,2)' anchor='top'/>" +
+        "</grid>");
+
+    assertEquals(Anchor.WEST.getValue(), getConstraints(panel, aButton).anchor);
+    assertEquals(Anchor.EAST.getValue(), getConstraints(panel, aList).anchor);
+    assertEquals(Anchor.NORTH.getValue(), getConstraints(panel, aTable).anchor);
+  }
+
   public void testRequiresGridPosAttributesOnAllGridSubcomponents() throws Exception {
     builder.add(aTable, aList, aButton);
     checkParsingError("<grid>" +
