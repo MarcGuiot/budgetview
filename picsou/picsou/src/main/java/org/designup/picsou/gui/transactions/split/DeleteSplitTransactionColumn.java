@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.transactions.split;
 
-import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.Icons;
 import org.designup.picsou.gui.transactions.columns.AbstractTransactionEditor;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
+import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.Icons;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.*;
@@ -34,7 +34,7 @@ class DeleteSplitTransactionColumn extends AbstractTransactionEditor {
     });
   }
 
-  protected Component getComponent(Glob transaction) {
+  protected Component getComponent(Glob transaction, boolean render) {
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
     panel.add(Box.createRigidArea(new Dimension(3, 0)));

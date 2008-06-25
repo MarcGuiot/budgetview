@@ -1,18 +1,18 @@
 package org.designup.picsou.functests.checkers.converters;
 
 import org.designup.picsou.functests.checkers.TransactionChecker;
-import org.designup.picsou.gui.description.CategoryComparator;
-import org.designup.picsou.gui.description.CategoryStringifier;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.description.CategoryComparator;
+import org.designup.picsou.gui.description.CategoryStringifier;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.uispec4j.Button;
 import org.uispec4j.TableCellValueConverter;
-import org.uispec4j.TextBox;
 import org.uispec4j.UIComponent;
 import org.uispec4j.Window;
 
@@ -47,10 +47,10 @@ public class CategoryCellConverter implements TableCellValueConverter {
     builder.append(")");
 
     org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
-    UIComponent[] categoryLabels = panel.getUIComponents(TextBox.class);
+    UIComponent[] categoryLabels = panel.getUIComponents(Button.class);
     if (categoryLabels.length == 1) {
-      TextBox label = (TextBox)categoryLabels[0];
-      String text = label.getText();
+      Button hyperLink = (Button)categoryLabels[0];
+      String text = hyperLink.getLabel();
       if (text.equals(TransactionChecker.TO_CATEGORIZE)) {
         stringifyCategories(transaction, builder);
       }

@@ -83,19 +83,11 @@ public class TransactionChecker extends DataChecker {
     chooseCategoryViaKeyboard(subCategory, modifier);
   }
 
-  public SplitDialogChecker openSplitDialog(final int row) {
-    return new SplitDialogChecker(WindowInterceptor.getModalDialog(new Trigger() {
-      public void run() throws Exception {
-        getTable().editCell(row, TransactionView.AMOUNT_COLUMN_INDEX).getButton().click();
-      }
-    }));
-  }
-
   public CategoryChooserChecker openCategoryChooserDialog(final int... rows) {
     getTable().selectRows(rows);
     return new CategoryChooserChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
-        getTable().editCell(rows[0], TransactionView.CATEGORY_COLUMN_INDEX).getButton("Add").click();
+        getTable().editCell(rows[0], TransactionView.CATEGORY_COLUMN_INDEX).getButton().click();
       }
     }));
   }
@@ -103,7 +95,7 @@ public class TransactionChecker extends DataChecker {
   private void chooseCategoryViaButtonClick(String categoryName, final int row) {
     CategoryChooserChecker checker = new CategoryChooserChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
-        getTable().editCell(row, TransactionView.CATEGORY_COLUMN_INDEX).getButton("Add").click();
+        getTable().editCell(row, TransactionView.CATEGORY_COLUMN_INDEX).getButton().click();
       }
     }));
     checker.selectCategory(categoryName);

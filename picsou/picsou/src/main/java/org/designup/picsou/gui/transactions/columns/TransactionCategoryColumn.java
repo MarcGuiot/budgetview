@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -18,53 +18,60 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class TransactionCategoryColumn extends AbstractTransactionEditor {
   private GlobStringifier categoryStringifier;
-
-  private boolean isCategoryNone;
-
-  private Icon addIcon;
-  private Icon addRolloverIcon;
-  private Icon selectIcon;
-  private Icon selectRolloverIcon;
+  private HyperlinkButton rendererButton;
+  private JPanel rendererPanel;
+  private HyperlinkButton editorButton;
+  private JPanel editorPanel;
   private CategoryChooserAction categoryChooserAction;
+  private Glob transaction;
 
-  public TransactionCategoryColumn(CategoryChooserAction action, GlobTableView view,
+  public TransactionCategoryColumn(CategoryChooserAction categoryChooserAction, GlobTableView view,
                                    TransactionRendererColors transactionRendererColors,
                                    DescriptionService descriptionService,
                                    GlobRepository repository, Directory directory) {
     super(view, transactionRendererColors, descriptionService, repository, directory);
-    categoryChooserAction = action;
+    this.categoryChooserAction = categoryChooserAction;
+
     categoryStringifier = descriptionService.getStringifier(Category.TYPE);
-    addIcon = iconLocator.get("add.png");
-    addRolloverIcon = iconLocator.get("addrollover.png");
-    selectIcon = iconLocator.get("select.png");
-    selectRolloverIcon = iconLocator.get("selectrollover.png");
+    rendererPanel = new JPanel();
+    rendererPanel.setLayout(new BoxLayout(rendererPanel, BoxLayout.X_AXIS));
+    rendererButton = new HyperlinkButton(new ForwardAction());
+    rendererPanel.add(rendererButton);
+    rendererPanel.add(Box.createHorizontalGlue());
+    editorPanel = new JPanel();
+    editorPanel.setLayout(new BoxLayout(editorPanel, BoxLayout.X_AXIS));
+    editorPanel.getLayout();
+    editorButton = new HyperlinkButton(new ForwardAction());
+    editorPanel.add(editorButton);
+    editorPanel.add(Box.createHorizontalGlue());
   }
 
-  protected Component getComponent(final Glob transaction) {
-    isCategoryNone = Transaction.hasNoCategory(transaction);
+  protected Component getComponent(final Glob transaction, boolean render) {
+    HyperlinkButton button;
+    JPanel panel;
+    if (render) {
+      button = this.rendererButton;
+      panel = this.rendererPanel;
+    }
+    else {
+      this.transaction = transaction;
+      button = this.editorButton;
+      panel = this.editorPanel;
+    }
+    boolean categoryNone = Transaction.hasNoCategory(transaction);
     boolean multiCategorized = TransactionToCategory.hasCategories(transaction, repository);
-    JPanel panel = new JPanel();
-    panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-    addCategorySelector(panel, transaction);
-    if (!isCategoryNone && !multiCategorized) {
+    if (!categoryNone && !multiCategorized) {
+      button.setForeground(Color.BLUE);
       Glob category = repository.get(Key.create(Category.TYPE, transaction.get(Transaction.CATEGORY)));
-      addCategoryLabel(category, repository, panel);
+      button.setText(categoryStringifier.toString(category, repository));
       rendererColors.setTransactionBackground(panel, isSelected, row);
     }
     else {
-      JLabel label = createLabel(Lang.get("category.assignement.required"), Color.RED, Color.RED);
-      panel.add(label);
-      Gui.setRolloverColor(label, rendererColors.getRolloverCategoryColor());
-      label.addMouseListener(new MouseAdapter() {
-        public void mouseClicked(MouseEvent e) {
-          openCategoryChooser(transaction);
-        }
-      });
+      button.setForeground(Color.RED);
+      button.setText(Lang.get("category.assignement.required"));
       if (isSelected) {
         panel.setBackground(rendererColors.getSelectionErrorBgColor());
       }
@@ -77,17 +84,11 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor {
     return panel;
   }
 
-  private void addCategorySelector(JPanel panel, final Glob transaction) {
-    final JButton chooseCategoryButton = new JButton();
-    chooseCategoryButton.setAction(new AbstractAction() {
-      public void actionPerformed(ActionEvent event) {
-        openCategoryChooser(transaction);
-      }
-    });
-    Gui.setIcons(chooseCategoryButton, addIcon, addRolloverIcon, addRolloverIcon);
-    Gui.configureIconButton(chooseCategoryButton, "Add", new Dimension(13, 13));
-    panel.add(chooseCategoryButton);
-    panel.add(Box.createRigidArea(new Dimension(3, 0)));
+  class ForwardAction extends AbstractAction {
+
+    public void actionPerformed(ActionEvent e) {
+      openCategoryChooser(transaction);
+    }
   }
 
   private void openCategoryChooser(Glob transaction) {
@@ -103,46 +104,4 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor {
     }
   }
 
-  private void addCategoriesToPanel(JPanel panel, final Glob transaction) {
-    if (!isCategoryNone) {
-    }
-    else {
-      GlobList categories = TransactionToCategory.getCategories(transaction, repository)
-        .sort(categoryStringifier.getComparator(repository));
-      for (final Glob category : categories) {
-        final JLabel label = addCategoryLabel(category, repository, panel);
-        Gui.setRolloverColor(label, rendererColors.getRolloverCategoryColor());
-        label.addMouseListener(new MouseAdapter() {
-          public void mouseReleased(MouseEvent e) {
-            Transaction.setCategory(transaction, category, repository);
-          }
-        });
-        panel.add(Box.createRigidArea(new Dimension(2, 0)));
-        panel.add(createSelectButton(new AbstractAction() {
-          public void actionPerformed(ActionEvent event) {
-            Transaction.setCategory(transaction, category, repository);
-          }
-        }));
-        panel.add(Box.createRigidArea(new Dimension(3, 0)));
-      }
-    }
-    rendererColors.setTransactionBackground(panel, isSelected, row);
-  }
-
-  private JLabel addCategoryLabel(Glob category, GlobRepository globRepository, JPanel panel) {
-    String categoryToDisplay = categoryStringifier.toString(category, globRepository);
-    JLabel label = createLabel(categoryToDisplay, Color.WHITE, Color.BLACK);
-    panel.add(label);
-    return label;
-  }
-
-  private JButton createSelectButton(AbstractAction action) {
-    JButton selectButton = new JButton(action);
-    Gui.setIcons(selectButton,
-                 selectIcon,
-                 selectRolloverIcon,
-                 selectRolloverIcon);
-    Gui.configureIconButton(selectButton, "Select", new Dimension(13, 13));
-    return selectButton;
-  }
 }

@@ -22,7 +22,8 @@ public class UpgradeV1Test extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/11", -1.2, "Menu I", MasterCategory.FOOD)
       .load();
 
-    transactions.openSplitDialog(0)
+    transactions.getTable().selectRow(0);
+    transactionDetails.openSplitDialog(0)
       .enterAmount("-1")
       .enterNote("COCA")
       .selectCategory(MasterCategory.FOOD)

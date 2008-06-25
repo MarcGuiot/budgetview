@@ -13,7 +13,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .load();
 
-    transactions.openSplitDialog(0)
+    transactions.getTable().selectRow(0);
+    transactionDetails.openSplitDialog(0)
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -20.00, ""},
       })
@@ -56,7 +57,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .load();
 
-    SplitDialogChecker dialog = transactions.openSplitDialog(0)
+    transactions.getTable().selectRow(0);
+    SplitDialogChecker dialog = transactionDetails.openSplitDialog(0)
       .enterAmount("12.50")
       .enterNote("DVD")
       .selectCategory(MasterCategory.LEISURES)
@@ -82,7 +84,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .load();
 
-    transactions.openSplitDialog(0)
+    transactions.getTable().selectRow(0);
+    transactionDetails.openSplitDialog(0)
       .enterAmount("12.50")
       .selectCategory(MasterCategory.LEISURES)
       .add()
@@ -109,7 +112,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50, MasterCategory.LEISURES)
       .check();
 
-    transactions.openSplitDialog(1)
+    transactions.getTable().selectRow(1);
+    transactionDetails.openSplitDialog(1)
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -7.50, ""},
         {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, ""},
@@ -236,7 +240,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -20.0, "Auchan")
       .load();
 
-    transactions.openSplitDialog(0)
+    transactions.getTable().selectRow(0);
+    transactionDetails.openSplitDialog(0)
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.NONE, "Auchan", -20.0, ""},
       })
@@ -337,7 +342,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .load();
 
-    transactions.openSplitDialog(0)
+    transactions.getTable().selectRow(0);
+    transactionDetails.openSplitDialog(0)
       .checkDeleteEnabled(false, 0)
       .add("12.50", MasterCategory.LEISURES, "DVD")
       .checkTable(new Object[][]{
@@ -354,6 +360,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .load();
 
-    return transactions.openSplitDialog(0);
+    transactions.getTable().selectRow(0);
+    return transactionDetails.openSplitDialog(0);
   }
 }

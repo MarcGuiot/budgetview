@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.categories.columns;
 
-import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.components.AbstractRolloverEditor;
 import org.designup.picsou.gui.categories.actions.CreateCategoryAction;
 import org.designup.picsou.gui.categories.actions.DeleteCategoryAction;
 import org.designup.picsou.gui.categories.actions.RenameCategoryAction;
+import org.designup.picsou.gui.components.AbstractRolloverEditor;
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.Category;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.Anchor;
@@ -37,7 +37,7 @@ public class CategoryColumn extends AbstractRolloverEditor {
   private CategoryBackgroundPainter backgroundPainter;
 
   public CategoryColumn(CategoryLabelCustomizer customizer, CategoryBackgroundPainter painter, GlobTableView view,
-                 DescriptionService descriptionService, GlobRepository repository, final Directory directory) {
+                        DescriptionService descriptionService, GlobRepository repository, final Directory directory) {
     super(view, descriptionService, repository, directory);
     this.customizer = customizer;
     this.backgroundPainter = painter;
@@ -56,7 +56,7 @@ public class CategoryColumn extends AbstractRolloverEditor {
     categoryStringifier = descriptionService.getStringifier(Category.TYPE);
   }
 
-  protected Component getComponent(final Glob category) {
+  protected Component getComponent(final Glob category, boolean render) {
     JPanel panel = new JPanel();
     panel.setOpaque(false);
     panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));

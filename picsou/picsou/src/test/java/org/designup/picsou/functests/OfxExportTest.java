@@ -21,7 +21,8 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.2, MasterCategory.FOOD)
       .check();
 
-    transactions.openSplitDialog(0)
+    transactions.getTable().selectRow(0);
+    transactionDetails.openSplitDialog(0)
       .enterAmount("-1")
       .enterNote("COCA")
       .selectCategory(MasterCategory.FOOD)

@@ -43,7 +43,7 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     this.iconLocator = directory.get(IconLocator.class);
   }
 
-  protected abstract Component getComponent(Glob glob);
+  protected abstract Component getComponent(Glob glob, boolean render);
 
   public Object getCellEditorValue() {
     return null;
@@ -52,14 +52,14 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                  boolean hasFocus, int row, int column) {
     this.hasFocus = hasFocus;
-    return getComponentToRender(isSelected, value, row, column);
+    return getComponentToRender(isSelected, value, row, column, true);
   }
 
   public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
     hasFocus = true;
     selectionUpdater = new SelectionUpdaterListener(table, row, column);
     addSelectionUpdater();
-    return getComponentToRender(isSelected, value, row, column);
+    return getComponentToRender(isSelected, value, row, column, false);
   }
 
   public boolean isCellEditable(EventObject anEvent) {
@@ -98,11 +98,11 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     tableView.getComponent().getSelectionModel().addListSelectionListener(selectionUpdater);
   }
 
-  private Component getComponentToRender(boolean isSelected, Object value, int row, int column) {
+  private Component getComponentToRender(boolean isSelected, Object value, int row, int column, boolean isRender) {
     this.isSelected = isSelected;
     this.row = row;
     this.column = column;
-    return getComponent((Glob)value);
+    return getComponent((Glob)value, isRender);
   }
 
   private class SelectionUpdaterListener implements ListSelectionListener {

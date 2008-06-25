@@ -30,7 +30,7 @@ public class CategorizationTest extends ServerFuncTestCase {
 
     Table transactionTable = window.getTable(Transaction.TYPE.getName());
     WindowInterceptor.init(transactionTable.editCell(2, TransactionView.CATEGORY_COLUMN_INDEX)
-      .getButton("Add").triggerClick())
+      .getButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(final Window window) throws Exception {
           return new Trigger() {

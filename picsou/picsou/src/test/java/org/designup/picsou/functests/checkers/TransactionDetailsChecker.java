@@ -144,4 +144,9 @@ public class TransactionDetailsChecker extends DataChecker {
     TextBox bankDate = getPanel().getTextBox("bankDate");
     assertFalse(bankDate.isVisible());
   }
+
+  public SplitDialogChecker openSplitDialog(int row) {
+    return new SplitDialogChecker(WindowInterceptor
+      .getModalDialog(getPanel().getButton("splitLink").triggerClick()));
+  }
 }
