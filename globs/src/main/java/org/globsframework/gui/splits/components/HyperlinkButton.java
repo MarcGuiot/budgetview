@@ -18,13 +18,13 @@ public class HyperlinkButton extends JButton {
 
   public HyperlinkButton() {
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    setForeground(Color.RED);
+    setForeground(Color.BLUE);
   }
 
   public HyperlinkButton(Action action) {
     super(action);
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    setForeground(Color.RED);
+    setForeground(Color.BLUE);
   }
 
   public void setRolloverColor(Color rolloverColor) {
@@ -43,10 +43,10 @@ public class HyperlinkButton extends JButton {
   public void paint(Graphics g) {
     Graphics2D d = (Graphics2D)g;
     d.setFont(getFont());
-//    if (isOpaque()) {
-    d.setColor(getBackground());
-    d.clearRect(0, 0, getWidth(), getHeight());
-//    }
+    if (isOpaque()) {
+      d.setColor(getParent().getBackground());
+      d.clearRect(0, 0, getWidth(), getHeight());
+    }
     int x1 = (getWidth() - textWidth) / 2;
     int y1 = (getHeight() + fontHeight) / 2 - descent;
     if (getModel().isRollover() || getModel().isArmed()) {
@@ -58,10 +58,12 @@ public class HyperlinkButton extends JButton {
     else {
       d.setColor(getForeground());
     }
-    d.drawString(getText(), x1, y1);
-    d.drawLine(x1, y1 + 1, x1 + textWidth, y1 + 1);
+    String str = getText();
+    if (str != null) {
+      d.drawString(str, x1, y1);
+      d.drawLine(x1, y1 + 1, x1 + textWidth, y1 + 1);
+    }
   }
-
 
   public void setText(String text) {
     super.setText(text);
@@ -70,7 +72,7 @@ public class HyperlinkButton extends JButton {
 
   private void initFontMetrics() {
     FontMetrics fontMetrics = getFontMetrics(getFont());
-    textWidth = fontMetrics.stringWidth(getText());
+    textWidth = fontMetrics.stringWidth(getText() == null ? "" : getText());
     fontHeight = fontMetrics.getHeight();
     descent = fontMetrics.getDescent();
     setSize(textWidth, fontHeight);

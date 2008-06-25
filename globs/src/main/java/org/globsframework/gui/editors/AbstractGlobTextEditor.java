@@ -19,6 +19,8 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   protected Field field;
   private GlobList lastSelectedGlobs;
   protected COMPONENT_TYPE textComponent;
+  private Object valueForMultiSelection;
+  private boolean forceNotEditable;
 
   protected AbstractGlobTextEditor(Field field, COMPONENT_TYPE component, GlobRepository repository, Directory directory) {
     super(field.getGlobType(), repository, directory);
@@ -27,6 +29,16 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     initTextComponent();
     SelectionService service = directory.get(SelectionService.class);
     service.addListener(this, field.getGlobType());
+  }
+
+  public AbstractGlobTextEditor setMultiSelectionText(Object valueForMultiSelection) {
+    this.valueForMultiSelection = valueForMultiSelection;
+    return this;
+  }
+
+  public AbstractGlobTextEditor setEditable(boolean b) {
+    forceNotEditable = !b;
+    return this;
   }
 
   private void initTextComponent() {
@@ -81,13 +93,15 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     lastSelectedGlobs = selection.getAll(field.getGlobType());
     boolean selectionNotEmpty = !lastSelectedGlobs.isEmpty();
     textComponent.setEnabled(selectionNotEmpty);
-    textComponent.setEditable(selectionNotEmpty);
+    if (!forceNotEditable) {
+      textComponent.setEditable(selectionNotEmpty);
+    }
 
     Object value = null;
     for (Glob glob : lastSelectedGlobs) {
       Object globValue = glob.getValue(field);
       if ((value != null) && (!value.equals(globValue))) {
-        value = null;
+        value = valueForMultiSelection;
         break;
       }
       value = globValue;
