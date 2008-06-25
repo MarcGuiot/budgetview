@@ -9,13 +9,13 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
-import org.uispec4j.Table;
-import org.uispec4j.TableCellValueConverter;
-import org.uispec4j.Trigger;
+import org.globsframework.utils.Strings;
+import org.uispec4j.*;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -62,6 +62,10 @@ public class TransactionChecker extends DataChecker {
   public void assignCategory(MasterCategory category, final int... rows) {
     getTable().selectRows(rows);
     chooseCategoryViaButtonClick(DataChecker.getCategoryName(category), rows[0]);
+  }
+
+  public void assignCategoryWithoutSelection(MasterCategory category, int row) {
+    chooseCategoryViaButtonClick(DataChecker.getCategoryName(category), row);
   }
 
   public void assignCategory(String subCategory, int... rows) {
@@ -182,6 +186,7 @@ public class TransactionChecker extends DataChecker {
 
     public void dumpCode() {
       TransactionTypeDumper transactionDumper = new TransactionTypeDumper();
+      CategoryDumper categoryDumper = new CategoryDumper();
 
       StringBuilder builder = new StringBuilder();
       builder.append(".initContent()\n");
@@ -189,6 +194,7 @@ public class TransactionChecker extends DataChecker {
       for (int row = 0; row < table.getRowCount(); row++) {
         String date = table.getContentAt(row, 0).toString();
         String type = table.getContentAt(row, 1, transactionDumper).toString();
+        String category = table.getContentAt(row, 1, categoryDumper).toString();
         String label = table.getContentAt(row, 2).toString();
         String amount = table.getContentAt(row, 3).toString();
         String note = table.getContentAt(row, 4).toString();
@@ -198,7 +204,11 @@ public class TransactionChecker extends DataChecker {
           .append(type).append(", \"")
           .append(label).append("\", \"")
           .append(note).append("\", ")
-          .append(amount).append(")\n");
+          .append(amount);
+        if (Strings.isNotEmpty(category)) {
+          builder.append(", ").append(category);
+        }
+        builder.append(")\n");
       }
       builder.append(".check();\n");
       System.out.println(builder.toString());
@@ -212,6 +222,32 @@ public class TransactionChecker extends DataChecker {
           return "";
         }
         return "TransactionType." + type.getName().toUpperCase();
+      }
+    }
+
+    private class CategoryDumper implements TableCellValueConverter {
+      public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
+        Glob transaction = (Glob)modelObject;
+        Integer categoryId = transaction.get(Transaction.CATEGORY);
+        if (categoryId == null) {
+          return "";
+        }
+
+        MasterCategory master = MasterCategory.findMaster(categoryId);
+        if (master == MasterCategory.NONE) {
+          return "";
+        }
+        if (master != null) {
+          return "MasterCategory." + master.name().toUpperCase();
+        }
+
+        org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
+        UIComponent[] categoryLabels = panel.getUIComponents(TextBox.class);
+        if (categoryLabels.length != 1) {
+          return "???";
+        }
+        TextBox label = (TextBox)categoryLabels[0];
+        return "\"" + label.getText() + "\"";
       }
     }
 

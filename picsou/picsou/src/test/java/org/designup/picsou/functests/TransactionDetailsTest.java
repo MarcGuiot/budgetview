@@ -82,7 +82,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.categorizeWithLink(MasterCategory.FOOD);
     transactionDetails.checkCategory(MasterCategory.FOOD);
     transactions.getTable().selectRow(2);
-    transactionDetails.categorizeWithButton(MasterCategory.EDUCATION);
+    transactionDetails.categorizeWithLink(MasterCategory.EDUCATION);
     transactionDetails.checkCategory(MasterCategory.EDUCATION);
     transactions.initContent()
       .add("18/06/2008", TransactionType.VIREMENT, "Quick", "", 10.00, MasterCategory.FOOD)

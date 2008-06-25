@@ -1,19 +1,20 @@
 package org.designup.picsou.gui.transactions.categorization;
 
-import org.designup.picsou.gui.categories.columns.CategoryButtonsPanel;
 import org.designup.picsou.gui.categories.actions.CreateCategoryAction;
 import org.designup.picsou.gui.categories.actions.DeleteCategoryAction;
 import org.designup.picsou.gui.categories.actions.RenameCategoryAction;
+import org.designup.picsou.gui.categories.columns.CategoryButtonsPanel;
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
@@ -41,6 +42,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private ArrayList<JLabel> selectedCategories = new ArrayList<JLabel>();
   private CategoryChooserCallback callback;
   private TransactionRendererColors colors;
+  private Directory directory;
   private GlobRepository repository;
   private GlobStringifier stringifier;
   private PicsouDialog dialog;
@@ -52,16 +54,14 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private CreateCategoryAction addCategoryAction;
   private DeleteCategoryAction deleteCategoryAction;
   private RenameCategoryAction renameCategoryAction;
-  private ColorService colorService;
-  private IconLocator iconLocator;
   private SelectionService selectionService;
-  private JPanel contentPanel;
   protected Font masterFont;
 
   public CategoryChooserDialog(CategoryChooserCallback callback, TransactionRendererColors colors,
                                GlobRepository repository, Directory directory) {
     this.callback = callback;
     this.colors = colors;
+    this.directory = directory;
 
     Directory localDirectory = new DefaultDirectory(directory);
     selectionService = new SelectionService();
@@ -73,8 +73,6 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
     this.stringifier = localDirectory.get(DescriptionService.class).getStringifier(Category.TYPE);
     repository.addChangeListener(this);
-    iconLocator = localDirectory.get(IconLocator.class);
-    colorService = localDirectory.get(ColorService.class);
     addCategoryAction = new CreateCategoryAction(repository, localDirectory) {
       public JDialog getDialog(ActionEvent e) {
         return PicsouDialog.create(dialog);
@@ -90,27 +88,25 @@ public class CategoryChooserDialog implements ChangeSetListener {
   }
 
   public void show(GlobList selectedTransactions) {
-    dialog = PicsouDialog.create(mainFrame, Lang.get("choose.category.title"));
-    if (contentPanel == null || needToRebuild) {
-      contentPanel = prepareDialogContent();
+    if (needToRebuild) {
+      dialog = PicsouDialog.create(mainFrame, Lang.get("choose.category.title"));      
+      loadDialogContent();
       needToRebuild = false;
     }
-    dialog.getContentPane().add(contentPanel);
-    dialog.pack();
     this.selectedTransactions = selectedTransactions;
     setSelectedCategories();
-
-//    ColorServiceEditor.showInFrame(colorService, dialog);
-
     GuiUtils.showCentered(dialog);
+  }
+
+  private void close() {
+    dialog.setVisible(false);
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(Category.TYPE)) {
       if (dialog.isVisible()) {
         dialog.getContentPane().removeAll();
-        dialog.getContentPane().add(prepareDialogContent());
-        dialog.pack();
+        loadDialogContent();
         setSelectedCategories();
       }
       else {
@@ -123,7 +119,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
     needToRebuild = true;
   }
 
-  private JPanel prepareDialogContent() {
+  private void loadDialogContent() {
     categoryIdToJLabel.clear();
     firstPartCategories.clear();
     secondPartCategories.clear();
@@ -131,17 +127,23 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
     splitCategories();
 
-    SplitsBuilder splitsBuilder = new SplitsBuilder(colorService, iconLocator);
-    splitsBuilder.add("first", getCategoriesPanel(firstPartCategories));
-    splitsBuilder.add("second", getCategoriesPanel(secondPartCategories));
-    splitsBuilder.add("third", getCategoriesPanel(thirdPartCategories));
-    splitsBuilder.add("close", new AbstractAction(Lang.get("close")) {
-      public void actionPerformed(ActionEvent e) {
-        close();
-      }
-    });
-
-    return (JPanel)splitsBuilder.parse(getClass(), "/layout/categoryChooser.splits");
+    SplitsBuilder.init(directory)
+      .init(getClass(), "/layout/categoryChooser.splits")
+      .add("first", getCategoriesPanel(firstPartCategories))
+      .add("second", getCategoriesPanel(secondPartCategories))
+      .add("third", getCategoriesPanel(thirdPartCategories))
+      .add("close", new AbstractAction(Lang.get("close")) {
+        public void actionPerformed(ActionEvent e) {
+          close();
+        }
+      })
+      .addLoader(new SplitsLoader() {
+        public void load(Component component) {
+          dialog.setContentPane((Container)component);
+          dialog.pack();
+        }
+      })
+      .load();
   }
 
   private JPanel getCategoriesPanel(GlobList categories) {
@@ -233,10 +235,6 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
     panel.add(label);
     return label;
-  }
-
-  private void close() {
-    dialog.setVisible(false);
   }
 
   private void splitCategories() {

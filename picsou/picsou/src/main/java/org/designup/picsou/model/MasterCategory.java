@@ -52,7 +52,7 @@ public enum MasterCategory {
     return id;
   }
 
-  public static MasterCategory getMaster(Integer categoryId) throws ItemNotFound {
+  public static MasterCategory findMaster(Integer categoryId) throws ItemNotFound {
     if (categoryId == null) {
       return null;
     }
@@ -61,7 +61,15 @@ public enum MasterCategory {
         return master;
       }
     }
-    throw new ItemNotFound("Unknown category " + categoryId);
+    return null;
+  }
+
+  public static MasterCategory getMaster(Integer categoryId) throws ItemNotFound {
+    MasterCategory master = findMaster(categoryId);
+    if (master == null) {
+      throw new ItemNotFound("Unknown category " + categoryId);
+    }
+    return master;
   }
 
   public Key getKey() {

@@ -38,8 +38,6 @@ public class CategoryCellConverter implements TableCellValueConverter {
   }
 
   public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-    org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
-    UIComponent[] categoryLabels = panel.getUIComponents(TextBox.class);
 
     StringBuilder builder = new StringBuilder();
     Glob transaction = (Glob)modelObject;
@@ -48,6 +46,8 @@ public class CategoryCellConverter implements TableCellValueConverter {
     builder.append(TransactionType.getType(transactionType).getName());
     builder.append(")");
 
+    org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
+    UIComponent[] categoryLabels = panel.getUIComponents(TextBox.class);
     if (categoryLabels.length == 1) {
       TextBox label = (TextBox)categoryLabels[0];
       String text = label.getText();

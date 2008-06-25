@@ -85,7 +85,8 @@ public class SeriesView implements GlobSelectionListener {
   }
 
   private Component parseSplitsFile(SplitsBuilder builder, String fileName) {
-    return builder.parse(getClass().getResourceAsStream(fileName));
+    builder.init(getClass(), fileName);
+    return builder.load();
   }
 
   private void clearPanel() {

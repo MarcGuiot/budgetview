@@ -3,6 +3,7 @@ package org.designup.picsou.gui.startup;
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -18,26 +19,36 @@ public class DateFormatSelectionPanel {
   private String selectedFormat;
   private Callback callback;
   private JLabel messageLabel;
+  protected GlobsPanelBuilder builder;
 
   public DateFormatSelectionPanel(GlobRepository repository, Directory directory, final Callback callback,
                                   JLabel messageLabel) {
     this.callback = callback;
     this.messageLabel = messageLabel;
-    GlobsPanelBuilder builder = GlobsPanelBuilder.init(repository, directory);
     combo = new JComboBox();
-    builder.add("dateFormatCombo", combo);
     combo.setRenderer(new DateFormatRenderer());
-    panel = (JPanel)builder.parse(getClass(), "/layout/dateFormatSelectionPanel.splits");
     combo.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         callback.dateFormatSelected(getSelectedFormat());
       }
     });
 
+    builder = new GlobsPanelBuilder(getClass(), "/layout/dateFormatSelectionPanel.splits",
+                                    repository, directory);
+    builder.add("dateFormatCombo", combo);
+    builder.addLoader(new SplitsLoader() {
+      public void load(Component component) {
+        panel = (JPanel)component;
+      }
+    });
   }
 
   interface Callback {
     void dateFormatSelected(String format);
+  }
+
+  public GlobsPanelBuilder getBuilder() {
+    return builder;
   }
 
   public JPanel getPanel() {

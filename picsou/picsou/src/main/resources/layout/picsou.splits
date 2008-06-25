@@ -45,7 +45,7 @@
                          intercellSpacing="(0,0)" showGrid="false" rowHeight="18"/>
                 </scrollPane>
                 <column>
-                  <panel ref="transactionDetails"/>
+                  <panel ref="transactionDetails" marginLeft="10"/>
                   <filler fill="vertical"/>
                 </column>
               </row>

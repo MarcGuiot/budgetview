@@ -61,7 +61,7 @@ public abstract class AbstractExoView implements ExoView {
 
   public JPanel getPanel() {
     String xml = createLayout();
-    return (JPanel)builder.parse(new StringReader(xml));
+    return (JPanel)builder.doParse(new StringReader(xml));
   }
 
   public String createLayout() {

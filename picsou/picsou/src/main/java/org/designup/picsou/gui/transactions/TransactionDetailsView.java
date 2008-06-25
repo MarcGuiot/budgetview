@@ -38,11 +38,13 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
-    builder.add("transactionDetails", createPanel());
+    builder.add("transactionDetails", createPanelBuilder());
   }
 
-  private JPanel createPanel() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(repository, directory);
+  private GlobsPanelBuilder createPanelBuilder() {
+    GlobsPanelBuilder builder =
+      new GlobsPanelBuilder(TransactionDetailsView.class, "/layout/transactionDetails.splits",
+                            repository, directory);
     builder.add("transactionType",
                 addLabel(new GlobListFieldStringifier(Transaction.TRANSACTION_TYPE, "", "") {
                   protected String stringify(Object value) {
@@ -94,10 +96,9 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
 
     builder.add("originalLabel",
                 addLabel(new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, ""), true));
-
     builder.add("bankDate",
                 addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true));
-    return (JPanel)builder.parse(TransactionDetailsView.class, "/layout/transactionDetails.splits");
+    return builder;
   }
 
   private GlobLabelView addLabel(GlobListStringifier stringifier, boolean autoHide) {

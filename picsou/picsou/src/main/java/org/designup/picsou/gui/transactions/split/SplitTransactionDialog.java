@@ -23,6 +23,7 @@ import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.components.JStyledPanel;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -106,17 +107,22 @@ public class SplitTransactionDialog {
     categoryChooserAction = new CategoryChooserAction(rendererColors, localRepository, localDirectory);
     categoryStringifier = descriptionService.getStringifier(Category.TYPE);
 
-    GlobsPanelBuilder builder = GlobsPanelBuilder.init(localRepository, localDirectory);
+    dialog = PicsouDialog.create(directory.get(JFrame.class), Lang.get("split.transaction.title"));
+
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/splitTransaction.splits",
+                                                      localRepository, localDirectory);
     addInitialTransactionPanel(builder);
     addSwitcher(builder);
     addAmountPanel(builder);
     addTable(builder);
     builder.add("ok", new OkAction());
     builder.add("cancel", new CancelAction());
-
-    JPanel panel = (JPanel)builder.parse(getClass(), "/layout/splitTransaction.splits");
-    dialog = PicsouDialog.create(directory.get(JFrame.class), Lang.get("split.transaction.title"));
-    dialog.getContentPane().add(panel);
+    builder.addLoader(new SplitsLoader() {
+      public void load(Component component) {
+        dialog.setContentPane((JPanel)component);
+      }
+    });
+    builder.load();
 
     toggleButton.setSelected(true);
     showAddAmountPanel();

@@ -97,13 +97,10 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor {
   }
 
   private void selectTransactionIfNeeded(Glob transaction) {
-    int[] selectedRows = tableView.getComponent().getSelectedRows();
-    for (int selectedRow : selectedRows) {
-      if (selectedRow == row) {
-        return;
-      }
+    GlobList selection = tableView.getCurrentSelection();
+    if (!selection.contains(transaction)) {
+      tableView.select(transaction);
     }
-    selectionService.select(transaction);
   }
 
   private void addCategoriesToPanel(JPanel panel, final Glob transaction) {

@@ -6,6 +6,7 @@ import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -15,6 +16,7 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class AccountEditionPanel {
   private JPanel panel;
@@ -22,6 +24,7 @@ public class AccountEditionPanel {
   protected SelectionService selectionService;
   private GlobRepository repository;
   private JLabel messageLabel;
+  private GlobsPanelBuilder builder;
 
   public AccountEditionPanel(final GlobRepository repository, Directory directory, JLabel messageLabel) {
     this.repository = repository;
@@ -31,7 +34,9 @@ public class AccountEditionPanel {
     selectionService = new SelectionService();
     localDirectory.add(selectionService);
 
-    GlobsPanelBuilder builder = GlobsPanelBuilder.init(repository, localDirectory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/accountEditionPanel.splits",
+                                     repository, localDirectory);
+
     builder.addCombo("accountBank", Bank.TYPE).setSelectionHandler(new GlobComboView.GlobSelectionHandler() {
       public void processSelection(Glob bank) {
         if (bank == null) {
@@ -46,9 +51,23 @@ public class AccountEditionPanel {
     });
     builder.addEditor(Account.NAME);
     builder.addEditor(Account.NUMBER);
+    builder.addLoader(new SplitsLoader() {
+      public void load(Component component) {
+        panel = (JPanel)component;
+        panel.setVisible(false);
+      }
+    });
+  }
 
-    panel = (JPanel)builder.parse(getClass(), "/layout/accountEditionPanel.splits");
-    panel.setVisible(false);
+  public GlobsPanelBuilder getBuilder() {
+    return builder;
+  }
+
+  public JPanel getPanel() {
+    if (panel == null) {
+      builder.load();
+    }
+    return panel;
   }
 
   public void setMessage(String key) {
@@ -74,10 +93,6 @@ public class AccountEditionPanel {
     }
     messageLabel.setText("");
     panel.setVisible(account != null);
-  }
-
-  public JPanel getPanel() {
-    return panel;
   }
 
   public boolean check() {

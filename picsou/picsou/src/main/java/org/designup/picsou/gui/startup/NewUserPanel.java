@@ -7,6 +7,7 @@ import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -16,15 +17,14 @@ import java.io.File;
 import java.util.Collections;
 
 public class NewUserPanel {
-  private JPanel panel;
 
   public static void show(GlobRepository repository, Directory directory, MainWindow mainWindow) {
-    NewUserPanel panel = new NewUserPanel(repository, directory, mainWindow);
-    mainWindow.setPanel(panel.panel);
+    new NewUserPanel(repository, directory, mainWindow);
   }
 
   private NewUserPanel(final GlobRepository repository, final Directory directory, final MainWindow mainWindow) {
-    GlobsPanelBuilder builder = GlobsPanelBuilder.init(repository, directory);
+    GlobsPanelBuilder builder =
+      new GlobsPanelBuilder(getClass(), "/layout/newUserPanel.splits", repository, directory);
     builder.add("wave", new JWavePanel(directory.get(ColorService.class)));
     ImportPanel importPanel = new ImportPanel(Lang.get("login.skip"), Collections.<File>emptyList(), new DialogOwner() {
       public Window getOwner() {
@@ -35,7 +35,14 @@ public class NewUserPanel {
         MainPanel.show(repository, directory, mainWindow);
       }
     };
-    builder.add("content", importPanel.getPanel());
-    panel = (JPanel)builder.parse(getClass(), "/layout/newUserPanel.splits");
+    builder.add("content", importPanel.getBuilder());
+
+    builder.addLoader(new SplitsLoader() {
+      public void load(Component component) {
+        JPanel panel = (JPanel)component;
+        mainWindow.setPanel(panel);
+      }
+    });
+    builder.load();
   }
 }

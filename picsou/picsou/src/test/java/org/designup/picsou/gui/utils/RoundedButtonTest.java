@@ -31,7 +31,7 @@ public class RoundedButtonTest {
     frame.pack();
     frame.setSize(300, 200);
 
-    ColorServiceEditor.showInFrame(directory.get(ColorService.class), frame);
+//    ColorServiceEditor.showInFrame(directory.get(ColorService.class), frame);
 
     frame.setVisible(true);
   }

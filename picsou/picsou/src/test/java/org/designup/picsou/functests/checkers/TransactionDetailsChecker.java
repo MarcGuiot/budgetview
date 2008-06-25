@@ -68,7 +68,6 @@ public class TransactionDetailsChecker extends DataChecker {
     Button hyperlink = getPanel().getButton("categoryChooserLink");
     assertThat(hyperlink.textEquals(Lang.get("category.assignement.required")));
     assertTrue(hyperlink.isVisible());
-    assertTrue(getPanel().getButton("categoryChooserButton").isVisible());
   }
 
   public void checkManyCategories() {
@@ -83,10 +82,6 @@ public class TransactionDetailsChecker extends DataChecker {
 
   public void categorizeWithLink(MasterCategory category) {
     categorize(category, getPanel().getButton("categoryChooserLink"));
-  }
-
-  public void categorizeWithButton(MasterCategory category) {
-    categorize(category, getPanel().getButton("categoryChooserButton"));
   }
 
   private void categorize(MasterCategory category, Button button) {

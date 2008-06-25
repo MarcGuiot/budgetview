@@ -7,12 +7,8 @@ import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.server.ServerDirectory;
-import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorServiceEditor;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
-
-import java.awt.*;
 
 public class MainWindowLauncher {
   private static final String COLOR_SELECTOR_PROPERTY = "ENABLE_COLOR_SELECTOR";
@@ -49,13 +45,6 @@ public class MainWindowLauncher {
     MainPanel.show(init.getRepository(), init.getDirectory(), window);
     window.show();
 
-    if ("true".equalsIgnoreCase(System.getProperty(COLOR_SELECTOR_PROPERTY))) {
-      showColorEditor(init.getDirectory(), window.getFrame());
-    }
     return init.getRepository();
-  }
-
-  public static void showColorEditor(Directory directory, Container container) {
-    ColorServiceEditor.showInFrame(directory.get(ColorService.class), container);
   }
 }

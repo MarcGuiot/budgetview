@@ -16,6 +16,7 @@ import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -33,6 +34,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.*;
 
 public class CategoryPropagationDialog {
   private static final int DATE_COLUMN_INDEX = 0;
@@ -64,16 +66,19 @@ public class CategoryPropagationDialog {
     SelectionService selectionService = new SelectionService();
     localDirectory.add(selectionService);
     descriptionService = localDirectory.get(DescriptionService.class);
-    rendererColors = new TransactionRendererColors(localDirectory);
+    dialog = PicsouDialog.create(directory.get(JFrame.class));
 
-    GlobsPanelBuilder builder = GlobsPanelBuilder.init(localRepository, localDirectory);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categoryPropagation.splits",
+                                                      localRepository, localDirectory);
     addTable(builder);
     builder.add("ok", new OkAction());
     builder.add("cancel", new CancelAction());
-
-    JPanel panel = (JPanel)builder.parse(getClass(), "/layout/categoryPropagation.splits");
-    dialog = PicsouDialog.create(directory.get(JFrame.class));
-    dialog.getContentPane().add(panel);
+    builder.addLoader(new SplitsLoader() {
+      public void load(Component component) {
+        JPanel panel = (JPanel)component;
+        dialog.setContentPane(panel);
+      }
+    });
   }
 
   public void show() {

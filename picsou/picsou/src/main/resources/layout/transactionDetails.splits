@@ -28,7 +28,6 @@
         <label text="$transacation.details.category"/>
         <row>
           <filler fill="horizontal"/>
-          <!--<button icon="add.png" rolloverIcon="addrollover.png" ref="categoryChooserButton"/>-->
           <hyperlink ref="categoryChooserLink"/>
           <filler fill="horizontal"/>
         </row>

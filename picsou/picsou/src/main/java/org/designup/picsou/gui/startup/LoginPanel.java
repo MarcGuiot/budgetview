@@ -13,6 +13,7 @@ import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.Strings;
@@ -85,7 +86,8 @@ public class LoginPanel {
     setVisible(creationComponents, false);
 
     ColorService colorService = directory.get(ColorService.class);
-    SplitsBuilder builder = SplitsBuilder.init(directory)
+    SplitsBuilder.init(directory)
+      .init(getClass(), "/layout/loginPanel.splits")
       .add("wave", new JWavePanel(colorService))
       .add("name", userField)
       .add("password", passwordField)
@@ -93,8 +95,14 @@ public class LoginPanel {
       .add("confirmLabel", confirmPasswordLabel)
       .add("createAccountCheckBox", creationCheckBox)
       .add("message", messageLabel)
-      .add("login", loginButton);
-    panel = (JPanel)builder.parse(getClass(), "/layout/loginPanel.splits");
+      .add("login", loginButton)
+      .addLoader(new SplitsLoader() {
+        public void load(Component component) {
+          panel = (JPanel)component;
+          mainWindow.setPanel(panel);
+        }
+      })
+      .load();
   }
 
   private void login() {

@@ -27,8 +27,8 @@ public class PicsouSampleGenerator {
   public static void main(String[] args) throws Exception {
     PicsouSampleGenerator generator = new PicsouSampleGenerator();
     generator.init();
-    generator.run(200701, 200703);
-    generator.write("picsou/dev/samples/sample_small.ofx");
+    generator.run(200001, 200703);
+    generator.write("tmp/sample_huge.ofx");
   }
 
   private GlobRepository repository;
@@ -149,7 +149,9 @@ public class PicsouSampleGenerator {
                              FieldValue.value(Transaction.ORIGINAL_LABEL, label),
                              FieldValue.value(Transaction.LABEL, label),
                              FieldValue.value(Transaction.MONTH, month),
-                             FieldValue.value(Transaction.DAY, day));
+                             FieldValue.value(Transaction.DAY, day),
+                             FieldValue.value(Transaction.BANK_MONTH, month),
+                             FieldValue.value(Transaction.BANK_DAY, day));
   }
 
   private void run(int min, int max) {

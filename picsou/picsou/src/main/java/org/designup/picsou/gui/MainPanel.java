@@ -14,12 +14,12 @@ import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.BalanceView;
 import org.designup.picsou.gui.transactions.InformationView;
-import org.designup.picsou.gui.TransactionSelection;
-import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
+import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -31,27 +31,29 @@ import java.awt.*;
 
 public class MainPanel {
   private JFrame parent;
-  private JPanel panel;
   private ImportFileAction importFileAction;
   private ExportFileAction exportFileAction;
   private ExitAction exitAction;
+  protected GlobsPanelBuilder builder;
+  private MainWindow mainWindow;
 
   public static MainPanel show(GlobRepository repository, Directory directory, MainWindow mainWindow) {
-    MainPanel panel = new MainPanel(repository, directory, mainWindow.getFrame());
-    mainWindow.setPanel(panel.panel);
+    MainPanel panel = new MainPanel(repository, directory, mainWindow);
     mainWindow.getFrame().setRepository(repository);
     return panel;
   }
 
-  private MainPanel(GlobRepository repository, Directory directory, JFrame parent) {
-    this.parent = parent;
+  private MainPanel(GlobRepository repository, Directory directory, MainWindow mainWindow) {
+    this.mainWindow = mainWindow;
+    this.parent = mainWindow.getFrame();
     directory.add(JFrame.class, parent);
+    builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
     AccountView accountView = new AccountView(repository, directory);
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
-    TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory); 
+    TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory);
     BalanceView balanceView = new BalanceView(repository, directory);
     CategoryView categoryView = new CategoryView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
@@ -60,19 +62,19 @@ public class MainPanel {
     exportFileAction = new ExportFileAction(repository, directory);
     exitAction = new ExitAction(directory);
 
-    panel = createPanel(repository, directory,
-                        new TitleView(repository, directory),
-                        new InformationView(repository, directory, transactionSelection),
-                        accountView,
-                        transactionView,
-                        transactionDetailsView,
-                        balanceView,
-                        timeView,
-                        categoryView,
-                        new CardView(repository, directory, transactionSelection),
-                        new HistoricalChart(repository, directory),
-                        new CategoriesChart(repository, directory, transactionSelection),
-                        new ScorecardView(repository, directory, transactionSelection));
+    createPanel(directory,
+                new TitleView(repository, directory),
+                new InformationView(repository, directory, transactionSelection),
+                accountView,
+                transactionView,
+                transactionDetailsView,
+                balanceView,
+                timeView,
+                categoryView,
+                new CardView(repository, directory, transactionSelection),
+                new HistoricalChart(repository, directory),
+                new CategoriesChart(repository, directory, transactionSelection),
+                new ScorecardView(repository, directory, transactionSelection));
 
     accountView.selectFirst();
     timeView.selectLastMonth();
@@ -81,15 +83,21 @@ public class MainPanel {
     createMenuBar(parent);
   }
 
-  private JPanel createPanel(GlobRepository repository, Directory directory, View... views) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(repository, directory);
+  private void createPanel(Directory directory, View... views) {
     for (View view : views) {
       view.registerComponents(builder);
     }
     builder.add("chartAreaPanel", new JWavePanel(directory.get(ColorService.class)));
     builder.add("verticalSplit", createSplitPane());
     builder.add("horizontalSplit", createSplitPane());
-    return (JPanel)builder.parse(MainPanel.class, "/layout/picsou.splits");
+    builder.addLoader(new SplitsLoader() {
+      public void load(Component component) {
+        JPanel panel = (JPanel)component;
+        mainWindow.setPanel(panel);
+      }
+    });
+
+    builder.load();
   }
 
   public void createMenuBar(JFrame frame) {
@@ -116,10 +124,6 @@ public class MainPanel {
       }
     });
     return splitPane;
-  }
-
-  public JPanel getJPanel() {
-    return panel;
   }
 
   public void openInFront() {

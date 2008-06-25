@@ -43,7 +43,6 @@ public abstract class ImportPanel {
   private JStyledPanel filePanel = new JStyledPanel();
   private final JTextField fileField = new JTextField();
   private JButton fileButton = new JButton();
-  private JPanel panel;
   protected CardHandler cardHandler;
   private JLabel fileNameLabel = new JLabel();
 
@@ -65,8 +64,11 @@ public abstract class ImportPanel {
   private boolean step1 = true;
   private boolean step2 = true;
   private OpenRequestManager openRequestManager;
+  protected GlobsPanelBuilder builder;
+  private DialogOwner owner;
 
   protected ImportPanel(String textForCloseButton, List<File> files, final DialogOwner owner, final GlobRepository repository, Directory directory) {
+    this.owner = owner;
     updateFileField(files);
     openRequestManager = directory.get(OpenRequestManager.class);
     openRequestManager.pushCallback(new OpenRequestManager.Callback() {
@@ -91,7 +93,7 @@ public abstract class ImportPanel {
     localDirectory.add(new SelectionService());
     fileButton.setAction(new BrowseFilesAction());
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(localRepository, localDirectory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/importPanel.splits", localRepository, localDirectory);
     //Step 1
     builder.add("message", messageLabel);
     builder.add("filePanel", filePanel);
@@ -118,7 +120,7 @@ public abstract class ImportPanel {
                                                                 dateRenderer.changeDateFormat(format);
                                                               }
                                                             }, importMessageLabel);
-    builder.add("dateSelectionPanel", dateFormatSelectionPanel.getPanel());
+    builder.add("dateSelectionPanel", dateFormatSelectionPanel.getBuilder());
     sessionDirectory = new DefaultDirectory(localDirectory);
     SelectionService selectionService = new SelectionService();
     sessionDirectory.add(selectionService);
@@ -158,7 +160,7 @@ public abstract class ImportPanel {
     builder.add("bankEntityEditionPanel", bankEntityEditionPanel.getPanel());
 
     accountEditionPanel = new AccountEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
-    builder.add("accountEditionPanel", accountEditionPanel.getPanel());
+    builder.add("accountEditionPanel", accountEditionPanel.getBuilder());
 
     builder.add("importMessage", importMessageLabel);
 
@@ -181,8 +183,6 @@ public abstract class ImportPanel {
       }
     });
     cardHandler = builder.addCardHandler("cardHandler");
-    panel = (JPanel)builder.parse(getClass(), "/layout/importPanel.splits");
-
   }
 
   private void loadLocalRepository(GlobRepository repository) {
@@ -252,8 +252,8 @@ public abstract class ImportPanel {
     messageLabel.setText("<html><font color=red>" + Lang.get(key) + "</font></html>");
   }
 
-  public JPanel getPanel() {
-    return panel;
+  public GlobsPanelBuilder getBuilder() {
+    return builder;
   }
 
   private class ImportAction extends AbstractAction {
@@ -454,7 +454,7 @@ public abstract class ImportPanel {
 
   private class BrowseFilesAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
-      File[] files = queryFile(panel);
+      File[] files = queryFile(owner.getOwner());
       if (files != null) {
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < files.length; i++) {

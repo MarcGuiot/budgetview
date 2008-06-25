@@ -85,16 +85,15 @@ public class PicsouApplication {
     Directory directory = createDirectory();
     directory.add(openRequestManager);
 
-    final MainWindow window = new MainWindow();
+    final MainWindow mainWindow = new MainWindow();
     final LoginPanel loginPanel = new LoginPanel(getServerAddress(), getLocalPrevaylerPath(), isDataInMemory(),
-                                                 window, directory);
-    window.setPanel(loginPanel.getJPanel());
-    window.getFrame().addWindowListener(new WindowAdapter() {
+                                                 mainWindow, directory);
+    mainWindow.getFrame().addWindowListener(new WindowAdapter() {
       public void windowOpened(WindowEvent e) {
         loginPanel.initFocus();
       }
     });
-    window.show();
+    mainWindow.show();
   }
 
   public static String[] parseLanguage(String... args) {

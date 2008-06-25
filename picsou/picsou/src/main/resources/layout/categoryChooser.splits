@@ -1,5 +1,7 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
-  <styledPanel border="matte(1,1,1,1,#666666)" topColor="dialog.bg.top" bottomColor="dialog.bg.bottom" opaque="false">
+  <styledPanel border="matte(1,1,1,1,#666666)"
+               topColor="dialog.bg.top" bottomColor="dialog.bg.bottom"
+               opaque="false" preferredSize="(800,800)" maximumSize="(800,800)">
     <column margin="5">
       <row defaultMargin="5" defaultFill="none" defaultAnchor="northeast">
         <component ref="first"/>
