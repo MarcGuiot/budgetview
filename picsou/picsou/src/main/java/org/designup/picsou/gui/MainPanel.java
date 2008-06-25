@@ -12,7 +12,6 @@ import org.designup.picsou.gui.graphics.HistoricalChart;
 import org.designup.picsou.gui.scorecard.ScorecardView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
-import org.designup.picsou.gui.transactions.BalanceView;
 import org.designup.picsou.gui.transactions.InformationView;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -20,6 +19,7 @@ import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
+import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -54,7 +54,6 @@ public class MainPanel {
     AccountView accountView = new AccountView(repository, directory);
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
     TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory);
-    BalanceView balanceView = new BalanceView(repository, directory);
     CategoryView categoryView = new CategoryView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
 
@@ -68,7 +67,6 @@ public class MainPanel {
                 accountView,
                 transactionView,
                 transactionDetailsView,
-                balanceView,
                 timeView,
                 categoryView,
                 new CardView(repository, directory, transactionSelection),

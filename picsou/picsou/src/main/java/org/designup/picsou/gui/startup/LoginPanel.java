@@ -87,7 +87,7 @@ public class LoginPanel {
 
     ColorService colorService = directory.get(ColorService.class);
     SplitsBuilder.init(directory)
-      .init(getClass(), "/layout/loginPanel.splits")
+      .setSource(getClass(), "/layout/loginPanel.splits")
       .add("wave", new JWavePanel(colorService))
       .add("name", userField)
       .add("password", passwordField)

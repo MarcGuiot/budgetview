@@ -11,6 +11,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.io.StringReader;
+import java.io.Reader;
 
 public abstract class AbstractExoView implements ExoView {
   protected Glob exercise;
@@ -60,8 +61,8 @@ public abstract class AbstractExoView implements ExoView {
   }
 
   public JPanel getPanel() {
-    String xml = createLayout();
-    return (JPanel)builder.doParse(new StringReader(xml));
+    final String xml = createLayout();
+    return builder.setSource(xml).load();
   }
 
   public String createLayout() {

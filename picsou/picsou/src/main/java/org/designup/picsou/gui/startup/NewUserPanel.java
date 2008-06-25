@@ -8,6 +8,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.SplitsLoader;
+import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 

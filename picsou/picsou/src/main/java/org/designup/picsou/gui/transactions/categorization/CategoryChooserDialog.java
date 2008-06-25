@@ -12,10 +12,8 @@ import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
@@ -128,7 +126,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
     splitCategories();
 
     SplitsBuilder.init(directory)
-      .init(getClass(), "/layout/categoryChooser.splits")
+      .setSource(getClass(), "/layout/categoryChooser.splits")
       .add("first", getCategoriesPanel(firstPartCategories))
       .add("second", getCategoriesPanel(secondPartCategories))
       .add("third", getCategoriesPanel(thirdPartCategories))

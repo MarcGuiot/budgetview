@@ -7,7 +7,7 @@
       <styledPanel topColor="login.block.top" bottomColor="login.block.bottom"
                    borderColor="login.block.border" borderWidth="2" cornerRadius="10"
                    opaque="true" anchor="center" fill="none" weightY="20"
-                   maximumSize="(500,300)">
+                   preferredSize="(500,300)">
 
         <styledPanel ref="content"/>
 

@@ -1,4 +1,11 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styles>
+    <style selector="label" foreground="#FFFFFF"/>
+    <style selector="textarea" foreground="#FFFFFF"/>
+    <style selector="hyperlink" foreground="#6666FF"/>
+  </styles>
+
   <column minimumSize="(200, 150)" preferredSize="(200, 150)">
     <label ref="transactionType"/>
     <textArea ref="userLabel" font="$transaction.label"

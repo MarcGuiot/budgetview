@@ -4,7 +4,7 @@ CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLo
 
 Import
 ------
-* Import step 1 : URL banques => lancer navigateur
+* Import step 1 : URL banques => lancer navigateur (reste Linux / Windows)
 * LoginPanel: error login + "new user" => effacer message
 
 * LoginPanel: si aucun utilisateur, mode "accompagnement" pour la creation d'un compte

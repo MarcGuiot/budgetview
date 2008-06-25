@@ -85,7 +85,7 @@ public class SeriesView implements GlobSelectionListener {
   }
 
   private Component parseSplitsFile(SplitsBuilder builder, String fileName) {
-    builder.init(getClass(), fileName);
+    builder.setSource(getClass(), fileName);
     return builder.load();
   }
 

@@ -43,6 +43,7 @@ public class MainWindow {
   public void setPanel(JPanel panel) {
     frame.setContentPane(panel);
     frame.validate();
+    frame.pack();
   }
 
   public PicsouFrame getFrame() {

@@ -7,7 +7,6 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.GlobList;
@@ -49,8 +48,8 @@ public class MainView {
       }
     }, Topic.TYPE);
 
-    splits.init(MainView.class, "/layout/mainView.xml", "UTF-8");
-    frame = (JFrame)splits.load();
+    splits.setSource(MainView.class, "/layout/mainView.xml", "UTF-8");
+    frame = splits.load();
     seriesView.setFrame(frame);
 
 //    SplitsEditor.showInFrame(directory.get(ColorService.class), frame);
