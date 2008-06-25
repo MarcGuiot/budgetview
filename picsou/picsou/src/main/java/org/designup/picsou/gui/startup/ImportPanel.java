@@ -546,7 +546,7 @@ public abstract class ImportPanel {
     }
 
     public void actionPerformed(ActionEvent e) {
-      directory.get(BrowsingService.class).launchBrowser("http://" + getName());
+      directory.get(BrowsingService.class).launchBrowser(getName());
     }
   }
 }
