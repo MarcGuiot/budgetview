@@ -6,9 +6,11 @@ import org.uispec4j.TextBox;
 import javax.swing.*;
 
 public class GlobMultiLineTextEditorTest extends AbstractGlobTextEditorTestCase {
-  protected TextBox init(StringField name) {
+  protected TextBox init(StringField name, String defaultValueForMultivalue, boolean isEditable) {
     JTextArea textField =
-      GlobMultiLineTextEditor.init(name, repository, directory).getComponent();
+      (JTextArea)GlobMultiLineTextEditor.init(name, repository, directory)
+        .setMultiSelectionText(defaultValueForMultivalue)
+        .setEditable(isEditable).getComponent();
     return new TextBox(textField);
   }
 

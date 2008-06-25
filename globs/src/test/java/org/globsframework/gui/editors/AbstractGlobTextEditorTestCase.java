@@ -28,7 +28,7 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
   }
 
   public void testSingleSelection() throws Exception {
-    TextBox textBox = init(DummyObject.NAME);
+    TextBox textBox = init(DummyObject.NAME, null, true);
     assertTrue(textBox.textIsEmpty());
     assertFalse(textBox.isEditable());
     assertFalse(textBox.isEnabled());
@@ -54,7 +54,7 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
   }
 
   public void testMultiSelection() throws Exception {
-    TextBox textBox = init(DummyObject.NAME);
+    TextBox textBox = init(DummyObject.NAME, null, true);
 
     selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
     assertTrue(textBox.isEditable());
@@ -81,7 +81,7 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
   }
 
   public void testFocusLostAppliesChanges() throws Exception {
-    TextBox textBox = init(DummyObject.NAME);
+    TextBox textBox = init(DummyObject.NAME, null, true);
     selectionService.select(glob1);
     assertTrue(textBox.textEquals("name1"));
     textBox.clear();
@@ -97,7 +97,17 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
     );
   }
 
-  protected abstract TextBox init(StringField field);
+  public void testMultiSelectionWithDifferentValue() throws Exception {
+    TextBox textBox = init(DummyObject.NAME, "...", false);
+    selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
+    assertFalse(textBox.isEditable());
+    assertTrue(textBox.isEnabled());
+    assertTrue(textBox.textEquals("..."));
+    simulateFocusLost(textBox);
+    changeListener.assertNoChanges();
+  }
+
+  protected abstract TextBox init(StringField field, String defaultValueForMultivalue, boolean isEditable);
 
   protected void enterTextAndValidate(TextBox textBox, String text) {
     textBox.setText(text);

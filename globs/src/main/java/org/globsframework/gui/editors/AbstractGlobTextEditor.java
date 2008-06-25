@@ -68,6 +68,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   }
 
   protected void applyChanges() {
+    if (forceNotEditable) {
+      return;
+    }
     Object value;
     try {
       value = getValue();
