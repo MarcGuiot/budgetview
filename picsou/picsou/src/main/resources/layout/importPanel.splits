@@ -1,35 +1,48 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
-  <cards ref="cardHandler">
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <!--  STYLES -->
+
+  <styles>
+    <style selector="label#fileName"
+           fill="none" anchor="left" font="-,bold,12" marginBottom="5"/>
+
+    <style selector="hyperlink#back"
+           font="-,plain,10" marginTop="10" fill="none" weightX="0.001"/>
+
+    <style selector="scrollPane"
+           marginBottom="10"/>
+
+  </styles>
+
+  <!-- CONTENT -->
+
+  <cards ref="cardHandler" name="importPanel">
     <card name="step1">
       <column margin="20" anchor="center" fill="none">
 
         <filler fill="vertical"/>
 
+        <label text="Chargement des données" styleClass="title"/>
+
         <htmlEditorPane text="$import.step1.header" marginBottom="5"/>
 
-        <row>
-          <label text="$import.bank"/>
-          <comboBox ref="bankCombo"/>
-        </row>
+        <comboBox ref="bankCombo" marginLeft="40" marginRight="40"/>
 
-        <row>
-          <filler fill="horizontal"/>
-          <hyperlink name="downloadUrl" action="downloadUrl"/>
-          <filler fill="horizontal"/>
-        </row>
+        <hyperlink name="downloadUrl" action="downloadUrl" fill="none" anchor="center" marginTop="15"/>
 
-        <htmlEditorPane text="$login.initial.file" marginTop="20"/>
+        <htmlEditorPane text="$login.initial.file" marginTop="30"/>
 
-        <row marginTop="5" defaultAnchor="center">
-          <label text="$file" anchor="east"/>
-          <textField ref="fileField" marginLeft="5" marginRight="5" anchor="center" weightX="1000"/>
+        <row marginTop="5" marginLeft="40" marginRight="40" defaultAnchor="center">
+          <textField ref="fileField" marginRight="10" anchor="center" weightX="100"/>
           <button ref="fileButton" text="$browse" anchor="west"/>
         </row>
 
-        <label ref="message" margin="5" horizontalAlignment="center" foreground="#FF0000"/>
+        <label ref="message" margin="5" horizontalAlignment="center" foreground="#FF0000"
+               fill="horizontal" anchor="center"/>
 
-        <row marginTop="10">
+        <row styleClass="buttons">
           <button action="import" text="$import" margin="5"/>
           <button action="close" name="close" margin="5"/>
         </row>
@@ -42,10 +55,13 @@
     <card name="step2">
       <column margin="20" anchor="center" fill="none">
 
-        <label text="$import.file.to.import" anchor="west" fill="none" marginBottom="5"/>
-        <label ref="fileName" anchor="center" fill="none" marginBottom="10" marginTop="10"/>
+        <label text="Chargement d'un fichier" styleClass="title"/>
 
-        <label text="$import.file.content" anchor="west" fill="none" marginBottom="5"/>
+        <label text="$import.file.to.import" styleClass="header"/>
+        <label ref="fileName"/>
+
+        <label text="$import.file.content" styleClass="header"/>
+
         <scrollPane maximumSize="(400,300)">
           <table ref="table"/>
         </scrollPane>
@@ -61,12 +77,16 @@
         <panel ref="accountEditionPanel"/>
         <label ref="importMessage" foreground="#FF0000"/>
 
-        <row marginTop="10">
-          <filler fill="horizontal"/>
+        <row styleClass="buttons">
           <button action="finish"/>
           <button action="skipFile"/>
         </row>
-        <hyperlink action="back" text="$import.step2.back"/>
+
+        <row>
+          <filler fill="horizontal"/>
+          <hyperlink name="back" action="back" text="$import.step2.back"/>
+        </row>
+
       </column>
     </card>
   </cards>

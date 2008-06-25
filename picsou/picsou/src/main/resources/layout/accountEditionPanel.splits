@@ -1,11 +1,15 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
   <column>
+    <label text="Creation de compte" styleClass="header"/>
     <grid>
-      <label text="$account.bank" gridPos="(0,0)"/>
+      <label text="$account.bank" gridPos="(0,0)" styleClass="formLabel"/>
       <comboBox ref="accountBank" gridPos="(1,0)"/>
-      <label text="$account.name" gridPos="(0,1)"/>
+      <label text="$account.name" gridPos="(0,1)" styleClass="formLabel"/>
       <textField ref="name" gridPos="(1,1)"/>
-      <label text="$account.number" gridPos="(0,2)"/>
+      <label text="$account.number" gridPos="(0,2)" styleClass="formLabel"/>
       <textField ref="number" gridPos="(1,2)"/>
     </grid>
   </column>

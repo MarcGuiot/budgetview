@@ -1,0 +1,27 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styles>
+
+    <style selector="label.title"
+           font="-,bold,16" foreground="import.title"
+           fill="none" anchor="center"
+           marginBottom="25"/>
+
+    <style selector="label.header"
+           font="-,plain,11" foreground="import.header.label"
+           marginTop="5" marginBottom="3" fill="none" anchor="left"/>
+
+    <style selector="label.formLabel"
+           font="-,plain,12" foreground="import.form.label"
+           anchor="east" marginRight="10"/>
+
+    <style selector="row.buttons"
+           fill="horizontal" anchor="center"
+           marginTop="10" marginBottom="10" marginLeft="40" marginRight="40"/>
+
+    <style selector="row.buttons button"
+           fill="horizontal" weightX="10"/>
+    
+  </styles>
+
+</splits>
