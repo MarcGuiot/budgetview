@@ -50,7 +50,7 @@
                          intercellSpacing="(0,0)" showGrid="false" rowHeight="18"/>
                 </scrollPane>
                 <column>
-                  <panel ref="transactionDetails" marginLeft="10"/>
+                  <panel ref="transactionDetails" marginLeft="15"/>
                 </column>
               </row>
             </card>

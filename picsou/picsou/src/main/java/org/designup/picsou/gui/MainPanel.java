@@ -96,6 +96,7 @@ public class MainPanel {
     });
 
     builder.load();
+    SplitsEditor.show(builder, parent);
   }
 
   public void createMenuBar(JFrame frame) {
@@ -104,6 +105,8 @@ public class MainPanel {
     fileMenu.add(exportFileAction);
     fileMenu.addSeparator();
     fileMenu.add(exitAction);
+
+    fileMenu.setVisible(false);
 
     JMenuBar menuBar = new JMenuBar();
     menuBar.add(fileMenu);

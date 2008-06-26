@@ -81,6 +81,7 @@ public class TransactionDetailsView extends View implements GlobSelectionListene
                 new AutoHideOnSelectionPanel(Transaction.TYPE,
                                              AutoHideOnSelectionPanel.Mode.SHOW_IF_AT_LEAST_ONE,
                                              directory));
+    
     CategoryChooserAction categoryChooserAction = new CategoryChooserAction(new TransactionRendererColors(directory), repository, directory);
     HyperlinkButton categoryChooserLink = new CategorisationHyperlinkButton(categoryChooserAction, repository, directory);
     builder.add("categoryChooserLink", categoryChooserLink);
