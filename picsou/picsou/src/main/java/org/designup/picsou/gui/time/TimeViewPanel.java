@@ -10,12 +10,11 @@ import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionListener, KeyListener, FocusListener,
                                                      SelectableContainer,
@@ -24,7 +23,17 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private static final Dimension DIMENSION = new Dimension(100, 45);
 
   private TimeGraph timeGraph;
-  private Set<Selectable> currentlySelected = new TreeSet<Selectable>();
+  private Set<Selectable> currentlySelected = new TreeSet<Selectable>(new Comparator<Selectable>() {
+    public int compare(Selectable o1, Selectable o2) {
+      if (o1 instanceof YearGraph) {
+        return 1;
+      }
+      if (o2 instanceof YearGraph) {
+        return -1;
+      }
+      return ((MonthGraph)o1).compareTo(((MonthGraph)o2));
+    }
+  });
   private MouseState currentState = new ReleasedMouseState(this);
   private SelectionService selectionService;
   private GlobRepository repository;
@@ -116,7 +125,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   public void mouseDragged(MouseEvent e) {
     currentState = currentState.mouseMoved(e);
     if (e.getPoint().getX() < 0) {
-      if (scrollLeft(10)) {
+      if (scrollLeft(timeGraph.getMonthWidth())) {
         scrollRunnable.set(id, e);
         timer.stop();
         timer.start();
@@ -126,7 +135,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       }
     }
     else if (e.getPoint().getX() > getWidth()) {
-      if (scrollRigth(10)) {
+      if (scrollRigth(timeGraph.getMonthWidth())) {
         scrollRunnable.set(id, e);
         timer.stop();
         timer.start();
@@ -235,6 +244,17 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     timeGraph.selectLastMonth(currentlySelected);
     sendSelectionEvent(true);
     repaint();
+    scrollToLastVisible();
+  }
+
+  private void scrollToLastVisible() {
+    if (currentlySelected.isEmpty()) {
+      return;
+    }
+    Iterator<Selectable> selectableIterator = currentlySelected.iterator();
+    if (!selectableIterator.next().isVisible().equals(Selectable.Visibility.FULLY)) {
+
+    }
   }
 
   public void selectMonth(int... indexes) {
@@ -271,14 +291,14 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   public void goToFirst() {
     do {
     }
-    while (scrollLeft(10));
+    while (scrollLeft(timeGraph.getMonthWidth()));
     repaint();
   }
 
   public void goToLast() {
     do {
     }
-    while (scrollRigth(10));
+    while (scrollRigth(timeGraph.getMonthWidth()));
     repaint();
   }
 

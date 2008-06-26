@@ -51,7 +51,6 @@ public class TimeView extends View {
     public NavigationAction(String name) {
       super(name);
     }
-
   }
 
   private static class FirstPeriodNavigationAction extends NavigationAction {

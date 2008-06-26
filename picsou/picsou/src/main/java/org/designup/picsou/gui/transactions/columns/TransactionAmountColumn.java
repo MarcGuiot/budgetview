@@ -16,9 +16,9 @@ import java.awt.*;
 
 public class TransactionAmountColumn implements TableCellRenderer {
   private GlobStringifier amountStringifier;
-  private JLabel amount = new JLabel();
-  private JLabel splitPart = new JLabel();
-  private JPanel panel = new JPanel();
+  private JLabel amount;
+  private JLabel splitPart;
+  private JPanel panel;
   private TransactionRendererColors rendererColors;
   private GlobRepository repository;
 
@@ -26,12 +26,16 @@ public class TransactionAmountColumn implements TableCellRenderer {
                                  DescriptionService descriptionService, GlobRepository repository, Directory directory) {
     this.repository = repository;
     amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
+    panel = new JPanel();
+    amount = new JLabel();
+    splitPart = new JLabel();
     amount.setBackground(Color.WHITE);
     amount.setName("amount");
     splitPart.setName("");
     panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-    panel.add(amount);
+    panel.add(Box.createHorizontalGlue());
     panel.add(splitPart);
+    panel.add(amount);
     this.rendererColors = transactionRendererColors;
     amount.setFont(view.getDefaultFont());
     splitPart.setFont(view.getDefaultFont());
@@ -87,4 +91,5 @@ public class TransactionAmountColumn implements TableCellRenderer {
     rendererColors.setTransactionBackground(panel, isSelected, row);
     return panel;
   }
+
 }

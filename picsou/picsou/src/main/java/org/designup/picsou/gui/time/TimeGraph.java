@@ -183,6 +183,10 @@ public class TimeGraph {
     return months.size() * monthWidth;
   }
 
+  public int getMonthWidth() {
+    return monthWidth;
+  }
+
   private class MonthChainedSelectableElement implements ChainedSelectableElement {
     private int yearCount;
 
