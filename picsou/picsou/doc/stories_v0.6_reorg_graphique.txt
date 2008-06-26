@@ -10,16 +10,26 @@ Bugs graphiques
 
 Details transactions
 --------------------
+* Min/Max/Moy sur une ligne
+* Categorie "A classer" en rouge
+* Categorie "..." en multi-selection ("<plusieurs categories>")
+* Voir position bouton "split"
+* Masquer label original si identique au label utilisateur
+* Masquer date banque si identique a la date utilisateur
+* Masquer labels
 * Afficher propagation d'affectation
 
 
 TransactionView
 ---------------
+* Look hyperlinks categories
+
 
 TimeView
 --------
-* Raccourcis mois en cours / tout
+* ScrollToVisible
 * Escamoter boutons
+* Tailles/positions labels ("juin")
 
 
 Misc
@@ -34,7 +44,7 @@ Misc
 Reorg vues
 ----------
 * Vues accueil / operations / repartition / evolution
-* Deplacer message "vous avez n transactions non classees" + Supprimer footer
+* Revoir message "vous avez n transactions non classees"
 
 
 Vue "accueil"

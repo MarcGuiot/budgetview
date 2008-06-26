@@ -11,13 +11,6 @@ Import
 * Bring to front sur Open With...
 
 
-Joliesse
---------
-* Panneau import
-* Taille panneau Categorisation sous Mac
-* Taille panneau import sous Linux
-
-
 Packaging
 ---------
 * Obfuscation
