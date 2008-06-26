@@ -36,7 +36,6 @@ Misc
 ----
 * Cacher comptes
 * Joliesse fenetre split transaction
-* PicsouDialog => reintroduire headers normaux
 * “Esc” pour fermer les boîtes de dialogue (mettre PicsouDialog en abstract, avec un dispose() a surcharger)
 * Memoriser dernier repertoire pour le filechooser
 

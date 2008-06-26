@@ -39,12 +39,14 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor {
     rendererPanel = new JPanel();
     rendererPanel.setLayout(new BoxLayout(rendererPanel, BoxLayout.X_AXIS));
     rendererButton = new HyperlinkButton(new ForwardAction());
+    rendererButton.setOpaque(false);
     rendererPanel.add(rendererButton);
     rendererPanel.add(Box.createHorizontalGlue());
     editorPanel = new JPanel();
     editorPanel.setLayout(new BoxLayout(editorPanel, BoxLayout.X_AXIS));
     editorPanel.getLayout();
     editorButton = new HyperlinkButton(new ForwardAction());
+    editorButton.setOpaque(false);
     editorPanel.add(editorButton);
     editorPanel.add(Box.createHorizontalGlue());
   }
@@ -67,20 +69,12 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor {
       button.setForeground(Color.BLUE);
       Glob category = repository.get(Key.create(Category.TYPE, transaction.get(Transaction.CATEGORY)));
       button.setText(categoryStringifier.toString(category, repository));
-      rendererColors.setTransactionBackground(panel, isSelected, row);
     }
     else {
       button.setForeground(Color.RED);
       button.setText(Lang.get("category.assignement.required"));
-      if (isSelected) {
-        panel.setBackground(rendererColors.getSelectionErrorBgColor());
-      }
-      else {
-        panel.setBackground((row % 2) == 0 ?
-                            rendererColors.getEvenErrorBgColor() :
-                            rendererColors.getOddErrorBgColor());
-      }
     }
+    rendererColors.setTransactionBackground(panel, isSelected, row);
     return panel;
   }
 

@@ -36,7 +36,7 @@
         <label text="$transacation.details.category"/>
         <row>
           <filler fill="horizontal"/>
-          <hyperlink ref="categoryChooserLink"/>
+          <hyperlink ref="categoryChooserLink" opaque="false"/>
           <filler fill="horizontal"/>
         </row>
       </column>
@@ -45,7 +45,7 @@
       <column>
         <row>
           <filler fill="horizontal"/>
-          <hyperlink name="splitLink" action="splitLink"/>
+          <hyperlink name="splitLink" action="splitLink" opaque="false"/>
           <filler fill="horizontal"/>
         </row>
         <label text="$transaction.details.label.original"/>
