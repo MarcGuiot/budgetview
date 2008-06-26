@@ -35,7 +35,7 @@ public class CardLayoutComponent extends AbstractSplitter {
       String cardName = card.getCardName();
       panel.add(card.getComponentStretch(false).getComponent(), cardName);
     }
-    ComponentStretch containerStretch = createContainerStretch(panel, subSplitters, DoubleOperation.MAX);
+    ComponentStretch containerStretch = createContainerStretch(panel, DoubleOperation.MAX);
     return containerStretch;
   }
 

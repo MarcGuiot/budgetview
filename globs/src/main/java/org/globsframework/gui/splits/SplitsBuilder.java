@@ -138,8 +138,9 @@ public class SplitsBuilder {
       component.setName(name);
       context.addOrReplaceComponent(name, component);
     }
-    complete();
+    completeBeforeLoad();
     Component component = doLoad();
+    completeAfterLoad();
     try {
       return (T)component;
     }
@@ -148,7 +149,11 @@ public class SplitsBuilder {
     }
   }
 
-  protected void complete() {
+  protected void completeBeforeLoad() {
+  }
+
+  protected void completeAfterLoad() {
+    context.complete();
   }
 
   public Component doLoad() {

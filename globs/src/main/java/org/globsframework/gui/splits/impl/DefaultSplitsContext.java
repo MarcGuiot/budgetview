@@ -7,9 +7,12 @@ import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.styles.StyleService;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,8 +29,8 @@ public class DefaultSplitsContext implements SplitsContext {
   private StyleService styleService;
   private Class referenceClass;
   private String resourceFile;
-
   private java.util.List<Component> createdComponents = new ArrayList<Component>();
+  private java.util.List<AutoHideListener> autoHideListeners = new ArrayList<AutoHideListener>();
 
   public DefaultSplitsContext(ColorService colorService, IconLocator iconLocator,
                               TextLocator textLocator, FontLocator fontLocator, StyleService styleService) {
@@ -121,17 +124,6 @@ public class DefaultSplitsContext implements SplitsContext {
     }
   }
 
-  public void cleanUp() {
-    Collections.reverse(createdComponents);
-    for (Component component : createdComponents) {
-      Container parent = component.getParent();
-      if (parent != null) {
-        parent.remove(component);
-      }
-    }
-    createdComponents.clear();
-  }
-
   public Component findComponent(String id) {
     return componentsByName.get(id);
   }
@@ -146,6 +138,31 @@ public class DefaultSplitsContext implements SplitsContext {
       throw new SplitsException("No action registered for id '" + id + "'" + dump());
     }
     return action;
+  }
+
+  public void addAutoHide(Component targetComponent, String sourceComponentName) {
+    autoHideListeners.add(new AutoHideListener(targetComponent, sourceComponentName));
+  }
+
+  public void cleanUp() {
+    Collections.reverse(createdComponents);
+    for (Component component : createdComponents) {
+      Container parent = component.getParent();
+      if (parent != null) {
+        parent.remove(component);
+      }
+    }
+    createdComponents.clear();
+    for (AutoHideListener listener : autoHideListeners) {
+      listener.dispose(this);
+    }
+    autoHideListeners.clear();
+  }
+
+  public void complete() {
+    for (AutoHideListener listener : autoHideListeners) {
+      listener.init(this);
+    }
   }
 
   public String dump() {
@@ -173,5 +190,50 @@ public class DefaultSplitsContext implements SplitsContext {
     }
 
     return builder.toString();
+  }
+
+  private static class AutoHideListener {
+    private Component targetComponent;
+    private String sourceComponentName;
+    protected ComponentAdapter componentListener;
+
+    private AutoHideListener(Component targetComponent, String sourceComponentName) {
+      this.targetComponent = targetComponent;
+      this.sourceComponentName = sourceComponentName;
+    }
+
+    public void init(SplitsContext context) {
+      Component sourceComponent = getSourceComponent(context);
+      componentListener = createListener();
+      sourceComponent.addComponentListener(componentListener);
+      targetComponent.setVisible(sourceComponent.isVisible());
+    }
+
+    public void dispose(SplitsContext context) {
+      if (componentListener != null) {
+        Component sourceComponent = getSourceComponent(context);
+        sourceComponent.removeComponentListener(componentListener);
+      }
+    }
+
+    private Component getSourceComponent(SplitsContext context) {
+      Component sourceComponent = context.findComponent(sourceComponentName);
+      if (sourceComponent == null) {
+        throw new ItemNotFound("References autoHideSource component '" + sourceComponentName + "' does not exist");
+      }
+      return sourceComponent;
+    }
+
+    private ComponentAdapter createListener() {
+      return new ComponentAdapter() {
+        public void componentShown(ComponentEvent e) {
+          targetComponent.setVisible(true);
+        }
+
+        public void componentHidden(ComponentEvent e) {
+          targetComponent.setVisible(false);
+        }
+      };
+    }
   }
 }

@@ -583,6 +583,7 @@
   <xs:attributeGroup name="jComponentAttributes">
     <xs:attribute name="ref" type="xs:string"/>
     <xs:attribute name="styleClass" type="xs:string"/>
+    <xs:attribute name="autoHideSource" type="xs:string"/>
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="background" type="xs:string"/>
     <xs:attribute name="foreground" type="xs:string"/>

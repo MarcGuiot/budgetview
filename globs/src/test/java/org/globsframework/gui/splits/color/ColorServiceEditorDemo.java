@@ -29,6 +29,6 @@ public class ColorServiceEditorDemo {
     frame.pack();
     frame.setVisible(true);
 
-    SplitsEditor.showInFrame(builder, frame);
+    SplitsEditor.show(builder, frame);
   }
 }

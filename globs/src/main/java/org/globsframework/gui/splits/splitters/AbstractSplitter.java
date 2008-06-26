@@ -13,6 +13,7 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.PropertySetter;
 import org.globsframework.gui.splits.utils.SplitsUtils;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +27,7 @@ public abstract class AbstractSplitter implements Splitter {
   private final SplitProperties properties;
   private final SplitsContext context;
   private static final String[] DEFAULT_EXCLUDES =
-    {"ref", "styleClass", "gridPos", "opaque", "borderPos",
+    {"ref", "styleClass", "autoHideSource", "gridPos", "opaque", "borderPos",
      "fill", "anchor", "weightX", "weightY",
      "margin", "marginTop", "marginBottom", "marginLeft", "marginRight"};
 
@@ -51,8 +52,17 @@ public abstract class AbstractSplitter implements Splitter {
     }
     complete(component);
     processAttributes(component);
+    processAutoHide(component);
     processDebug(stretch);
     return stretch;
+  }
+
+  private void processAutoHide(Component component) {
+    String source = properties.getString("autoHideSource");
+    if (Strings.isNullOrEmpty(source)) {
+      return;
+    }
+    context.addAutoHide(component, source);
   }
 
   private void processDebug(ComponentStretch stretch) {
@@ -185,14 +195,14 @@ public abstract class AbstractSplitter implements Splitter {
     }
 
     JComponent jComponent = (JComponent)component;
-    jComponent.setOpaque(opaque.booleanValue());
+    jComponent.setOpaque(opaque);
   }
 
   private int toInt(Integer value, Integer defaultValue) {
     if (value != null) {
-      return value.intValue();
+      return value;
     }
-    return defaultValue != null ? defaultValue.intValue() : 0;
+    return defaultValue != null ? defaultValue : 0;
   }
 
   private void processAttributes(Component component) {
@@ -202,7 +212,7 @@ public abstract class AbstractSplitter implements Splitter {
     PropertySetter.process(component, properties, context, toExclude.toArray(new String[toExclude.size()]));
   }
 
-  protected ComponentStretch createContainerStretch(Component container, Splitter[] subSplitters, DoubleOperation operation) {
+  protected ComponentStretch createContainerStretch(Component container, DoubleOperation operation) {
     double weightX = 0;
     double weightY = 0;
     for (Splitter splitter : getSubSplitters()) {
