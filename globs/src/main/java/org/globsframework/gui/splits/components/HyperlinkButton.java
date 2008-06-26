@@ -43,6 +43,7 @@ public class HyperlinkButton extends JButton {
   public void paint(Graphics g) {
     Graphics2D d = (Graphics2D)g;
     d.setFont(getFont());
+    d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     if (isOpaque()) {
       d.setColor(getParent().getBackground());
       d.clearRect(0, 0, getWidth(), getHeight());
@@ -63,6 +64,11 @@ public class HyperlinkButton extends JButton {
       d.drawString(str, x1, y1);
       d.drawLine(x1, y1 + 1, x1 + textWidth, y1 + 1);
     }
+  }
+
+  public void setFont(Font font) {
+    super.setFont(font);
+    initFontMetrics();
   }
 
   public void setText(String text) {
