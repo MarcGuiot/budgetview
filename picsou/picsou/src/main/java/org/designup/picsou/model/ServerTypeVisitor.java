@@ -20,6 +20,8 @@ public interface ServerTypeVisitor {
 
   void visitCategory(Key key, FieldValues values) throws Exception;
 
+  void visitUserPreferences(Key key, FieldValues values) throws Exception;
+
   void visitOther(Key key, FieldValues values) throws Exception;
 
   public static class Visitor {
@@ -45,6 +47,9 @@ public interface ServerTypeVisitor {
         }
         else if (key.getGlobType() == Category.TYPE) {
           visitor.visitCategory(key, values);
+        }
+        else if (key.getGlobType() == UserPreferences.TYPE) {
+          visitor.visitUserPreferences(key, values);
         }
         else {
           visitor.visitOther(key, values);

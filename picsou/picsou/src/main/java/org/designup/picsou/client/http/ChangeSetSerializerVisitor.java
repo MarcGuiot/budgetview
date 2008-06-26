@@ -176,8 +176,19 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
           .add(HiddenCategory.HIDDEN_USER_ID, -1).get(), globFieldValues);
     }
 
+    public void visitUserPreferences(Key key, FieldValues values) throws Exception {
+      FieldValues globFieldValues = getHiddenUserPreference(key, values);
+      globChangeVisitor.visitCreation(
+        KeyBuilder.init(HiddenUserPreferences.ID, key.get(HiddenUserPreferences.ID))
+          .add(HiddenUserPreferences.HIDDEN_USER_ID, -1).get(), globFieldValues);
+    }
+
     public void visitOther(Key key, FieldValues values) throws Exception {
     }
+  }
+
+  private FieldValues getHiddenUserPreference(Key key, FieldValues values) {
+    return null;
   }
 
   private FieldValues createHiddenImportForUpdate(Key key, FieldValues values, GlobRepository globRepository) {

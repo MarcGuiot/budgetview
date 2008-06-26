@@ -9,7 +9,7 @@ public abstract class AbstractComponent implements Selectable {
   protected boolean selected = false;
   protected ChainedSelectableElement element;
   protected Rectangle clickableArea = new Rectangle();
-  protected Visibility isVisible = Visibility.FULLY;
+  protected Visibility isVisible = Visibility.NOT_VISIBLE;
 
   public AbstractComponent(ChainedSelectableElement element) {
     this.element = element;

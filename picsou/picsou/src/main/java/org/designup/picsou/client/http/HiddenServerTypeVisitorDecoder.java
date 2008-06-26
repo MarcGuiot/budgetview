@@ -88,6 +88,25 @@ public class HiddenServerTypeVisitorDecoder implements HiddenServerTypeVisitor {
     globs.add(builder.get());
   }
 
+  public void visitHiddenUserPreferences() throws Exception {
+    GlobBuilder builder = GlobBuilder.init(UserPreferences.TYPE);
+    builder.set(Category.ID, hiddenGlob.get(HiddenUserPreferences.ID));
+    byte[] bytes = hiddenGlob.get(HiddenUserPreferences.CRYPTED_INFO);
+    updateHiddenPreferences(builder, bytes);
+    globs.add(builder.get());
+  }
+
+  private int updateHiddenPreferences(GlobBuilder builder, byte[] bytes) {
+    byte[] decrypted = passwordBasedEncryptor.decrypt(bytes);
+    SerializedInput input = SerializedInputOutputFactory.init(decrypted);
+    Integer version = input.readNotNullInt();
+    if (version == ChangeSetSerializerVisitor.V1) {
+      builder.set(UserPreferences.LAST_DIRECTORY, input.readString());
+      return ChangeSetSerializerVisitor.V1;
+    }
+    return -1;
+  }
+
   public void visitOther() throws Exception {
   }
 

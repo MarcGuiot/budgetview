@@ -55,7 +55,8 @@ public class LoginPanel {
     this.directory = directory;
     initServerAccess(remoteAdress, prevaylerPath, dataInMemory);
     mainWindow.getFrame().addWindowListener(new WindowAdapter() {
-      public void windowClosed(WindowEvent e) {
+      public void windowClosing(WindowEvent e) {
+        serverAccess.takeSnapshot();
         serverAccess.disconnect();
         serverDirectory.close();
       }

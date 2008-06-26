@@ -47,6 +47,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       SwingUtilities.invokeLater(scrollRunnable);
     }
   });
+  private Runnable pendingOperation;
   private int previousWidth = -1;
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
@@ -79,6 +80,11 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     previousWidth = getWidth();
     Graphics2D d = (Graphics2D)g.create();
     try {
+      timeGraph.init(d, getWidth());
+      if (pendingOperation != null) {
+        pendingOperation.run();
+        pendingOperation = null;
+      }
       d.setPaint(new GradientPaint(0, 0, colors.backgroundTop, 0, getHeight(), colors.backgroundBottom));
       d.fillRect(0, 0, getWidth(), getHeight());
       TransformationAdapter transformationAdapter = new TransformationAdapter(d);
@@ -244,18 +250,35 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     clearSelection();
     timeGraph.selectLastMonth(currentlySelected);
     sendSelectionEvent(true);
-    repaint();
     scrollToLastVisible();
+    repaint();
   }
 
   private void scrollToLastVisible() {
+    if (previousWidth == -1) {
+      pendingOperation = new Runnable() {
+        public void run() {
+          scrollToLastVisible();
+        }
+      };
+    }
     if (currentlySelected.isEmpty()) {
       return;
     }
-    Iterator<Selectable> selectableIterator = currentlySelected.iterator();
-    if (!selectableIterator.next().isVisible().equals(Selectable.Visibility.FULLY)) {
-
+    Selectable lastSelected = null;
+    for (Selectable selected : currentlySelected) {
+      lastSelected = selected;
     }
+    if (lastSelected.isVisible().equals(Selectable.Visibility.FULLY)) {
+      return;
+    }
+    Selectable mostLeftSelectable = timeGraph.getFirstSelectable();
+    int count = 0;
+    while (mostLeftSelectable != lastSelected) {
+      mostLeftSelectable = mostLeftSelectable.getRight();
+      count++;
+    }
+    scrollRigth(count * timeGraph.getMonthWidth());
   }
 
   public void selectMonth(int... indexes) {

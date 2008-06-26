@@ -19,6 +19,8 @@ public interface HiddenServerTypeVisitor {
 
   void visitHiddenCategory() throws Exception;
 
+  void visitHiddenUserPreferences() throws Exception;
+
   void visitOther() throws Exception;
 
   public static class Visitor {
@@ -44,6 +46,9 @@ public interface HiddenServerTypeVisitor {
         }
         else if (globType == HiddenCategory.TYPE) {
           visitorHidden.visitHiddenCategory();
+        }
+        else if (globType == HiddenUserPreferences.TYPE) {
+          visitorHidden.visitHiddenUserPreferences();
         }
         else {
           visitorHidden.visitOther();

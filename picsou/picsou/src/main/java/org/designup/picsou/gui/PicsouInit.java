@@ -60,9 +60,6 @@ public class PicsouInit {
     MutableChangeSet changeSet = new DefaultChangeSet();
     try {
       GlobList userData = serverAccess.getUserData(changeSet);
-      if (newUser) {
-        userData.addAll(loadDefaultSubcategories());
-      }
       repository.reset(userData, Transaction.TYPE, Account.TYPE, Bank.TYPE, BankEntity.TYPE,
                        TransactionToCategory.TYPE, LabelToCategory.TYPE, Category.TYPE);
     }
@@ -70,6 +67,9 @@ public class PicsouInit {
       throw new InvalidData(Lang.get("login.data.load.fail"), e);
     }
     serverAccess.applyChanges(changeSet, repository);
+    if (newUser) {
+      loadDefaultSubcategories();
+    }
 
     initDirectory(repository);
   }

@@ -15,7 +15,8 @@ public class PicsouModel {
                           TransactionToCategory.TYPE,
                           LabelToCategory.TYPE,
                           TransactionTypeMatcher.TYPE,
-                          TransactionImport.TYPE)
+                          TransactionImport.TYPE,
+                          UserPreferences.TYPE)
       .get();
 
   public static GlobModel get() {

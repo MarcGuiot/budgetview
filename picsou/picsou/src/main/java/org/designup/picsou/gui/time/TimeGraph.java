@@ -17,6 +17,8 @@ public class TimeGraph {
   private GlobList months;
   private MonthFontMetricInfo monthFontMetricInfo;
   private int monthWidth;
+  private int yearHeight;
+  private int monthRank;
 
   public TimeGraph(GlobList months, MonthViewColors colors) {
     this.months = months;
@@ -44,7 +46,7 @@ public class TimeGraph {
                             new YearChainedSelectableElement(yearCount)));
   }
 
-  private void init(Graphics2D graphics2D) {
+  private void initFontMetrics(Graphics2D graphics2D) {
     if (monthFontMetricInfo != null || months.isEmpty()) {
       return;
     }
@@ -69,35 +71,39 @@ public class TimeGraph {
     Rectangle visibleRectangle = new Rectangle(0, 0, preferredWidth, preferredHeight);
     transformationAdapter.save();
     try {
-      init(graphics2D);
-
-      int totalMonthCount = 0;
-      for (YearGraph year : years) {
-        totalMonthCount += year.getMonthCount();
-      }
-      if (totalMonthCount == 0) {
+      if (years.isEmpty()) {
         return;
       }
+      init(graphics2D, preferredWidth);
 
-      int height = years.get(0).getPreferredHeight(graphics2D);
-      monthWidth = preferredWidth / totalMonthCount;
-      for (YearGraph year : years) {
-        monthWidth = Math.max(monthWidth, year.getMinWidth(graphics2D));
-      }
-      int monthRank = 0;
-      for (YearGraph year : years) {
-        monthRank = Math.max(monthRank, year.getMinMonthRank(monthWidth));
-      }
-      int y = preferredHeight - height;
+      int y = preferredHeight - yearHeight;
       transformationAdapter.translate(0, y < 0 ? 0 : y);
       for (YearGraph yearGraph : years) {
         int actualMonthPos =
-          yearGraph.draw(graphics2D, transformationAdapter, height, monthWidth, monthRank, visibleRectangle);
+          yearGraph.draw(graphics2D, transformationAdapter, yearHeight, monthWidth, monthRank, visibleRectangle);
         transformationAdapter.translate(actualMonthPos, 0);
       }
     }
     finally {
       transformationAdapter.restore();
+    }
+  }
+
+  public void init(Graphics2D graphics2D, int preferredWidth) {
+    initFontMetrics(graphics2D);
+
+    int totalMonthCount = 0;
+    for (YearGraph year : years) {
+      totalMonthCount += year.getMonthCount();
+    }
+
+    yearHeight = years.get(0).getPreferredHeight(graphics2D);
+    monthWidth = preferredWidth / totalMonthCount;
+    for (YearGraph year : years) {
+      monthWidth = Math.max(monthWidth, year.getMinWidth(graphics2D));
+    }
+    for (YearGraph year : years) {
+      monthRank = Math.max(monthRank, year.getMinMonthRank(monthWidth));
     }
   }
 

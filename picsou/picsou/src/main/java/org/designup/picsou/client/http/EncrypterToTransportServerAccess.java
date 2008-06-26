@@ -134,6 +134,9 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   }
 
   public void takeSnapshot() {
+    if (notConnected) {
+      return;
+    }
     checkConnected();
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
@@ -178,7 +181,9 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   }
 
   public void disconnect() {
-    checkConnected();
+    if (notConnected) {
+      return;
+    }
     SerializedByteArrayOutput request = new SerializedByteArrayOutput();
     request.getOutput().writeBytes(privateId);
     clientTransport.disconnect(sessionId, request.toByteArray());

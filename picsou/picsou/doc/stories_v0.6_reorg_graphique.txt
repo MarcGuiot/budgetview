@@ -24,13 +24,9 @@ TransactionView
 ---------------
 * Look hyperlinks categories
 
-
 TimeView
 --------
-* ScrollToVisible
 * Escamoter boutons
-* Tailles/positions labels ("juin")
-
 
 Misc
 ----

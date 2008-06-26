@@ -247,6 +247,13 @@ public class PrevaylerPersistence implements Persistence {
           .get();
       }
 
+      public void visitHiddenUserPreferences() throws Exception {
+        key = KeyBuilder
+          .init(HiddenUserPreferences.ID, values.get(HiddenUserPreferences.ID))
+          .add(HiddenUserPreferences.HIDDEN_USER_ID, userId)
+          .get();
+      }
+
       public void visitOther() throws Exception {
         throw new UnexpectedApplicationState(globType.getName() + " not managed");
       }
