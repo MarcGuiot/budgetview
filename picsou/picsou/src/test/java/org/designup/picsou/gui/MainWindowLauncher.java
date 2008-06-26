@@ -10,9 +10,16 @@ import org.designup.picsou.server.ServerDirectory;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 public class MainWindowLauncher {
   private static final String COLOR_SELECTOR_PROPERTY = "ENABLE_COLOR_SELECTOR";
   private static OpenRequestManager openRequestManager = new OpenRequestManager();
+  private static String user;
+  private static String password;
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
@@ -23,6 +30,10 @@ public class MainWindowLauncher {
     if (args.length > 1) {
       args = PicsouApplication.parseLanguage(args);
     }
+    List<String> arguments = new ArrayList<String>();
+    arguments.addAll(Arrays.asList(args));
+    user = parseArguments(arguments, "user", "-u");
+    password = parseArguments(arguments, "pwd", "-p");
     ServerDirectory serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), false);
     Directory directory = serverDirectory.getServiceDirectory();
     ServerAccess serverAccess =
@@ -30,16 +41,31 @@ public class MainWindowLauncher {
     run(serverAccess, args);
   }
 
+  private static String parseArguments(List<String> args, String defaultValue, String key) {
+    for (Iterator<String> it = args.iterator(); it.hasNext();) {
+      String arg = it.next();
+      if (key.equals(arg)) {
+        it.remove();
+        if (it.hasNext()) {
+          String value = it.next();
+          it.remove();
+          return value;
+        }
+      }
+    }
+    return defaultValue;
+  }
+
   public static GlobRepository run(ServerAccess serverAccess, String[] args) throws Exception {
     try {
-      serverAccess.createUser("user", "pwd".toCharArray());
+      serverAccess.createUser(user, password.toCharArray());
     }
     catch (UserAlreadyExists userAlreadyExists) {
-      serverAccess.initConnection("user", "pwd".toCharArray(), false);
+      serverAccess.initConnection(user, password.toCharArray(), false);
     }
     Directory directory = PicsouApplication.createDirectory();
     directory.add(OpenRequestManager.class, openRequestManager);
-    PicsouInit init = PicsouInit.init(serverAccess, "user", true, directory);
+    PicsouInit init = PicsouInit.init(serverAccess, user, true, directory);
 
     MainWindow window = new MainWindow();
     MainPanel.show(init.getRepository(), init.getDirectory(), window);
