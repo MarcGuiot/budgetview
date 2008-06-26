@@ -100,6 +100,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void mouseReleased(MouseEvent e) {
+    timer.stop();
     currentState = currentState.mouseReleased(e);
     sendSelectionEvent(false);
     repaint();
