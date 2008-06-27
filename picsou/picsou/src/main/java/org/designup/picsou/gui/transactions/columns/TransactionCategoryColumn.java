@@ -1,16 +1,20 @@
 package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.components.HyperlinkButton;
+import org.globsframework.gui.splits.font.FontLocator;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.directory.Directory;
@@ -19,7 +23,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class TransactionCategoryColumn extends AbstractTransactionEditor {
+public class TransactionCategoryColumn extends AbstractTransactionEditor implements ColorChangeListener {
   private GlobStringifier categoryStringifier;
   private HyperlinkButton rendererButton;
   private JPanel rendererPanel;
@@ -27,28 +31,50 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor {
   private JPanel editorPanel;
   private CategoryChooserAction categoryChooserAction;
   private Glob transaction;
+  private Color normalColor;
+  private Color toCategorizeColor;
+  private Font normalFont;
+  private Font toCategorizeFont;
 
   public TransactionCategoryColumn(CategoryChooserAction categoryChooserAction, GlobTableView view,
                                    TransactionRendererColors transactionRendererColors,
                                    DescriptionService descriptionService,
-                                   GlobRepository repository, Directory directory) {
+                                   GlobRepository repository,
+                                   Directory directory) {
     super(view, transactionRendererColors, descriptionService, repository, directory);
     this.categoryChooserAction = categoryChooserAction;
 
     categoryStringifier = descriptionService.getStringifier(Category.TYPE);
+
+    FontLocator fontLocator = directory.get(FontLocator.class);
+    normalFont = fontLocator.get("transactionView.category");
+    toCategorizeFont = fontLocator.get("transactionView.category.error");
+
+    rendererButton = createHyperlink();
     rendererPanel = new JPanel();
     rendererPanel.setLayout(new BoxLayout(rendererPanel, BoxLayout.X_AXIS));
-    rendererButton = new HyperlinkButton(new ForwardAction());
-    rendererButton.setOpaque(false);
     rendererPanel.add(rendererButton);
     rendererPanel.add(Box.createHorizontalGlue());
+
+    editorButton = createHyperlink();
     editorPanel = new JPanel();
     editorPanel.setLayout(new BoxLayout(editorPanel, BoxLayout.X_AXIS));
-    editorPanel.getLayout();
-    editorButton = new HyperlinkButton(new ForwardAction());
-    editorButton.setOpaque(false);
     editorPanel.add(editorButton);
     editorPanel.add(Box.createHorizontalGlue());
+
+    directory.get(ColorService.class).addListener(this);
+  }
+
+  public void colorsChanged(ColorLocator colorLocator) {
+    normalColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT);
+    toCategorizeColor = colorLocator.get(PicsouColors.TRANSACTION_ERROR_TEXT);
+  }
+
+  private HyperlinkButton createHyperlink() {
+    HyperlinkButton button = new HyperlinkButton(new OpenChooserAction());
+    button.setOpaque(false);
+    button.setUnderline(false);
+    return button;
   }
 
   protected Component getComponent(final Glob transaction, boolean render) {
@@ -66,36 +92,38 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor {
     boolean categoryNone = Transaction.hasNoCategory(transaction);
     boolean multiCategorized = TransactionToCategory.hasCategories(transaction, repository);
     if (!categoryNone && !multiCategorized) {
-      button.setForeground(Color.BLUE);
-      Glob category = repository.get(Key.create(Category.TYPE, transaction.get(Transaction.CATEGORY)));
+      button.setForeground(normalColor);
+      button.setFont(normalFont);
+      button.setUnderline(false);
+      Glob category = repository.findLinkTarget(transaction, Transaction.CATEGORY);
       button.setText(categoryStringifier.toString(category, repository));
     }
     else {
-      button.setForeground(Color.RED);
+      button.setForeground(toCategorizeColor);
+      button.setFont(toCategorizeFont);
+      button.setUnderline(true);
       button.setText(Lang.get("category.assignement.required"));
     }
     rendererColors.setTransactionBackground(panel, isSelected, row);
     return panel;
   }
 
-  class ForwardAction extends AbstractAction {
-
+  private class OpenChooserAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       openCategoryChooser(transaction);
     }
-  }
 
-  private void openCategoryChooser(Glob transaction) {
-    tableView.getComponent().requestFocus();
-    selectTransactionIfNeeded(transaction);
-    categoryChooserAction.actionPerformed(null);
-  }
+    private void openCategoryChooser(Glob transaction) {
+      tableView.getComponent().requestFocus();
+      selectTransactionIfNeeded(transaction);
+      categoryChooserAction.actionPerformed(null);
+    }
 
-  private void selectTransactionIfNeeded(Glob transaction) {
-    GlobList selection = tableView.getCurrentSelection();
-    if (!selection.contains(transaction)) {
-      tableView.select(transaction);
+    private void selectTransactionIfNeeded(Glob transaction) {
+      GlobList selection = tableView.getCurrentSelection();
+      if (!selection.contains(transaction)) {
+        tableView.select(transaction);
+      }
     }
   }
-
 }

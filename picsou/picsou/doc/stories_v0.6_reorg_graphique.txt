@@ -14,28 +14,24 @@ Details transactions
 * Categorie "A classer" en rouge
 * Categorie "..." en multi-selection ("<plusieurs categories>")
 * Voir position bouton "split"
-* Masquer label original si identique au label utilisateur
-* Masquer date banque si identique a la date utilisateur
 * Afficher propagation d'affectation
 * Cas de transaction deja splittee
 
 
 TransactionView
 ---------------
-* Look hyperlinks categories
 
 
 TimeView
 --------
 * ScrollToVisible
 * Escamoter boutons
-* Tailles/positions labels ("juin")
 
 
 Misc
 ----
-* Cacher comptes
 * Joliesse fenetre split transaction
+* Split transaction : supprimer "disposable"
 * “Esc” pour fermer les boîtes de dialogue (mettre PicsouDialog en abstract, avec un dispose() a surcharger)
 * Memoriser dernier repertoire pour le filechooser
 
@@ -44,21 +40,5 @@ Reorg vues
 ----------
 * Vues accueil / operations / repartition / evolution
 * Revoir message "vous avez n transactions non classees"
-
-
-Vue "accueil"
--------------
-* Reprendre AccountView
-* Afficher/editer/ajouter les comptes et les positions
-* Naviguer vers le site de la banque
-
-
-Vue "Repartition"
------------------
-* Drill-down masters / subcats / labels
-
-
-Vue "Evolution"
----------------
+* Vue "Repartition"
 * Transformer HistoricalView en histogramme
-* Palmarès
