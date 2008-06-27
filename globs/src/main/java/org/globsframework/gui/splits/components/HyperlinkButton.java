@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 public class HyperlinkButton extends JButton {
   private int textWidth;
   private int fontHeight;
-  private Color rolloverColor = Color.BLUE;
+  private Color rolloverColor = Color.BLUE.brighter();
   private Color disabledColor = Color.GRAY;
   private int descent;
   private boolean underline = true;
@@ -30,7 +30,7 @@ public class HyperlinkButton extends JButton {
   private void init() {
     setRolloverEnabled(true);
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    setForeground(Color.CYAN);
+    setForeground(Color.BLUE);
   }
 
   public void setUnderline(boolean underline) {
