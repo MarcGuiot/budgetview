@@ -8,7 +8,6 @@ import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.gui.graphics.CategoriesChart;
 import org.designup.picsou.gui.graphics.HistoricalChart;
-import org.designup.picsou.gui.scorecard.ScorecardView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.InformationView;
@@ -68,8 +67,7 @@ public class MainPanel {
                 categoryView,
                 new CardView(repository, directory, transactionSelection),
                 new HistoricalChart(repository, directory),
-                new CategoriesChart(repository, directory, transactionSelection),
-                new ScorecardView(repository, directory, transactionSelection));
+                new CategoriesChart(repository, directory, transactionSelection));
 
     timeView.selectLastMonth();
     categoryView.select(Category.ALL);
@@ -101,8 +99,6 @@ public class MainPanel {
     fileMenu.add(exportFileAction);
     fileMenu.addSeparator();
     fileMenu.add(exitAction);
-
-    fileMenu.setVisible(false);
 
     JMenuBar menuBar = new JMenuBar();
     menuBar.add(fileMenu);
