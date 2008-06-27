@@ -38,7 +38,5 @@ Misc
 
 Reorg vues
 ----------
-* Vues accueil / operations / repartition / evolution
 * Revoir message "vous avez n transactions non classees"
-* Vue "Repartition"
 * Transformer HistoricalView en histogramme
