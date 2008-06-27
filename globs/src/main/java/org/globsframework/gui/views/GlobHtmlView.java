@@ -4,7 +4,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.gui.ComponentHolder;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -15,9 +14,7 @@ public class GlobHtmlView extends AbstractGlobTextView<GlobHtmlView> {
 
   public static GlobHtmlView init(GlobType type, GlobRepository globRepository,
                                   Directory directory, GlobListStringifier stringifier) {
-    GlobHtmlView view = new GlobHtmlView(type, globRepository, directory, stringifier);
-    view.update();
-    return view;
+    return new GlobHtmlView(type, globRepository, directory, stringifier);
   }
 
   private GlobHtmlView(GlobType type, GlobRepository repository, Directory directory, GlobListStringifier stringifier) {
@@ -37,12 +34,16 @@ public class GlobHtmlView extends AbstractGlobTextView<GlobHtmlView> {
   }
 
   public JEditorPane getComponent() {
+    if (!initCompleted) {
+      initCompleted = true;
+      update();
+    }
     return editorPane;
   }
 
   protected void doUpdate(String text) {
     this.text = text;
-    editorPane.setText(text);
+    this.editorPane.setText(text);
   }
 
   protected String getText() {

@@ -4,16 +4,19 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.utils.GlobListMatcher;
 import org.uispec4j.TextBox;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 public class GlobHtmlViewTest extends GlobTextViewTestCase {
-  protected TextBox init(final GlobRepository repository, boolean autoHide, GlobListStringifier stringifier) {
+  protected TextBox init(final GlobRepository repository, boolean autoHide,
+                         GlobListStringifier stringifier, GlobListMatcher matcher) {
     GlobHtmlView view =
       GlobHtmlView.init(DummyObject.TYPE, repository, directory, stringifier)
-      .setAutoHide(autoHide);
+        .setAutoHideMatcher(matcher)
+        .setAutoHideIfEmpty(autoHide);
     return new TextBox(view.getComponent());
   }
 

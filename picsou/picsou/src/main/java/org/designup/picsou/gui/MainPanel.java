@@ -1,6 +1,5 @@
 package org.designup.picsou.gui;
 
-import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ExportFileAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
@@ -18,8 +17,8 @@ import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsEditor;
+import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -51,7 +50,6 @@ public class MainPanel {
 
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
-    AccountView accountView = new AccountView(repository, directory);
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
     TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory);
     CategoryView categoryView = new CategoryView(repository, directory);
@@ -64,7 +62,6 @@ public class MainPanel {
     createPanel(directory,
                 new TitleView(repository, directory),
                 new InformationView(repository, directory, transactionSelection),
-                accountView,
                 transactionView,
                 transactionDetailsView,
                 timeView,
@@ -74,7 +71,6 @@ public class MainPanel {
                 new CategoriesChart(repository, directory, transactionSelection),
                 new ScorecardView(repository, directory, transactionSelection));
 
-    accountView.selectFirst();
     timeView.selectLastMonth();
     categoryView.select(Category.ALL);
 

@@ -162,16 +162,24 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkOriginalLabelNotVisible();
   }
 
-  public void testDisplayOriginalLabel() throws Exception {
+  public void testDisplayOriginalLabelOnlyIfDifferentFromUserLabel() throws Exception {
     String fileName = QifBuilder.init(this)
       .addTransaction("2008/06/15", 20.00, "PRELEVEMENT 123123 Auchan")
+      .addTransaction("2008/06/14", 100.00, "QUICK")
       .save();
+
     operations.importQifFiles(10, "Societe generale", fileName);
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkOriginalLabel("PRELEVEMENT 123123 Auchan");
+
     transactions.initContent()
       .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", 20.00)
+      .add("14/06/2008", TransactionType.VIREMENT, "QUICK", "", 100.00)
       .check();
+
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkOriginalLabel("PRELEVEMENT 123123 Auchan");
+
+    transactions.getTable().selectRow(1);
+    transactionDetails.checkOriginalLabelNotVisible();
   }
 
   public void testTransactionTypeDisplay() throws Exception {
@@ -206,21 +214,26 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactions.getTable().selectRow(0);
   }
 
-  public void testBankDateIsVisible() throws Exception {
+  public void testBankDateIsVisibleOnlyIfDifferentFromUserDate() throws Exception {
     String fileName = QifBuilder.init(this)
-      .addTransaction("2008/06/15", 20.00, "CARTE 123123 12/06/08 auchan")
-      .addTransaction("2008/06/14", 20.00, "CARTE 123123 12/06/08 auchan")
+      .addTransaction("2008/06/15", 20.00, "CARTE 123123 12/06/08 AUCHAN1")
+      .addTransaction("2008/06/10", 10.00, "CARTE 123123 10/06/08 AUCHAN2")
       .save();
     operations.importQifFiles(10, "Societe generale", fileName);
+    transactions.initContent()
+      .add("12/06/2008", TransactionType.CREDIT_CARD, "AUCHAN1", "", 20.00)
+      .add("10/06/2008", TransactionType.CREDIT_CARD, "AUCHAN2", "", 10.00)
+      .check();
+
     transactionDetails.checkBankDateNotVisible();
+
     transactions.getTable().selectRow(0);
     transactionDetails.checkBankDate("15/06/2008");
+
     transactions.getTable().selectRows(0, 1);
     transactionDetails.checkBankDateNotVisible();
 
-    transactions.initContent()
-      .add("12/06/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", 20.00)
-      .add("12/06/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", 20.00)
-      .check();
+    transactions.getTable().selectRows(1);
+    transactionDetails.checkBankDateNotVisible();
   }
 }

@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -8,8 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PicsouDialog extends JDialog {
-
-  private static PicsouDialogPainter painter = new PicsouDialogPainter();
 
   public static PicsouDialog create(Window owner) {
     if (owner instanceof JFrame) {
@@ -30,11 +27,19 @@ public class PicsouDialog extends JDialog {
   }
 
   public static PicsouDialog create(JFrame owner, String title) {
-    return initBorder(title, create(owner));
+    PicsouDialog modalWindow = create(owner);
+    if (title != null) {
+      modalWindow.setTitle(title);
+    }
+    return modalWindow;
   }
 
   public static PicsouDialog create(JDialog owner, String title) {
-    return initBorder(title, create(owner));
+    PicsouDialog modalWindow = create(owner);
+    if (title != null) {
+      modalWindow.setTitle(title);
+    }
+    return modalWindow;
   }
 
   public static PicsouDialog createWithButtons(Window owner, JPanel panel, Action... buttonActions) {
@@ -53,29 +58,11 @@ public class PicsouDialog extends JDialog {
     return dialog;
   }
 
-  private static PicsouDialog initBorder(String title, PicsouDialog modalWindow) {
-    if (title != null) {
-      modalWindow.setTitle(title);
-    }
-    JPanel container = (JPanel)modalWindow.getContentPane();
-    Gui.installWindowTitle(container, painter, title == null ? "" : title, 0);
-    Gui.installMovingWindowTitle(modalWindow);
-    return modalWindow;
-  }
-
   private PicsouDialog(JFrame parent) {
     super(parent, true);
-    setUndecorated(true);
   }
 
   private PicsouDialog(JDialog parent) {
     super(parent, true);
-    setUndecorated(true);
-  }
-
-  public void setContentPane(Container contentPane) {
-    Gui.installWindowTitle((JComponent)contentPane, painter, getTitle() == null ? "" : getTitle(), 0);
-    Gui.installMovingWindowTitle(this);
-    super.setContentPane(contentPane);
   }
 }

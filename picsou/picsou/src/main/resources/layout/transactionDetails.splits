@@ -9,12 +9,12 @@
     <style selector=".formValue"
       fill="none" anchor="right"/>
 
-    <style selector="hyperlink" foreground="#6666FF"/>
+    <style selector="hyperlink" foreground="#6666FF" opaque="false"/>
     <style selector="hyperlink#splitLink" font="-,plain,10"/>
     <style selector="panel" opaque="false"/>
 
     <style selector="textArea" foreground="transaction.detail.text" opaque="false"
-           anchor="top" lineWrap="true"/>
+           anchor="top" lineWrap="true" wrapStyleWord="true"/>
     <style selector="textArea#userLabel" font="$transaction.label"/>
 
     <style selector="label#amountValue" font="-,bold,16"/>
@@ -66,14 +66,10 @@
       </column>
     </panel>
 
-    <panel ref="detailInfo">
-      <column>
-
-        <label text="$transaction.details.label.original" styleClass="formLabel"/>
-        <textArea ref="originalLabel"/>
-
-      </column>
-    </panel>
+    <column>
+      <label text="$transaction.details.label.original" styleClass="formLabel" autoHideSource="originalLabel"/>
+      <textArea ref="originalLabel"/>
+    </column>
 
     <filler fill="vertical"/>
   </column>

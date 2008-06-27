@@ -4,7 +4,10 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.uispec4j.Button;
+import org.uispec4j.Panel;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -119,21 +122,19 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     transactions.assertEmpty();
   }
 
-  public void testNonAllocatedTransactionsHaveARedBackground() throws Exception {
+  public void testNonAllocatedTransactionsHaveARedLabel() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .load();
 
-    assertTrue(transactions.getTable().backgroundEquals(new Object[][]{
-      {DEFAULT_BG, ERROR_BG, DEFAULT_BG, DEFAULT_BG},
-    }));
+    Button lintToClasified = new Panel((Container)transactions.getTable().getSwingRendererComponentAt(0, 1)).getButton();
+    assertTrue(lintToClasified.foregroundEquals("red"));
 
     transactions.assignCategory(MasterCategory.FOOD, 0);
     transactions.getTable().clearSelection();
-    assertTrue(transactions.getTable().backgroundEquals(new Object[][]{
-      {DEFAULT_BG, DEFAULT_BG, DEFAULT_BG, DEFAULT_BG, DEFAULT_BG},
-    }));
+    Button categorizedLink = new Panel((Container)transactions.getTable().getSwingRendererComponentAt(0, 1)).getButton();
+    assertTrue(categorizedLink.foregroundEquals("blue"));
   }
 
   public void testCategorisationLinkSelectsCorrespondingRow() throws Exception {

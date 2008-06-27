@@ -96,8 +96,7 @@ public class TransactionToCategory {
   }
 
   public static GlobList getCategories(int transactionId, GlobRepository repository) {
-    Set<Integer> categoryIds = repository
-      .getAll(TYPE, GlobMatchers.fieldEquals(TRANSACTION, transactionId))
+    Set<Integer> categoryIds = repository.findByIndex(TRANSACTION_INDEX, transactionId)
       .getValueSet(CATEGORY);
 
     return repository.getAll(Category.TYPE, GlobMatchers.contained(Category.ID, categoryIds));

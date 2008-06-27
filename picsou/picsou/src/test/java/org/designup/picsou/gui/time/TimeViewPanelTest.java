@@ -160,14 +160,6 @@ public class TimeViewPanelTest extends TestCase {
     return jFrame;
   }
 
-
-  public void testInter() throws Exception {
-    Rectangle r1 = new Rectangle(15, 15, 10, 10);
-    Rectangle r2 = new Rectangle(10, 10, 10, 10);
-    Rectangle rectangle = r1.intersection(r2);
-    System.out.println("TimeViewPanelTest.testInter " + rectangle);
-  }
-
   public static void main(String[] args) {
     initPanel(new DefaultDirectory(), GlobRepositoryBuilder.init().get()).setVisible(true);
   }

@@ -11,9 +11,6 @@ public class PicsouWindowsLookAndFeel extends Plastic3DLookAndFeel {
     try {
       LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouButtonUI", "ButtonUI");
       LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouWindowsLabelUI", "LabelUI");
-      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouOptionPaneUI", "OptionPaneUI");
-      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouWindowsFileChooserUI", "FileChooserUI");
-      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouRootPaneUI", "RootPaneUI");
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -31,6 +28,6 @@ public class PicsouWindowsLookAndFeel extends Plastic3DLookAndFeel {
   }
 
   public boolean getSupportsWindowDecorations() {
-    return true;
+    return false;
   }
 }

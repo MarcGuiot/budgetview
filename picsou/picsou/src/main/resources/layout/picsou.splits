@@ -3,21 +3,18 @@
 
     <styledPanel name="header" topColor="frame.bg.top" bottomColor="frame.bg.bottom" opaque="false"
                  border="matte(0,0,1,0,#888888)" weightY="0">
-      <column marginLeft="20" marginRight="10" marginTop="10">
-        <label ref="accountView" opaque="false" horizontalAlignment="center" anchor="center" weightY="0"/>
-        <grid weightY="10" marginTop="5" marginBottom="20">
-          <button ref="firstPeriod" gridPos="(0,0)" fill="none" anchor="southeast" size="(15,20)"
-                  icon="first.png" rolloverIcon="firstrollover.png" pressedIcon="firstpressed.png"/>
-          <button ref="prevPeriod" gridPos="(0,1)" fill="none" anchor="northeast" size="(15,20)"
-                  icon="prev.png" rolloverIcon="prevrollover.png" pressedIcon="prevpressed.png"/>
-          <component ref="month" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
-                     marginLeft="10" weightX="1000.0" weightY="100.0" border="etched"/>
-          <button ref="lastPeriod" gridPos="(2,0)" fill="none" anchor="southeast" size="(15,20)"
-                  icon="last.png" rolloverIcon="lastrollover.png" pressedIcon="lastpressed.png"/>
-          <button ref="nextPeriod" gridPos="(2,1)" fill="none" anchor="northeast" size="(15,20)"
-                  icon="next.png" rolloverIcon="nextrollover.png" pressedIcon="nextpressed.png"/>
-        </grid>
-      </column>
+      <grid weightY="10" marginTop="15" marginBottom="15">
+        <button ref="firstPeriod" gridPos="(0,0)" fill="none" anchor="southeast" size="(15,20)"
+                icon="first.png" rolloverIcon="firstrollover.png" pressedIcon="firstpressed.png"/>
+        <button ref="prevPeriod" gridPos="(0,1)" fill="none" anchor="northeast" size="(15,20)"
+                icon="prev.png" rolloverIcon="prevrollover.png" pressedIcon="prevpressed.png"/>
+        <component ref="month" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
+                   marginLeft="10" weightX="1000.0" weightY="100.0" border="etched"/>
+        <button ref="lastPeriod" gridPos="(2,0)" fill="none" anchor="southeast" size="(15,20)"
+                icon="last.png" rolloverIcon="lastrollover.png" pressedIcon="lastpressed.png"/>
+        <button ref="nextPeriod" gridPos="(2,1)" fill="none" anchor="northeast" size="(15,20)"
+                icon="next.png" rolloverIcon="nextrollover.png" pressedIcon="nextpressed.png"/>
+      </grid>
     </styledPanel>
 
     <styledPanel ref="chartAreaPanel">
