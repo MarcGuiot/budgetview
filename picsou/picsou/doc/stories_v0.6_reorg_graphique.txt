@@ -13,7 +13,7 @@ Details transactions
 * Min/Max/Moy sur une ligne
 * Categorie "A classer" en rouge
 * Categorie "..." en multi-selection ("<plusieurs categories>")
-* Voir position bouton "split"
+* Voir position lien "split"
 * Afficher propagation d'affectation
 * Cas de transaction deja splittee
 
