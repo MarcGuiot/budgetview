@@ -1,5 +1,7 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.server.model.SerializableGlobType;
+import org.designup.picsou.server.serialization.SerializationManager;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.utils.GlobModelBuilder;
 
@@ -16,8 +18,13 @@ public class PicsouModel {
                           LabelToCategory.TYPE,
                           TransactionTypeMatcher.TYPE,
                           TransactionImport.TYPE,
-                          UserPreferences.TYPE)
+                          UserPreferences.TYPE,
+                          SerializableGlobType.TYPE)
       .get();
+
+  static {
+    SerializationManager.init(model);
+  }
 
   public static GlobModel get() {
     return model;

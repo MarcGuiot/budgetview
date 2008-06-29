@@ -5,6 +5,7 @@ import org.designup.picsou.client.exceptions.IdentificationFailed;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -22,7 +23,11 @@ public interface ServerAccess {
 
   void takeSnapshot();
 
-  GlobList getUserData(MutableChangeSet upgradeChangeSetToApply);
+  interface IdUpdate {
+    void update(IntegerField field, Integer lastAllocatedId);
+  }
+
+  GlobList getUserData(MutableChangeSet upgradeChangeSetToApply, IdUpdate idUpdate);
 
   int getNextId(String type, int idCount);
 

@@ -30,8 +30,8 @@ public class ServerAccessDecorator implements ServerAccess {
     serverAccess.takeSnapshot();
   }
 
-  public GlobList getUserData(MutableChangeSet changeSet) {
-    return serverAccess.getUserData(changeSet);
+  public GlobList getUserData(MutableChangeSet changeSet, IdUpdate idUpdate) {
+    return serverAccess.getUserData(changeSet, idUpdate);
   }
 
   public int getNextId(String type, int idCount) {

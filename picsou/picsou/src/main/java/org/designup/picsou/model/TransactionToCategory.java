@@ -1,17 +1,20 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.index.NotUniqueIndex;
+import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.KeyBuilder;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.Set;
 
@@ -19,18 +22,19 @@ public class TransactionToCategory {
   public static GlobType TYPE;
 
   @Key
+  public static IntegerField ID;
+
   @Target(Transaction.class)
   public static LinkField TRANSACTION;
 
-  @Key
   @Target(Category.class)
   public static LinkField CATEGORY;
 
-  public static NotUniqueIndex TRANSACTION_INDEX;
+  public static MultiFieldUniqueIndex TRANSACTION_INDEX;
 
   static {
     GlobTypeLoader.init(TransactionToCategory.class)
-      .defineNotUniqueIndex(TRANSACTION_INDEX, TRANSACTION);
+      .defineMultiFieldUniqueIndex(TRANSACTION_INDEX, TRANSACTION, CATEGORY);
   }
 
   public static void link(GlobRepository repository, Glob transaction, MasterCategory... categories) {
@@ -48,9 +52,16 @@ public class TransactionToCategory {
   public static void link(GlobRepository repository, Integer transactionId, Integer[] categoryIds) {
     for (Integer categoryId : categoryIds) {
       if (!categoryId.equals(Category.NONE) && !categoryId.equals(Category.ALL)) {
-        repository.findOrCreate(KeyBuilder.createFromValues(TYPE,
-                                                            value(TRANSACTION, transactionId),
-                                                            value(CATEGORY, categoryId)));
+        GlobList transactionToCategory =
+          repository
+            .findByIndex(TransactionToCategory.TRANSACTION_INDEX, TRANSACTION, transactionId)
+            .findByIndex(categoryId);
+        if (transactionToCategory.isEmpty()) {
+          repository.create(TYPE,
+                            value(ID, repository.getIdGenerator().getNextId(ID, 1)),
+                            value(TRANSACTION, transactionId),
+                            value(CATEGORY, categoryId));
+        }
       }
     }
   }
@@ -63,9 +74,14 @@ public class TransactionToCategory {
       }
     }
     else {
-      repository.findOrCreate(KeyBuilder.createFromValues(TYPE,
-                                                          value(TRANSACTION, transactionId),
-                                                          value(CATEGORY, categoryId)));
+      GlobList association = repository.findByIndex(TransactionToCategory.TRANSACTION_INDEX, TransactionToCategory.TRANSACTION, transactionId)
+        .findByIndex(categoryId);
+      if (association.isEmpty()) {
+        repository.create(TYPE,
+                          value(ID, repository.getIdGenerator().getNextId(ID, 1)),
+                          value(TRANSACTION, transactionId),
+                          value(CATEGORY, categoryId));
+      }
     }
   }
 
@@ -78,12 +94,9 @@ public class TransactionToCategory {
   }
 
   private static void unlink(GlobRepository repository, int transactionId, int categoryId) {
-    GlobList matchingTransactions = repository.getAll(TYPE, GlobMatchers.fieldEquals(TRANSACTION, transactionId));
-    for (Glob matchingTransaction : matchingTransactions) {
-      if (matchingTransaction.get(CATEGORY) == categoryId) {
-        repository.delete(matchingTransaction.getKey());
-      }
-    }
+    GlobList linkToDelete = repository.findByIndex(TransactionToCategory.TRANSACTION_INDEX, TransactionToCategory.TRANSACTION, transactionId)
+      .findByIndex(categoryId);
+    repository.delete(linkToDelete);
   }
 
   public static boolean hasCategories(Glob transaction, GlobRepository repository) {
@@ -96,7 +109,8 @@ public class TransactionToCategory {
   }
 
   public static GlobList getCategories(int transactionId, GlobRepository repository) {
-    Set<Integer> categoryIds = repository.findByIndex(TRANSACTION_INDEX, transactionId)
+    Set<Integer> categoryIds = repository.findByIndex(TRANSACTION_INDEX, TRANSACTION, transactionId)
+      .getGlobs()
       .getValueSet(CATEGORY);
 
     return repository.getAll(Category.TYPE, GlobMatchers.contained(Category.ID, categoryIds));
@@ -110,4 +124,32 @@ public class TransactionToCategory {
     GlobList categories = getCategories(transaction, repository);
     return ((categories.size() == 1) && (categories.get(0).get(Category.ID) == MasterCategory.INTERNAL.getId()));
   }
+
+  public static class Serialization implements PicsouGlobSerializer {
+
+    public byte[] serializeData(FieldValues values) {
+      SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
+      SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
+      outputStream.write(values.get(CATEGORY));
+      outputStream.write(values.get(TRANSACTION));
+      return serializedByteArrayOutput.toByteArray();
+    }
+
+    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
+      if (version == 1) {
+        deserializeDataV1(fieldSetter, data);
+      }
+    }
+
+    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(CATEGORY, input.readNotNullInt());
+      fieldSetter.set(TRANSACTION, input.readNotNullInt());
+    }
+
+    public int getWriteVersion() {
+      return 1;
+    }
+  }
+
 }

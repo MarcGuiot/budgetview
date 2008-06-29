@@ -10,7 +10,6 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.KeyBuilder;
 import static org.globsframework.model.KeyBuilder.newKey;
 import org.globsframework.utils.directory.Directory;
 
@@ -88,11 +87,14 @@ public class DeleteCategoryAction extends AbstractCategoryAction {
     Integer categoryId = category.get(Category.ID);
     for (Glob ttc : repository.getAll(TransactionToCategory.TYPE)) {
       if (categoryId.equals(ttc.get(TransactionToCategory.CATEGORY))) {
-        repository.findOrCreate(KeyBuilder.createFromValues(
-          TransactionToCategory.TYPE,
-          value(TransactionToCategory.TRANSACTION, ttc.get(TransactionToCategory.TRANSACTION)),
-          value(TransactionToCategory.CATEGORY, masterId)));
-        repository.delete(ttc.getKey());
+        GlobList existingLink = repository.findByIndex(TransactionToCategory.TRANSACTION_INDEX, TransactionToCategory.TRANSACTION,
+                                                       ttc.get(TransactionToCategory.TRANSACTION)).findByIndex(TransactionToCategory.CATEGORY);
+        if (existingLink.isEmpty()) {
+          repository.create(TransactionToCategory.TYPE,
+                            value(TransactionToCategory.TRANSACTION, ttc.get(TransactionToCategory.TRANSACTION)),
+                            value(TransactionToCategory.CATEGORY, masterId));
+          repository.delete(ttc.getKey());
+        }
       }
     }
   }

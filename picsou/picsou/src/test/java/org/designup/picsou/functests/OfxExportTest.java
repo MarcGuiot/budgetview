@@ -34,7 +34,7 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
     String exportedContent = Files.loadFileToString(fileName);
 
     assertTrue(exportedContent.contains(
-      "        <BANKTRANLIST>\n" +
+      "<BANKTRANLIST>\n" +
       "          <DTSTART>20060131000000\n" +
       "          <DTEND>20060203000000\n" +
       "          <STMTTRN>\n" +
@@ -42,7 +42,7 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
       "            <DTPOSTED>20060110\n" +
       "            <DTUSER>20060110\n" +
       "            <TRNAMT>-0.2\n" +
-      "            <FITID>PICSOU1\n" +
+      "            <FITID>PICSOU0\n" +
       "            <NAME>Menu K\n" +
       "            <CATEGORY>food\n" +
       "          </STMTTRN>\n" +
@@ -51,11 +51,11 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
       "            <DTPOSTED>20060110\n" +
       "            <DTUSER>20060110\n" +
       "            <TRNAMT>-1.0\n" +
-      "            <FITID>PICSOU2\n" +
+      "            <FITID>PICSOU1\n" +
       "            <NAME>Menu K\n" +
       "            <CATEGORY>food\n" +
       "            <NOTE>COCA\n" +
-      "            <PARENT>PICSOU1\n" +
+      "            <PARENT>PICSOU0\n" +
       "          </STMTTRN>\n" +
       "        </BANKTRANLIST>"
     ));

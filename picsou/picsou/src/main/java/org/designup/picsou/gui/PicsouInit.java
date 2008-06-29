@@ -2,7 +2,6 @@ package org.designup.picsou.gui;
 
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
-import org.designup.picsou.client.ServerAccessGlobIdGenerator;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.triggers.MonthStatComputer;
@@ -12,10 +11,12 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.CachedGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import static org.globsframework.model.utils.GlobMatchers.isNotNull;
@@ -39,14 +40,13 @@ public class PicsouInit {
   private PicsouInit(ServerAccess serverAccess, String user, boolean newUser, Directory directory) throws IOException {
     this.directory = directory;
 
-    ServerAccessGlobIdGenerator generator = new ServerAccessGlobIdGenerator(serverAccess);
+    final DefaultGlobIdGenerator generator = new DefaultGlobIdGenerator();
     repository =
       GlobRepositoryBuilder.init(new CachedGlobIdGenerator(generator))
         .add(directory.get(GlobModel.class).getConstants())
         .get();
-    generator.set(repository);
 
-
+    generator.setRepository(repository);
     repository.addTrigger(new SummaryAccountCreationTrigger());
 
     repository.addChangeListener(new ServerChangeSetListener(serverAccess));
@@ -59,7 +59,12 @@ public class PicsouInit {
 
     MutableChangeSet changeSet = new DefaultChangeSet();
     try {
-      GlobList userData = serverAccess.getUserData(changeSet);
+      GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdate() {
+
+        public void update(IntegerField field, Integer lastAllocatedId) {
+          generator.update(field, lastAllocatedId);
+        }
+      });
       repository.reset(userData, Transaction.TYPE, Account.TYPE, Bank.TYPE, BankEntity.TYPE,
                        TransactionToCategory.TYPE, LabelToCategory.TYPE, Category.TYPE);
     }

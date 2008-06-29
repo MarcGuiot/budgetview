@@ -24,7 +24,8 @@ public class TransactionFilter {
 
     for (Glob transaction : createdTransactions) {
       Set<Integer> categoryIds =
-        targetRepository.findByIndex(TransactionToCategory.TRANSACTION_INDEX, transaction.get(Transaction.ID))
+        targetRepository.findByIndex(TransactionToCategory.TRANSACTION_INDEX, TransactionToCategory.TRANSACTION, transaction.get(Transaction.ID))
+          .getGlobs()
           .getValueSet(TransactionToCategory.CATEGORY);
       TransactionToCategory.link(targetRepository,
                                  transaction.get(Transaction.ID),

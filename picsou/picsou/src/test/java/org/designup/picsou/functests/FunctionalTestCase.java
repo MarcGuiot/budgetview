@@ -15,6 +15,7 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
   protected String url;
   protected Directory directory;
   private ServerDirectory serverDirectory;
+  private boolean inMemory = true;
 
   static {
     TestUtils.clearTmpDir();
@@ -26,7 +27,11 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
     Locale.setDefault(Locale.ENGLISH);
     Log.reset();
     Files.deleteSubtree(new File(createPrevaylerRepository()));
-    url = initServerEnvironment(this);
+    url = initServerEnvironment(this, inMemory);
+  }
+
+  protected void setInMemory(boolean inMemory) {
+    this.inMemory = inMemory;
   }
 
   protected void tearDown() throws Exception {
@@ -38,9 +43,9 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
     Files.deleteSubtree(new File(createPrevaylerRepository()));
   }
 
-  public String initServerEnvironment(TestCase testCase) throws Exception {
+  public String initServerEnvironment(TestCase testCase, boolean inMemory) throws Exception {
     String prevaylerPath = createPrevaylerRepository();
-    serverDirectory = new ServerDirectory(prevaylerPath, true);
+    serverDirectory = new ServerDirectory(prevaylerPath, inMemory);
     directory = serverDirectory.getServiceDirectory();
     return prevaylerPath;
   }

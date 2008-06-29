@@ -1,5 +1,6 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
@@ -7,12 +8,14 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import static org.globsframework.model.Key.create;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public class Transaction {
   public static GlobType TYPE;
@@ -104,7 +107,8 @@ public class Transaction {
     try {
       repository.setTarget(transaction.getKey(), CATEGORY, create(Category.TYPE, categoryId));
       repository.delete(repository.findByIndex(TransactionToCategory.TRANSACTION_INDEX,
-                                               transaction.get(Transaction.ID)));
+                                               TransactionToCategory.TRANSACTION,
+                                               transaction.get(Transaction.ID)).getGlobs());
     }
     finally {
       repository.completeBulkDispatchingMode();
@@ -129,5 +133,58 @@ public class Transaction {
 
   public static double subtract(double initialValue, double amount) {
     return Math.rint(Math.signum(initialValue) * (Math.abs(initialValue) - Math.abs(amount)) * 100.0) / 100.0;
+  }
+
+  public static class Serialization implements PicsouGlobSerializer {
+
+    public byte[] serializeData(FieldValues fieldValues) {
+      SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
+      SerializedOutput output = serializedByteArrayOutput.getOutput();
+      output.writeString(fieldValues.get(Transaction.ORIGINAL_LABEL));
+      output.writeString(fieldValues.get(Transaction.LABEL));
+      output.writeString(fieldValues.get(Transaction.LABEL_FOR_CATEGORISATION));
+      output.writeString(fieldValues.get(Transaction.NOTE));
+      output.writeInteger(fieldValues.get(Transaction.MONTH));
+      output.writeInteger(fieldValues.get(Transaction.DAY));
+      output.writeInteger(fieldValues.get(Transaction.BANK_MONTH));
+      output.writeInteger(fieldValues.get(Transaction.BANK_DAY));
+      output.writeDouble(fieldValues.get(Transaction.AMOUNT));
+      output.writeInteger(fieldValues.get(Transaction.ACCOUNT));
+      output.writeInteger(fieldValues.get(Transaction.TRANSACTION_TYPE));
+      output.writeInteger(fieldValues.get(Transaction.CATEGORY));
+      output.writeBoolean(fieldValues.get(Transaction.SPLIT));
+      output.writeInteger(fieldValues.get(Transaction.SPLIT_SOURCE));
+      output.writeBoolean(fieldValues.get(Transaction.DISPENSABLE));
+      return serializedByteArrayOutput.toByteArray();
+    }
+
+    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
+      if (version == 1) {
+        deserializeDataV1(fieldSetter, data);
+      }
+    }
+
+    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readString());
+      fieldSetter.set(Transaction.LABEL, input.readString());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readString());
+      fieldSetter.set(Transaction.NOTE, input.readString());
+      fieldSetter.set(Transaction.MONTH, input.readInteger());
+      fieldSetter.set(Transaction.DAY, input.readInteger());
+      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
+      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
+      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
+      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
+      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
+      fieldSetter.set(Transaction.DISPENSABLE, input.readBoolean());
+    }
+
+    public int getWriteVersion() {
+      return 1;
+    }
   }
 }

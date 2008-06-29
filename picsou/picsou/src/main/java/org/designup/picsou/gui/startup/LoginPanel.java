@@ -230,11 +230,11 @@ public class LoginPanel {
   private void initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
     serverDirectory = new ServerDirectory(prevaylerPath, dataInMemory);
     EncrypterToTransportServerAccess localServerAccess =
-      new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()));
+      new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()), directory);
     ServerAccess remoteAccess = null;
     if (remoteAdress.startsWith("http")) {
       remoteAccess = new ConnectionRetryServerAccess(
-        new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress)));
+        new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
     }
     serverAccess = new DispatcherServerAccess(localServerAccess, remoteAccess);
   }

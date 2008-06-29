@@ -1,23 +1,34 @@
 package org.designup.picsou.client.http;
 
 import org.designup.picsou.client.ClientTransport;
+import org.designup.picsou.client.SerializableDeltaGlobSerializer;
+import org.designup.picsou.client.SerializableGlobSerializer;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadConnection;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
-import org.designup.picsou.server.model.HiddenServerTypeVisitor;
-import org.designup.picsou.server.model.ServerModel;
+import org.designup.picsou.server.model.SerializableGlobType;
+import org.designup.picsou.server.serialization.PicsouGlobSerializer;
+import org.designup.picsou.server.serialization.SerializationManager;
+import org.globsframework.metamodel.GlobModel;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.delta.DeltaGlob;
 import org.globsframework.model.delta.MutableChangeSet;
-import org.globsframework.remote.SerializedRemoteAccess;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.MapOfMaps;
+import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.security.SecureRandom;
+import java.util.Map;
 
 public class EncrypterToTransportServerAccess implements ServerAccess {
   private ClientTransport clientTransport;
@@ -27,9 +38,11 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   private PasswordBasedEncryptor passwordBasedEncryptor;
   private boolean notConnected = true;
   static final byte[] salt = {0x54, 0x12, 0x43, 0x65, 0x77, 0x2, 0x79, 0x72};
+  private GlobModel globModel;
 
-  public EncrypterToTransportServerAccess(ClientTransport transport) {
+  public EncrypterToTransportServerAccess(ClientTransport transport, Directory directory) {
     this.clientTransport = transport;
+    globModel = directory.get(GlobModel.class);
   }
 
   public boolean createUser(String name, char[] password) throws UserAlreadyExists {
@@ -122,14 +135,16 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     }
   }
 
-  public void applyChanges(ChangeSet changeSet, final GlobRepository globRepository) {
-    SerializedByteArrayOutput request = new SerializedByteArrayOutput();
-    final SerializedRemoteAccess.ChangeVisitor globChangeVisitor =
-      SerializedRemoteAccess.getChangeVisitor(request.getOutput());
-    changeSet.safeVisit(new ChangeSetSerializerVisitor(globChangeVisitor, globRepository, passwordBasedEncryptor));
-    if (request.size() != 0) {
-      globChangeVisitor.complete();
-      updateUserData(request.toByteArray());
+  public void applyChanges(ChangeSet changeSet, final GlobRepository repository) {
+    ChangeSetSerializerVisitor serializerVisitor = new ChangeSetSerializerVisitor(passwordBasedEncryptor, repository);
+    changeSet.safeVisit(serializerVisitor);
+    SerializableDeltaGlobSerializer deltaGlobSerializer = new SerializableDeltaGlobSerializer();
+    SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
+    outputStream.getOutput().writeBytes(privateId);
+    MultiMap<String, DeltaGlob> stringDeltaGlobMultiMap = serializerVisitor.getSerializableGlob();
+    deltaGlobSerializer.serialize(outputStream.getOutput(), stringDeltaGlobMultiMap);
+    if (stringDeltaGlobMultiMap.size() != 0) {
+      updateUserData(outputStream.toByteArray());
     }
   }
 
@@ -143,29 +158,39 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     clientTransport.takeSnapshot(sessionId, outputStream.toByteArray());
   }
 
-  private void updateUserData(byte[] hiddenTransactions) {
+  private void updateUserData(byte[] bytes) {
     checkConnected();
-    SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
-    outputStream.getOutput().writeBytes(privateId);
-    outputStream.getOutput().writeBytes(hiddenTransactions);
-    clientTransport.updateUserData(sessionId, outputStream.toByteArray());
+    clientTransport.updateUserData(sessionId, bytes);
   }
 
-  public GlobList getUserData(MutableChangeSet changeSet) {
+  public GlobList getUserData(MutableChangeSet changeSet, IdUpdate idUpdate) {
     checkConnected();
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
     SerializedInput input = clientTransport.getUserData(sessionId, outputStream.toByteArray());
-    int globCount = input.readNotNullInt();
-    HiddenServerTypeVisitorDecoder typeVisitorDecoder =
-      new HiddenServerTypeVisitorDecoder(passwordBasedEncryptor, globCount, changeSet);
-    while (globCount != 0) {
-      Glob glob = input.readGlob(ServerModel.get());
-      typeVisitorDecoder.set(glob);
-      HiddenServerTypeVisitor.Visitor.safeVisit(glob.getType(), typeVisitorDecoder);
-      globCount--;
+    SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
+    MapOfMaps<String, Integer, Glob> stringIntegerGlobMapOfMaps = serializableGlobSerializer.deserialize(input);
+    GlobList result = new GlobList(stringIntegerGlobMapOfMaps.size());
+    for (String globTypeName : stringIntegerGlobMapOfMaps.keys()) {
+      GlobType globType = globModel.getType(globTypeName);
+      PicsouGlobSerializer globSerializer =
+        globType.getProperty(SerializationManager.SERIALIZATION_PROPERTY);
+      if (globSerializer == null) {
+        throw new RuntimeException("missing serialializer for " + globTypeName);
+      }
+      IntegerField field = (IntegerField)globType.getKeyFields().get(0);
+      Integer id = 0;
+      for (Map.Entry<Integer, Glob> globEntry : stringIntegerGlobMapOfMaps.get(globTypeName).entrySet()) {
+        id = globEntry.getKey();
+        GlobBuilder builder = GlobBuilder.init(globType).setValue(field, id);
+        Glob glob = globEntry.getValue();
+        globSerializer.deserializeData(glob.get(SerializableGlobType.VERSION), builder,
+                                       passwordBasedEncryptor.decrypt(glob.get(SerializableGlobType.DATA)));
+        result.add(builder.get());
+      }
+      idUpdate.update(field, id);
     }
-    return typeVisitorDecoder.getGlobs();
+    return result;
   }
 
   public int getNextId(String type, int idCount) {

@@ -37,7 +37,7 @@ public class MainWindowLauncher {
     ServerDirectory serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), false);
     Directory directory = serverDirectory.getServiceDirectory();
     ServerAccess serverAccess =
-      new EncrypterToTransportServerAccess(new LocalClientTransport(directory));
+      new EncrypterToTransportServerAccess(new LocalClientTransport(directory), directory);
     run(serverAccess, args);
   }
 

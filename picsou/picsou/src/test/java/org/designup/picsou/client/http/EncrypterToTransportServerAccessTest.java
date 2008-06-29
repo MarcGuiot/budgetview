@@ -1,5 +1,6 @@
 package org.designup.picsou.client.http;
 
+import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadPassword;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
@@ -9,6 +10,7 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.server.model.*;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.Persistence;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.impl.DefaultGlobRepository;
@@ -18,7 +20,15 @@ import org.globsframework.utils.Functor;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.InvalidState;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
+
+  protected void setUp() throws Exception {
+    setInMemory(false);
+    super.setUp();
+  }
 
   private GlobRepository init(final EncrypterToTransportServerAccess createClientCategorizer) {
     GlobRepository repository = GlobRepositoryBuilder.createEmpty();
@@ -27,6 +37,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
         createClientCategorizer.applyChanges(changeSet, repository);
       }
     });
+    PicsouModel.get();
     return repository;
   }
 
@@ -38,31 +49,29 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
 
   public void testAddAndModifyTransaction() throws Exception {
     EncrypterToTransportServerAccess serverAccess = createServerAccess();
+
     Glob glob = createUser("name", "password", serverAccess);
     assertEquals("name", glob.get(User.NAME));
-    Glob hiddenGlob = getHiddenUser(glob);
-    Integer userId = hiddenGlob.get(HiddenUser.USER_ID);
     Glob expected = getATransaction();
+    serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdate());
 
     GlobRepository repository = init(serverAccess);
     repository.create(expected.getKey(), expected.toArray());
 
-    GlobList transactions = getHiddenTransaction(userId);
-    assertEquals(1, transactions.size());
-
-    GlobList result = serverAccess.getUserData(new DefaultChangeSet());
+    DummyIdUpdate update = new DummyIdUpdate();
+    GlobList result = serverAccess.getUserData(new DefaultChangeSet(), update);
+    assertEquals((int)update.ids.get(Transaction.ID), 1);
     assertEquals(1, result.size());
     assertEquals(expected.get(Transaction.CATEGORY), result.get(0).get(Transaction.CATEGORY));
   }
 
   public void testCreateAndModifyAccount() throws Exception {
-    EncrypterToTransportServerAccess categorizer = createServerAccess();
-    Glob glob = createUser("name", "password", categorizer);
+    EncrypterToTransportServerAccess serverAccess = createServerAccess();
+    Glob glob = createUser("name", "password", serverAccess);
+    serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdate());
     assertEquals("name", glob.get(User.NAME));
-    Glob hiddenGlob = getHiddenUser(glob);
-    Integer userId = hiddenGlob.get(HiddenUser.USER_ID);
 
-    GlobRepository repository = init(categorizer);
+    GlobRepository repository = init(serverAccess);
 
     Glob expected = repository.create(Key.create(Account.TYPE, 123),
                                       FieldValue.value(Account.BANK_ENTITY, 1),
@@ -70,10 +79,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
                                       FieldValue.value(Account.BALANCE, 100.),
                                       FieldValue.value(Account.BRANCH_ID, 2));
     {
-      GlobList accounts = getAccount(userId);
-      assertEquals(1, accounts.size());
-      assertEquals(123, accounts.get(0).get(HiddenAccount.ID).intValue());
-      Glob actualAccount = categorizer.getUserData(new DefaultChangeSet()).get(0);
+      Glob actualAccount = serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdate()).get(0);
       assertEquals(1, actualAccount.get(Account.BANK_ENTITY).intValue());
       assertEquals(123, actualAccount.get(Account.ID).intValue());
       assertEquals(2, actualAccount.get(Account.BRANCH_ID).intValue());
@@ -81,29 +87,24 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
     }
     {
       repository.update(expected.getKey(), Account.BALANCE, -122.);
-      GlobList accounts = getAccount(userId);
-      assertEquals(1, accounts.size());
-      Glob actualAccount = categorizer.getUserData(new DefaultChangeSet()).get(0);
+      Glob actualAccount = serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdate()).get(0);
       assertEquals(-122.0, actualAccount.get(Account.BALANCE), 0.1);
     }
   }
 
   public void testAddBank() throws Exception {
-    EncrypterToTransportServerAccess categorizer = createServerAccess();
-    Glob glob = createUser("name", "password", categorizer);
-    Glob hiddenGlob = getHiddenUser(glob);
-    Integer userId = hiddenGlob.get(HiddenUser.USER_ID);
+    EncrypterToTransportServerAccess serverAccess = createServerAccess();
+
+    Glob glob = createUser("name", "password", serverAccess);
+    serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdate());
     Glob expected = GlobBuilder.init(org.designup.picsou.model.Bank.TYPE)
       .set(Bank.ID, 12).get();
 
-    GlobRepository repository = init(categorizer);
+    GlobRepository repository = init(serverAccess);
 
     {
       repository.create(expected.getKey(), expected.toArray());
-      GlobList banks = getBank(userId);
-      assertEquals(1, banks.size());
-      assertEquals(12, banks.get(0).get(HiddenBank.ID).intValue());
-      Glob actualBank = categorizer.getUserData(new DefaultChangeSet()).get(0);
+      Glob actualBank = serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdate()).get(0);
       assertEquals(12, actualBank.get(Bank.ID).intValue());
     }
   }
@@ -146,7 +147,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
     final EncrypterToTransportServerAccess categorizer = createServerAccess();
     TestUtils.assertFails(new Functor() {
       public void run() throws Exception {
-        categorizer.getUserData(new DefaultChangeSet());
+        categorizer.getUserData(new DefaultChangeSet(), new DummyIdUpdate());
       }
     }, InvalidState.class);
 
@@ -160,9 +161,9 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   public void testWithCategory() throws Exception {
     EncrypterToTransportServerAccess serverAccess = createServerAccess();
     Glob glob = createUser("name", "password", serverAccess);
+    serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdate());
+
     assertEquals("name", glob.get(User.NAME));
-    Glob hiddenGlob = getHiddenUser(glob);
-    Integer userId = hiddenGlob.get(HiddenUser.USER_ID);
 
     Glob expected = GlobBuilder.init(Category.TYPE)
       .set(Category.ID, 1).set(Category.NAME, "category name").set(Category.MASTER, 3).get();
@@ -170,38 +171,16 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
     GlobRepository repository = init(serverAccess);
     repository.create(expected.getKey(), expected.toArray());
 
-    GlobList transactions = getHiddenCateory(userId);
-    assertEquals(1, transactions.size());
-
-    GlobList result = serverAccess.getUserData(new DefaultChangeSet());
+    GlobList result = serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdate());
     assertEquals(1, result.size());
     assertEquals(expected.get(Category.NAME), result.get(0).get(Category.NAME));
 
     repository.update(Key.create(Category.TYPE, 1), Category.NAME, "other name");
 
-    GlobList updateResult = serverAccess.getUserData(new DefaultChangeSet());
+    DummyIdUpdate update = new DummyIdUpdate();
+    GlobList updateResult = serverAccess.getUserData(new DefaultChangeSet(), update);
     assertEquals(1, updateResult.size());
     assertEquals("other name", updateResult.get(0).get(Category.NAME));
-  }
-
-  public void testGetNextId() throws Exception {
-    EncrypterToTransportServerAccess serverAccess = createServerAccess();
-    Glob glob = createUser("name", "password", serverAccess);
-    assertEquals(1000, serverAccess.getNextId(Category.TYPE.getName(), 3));
-    assertEquals(1003, serverAccess.getNextId(Category.TYPE.getName(), 2));
-
-    assertEquals(1, serverAccess.getNextId(Transaction.TYPE.getName(), 3));
-    assertEquals(4, serverAccess.getNextId(Transaction.TYPE.getName(), 2));
-
-    assertEquals(1, serverAccess.getNextId(TransactionImport.TYPE.getName(), 3));
-    assertEquals(4, serverAccess.getNextId(TransactionImport.TYPE.getName(), 2));
-
-    assertEquals(1, serverAccess.getNextId(Account.TYPE.getName(), 3));
-    assertEquals(4, serverAccess.getNextId(Account.TYPE.getName(), 2));
-
-    assertEquals(1, serverAccess.getNextId(Bank.TYPE.getName(), 3));
-    assertEquals(4, serverAccess.getNextId(Bank.TYPE.getName(), 2));
-
   }
 
   private Glob getHiddenUser(Glob glob) {
@@ -240,7 +219,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
 
   private EncrypterToTransportServerAccess createServerAccess() {
     LocalClientTransport dummyClentTransport = new LocalClientTransport(directory);
-    return new EncrypterToTransportServerAccess(dummyClentTransport);
+    return new EncrypterToTransportServerAccess(dummyClentTransport, directory);
   }
 
   private GlobList getAccount(Integer userId) {
@@ -248,4 +227,11 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
     return persistence.getHiddenGlob(HiddenAccount.TYPE, userId);
   }
 
+  private static class DummyIdUpdate implements ServerAccess.IdUpdate {
+    public Map<IntegerField, Integer> ids = new HashMap<IntegerField, Integer>();
+
+    public void update(IntegerField field, Integer lastAllocatedId) {
+      ids.put(field, lastAllocatedId);
+    }
+  }
 }

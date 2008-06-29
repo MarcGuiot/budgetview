@@ -1,5 +1,6 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
@@ -9,10 +10,12 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.ReadOnlyGlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public class Category {
 
@@ -86,4 +89,35 @@ public class Category {
   public static boolean isReserved(Glob category) {
     return MasterCategory.isReserved(category);
   }
+
+  public static class Serialization implements PicsouGlobSerializer {
+
+    public byte[] serializeData(FieldValues values) {
+      SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
+      SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
+      outputStream.writeString(values.get(NAME));
+      outputStream.writeInteger(values.get(MASTER));
+      outputStream.writeBoolean(values.get(SYSTEM));
+      return serializedByteArrayOutput.toByteArray();
+    }
+
+    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
+      if (version == 1) {
+        deserializeDataV1(fieldSetter, data);
+      }
+    }
+
+    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NAME, input.readString());
+      fieldSetter.set(MASTER, input.readInteger());
+      fieldSetter.set(SYSTEM, input.readBoolean());
+
+    }
+
+    public int getWriteVersion() {
+      return 1;
+    }
+  }
+
 }

@@ -73,8 +73,10 @@ public class OfxExporter {
                                    transaction.get(Transaction.ORIGINAL_LABEL));
 
     GlobList categories =
-      GlobUtils.getTargets(repository.findLinkedTo(transaction, TransactionToCategory.TRANSACTION),
-                           TransactionToCategory.CATEGORY, repository)
+      GlobUtils.getTargets(
+        repository.findByIndex(TransactionToCategory.TRANSACTION_INDEX, TransactionToCategory.TRANSACTION,
+                               transaction.get(Transaction.ID)).getGlobs(),
+        TransactionToCategory.CATEGORY, repository)
         .sort(Category.NAME);
     categories.add(repository.findLinkTarget(transaction, Transaction.CATEGORY));
     for (Glob category : categories) {
