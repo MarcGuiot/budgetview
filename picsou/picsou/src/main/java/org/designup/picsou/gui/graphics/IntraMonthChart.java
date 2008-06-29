@@ -20,9 +20,8 @@ import static org.globsframework.model.utils.GlobMatchers.and;
 import org.globsframework.utils.directory.Directory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.xy.XYSeries;
-import org.jfree.util.ShapeUtilities;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -175,25 +174,14 @@ public class IntraMonthChart extends AbstractLineChart {
   }
 
   private void configureSeries() {
-    XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer)plot.getRenderer();
-    renderer.setSeriesShapesVisible(0, true);
-    renderer.setSeriesShapesVisible(1, false);
-
-    renderer.setSeriesLinesVisible(0, true);
-    renderer.setSeriesLinesVisible(1, true);
+    XYBarRenderer renderer = (XYBarRenderer)plot.getRenderer();
     renderer.setSeriesStroke(0, new BasicStroke(1.5f));
     renderer.setSeriesStroke(1, new BasicStroke(
       1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
       1.0f, new float[]{6.0f, 6.0f}, 0.0f
     ));
 
-    setRowColor(CURRENT_ROW, PicsouColors.INTRAMONTH_CURRENT_LINE, renderer, dataset);
-    setRowColor(PREVIOUS_ROW, PicsouColors.INTRAMONTH_PREVIOUS_LINE, renderer, dataset);
-
-    setShapeColor(CURRENT_ROW, PicsouColors.CHART_EXPENSES_SHAPE, renderer, dataset);
-    renderer.setSeriesShape(0, ShapeUtilities.createDiamond(2.0f));
-
-    renderer.setDrawOutlines(true);
-    renderer.setUseFillPaint(true);
+    setRowColor(CURRENT_ROW, PicsouColors.INTRAMONTH_CURRENT_LINE, PicsouColors.INTRAMONTH_CURRENT_LINE, renderer, dataset);
+    setRowColor(PREVIOUS_ROW, PicsouColors.INTRAMONTH_PREVIOUS_LINE, PicsouColors.INTRAMONTH_PREVIOUS_LINE, renderer, dataset);
   }
 }

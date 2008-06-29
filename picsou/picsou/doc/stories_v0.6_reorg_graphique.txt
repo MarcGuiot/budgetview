@@ -16,10 +16,12 @@ Details transactions
 * Voir position lien "split"
 * Afficher propagation d'affectation
 * Cas de transaction deja splittee
+* Notes
 
 
 TransactionView
 ---------------
+* Revoir tailles colonnes (colonne "notes" invisible)
 
 
 TimeView
@@ -38,5 +40,4 @@ Misc
 
 Reorg vues
 ----------
-* Revoir message "vous avez n transactions non classees"
 * Transformer HistoricalView en histogramme

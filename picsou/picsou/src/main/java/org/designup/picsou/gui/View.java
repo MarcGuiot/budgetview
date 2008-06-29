@@ -5,6 +5,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
@@ -15,6 +16,7 @@ public abstract class View implements ColorChangeListener {
   protected ColorService colorService;
   protected DescriptionService descriptionService;
   protected SelectionService selectionService;
+  protected FontLocator fontLocator;
 
   protected View(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -22,6 +24,7 @@ public abstract class View implements ColorChangeListener {
     this.colorService = directory.get(ColorService.class);
     this.descriptionService = directory.get(DescriptionService.class);
     this.selectionService = directory.get(SelectionService.class);
+    this.fontLocator = directory.get(FontLocator.class);
     colorService.addListener(this);
   }
 
