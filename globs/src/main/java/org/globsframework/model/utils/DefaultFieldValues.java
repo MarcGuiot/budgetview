@@ -46,9 +46,10 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
     }
   }
 
-  public void setValue(Field field, Object value) throws InvalidParameter {
+  public DefaultFieldValues setValue(Field field, Object value) throws InvalidParameter {
     field.checkValue(value);
     values.put(field, value);
+    return this;
   }
 
   public String toString() {
@@ -68,40 +69,49 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
     return builder.toString();
   }
 
-  public void set(IntegerField field, Integer value) {
+  public DefaultFieldValues set(IntegerField field, Integer value) {
     setValue(field, value);
+    return this;
   }
 
-  public void set(LinkField field, Integer value) throws ItemNotFound {
+  public DefaultFieldValues set(LinkField field, Integer value) throws ItemNotFound {
     setValue(field, value);
+    return this;
   }
 
-  public void set(DoubleField field, Double value) {
+  public DefaultFieldValues set(DoubleField field, Double value) {
     setValue(field, value);
+    return this;
   }
 
-  public void set(StringField field, String value) {
+  public DefaultFieldValues set(StringField field, String value) {
     setValue(field, value);
+    return this;
   }
 
-  public void set(DateField field, Date value) {
+  public DefaultFieldValues set(DateField field, Date value) {
     setValue(field, value);
+    return this;
   }
 
-  public void set(TimeStampField field, Date value) throws ItemNotFound {
+  public DefaultFieldValues set(TimeStampField field, Date value) throws ItemNotFound {
     setValue(field, value);
+    return this;
   }
 
-  public void set(BooleanField field, Boolean value) {
+  public DefaultFieldValues set(BooleanField field, Boolean value) {
     setValue(field, value);
+    return this;
   }
 
-  public void set(LongField field, Long value) throws ItemNotFound {
+  public DefaultFieldValues set(LongField field, Long value) throws ItemNotFound {
     setValue(field, value);
+    return this;
   }
 
-  public void set(BlobField field, byte[] value) {
+  public DefaultFieldValues set(BlobField field, byte[] value) {
     setValue(field, value);
+    return this;
   }
 
   public void setValues(FieldValues values) {

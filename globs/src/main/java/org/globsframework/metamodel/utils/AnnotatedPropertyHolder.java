@@ -5,7 +5,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 
-public class AnnotatedPropertyHolder<T> extends DefaultPropertyHolder<T> implements Annotable {
+public abstract class AnnotatedPropertyHolder<T> extends DefaultPropertyHolder<T> implements Annotable {
   private Map<Class<? extends Annotation>, Annotation> annotations;
 
   public AnnotatedPropertyHolder(Map<Class<? extends Annotation>, Annotation> annotations) {

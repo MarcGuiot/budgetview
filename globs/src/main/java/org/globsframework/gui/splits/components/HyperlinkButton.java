@@ -17,12 +17,16 @@ public class HyperlinkButton extends JButton {
   private int descent;
 
   public HyperlinkButton() {
-    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    setForeground(Color.CYAN);
+    init();
   }
 
   public HyperlinkButton(Action action) {
     super(action);
+    init();
+  }
+
+  private void init() {
+    setRolloverEnabled(true);
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     setForeground(Color.CYAN);
   }

@@ -4,7 +4,7 @@ import org.globsframework.metamodel.properties.Property;
 import org.globsframework.metamodel.properties.PropertyHolder;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
-public class DefaultPropertyHolder<T> implements PropertyHolder<T> {
+public abstract class DefaultPropertyHolder<T> implements PropertyHolder<T> {
   private static Object NULL_OBJECT = new Object();
   private Object properties[] = new Object[]{NULL_OBJECT, NULL_OBJECT};
 
@@ -27,7 +27,7 @@ public class DefaultPropertyHolder<T> implements PropertyHolder<T> {
   public <D> D getProperty(Property<T, D> key) throws ItemNotFound {
     Object value = properties[key.getId()];
     if (value == NULL_OBJECT) {
-      throw new ItemNotFound("No property '" + key.getName() + "'");
+      throw new ItemNotFound("No property '" + key.getName() + "' on " + getName());
     }
     return (D)value;
   }

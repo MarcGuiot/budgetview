@@ -3,15 +3,13 @@ package org.globsframework.model.utils;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.FieldValuesBuilder;
-import org.globsframework.model.Glob;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.model.impl.DefaultGlob;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Date;
 
-public class GlobBuilder implements FieldValues.Functor {
+public class GlobBuilder implements FieldValues.Functor, FieldSetter {
   private FieldValuesBuilder fieldValuesBuilder = new FieldValuesBuilder();
   private GlobType globType;
 
@@ -39,6 +37,11 @@ public class GlobBuilder implements FieldValues.Functor {
     return this;
   }
 
+  public GlobBuilder set(LinkField field, Integer value) throws ItemNotFound {
+    fieldValuesBuilder.set(field, value);
+    return this;
+  }
+
   public GlobBuilder set(StringField field, String value) {
     fieldValuesBuilder.set(field, value);
     return this;
@@ -56,6 +59,11 @@ public class GlobBuilder implements FieldValues.Functor {
 
   public GlobBuilder set(BlobField field, byte[] value) {
     fieldValuesBuilder.set(field, value);
+    return this;
+  }
+
+  public GlobBuilder setValue(Field field, Object value) throws ItemNotFound {
+    fieldValuesBuilder.setObject(field, value);
     return this;
   }
 

@@ -7,9 +7,11 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.*;
 import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.exceptions.EOFIOFailure;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -176,10 +178,10 @@ public class DefaultSerializationInput implements SerializedInput {
 
   public int readNotNullInt() {
     try {
-      return ((inputStream.read() & 0xFF)) +
-             ((inputStream.read() & 0xFF) << 8) +
-             ((inputStream.read() & 0xFF) << 16) +
-             ((inputStream.read() & 0xFF) << 24);
+      return ((read() & 0xFF)) +
+             ((read() & 0xFF) << 8) +
+             ((read() & 0xFF) << 16) +
+             ((read() & 0xFF) << 24);
     }
     catch (IOException e) {
       throw new UnexpectedApplicationState(e);
@@ -188,7 +190,7 @@ public class DefaultSerializationInput implements SerializedInput {
 
   private boolean isNull() {
     try {
-      return inputStream.read() != 0;
+      return read() != 0;
     }
     catch (IOException e) {
       throw new UnexpectedApplicationState(e);
@@ -217,7 +219,7 @@ public class DefaultSerializationInput implements SerializedInput {
 
   public Boolean readBoolean() {
     try {
-      int i = inputStream.read();
+      int i = read();
       return i == 0 ? Boolean.FALSE : i == 1 ? Boolean.TRUE : null;
     }
     catch (IOException e) {
@@ -234,23 +236,36 @@ public class DefaultSerializationInput implements SerializedInput {
 
   public long readNotNullLong() {
     try {
-      return ((inputStream.read() & 0xFFL)) +
-             ((inputStream.read() & 0xFFL) << 8) +
-             ((inputStream.read() & 0xFFL) << 16) +
-             ((inputStream.read() & 0xFFL) << 24) +
-             ((inputStream.read() & 0xFFL) << 32) +
-             ((inputStream.read() & 0xFFL) << 40) +
-             ((inputStream.read() & 0xFFL) << 48) +
-             ((inputStream.read() & 0xFFL) << 56);
+      return ((read() & 0xFFL)) +
+             ((read() & 0xFFL) << 8) +
+             ((read() & 0xFFL) << 16) +
+             ((read() & 0xFFL) << 24) +
+             ((read() & 0xFFL) << 32) +
+             ((read() & 0xFFL) << 40) +
+             ((read() & 0xFFL) << 48) +
+             ((read() & 0xFFL) << 56);
     }
     catch (IOException e) {
       throw new UnexpectedApplicationState(e);
     }
   }
 
+  private int read() throws IOException {
+    try {
+      int i = inputStream.read();
+      if (i == -1) {
+        throw new EOFIOFailure("eof");
+      }
+      return i;
+    }
+    catch (EOFException e) {
+      throw new EOFIOFailure(e);
+    }
+  }
+
   public byte readByte() {
     try {
-      return (byte)(inputStream.read());
+      return (byte)(read());
     }
     catch (IOException e) {
       throw new UnexpectedApplicationState(e);

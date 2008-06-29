@@ -75,4 +75,8 @@ public class DefaultGlobIdGenerator implements GlobIdGenerator {
     }
     return Collections.max(globs.getValueSet(keyField));
   }
+
+  public void update(IntegerField field, Integer lastAllocatedId) {
+    fieldToCurrentId.put(field, lastAllocatedId + 1);
+  }
 }

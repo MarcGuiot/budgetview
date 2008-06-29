@@ -28,7 +28,9 @@ public class MapOfMaps<KEY1, KEY2, VALUE> {
       return map;
     }
     else {
-      return Collections.emptyMap();
+      HashMap<KEY2, VALUE> valueHashMap = new HashMap<KEY2, VALUE>();
+      maps.put(key1, valueHashMap);
+      return valueHashMap;
     }
   }
 
@@ -58,6 +60,14 @@ public class MapOfMaps<KEY1, KEY2, VALUE> {
       result.addAll(map.values());
     }
     return result;
+  }
+
+  public int size() {
+    int count = 0;
+    for (Map<KEY2, VALUE> key2VALUEMap : maps.values()) {
+      count += key2VALUEMap.size();
+    }
+    return count;
   }
 
   public Set<KEY1> keys() {
