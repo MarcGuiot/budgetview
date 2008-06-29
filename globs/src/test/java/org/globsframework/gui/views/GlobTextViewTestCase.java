@@ -7,11 +7,12 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.model.utils.GlobListMatcher;
+import org.globsframework.model.utils.GlobListMatchers;
 import org.uispec4j.TextBox;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   protected Glob glob1;
@@ -61,7 +62,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
         }
         return items.toString();
       }
-    });
+    }, GlobListMatchers.ALL);
 
     selectionService.select(glob1);
     assertTrue(textBox.textEquals("[1/null]"));
@@ -90,7 +91,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     assertTrue(textBox.textIsEmpty());
   }
 
-  public void testAutoHide() throws Exception {
+  public void testAutoHideIfEmpty() throws Exception {
     TextBox textBox = init(repository, true);
     assertFalse(textBox.isVisible());
 
@@ -101,9 +102,35 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     assertFalse(textBox.isVisible());
   }
 
-  protected TextBox init(final GlobRepository repository, boolean autoHide) {
-    return init(repository, autoHide, stringifier);
+  public void testAutoHideWithMatcher() throws Exception {
+    TextBox textBox = init(repository, new GlobListMatcher() {
+      public boolean matches(GlobList list, GlobRepository repository) {
+        return list.contains(glob1);
+      }
+    });
+    assertFalse(textBox.isVisible());
+
+    selectionService.select(glob1);
+    assertTrue(textBox.isVisible());
+
+    selectionService.clear(glob1.getType());
+    assertFalse(textBox.isVisible());
+
+    selectionService.select(new GlobList(glob1, glob2), DummyObject.TYPE);
+    assertTrue(textBox.isVisible());
+
+    selectionService.select(glob2);
+    assertFalse(textBox.isVisible());
   }
 
-  protected abstract TextBox init(GlobRepository repository, boolean autoHide, GlobListStringifier stringifier);
+  protected TextBox init(final GlobRepository repository, boolean autoHide) {
+    return init(repository, autoHide, stringifier, GlobListMatchers.ALL);
+  }
+
+  protected TextBox init(final GlobRepository repository, GlobListMatcher matcher) {
+    return init(repository, false, stringifier, matcher);
+  }
+
+  protected abstract TextBox init(GlobRepository repository, boolean autoHide,
+                                  GlobListStringifier stringifier, GlobListMatcher matcher);
 }

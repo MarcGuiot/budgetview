@@ -24,7 +24,7 @@
 
         <filler fill="vertical"/>
 
-        <label text="Chargement des données" styleClass="title"/>
+        <label text="$import.step1.title" styleClass="title"/>
 
         <htmlEditorPane text="$import.step1.header" marginBottom="5"/>
 
@@ -55,7 +55,7 @@
     <card name="step2">
       <column margin="20" anchor="center" fill="none">
 
-        <label text="Chargement d'un fichier" styleClass="title"/>
+        <label text="$import.step2.title" styleClass="title"/>
 
         <label text="$import.file.to.import" styleClass="header"/>
         <label ref="fileName"/>

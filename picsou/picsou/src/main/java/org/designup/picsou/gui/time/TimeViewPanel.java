@@ -49,6 +49,8 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   });
   private Runnable pendingOperation;
   private int previousWidth = -1;
+  private int paintCount = 0;
+  private int currentPaintCount = 0;
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
     this.repository = globRepository;
@@ -77,6 +79,12 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
         translation = 0;
       }
     }
+    boolean shouldScroll = false;
+    if (getWidth() < previousWidth) {
+      if (translation < 0) {
+        shouldScroll = true;
+      }
+    }
     previousWidth = getWidth();
     Graphics2D d = (Graphics2D)g.create();
     try {
@@ -93,6 +101,14 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     }
     finally {
       d.dispose();
+    }
+    synchronized (this) {
+      paintCount++;
+      this.notify();
+    }
+    if (shouldScroll) {
+      scrollToLastVisible();
+      repaint();
     }
   }
 
@@ -165,6 +181,9 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       translation -= shift;
       if (-translation + getWidth() > timeGraph.getWidth()) {
         translation = getWidth() - timeGraph.getWidth();
+        if (translation > 0) {
+          translation = 0;
+        }
         return false;
       }
       else {
@@ -261,6 +280,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
           scrollToLastVisible();
         }
       };
+      return;
     }
     if (currentlySelected.isEmpty()) {
       return;
@@ -273,7 +293,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       return;
     }
     Selectable mostLeftSelectable = timeGraph.getFirstSelectable();
-    int count = 0;
+    int count = 1;
     while (mostLeftSelectable != lastSelected) {
       mostLeftSelectable = mostLeftSelectable.getRight();
       count++;
@@ -340,6 +360,32 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void focusLost(FocusEvent e) {
+  }
+
+  public TimeGraph getTimeGraph() {
+    return timeGraph;
+  }
+
+  public synchronized void savePaintPoint() {
+    currentPaintCount = paintCount;
+  }
+
+  public synchronized void waitRepaint() {
+    long mili = System.currentTimeMillis() + 150000;
+    while (currentPaintCount == paintCount) {
+      try {
+        long duration = mili - System.currentTimeMillis();
+        if (duration > 0) {
+          wait(duration);
+        }
+        else {
+          return;
+        }
+      }
+      catch (InterruptedException e) {
+      }
+    }
+    currentPaintCount = paintCount;
   }
 
   private class ScrollAndRepaint implements Runnable {

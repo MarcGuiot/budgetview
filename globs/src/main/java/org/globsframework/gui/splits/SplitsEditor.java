@@ -10,13 +10,20 @@ import java.awt.event.ActionEvent;
 
 public class SplitsEditor {
 
-  public static void showInFrame(final SplitsBuilder builder, Container container) {
+  public static final String EDITOR_ENABLED_PROPERTY = "splits.editor.enabled";
+
+  public static void show(final SplitsBuilder builder, Container container) {
+
+    if (!"true".equalsIgnoreCase(System.getProperty(EDITOR_ENABLED_PROPERTY))) {
+      return;
+    }
+
     ColorService colorService = builder.getContext().getColorService();
     colorService.autoUpdate(container);
 
     JFrame frame =
       SplitsBuilder.init(builder.getContext().getColorService(),
-                                 builder.getContext().getIconLocator())
+                         builder.getContext().getIconLocator())
         .setSource(SplitsEditor.class, "/splits/splitsEditor.splits")
         .add("reload", new AbstractAction("Reload") {
           public void actionPerformed(ActionEvent e) {

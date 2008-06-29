@@ -33,7 +33,7 @@ public class Grid extends AbstractSplitter {
                   stretch.getFill(), stretch.getAnchor(),
                   splitter.getMarginInsets());
     }
-    return createContainerStretch(builder.getPanel(), getSubSplitters(), DoubleOperation.SUM);
+    return createContainerStretch(builder.getPanel(), DoubleOperation.SUM);
   }
 
   protected String[] getExcludedParameters() {

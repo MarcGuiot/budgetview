@@ -1,3 +1,11 @@
+Vue "accueil"
+-------------
+* Reprendre AccountView
+* Afficher/editer/ajouter les comptes et les positions
+* Naviguer vers le site de la banque
+
+
+
 * QIF: Estimation de solde final / SMS
 
 * Mecanique de backup/restore pour les utilisateurs

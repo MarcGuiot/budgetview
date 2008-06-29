@@ -17,7 +17,7 @@ public class AccountChecker extends DataChecker {
   private TextBox accountLabel;
 
   public AccountChecker(Panel panel) {
-    accountLabel = panel.getTextBox("accountView");
+//    accountLabel = panel.getTextBox("accountView");
   }
 
   public void assertDisplayEquals(String accountName, double balance, String updateDate) {

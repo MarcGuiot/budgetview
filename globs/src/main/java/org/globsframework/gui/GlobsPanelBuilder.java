@@ -99,7 +99,8 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return component;
   }
 
-  protected void complete() {
+  protected void completeBeforeLoad() {
+    super.completeBeforeLoad();
     for (ComponentHolder componentHolder : componentHolders) {
       add(componentHolder.getComponent());
     }

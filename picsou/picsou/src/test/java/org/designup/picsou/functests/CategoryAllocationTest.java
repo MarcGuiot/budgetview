@@ -134,7 +134,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     transactions.assignCategory(MasterCategory.FOOD, 0);
     transactions.getTable().clearSelection();
     Button categorizedLink = new Panel((Container)transactions.getTable().getSwingRendererComponentAt(0, 1)).getButton();
-    assertTrue(categorizedLink.foregroundEquals("blue"));
+    assertTrue(categorizedLink.foregroundEquals("black"));
   }
 
   public void testCategorisationLinkSelectsCorrespondingRow() throws Exception {

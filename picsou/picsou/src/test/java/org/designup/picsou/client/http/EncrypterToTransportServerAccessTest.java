@@ -30,6 +30,11 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
     super.setUp();
   }
 
+  protected void tearDown() throws Exception {
+    super.tearDown();
+    setInMemory(true);
+  }
+
   private GlobRepository init(final EncrypterToTransportServerAccess createClientCategorizer) {
     GlobRepository repository = GlobRepositoryBuilder.createEmpty();
     repository.addChangeListener(new DefaultChangeSetListener() {

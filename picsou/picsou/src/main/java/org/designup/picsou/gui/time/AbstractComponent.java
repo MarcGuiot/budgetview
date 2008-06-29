@@ -55,4 +55,9 @@ public abstract class AbstractComponent implements Selectable {
       list.add(this);
     }
   }
+
+  // for testing
+  public Rectangle getClickableArea() {
+    return clickableArea;
+  }
 }

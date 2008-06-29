@@ -117,7 +117,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkOriginalLabelNotVisible() {
-    assertFalse(getPanel().getPanel("detailInfo").isVisible());
+    assertFalse(getPanel().getTextBox("originalLabel").isVisible());
   }
 
   public void checkOriginalLabel(String originalLabel) {

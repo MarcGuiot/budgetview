@@ -1,6 +1,5 @@
 package org.designup.picsou.gui;
 
-import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ExportFileAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
@@ -9,7 +8,6 @@ import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.gui.graphics.CategoriesChart;
 import org.designup.picsou.gui.graphics.HistoricalChart;
-import org.designup.picsou.gui.scorecard.ScorecardView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.InformationView;
@@ -18,8 +16,8 @@ import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsEditor;
+import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -51,7 +49,6 @@ public class MainPanel {
 
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
-    AccountView accountView = new AccountView(repository, directory);
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
     TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory);
     CategoryView categoryView = new CategoryView(repository, directory);
@@ -64,17 +61,14 @@ public class MainPanel {
     createPanel(directory,
                 new TitleView(repository, directory),
                 new InformationView(repository, directory, transactionSelection),
-                accountView,
                 transactionView,
                 transactionDetailsView,
                 timeView,
                 categoryView,
                 new CardView(repository, directory, transactionSelection),
                 new HistoricalChart(repository, directory),
-                new CategoriesChart(repository, directory, transactionSelection),
-                new ScorecardView(repository, directory, transactionSelection));
+                new CategoriesChart(repository, directory, transactionSelection));
 
-    accountView.selectFirst();
     timeView.selectLastMonth();
     categoryView.select(Category.ALL);
 
@@ -96,6 +90,7 @@ public class MainPanel {
     });
 
     builder.load();
+    SplitsEditor.show(builder, parent);
   }
 
   public void createMenuBar(JFrame frame) {

@@ -97,6 +97,9 @@ public class TimeGraph {
       totalMonthCount += year.getMonthCount();
     }
 
+    if (totalMonthCount == 0) {
+      return;
+    }
     yearHeight = years.get(0).getPreferredHeight(graphics2D);
     monthWidth = preferredWidth / totalMonthCount;
     for (YearGraph year : years) {

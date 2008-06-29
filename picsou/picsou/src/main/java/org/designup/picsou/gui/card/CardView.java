@@ -1,8 +1,9 @@
 package org.designup.picsou.gui.card;
 
-import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.TransactionSelection;
+import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.model.MonthStat;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -14,6 +15,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class CardView extends View implements GlobSelectionListener {
@@ -28,20 +30,23 @@ public class CardView extends View implements GlobSelectionListener {
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
+
     handler = builder.addCardHandler("cardView");
     handler.show(lastSelectedCard.getName());
 
-    JToggleButton dataCardToggle = new JToggleButton(new ToggleAction(Card.DATA));
-    builder.add("dataCardToggle", dataCardToggle);
-
-    JToggleButton overviewCardToggle = new JToggleButton(new ToggleAction(Card.OVERVIEW));
-    builder.add("overviewCardToggle", overviewCardToggle);
-
     ButtonGroup group = new ButtonGroup();
-    group.add(dataCardToggle);
-    group.add(overviewCardToggle);
+    JToggleButton[] toggles = new JToggleButton[Card.values().length];
+    for (int i = 0; i < Card.values().length; i++) {
+      Card card = Card.values()[i];
+      JToggleButton toggle = new JToggleButton(new ToggleAction(card));
+      String name = card.getName() + "CardToggle";
+      Gui.configureIconButton(toggle, name, new Dimension(45, 45));
+      builder.add(name, toggle);
+      group.add(toggle);
+      toggles[i] = toggle;
+    }
 
-    dataCardToggle.setSelected(true);
+    toggles[0].setSelected(true);
 
     JTextArea textArea = new JTextArea();
     textArea.setText(Lang.get("noData"));
@@ -81,7 +86,7 @@ public class CardView extends View implements GlobSelectionListener {
   }
 
   private enum Card {
-    DATA, OVERVIEW;
+    DATA, REPARTITION, EVOLUTION;
 
     String getName() {
       return name().toLowerCase();

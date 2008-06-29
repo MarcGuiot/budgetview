@@ -33,5 +33,7 @@ public interface SplitsContext {
 
   void addOrReplaceComponent(String id, Component component);
 
+  void addAutoHide(Component targetComponent, String sourceComponentName);
+
   void cleanUp();
 }

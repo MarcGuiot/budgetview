@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class MainWindowLauncher {
-  private static final String COLOR_SELECTOR_PROPERTY = "ENABLE_COLOR_SELECTOR";
   private static OpenRequestManager openRequestManager = new OpenRequestManager();
   private static String user;
   private static String password;
@@ -32,16 +31,16 @@ public class MainWindowLauncher {
     }
     List<String> arguments = new ArrayList<String>();
     arguments.addAll(Arrays.asList(args));
-    user = parseArguments(arguments, "user", "-u");
-    password = parseArguments(arguments, "pwd", "-p");
+    user = parseArguments(arguments, "-u", "user");
+    password = parseArguments(arguments, "-p", "pwd");
     ServerDirectory serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), false);
     Directory directory = serverDirectory.getServiceDirectory();
     ServerAccess serverAccess =
       new EncrypterToTransportServerAccess(new LocalClientTransport(directory), directory);
-    run(serverAccess, args);
+    run(serverAccess);
   }
 
-  private static String parseArguments(List<String> args, String defaultValue, String key) {
+  private static String parseArguments(List<String> args, String key, String defaultValue) {
     for (Iterator<String> it = args.iterator(); it.hasNext();) {
       String arg = it.next();
       if (key.equals(arg)) {
@@ -56,7 +55,7 @@ public class MainWindowLauncher {
     return defaultValue;
   }
 
-  public static GlobRepository run(ServerAccess serverAccess, String[] args) throws Exception {
+  public static GlobRepository run(ServerAccess serverAccess) throws Exception {
     try {
       serverAccess.createUser(user, password.toCharArray());
     }

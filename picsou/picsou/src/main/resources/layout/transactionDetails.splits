@@ -1,61 +1,76 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
   <styles>
-    <style selector="label" foreground="#FFFFFF"/>
-    <style selector="textarea" foreground="#FFFFFF"/>
-    <style selector="hyperlink" foreground="#6666FF"/>
+    <style selector="label" foreground="transaction.detail.text"/>
+
+    <style selector="label.formLabel"
+           fill="none" anchor="left"
+           foreground="transaction.detail.formLabel" font="-,plain,10"/>
+    <style selector=".formValue"
+           fill="none" anchor="right"/>
+
+    <style selector="hyperlink" foreground="#6666FF" opaque="false"/>
+    <style selector="hyperlink#splitLink" font="-,plain,10"/>
+    <style selector="panel" opaque="false"/>
+
+    <style selector="textArea" foreground="transaction.detail.text" opaque="false"
+           anchor="top" lineWrap="true" wrapStyleWord="true"/>
+    <style selector="textArea#userLabel" font="$transaction.label"/>
+
+    <style selector="label#amountValue" font="-,bold,16"/>
+
   </styles>
 
   <column minimumSize="(200, 150)" preferredSize="(200, 150)">
-    <label ref="transactionType"/>
-    <textArea ref="userLabel" font="$transaction.label"
-              foreground="transaction.detail.text" lineWrap="true" opaque="false"/>
-    <label ref="userDate" font="$transaction.date" foreground="transaction.detail.text"/>
+
+    <label ref="transactionType" styleClass="formLabel"/>
+    <textArea ref="userLabel"/>
+
     <row>
-      <label ref="amountLabel"/>
-      <label ref="amountValue"/>
+      <label ref="amountLabel" styleClass="formLabel"/>
+      <label ref="amountValue" styleClass="formValue"/>
     </row>
-    <panel ref="amountPanel" opaque="false">
+    <row>
+      <label text="$transaction.detail.userDate" styleClass="formLabel" autoHideSource="userDate"/>
+      <label ref="userDate" font="$transaction.date" styleClass="formValue"/>
+    </row>
+    <row>
+      <label text="$transaction.detail.bankDate" styleClass="formLabel" autoHideSource="bankDate"/>
+      <label ref="bankDate" font="$transaction.date" styleClass="formValue"/>
+    </row>
+
+    <panel ref="amountPanel">
       <column>
         <row>
-          <label text="$transaction.details.amount.minimum"/>
-          <label ref="minimumAmount"/>
+          <label text="$transaction.details.amount.minimum" styleClass="formLabel"/>
+          <label ref="minimumAmount" styleClass="formValue"/>
         </row>
         <row>
-          <label text="$transaction.details.amount.maximum"/>
-          <label ref="maximumAmount"/>
+          <label text="$transaction.details.amount.maximum" styleClass="formLabel"/>
+          <label ref="maximumAmount" styleClass="formValue"/>
         </row>
         <row>
-          <label text="$transaction.details.amount.average"/>
-          <label ref="averageAmount"/>
+          <label text="$transaction.details.amount.average" styleClass="formLabel"/>
+          <label ref="averageAmount" styleClass="formValue"/>
         </row>
       </column>
     </panel>
-    <panel ref="categoryChooserPanel" opaque="false">
+
+    <panel ref="categoryChooserPanel">
       <column>
-        <label text="$transacation.details.category"/>
-        <row>
-          <filler fill="horizontal"/>
-          <hyperlink ref="categoryChooserLink" opaque="false"/>
-          <filler fill="horizontal"/>
+        <row marginBottom="0">
+          <label text="$transaction.details.category" styleClass="formLabel"/>
+          <hyperlink ref="categoryChooserLink" styleClass="formValue"/>
         </row>
+        <hyperlink name="splitLink" action="splitLink" marginTop="0"/>
       </column>
     </panel>
-    <panel ref="detailInfo" opaque="false">
-      <column>
-        <row>
-          <filler fill="horizontal"/>
-          <hyperlink name="splitLink" action="splitLink" opaque="false"/>
-          <filler fill="horizontal"/>
-        </row>
-        <label text="$transaction.details.label.original"/>
-        <textArea ref="originalLabel" opaque="false" lineWrap="true"/>
-        <row>
-          <label text="$transaction.detail.bankLabel"/>
-          <label ref="bankDate"/>
-        </row>
-      </column>
-    </panel>
+
+    <column>
+      <label text="$transaction.details.label.original" styleClass="formLabel" autoHideSource="originalLabel"/>
+      <textArea ref="originalLabel"/>
+    </column>
+
     <filler fill="vertical"/>
   </column>
 </splits>

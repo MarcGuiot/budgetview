@@ -7,9 +7,12 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.utils.directory.Directory;
+import org.globsframework.model.utils.GlobListMatcher;
+import org.globsframework.model.utils.GlobListMatchers;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +21,9 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView> imple
   private GlobRepository repository;
   private GlobListStringifier stringifier;
   private GlobList currentSelection = new GlobList();
-  private boolean autoHide;
+  private boolean autoHideIfEmpty;
+  private GlobListMatcher matcher = GlobListMatchers.ALL;
+  protected boolean initCompleted = false;
 
   public AbstractGlobTextView(GlobType type, GlobRepository repository, Directory directory, GlobListStringifier stringifier) {
     this.type = type;
@@ -28,17 +33,35 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView> imple
     repository.addChangeListener(this);
   }
 
-  public T setAutoHide(boolean autoHide) {
-    this.autoHide = autoHide;
-    getComponent().setVisible(!autoHide || Strings.isNotEmpty(getText()));
+  public T setAutoHideIfEmpty(boolean autoHide) {
+    this.autoHideIfEmpty = autoHide;
+    if (initCompleted) {
+      update();
+    }
+    return (T)this;
+  }
+
+  public T setAutoHideMatcher(GlobListMatcher matcher) {
+    this.matcher = matcher;
+    if (initCompleted) {
+      update();
+    }
     return (T)this;
   }
 
   public void update() {
-    String text = stringifier.toString(currentSelection);
-    if (autoHide) {
-      getComponent().setVisible(Strings.isNotEmpty(text));
+    JComponent component = getComponent();
+    boolean matches = matcher.matches(currentSelection, repository);
+    component.setVisible(matches);
+    if (!component.isVisible()) {
+      return;
     }
+
+    String text = stringifier.toString(currentSelection);
+    if (autoHideIfEmpty) {
+      component.setVisible(Strings.isNotEmpty(text));
+    }
+
     doUpdate(text);
   }
 

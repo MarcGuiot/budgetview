@@ -4,6 +4,7 @@ import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +13,10 @@ import java.awt.event.ActionEvent;
 public class HyperlinkButton extends JButton {
   private int textWidth;
   private int fontHeight;
-  private Color rolloverColor = Color.BLUE;
+  private Color rolloverColor = Color.BLUE.brighter();
   private Color disabledColor = Color.GRAY;
   private int descent;
+  private boolean underline = true;
 
   public HyperlinkButton() {
     init();
@@ -28,7 +30,11 @@ public class HyperlinkButton extends JButton {
   private void init() {
     setRolloverEnabled(true);
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    setForeground(Color.CYAN);
+    setForeground(Color.BLUE);
+  }
+
+  public void setUnderline(boolean underline) {
+    this.underline = underline;
   }
 
   public void setRolloverColor(Color rolloverColor) {
@@ -52,6 +58,12 @@ public class HyperlinkButton extends JButton {
       d.setColor(getParent().getBackground());
       d.clearRect(0, 0, getWidth(), getHeight());
     }
+
+    String text = getText();
+    if (Strings.isNullOrEmpty(text)) {
+      return;
+    }
+
     int x1 = (getWidth() - textWidth) / 2;
     int y1 = (getHeight() + fontHeight) / 2 - descent;
     if (getModel().isRollover() || getModel().isArmed()) {
@@ -63,9 +75,9 @@ public class HyperlinkButton extends JButton {
     else {
       d.setColor(getForeground());
     }
-    String str = getText();
-    if (str != null) {
-      d.drawString(str, x1, y1);
+
+    d.drawString(text, x1, y1);
+    if (underline || getModel().isRollover()) {
       d.drawLine(x1, y1 + 1, x1 + textWidth, y1 + 1);
     }
   }
@@ -94,12 +106,12 @@ public class HyperlinkButton extends JButton {
 
   public static void main(String[] args) {
     HyperlinkButton component1 = new HyperlinkButton(new AbstractAction("toto") {
-
       public void actionPerformed(ActionEvent e) {
         System.out.println("HyperlinkButton.actionPerformed");
       }
     });
     component1.setText("hello");
+
     JPanel panel = GridBagBuilder.init().add(component1, 0, 0, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER).getPanel();
     panel.setOpaque(true);
     panel.setBackground(Color.CYAN);

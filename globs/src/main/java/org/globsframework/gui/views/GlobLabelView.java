@@ -4,18 +4,15 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.gui.ComponentHolder;
 
 import javax.swing.*;
 
 public class GlobLabelView extends AbstractGlobTextView<GlobLabelView> {
   private JLabel label;
 
-  public static GlobLabelView init(GlobType type, GlobRepository globRepository,
+  public static GlobLabelView init(GlobType type, GlobRepository repository,
                                    Directory directory, GlobListStringifier stringifier) {
-    GlobLabelView view = new GlobLabelView(type, globRepository, directory, stringifier);
-    view.update();
-    return view;
+    return new GlobLabelView(type, repository, directory, stringifier);
   }
 
   private GlobLabelView(GlobType type, GlobRepository repository, Directory directory, GlobListStringifier stringifier) {
@@ -25,6 +22,10 @@ public class GlobLabelView extends AbstractGlobTextView<GlobLabelView> {
   }
 
   public JLabel getComponent() {
+    if (!initCompleted) {
+      initCompleted = true;
+      update();
+    }
     return label;
   }
 

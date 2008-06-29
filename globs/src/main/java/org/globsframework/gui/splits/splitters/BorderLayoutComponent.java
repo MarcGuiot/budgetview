@@ -36,7 +36,7 @@ public class BorderLayoutComponent extends AbstractSplitter {
       }
       panel.add(splitter.getComponentStretch(false).getComponent(), SplitsUtils.capitalize(pos));
     }
-    return createContainerStretch(panel, subSplitters, DoubleOperation.SUM);
+    return createContainerStretch(panel, DoubleOperation.SUM);
   }
 
   private String getBorderPosErrorMessage(Splitter splitter) {
