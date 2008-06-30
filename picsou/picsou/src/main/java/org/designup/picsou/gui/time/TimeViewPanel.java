@@ -216,6 +216,12 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public Selectable getSelectable(int x, int y) {
+    if (y >= getWidth()) {
+      return timeGraph.getSelectableAt(x, getWidth() + timeGraph.getMonthWidth());
+    }
+    if (y < 0) {
+      return timeGraph.getSelectableAt(x, -timeGraph.getMonthWidth());
+    }
     return timeGraph.getSelectableAt(x, y);
   }
 

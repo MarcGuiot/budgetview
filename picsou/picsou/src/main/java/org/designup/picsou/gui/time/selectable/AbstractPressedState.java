@@ -17,7 +17,7 @@ public class AbstractPressedState extends AbstractMouseState {
     return findNearestSelectable(container.getLastSelected(), selectable, selected);
   }
 
-  static public Selectable findNearestSelectable(Selectable currentlySelected, Selectable selectable, List<Selectable> selected) {
+  static private Selectable findNearestSelectable(Selectable currentlySelected, Selectable selectable, List<Selectable> selected) {
     if (selectable == null || currentlySelected == null) {
       return null;
     }
