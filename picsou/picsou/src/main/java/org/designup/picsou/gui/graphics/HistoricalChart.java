@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.graphics;
 
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
@@ -18,11 +18,10 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.chart.plot.IntervalMarker;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.renderer.xy.AbstractXYItemRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.ui.Layer;
-import org.jfree.util.ShapeUtilities;
 
 import java.awt.*;
 import java.text.FieldPosition;
@@ -41,9 +40,7 @@ public class HistoricalChart extends AbstractLineChart {
   private Color markerColor;
 
   public static final String INCOME_ROW = "Revenus";
-  public static final String AVERAGE_INCOME_ROW = "Revenus moyens";
   public static final String EXPENSES_ROW = "Depenses";
-  public static final String AVERAGE_EXPENSES_ROW = "Depenses moyennes";
   private Integer[] selectedMonths = {};
 
   public HistoricalChart(GlobRepository repository, Directory directory) {
@@ -58,7 +55,6 @@ public class HistoricalChart extends AbstractLineChart {
   public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
     if (changeSet.containsChanges(MonthStat.TYPE)) {
       updateChart();
-      return;
     }
   }
 
@@ -128,47 +124,39 @@ public class HistoricalChart extends AbstractLineChart {
       }
     });
 
+    Color labelColor = colorService.get(PicsouColors.CHART_LABEL);
+
     NumberAxis domainAxis = (NumberAxis)plot.getDomainAxis();
     domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
     domainAxis.setNumberFormatOverride(new MonthFormat());
+    domainAxis.setTickLabelPaint(labelColor);
+    domainAxis.setTickMarkPaint(labelColor);
+    domainAxis.setTickLabelFont(fontLocator.get("chart.historical.label"));
 
     NumberAxis rangeAxis = (NumberAxis)plot.getRangeAxis();
     rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
     rangeAxis.setAutoRangeIncludesZero(false);
+    rangeAxis.setTickLabelPaint(labelColor);
+    rangeAxis.setTickMarkPaint(labelColor);
+    rangeAxis.setTickLabelFont(fontLocator.get("chart.historical.label"));
   }
 
   private void configureSeries() {
-    XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer)plot.getRenderer();
-    renderer.setSeriesShapesVisible(0, true);
-    renderer.setSeriesShapesVisible(1, false);
-    renderer.setSeriesShapesVisible(2, true);
-    renderer.setSeriesShapesVisible(3, false);
-
-    renderer.setSeriesLinesVisible(0, true);
-    renderer.setSeriesLinesVisible(2, true);
+    AbstractXYItemRenderer renderer = (AbstractXYItemRenderer)plot.getRenderer();
     renderer.setSeriesStroke(0, new BasicStroke(1.0f));
     renderer.setSeriesStroke(2, new BasicStroke(1.0f));
-    renderer.setSeriesStroke(1, new BasicStroke(2.0f));
-    renderer.setSeriesStroke(3, new BasicStroke(2.0f));
 
     renderer.setSeriesToolTipGenerator(0, new ToolTipGenerator(Lang.get("expenses")));
-    renderer.setSeriesToolTipGenerator(1, new ToolTipGenerator(Lang.get("average.expenses")));
     renderer.setSeriesToolTipGenerator(2, new ToolTipGenerator(Lang.get("income")));
-    renderer.setSeriesToolTipGenerator(3, new ToolTipGenerator(Lang.get("average.income")));
 
-    setRowColor(INCOME_ROW, PicsouColors.CHART_INCOME_LINE, renderer, dataset);
-    setRowColor(AVERAGE_INCOME_ROW, PicsouColors.CHART_INCOME_AVERAGE_LINE, renderer, dataset);
-    setRowColor(EXPENSES_ROW, PicsouColors.CHART_EXPENSES_LINE, renderer, dataset);
-    setRowColor(AVERAGE_EXPENSES_ROW, PicsouColors.CHART_EXPENSES_AVERAGE_LINE, renderer, dataset);
-
-    setShapeColor(INCOME_ROW, PicsouColors.CHART_INCOME_SHAPE, renderer, dataset);
-    setShapeColor(EXPENSES_ROW, PicsouColors.CHART_EXPENSES_SHAPE, renderer, dataset);
-
-    renderer.setSeriesShape(2, ShapeUtilities.createDiamond(4.0f));
-    renderer.setSeriesShape(3, ShapeUtilities.createDiamond(4.0f));
-
-    renderer.setDrawOutlines(true);
-    renderer.setUseFillPaint(true);
+    setRowColor(INCOME_ROW,
+                PicsouColors.CHART_INCOME_BAR_TOP,
+                PicsouColors.CHART_INCOME_BAR_BOTTOM,
+                renderer, dataset);
+    setRowColor(EXPENSES_ROW,
+                PicsouColors.CHART_EXPENSES_BAR_TOP,
+                PicsouColors.CHART_EXPENSES_BAR_BOTTOM,
+                renderer, dataset);
   }
 
   private int getMonthIndex(Integer yyyymm) {
@@ -203,9 +191,6 @@ public class HistoricalChart extends AbstractLineChart {
     XYSeries expenseSeries = new XYSeries(EXPENSES_ROW);
     XYSeries incomeSeries = new XYSeries(INCOME_ROW);
 
-    XYSeries averageExpenseSeries = new XYSeries(AVERAGE_EXPENSES_ROW);
-    XYSeries averageIncomeSeries = new XYSeries(AVERAGE_INCOME_ROW);
-
     months.clear();
     boolean hasExpenses = false;
     boolean hasIncome = false;
@@ -214,8 +199,6 @@ public class HistoricalChart extends AbstractLineChart {
       months.add(month.get(Month.ID));
       double expenses = 0;
       double income = 0;
-      double averageExpenses = 0;
-      double averageIncome = 0;
       for (Glob category : selectedCategories) {
         if (!category.exists()) {
           continue;
@@ -223,26 +206,20 @@ public class HistoricalChart extends AbstractLineChart {
         Key key = MonthStat.getKey(month.get(Month.ID), category.get(Category.ID), Account.SUMMARY_ACCOUNT_ID);
         Glob stat = repository.get(key);
         expenses += stat.get(MonthStat.EXPENSES);
-        averageExpenses += stat.get(MonthStat.EXPENSES_AVERAGE);
         income += stat.get(MonthStat.INCOME);
-        averageIncome += stat.get(MonthStat.INCOME_AVERAGE);
       }
       hasExpenses |= expenses > 0;
       expenseSeries.add(index, expenses);
-      averageExpenseSeries.add(index, averageExpenses);
       hasIncome |= income > 0;
       incomeSeries.add(index, income);
-      averageIncomeSeries.add(index, averageIncome);
       index++;
     }
 
     if (hasExpenses) {
       dataset.addSeries(expenseSeries);
-      dataset.addSeries(averageExpenseSeries);
     }
     if (hasIncome) {
       dataset.addSeries(incomeSeries);
-      dataset.addSeries(averageIncomeSeries);
     }
 
     configureSeries();

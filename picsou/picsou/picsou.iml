@@ -20,11 +20,9 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/jfree/jfreechart/1.0.7/jfreechart-1.0.7.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/jfree/jfreechart/1.0.7/jfreechart-1.0.7-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/jfree/jfreechart/1.0.7/jfreechart-1.0.7-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/jfree/jfreechart/1.0.7/jfreechart-0.7-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

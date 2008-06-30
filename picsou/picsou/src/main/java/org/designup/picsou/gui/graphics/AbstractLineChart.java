@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.graphics;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSetListener;
@@ -15,7 +15,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.DatasetRenderingOrder;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.renderer.AbstractRenderer;
+import org.jfree.chart.renderer.xy.ClusteredXYBarRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -42,7 +43,6 @@ public abstract class AbstractLineChart extends View implements GlobSelectionLis
 
   public ChartPanel createPanel() {
     ChartPanel panel = new ChartPanel(createChart());
-    panel.setFont(Gui.getDefaultFont());
     panel.setDomainZoomable(false);
     panel.setDisplayToolTips(true);
     panel.setInitialDelay(100);
@@ -56,9 +56,10 @@ public abstract class AbstractLineChart extends View implements GlobSelectionLis
   protected abstract void configurePanel(ChartPanel panel);
 
   protected JFreeChart createChart() {
-    chart = ChartFactory.createXYLineChart(
+    chart = ChartFactory.createXYBarChart(
       null,  // chart title
       null,  // domain axis label
+      false,
       null,  // range axis label
       dataset,
       PlotOrientation.VERTICAL,
@@ -80,21 +81,24 @@ public abstract class AbstractLineChart extends View implements GlobSelectionLis
 
     configureChart();
 
+
+    ClusteredXYBarRenderer renderer = new ClusteredXYBarRenderer();
+    renderer.setMargin(0.3);
+    plot.setRenderer(renderer);
+
     return chart;
   }
 
-  protected void setRowColor(String row, PicsouColors color, final XYLineAndShapeRenderer renderer, XYDataset dataset) {
+  protected void setRowColor(String row, PicsouColors topColor, PicsouColors bottomColor, final AbstractRenderer renderer, XYDataset dataset) {
     final int rowIndex = dataset.indexOf(row);
     if (rowIndex >= 0) {
-      colorService.install(color.toString(), new ColorUpdater() {
-        public void updateColor(Color color) {
-          renderer.setSeriesPaint(rowIndex, color);
-        }
-      });
+      FillColorUpdater colorUpdater = new FillColorUpdater(renderer, rowIndex, topColor, bottomColor, colorService);
+      colorService.install(topColor.toString(), colorUpdater);
+      colorService.install(bottomColor.toString(), colorUpdater);
     }
   }
 
-  protected void setShapeColor(String row, PicsouColors color, final XYLineAndShapeRenderer renderer, XYDataset dataset) {
+  protected void setShapeColor(String row, PicsouColors color, final AbstractRenderer renderer, XYDataset dataset) {
     final int rowIndex = dataset.indexOf(row);
     if (rowIndex >= 0) {
       colorService.install(color.toString(), new ColorUpdater() {
@@ -110,5 +114,29 @@ public abstract class AbstractLineChart extends View implements GlobSelectionLis
       panel = createPanel();
     }
     return panel;
+  }
+
+  private static class FillColorUpdater implements ColorUpdater {
+    private final AbstractRenderer renderer;
+    private final int rowIndex;
+    private PicsouColors topColor;
+    private PicsouColors bottomColor;
+    private ColorLocator colorLocator;
+
+    public FillColorUpdater(AbstractRenderer renderer, int rowIndex,
+                            PicsouColors topColor, PicsouColors bottomColor,
+                            ColorLocator colorLocator) {
+      this.renderer = renderer;
+      this.rowIndex = rowIndex;
+      this.topColor = topColor;
+      this.bottomColor = bottomColor;
+      this.colorLocator = colorLocator;
+    }
+
+    public void updateColor(Color color) {
+      renderer.setSeriesPaint(rowIndex,
+                              new GradientPaint(0.0f, 0.0f, colorLocator.get(topColor),
+                                                0.0f, 5000.0f, colorLocator.get(bottomColor)));
+    }
   }
 }

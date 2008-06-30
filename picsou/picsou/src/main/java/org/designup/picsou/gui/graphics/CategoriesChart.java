@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.graphics;
 
+import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.model.MonthStat;
-import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.globsframework.gui.GlobSelection;
@@ -48,6 +48,7 @@ public class CategoriesChart extends View implements GlobSelectionListener, Chan
     chartPanel.setOpaque(false);
     chartPanel.setRangeZoomable(false);
     chartPanel.setDomainZoomable(false);
+    chartPanel.setPopupMenu(null);
     builder.add("categoriesChart", chartPanel);
   }
 
@@ -136,13 +137,14 @@ public class CategoriesChart extends View implements GlobSelectionListener, Chan
     plot.setIgnoreZeroValues(true);
 
     plot.setLegendLabelToolTipGenerator(new StandardPieSectionLabelGenerator("{2}%"));
+    plot.setLabelFont(fontLocator.get("chart.pie.label"));
 
     plot.setOutlinePaint(null);
     plot.setBackgroundPaint(null);
     plot.setLabelBackgroundPaint(null);
     plot.setLabelOutlinePaint(null);
     plot.setLabelShadowPaint(null);
-    plot.setMinimumArcAngleToDraw(2.0);
+    plot.setMinimumArcAngleToDraw(4.0);
 
     colorService.install("category.pie.link", new ColorUpdater() {
       public void updateColor(Color color) {

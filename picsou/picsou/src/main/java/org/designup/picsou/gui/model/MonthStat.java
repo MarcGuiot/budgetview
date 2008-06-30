@@ -37,20 +37,11 @@ public class MonthStat {
   public static DoubleField INCOME_PART;
 
   @DefaultDouble(0.0)
-  public static DoubleField EXPENSES_AVERAGE;
-  @DefaultDouble(0.0)
-  public static DoubleField INCOME_AVERAGE;
-
-  @DefaultDouble(0.0)
   public static DoubleField DISPENSABLE;
-  @DefaultDouble(0.0)
-  public static DoubleField DISPENSABLE_AVERAGE;
 
-//  public static MultiFieldUniqueIndex ACCOUNT_MONTH_CATEGORY;
 
   static {
-    GlobTypeLoader loader = GlobTypeLoader.init(MonthStat.class);
-//    loader.defineMultiFieldUniqueIndex(ACCOUNT_MONTH_CATEGORY, ACCOUNT, MONTH, CATEGORY);
+    GlobTypeLoader.init(MonthStat.class);
   }
 
   public static org.globsframework.model.Key getKey(Integer month, Integer categoryId, int accountId) {

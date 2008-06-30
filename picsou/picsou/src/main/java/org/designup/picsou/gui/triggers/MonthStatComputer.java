@@ -121,7 +121,6 @@ public class MonthStatComputer implements ChangeSetListener {
       for (int month : months) {
         double totalIncome = 0.0;
         double totalExpenses = 0.0;
-        double totalDispensable = 0.0;
 
         Key keyForAll = getKey(month, Category.ALL, accountId);
         Glob monthStatForAll = repository.get(keyForAll);
@@ -146,16 +145,11 @@ public class MonthStatComputer implements ChangeSetListener {
           if (Category.isMaster(category)) {
             totalIncome += monthStat.get(MonthStat.INCOME);
             totalExpenses += monthStat.get(MonthStat.EXPENSES);
-            totalDispensable += monthStat.get(MonthStat.DISPENSABLE);
           }
 
           averageIncome.add(monthStat.get(MonthStat.INCOME));
           averageExpenses.add(monthStat.get(MonthStat.EXPENSES));
           averageDispensable.add(monthStat.get(MonthStat.DISPENSABLE));
-
-          repository.update(monthStatKey, MonthStat.INCOME_AVERAGE, averageIncome.getAverage());
-          repository.update(monthStatKey, MonthStat.EXPENSES_AVERAGE, averageExpenses.getAverage());
-          repository.update(monthStatKey, MonthStat.DISPENSABLE_AVERAGE, averageExpenses.getAverage());
 
           if (Category.isMaster(category)) {
             GlobUtils.add(keyForAll,
@@ -166,19 +160,8 @@ public class MonthStatComputer implements ChangeSetListener {
           }
         }
 
-        FloatingAverage incomeFloatingAverageComputer = getOrCreate(incomeAverage, Category.ALL);
-        FloatingAverage expensesFloatingAverageComputer = getOrCreate(expensesAverage, Category.ALL);
-        FloatingAverage dispensableFloatingAverageComputer = getOrCreate(dispensableAverage, Category.ALL);
         repository.update(keyForAll, MonthStat.INCOME, totalIncome);
         repository.update(keyForAll, MonthStat.EXPENSES, totalExpenses);
-
-        incomeFloatingAverageComputer.add(totalIncome);
-        expensesFloatingAverageComputer.add(totalExpenses);
-        dispensableFloatingAverageComputer.add(totalDispensable);
-
-        repository.update(keyForAll, MonthStat.INCOME_AVERAGE, incomeFloatingAverageComputer.getAverage());
-        repository.update(keyForAll, MonthStat.EXPENSES_AVERAGE, expensesFloatingAverageComputer.getAverage());
-        repository.update(keyForAll, MonthStat.DISPENSABLE_AVERAGE, dispensableFloatingAverageComputer.getAverage());
 
         for (Glob category : repository.getAll(Category.TYPE)) {
           Key key = getKey(month, category.get(Category.ID), accountId);

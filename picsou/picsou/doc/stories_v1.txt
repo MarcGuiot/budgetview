@@ -1,3 +1,7 @@
+* Sous Mac: Sauvegarde dans ~/Library/Application Support/<application name>
+
+
+
 Vue "accueil"
 -------------
 * Reprendre AccountView
