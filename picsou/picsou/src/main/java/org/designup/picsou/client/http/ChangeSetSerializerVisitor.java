@@ -33,18 +33,18 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   public void visitCreation(Key key, FieldValues values) throws Exception {
     PicsouGlobSerializer serializer = key.getGlobType().getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
     if (serializer != null) {
-      writeData(key, values, DeltaState.CREATED, serializer);
+      writeData(key, DeltaState.CREATED, serializer);
     }
   }
 
   public void visitUpdate(Key key, FieldValues values) throws Exception {
     PicsouGlobSerializer serializer = key.getGlobType().getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
     if (serializer != null) {
-      writeData(key, values, DeltaState.UPDATED, serializer);
+      writeData(key, DeltaState.UPDATED, serializer);
     }
   }
 
-  private void writeData(Key key, FieldValues values, DeltaState state, PicsouGlobSerializer serializer) {
+  private void writeData(Key key, DeltaState state, PicsouGlobSerializer serializer) {
     GlobType globType = key.getGlobType();
     Field keyField = globType.getKeyFields().get(0);
     DefaultDeltaGlob defaultDeltaGlob = new DefaultDeltaGlob(

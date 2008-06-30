@@ -43,7 +43,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     });
     Window mainWindow = getMainWindow();
     Panel panel = mainWindow.getPanel("MonthSelector");
-    paintAndWait();
+    selectLastMonth(11);
     Mouse.pressed(panel, 200, 5);
     Mouse.released(panel, 200, 5);
     GlobList list = listener.getReceived();
@@ -61,50 +61,66 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     org.globsframework.utils.TestUtils.assertEquals(expected, received);
   }
 
-  private void paintAndWait() {
+  private void selectLastMonth(int monthId) {
     timeViewPanel.savePaintPoint();
-    timeViewPanel.selectLastMonth();
+    timeViewPanel.selectMonth(monthId);
     timeViewPanel.repaint();
     timeViewPanel.waitRepaint();
   }
 
   public void testScrollToVisibleToNotScrollToMuch_2() throws Exception {
-    init(170);
+    init(170, 11);
     Selectable selectable = getLastSelected();
     assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);
     assertNotNull(timeViewPanel.getSelectable(1, 1));
   }
 
   public void testScrollToVisibleToNotScrollToMuch_1() throws Exception {
-    init(270);
+    init(270, 11);
     Selectable selectable = getLastSelected();
     assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);
     assertNotNull(timeViewPanel.getSelectable(1, 1));
   }
 
   public void testScrollToVisibleToNotScrollToMuch_3() throws Exception {
-    init(470);
+    init(470, 11);
     Selectable selectable = getLastSelected();
     assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);
     assertNotNull(timeViewPanel.getSelectable(1, 1));
   }
 
-  public void DISABLED_testScrollReduceSize() throws Exception {
-    init(470);
+  public void testScrollReduceSize() throws Exception {
+    init(470, 11);
     timeViewPanel.waitRepaint();
     timeViewPanel.savePaintPoint();
     timeViewPanel.setSize(80, 40);
-    timeViewPanel.waitRepaint();
+    waitSize(80);
     Selectable selectable = getLastSelected();
     assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);
   }
 
+  private void waitSize(int width) {
+    int previousWidth = 0;
+    while (previousWidth != width) {
+      previousWidth = timeViewPanel.getPreviousWidth();
+      timeViewPanel.waitRepaint();
+    }
+  }
+
   public void testReduceSizeLetSelectedVisible() throws Exception {
-    init(170);
+    init(170, 11);
     timeViewPanel.savePaintPoint();
     timeViewPanel.setSize(80, 40);
-    timeViewPanel.waitRepaint();
-    timeViewPanel.waitRepaint();
+    waitSize(80);
+    Selectable selectable = getLastSelected();
+    assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);
+  }
+
+  public void testReduceSizeLetMiddleSelectedVisible() throws Exception {
+    init(170, 5);
+    timeViewPanel.savePaintPoint();
+    timeViewPanel.setSize(80, 40);
+    waitSize(80);
     Selectable selectable = getLastSelected();
     assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);
   }
@@ -124,7 +140,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     return selectable;
   }
 
-  private void init(int width) {
+  private void init(int width, int monthId) {
     DefaultDirectory defaultDirectory = new DefaultDirectory();
     GlobRepository repository = GlobRepositoryBuilder.init().get();
     frame = initPanel(defaultDirectory, repository, width);
@@ -144,7 +160,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     Window mainWindow = getMainWindow();
     TimeGraph timeGraph = timeViewPanel.getTimeGraph();
     int monthWidth = timeGraph.getMonthWidth();
-    paintAndWait();
+    selectLastMonth(monthId);
   }
 
   private JFrame initPanel(Directory directory, GlobRepository repository, int width) {
