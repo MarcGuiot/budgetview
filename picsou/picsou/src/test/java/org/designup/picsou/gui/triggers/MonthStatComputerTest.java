@@ -36,25 +36,11 @@ public class MonthStatComputerTest extends PicsouTestCase {
       .add(MasterCategory.ALL, 460.0, 500.0, 0.0, 610.0)
       .check();
 
-    init(MonthStat.EXPENSES_AVERAGE)
-      .setMonths(200605, 200606, 200607, 200608)
-      .add(MasterCategory.HEALTH, 60.0, 80.0, 53.33, 100.0)
-      .add(MasterCategory.HOUSE, 400.0, 400.0, 266.67, 270.0)
-      .add(MasterCategory.ALL, 460.0, 480.0, 320.0, 370.0)
-      .check();
-
     init(MonthStat.INCOME)
       .setMonths(200605, 200606, 200607, 200608)
       .add(MasterCategory.INCOME, 600.0, 800.0, 0.0, 700.0)
       .add(MasterCategory.HEALTH, 0.0, 20.0, 0.0, 10.0)
       .add(MasterCategory.ALL, 600.0, 820.0, 0.0, 710.0)
-      .check();
-
-    init(MonthStat.INCOME_AVERAGE)
-      .setMonths(200605, 200606, 200607, 200608)
-      .add(MasterCategory.INCOME, 600.0, 700.0, 466.67, 500.0)
-      .add(MasterCategory.HEALTH, 0.0, 10.0, 6.67, 10.0)
-      .add(MasterCategory.ALL, 600.0, 710.0, 473.33, 510.0)
       .check();
 
     init(MonthStat.EXPENSES_PART)
@@ -150,26 +136,11 @@ public class MonthStatComputerTest extends PicsouTestCase {
       .add(MasterCategory.ALL, 120.0, 100.0, 0.0, 100.0)
       .check();
 
-    init(MonthStat.EXPENSES_AVERAGE)
-      .setMonths(200605, 200606, 200607, 200608)
-      .add(MasterCategory.HEALTH, 120.0, 110.0, 73.33, 66.67)
-      .add("doctor", 110.0, 55.0, 36.67, 20.0)
-      .add("pharma", 0.0, 20.0, 13.33, 13.33)
-      .add(MasterCategory.ALL, 120.0, 110.0, 73.33, 66.67)
-      .check();
-
     init(MonthStat.INCOME)
       .setMonths(200605, 200606, 200607, 200608)
       .add(MasterCategory.HEALTH, 90.0, 70.0, 0.0, 80.0)
       .add("reimbursements", 90.0, 70.0, 0.0, 80.0)
       .add(MasterCategory.ALL, 90.0, 70.0, 0.0, 80.0)
-      .check();
-
-    init(MonthStat.INCOME_AVERAGE)
-      .setMonths(200605, 200606, 200607, 200608)
-      .add(MasterCategory.HEALTH, 90.0, 80.0, 53.33, 50.0)
-      .add("reimbursements", 90.0, 80.0, 53.33, 50.0)
-      .add(MasterCategory.ALL, 90.0, 80.0, 53.33, 50.0)
       .check();
 
     initGlobal()
