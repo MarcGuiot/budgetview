@@ -81,9 +81,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     }
     boolean shouldScroll = false;
     if (getWidth() < previousWidth) {
-      if (translation < 0) {
-        shouldScroll = true;
-      }
+      shouldScroll = true;
     }
     previousWidth = getWidth();
     Graphics2D d = (Graphics2D)g.create();
@@ -102,13 +100,13 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     finally {
       d.dispose();
     }
-    synchronized (this) {
-      paintCount++;
-      this.notify();
-    }
     if (shouldScroll) {
       scrollToLastVisible();
       repaint();
+    }
+    synchronized (this) {
+      paintCount++;
+      this.notify();
     }
   }
 

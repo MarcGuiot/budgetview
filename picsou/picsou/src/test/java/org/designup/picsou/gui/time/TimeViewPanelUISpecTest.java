@@ -89,6 +89,16 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     assertNotNull(timeViewPanel.getSelectable(1, 1));
   }
 
+  public void DISABLED_testScrollReduceSize() throws Exception {
+    init(470);
+    timeViewPanel.waitRepaint();
+    timeViewPanel.savePaintPoint();
+    timeViewPanel.setSize(80, 40);
+    timeViewPanel.waitRepaint();
+    Selectable selectable = getLastSelected();
+    assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);
+  }
+
   public void testReduceSizeLetSelectedVisible() throws Exception {
     init(170);
     timeViewPanel.savePaintPoint();
