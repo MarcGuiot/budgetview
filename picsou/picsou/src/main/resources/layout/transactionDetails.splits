@@ -71,6 +71,8 @@
       <textArea ref="originalLabel"/>
     </column>
 
+    <hyperlink ref="categorizeLink"/>
+
     <filler fill="vertical"/>
   </column>
 </splits>

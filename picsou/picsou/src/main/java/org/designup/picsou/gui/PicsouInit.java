@@ -19,7 +19,6 @@ import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.CachedGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import static org.globsframework.model.utils.GlobMatchers.isNotNull;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
@@ -73,7 +72,8 @@ public class PicsouInit {
     }
     serverAccess.applyChanges(changeSet, repository);
     if (newUser) {
-      loadDefaultSubcategories();
+      loadGlobs("/subcats.xml");
+      loadGlobs("/series.xml");
     }
 
     initDirectory(repository);
@@ -110,13 +110,12 @@ public class PicsouInit {
     return repository;
   }
 
-  private GlobList loadDefaultSubcategories() {
-    String subcatsFile = "/subcats.xml";
+  private void loadGlobs(String fileName) {
     Reader reader = null;
     try {
-      InputStream stream = PicsouInit.class.getResourceAsStream(subcatsFile);
+      InputStream stream = PicsouInit.class.getResourceAsStream(fileName);
       if (stream == null) {
-        throw new ResourceAccessFailed("Resource file not found:" + subcatsFile);
+        throw new ResourceAccessFailed("Resource file not found:" + fileName);
       }
       reader = new InputStreamReader(stream, "UTF-8");
     }
@@ -124,10 +123,5 @@ public class PicsouInit {
       throw new UnexpectedApplicationState(e);
     }
     XmlGlobParser.parse(PicsouModel.get(), repository, reader, "globs");
-    GlobList result = new GlobList();
-    for (Glob subcat : repository.getAll(Category.TYPE, isNotNull(Category.MASTER))) {
-      result.add(subcat.duplicate());
-    }
-    return result;
   }
 }

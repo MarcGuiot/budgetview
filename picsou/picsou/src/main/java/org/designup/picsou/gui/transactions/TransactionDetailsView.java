@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
@@ -30,8 +31,10 @@ import org.globsframework.model.utils.GlobListMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.awt.event.ActionEvent;
 
 public class TransactionDetailsView extends View {
   public TransactionDetailsView(GlobRepository repository, Directory directory) {
@@ -99,6 +102,13 @@ public class TransactionDetailsView extends View {
     builder.add("bankDate",
                 addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true)
                   .setAutoHideMatcher(new BankDateVisibilityMatcher()));
+
+    builder.add("categorizeLink", new HyperlinkButton(new AbstractAction("categorize") {
+      public void actionPerformed(ActionEvent e) {
+        CategorizationDialog dialog = new CategorizationDialog(repository, directory);
+        dialog.show(GlobList.EMPTY, directory.get(JFrame.class));
+      }
+    }));
 
     return builder;
   }

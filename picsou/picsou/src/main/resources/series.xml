@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<globs>
+  <series id="0" name="internet" budgetAreaName="recurringExpenses">
+  </series>
+  <series id="1" name="rental" budgetAreaName="recurringExpenses"/>
+  <series id="2" name="electricity" budgetAreaName="recurringExpenses"/>
+
+  <series id="10" name="groceries" budgetAreaName="expensesEnvelope">
+  </series>
+
+  <envelopeProfile>
+    <envelopeProfileToCategory categoryName="food"/>
+    <envelopeProfileToCategory categoryName="house"/>
+  </envelopeProfile>
+</globs>

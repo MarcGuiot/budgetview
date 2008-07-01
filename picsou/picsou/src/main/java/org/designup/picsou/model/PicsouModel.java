@@ -19,7 +19,11 @@ public class PicsouModel {
                           TransactionTypeMatcher.TYPE,
                           TransactionImport.TYPE,
                           UserPreferences.TYPE,
-                          SerializableGlobType.TYPE)
+                          SerializableGlobType.TYPE,
+                          Series.TYPE,
+                          BudgetArea.TYPE,
+                          EnvelopeProfile.TYPE,
+                          EnvelopeProfileToCategory.TYPE)
       .get();
 
   static {

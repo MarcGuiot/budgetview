@@ -22,12 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionChecker extends DataChecker {
+  public static final String TO_CATEGORIZE = "To categorize";
+
   private Table table;
   private Window window;
-  public static final String TO_CATEGORIZE = "To categorize";
+  private TransactionDetailsChecker transactionDetails;
 
   public TransactionChecker(Window window) {
     this.window = window;
+    this.transactionDetails = new TransactionDetailsChecker(window);
   }
 
   public void checkHeader(String... columnNames) {
@@ -138,6 +141,11 @@ public class TransactionChecker extends DataChecker {
       builder.append(category);
     }
     return builder.toString();
+  }
+
+  public CategorizationDialogChecker categorize(int row) {
+    getTable().selectRow(row);
+    return transactionDetails.categorize();
   }
 
   public class ContentChecker {

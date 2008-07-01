@@ -6,7 +6,7 @@ import org.globsframework.metamodel.annotations.NamingField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldValuesBuilder;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
@@ -45,10 +45,8 @@ public enum ExerciseType implements GlobConstantContainer {
   public ReadOnlyGlob getGlob() {
     if (glob == null) {
       glob = new ReadOnlyGlob(TYPE,
-                              FieldValuesBuilder
-                                .init(ID, id)
-                                .set(NAME, Strings.toNiceLowerCase(name()))
-                                .get());
+                              value(ID, id),
+                              value(NAME, Strings.toNiceLowerCase(name())));
     }
     return glob;
   }

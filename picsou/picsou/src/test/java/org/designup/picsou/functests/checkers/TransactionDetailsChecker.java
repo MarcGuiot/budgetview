@@ -149,4 +149,19 @@ public class TransactionDetailsChecker extends DataChecker {
     return new SplitDialogChecker(WindowInterceptor
       .getModalDialog(getPanel().getButton("splitLink").triggerClick()));
   }
+
+  public CategorizationDialogChecker categorize() {
+    Button button = getPanel().getButton("Categorize");
+    Window dialog = WindowInterceptor.getModalDialog(button.triggerClick());
+    return new CategorizationDialogChecker(dialog);
+  }
+
+  public void checkSeries(String name, MasterCategory category) {
+    TextBox seriesName = getPanel().getTextBox("transactionSeriesName");
+    assertTrue(seriesName.textEquals(name));
+
+    TextBox categoriesName = getPanel().getTextBox("transactionSeriesCategory");
+    assertTrue(categoriesName.textEquals(name));
+
+  }
 }

@@ -23,9 +23,11 @@ TransactionView
 ---------------
 * Revoir tailles colonnes (colonne "notes" invisible)
 
+
 TimeView
 --------
 * Escamoter boutons
+
 
 Misc
 ----
@@ -33,6 +35,11 @@ Misc
 * Split transaction : supprimer "disposable"
 * “Esc” pour fermer les boîtes de dialogue (mettre PicsouDialog en abstract, avec un dispose() a surcharger)
 * Memoriser dernier repertoire pour le filechooser
+
+
+Fenetre import
+--------------
+* En mode "dialog", revoir hyperlien "annuler" et bouton "ignorer fichier" => introduire bouton "cancel" ?
 
 
 Reorg vues
