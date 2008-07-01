@@ -11,16 +11,22 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.ComponentHolder;
+import org.globsframework.gui.editors.AbstractGlobTextEditor;
 import org.globsframework.gui.editors.GlobMultiLineTextEditor;
 import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
+import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobMultiLineTextView;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.FieldValue;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.utils.GlobListFieldStringifier;
@@ -30,10 +36,18 @@ import org.globsframework.model.utils.GlobListMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public class TransactionDetailsView extends View {
+  private AbstractGlobTextEditor labelEditor;
+  private boolean editMode = false;
+  private TransactionDetailsView.EditOneSelectionAction editAction;
+  private TransactionDetailsView.SaveEditSelectionAction saveAction;
+
   public TransactionDetailsView(GlobRepository repository, Directory directory) {
     super(repository, directory);
   }
@@ -53,11 +67,25 @@ public class TransactionDetailsView extends View {
                   }
                 }, true));
 
-    builder.add("userLabel",
-                GlobMultiLineTextEditor.init(Transaction.LABEL, repository, directory)
-                  .setMultiSelectionText(Lang.get("transaction.details.multilabel"))
-                  .setEditable(false));
+    builder.add("comboTypeTransaction", GlobComboView.init(TransactionType.TYPE, repository, directory));
 
+    builder.add("userLabel", GlobMultiLineTextEditor.init(Transaction.LABEL, repository, directory)
+      .setMultiSelectionText(Lang.get("transaction.details.multilabel"))
+      .setEditable(false));
+    labelEditor = GlobMultiLineTextEditor.init(Transaction.LABEL, repository, directory)
+      .setMultiSelectionText(Lang.get("transaction.details.multilabel"))
+      .setEditable(true);
+    builder.add("editableLabel", labelEditor);
+    editAction = new EditOneSelectionAction();
+    selectionService.addListener(editAction, Transaction.TYPE);
+    builder.add("editOneSelection", editAction);
+    saveAction = new SaveEditSelectionAction();
+    builder.add("saveEditSelection", saveAction);
+
+    builder.add("cancelEditSelection", new CancelEditAction());
+
+    builder.add("decrementDate", new DecrementDate());
+    builder.add("incrementDate", new IncrementDate());
     builder.add("userDate",
                 addLabel(new TransactionDateListStringifier(Transaction.MONTH, Transaction.DAY), true));
 
@@ -158,5 +186,77 @@ public class TransactionDetailsView extends View {
     }
   }
 
+  private class IncrementDate extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+    }
+  }
+
+  private class DecrementDate extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+    }
+  }
+
+  private class EditOneSelectionAction extends AbstractAction implements GlobSelectionListener {
+    private int transactionSelectedCount = 0;
+    private Glob transaction;
+
+    private EditOneSelectionAction() {
+      editMode = false;
+      setEnabled(false);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      editMode = true;
+      updateEditVisibility(transactionSelectedCount);
+    }
+
+    public void selectionUpdated(GlobSelection selection) {
+      editMode = false;
+      GlobList globList = selection.getAll(Transaction.TYPE);
+      transactionSelectedCount = globList.size();
+      updateEditVisibility(transactionSelectedCount);
+      if (transactionSelectedCount == 1){
+        transaction = globList.get(0).duplicate();
+      }
+    }
+
+    public Glob getTransaction() {
+      return transaction;
+    }
+  }
+
+  private class SaveEditSelectionAction extends AbstractAction {
+    private SaveEditSelectionAction() {
+      setEnabled(false);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      editMode = false;
+      updateEditVisibility(1);
+    }
+  }
+
+  public void updateEditVisibility(int transactionSelectedCount) {
+    if (editMode && transactionSelectedCount == 1) {
+      editAction.setEnabled(false);
+      saveAction.setEnabled(true);
+    }
+    else {
+      saveAction.setEnabled(false);
+      editAction.setEnabled(transactionSelectedCount == 1);
+    }
+
+  }
+
+  private class CancelEditAction extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+      Glob transaction = editAction.getTransaction();
+      repository.enterBulkDispatchingMode();
+      repository.update(transaction.getKey(), transaction.toArray());
+      repository.completeBulkDispatchingMode();
+      editMode = false;
+      updateEditVisibility(1);
+    }
+  }
 }
 

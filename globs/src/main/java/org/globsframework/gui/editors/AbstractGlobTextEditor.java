@@ -8,6 +8,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.EmptyGlobList;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;
 
@@ -17,7 +18,7 @@ import java.awt.event.FocusListener;
 
 public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextComponent> extends AbstractGlobComponentHolder implements GlobSelectionListener {
   protected Field field;
-  private GlobList lastSelectedGlobs;
+  private GlobList lastSelectedGlobs = new EmptyGlobList();
   protected COMPONENT_TYPE textComponent;
   private Object valueForMultiSelection;
   private boolean forceNotEditable;
@@ -38,6 +39,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
 
   public AbstractGlobTextEditor setEditable(boolean b) {
     forceNotEditable = !b;
+    updateTextComponentState();
     return this;
   }
 
@@ -94,11 +96,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       return;
     }
     lastSelectedGlobs = selection.getAll(field.getGlobType());
-    boolean selectionNotEmpty = !lastSelectedGlobs.isEmpty();
-    textComponent.setEnabled(selectionNotEmpty);
-    if (!forceNotEditable) {
-      textComponent.setEditable(selectionNotEmpty);
-    }
+    updateTextComponentState();
 
     Object value = null;
     for (Glob glob : lastSelectedGlobs) {
@@ -110,6 +108,14 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       value = globValue;
     }
     setValue(value);
+  }
+
+  private void updateTextComponentState() {
+    boolean selectionNotEmpty = !lastSelectedGlobs.isEmpty();
+    textComponent.setEnabled(selectionNotEmpty);
+    if (!forceNotEditable) {
+      textComponent.setEditable(selectionNotEmpty);
+    }
   }
 
   protected Object getValue() throws InvalidFormat {

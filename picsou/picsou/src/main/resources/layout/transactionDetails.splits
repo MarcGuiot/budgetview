@@ -16,6 +16,7 @@
     <style selector="textArea" foreground="transaction.detail.text" opaque="false"
            anchor="top" lineWrap="true" wrapStyleWord="true"/>
     <style selector="textArea#userLabel" font="$transaction.label"/>
+    <style selector="textArea#editableLabel" font="$transaction.label"/>
 
     <style selector="label#amountValue" font="-,bold,16"/>
 
@@ -23,8 +24,21 @@
 
   <column minimumSize="(200, 150)" preferredSize="(200, 150)">
 
-    <label ref="transactionType" styleClass="formLabel"/>
-    <textArea ref="userLabel"/>
+    <label ref="transactionType" styleClass="formLabel" autoHideSource="editOneSelection"/>
+    <comboBox ref="comboTypeTransaction" autoHideSource="saveEditSelection" opaque="false"/>
+    <textArea ref="userLabel" autoHideSource="editOneSelection"/>
+    <textArea ref="editableLabel" background="transaction.detail.editLabel.bg"
+              autoHideSource="saveEditSelection" opaque="true"/>
+    <row>
+      <filler fill="horizontal"/>
+      <hyperlink name="editOneSelection" action="editOneSelection" text="$transaction.detail.edit"/>
+      <hyperlink name="saveEditSelection" action="saveEditSelection" text="$transaction.detail.apply"/>
+      <filler fill="horizontal"/>
+      <hyperlink name="cancelEditSelection" action="cancelEditSelection" text="$transaction.detail.cancelEdit"
+        autoHideSource="saveEditSelection"/>
+      <filler fill="horizontal"/>
+    </row>
+    <!--<hyperlink ref="editManySelection"/>-->
 
     <row>
       <label ref="amountLabel" styleClass="formLabel"/>
@@ -32,7 +46,10 @@
     </row>
     <row>
       <label text="$transaction.detail.userDate" styleClass="formLabel" autoHideSource="userDate"/>
+      <filler fill="horizontal"/>
+      <hyperlink action="decrementDate" text="-" autoHideSource="saveEditSelection" underline="false"/>
       <label ref="userDate" font="$transaction.date" styleClass="formValue"/>
+      <hyperlink action="incrementDate" text="+" autoHideSource="saveEditSelection" underline="false"/>
     </row>
     <row>
       <label text="$transaction.detail.bankDate" styleClass="formLabel" autoHideSource="bankDate"/>

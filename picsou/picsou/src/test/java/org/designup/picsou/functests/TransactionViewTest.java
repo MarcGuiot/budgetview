@@ -162,6 +162,21 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testChangeMonthClearTransactionSelection() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransactionWithNote("2006/06/01", -70.00, "essence", "frais pro", MasterCategory.TRANSPORTS)
+      .load();
+
+    periods.selectCell(0);
+    transactions.getTable().selectRow(0);
+    assertFalse(transactions.getTable().selectionIsEmpty());
+    periods.selectCell(1);
+    assertTrue(transactions.getTable().selectionIsEmpty());
+    periods.selectCell(0);
+    assertTrue(transactions.getTable().selectionIsEmpty());
+  }
+
   private void enterNote(int row, String note) {
     table.editCell(row, TransactionView.NOTE_COLUMN_INDEX, note, true);
   }

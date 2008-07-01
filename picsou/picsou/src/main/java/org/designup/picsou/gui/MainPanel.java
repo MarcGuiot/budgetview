@@ -14,8 +14,13 @@ import org.designup.picsou.gui.transactions.InformationView;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Category;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.color.ColorService;
@@ -71,8 +76,18 @@ public class MainPanel {
 
     timeView.selectLastMonth();
     categoryView.select(Category.ALL);
+    initMonthSelection(directory);
 
     createMenuBar(parent);
+  }
+
+  private void initMonthSelection(Directory directory) {
+    final SelectionService selectionService = directory.get(SelectionService.class);
+    selectionService.addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        selectionService.clear(Transaction.TYPE);
+      }
+    }, Month.TYPE);
   }
 
   private void createPanel(Directory directory, View... views) {
