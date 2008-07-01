@@ -5,6 +5,7 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.metamodel.DummyObjectWithLinks;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.KeyBuilder.newKey;
 
 public abstract class DefaultGlobRepositoryTestCase extends TestCase {
@@ -30,10 +31,8 @@ public abstract class DefaultGlobRepositoryTestCase extends TestCase {
   protected Key initWithReadOnlyGlob(int value) {
     init(GlobRepositoryBuilder.init()
       .add(new ReadOnlyGlob(DummyObject.TYPE,
-                            FieldValuesBuilder
-                              .init(DummyObject.ID, value)
-                              .set(DummyObject.NAME, "name")
-                              .get()))
+                            value(DummyObject.ID, value),
+                            value(DummyObject.NAME, "name")))
       .get());
     return getKey(value);
   }

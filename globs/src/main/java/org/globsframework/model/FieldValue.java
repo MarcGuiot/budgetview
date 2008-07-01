@@ -84,4 +84,8 @@ public class FieldValue {
     result = 31 * result + (value != null ? value.hashCode() : 0);
     return result;
   }
+
+  public String toString() {
+    return field.getName() + ":" + value;
+  }
 }

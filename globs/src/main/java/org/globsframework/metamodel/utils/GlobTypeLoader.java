@@ -200,7 +200,6 @@ public class GlobTypeLoader {
     return NotUniqueIndex.class.isAssignableFrom(field.getType());
   }
 
-
   private boolean isUniqueIndexField(java.lang.reflect.Field field) {
     return UniqueIndex.class.isAssignableFrom(field.getType());
   }
@@ -253,7 +252,7 @@ public class GlobTypeLoader {
         type.addConstant((ReadOnlyGlob)glob);
       }
       else {
-        type.addConstant(new ReadOnlyGlob(glob.getType(), glob));
+        type.addConstant(new ReadOnlyGlob(glob.getType(), glob.toArray()));
       }
     }
   }

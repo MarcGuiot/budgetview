@@ -94,7 +94,7 @@ public class SplitsBuilder {
     return DefaultCardHandler.init(panel);
   }
 
-  public <T> RepeatHandler<T> addRepeat(String name, RepeatFactory<String> factory,
+  public <T> RepeatHandler<T> addRepeat(String name, RepeatFactory<T> factory,
                                         java.util.List<T> items) {
 
     DefaultRepeat<T> repeat = new DefaultRepeat<T>(factory, items);

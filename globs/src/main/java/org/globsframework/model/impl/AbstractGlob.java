@@ -29,15 +29,14 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
     this.values = values;
   }
 
-  protected AbstractGlob(final GlobType type, FieldValues fieldValues) {
+  protected AbstractGlob(final GlobType type, FieldValue... fieldValues) {
     this(type);
-    fieldValues.safeApply(new FieldValues.Functor() {
-      public void process(Field field, Object value) throws Exception {
-        if (field.getGlobType().equals(type)) {
-          values[field.getIndex()] = value;
-        }
+    for (FieldValue fieldValue : fieldValues) {
+      Field field = fieldValue.getField();
+      if (field.getGlobType().equals(type)) {
+        values[field.getIndex()] = fieldValue.getValue();
       }
-    });
+    }
   }
 
   public GlobType getType() {

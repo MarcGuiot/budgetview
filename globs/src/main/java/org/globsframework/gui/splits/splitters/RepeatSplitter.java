@@ -9,25 +9,25 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 public class RepeatSplitter extends AbstractSplitter {
   private Splitter templateSplitter;
-  protected String ref;
+  protected String name;
 
   public RepeatSplitter(SplitProperties properties, Splitter[] subSplitters) {
     super(properties, null);
-    ref = properties.get("ref");
-    if (ref == null) {
-      throw new SplitsException("Repeat items must have a 'ref' attribute");
+    name = properties.get("name");
+    if (name == null) {
+      throw new SplitsException("Repeat items must have a 'name' attribute");
     }
 
     if (subSplitters.length != 1) {
-      throw new SplitsException("Repeat component '" + ref + "' must have exactly one subcomponent");
+      throw new SplitsException("Repeat component '" + name + "' must have exactly one subcomponent");
     }
     this.templateSplitter = subSplitters[0];
   }
 
   protected ComponentStretch createRawStretch(SplitsContext context) {
-    Repeat repeat = context.getRepeat(ref);
+    Repeat repeat = context.getRepeat(name);
     if (repeat == null) {
-      throw new ItemNotFound("Repeat '" + ref + "' not declared");
+      throw new ItemNotFound("Repeat '" + name + "' not declared");
     }
     RepeatPanel repeatPanel = new RepeatPanel(repeat, templateSplitter, context);
     return repeatPanel.getStretch();

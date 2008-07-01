@@ -21,7 +21,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     }, Arrays.asList("aa", "bb"));
 
     JPanel panel = parse(
-      "<repeat ref='myRepeat'>" +
+      "<repeat name='myRepeat'>" +
       "  <row>" +
       "    <label ref='label'/>" +
       "    <button ref='btn'/>" +
@@ -63,7 +63,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
   public void testRepeatAcceptsOnlyOneSubComponent() throws Exception {
     try {
       parse(
-        "<repeat ref='myRepeat'>" +
+        "<repeat name='myRepeat'>" +
         "  <label ref='label'/>" +
         "  <button ref='btn'/>" +
         "</repeat>");
@@ -76,7 +76,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
   public void testRepeatNotFound() throws Exception {
     try {
       parse(
-        "<repeat ref='myRepeat'>" +
+        "<repeat name='myRepeat'>" +
         "  <label ref='label'/>" +
         "</repeat>");
     }
@@ -98,10 +98,10 @@ public class SplitsRepeatTest extends SplitsTestCase {
     }, Arrays.asList("aa", "bb", "cc"));
 
     JPanel panel = parse(
-      "<repeat ref='parentRepeat'>" +
+      "<repeat name='parentRepeat'>" +
       "  <row>" +
       "    <label ref='label'/>" +
-      "    <repeat ref='childRepeat'>" +
+      "    <repeat name='childRepeat'>" +
       "      <button ref='button'/>" +
       "    </repeat>" +
       "  </row>" +
