@@ -10,20 +10,22 @@ import org.globsframework.gui.splits.layout.ComponentStretch;
 import javax.swing.*;
 
 public class ScrollPaneComponent extends AbstractSplitter {
-  private ComponentStretch stretch;
 
-  protected ScrollPaneComponent(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
-    super(properties, subSplitters, context);
+  protected ScrollPaneComponent(SplitProperties properties, Splitter[] subSplitters) {
+    super(properties, subSplitters);
     if (subSplitters.length != 1) {
       throw new SplitsException("scrollPane must have exactly one subcomponent");
     }
-    ComponentStretch subStretch = subSplitters[0].getComponentStretch(true);
+  }
+
+  protected ComponentStretch createRawStretch(SplitsContext context) {
+    ComponentStretch subStretch = getSubSplitters()[0].getComponentStretch(context, true);
     JScrollPane scrollPane = new JScrollPane(subStretch.getComponent());
-    stretch = new ComponentStretch(scrollPane,
-                                   subStretch.getFill(),
-                                   subStretch.getAnchor(),
-                                   subStretch.getWeightX(),
-                                   subStretch.getWeightY());
+    ComponentStretch stretch = new ComponentStretch(scrollPane,
+                                                    subStretch.getFill(),
+                                                    subStretch.getAnchor(),
+                                                    subStretch.getWeightX(),
+                                                    subStretch.getWeightY());
 
     String id = properties.getString("id");
     if (id != null) {
@@ -39,9 +41,6 @@ public class ScrollPaneComponent extends AbstractSplitter {
     if (viewportOpaque != null) {
       scrollPane.getViewport().setOpaque(viewportOpaque);
     }
-  }
-
-  protected ComponentStretch createRawStretch() {
     return stretch;
   }
 

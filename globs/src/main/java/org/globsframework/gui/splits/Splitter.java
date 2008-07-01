@@ -8,7 +8,7 @@ import java.awt.*;
 public interface Splitter {
   String getName();
 
-  ComponentStretch getComponentStretch(boolean addMargin);
+  ComponentStretch getComponentStretch(SplitsContext context, boolean addMargin);
 
   Insets getMarginInsets();
 

@@ -10,14 +10,14 @@ import java.awt.*;
 
 public class FrameComponent extends DefaultComponent<JFrame> {
 
-  public FrameComponent(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
-    super(JFrame.class, "frame", context, properties, subSplitters, true);
+  public FrameComponent(SplitProperties properties, Splitter[] subSplitters) {
+    super(JFrame.class, "frame", properties, subSplitters, true);
   }
 
-  protected void processComponent(JFrame frame, SplitProperties properties, SplitsContext context) {
-    ComponentStretch panelStretch = Sequence.createPanel(getSubSplitters(), Sequence.Direction.VERTICAL);
+  protected void postCreateComponent(JFrame component, SplitsContext context) {
+    ComponentStretch panelStretch = Sequence.createPanel(getSubSplitters(), Sequence.Direction.VERTICAL, context);
     Component panel = panelStretch.getComponent();
-    frame.setContentPane((Container)panel);
+    component.setContentPane((Container)panel);
   }
 
   protected void complete(Component component) {

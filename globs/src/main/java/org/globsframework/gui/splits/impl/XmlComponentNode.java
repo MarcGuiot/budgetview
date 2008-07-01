@@ -60,14 +60,14 @@ public class XmlComponentNode extends DefaultXmlNode {
   public void complete() {
     splitter = factory.getSplitter(name,
                                    subSplitters.toArray(new Splitter[subSplitters.size()]),
-                                   properties,
-                                   context);
+                                   properties
+    );
     if (parent != null) {
       parent.subSplitters.add(splitter);
     }
   }
 
   public Component getComponent() {
-    return splitter.getComponentStretch(true).getComponent();
+    return splitter.getComponentStretch(context, true).getComponent();
   }
 }

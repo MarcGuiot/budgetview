@@ -6,7 +6,7 @@ import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.components.JStyledPanel;
 
 public class StyledPanelComponent extends AbstractPanelComponent<JStyledPanel> {
-  protected StyledPanelComponent(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
-    super(JStyledPanel.class, "styledPanel", properties, subSplitters, context);
+  protected StyledPanelComponent(SplitProperties properties, Splitter[] subSplitters) {
+    super(JStyledPanel.class, "styledPanel", properties, subSplitters);
   }
 }

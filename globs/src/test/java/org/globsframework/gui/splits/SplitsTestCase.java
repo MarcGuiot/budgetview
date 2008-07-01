@@ -29,9 +29,9 @@ public abstract class SplitsTestCase extends UISpecTestCase {
     builder = new SplitsBuilder(colorService, iconLocator, textLocator, fontService);
   }
 
-  protected Component parse(final String xml) throws Exception {
+  protected <T extends Component> T parse(final String xml) throws Exception {
     validateDocument(toStream(xml));
-    return builder.setSource(complete(xml)).load();
+    return builder.setSource(complete(xml)).<T>load();
   }
 
   protected Component parseWithoutSchemaValidation(String xml) throws Exception {

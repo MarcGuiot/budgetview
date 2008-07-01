@@ -11,11 +11,13 @@ import javax.swing.*;
  * Manages a JEditorPane configured to display HTML with a standard font and opacity disabled.
  */
 public class HtmlEditorPane extends DefaultComponent<JEditorPane> {
-  public HtmlEditorPane(SplitsContext context,
-                        SplitProperties properties,
+  public HtmlEditorPane(SplitProperties properties,
                         Splitter[] subSplitters,
                         boolean acceptsSubSplitters) {
-    super(JEditorPane.class, "htmlEditorPane", context, properties, subSplitters, acceptsSubSplitters);
+    super(JEditorPane.class, "htmlEditorPane", properties, subSplitters, acceptsSubSplitters);
+  }
+
+  protected void postCreateComponent(JEditorPane component, SplitsContext context) {
     component.setContentType("text/html");
     component.setEditable(false);
     component.setOpaque(false);

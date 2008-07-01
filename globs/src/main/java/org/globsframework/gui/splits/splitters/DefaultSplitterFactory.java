@@ -1,7 +1,6 @@
 package org.globsframework.gui.splits.splitters;
 
 import org.globsframework.gui.splits.SplitProperties;
-import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.SplitterFactory;
 import org.globsframework.gui.splits.components.HyperlinkButton;
@@ -14,98 +13,101 @@ public class DefaultSplitterFactory implements SplitterFactory {
 
   public Splitter getSplitter(String name,
                               Splitter[] subSplitters,
-                              SplitProperties properties,
-                              SplitsContext context) {
+                              SplitProperties properties
+  ) {
 
     if (name.equals("row")) {
-      return new Sequence(subSplitters, Sequence.Direction.HORIZONTAL, properties, context);
+      return new Sequence(subSplitters, Sequence.Direction.HORIZONTAL, properties);
     }
     if (name.equals("column")) {
-      return new Sequence(subSplitters, Sequence.Direction.VERTICAL, properties, context);
+      return new Sequence(subSplitters, Sequence.Direction.VERTICAL, properties);
     }
     else if (name.equals("verticalSplit")) {
-      return new MovableSplit(MovableSplit.Direction.VERTICAL, properties, subSplitters, context);
+      return new MovableSplit(MovableSplit.Direction.VERTICAL, properties, subSplitters);
     }
     else if (name.equals("horizontalSplit")) {
-      return new MovableSplit(MovableSplit.Direction.HORIZONTAL, properties, subSplitters, context);
+      return new MovableSplit(MovableSplit.Direction.HORIZONTAL, properties, subSplitters);
     }
     else if (name.equals("grid")) {
-      return new Grid(properties, subSplitters, context);
+      return new Grid(properties, subSplitters);
     }
     else if (name.equals("borderLayout")) {
-      return new BorderLayoutComponent(properties, subSplitters, context);
+      return new BorderLayoutComponent(properties, subSplitters);
     }
     else if (name.equals("cards")) {
-      return new CardLayoutComponent(properties, subSplitters, context);
+      return new CardLayoutComponent(properties, subSplitters);
     }
     else if (name.equals("card")) {
-      return new CardSplitter(context, properties, subSplitters);
+      return new CardSplitter(properties, subSplitters);
+    }
+    else if (name.equals("repeat")) {
+      return new RepeatSplitter(properties, subSplitters);
     }
     else if (name.equals("label")) {
-      return new LabelComponent(properties, subSplitters, context);
+      return new LabelComponent(properties, subSplitters);
     }
     else if (name.equals("component")) {
-      return NamedComponent.get(properties, subSplitters, context);
+      return new NamedComponent(properties, subSplitters);
     }
     else if (name.equals("filler")) {
-      return new Filler(properties, subSplitters, context);
+      return new Filler(properties, subSplitters);
     }
     else if (name.equals("frame")) {
-      return new FrameComponent(properties, subSplitters, context);
+      return new FrameComponent(properties, subSplitters);
     }
     else if (name.equals("panel")) {
-      return new PanelComponent(properties, subSplitters, context);
+      return new PanelComponent(properties, subSplitters);
     }
     else if (name.equals("styledPanel")) {
-      return new StyledPanelComponent(properties, subSplitters, context);
+      return new StyledPanelComponent(properties, subSplitters);
     }
     else if (name.equals("scrollPane")) {
-      return new ScrollPaneComponent(properties, subSplitters, context);
+      return new ScrollPaneComponent(properties, subSplitters);
     }
     else if (name.equals("table")) {
-      return createDefaultComponent(JTable.class, "table", context, properties, subSplitters);
+      return createDefaultComponent(JTable.class, "table", properties, subSplitters);
     }
     else if (name.equals("list")) {
-      return createDefaultComponent(JList.class, "list", context, properties, subSplitters);
+      return createDefaultComponent(JList.class, "list", properties, subSplitters);
     }
     else if (name.equals("button")) {
-      return createDefaultComponent(JButton.class, "button", context, properties, subSplitters);
+      return createDefaultComponent(JButton.class, "button", properties, subSplitters);
     }
     else if (name.equals("hyperlink")) {
-      return createDefaultComponent(HyperlinkButton.class, "hyperlink", context, properties, subSplitters);
+      return createDefaultComponent(HyperlinkButton.class, "hyperlink", properties, subSplitters);
     }
     else if (name.equals("toggleButton")) {
-      return createDefaultComponent(JToggleButton.class, "toggleButton", context, properties, subSplitters);
+      return createDefaultComponent(JToggleButton.class, "toggleButton", properties, subSplitters);
     }
     else if (name.equals("textField")) {
-      return createDefaultComponent(JTextField.class, "textField", context, properties, subSplitters);
+      return createDefaultComponent(JTextField.class, "textField", properties, subSplitters);
     }
     else if (name.equals("textArea")) {
-      return createDefaultComponent(JTextArea.class, "textArea", context, properties, subSplitters);
+      return createDefaultComponent(JTextArea.class, "textArea", properties, subSplitters);
     }
     else if (name.equals("editorPane")) {
-      return createDefaultComponent(JEditorPane.class, "editorPane", context, properties, subSplitters);
+      return createDefaultComponent(JEditorPane.class, "editorPane", properties, subSplitters);
     }
     else if (name.equals("htmlEditorPane")) {
-      return new HtmlEditorPane(context, properties, subSplitters, false);
+      return new HtmlEditorPane(properties, subSplitters, false);
     }
     else if (name.equals("comboBox")) {
-      return createDefaultComponent(JComboBox.class, "comboBox", context, properties, subSplitters);
+      return createDefaultComponent(JComboBox.class, "comboBox", properties, subSplitters);
     }
     else if (name.equals("checkBox")) {
-      return createDefaultComponent(JCheckBox.class, "checkBox", context, properties, subSplitters);
+      return createDefaultComponent(JCheckBox.class, "checkBox", properties, subSplitters);
     }
     else if (name.equals("tabs")) {
-      return new TabGroupSplitter(context, properties, subSplitters);
+      return new TabGroupSplitter(properties, subSplitters);
     }
     else if (name.equals("tab")) {
-      return new TabSplitter(context, properties, subSplitters);
+      return new TabSplitter(properties, subSplitters);
     }
     throw new SplitsException("Unknown splitter name: " + name);
   }
 
-  private <T extends Component> DefaultComponent<T> createDefaultComponent(Class<T> componentClass, String name, SplitsContext context, SplitProperties properties, Splitter[] subSplitters) {
-    return new DefaultComponent<T>(componentClass, name, context, properties, subSplitters, false);
+  private <T extends Component> DefaultComponent<T> createDefaultComponent(Class<T> componentClass, String name, SplitProperties properties, Splitter[] subSplitters) {
+    return new DefaultComponent<T>(componentClass, name, properties, subSplitters, false);
   }
 
 }

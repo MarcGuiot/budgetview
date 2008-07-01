@@ -11,17 +11,13 @@ import javax.swing.*;
 
 public class TabGroupSplitter extends AbstractSplitter {
 
-  private JTabbedPane tabbedPane = new JTabbedPane();
-
-  public TabGroupSplitter(SplitsContext context, SplitProperties properties, Splitter[] subSplitters) {
-    super(properties, subSplitters, context);
+  public TabGroupSplitter(SplitProperties properties, Splitter[] subSplitters) {
+    super(properties, subSplitters);
     for (Splitter splitter : subSplitters) {
       if (!(splitter instanceof TabSplitter)) {
         throw new SplitsException("Invalid component '" + splitter.getName() + "' found in 'tabs' component - " +
                                   " only 'tab' subcomponents are accepted");
       }
-      TabSplitter tab = (TabSplitter)splitter;
-      tabbedPane.add(tab.getTitle(), tab.getComponent());
     }
   }
 
@@ -29,7 +25,12 @@ public class TabGroupSplitter extends AbstractSplitter {
     return "tabs";
   }
 
-  protected ComponentStretch createRawStretch() {
+  protected ComponentStretch createRawStretch(SplitsContext context) {
+    JTabbedPane tabbedPane = new JTabbedPane();
+    for (Splitter splitter : getSubSplitters()) {
+      TabSplitter tab = (TabSplitter)splitter;
+      tabbedPane.add(tab.getTitle(), tab.getComponentStretch(context, true).getComponent());
+    }
     return SwingStretches.get(tabbedPane);
   }
 }

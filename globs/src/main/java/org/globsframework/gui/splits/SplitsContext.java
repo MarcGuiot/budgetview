@@ -3,6 +3,7 @@ package org.globsframework.gui.splits;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.styles.StyleService;
+import org.globsframework.gui.splits.repeat.Repeat;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,9 @@ public interface SplitsContext {
 
   Component findComponent(String id);
 
-  <T extends Component> T findOrCreateComponent(String id, String name, Class<T> componentClass);
+  <T extends Component> T findOrCreateComponent(String ref, String name, Class<T> componentClass);
+
+  Repeat getRepeat(String name);
 
   void add(String name, Action action);
 

@@ -10,29 +10,22 @@ import org.globsframework.gui.splits.layout.SwingStretches;
 import java.awt.*;
 
 public class NamedComponent extends AbstractSplitter {
+  private String name;
+  protected Component component;
 
-  public static NamedComponent get(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
-    String ref = properties.getString("ref");
-    if (ref == null) {
+  public NamedComponent(SplitProperties properties, Splitter[] subSplitters) {
+    super(properties, subSplitters);
+    name = properties.getString("ref");
+    if (name == null) {
       throw new SplitsException("Property 'ref' is mandatory for named components");
     }
-    Component component = context.findComponent(ref);
+  }
+
+  public ComponentStretch createRawStretch(SplitsContext context) {
+    component = context.findComponent(name);
     if (component == null) {
-      throw new SplitsException("No component found for ref: " + ref);
+      throw new SplitsException("No component found for ref: " + name);
     }
-    return new NamedComponent(ref, component, subSplitters, properties, context);
-  }
-
-  private String name;
-  private Component component;
-
-  public NamedComponent(String name, Component component, Splitter[] subSplitters, SplitProperties properties, SplitsContext context) {
-    super(properties, subSplitters, context);
-    this.name = name;
-    this.component = component;
-  }
-
-  public ComponentStretch createRawStretch() {
     return SwingStretches.get(component);
   }
 

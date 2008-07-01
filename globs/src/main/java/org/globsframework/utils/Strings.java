@@ -99,4 +99,12 @@ public class Strings {
     }
     return text;
   }
+
+  public static String repeat(String text, int count){
+    StringBuilder builder = new StringBuilder();
+    for (int i = 0; i < count; i++) {
+      builder.append(text);
+    }
+    return builder.toString();
+  }
 }

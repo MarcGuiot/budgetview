@@ -26,8 +26,8 @@ public class MovableSplit extends DefaultComponent<JSplitPane> {
     }
   }
 
-  public MovableSplit(Direction direction, SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
-    super(JSplitPane.class, direction.name, context, properties, subSplitters, true);
+  public MovableSplit(Direction direction, SplitProperties properties, Splitter[] subSplitters) {
+    super(JSplitPane.class, direction.name, properties, subSplitters, true);
     this.direction = direction;
   }
 
@@ -35,12 +35,13 @@ public class MovableSplit extends DefaultComponent<JSplitPane> {
     return new String[]{"dividerLocation"};
   }
 
-  public ComponentStretch createRawStretch() {
+  public ComponentStretch createRawStretch(SplitsContext context) {
     if (getSubSplitters().length != 2) {
       throw new SplitsException("verticalSplit requires two subcomponents");
     }
-    ComponentStretch stretch1 = getSubSplitters()[0].getComponentStretch(true);
-    ComponentStretch stretch2 = getSubSplitters()[1].getComponentStretch(true);
+    ComponentStretch stretch1 = getSubSplitters()[0].getComponentStretch(context, true);
+    ComponentStretch stretch2 = getSubSplitters()[1].getComponentStretch(context, true);
+    JSplitPane component = findOrCreateComponent(context);
     component.setOrientation(direction.value);
     component.setLeftComponent(stretch1.getComponent());
     component.setRightComponent(stretch2.getComponent());

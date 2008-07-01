@@ -14,14 +14,14 @@ public class Grid extends AbstractSplitter {
                                                       "defaultMarginTop", "defaultMarginBottom",
                                                       "defaultMarginLeft", "defaultMarginRight"};
 
-  protected Grid(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
-    super(properties, subSplitters, context);
+  protected Grid(SplitProperties properties, Splitter[] subSplitters) {
+    super(properties, subSplitters);
   }
 
-  protected ComponentStretch createRawStretch() {
+  protected ComponentStretch createRawStretch(SplitsContext context) {
     GridBagBuilder builder = GridBagBuilder.init().setOpaque(false);
     for (Splitter splitter : getSubSplitters()) {
-      ComponentStretch stretch = splitter.getComponentStretch(false);
+      ComponentStretch stretch = splitter.getComponentStretch(context, false);
       GridPos gridPos = stretch.getGridPos();
       if (gridPos == null) {
         throw new SplitsException("Grid element '" + splitter.getName() + "' must have a GridPos attribute");
@@ -33,7 +33,7 @@ public class Grid extends AbstractSplitter {
                   stretch.getFill(), stretch.getAnchor(),
                   splitter.getMarginInsets());
     }
-    return createContainerStretch(builder.getPanel(), DoubleOperation.SUM);
+    return createContainerStretch(builder.getPanel(), DoubleOperation.SUM, context);
   }
 
   protected String[] getExcludedParameters() {

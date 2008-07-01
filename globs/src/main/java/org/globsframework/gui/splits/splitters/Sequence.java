@@ -27,16 +27,16 @@ public class Sequence extends AbstractSplitter {
     }
   }
 
-  public Sequence(Splitter[] subSplitters, Direction direction, SplitProperties properties, SplitsContext context) {
-    super(properties, subSplitters, context);
+  public Sequence(Splitter[] subSplitters, Direction direction, SplitProperties properties) {
+    super(properties, subSplitters);
     this.direction = direction;
   }
 
-  public ComponentStretch createRawStretch() {
-    return createPanel(getSubSplitters(), direction);
+  public ComponentStretch createRawStretch(SplitsContext context) {
+    return createPanel(getSubSplitters(), direction, context);
   }
 
-  public static ComponentStretch createPanel(Splitter[] subSplitters, Direction direction) {
+  public static ComponentStretch createPanel(Splitter[] subSplitters, Direction direction, SplitsContext context) {
     GridBagBuilder builder = GridBagBuilder.init().setOpaque(false);
 
     double weightX = 0.0;
@@ -44,7 +44,7 @@ public class Sequence extends AbstractSplitter {
 
     int position = 0;
     for (Splitter splitter : subSplitters) {
-      ComponentStretch stretch = splitter.getComponentStretch(true);
+      ComponentStretch stretch = splitter.getComponentStretch(context, true);
       builder.add(stretch.getComponent(),
                   direction == Direction.HORIZONTAL ? position++ : 0,
                   direction == Direction.VERTICAL ? position++ : 0,

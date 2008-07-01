@@ -7,6 +7,9 @@ import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.SwingStretches;
+import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.repeat.RepeatFactory;
+import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.splits.utils.DummyIconLocator;
 import org.uispec4j.finder.ComponentFinder;
@@ -17,6 +20,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.util.Arrays;
 
 public class SplitsBuilderTest extends SplitsTestCase {
 
@@ -34,7 +38,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testMovableSplits() throws Exception {
     builder.add(aTable, aList, aButton);
     JSplitPane hSplit =
-      (JSplitPane)parse(
+      parse(
         "<horizontalSplit>" +
         "  <component ref='aList'/>" +
         "  <verticalSplit>" +
@@ -54,7 +58,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testMovableSplitProperties() throws Exception {
     builder.add(aTable, aList, aButton);
     JSplitPane hSplit =
-      (JSplitPane)parse(
+      parse(
         "<horizontalSplit dividerSize='21' dividerLocation='250'>" +
         "  <component ref='aList'/>" +
         "  <component ref='aTable'/>" +
@@ -66,7 +70,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testDefaultMovableSplitLocation() throws Exception {
     builder.add(aTable, aList, aButton);
     JSplitPane hSplit =
-      (JSplitPane)parse(
+      parse(
         "<horizontalSplit>" +
         "  <component ref='aList'/>" +
         "  <component ref='aTable'/>" +
@@ -82,7 +86,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
     builder.add("aSplit", splitPane);
 
     JSplitPane hSplit =
-      (JSplitPane)parse(
+      parse(
         "<horizontalSplit ref='aSplit' continuousLayout='true'>" +
         "  <component ref='aList'/>" +
         "  <component ref='aTable'/>" +
@@ -96,7 +100,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testRowsAndColumns() throws Exception {
     builder.add(aTable, aList, aButton);
     JPanel row =
-      (JPanel)parse(
+      parse(
         "<row>" +
         "  <component ref='aList'/>" +
         "  <column>" +
@@ -123,7 +127,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
     builder.add(aTable, aList, aButton);
 
     JPanel row =
-      (JPanel)parse(
+      parse(
         "<row>" +
         "  <component ref='aList'/>" +
         "  <component ref='aTable' " +
@@ -143,7 +147,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
     builder.add(aTable, aList, aButton);
 
     JPanel panel =
-      (JPanel)parse(
+      parse(
         "<grid>" +
         "  <component ref='aButton' gridPos='(0,0)'/>" +
         "  <component ref='aList' gridPos='(0,1)'/>" +
@@ -171,7 +175,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
     builder.add(aTable, aList, aButton);
 
     JPanel panel =
-      (JPanel)parse(
+      parse(
         "<grid>" +
         "  <component ref='aButton' gridPos='(0,0)' " +
         "             fill='vertical' anchor='north' weightX='2.0' weightY='3.0'/>" +
@@ -193,7 +197,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
     builder.add(aTable, aList, aButton);
 
     JPanel panel =
-      (JPanel)parse(
+      parse(
         "<grid>" +
         "  <component ref='aButton' gridPos='(0,0)' anchor='left'/>" +
         "  <component ref='aList' gridPos='(0,1)' anchor='right'/>" +
@@ -218,7 +222,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testDefaultGridBagPositionAttributesForGrid() throws Exception {
     builder.add(aButton, aList);
     JPanel panel =
-      (JPanel)parse(
+      parse(
         "<grid defaultFill='both' defaultAnchor='north'>" +
         "  <component ref='aButton' gridPos='(0,0)'/>" +
         "  <component ref='aList' gridPos='(0,1)' fill='horizontal' anchor='east' />" +
@@ -238,7 +242,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testDefaultGridBagPositionAttributesForRow() throws Exception {
     builder.add(aButton, aList);
     JPanel panel =
-      (JPanel)parse(
+      parse(
         "<row defaultFill='both' defaultAnchor='north'>" +
         "  <component ref='aButton'/>" +
         "  <component ref='aList' fill='horizontal' anchor='east' />" +
@@ -258,7 +262,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testDefaultGridBagPositionAttributesForColumn() throws Exception {
     builder.add(aButton, aList);
     JPanel panel =
-      (JPanel)parse(
+      parse(
         "<column defaultFill='both' defaultAnchor='north'>" +
         "  <component ref='aButton'/>" +
         "  <component ref='aList' fill='horizontal' anchor='east' />" +
@@ -278,7 +282,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testDefaultGridBagMarginForGrid() throws Exception {
     builder.add(aButton, aList, aTable);
     JPanel panel =
-      (JPanel)parse(
+      parse(
         "<grid defaultMargin='10'>" +
         "  <component ref='aButton' gridPos='(0,0)'/>" +
         "  <component ref='aList' gridPos='(0,1)' marginTop='5' marginBottom='20'/>" +
@@ -311,7 +315,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   private void checkDefaultGridBagMargin(String tagName) throws Exception {
     builder.add(aButton, aList, aTable);
     JPanel panel =
-      (JPanel)parse(
+      parse(
         "<" +
         tagName +
         " defaultMargin='10'>" +
@@ -333,7 +337,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
     builder.add(aTable, aList, aButton);
 
     JPanel panel =
-      (JPanel)parse(
+      parse(
         "<borderLayout>" +
         "  <component ref='aButton' borderPos='north'/>" +
         "  <component ref='aTable' borderPos='center'/>" +
@@ -367,9 +371,9 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   public void testCreatingAComponentWithAName() throws Exception {
-    JFrame frame = (JFrame)parse("<frame>" +
-                                 "  <button text='Click!'/>" +
-                                 "</frame>");
+    JFrame frame = parse("<frame>" +
+                         "  <button text='Click!'/>" +
+                         "</frame>");
     JButton button = (JButton)frame.getContentPane().getComponent(0);
     assertEquals("Click!", button.getText());
   }
@@ -396,18 +400,18 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   private void checkAssignedName(String xml, String name) throws Exception {
-    assertEquals(name, parse(xml).getName());
+    assertEquals(name, this.<Component>parse(xml).getName());
   }
 
   public void testSizes() throws Exception {
     JFrame frame =
-      (JFrame)parse("<frame size='(800,600)' minimumSize='(200, 150)' maximumSize='(1000, 900)'/>");
+      parse("<frame size='(800,600)' minimumSize='(200, 150)' maximumSize='(1000, 900)'/>");
     assertEquals(new Dimension(800, 600), frame.getSize());
     assertEquals(new Dimension(200, 150), frame.getMinimumSize());
     assertEquals(new Dimension(1000, 900), frame.getMaximumSize());
 
     JButton button =
-      (JButton)parse("<button text='Click!' size='(80,60)' minimumSize='(20, 15)' maximumSize='(100, 90)'/>");
+      parse("<button text='Click!' size='(80,60)' minimumSize='(20, 15)' maximumSize='(100, 90)'/>");
     assertEquals(new Dimension(80, 60), button.getSize());
     assertEquals(new Dimension(20, 15), button.getMinimumSize());
     assertEquals(new Dimension(100, 90), button.getMaximumSize());
@@ -433,7 +437,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
 
   public void testCreatingAFrame() throws Exception {
     JFrame frame =
-      (JFrame)parse(
+      parse(
         "<frame title='The Title'>" +
         "  <button text='Click'/>" +
         "</frame>");
@@ -459,7 +463,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   public void testCreatingAList() throws Exception {
-    JList list = (JList)parse("<list/>");
+    JList list = parse("<list/>");
     assertNotNull(list);
   }
 
@@ -471,7 +475,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testCreatingAButtonWithAnAction() throws Exception {
     DummyAction action = new DummyAction();
     builder.add("action1", action);
-    JButton btn = (JButton)parse("<button text='blah' action='action1'/>");
+    JButton btn = parse("<button text='blah' action='action1'/>");
     assertEquals("blah", btn.getText());
     new org.uispec4j.Button(btn).click();
     assertTrue(action.wasClicked());
@@ -480,7 +484,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testCreatingAToggleButtonWithAnAction() throws Exception {
     DummyAction action = new DummyAction();
     builder.add("action1", action);
-    JToggleButton btn = (JToggleButton)parse("<toggleButton text='blah' action='action1'/>");
+    JToggleButton btn = parse("<toggleButton text='blah' action='action1'/>");
     assertEquals("blah", btn.getText());
     new org.uispec4j.ToggleButton(btn).click();
     assertTrue(action.wasClicked());
@@ -495,13 +499,13 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testButtonUsesTheActionLabelIfNoneWasGiven() throws Exception {
     DummyAction action = new DummyAction();
     builder.add("action1", action);
-    JButton btn = (JButton)parse("<button action='action1'/>");
+    JButton btn = parse("<button action='action1'/>");
     assertEquals("dummyAction", btn.getText());
   }
 
   public void testButtonIcons() throws Exception {
     JButton btn =
-      (JButton)parse("<button icon='icon1' pressedIcon='icon2' rolloverIcon='icon3'/>");
+      parse("<button icon='icon1' pressedIcon='icon2' rolloverIcon='icon3'/>");
     assertSame(DummyIconLocator.ICON1, btn.getIcon());
     assertSame(DummyIconLocator.ICON2, btn.getPressedIcon());
     assertSame(DummyIconLocator.ICON3, btn.getRolloverIcon());
@@ -511,25 +515,25 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testCreatingATextField() throws Exception {
     DummyAction action = new DummyAction();
     builder.add("action1", action);
-    JTextField textField = (JTextField)parse("<textField text='blah' action='action1'/>");
+    JTextField textField = parse("<textField text='blah' action='action1'/>");
     assertEquals("blah", textField.getText());
     new org.uispec4j.TextBox(textField).setText("newText");
     assertTrue(action.wasClicked());
   }
 
   public void testCreatingATextArea() throws Exception {
-    JTextArea textArea = (JTextArea)parse("<textArea text='blah'/>");
+    JTextArea textArea = parse("<textArea text='blah'/>");
     assertEquals("blah", textArea.getText());
   }
 
   public void testCreatingAnEditorPane() throws Exception {
-    JEditorPane editorPane = (JEditorPane)parse("<editorPane text='blah'/>");
+    JEditorPane editorPane = parse("<editorPane text='blah'/>");
     assertEquals("blah", editorPane.getText());
   }
 
   public void testCreatingAHtmlEditorPane() throws Exception {
     textLocator.set("editor.text", "<html><b>Hello</b> world!</html>");
-    JEditorPane editorPane = (JEditorPane)parse("<htmlEditorPane text='$editor.text'/>");
+    JEditorPane editorPane = parse("<htmlEditorPane text='$editor.text'/>");
     assertEquals("text/html", editorPane.getContentType());
     assertEquals("<html>\n" +
                  "  <head>\n" +
@@ -543,7 +547,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   public void testCreatingAComboBox() throws Exception {
-    JComboBox combo = (JComboBox)parse("<comboBox/>");
+    JComboBox combo = parse("<comboBox/>");
     assertNotNull(combo);
   }
 
@@ -554,7 +558,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   public void testCreatingACheckBox() throws Exception {
-    JCheckBox check = (JCheckBox)parse("<checkBox/>");
+    JCheckBox check = parse("<checkBox/>");
     assertNotNull(check);
   }
 
@@ -565,41 +569,44 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   public void testFixedForeground() throws Exception {
-    JButton button = (JButton)parse("<button foreground='FF0000'/>");
+    JButton button = parse("<button foreground='FF0000'/>");
     assertEquals(Color.RED, button.getForeground());
   }
 
   public void testVariableForeground() throws Exception {
     colorService.set("fgkey", Color.RED);
-    JButton btn = (JButton)parse("<button foreground='fgkey'/>");
+    JButton btn = parse("<button foreground='fgkey'/>");
     assertEquals(Color.RED, btn.getForeground());
     colorService.set("fgkey", Color.BLUE);
     assertEquals(Color.BLUE, btn.getForeground());
   }
 
   public void testFixedBackground() throws Exception {
-    JButton button = (JButton)parse("<button background='#FF0000'/>");
+    JButton button = parse("<button background='#FF0000'/>");
     assertEquals(Color.RED, button.getBackground());
   }
 
   public void testVariableBackground() throws Exception {
     colorService.set("bgkey", Color.RED);
-    JButton btn = (JButton)parse("<button background='bgkey'/>");
+    JButton btn = parse("<button background='bgkey'/>");
     assertEquals(Color.RED, btn.getBackground());
     colorService.set("bgkey", Color.BLUE);
     assertEquals(Color.BLUE, btn.getBackground());
   }
 
   public void testLabelsAreNotOpaqueButThisCanBeOverriden() throws Exception {
-    assertFalse(parse("<label text='foo'/>").isOpaque());
-    assertTrue(parse("<label text='foo' opaque='true'/>").isOpaque());
+    JLabel label1 = parse("<label text='foo'/>");
+    assertFalse(label1.isOpaque());
+    
+    JLabel label2 = this.parse("<label text='foo' opaque='true'/>");
+    assertTrue(label2.isOpaque());
   }
 
   public void testPanel() throws Exception {
     builder.add("btn", aButton);
     MyPanel myPanel = new MyPanel();
     builder.add("myPanel", myPanel);
-    MyPanel panel = (MyPanel)parse(
+    MyPanel panel = parse(
       "<panel ref='myPanel'>" +
       "  <button ref='btn'/>" +
       "</panel>");
@@ -626,7 +633,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
 
   public void testStyledPanel() throws Exception {
     builder.add("btn", aButton);
-    JStyledPanel panel = (JStyledPanel)parse(
+    JStyledPanel panel = parse(
       "<styledPanel topColor='top' bottomColor='bottom' " +
       "             borderWidth='2' borderColor='border'" +
       "             cornerRadius='12'>" +
@@ -649,7 +656,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
 
   public void testScrollPane() throws Exception {
     builder.add(aTable);
-    JScrollPane scrollPane = (JScrollPane)parse(
+    JScrollPane scrollPane = parse(
       "<scrollPane>" +
       "  <table ref='aTable'/>" +
       "</scrollPane>");
@@ -682,7 +689,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   public void testScrollPaneBackgroundColor() throws Exception {
-    JScrollPane scrollPane = (JScrollPane)parse(
+    JScrollPane scrollPane = parse(
       "<scrollPane viewportBackground='#FF0000'>" +
       "  <button/>" +
       "</scrollPane>");
@@ -690,7 +697,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   public void testScrollPaneViewportOpacity() throws Exception {
-    JScrollPane scrollPane = (JScrollPane)parse(
+    JScrollPane scrollPane = parse(
       "<scrollPane viewportOpaque='false'>" +
       "  <button/>" +
       "</scrollPane>");
@@ -698,7 +705,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   public void testTabs() throws Exception {
-    JTabbedPane tabs = (JTabbedPane)parse(
+    JTabbedPane tabs = parse(
       "<tabs>" +
       "  <tab title='Tab 1'>" +
       "    <label text='Blah'/>" +
@@ -796,7 +803,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   public void testCanUseConstantsForIntegers() throws Exception {
-    JLabel label = (JLabel)parse("<label horizontalAlignment='JLabel.RIGHT'/>");
+    JLabel label = parse("<label horizontalAlignment='JLabel.RIGHT'/>");
     assertEquals(JLabel.RIGHT, label.getHorizontalAlignment());
   }
 
@@ -813,14 +820,14 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   public void testHardcodedFont() throws Exception {
-    JLabel label = (JLabel)parse("<label font='Arial,italic,24'/>");
+    JLabel label = parse("<label font='Arial,italic,24'/>");
     FontsTest.checkFont(label.getFont(), "Arial", Font.ITALIC, 24);
   }
 
   public void testFontService() throws Exception {
     Font font = Fonts.parseFont("Arial,italic,12");
     fontService.set("font1", font);
-    JLabel label = (JLabel)parse("<label font='$font1'/>");
+    JLabel label = parse("<label font='$font1'/>");
     assertEquals(font, label.getFont());
   }
 
@@ -828,17 +835,17 @@ public class SplitsBuilderTest extends SplitsTestCase {
     builder.add(aButton, aList, aTable);
     CardHandler handler = builder.addCardHandler("myHandler");
 
-    JPanel panel = (JPanel)parse("<cards ref='myHandler'>" +
-                                 "  <card name='a'>" +
-                                 "    <button ref='aButton'/>" +
-                                 "  </card>" +
-                                 "  <card name='b'>" +
-                                 "    <table ref='aTable'/>" +
-                                 "  </card>" +
-                                 "  <card name='c'>" +
-                                 "    <list ref='aList'/>" +
-                                 "  </card>" +
-                                 "</cards>");
+    JPanel panel = parse("<cards ref='myHandler'>" +
+                         "  <card name='a'>" +
+                         "    <button ref='aButton'/>" +
+                         "  </card>" +
+                         "  <card name='b'>" +
+                         "    <table ref='aTable'/>" +
+                         "  </card>" +
+                         "  <card name='c'>" +
+                         "    <list ref='aList'/>" +
+                         "  </card>" +
+                         "</cards>");
 
     assertTrue(panel.getLayout() instanceof CardLayout);
 
@@ -909,12 +916,12 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   public void testTextLocator() throws Exception {
-    JLabel label = (JLabel)parse("<label text='$aa.bb.cc'/>");
+    JLabel label = parse("<label text='$aa.bb.cc'/>");
     assertEquals("aa bb cc", label.getText());
   }
 
   private <T extends Border> T checkBorder(String desc, Class<T> c) throws Exception {
-    JLabel label = (JLabel)parse("<label border='" + desc + "'/>");
+    JLabel label = parse("<label border='" + desc + "'/>");
     Border border = label.getBorder();
     assertNotNull(border);
     assertTrue(c.isInstance(border));
@@ -922,7 +929,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   }
 
   private void checkFiller(String xml, double weightx, double weighty, int maxX, int maxY) throws Exception {
-    JPanel panel = (JPanel)parse(xml);
+    JPanel panel = parse(xml);
 
     Box.Filler filler = (Box.Filler)panel.getComponent(0);
     assertNotNull(filler);

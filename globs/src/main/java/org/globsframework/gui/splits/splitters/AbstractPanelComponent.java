@@ -14,24 +14,29 @@ import java.awt.*;
 
 public abstract class AbstractPanelComponent<T extends JPanel> extends DefaultComponent<T> {
 
-  protected AbstractPanelComponent(Class<T> componentClass, String name, SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
-    super(componentClass, name, context, properties, subSplitters, true);
+  protected AbstractPanelComponent(Class<T> componentClass, String name, SplitProperties properties,
+                                   Splitter[] subSplitters) {
+    super(componentClass, name, properties, subSplitters, true);
     if (subSplitters.length > 1) {
       throw new SplitsException(name + " components cannot have more than one subcomponent");
 
     }
-    if (subSplitters.length == 1) {
-      ComponentStretch stretch = subSplitters[0].getComponentStretch(true);
-      Component component = stretch.getComponent();
-      if (component instanceof JPanel) {
-        ((JPanel)component).setOpaque(false);
+  }
+
+  protected void postCreateComponent(T component, SplitsContext context) {
+    if (getSubSplitters().length == 1) {
+      ComponentStretch stretch = getSubSplitters()[0].getComponentStretch(context, true);
+      Component subComponent = stretch.getComponent();
+      if (subComponent instanceof JPanel) {
+        ((JPanel)subComponent).setOpaque(false);
       }
       GridBagBuilder
-        .init(this.component)
-        .add(component,
-             0, 0, 1, 1, 1.0, 1.0,
+        .init(component)
+        .add(subComponent,
+      0, 0, 1, 1, 1.0, 1.0,
              Fill.BOTH, Anchor.CENTER,
              stretch.getInsets());
     }
+
   }
 }

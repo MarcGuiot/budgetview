@@ -87,6 +87,7 @@
       <xs:element ref="scrollPane"/>
       <xs:element ref="tabs"/>
       <xs:element ref="cards"/>
+      <xs:element ref="repeat"/>
     </xs:choice>
   </xs:group>
 
@@ -286,6 +287,15 @@
         <xs:group ref="splitsComponents"/>
       </xs:sequence>
       <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="repeat">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
     </xs:complexType>
   </xs:element>
 

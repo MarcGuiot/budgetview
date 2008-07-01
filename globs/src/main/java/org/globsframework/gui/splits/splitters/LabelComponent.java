@@ -7,11 +7,11 @@ import org.globsframework.gui.splits.Splitter;
 import javax.swing.*;
 
 public class LabelComponent extends DefaultComponent<JLabel> {
-  public LabelComponent(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
-    super(JLabel.class, "label", context, properties, subSplitters, false);
+  public LabelComponent(SplitProperties properties, Splitter[] subSplitters) {
+    super(JLabel.class, "label", properties, subSplitters, false);
   }
 
-  protected void processComponent(JLabel label, SplitProperties properties, SplitsContext context) {
-    label.setOpaque(false);
+  protected void postCreateComponent(JLabel component, SplitsContext context) {
+    component.setOpaque(false);
   }
 }

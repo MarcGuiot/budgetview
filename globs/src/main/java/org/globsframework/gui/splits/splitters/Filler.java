@@ -16,8 +16,8 @@ public class Filler extends AbstractSplitter {
 
   private Fill fill = Fill.BOTH;
 
-  public Filler(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
-    super(properties, subSplitters, context);
+  public Filler(SplitProperties properties, Splitter[] subSplitters) {
+    super(properties, subSplitters);
     String direction = properties.getString("fill");
     if ((direction != null) && (direction.length() > 0)) {
       fill = getFill(direction);
@@ -35,7 +35,7 @@ public class Filler extends AbstractSplitter {
     return fill;
   }
 
-  public ComponentStretch createRawStretch() {
+  public ComponentStretch createRawStretch(SplitsContext context) {
     Component component;
     double weightx;
     double weighty;

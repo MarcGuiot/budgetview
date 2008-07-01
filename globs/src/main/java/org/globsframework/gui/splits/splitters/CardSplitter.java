@@ -6,13 +6,11 @@ import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 
-import java.awt.*;
-
 public class CardSplitter extends AbstractSplitter {
   private String cardName;
 
-  public CardSplitter(SplitsContext context, SplitProperties properties, Splitter[] subSplitters) {
-    super(properties, subSplitters, context);
+  public CardSplitter(SplitProperties properties, Splitter[] subSplitters) {
+    super(properties, subSplitters);
     this.cardName = properties.get("name");
     if (cardName == null) {
       throw new SplitsException("Card items must have a 'name' attribute");
@@ -34,12 +32,9 @@ public class CardSplitter extends AbstractSplitter {
     return new String[]{"name"};
   }
 
-  protected ComponentStretch createRawStretch() {
+  protected ComponentStretch createRawStretch(SplitsContext context) {
     Splitter splitter = getSubSplitters()[0];
-    return splitter.getComponentStretch(true);
+    return splitter.getComponentStretch(context, true);
   }
 
-  public Component getComponent() {
-    return getComponentStretch(true).getComponent();
-  }
 }

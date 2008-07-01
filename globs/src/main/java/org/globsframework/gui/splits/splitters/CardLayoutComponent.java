@@ -12,16 +12,16 @@ import java.awt.*;
 
 public class CardLayoutComponent extends AbstractSplitter {
 
-  public CardLayoutComponent(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
-    super(properties, subSplitters, context);
+  public CardLayoutComponent(SplitProperties properties, Splitter[] subSplitters) {
+    super(properties, subSplitters);
   }
 
-  protected ComponentStretch createRawStretch() {
+  protected ComponentStretch createRawStretch(SplitsContext context) {
     String ref = getProperties().getString("ref");
     if (ref == null) {
       throw new SplitsException("cards components must reference a registered panel (use ref='xxx')");
     }
-    JPanel panel = getContext().findOrCreateComponent(ref, null, JPanel.class);
+    JPanel panel = context.findOrCreateComponent(ref, null, JPanel.class);
     if (!CardLayout.class.isInstance(panel.getLayout())) {
       throw new SplitsException("Panel '" + ref + "' must use a CardLayout, preferably through a CardHandler");
     }
@@ -33,10 +33,9 @@ public class CardLayoutComponent extends AbstractSplitter {
       }
       CardSplitter card = (CardSplitter)splitter;
       String cardName = card.getCardName();
-      panel.add(card.getComponentStretch(false).getComponent(), cardName);
+      panel.add(card.getComponentStretch(context, false).getComponent(), cardName);
     }
-    ComponentStretch containerStretch = createContainerStretch(panel, DoubleOperation.MAX);
-    return containerStretch;
+    return createContainerStretch(panel, DoubleOperation.MAX, context);
   }
 
   public String getName() {

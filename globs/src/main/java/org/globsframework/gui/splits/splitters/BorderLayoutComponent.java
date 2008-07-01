@@ -19,11 +19,11 @@ public class BorderLayoutComponent extends AbstractSplitter {
   private static final Set<String> BORDER_POS_VALUES =
     new HashSet(Arrays.asList("center", "west", "east", "north", "south"));
 
-  public BorderLayoutComponent(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
-    super(properties, subSplitters, context);
+  public BorderLayoutComponent(SplitProperties properties, Splitter[] subSplitters) {
+    super(properties, subSplitters);
   }
 
-  public ComponentStretch createRawStretch() {
+  public ComponentStretch createRawStretch(SplitsContext context) {
     JPanel panel = new JPanel();
     panel.setOpaque(false);
     panel.setLayout(new BorderLayout());
@@ -34,9 +34,9 @@ public class BorderLayoutComponent extends AbstractSplitter {
       if ((pos == null) || (!BORDER_POS_VALUES.contains(pos))) {
         throw new SplitsException(getBorderPosErrorMessage(splitter));
       }
-      panel.add(splitter.getComponentStretch(false).getComponent(), SplitsUtils.capitalize(pos));
+      panel.add(splitter.getComponentStretch(context, false).getComponent(), SplitsUtils.capitalize(pos));
     }
-    return createContainerStretch(panel, DoubleOperation.SUM);
+    return createContainerStretch(panel, DoubleOperation.SUM, context);
   }
 
   private String getBorderPosErrorMessage(Splitter splitter) {

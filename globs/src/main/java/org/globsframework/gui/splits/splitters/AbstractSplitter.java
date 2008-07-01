@@ -22,27 +22,24 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public abstract class AbstractSplitter implements Splitter {
-  protected ComponentStretch stretch;
   private final Splitter[] subSplitters;
-  private final SplitProperties properties;
-  private final SplitsContext context;
+  protected final SplitProperties properties;
   private static final String[] DEFAULT_EXCLUDES =
     {"ref", "styleClass", "autoHideSource", "gridPos", "opaque", "borderPos",
      "fill", "anchor", "weightX", "weightY",
      "margin", "marginTop", "marginBottom", "marginLeft", "marginRight"};
 
-  protected AbstractSplitter(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
+  protected AbstractSplitter(SplitProperties properties, Splitter[] subSplitters) {
     this.properties = properties;
     this.subSplitters = subSplitters;
-    this.context = context;
   }
 
-  public final ComponentStretch getComponentStretch(boolean addMargin) {
-    if (stretch != null) {
-      return stretch;
-    }
+  public final ComponentStretch getComponentStretch(SplitsContext context, boolean addMargin) {
+      return createComponentStretch(addMargin, context);
+  }
 
-    stretch = createRawStretch();
+  private ComponentStretch createComponentStretch(boolean addMargin, SplitsContext context) {
+    ComponentStretch stretch = createRawStretch(context);
     setGridPos(stretch);
     overrideStretch(stretch);
     Component component = stretch.getComponent();
@@ -51,13 +48,13 @@ public abstract class AbstractSplitter implements Splitter {
       addMargin(stretch);
     }
     complete(component);
-    processAttributes(component);
-    processAutoHide(component);
-    processDebug(stretch);
+    processAttributes(component, context);
+    processAutoHide(component, context);
+    processDebug(stretch, context);
     return stretch;
   }
 
-  private void processAutoHide(Component component) {
+  private void processAutoHide(Component component, SplitsContext context) {
     String source = properties.getString("autoHideSource");
     if (Strings.isNullOrEmpty(source)) {
       return;
@@ -65,7 +62,7 @@ public abstract class AbstractSplitter implements Splitter {
     context.addAutoHide(component, source);
   }
 
-  private void processDebug(ComponentStretch stretch) {
+  private void processDebug(ComponentStretch stretch, SplitsContext context) {
     if (!GuiUtils.isDebugModeEnabled()) {
       return;
     }
@@ -112,7 +109,7 @@ public abstract class AbstractSplitter implements Splitter {
   protected void complete(Component component) {
   }
 
-  protected abstract ComponentStretch createRawStretch();
+  protected abstract ComponentStretch createRawStretch(SplitsContext context);
 
   public Splitter[] getSubSplitters() {
     return subSplitters;
@@ -122,11 +119,7 @@ public abstract class AbstractSplitter implements Splitter {
     return properties;
   }
 
-  public SplitsContext getContext() {
-    return context;
-  }
-
-  private void setGridPos(ComponentStretch stretch) {
+   private void setGridPos(ComponentStretch stretch) {
     String value = properties.getString("gridPos");
     if (value != null) {
       stretch.setGridPos(SplitsUtils.parseGridPos(value));
@@ -205,18 +198,18 @@ public abstract class AbstractSplitter implements Splitter {
     return defaultValue != null ? defaultValue : 0;
   }
 
-  private void processAttributes(Component component) {
+  private void processAttributes(Component component, SplitsContext context) {
     java.util.List<String> toExclude = new ArrayList<String>();
     toExclude.addAll(Arrays.asList(DEFAULT_EXCLUDES));
     toExclude.addAll(Arrays.asList(getExcludedParameters()));
     PropertySetter.process(component, properties, context, toExclude.toArray(new String[toExclude.size()]));
   }
 
-  protected ComponentStretch createContainerStretch(Component container, DoubleOperation operation) {
+  protected ComponentStretch createContainerStretch(Component container, DoubleOperation operation, SplitsContext context) {
     double weightX = 0;
     double weightY = 0;
-    for (Splitter splitter : getSubSplitters()) {
-      ComponentStretch stretch = splitter.getComponentStretch(false);
+    for (Splitter splitter : subSplitters) {
+      ComponentStretch stretch = splitter.getComponentStretch(context, false);
       weightX = operation.get(stretch.getWeightX(), weightX);
       weightY = operation.get(stretch.getWeightY(), weightY);
     }
