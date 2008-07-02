@@ -25,7 +25,7 @@ public abstract class AbstractPanelComponent<T extends JPanel> extends DefaultCo
 
   protected void postCreateComponent(T component, SplitsContext context) {
     if (getSubSplitters().length == 1) {
-      ComponentStretch stretch = getSubSplitters()[0].getComponentStretch(context, true);
+      ComponentStretch stretch = getSubSplitters()[0].createComponentStretch(context, true);
       Component subComponent = stretch.getComponent();
       if (subComponent instanceof JPanel) {
         ((JPanel)subComponent).setOpaque(false);
@@ -33,7 +33,7 @@ public abstract class AbstractPanelComponent<T extends JPanel> extends DefaultCo
       GridBagBuilder
         .init(component)
         .add(subComponent,
-      0, 0, 1, 1, 1.0, 1.0,
+             0, 0, 1, 1, 1.0, 1.0,
              Fill.BOTH, Anchor.CENTER,
              stretch.getInsets());
     }

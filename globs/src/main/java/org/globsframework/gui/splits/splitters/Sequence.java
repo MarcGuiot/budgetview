@@ -44,7 +44,7 @@ public class Sequence extends AbstractSplitter {
 
     int position = 0;
     for (Splitter splitter : subSplitters) {
-      ComponentStretch stretch = splitter.getComponentStretch(context, true);
+      ComponentStretch stretch = splitter.createComponentStretch(context, true);
       builder.add(stretch.getComponent(),
                   direction == Direction.HORIZONTAL ? position++ : 0,
                   direction == Direction.VERTICAL ? position++ : 0,

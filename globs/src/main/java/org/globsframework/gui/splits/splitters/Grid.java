@@ -4,9 +4,7 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
-import org.globsframework.gui.splits.layout.ComponentStretch;
-import org.globsframework.gui.splits.layout.GridBagBuilder;
-import org.globsframework.gui.splits.layout.GridPos;
+import org.globsframework.gui.splits.layout.*;
 import org.globsframework.gui.splits.utils.DoubleOperation;
 
 public class Grid extends AbstractSplitter {
@@ -20,8 +18,10 @@ public class Grid extends AbstractSplitter {
 
   protected ComponentStretch createRawStretch(SplitsContext context) {
     GridBagBuilder builder = GridBagBuilder.init().setOpaque(false);
+    double weightX = 0;
+    double weightY = 0;
     for (Splitter splitter : getSubSplitters()) {
-      ComponentStretch stretch = splitter.getComponentStretch(context, false);
+      ComponentStretch stretch = splitter.createComponentStretch(context, false);
       GridPos gridPos = stretch.getGridPos();
       if (gridPos == null) {
         throw new SplitsException("Grid element '" + splitter.getName() + "' must have a GridPos attribute");
@@ -32,8 +32,10 @@ public class Grid extends AbstractSplitter {
                   stretch.getWeightX(), stretch.getWeightY(),
                   stretch.getFill(), stretch.getAnchor(),
                   splitter.getMarginInsets());
+      weightX = DoubleOperation.SUM.get(stretch.getWeightX(), weightX);
+      weightY = DoubleOperation.SUM.get(stretch.getWeightY(), weightY);
     }
-    return createContainerStretch(builder.getPanel(), DoubleOperation.SUM, context);
+    return new ComponentStretch(builder.getPanel(), Fill.BOTH, Anchor.CENTER, weightX, weightY);
   }
 
   protected String[] getExcludedParameters() {

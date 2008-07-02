@@ -19,7 +19,7 @@ public class ScrollPaneComponent extends AbstractSplitter {
   }
 
   protected ComponentStretch createRawStretch(SplitsContext context) {
-    ComponentStretch subStretch = getSubSplitters()[0].getComponentStretch(context, true);
+    ComponentStretch subStretch = getSubSplitters()[0].createComponentStretch(context, true);
     JScrollPane scrollPane = new JScrollPane(subStretch.getComponent());
     ComponentStretch stretch = new ComponentStretch(scrollPane,
                                                     subStretch.getFill(),

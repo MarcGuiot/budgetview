@@ -8,7 +8,6 @@ import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
-import org.globsframework.gui.splits.utils.DoubleOperation;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.PropertySetter;
 import org.globsframework.gui.splits.utils.SplitsUtils;
@@ -34,11 +33,7 @@ public abstract class AbstractSplitter implements Splitter {
     this.subSplitters = subSplitters;
   }
 
-  public final ComponentStretch getComponentStretch(SplitsContext context, boolean addMargin) {
-      return createComponentStretch(addMargin, context);
-  }
-
-  private ComponentStretch createComponentStretch(boolean addMargin, SplitsContext context) {
+  public final ComponentStretch createComponentStretch(SplitsContext context, boolean addMargin) {
     ComponentStretch stretch = createRawStretch(context);
     setGridPos(stretch);
     overrideStretch(stretch);
@@ -203,17 +198,6 @@ public abstract class AbstractSplitter implements Splitter {
     toExclude.addAll(Arrays.asList(DEFAULT_EXCLUDES));
     toExclude.addAll(Arrays.asList(getExcludedParameters()));
     PropertySetter.process(component, properties, context, toExclude.toArray(new String[toExclude.size()]));
-  }
-
-  protected ComponentStretch createContainerStretch(Component container, DoubleOperation operation, SplitsContext context) {
-    double weightX = 0;
-    double weightY = 0;
-    for (Splitter splitter : subSplitters) {
-      ComponentStretch stretch = splitter.getComponentStretch(context, false);
-      weightX = operation.get(stretch.getWeightX(), weightX);
-      weightY = operation.get(stretch.getWeightY(), weightY);
-    }
-    return new ComponentStretch(container, Fill.BOTH, Anchor.CENTER, weightX, weightY);
   }
 
   public String toString() {

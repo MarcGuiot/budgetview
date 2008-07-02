@@ -47,7 +47,7 @@ public class RepeatPanel implements RepeatHandler {
   private ComponentStretch createStretch(Object item) {
     RepeatContext repeatContext = new RepeatContext(context);
     repeat.getFactory().register(new ContextualRepeatCellBuilder(repeatContext), item);
-    return templateSplitter.getComponentStretch(repeatContext, true);
+    return templateSplitter.createComponentStretch(repeatContext, true);
   }
 
   public ComponentStretch getStretch() {

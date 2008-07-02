@@ -68,6 +68,6 @@ public class XmlComponentNode extends DefaultXmlNode {
   }
 
   public Component getComponent() {
-    return splitter.getComponentStretch(context, true).getComponent();
+    return splitter.createComponentStretch(context, true).getComponent();
   }
 }

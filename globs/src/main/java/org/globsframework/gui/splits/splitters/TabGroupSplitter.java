@@ -29,7 +29,7 @@ public class TabGroupSplitter extends AbstractSplitter {
     JTabbedPane tabbedPane = new JTabbedPane();
     for (Splitter splitter : getSubSplitters()) {
       TabSplitter tab = (TabSplitter)splitter;
-      tabbedPane.add(tab.getTitle(), tab.getComponentStretch(context, true).getComponent());
+      tabbedPane.add(tab.getTitle(), tab.createComponentStretch(context, true).getComponent());
     }
     return SwingStretches.get(tabbedPane);
   }

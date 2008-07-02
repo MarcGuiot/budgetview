@@ -7,9 +7,6 @@ import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.SwingStretches;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
-import org.globsframework.gui.splits.repeat.RepeatFactory;
-import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.splits.utils.DummyIconLocator;
 import org.uispec4j.finder.ComponentFinder;
@@ -597,7 +594,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testLabelsAreNotOpaqueButThisCanBeOverriden() throws Exception {
     JLabel label1 = parse("<label text='foo'/>");
     assertFalse(label1.isOpaque());
-    
+
     JLabel label2 = this.parse("<label text='foo' opaque='true'/>");
     assertTrue(label2.isOpaque());
   }
@@ -915,6 +912,47 @@ public class SplitsBuilderTest extends SplitsTestCase {
     }
   }
 
+  public void testComplexContainment() throws Exception {
+    builder.add(aButton, aList, aTable);
+    CardHandler handler = builder.addCardHandler("myHandler");
+
+    JPanel panel = parse("<row>" +
+                         "  <borderLayout>" +
+                         "    <label text='hello' borderPos='north'/>" +
+                         "    <cards ref='myHandler' borderPos='center'>" +
+                         "      <card name='a'>" +
+                         "        <grid>" +
+                         "          <button ref='aButton' gridPos='(0,0)'/>" +
+                         "        </grid>" +
+                         "      </card>" +
+                         "      <card name='b'>" +
+                         "        <table ref='aTable'/>" +
+                         "      </card>" +
+                         "      <card name='c'>" +
+                         "        <list ref='aList'/>" +
+                         "      </card>" +
+                         "    </cards>" +
+                         "  </borderLayout>" +
+                         "</row>");
+
+    ComponentFinder finder = new ComponentFinder(panel);
+
+    handler.show("a");
+    assertSame(aButton, finder.findComponent(ComponentMatchers.fromClass(JButton.class)));
+    assertNull(finder.findComponent(ComponentMatchers.fromClass(JTable.class)));
+    assertNull(finder.findComponent(ComponentMatchers.fromClass(JList.class)));
+
+    handler.show("b");
+    assertNull(finder.findComponent(ComponentMatchers.fromClass(JButton.class)));
+    assertSame(aTable, finder.findComponent(ComponentMatchers.fromClass(JTable.class)));
+    assertNull(finder.findComponent(ComponentMatchers.fromClass(JList.class)));
+
+    handler.show("c");
+    assertNull(finder.findComponent(ComponentMatchers.fromClass(JButton.class)));
+    assertNull(finder.findComponent(ComponentMatchers.fromClass(JTable.class)));
+    assertSame(aList, finder.findComponent(ComponentMatchers.fromClass(JList.class)));
+  }
+
   public void testTextLocator() throws Exception {
     JLabel label = parse("<label text='$aa.bb.cc'/>");
     assertEquals("aa bb cc", label.getText());
@@ -945,6 +983,10 @@ public class SplitsBuilderTest extends SplitsTestCase {
                             int x, int y, int w, int h,
                             double weightX, double weightY,
                             Fill fill, Anchor anchor, Insets insets) {
+
+    assertEquals(panel, component.getParent());
+    assertTrue(Arrays.asList(panel.getComponents()).contains(component));
+
     GridBagConstraints constraints = getConstraints(panel, component);
     assertEquals(x, constraints.gridx);
     assertEquals(y, constraints.gridy);

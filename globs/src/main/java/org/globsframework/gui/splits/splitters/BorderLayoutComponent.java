@@ -5,6 +5,8 @@ import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.Fill;
+import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.utils.DoubleOperation;
 import org.globsframework.gui.splits.utils.SplitsUtils;
 
@@ -28,15 +30,20 @@ public class BorderLayoutComponent extends AbstractSplitter {
     panel.setOpaque(false);
     panel.setLayout(new BorderLayout());
 
-    Splitter[] subSplitters = getSubSplitters();
-    for (Splitter splitter : subSplitters) {
+
+    double weightX = 0;
+    double weightY = 0;
+    for (Splitter splitter : getSubSplitters()) {
       String pos = splitter.getProperties().get(BORDER_POS);
       if ((pos == null) || (!BORDER_POS_VALUES.contains(pos))) {
         throw new SplitsException(getBorderPosErrorMessage(splitter));
       }
-      panel.add(splitter.getComponentStretch(context, false).getComponent(), SplitsUtils.capitalize(pos));
+      ComponentStretch stretch = splitter.createComponentStretch(context, false);
+      weightX = DoubleOperation.SUM.get(stretch.getWeightX(), weightX);
+      weightY = DoubleOperation.SUM.get(stretch.getWeightY(), weightY);
+      panel.add(stretch.getComponent(), SplitsUtils.capitalize(pos));
     }
-    return createContainerStretch(panel, DoubleOperation.SUM, context);
+    return new ComponentStretch(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY);
   }
 
   private String getBorderPosErrorMessage(Splitter splitter) {

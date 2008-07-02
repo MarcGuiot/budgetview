@@ -5,6 +5,8 @@ import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.Fill;
+import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.utils.DoubleOperation;
 
 import javax.swing.*;
@@ -26,16 +28,20 @@ public class CardLayoutComponent extends AbstractSplitter {
       throw new SplitsException("Panel '" + ref + "' must use a CardLayout, preferably through a CardHandler");
     }
 
-    Splitter[] subSplitters = getSubSplitters();
-    for (Splitter splitter : subSplitters) {
+    double weightX = 0;
+    double weightY = 0;
+    for (Splitter splitter : getSubSplitters()) {
       if (!(splitter instanceof CardSplitter)) {
         throw new SplitsException("CardLayout tags can only contain <card> elements");
       }
       CardSplitter card = (CardSplitter)splitter;
       String cardName = card.getCardName();
-      panel.add(card.getComponentStretch(context, false).getComponent(), cardName);
+      ComponentStretch stretch = card.createComponentStretch(context, false);
+      weightX = DoubleOperation.MAX.get(stretch.getWeightX(), weightX);
+      weightY = DoubleOperation.MAX.get(stretch.getWeightY(), weightY);
+      panel.add(stretch.getComponent(), cardName);
     }
-    return createContainerStretch(panel, DoubleOperation.MAX, context);
+    return new ComponentStretch(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY);
   }
 
   public String getName() {

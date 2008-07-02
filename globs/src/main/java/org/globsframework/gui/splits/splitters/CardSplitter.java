@@ -34,7 +34,7 @@ public class CardSplitter extends AbstractSplitter {
 
   protected ComponentStretch createRawStretch(SplitsContext context) {
     Splitter splitter = getSubSplitters()[0];
-    return splitter.getComponentStretch(context, true);
+    return splitter.createComponentStretch(context, true);
   }
 
 }

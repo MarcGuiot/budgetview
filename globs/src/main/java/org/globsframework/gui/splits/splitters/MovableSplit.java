@@ -39,8 +39,8 @@ public class MovableSplit extends DefaultComponent<JSplitPane> {
     if (getSubSplitters().length != 2) {
       throw new SplitsException("verticalSplit requires two subcomponents");
     }
-    ComponentStretch stretch1 = getSubSplitters()[0].getComponentStretch(context, true);
-    ComponentStretch stretch2 = getSubSplitters()[1].getComponentStretch(context, true);
+    ComponentStretch stretch1 = getSubSplitters()[0].createComponentStretch(context, true);
+    ComponentStretch stretch2 = getSubSplitters()[1].createComponentStretch(context, true);
     JSplitPane component = findOrCreateComponent(context);
     component.setOrientation(direction.value);
     component.setLeftComponent(stretch1.getComponent());

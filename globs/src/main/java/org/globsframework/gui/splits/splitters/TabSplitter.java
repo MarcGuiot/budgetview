@@ -30,7 +30,7 @@ public class TabSplitter extends AbstractSplitter {
   }
 
   protected ComponentStretch createRawStretch(SplitsContext context) {
-    return getSubSplitters()[0].getComponentStretch(context, true);
+    return getSubSplitters()[0].createComponentStretch(context, true);
   }
 
 }
