@@ -12,6 +12,16 @@
             <toggleButton ref="recurringSeriesToggle"/>
           </repeat>
         </card>
+        <card name="expensesEnvelope">
+          <repeat ref="envelopeSeriesRepeat">
+            <column>
+              <label ref="envelopeSeriesName"/>
+              <repeat ref="envelopeCategoryRepeat">
+                <toggleButton ref="envelopeCategoryToggle"/>
+              </repeat>
+            </column>
+          </repeat>
+        </card>
       </cards>
     </row>
     <row>

@@ -22,8 +22,7 @@ public class PicsouModel {
                           SerializableGlobType.TYPE,
                           Series.TYPE,
                           BudgetArea.TYPE,
-                          EnvelopeProfile.TYPE,
-                          EnvelopeProfileToCategory.TYPE)
+                          SeriesToCategory.TYPE)
       .get();
 
   static {

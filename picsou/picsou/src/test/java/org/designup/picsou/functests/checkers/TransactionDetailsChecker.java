@@ -160,4 +160,9 @@ public class TransactionDetailsChecker extends DataChecker {
     TextBox seriesName = getPanel().getTextBox("transactionSeriesName");
     assertTrue(seriesName.textEquals(name));
   }
+
+  public void checkNoSeries() {
+    TextBox seriesName = getPanel().getTextBox("transactionSeriesName");
+    assertFalse(seriesName.isVisible());
+  }
 }

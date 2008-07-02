@@ -1,12 +1,11 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.*;
-import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.designup.picsou.model.MasterCategory;
+import org.uispec4j.*;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CategorizationDialogChecker extends DataChecker {
   private Window dialog;
@@ -49,30 +48,32 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void validate() {
-    dialog.getButton("OK").click();
+    dialog.getButton("ok").click();
+  }
+
+  public void cancel() {
+    dialog.getButton("cancel").click();
   }
 
   public void selectEnvelopes() {
-    dialog.getToggleButton("Envelopes").click();
+    dialog.getToggleButton("expensesEnvelope").click();
   }
 
   public void checkContainsEnvelope(String envelopeName, MasterCategory... categories) {
     Panel panel = getEnvelopeSeriesPanel();
-    Panel envelopePanel = panel.getPanel("envelope:" + envelopeName);
-    assertTrue(envelopePanel.containsLabel(envelopeName));
+    assertTrue(panel.containsLabel(envelopeName));
     for (MasterCategory category : categories) {
-      assertTrue(envelopePanel.containsUIComponent(ToggleButton.class, getCategoryName(category)));
+      assertTrue(panel.containsUIComponent(ToggleButton.class, envelopeName + ":" + category.getName()));
     }
   }
 
   public void selectEnvelopeSeries(String envelopeName, MasterCategory category) {
     Panel panel = getEnvelopeSeriesPanel();
-    Panel envelopePanel = panel.getPanel("envelope:" + envelopeName);
-    envelopePanel.getToggleButton(getCategoryName(category)).click();
+    panel.getToggleButton(envelopeName + ":" + category.getName()).click();
   }
 
   private Panel getEnvelopeSeriesPanel() {
-    Panel panel = dialog.getPanel("envelopeSeriesPanel");
+    Panel panel = dialog.getPanel("envelopeSeriesRepeat");
     assertTrue(panel.isVisible());
     return panel;
   }

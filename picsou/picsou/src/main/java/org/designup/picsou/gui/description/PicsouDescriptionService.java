@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.description;
 
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Category;
-import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.model.Series;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -79,6 +76,9 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     }
     if (globType.equals(Series.TYPE)) {
       return new BundleBasedStringifier(Series.NAME, Series.TYPE.getName() + ".");
+    }
+    if (globType.equals(BudgetArea.TYPE)) {
+      return new BundleBasedStringifier(BudgetArea.NAME, BudgetArea.TYPE.getName() + ".");
     }
     if (globType.equals(Account.TYPE)) {
       return new AccountStringifier();
