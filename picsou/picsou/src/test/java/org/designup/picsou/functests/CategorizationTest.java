@@ -5,7 +5,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
 import org.designup.picsou.model.MasterCategory;
 
-public class TransactionCategorizationTest extends LoggedInFunctionalTestCase {
+public class CategorizationTest extends LoggedInFunctionalTestCase {
   public void testStandardRecurringTransaction() throws Exception {
     OfxBuilder
       .init(this)
@@ -16,11 +16,11 @@ public class TransactionCategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("Free Telecom");
 
     dialog.selectRecurring();
-    dialog.checkContainsRecurringSeries("Rental", "Electricity", "Internet");
+    dialog.checkContainsRecurringSeries("Internet", "Rental", "Electricity");
     dialog.selectRecurringSeries("Internet");
     dialog.validate();
 
-    transactionDetails.checkSeries("Internet", MasterCategory.FOOD);
+    transactionDetails.checkSeries("Internet");
   }
 
   public void testStandardEnvelopeTransaction() throws Exception {
@@ -37,7 +37,7 @@ public class TransactionCategorizationTest extends LoggedInFunctionalTestCase {
     dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD);
     dialog.validate();
 
-    transactionDetails.checkSeries("Groceries", MasterCategory.FOOD);
+    transactionDetails.checkSeries("Groceries");
   }
 
   public void testStandardOccasionalTransaction() throws Exception {
@@ -53,6 +53,6 @@ public class TransactionCategorizationTest extends LoggedInFunctionalTestCase {
     dialog.selectOccasionalSeries(MasterCategory.MULTIMEDIA);
     dialog.validate();
 
-    transactionDetails.checkSeries("Occasional", MasterCategory.MULTIMEDIA);
+    transactionDetails.checkSeries("Occasional");
   }
 }

@@ -32,7 +32,7 @@ public class BalanceStringifier implements GlobListStringifier, ColorChangeListe
     directory.get(ColorService.class).addListener(this);
   }
 
-  public String toString(GlobList transactions) {
+  public String toString(GlobList transactions, GlobRepository repository) {
     if (transactions.isEmpty()) {
       return " ";
     }
@@ -44,7 +44,7 @@ public class BalanceStringifier implements GlobListStringifier, ColorChangeListe
       .append("<html><font size='3' color='")
       .append(Colors.toString(total > 0 ? positiveAmountColor : negativeAmountColor))
       .append("'>")
-      .append(stringifyNumber(total, repository))
+      .append(stringifyNumber(total, this.repository))
       .append("</font>")
       .toString();
   }

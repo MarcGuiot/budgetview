@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.annotations.NamingField;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -30,7 +31,10 @@ public class Transaction {
   public static IntegerField BANK_DAY; // Starts at 1
 
   public static DoubleField AMOUNT;
+
+  @NamingField
   public static StringField LABEL;
+  
   public static StringField NOTE;
   public static StringField ORIGINAL_LABEL;
   public static BooleanField DISPENSABLE; // unused
@@ -53,6 +57,9 @@ public class Transaction {
 
   @Target(Transaction.class)
   public static LinkField SPLIT_SOURCE;
+
+  @Target(Series.class)
+  public static LinkField SERIES;
 
   public static NotUniqueIndex LABEL_FOR_CATEGORISATION_INDEX;
 

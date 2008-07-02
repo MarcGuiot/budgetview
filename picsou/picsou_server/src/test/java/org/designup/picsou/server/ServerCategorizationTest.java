@@ -19,12 +19,12 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import java.awt.*;
 
-public class CategorizationTest extends ServerFuncTestCase {
+public class ServerCategorizationTest extends ServerFuncTestCase {
 
   public void test() throws Exception {
     String fileName = TestUtils.getFileName(this, ".qif");
 
-    Files.copyStreamTofile(CategorizationTest.class.getResourceAsStream(PICSOU_DEV_TESTFILES_SG1_QIF),
+    Files.copyStreamTofile(ServerCategorizationTest.class.getResourceAsStream(PICSOU_DEV_TESTFILES_SG1_QIF),
                            fileName);
     createAndLogUser("user", "_passd1", fileName);
 

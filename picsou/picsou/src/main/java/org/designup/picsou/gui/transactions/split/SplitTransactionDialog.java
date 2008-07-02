@@ -157,7 +157,7 @@ public class SplitTransactionDialog {
   }
 
   private void updateInitialAmount(BalanceStringifier balanceStringifier) {
-    initialAmount.setText(balanceStringifier.toString(localRepository.getAll(Transaction.TYPE)));
+    initialAmount.setText(balanceStringifier.toString(localRepository.getAll(Transaction.TYPE), localRepository));
   }
 
   private void addAmountPanel(GlobsPanelBuilder builder) {

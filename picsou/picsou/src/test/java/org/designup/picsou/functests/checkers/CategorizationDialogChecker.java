@@ -29,8 +29,8 @@ public class CategorizationDialogChecker extends DataChecker {
     Panel seriesPanel = getRecurringSeriesPanel();
 
     List<String> names = new ArrayList<String>();
-    ToggleButton[] toggles = (ToggleButton[])seriesPanel.getUIComponents(ToggleButton.class);
-    for (ToggleButton toggle : toggles) {
+    UIComponent[] toggles = seriesPanel.getUIComponents(ToggleButton.class);
+    for (UIComponent toggle : toggles) {
       names.add(toggle.getLabel());
     }
 
@@ -43,7 +43,7 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   private Panel getRecurringSeriesPanel() {
-    Panel panel = dialog.getPanel("recurringSeriesPanel");
+    Panel panel = dialog.getPanel("recurringSeriesRepeat");
     assertTrue(panel.isVisible());
     return panel;
   }

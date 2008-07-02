@@ -416,7 +416,7 @@ public abstract class ImportPanel {
   }
 
   private static class BankUrlStringifier implements GlobListStringifier {
-    public String toString(GlobList selected) {
+    public String toString(GlobList selected, GlobRepository repository) {
       if (selected.size() != 1) {
         return "";
       }

@@ -1,12 +1,24 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <column>
+    <textArea ref="transactionLabel"/>
     <row>
       <repeat ref="budgetAreas">
         <toggleButton ref="budgetAreaToggle"/>
       </repeat>
-
+      <cards ref="cards">
+        <card name="recurringExpenses">
+          <repeat ref="recurringSeriesRepeat">
+            <toggleButton ref="recurringSeriesToggle"/>
+          </repeat>
+        </card>
+      </cards>
     </row>
+    <row>
+      <button action="ok" text="$ok"/>
+      <button action="cancel" text="$cancel"/>
+    </row>
+
   </column>
 
 </splits>

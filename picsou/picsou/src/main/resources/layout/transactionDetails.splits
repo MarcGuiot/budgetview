@@ -72,6 +72,11 @@
     </column>
 
     <hyperlink ref="categorizeLink"/>
+    <row>
+      <label text="$transaction.details.series" styleClass="formLabel"/>
+      <label ref="transactionSeriesName"/>
+
+    </row>
 
     <filler fill="vertical"/>
   </column>

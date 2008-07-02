@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <styledPanel ref="wave" opaque="true">
+  <panel ref="wave" opaque="true">
     <column>
 
       <filler fill="vertical" weightY="10"/>
@@ -45,6 +45,6 @@
 
     </column>
 
-  </styledPanel>
+  </panel>
 
 </splits>
