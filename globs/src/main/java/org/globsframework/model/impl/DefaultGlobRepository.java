@@ -64,25 +64,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     if (source == null) {
       return null;
     }
-
-    // Optimization
-    if (link instanceof LinkField) {
-      Integer value = source.get((LinkField)link);
-      if (value == null) {
-        return null;
-      }
-      Key targetKey = Key.create(link.getTargetType(), value);
-      return find(targetKey);
-    }
-
-    FieldValues values = source.getTargetValues(link);
-    for (Glob target : getAll(link.getTargetType())) {
-      if (target.matches(values)) {
-        return target;
-      }
-    }
-
-    return null;
+    return find(source.getTargetKey(link));
   }
 
   public GlobList findLinkedTo(Glob target, Link link) {
@@ -93,9 +75,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       return getAll(link.getSourceType(), GlobMatchers.fieldEquals((LinkField)link, id));
     }
 
+    Key targetKey = target.getKey();
     GlobList result = new GlobList();
     for (Glob glob : getAll(link.getSourceType())) {
-      if (target.matches(glob.getTargetValues(link))) {
+      if (targetKey.equals(glob.getTargetKey(link))) {
         result.add(glob);
       }
     }

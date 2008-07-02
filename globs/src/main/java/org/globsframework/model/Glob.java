@@ -10,7 +10,7 @@ public interface Glob extends FieldValues, Serializable {
 
   Key getKey();
 
-  FieldValues getTargetValues(Link link);
+  Key getTargetKey(Link link);
 
   boolean matches(FieldValues values);
 

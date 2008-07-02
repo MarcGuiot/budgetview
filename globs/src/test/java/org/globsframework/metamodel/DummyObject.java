@@ -1,6 +1,5 @@
 package org.globsframework.metamodel;
 
-import org.globsframework.metamodel.annotations.ContainmentLink;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
 import org.globsframework.metamodel.annotations.Target;
@@ -30,17 +29,12 @@ public class DummyObject {
   @Target(DummyObject.class)
   public static LinkField LINK;
 
-  @ContainmentLink
-  public static Link CHILD_DUMMY_OBJECT_WITH_LINK;
-
   public static UniqueIndex NAME_INDEX;
   public static NotUniqueIndex DATE_INDEX;
 
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(DummyObject.class);
-    loader.defineLink(CHILD_DUMMY_OBJECT_WITH_LINK)
-      .add(ID, DummyObjectWithLinks.PARENT_ID);
     loader.defineUniqueIndex(NAME_INDEX, NAME);
     loader.defineNotUniqueIndex(DATE_INDEX, DATE);
   }

@@ -3,6 +3,7 @@ package org.globsframework.model.impl;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.links.FieldMappingFunctor;
 import org.globsframework.model.*;
 import org.globsframework.utils.Ref;
@@ -71,17 +72,33 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
     return array;
   }
 
-  public FieldValues getTargetValues(Link link) {
+  public Key getTargetKey(Link link) {
     if (!link.getSourceType().equals(type)) {
       throw new InvalidParameter("Link '" + link + " cannot be used with " + this);
     }
-    final FieldValuesBuilder builder = FieldValuesBuilder.init();
+
+    if (link instanceof LinkField) {
+      Integer value = get((LinkField)link);
+      if (value == null) {
+        return null;
+      }
+      return Key.create(link.getTargetType(), value);
+    }
+
+    final FieldValuesBuilder valuesBuilder = FieldValuesBuilder.init();
     link.apply(new FieldMappingFunctor() {
       public void process(Field sourceField, Field targetField) {
-        builder.setObject(targetField, getValue(sourceField));
+        Object value = getValue(sourceField);
+        if (value != null) {
+          valuesBuilder.setObject(targetField, value);
+        }
       }
     });
-    return builder.get();
+
+    if (valuesBuilder.size() != link.getTargetType().getKeyFields().size()) {
+      return null;
+    }
+    return KeyBuilder.createFromValues(link.getTargetType(), valuesBuilder.toArray());
   }
 
   public Object doGet(Field field) {

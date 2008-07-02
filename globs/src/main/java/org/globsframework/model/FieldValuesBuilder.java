@@ -98,4 +98,8 @@ public class FieldValuesBuilder {
     });
     return builder.get();
   }
+
+  public int size() {
+    return values.size();
+  }
 }
