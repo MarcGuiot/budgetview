@@ -13,8 +13,7 @@ public class DefaultSplitterFactory implements SplitterFactory {
 
   public Splitter getSplitter(String name,
                               Splitter[] subSplitters,
-                              SplitProperties properties
-  ) {
+                              SplitProperties properties) {
 
     if (name.equals("row")) {
       return new Sequence(subSplitters, Sequence.Direction.HORIZONTAL, properties);

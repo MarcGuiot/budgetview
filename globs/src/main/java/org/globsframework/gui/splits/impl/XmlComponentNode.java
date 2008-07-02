@@ -24,7 +24,8 @@ public class XmlComponentNode extends DefaultXmlNode {
   private SplitProperties properties;
   private SplitsPath path;
 
-  public XmlComponentNode(String name, Attributes attributes, SplitterFactory factory, SplitsContext context, XmlComponentNode parent) {
+  public XmlComponentNode(String name, Attributes attributes, SplitterFactory factory,
+                          SplitsContext context, XmlComponentNode parent) {
     this.name = name;
     this.factory = factory;
     this.context = context;
@@ -60,8 +61,7 @@ public class XmlComponentNode extends DefaultXmlNode {
   public void complete() {
     splitter = factory.getSplitter(name,
                                    subSplitters.toArray(new Splitter[subSplitters.size()]),
-                                   properties
-    );
+                                   properties);
     if (parent != null) {
       parent.subSplitters.add(splitter);
     }
