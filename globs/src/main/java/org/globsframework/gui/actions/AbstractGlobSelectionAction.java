@@ -11,24 +11,27 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 
 public abstract class AbstractGlobSelectionAction extends AbstractAction implements GlobSelectionListener {
-  private GlobType type;
+  protected final GlobType type;
+  protected final Directory directory;
   private String name;
+  protected GlobList lastSelection = GlobList.EMPTY;
 
   protected AbstractGlobSelectionAction(GlobType type, Directory directory) {
     this.type = type;
+    this.directory = directory;
     directory.get(SelectionService.class).addListener(this, type);
     setEnabled(false);
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    GlobList globs = selection.getAll(type);
-    if (globs.size() == 0) {
+    lastSelection = selection.getAll(type);
+    if (lastSelection.size() == 0) {
       name = null;
       setEnabled(false);
     }
     else {
       setEnabled(true);
-      name = toString(globs);
+      name = toString(lastSelection);
       if (Strings.isNullOrEmpty(name)) {
         setEnabled(false);
       }

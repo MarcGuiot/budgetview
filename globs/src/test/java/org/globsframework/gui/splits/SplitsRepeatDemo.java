@@ -2,11 +2,10 @@ package org.globsframework.gui.splits;
 
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
-import org.globsframework.gui.splits.repeat.RepeatFactory;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -15,17 +14,17 @@ public class SplitsRepeatDemo {
 
     SplitsBuilder builder = SplitsBuilder.init(new ColorService(), IconLocator.NULL);
 
-    builder.addRepeat("repeat1", new RepeatFactory<String>() {
-      public void register(RepeatCellBuilder cellBuilder, String item) {
+    builder.addRepeat("repeat1", Arrays.asList("a", "b", "c"), new RepeatComponentFactory<String>() {
+      public void registerComponents(RepeatCellBuilder cellBuilder, String item) {
         cellBuilder.add("label1", new JLabel(item));
-        cellBuilder.addRepeat("repeat2", new RepeatFactory<String>() {
+        cellBuilder.addRepeat("repeat2", new RepeatComponentFactory<String>() {
 
-          public void register(RepeatCellBuilder cellBuilder, String item) {
+          public void registerComponents(RepeatCellBuilder cellBuilder, String item) {
             cellBuilder.add("label2", new JLabel(item));
           }
         }, getItems(item));
       }
-    }, Arrays.asList("a", "b", "c"));
+    });
 
     builder.setSource("<splits>" +
                       "  <repeat ref='repeat1'>" +

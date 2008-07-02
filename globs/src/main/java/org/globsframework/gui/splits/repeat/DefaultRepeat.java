@@ -4,10 +4,10 @@ import java.util.List;
 
 public class DefaultRepeat<T> implements RepeatHandler<T>, Repeat<T> {
   private RepeatHandler<T> repeatHandler;
-  private RepeatFactory factory;
+  private RepeatComponentFactory factory;
   private List<T> initialItems;
 
-  public DefaultRepeat(RepeatFactory factory, List<T> initialItems) {
+  public DefaultRepeat(RepeatComponentFactory factory, List<T> initialItems) {
     this.factory = factory;
     this.initialItems = initialItems;
   }
@@ -24,7 +24,7 @@ public class DefaultRepeat<T> implements RepeatHandler<T>, Repeat<T> {
     repeatHandler.remove(index);
   }
 
-  public RepeatFactory getFactory() {
+  public RepeatComponentFactory getFactory() {
     return factory;
   }
 

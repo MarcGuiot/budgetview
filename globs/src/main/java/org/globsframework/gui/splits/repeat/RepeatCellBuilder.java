@@ -6,5 +6,5 @@ import java.util.List;
 public interface RepeatCellBuilder {
   void add(String name, Component component);
 
-  <T> RepeatHandler<T> addRepeat(String name, RepeatFactory<T> repeatFactory, List<T> items);
+  <T> RepeatHandler<T> addRepeat(String name, RepeatComponentFactory<T> repeatFactory, List<T> items);
 }

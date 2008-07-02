@@ -24,7 +24,7 @@ public class GlobHtmlViewTest extends GlobTextViewTestCase {
     GlobHtmlView view =
       GlobHtmlView.init(DummyObject.TYPE, repository, directory,
                         new GlobListStringifier() {
-                          public String toString(GlobList selected) {
+                          public String toString(GlobList selected, GlobRepository repository) {
                             return "<a href='http://www.globsframework.org'>globs</a>";
                           }
                         });

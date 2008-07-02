@@ -34,23 +34,30 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     componentsByName.put(id, component);
   }
 
-  public <T extends Component> T findOrCreateComponent(String ref, String name, Class<T> componentClass)
+  public <T extends Component> T findOrCreateComponent(String ref, String name, Class<T> componentClass, String splitterName)
     throws SplitsException {
 
     if (ref != null) {
       if (name != null) {
-        throw new SplitsException("A component referenced with a 'ref' cannot be given a 'name' attribute" +
+        throw new SplitsException("Error for tag: " + splitterName + ", ref: " + ref + ", name: "+ name +
+                                  "- a component referenced with a 'ref' cannot be given a 'name' attribute" +
                                   dump());
       }
 
       Component component = componentsByName.get(ref);
-      if (component != null) {
-        return (T)component;
-      }
-      else {
-        throw new SplitsException("No component registered with name '" + ref +
+      if (component == null) {
+        throw new SplitsException("Error for tag: " + splitterName + " - no component registered with name '" + ref +
                                   "' - available names: " + componentsByName.keySet() + dump());
       }
+
+      if (!componentClass.isAssignableFrom(component.getClass())) {
+        throw new SplitsException("Error for tag: " + splitterName +
+                                  " - unexpected type '" + component.getClass().getSimpleName() +
+                                  "' for referenced component '" + ref + "' - expected type: " + componentClass.getName()
+                                  + dump());
+      }
+
+      return (T)component;
     }
 
     try {

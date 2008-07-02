@@ -15,7 +15,7 @@ public class RepeatPanel implements RepeatHandler {
   private Splitter templateSplitter;
   private SplitsContext context;
 
-  public RepeatPanel(Repeat repeat, Splitter templateSplitter, SplitsContext context) {
+  public RepeatPanel(String name, Repeat repeat, Splitter templateSplitter, SplitsContext context) {
     this.repeat = repeat;
     this.templateSplitter = templateSplitter;
     this.context = context;
@@ -23,6 +23,7 @@ public class RepeatPanel implements RepeatHandler {
     set(repeat.getInitialItems());
     this.stretch = SwingStretches.get(panel);
     this.panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    this.panel.setName(name);
   }
 
   public void set(List items) {
@@ -46,7 +47,7 @@ public class RepeatPanel implements RepeatHandler {
 
   private ComponentStretch createStretch(Object item) {
     RepeatContext repeatContext = new RepeatContext(context);
-    repeat.getFactory().register(new ContextualRepeatCellBuilder(repeatContext), item);
+    repeat.getFactory().registerComponents(new ContextualRepeatCellBuilder(repeatContext), item);
     return templateSplitter.createComponentStretch(repeatContext, true);
   }
 

@@ -38,7 +38,7 @@ public class DefaultComponent<T extends Component> extends AbstractSplitter {
   protected T findOrCreateComponent(SplitsContext context) {
     String ref = properties.getString("ref");
     String componentName = properties.getString("name");
-    return context.findOrCreateComponent(ref, componentName, componentClass);
+    return context.findOrCreateComponent(ref, componentName, componentClass, getName());
   }
 
   protected void postCreateComponent(T component, SplitsContext context) {

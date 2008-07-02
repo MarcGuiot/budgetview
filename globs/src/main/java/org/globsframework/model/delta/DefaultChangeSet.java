@@ -232,4 +232,13 @@ public class DefaultChangeSet implements MutableChangeSet {
       throw new RuntimeException(e);
     }
   }
+
+  public void clear(List<GlobType> globTypes) {
+    for (Iterator<Key> it = deltaGlobsByKey.keySet().iterator(); it.hasNext();) {
+      Key key = it.next();
+      if (globTypes.contains(key.getGlobType())){
+        it.remove();
+      }
+    }
+  }
 }

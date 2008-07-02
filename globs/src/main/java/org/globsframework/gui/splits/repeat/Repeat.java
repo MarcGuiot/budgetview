@@ -7,5 +7,5 @@ public interface Repeat<T> {
 
   void register(RepeatHandler<T> repeatHandler);
 
-  RepeatFactory getFactory();
+  RepeatComponentFactory getFactory();
 }

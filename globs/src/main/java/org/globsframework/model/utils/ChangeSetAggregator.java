@@ -51,7 +51,7 @@ public class ChangeSetAggregator {
     }
 
     public void globsReset(GlobRepository globRepository, List<GlobType> changedTypes) {
-      throw new NotSupported("");
+      changeSet.clear(changedTypes);
     }
   }
 }

@@ -3,6 +3,7 @@ package org.globsframework.model.format;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 
 import java.text.DecimalFormat;
 
@@ -12,7 +13,7 @@ public class GlobListStringifiers {
                                                      final String singularText,
                                                      final String pluralText) {
     return new GlobListStringifier() {
-      public String toString(GlobList selected) {
+      public String toString(GlobList selected, GlobRepository repository) {
         if (selected.isEmpty()) {
           return emptyText;
         }
@@ -26,7 +27,7 @@ public class GlobListStringifiers {
 
   public static GlobListStringifier sum(final DoubleField field, final DecimalFormat format) {
     return new GlobListStringifier() {
-      public String toString(GlobList selected) {
+      public String toString(GlobList selected, GlobRepository repository) {
         if (selected.isEmpty()) {
           return "";
         }
@@ -42,7 +43,7 @@ public class GlobListStringifiers {
 
   public static GlobListStringifier minimum(final DoubleField field, final DecimalFormat format) {
     return new GlobListStringifier() {
-      public String toString(GlobList selected) {
+      public String toString(GlobList selected, GlobRepository repository) {
         if (selected.isEmpty()) {
           return "";
         }
@@ -58,7 +59,7 @@ public class GlobListStringifiers {
 
   public static GlobListStringifier maximum(final DoubleField field, final DecimalFormat format) {
     return new GlobListStringifier() {
-      public String toString(GlobList selected) {
+      public String toString(GlobList selected, GlobRepository repository) {
         if (selected.isEmpty()) {
           return "";
         }
@@ -74,7 +75,7 @@ public class GlobListStringifiers {
 
   public static GlobListStringifier average(final DoubleField field, final DecimalFormat format) {
     return new GlobListStringifier() {
-      public String toString(GlobList selected) {
+      public String toString(GlobList selected, GlobRepository repository) {
         if (selected.isEmpty()) {
           return "";
         }

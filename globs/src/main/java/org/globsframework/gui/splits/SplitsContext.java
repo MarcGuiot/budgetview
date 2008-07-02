@@ -14,7 +14,7 @@ public interface SplitsContext {
 
   Component findComponent(String id);
 
-  <T extends Component> T findOrCreateComponent(String ref, String name, Class<T> componentClass);
+  <T extends Component> T findOrCreateComponent(String ref, String name, Class<T> componentClass, String splitterName);
 
   Repeat getRepeat(String name);
 

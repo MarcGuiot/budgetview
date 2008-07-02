@@ -7,11 +7,11 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.format.Formats;
-import org.globsframework.model.format.GlobLinkStringifier;
-import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.format.*;
 import org.globsframework.utils.Ref;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 
 import java.util.Date;
 import java.util.Locale;
@@ -83,6 +83,11 @@ public class DefaultDescriptionService implements DescriptionService {
         return glob.getKey().toString();
       }
     };
+  }
+
+  public GlobListStringifier getListStringifier(GlobType type) {
+    final GlobStringifier stringifier = getStringifier(type);
+    return new CompositeGlobListStringifier(stringifier);
   }
 
   public GlobStringifier getStringifier(Field targetField) {
@@ -159,8 +164,43 @@ public class DefaultDescriptionService implements DescriptionService {
     return result.get();
   }
 
+  public GlobListStringifier getListStringifier(Field field) {
+    GlobStringifier stringifier = getStringifier(field);
+    return new CompositeGlobListStringifier(stringifier);
+  }
+
   public GlobStringifier getStringifier(Link link) {
     return new GlobLinkStringifier(link, getStringifier(link.getTargetType()));
   }
 
+  public GlobListStringifier getListStringifier(Link link) {
+    GlobStringifier stringifier = getStringifier(link);
+    return new CompositeGlobListStringifier(stringifier);
+  }
+
+  public GlobListStringifier getListStringifier(LinkField link) {
+    return getListStringifier((Link)link);
+  }
+
+  private static class CompositeGlobListStringifier implements GlobListStringifier {
+    private final GlobStringifier stringifier;
+
+    public CompositeGlobListStringifier(GlobStringifier stringifier) {
+      this.stringifier = stringifier;
+    }
+
+    public String toString(GlobList list, GlobRepository repository) {
+      if (list.isEmpty()) {
+        return "";
+      }
+      String current = stringifier.toString(list.get(0), repository);
+      for (Glob glob : list) {
+        String text = stringifier.toString(glob, repository);
+        if (!Utils.equal(current, text)) {
+          return "...";
+        }
+      }
+      return current;
+    }
+  }
 }

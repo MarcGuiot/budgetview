@@ -4,7 +4,6 @@ import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatContext;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
 
 public class ContextualRepeatCellBuilder implements RepeatCellBuilder {
@@ -18,7 +17,7 @@ public class ContextualRepeatCellBuilder implements RepeatCellBuilder {
     repeatContext.addComponent(name, component);
   }
 
-  public <T> DefaultRepeat<T> addRepeat(String name, RepeatFactory<T> repeatFactory, List<T> items) {
+  public <T> DefaultRepeat<T> addRepeat(String name, RepeatComponentFactory<T> repeatFactory, List<T> items) {
     DefaultRepeat<T> repeat = new DefaultRepeat<T>(repeatFactory, items);
     repeatContext.addRepeat(name, repeat);
     return repeat;

@@ -23,7 +23,7 @@ public class CardLayoutComponent extends AbstractSplitter {
     if (ref == null) {
       throw new SplitsException("cards components must reference a registered panel (use ref='xxx')");
     }
-    JPanel panel = context.findOrCreateComponent(ref, null, JPanel.class);
+    JPanel panel = context.findOrCreateComponent(ref, null, JPanel.class, getName());
     if (!CardLayout.class.isInstance(panel.getLayout())) {
       throw new SplitsException("Panel '" + ref + "' must use a CardLayout, preferably through a CardHandler");
     }

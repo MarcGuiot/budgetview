@@ -10,7 +10,7 @@ import org.globsframework.gui.splits.splitters.DefaultSplitterFactory;
 import org.globsframework.gui.splits.styles.StyleService;
 import org.globsframework.gui.splits.xml.SplitsParser;
 import org.globsframework.gui.splits.repeat.RepeatHandler;
-import org.globsframework.gui.splits.repeat.RepeatFactory;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.repeat.DefaultRepeat;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
@@ -94,9 +94,7 @@ public class SplitsBuilder {
     return DefaultCardHandler.init(panel);
   }
 
-  public <T> RepeatHandler<T> addRepeat(String name, RepeatFactory<T> factory,
-                                        java.util.List<T> items) {
-
+  public <T> RepeatHandler<T> addRepeat(String name, java.util.List<T> items, RepeatComponentFactory<T> factory) {
     DefaultRepeat<T> repeat = new DefaultRepeat<T>(factory, items);
     context.addRepeat(name, repeat);
     return repeat;

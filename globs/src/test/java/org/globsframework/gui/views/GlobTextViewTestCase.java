@@ -19,7 +19,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   protected Glob glob2;
   private TextBox textBox;
   protected GlobListStringifier stringifier = new GlobListStringifier() {
-    public String toString(GlobList selected) {
+    public String toString(GlobList selected, GlobRepository repository) {
       if (selected.isEmpty()) {
         return "";
       }
@@ -52,7 +52,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
 
   public void testLabelIsUpdatedOnRepositoryChanges() throws Exception {
     textBox = init(repository, false, new GlobListStringifier() {
-      public String toString(GlobList selected) {
+      public String toString(GlobList selected, GlobRepository repository) {
         if (selected.isEmpty()) {
           return "";
         }

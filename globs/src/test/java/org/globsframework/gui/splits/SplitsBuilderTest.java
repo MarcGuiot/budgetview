@@ -32,6 +32,23 @@ public class SplitsBuilderTest extends SplitsTestCase {
     aButton.setName("aButton");
   }
 
+  public void testTypeError() throws Exception {
+    builder.add("label", aTable);
+    try {
+      parse("<label ref='label'/>");
+      fail();
+    }
+    catch (Exception e) {
+      assertTrue(e.getMessage().contains("unexpected type"));
+    }
+  }
+
+  public void testReferencingASubclass() throws Exception {
+    builder.add("label", new JLabel("text") {});
+    JLabel parsedLabel = parse("<label ref='label'/>");
+    assertEquals("text", parsedLabel.getText());
+  }
+
   public void testMovableSplits() throws Exception {
     builder.add(aTable, aList, aButton);
     JSplitPane hSplit =

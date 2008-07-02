@@ -4,14 +4,13 @@ import junit.framework.TestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.metamodel.DummyObjectWithLinks;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.FieldValuesBuilder;
-import org.globsframework.model.GlobChecker;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import static org.globsframework.model.KeyBuilder.newKey;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.InvalidState;
+
+import java.util.Arrays;
 
 public class DefaultChangeSetTest extends TestCase {
 
@@ -250,5 +249,15 @@ public class DefaultChangeSetTest extends TestCase {
   private void checkMerge(String xml) {
     changeSet.merge(newChangeSet);
     checker.assertChangesEqual(changeSet, xml);
+  }
+
+  public void testClear() throws Exception {
+    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1);
+    changeSet.processDeletion(Key.create(DummyObject.TYPE , 10), FieldValues.EMPTY);
+    changeSet.processCreation(Key.create(DummyObject2.TYPE, 11), FieldValues.EMPTY);
+    changeSet.processCreation(Key.create(DummyObjectWithLinks.TYPE, 12), FieldValues.EMPTY);
+    changeSet.clear(Arrays.asList(DummyObject.TYPE, DummyObject2.TYPE));
+    checker.assertChangesEqual(changeSet,
+                               "<create type='dummyObjectWithLinks' id='12'/>");
   }
 }

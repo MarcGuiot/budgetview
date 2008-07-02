@@ -16,7 +16,9 @@ import javax.swing.*;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractGlobTextView<T extends AbstractGlobTextView> implements GlobSelectionListener, ChangeSetListener, ComponentHolder {
+public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
+  implements GlobSelectionListener, ChangeSetListener, ComponentHolder {
+  
   private GlobType type;
   private GlobRepository repository;
   private GlobListStringifier stringifier;
@@ -57,7 +59,7 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView> imple
       return;
     }
 
-    String text = stringifier.toString(currentSelection);
+    String text = stringifier.toString(currentSelection, repository);
     if (autoHideIfEmpty) {
       component.setVisible(Strings.isNotEmpty(text));
     }

@@ -2,6 +2,7 @@ package org.globsframework.model.format.utils;
 
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.metamodel.Field;
 import org.globsframework.utils.Strings;
 
@@ -18,7 +19,7 @@ public class GlobListFieldStringifier implements GlobListStringifier {
     this.textForMultiSelection = textForMultiSelection;
   }
 
-  public String toString(GlobList selected) {
+  public String toString(GlobList selected, GlobRepository repository) {
     Set values = selected.getValueSet(field);
     if (values.isEmpty()) {
       return textForEmptySelection;

@@ -1,32 +1,36 @@
 package org.globsframework.gui.splits;
 
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
-import org.globsframework.gui.splits.repeat.RepeatFactory;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.utils.Strings;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Collections;
-import java.awt.*;
 
 public class SplitsRepeatTest extends SplitsTestCase {
   public void testRepeat() throws Exception {
 
-    RepeatHandler<String> handler = builder.addRepeat("myRepeat", new RepeatFactory<String>() {
-      public void register(RepeatCellBuilder cellBuilder, String object) {
-        cellBuilder.add("label", new JLabel(object));
-        cellBuilder.add("btn", new JButton(object));
-      }
-    }, Arrays.asList("aa", "bb"));
+    RepeatHandler<String> handler =
+      builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                        new RepeatComponentFactory<String>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                            cellBuilder.add("label", new JLabel(object));
+                            cellBuilder.add("btn", new JButton(object));
+                          }
+                        });
 
     JPanel panel = parse(
-      "<repeat name='myRepeat'>" +
+      "<repeat ref='myRepeat'>" +
       "  <row>" +
       "    <label ref='label'/>" +
       "    <button ref='btn'/>" +
       "  </row>" +
       "</repeat>");
+
+    assertEquals("myRepeat", panel.getName());
 
     checkPanel(panel,
                "panel\n" +
@@ -35,7 +39,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "panel\n" +
                "  label:bb\n" +
                "  button:bb\n");
-    
+
     handler.insert("cc", 1);
 
     checkPanel(panel,
@@ -63,7 +67,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
   public void testRepeatAcceptsOnlyOneSubComponent() throws Exception {
     try {
       parse(
-        "<repeat name='myRepeat'>" +
+        "<repeat ref='myRepeat'>" +
         "  <label ref='label'/>" +
         "  <button ref='btn'/>" +
         "</repeat>");
@@ -76,7 +80,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
   public void testRepeatNotFound() throws Exception {
     try {
       parse(
-        "<repeat name='myRepeat'>" +
+        "<repeat ref='myRepeat'>" +
         "  <label ref='label'/>" +
         "</repeat>");
     }
@@ -86,22 +90,22 @@ public class SplitsRepeatTest extends SplitsTestCase {
   }
 
   public void testImbricatedRepeats() throws Exception {
-    builder.addRepeat("parentRepeat", new RepeatFactory<String>() {
-      public void register(RepeatCellBuilder cellBuilder, String object) {
+    builder.addRepeat("parentRepeat", Arrays.asList("aa", "bb", "cc"), new RepeatComponentFactory<String>() {
+      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
         cellBuilder.add("label", new JLabel(object));
-        cellBuilder.addRepeat("childRepeat", new RepeatFactory<String>() {
-          public void register(RepeatCellBuilder cellBuilder, String item) {
+        cellBuilder.addRepeat("childRepeat", new RepeatComponentFactory<String>() {
+          public void registerComponents(RepeatCellBuilder cellBuilder, String item) {
             cellBuilder.add("button", new JButton(item));
           }
         }, getItems(object));
       }
-    }, Arrays.asList("aa", "bb", "cc"));
+    });
 
     JPanel panel = parse(
-      "<repeat name='parentRepeat'>" +
+      "<repeat ref='parentRepeat'>" +
       "  <row>" +
       "    <label ref='label'/>" +
-      "    <repeat name='childRepeat'>" +
+      "    <repeat ref='childRepeat'>" +
       "      <button ref='button'/>" +
       "    </repeat>" +
       "  </row>" +
@@ -109,17 +113,17 @@ public class SplitsRepeatTest extends SplitsTestCase {
 
     checkPanel(panel,
                "panel\n" +
-                 "  label:aa\n" +
-                 "  panel\n" +
-                 "    button:a1\n" +
-                 "    button:a2\n" +
-                 "panel\n" +
-                 "  label:bb\n" +
-                 "  panel\n" +
-                 "panel\n" +
-                 "  label:cc\n" +
-                 "  panel\n" +
-                 "    button:c1\n");
+               "  label:aa\n" +
+               "  panel\n" +
+               "    button:a1\n" +
+               "    button:a2\n" +
+               "panel\n" +
+               "  label:bb\n" +
+               "  panel\n" +
+               "panel\n" +
+               "  label:cc\n" +
+               "  panel\n" +
+               "    button:c1\n");
   }
 
   private void checkPanel(JPanel panel, String expected) {

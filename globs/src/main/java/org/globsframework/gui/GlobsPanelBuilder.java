@@ -7,16 +7,18 @@ import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobPasswordEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.views.GlobComboView;
-import org.globsframework.gui.views.GlobLabelView;
-import org.globsframework.gui.views.GlobListView;
-import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.gui.splits.repeat.RepeatHandler;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.views.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.utils.directory.Directory;
 
@@ -78,6 +80,14 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return store(GlobLabelView.init(type, repository, directory, stringifier));
   }
 
+  public GlobMultiLineTextView addMultiLineTextView(String name, GlobType type) {
+    return addMultiLineTextView(name, type, directory.get(DescriptionService.class).getListStringifier(type));
+  }
+
+  public GlobMultiLineTextView addMultiLineTextView(String name, GlobType type, GlobListStringifier stringifier) {
+    return store(GlobMultiLineTextView.init(type, repository, directory, stringifier).setName(name));
+  }
+
   public GlobsPanelBuilder add(String name, ComponentHolder holder) {
     holder.setName(name);
     store(holder);
@@ -92,6 +102,12 @@ public class GlobsPanelBuilder extends SplitsBuilder {
   public GlobsPanelBuilder addDeleteAction(String label, String name, GlobType type) {
     add(name, new DeleteGlobAction(label, type, repository, directory));
     return this;
+  }
+
+  public RepeatHandler addRepeat(String name, GlobType type, GlobMatcher matcher, Comparator<Glob> comparator, RepeatComponentFactory factory) {
+    GlobList list = repository.getAll(type, matcher);
+    list.sort(comparator);
+    return super.addRepeat(name, list, factory);
   }
 
   private <T extends ComponentHolder> T store(T component) {
