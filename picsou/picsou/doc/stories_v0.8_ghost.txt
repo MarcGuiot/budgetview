@@ -1,0 +1,5 @@
+=== v0.8 : transactions ghost ===
+
+Profils
+Ghost
+Estimations budget avec gauges
