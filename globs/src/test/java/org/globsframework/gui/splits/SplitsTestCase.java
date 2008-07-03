@@ -2,19 +2,19 @@ package org.globsframework.gui.splits;
 
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontService;
+import org.globsframework.gui.splits.styles.StyleService;
 import org.globsframework.gui.splits.utils.DummyIconLocator;
 import org.globsframework.gui.splits.utils.DummyTextLocator;
-import org.globsframework.gui.splits.exceptions.SplitsException;
-import org.globsframework.gui.splits.styles.StyleService;
 import org.uispec4j.UISpecTestCase;
 
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Schema;
-import javax.xml.validation.Validator;
+import javax.swing.*;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import java.awt.*;
-import java.io.StringReader;
 import java.io.Reader;
+import java.io.StringReader;
 
 public abstract class SplitsTestCase extends UISpecTestCase {
   protected SplitsBuilder builder;
@@ -24,8 +24,15 @@ public abstract class SplitsTestCase extends UISpecTestCase {
   protected DummyTextLocator textLocator = new DummyTextLocator();
   protected StyleService styleService = new StyleService();
 
+  protected JTable aTable = new JTable();
+  protected JList aList = new JList();
+  protected JButton aButton = new JButton();
+
   protected void setUp() throws Exception {
     super.setUp();
+    aTable.setName("aTable");
+    aList.setName("aList");
+    aButton.setName("aButton");
     builder = new SplitsBuilder(colorService, iconLocator, textLocator, fontService);
   }
 
@@ -64,4 +71,9 @@ public abstract class SplitsTestCase extends UISpecTestCase {
     }
   }
 
+  protected GridBagConstraints getConstraints(Component parent, JComponent component) {
+    JPanel panel = (JPanel)parent;
+    GridBagLayout layout = (GridBagLayout)panel.getLayout();
+    return layout.getConstraints(component);
+  }
 }

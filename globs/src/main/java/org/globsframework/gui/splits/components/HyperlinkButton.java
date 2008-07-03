@@ -13,10 +13,10 @@ import java.awt.event.ActionEvent;
 public class HyperlinkButton extends JButton {
   private int textWidth;
   private int fontHeight;
-  private Color rolloverColor = Color.BLUE.brighter();
-  private Color disabledColor = Color.GRAY;
   private int descent;
   private boolean underline = true;
+  private Color rolloverColor = Color.BLUE.brighter();
+  private Color disabledColor = Color.GRAY;
 
   public HyperlinkButton() {
     init();

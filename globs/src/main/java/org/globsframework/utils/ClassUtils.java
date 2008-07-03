@@ -2,6 +2,8 @@ package org.globsframework.utils;
 
 import org.globsframework.utils.exceptions.InvalidParameter;
 
+import java.util.Arrays;
+
 public class ClassUtils {
   private ClassUtils() {
   }

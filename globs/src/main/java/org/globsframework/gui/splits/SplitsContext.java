@@ -41,4 +41,6 @@ public interface SplitsContext {
   void cleanUp();
 
   void dispose();
+
+  String dump();
 }
