@@ -1,5 +1,6 @@
 package org.globsframework.model;
 
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -86,6 +87,15 @@ public class GlobTestUtils {
       throw new RuntimeException(e);
     }
     return writer.toString();
+  }
+
+  public static String dump(Glob glob) {
+    StringBuilder builder = new StringBuilder();
+    GlobType type = glob.getType();
+    for (Field field : type.getFields()) {
+      builder.append(field.getName()).append("=").append(glob.getValue(field)).append(('\n'));
+    }
+    return builder.toString();
   }
 
   public static void assertChangesEqual(ChangeSet changeSet, List<Key> keys, String expectedXml) {
