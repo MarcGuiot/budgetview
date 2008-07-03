@@ -2,7 +2,6 @@ package org.designup.picsou.gui.triggers;
 
 import org.designup.picsou.gui.model.GlobalStat;
 import org.designup.picsou.gui.model.MonthStat;
-import org.designup.picsou.gui.utils.FloatingAverage;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -12,11 +11,11 @@ import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Utils;
 
 import static java.lang.Math.*;
-import java.util.*;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class MonthStatComputer implements ChangeSetListener {
-  private static final int FLOATING_AVERAGE_MONTH = 3;
-
   private GlobRepository repository;
 
   public MonthStatComputer(GlobRepository repository) {
@@ -115,9 +114,6 @@ public class MonthStatComputer implements ChangeSetListener {
     for (Glob account : repository.getAll(Account.TYPE)) {
       int accountId = account.get(Account.ID);
 
-      Map<Integer, FloatingAverage> incomeAverage = new HashMap<Integer, FloatingAverage>();
-      Map<Integer, FloatingAverage> expensesAverage = new HashMap<Integer, FloatingAverage>();
-      Map<Integer, FloatingAverage> dispensableAverage = new HashMap<Integer, FloatingAverage>();
       for (int month : months) {
         double totalIncome = 0.0;
         double totalExpenses = 0.0;
@@ -136,20 +132,12 @@ public class MonthStatComputer implements ChangeSetListener {
             continue;
           }
 
-          FloatingAverage averageIncome = getOrCreate(incomeAverage, categoryId);
-          FloatingAverage averageExpenses = getOrCreate(expensesAverage, categoryId);
-          FloatingAverage averageDispensable = getOrCreate(dispensableAverage, categoryId);
-
           Key monthStatKey = getKey(month, categoryId, accountId);
           Glob monthStat = repository.get(monthStatKey);
           if (Category.isMaster(category)) {
             totalIncome += monthStat.get(MonthStat.INCOME);
             totalExpenses += monthStat.get(MonthStat.EXPENSES);
           }
-
-          averageIncome.add(monthStat.get(MonthStat.INCOME));
-          averageExpenses.add(monthStat.get(MonthStat.EXPENSES));
-          averageDispensable.add(monthStat.get(MonthStat.DISPENSABLE));
 
           if (Category.isMaster(category)) {
             GlobUtils.add(keyForAll,
@@ -203,15 +191,6 @@ public class MonthStatComputer implements ChangeSetListener {
                         FieldValue.value(GlobalStat.MAX_INCOME, maxTotalIncome),
                         FieldValue.value(GlobalStat.MIN_INCOME, minTotalIncome));
     }
-  }
-
-  private FloatingAverage getOrCreate(Map<Integer, FloatingAverage> categoryIdToAverage, Integer categoryId) {
-    FloatingAverage average = categoryIdToAverage.get(categoryId);
-    if (average == null) {
-      average = FloatingAverage.init(FLOATING_AVERAGE_MONTH);
-      categoryIdToAverage.put(categoryId, average);
-    }
-    return average;
   }
 
   private double computePart(double totalIncome, Double income) {

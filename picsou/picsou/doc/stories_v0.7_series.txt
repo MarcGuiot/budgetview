@@ -1,0 +1,29 @@
+=== v0.7 : recurrences ===
+
+Panneau categorisation
+----------------------
+* Groupes de toggles
+* MAJ sur changeSet series/categories/seriesToCategories
+* Ponctuel
+* Precedent / Suivant
+
+
+Panneau accueil
+---------------
+* Liste comptes
+* Bloc mois courant / mois precedent
+  - montant global
+  - montant par BudgetArea
+
+
+Panneau budget
+--------------
+* 
+
+
+* Panneaux d'edition
+* Selection de recurrence dans le panneau d'edition des transactions
+
+* Rapprochement auto
+* Introduction de transactions fantomes
+* Vue du futur
