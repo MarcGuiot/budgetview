@@ -1,8 +1,8 @@
 package org.globsframework.gui.splits;
 
+import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.utils.Strings;
 
 import javax.swing.*;
@@ -13,7 +13,7 @@ import java.util.Collections;
 public class SplitsRepeatTest extends SplitsTestCase {
   public void testRepeat() throws Exception {
 
-    RepeatHandler<String> handler =
+    Repeat<String> futur =
       builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                         new RepeatComponentFactory<String>() {
                           public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
@@ -40,7 +40,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "  label:bb\n" +
                "  button:bb\n");
 
-    handler.insert("cc", 1);
+    futur.insert("cc", 1);
 
     checkPanel(panel,
                "panel\n" +
@@ -53,7 +53,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "  label:bb\n" +
                "  button:bb\n");
 
-    handler.remove(0);
+    futur.remove(0);
 
     checkPanel(panel,
                "panel\n" +
@@ -124,6 +124,52 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "  label:cc\n" +
                "  panel\n" +
                "    button:c1\n");
+  }
+
+  public void testDisposeListener() throws Exception {
+    final StringBuilder logger = new StringBuilder();
+    Repeat<String> repeat = builder.addRepeat("parentRepeat", Arrays.asList("aa", "bb", "cc"), new RepeatComponentFactory<String>() {
+      public void registerComponents(RepeatCellBuilder cellBuilder, final String object) {
+        cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+          public void dispose() {
+            logger.append(object).append('\n');
+          }
+        });
+        cellBuilder.add("label", new JLabel(object));
+        cellBuilder.addRepeat("childRepeat", new RepeatComponentFactory<String>() {
+          public void registerComponents(RepeatCellBuilder cellBuilder, final String item) {
+            cellBuilder.add("button", new JButton(item));
+            cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+              public void dispose() {
+                logger.append(item).append('\n');
+              }
+            });
+          }
+        }, getItems(object));
+      }
+    });
+    JPanel panel = parse(
+      "<repeat ref='parentRepeat'>" +
+      "  <row>" +
+      "    <label ref='label'/>" +
+      "    <repeat ref='childRepeat'>" +
+      "      <button ref='button'/>" +
+      "    </repeat>" +
+      "  </row>" +
+      "</repeat>");
+
+    repeat.remove(2);
+    checkPanel(panel,
+               "panel\n" +
+               "  label:aa\n" +
+               "  panel\n" +
+               "    button:a1\n" +
+               "    button:a2\n" +
+               "panel\n" +
+               "  label:bb\n" +
+               "  panel\n");
+    assertEquals("c1\n" +
+                 "cc\n", logger.toString());
   }
 
   private void checkPanel(JPanel panel, String expected) {

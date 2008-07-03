@@ -2,8 +2,8 @@ package org.globsframework.gui.splits;
 
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
+import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.gui.splits.styles.StyleService;
-import org.globsframework.gui.splits.repeat.Repeat;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ public interface SplitsContext {
 
   <T extends Component> T findOrCreateComponent(String ref, String name, Class<T> componentClass, String splitterName);
 
-  Repeat getRepeat(String name);
+  RepeatHandler getRepeat(String name);
 
   void add(String name, Action action);
 
@@ -39,4 +39,6 @@ public interface SplitsContext {
   void addAutoHide(Component targetComponent, String sourceComponentName);
 
   void cleanUp();
+
+  void dispose();
 }

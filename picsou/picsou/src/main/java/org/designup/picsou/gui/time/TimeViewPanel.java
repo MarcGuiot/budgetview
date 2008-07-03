@@ -375,7 +375,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public synchronized void waitRepaint() {
-    long mili = System.currentTimeMillis() + 150000;
+    long mili = System.currentTimeMillis() + 150;
     while (currentPaintCount == paintCount) {
       try {
         long duration = mili - System.currentTimeMillis();

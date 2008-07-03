@@ -6,12 +6,12 @@ import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.DefaultCardHandler;
+import org.globsframework.gui.splits.repeat.DefaultRepeat;
+import org.globsframework.gui.splits.repeat.Repeat;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.splitters.DefaultSplitterFactory;
 import org.globsframework.gui.splits.styles.StyleService;
 import org.globsframework.gui.splits.xml.SplitsParser;
-import org.globsframework.gui.splits.repeat.RepeatHandler;
-import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.repeat.DefaultRepeat;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -22,7 +22,9 @@ import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SplitsBuilder {
 
@@ -94,7 +96,7 @@ public class SplitsBuilder {
     return DefaultCardHandler.init(panel);
   }
 
-  public <T> RepeatHandler<T> addRepeat(String name, java.util.List<T> items, RepeatComponentFactory<T> factory) {
+  public <T> Repeat<T> addRepeat(String name, java.util.List<T> items, RepeatComponentFactory<T> factory) {
     DefaultRepeat<T> repeat = new DefaultRepeat<T>(factory, items);
     context.addRepeat(name, repeat);
     return repeat;

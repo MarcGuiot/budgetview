@@ -1,9 +1,11 @@
 package org.globsframework.gui.splits.splitters;
 
-import org.globsframework.gui.splits.*;
+import org.globsframework.gui.splits.SplitProperties;
+import org.globsframework.gui.splits.SplitsContext;
+import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
-import org.globsframework.gui.splits.repeat.Repeat;
+import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.gui.splits.repeat.RepeatPanel;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
@@ -25,11 +27,11 @@ public class RepeatSplitter extends AbstractSplitter {
   }
 
   protected ComponentStretch createRawStretch(SplitsContext context) {
-    Repeat repeat = context.getRepeat(ref);
-    if (repeat == null) {
+    RepeatHandler repeatHandler = context.getRepeat(ref);
+    if (repeatHandler == null) {
       throw new ItemNotFound("Repeat '" + ref + "' not declared");
     }
-    RepeatPanel repeatPanel = new RepeatPanel(ref, repeat, templateSplitter, context);
+    RepeatPanel repeatPanel = new RepeatPanel(ref, repeatHandler, templateSplitter, context);
     return repeatPanel.getStretch();
   }
 

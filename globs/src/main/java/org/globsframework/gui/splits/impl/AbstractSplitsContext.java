@@ -1,18 +1,18 @@
 package org.globsframework.gui.splits.impl;
 
 import org.globsframework.gui.splits.SplitsContext;
-import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.exceptions.SplitsException;
+import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractSplitsContext implements SplitsContext {
   private Map<String, Component> componentsByName = new HashMap<String, Component>();
@@ -20,7 +20,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
   protected java.util.List<Component> createdComponents = new ArrayList<Component>();
   private String resourceFile;
   private java.util.List<AutoHideListener> autoHideListeners = new ArrayList<AutoHideListener>();
-  private Map<String, Repeat> repeats = new HashMap<String, Repeat>();
+  private Map<String, RepeatHandler> repeats = new HashMap<String, RepeatHandler>();
 
   public void addComponent(String id, Component component) {
     if (componentsByName.containsKey(id)) {
@@ -39,7 +39,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
 
     if (ref != null) {
       if (name != null) {
-        throw new SplitsException("Error for tag: " + splitterName + ", ref: " + ref + ", name: "+ name +
+        throw new SplitsException("Error for tag: " + splitterName + ", ref: " + ref + ", name: " + name +
                                   "- a component referenced with a 'ref' cannot be given a 'name' attribute" +
                                   dump());
       }
@@ -134,6 +134,13 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     autoHideListeners.clear();
   }
 
+  public void dispose() {
+    cleanUp();
+    for (RepeatHandler repeatHandler : repeats.values()) {
+      repeatHandler.dispose();
+    }
+  }
+
   public void addAutoHide(Component targetComponent, String sourceComponentName) {
     autoHideListeners.add(new AutoHideListener(targetComponent, sourceComponentName));
   }
@@ -144,12 +151,12 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     }
   }
 
-  public Repeat getRepeat(String name) {
+  public RepeatHandler getRepeat(String name) {
     return repeats.get(name);
   }
 
-  public void addRepeat(String name, Repeat repeat) {
-    repeats.put(name, repeat);
+  public void addRepeat(String name, RepeatHandler repeatHandler) {
+    repeats.put(name, repeatHandler);
   }
 
   protected static class AutoHideListener {

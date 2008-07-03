@@ -4,13 +4,10 @@ import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
-import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.styles.StyleService;
 
 import java.awt.*;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DefaultSplitsContext extends AbstractSplitsContext {
   private ColorService colorService;

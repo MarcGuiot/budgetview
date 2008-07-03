@@ -7,7 +7,7 @@ import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobPasswordEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.repeat.RepeatHandler;
+import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.views.*;
 import org.globsframework.metamodel.GlobType;
@@ -15,11 +15,11 @@ import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.ArrayList;
@@ -104,7 +104,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return this;
   }
 
-  public RepeatHandler addRepeat(String name, GlobType type, GlobMatcher matcher, Comparator<Glob> comparator, RepeatComponentFactory factory) {
+  public Repeat addRepeat(String name, GlobType type, GlobMatcher matcher, Comparator<Glob> comparator, RepeatComponentFactory factory) {
     GlobList list = repository.getAll(type, matcher);
     list.sort(comparator);
     return super.addRepeat(name, list, factory);

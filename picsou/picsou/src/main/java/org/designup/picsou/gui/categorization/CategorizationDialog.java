@@ -120,6 +120,7 @@ public class CategorizationDialog {
     }
     localRepository.reset(transactions, Transaction.TYPE);
     selectionService.select(transactions.get(0));
+    dialog.pack();
     GuiUtils.showCentered(dialog);
   }
 
@@ -134,7 +135,7 @@ public class CategorizationDialog {
 
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob budgetArea) {
       String name = budgetAreaStringifier.toString(budgetArea, localRepository);
-      JToggleButton toggleButton = new JToggleButton(new AbstractAction(name) {
+      final JToggleButton toggleButton = new JToggleButton(new AbstractAction(name) {
         public void actionPerformed(ActionEvent e) {
           cardHandler.show(budgetArea.get(BudgetArea.NAME));
         }
@@ -142,6 +143,11 @@ public class CategorizationDialog {
       toggleButton.setName(budgetArea.get(BudgetArea.NAME));
       cellBuilder.add("budgetAreaToggle", toggleButton);
       budgetAreasGroup.add(toggleButton);
+      cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+        public void dispose() {
+          budgetAreasGroup.remove(toggleButton);
+        }
+      });
     }
   }
 
