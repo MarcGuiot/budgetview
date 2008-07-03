@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.*;
+import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
 import java.util.ArrayList;
@@ -97,5 +98,36 @@ public class CategorizationDialogChecker extends DataChecker {
     for (MasterCategory category : categories) {
       assertTrue(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + category.getName()));
     }
+  }
+
+  public void checkOccasionalSeries(MasterCategory category) {
+    assertTrue(dialog.getToggleButton("occasionalExpenses").isSelected());
+    assertTrue(getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).isSelected());
+  }
+
+  public void checkEnveloppeSeriesIsSelected(String seriesName, MasterCategory category) {
+    assertTrue(dialog.getToggleButton("expensesEnvelope").isSelected());
+    Panel panel = getEnvelopeSeriesPanel();
+    assertTrue(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
+  }
+
+  public void checkEnveloppeSeriesIsNotSelected(String seriesName, MasterCategory category) {
+    assertTrue(dialog.getToggleButton("expensesEnvelope").isSelected());
+    Panel panel = getEnvelopeSeriesPanel();
+    UISpecAssert.assertFalse(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
+  }
+
+  public void checkResurringSeriesIsSelected(String seriesName) {
+    assertTrue(dialog.getToggleButton("RecurringExpenses").isSelected());
+
+    Panel panel = getRecurringSeriesPanel();
+    assertTrue(panel.getToggleButton(seriesName).isSelected());
+  }
+
+  public void checkRecurringSeriesIsNotSelected(String seriesName) {
+    assertTrue(dialog.getToggleButton("RecurringExpenses").isSelected());
+
+    Panel panel = getRecurringSeriesPanel();
+    UISpecAssert.assertFalse(panel.getToggleButton(seriesName).isSelected());
   }
 }

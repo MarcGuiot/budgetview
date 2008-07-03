@@ -22,6 +22,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     transactionDetails.checkSeries("Internet");
     transactionDetails.checkCategory(MasterCategory.TELECOMS);
+
+    CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
+    reopenedDialog.checkResurringSeriesIsSelected("Internet");
+    dialog.selectRecurringSeries("Rental");
+    dialog.checkRecurringSeriesIsNotSelected("Internet");
   }
 
   public void testStandardEnvelopeTransaction() throws Exception {
@@ -40,6 +45,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     transactionDetails.checkSeries("Groceries");
     transactionDetails.checkCategory(MasterCategory.FOOD);
+
+    CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
+    reopenedDialog.checkEnveloppeSeriesIsSelected("Groceries", MasterCategory.FOOD);
+    dialog.selectEnvelopeSeries("Groceries", MasterCategory.HOUSE);
+    dialog.checkEnveloppeSeriesIsSelected("Groceries", MasterCategory.HOUSE);
+    dialog.checkEnveloppeSeriesIsNotSelected("Groceries", MasterCategory.FOOD);
   }
 
   public void testStandardOccasionalTransaction() throws Exception {
@@ -58,6 +69,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     transactionDetails.checkSeries("Occasional");
     transactionDetails.checkCategory(MasterCategory.MULTIMEDIA);
+
+    CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
+    reopenedDialog.checkOccasionalSeries(MasterCategory.MULTIMEDIA);
   }
 
   public void testCancel() throws Exception {
