@@ -56,7 +56,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
   protected Font masterFont;
 
   public CategoryChooserDialog(CategoryChooserCallback callback, TransactionRendererColors colors,
-                               GlobRepository repository, Directory directory) {
+                               GlobRepository repository, Directory directory, Window parent) {
     this.callback = callback;
     this.colors = colors;
     this.directory = directory;
@@ -87,7 +87,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
   public void show(GlobList selectedTransactions) {
     if (needToRebuild) {
-      dialog = PicsouDialog.create(mainFrame, Lang.get("choose.category.title"));      
+      dialog = PicsouDialog.create(mainFrame, Lang.get("choose.category.title"));
       loadDialogContent();
       needToRebuild = false;
     }

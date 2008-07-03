@@ -22,6 +22,11 @@
             </column>
           </repeat>
         </card>
+        <card name="occasionalExpenses">
+          <repeat ref="occasionalSeriesRepeat">
+            <toggleButton ref="occasionalCategoryToggle"/>
+          </repeat>
+        </card>
       </cards>
     </row>
     <row>

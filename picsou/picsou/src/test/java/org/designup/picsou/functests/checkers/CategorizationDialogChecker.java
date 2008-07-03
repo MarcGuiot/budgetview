@@ -21,7 +21,7 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void selectRecurring() {
-    dialog.getToggleButton("Recurring").click();
+    dialog.getToggleButton("RecurringExpenses").click();
   }
 
   public void checkContainsRecurringSeries(String... seriesNames) {
@@ -79,17 +79,23 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void selectOccasional() {
-    dialog.getToggleButton("Occasional").click();
+    dialog.getToggleButton("occasionalExpenses").click();
   }
 
   public void selectOccasionalSeries(MasterCategory category) {
-    Panel panel = getOccasionalSeriesPanel();
-    panel.getToggleButton(getCategoryName(category)).click();
+    getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).click();
   }
 
   private Panel getOccasionalSeriesPanel() {
-    Panel panel = dialog.getPanel("occasionalSeriesPanel");
+    Panel panel = dialog.getPanel("occasionalSeriesRepeat");
     assertTrue(panel.isVisible());
     return panel;
+  }
+
+  public void checkContainsOccasional(MasterCategory... categories) {
+    Panel panel = getOccasionalSeriesPanel();
+    for (MasterCategory category : categories) {
+      assertTrue(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + category.getName()));
+    }
   }
 }

@@ -52,10 +52,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("LDLC");
 
     dialog.selectOccasional();
+    dialog.checkContainsOccasional(MasterCategory.MULTIMEDIA, MasterCategory.CLOTHING);
     dialog.selectOccasionalSeries(MasterCategory.MULTIMEDIA);
     dialog.validate();
 
     transactionDetails.checkSeries("Occasional");
+    transactionDetails.checkCategory(MasterCategory.MULTIMEDIA);
   }
 
   public void testCancel() throws Exception {

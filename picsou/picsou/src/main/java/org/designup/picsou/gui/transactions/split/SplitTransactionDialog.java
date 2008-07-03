@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.transactions.split;
 
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.description.BalanceStringifier;
 import org.designup.picsou.gui.description.TransactionCategoriesStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
@@ -9,6 +8,7 @@ import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserCallback;
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserDialog;
 import org.designup.picsou.gui.transactions.columns.*;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
@@ -18,12 +18,12 @@ import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.components.JStyledPanel;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -171,7 +171,7 @@ public class SplitTransactionDialog {
             amountField.requestFocusInWindow();
             amountField.requestFocus();
           }
-        }, rendererColors, localRepository, localDirectory);
+        }, rendererColors, localRepository, localDirectory, dialog);
         categoryChooserDialog.show(new GlobList(transaction));
       }
     });

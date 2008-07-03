@@ -74,7 +74,7 @@ public class CategoryChooserAction extends AbstractAction implements GlobSelecti
             categorise(category, selectedTransactions);
           }
         }
-      }, colors, repository, directory);
+      }, colors, repository, directory, directory.get(JFrame.class));
     }
     dialog.show(selectedTransactions);
   }

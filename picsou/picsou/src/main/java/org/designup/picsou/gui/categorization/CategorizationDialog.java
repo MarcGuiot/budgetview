@@ -25,6 +25,8 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CategorizationDialog {
   private JPanel panel;
@@ -61,6 +63,16 @@ public class CategorizationDialog {
                       GlobMatchers.linkedTo(BudgetArea.EXPENSES_ENVELOPE.getGlob(), Series.BUDGET_AREA),
                       new GlobFieldComparator(Series.ID),
                       new EnvelopeSeriesComponentFactory());
+
+    GlobList occasionalSeries = repository.findLinkedTo(BudgetArea.OCCASIONAL_EXPENSES.getGlob(), Series.BUDGET_AREA);
+    Set<Glob> categories = new HashSet<Glob>();
+    for (Glob oneOccasionalSeries : occasionalSeries) {
+      categories.addAll(repository.findLinkedTo(oneOccasionalSeries, SeriesToCategory.SERIES));
+    }
+
+    builder.addRepeat("occasionalSeriesRepeat",
+                      new GlobList(categories).sort(SeriesToCategory.ID),
+                      new SeriesToCategoryComponentFactory("occasionalSeries", "occasionalCategoryToggle"));
 
     builder.add("ok", new AbstractAction("ok") {
       public void actionPerformed(ActionEvent e) {
@@ -153,16 +165,18 @@ public class CategorizationDialog {
                       new JLabel(seriesStringifier.toString(series, localRepository)));
 
       cellBuilder.addRepeat("envelopeCategoryRepeat",
-                            new EnvelopeCategoryComponentFactory(series.get(Series.NAME)),
+                            new SeriesToCategoryComponentFactory(seriesStringifier.toString(series, localRepository), "envelopeCategoryToggle"),
                             localRepository.findLinkedTo(series, SeriesToCategory.SERIES).sort(SeriesToCategory.ID));
     }
   }
 
-  private class EnvelopeCategoryComponentFactory implements RepeatComponentFactory<Glob> {
+  private class SeriesToCategoryComponentFactory implements RepeatComponentFactory<Glob> {
     private String seriesName;
+    private String name;
 
-    public EnvelopeCategoryComponentFactory(String seriesName) {
+    public SeriesToCategoryComponentFactory(String seriesName, String name) {
       this.seriesName = seriesName;
+      this.name = name;
     }
 
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob seriesToCategory) {
@@ -176,9 +190,8 @@ public class CategorizationDialog {
                                     seriesToCategory.getTargetKey(SeriesToCategory.CATEGORY));
         }
       });
-      cellBuilder.add("envelopeCategoryToggle", toggle);
+      cellBuilder.add(this.name, toggle);
       toggle.setName(seriesName + ":" + category.get(Category.NAME));
     }
   }
-
 }
