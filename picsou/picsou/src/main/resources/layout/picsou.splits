@@ -33,7 +33,7 @@
         <column marginTop="10" preferredSize="(3000,60)" marginLeft="20" marginRight="20">
           <row>
             <label ref="title" opaque="false" font="Arial,bold,24"
-                   horizontalAlignment="center" foreground="title"/>
+                   horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
             <filler fill="horizontal"/>
             <toggleButton ref="dataCardToggle"/>
             <toggleButton ref="repartitionCardToggle"/>
@@ -66,7 +66,7 @@
                 <scrollPane borderPos="center" viewportBackground="transactions.bg" border="empty" opaque="false"
                             marginLeft="5">
                   <table ref="transaction" background="transactions.bg"
-                         intercellSpacing="(0,0)" showGrid="false" rowHeight="22"/>
+                         intercellSpacing="(0,0)" showGrid="false" rowHeight="20"/>
                 </scrollPane>
                 <column>
                   <panel ref="transactionDetails" marginLeft="15"/>

@@ -2,10 +2,16 @@
 
 Panneau categorisation
 ----------------------
-* Groupes de toggles
+* MAJ auto en fonction de la transaction selectionnee
+* Groupes de toggles pour les series
+* Ponctuel : afficher master/subcats
 * MAJ sur changeSet series/categories/seriesToCategories
-* Ponctuel
 * Precedent / Suivant
+* Creer une recurrence
+* Gerer les recurrences
+* Gerer les enveloppes
+* Ponctuel : choisir d'autres categories
+* Revenus
 
 
 Panneau accueil
@@ -19,11 +25,10 @@ Panneau accueil
 Panneau budget
 --------------
 * 
-
-
 * Panneaux d'edition
-* Selection de recurrence dans le panneau d'edition des transactions
 
-* Rapprochement auto
-* Introduction de transactions fantomes
-* Vue du futur
+
+
+Apprentissage
+-------------
+*
