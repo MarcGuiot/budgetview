@@ -1,5 +1,7 @@
 package org.globsframework.model.utils;
 
+import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -65,4 +67,14 @@ public class GlobUtils {
     }
     return result;
   }
+
+  public static String dump(Glob glob) {
+    StringBuilder builder = new StringBuilder();
+    GlobType type = glob.getType();
+    for (Field field : type.getFields()) {
+      builder.append(field.getName()).append("=").append(glob.getValue(field)).append(('\n'));
+    }
+    return builder.toString();
+  }
+
 }

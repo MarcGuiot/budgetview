@@ -1,21 +1,29 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <column>
-    <textArea ref="transactionLabel"/>
+    <row>
+      <textArea ref="transactionLabel"/>
+      <button name="nextTransaction" action="nextTransaction" text="$categorization.next"/>
+      <button name="previousTransaction" action="previousTransaction" text="$categorization.previous"/>
+    </row>
     <row>
       <repeat ref="budgetAreas">
         <toggleButton ref="budgetAreaToggle"/>
       </repeat>
       <cards ref="cards">
         <card name="recurringExpenses">
-          <repeat ref="recurringSeriesRepeat">
-            <toggleButton ref="recurringSeriesToggle"/>
-          </repeat>
+          <row>
+            <toggleButton ref="invisibleRecurringToggle" visible="false"/>
+            <repeat ref="recurringSeriesRepeat">
+              <toggleButton ref="recurringSeriesToggle"/>
+            </repeat>
+          </row>
         </card>
         <card name="expensesEnvelope">
           <repeat ref="envelopeSeriesRepeat">
             <column>
               <label ref="envelopeSeriesName"/>
+              <toggleButton ref="invisibleCategory" visible="false"/>
               <repeat ref="envelopeCategoryRepeat">
                 <toggleButton ref="envelopeCategoryToggle"/>
               </repeat>
@@ -23,9 +31,12 @@
           </repeat>
         </card>
         <card name="occasionalExpenses">
-          <repeat ref="occasionalSeriesRepeat">
-            <toggleButton ref="occasionalCategoryToggle"/>
-          </repeat>
+          <row>
+            <toggleButton ref="invibleOccasionalToggle" visible="false"/>
+            <repeat ref="occasionalSeriesRepeat">
+              <toggleButton ref="occasionalCategoryToggle"/>
+            </repeat>
+          </row>
         </card>
       </cards>
     </row>

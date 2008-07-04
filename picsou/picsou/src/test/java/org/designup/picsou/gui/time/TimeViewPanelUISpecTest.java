@@ -68,21 +68,21 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     timeViewPanel.waitRepaint();
   }
 
-  public void testScrollToVisibleToNotScrollToMuch_2() throws Exception {
+  public void testScrollToVisibleDoNotScrollToMuch_2() throws Exception {
     init(170);
     Selectable selectable = getLastSelected();
     assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);
     assertNotNull(timeViewPanel.getSelectable(1, 1));
   }
 
-  public void testScrollToVisibleToNotScrollToMuch_1() throws Exception {
+  public void testScrollToVisibleDoNotScrollToMuch_1() throws Exception {
     init(270);
     Selectable selectable = getLastSelected();
     assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);
     assertNotNull(timeViewPanel.getSelectable(1, 1));
   }
 
-  public void testScrollToVisibleToNotScrollToMuch_3() throws Exception {
+  public void testScrollToVisibleDoNotScrollToMuch_3() throws Exception {
     init(470);
     Selectable selectable = getLastSelected();
     assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);

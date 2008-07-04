@@ -143,8 +143,8 @@ public class TransactionChecker extends DataChecker {
     return builder.toString();
   }
 
-  public CategorizationDialogChecker categorize(int row) {
-    getTable().selectRow(row);
+  public CategorizationDialogChecker categorize(int... row) {
+    getTable().selectRows(row);
     return transactionDetails.categorize();
   }
 
