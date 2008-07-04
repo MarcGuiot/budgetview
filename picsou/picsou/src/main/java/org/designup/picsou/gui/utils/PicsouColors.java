@@ -127,6 +127,7 @@ public enum PicsouColors {
                                                  "/color.properties",
                                                  "/seb.properties",
                                                  "/regis.properties",
+                                                 "/darkgreycolors.properties",
                                                  "/grey_yellow1.properties");
     check(colorService);
     return colorService;

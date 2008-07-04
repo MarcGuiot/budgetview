@@ -25,6 +25,8 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.Date;
 
 public class MainPanel {
   private JFrame parent;
@@ -91,7 +93,7 @@ public class MainPanel {
     SplitsEditor.show(builder, parent);
   }
 
-  public void createMenuBar(JFrame frame) {
+  public void createMenuBar(final JFrame frame) {
     JMenu fileMenu = new JMenu(Lang.get("file"));
     fileMenu.add(importFileAction);
     fileMenu.add(exportFileAction);

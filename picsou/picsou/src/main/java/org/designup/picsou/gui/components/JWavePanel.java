@@ -41,22 +41,20 @@ public class JWavePanel extends JPanel implements ColorChangeListener {
     int h = d.height;
 
     Graphics2D g2 = (Graphics2D)g.create();
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    GradientPaint gradient = new GradientPaint(0, 0, topColor, 0, h, bottomColor);
-    g2.setPaint(gradient);
-    g2.fillRect(0, 0, w, h);
+    Rectangle rect = new Rectangle(0, 0, w, h);
+    JideFastGradientPainter.drawGradient(g2, rect, topColor, bottomColor, true);
 
-    g2.setPaint(new GradientPaint(0, 0, waveColor, 0, h, bottomColor));
     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, WAVE_ALPHA));
 
-    AffineTransform at = new AffineTransform();
-    at.setToScale(w * 0.9, h * 0.3);
-    g2.transform(at);
-    g2.fill(path);
+    AffineTransform transform = new AffineTransform();
+    transform.setToScale(w * 0.9, h * 0.3);
+    g2.transform(transform);
+    JideFastGradientPainter.drawGradient(g2, path, waveColor, bottomColor, true);
 
-    at.setToScale(0.3, 2.5);
-    g2.transform(at);
-    g2.fill(path);
+    transform.setToScale(0.3, 2.5);
+    g2.transform(transform);
+    JideFastGradientPainter.drawGradient(g2, path, waveColor, bottomColor, true);
   }
 }
