@@ -15,7 +15,7 @@ public class StyleTest extends TestCase {
     assertNoMatch("type#name", "type#anotherName");
   }
 
-  public void testContainmentRules() throws Exception {
+  public void testContainmentMatches() throws Exception {
     assertMatches("parent type", "parent.class type.class");
     assertMatches("ancestor type", "ancestor parent type");
     assertMatches(".class type", "ancestor.class parent.anotherClas anotherParent#name type");
@@ -24,6 +24,7 @@ public class StyleTest extends TestCase {
 
   public void testContainmentMismatches() throws Exception {
     assertNoMatch("parent type", "anotherParent type");
+    assertNoMatch(".class", "parent.class type.anotherClass");
   }
 
   private void assertMatches(String styleSelectors, String pathSelectors) {

@@ -29,7 +29,9 @@ public class Style {
         return false;
       }
     }
-    return true;
+    Selector lastFilterItem = filterSelectors[filterSelectors.length - 1];
+    Selector lastPathItem = path.getSelectors()[path.getSelectors().length - 1];
+    return lastFilterItem.matches(lastPathItem);
   }
 
   public SplitProperties getProperties() {
