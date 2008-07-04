@@ -8,7 +8,7 @@ public class GraphicManagementTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    mainWindow.getToggleButton("evolutionCardToggle").click();
+    views.selectEvolution();
   }
 
   public void testDisplaysImportedData() throws Exception {

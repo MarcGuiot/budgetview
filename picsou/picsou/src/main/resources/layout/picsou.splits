@@ -4,6 +4,7 @@
     <style selector="toggleButton" opaque="false"
            preferredSize="(45,45)"
            margin="0" weightX="0" fill="none"/>
+    <style selector="toggleButton#homeCardToggle" icon="card_home.png" selectedIcon="card_home_selected.png"/>
     <style selector="toggleButton#dataCardToggle" icon="card_list.png" selectedIcon="card_list_selected.png"/>
     <style selector="toggleButton#repartitionCardToggle" icon="card_pie.png" selectedIcon="card_pie_selected.png"/>
     <style selector="toggleButton#evolutionCardToggle" icon="card_line.png" selectedIcon="card_line_selected.png"/>
@@ -27,14 +28,18 @@
       </grid>
     </styledPanel>
 
-    <panel ref="chartAreaPanel">
-      <column>
+    public void selectHome() {
+      select("home");
+    }
+    <panel ref="documentArea">
+      <column marginTop="10" marginLeft="20" marginRight="20" marginBottom="15">
 
-        <column marginTop="10" preferredSize="(3000,60)" marginLeft="20" marginRight="20">
+        <column preferredSize="(3000,60)">
           <row>
             <label ref="title" opaque="false" font="Arial,bold,24"
                    horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
             <filler fill="horizontal"/>
+            <toggleButton ref="homeCardToggle"/>
             <toggleButton ref="dataCardToggle"/>
             <toggleButton ref="repartitionCardToggle"/>
             <toggleButton ref="evolutionCardToggle"/>
@@ -52,50 +57,69 @@
           </row>
         </column>
 
-        <horizontalSplit ref="horizontalSplit" dividerSize="3" dividerLocation="240"
-                         continuousLayout="true" opaque="false" margin="20">
+        <cards ref="cardView" opaque="false" marginTop="20">
 
-          <scrollPane border="matte(2,2,2,2,#3A3A3A)"
-                      viewportBackground="categories.bg" background="categories.bg">
-            <table ref="category" intercellSpacing="(0,0)" showGrid="false" opaque="false"/>
-          </scrollPane>
-
-          <cards ref="cardView" opaque="false">
-            <card name="data">
-              <row>
-                <scrollPane borderPos="center" viewportBackground="transactions.bg" border="empty" opaque="false"
-                            marginLeft="5">
-                  <table ref="transaction" background="transactions.bg"
-                         intercellSpacing="(0,0)" showGrid="false" rowHeight="20"/>
-                </scrollPane>
-                <column>
-                  <panel ref="transactionDetails" marginLeft="15"/>
-                </column>
-              </row>
-            </card>
-            <card name="repartition">
+          <card name="home">
+            <row>
               <column>
-                <filler fill="vertical"/>
-                <component ref="categoriesChart" opaque="false" fill="both"/>
+                <panel ref="accountView"/>
                 <filler fill="vertical"/>
               </column>
-            </card>
-            <card name="evolution">
-              <column>
-                <filler fill="vertical"/>
-                <component ref="historicalChart" opaque="false" fill="both" anchor="center"
-                           marginLeft="30" marginRight="20"/>
-                <filler fill="vertical"/>
-              </column>
-            </card>
-            <card name="noData">
-              <row marginLeft="20">
-                <component ref="noData" opaque="false" foreground="title" />
-              </row>
-            </card>
-          </cards>
-        </horizontalSplit>
+              <filler fill="horizontal"/>
+            </row>
+          </card>
 
+          <card name="withCategories">
+
+            <row>
+
+              <scrollPane border="matte(2,2,2,2,#3A3A3A)"
+                          viewportBackground="categories.bg" background="categories.bg" autoHideSource="category">
+                <table ref="category" intercellSpacing="(0,0)" showGrid="false" opaque="false"/>
+              </scrollPane>
+
+              <cards ref="cardsWithCategoriesView" opaque="false">
+                <card name="data">
+                  <row>
+                    <scrollPane borderPos="center" viewportBackground="transactions.bg" border="empty" opaque="false"
+                                marginLeft="5">
+                      <table ref="transaction" background="transactions.bg"
+                             intercellSpacing="(0,0)" showGrid="false" rowHeight="20"/>
+                    </scrollPane>
+                    <column>
+                      <panel ref="transactionDetails" marginLeft="15"/>
+                    </column>
+                  </row>
+                </card>
+
+                <card name="repartition">
+                  <column>
+                    <filler fill="vertical"/>
+                    <component ref="categoriesChart" opaque="false" fill="both"/>
+                    <filler fill="vertical"/>
+                  </column>
+                </card>
+
+                <card name="evolution">
+                  <column>
+                    <filler fill="vertical"/>
+                    <component ref="historicalChart" opaque="false" fill="both" anchor="center"
+                               marginLeft="30" marginRight="20"/>
+                    <filler fill="vertical"/>
+                  </column>
+                </card>
+
+              </cards>
+            </row>
+
+          </card>
+
+          <card name="noData">
+            <row marginLeft="20">
+              <component ref="noData" opaque="false" foreground="title"/>
+            </row>
+          </card>
+        </cards>
       </column>
 
     </panel>

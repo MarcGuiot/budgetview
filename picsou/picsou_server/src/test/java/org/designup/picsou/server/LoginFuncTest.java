@@ -17,7 +17,7 @@ public class LoginFuncTest extends ServerFuncTestCase {
     Button loginButton = window.getButton("login");
     loginButton.click();
 
-    JLabel label = (JLabel)window.findSwingComponent(JLabel.class, "message");
+    JLabel label = window.findSwingComponent(JLabel.class, "message");
     assertFalse(label.getText().equals(""));
   }
 
@@ -51,7 +51,6 @@ public class LoginFuncTest extends ServerFuncTestCase {
     window.getComboBox("accountBank").select("Societe Generale");
     window.getButton("OK").click();
 
-    Table table = window.getTable("category");
-    assertTrue(table.cellEquals(0, 2, "-155"));
+    assertTrue(getCategoryTable().cellEquals(0, 2, "-155"));
   }
 }

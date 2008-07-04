@@ -10,10 +10,13 @@ import org.globsframework.model.FieldSetter;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Glob;
+import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 public class Account {
   public static final String SUMMARY_ACCOUNT_NUMBER = null;
@@ -44,6 +47,14 @@ public class Account {
     repository.create(TYPE,
                       value(ID, SUMMARY_ACCOUNT_ID),
                       value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
+  }
+
+  public static Glob getBank(Glob account, GlobRepository repository) {
+    Glob bankEntity = repository.findLinkTarget(account, Account.BANK_ENTITY);
+    if (bankEntity == null) {
+      throw new ItemNotFound("Account with no bank entity: " + GlobUtils.dump(account));
+    }
+    return BankEntity.getBank(bankEntity, repository);
   }
 
   public static class Serialization implements PicsouGlobSerializer {

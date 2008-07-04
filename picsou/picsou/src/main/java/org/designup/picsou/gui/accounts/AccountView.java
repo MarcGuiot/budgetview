@@ -1,44 +1,44 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.utils.Html;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.browsing.BrowsingService;
+import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Bank;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.color.ColorLocator;
-import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.views.GlobLabelView;
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.utils.Strings;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.List;
+import java.awt.event.ActionEvent;
 
 public class AccountView extends View implements ChangeSetListener {
-  private JLabel infoLabel = new JLabel();
-  private Color accountNameColor;
-  private Color positiveAmountColor;
-  private Color negativeAmountColor;
-  private GlobStringifier balanceStringifier;
 
-  public AccountView(GlobRepository globRepository, Directory directory) {
-    super(globRepository, directory);
-    balanceStringifier = descriptionService.getStringifier(Account.BALANCE);
-    repository.addChangeListener(this);
+  public AccountView(GlobRepository repository, Directory directory) {
+    super(repository, directory);
+    this.repository.addChangeListener(this);
   }
 
-  public void registerComponents(GlobsPanelBuilder builder) {
-    builder.add("accountView", infoLabel);
-  }
+  public void registerComponents(GlobsPanelBuilder parentBuilder) {
 
-  public void colorsChanged(ColorLocator colorLocator) {
-    accountNameColor = colorLocator.get(PicsouColors.ACCOUNT_NAME);
-    positiveAmountColor = colorLocator.get("balance.positive");
-    negativeAmountColor = colorLocator.get("balance.negative");
-    update();
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountView.splits", repository, directory);
+
+    Glob summaryAccount = repository.get(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID));
+    builder.addLabel("totalBalance", Account.BALANCE).forceSelection(summaryAccount);
+
+    builder.addRepeat("accountRepeat", Account.TYPE, not(contains(summaryAccount)),
+                      new AccountComparator(),
+                      new AccountRepeatFactory());
+
+    parentBuilder.add("accountView", builder);
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -52,68 +52,36 @@ public class AccountView extends View implements ChangeSetListener {
   }
 
   private void update() {
-    if (infoLabel != null) {
-      infoLabel.setText(getText());
-    }
   }
 
-  private String getText() {
-    GlobList accounts = repository.getAll(Account.TYPE).sort(new AccountComparator());
-    if (accounts.isEmpty()) {
-      return "";
+  private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {
+    public void registerComponents(RepeatCellBuilder cellBuilder, Glob account) {
+      add("accountName", Account.NAME, account, cellBuilder);
+      add("accountNumber", Account.NUMBER, account, cellBuilder);
+      add("accountBalance", Account.BALANCE, account, cellBuilder);
+      add("accountUpdateDate", Account.UPDATE_DATE, account, cellBuilder);
+
+      cellBuilder.add("gotoWebsite", new GotoWebsiteAction(account));
+      cellBuilder.add("importData", new ImportFileAction(repository, directory));
     }
-    StringBuilder builder = new StringBuilder();
-    builder.append("<html>");
-    int count = 0;
-    for (Glob account : accounts) {
-      if (account.get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID)) {
-        continue;
+
+    private void add(String name, Field field, Glob account, RepeatCellBuilder cellBuilder) {
+      cellBuilder.add(name, GlobLabelView.init(field, repository, directory)
+        .forceSelection(account)
+        .getComponent());
+    }
+
+    private class GotoWebsiteAction extends AbstractAction {
+      private String url;
+
+      public GotoWebsiteAction(Glob account) {
+        url = Account.getBank(account, repository).get(Bank.DOWNLOAD_URL);
+        setEnabled(Strings.isNotEmpty(url));
       }
-      append(account, count++, builder);
-    }
 
-    builder.append("</html>");
-    return builder.toString();
-  }
-
-  private void append(Glob account, int count, StringBuilder builder) {
-
-    builder.append("<font size='3' color='");
-    builder.append(Colors.toString(accountNameColor));
-    builder.append("'>");
-    if (count > 0) {
-      builder.append("&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;");
-    }
-    builder.append(getName(account));
-    builder.append("</font>");
-
-    builder.append(" <font size='3' color='");
-    Double balance = account.get(Account.BALANCE);
-    if (balance != null) {
-      boolean positive = balance > 0;
-      builder.append(Colors.toString(positive ? positiveAmountColor : negativeAmountColor));
-      builder.append("'><b>");
-      if (positive) {
-        builder.append("+");
+      public void actionPerformed(ActionEvent e) {
+        directory.get(BrowsingService.class).launchBrowser(url);
       }
-      builder.append(balanceStringifier.toString(account, repository));
-      builder.append(Html.EURO_SYMBOL);
-      builder.append("</b></font>");
     }
-    else {
-      builder.append("?");
-    }
-  }
-
-  private String getName(Glob account) {
-    String name = account.get(Account.NAME);
-    if (Strings.isNullOrEmpty(name)) {
-      return account.get(Account.NUMBER);
-    }
-    return name;
-  }
-
-  public void selectFirst() {
-    repository.get(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID));
   }
 }

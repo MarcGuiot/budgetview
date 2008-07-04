@@ -4,6 +4,7 @@ import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -12,6 +13,7 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -19,11 +21,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class CardView extends View implements GlobSelectionListener {
-  private CardHandler handler;
-  private Card lastSelectedCard = Card.DATA;
+  private CardHandler masterCardHandler;
+  private CardHandler categoryCardHandler;
+
+  private Card lastSelectedCard = Card.HOME;
   private TransactionSelection transactionSelection;
 
-  public CardView(GlobRepository repository, Directory directory, TransactionSelection transactionSelection) {
+  public CardView(GlobRepository repository, Directory directory,
+                  TransactionSelection transactionSelection) {
     super(repository, directory);
     this.transactionSelection = transactionSelection;
     this.transactionSelection.addListener(this);
@@ -31,8 +36,10 @@ public class CardView extends View implements GlobSelectionListener {
 
   public void registerComponents(GlobsPanelBuilder builder) {
 
-    handler = builder.addCardHandler("cardView");
-    handler.show(lastSelectedCard.getName());
+    masterCardHandler = builder.addCardHandler("cardView");
+    categoryCardHandler = builder.addCardHandler("cardsWithCategoriesView");
+
+    showCard(lastSelectedCard);
 
     ButtonGroup group = new ButtonGroup();
     JToggleButton[] toggles = new JToggleButton[Card.values().length];
@@ -53,12 +60,27 @@ public class CardView extends View implements GlobSelectionListener {
     builder.add("noData", textArea);
   }
 
-  public void selectionUpdated(GlobSelection selection) {
-    if (hasData(transactionSelection.getSelectedMonthStats())) {
-      handler.show(lastSelectedCard.getName());
+  private void showCard(Card card) {
+    if (card == null) {
+      masterCardHandler.show("noData");
+      return;
+    }
+
+    if (card.showCategoryCard) {
+      categoryCardHandler.show(card.getName());
+      masterCardHandler.show("withCategories");
     }
     else {
-      handler.show("noData");
+      masterCardHandler.show(card.getName());
+    }
+  }
+
+  public void selectionUpdated(GlobSelection selection) {
+    if (hasData(transactionSelection.getSelectedMonthStats())) {
+      showCard(lastSelectedCard);
+    }
+    else {
+      showCard(null);
     }
   }
 
@@ -81,12 +103,18 @@ public class CardView extends View implements GlobSelectionListener {
 
     public void actionPerformed(ActionEvent e) {
       lastSelectedCard = card;
-      handler.show(lastSelectedCard.getName());
+      showCard(lastSelectedCard);
     }
   }
 
   private enum Card {
-    DATA, REPARTITION, EVOLUTION;
+    HOME(false), DATA(true), REPARTITION(true), EVOLUTION(true);
+
+    private boolean showCategoryCard;
+
+    Card(boolean showCategoryCard) {
+      this.showCategoryCard = showCategoryCard;
+    }
 
     String getName() {
       return name().toLowerCase();

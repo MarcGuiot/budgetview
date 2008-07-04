@@ -1,0 +1,39 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styles>
+    <style selector=".totalAmount" font="-,bold,16" anchor="center"/>
+  </styles>
+
+  <column>
+
+    <label text="Comptes" anchor="center" foreground="#FFFFFF" marginBottom="5"/>
+
+    <styledPanel topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
+                 cornerRadius="20">
+
+      <column marginLeft="10" marginRight="10" marginTop="10">
+
+        <label ref="totalBalance" styleClass="totalAmount"/>
+
+        <repeat ref="accountRepeat" marginTop="10">
+          <column marginBottom="10">
+            <grid>
+              <label ref="accountName" gridPos="(0,0)" anchor="west"/>
+              <label ref="accountNumber" gridPos="(0,1)" anchor="west"/>
+
+              <label ref="accountBalance" gridPos="(1,0)" anchor="east"/>
+              <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east"/>
+            </grid>
+            <row>
+              <filler fill="horizontal"/>
+              <hyperlink action="gotoWebsite" text="$account.goto.website"/>
+              <hyperlink action="importData" text="$account.import.data"/>
+            </row>
+          </column>
+        </repeat>
+      </column>
+
+    </styledPanel>
+
+  </column>
+</splits>

@@ -37,7 +37,7 @@ public class CategoryView extends View {
   public static final int CATEGORY_COLUMN_INDEX = 1;
   public static final int AMOUNT_COLUMN_INDEX = 2;
 
-  private GlobTableView tableView;
+  private GlobTableView globTable;
   private JTable table;
   private CreateCategoryAction createCategoryAction;
   private RenameCategoryAction renameCategoryAction;
@@ -69,7 +69,7 @@ public class CategoryView extends View {
   }
 
   public void select(Integer categoryId) {
-    tableView.select(repository.get(Key.create(Category.TYPE, categoryId)));
+    globTable.select(repository.get(Key.create(Category.TYPE, categoryId)));
   }
 
   private void createTable() {
@@ -78,15 +78,15 @@ public class CategoryView extends View {
     GlobStringifier amountStringifier = new AmountStringifier(provider);
     CategoryComparator categoryComparator = new CategoryComparator(repository, categoryStringifier);
 
-    tableView = GlobTableView.init(Category.TYPE, repository, categoryComparator, directory);
+    globTable = GlobTableView.init(Category.TYPE, repository, categoryComparator, directory);
 
     CategoryLabelCustomizer customizer = new CategoryLabelCustomizer(directory);
     CategoryBackgroundPainter backgroundPainter = new CategoryBackgroundPainter(directory);
     CategoryExpansionColumn expandColumn = new CategoryExpansionColumn(backgroundPainter, selectionService);
-    CategoryColumn categoryColumn = new CategoryColumn(customizer, backgroundPainter, tableView,
+    CategoryColumn categoryColumn = new CategoryColumn(customizer, backgroundPainter, globTable,
                                                        descriptionService, repository, directory);
 
-    tableView.addColumn(" ", expandColumn, expandColumn, categoryStringifier.getComparator(repository))
+    globTable.addColumn(" ", expandColumn, expandColumn, categoryStringifier.getComparator(repository))
       .addColumn(Lang.get("category"), categoryColumn, categoryColumn, categoryComparator)
       .addColumn(Lang.get("amount"), amountStringifier, chain(alignRight(), customizer), backgroundPainter)
       .setHeaderCustomizer(new PicsouTableHeaderCustomizer(directory, PicsouColors.CATEGORY_TABLE_HEADER_TITLE),
@@ -97,11 +97,11 @@ public class CategoryView extends View {
                                                         PicsouColors.CATEGORY_TABLE_HEADER_BORDER))
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
-    tableView.setPopupFactory(new CategoryPopupMenuFactory());
+    globTable.setPopupFactory(new CategoryPopupMenuFactory());
 
-    provider.setView(tableView);
+    provider.setView(globTable);
 
-    table = tableView.getComponent();
+    table = globTable.getComponent();
 
     expansionModel = new CategoryExpansionModel(repository, this);
     expandColumn.init(this, expansionModel);
@@ -136,15 +136,19 @@ public class CategoryView extends View {
   }
 
   public Glob getSelectedCategory() {
-    return tableView.getGlobAt(table.getSelectedRow());
+    return globTable.getGlobAt(table.getSelectedRow());
   }
 
   public void select(Glob category) {
-    tableView.select(category);
+    globTable.select(category);
   }
 
   public void setFilter(GlobMatcher matcher) {
-    tableView.setFilter(matcher);
+    globTable.setFilter(matcher);
+  }
+
+  public void setVisible(boolean visible) {
+    table.setVisible(visible);
   }
 
   private class AmountStringifier extends AbstractGlobStringifier {

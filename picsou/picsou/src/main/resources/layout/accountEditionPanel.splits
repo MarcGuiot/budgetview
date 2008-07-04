@@ -3,7 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <column>
-    <label text="Creation de compte" styleClass="header"/>
+    <label text="$account.panel.title" styleClass="header"/>
     <grid>
       <label text="$account.bank" gridPos="(0,0)" styleClass="formLabel"/>
       <comboBox ref="accountBank" gridPos="(1,0)"/>

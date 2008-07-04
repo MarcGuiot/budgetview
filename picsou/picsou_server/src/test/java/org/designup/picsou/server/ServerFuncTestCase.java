@@ -1,6 +1,7 @@
 package org.designup.picsou.server;
 
 import org.designup.picsou.PicsouServer;
+import org.designup.picsou.functests.checkers.ViewSelectionChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.uispec4j.*;
@@ -68,5 +69,17 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     }
 
     window.getButton("OK").click();
+  }
+
+  protected Table getCategoryTable() {
+    ViewSelectionChecker views = new ViewSelectionChecker(window);
+    views.selectData();
+    return window.getTable("category");
+  }
+
+  protected Table getTransactionTable() {
+    ViewSelectionChecker views = new ViewSelectionChecker(window);
+    views.selectData();
+    return window.getTable("transaction");
   }
 }

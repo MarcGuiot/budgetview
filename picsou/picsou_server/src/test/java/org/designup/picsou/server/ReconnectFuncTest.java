@@ -2,6 +2,7 @@ package org.designup.picsou.server;
 
 import org.designup.picsou.PicsouServer;
 import org.designup.picsou.functests.checkers.OperationChecker;
+import org.designup.picsou.functests.checkers.ViewSelectionChecker;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Table;
@@ -23,7 +24,7 @@ public class ReconnectFuncTest extends ServerFuncTestCase {
     OperationChecker operations = new OperationChecker(window);
     operations.importOfxFile(fileName);
 
-    Table table = window.getTable("category");
+    Table table = getCategoryTable();
     assertTrue(table.cellEquals(0, 2, "-50"));
   }
 }

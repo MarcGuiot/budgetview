@@ -20,6 +20,7 @@ import org.uispec4j.interception.WindowInterceptor;
 public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected Window mainWindow;
 
+  protected ViewSelectionChecker views;
   protected AccountChecker accounts;
   protected CategoryChecker categories;
   protected MonthChecker periods;
@@ -60,9 +61,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     loginChecker.skipImport();
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
+    views.selectData();
+
   }
 
   public void initCheckers() {
+    views = new ViewSelectionChecker(mainWindow);
     accounts = new AccountChecker(mainWindow);
     operations = new OperationChecker(mainWindow);
     categories = new CategoryChecker(mainWindow);
@@ -78,6 +82,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     super.tearDown();
     mainWindow.dispose();
     mainWindow = null;
+    views = null;
     accounts = null;
     categories = null;
     periods = null;

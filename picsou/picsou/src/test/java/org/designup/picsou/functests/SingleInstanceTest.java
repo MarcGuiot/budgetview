@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.ImportChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.checkers.TransactionChecker;
+import org.designup.picsou.functests.checkers.ViewSelectionChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
@@ -67,8 +68,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     importer.doImport();
     importer.doImport();
 
-    TransactionChecker transactionChecker = new TransactionChecker(window);
-    transactionChecker.initContent()
+    getTransactionView(window).initContent()
       .add("04/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
       .add("03/01/2000", TransactionType.VIREMENT, "pizza", "", 1.20)
       .add("02/01/2000", TransactionType.VIREMENT, "quick", "", 1.20)
@@ -119,8 +119,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     importer.doImport();
     importer.doImport();
 
-    TransactionChecker transactionChecker = new TransactionChecker(window);
-    transactionChecker.initContent()
+    getTransactionView(window).initContent()
       .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
       .add("02/01/2000", TransactionType.VIREMENT, "quick", "", 1.20)
       .add("01/01/2000", TransactionType.VIREMENT, "mac do", "", 1.20)
@@ -159,5 +158,11 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     void shutdown() throws Exception {
       picsouApplication.shutdown();
     }
+  }
+
+  private TransactionChecker getTransactionView(Window window) {
+    ViewSelectionChecker views = new ViewSelectionChecker(window);
+    views.selectData();
+    return new TransactionChecker(window);
   }
 }

@@ -10,10 +10,14 @@ import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 public class BankEntity {
   public static GlobType TYPE;
@@ -25,6 +29,14 @@ public class BankEntity {
   public static LinkField BANK;
 
   public static NotUniqueIndex BANK_INDEX;
+
+  public static Glob getBank(Glob bankEntity, GlobRepository repository) {
+    Glob bank = repository.findLinkTarget(bankEntity, BANK);
+    if (bank == null) {
+      throw new ItemNotFound("BankEntity with no bank: " + GlobUtils.dump(bankEntity));
+    }
+    return bank;
+  }
 
   static {
     GlobTypeLoader.init(BankEntity.class)

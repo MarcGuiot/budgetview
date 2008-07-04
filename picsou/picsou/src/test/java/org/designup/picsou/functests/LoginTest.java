@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.checkers.TransactionChecker;
+import org.designup.picsou.functests.checkers.ViewSelectionChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
@@ -29,7 +30,6 @@ public class LoginTest extends StartUpFunctionalTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "");
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "");
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
-
 
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
@@ -78,7 +78,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .save();
 
     createUser("toto", "p4ssw0rd", filePath);
-    getTransactionChecker()
+    getTransactionView()
       .initContent()
       .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 12345", "", -12.00, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
@@ -86,7 +86,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
     openNewLoginWindow();
     login("toto", "p4ssw0rd");
-    getTransactionChecker()
+    getTransactionView()
       .initContent()
       .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 12345", "", -12.00, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
@@ -210,7 +210,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
     window.getButton("OK").click();
 
-    getTransactionChecker()
+    getTransactionView()
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
@@ -230,7 +230,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     window.getButton("Import").click();
     window.getButton("OK").click();
     window.getButton("OK").click();
-    getTransactionChecker()
+    getTransactionView()
       .initContent()
       .add("20/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2.2)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
@@ -255,12 +255,12 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
     createUser("toto", "p4ssw0rd", path);
-    getTransactionChecker()
+    getTransactionView()
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
 
-    TransactionChecker checker = getTransactionChecker();
+    TransactionChecker checker = getTransactionView();
     checker.assignCategory(MasterCategory.FOOD, 0);
 
     openNewLoginWindow();
@@ -270,8 +270,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .init(this, new OperationChecker(window))
       .addTransaction("2006/01/12", -2, "Menu K")
       .load();
-    getTransactionChecker()
-      .initContent()
+
+    getTransactionView().initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2, MasterCategory.FOOD)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
       .check();
@@ -327,7 +327,9 @@ public class LoginTest extends StartUpFunctionalTestCase {
     }
   }
 
-  private TransactionChecker getTransactionChecker() {
+  private TransactionChecker getTransactionView() {
+    ViewSelectionChecker views = new ViewSelectionChecker(window);
+    views.selectData();
     return new TransactionChecker(window);
   }
 }

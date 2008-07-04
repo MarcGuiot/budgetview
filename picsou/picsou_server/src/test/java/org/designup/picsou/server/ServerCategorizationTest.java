@@ -6,7 +6,6 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
@@ -28,7 +27,7 @@ public class ServerCategorizationTest extends ServerFuncTestCase {
                            fileName);
     createAndLogUser("user", "_passd1", fileName);
 
-    Table transactionTable = window.getTable(Transaction.TYPE.getName());
+    Table transactionTable = getTransactionTable();
     WindowInterceptor.init(transactionTable.editCell(2, TransactionView.CATEGORY_COLUMN_INDEX)
       .getButton().triggerClick())
       .process(new WindowHandler() {

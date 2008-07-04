@@ -1,5 +1,6 @@
 package org.designup.picsou.gui;
 
+import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ExportFileAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
@@ -23,8 +24,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
 
 public class MainPanel {
@@ -65,6 +64,7 @@ public class MainPanel {
                 transactionDetailsView,
                 timeView,
                 categoryView,
+                new AccountView(repository, directory),
                 new CardView(repository, directory, transactionSelection),
                 new HistoricalChart(repository, directory),
                 new CategoriesChart(repository, directory, transactionSelection));
@@ -79,9 +79,7 @@ public class MainPanel {
     for (View view : views) {
       view.registerComponents(builder);
     }
-    builder.add("chartAreaPanel", new JWavePanel(directory.get(ColorService.class)));
-    builder.add("verticalSplit", createSplitPane());
-    builder.add("horizontalSplit", createSplitPane());
+    builder.add("documentArea", new JWavePanel(directory.get(ColorService.class)));
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
         JPanel panel = (JPanel)component;
@@ -104,24 +102,5 @@ public class MainPanel {
     menuBar.add(fileMenu);
 
     frame.setJMenuBar(menuBar);
-  }
-
-  private JSplitPane createSplitPane() {
-    JSplitPane splitPane = new JSplitPane();
-    splitPane.setUI(new BasicSplitPaneUI() {
-      public BasicSplitPaneDivider getDivider() {
-        return new BasicSplitPaneDivider(this) {
-          public void paint(Graphics g) {
-          }
-        };
-      }
-    });
-    return splitPane;
-  }
-
-  public void openInFront() {
-    final JDialog jDialog = new JDialog(parent);
-    jDialog.setVisible(true);
-    jDialog.setVisible(false);
   }
 }

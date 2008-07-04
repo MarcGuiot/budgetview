@@ -184,4 +184,12 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     accounts.assertDisplayEquals("Compte principal");
   }
+
+  public void testImportFromViewInitializesTheBankURL() throws Exception {
+    fail();
+  }
+
+  public void testImportFromViewInitializesTheDefaultAccountForQifFiles() throws Exception {
+    fail();
+  }
 }

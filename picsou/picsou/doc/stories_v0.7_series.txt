@@ -2,11 +2,8 @@
 
 Panneau categorisation
 ----------------------
-* MAJ auto en fonction de la transaction selectionnee
-* Groupes de toggles pour les series
 * Ponctuel : afficher master/subcats
 * MAJ sur changeSet series/categories/seriesToCategories
-* Precedent / Suivant
 * Creer une recurrence
 * Gerer les recurrences
 * Gerer les enveloppes
@@ -17,6 +14,8 @@ Panneau categorisation
 Panneau accueil
 ---------------
 * Liste comptes
+  - Afficher/editer/ajouter les comptes et les positions
+  - Naviguer vers le site de la banque
 * Bloc mois courant / mois precedent
   - montant global
   - montant par BudgetArea

@@ -2,13 +2,9 @@
 
 
 
-Vue "accueil"
--------------
-* Reprendre AccountView
-* Afficher/editer/ajouter les comptes et les positions
-* Naviguer vers le site de la banque
+* Types de comptes (courant / carte / epargne)
 
-
+* Types de revenus (actifs/passifs) + identification impots/taxes + dons ==> graphiques et rapports
 
 * QIF: Estimation de solde final / SMS
 

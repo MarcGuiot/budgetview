@@ -26,24 +26,28 @@ import java.util.List;
 public class CategoryChecker extends DataChecker {
   private static final int NAME_COLUMN_INDEX = 1;
 
+  private Panel panel;
   private Table table;
 
   public CategoryChecker(Panel panel) {
-    table = panel.getTable("category");
-    table.setCellValueConverter(0, new TableCellValueConverter() {
-      public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-        return "";
-      }
-    });
-    table.setCellValueConverter(CategoryView.CATEGORY_COLUMN_INDEX, new TableCellValueConverter() {
-      public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-        Panel panel = new Panel((Container)renderedComponent);
-        return panel.getTextBox().getText();
-      }
-    });
+    this.panel = panel;
   }
 
   public Table getTable() {
+    if (table == null) {
+      table = panel.getTable("category");
+      getTable().setCellValueConverter(0, new TableCellValueConverter() {
+        public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
+          return "";
+        }
+      });
+      getTable().setCellValueConverter(CategoryView.CATEGORY_COLUMN_INDEX, new TableCellValueConverter() {
+        public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
+          Panel panel = new Panel((Container)renderedComponent);
+          return panel.getTextBox().getText();
+        }
+      });
+    }
     return table;
   }
 
@@ -52,18 +56,18 @@ public class CategoryChecker extends DataChecker {
   }
 
   public void select(String... categoryNames) {
-    table.selectRows(getIndexes(categoryNames));
+    getTable().selectRows(getIndexes(categoryNames));
   }
 
   public void select(MasterCategory... categories) {
-    table.selectRows(getIndexes(categories));
+    getTable().selectRows(getIndexes(categories));
   }
 
   public void assertCategoryNamesEqual(String... expected) {
-    int rowCount = table.getRowCount();
+    int rowCount = getTable().getRowCount();
     String[] actual = new String[rowCount];
     for (int row = 0; row < rowCount; row++) {
-      actual[row] = (String)table.getContentAt(row, NAME_COLUMN_INDEX);
+      actual[row] = (String)getTable().getContentAt(row, NAME_COLUMN_INDEX);
     }
     ArrayTestUtils.assertEquals(expected, actual);
   }
@@ -82,11 +86,11 @@ public class CategoryChecker extends DataChecker {
   }
 
   public void assertSelectionEquals(MasterCategory... categories) {
-    assertTrue(table.rowsAreSelected(getIndexes(categories)));
+    assertTrue(getTable().rowsAreSelected(getIndexes(categories)));
   }
 
   public void assertSelectionEquals(String categoryName) {
-    assertTrue(table.rowsAreSelected(getIndexes(categoryName)));
+    assertTrue(getTable().rowsAreSelected(getIndexes(categoryName)));
   }
 
   public int[] getIndexes(MasterCategory... categories) {
@@ -94,8 +98,8 @@ public class CategoryChecker extends DataChecker {
     for (int i = 0; i < categories.length; i++) {
       indexes[i] = -1;
       MasterCategory targetCategory = categories[i];
-      for (int tableRow = 0; tableRow < table.getRowCount(); tableRow++) {
-        Glob glob = (Glob)table.getContentAt(tableRow, NAME_COLUMN_INDEX, ModelTableCellValueConverter.INSTANCE);
+      for (int tableRow = 0; tableRow < getTable().getRowCount(); tableRow++) {
+        Glob glob = (Glob)getTable().getContentAt(tableRow, NAME_COLUMN_INDEX, ModelTableCellValueConverter.INSTANCE);
         if (targetCategory.getId().equals(glob.get(Category.ID))) {
           indexes[i] = tableRow;
           continue;
@@ -121,8 +125,8 @@ public class CategoryChecker extends DataChecker {
   }
 
   private int getIndex(String categoryName) {
-    for (int tableRow = 0; tableRow < table.getRowCount(); tableRow++) {
-      String name = (String)table.getContentAt(tableRow, NAME_COLUMN_INDEX);
+    for (int tableRow = 0; tableRow < getTable().getRowCount(); tableRow++) {
+      String name = (String)getTable().getContentAt(tableRow, NAME_COLUMN_INDEX);
       if (categoryName.equals(name)) {
         return tableRow;
       }
@@ -181,11 +185,11 @@ public class CategoryChecker extends DataChecker {
   }
 
   public Trigger triggerPopup(String name) {
-    return table.triggerRightClick(getIndex(name), NAME_COLUMN_INDEX);
+    return getTable().triggerRightClick(getIndex(name), NAME_COLUMN_INDEX);
   }
 
   public Trigger triggerPopup(MasterCategory master) {
-    return table.triggerRightClick(getIndex(master), NAME_COLUMN_INDEX);
+    return getTable().triggerRightClick(getIndex(master), NAME_COLUMN_INDEX);
   }
 
   private int getIndex(MasterCategory master) {
@@ -193,14 +197,14 @@ public class CategoryChecker extends DataChecker {
   }
 
   public void assertExpansionEnabled(MasterCategory master, boolean enabled) {
-    JButton button = (JButton)table.getSwingRendererComponentAt(getIndex(master), 0);
+    JButton button = (JButton)getTable().getSwingRendererComponentAt(getIndex(master), 0);
     Assert.assertEquals(enabled,
                         (button.getIcon() != null) &&
                         (button.getIcon() != CategoryExpansionColumn.DISABLED_ICON));
   }
 
   public void assertExpanded(MasterCategory master, boolean expanded) {
-    JButton button = (JButton)table.getSwingRendererComponentAt(getIndex(master), 0);
+    JButton button = (JButton)getTable().getSwingRendererComponentAt(getIndex(master), 0);
     if (expanded) {
       Assert.assertSame(CategoryExpansionColumn.EXPANDED_ICON, button.getIcon());
     }
@@ -215,16 +219,16 @@ public class CategoryChecker extends DataChecker {
 
   public void toggleExpanded(MasterCategory master) {
     select(master);
-    JButton button = (JButton)table.getSwingEditorComponentAt(getIndex(master), 0);
+    JButton button = (JButton)getTable().getSwingEditorComponentAt(getIndex(master), 0);
     new Button(button).click();
   }
 
   public void doubleClick(MasterCategory master) {
-    table.doubleClick(getIndex(master), 1);
+    getTable().doubleClick(getIndex(master), 1);
   }
 
   public void doubleClick(String category) {
-    table.doubleClick(getIndex(category), 1);
+    getTable().doubleClick(getIndex(category), 1);
   }
 
   private Trigger triggerButton(final String name) {
@@ -237,7 +241,7 @@ public class CategoryChecker extends DataChecker {
   }
 
   private Table.Cell rolloverOnCategoryLabel() {
-    Table.Cell cell = table.editCell(table.getJTable().getSelectedRow(), CategoryView.CATEGORY_COLUMN_INDEX);
+    Table.Cell cell = getTable().editCell(getTable().getJTable().getSelectedRow(), CategoryView.CATEGORY_COLUMN_INDEX);
     mouseEnterInComponent(cell.getTextBox().getAwtComponent());
     return cell;
   }
@@ -262,7 +266,7 @@ public class CategoryChecker extends DataChecker {
 
     public void check() {
       String[][] expectedArray = computeExpectedArray();
-      assertTrue(table.contentEquals(expectedArray));
+      assertTrue(getTable().contentEquals(expectedArray));
     }
 
     private String[][] computeExpectedArray() {
