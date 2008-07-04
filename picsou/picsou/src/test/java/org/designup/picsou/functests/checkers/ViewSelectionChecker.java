@@ -1,6 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
+import org.uispec4j.ToggleButton;
 import org.uispec4j.Window;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
 public class ViewSelectionChecker extends DataChecker {
   private Window window;
@@ -25,7 +27,31 @@ public class ViewSelectionChecker extends DataChecker {
     select("repartition");
   }
 
+  public void assertHomeSelected() {
+    assertSelected("home");
+  }
+
+  public void assertDataSelected() {
+    assertSelected("data");
+  }
+
+  public void assertEvolutionSelected() {
+    assertSelected("evolution");
+  }
+
+  public void assertRepartitionSelected() {
+    assertSelected("repartition");
+  }
+
   private void select(String viewName) {
-    window.getToggleButton(viewName + "CardToggle").click();
+    getToggle(viewName).click();
+  }
+
+  private void assertSelected(String viewName) {
+    assertTrue(getToggle(viewName).isSelected());
+  }
+
+  private ToggleButton getToggle(String viewName) {
+    return window.getToggleButton(viewName + "CardToggle");
   }
 }

@@ -73,9 +73,8 @@
 
     <hyperlink ref="categorizeLink"/>
     <row>
-      <label text="$transaction.details.series" styleClass="formLabel"/>
+      <label text="$transaction.details.series" styleClass="formLabel" autoHideSource="transactionSeriesName"/>
       <label ref="transactionSeriesName"/>
-
     </row>
 
     <filler fill="vertical"/>

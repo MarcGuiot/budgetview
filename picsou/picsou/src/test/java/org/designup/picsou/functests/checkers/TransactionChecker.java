@@ -13,6 +13,7 @@ import org.globsframework.utils.Strings;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
+import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
@@ -21,15 +22,14 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionChecker extends DataChecker {
+public class TransactionChecker extends ViewChecker {
   public static final String TO_CATEGORIZE = "To categorize";
 
   private Table table;
-  private Window window;
   private TransactionDetailsChecker transactionDetails;
 
   public TransactionChecker(Window window) {
-    this.window = window;
+    super(window);
     this.transactionDetails = new TransactionDetailsChecker(window);
   }
 
@@ -53,6 +53,10 @@ public class TransactionChecker extends DataChecker {
       table.setCellValueConverter(TransactionView.AMOUNT_COLUMN_INDEX, new AmountCellConverter());
     }
     return table;
+  }
+
+  protected UIComponent findMainComponent(Window window) {
+    return window.findUIComponent(ComponentMatchers.innerNameIdentity(Transaction.TYPE.getName()));
   }
 
   public static String getCategoryName(MasterCategory category) {

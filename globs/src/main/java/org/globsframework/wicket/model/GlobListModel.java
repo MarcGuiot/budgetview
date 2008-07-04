@@ -2,7 +2,6 @@ package org.globsframework.wicket.model;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.wicket.GlobPage;
 import wicket.Component;
@@ -33,10 +32,10 @@ public class GlobListModel extends AbstractReadOnlyModel {
     GlobPage page = (GlobPage)component.getPage();
     GlobList list = page.getRepository().getAll(type, matcher);
     list.sort(page.getDescriptionService().getStringifier(type).getComparator(page.getRepository()));
-    return filter(list, page.getRepository());
+    return filter(list);
   }
 
-  protected GlobList filter(GlobList list, GlobRepository repository) {
+  protected GlobList filter(GlobList list) {
     return list;
   }
 

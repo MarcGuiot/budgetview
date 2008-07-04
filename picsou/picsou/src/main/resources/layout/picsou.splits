@@ -109,16 +109,17 @@
                   </column>
                 </card>
 
+                <card name="noData">
+                  <row marginLeft="20">
+                    <component ref="noData" opaque="false" foreground="title"/>
+                  </row>
+                </card>
+
               </cards>
             </row>
 
           </card>
 
-          <card name="noData">
-            <row marginLeft="20">
-              <component ref="noData" opaque="false" foreground="title"/>
-            </row>
-          </card>
         </cards>
       </column>
 

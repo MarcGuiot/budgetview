@@ -23,19 +23,18 @@ import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 
-public class CategoryChecker extends DataChecker {
+public class CategoryChecker extends ViewChecker {
   private static final int NAME_COLUMN_INDEX = 1;
 
-  private Panel panel;
   private Table table;
 
-  public CategoryChecker(Panel panel) {
-    this.panel = panel;
+  public CategoryChecker(Window window) {
+    super(window);
   }
 
   public Table getTable() {
     if (table == null) {
-      table = panel.getTable("category");
+      table = window.getTable("category");
       getTable().setCellValueConverter(0, new TableCellValueConverter() {
         public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
           return "";
@@ -49,6 +48,10 @@ public class CategoryChecker extends DataChecker {
       });
     }
     return table;
+  }
+
+  protected UIComponent findMainComponent(Window window) {
+    return window.getTable("category");
   }
 
   public void selectNone() {

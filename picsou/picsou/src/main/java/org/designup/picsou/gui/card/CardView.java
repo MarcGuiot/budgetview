@@ -4,7 +4,6 @@ import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -13,7 +12,6 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -61,14 +59,15 @@ public class CardView extends View implements GlobSelectionListener {
   }
 
   private void showCard(Card card) {
-    if (card == null) {
-      masterCardHandler.show("noData");
-      return;
-    }
-
     if (card.showCategoryCard) {
-      categoryCardHandler.show(card.getName());
-      masterCardHandler.show("withCategories");
+      if (hasData(transactionSelection.getSelectedMonthStats())) {
+        categoryCardHandler.show(card.getName());
+        masterCardHandler.show("withCategories");
+      }
+      else {
+        categoryCardHandler.show("noData");
+        masterCardHandler.show("withCategories");
+      }
     }
     else {
       masterCardHandler.show(card.getName());
@@ -76,12 +75,7 @@ public class CardView extends View implements GlobSelectionListener {
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    if (hasData(transactionSelection.getSelectedMonthStats())) {
-      showCard(lastSelectedCard);
-    }
-    else {
-      showCard(null);
-    }
+    showCard(lastSelectedCard);
   }
 
   private boolean hasData(GlobList monthStats) {
