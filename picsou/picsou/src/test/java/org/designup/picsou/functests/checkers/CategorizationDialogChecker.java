@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
@@ -22,7 +23,7 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void selectRecurring() {
-    dialog.getToggleButton("RecurringExpenses").click();
+    dialog.getToggleButton(BudgetArea.RECURRING_EXPENSES.getGlob().get(BudgetArea.NAME)).click();
   }
 
   public void checkContainsRecurringSeries(String... seriesNames) {
@@ -40,6 +41,10 @@ public class CategorizationDialogChecker extends DataChecker {
   public void selectRecurringSeries(String name) {
     Panel panel = getRecurringSeriesPanel();
     panel.getToggleButton(name).click();
+  }
+
+  public void checkBudgetAreaIsSelected(BudgetArea budgetArea) {
+    assertTrue(dialog.getToggleButton(budgetArea.getGlob().get(BudgetArea.NAME)).isSelected());
   }
 
   private Panel getRecurringSeriesPanel() {
@@ -117,7 +122,7 @@ public class CategorizationDialogChecker extends DataChecker {
     UISpecAssert.assertFalse(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
   }
 
-  public void checkResurringSeriesIsSelected(String seriesName) {
+  public void checkRecurringSeriesIsSelected(String seriesName) {
     assertTrue(dialog.getToggleButton("RecurringExpenses").isSelected());
 
     Panel panel = getRecurringSeriesPanel();
@@ -125,9 +130,23 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void checkRecurringSeriesIsNotSelected(String seriesName) {
-    assertTrue(dialog.getToggleButton("RecurringExpenses").isSelected());
-
-    Panel panel = getRecurringSeriesPanel();
-    UISpecAssert.assertFalse(panel.getToggleButton(seriesName).isSelected());
+    UISpecAssert.assertFalse(dialog.getPanel("recurringSeriesRepeat").getToggleButton(seriesName).isSelected());
   }
+
+  public void checkPreviousIsDisable() {
+    UISpecAssert.assertFalse(dialog.getButton("previousTransaction").isEnabled());
+  }
+
+  public void checkNextIsDisable() {
+    UISpecAssert.assertFalse(dialog.getButton("nextTransaction").isEnabled());
+  }
+
+  public void selectNext() {
+    dialog.getButton("nextTransaction").click();
+  }
+
+  public void selectPrevious() {
+    dialog.getButton("previousTransaction").click();
+  }
+
 }
