@@ -105,19 +105,23 @@ public class JStyledPanel extends JPanel {
     Java2DUtils.fillShadow(g2d, Color.BLACK, opacity, shadowWidth, cornerRadius,
                            x + distance, y + distance, width - (distance * 2), height - (distance * 2));
 
-    int rectX = x;
-    int rectY = y;
     int rectWidth = width - (distance * 2);
     int rectHeight = height - (distance * 2);
     if (borderWidth > 0) {
       g2d.setColor(borderColor);
-      g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, cornerRadius, cornerRadius);
+      g2d.fillRoundRect(x, y, rectWidth, rectHeight, cornerRadius, cornerRadius);
     }
+
+
+    int innerWidth = rectWidth - 2 * borderWidth;
+    int innerHeight = rectHeight - 2 * borderWidth;
+    int widthRadius = Math.max(0, cornerRadius  - borderWidth);
+    int heightRadius = Math.max(0, cornerRadius  - borderWidth);
 
     GradientPaint gradient = new GradientPaint(x, y, topColor, x, height, bottomColor);
     g2d.setPaint(gradient);
-    g2d.fillRoundRect(rectX + borderWidth, rectY + borderWidth,
-                      rectWidth - 2 * borderWidth, rectHeight - 2 * borderWidth,
-                      cornerRadius, cornerRadius);
+    g2d.fillRoundRect(x + borderWidth, y + borderWidth,
+                      innerWidth, innerHeight,
+                      widthRadius, heightRadius);
   }
 }

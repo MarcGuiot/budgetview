@@ -26,6 +26,7 @@ public class RepeatPanel implements Repeat {
     this.stretch = SwingStretches.get(panel);
     this.panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     this.panel.setName(name);
+    this.panel.setOpaque(false);
   }
 
   public void set(List items) {

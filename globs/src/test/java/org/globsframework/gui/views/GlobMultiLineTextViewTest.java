@@ -1,6 +1,8 @@
 package org.globsframework.gui.views;
 
 import org.globsframework.metamodel.DummyObject;
+import org.globsframework.metamodel.Field;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListMatcher;
@@ -13,6 +15,18 @@ public class GlobMultiLineTextViewTest extends GlobTextViewTestCase {
       GlobMultiLineTextView.init(DummyObject.TYPE, repository, directory, stringifier)
         .setAutoHideMatcher(matcher)
         .setAutoHideIfEmpty(autoHide);
+    return new TextBox(view.getComponent());
+  }
+
+  protected TextBox init(GlobRepository repository, Field field) {
+    GlobMultiLineTextView view = GlobMultiLineTextView.init(field, repository, directory);
+    return new TextBox(view.getComponent());
+  }
+
+  protected TextBox init(GlobRepository repository, Glob glob) {
+    GlobMultiLineTextView view =
+      GlobMultiLineTextView.init(DummyObject.TYPE, repository, directory, stringifier)
+        .forceSelection(glob);
     return new TextBox(view.getComponent());
   }
 

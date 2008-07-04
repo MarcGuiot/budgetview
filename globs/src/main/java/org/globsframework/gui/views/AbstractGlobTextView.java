@@ -4,6 +4,7 @@ import org.globsframework.gui.ComponentHolder;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.DefaultSelection;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
@@ -13,25 +14,31 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   implements GlobSelectionListener, ChangeSetListener, ComponentHolder {
-  
+
   private GlobType type;
   private GlobRepository repository;
+  private Directory directory;
   private GlobListStringifier stringifier;
   private GlobList currentSelection = new GlobList();
   private boolean autoHideIfEmpty;
   private GlobListMatcher matcher = GlobListMatchers.ALL;
   protected boolean initCompleted = false;
+  private GlobList forcedSelection;
+  protected String name;
 
-  public AbstractGlobTextView(GlobType type, GlobRepository repository, Directory directory, GlobListStringifier stringifier) {
+  public AbstractGlobTextView(GlobType type, GlobRepository repository, Directory directory,
+                              GlobListStringifier stringifier) {
     this.type = type;
+    this.name = type.getName();
     this.repository = repository;
+    this.directory = directory;
     this.stringifier = stringifier;
-    directory.get(SelectionService.class).addListener(this, type);
     repository.addChangeListener(this);
   }
 
@@ -48,6 +55,11 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
     if (initCompleted) {
       update();
     }
+    return (T)this;
+  }
+
+  public T forceSelection(Glob glob) {
+    this.forcedSelection = new GlobList(glob);
     return (T)this;
   }
 
@@ -68,7 +80,7 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   }
 
   public T setName(String name) {
-    getComponent().setName(name);
+    this.name = name;
     return (T)this;
   }
 
@@ -98,5 +110,15 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
 
   public void dispose() {
     repository.removeChangeListener(this);
+  }
+
+  protected void complete() {
+    if (forcedSelection == null) {
+      directory.get(SelectionService.class).addListener(this, type);
+    }
+    else {
+      selectionUpdated(new DefaultSelection(forcedSelection, Collections.singletonList(type)));
+    }
+    getComponent().setName(name);    
   }
 }

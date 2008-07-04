@@ -1,8 +1,10 @@
 package org.globsframework.gui.views;
 
 import org.globsframework.metamodel.DummyObject;
+import org.globsframework.metamodel.Field;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Glob;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListMatcher;
 import org.uispec4j.TextBox;
@@ -17,6 +19,18 @@ public class GlobHtmlViewTest extends GlobTextViewTestCase {
       GlobHtmlView.init(DummyObject.TYPE, repository, directory, stringifier)
         .setAutoHideMatcher(matcher)
         .setAutoHideIfEmpty(autoHide);
+    return new TextBox(view.getComponent());
+  }
+
+  protected TextBox init(GlobRepository repository, Field field) {
+    GlobHtmlView view = GlobHtmlView.init(field, repository, directory);
+    return new TextBox(view.getComponent());
+  }
+
+  protected TextBox init(GlobRepository repository, Glob glob) {
+    GlobHtmlView view =
+      GlobHtmlView.init(DummyObject.TYPE, repository, directory, stringifier)
+        .forceSelection(glob);
     return new TextBox(view.getComponent());
   }
 

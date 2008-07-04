@@ -39,7 +39,7 @@ public class SwingStretches {
     }
 
     if ((component instanceof JLabel)) {
-      return new ComponentStretch(component, Fill.NONE, Anchor.CENTER,
+      return new ComponentStretch(component, Fill.NONE, Anchor.WEST,
                                   NULL_WEIGHT, NULL_WEIGHT);
     }
 

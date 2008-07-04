@@ -1,8 +1,10 @@
 package org.globsframework.gui.views;
 
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.Field;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -15,6 +17,11 @@ public class GlobMultiLineTextView extends AbstractGlobTextView<GlobMultiLineTex
     return new GlobMultiLineTextView(type, repository, directory, stringifier);
   }
 
+  public static GlobMultiLineTextView init(Field field, GlobRepository repository, Directory directory) {
+    GlobListStringifier stringifier = directory.get(DescriptionService.class).getListStringifier(field);
+    return init(field.getGlobType(), repository, directory, stringifier);
+  }
+
   private GlobMultiLineTextView(GlobType type, GlobRepository repository, Directory directory, GlobListStringifier stringifier) {
     super(type, repository, directory, stringifier);
     this.textArea = new JTextArea();
@@ -25,6 +32,7 @@ public class GlobMultiLineTextView extends AbstractGlobTextView<GlobMultiLineTex
   public JTextArea getComponent() {
     if (!initCompleted) {
       initCompleted = true;
+      complete();
       update();
     }
     return textArea;

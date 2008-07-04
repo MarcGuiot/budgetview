@@ -214,6 +214,14 @@ public class GlobMatchers {
     };
   }
 
+  public static GlobMatcher contains(final Glob glob) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return item.getKey().equals(glob.getKey());
+      }
+    };
+  }
+
   private static class SingleFieldMatcher implements GlobMatcher {
     private Field field;
     private Object value;

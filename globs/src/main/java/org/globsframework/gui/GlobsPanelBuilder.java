@@ -12,6 +12,7 @@ import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.views.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
@@ -76,8 +77,12 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return store(GlobPasswordEditor.init(field, repository, directory));
   }
 
-  public GlobLabelView addLabel(GlobType type, GlobListStringifier stringifier) {
-    return store(GlobLabelView.init(type, repository, directory, stringifier));
+  public GlobLabelView addLabel(String name, GlobType type, GlobListStringifier stringifier) {
+    return store(GlobLabelView.init(type, repository, directory, stringifier)).setName(name);
+  }
+
+  public GlobLabelView addLabel(String name, Field field) {
+    return store(GlobLabelView.init(field, repository, directory)).setName(name);
   }
 
   public GlobMultiLineTextView addMultiLineTextView(String name, GlobType type) {
