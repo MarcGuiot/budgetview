@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel ref="wave" opaque="true">
+  <panel ui="wave">
     <column>
 
       <filler fill="vertical" weightY="10"/>

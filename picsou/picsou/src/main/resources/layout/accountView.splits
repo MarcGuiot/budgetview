@@ -1,7 +1,8 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styles>
-    <style selector=".totalAmount" font="-,bold,20" anchor="center"/>
+    <style selector="label" foreground="account.text"/>
+    <style selector="label.totalAmount" font="-,bold,20" anchor="center"/>
     <style selector=".accountBlock" border="matte(1,1,1,1,#DDDDDD)" opaque="true" background="account.block.bg"
            marginTop="5" marginBottom="5"/>
   </styles>

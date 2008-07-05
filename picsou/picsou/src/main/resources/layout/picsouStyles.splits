@@ -1,6 +1,9 @@
-<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styles>
+
+    <ui name="wave" class="org.designup.picsou.gui.plaf.WavePanelUI"
+        topColor="wave.panel.top" bottomColor="wave.panel.bottom" waveColor="wave.panel.wave"/>
 
     <style selector="label.title"
            font="-,bold,16" foreground="import.title"

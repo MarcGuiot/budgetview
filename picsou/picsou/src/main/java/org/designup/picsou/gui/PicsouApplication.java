@@ -14,6 +14,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.TextLocator;
+import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.metamodel.GlobModel;
@@ -157,6 +158,7 @@ public class PicsouApplication {
     directory.add(IconLocator.class, Gui.ICON_LOCATOR);
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
+    directory.add(new UIService());
 
     UIManager.put("ColorService", directory.get(ColorService.class));
 

@@ -6,7 +6,6 @@ import org.designup.picsou.gui.actions.ExportFileAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.categories.CategoryView;
-import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.gui.graphics.CategoriesChart;
 import org.designup.picsou.gui.graphics.HistoricalChart;
 import org.designup.picsou.gui.time.TimeView;
@@ -19,14 +18,11 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.SplitsLoader;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.Date;
 
 public class MainPanel {
   private JFrame parent;
@@ -59,8 +55,8 @@ public class MainPanel {
     exportFileAction = new ExportFileAction(repository, directory);
     exitAction = new ExitAction(directory);
 
-    createPanel(directory,
-                new TitleView(repository, directory),
+    createPanel(
+      new TitleView(repository, directory),
                 new InformationView(repository, directory, transactionSelection),
                 transactionView,
                 transactionDetailsView,
@@ -77,11 +73,10 @@ public class MainPanel {
     createMenuBar(parent);
   }
 
-  private void createPanel(Directory directory, View... views) {
+  private void createPanel(View... views) {
     for (View view : views) {
       view.registerComponents(builder);
     }
-    builder.add("documentArea", new JWavePanel(directory.get(ColorService.class)));
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
         JPanel panel = (JPanel)component;

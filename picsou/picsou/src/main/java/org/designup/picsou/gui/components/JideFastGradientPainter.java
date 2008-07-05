@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 
-class JideFastGradientPainter {
+public class JideFastGradientPainter {
     private static GradientCache gradientCache = new GradientCache();
 
     //no instantiation

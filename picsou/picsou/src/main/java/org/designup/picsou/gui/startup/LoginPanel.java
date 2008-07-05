@@ -9,7 +9,6 @@ import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.MainPanel;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.components.JWavePanel;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -86,10 +85,8 @@ public class LoginPanel {
 
     setVisible(creationComponents, false);
 
-    ColorService colorService = directory.get(ColorService.class);
     SplitsBuilder.init(directory)
       .setSource(getClass(), "/layout/loginPanel.splits")
-      .add("wave", new JWavePanel(colorService))
       .add("name", userField)
       .add("password", passwordField)
       .add("confirmPassword", confirmPasswordField)

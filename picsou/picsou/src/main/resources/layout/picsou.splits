@@ -1,5 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
+  <styleImport file="/layout/picsouStyles.splits"/>
+  
   <styles>
     <style selector="toggleButton" opaque="false"
            preferredSize="(45,45)"
@@ -28,10 +30,7 @@
       </grid>
     </styledPanel>
 
-    public void selectHome() {
-      select("home");
-    }
-    <panel ref="documentArea">
+    <panel ui="wave">
       <column marginTop="10" marginLeft="20" marginRight="20" marginBottom="15">
 
         <column preferredSize="(3000,60)">

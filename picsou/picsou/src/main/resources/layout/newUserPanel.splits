@@ -1,5 +1,8 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
-  <panel ref="wave">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  
+  <panel ui="wave">
     <column>
 
       <filler fill="vertical" weightY="10"/>
