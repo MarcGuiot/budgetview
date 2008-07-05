@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.DisposeCallback;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobSelection;
@@ -30,7 +31,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CategorizationDialog {
-  private JPanel panel;
   private SelectionService selectionService = new SelectionService();
   private LocalGlobRepository localRepository;
   private Glob currentTransaction;
@@ -94,14 +94,18 @@ public class CategorizationDialog {
 
     builder.add("cancel", new AbstractAction("cancel") {
       public void actionPerformed(ActionEvent e) {
-        localRepository.rollback();
         dialog.setVisible(false);
       }
     });
 
-    panel = builder.load();
+    JPanel panel = builder.load();
     dialog = PicsouDialog.create(parent);
     dialog.setContentPane(panel);
+    dialog.setWindowCloseCallback(new DisposeCallback() {
+      public void processDispose() {
+        localRepository.rollback();
+      }
+    });
   }
 
   private Directory init(GlobRepository repository, Directory directory) {
@@ -267,7 +271,6 @@ public class CategorizationDialog {
       });
     }
   }
-
 
   private class NextTransactionAction extends AbstractAction implements GlobSelectionListener {
 

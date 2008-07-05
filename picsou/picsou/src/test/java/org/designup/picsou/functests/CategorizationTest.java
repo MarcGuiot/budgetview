@@ -5,6 +5,11 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
+import org.uispec4j.Key;
+import org.uispec4j.utils.KeyUtils;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class CategorizationTest extends LoggedInFunctionalTestCase {
   public void testStandardRecurringTransaction() throws Exception {
@@ -127,6 +132,21 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     dialog.selectRecurringSeries("Internet");
     dialog.checkBudgetAreaIsSelected(BudgetArea.RECURRING_EXPENSES);
+  }
 
+  public void testEscClosesTheDialogAndCancelsChanges() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/28", -29.90, "Free Telecom")
+      .load();
+
+    CategorizationDialogChecker dialog = transactions.categorize(0);
+    dialog.assertVisible(true);
+    dialog.selectRecurring();
+    dialog.selectRecurringSeries("Internet");
+
+    dialog.pressEscapeKey();
+    dialog.assertVisible(false);
+    transactionDetails.checkNoSeries();
   }
 }

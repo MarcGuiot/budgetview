@@ -3,9 +3,12 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.*;
+import org.uispec4j.utils.KeyUtils;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
+import static org.uispec4j.assertion.UISpecAssert.assertEquals;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,4 +152,12 @@ public class CategorizationDialogChecker extends DataChecker {
     dialog.getButton("previousTransaction").click();
   }
 
+  public void assertVisible(boolean visible) {
+    assertEquals(visible, dialog.isVisible());
+  }
+
+  public void pressEscapeKey() {
+    final JDialog jDialog = (JDialog)dialog.getAwtComponent();
+    KeyUtils.pressKey(jDialog.getRootPane(), Key.ESCAPE);
+  }
 }

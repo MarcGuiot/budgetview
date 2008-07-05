@@ -5,6 +5,9 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class PicsouDialog extends JDialog {
 
@@ -58,11 +61,39 @@ public class PicsouDialog extends JDialog {
     return dialog;
   }
 
+  public void setWindowCloseCallback(final DisposeCallback disposeCallback) {
+    addWindowListener(new WindowAdapter() {
+      public void windowClosed(WindowEvent e) {
+        disposeCallback.processDispose();
+      }
+    });
+  }
+
   private PicsouDialog(JFrame parent) {
     super(parent, true);
   }
 
   private PicsouDialog(JDialog parent) {
     super(parent, true);
+  }
+
+  protected JRootPane createRootPane() {
+    JRootPane rootPane = new JRootPane();
+    KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
+    InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    inputMap.put(stroke, "ESCAPE");
+
+    rootPane.getActionMap().put("ESCAPE", new CloseAction());
+    return rootPane;
+  }
+
+  private class CloseAction extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          setVisible(false);
+        }
+      });
+    }
   }
 }
