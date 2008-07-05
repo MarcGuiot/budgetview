@@ -172,14 +172,13 @@ public class SplitsRepeatTest extends SplitsTestCase {
                  "cc\n", logger.toString());
   }
 
-  private void checkPanel(JPanel panel, String expected) {
+  public static void checkPanel(JPanel panel, String expected) {
     StringBuilder builder = new StringBuilder();
     dump(panel, builder, 0);
-    assertEquals(expected,
-                 builder.toString());
+    assertEquals(expected, builder.toString());
   }
 
-  private void dump(Container panel, StringBuilder builder, int level) {
+  private static void dump(Container panel, StringBuilder builder, int level) {
     for (Component component : panel.getComponents()) {
       builder.append(Strings.repeat(" ", level * 2));
       if (component instanceof JLabel) {
@@ -209,13 +208,5 @@ public class SplitsRepeatTest extends SplitsTestCase {
       return Arrays.asList("c1");
     }
     return Collections.emptyList();
-  }
-
-  private void checkSubpanel(JPanel panel, int row, String text) {
-    JPanel subPanel = (JPanel)panel.getComponent(row);
-    JLabel label = (JLabel)subPanel.getComponent(0);
-    assertEquals("label-" + text, label.getText());
-    JButton button = (JButton)subPanel.getComponent(1);
-    assertEquals("button-" + text, button.getText());
   }
 }
