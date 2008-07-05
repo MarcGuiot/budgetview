@@ -5,6 +5,13 @@
     <ui name="wave" class="org.designup.picsou.gui.plaf.WavePanelUI"
         topColor="wave.panel.top" bottomColor="wave.panel.bottom" waveColor="wave.panel.wave"/>
 
+    <ui name="loginPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="login.block.top" bottomColor="login.block.bottom" borderColor="login.block.border"
+        borderWidth="2" cornerRadius="10"/>
+
+    <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="dialog.bg.top" bottomColor="dialog.bg.bottom"/>
+
     <style selector="label.title"
            font="-,bold,16" foreground="import.title"
            fill="none" anchor="center"

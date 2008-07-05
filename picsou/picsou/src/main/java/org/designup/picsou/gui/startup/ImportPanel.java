@@ -12,7 +12,6 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.AbstractGlobSelectionAction;
-import org.globsframework.gui.splits.components.JStyledPanel;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobComboView;
@@ -45,7 +44,7 @@ import java.util.List;
 
 public abstract class ImportPanel {
   private JLabel messageLabel = new JLabel();
-  private JStyledPanel filePanel = new JStyledPanel();
+  private JPanel filePanel = new JPanel();
   private final JTextField fileField = new JTextField();
   private JButton fileButton = new JButton();
   protected CardHandler cardHandler;

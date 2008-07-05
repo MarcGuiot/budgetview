@@ -5,14 +5,17 @@
     <style selector="label.totalAmount" font="-,bold,20" anchor="center"/>
     <style selector=".accountBlock" border="matte(1,1,1,1,#DDDDDD)" opaque="true" background="account.block.bg"
            marginTop="5" marginBottom="5"/>
+    <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
+      topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
+                 cornerRadius="20"/>
+
   </styles>
 
   <column>
 
     <label text="Comptes" anchor="center" foreground="#FFFFFF" marginBottom="5"/>
 
-    <styledPanel topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
-                 cornerRadius="20">
+    <panel ui="block">
 
       <column marginLeft="10" marginRight="10" marginTop="10">
 
@@ -38,7 +41,7 @@
         </repeat>
       </column>
 
-    </styledPanel>
+    </panel>
 
   </column>
 </splits>

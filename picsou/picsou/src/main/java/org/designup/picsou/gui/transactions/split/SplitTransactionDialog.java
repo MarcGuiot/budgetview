@@ -22,7 +22,6 @@ import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.components.JStyledPanel;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
@@ -66,7 +65,7 @@ public class SplitTransactionDialog {
   private ColorService colorService;
   private TransactionRendererColors rendererColors;
 
-  private JStyledPanel initialAmountPanel = new JStyledPanel();
+  private JPanel initialAmountPanel = new JPanel();
   private JLabel initialLabel = new JLabel();
   private JLabel initialAmount = new JLabel();
   private JLabel initialDate = new JLabel();
@@ -77,8 +76,8 @@ public class SplitTransactionDialog {
   private PicsouDialog dialog;
   private JLabel categoryLabel = new JLabel();
   private AddAction addAction = new AddAction();
-  private JStyledPanel addAmountPanel = new JStyledPanel();
-  private JStyledPanel subAmountPanel = new JStyledPanel();
+  private JPanel addAmountPanel = new JPanel();
+  private JPanel subAmountPanel = new JPanel();
   private JToggleButton toggleButton = new JToggleButton();
   private CategoryChooserAction categoryChooserAction;
   private BalanceColorChangeListener colorChangeListener;

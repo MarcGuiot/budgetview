@@ -1,20 +1,19 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
-  
+
   <panel ui="wave">
     <column>
 
       <filler fill="vertical" weightY="10"/>
 
-      <styledPanel topColor="login.block.top" bottomColor="login.block.bottom"
-                   borderColor="login.block.border" borderWidth="2" cornerRadius="10"
-                   opaque="true" anchor="center" fill="none" weightY="20"
-                   preferredSize="(500,500)">
+      <panel ui="loginPanel"
+             opaque="true" anchor="center" fill="none" weightY="20"
+             preferredSize="(500,500)">
 
         <panel ref="content"/>
 
-      </styledPanel>
+      </panel>
 
       <filler fill="vertical" weightY="20"/>
 

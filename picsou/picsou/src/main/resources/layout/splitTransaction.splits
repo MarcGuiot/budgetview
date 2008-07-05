@@ -1,16 +1,26 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
-  <styledPanel border="matte(1,1,1,1,#666666)" topColor="dialog.bg.top" bottomColor="dialog.bg.bottom" opaque="false">
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <styles>
+    <ui name="dialogBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="dialog.block.top" bottomColor="dialog.block.bottom"
+        borderColor="dialog.block.border" borderWidth="1" cornerRadius="10"/>
+
+    <ui name="dialogBlockInternal" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="dialog.block.internal" bottomColor="dialog.block.internal"/>
+  </styles>
+
+  <panel ui="dialog" border="matte(1,1,1,1,#666666)">
 
     <column margin="20">
 
-      <styledPanel ref="initialAmountPanel" topColor="dialog.block.top" bottomColor="dialog.block.bottom"
-                   borderColor="dialog.block.border" borderWidth="1" cornerRadius="10"
-                   opaque="true" weightY="0" anchor="north" fill="both" marginTop="0" marginBottom="5">
+      <panel ref="initialAmountPanel" ui="dialogBlock"
+             opaque="true" weightY="0" anchor="north" fill="both" marginTop="0" marginBottom="5">
         <column margin="10">
           <label text="$split.transaction.initial.title" anchor="west" icon="bullet.png"/>
-          <styledPanel marginTop="5" opaque="false" anchor="north"
-                       border="etched" weightY="0" topColor="dialog.block.internal" bottomColor="dialog.block.internal">
+          <panel ui="dialogBlockInternal" marginTop="5" opaque="false" anchor="north"
+                 border="etched" weightY="0">
             <column margin="10">
               <row>
                 <label text="$label"/>
@@ -24,20 +34,17 @@
                 <label ref="initialDate" marginLeft="5" horizontalAlignment="right"/>
               </row>
             </column>
-          </styledPanel>
+          </panel>
         </column>
-      </styledPanel>
+      </panel>
 
-      <styledPanel topColor="dialog.block.top" bottomColor="dialog.block.bottom"
-                   borderColor="dialog.block.border" borderWidth="1" cornerRadius="10"
-                   opaque="true" anchor="north" weightY="100" fill="both" marginTop="5" marginBottom="5">
+      <panel ui="dialogBlock"
+             opaque="true" anchor="north" weightY="100" fill="both" marginTop="5" marginBottom="5">
         <column margin="5">
           <component ref="switchToAddAmountButton" anchor="west"/>
 
-          <styledPanel ref="addAmountPanel" opaque="false" border="etched" topColor="dialog.block.internal"
-                       bottomColor="dialog.block.internal" marginTop="5" marginBottom="5" marginLeft="5"
-                       marginRight="5">
-            <column margin="10">
+          <panel ref="addAmountPanel" ui="dialogBlockInternal" opaque="false" border="etched" margin="5">
+          <column margin="10">
               <grid defaultMarginTop="5" defaultMarginBottom="5" opaque="false">
                 <label text="$split.transaction.add.amount.amount" gridPos="(0,0)" fill="none" anchor="east"
                        marginRight="10"/>
@@ -65,7 +72,7 @@
               </row>
               <label marginTop="5" ref="message" horizontalAlignment="center" foreground="split.error.label"/>
             </column>
-          </styledPanel>
+          </panel>
 
           <row marginTop="5" marginBottom="5" marginLeft="5" marginRight="5" weightY="100">
             <scrollPane viewportBackground="transactions.bg" border="etched">
@@ -74,7 +81,7 @@
           </row>
 
         </column>
-      </styledPanel>
+      </panel>
 
       <row marginTop="10" defaultMarginLeft="10">
         <filler fill="horizontal"/>
@@ -85,5 +92,5 @@
 
     </column>
 
-  </styledPanel>
+  </panel>
 </splits>

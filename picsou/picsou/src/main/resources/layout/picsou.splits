@@ -1,8 +1,18 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
-  
+
   <styles>
+    <ui name="headerFrame" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="frame.bg.top" bottomColor="frame.bg.bottom"/>
+
+    <ui name="errorMessage" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="errorpanel.top" bottomColor="errorpanel.bottom"
+        borderColor="errorpanel.border" borderWidth="1" cornerRadius="10"/>
+
+    <style selector="panel#header" ui="headerFrame" opaque="false"
+           border="matte(0,0,2,0,#404040)" weightY="0"/>
+
     <style selector="toggleButton" opaque="false"
            preferredSize="(45,45)"
            margin="0" weightX="0" fill="none"/>
@@ -10,12 +20,12 @@
     <style selector="toggleButton#dataCardToggle" icon="card_list.png" selectedIcon="card_list_selected.png"/>
     <style selector="toggleButton#repartitionCardToggle" icon="card_pie.png" selectedIcon="card_pie_selected.png"/>
     <style selector="toggleButton#evolutionCardToggle" icon="card_line.png" selectedIcon="card_line_selected.png"/>
+    <style selector="panel.errorMessage" ui="errorMessage"/>
   </styles>
 
   <column>
 
-    <styledPanel name="header" topColor="frame.bg.top" bottomColor="frame.bg.bottom" opaque="false"
-                 border="matte(0,0,2,0,#404040)" weightY="0">
+    <panel name="header">
       <grid weightY="10" marginTop="10" marginBottom="10" marginLeft="30" marginRight="30">
         <button ref="firstPeriod" gridPos="(0,0)" fill="none" anchor="southeast" size="(15,20)"
                 icon="first.png" rolloverIcon="firstrollover.png" pressedIcon="firstpressed.png"/>
@@ -28,7 +38,7 @@
         <button ref="nextPeriod" gridPos="(2,1)" fill="none" anchor="northeast" size="(15,20)"
                 icon="next.png" rolloverIcon="nextrollover.png" pressedIcon="nextpressed.png"/>
       </grid>
-    </styledPanel>
+    </panel>
 
     <panel ui="wave">
       <column marginTop="10" marginLeft="20" marginRight="20" marginBottom="15">
@@ -45,13 +55,11 @@
           </row>
           <row>
             <filler fill="horizontal"/>
-            <styledPanel autoHideSource="uncategorizedLabel"
-                         topColor="errorpanel.top" bottomColor="errorpanel.bottom"
-                         borderColor="errorpanel.border" borderWidth="1" cornerRadius="10">
+            <panel styleClass="errorMessage" autoHideSource="uncategorizedLabel">
               <label ref="uncategorizedLabel" text="$transaction.allocation.warning"
                      icon="exclamation.png" foreground="errorpanel.text"
                      marginLeft="10" marginRight="10" opaque="false"/>
-            </styledPanel>
+            </panel>
             <filler fill="horizontal"/>
           </row>
         </column>

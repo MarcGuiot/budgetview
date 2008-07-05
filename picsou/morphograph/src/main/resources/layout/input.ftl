@@ -1,4 +1,11 @@
-<splits>
+<?xml version="1.0" encoding="utf-8"?>
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styles>
+    <ui name="styled" class="org.globsframework.gui.splits.components.StyledPanelUI"
+      topColor="exo.top" bottomColor="exo.bottom" borderWidth="1" borderColor="exo.border" cornerRadius="10"/>
+  </styles>
+
   <column opaque="false" background="background">
 
     <label text="${exo.name}" foreground="exo.title" marginBottom="5" marginTop="0"/>
@@ -8,8 +15,7 @@
     <label text="Exemple : ${exo.example}" foreground="exo.title" marginBottom="5" marginTop="0"/>
     [/#if]
 
-    <styledPanel topColor="exo.top" bottomColor="exo.bottom" opaque="false" marginTop="15"
-                 borderWidth="1" borderColor="exo.border" cornerRadius="10">
+    <panel ui="styled" opaque="false" marginTop="15">
       <column margin="15">
         <grid>
           [#list exo.getQuestions() as question]
@@ -27,7 +33,7 @@
           [/#list]
         </grid>
       </column>
-    </styledPanel>
+    </panel>
 
     <label text="${exo.comment!}" foreground="exo.title" marginBottom="5" marginTop="20"/>
 
