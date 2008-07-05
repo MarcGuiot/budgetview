@@ -204,7 +204,7 @@ public class DirectAccountDataManager implements AccountDataManager {
   public void takeSnapshot(Integer userId) {
     MapOfMaps<String, Integer, Glob> stringIntegerGlobMapOfMaps = readData(userId);
     PrevaylerDirectory prevaylerDirectory = new PrevaylerDirectory(getPath(userId));
-    File file = prevaylerDirectory.snapshotFile();
+//    File file = prevaylerDirectory.snapshotFile();
 
 //    readAndWriteTransaction(userId);
   }
