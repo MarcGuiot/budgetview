@@ -65,28 +65,17 @@ public class SplitsRepeatTest extends SplitsTestCase {
   }
 
   public void testRepeatAcceptsOnlyOneSubComponent() throws Exception {
-    try {
-      parse(
-        "<repeat ref='myRepeat'>" +
-        "  <label ref='label'/>" +
-        "  <button ref='btn'/>" +
-        "</repeat>");
-    }
-    catch (Exception e) {
-      assertTrue(e.getMessage().contains("Repeat component 'myRepeat' must have exactly one subcomponent"));
-    }
+    checkParsingError("<repeat ref='myRepeat'>" +
+                      "  <label ref='label'/>" +
+                      "  <button ref='btn'/>" +
+                      "</repeat>",
+                      "Repeat component 'myRepeat' must have exactly one subcomponent");
   }
 
   public void testRepeatNotFound() throws Exception {
-    try {
-      parse(
-        "<repeat ref='myRepeat'>" +
-        "  <label ref='label'/>" +
-        "</repeat>");
-    }
-    catch (Exception e) {
-      assertEquals("Repeat 'myRepeat' not declared", e.getMessage());
-    }
+    checkParsingError("<repeat ref='myRepeat'>" +
+                      "  <label ref='label'/>" +
+                      "</repeat>", "Repeat 'myRepeat' not declared");
   }
 
   public void testImbricatedRepeats() throws Exception {
@@ -209,13 +198,5 @@ public class SplitsRepeatTest extends SplitsTestCase {
       return Arrays.asList("c1");
     }
     return Collections.emptyList();
-  }
-
-  private void checkSubpanel(JPanel panel, int row, String text) {
-    JPanel subPanel = (JPanel)panel.getComponent(row);
-    JLabel label = (JLabel)subPanel.getComponent(0);
-    assertEquals("label-" + text, label.getText());
-    JButton button = (JButton)subPanel.getComponent(1);
-    assertEquals("button-" + text, button.getText());
   }
 }

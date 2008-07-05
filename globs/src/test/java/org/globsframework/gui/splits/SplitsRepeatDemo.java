@@ -1,9 +1,9 @@
 package org.globsframework.gui.splits;
 
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.utils.directory.DefaultDirectory;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -12,7 +12,7 @@ import java.util.Collections;
 public class SplitsRepeatDemo {
   public static void main(String[] args) {
 
-    SplitsBuilder builder = SplitsBuilder.init(new ColorService(), IconLocator.NULL);
+    SplitsBuilder builder = SplitsBuilder.init(new DefaultDirectory());
 
     builder.addRepeat("repeat1", Arrays.asList("a", "b", "c"), new RepeatComponentFactory<String>() {
       public void registerComponents(RepeatCellBuilder cellBuilder, String item) {

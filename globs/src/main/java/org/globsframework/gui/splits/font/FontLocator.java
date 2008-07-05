@@ -7,4 +7,10 @@ import java.awt.*;
 
 public interface FontLocator {
   Font get(String name) throws ItemNotFound, InvalidParameter;
+
+  public static final FontLocator NULL = new FontLocator() {
+    public Font get(String name) throws ItemNotFound, InvalidParameter {
+      throw new ItemNotFound("No font locator defined");
+    }
+  };
 }

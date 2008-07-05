@@ -2,6 +2,7 @@ package org.globsframework.gui.splits.utils;
 
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.exceptions.SplitsException;
@@ -13,7 +14,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class PropertySetter {
-  public static void process(Component component,
+  public static void process(Object component,
                              SplitProperties properties,
                              SplitsContext context,
                              String... toExclude) {
@@ -30,39 +31,39 @@ public class PropertySetter {
     }
   }
 
-  private static void process(final Component component, final String property, String value, SplitsContext context) {
-    final Class<? extends Component> componentClass = component.getClass();
-    Method[] methods = componentClass.getMethods();
+  private static void process(final Object object, final String property, String value, SplitsContext context) {
+    final Class objectClass = object.getClass();
+    Method[] methods = objectClass.getMethods();
     final Method setter = findMethod(methods, property);
     if (setter == null) {
       throw new SplitsException("No property '" + property +
-                                "' found for class " + componentClass.getSimpleName());
+                                "' found for class " + objectClass.getSimpleName());
     }
     Class<?> targetClass = setter.getParameterTypes()[0];
     if (targetClass == Color.class) {
       if (value.startsWith(Colors.HEXA_PREFIX)) {
-        invokeSetter(component, setter, Colors.toColor(value.substring(1)), property, componentClass);
+        invokeSetter(object, setter, Colors.toColor(value.substring(1)), property, objectClass);
       }
       else if (value.length() == 0) {
-        invokeSetter(component, setter, null, property, componentClass);
+        invokeSetter(object, setter, null, property, objectClass);
       }
       else {
-        context.getColorService().install(value, new ColorUpdater() {
+        context.getService(ColorService.class).install(value, new ColorUpdater() {
           public void updateColor(Color color) {
-            invokeSetter(component, setter, color, property, componentClass);
+            invokeSetter(object, setter, color, property, objectClass);
           }
         });
       }
     }
     else {
-      Object targetValue = TypeConverter.getValue(targetClass, property, value, componentClass, context);
-      invokeSetter(component, setter, targetValue, property, componentClass);
+      Object targetValue = TypeConverter.getValue(targetClass, property, value, objectClass, context);
+      invokeSetter(object, setter, targetValue, property, objectClass);
     }
   }
 
-  private static void invokeSetter(Component component, Method setter, Object targetValue, String attribute, Class<? extends Component> componentClass) {
+  private static void invokeSetter(Object object, Method setter, Object targetValue, String attribute, Class<? extends Component> componentClass) {
     try {
-      setter.invoke(component, targetValue);
+      setter.invoke(object, targetValue);
     }
     catch (IllegalAccessException e) {
       throw new SplitsException("Could not invoke setter found for property '" + attribute +

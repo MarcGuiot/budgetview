@@ -46,7 +46,7 @@ public class SplitsReloadTest extends SplitsTestCase {
                       "  </panel>" +
                       "</splits>");
 
-    SplitsBuilder subBuilder = SplitsBuilder.init(colorService, iconLocator);
+    SplitsBuilder subBuilder = SplitsBuilder.init(directory);
     subBuilder.setSource("<splits>" +
                          "  <button text='btn'/>" +
                          "</splits>");
@@ -73,7 +73,7 @@ public class SplitsReloadTest extends SplitsTestCase {
                       "  </panel>" +
                       "</splits>");
 
-    SplitsBuilder subBuilder = SplitsBuilder.init(colorService, iconLocator);
+    SplitsBuilder subBuilder = SplitsBuilder.init(directory);
     subBuilder.setSource("<splits>" +
                          "  <panel name='subBuilder'>" +
                          "    <button text='btn'/>" +

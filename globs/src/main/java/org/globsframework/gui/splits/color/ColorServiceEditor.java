@@ -2,6 +2,8 @@ package org.globsframework.gui.splits.color;
 
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.directory.DefaultDirectory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -33,7 +35,10 @@ public class ColorServiceEditor implements ColorCreationListener {
 
   public ColorServiceEditor(ColorService service) {
     colorService = service;
-    builder = SplitsBuilder.init(new ColorService(), IconLocator.NULL);
+    Directory directory = new DefaultDirectory();
+    directory.add(new ColorService());
+    directory.add(IconLocator.class, IconLocator.NULL);
+    builder = SplitsBuilder.init(directory);
     colorChooser = createColorChooser();
     textField = createTextField();
     keyList = createList();

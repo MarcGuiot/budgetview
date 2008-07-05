@@ -1,6 +1,5 @@
 package org.globsframework.gui.splits;
 
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
@@ -10,8 +9,9 @@ import org.globsframework.gui.splits.repeat.DefaultRepeat;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.splitters.DefaultSplitterFactory;
-import org.globsframework.gui.splits.styles.StyleService;
 import org.globsframework.gui.splits.xml.SplitsParser;
+import org.globsframework.gui.splits.styles.StyleService;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -32,35 +32,26 @@ public class SplitsBuilder {
   private DefaultSplitsContext context;
   private Source source;
   private java.util.List<SplitsLoader> loaders = new ArrayList<SplitsLoader>();
+  private Directory directory;
+
+  public SplitsBuilder(Directory directory) {
+    this.directory = directory;
+    this.context = new DefaultSplitsContext(directory);
+    addIfMissing(directory, ColorService.class, new ColorService());
+    addIfMissing(directory, FontLocator.class, FontLocator.NULL);
+    addIfMissing(directory, IconLocator.class, IconLocator.NULL);
+    addIfMissing(directory, TextLocator.class, TextLocator.NULL);
+    addIfMissing(directory, StyleService.class, new StyleService());
+  }
+
+  private <T> void addIfMissing(Directory directory, Class<T> serviceClass, T service) {
+    if (directory.find(serviceClass) == null) {
+      directory.add(serviceClass, service);
+    }
+  }
 
   public static SplitsBuilder init(Directory directory) {
     return new SplitsBuilder(directory);
-  }
-
-  public static SplitsBuilder init(ColorService colorService, IconLocator locator) {
-    return new SplitsBuilder(colorService, locator);
-  }
-
-  public SplitsBuilder(ColorService colorService, IconLocator locator) {
-    this(colorService, locator, null, null);
-  }
-
-  public SplitsBuilder(ColorService colorService, IconLocator iconLocator, TextLocator textLocator, FontLocator fontLocator) {
-    if (iconLocator == null) {
-      iconLocator = IconLocator.NULL;
-    }
-    if (textLocator == null) {
-      textLocator = TextLocator.NULL;
-    }
-    this.context = new DefaultSplitsContext(colorService, iconLocator, textLocator, fontLocator,
-                                            new StyleService());
-  }
-
-  public SplitsBuilder(Directory directory) {
-    this(directory.get(ColorService.class),
-         directory.find(IconLocator.class),
-         directory.find(TextLocator.class),
-         directory.find(FontLocator.class));
   }
 
   public SplitsBuilder add(String name, Component component) {
@@ -182,6 +173,10 @@ public class SplitsBuilder {
       loader.load(component);
     }
     return component;
+  }
+
+  public Directory getDirectory() {
+    return directory;
   }
 
   private interface Source {

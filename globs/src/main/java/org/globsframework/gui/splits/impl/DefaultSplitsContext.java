@@ -5,49 +5,25 @@ import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.styles.StyleService;
+import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 import java.util.Collections;
 
 public class DefaultSplitsContext extends AbstractSplitsContext {
-  private ColorService colorService;
-  private IconLocator iconLocator;
-  private TextLocator textLocator;
-  private FontLocator fontLocator;
-  private StyleService styleService;
+  private Directory directory;
   private Class referenceClass;
 
-  public DefaultSplitsContext(ColorService colorService, IconLocator iconLocator,
-                              TextLocator textLocator, FontLocator fontLocator, StyleService styleService) {
-    this.colorService = colorService;
-    this.iconLocator = iconLocator;
-    this.textLocator = textLocator;
-    this.fontLocator = fontLocator;
-    this.styleService = styleService;
-  }
-
-  public ColorService getColorService() {
-    return colorService;
-  }
-
-  public IconLocator getIconLocator() {
-    return iconLocator;
-  }
-
-  public TextLocator getTextLocator() {
-    return textLocator;
-  }
-
-  public FontLocator getFontLocator() {
-    return fontLocator;
-  }
-
-  public StyleService getStyleService() {
-    return styleService;
+  public DefaultSplitsContext(Directory directory) {
+    this.directory = directory;
   }
 
   public void setReferenceClass(Class referenceClass) {
     this.referenceClass = referenceClass;
+  }
+
+  public <T> T getService(Class<T> serviceClass) {
+    return directory.get(serviceClass);
   }
 
   public Class getReferenceClass() {

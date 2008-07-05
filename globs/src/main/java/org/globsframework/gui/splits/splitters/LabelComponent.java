@@ -5,6 +5,7 @@ import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.components.ShadowedLabelUI;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
@@ -34,7 +35,7 @@ public class LabelComponent extends DefaultComponent<JLabel> {
           ui.setShadowColor(null);
         }
         else {
-          context.getColorService().install(shadowColor, new ColorUpdater() {
+          context.getService(ColorService.class).install(shadowColor, new ColorUpdater() {
             public void updateColor(Color color) {
               ui.setShadowColor(color);
             }

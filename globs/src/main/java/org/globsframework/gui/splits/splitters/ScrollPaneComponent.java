@@ -4,6 +4,7 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.color.BackgroundColorUpdater;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 
@@ -34,7 +35,7 @@ public class ScrollPaneComponent extends AbstractSplitter {
 
     String bg = properties.getString("viewportBackground");
     if (bg != null) {
-      context.getColorService().install(bg, new BackgroundColorUpdater(scrollPane.getViewport()));
+      context.getService(ColorService.class).install(bg, new BackgroundColorUpdater(scrollPane.getViewport()));
     }
 
     Boolean viewportOpaque = properties.getBoolean("viewportOpaque");

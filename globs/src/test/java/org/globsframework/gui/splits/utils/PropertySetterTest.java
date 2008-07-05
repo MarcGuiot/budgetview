@@ -5,7 +5,12 @@ import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.impl.DefaultSplitProperties;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
 import org.globsframework.gui.splits.font.FontService;
+import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.styles.StyleService;
+import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.TextLocator;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.directory.DefaultDirectory;
 import org.uispec4j.UISpecTestCase;
 
 import javax.swing.*;
@@ -19,8 +24,13 @@ public class PropertySetterTest extends UISpecTestCase {
 
   protected void setUp() throws Exception {
     colorService = new ColorService();
-    context = new DefaultSplitsContext(colorService, new DummyIconLocator(), new DummyTextLocator(),
-                                       new FontService(), new StyleService());
+    Directory directory = new DefaultDirectory();
+    directory.add(colorService);
+    directory.add(IconLocator.class, new DummyIconLocator());
+    directory.add(TextLocator.class, new DummyTextLocator());
+    directory.add(FontLocator.class, new FontService());
+    directory.add(new StyleService());
+    context = new DefaultSplitsContext(directory);
   }
 
   public void testStringParameter() throws Exception {

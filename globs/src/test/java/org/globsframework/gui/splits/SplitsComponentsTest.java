@@ -213,7 +213,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
         "</panel>");
     }
     catch (Exception e) {
-      assertTrue(e.getMessage().contains("panel components cannot have more than one subcomponent"));
+     checkException(e, "panel components cannot have more than one subcomponent");
     }
   }
 
@@ -262,7 +262,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertTrue(e.getMessage().contains("scrollPane must have exactly one subcomponent"));
+     checkException(e, "scrollPane must have exactly one subcomponent");
     }
   }
 
@@ -273,7 +273,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertTrue(e.getMessage().contains("scrollPane must have exactly one subcomponent"));
+     checkException(e, "scrollPane must have exactly one subcomponent");
     }
   }
 

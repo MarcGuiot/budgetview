@@ -41,8 +41,13 @@
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="style"/>
+      <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element ref="style"/>
+        </xs:choice>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element ref="ui"/>
+        </xs:choice>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -60,13 +65,21 @@
       <xs:attributeGroup ref="iconAttributes"/>
       <xs:attributeGroup ref="splitPaneAttributes"/>
       <xs:attribute name="text" type="xs:string"/>
-      <xs:anyAttribute/>
+      <xs:anyAttribute processContents="skip"/>
     </xs:complexType>
   </xs:element>
 
   <xs:element name="styleImport">
     <xs:complexType>
       <xs:attribute name="file" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ui">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="class" type="xs:string" use="required"/>
+      <xs:anyAttribute processContents="skip"/>
     </xs:complexType>
   </xs:element>
 
@@ -607,6 +620,7 @@
     <xs:attribute name="font" type="xs:string"/>
     <xs:attribute name="visible" type="xs:boolean"/>
     <xs:attribute name="enabled" type="xs:boolean"/>
+    <xs:attribute name="ui" type="xs:string"/>
   </xs:attributeGroup>
 
   <xs:attributeGroup name="componentAttributes">
@@ -631,7 +645,7 @@
       </xs:annotation>
     </xs:attribute>
 
-    <xs:anyAttribute/>
+    <xs:anyAttribute processContents="skip"/>
   </xs:attributeGroup>
 
   <xs:attributeGroup name="iconAttributes">

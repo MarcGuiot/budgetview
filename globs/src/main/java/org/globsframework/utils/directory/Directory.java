@@ -10,8 +10,7 @@ public interface Directory {
 
   boolean contains(Class serviceClass);
 
-  void add(Class serviceClass, Object service) throws ItemAlreadyExists;
+  <T, D extends T> void add(Class<T> serviceClass, D service) throws ItemAlreadyExists;
 
   void add(Object service) throws ItemAlreadyExists;
-
 }

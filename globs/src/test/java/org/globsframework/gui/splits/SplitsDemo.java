@@ -1,7 +1,6 @@
 package org.globsframework.gui.splits;
 
-
-import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.utils.directory.DefaultDirectory;
 
 import javax.swing.*;
 
@@ -30,7 +29,7 @@ public class SplitsDemo {
     );
 
     SplitsBuilder builder =
-      SplitsBuilder.init(new ColorService(), IconLocator.NULL)
+      SplitsBuilder.init(new DefaultDirectory())
         .add("myTable", table)
         .add("myList", list)
         .add("button1", new JButton("button 1"))
@@ -42,7 +41,7 @@ public class SplitsDemo {
 
   private static void loginPanel() {
     SplitsBuilder builder =
-      SplitsBuilder.init(new ColorService(), IconLocator.NULL)
+      SplitsBuilder.init(new DefaultDirectory())
         .add("userField", new JTextField())
         .add("passwordField", new JPasswordField())
         .add("createAccountCheckBox", new JCheckBox("Create account"))

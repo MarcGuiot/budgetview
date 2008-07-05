@@ -37,10 +37,10 @@ public class DefaultDirectory implements Directory {
   }
 
   public void add(Object service) throws ItemAlreadyExists {
-    add(service.getClass(), service);
+    add((Class<Object>)service.getClass(), service);
   }
 
-  public void add(Class serviceClass, Object service) throws ItemAlreadyExists {
+  public <T, D extends T> void add(Class<T> serviceClass, D service) throws ItemAlreadyExists {
     if (services.containsKey(serviceClass)) {
       throw new ItemAlreadyExists("Service already registered for class: " + serviceClass.getName());
     }

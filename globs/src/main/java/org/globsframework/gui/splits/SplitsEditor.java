@@ -18,12 +18,11 @@ public class SplitsEditor {
       return;
     }
 
-    ColorService colorService = builder.getContext().getColorService();
+    ColorService colorService = builder.getContext().getService(ColorService.class);
     colorService.autoUpdate(container);
 
     JFrame frame =
-      SplitsBuilder.init(builder.getContext().getColorService(),
-                         builder.getContext().getIconLocator())
+      SplitsBuilder.init(builder.getDirectory())
         .setSource(SplitsEditor.class, "/splits/splitsEditor.splits")
         .add("reload", new AbstractAction("Reload") {
           public void actionPerformed(ActionEvent e) {

@@ -1,9 +1,7 @@
 package org.globsframework.gui.splits;
 
-import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.repeat.RepeatHandler;
-import org.globsframework.gui.splits.styles.StyleService;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,15 +20,7 @@ public interface SplitsContext {
 
   Action getAction(String id);
 
-  ColorService getColorService();
-
-  IconLocator getIconLocator();
-
-  TextLocator getTextLocator();
-
-  FontLocator getFontLocator();
-
-  StyleService getStyleService();
+  <T> T getService(Class<T> serviceClass);
 
   Class getReferenceClass();
 

@@ -3,6 +3,8 @@ package org.globsframework.gui.splits.color;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsEditor;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.directory.DefaultDirectory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +15,9 @@ public class ColorServiceEditorDemo {
     colorService.set("form.bg", Color.RED);
     colorService.set("label.fg", Color.BLACK);
 
-    SplitsBuilder builder = new SplitsBuilder(colorService, IconLocator.NULL);
+    Directory directory = new DefaultDirectory();
+    directory.add(colorService);
+    SplitsBuilder builder = new SplitsBuilder(directory);
 
     JFrame frame =
       builder.setSource(

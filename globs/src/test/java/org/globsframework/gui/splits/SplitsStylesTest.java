@@ -1,18 +1,9 @@
 package org.globsframework.gui.splits;
 
-import org.globsframework.utils.exceptions.InvalidFormat;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class SplitsStylesTest extends SplitsTestCase {
-
-  private JButton button;
-
-  protected void setUp() throws Exception {
-    super.setUp();
-    button = new JButton();
-  }
 
   public void testTypeSelection() throws Exception {
     checkButtonStyle(
@@ -55,8 +46,8 @@ public class SplitsStylesTest extends SplitsTestCase {
   }
 
   public void testNoSelectorMatch() throws Exception {
-    builder.add("btn", button);
-    Color color = button.getForeground();
+    builder.add("btn", aButton);
+    Color color = aButton.getForeground();
     JButton button1 = (JButton)parse(
       "<styles>" +
       "  <style selector='unknown' foreground='#FF0000'/>" +
@@ -110,21 +101,16 @@ public class SplitsStylesTest extends SplitsTestCase {
   }
 
   public void testSelectorsMustNotBeEmpty() throws Exception {
-    try {
-      parse(
-        "<styles>" +
-        "  <style selector='' foreground='#FF0000'/>" +
-        "</styles>" +
-        "<button name='btn1'/>");
-      fail();
-    }
-    catch (InvalidFormat e) {
-      assertTrue(e.getMessage().contains("A style selector cannot be empty"));
-    }
+    checkParsingError(
+      "<styles>" +
+      "  <style selector='' foreground='#FF0000'/>" +
+      "</styles>" +
+      "<button name='btn1'/>",
+      "A style selector cannot be empty");
   }
 
   private void checkButtonStyle(String xml) throws Exception {
-    builder.add("btn", button);
+    builder.add("btn", aButton);
     JButton button = (JButton)parse(xml);
     assertEquals(Color.RED, button.getForeground());
   }

@@ -1,10 +1,14 @@
 package org.globsframework.gui.splits;
 
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.styles.StyleService;
+import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.DummyIconLocator;
 import org.globsframework.gui.splits.utils.DummyTextLocator;
+import org.globsframework.utils.directory.DefaultDirectory;
+import org.globsframework.utils.directory.Directory;
 import org.uispec4j.UISpecTestCase;
 
 import javax.swing.*;
@@ -23,17 +27,25 @@ public abstract class SplitsTestCase extends UISpecTestCase {
   protected DummyIconLocator iconLocator = new DummyIconLocator();
   protected DummyTextLocator textLocator = new DummyTextLocator();
   protected StyleService styleService = new StyleService();
+  protected UIService uiService = new UIService();
 
   protected JTable aTable = new JTable();
   protected JList aList = new JList();
   protected JButton aButton = new JButton();
+  protected Directory directory;
 
   protected void setUp() throws Exception {
     super.setUp();
     aTable.setName("aTable");
     aList.setName("aList");
     aButton.setName("aButton");
-    builder = new SplitsBuilder(colorService, iconLocator, textLocator, fontService);
+    directory = new DefaultDirectory();
+    directory.add(colorService);
+    directory.add(FontLocator.class, fontService);
+    directory.add(TextLocator.class, textLocator);
+    directory.add(IconLocator.class, iconLocator);
+    directory.add(UIService.class, uiService);
+    builder = new SplitsBuilder(directory);
   }
 
   protected <T extends Component> T parse(final String xml) throws Exception {
@@ -67,7 +79,7 @@ public abstract class SplitsTestCase extends UISpecTestCase {
       fail();
     }
     catch (Exception e) {
-      assertTrue(e.getMessage().contains(error));
+      checkException(e, error);
     }
   }
 
@@ -75,5 +87,12 @@ public abstract class SplitsTestCase extends UISpecTestCase {
     JPanel panel = (JPanel)parent;
     GridBagLayout layout = (GridBagLayout)panel.getLayout();
     return layout.getConstraints(component);
+  }
+
+  protected void checkException(Exception e, String message) {
+    if (!e.getMessage().contains(message)) {
+      fail("Exception does not contain message: " + message + "\n" +
+           "Actual message is: " + e.getMessage());
+    }
   }
 }

@@ -15,17 +15,12 @@ public class SplitsBuilderTest extends SplitsTestCase {
 
   public void testTypeError() throws Exception {
     builder.add("label", aTable);
-    try {
-      parse("<label ref='label'/>");
-      fail();
-    }
-    catch (Exception e) {
-      assertTrue(e.getMessage().contains("unexpected type"));
-    }
+    checkParsingError("<label ref='label'/>", "unexpected type");
   }
 
   public void testReferencingASubclass() throws Exception {
     builder.add("label", new JLabel("text") {
+      // JLabel subclass
     });
     JLabel parsedLabel = parse("<label ref='label'/>");
     assertEquals("text", parsedLabel.getText());
@@ -346,7 +341,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertTrue(e.getMessage().contains("No component found for ref: anUndefinedId"));
+      checkException(e, "No component found for ref: anUndefinedId");
     }
   }
 
