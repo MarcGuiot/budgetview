@@ -6,8 +6,6 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
 
-import org.globsframework.utils.Utils;
-
 public class ShadowedLabelUI extends BasicLabelUI {
 
   public enum Direction {
