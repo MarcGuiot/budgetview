@@ -3,6 +3,7 @@ C org.designup.picsou.gui.MainWindowLauncher
 C org.designup.picsou.gui.PicsouApplet
 C org.designup.picsou.gui.PicsouApplication
 C org.designup.picsou.client.local.LocalClientTransport
+C org.designup.picsou.gui.plaf.WavePanelUI
 C org.designup.picsou.gui.plaf.PicsouButtonUI
 C org.designup.picsou.gui.plaf.PicsouWindowsLabelUI
 C org.designup.picsou.gui.plaf.PicsouRootPaneUI
@@ -14,6 +15,9 @@ C org.apache.commons.logging.impl.SimpleLog
 C org.apache.commons.httpclient.auth.CredentialsNotAvailableException
 C org.apache.commons.httpclient.cookie.IgnoreCookiesSpec
 C org.jfree.chart.resources.JFreeChartResources
+C org.globsframework.gui.splits.components.StyledPanelUI
+C org.globsframework.gui.splits.components.StyledToggleButtonUI
+C org.globsframework.gui.splits.components.ShadowedLabelUI
 P com/jgoodies/looks true
 R org/jfree/resources/JCommonResources.class
 R org/jfree/chart/LocalizationBundle.properties
@@ -21,12 +25,15 @@ R org/jfree/chart/editor/LocalizationBundle.properties
 R org/jfree/chart/plot/LocalizationBundle.properties
 R color.properties
 R subcats.xml
+R series.xml
 R layout/
 R banks/
 R logging/
 R i18n/
 R images/
+R darkgreycolors.properties
 R grey_yellow1.properties
 R regis.properties
 R seb.properties
 R whitecolors.properties
+R fonts.properties

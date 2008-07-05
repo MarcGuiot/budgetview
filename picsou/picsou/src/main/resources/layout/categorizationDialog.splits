@@ -1,11 +1,14 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-  <column>
-    <row>
+  <column opaque="true">
+
+    <row opaque="true">
       <textArea ref="transactionLabel"/>
-      <button name="nextTransaction" action="nextTransaction" text="$categorization.next"/>
+      <filler fill="horizontal"/>
       <button name="previousTransaction" action="previousTransaction" text="$categorization.previous"/>
+      <button name="nextTransaction" action="nextTransaction" text="$categorization.next"/>
     </row>
+
     <row>
       <repeat ref="budgetAreas">
         <toggleButton ref="budgetAreaToggle"/>

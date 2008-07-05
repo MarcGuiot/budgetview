@@ -1,14 +1,25 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styles>
-    <style selector="label" foreground="account.text"/>
-    <style selector="label.totalAmount" font="-,bold,20" anchor="center"/>
-    <style selector=".accountBlock" border="matte(1,1,1,1,#DDDDDD)" opaque="true" background="account.block.bg"
-           marginTop="5" marginBottom="5"/>
-    <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
-      topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
-                 cornerRadius="20"/>
 
+    <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
+        cornerRadius="20"/>
+
+    <ui name="accountBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="account.block.top" bottomColor="account.block.bottom" borderColor="account.block.border"
+        borderWidth="2" cornerRadius="10"/>
+
+    <style selector="label" foreground="account.text.total"/>
+    <style selector="label.totalAmount" font="-,bold,20" anchor="center"/>
+    <style selector=".accountBlock" ui="accountBlock" marginTop="5" marginBottom="5"/>
+
+    <style selector="label#accountName" foreground="account.text.name" font="-,bold,12"/>
+    <style selector="label#accountNumber" foreground="account.text.number" font="-,plain,10"/>
+    <style selector="label#accountBalance" foreground="account.text.balance" font="-,bold,14"/>
+    <style selector="label#accountUpdateDate" foreground="account.text.updateDate" font="-,plain,10"/>
+
+    <style selector=".accountBlock hyperlink" foreground="account.hyperlink"/>
   </styles>
 
   <column>
@@ -23,7 +34,7 @@
 
         <repeat ref="accountRepeat" marginTop="5" marginBottom="5">
           <panel styleClass="accountBlock">
-            <column margin="4">
+            <column margin="6" marginLeft="10" marginRight="10">
               <grid>
                 <label ref="accountName" gridPos="(0,0)" anchor="west"/>
                 <label ref="accountNumber" gridPos="(0,1)" anchor="west"/>
