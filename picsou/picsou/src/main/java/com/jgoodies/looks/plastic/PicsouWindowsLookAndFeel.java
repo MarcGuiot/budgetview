@@ -1,6 +1,8 @@
 package com.jgoodies.looks.plastic;
 
 import org.designup.picsou.gui.plaf.LafUtils;
+import org.designup.picsou.gui.plaf.PicsouButtonUI;
+import org.designup.picsou.gui.plaf.PicsouWindowsLabelUI;
 
 import javax.swing.*;
 import javax.swing.plaf.InsetsUIResource;
@@ -9,8 +11,8 @@ public class PicsouWindowsLookAndFeel extends Plastic3DLookAndFeel {
   protected void initClassDefaults(UIDefaults defaults) {
     super.initClassDefaults(defaults);
     try {
-      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouButtonUI", "ButtonUI");
-      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouWindowsLabelUI", "LabelUI");
+      LafUtils.initUI(defaults, PicsouButtonUI.class, "ButtonUI");
+      LafUtils.initUI(defaults, PicsouWindowsLabelUI.class, "LabelUI");
     }
     catch (Exception e) {
       e.printStackTrace();
