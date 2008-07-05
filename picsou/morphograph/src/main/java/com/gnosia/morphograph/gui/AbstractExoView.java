@@ -10,8 +10,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.io.StringReader;
-import java.io.Reader;
 
 public abstract class AbstractExoView implements ExoView {
   protected Glob exercise;
@@ -29,7 +27,7 @@ public abstract class AbstractExoView implements ExoView {
     this.directory = directory;
     this.colorService = directory.get(ColorService.class);
     this.templateFile = velocityFile;
-    this.builder = new SplitsBuilder(directory.get(ColorService.class), directory.get(IconLocator.class));
+    this.builder = new SplitsBuilder(directory);
 
     IconLocator iconLocator = directory.get(IconLocator.class);
     okIcon = iconLocator.get("accept.png");

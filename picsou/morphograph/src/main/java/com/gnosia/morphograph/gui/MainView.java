@@ -5,9 +5,7 @@ import com.gnosia.morphograph.model.Topic;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -27,7 +25,7 @@ public class MainView {
 
     setNativeLookAndFeel();
 
-    SplitsBuilder splits = new SplitsBuilder(directory.get(ColorService.class), directory.get(IconLocator.class));
+    SplitsBuilder splits = new SplitsBuilder(directory);
 
     SeriesView seriesView = new SeriesView(globRepository, directory);
     splits.add("seriesPanel", seriesView.createPanel());

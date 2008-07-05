@@ -6,9 +6,7 @@ import com.gnosia.morphograph.model.Series;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -34,7 +32,7 @@ public class SeriesView implements GlobSelectionListener {
     this.directory = directory;
     directory.get(SelectionService.class).addListener(this, Series.TYPE, Exercise.TYPE);
 
-    SplitsBuilder builder = new SplitsBuilder(directory.get(ColorService.class), directory.get(IconLocator.class));
+    SplitsBuilder builder = new SplitsBuilder(directory);
     builder.add("exoPanel", exoPanelContainer);
     nextAction = new NextAction();
     builder.add("next", nextAction);
