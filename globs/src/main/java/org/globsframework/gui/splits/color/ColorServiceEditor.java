@@ -73,6 +73,8 @@ public class ColorServiceEditor implements ColorCreationListener {
       }
 
     });
+
+    jList.setCellRenderer(new CellRenderer());
     return jList;
   }
 
@@ -121,6 +123,7 @@ public class ColorServiceEditor implements ColorCreationListener {
       public void stateChanged(ChangeEvent event) {
         if (currentKey != null) {
           colorService.set(currentKey, colorChooser.getColor());
+          keyList.repaint();
         }
       }
     });
@@ -180,4 +183,50 @@ public class ColorServiceEditor implements ColorCreationListener {
       }
     });
   }
+
+  private class CellRenderer implements ListCellRenderer {
+
+    private JLabel label = new JLabel();
+    private ColorRectIcon icon = new ColorRectIcon();
+
+    private CellRenderer() {
+      label.setIcon(icon);
+      label.setOpaque(true);
+    }
+
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+      icon.setColor(colorService.get(value));
+      label.setText((String)value);
+      label.setBackground(isSelected ? Color.LIGHT_GRAY : Color.WHITE);
+      return label;
+    }
+  }
+
+  private static class ColorRectIcon implements Icon {
+
+    private Color color = Color.WHITE;
+
+    public void setColor(Color color) {
+      this.color = color;
+    }
+
+    public int getIconHeight() {
+      return 12;
+    }
+
+    public int getIconWidth() {
+      return 15;
+    }
+
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+      int w = getIconWidth();
+      int h = getIconHeight();
+
+      Graphics2D g2 = (Graphics2D)g;
+      g2.setColor(color);
+      g.fillRect(x, y + 1, x+ w, y + h - 2);
+      g2.setColor(Color.DARK_GRAY);
+      g.drawRect(x, y + 1, x+ w, y + h - 2);
+    }
+  }  
 }
