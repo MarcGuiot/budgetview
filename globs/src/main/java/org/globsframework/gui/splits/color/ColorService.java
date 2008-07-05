@@ -83,21 +83,35 @@ public class ColorService implements ColorLocator {
     notifyListeners();
   }
 
+  public boolean isSet(Object key) {
+    String stringKey = getKeyString(key);
+    return currentSet.isSet(stringKey);
+  }
+
+  public boolean contains(Object key) {
+    String stringKey = getKeyString(key);
+    return currentSet.contains(stringKey);
+  }
+
   /**
    * The <code>toString()</code> method of the given key is used as the actual key.
    */
   public Color get(Object key) throws ItemNotFound, InvalidParameter {
-    if (key == null) {
-      throw new InvalidParameter("null key is not allowed");
-    }
-    String stringKey = key.toString();
+    String stringKey = getKeyString(key);
     if (!currentSet.contains(stringKey)) {
-      currentSet.set(stringKey, Color.RED);
+      currentSet.declareEmptyKey(stringKey);
       for (ColorCreationListener listener : colorCreationListeners) {
         listener.colorCreated(stringKey);
       }
     }
     return currentSet.get(stringKey);
+  }
+
+  private String getKeyString(Object key) {
+    if (key == null) {
+      throw new InvalidParameter("null key is not allowed");
+    }
+    return key.toString();
   }
 
   public void addListener(ColorChangeListener listener) {

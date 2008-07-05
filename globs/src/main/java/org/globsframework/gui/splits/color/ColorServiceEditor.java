@@ -2,8 +2,8 @@ package org.globsframework.gui.splits.color;
 
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.directory.DefaultDirectory;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -202,6 +202,7 @@ public class ColorServiceEditor implements ColorCreationListener {
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
       icon.setColor(colorService.get(value));
       label.setText((String)value);
+      label.setForeground(colorService.isSet(value) ? Color.BLACK : Color.RED);
       label.setBackground(isSelected ? Color.LIGHT_GRAY : Color.WHITE);
       return label;
     }
@@ -229,9 +230,9 @@ public class ColorServiceEditor implements ColorCreationListener {
 
       Graphics2D g2 = (Graphics2D)g;
       g2.setColor(color);
-      g.fillRect(x, y + 1, x+ w, y + h - 2);
+      g.fillRect(x, y + 1, x + w, y + h - 2);
       g2.setColor(Color.DARK_GRAY);
-      g.drawRect(x, y + 1, x+ w, y + h - 2);
+      g.drawRect(x, y + 1, x + w, y + h - 2);
     }
-  }  
+  }
 }

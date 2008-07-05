@@ -26,7 +26,15 @@ public class ColorSet {
   }
 
   public Color get(String key) {
-    return colorsByName.get(key);
+    final Color color = colorsByName.get(key);
+    if (color == null) {
+      return Color.RED;
+    }
+    return color;
+  }
+
+  public void declareEmptyKey(String key) {
+    colorsByName.put(key, null);
   }
 
   public void set(String key, Color color) {
@@ -37,6 +45,10 @@ public class ColorSet {
       throw new SplitsException("null color not allowed for key: " + key);
     }
     colorsByName.put(key, color);
+  }
+
+  public boolean isSet(String key) {
+    return colorsByName.get(key) != null;
   }
 
   public boolean contains(String key) {
