@@ -53,7 +53,7 @@ public class MainPanel {
     CategoryView categoryView = new CategoryView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
 
-    importFileAction = new ImportFileAction(repository, directory);
+    importFileAction = ImportFileAction.initAndRegisterInOpenRequestManager(repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
     exitAction = new ExitAction(directory);
 

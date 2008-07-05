@@ -24,7 +24,16 @@ public class ImportFileAction extends AbstractAction {
   private Glob defaulAccount;
   private GlobRepository repository;
 
-  public ImportFileAction(final GlobRepository repository, final Directory directory) {
+
+  static public ImportFileAction initAndRegisterInOpenRequestManager(final GlobRepository repository, final Directory directory) {
+    return new ImportFileAction(repository, directory);
+  }
+
+  static public ImportFileAction init(final GlobRepository repository, final Directory directory, Glob defaulAccount) {
+    return new ImportFileAction(repository, directory, defaulAccount);
+  }
+
+  private ImportFileAction(final GlobRepository repository, final Directory directory) {
     super(Lang.get("import"));
     this.repository = repository;
     this.directory = directory;
@@ -32,11 +41,12 @@ public class ImportFileAction extends AbstractAction {
     openRequestManager.pushCallback(new OpenRequestManager.Callback() {
       public void openFiles(List<File> files) {
         SwingUtilities.invokeLater(new OpenRunnable(files, directory, repository, defaulAccount));
+        defaulAccount = null;
       }
     });
   }
 
-  public ImportFileAction(final GlobRepository repository, final Directory directory, Glob defaulAccount) {
+  private ImportFileAction(final GlobRepository repository, final Directory directory, Glob defaulAccount) {
     super(Lang.get("import"));
     this.repository = repository;
     this.directory = directory;
@@ -46,6 +56,7 @@ public class ImportFileAction extends AbstractAction {
   public void actionPerformed(ActionEvent event) {
     OpenRunnable runnable = new OpenRunnable(Collections.EMPTY_LIST, directory, repository, defaulAccount);
     runnable.run();
+    defaulAccount = null;
   }
 
   private static class OpenRunnable implements Runnable {

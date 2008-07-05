@@ -34,6 +34,12 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   public void getUserData(SerializedOutput output, Integer userId) {
+    MapOfMaps<String, Integer, Glob> globs = readData(userId);
+    SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
+    serializableGlobSerializer.serialize(output, globs);
+  }
+
+  private MapOfMaps<String, Integer, Glob> readData(Integer userId) {
     String path = getPath(userId);
     File file1 = new File(path);
     if (!file1.exists()) {
@@ -59,8 +65,7 @@ public class DirectAccountDataManager implements AccountDataManager {
       catch (FileNotFoundException e) {
       }
     }
-    SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
-    serializableGlobSerializer.serialize(output, globs);
+    return globs;
   }
 
   private String getPath(Integer userId) {
@@ -126,7 +131,8 @@ public class DirectAccountDataManager implements AccountDataManager {
 
   private MapOfMaps<String, Integer, Glob> readSnapshot(File file) {
     try {
-      SerializedInput serializedInput = SerializedInputOutputFactory.init(new BufferedInputStream(new FileInputStream(file)));
+      SerializedInput serializedInput =
+        SerializedInputOutputFactory.init(new BufferedInputStream(new FileInputStream(file)));
       String version = serializedInput.readString();
       if ("2".equals(version)) {
         return readVersion2(serializedInput);
@@ -196,6 +202,10 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   public void takeSnapshot(Integer userId) {
+    MapOfMaps<String, Integer, Glob> stringIntegerGlobMapOfMaps = readData(userId);
+    PrevaylerDirectory prevaylerDirectory = new PrevaylerDirectory(getPath(userId));
+    File file = prevaylerDirectory.snapshotFile();
+
 //    readAndWriteTransaction(userId);
   }
 

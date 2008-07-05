@@ -63,7 +63,7 @@ public class AccountView extends View implements ChangeSetListener {
       add("accountUpdateDate", Account.UPDATE_DATE, account, cellBuilder);
 
       cellBuilder.add("gotoWebsite", new GotoWebsiteAction(account));
-      cellBuilder.add("importData", new ImportFileAction(repository, directory, account));
+      cellBuilder.add("importData", ImportFileAction.init(repository, directory, account));
     }
 
     private void add(String name, Field field, Glob account, RepeatCellBuilder cellBuilder) {
@@ -81,6 +81,7 @@ public class AccountView extends View implements ChangeSetListener {
       }
 
       public void actionPerformed(ActionEvent e) {
+
         directory.get(BrowsingService.class).launchBrowser(url);
       }
     }
