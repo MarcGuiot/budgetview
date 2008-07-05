@@ -2,7 +2,6 @@ package org.globsframework.gui.splits;
 
 import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.splits.utils.DummyIconLocator;
-import org.globsframework.gui.splits.components.JStyledPanel;
 import org.globsframework.gui.splits.components.ShadowedLabelUI;
 import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.gui.splits.layout.CardHandler;
@@ -218,29 +217,6 @@ public class SplitsComponentsTest extends SplitsTestCase {
   }
 
   private static class MyPanel extends JPanel {
-  }
-
-  public void testStyledPanel() throws Exception {
-    builder.add("btn", aButton);
-    JStyledPanel panel = parse(
-      "<styledPanel topColor='top' bottomColor='bottom' " +
-      "             borderWidth='2' borderColor='border'" +
-      "             cornerRadius='12'>" +
-      "  <button ref='btn'/>" +
-      "</styledPanel>");
-
-    colorService.set("top", Color.YELLOW);
-    colorService.set("bottom", Color.CYAN);
-    colorService.set("border", Color.GREEN);
-
-    assertEquals(Color.YELLOW, panel.getTopColor());
-    assertEquals(Color.CYAN, panel.getBottomColor());
-    assertEquals(Color.GREEN, panel.getBorderColor());
-
-    assertEquals(2, panel.getBorderWidth());
-    assertEquals(12, panel.getCornerRadius());
-
-    assertSame(aButton, panel.getComponent(0));
   }
 
   public void testScrollPane() throws Exception {

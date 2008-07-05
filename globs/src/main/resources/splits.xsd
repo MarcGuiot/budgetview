@@ -96,7 +96,6 @@
       <xs:element ref="horizontalSplit"/>
       <xs:element ref="verticalSplit"/>
       <xs:element ref="panel"/>
-      <xs:element ref="styledPanel"/>
       <xs:element ref="scrollPane"/>
       <xs:element ref="tabs"/>
       <xs:element ref="cards"/>
@@ -223,23 +222,6 @@
   </xs:element>
 
   <xs:element name="panel">
-    <xs:complexType>
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:group ref="splitsComponents"/>
-      </xs:sequence>
-      <xs:attributeGroup ref="componentAttributes"/>
-      <xs:attribute name="color" type="xs:string"/>
-      <xs:attribute name="topColor" type="xs:string"/>
-      <xs:attribute name="bottomColor" type="xs:string"/>
-      <xs:attribute name="borderColor" type="xs:string"/>
-      <xs:attribute name="borderWidth" type="xs:integer"/>
-      <xs:attribute name="cornerRadius" type="xs:integer"/>
-      <xs:attribute name="shadowWidth" type="xs:integer"/>
-      <xs:attribute name="opacity" type="xs:float"/>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="styledPanel">
     <xs:complexType>
       <xs:sequence minOccurs="0" maxOccurs="unbounded">
         <xs:group ref="splitsComponents"/>

@@ -349,7 +349,6 @@ public class SplitsBuilderTest extends SplitsTestCase {
     checkAssignedName("<button name='btn'/>", "btn");
     checkAssignedName("<table name='aTable'/>", "aTable");
     checkAssignedName("<list name='aList'/>", "aList");
-    checkAssignedName("<styledPanel name='styled'/>", "styled");
     checkAssignedName("<label name='lbl'/>", "lbl");
   }
 

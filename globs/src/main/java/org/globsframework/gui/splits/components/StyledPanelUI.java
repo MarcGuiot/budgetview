@@ -3,9 +3,10 @@ package org.globsframework.gui.splits.components;
 import org.globsframework.gui.splits.utils.Java2DUtils;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
 
-public class JStyledPanel extends JPanel {
+public class StyledPanelUI extends BasicPanelUI {
   private Color topColor = Color.WHITE;
   private Color bottomColor = Color.WHITE;
   private Color borderColor = Color.BLACK;
@@ -17,7 +18,7 @@ public class JStyledPanel extends JPanel {
   private int distance = 0;
   private float opacity = 0.5f;
 
-  public JStyledPanel() {
+  public StyledPanelUI() {
   }
 
   public Color getBorderColor() {
@@ -84,20 +85,15 @@ public class JStyledPanel extends JPanel {
     this.opacity = opacity;
   }
 
-  public void update(Graphics graphics) {
-    graphics.clearRect(0, 0, getWidth(), getHeight());
-    paintComponents(graphics);
-  }
-
-  protected void paintComponent(Graphics graphics) {
-    setOpaque(false);
+  public void paint(Graphics graphics, JComponent c) {
+    c.setOpaque(false);
     Graphics2D g2d = (Graphics2D)graphics;
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    Insets vInsets = getInsets();
+    Insets vInsets = c.getInsets();
 
-    int width = getWidth() - (vInsets.left + vInsets.right);
-    int height = getHeight() - (vInsets.top + vInsets.bottom);
+    int width = c.getWidth() - (vInsets.left + vInsets.right);
+    int height = c.getHeight() - (vInsets.top + vInsets.bottom);
 
     int x = vInsets.left;
     int y = vInsets.top;
