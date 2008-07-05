@@ -7,6 +7,7 @@ import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -20,6 +21,7 @@ import java.util.List;
 public class ImportFileAction extends AbstractAction {
 
   private Directory directory;
+  private Glob defaulAccount;
   private GlobRepository repository;
 
   public ImportFileAction(final GlobRepository repository, final Directory directory) {
@@ -29,13 +31,20 @@ public class ImportFileAction extends AbstractAction {
     OpenRequestManager openRequestManager = directory.get(OpenRequestManager.class);
     openRequestManager.pushCallback(new OpenRequestManager.Callback() {
       public void openFiles(List<File> files) {
-        SwingUtilities.invokeLater(new OpenRunnable(files, directory, repository));
+        SwingUtilities.invokeLater(new OpenRunnable(files, directory, repository, defaulAccount));
       }
     });
   }
 
+  public ImportFileAction(final GlobRepository repository, final Directory directory, Glob defaulAccount) {
+    super(Lang.get("import"));
+    this.repository = repository;
+    this.directory = directory;
+    this.defaulAccount = defaulAccount;
+  }
+
   public void actionPerformed(ActionEvent event) {
-    OpenRunnable runnable = new OpenRunnable(Collections.EMPTY_LIST, directory, repository);
+    OpenRunnable runnable = new OpenRunnable(Collections.EMPTY_LIST, directory, repository, defaulAccount);
     runnable.run();
   }
 
@@ -44,9 +53,9 @@ public class ImportFileAction extends AbstractAction {
     private PicsouDialog dialog;
     private ImportPanel panel;
 
-    public OpenRunnable(List<File> files, Directory directory, GlobRepository repository) {
+    public OpenRunnable(List<File> files, Directory directory, GlobRepository repository, Glob defaultAccount) {
       frame = directory.get(JFrame.class);
-      panel = new ImportPanel(Lang.get("import.step1.close"), files, new DialogOwner() {
+      panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount, new DialogOwner() {
         public Window getOwner() {
           return dialog;
         }

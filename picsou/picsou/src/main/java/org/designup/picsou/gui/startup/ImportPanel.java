@@ -70,9 +70,12 @@ public abstract class ImportPanel {
   private boolean step2 = true;
   private OpenRequestManager openRequestManager;
   protected GlobsPanelBuilder builder;
+  private Glob defaultAccount;
   private DialogOwner owner;
 
-  protected ImportPanel(String textForCloseButton, List<File> files, final DialogOwner owner, final GlobRepository repository, Directory directory) {
+  protected ImportPanel(String textForCloseButton, List<File> files, Glob defaultAccount,
+                        final DialogOwner owner, final GlobRepository repository, Directory directory) {
+    this.defaultAccount = defaultAccount;
     this.owner = owner;
     updateFileField(files);
     openRequestManager = directory.get(OpenRequestManager.class);
@@ -127,9 +130,8 @@ public abstract class ImportPanel {
                                                             }, importMessageLabel);
     builder.add("dateSelectionPanel", dateFormatSelectionPanel.getBuilder());
     sessionDirectory = new DefaultDirectory(localDirectory);
-    SelectionService selectionService = new SelectionService();
-    sessionDirectory.add(selectionService);
-    selectionService.addListener(new GlobSelectionListener() {
+    sessionDirectory.add(new SelectionService());
+    sessionDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         currentlySelectedAccount = selection.getAll().isEmpty() ? null : selection.getAll().get(0);
       }
@@ -188,6 +190,11 @@ public abstract class ImportPanel {
       }
     });
     cardHandler = builder.addCardHandler("cardHandler");
+
+    if (defaultAccount != null) {
+      Glob bank = Account.getBank(defaultAccount, localRepository);
+      localDirectory.get(SelectionService.class).select(bank);
+    }
   }
 
   private void loadLocalRepository(GlobRepository repository) {
@@ -360,7 +367,10 @@ public abstract class ImportPanel {
       }
       else {
         Glob account = null;
-        if (accounts.size() == 2) {
+        if (defaultAccount != null) {
+          account = sessionRepository.get(defaultAccount.getKey());
+        }
+        else if (accounts.size() == 2) {
           if (accounts.get(0).get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID)) {
             account = accounts.get(1);
           }

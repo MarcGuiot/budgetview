@@ -1,5 +1,5 @@
 <globs>
-  <bank name="Societe Generale" id="4">
+  <bank name="Societe Generale" id="4" downloadUrl="https://logitelnet.socgen.com/index.html">
     <bankEntity id="30003"/>
 
     <transactionTypeMatcher regexp="VIR.LOGITEL[ ]*"

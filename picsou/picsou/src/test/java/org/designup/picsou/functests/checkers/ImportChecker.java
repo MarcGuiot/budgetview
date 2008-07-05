@@ -77,4 +77,12 @@ public class ImportChecker {
   public void checkCloseButton(String text) {
     UISpecAssert.assertThat(panel.getButton("close").textEquals(text));
   }
+
+  public void checkbank(String bankName) {
+    UISpecAssert.assertThat(bankCombo.selectionEquals(bankName));
+  }
+
+  public void checkSelectedAccount(String accountNumber) {
+    UISpecAssert.assertThat(panel.getComboBox("accountCombo").selectionEquals(accountNumber));
+  }
 }

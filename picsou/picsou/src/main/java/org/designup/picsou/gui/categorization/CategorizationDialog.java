@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CategorizationDialog {
-  private JPanel panel;
   private SelectionService selectionService = new SelectionService();
   private LocalGlobRepository localRepository;
   private Glob currentTransaction;
@@ -99,7 +98,7 @@ public class CategorizationDialog {
       }
     });
 
-    panel = builder.load();
+    JPanel panel = builder.load();
     dialog = PicsouDialog.create(parent);
     dialog.setContentPane(panel);
   }
@@ -163,6 +162,7 @@ public class CategorizationDialog {
         public void dispose() {
           budgetAreasGroup.remove(toggleButton);
           selectionService.removeListener(listener);
+          localRepository.removeChangeListener(listener);
         }
       });
     }

@@ -1,82 +1,47 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.gui.description.PicsouDescriptionService;
-import static org.designup.picsou.model.Account.*;
-import org.globsframework.model.Glob;
 import org.globsframework.utils.Dates;
-import org.uispec4j.ListBoxCellValueConverter;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
+import org.uispec4j.Trigger;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.finder.ComponentMatcher;
+import org.uispec4j.finder.ComponentMatchers;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class AccountChecker extends DataChecker {
-  private TextBox accountLabel;
+  private Panel panel;
 
   public AccountChecker(Panel panel) {
-//    accountLabel = panel.getTextBox("accountView");
+    this.panel = panel;
   }
 
-  public void assertDisplayEquals(String accountName, double balance, String updateDate) {
-// TODO: correction necessaire dans UISpec ?
-//    JComboBox comboBox = (JComboBox)accountCombo.getAwtComponent();
-//    System.out.println("AccountChecker.assertDisplayEquals: " + comboBox.getSelectedIndex());
-//    System.out.println("AccountChecker.assertDisplayEquals: " + comboBox.getSelectedItem());
-//    UISpecAssert.assertTrue(accountCombo.selectionEquals(stringify(accountName, balance, updateDate)));
-    UISpecAssert.assertTrue(accountLabel.textContains(Double.toString(balance)));
+  public void assertDisplayEquals(String accountNumber, double balance, String updateDate) {
+    Panel parentPanel = getAccountPanel(accountNumber);
+    UISpecAssert.assertThat(parentPanel.getTextBox("accountBalance").textEquals(toString(balance)));
     Date date = Dates.parse(updateDate);
-    UISpecAssert.assertTrue(accountLabel.textContains(PicsouDescriptionService.toString(date)));
+    UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(PicsouDescriptionService.toString(date)));
+  }
+
+  private Panel getAccountPanel(final String accountName) {
+    final ComponentMatcher componentMatcher = ComponentMatchers.displayedNameIdentity(accountName);
+    TextBox account = panel.getTextBox(componentMatcher);
+    return account.getContainer("accountParent");
   }
 
   public void assertDisplayEquals(String accountName) {
-// TODO: correction necessaire dans UISpec ?
-//    UISpecAssert.assertTrue(accountCombo.selectionEquals(stringify(accountName, balance, updateDate)));
-    UISpecAssert.assertTrue(accountLabel.textIsEmpty());
-    UISpecAssert.assertTrue(accountLabel.textIsEmpty());
+    Panel parentPanel = getAccountPanel(accountName);
+    UISpecAssert.assertTrue(parentPanel.getTextBox("accountBalance").textIsEmpty());
+    UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textIsEmpty());
   }
 
-  private static String stringify(String accountName, double balance, String updateDate) {
-    return accountName + " - " + balance + " - " + updateDate;
+  public void checkSummary(double amount, String updateDate) {
+    UISpecAssert.assertThat(panel.getTextBox("totalBalance").textEquals(toString(amount)));
   }
 
-  public void select(String accountName) {
-//    accountCombo.select(accountName);
+  public Trigger getImportTrigger(String account) {
+    return getAccountPanel(account).getButton("Import data").triggerClick();
   }
-
-  private static class Converter implements ListBoxCellValueConverter {
-    public String getValue(int index, Component renderedComponent, Object modelObject) {
-      Glob account = (Glob)modelObject;
-      if (account == null) {
-        return "(null)";
-      }
-      return stringify(account.get(NAME),
-                       account.get(BALANCE),
-                       Dates.toString(account.get(UPDATE_DATE)));
-    }
-  }
-
-  public ContentChecker initContent() {
-    return new ContentChecker();
-  }
-
-  public class ContentChecker {
-    private java.util.List<String> expectedItems = new ArrayList<String>();
-
-    private ContentChecker() {
-    }
-
-    public ContentChecker add(String accountName, double balance, String updateDate) {
-      expectedItems.add(stringify(accountName, balance, updateDate));
-      return this;
-    }
-
-    public void check() {
-      String[] expectedArray = expectedItems.toArray(new String[expectedItems.size()]);
-//      assertTrue(accountCombo.contentEquals(expectedArray));
-    }
-  }
-
 }
