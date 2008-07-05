@@ -30,7 +30,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected GraphicChecker graphics;
   protected GlobRepository repository;
   protected ServerAccess serverAccess;
-  protected InformationPanelChecker informationPanel;
+  protected UncategorizedMessagePanelChecker informationPanel;
   protected TitleChecker title;
   private PicsouApplication picsouApplication;
 
@@ -74,7 +74,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     transactions = new TransactionChecker(mainWindow);
     transactionDetails = new TransactionDetailsChecker(mainWindow);
     graphics = new GraphicChecker(mainWindow);
-    informationPanel = new InformationPanelChecker(mainWindow);
+    informationPanel = new UncategorizedMessagePanelChecker(mainWindow);
     title = new TitleChecker(mainWindow);
   }
 

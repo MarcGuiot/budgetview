@@ -1,7 +1,5 @@
 * Sous Mac: Sauvegarde dans ~/Library/Application Support/<application name>
 
-
-
 * Types de comptes (courant / carte / epargne)
 
 * Types de revenus (actifs/passifs) + identification impots/taxes + dons ==> graphiques et rapports

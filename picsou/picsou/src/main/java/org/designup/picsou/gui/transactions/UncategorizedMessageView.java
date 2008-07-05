@@ -2,6 +2,7 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -11,17 +12,19 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.List;
 
-public class InformationView extends View implements GlobSelectionListener, ChangeSetListener {
-  private JLabel label = new JLabel();
+public class UncategorizedMessageView extends View implements GlobSelectionListener, ChangeSetListener {
+  private JTextArea textArea = new JTextArea();
   private TransactionSelection transactionSelection;
+  private GlobList uncategorizedTransactions = GlobList.EMPTY;
 
-  public InformationView(GlobRepository repository, Directory directory, TransactionSelection transactionSelection) {
+  public UncategorizedMessageView(GlobRepository repository, Directory directory, TransactionSelection transactionSelection) {
     super(repository, directory);
     this.transactionSelection = transactionSelection;
     this.transactionSelection.addListener(this);
@@ -29,7 +32,13 @@ public class InformationView extends View implements GlobSelectionListener, Chan
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
-    builder.add("uncategorizedLabel", label);
+    builder.add("uncategorizedMessage", textArea);
+    builder.add("categorizeRemainingTransactions", new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        final CategorizationDialog dialog = directory.get(CategorizationDialog.class);
+        dialog.show(uncategorizedTransactions);
+      }
+    });
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -47,11 +56,11 @@ public class InformationView extends View implements GlobSelectionListener, Chan
   }
 
   private void update() {
-    GlobList uncategorizedTransactions =
+    uncategorizedTransactions =
       repository.getAll(Transaction.TYPE,
-                        GlobMatchers.and(transactionSelection.getCurrentMatcher(),
-                                         GlobMatchers.isNull(Transaction.CATEGORY)));
-    label.setVisible(uncategorizedTransactions.size() > 0);
+                        and(transactionSelection.getCurrentMatcher(),
+                            isNull(Transaction.CATEGORY)));
+    textArea.setVisible(uncategorizedTransactions.size() > 0);
   }
 
 }

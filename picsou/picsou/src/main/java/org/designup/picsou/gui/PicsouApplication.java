@@ -10,6 +10,7 @@ import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.IconLocator;
@@ -161,7 +162,7 @@ public class PicsouApplication {
     directory.add(new UIService());
 
     UIManager.put("ColorService", directory.get(ColorService.class));
-
+    
     return directory;
   }
 

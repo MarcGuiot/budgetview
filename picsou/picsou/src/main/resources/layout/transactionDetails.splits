@@ -1,5 +1,7 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
+  <styleImport file="/layout/picsouStyles.splits"/>
+  
   <styles>
     <style selector="label" foreground="transaction.detail.text"/>
 
@@ -13,8 +15,8 @@
     <style selector="hyperlink#splitLink" font="-,plain,10"/>
     <style selector="panel" opaque="false"/>
 
-    <style selector="textArea" foreground="transaction.detail.text" opaque="false"
-           anchor="top" lineWrap="true" wrapStyleWord="true"/>
+    <style selector="textArea" foreground="transaction.detail.text" opaque="false" anchor="top"
+       lineWrap="true" wrapStyleWord="true"/>
     <style selector="textArea#userLabel" font="$transaction.label"/>
 
     <style selector="label#amountValue" font="-,bold,16"/>
@@ -24,7 +26,7 @@
   <column minimumSize="(200, 150)" preferredSize="(200, 150)">
 
     <label ref="transactionType" styleClass="formLabel"/>
-    <textArea ref="userLabel"/>
+    <textArea ref="userLabel" styleClass="readonly"/>
 
     <row>
       <label ref="amountLabel" styleClass="formLabel"/>

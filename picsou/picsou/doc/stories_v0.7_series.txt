@@ -23,7 +23,6 @@ Panneau accueil
 
 Panneau budget
 --------------
-* 
 * Panneaux d'edition
 
 

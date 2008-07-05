@@ -226,8 +226,12 @@ public class CategoryChooserDialog implements ChangeSetListener {
       }
 
       public void mouseReleased(MouseEvent e) {
-        close();
         callback.categorySelected(category);
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            close();
+          }
+        });
       }
     });
 

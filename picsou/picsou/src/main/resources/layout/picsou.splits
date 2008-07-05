@@ -8,18 +8,21 @@
 
     <ui name="errorMessage" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="errorpanel.top" bottomColor="errorpanel.bottom"
-        borderColor="errorpanel.border" borderWidth="1" cornerRadius="10"/>
+        borderColor="errorpanel.border" borderWidth="2" cornerRadius="20"/>
+
+    <ui name="viewSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
+        topColor="viewselector.top" bottomColor="viewselector.bottom"
+        borderColor="viewselector.border" borderWidth="1" cornerRadius="10"/>
 
     <style selector="panel#header" ui="headerFrame" opaque="false"
            border="matte(0,0,2,0,#404040)" weightY="0"/>
 
-    <style selector="toggleButton" opaque="false"
-           preferredSize="(45,45)"
-           margin="0" weightX="0" fill="none"/>
-    <style selector="toggleButton#homeCardToggle" icon="card_home.png" selectedIcon="card_home_selected.png"/>
-    <style selector="toggleButton#dataCardToggle" icon="card_list.png" selectedIcon="card_list_selected.png"/>
-    <style selector="toggleButton#repartitionCardToggle" icon="card_pie.png" selectedIcon="card_pie_selected.png"/>
-    <style selector="toggleButton#evolutionCardToggle" icon="card_line.png" selectedIcon="card_line_selected.png"/>
+    <style selector="toggleButton.viewSelector" ui="viewSelector" opaque="false"
+           minimumSize="(40,40)" preferredSize="(40,40)" margin="0" marginLeft="5" weightX="0" fill="none"/>
+    <style selector="toggleButton#homeCardToggle" icon="card_home.png"/>
+    <style selector="toggleButton#dataCardToggle" icon="card_list.png"/>
+    <style selector="toggleButton#repartitionCardToggle" icon="card_pie.png"/>
+    <style selector="toggleButton#evolutionCardToggle" icon="card_line.png"/>
     <style selector="panel.errorMessage" ui="errorMessage"/>
   </styles>
 
@@ -43,33 +46,35 @@
     <panel ui="wave">
       <column marginTop="10" marginLeft="20" marginRight="20" marginBottom="15">
 
-        <column preferredSize="(3000,60)">
-          <row>
-            <label ref="title" opaque="false" font="Arial,bold,24"
-                   horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
-            <filler fill="horizontal"/>
-            <toggleButton ref="homeCardToggle"/>
-            <toggleButton ref="dataCardToggle"/>
-            <toggleButton ref="repartitionCardToggle"/>
-            <toggleButton ref="evolutionCardToggle"/>
-          </row>
-          <row>
-            <filler fill="horizontal"/>
-            <panel styleClass="errorMessage" autoHideSource="uncategorizedLabel">
-              <label ref="uncategorizedLabel" text="$transaction.allocation.warning"
-                     icon="exclamation.png" foreground="errorpanel.text"
-                     marginLeft="10" marginRight="10" opaque="false"/>
-            </panel>
-            <filler fill="horizontal"/>
-          </row>
-        </column>
+        <row>
+          <label ref="title" opaque="false" font="Arial,bold,24"
+                 horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
+          <filler fill="horizontal"/>
+          <toggleButton ref="homeCardToggle" styleClass="viewSelector"/>
+          <toggleButton ref="dataCardToggle" styleClass="viewSelector"/>
+          <toggleButton ref="repartitionCardToggle" styleClass="viewSelector"/>
+          <toggleButton ref="evolutionCardToggle" styleClass="viewSelector"/>
+        </row>
 
-        <cards ref="cardView" opaque="false" marginTop="20">
+        <cards ref="cardView" opaque="false" marginTop="40">
 
           <card name="home">
             <row>
               <column>
                 <panel ref="accountView"/>
+
+                <panel styleClass="errorMessage" autoHideSource="uncategorizedMessage" marginTop="20"
+                       preferredSize="(50,80)" weightY="0">
+                  <row margin="5">
+                    <label icon="exclamation.png"/>
+                    <column>
+                      <textArea ref="uncategorizedMessage" text="$transaction.allocation.warning"
+                                anchor="left" styleClass="readonly" foreground="errorpanel.text" opaque="false"
+                                lineWrap="true" wrapStyleWord="true"/>
+                      <button action="categorizeRemainingTransactions"/>
+                    </column>
+                  </row>
+                </panel>
                 <filler fill="vertical"/>
               </column>
               <filler fill="horizontal"/>

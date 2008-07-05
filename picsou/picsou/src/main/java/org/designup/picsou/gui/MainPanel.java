@@ -10,9 +10,10 @@ import org.designup.picsou.gui.graphics.CategoriesChart;
 import org.designup.picsou.gui.graphics.HistoricalChart;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
-import org.designup.picsou.gui.transactions.InformationView;
+import org.designup.picsou.gui.transactions.UncategorizedMessageView;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.TransactionView;
+import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -42,6 +43,8 @@ public class MainPanel {
     this.mainWindow = mainWindow;
     this.parent = mainWindow.getFrame();
     directory.add(JFrame.class, parent);
+    directory.add(new CategorizationDialog(parent, repository, directory));
+    
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
@@ -57,7 +60,7 @@ public class MainPanel {
 
     createPanel(
       new TitleView(repository, directory),
-                new InformationView(repository, directory, transactionSelection),
+                new UncategorizedMessageView(repository, directory, transactionSelection),
                 transactionView,
                 transactionDetailsView,
                 timeView,

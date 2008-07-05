@@ -20,7 +20,7 @@ public class CategorizationAction extends AbstractGlobSelectionAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-    CategorizationDialog dialog = new CategorizationDialog(parent, repository, directory);
+    CategorizationDialog dialog = directory.get(CategorizationDialog.class);
     dialog.show(lastSelection);
   }
 

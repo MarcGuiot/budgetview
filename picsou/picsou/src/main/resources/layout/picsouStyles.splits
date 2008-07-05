@@ -12,6 +12,8 @@
     <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="dialog.bg.top" bottomColor="dialog.bg.bottom"/>
 
+    <style selector="textArea.readOnly" opaque="false" lineWrap="true" wrapStyleWord="true"/>
+    
     <style selector="label.title"
            font="-,bold,16" foreground="import.title"
            fill="none" anchor="center"
