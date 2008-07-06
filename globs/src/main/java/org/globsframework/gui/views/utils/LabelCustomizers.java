@@ -65,6 +65,14 @@ public class LabelCustomizers {
     };
   }
 
+  public static LabelCustomizer font(final Font font) {
+    return new LabelCustomizer() {
+      public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
+        label.setFont(font);
+      }
+    };
+  }
+
   private static class AligmentCustomizer implements LabelCustomizer {
     private int alignment;
 
