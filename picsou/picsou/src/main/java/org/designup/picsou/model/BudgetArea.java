@@ -40,4 +40,8 @@ public enum BudgetArea implements GlobConstantContainer {
                             value(BudgetArea.ID, id),
                             value(BudgetArea.NAME, Strings.toNiceLowerCase(name())));
   }
+
+  public Integer getId() {
+    return id;
+  }
 }

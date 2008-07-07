@@ -5,8 +5,8 @@ import org.designup.picsou.gui.description.BalanceStringifier;
 import org.designup.picsou.gui.description.TransactionCategoriesStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
-import org.designup.picsou.gui.transactions.categorization.CategoryChooserCallback;
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserDialog;
+import org.designup.picsou.gui.transactions.categorization.TransactionCategoryChooserCallback;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
@@ -163,15 +163,10 @@ public class SplitTransactionDialog {
     selectedCategory = Category.find(MasterCategory.NONE.getName(), localRepository);
     JButton categoryChooserButton = new JButton(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        CategoryChooserDialog categoryChooserDialog = new CategoryChooserDialog(new CategoryChooserCallback() {
-          public void categorySelected(Glob category) {
-            selectedCategory = category;
-            updateCategoryField();
-            amountField.requestFocusInWindow();
-            amountField.requestFocus();
-          }
-        }, rendererColors, localRepository, localDirectory, dialog);
-        categoryChooserDialog.show(new GlobList(transaction));
+        final MyCategoryChooserCallback callback = new MyCategoryChooserCallback(transaction);
+        CategoryChooserDialog categoryChooserDialog =
+          new CategoryChooserDialog(callback, rendererColors, localRepository, localDirectory, dialog);
+        categoryChooserDialog.show();
       }
     });
     Gui.configureIconButton(categoryChooserButton, "categoryChooser", new Dimension(13, 13));
@@ -474,6 +469,30 @@ public class SplitTransactionDialog {
         }
         e.consume();
       }
+    }
+  }
+
+  private class MyCategoryChooserCallback extends TransactionCategoryChooserCallback {
+
+    private GlobList transactions;
+
+    private MyCategoryChooserCallback(Glob transaction) {
+      this.transactions = new GlobList(transaction);
+    }
+
+    public void categorySelected(Glob category) {
+      selectedCategory = category;
+      updateCategoryField();
+      amountField.requestFocusInWindow();
+      amountField.requestFocus();
+    }
+
+    protected GlobRepository getRepository() {
+      return localRepository;
+    }
+
+    protected GlobList getReferenceTransactions() {
+      return transactions;
     }
   }
 }

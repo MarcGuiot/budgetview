@@ -9,7 +9,6 @@ import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
-import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -33,9 +32,9 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 public class CategoryChooserDialog implements ChangeSetListener {
-  private GlobList selectedTransactions = GlobList.EMPTY;
   private HashMap<Integer, JLabel> categoryIdToJLabel = new HashMap<Integer, JLabel>();
   private ArrayList<JLabel> selectedCategories = new ArrayList<JLabel>();
   private CategoryChooserCallback callback;
@@ -85,13 +84,12 @@ public class CategoryChooserDialog implements ChangeSetListener {
     mainFrame = localDirectory.get(JFrame.class);
   }
 
-  public void show(GlobList selectedTransactions) {
+  public void show() {
     if (needToRebuild) {
       dialog = PicsouDialog.create(mainFrame, Lang.get("choose.category.title"));
       loadDialogContent();
       needToRebuild = false;
     }
-    this.selectedTransactions = selectedTransactions;
     setSelectedCategories();
     GuiUtils.showCentered(dialog);
   }
@@ -154,21 +152,11 @@ public class CategoryChooserDialog implements ChangeSetListener {
   }
 
   private void setSelectedCategories() {
-    HashSet<Integer> categoryIdsForSelectedTransactions = new HashSet<Integer>();
-
-    for (Glob transaction : selectedTransactions) {
-      GlobList categories = Transaction.getCategories(transaction, repository);
-      if (categories.size() == 0) {
-        categoryIdsForSelectedTransactions.add(Category.NONE);
-      }
-      for (Glob category : categories) {
-        categoryIdsForSelectedTransactions.add(category.get(Category.ID));
-      }
-    }
+    Set<Integer> preselectedCategoryIds = callback.getPreselectedCategoryIds();
 
     unselectAllCategories();
 
-    for (Integer categoryId : categoryIdsForSelectedTransactions) {
+    for (Integer categoryId : preselectedCategoryIds) {
       JLabel label = categoryIdToJLabel.get(categoryId);
       label.setForeground(colors.getRolloverCategoryColor());
       selectedCategories.add(label);

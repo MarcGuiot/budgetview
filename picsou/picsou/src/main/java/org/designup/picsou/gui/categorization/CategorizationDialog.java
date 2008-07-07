@@ -1,7 +1,8 @@
 package org.designup.picsou.gui.categorization;
 
-import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.DisposeCallback;
+import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.series.SeriesCreationDialog;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobSelection;
@@ -44,7 +45,7 @@ public class CategorizationDialog {
 
   public CategorizationDialog(Window parent, final GlobRepository repository, Directory directory) {
 
-    Directory localDirectory = init(repository, directory);
+    final Directory localDirectory = init(repository, directory);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationDialog.splits",
                                                       localRepository, localDirectory);
@@ -64,7 +65,6 @@ public class CategorizationDialog {
     builder.add("invisibleBudgetAreaToggle", invisibleBudgetAreaToggle);
     builder.addRepeat("budgetAreas", BudgetArea.TYPE.getConstants(),
                       new BudgetAreaComponentFactory(cardHandler));
-
 
     JToggleButton invisibleIncomeToggle = new JToggleButton();
     builder.add("invisibleIncomeToggle", invisibleIncomeToggle);
@@ -87,6 +87,13 @@ public class CategorizationDialog {
                       GlobMatchers.linkedTo(BudgetArea.RECURRING_EXPENSES.getGlob(), Series.BUDGET_AREA),
                       new GlobFieldComparator(Series.ID),
                       new SeriesComponentFactory(invisibleRecurringToggle));
+
+    builder.add("createIncomeSeries", new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        SeriesCreationDialog creationDialog = new SeriesCreationDialog(dialog, localRepository, localDirectory);
+        creationDialog.show();
+      }
+    });
 
     builder.addRepeat("envelopeSeriesRepeat",
                       Series.TYPE,

@@ -2,7 +2,6 @@
 
 Panneau categorisation
 ----------------------
-* Ponctuel : afficher master/subcats
 * MAJ sur changeSet series/categories/seriesToCategories
 * Creer une recurrence
 * Gerer les recurrences
@@ -30,3 +29,7 @@ Panneau budget
 Apprentissage / series
 ----------------------
 *
+
+Misc
+----
+* Separer camembert en 2 : received / spent

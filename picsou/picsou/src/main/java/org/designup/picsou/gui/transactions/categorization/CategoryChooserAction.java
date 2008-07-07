@@ -15,8 +15,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.HashSet;
-import java.util.Set;
 
 public class CategoryChooserAction extends AbstractAction implements GlobSelectionListener {
 
@@ -46,52 +44,31 @@ public class CategoryChooserAction extends AbstractAction implements GlobSelecti
 
   public void actionPerformed(final ActionEvent e) {
     if (dialog == null) {
-      dialog = new CategoryChooserDialog(new CategoryChooserCallback() {
-        public void categorySelected(final Glob category) {
-          boolean displayPropagationDialog;
-          Set<Glob> allTransactionsToBeLearned = new HashSet<Glob>();
-          for (Glob transaction : selectedTransactions) {
-            GlobList toBeLearned =
-              learningService.getTransactionsToBeLearned(transaction, category.get(Category.ID), repository);
-            allTransactionsToBeLearned.addAll(toBeLearned);
-            if (toBeLearned.size() > 1) {
-              displayPropagationDialog = true;
-            }
-          }
-
-          // disable the feature for now
-          displayPropagationDialog = false;
-          if (displayPropagationDialog) {
-            CategoryPropagationDialog dialog =
-              new CategoryPropagationDialog(new CategoryPropagationCallback() {
-                public void propagate() {
-                  categorise(category, selectedTransactions);
-                }
-              }, new GlobList(allTransactionsToBeLearned), colors, repository, directory);
-            dialog.show();
-          }
-          else {
-            categorise(category, selectedTransactions);
-          }
-        }
-      }, colors, repository, directory, directory.get(JFrame.class));
+      dialog = new CategoryChooserDialog(new MyCategoryChooserCallback(),
+                                         colors, repository, directory, directory.get(JFrame.class));
     }
-    dialog.show(selectedTransactions);
+    dialog.show();
   }
 
-  private void categorise(Glob category, GlobList transactions) {
-    repository.enterBulkDispatchingMode();
-    try {
-      for (Glob transaction : transactions) {
-        learningService.learn(transaction, category.get(Category.ID), repository);
+  private class MyCategoryChooserCallback extends TransactionCategoryChooserCallback {
+    public void categorySelected(final Glob category) {
+      repository.enterBulkDispatchingMode();
+      try {
+        for (Glob transaction : selectedTransactions) {
+          learningService.learn(transaction, category.get(Category.ID), repository);
+        }
+      }
+      finally {
+        repository.completeBulkDispatchingMode();
       }
     }
-    finally {
-      repository.completeBulkDispatchingMode();
-    }
-  }
 
-  public GlobList getSelectedTransactions() {
-    return selectedTransactions;
+    protected GlobRepository getRepository() {
+      return repository;
+    }
+
+    protected GlobList getReferenceTransactions() {
+      return selectedTransactions;
+    }
   }
 }

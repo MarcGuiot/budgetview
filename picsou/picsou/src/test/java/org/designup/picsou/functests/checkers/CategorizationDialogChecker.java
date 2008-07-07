@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.*;
+import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.utils.KeyUtils;
@@ -210,5 +211,10 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void checkTextVisible(String text) {
     Assert.assertNotNull(dialog.getTextBox(text));
+  }
+
+  public SeriesCreationDialogChecker createSeries() {
+    final Window creationDialog = WindowInterceptor.getModalDialog(dialog.getButton("New series").triggerClick());
+    return new SeriesCreationDialogChecker(creationDialog);
   }
 }

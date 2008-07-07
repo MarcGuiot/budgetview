@@ -75,7 +75,7 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
       return new BundleBasedStringifier(TransactionType.NAME, TransactionType.TYPE.getName() + ".");
     }
     if (globType.equals(Series.TYPE)) {
-      return new BundleBasedStringifier(Series.NAME, Series.TYPE.getName() + ".");
+      return new SeriesStringifier();
     }
     if (globType.equals(BudgetArea.TYPE)) {
       return new BundleBasedStringifier(BudgetArea.NAME, BudgetArea.TYPE.getName() + ".");
