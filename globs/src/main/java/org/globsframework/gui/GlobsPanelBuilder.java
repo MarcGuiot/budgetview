@@ -150,7 +150,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     }
 
     public void globListReset() {
-      if (repeat != null) {
+      if ((repeat != null) && (model != null)) {
         repeat.set(model.getAll());
       }
     }

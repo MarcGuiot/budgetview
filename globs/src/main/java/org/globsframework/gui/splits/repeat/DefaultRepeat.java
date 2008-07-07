@@ -12,16 +12,26 @@ public class DefaultRepeat<T> implements Repeat<T>, RepeatHandler<T> {
     this.initialItems = initialItems;
   }
 
+  public void register(RepeatPanel panel) {
+    this.repeatPanel = panel;
+  }
+
   public void set(List<T> items) {
-    repeatPanel.set(items);
+    if (repeatPanel != null) {
+      repeatPanel.set(items);
+    }
   }
 
   public void insert(T item, int index) {
-    repeatPanel.insert(item, index);
+    if (repeatPanel != null) {
+      repeatPanel.insert(item, index);
+    }
   }
 
   public void remove(int index) {
-    repeatPanel.remove(index);
+    if (repeatPanel != null) {
+      repeatPanel.remove(index);
+    }
   }
 
   public RepeatComponentFactory getFactory() {
@@ -29,14 +39,12 @@ public class DefaultRepeat<T> implements Repeat<T>, RepeatHandler<T> {
   }
 
   public void dispose() {
-    repeatPanel.dispose();
+    if (repeatPanel != null) {
+      repeatPanel.dispose();
+    }
   }
 
   public List<T> getInitialItems() {
     return initialItems;
-  }
-
-  public void register(RepeatPanel panel) {
-    this.repeatPanel = panel;
   }
 }
