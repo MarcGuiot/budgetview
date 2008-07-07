@@ -58,6 +58,12 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return store(new GlobLinkComboEditor(field, repository, directory));
   }
 
+  public GlobTextEditor addEditor(String name, StringField field) {
+    final GlobTextEditor editor = addEditor(field);
+    editor.setName(name);
+    return editor;
+  }
+
   public GlobTextEditor addEditor(StringField field) {
     return store(GlobTextEditor.init(field, repository, directory));
   }

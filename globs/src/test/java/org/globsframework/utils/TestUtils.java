@@ -122,8 +122,10 @@ public class TestUtils {
     }
   }
 
-  public static <T> void assertContains(Iterable<T> iterable, T... expectedItems) {
-    assertEquals(Utils.toList(iterable.iterator()), expectedItems);
+  public static <T> void assertContains(Collection<T> actual, T... expectedItems) {
+    if (!actual.containsAll(Arrays.asList(expectedItems))) {
+      Assert.fail("Collection: " + actual + "\n does not contain: " + Arrays.toString(expectedItems));
+    }
   }
 
   public static void assertDateEquals(Date date1, Date date2, int margin) throws Exception {
