@@ -10,10 +10,16 @@
     </row>
 
     <row>
+      <toggleButton ref="invisibleBudgetAreaToggle" visible="false"/>
       <repeat ref="budgetAreas">
         <toggleButton ref="budgetAreaToggle"/>
       </repeat>
       <cards ref="cards">
+
+        <card name="noBudgetArea">
+          <htmlEditorPane text="$categorization.no.budget.area" editable="false" opaque="false"/>
+        </card>
+
         <card name="income">
           <row>
             <toggleButton ref="invisibleIncomeToggle" visible="false"/>
@@ -22,6 +28,7 @@
             </repeat>
           </row>
         </card>
+
         <card name="recurringExpenses">
           <row>
             <toggleButton ref="invisibleRecurringToggle" visible="false"/>
@@ -30,6 +37,7 @@
             </repeat>
           </row>
         </card>
+
         <card name="expensesEnvelope">
           <repeat ref="envelopeSeriesRepeat">
             <column>
@@ -41,6 +49,7 @@
             </column>
           </repeat>
         </card>
+
         <card name="occasionalExpenses">
           <row>
             <toggleButton ref="invibleOccasionalToggle" visible="false"/>
@@ -49,6 +58,7 @@
             </repeat>
           </row>
         </card>
+
       </cards>
     </row>
     <row>

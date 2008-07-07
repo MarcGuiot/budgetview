@@ -11,6 +11,8 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
+
 public class CategorizationDialogChecker extends DataChecker {
   private Window dialog;
   private TextBox transactionLabel;
@@ -26,6 +28,13 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void checkBudgetAreaIsSelected(BudgetArea budgetArea) {
     assertTrue(dialog.getToggleButton(budgetArea.getGlob().get(BudgetArea.NAME)).isSelected());
+  }
+
+  public void checkNoBudgetAreaSelected() {
+    for (BudgetArea area : BudgetArea.values()) {
+      final String name = area.getGlob().get(BudgetArea.NAME);
+      assertFalse("Area '" + name + "' is selected", dialog.getToggleButton(name).isSelected());
+    }
   }
 
   public void selectIncome() {
@@ -170,7 +179,7 @@ public class CategorizationDialogChecker extends DataChecker {
     UISpecAssert.assertFalse(dialog.getButton("previousTransaction").isEnabled());
   }
 
-  public void checkNextIsDisable() {
+  public void checkNextIsDisabled() {
     UISpecAssert.assertFalse(dialog.getButton("nextTransaction").isEnabled());
   }
 
@@ -197,5 +206,9 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void cancel() {
     dialog.getButton("cancel").click();
+  }
+
+  public void checkTextVisible(String text) {
+    Assert.assertNotNull(dialog.getTextBox(text));
   }
 }

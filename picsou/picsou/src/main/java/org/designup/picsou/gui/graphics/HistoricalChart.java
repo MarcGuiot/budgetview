@@ -135,7 +135,7 @@ public class HistoricalChart extends AbstractLineChart {
 
     NumberAxis rangeAxis = (NumberAxis)plot.getRangeAxis();
     rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-    rangeAxis.setAutoRangeIncludesZero(false);
+    rangeAxis.setAutoRangeIncludesZero(true);
     rangeAxis.setTickLabelPaint(labelColor);
     rangeAxis.setTickMarkPaint(labelColor);
     rangeAxis.setTickLabelFont(fontLocator.get("chart.historical.label"));

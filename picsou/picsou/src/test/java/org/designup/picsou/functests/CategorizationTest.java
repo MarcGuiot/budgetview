@@ -99,6 +99,19 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     reopenedDialog.checkOccasionalSeries(MasterCategory.MULTIMEDIA);
   }
 
+  public void testUnassignedTransaction() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -199.90, "LDLC")
+      .load();
+
+    CategorizationDialogChecker dialog = transactions.categorize(0);
+    dialog.checkLabel("LDLC");
+
+    dialog.checkNoBudgetAreaSelected();
+    dialog.checkTextVisible("Select the series type");
+  }
+
   public void testCancel() throws Exception {
     OfxBuilder
       .init(this)
@@ -129,14 +142,18 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.selectRecurring();
     dialog.selectRecurringSeries("Internet");
     dialog.checkPreviousIsDisabled();
+
     dialog.selectNext();
-    dialog.checkRecurringSeriesIsNotSelected("Internet");
-    dialog.checkNextIsDisable();
+    dialog.checkNoBudgetAreaSelected();
+    dialog.checkNextIsDisabled();
+
     dialog.selectEnvelopes();
     dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD);
+
     dialog.selectPrevious();
     dialog.checkPreviousIsDisabled();
     dialog.checkRecurringSeriesIsSelected("Internet");
+
     dialog.selectNext();
     dialog.checkEnveloppeSeriesIsSelected("Groceries", MasterCategory.FOOD);
   }

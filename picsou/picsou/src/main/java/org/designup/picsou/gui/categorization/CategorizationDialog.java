@@ -40,6 +40,7 @@ public class CategorizationDialog {
   private PicsouDialog dialog;
   private int transactionIndex = 0;
   private GlobList transactions;
+  private JToggleButton invisibleBudgetAreaToggle;
 
   public CategorizationDialog(Window parent, final GlobRepository repository, Directory directory) {
 
@@ -51,12 +52,19 @@ public class CategorizationDialog {
     builder.addMultiLineTextView("transactionLabel", Transaction.TYPE);
 
     builder.add("nextTransaction", new NextTransactionAction(selectionService));
-
     builder.add("previousTransaction", new PreviousTransactionAction(selectionService));
 
     final CardHandler cardHandler = builder.addCardHandler("cards");
+
+    invisibleBudgetAreaToggle = new JToggleButton(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        cardHandler.show("noBudgetArea");
+      }
+    });
+    builder.add("invisibleBudgetAreaToggle", invisibleBudgetAreaToggle);
     builder.addRepeat("budgetAreas", BudgetArea.TYPE.getConstants(),
                       new BudgetAreaComponentFactory(cardHandler));
+
 
     JToggleButton invisibleIncomeToggle = new JToggleButton();
     builder.add("invisibleIncomeToggle", invisibleIncomeToggle);
@@ -133,6 +141,9 @@ public class CategorizationDialog {
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         currentTransaction = selection.getAll(Transaction.TYPE).get(0);
+        if ((currentTransaction != null) && (currentTransaction.get(Transaction.SERIES) == null)) {
+          invisibleBudgetAreaToggle.doClick();
+        }
       }
     }, Transaction.TYPE);
 
@@ -162,6 +173,7 @@ public class CategorizationDialog {
     public BudgetAreaComponentFactory(CardHandler cardHandler) {
       this.cardHandler = cardHandler;
       this.budgetAreasGroup = new ButtonGroup();
+      this.budgetAreasGroup.add(invisibleBudgetAreaToggle);
     }
 
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob budgetArea) {
