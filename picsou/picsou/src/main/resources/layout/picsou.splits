@@ -14,6 +14,8 @@
         topColor="viewselector.top" bottomColor="viewselector.bottom"
         borderColor="viewselector.border" borderWidth="1" cornerRadius="10"/>
 
+    <ui name="cleanSplitPane" class="org.designup.picsou.gui.plaf.PicsouSplitPaneUI"/>
+
     <style selector="panel#header" ui="headerFrame" opaque="false"
            border="matte(0,0,2,0,#404040)" weightY="0"/>
 
@@ -83,10 +85,13 @@
 
           <card name="withCategories">
 
-            <row>
+            <horizontalSplit ui="cleanSplitPane" dividerSize="2" dividerLocation="240"
+                         continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
 
               <scrollPane border="matte(2,2,2,2,#3A3A3A)"
-                          viewportBackground="categories.bg" background="categories.bg" autoHideSource="category">
+                          viewportBackground="categories.bg" background="categories.bg"
+                          minimumSize="(180,400)"
+                          autoHideSource="category" weightX="1">
                 <table ref="category" intercellSpacing="(0,0)" showGrid="false" opaque="false"/>
               </scrollPane>
 
@@ -128,7 +133,7 @@
                 </card>
 
               </cards>
-            </row>
+            </horizontalSplit>
 
           </card>
 

@@ -7,15 +7,17 @@ import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouSamples;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Category;
+import org.designup.picsou.model.Transaction;
 import static org.designup.picsou.model.Transaction.*;
+import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
@@ -27,10 +29,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -41,6 +40,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
   public static final int CATEGORY_COLUMN_INDEX = 1;
   public static final int AMOUNT_COLUMN_INDEX = 3;
   public static final int NOTE_COLUMN_INDEX = 4;
+  private static final int[] COLUMN_SIZES = {10, 16, 30, 9};
 
   private GlobTableView view;
 
@@ -99,6 +99,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
     table.setDragEnabled(false);
     table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     ToolTipManager.sharedInstance().unregisterComponent(table.getTableHeader());
+
     setInitialColumnSizes(table);
 
     return table;
@@ -120,8 +121,11 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
     TransactionAmountColumn amountColumn =
       new TransactionAmountColumn(view, rendererColors, descriptionService, repository, directory);
 
+    FontLocator fontLocator = directory.get(FontLocator.class);
+    Font dateFont = fontLocator.get("transactionView.date");
+
     return view
-      .addColumn(Lang.get("date"), new TransactionDateStringifier(comparator))
+      .addColumn(Lang.get("date"), new TransactionDateStringifier(comparator), LabelCustomizers.font(dateFont))
       .addColumn(descriptionService.getLabel(Category.TYPE), categoryColumn, categoryColumn,
                  new TransactionCategoriesStringifier(categoryStringifier).getComparator(repository))
       .addColumn(LABEL, LabelCustomizers.bold(), CellPainter.NULL)
@@ -130,52 +134,9 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
   }
 
   private void setInitialColumnSizes(JTable targetTable) {
-    Glob sampleTransaction =
-      GlobBuilder.init(TYPE)
-        .set(ID, 111)
-        .set(MONTH, 200612)
-        .set(DAY, 30)
-        .set(TRANSACTION_TYPE, TransactionType.CHECK.getId())
-        .set(CATEGORY, MasterCategory.FOOD.getId())
-        .set(LABEL, PicsouSamples.LABEL_SAMPLE)
-        .set(NOTE, PicsouSamples.NOTE_SAMPLE)
-        .set(AMOUNT, PicsouSamples.AMOUNT_SAMPLE)
-        .set(SPLIT, Boolean.TRUE)
-        .get();
-
-    LocalGlobRepository tempRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(sampleTransaction)
-      .copy(TransactionType.TYPE, Category.TYPE)
-      .get();
-
-    tempRepository.update(sampleTransaction.getKey(), TRANSACTION_TYPE, getLargestType(tempRepository));
-
-    GlobTableView tempTableView = createGlobTableView(categoryChooserAction, tempRepository,
-                                                      descriptionService, directory, rendererColors);
-    JTable tempTable = tempTableView.getComponent();
-
-    for (int column = 0; column < tempTable.getColumnCount() - 1; column++) {
-      Component component = TableUtils.getRenderedComponentAt(tempTable, 0, column);
-      TableUtils.setSize(targetTable, column, TableUtils.getPreferredWidth(component));
+    for (int column = 0; column < targetTable.getColumnCount() - 1; column++) {
+      final int width = COLUMN_SIZES[column] * 7;
+      TableUtils.setSize(targetTable, column, width);
     }
-
-    tempTableView.dispose();
-  }
-
-  private Integer getLargestType(GlobRepository repository) {
-    GlobStringifier globStringifier = descriptionService.getStringifier(TransactionType.TYPE);
-
-    int largestString = 0;
-    Integer largestGlobId = 0;
-
-    for (Glob glob : repository.getAll(TransactionType.TYPE)) {
-      int fieldLength = globStringifier.toString(glob, repository).length();
-      if (largestString < fieldLength) {
-        largestString = fieldLength;
-        largestGlobId = glob.get(TransactionType.ID);
-      }
-    }
-
-    return largestGlobId;
   }
 }

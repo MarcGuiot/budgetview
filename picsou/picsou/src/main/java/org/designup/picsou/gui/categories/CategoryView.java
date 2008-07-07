@@ -129,7 +129,7 @@ public class CategoryView extends View {
     TableUtils.setSize(table, EXPANSION_COLUMN_INDEX, column.getPreferredWidth());
 
     JLabel renderer = (JLabel)TableUtils.getRenderedComponentAt(table, 0, AMOUNT_COLUMN_INDEX);
-    renderer.setText(format(PicsouSamples.AMOUNT_SAMPLE));
+    renderer.setText(format(-10000));
     TableUtils.setSize(table, AMOUNT_COLUMN_INDEX, TableUtils.getPreferredWidth(renderer));
 
     TableUtils.autosizeColumn(table, CATEGORY_COLUMN_INDEX);
