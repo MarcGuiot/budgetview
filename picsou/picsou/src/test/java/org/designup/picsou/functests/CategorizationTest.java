@@ -5,13 +5,32 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
-import org.uispec4j.Key;
-import org.uispec4j.utils.KeyUtils;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class CategorizationTest extends LoggedInFunctionalTestCase {
+
+  public void testStandardIncomeTransaction() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -1129.90, "WorldCo/june")
+      .load();
+
+    CategorizationDialogChecker dialog = transactions.categorize(0);
+    dialog.checkLabel("WorldCo/june");
+
+    dialog.selectIncome();
+    dialog.checkContainsIncomeSeries("Salary", "Exceptional Income");
+    dialog.selectIncomeSeries("Salary");
+    dialog.validate();
+
+    transactionDetails.checkSeries("Salary");
+    transactionDetails.checkCategory(MasterCategory.INCOME);
+
+    CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
+    reopenedDialog.checkIncomeSeriesIsSelected("Salary");
+    dialog.selectIncomeSeries("Exceptional Income");
+    dialog.checkIncomeSeriesIsNotSelected("Salary");
+  }
+
   public void testStandardRecurringTransaction() throws Exception {
     OfxBuilder
       .init(this)
@@ -109,14 +128,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     dialog.selectRecurring();
     dialog.selectRecurringSeries("Internet");
-    dialog.checkPreviousIsDisable();
+    dialog.checkPreviousIsDisabled();
     dialog.selectNext();
     dialog.checkRecurringSeriesIsNotSelected("Internet");
     dialog.checkNextIsDisable();
     dialog.selectEnvelopes();
     dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD);
     dialog.selectPrevious();
-    dialog.checkPreviousIsDisable();
+    dialog.checkPreviousIsDisabled();
     dialog.checkRecurringSeriesIsSelected("Internet");
     dialog.selectNext();
     dialog.checkEnveloppeSeriesIsSelected("Groceries", MasterCategory.FOOD);
@@ -130,6 +149,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker dialog = transactions.categorize(0);
 
+    dialog.selectRecurring();
     dialog.selectRecurringSeries("Internet");
     dialog.checkBudgetAreaIsSelected(BudgetArea.RECURRING_EXPENSES);
   }

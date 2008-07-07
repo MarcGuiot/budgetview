@@ -58,13 +58,27 @@ public class CategorizationDialog {
     builder.addRepeat("budgetAreas", BudgetArea.TYPE.getConstants(),
                       new BudgetAreaComponentFactory(cardHandler));
 
+    JToggleButton invisibleIncomeToggle = new JToggleButton();
+    builder.add("invisibleIncomeToggle", invisibleIncomeToggle);
+    builder.addRepeat("incomeSeriesRepeat",
+                      Series.TYPE,
+                      GlobMatchers.linkedTo(BudgetArea.INCOME.getGlob(), Series.BUDGET_AREA),
+                      new GlobFieldComparator(Series.ID),
+                      new SeriesComponentFactory(invisibleIncomeToggle));
+
+    builder.addRepeat("envelopeSeriesRepeat",
+                      Series.TYPE,
+                      GlobMatchers.linkedTo(BudgetArea.EXPENSES_ENVELOPE.getGlob(), Series.BUDGET_AREA),
+                      new GlobFieldComparator(Series.ID),
+                      new EnvelopeSeriesComponentFactory());
+
     JToggleButton invisibleRecurringToggle = new JToggleButton();
     builder.add("invisibleRecurringToggle", invisibleRecurringToggle);
     builder.addRepeat("recurringSeriesRepeat",
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.RECURRING_EXPENSES.getGlob(), Series.BUDGET_AREA),
                       new GlobFieldComparator(Series.ID),
-                      new RecurringSeriesComponentFactory(invisibleRecurringToggle));
+                      new SeriesComponentFactory(invisibleRecurringToggle));
 
     builder.addRepeat("envelopeSeriesRepeat",
                       Series.TYPE,
@@ -173,11 +187,11 @@ public class CategorizationDialog {
     }
   }
 
-  private class RecurringSeriesComponentFactory implements RepeatComponentFactory<Glob> {
+  private class SeriesComponentFactory implements RepeatComponentFactory<Glob> {
     ButtonGroup seriesGroup = new ButtonGroup();
     private JToggleButton invisibleToggle;
 
-    public RecurringSeriesComponentFactory(JToggleButton invisibleToggle) {
+    public SeriesComponentFactory(JToggleButton invisibleToggle) {
       this.invisibleToggle = invisibleToggle;
       seriesGroup.add(invisibleToggle);
     }
@@ -215,7 +229,7 @@ public class CategorizationDialog {
           seriesGroup.remove(toggle);
         }
       });
-      cellBuilder.add("recurringSeriesToggle", toggle);
+      cellBuilder.add("seriesToggle", toggle);
     }
   }
 

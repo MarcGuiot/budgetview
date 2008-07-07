@@ -3,6 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <panel ui="dialog" preferredSize="(800,800)" maximumSize="(800,800)">
+    <scrollPane>
     <column margin="5">
       <row defaultMargin="5" defaultFill="none" defaultAnchor="northeast">
         <component ref="first"/>
@@ -14,5 +15,6 @@
         <button action="close"/>
       </row>
     </column>
+    </scrollPane>
   </panel>
 </splits>

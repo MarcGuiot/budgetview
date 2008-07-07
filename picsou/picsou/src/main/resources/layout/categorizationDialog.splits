@@ -14,11 +14,19 @@
         <toggleButton ref="budgetAreaToggle"/>
       </repeat>
       <cards ref="cards">
+        <card name="income">
+          <row>
+            <toggleButton ref="invisibleIncomeToggle" visible="false"/>
+            <repeat ref="incomeSeriesRepeat">
+              <toggleButton ref="seriesToggle"/>
+            </repeat>
+          </row>
+        </card>
         <card name="recurringExpenses">
           <row>
             <toggleButton ref="invisibleRecurringToggle" visible="false"/>
             <repeat ref="recurringSeriesRepeat">
-              <toggleButton ref="recurringSeriesToggle"/>
+              <toggleButton ref="seriesToggle"/>
             </repeat>
           </row>
         </card>
