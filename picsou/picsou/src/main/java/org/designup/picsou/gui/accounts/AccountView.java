@@ -10,8 +10,9 @@ import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import static org.globsframework.model.utils.GlobMatchers.contains;
 import static org.globsframework.model.utils.GlobMatchers.not;
 import org.globsframework.utils.Strings;
@@ -19,13 +20,11 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.List;
 
-public class AccountView extends View implements ChangeSetListener {
+public class AccountView extends View {
 
   public AccountView(GlobRepository repository, Directory directory) {
     super(repository, directory);
-    this.repository.addChangeListener(this);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -40,19 +39,6 @@ public class AccountView extends View implements ChangeSetListener {
                       new AccountRepeatFactory());
 
     parentBuilder.add("accountView", builder);
-  }
-
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(Account.TYPE)) {
-      update();
-    }
-  }
-
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
-    update();
-  }
-
-  private void update() {
   }
 
   private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {

@@ -62,8 +62,8 @@ public class MonthDataProvider implements ChangeSetListener, GlobSelectionListen
         MonthData data = new MonthData();
         for (Integer categoryId : categoryIds) {
           Glob stat = repository.get(MonthStat.getKey(month, categoryId, currentAccountId));
-          data.income += stat.get(MonthStat.INCOME);
-          data.expenses += stat.get(MonthStat.EXPENSES);
+          data.income += stat.get(MonthStat.TOTAL_RECEIVED);
+          data.expenses += stat.get(MonthStat.TOTAL_SPENT);
         }
         monthData.put(month, data);
       }

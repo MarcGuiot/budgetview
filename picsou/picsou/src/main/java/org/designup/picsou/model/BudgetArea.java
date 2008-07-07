@@ -10,6 +10,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.exceptions.InvalidData;
 
 public enum BudgetArea implements GlobConstantContainer {
   INCOME(0),
@@ -39,6 +40,20 @@ public enum BudgetArea implements GlobConstantContainer {
     return new ReadOnlyGlob(BudgetArea.TYPE,
                             value(BudgetArea.ID, id),
                             value(BudgetArea.NAME, Strings.toNiceLowerCase(name())));
+  }
+
+  public static BudgetArea get(int id) {
+    switch (id) {
+      case 0:
+        return INCOME;
+      case 1:
+        return RECURRING_EXPENSES;
+      case 2:
+        return EXPENSES_ENVELOPE;
+      case 3:
+        return OCCASIONAL_EXPENSES;
+    }
+    throw new InvalidData(id + " not associated to any BugdetArea enum value");
   }
 
   public Integer getId() {

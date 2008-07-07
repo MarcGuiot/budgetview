@@ -74,7 +74,7 @@ public class CategoriesChart extends View implements GlobSelectionListener, Chan
       if (MasterCategory.ALL.getId().equals(categoryId)) {
         continue;
       }
-      Double expenses = monthStat.get(MonthStat.EXPENSES);
+      Double expenses = monthStat.get(MonthStat.TOTAL_SPENT);
       Double expensesForCategory = categoryIdToExpenses.get(categoryId);
       if (expensesForCategory == null) {
         expensesForCategory = 0.0;

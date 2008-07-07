@@ -80,11 +80,8 @@ public class TitleView extends View implements GlobSelectionListener {
 
   private String getMonthDesc() {
     if (months.length == 1) {
-      int month = Month.toMonth(months[0]);
-      int year = Month.toYear(months[0]);
-      return Lang.get("month." + Month.toMonth(month) + ".long").toLowerCase() + " " + year;
+      return Month.getLabel(months[0]);
     }
     return "";
   }
-
 }

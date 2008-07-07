@@ -12,12 +12,12 @@ import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobUtils;
+import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
-import org.globsframework.utils.exceptions.ItemNotFound;
 
 public class BankEntity {
   public static GlobType TYPE;
@@ -33,7 +33,7 @@ public class BankEntity {
   public static Glob getBank(Glob bankEntity, GlobRepository repository) {
     Glob bank = repository.findLinkTarget(bankEntity, BANK);
     if (bank == null) {
-      throw new ItemNotFound("BankEntity with no bank: " + GlobUtils.dump(bankEntity));
+      throw new ItemNotFound("BankEntity with no bank: " + GlobPrinter.dump(bankEntity));
     }
     return bank;
   }

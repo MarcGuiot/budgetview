@@ -1,10 +1,10 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.GlobList;
 import org.globsframework.utils.Utils;
 
 import java.text.DecimalFormat;
@@ -119,6 +119,12 @@ public class Month {
 
   public static int intToDay(int yyyymmdd) {
     return yyyymmdd % 100;
+  }
+
+  public static String getLabel(Integer monthId) {
+    int month = toMonth(monthId);
+    int year = toYear(monthId);
+    return Lang.get("month." + toMonth(month) + ".long").toLowerCase() + " " + year;
   }
 
   private static class RangeIterator implements Iterator<Integer> {

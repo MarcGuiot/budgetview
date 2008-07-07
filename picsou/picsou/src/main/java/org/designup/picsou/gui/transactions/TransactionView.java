@@ -38,6 +38,7 @@ import java.awt.*;
 public class TransactionView extends View implements GlobSelectionListener, ChangeSetListener {
   public static final int DATE_COLUMN_INDEX = 0;
   public static final int CATEGORY_COLUMN_INDEX = 1;
+  public static final int LABEL_COLUMN_INDEX = 2;
   public static final int AMOUNT_COLUMN_INDEX = 3;
   public static final int NOTE_COLUMN_INDEX = 4;
   private static final int[] COLUMN_SIZES = {10, 16, 30, 9};

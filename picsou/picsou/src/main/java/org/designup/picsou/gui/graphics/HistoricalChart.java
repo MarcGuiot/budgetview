@@ -205,8 +205,8 @@ public class HistoricalChart extends AbstractLineChart {
         }
         Key key = MonthStat.getKey(month.get(Month.ID), category.get(Category.ID), Account.SUMMARY_ACCOUNT_ID);
         Glob stat = repository.get(key);
-        expenses += stat.get(MonthStat.EXPENSES);
-        income += stat.get(MonthStat.INCOME);
+        expenses += stat.get(MonthStat.TOTAL_SPENT);
+        income += stat.get(MonthStat.TOTAL_RECEIVED);
       }
       hasExpenses |= expenses > 0;
       expenseSeries.add(index, expenses);

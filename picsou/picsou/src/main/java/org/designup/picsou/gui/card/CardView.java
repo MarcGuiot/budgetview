@@ -25,8 +25,7 @@ public class CardView extends View implements GlobSelectionListener {
   private Card lastSelectedCard = Card.HOME;
   private TransactionSelection transactionSelection;
 
-  public CardView(GlobRepository repository, Directory directory,
-                  TransactionSelection transactionSelection) {
+  public CardView(GlobRepository repository, Directory directory, TransactionSelection transactionSelection) {
     super(repository, directory);
     this.transactionSelection = transactionSelection;
     this.transactionSelection.addListener(this);
@@ -80,7 +79,7 @@ public class CardView extends View implements GlobSelectionListener {
 
   private boolean hasData(GlobList monthStats) {
     for (Glob monthStat : monthStats) {
-      if ((monthStat.get(MonthStat.EXPENSES) != 0.0) || (monthStat.get(MonthStat.INCOME) != 0.0)) {
+      if ((monthStat.get(MonthStat.TOTAL_SPENT) != 0.0) || (monthStat.get(MonthStat.TOTAL_RECEIVED) != 0.0)) {
         return true;
       }
     }

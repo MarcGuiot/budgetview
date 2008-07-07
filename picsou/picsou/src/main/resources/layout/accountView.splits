@@ -1,10 +1,8 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-  <styles>
+  <styleImport file="/layout/picsouStyles.splits"/>
 
-    <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
-        cornerRadius="20"/>
+  <styles>
 
     <ui name="accountBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="account.block.top" bottomColor="account.block.bottom" borderColor="account.block.border"

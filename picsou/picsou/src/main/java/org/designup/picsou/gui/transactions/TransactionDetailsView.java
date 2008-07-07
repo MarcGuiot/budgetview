@@ -68,7 +68,7 @@ public class TransactionDetailsView extends View {
                                                                Lang.get("transaction.details.amount.singular"),
                                                                Lang.get("transaction.details.amount.plural")), true));
     builder.add("amountValue",
-                addLabel(GlobListStringifiers.sum(Transaction.AMOUNT, PicsouDescriptionService.DECIMAL_FORMAT), true));
+                addLabel(GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, Transaction.AMOUNT), true));
 
     builder.add("amountPanel",
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_TWO,

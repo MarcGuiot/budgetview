@@ -79,6 +79,10 @@
                 </panel>
                 <filler fill="vertical"/>
               </column>
+              <column>
+                <panel ref="monthSummaryView"/>
+                <filler fill="vertical"/>
+              </column>
               <filler fill="horizontal"/>
             </row>
           </card>
@@ -86,7 +90,7 @@
           <card name="withCategories">
 
             <horizontalSplit ui="cleanSplitPane" dividerSize="2" dividerLocation="240"
-                         continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
+                             continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
 
               <scrollPane border="matte(2,2,2,2,#3A3A3A)"
                           viewportBackground="categories.bg" background="categories.bg"

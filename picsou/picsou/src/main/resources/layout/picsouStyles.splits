@@ -12,8 +12,12 @@
     <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="dialog.bg.top" bottomColor="dialog.bg.bottom"/>
 
+    <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
+        cornerRadius="20"/>
+
     <style selector="textArea.readOnly" opaque="false" lineWrap="true" wrapStyleWord="true"/>
-    
+
     <style selector="label.title"
            font="-,bold,16" foreground="import.title"
            fill="none" anchor="center"
@@ -33,7 +37,7 @@
 
     <style selector="row.buttons button"
            fill="horizontal" weightX="10"/>
-    
+
   </styles>
 
 </splits>

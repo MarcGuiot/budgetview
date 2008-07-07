@@ -74,10 +74,10 @@ public class CategoryDataProvider implements ChangeSetListener, GlobSelectionLis
           Key key = MonthStat.getKey(month, categoryId, currentAccountId);
           Glob stat = repository.get(key);
           if (categoryId == Category.NONE) {
-            amount += stat.get(MonthStat.INCOME) + stat.get(MonthStat.EXPENSES);
+            amount += stat.get(MonthStat.TOTAL_RECEIVED) + stat.get(MonthStat.TOTAL_SPENT);
           }
           else {
-            amount += stat.get(MonthStat.INCOME) - stat.get(MonthStat.EXPENSES);
+            amount += stat.get(MonthStat.TOTAL_RECEIVED) - stat.get(MonthStat.TOTAL_SPENT);
           }
 
           dispensability += stat.get(MonthStat.DISPENSABLE);

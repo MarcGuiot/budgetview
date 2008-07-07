@@ -7,6 +7,8 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.PicsouTestCase;
 import org.globsframework.metamodel.Field;
 
+import java.util.Collections;
+
 public class MonthStatComputerTest extends PicsouTestCase {
   public void testStandardCase() throws Exception {
     String input =
@@ -29,32 +31,18 @@ public class MonthStatComputerTest extends PicsouTestCase {
 
     updateStats();
 
-    init(MonthStat.EXPENSES)
+    init(MonthStat.TOTAL_SPENT)
       .setMonths(200605, 200606, 200607, 200608)
       .add(MasterCategory.HEALTH, 60.0, 100.0, 0.0, 200.0)
       .add(MasterCategory.HOUSE, 400.0, 400.0, 0.0, 410.0)
       .add(MasterCategory.ALL, 460.0, 500.0, 0.0, 610.0)
       .check();
 
-    init(MonthStat.INCOME)
+    init(MonthStat.TOTAL_RECEIVED)
       .setMonths(200605, 200606, 200607, 200608)
       .add(MasterCategory.INCOME, 600.0, 800.0, 0.0, 700.0)
       .add(MasterCategory.HEALTH, 0.0, 20.0, 0.0, 10.0)
       .add(MasterCategory.ALL, 600.0, 820.0, 0.0, 710.0)
-      .check();
-
-    init(MonthStat.EXPENSES_PART)
-      .setMonths(200605, 200606, 200607, 200608)
-      .add(MasterCategory.HEALTH, 0.13, 0.2, 0.0, 0.33)
-      .add(MasterCategory.HOUSE, 0.87, 0.8, 0.0, 0.67)
-      .add(MasterCategory.ALL, 1.0, 1.0, 0.0, 1.0)
-      .check();
-
-    init(MonthStat.INCOME_PART)
-      .setMonths(200605, 200606, 200607, 200608)
-      .add(MasterCategory.HEALTH, 0.0, 0.02, 0.0, 0.01)
-      .add(MasterCategory.INCOME, 1.0, 0.98, 0.0, 0.99)
-      .add(MasterCategory.ALL, 1.0, 1.0, 0.0, 1.0)
       .check();
 
     initGlobal()
@@ -91,13 +79,13 @@ public class MonthStatComputerTest extends PicsouTestCase {
                   "<transaction month='200605' day='10' amount='15.0'/>");
     updateStats();
 
-    init(MonthStat.EXPENSES)
+    init(MonthStat.TOTAL_SPENT)
       .setMonths(200605)
       .add(MasterCategory.NONE, 20.0)
       .add(MasterCategory.ALL, 20.0)
       .check();
 
-    init(MonthStat.INCOME)
+    init(MonthStat.TOTAL_RECEIVED)
       .setMonths(200605)
       .add(MasterCategory.NONE, 15.0)
       .add(MasterCategory.ALL, 15.0)
@@ -128,7 +116,7 @@ public class MonthStatComputerTest extends PicsouTestCase {
 
     updateStats();
 
-    init(MonthStat.EXPENSES)
+    init(MonthStat.TOTAL_SPENT)
       .setMonths(200605, 200606, 200607, 200608)
       .add(MasterCategory.HEALTH, 120.0, 100.0, 0.0, 100.0)
       .add("doctor", 110.0, 0.0, 0.0, 60.0)
@@ -136,7 +124,7 @@ public class MonthStatComputerTest extends PicsouTestCase {
       .add(MasterCategory.ALL, 120.0, 100.0, 0.0, 100.0)
       .check();
 
-    init(MonthStat.INCOME)
+    init(MonthStat.TOTAL_RECEIVED)
       .setMonths(200605, 200606, 200607, 200608)
       .add(MasterCategory.HEALTH, 90.0, 70.0, 0.0, 80.0)
       .add("reimbursements", 90.0, 70.0, 0.0, 80.0)
@@ -161,14 +149,14 @@ public class MonthStatComputerTest extends PicsouTestCase {
                   "<transaction month='200606' day='1' amount='600.0' categoryName='internal'/>");
     updateStats();
 
-    init(MonthStat.EXPENSES)
+    init(MonthStat.TOTAL_SPENT)
       .setMonths(200605, 200606)
       .add(MasterCategory.HEALTH, 20.0, 0.0)
       .add(MasterCategory.INTERNAL, 9000.0, 0.0)
       .add(MasterCategory.ALL, 20.0, 0.0)
       .check();
 
-    init(MonthStat.INCOME)
+    init(MonthStat.TOTAL_RECEIVED)
       .setMonths(200605, 200606)
       .add(MasterCategory.HEALTH, 15.0, 0.0)
       .add(MasterCategory.INTERNAL, 12000.0, 600.0)
@@ -190,14 +178,14 @@ public class MonthStatComputerTest extends PicsouTestCase {
     );
     updateStats();
 
-    init(MonthStat.EXPENSES)
+    init(MonthStat.TOTAL_SPENT)
       .setMonths(200605)
       .add(MasterCategory.HEALTH, 40.0)
       .add(MasterCategory.NONE, 110.0)
       .add(MasterCategory.ALL, 150.0)
       .check();
 
-    init(MonthStat.EXPENSES)
+    init(MonthStat.TOTAL_SPENT)
       .setAccount(1)
       .setMonths(200605)
       .add(MasterCategory.HEALTH, 10.0)
@@ -205,14 +193,14 @@ public class MonthStatComputerTest extends PicsouTestCase {
       .add(MasterCategory.ALL, 70.0)
       .check();
 
-    init(MonthStat.INCOME)
+    init(MonthStat.TOTAL_RECEIVED)
       .setMonths(200605)
       .add(MasterCategory.INCOME, 400.0)
       .add(MasterCategory.NONE, 200.0)
       .add(MasterCategory.ALL, 600.0)
       .check();
 
-    init(MonthStat.INCOME)
+    init(MonthStat.TOTAL_RECEIVED)
       .setAccount(1)
       .setMonths(200605)
       .add(MasterCategory.INCOME, 100.0)
@@ -231,21 +219,21 @@ public class MonthStatComputerTest extends PicsouTestCase {
     );
     updateStats();
 
-    init(MonthStat.EXPENSES)
+    init(MonthStat.TOTAL_SPENT)
       .setMonths(200605)
       .add(MasterCategory.INTERNAL, 10.0)
       .add(MasterCategory.NONE, 20.0)
       .add(MasterCategory.ALL, 20.0)
       .check();
 
-    init(MonthStat.INCOME)
+    init(MonthStat.TOTAL_RECEIVED)
       .setMonths(200605)
       .add(MasterCategory.INTERNAL, 100.0)
       .add(MasterCategory.NONE, 200.0)
       .add(MasterCategory.ALL, 200.0)
       .check();
 
-    init(MonthStat.EXPENSES)
+    init(MonthStat.TOTAL_SPENT)
       .setAccount(1)
       .setMonths(200605)
       .add(MasterCategory.INTERNAL, 10.0)
@@ -253,7 +241,7 @@ public class MonthStatComputerTest extends PicsouTestCase {
       .add(MasterCategory.ALL, 30.0)
       .check();
 
-    init(MonthStat.INCOME)
+    init(MonthStat.TOTAL_RECEIVED)
       .setAccount(1)
       .setMonths(200605)
       .add(MasterCategory.INTERNAL, 100.0)
@@ -288,7 +276,7 @@ public class MonthStatComputerTest extends PicsouTestCase {
 
   private void updateStats() {
     MonthStatComputer computer = new MonthStatComputer(repository);
-    computer.run();
+    computer.run(Collections.<Integer>emptySet());
   }
 
   private MonthStatChecker init(Field field) {
