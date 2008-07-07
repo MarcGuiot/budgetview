@@ -25,7 +25,7 @@ public class GlobListStringifiers {
     };
   }
 
-  public static GlobListStringifier sum(final DoubleField field, final DecimalFormat format) {
+  public static GlobListStringifier sum(final DecimalFormat format, final DoubleField... fields) {
     return new GlobListStringifier() {
       public String toString(GlobList selected, GlobRepository repository) {
         if (selected.isEmpty()) {
@@ -34,7 +34,9 @@ public class GlobListStringifiers {
 
         double total = 0;
         for (Glob glob : selected) {
-          total += glob.get(field);
+          for (DoubleField field : fields) {
+            total += glob.get(field);
+          }
         }
         return format.format(total);
       }
