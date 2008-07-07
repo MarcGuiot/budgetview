@@ -38,11 +38,6 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     glob2 = repository.get(key2);
   }
 
-  public void testDefaultName() throws Exception {
-    textBox = init(repository, false);
-    assertEquals(DummyObject.TYPE.getName(), textBox.getName());
-  }
-  
   public void testCreationWithExistingGlobs() throws Exception {
     textBox = init(repository, false);
     assertTrue(textBox.textIsEmpty());

@@ -23,23 +23,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DirectAccountDataManager implements AccountDataManager {
+public class DirectAccountDataManagerWithSnapshot implements AccountDataManager {
   private Map<Integer, DurableOutputStream> outputStreamMap = new HashMap<Integer, DurableOutputStream>();
   private String prevaylerPath;
   private boolean inMemory;
 
-  public DirectAccountDataManager(String prevaylerPath, boolean inMemory) {
+  public DirectAccountDataManagerWithSnapshot(String prevaylerPath, boolean inMemory) {
     this.prevaylerPath = prevaylerPath;
     this.inMemory = inMemory;
   }
 
   public void getUserData(SerializedOutput output, Integer userId) {
-    MapOfMaps<String, Integer, Glob> globs = readData(userId);
+    MapOfMaps<String, Integer, Glob> globs = new MapOfMaps<String, Integer, Glob>();
+    readData(userId, globs);
     SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
     serializableGlobSerializer.serialize(output, globs);
   }
 
-  private MapOfMaps<String, Integer, Glob> readData(Integer userId) {
+  private long readData(Integer userId, MapOfMaps<String, Integer, Glob> globs) {
     String path = getPath(userId);
     File file1 = new File(path);
     if (!file1.exists()) {
@@ -48,24 +49,23 @@ public class DirectAccountDataManager implements AccountDataManager {
     final PrevaylerDirectory prevaylerDirectory = new PrevaylerDirectory(path);
     File file = prevaylerDirectory.latestSnapshot();
     long snapshotVersion = 1;
-    MapOfMaps<String, Integer, Glob> globs = new MapOfMaps<String, Integer, Glob>();
     if (file != null) {
       snapshotVersion = PrevaylerDirectory.snapshotVersion(file);
-      globs = readSnapshot(file);
+      readSnapshot(file, globs);
     }
     File journalFile = prevaylerDirectory.findInitialJournalFile(snapshotVersion);
     if (journalFile == null) {
-      outputStreamMap.put(userId, new DurableOutputStream(1, userId));
+      outputStreamMap.put(userId, new DurableOutputStream(snapshotVersion, userId));
     }
     else {
       try {
-        long nextTransactionVersion = readFrom(globs, snapshotVersion, journalFile, prevaylerDirectory);
-        outputStreamMap.put(userId, new DurableOutputStream(nextTransactionVersion, userId));
+        snapshotVersion = readFrom(globs, snapshotVersion, journalFile, prevaylerDirectory);
+        outputStreamMap.put(userId, new DurableOutputStream(snapshotVersion, userId));
       }
       catch (FileNotFoundException e) {
       }
     }
-    return globs;
+    return snapshotVersion;
   }
 
   private String getPath(Integer userId) {
@@ -129,18 +129,17 @@ public class DirectAccountDataManager implements AccountDataManager {
     return serializedInput.readNotNullLong();
   }
 
-  private MapOfMaps<String, Integer, Glob> readSnapshot(File file) {
+  private void readSnapshot(File file, MapOfMaps<String, Integer, Glob> globs) {
     try {
       SerializedInput serializedInput =
         SerializedInputOutputFactory.init(new BufferedInputStream(new FileInputStream(file)));
       String version = serializedInput.readString();
       if ("2".equals(version)) {
-        return readVersion2(serializedInput);
+        readVersion2(serializedInput, globs);
       }
     }
     catch (FileNotFoundException e) {
     }
-    return new MapOfMaps<String, Integer, Glob>();
   }
 
   /*
@@ -150,13 +149,13 @@ public class DirectAccountDataManager implements AccountDataManager {
        id
        value
   */
-  private MapOfMaps<String, Integer, Glob> readVersion2(SerializedInput serializedInput) {
+  private void readVersion2(SerializedInput serializedInput,
+                            MapOfMaps<String, Integer, Glob> globs) {
     try {
-      MapOfMaps<String, Integer, Glob> globMapOfMaps = new MapOfMaps<String, Integer, Glob>();
       int count;
       count = serializedInput.readNotNullInt();
       if (count == 0) {
-        return globMapOfMaps;
+        return;
       }
       String globTypeName = serializedInput.readString();
       while (count != 0) {
@@ -165,13 +164,12 @@ public class DirectAccountDataManager implements AccountDataManager {
           .set(SerializableGlobType.ID, id)
           .set(SerializableGlobType.GLOB_TYPE_NAME, globTypeName)
           .set(SerializableGlobType.DATA, serializedInput.readBytes());
-        globMapOfMaps.put(globTypeName, id, globBuilder.get());
+        globs.put(globTypeName, id, globBuilder.get());
         count--;
       }
     }
     catch (UnexpectedApplicationState e) {
     }
-    return new MapOfMaps<String, Integer, Glob>();
   }
 
   public void updateUserData(SerializedInput input, Integer userId) {
@@ -202,31 +200,41 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   public void takeSnapshot(Integer userId) {
-    MapOfMaps<String, Integer, Glob> stringIntegerGlobMapOfMaps = readData(userId);
-    PrevaylerDirectory prevaylerDirectory = new PrevaylerDirectory(getPath(userId));
-//    File file = prevaylerDirectory.snapshotFile();
+    MapOfMaps<String, Integer, Glob> globs = new MapOfMaps<String, Integer, Glob>();
+    long transactionId = readData(userId, globs);
+    writeSnapshot(userId, transactionId, globs);
+  }
 
-//    readAndWriteTransaction(userId);
+  private void writeSnapshot(Integer userId, long version, MapOfMaps<String, Integer, Glob> globs) {
+    PrevaylerDirectory directory = new PrevaylerDirectory(getPath(userId));
+//    File tempFile = directory.createTempFile("snapshot" + version + "temp", "generatingSnapshot");
+//
+//    writeSnapshot(prevalentSystem, tempFile);
+//
+//    File permanent = snapshotFile(version);
+//    permanent.delete();
+//    if (!tempFile.renameTo(permanent)) throw new IOFailure(
+//        "Temporary snapshot file generated: " + tempFile + "\nUnable to rename it permanently to: " + permanent);
   }
 
   private class DurableOutputStream {
-    private long nextTransactionVersion;
+    private long nextTransactionId;
     private OutputStream outputStream;
     private PrevaylerDirectory prevaylerDirectory;
     private FileDescriptor fd;
 
-    public DurableOutputStream(long nextTransactionVersion, Integer userId) {
-      this.nextTransactionVersion = nextTransactionVersion;
+    public DurableOutputStream(long nextTransactionId, Integer userId) {
+      this.nextTransactionId = nextTransactionId;
       prevaylerDirectory = new PrevaylerDirectory(getPath(userId));
     }
 
-    public void write(MultiMap<String, DeltaGlob> map) {
+    public void write(MultiMap<String, DeltaGlob> deltaGlob) {
       if (inMemory) {
         return;
       }
       try {
         if (outputStream == null) {
-          File file = prevaylerDirectory.journalFile(nextTransactionVersion, "journal");
+          File file = prevaylerDirectory.journalFile(nextTransactionId, "journal");
           FileOutputStream stream = new FileOutputStream(file);
           fd = stream.getFD();
           outputStream = new BufferedOutputStream(stream);
@@ -234,11 +242,11 @@ public class DirectAccountDataManager implements AccountDataManager {
         SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
         SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
         serializedOutput.writeString("Tr");
-        serializedOutput.write(nextTransactionVersion);
-        serializableDeltaGlobSerializer.serialize(serializedOutput, map);
+        serializedOutput.write(nextTransactionId);
+        serializableDeltaGlobSerializer.serialize(serializedOutput, deltaGlob);
         outputStream.flush();
         fd.sync();
-        nextTransactionVersion++;
+        nextTransactionId++;
       }
       catch (IOException e) {
         throw new RuntimeException(e);

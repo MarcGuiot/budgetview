@@ -10,13 +10,12 @@ import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.views.*;
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
-import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -109,10 +108,14 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return this;
   }
 
-  public Repeat addRepeat(String name, GlobType type, GlobMatcher matcher, Comparator<Glob> comparator, RepeatComponentFactory factory) {
-    GlobList list = repository.getAll(type, matcher);
-    list.sort(comparator);
-    return super.addRepeat(name, list, factory);
+  public Repeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
+                          Comparator<Glob> comparator, RepeatComponentFactory factory) {
+    GlobRepeatListener listener = new GlobRepeatListener();
+    GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
+    model.setFilter(matcher);
+    Repeat<Glob> repeat = super.addRepeat(name, model.getAll(), factory);
+    listener.set(model, repeat);
+    return repeat;
   }
 
   private <T extends ComponentHolder> T store(T component) {
@@ -126,5 +129,35 @@ public class GlobsPanelBuilder extends SplitsBuilder {
       add(componentHolder.getComponent());
     }
     componentHolders.clear();
+  }
+
+  private static class GlobRepeatListener implements GlobViewModel.Listener {
+    private GlobViewModel model;
+    private Repeat<Glob> repeat;
+
+    public void globInserted(int index) {
+      repeat.insert(model.get(index), index);
+    }
+
+    public void globUpdated(int index) {
+    }
+
+    public void globRemoved(int index) {
+      repeat.remove(index);
+    }
+
+    public void globListPreReset() {
+    }
+
+    public void globListReset() {
+      if (repeat != null) {
+        repeat.set(model.getAll());
+      }
+    }
+
+    public void set(GlobViewModel model, Repeat<Glob> repeat) {
+      this.model = model;
+      this.repeat = repeat;
+    }
   }
 }

@@ -167,6 +167,7 @@ public class CategorizationDialog {
         public void dispose() {
           budgetAreasGroup.remove(toggleButton);
           selectionService.removeListener(listener);
+          localRepository.removeChangeListener(listener);
         }
       });
     }

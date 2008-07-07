@@ -11,6 +11,7 @@ import org.uispec4j.interception.WindowInterceptor;
 public class OperationChecker {
   private MenuItem importMenu;
   private MenuItem exportMenu;
+  public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
 
   public OperationChecker(Window window) {
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
@@ -46,7 +47,7 @@ public class OperationChecker {
           }
           importDialog.getButton("Import").click();
           if (importDialog.getInputTextBox("number").isEditable().isTrue()) {
-            importDialog.getInputTextBox("number").setText("11111");
+            importDialog.getInputTextBox("number").setText(DEFAULT_ACCOUNT_NUMBER);
           }
           Button okButton = importDialog.getButton("OK");
           for (int i = 0; i < fileNames.length - 1; i++) {

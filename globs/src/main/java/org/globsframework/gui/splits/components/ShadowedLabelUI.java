@@ -56,6 +56,9 @@ public class ShadowedLabelUI extends BasicLabelUI {
   }
 
   protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
+    if (g instanceof Graphics2D) {
+      ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    }
     int mnemIndex = l.getDisplayedMnemonicIndex();
     g.setColor(shadowColor);
     SwingUtilities2.drawStringUnderlineCharAt(l, g, s, mnemIndex, textX + direction.x, textY + direction.y);

@@ -35,7 +35,6 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   public AbstractGlobTextView(GlobType type, GlobRepository repository, Directory directory,
                               GlobListStringifier stringifier) {
     this.type = type;
-    this.name = type.getName();
     this.repository = repository;
     this.directory = directory;
     this.stringifier = stringifier;
@@ -119,6 +118,6 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
     else {
       selectionUpdated(new DefaultSelection(forcedSelection, Collections.singletonList(type)));
     }
-    getComponent().setName(name);    
+    getComponent().setName(name);
   }
 }

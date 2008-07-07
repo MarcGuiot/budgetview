@@ -56,7 +56,9 @@ public abstract class AbstractSplitsContext implements SplitsContext {
                                   "' for referenced component '" + ref + "' - expected type: " + componentClass.getName()
                                   + dump());
       }
-
+      if (component.getName() == null) {
+        component.setName(ref);
+      }
       return (T)component;
     }
 

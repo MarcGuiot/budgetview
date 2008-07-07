@@ -23,7 +23,7 @@ public class NewUserPanel {
   private NewUserPanel(final GlobRepository repository, final Directory directory, final MainWindow mainWindow) {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/newUserPanel.splits", repository, directory);
-    ImportPanel importPanel = new ImportPanel(Lang.get("login.skip"), Collections.<File>emptyList(), new DialogOwner() {
+    ImportPanel importPanel = new ImportPanel(Lang.get("login.skip"), Collections.<File>emptyList(), null, new DialogOwner() {
       public Window getOwner() {
         return mainWindow.getFrame();
       }

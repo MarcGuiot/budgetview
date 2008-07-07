@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.actions.ImportFileAction;
+import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -12,13 +12,14 @@ import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
-import org.globsframework.utils.directory.Directory;
+import static org.globsframework.model.utils.GlobMatchers.contains;
+import static org.globsframework.model.utils.GlobMatchers.not;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.List;
 import java.awt.event.ActionEvent;
+import java.util.List;
 
 public class AccountView extends View implements ChangeSetListener {
 
@@ -62,7 +63,7 @@ public class AccountView extends View implements ChangeSetListener {
       add("accountUpdateDate", Account.UPDATE_DATE, account, cellBuilder);
 
       cellBuilder.add("gotoWebsite", new GotoWebsiteAction(account));
-      cellBuilder.add("importData", new ImportFileAction(repository, directory));
+      cellBuilder.add("importData", ImportFileAction.init(repository, directory, account));
     }
 
     private void add(String name, Field field, Glob account, RepeatCellBuilder cellBuilder) {
@@ -80,6 +81,7 @@ public class AccountView extends View implements ChangeSetListener {
       }
 
       public void actionPerformed(ActionEvent e) {
+
         directory.get(BrowsingService.class).launchBrowser(url);
       }
     }
