@@ -397,6 +397,13 @@ public class SplitsComponentsTest extends SplitsTestCase {
     assertEquals(BevelBorder.RAISED, raised.getBevelType());
   }
 
+  public void testResettingTheBorderWithAnEmptyString() throws Exception {
+    aList.setBorder(BorderFactory.createEtchedBorder());
+    builder.add("list", aList);
+    parse("<list ref='list' border=''/>");
+    assertNull(aList.getBorder());
+  }
+
   private <T extends Border> T checkBorder(String desc, Class<T> c) throws Exception {
     JLabel label = parse("<label border='" + desc + "'/>");
     Border border = label.getBorder();
