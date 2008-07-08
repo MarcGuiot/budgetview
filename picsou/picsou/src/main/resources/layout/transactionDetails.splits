@@ -3,7 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   
   <styles>
-    <style selector="label" foreground="transaction.detail.text"/>
+    <style selector="#transactionDetails label" foreground="transaction.detail.text"/>
 
     <style selector="label.formLabel"
            fill="none" anchor="left"
@@ -23,7 +23,7 @@
 
   </styles>
 
-  <column minimumSize="(200, 150)" preferredSize="(200, 150)">
+  <column name="transactionDetails" minimumSize="(200, 150)" preferredSize="(200, 150)">
 
     <label ref="transactionType" styleClass="formLabel"/>
     <textArea ref="userLabel" styleClass="readonly"/>

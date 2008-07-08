@@ -1,24 +1,27 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
-  <styles>
-    <style selector="label" foreground="#000000"/>
-  </styles>
 
-  <panel ui="block">
-    <column>
-      <label ref="monthLabel"/>
-      <row>
-        <label ref="totalReceivedAmount"/>
-        <label ref="totalSpentAmount"/>
-      </row>
-      <repeat ref="budgetAreaRepeat">
-        <row name="budgetAreaRow">
-          <label ref="budgetAreaName"/>
-          <filler fill="horizontal"/>
-          <label ref="budgetAreaAmount"/>
+  <column>
+
+    <label text="$monthsummary.title" styleClass="blockTitle"/>
+
+    <panel styleClass="block">
+      <column margin="10">
+        <label ref="monthLabel"/>
+        <row>
+          <label ref="totalReceivedAmount"/>
+          <label ref="totalSpentAmount"/>
         </row>
-      </repeat>
-    </column>
-  </panel>
+        <repeat ref="budgetAreaRepeat">
+          <row name="budgetAreaRow">
+            <label ref="budgetAreaName"/>
+            <filler fill="horizontal"/>
+            <label ref="budgetAreaAmount"/>
+          </row>
+        </repeat>
+      </column>
+    </panel>
+
+  </column>
 </splits>

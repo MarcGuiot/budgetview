@@ -16,6 +16,11 @@
         topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
         cornerRadius="20"/>
 
+    <style selector=".block" ui="block" opaque="true"/>
+    <style selector="label.blockTitle" anchor="center" foreground="#FFFFFF" marginBottom="5"/>
+    <style selector=".block label.totalAmount" foreground="block.total" font="-,bold,20" anchor="center"/>
+    <style selector=".block label" foreground="#000000"/>
+       
     <style selector="textArea.readOnly" opaque="false" lineWrap="true" wrapStyleWord="true"/>
 
     <style selector="label.title"

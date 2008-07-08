@@ -19,16 +19,6 @@ Details transactions
 * Notes
 
 
-TransactionView
----------------
-* Revoir tailles colonnes (colonne "notes" invisible)
-
-
-TimeView
---------
-* Escamoter boutons
-
-
 Misc
 ----
 * Split transaction : supprimer "disposable"

@@ -12,12 +12,6 @@ Panneau categorisation
 
 Panneau accueil
 ---------------
-* Liste comptes
-  - Afficher/editer/ajouter les comptes et les positions
-  - Naviguer vers le site de la banque
-* Bloc mois courant / mois precedent
-  - montant global
-  - montant par BudgetArea
 
 
 Panneau budget

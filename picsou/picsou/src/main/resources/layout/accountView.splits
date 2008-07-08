@@ -8,23 +8,20 @@
         topColor="account.block.top" bottomColor="account.block.bottom" borderColor="account.block.border"
         borderWidth="2" cornerRadius="10"/>
 
-    <style selector="label" foreground="account.text.total"/>
-    <style selector="label.totalAmount" font="-,bold,20" anchor="center"/>
     <style selector=".accountBlock" ui="accountBlock" marginTop="5" marginBottom="5"/>
-
-    <style selector="label#accountName" foreground="account.text.name" font="-,bold,12"/>
-    <style selector="label#accountNumber" foreground="account.text.number" font="-,plain,10"/>
-    <style selector="label#accountBalance" foreground="account.text.balance" font="-,bold,14"/>
-    <style selector="label#accountUpdateDate" foreground="account.text.updateDate" font="-,plain,10"/>
-
+    <style selector=".accountBlock label#accountName" foreground="account.text.name" font="-,bold,12"/>
+    <style selector=".accountBlock label#accountNumber" foreground="account.text.number" font="-,plain,10"/>
+    <style selector=".accountBlock label#accountBalance" foreground="account.text.balance" font="-,bold,14"/>
+    <style selector=".accountBlock label#accountUpdateDate" foreground="account.text.updateDate" font="-,plain,10"/>
     <style selector=".accountBlock hyperlink" foreground="account.hyperlink"/>
+
   </styles>
 
   <column>
 
-    <label text="Comptes" anchor="center" foreground="#FFFFFF" marginBottom="5"/>
+    <label text="$account.title" styleClass="blockTitle"/>
 
-    <panel ui="block">
+    <panel styleClass="block">
 
       <column marginLeft="10" marginRight="10" marginTop="10">
 

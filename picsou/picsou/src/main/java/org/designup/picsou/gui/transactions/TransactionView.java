@@ -41,10 +41,11 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
   public static final int LABEL_COLUMN_INDEX = 2;
   public static final int AMOUNT_COLUMN_INDEX = 3;
   public static final int NOTE_COLUMN_INDEX = 4;
+
   private static final int[] COLUMN_SIZES = {10, 16, 30, 9};
+  private static final int DEFAULT_COLUMN_CHAR_WIDTH = 7;
 
   private GlobTableView view;
-
   private TransactionRendererColors rendererColors;
   private CategoryChooserAction categoryChooserAction;
   private TransactionSelection transactionSelection;
@@ -136,7 +137,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
 
   private void setInitialColumnSizes(JTable targetTable) {
     for (int column = 0; column < targetTable.getColumnCount() - 1; column++) {
-      final int width = COLUMN_SIZES[column] * 7;
+      final int width = COLUMN_SIZES[column] * DEFAULT_COLUMN_CHAR_WIDTH;
       TableUtils.setSize(targetTable, column, width);
     }
   }

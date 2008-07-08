@@ -79,7 +79,7 @@
                 </panel>
                 <filler fill="vertical"/>
               </column>
-              <column>
+              <column marginLeft="20">
                 <panel ref="monthSummaryView"/>
                 <filler fill="vertical"/>
               </column>

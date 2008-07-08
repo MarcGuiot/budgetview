@@ -126,7 +126,6 @@ public class Gui {
         }
       }
     });
-
   }
 
   public static JPanel createHorizontalBoxLayoutPanel() {
