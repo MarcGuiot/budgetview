@@ -12,8 +12,11 @@ import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.model.*;
+import org.globsframework.model.ChangeSet;
 import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
@@ -64,7 +67,7 @@ public class PicsouInit {
           generator.update(field, lastAllocatedId);
         }
       });
-      repository.reset(userData, Transaction.TYPE, Account.TYPE, Bank.TYPE, BankEntity.TYPE,
+      repository.reset(userData, Month.TYPE, Transaction.TYPE, Account.TYPE, Bank.TYPE, BankEntity.TYPE,
                        TransactionToCategory.TYPE, LabelToCategory.TYPE, Category.TYPE);
     }
     catch (Exception e) {
@@ -88,6 +91,7 @@ public class PicsouInit {
     directory.add(TransactionAnalyzerFactory.class, factory);
     ImportService importService = new ImportService();
     directory.add(ImportService.class, importService);
+    directory.add(TimeService.class, new TimeService());
   }
 
   private static class ServerChangeSetListener extends DefaultChangeSetListener {

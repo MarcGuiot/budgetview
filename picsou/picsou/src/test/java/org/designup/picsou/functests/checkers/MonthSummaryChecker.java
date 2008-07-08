@@ -32,6 +32,11 @@ public class MonthSummaryChecker extends DataChecker {
       return this;
     }
 
+    public Summary checkPlannedRecurring(double amount) {
+      checkPlanned(BudgetArea.RECURRING_EXPENSES.getGlob().get(BudgetArea.NAME), amount);
+      return this;
+    }
+
     public Summary checkEnvelop(double amount) {
       check(BudgetArea.EXPENSES_ENVELOPE.getGlob().get(BudgetArea.NAME), amount);
       return this;
@@ -50,6 +55,11 @@ public class MonthSummaryChecker extends DataChecker {
     private void check(String budgetAreaName, double amount) {
       UISpecAssert.assertThat(panel.getTextBox(budgetAreaName).getContainer("budgetAreaRow")
         .getTextBox("budgetAreaAmount").textEquals(MonthSummaryChecker.this.toString(amount)));
+    }
+
+    private void checkPlanned(String budgetAreaName, double amount) {
+      UISpecAssert.assertThat(panel.getTextBox(budgetAreaName).getContainer("budgetAreaRow")
+        .getTextBox("budgetAreaPlannedAmount").textEquals(MonthSummaryChecker.this.toString(amount)));
     }
 
     public Summary total(double received, double expence) {

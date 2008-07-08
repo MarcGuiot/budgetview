@@ -40,10 +40,6 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .check();
 
     categories.assertSelectionEquals(MasterCategory.ALL);
-    periods
-      .initContent()
-      .add("Avril", 2006, 0.0, 0.0, 10.0, 100.00)
-      .check();
   }
 
   public void testTakesUserAndBankDatesIntoAccountWhenDetectingDuplicates() throws Exception {
@@ -59,6 +55,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     operations.importQifFile(12.50, file, "Societe Generale");
     operations.importQifFile(12.50, file, "Societe Generale");
 
+    periods.selectCells(0);
     transactions.initContent()
       .add("19/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
       .check();

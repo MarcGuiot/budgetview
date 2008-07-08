@@ -152,6 +152,13 @@ public class TransactionChecker extends ViewChecker {
     return transactionDetails.categorize();
   }
 
+  public void setRecurring(int rowIndex, String seriesName) {
+    CategorizationDialogChecker categorization = categorize(rowIndex);
+    categorization.selectRecurring();
+    categorization.selectRecurringSeries(seriesName);
+    categorization.validate();
+  }
+
   public class ContentChecker {
     private List<Object[]> content = new ArrayList<Object[]>();
 

@@ -28,6 +28,7 @@ public class MonthStatComputer implements ChangeSetListener {
         changeSet.containsUpdates(Transaction.MONTH) ||
         changeSet.containsUpdates(Transaction.SERIES) ||
         changeSet.containsChanges(Category.TYPE) ||
+        changeSet.containsCreationsOrDeletions(Month.TYPE) ||
         changeSet.containsCreationsOrDeletions(Transaction.TYPE)) {
       Set<Key> keySet = changeSet.getDeleted(Category.TYPE);
       Set<Integer> categoryToDelete = new HashSet<Integer>();
@@ -55,8 +56,7 @@ public class MonthStatComputer implements ChangeSetListener {
       repository.deleteAll(GlobalStat.TYPE);
 
       updateToZero(categoryToDelete);
-      SortedSet<Integer> months = new TreeSet<Integer>();
-
+      SortedSet<Integer> months = repository.getAll(Month.TYPE).getSortedSet(Month.ID);
       processTransactions(months);
       if (months.isEmpty()) {
         return;

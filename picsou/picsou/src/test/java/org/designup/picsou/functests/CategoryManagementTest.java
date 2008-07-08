@@ -93,7 +93,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/02/10", -2.0, "Unknown")
       .load();
 
-    periods.assertCellSelected(1);
+    periods.assertCellSelected("2006/01", "2006/02");
     categories.select(MasterCategory.FOOD, MasterCategory.TRANSPORTS);
 
     periods.selectCell(0);

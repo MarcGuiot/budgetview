@@ -25,11 +25,7 @@ public class MonthChecker extends DataChecker {
     Assert.assertTrue(timeViewPanel.getCurrentlySelectedToUpdate().isEmpty());
   }
 
-  public ContentChecker initContent() {
-    return new ContentChecker();
-  }
-
-  public void assertContains(String... elements) {
+  public void assertEquals(String... elements) {
     List<Integer> ids = new ArrayList<Integer>();
     for (String element : elements) {
       int index = element.indexOf(" (");
@@ -41,7 +37,7 @@ public class MonthChecker extends DataChecker {
     GlobList list = new GlobList();
     timeViewPanel.getAllSelectableMonth(list);
     Set<Integer> valueSet = list.getValueSet(Month.ID);
-    TestUtils.assertSetEquals(valueSet, ids);
+    TestUtils.assertSetEquals(ids, valueSet);
   }
 
   public void assertCellSelected(int index) {
@@ -59,24 +55,16 @@ public class MonthChecker extends DataChecker {
     }
   }
 
-  public void assertCellSelected(boolean... cells) {
+  public void assertCellSelected(String... dates) {
     Set<Selectable> list = timeViewPanel.getCurrentlySelectedToUpdate();
     GlobList selectedMonth = new GlobList();
     for (Selectable selectable : list) {
       selectable.getSelectedGlobs(selectedMonth);
     }
-    GlobList currentMonths = timeViewPanel.getRepository().getAll(Month.TYPE).sort(Month.ID);
 
-    for (int i = 0; i < cells.length; i++) {
-      if (cells[i]) {
-        Assert.assertTrue(Month.toString(currentMonths.get(i).get(Month.ID)) + "not selected",
-                          selectedMonth.contains(currentMonths.get(i)));
-      }
+    for (int i = 0; i < dates.length; i++) {
+      Assert.assertEquals(dates[i], Month.toString(selectedMonth.get(i).get(Month.ID)));
     }
-
-    // TODO: finir le test
-    System.out.println("MonthChecker.assertCellSelected: TBD");
-//    assertTrue(table.selectionEquals(new boolean[][]{cells}));
   }
 
   public void selectCell(int index) {
@@ -99,15 +87,11 @@ public class MonthChecker extends DataChecker {
     timeViewPanel.selectAll();
   }
 
-  public class ContentChecker {
-    private ContentChecker() {
-    }
-
-    public ContentChecker add(String month, int year, double income, double incomePart, double expenses, double expensesPart) {
-      return this;
-    }
-
-    public void check() {
-    }
+  public void assertSpanEquals(String frommmyyy, String tommyyyy) {
+    GlobList list = new GlobList();
+    timeViewPanel.getAllSelectableMonth(list);
+    Assert.assertTrue(list.size() >= 2);
+    Assert.assertEquals(frommmyyy, Month.toString(list.get(0).get(Month.ID)));
+    Assert.assertEquals(tommyyyy, Month.toString(list.get(list.size() - 1).get(Month.ID)));
   }
 }

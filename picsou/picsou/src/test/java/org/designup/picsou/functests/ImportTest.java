@@ -115,6 +115,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     transactions
       .initContent()
       .add("20/02/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2.2)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
   }
 

@@ -4,7 +4,6 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
-import org.uispec4j.Button;
 
 public class MonthManagementTest extends LoggedInFunctionalTestCase {
 
@@ -19,8 +18,8 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/20", +5, "income")
       .load();
 
-    periods.assertContains("2006/01 (5.00/10.00)");
-    periods.assertCellSelected(0);
+    periods.assertEquals("2006/01 (5.00/10.00)");
+    periods.assertCellSelected("2006/01");
   }
 
   public void testTwoMonths() throws Exception {
@@ -30,9 +29,10 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/02/20", +5, "income")
       .load();
 
-    periods.assertContains("2006/01 (0.00/10.00)", "2006/02 (5.00/0.00)");
+    periods.assertEquals("2006/01 (0.00/10.00)", "2006/02 (5.00/0.00)");
 
-    periods.assertCellSelected(1);
+    periods.assertCellSelected("2006/01", "2006/02");
+    periods.selectCell(1);
     transactions.initContent()
       .add("20/02/2006", TransactionType.VIREMENT, "income", "", 5.0, MasterCategory.NONE)
       .check();
@@ -50,8 +50,8 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/03/20", +5, "income")
       .load();
 
-    periods.assertContains("2006/01 (0.00/10.00)", "2006/02 (0.00/0.00)", "2006/03 (5.00/0.00)");
-    periods.assertCellSelected(2);
+    periods.assertEquals("2006/01 (0.00/10.00)", "2006/02 (0.00/0.00)", "2006/03 (5.00/0.00)");
+    periods.assertCellSelected("2006/01", "2006/03");
     periods.selectCell(0);
     periods.selectCell(2);
     transactions
@@ -81,7 +81,7 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -10, "misc")
       .addTransaction("2006/01/11", -50, "internal")
       .load();
-    periods.assertContains("2006/01 (0.00/60.00)");
+    periods.assertEquals("2006/01 (0.00/60.00)");
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "internal", "", -50, MasterCategory.NONE)
@@ -95,7 +95,7 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "misc", "", -10, MasterCategory.NONE)
       .check();
 
-    periods.assertContains("2006/01 (0.00/10.00)");
+    periods.assertEquals("2006/01 (0.00/10.00)");
   }
 
   public void testMultiselectionCumulatesTransactions() throws Exception {
@@ -127,39 +127,4 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
     transactions.assertEmpty();
   }
 
-  public void DISABLED_NOT_APPLICABLE_testNavigationButtons() throws Exception {
-    Button prevButton = mainWindow.getButton("prev");
-    Button nextButton = mainWindow.getButton("next");
-    Button lastButton = mainWindow.getButton("last");
-    Button firstButton = mainWindow.getButton("first");
-
-    OfxBuilder builder = OfxBuilder.init(this);
-    for (int i = 0; i < 4; i++) {
-      builder.addTransaction("2006/" + i + "/10", 1, "blah");
-    }
-    builder.load();
-
-    periods.assertCellSelected(3);
-
-    firstButton.click();
-    periods.assertCellSelected(0);
-
-    nextButton.click();
-    periods.assertCellSelected(1);
-
-    lastButton.click();
-    periods.assertCellSelected(3);
-
-    nextButton.click();
-    periods.assertCellSelected(3);
-
-    prevButton.click();
-    periods.assertCellSelected(2);
-
-    prevButton.click();
-    periods.assertCellSelected(1);
-
-    prevButton.click();
-    periods.assertCellSelected(0);
-  }
 }

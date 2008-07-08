@@ -106,7 +106,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/02/10", -2.0, "MiamMiam")
       .load();
 
-    periods.assertContains("2006/01 (0.00/1.00)", "2006/02 (0.00/2.00)");
+    periods.assertEquals("2006/01 (0.00/1.00)", "2006/02 (0.00/2.00)");
     periods.selectCell(0);
     categories.select(MasterCategory.NONE);
     transactions
@@ -117,7 +117,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
 
     transactions.assignCategory(MasterCategory.FOOD, 0);
     categories.assertSelectionEquals(MasterCategory.NONE);
-    periods.assertCellSelected(0);
+    periods.assertCellSelected("2006/01");
 
     transactions.assertEmpty();
   }

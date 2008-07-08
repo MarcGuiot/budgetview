@@ -241,7 +241,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private void reloadMonth() {
     GlobList list = repository.getAll(Month.TYPE).sort(Month.ID);
     timeGraph = new TimeGraph(list, colors);
-    selectLastMonth();
   }
 
   public void globsReset(GlobRepository globRepository, List<GlobType> changedTypes) {

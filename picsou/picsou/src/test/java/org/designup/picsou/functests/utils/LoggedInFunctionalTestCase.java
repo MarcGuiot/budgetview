@@ -32,6 +32,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected ServerAccess serverAccess;
   protected UncategorizedMessagePanelChecker informationPanel;
   protected TitleChecker title;
+  protected MonthSummaryChecker monthSummary;
   private PicsouApplication picsouApplication;
 
   protected void setUp() throws Exception {
@@ -62,7 +63,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
     views.selectData();
-
   }
 
   public void initCheckers() {
@@ -76,6 +76,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     graphics = new GraphicChecker(mainWindow);
     informationPanel = new UncategorizedMessagePanelChecker(mainWindow);
     title = new TitleChecker(mainWindow);
+    monthSummary = new MonthSummaryChecker(mainWindow);
   }
 
   protected void tearDown() throws Exception {
@@ -94,6 +95,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     informationPanel = null;
     title = null;
     repository = null;
+    monthSummary = null;
     picsouApplication.shutdown();
     picsouApplication = null;
   }

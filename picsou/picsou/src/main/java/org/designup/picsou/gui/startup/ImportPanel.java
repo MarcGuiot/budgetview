@@ -21,6 +21,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
@@ -71,11 +72,16 @@ public abstract class ImportPanel {
   protected GlobsPanelBuilder builder;
   private Glob defaultAccount;
   private DialogOwner owner;
+  private GlobRepository repository;
+  private Directory directory;
+  private Set<Integer> importKeys = new HashSet<Integer>();
 
   protected ImportPanel(String textForCloseButton, List<File> files, Glob defaultAccount,
                         final DialogOwner owner, final GlobRepository repository, Directory directory) {
     this.defaultAccount = defaultAccount;
     this.owner = owner;
+    this.repository = repository;
+    this.directory = directory;
     updateFileField(files);
     openRequestManager = directory.get(OpenRequestManager.class);
     openRequestManager.pushCallback(new OpenRequestManager.Callback() {
@@ -311,6 +317,7 @@ public abstract class ImportPanel {
       try {
         openRequestManager.popCallback();
         localRepository.commitChanges(true);
+        selectImportedMonth();
         complete();
         return true;
       }
@@ -342,6 +349,25 @@ public abstract class ImportPanel {
       Log.write("", e);
       messageLabel.setText(message);
       return false;
+    }
+  }
+
+  private void selectImportedMonth() {
+    repository.enterBulkDispatchingMode();
+    Set<Integer> monthIds;
+    try {
+      monthIds = repository.getAll(Transaction.TYPE,
+                                   GlobMatchers.fieldIn(Transaction.IMPORT, importKeys)).getValueSet(Transaction.BANK_MONTH);
+      for (Integer monthId : monthIds) {
+        repository.findOrCreate(Key.create(Month.TYPE, monthId));
+      }
+    }
+    finally {
+      repository.completeBulkDispatchingMode();
+    }
+    GlobList monthToSelect = repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, monthIds));
+    if (!monthToSelect.isEmpty()) {
+      directory.get(SelectionService.class).select(monthToSelect, Month.TYPE);
     }
   }
 
@@ -408,7 +434,8 @@ public abstract class ImportPanel {
       if (!accountEditionPanel.check()) {
         return;
       }
-      importSession.importTransactions(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
+      Key importKey = importSession.importTransactions(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
+      importKeys.add(importKey.get(TransactionImport.ID));
       nextImport();
     }
   }

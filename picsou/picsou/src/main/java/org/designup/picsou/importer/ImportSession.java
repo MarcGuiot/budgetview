@@ -74,13 +74,13 @@ public class ImportSession {
     return dateFormatAnalyzer.parse(valueSet);
   }
 
-  public void importTransactions(Glob currentlySelectedAccount, String selectedDateFormat) {
+  public Key importTransactions(Glob currentlySelectedAccount, String selectedDateFormat) {
 
     TransactionFilter transactionFilter = new TransactionFilter();
     GlobList newTransactions = transactionFilter.loadTransactions(referenceRepository, localRepository,
                                                                   convertImportedTransaction(selectedDateFormat));
 
-    createImport(typedStream, newTransactions, localRepository);
+    Key importKey = createImport(typedStream, newTransactions, localRepository);
     localRepository.deleteAll(ImportedTransaction.TYPE);
     importChangeSetAggregator.dispose();
     try {
@@ -124,6 +124,7 @@ public class ImportSession {
     finally {
       referenceRepository.completeBulkDispatchingMode();
     }
+    return importKey;
   }
 
   private GlobList convertImportedTransaction(String selectedDateFormat) {
