@@ -80,7 +80,7 @@ public class GlobList extends ArrayList<Glob> {
     }
   }
 
-  public void removeAll(Set<Key> keys){
+  public void removeAll(Set<Key> keys) {
     for (Iterator it = this.iterator(); it.hasNext();) {
       Glob glob = (Glob)it.next();
       if (keys.contains(glob.getKey())) {
@@ -206,5 +206,13 @@ public class GlobList extends ArrayList<Glob> {
       types.add(glob.getType());
     }
     return types;
+  }
+
+  public Glob getFirst() {
+    return get(0);
+  }
+
+  public Glob getLast() {
+    return get(size() - 1);
   }
 }

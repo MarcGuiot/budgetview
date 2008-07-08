@@ -222,6 +222,14 @@ public class GlobMatchers {
     };
   }
 
+  public static GlobMatcher fieldIn(final IntegerField field, final Set<Integer> values) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return values.contains(item.get(field));
+      }
+    };
+  }
+
   private static class SingleFieldMatcher implements GlobMatcher {
     private Field field;
     private Object value;
