@@ -24,6 +24,8 @@ public interface DeltaGlob extends FieldValuesWithPrevious {
 
   void setPreviousValues(FieldValues values);
 
+  void mergePreviousValues(FieldValues values);
+
   FieldValues getValues();
 
   FieldValues getPreviousValues();

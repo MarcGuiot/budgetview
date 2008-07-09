@@ -76,7 +76,7 @@ public interface DeltaState {
 
     public void processDeletion(DeltaGlob delta, FieldValues values) {
       delta.setState(DELETED);
-      delta.setPreviousValues(values);
+      delta.mergePreviousValues(values);
     }
 
     public void visit(DeltaGlob delta, ChangeSetVisitor visitor) throws Exception {
@@ -90,7 +90,6 @@ public interface DeltaState {
 
   DeltaState DELETED = new DeltaState() {
     public void processCreation(DeltaGlob delta, FieldValues values) {
-      delta.resetValues();
       delta.setState(UPDATED);
       delta.setValues(values);
     }

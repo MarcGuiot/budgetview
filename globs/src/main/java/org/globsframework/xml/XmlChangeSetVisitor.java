@@ -82,7 +82,7 @@ public class XmlChangeSetVisitor implements ChangeSetVisitor {
   private void dumpFieldValues(final XmlTag tag, FieldValuesWithPrevious values) throws IOException {
     values.safeApply(new FieldValuesWithPrevious.Functor() {
       public void process(Field field, Object value, Object previousValue) throws IOException {
-        if (value != null) {
+        if ((value != null) || (previousValue != null)) {
           tag.addAttribute(field.getName(), converter.toString(field, value));
           tag.addAttribute("_" + field.getName(), converter.toString(field, previousValue));
         }

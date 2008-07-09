@@ -68,6 +68,17 @@ public class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements
     });
   }
 
+  public void mergePreviousValues(FieldValues globValues) {
+    globValues.safeApply(new FieldValues.Functor() {
+      public void process(Field field, Object value) throws Exception {
+        final int index = field.getIndex();
+        if (previousValues[index] == UNSET_VALUE) {
+          previousValues[index] = value;
+        }
+      }
+    });
+  }
+
   public FieldValues getValues() {
     return this;
   }
@@ -110,7 +121,7 @@ public class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements
       if (!field.isKeyField()) {
         values[field.getIndex()] = UNSET_VALUE;
       }
-      previousValues[field.getIndex()] = null;
+      previousValues[field.getIndex()] = UNSET_VALUE;
     }
   }
 
