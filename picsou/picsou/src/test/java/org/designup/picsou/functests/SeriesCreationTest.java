@@ -7,7 +7,7 @@ import org.designup.picsou.functests.checkers.SeriesCreationDialogChecker;
 import org.designup.picsou.model.MasterCategory;
 
 public class SeriesCreationTest extends LoggedInFunctionalTestCase {
-  public void test() throws Exception {
+  public void testNewIncomeSeries() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -1129.90, "WorldCo/june")
@@ -31,8 +31,53 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkCategory(MasterCategory.INCOME);
   }
 
-  public void testCancel() throws Exception {
-//    fail();
+  public void testNewRecurringSeries() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -60, "Telefoot+")
+      .load();
+
+    CategorizationDialogChecker dialog = transactions.categorize(0);
+    dialog.checkLabel("Telefoot+");
+
+    dialog.selectRecurring();
+    SeriesCreationDialogChecker creationDialog = dialog.createSeries();
+    creationDialog.setName("Culture");
+    creationDialog.checkType("Recurring");
+    creationDialog.setCategory(MasterCategory.EDUCATION);
+    creationDialog.validate();
+
+    dialog.checkContainsRecurringSeries("Internet", "Culture");
+    dialog.selectRecurringSeries("Culture");
+    dialog.validate();
+
+    transactionDetails.checkSeries("Culture");
+    transactionDetails.checkCategory(MasterCategory.EDUCATION);
   }
   
+  public void testCancel() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -60, "JaimeLeFoot.com")
+      .load();
+
+    CategorizationDialogChecker dialog = transactions.categorize(0);
+    dialog.checkLabel("JaimeLeFoot.com");
+
+    dialog.selectRecurring();
+    SeriesCreationDialogChecker creationDialog = dialog.createSeries();
+    creationDialog.setName("Culture");
+    creationDialog.checkType("Recurring");
+    creationDialog.setCategory(MasterCategory.EDUCATION);
+    creationDialog.validate();
+
+    dialog.cancel();
+
+    transactionDetails.checkNoSeries();
+
+    CategorizationDialogChecker newDialog = transactions.categorize(0);
+    newDialog.checkLabel("JaimeLeFoot.com");
+    newDialog.selectRecurring();
+    newDialog.checkRecurringSeriesNotFound("Culture");
+  }  
 }

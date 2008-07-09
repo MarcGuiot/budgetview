@@ -1,12 +1,9 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-  <column opaque="true">
+  <column opaque="true" preferredSize="(500,300)">
 
     <row opaque="true">
       <textArea ref="transactionLabel"/>
-      <filler fill="horizontal"/>
-      <button name="previousTransaction" action="previousTransaction" text="$categorization.previous"/>
-      <button name="nextTransaction" action="nextTransaction" text="$categorization.next"/>
     </row>
 
     <row>
@@ -29,31 +26,34 @@
             <hyperlink action="createIncomeSeries" text="$categorization.newseries"/>
           </row>
         </card>
-        
+
         <card name="recurringExpenses">
           <row>
             <toggleButton ref="invisibleRecurringToggle" visible="false"/>
             <repeat ref="recurringSeriesRepeat">
               <toggleButton ref="seriesToggle"/>
             </repeat>
+            <hyperlink action="createRecurringSeries" text="$categorization.newseries"/>
           </row>
         </card>
 
         <card name="expensesEnvelope">
-          <repeat ref="envelopeSeriesRepeat">
-            <column>
-              <label ref="envelopeSeriesName"/>
-              <toggleButton ref="invisibleCategory" visible="false"/>
-              <repeat ref="envelopeCategoryRepeat">
-                <toggleButton ref="envelopeCategoryToggle"/>
-              </repeat>
-            </column>
-          </repeat>
+          <row>
+            <toggleButton ref="invisibleEnvelopeToggle" visible="false"/>
+            <repeat ref="envelopeSeriesRepeat">
+              <column>
+                <label ref="envelopeSeriesName"/>
+                <repeat ref="envelopeCategoryRepeat">
+                  <toggleButton ref="envelopeCategoryToggle"/>
+                </repeat>
+              </column>
+            </repeat>
+          </row>
         </card>
 
         <card name="occasionalExpenses">
           <row>
-            <toggleButton ref="invibleOccasionalToggle" visible="false"/>
+            <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
             <repeat ref="occasionalSeriesRepeat">
               <toggleButton ref="occasionalCategoryToggle"/>
             </repeat>
@@ -62,6 +62,13 @@
 
       </cards>
     </row>
+
+    <row margin="10">
+      <button name="previousTransaction" action="previousTransaction" text="$categorization.previous"/>
+      <filler fill="horizontal"/>
+      <button name="nextTransaction" action="nextTransaction" text="$categorization.next"/>
+    </row>
+
     <row>
       <button action="ok" text="$ok"/>
       <button action="cancel" text="$cancel"/>

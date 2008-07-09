@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
-  <column>
+  <column opaque="true">
 
     <label text="$seriesCreation.title"/>
 

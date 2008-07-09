@@ -30,8 +30,10 @@ public class SeriesCreationDialog {
   private Directory localDirectory;
   private Glob series;
   private SelectionService selectionService;
+  private BudgetArea budgetArea;
 
-  public SeriesCreationDialog(Window parent, GlobRepository repository, Directory directory) {
+  public SeriesCreationDialog(BudgetArea budgetArea, Window parent, GlobRepository repository, Directory directory) {
+    this.budgetArea = budgetArea;
 
     localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(Series.TYPE, Category.TYPE, BudgetArea.TYPE)
@@ -70,7 +72,7 @@ public class SeriesCreationDialog {
   public void show() {
     localRepository.rollback();
     series = localRepository.create(Series.TYPE,
-                                    value(Series.BUDGET_AREA, BudgetArea.INCOME.getId()));
+                                    value(Series.BUDGET_AREA, budgetArea.getId()));
     selectionService.select(series);
     dialog.pack();
     GuiUtils.showCentered(dialog);

@@ -81,6 +81,11 @@ public class CategorizationDialogChecker extends DataChecker {
     org.globsframework.utils.TestUtils.assertContains(names, seriesNames);
   }
 
+  public void checkRecurringSeriesNotFound(String seriesName) {
+    Panel seriesPanel = getRecurringSeriesPanel();
+    assertFalse(seriesPanel.containsUIComponent(ToggleButton.class, seriesName));
+  }
+
   public void selectRecurringSeries(String name) {
     Panel panel = getRecurringSeriesPanel();
     panel.getToggleButton(name).click();
