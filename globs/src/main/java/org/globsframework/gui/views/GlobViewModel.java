@@ -155,7 +155,7 @@ public class GlobViewModel implements ChangeSetListener {
       }
     }
 
-    public void visitUpdate(Key key, FieldValues values) throws Exception {
+    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
       Glob glob = repository.get(key);
       boolean matches = matcher.matches(glob, repository);
       int previousIndex = globs.firstIndexOf(new GlobKeyMatcher(key), repository);
@@ -206,7 +206,7 @@ public class GlobViewModel implements ChangeSetListener {
       }
     }
 
-    public void visitUpdate(Key key, FieldValues values) throws Exception {
+    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
       toRemove.add(globs.getFirst(new GlobKeyMatcher(key), repository));
       Glob glob = repository.get(key);
       toAdd.add(glob);

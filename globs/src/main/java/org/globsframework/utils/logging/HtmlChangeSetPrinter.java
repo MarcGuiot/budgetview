@@ -63,7 +63,7 @@ class HtmlChangeSetPrinter {
         table.writeRow(row);
       }
 
-      public void visitUpdate(Key key, FieldValues values) throws Exception {
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         List<String> row = new ArrayList<String>();
         row.add("update");
         for (Field field : type.getFields()) {

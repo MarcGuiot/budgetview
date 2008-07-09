@@ -2,10 +2,7 @@ package org.globsframework.remote;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetVisitor;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedOutput;
 
@@ -53,7 +50,7 @@ public class SerializedRemoteAccess {
       }
     }
 
-    public void visitUpdate(Key key, FieldValues values) throws Exception {
+    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
       output.writeByte(RemoteExecutor.TAG.UPDATE.getId());
       output.writeString(key.getGlobType().getName());
       writeKey(key);

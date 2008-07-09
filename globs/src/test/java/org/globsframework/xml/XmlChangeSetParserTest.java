@@ -3,10 +3,7 @@ package org.globsframework.xml;
 import junit.framework.TestCase;
 import org.globsframework.metamodel.DummyModel;
 import org.globsframework.metamodel.DummyObject;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetVisitor;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -33,7 +30,7 @@ public class XmlChangeSetParserTest extends TestCase {
         assertTrue(values.get(DummyObject.PRESENT));
       }
 
-      public void visitUpdate(Key key, FieldValues values) throws Exception {
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         assertEquals(3, key.get(DummyObject.ID).intValue());
         assertEquals(2, values.size());
         assertEquals("newName", values.get(DummyObject.NAME));

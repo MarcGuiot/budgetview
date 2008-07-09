@@ -15,7 +15,7 @@ public class ChangeSetSequencer {
     GlobTypeDependencies dependencies = model.getDependencies();
 
     final MultiMap<GlobType, Change> creations = new MultiMap<GlobType, Change>();
-    final MultiMap<GlobType, Change> updates = new MultiMap<GlobType, Change>();
+    final MultiMap<GlobType, ChangeWithPrevious> updates = new MultiMap<GlobType, ChangeWithPrevious>();
     final MultiMap<GlobType, Change> deletions = new MultiMap<GlobType, Change>();
 
     dispatchChanges(changeSet, creations, updates, deletions, dependencies);
@@ -27,7 +27,7 @@ public class ChangeSetSequencer {
     }
 
     for (GlobType type : dependencies.getUpdateSequence()) {
-      for (Change change : updates.get(type)) {
+      for (ChangeWithPrevious change : updates.get(type)) {
         visitor.visitUpdate(change.getKey(), change.getValues());
       }
     }
@@ -41,7 +41,7 @@ public class ChangeSetSequencer {
 
   private static void dispatchChanges(ChangeSet changeSet,
                                       final MultiMap<GlobType, Change> creations,
-                                      final MultiMap<GlobType, Change> updates,
+                                      final MultiMap<GlobType, ChangeWithPrevious> updates,
                                       final MultiMap<GlobType, Change> deletions,
                                       final GlobTypeDependencies dependencies) {
     changeSet.safeVisit(new ChangeSetVisitor() {
@@ -51,7 +51,7 @@ public class ChangeSetSequencer {
           return;
         }
         final FieldValuesBuilder builderForCreation = FieldValuesBuilder.init();
-        final FieldValuesBuilder builderForUpdate = FieldValuesBuilder.init();
+        final FieldValuesWithPreviousBuilder builderForUpdate = FieldValuesWithPreviousBuilder.init();
         values.apply(new FieldValues.Functor() {
           public void process(Field field, Object value) throws Exception {
             if (field.isRequired()) {
@@ -63,14 +63,14 @@ public class ChangeSetSequencer {
           }
         });
         creations.put(key.getGlobType(), new Change(key, builderForCreation.get()));
-        FieldValues valuesForUpdate = builderForUpdate.get();
+        FieldValuesWithPrevious valuesForUpdate = builderForUpdate.get();
         if (valuesForUpdate.size() > 0) {
-          updates.put(key.getGlobType(), new Change(key, valuesForUpdate));
+          updates.put(key.getGlobType(), new ChangeWithPrevious(key, valuesForUpdate));
         }
       }
 
-      public void visitUpdate(Key key, FieldValues values) throws Exception {
-        updates.put(key.getGlobType(), new Change(key, values));
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        updates.put(key.getGlobType(), new ChangeWithPrevious(key, values));
       }
 
       public void visitDeletion(Key key, FieldValues values) throws Exception {
@@ -94,6 +94,25 @@ public class ChangeSetSequencer {
     }
 
     public FieldValues getValues() {
+      return values;
+    }
+  }
+
+  private static class ChangeWithPrevious {
+
+    private Key key;
+    private FieldValuesWithPrevious values;
+
+    private ChangeWithPrevious(Key key, FieldValuesWithPrevious values) {
+      this.key = key;
+      this.values = values;
+    }
+
+    public Key getKey() {
+      return key;
+    }
+
+    public FieldValuesWithPrevious getValues() {
       return values;
     }
   }

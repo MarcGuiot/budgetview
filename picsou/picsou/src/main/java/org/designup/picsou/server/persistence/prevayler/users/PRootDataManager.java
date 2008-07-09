@@ -3,8 +3,6 @@ package org.designup.picsou.server.persistence.prevayler.users;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializablePolicy;
 import org.designup.picsou.server.persistence.prevayler.DefaultSerializer;
 import org.designup.picsou.server.persistence.prevayler.RootDataManager;
-import org.designup.picsou.server.persistence.prevayler.categories.GetAssociatedCategory;
-import org.designup.picsou.server.persistence.prevayler.categories.RegisterAssociatedCategory;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Log;

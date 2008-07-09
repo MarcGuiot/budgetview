@@ -5,10 +5,7 @@ import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.designup.picsou.server.serialization.SerializationManager;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSetVisitor;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultDeltaGlob;
 import org.globsframework.model.delta.DeltaGlob;
 import org.globsframework.model.delta.DeltaState;
@@ -37,7 +34,7 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
     }
   }
 
-  public void visitUpdate(Key key, FieldValues values) throws Exception {
+  public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
     PicsouGlobSerializer serializer = key.getGlobType().getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
     if (serializer != null) {
       writeData(key, values, DeltaState.UPDATED, serializer);

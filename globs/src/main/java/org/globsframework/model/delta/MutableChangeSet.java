@@ -12,7 +12,7 @@ import java.util.List;
 public interface MutableChangeSet extends ChangeSet {
   void processCreation(Key globKey, FieldValues values);
 
-  void processUpdate(Key key, Field field, Object newValue);
+  void processUpdate(Key key, Field field, Object newValue, Object previousValue);
 
   void processUpdate(Key key, FieldValues values);
 

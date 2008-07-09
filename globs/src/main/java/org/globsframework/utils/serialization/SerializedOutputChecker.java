@@ -2,7 +2,6 @@ package org.globsframework.utils.serialization;
 
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
-import org.globsframework.model.delta.DeltaGlob;
 
 import java.util.Date;
 
@@ -21,11 +20,6 @@ class SerializedOutputChecker implements SerializedOutput {
   public void writeChangeSet(ChangeSet changeSet) {
     serializationOutput.writeString("ChangeSet");
     serializationOutput.writeChangeSet(changeSet);
-  }
-
-  public void writeDeltaGlob(DeltaGlob deltaGlob) {
-    serializationOutput.writeString("DeltaGlob");
-    serializationOutput.writeDeltaGlob(deltaGlob);
   }
 
   public void write(int[] array) {

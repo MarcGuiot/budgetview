@@ -221,7 +221,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
             values.apply(new NoKeyFieldChecker());
           }
 
-          public void visitUpdate(Key key, FieldValues values) throws Exception {
+          public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
             values.apply(new NoKeyFieldChecker());
           }
         });
@@ -593,7 +593,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
             createObj2(repository, key, key + " created");
           }
 
-          public void visitUpdate(Key key, FieldValues values) throws Exception {
+          public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
             repository.update(key, DummyObject.NAME,
                               (values.contains(DummyObject.NAME) ? values.get(DummyObject.NAME) : "null") + "-updated");
             createObj2(repository, key, key + " updated");
@@ -754,7 +754,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                                 .set(DummyObject.NAME, "obj3")
                                 .get());
 
-    changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1");
+    changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1", toto);
     changeSet.processDeletion(getKey2(2), FieldValues.EMPTY);
 
     repository.apply(changeSet);
@@ -776,7 +776,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                                 .set(DummyObject.NAME, "obj3")
                                 .get());
 
-    changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1");
+    changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1", toto);
     changeSet.processDeletion(getKey2(2), FieldValues.EMPTY);
     changeSet.processDeletion(getKey(666), FieldValues.EMPTY);
 
@@ -812,7 +812,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     );
 
     MutableChangeSet changeSet = new DefaultChangeSet();
-    changeSet.processUpdate(getKey(2), DummyObject.NAME, "newObj1");
+    changeSet.processUpdate(getKey(2), DummyObject.NAME, "newObj1", toto);
     checkApplyChangeSetError(changeSet, "Object dummyObject[id=2] not found - cannot apply update");
   }
 

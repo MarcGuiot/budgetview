@@ -2,9 +2,13 @@ package org.globsframework.model.delta;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.ChangeSetVisitor;
-import org.globsframework.model.MutableGlob;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.Key;
+import org.globsframework.model.FieldValuesWithPrevious;
 
-public interface DeltaGlob extends MutableGlob {
+public interface DeltaGlob extends FieldValuesWithPrevious {
+
+  void setObject(Field field, Object value);
 
   boolean isSet(Field field);
 
@@ -18,4 +22,9 @@ public interface DeltaGlob extends MutableGlob {
 
   DeltaState getState();
 
+  void setValues(FieldValues values);
+
+  Key getKey();
+
+  FieldValues getValues();
 }

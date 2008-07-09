@@ -74,8 +74,8 @@ public interface DeltaState {
       glob.setValues(values);
     }
 
-    public void visit(DeltaGlob glob, ChangeSetVisitor visitor) throws Exception {
-      visitor.visitUpdate(glob.getKey(), glob.getValues());
+    public void visit(DeltaGlob delta, ChangeSetVisitor visitor) throws Exception {
+      visitor.visitUpdate(delta.getKey(), delta);
     }
 
     public String toString() {

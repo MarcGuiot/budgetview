@@ -37,11 +37,6 @@ public interface SerializedOutput {
 
   void writeChangeSet(ChangeSet changeSet);
 
-  /**
-   * @deprecated - A SUPPRIMER
-   */
-  void writeDeltaGlob(DeltaGlob deltaGlob);
-
   void write(int[] array);
 
   void write(long[] array);

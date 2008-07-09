@@ -22,7 +22,7 @@ public class DefaultChangeSet implements MutableChangeSet {
     processCreation(KeyBuilder.createFromValues(type, values), FieldValuesBuilder.removeKeyFields(values));
   }
 
-  public void processUpdate(Key key, Field field, Object newValue) {
+  public void processUpdate(Key key, Field field, Object newValue, Object previousValue) {
     DefaultDeltaGlob glob = getGlob(key);
     glob.processUpdate(field, newValue);
   }
@@ -208,10 +208,10 @@ public class DefaultChangeSet implements MutableChangeSet {
         processCreation(key, values);
       }
 
-      public void visitUpdate(final Key key, FieldValues values) throws Exception {
-        values.apply(new FieldValues.Functor() {
-          public void process(Field field, Object value) throws IOException {
-            processUpdate(key, field, value);
+      public void visitUpdate(final Key key, FieldValuesWithPrevious values) throws Exception {
+        values.apply(new FieldValuesWithPrevious.Functor() {
+          public void process(Field field, Object value, Object previousValue) throws IOException {
+            processUpdate(key, field, value, previousValue);
           }
         });
       }

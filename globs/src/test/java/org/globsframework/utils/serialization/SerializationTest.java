@@ -88,21 +88,6 @@ public class SerializationTest extends TestCase {
     inputStream.close();
   }
 
-  public void testDeltaGlobWithCreatedState() throws Exception {
-    checkDeltaGlobWithValues(DeltaState.CREATED);
-  }
-
-  public void testDeltaGlobWithUpdateState() throws Exception {
-    checkDeltaGlobWithValues(DeltaState.UPDATED);
-  }
-
-  public void testDeltaGlobWithDeletedState() throws Exception {
-    checkDeletedDeltaGlobWithoutValues(DeltaState.DELETED);
-  }
-
-  public void testDeltaGlobWithUnchangedState() throws Exception {
-    checkDeletedDeltaGlobWithoutValues(DeltaState.DELETED);
-  }
 
   public void testChangeSet() throws Exception {
     MutableChangeSet changeSet = new DefaultChangeSet();
@@ -112,7 +97,7 @@ public class SerializationTest extends TestCase {
                                 .set(DummyObject.NAME, "name1")
                                 .set(DummyObject.DATE, currentDate)
                                 .get());
-    changeSet.processUpdate(KeyBuilder.newKey(DummyObject.TYPE, 2), DummyObject.NAME, "name2");
+    changeSet.processUpdate(KeyBuilder.newKey(DummyObject.TYPE, 2), DummyObject.NAME, "name2", toto);
     changeSet.processDeletion(KeyBuilder.newKey(DummyObject.TYPE, 3),
                               FieldValuesBuilder.init()
                                 .set(DummyObject.ID, 3)
@@ -130,45 +115,7 @@ public class SerializationTest extends TestCase {
     );
   }
 
-  private void checkDeltaGlobWithValues(DeltaState state) throws IOException {
-    DeltaGlob delta = new DefaultDeltaGlob(Key.create(DummyObject.TYPE, 1));
-    delta.setState(state);
-    delta.setObject(DummyObject.NAME, "obj");
 
-    output.writeDeltaGlob(delta);
-    output.writeString("end");
-    outputStream.close();
-
-    DeltaGlob newDelta = input.readDeltaGlob(DummyModel.get());
-    assertNotSame(delta, newDelta);
-
-    assertEquals(state, newDelta.getState());
-    assertEquals(1, newDelta.get(DummyObject.ID).intValue());
-    assertEquals("obj", newDelta.get(DummyObject.NAME));
-
-    assertEquals("end", input.readString());
-    inputStream.close();
-  }
-
-  private void checkDeletedDeltaGlobWithoutValues(DeltaState state) throws IOException {
-    DeltaGlob delta = new DefaultDeltaGlob(Key.create(DummyObject.TYPE, 1));
-    delta.setState(state);
-    delta.setObject(DummyObject.NAME, "obj");
-
-    output.writeDeltaGlob(delta);
-    output.writeString("end");
-    outputStream.close();
-
-    DeltaGlob newDelta = input.readDeltaGlob(DummyModel.get());
-    assertNotSame(delta, newDelta);
-
-    assertEquals(state, newDelta.getState());
-    assertEquals(1, newDelta.get(DummyObject.ID).intValue());
-    assertTrue(newDelta.isSet(DummyObject.NAME));
-
-    assertEquals("end", input.readString());
-    inputStream.close();
-  }
 
   private FieldValues createSampleValues() {
     return FieldValuesBuilder.init()

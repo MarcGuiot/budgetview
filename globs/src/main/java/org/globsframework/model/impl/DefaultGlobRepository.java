@@ -281,7 +281,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     if (indexTables != null) {
       indexTables.add(newValue, mutableGlob, field, oldValue);
     }
-    changeSetToDispatch.processUpdate(key, field, newValue);
+    changeSetToDispatch.processUpdate(key, field, newValue, toto);
     return true;
   }
 
@@ -316,7 +316,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       public void process(Field sourceField, Field targetField) {
         Object value = targetKey != null ? targetKey.getValue(targetField) : null;
         sourceGlob.setObject(sourceField, value);
-        changeSetToDispatch.processUpdate(sourceKey, sourceField, value);
+        changeSetToDispatch.processUpdate(sourceKey, sourceField, value, toto);
       }
     });
     notifyListeners();
@@ -414,7 +414,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         }
       }
 
-      public void visitUpdate(Key key, FieldValues values) {
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) {
         if (find(key) == null) {
           throw new InvalidParameter("Object " + key + " not found - cannot apply update");
         }
@@ -581,7 +581,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       create(key.getGlobType(), mergedValues.toArray());
     }
 
-    public void visitUpdate(Key key, FieldValues values) {
+    public void visitUpdate(Key key, FieldValuesWithPrevious values) {
       update(key, values.toArray());
     }
 
