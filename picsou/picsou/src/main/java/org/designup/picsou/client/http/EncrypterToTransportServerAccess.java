@@ -7,6 +7,7 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadConnection;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.server.model.SerializableGlobType;
+import org.designup.picsou.server.model.ServerDelta;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.designup.picsou.server.serialization.SerializationManager;
 import org.globsframework.metamodel.GlobModel;
@@ -16,7 +17,6 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.delta.DeltaGlob;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.MapOfMaps;
@@ -141,7 +141,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializableDeltaGlobSerializer deltaGlobSerializer = new SerializableDeltaGlobSerializer();
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
-    MultiMap<String, DeltaGlob> stringDeltaGlobMultiMap = serializerVisitor.getSerializableGlob();
+    MultiMap<String, ServerDelta> stringDeltaGlobMultiMap = serializerVisitor.getSerializableGlob();
     deltaGlobSerializer.serialize(outputStream.getOutput(), stringDeltaGlobMultiMap);
     if (stringDeltaGlobMultiMap.size() != 0) {
       updateUserData(outputStream.toByteArray());
