@@ -8,7 +8,9 @@ import org.globsframework.model.FieldValuesWithPrevious;
 
 public interface DeltaGlob extends FieldValuesWithPrevious {
 
-  void setObject(Field field, Object value);
+  void setValue(Field field, Object value);
+
+  void setValue(Field field, Object value, Object previousValue);
 
   boolean isSet(Field field);
 

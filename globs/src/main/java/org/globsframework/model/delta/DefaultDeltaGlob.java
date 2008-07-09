@@ -4,14 +4,17 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.*;
-import org.globsframework.model.impl.AbstractMutableGlob;
+import org.globsframework.model.impl.AbstractFieldValuesWithPrevious;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Date;
 
-public class DefaultDeltaGlob extends AbstractMutableGlob implements DeltaGlob {
+public class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaGlob {
 
+  private Key key;
+  private Object[] values;
+  private Object[] previousValues;
   private DeltaState state = DeltaState.UNCHANGED;
 
   // TODO: to be made serialization-proof
@@ -22,13 +25,29 @@ public class DefaultDeltaGlob extends AbstractMutableGlob implements DeltaGlob {
   };
 
   public DefaultDeltaGlob(Key key) {
-    super(key.getGlobType());
+    this.key = key;
     setValues(key);
     resetValues();
   }
 
-  private DefaultDeltaGlob(GlobType type, Object[] values) {
-    super(type, values);
+  protected Object doGet(Field field) {
+    return values[field.getIndex()];
+  }
+
+  protected Object doGetPrevious(Field field) {
+    return previousValues[field.getIndex()];
+  }
+
+  public Key getKey() {
+    return key;
+  }
+
+  public void setValues(FieldValues values) {
+    values.apply(new FieldValues.Functor() {
+      public void process(Field field, Object value) throws Exception {
+
+      }
+    });
   }
 
   public boolean isModified() {
@@ -73,25 +92,37 @@ public class DefaultDeltaGlob extends AbstractMutableGlob implements DeltaGlob {
     this.state = state;
   }
 
-  public void setObject(Field field, Object value) {
+  public void setValue(Field field, Object value) {
     values[field.getIndex()] = value;
   }
 
   public FieldValues getValues() {
-    return new FieldValuesFromArray(type, values);
+    return new FieldValuesFromArray(key.getGlobType(), values);
   }
 
   public void apply(Functor functor) throws Exception {
-    for (Field field : type.getFields()) {
+    for (Field field : key.getGlobType().getFields()) {
       Object value = values[field.getIndex()];
       if (value != UNSET_VALUE) {
-        functor.process(field, value);
+        functor.process(field, value, previousValues[field.getIndex()]);
       }
     }
   }
 
+  public void safeApply(Functor functor) {
+    try {
+      apply(functor);
+    }
+    catch (RuntimeException e) {
+      throw e;
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public void resetValues() {
-    for (Field field : type.getFields()) {
+    for (Field field : key.getGlobType().getFields()) {
       if (!field.isKeyField()) {
         values[field.getIndex()] = UNSET_VALUE;
       }
@@ -106,8 +137,8 @@ public class DefaultDeltaGlob extends AbstractMutableGlob implements DeltaGlob {
     state.processCreation(this, values);
   }
 
-  public void processUpdate(Field field, Object value) {
-    state.processUpdate(this, field, value);
+  public void processUpdate(Field field, Object value, Object previousValue) {
+    state.processUpdate(this, field, value, previousValue);
   }
 
   public void processDeletion(FieldValues values) {
@@ -125,10 +156,6 @@ public class DefaultDeltaGlob extends AbstractMutableGlob implements DeltaGlob {
     catch (Exception e) {
       throw new UnexpectedApplicationState(e);
     }
-  }
-
-  public Glob duplicate() {
-    return new DefaultDeltaGlob(type, duplicateValues());
   }
 
   static private class FieldValuesFromArray implements FieldValues {
