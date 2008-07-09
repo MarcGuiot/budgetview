@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DirectAccountDataManager implements AccountDataManager {
+
   private Map<Integer, DurableOutputStream> outputStreamMap = new HashMap<Integer, DurableOutputStream>();
   private String prevaylerPath;
   private boolean inMemory;
@@ -115,7 +116,7 @@ public class DirectAccountDataManager implements AccountDataManager {
           globToMerge.remove(deltaGlob.get(SerializableGlobType.ID));
         }
         else {
-          globToMerge.put(deltaGlob.get(SerializableGlobType.ID), deltaGlob);
+//          globToMerge.put(deltaGlob.get(SerializableGlobType.ID), deltaGlob);
         }
       }
     }

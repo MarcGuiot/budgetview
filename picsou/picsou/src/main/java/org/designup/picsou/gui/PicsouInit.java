@@ -7,10 +7,12 @@ import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.triggers.MonthStatComputer;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.PicsouModel;
+import org.designup.picsou.model.User;
 import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.ChangeSet;
 import static org.globsframework.model.FieldValue.value;
@@ -29,6 +31,7 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.globsframework.xml.XmlGlobParser;
 
 import java.io.*;
+import java.util.Collection;
 
 public class PicsouInit {
 
@@ -67,8 +70,8 @@ public class PicsouInit {
           generator.update(field, lastAllocatedId);
         }
       });
-      repository.reset(userData, Month.TYPE, Transaction.TYPE, Account.TYPE, Bank.TYPE, BankEntity.TYPE,
-                       TransactionToCategory.TYPE, LabelToCategory.TYPE, Category.TYPE);
+      Collection<GlobType> serverType = userData.getTypes();
+      repository.reset(userData, serverType.toArray(new GlobType[serverType.size()]));
     }
     catch (Exception e) {
       throw new InvalidData(Lang.get("login.data.load.fail"), e);

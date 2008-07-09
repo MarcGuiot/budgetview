@@ -40,17 +40,22 @@ public class DefaultSerializationInput implements SerializedInput {
       GlobType type = model.getType(readString());
       Key key = KeyBuilder.createFromValues(type, readValues(type));
       int state = readByte();
-      FieldValues values = readValues(type);
       switch (state) {
-        case 1:
+        case 1: {
+          FieldValues values = readValues(type);
           changeSet.processCreation(key, values);
           break;
-        case 2:
+        }
+        case 2: {
+          FieldValuesWithPrevious values = readValuesWithPrevious(type);
           changeSet.processUpdate(key, values);
           break;
-        case 3:
+        }
+        case 3: {
+          FieldValues values = readValues(type);
           changeSet.processDeletion(key, values);
           break;
+        }
         default:
           throw new UnexpectedApplicationState("Invalid state '" + state + "' undefined for: " + key);
       }
@@ -96,6 +101,20 @@ public class DefaultSerializationInput implements SerializedInput {
     }
     return builder.get();
   }
+
+  private FieldValuesWithPrevious readValuesWithPrevious(GlobType type) {
+    FieldValuesWithPreviousBuilder builder = FieldValuesWithPreviousBuilder.init();
+    FieldReader fieldReader = new FieldReader(this, builder);
+    int fieldCount = readNotNullInt();
+    while (fieldCount != 0) {
+      int fieldIndex = readNotNullInt();
+      Field field = type.getField(fieldIndex);
+      field.safeVisit(fieldReader);
+      fieldCount--;
+    }
+    return builder.get();
+  }
+
 
   public int[] readIntArray() {
     int length = readNotNullInt();
@@ -160,6 +179,53 @@ public class DefaultSerializationInput implements SerializedInput {
       builder.set(field, input.readInteger());
     }
   }
+
+  static class FieldWithPreviousReader implements FieldVisitor {
+    private DefaultSerializationInput input;
+    private FieldValuesWithPreviousBuilder builder;
+
+    public FieldWithPreviousReader(DefaultSerializationInput input, FieldValuesWithPreviousBuilder builder) {
+      this.input = input;
+      this.builder = builder;
+    }
+
+    public void visitInteger(IntegerField field) throws Exception {
+      builder.set(field, input.readInteger(), input.readInteger());
+    }
+
+    public void visitDouble(DoubleField field) throws Exception {
+      builder.set(field, input.readDouble(), input.readDouble());
+    }
+
+    public void visitString(StringField field) throws Exception {
+      builder.set(field, input.readString(), input.readString());
+    }
+
+    public void visitDate(DateField field) throws Exception {
+      builder.set(field, input.readDate(), input.readDate());
+    }
+
+    public void visitBoolean(BooleanField field) throws Exception {
+      builder.set(field, input.readBoolean(), input.readBoolean());
+    }
+
+    public void visitTimeStamp(TimeStampField field) throws Exception {
+      builder.set(field, input.readDate(), input.readDate());
+    }
+
+    public void visitBlob(BlobField field) throws Exception {
+      builder.set(field, input.readBytes(), input.readBytes());
+    }
+
+    public void visitLong(LongField field) throws Exception {
+      builder.set(field, input.readLong(), input.readLong());
+    }
+
+    public void visitLink(LinkField field) throws Exception {
+      builder.set(field, input.readInteger(), input.readInteger());
+    }
+  }
+
 
   public Date readDate() {
     long time = readNotNullLong();

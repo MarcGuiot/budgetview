@@ -11,8 +11,17 @@ import java.util.Date;
 
 public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVisitor {
   private OutputStream outputStream;
+  <<<<<<<local
+  =======
 
+    >>>>>>>other
   private FieldValues.Functor fieldValuesFunctor = new FieldValuesFunctor();
+  <<<<<<<local
+  private FieldValuesWithPrevious.Functor fieldValuesWithPreviousFunctor = new FieldValuesWithPreviousFunctor();
+  =======
+    >>>>>>>
+
+  other
 
   DefaultSerializationOutput(OutputStream outputStream) {
     this.outputStream = outputStream;
@@ -252,7 +261,57 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
 
   private void writeValues(FieldValuesWithPrevious values) {
     write(values.size());
-    values.safeApply(this);
+    <<<<<<<local
+    values.safeApply(fieldValuesWithPreviousFunctor);
+  }
+
+  public class FieldValuesWithPreviousFunctor implements FieldValuesWithPrevious.Functor, FieldValueVisitor {
+
+    public void process(Field field, Object value, Object previousValue) throws Exception {
+      write(field.getIndex());
+      field.safeVisit(this, value);
+      field.safeVisit(this, previousValue);
+    }
+
+    public void visitInteger(IntegerField field, Integer value) throws Exception {
+      writeInteger(value);
+    }
+
+    public void visitDouble(DoubleField field, Double value) throws Exception {
+      writeDouble(value);
+    }
+
+    public void visitString(StringField field, String value) throws Exception {
+      writeString(value);
+    }
+
+    public void visitDate(DateField field, Date value) throws Exception {
+      writeDate(value);
+    }
+
+    public void visitBoolean(BooleanField field, Boolean value) throws Exception {
+      writeBoolean(value);
+    }
+
+    public void visitTimeStamp(TimeStampField field, Date value) throws Exception {
+      writeDate(value);
+    }
+
+    public void visitBlob(BlobField field, byte[] value) throws Exception {
+      writeBytes(value);
+    }
+
+    public void visitLong(LongField field, Long value) throws Exception {
+      writeLong(value);
+    }
+
+    public void visitLink(LinkField field, Integer value) throws Exception {
+      writeInteger(value);
+    }
+
+    =======
+      values.safeApply(this);
+    >>>>>>>other
   }
 
   private class OutputStreamFieldVisitor implements FieldVisitor {

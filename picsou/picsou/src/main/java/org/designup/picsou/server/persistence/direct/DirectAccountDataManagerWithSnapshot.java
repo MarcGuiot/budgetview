@@ -115,7 +115,7 @@ public class DirectAccountDataManagerWithSnapshot implements AccountDataManager 
           globToMerge.remove(deltaGlob.get(SerializableGlobType.ID));
         }
         else {
-          globToMerge.put(deltaGlob.get(SerializableGlobType.ID), deltaGlob);
+//          globToMerge.put(deltaGlob.get(SerializableGlobType.ID), deltaGlob);
         }
       }
     }

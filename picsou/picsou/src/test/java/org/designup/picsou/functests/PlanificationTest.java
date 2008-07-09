@@ -13,7 +13,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
-  public void test() throws Exception {
+  public void testFirstSeriesInitialization() throws Exception {
     LicenseChecker license = new LicenseChecker(mainWindow);
     license.enterLicense("");
     OfxBuilder.init(this)
@@ -26,12 +26,12 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .dumpCode();
     views.selectHome();
     periods.selectCell(0);
-//    monthSummary.on("july 2008")
-//      .checkReccuring(29.9)
-//      .checkPlannedRecurring(29.9);
-//    periods.selectCell(1);
-//    monthSummary.on("August 2008")
-//      .checkReccuring(0)
-//      .checkPlannedRecurring(29.9);
+    monthSummary.on("july 2008")
+      .checkReccuring(29.9)
+      .checkPlannedRecurring(29.9);
+    periods.selectCell(1);
+    monthSummary.on("August 2008")
+      .checkReccuring(0)
+      .checkPlannedRecurring(29.9);
   }
 }
