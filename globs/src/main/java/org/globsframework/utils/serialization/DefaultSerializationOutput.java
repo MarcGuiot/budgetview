@@ -11,17 +11,8 @@ import java.util.Date;
 
 public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVisitor {
   private OutputStream outputStream;
-  <<<<<<<local
-  =======
-
-    >>>>>>>other
   private FieldValues.Functor fieldValuesFunctor = new FieldValuesFunctor();
-  <<<<<<<local
   private FieldValuesWithPrevious.Functor fieldValuesWithPreviousFunctor = new FieldValuesWithPreviousFunctor();
-  =======
-    >>>>>>>
-
-  other
 
   DefaultSerializationOutput(OutputStream outputStream) {
     this.outputStream = outputStream;
@@ -261,7 +252,6 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
 
   private void writeValues(FieldValuesWithPrevious values) {
     write(values.size());
-    <<<<<<<local
     values.safeApply(fieldValuesWithPreviousFunctor);
   }
 
@@ -309,9 +299,6 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
       writeInteger(value);
     }
 
-    =======
-      values.safeApply(this);
-    >>>>>>>other
   }
 
   private class OutputStreamFieldVisitor implements FieldVisitor {
