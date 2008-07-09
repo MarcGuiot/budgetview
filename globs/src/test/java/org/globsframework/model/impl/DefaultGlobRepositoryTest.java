@@ -278,7 +278,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     checker.assertEquals(repository, "<dummyObject id='0' name='newName'/>");
 
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='0' name='newName'/>"
+      "<update type='dummyObject' id='0' name='newName' _name='name'/>"
     );
   }
 
@@ -288,10 +288,14 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                       value(DummyObject.NAME, "newName"),
                       value(DummyObject.PRESENT, true),
                       value(DummyObject.LINK, 7));
-    checker.assertEquals(repository, "<dummyObject id='0' name='newName' present='true' link='7'/>");
+    checker.assertEquals(repository, 
+                         "<dummyObject id='0' name='newName' present='true' link='7'/>");
 
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='0' name='newName' present='true' link='7'/>"
+      "<update type='dummyObject' id='0' " +
+      "  name='newName' _name='name' " +
+      "  present='true' _present='(null)'" +
+      "  link='7' _link='(null)'/>"
     );
   }
 
@@ -354,7 +358,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     repository.setTarget(getKey(1), DummyObject.LINK, getKey(3));
     assertEquals(3, repository.get(getKey(1)).get(DummyObject.LINK).intValue());
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' link='3'/>"
+      "<update type='dummyObject' id='1' link='3' _link='(null)'/>"
     );
   }
 
@@ -393,7 +397,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     repository.delete(getKey(1));
     checker.assertEquals(repository, "");
     changeListener.assertLastChangesEqual(
-      "<delete type='dummyObject' id='1' name='name'/>"
+      "<delete type='dummyObject' id='1' _name='name'/>"
     );
   }
 
@@ -407,8 +411,8 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     repository.delete(new GlobList(glob1, glob2));
     checker.assertEquals(repository, "<dummyObject id='3'/>");
     changeListener.assertLastChangesEqual(
-      "<delete type='dummyObject' id='1' name='obj1'/>" +
-      "<delete type='dummyObject' id='2' name='obj2'/>"
+      "<delete type='dummyObject' id='1' _name='obj1'/>" +
+      "<delete type='dummyObject' id='2' _name='obj2'/>"
     );
     checkDummyObjectDisabled(glob1);
     checkDummyObjectDisabled(glob2);
@@ -509,12 +513,12 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
     repository.update(getKey(1), DummyObject.NAME, "newName");
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' name='newName'/>"
+      "<update type='dummyObject' id='1' name='newName' _name='name1'/>"
     );
 
     repository.delete(getKey(2));
     changeListener.assertLastChangesEqual(
-      "<delete type='dummyObject' id='2' name='name2'/>"
+      "<delete type='dummyObject' id='2' _name='name2'/>"
     );
 
     createDummyObject(repository, 4);
@@ -542,8 +546,8 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     repository.completeBulkDispatchingMode();
     changeListener.assertLastChangesEqual(
       "<create type='dummyObject' id='3'/>" +
-      "<update type='dummyObject' id='1' name='newName'/>" +
-      "<delete type='dummyObject' id='2' name='name2'/>"
+      "<update type='dummyObject' id='1' name='newName' _name='name1'/>" +
+      "<delete type='dummyObject' id='2' _name='name2'/>"
     );
   }
 
@@ -577,8 +581,8 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     repository.completeBulkDispatchingMode();
     changeListener.assertLastChangesEqual(
       "<create type='dummyObject' id='3'/>" +
-      "<update type='dummyObject' id='1' name='newName'/>" +
-      "<delete type='dummyObject' id='2' name='name2'/>"
+      "<update type='dummyObject' id='1' name='newName' _name='name1'/>" +
+      "<delete type='dummyObject' id='2' _name='name2'/>"
     );
   }
 
@@ -623,7 +627,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     changeListener.assertLastChangesEqual(
       "<create type='dummyObject' id='2' name='name2-created'/>" +
       "<create type='dummyObject2' id='1' label='dummyObject[id=1] updated'/>" +
-      "<update type='dummyObject' id='1' name='null-updated' value='1.1'/>" +
+      "<update type='dummyObject' id='1' name='null-updated' _name='name1-created' value='1.1' _value='(null)'/>" +
       "<create type='dummyObject2' id='2' label='dummyObject[id=2] created'/>");
     clearTaggingObjects(repository, changeListener);
 

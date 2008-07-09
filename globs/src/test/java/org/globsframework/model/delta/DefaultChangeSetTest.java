@@ -132,7 +132,7 @@ public class DefaultChangeSetTest extends TestCase {
                                "<update type='dummyObject' id='1' value='1.1'/>");
     changeSet.processDeletion(key1, FieldValues.EMPTY);
     checker.assertChangesEqual(changeSet,
-                               "<delete type='dummyObject' id='1' value='1.1'/>");
+                               "<delete type='dummyObject' id='1' _value='1.1'/>");
     assertEquals(1, changeSet.size());
   }
 

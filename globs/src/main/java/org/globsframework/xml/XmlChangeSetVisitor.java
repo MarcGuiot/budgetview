@@ -1,11 +1,10 @@
 package org.globsframework.xml;
 
 import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSetVisitor;
 import org.globsframework.model.FieldValues;
-import org.globsframework.model.Key;
 import org.globsframework.model.FieldValuesWithPrevious;
+import org.globsframework.model.Key;
 import org.saxstack.writer.PrettyPrintRootXmlTag;
 import org.saxstack.writer.RootXmlTag;
 import org.saxstack.writer.XmlTag;
@@ -42,7 +41,7 @@ public class XmlChangeSetVisitor implements ChangeSetVisitor {
   }
 
   public void visitCreation(Key key, FieldValues values) throws Exception {
-    dumpChanges("create", key, values);
+    dumpChanges("create", key, values, false);
   }
 
   public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -50,33 +49,45 @@ public class XmlChangeSetVisitor implements ChangeSetVisitor {
   }
 
   public void visitDeletion(Key key, FieldValues values) throws Exception {
-    dumpChanges("delete", key, values);
+    dumpChanges("delete", key, values, true);
   }
 
-  private void dumpChanges(String change, Key key, FieldValues values) throws IOException {
+  private void dumpChanges(String change, Key key, FieldValues values, boolean previousValues) throws IOException {
     XmlTag tag = changesTag.createChildTag(change);
     tag.addAttribute("type", key.getGlobType().getName());
-    dumpFieldValues(tag, key.getGlobType(), key);
-    dumpFieldValues(tag, key.getGlobType(), values);
+    dumpFieldValues(tag, key, false);
+    dumpFieldValues(tag, values, previousValues);
     tag.end();
   }
 
-  private void dumpFieldValues(final XmlTag tag, final GlobType type, FieldValues values) throws IOException {
-    try {
-      values.apply(new FieldValues.Functor() {
-        public void process(Field field, Object value) throws IOException {
-          if (value != null) {
-            tag.addAttribute(field.getName(), converter.toString(field, value));
-          }
+  private void dumpChanges(String change, Key key, FieldValuesWithPrevious values) throws IOException {
+    XmlTag tag = changesTag.createChildTag(change);
+    tag.addAttribute("type", key.getGlobType().getName());
+    dumpFieldValues(tag, key, false);
+    dumpFieldValues(tag, values);
+    tag.end();
+  }
+
+  private void dumpFieldValues(final XmlTag tag, FieldValues values, final boolean previousValues) throws IOException {
+    values.safeApply(new FieldValues.Functor() {
+      public void process(Field field, Object value) throws IOException {
+        if (value != null) {
+          final String name = previousValues ? "_" + field.getName() : field.getName();
+          tag.addAttribute(name, converter.toString(field, value));
         }
-      });
-    }
-    catch (IOException e) {
-      throw e;
-    }
-    catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+      }
+    });
+  }
+
+  private void dumpFieldValues(final XmlTag tag, FieldValuesWithPrevious values) throws IOException {
+    values.safeApply(new FieldValuesWithPrevious.Functor() {
+      public void process(Field field, Object value, Object previousValue) throws IOException {
+        if (value != null) {
+          tag.addAttribute(field.getName(), converter.toString(field, value));
+          tag.addAttribute("_" + field.getName(), converter.toString(field, previousValue));
+        }
+      }
+    });
   }
 
   public void complete() {

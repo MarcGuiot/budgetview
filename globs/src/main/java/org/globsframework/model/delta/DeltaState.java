@@ -22,7 +22,7 @@ public interface DeltaState {
 
     public void processUpdate(DeltaGlob delta, Field field, Object value, Object previousValue) {
       delta.setState(UPDATED);
-      delta.setValue(field, value);
+      delta.setValue(field, value, previousValue);
     }
 
     public void processDeletion(DeltaGlob delta, FieldValues values) {
