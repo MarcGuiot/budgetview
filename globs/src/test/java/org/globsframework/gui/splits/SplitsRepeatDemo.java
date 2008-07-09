@@ -17,12 +17,12 @@ public class SplitsRepeatDemo {
     builder.addRepeat("repeat1", Arrays.asList("a", "b", "c"), new RepeatComponentFactory<String>() {
       public void registerComponents(RepeatCellBuilder cellBuilder, String item) {
         cellBuilder.add("label1", new JLabel(item));
-        cellBuilder.addRepeat("repeat2", new RepeatComponentFactory<String>() {
+        cellBuilder.addRepeat("repeat2", getItems(item), new RepeatComponentFactory<String>() {
 
           public void registerComponents(RepeatCellBuilder cellBuilder, String item) {
             cellBuilder.add("label2", new JLabel(item));
           }
-        }, getItems(item));
+        });
       }
     });
 

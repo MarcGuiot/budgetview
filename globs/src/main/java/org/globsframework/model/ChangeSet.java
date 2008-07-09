@@ -3,7 +3,6 @@ package org.globsframework.model;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 
-import java.util.List;
 import java.util.Set;
 
 public interface ChangeSet {

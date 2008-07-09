@@ -31,25 +31,33 @@ public class RepeatPanel implements Repeat {
 
   public void set(List items) {
     panel.removeAll();
+    for (RepeatContext context : repeatContexts) {
+      context.dispose();
+    }
+    repeatContexts.clear();
     int index = 0;
     for (Object item : items) {
-      add(createStretch(item, index));
+      panel.add(createStretch(item, index).getComponent());
       index++;
     }
+    panel.validate();
   }
 
   public void insert(Object item, int index) {
     panel.add(createStretch(item, index).getComponent(), index);
+    panel.validate();
   }
 
   public void remove(int index) {
     panel.remove(index);
+    panel.validate();
     RepeatContext context = repeatContexts.remove(index);
     context.dispose();
   }
 
   public void add(ComponentStretch componentStretch) {
     panel.add(componentStretch.getComponent());
+    panel.validate();
   }
 
   private ComponentStretch createStretch(Object item, int index) {

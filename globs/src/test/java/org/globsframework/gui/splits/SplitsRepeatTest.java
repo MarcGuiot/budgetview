@@ -82,11 +82,11 @@ public class SplitsRepeatTest extends SplitsTestCase {
     builder.addRepeat("parentRepeat", Arrays.asList("aa", "bb", "cc"), new RepeatComponentFactory<String>() {
       public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
         cellBuilder.add("label", new JLabel(object));
-        cellBuilder.addRepeat("childRepeat", new RepeatComponentFactory<String>() {
+        cellBuilder.addRepeat("childRepeat", getItems(object), new RepeatComponentFactory<String>() {
           public void registerComponents(RepeatCellBuilder cellBuilder, String item) {
             cellBuilder.add("button", new JButton(item));
           }
-        }, getItems(object));
+        });
       }
     });
 
@@ -117,7 +117,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
 
   public void testDisposeListener() throws Exception {
     final StringBuilder logger = new StringBuilder();
-    Repeat<String> repeat = builder.addRepeat("parentRepeat", Arrays.asList("aa", "bb", "cc"), new RepeatComponentFactory<String>() {
+    Repeat<String> parentRepeat = builder.addRepeat("parentRepeat", Arrays.asList("aa", "bb", "cc"), new RepeatComponentFactory<String>() {
       public void registerComponents(RepeatCellBuilder cellBuilder, final String object) {
         cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
           public void dispose() {
@@ -125,7 +125,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
           }
         });
         cellBuilder.add("label", new JLabel(object));
-        cellBuilder.addRepeat("childRepeat", new RepeatComponentFactory<String>() {
+        cellBuilder.addRepeat("childRepeat", getItems(object), new RepeatComponentFactory<String>() {
           public void registerComponents(RepeatCellBuilder cellBuilder, final String item) {
             cellBuilder.add("button", new JButton(item));
             cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
@@ -134,7 +134,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
               }
             });
           }
-        }, getItems(object));
+        });
       }
     });
     JPanel panel = parse(
@@ -147,7 +147,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
       "  </row>" +
       "</repeat>");
 
-    repeat.remove(2);
+    parentRepeat.remove(2);
     checkPanel(panel,
                "panel\n" +
                "  label:aa\n" +
@@ -159,6 +159,18 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "  panel\n");
     assertEquals("c1\n" +
                  "cc\n", logger.toString());
+    logger.setLength(0);
+
+    parentRepeat.set(Arrays.asList("dd"));
+    checkPanel(panel,
+               "panel\n" +
+               "  label:dd\n" +
+               "  panel\n");
+    assertEquals("a1\n" +
+                 "a2\n" +
+                 "aa\n" +
+                 "bb\n",
+                 logger.toString());
   }
 
   public static void checkPanel(JPanel panel, String expected) {

@@ -19,7 +19,7 @@ public class ContextualRepeatCellBuilder implements RepeatCellBuilder {
     repeatContext.add(name, action);
   }
 
-  public <T> DefaultRepeat<T> addRepeat(String name, RepeatComponentFactory<T> repeatFactory, List<T> items) {
+  public <T> DefaultRepeat<T> addRepeat(String name, List<T> items, RepeatComponentFactory<T> repeatFactory) {
     DefaultRepeat<T> repeat = new DefaultRepeat<T>(repeatFactory, items);
     repeatContext.addRepeat(name, repeat);
     return repeat;

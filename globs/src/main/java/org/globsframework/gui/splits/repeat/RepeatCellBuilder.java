@@ -9,7 +9,7 @@ public interface RepeatCellBuilder {
 
   void add(String name, Action action);
 
-  <T> Repeat<T> addRepeat(String name, RepeatComponentFactory<T> repeatFactory, List<T> items);
+  <T> Repeat<T> addRepeat(String name, List<T> items, RepeatComponentFactory<T> repeatFactory);
 
   void addDisposeListener(DisposeListener dispose);
 
