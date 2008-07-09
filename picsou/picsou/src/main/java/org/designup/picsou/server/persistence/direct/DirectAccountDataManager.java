@@ -3,12 +3,10 @@ package org.designup.picsou.server.persistence.direct;
 import org.designup.picsou.client.SerializableDeltaGlobSerializer;
 import org.designup.picsou.client.SerializableGlobSerializer;
 import org.designup.picsou.server.model.SerializableGlobType;
+import org.designup.picsou.server.model.ServerDelta;
+import org.designup.picsou.server.model.ServerState;
 import org.designup.picsou.server.persistence.prevayler.AccountDataManager;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.delta.DeltaGlob;
-import org.globsframework.model.delta.DeltaState;
-import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.exceptions.EOFIOFailure;
@@ -35,12 +33,12 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   public void getUserData(SerializedOutput output, Integer userId) {
-    MapOfMaps<String, Integer, Glob> globs = readData(userId);
+    MapOfMaps<String, Integer, SerializableGlobType> globs = readData(userId);
     SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
     serializableGlobSerializer.serialize(output, globs);
   }
 
-  private MapOfMaps<String, Integer, Glob> readData(Integer userId) {
+  private MapOfMaps<String, Integer, SerializableGlobType> readData(Integer userId) {
     String path = getPath(userId);
     File file1 = new File(path);
     if (!file1.exists()) {
@@ -49,7 +47,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     final PrevaylerDirectory prevaylerDirectory = new PrevaylerDirectory(path);
     File file = prevaylerDirectory.latestSnapshot();
     long snapshotVersion = 1;
-    MapOfMaps<String, Integer, Glob> globs = new MapOfMaps<String, Integer, Glob>();
+    MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
     if (file != null) {
       snapshotVersion = PrevaylerDirectory.snapshotVersion(file);
       globs = readSnapshot(file);
@@ -73,7 +71,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     return prevaylerPath + "/" + userId.toString();
   }
 
-  private long readFrom(MapOfMaps<String, Integer, Glob> globs, long snapshotVersion,
+  private long readFrom(MapOfMaps<String, Integer, SerializableGlobType> globs, long snapshotVersion,
                         File nextTransactionFile, PrevaylerDirectory prevaylerDirectory) throws FileNotFoundException {
     long version = snapshotVersion;
     File file = nextTransactionFile;
@@ -87,10 +85,10 @@ public class DirectAccountDataManager implements AccountDataManager {
           throw new RuntimeException("error while reading journal file");
         }
         SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
-//        MultiMap<String, DeltaGlob> map = serializableDeltaGlobSerializer.deserialize(serializedInput);
-//        if (version >= snapshotVersion) {
-//          apply(globs, map);
-//        }
+        MultiMap<String, ServerDelta> map = serializableDeltaGlobSerializer.deserialize(serializedInput);
+        if (version >= snapshotVersion) {
+          apply(globs, map);
+        }
         version++;
       }
       catch (EOFIOFailure e) {
@@ -108,15 +106,15 @@ public class DirectAccountDataManager implements AccountDataManager {
     return version;
   }
 
-  private void apply(MapOfMaps<String, Integer, Glob> globs, MultiMap<String, DeltaGlob> map) {
-    for (Map.Entry<String, List<DeltaGlob>> stringListEntry : map.values()) {
-      Map<Integer, Glob> globToMerge = globs.get(stringListEntry.getKey());
-      for (DeltaGlob deltaGlob : stringListEntry.getValue()) {
-        if (deltaGlob.getState() == DeltaState.DELETED) {
-          globToMerge.remove(deltaGlob.get(SerializableGlobType.ID));
+  private void apply(MapOfMaps<String, Integer, SerializableGlobType> globs, MultiMap<String, ServerDelta> map) {
+    for (Map.Entry<String, List<ServerDelta>> stringListEntry : map.values()) {
+      Map<Integer, SerializableGlobType> globToMerge = globs.get(stringListEntry.getKey());
+      for (ServerDelta deltaGlob : stringListEntry.getValue()) {
+        if (deltaGlob.getState() == ServerState.DELETED) {
+          globToMerge.remove(deltaGlob.getId());
         }
         else {
-//          globToMerge.put(deltaGlob.get(SerializableGlobType.ID), deltaGlob);
+          globToMerge.put(deltaGlob.getId(), new SerializableGlobType(stringListEntry.getKey(), deltaGlob));
         }
       }
     }
@@ -130,7 +128,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     return serializedInput.readNotNullLong();
   }
 
-  private MapOfMaps<String, Integer, Glob> readSnapshot(File file) {
+  private MapOfMaps<String, Integer, SerializableGlobType> readSnapshot(File file) {
     try {
       SerializedInput serializedInput =
         SerializedInputOutputFactory.init(new BufferedInputStream(new FileInputStream(file)));
@@ -141,7 +139,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     }
     catch (FileNotFoundException e) {
     }
-    return new MapOfMaps<String, Integer, Glob>();
+    return new MapOfMaps<String, Integer, SerializableGlobType>();
   }
 
   /*
@@ -151,9 +149,9 @@ public class DirectAccountDataManager implements AccountDataManager {
        id
        value
   */
-  private MapOfMaps<String, Integer, Glob> readVersion2(SerializedInput serializedInput) {
+  private MapOfMaps<String, Integer, SerializableGlobType> readVersion2(SerializedInput serializedInput) {
     try {
-      MapOfMaps<String, Integer, Glob> globMapOfMaps = new MapOfMaps<String, Integer, Glob>();
+      MapOfMaps<String, Integer, SerializableGlobType> globMapOfMaps = new MapOfMaps<String, Integer, SerializableGlobType>();
       int count;
       count = serializedInput.readNotNullInt();
       if (count == 0) {
@@ -162,27 +160,27 @@ public class DirectAccountDataManager implements AccountDataManager {
       String globTypeName = serializedInput.readString();
       while (count != 0) {
         int id = serializedInput.readNotNullInt();
-        GlobBuilder globBuilder = GlobBuilder.init(SerializableGlobType.TYPE)
-          .set(SerializableGlobType.ID, id)
-          .set(SerializableGlobType.GLOB_TYPE_NAME, globTypeName)
-          .set(SerializableGlobType.DATA, serializedInput.readBytes());
-        globMapOfMaps.put(globTypeName, id, globBuilder.get());
+        SerializableGlobType data = new SerializableGlobType();
+        data.setId(id);
+        data.setGlobTypeName(globTypeName);
+        data.setData(serializedInput.readBytes());
+        globMapOfMaps.put(globTypeName, id, data);
         count--;
       }
     }
     catch (UnexpectedApplicationState e) {
     }
-    return new MapOfMaps<String, Integer, Glob>();
+    return new MapOfMaps<String, Integer, SerializableGlobType>();
   }
 
   public void updateUserData(SerializedInput input, Integer userId) {
     SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
-//    MultiMap<String, DeltaGlob> map = serializableDeltaGlobSerializer.deserialize(input);
-//    DurableOutputStream bufferedOutputStream = outputStreamMap.get(userId);
-//    if (bufferedOutputStream == null) {
-//      throw new RuntimeException("read should be call before write");
-//    }
-//    bufferedOutputStream.write(map);
+    MultiMap<String, ServerDelta> data = serializableDeltaGlobSerializer.deserialize(input);
+    DurableOutputStream bufferedOutputStream = outputStreamMap.get(userId);
+    if (bufferedOutputStream == null) {
+      throw new RuntimeException("read should be call before write");
+    }
+    bufferedOutputStream.write(data);
   }
 
   public Integer getNextId(String globTypeName, Integer userId, Integer count) {
@@ -203,7 +201,7 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   public void takeSnapshot(Integer userId) {
-    MapOfMaps<String, Integer, Glob> stringIntegerGlobMapOfMaps = readData(userId);
+    MapOfMaps<String, Integer, SerializableGlobType> stringIntegerGlobMapOfMaps = readData(userId);
     PrevaylerDirectory prevaylerDirectory = new PrevaylerDirectory(getPath(userId));
 //    File file = prevaylerDirectory.snapshotFile();
 
@@ -221,7 +219,7 @@ public class DirectAccountDataManager implements AccountDataManager {
       prevaylerDirectory = new PrevaylerDirectory(getPath(userId));
     }
 
-    public void write(MultiMap<String, DeltaGlob> map) {
+    public void write(MultiMap<String, ServerDelta> data) {
       if (inMemory) {
         return;
       }
@@ -236,7 +234,7 @@ public class DirectAccountDataManager implements AccountDataManager {
         SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
         serializedOutput.writeString("Tr");
         serializedOutput.write(nextTransactionVersion);
-//        serializableDeltaGlobSerializer.serialize(serializedOutput, map);
+        serializableDeltaGlobSerializer.serialize(serializedOutput, data);
         outputStream.flush();
         fd.sync();
         nextTransactionVersion++;

@@ -1,23 +1,46 @@
 package org.designup.picsou.server.model;
 
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.fields.BlobField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
-
 public class SerializableGlobType {
-  public static GlobType TYPE;
-  @Key
-  public static IntegerField ID;
-  @Key
-  public static StringField GLOB_TYPE_NAME;
+  private int version;
+  private byte[] data;
+  private int id;
+  private String globTypeName;
 
-  public static IntegerField VERSION;
-  public static BlobField DATA;
+  public SerializableGlobType(String globTypeName, ServerDelta delta) {
+    this.globTypeName = globTypeName;
+    id = delta.getId();
+    data = delta.getData();
+    version = delta.getVersion();
+  }
 
-  static {
-    GlobTypeLoader.init(SerializableGlobType.class);
+  public SerializableGlobType() {
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
+  public void setData(byte[] data) {
+    this.data = data;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public int getVersion() {
+    return version;
+  }
+
+  public byte[] getData() {
+    return data;
+  }
+
+  public void setGlobTypeName(String globTypeName) {
+    this.globTypeName = globTypeName;
   }
 }

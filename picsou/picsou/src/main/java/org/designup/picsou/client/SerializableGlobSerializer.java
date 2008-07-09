@@ -1,8 +1,6 @@
 package org.designup.picsou.client;
 
 import org.designup.picsou.server.model.SerializableGlobType;
-import org.globsframework.model.Glob;
-import org.globsframework.model.impl.DefaultGlob;
 import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
@@ -10,34 +8,35 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import java.util.Map;
 
 public class SerializableGlobSerializer {
-  public void serialize(SerializedOutput output, MapOfMaps<String, Integer, Glob> deltaGlobMap) {
-    int globTypeCount = deltaGlobMap.keys().size();
+  public void serialize(SerializedOutput output,
+                        MapOfMaps<String, Integer, SerializableGlobType> dataByGlobTypeAndId) {
+    int globTypeCount = dataByGlobTypeAndId.keys().size();
     output.write(globTypeCount);
-    for (String stringListEntry : deltaGlobMap.keys()) {
-      Map<Integer, Glob> map = deltaGlobMap.get(stringListEntry);
-      output.writeString(stringListEntry);
-      output.write(map.size());
-      for (Glob deltaGlob : map.values()) {
-        output.write(deltaGlob.get(SerializableGlobType.ID));
-        output.write(deltaGlob.get(SerializableGlobType.VERSION));
-        output.writeBytes(deltaGlob.get(SerializableGlobType.DATA));
+    for (String globTypeName : dataByGlobTypeAndId.keys()) {
+      Map<Integer, SerializableGlobType> dataById = dataByGlobTypeAndId.get(globTypeName);
+      output.writeString(globTypeName);
+      output.write(dataById.size());
+      for (SerializableGlobType data : dataById.values()) {
+        output.write(data.getId());
+        output.write(data.getVersion());
+        output.writeBytes(data.getData());
       }
     }
   }
 
-  public MapOfMaps<String, Integer, Glob> deserialize(SerializedInput serializedInput) {
-    MapOfMaps<String, Integer, Glob> multiMap = new MapOfMaps<String, Integer, Glob>();
+  public MapOfMaps<String, Integer, SerializableGlobType> deserialize(SerializedInput serializedInput) {
+    MapOfMaps<String, Integer, SerializableGlobType> multiMap = new MapOfMaps<String, Integer, SerializableGlobType>();
     int globTypeCount = serializedInput.readNotNullInt();
     while (globTypeCount > 0) {
       String globTypeName = serializedInput.readString();
       int deltaGlobCount = serializedInput.readNotNullInt();
       while (deltaGlobCount > 0) {
-        DefaultGlob defaultGlob = new DefaultGlob(SerializableGlobType.TYPE);
+        SerializableGlobType defaultGlob = new SerializableGlobType();
         int id = serializedInput.readNotNullInt();
-        defaultGlob.set(SerializableGlobType.ID, id);
-        defaultGlob.set(SerializableGlobType.GLOB_TYPE_NAME, globTypeName);
-        defaultGlob.set(SerializableGlobType.VERSION, serializedInput.readNotNullInt());
-        defaultGlob.set(SerializableGlobType.DATA, serializedInput.readBytes());
+        defaultGlob.setId(id);
+        defaultGlob.setGlobTypeName(globTypeName);
+        defaultGlob.setVersion(serializedInput.readNotNullInt());
+        defaultGlob.setData(serializedInput.readBytes());
         multiMap.put(globTypeName, id, defaultGlob);
         deltaGlobCount--;
       }

@@ -2,11 +2,6 @@ package org.designup.picsou.client;
 
 import junit.framework.TestCase;
 import org.designup.picsou.server.model.SerializableGlobType;
-import org.designup.picsou.server.model.ServerModel;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobTestUtils;
-import org.globsframework.model.impl.DefaultGlobRepository;
 import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 
@@ -16,25 +11,25 @@ public class SerializableGlobSerializerTest extends TestCase {
     SerializableGlobSerializer serializer = new SerializableGlobSerializer();
     SerializedByteArrayOutput byteArrayOutput = new SerializedByteArrayOutput();
     serializer.serialize(byteArrayOutput.getOutput(), init());
-    MapOfMaps<String, Integer, Glob> actual = serializer.deserialize(byteArrayOutput.getInput());
+    MapOfMaps<String, Integer, SerializableGlobType> actual = serializer.deserialize(byteArrayOutput.getInput());
     assertEquals(1, actual.get("A").size());
     assertEquals(1, actual.get("B").size());
-    assertEquals(2, actual.get("A").get(1).get(SerializableGlobType.VERSION).intValue());
-    assertEquals(1, actual.get("B").get(2).get(SerializableGlobType.VERSION).intValue());
+    assertEquals(2, actual.get("A").get(1).getVersion());
+    assertEquals(1, actual.get("B").get(2).getVersion());
   }
 
-  private MapOfMaps<String, Integer, Glob> init() {
-    DefaultGlobRepository repository = new DefaultGlobRepository();
-    GlobTestUtils.parse(ServerModel.get(), repository,
-                        "<serializableGlobType id='1' globTypeName='A' version='2'/>" +
-                        "<serializableGlobType id='2' globTypeName='B' version='1'/>" +
-                        "");
-    MapOfMaps<String, Integer, Glob> globMapOfMaps = new MapOfMaps<String, Integer, Glob>();
-    GlobList list = repository.getAll(SerializableGlobType.TYPE);
-    for (Glob glob : list) {
-      globMapOfMaps.put(glob.get(SerializableGlobType.GLOB_TYPE_NAME),
-                        glob.get(SerializableGlobType.ID), glob);
-    }
+  private MapOfMaps<String, Integer, SerializableGlobType> init() {
+    MapOfMaps<String, Integer, SerializableGlobType> globMapOfMaps = new MapOfMaps<String, Integer, SerializableGlobType>();
+    globMapOfMaps.put("A", 1, create("A", 1, 2));
+    globMapOfMaps.put("B", 2, create("B", 2, 1));
     return globMapOfMaps;
+  }
+
+  private SerializableGlobType create(String typeName, int id, int version) {
+    SerializableGlobType data = new SerializableGlobType();
+    data.setGlobTypeName(typeName);
+    data.setVersion(version);
+    data.setId(id);
+    return data;
   }
 }

@@ -5,7 +5,6 @@ import org.globsframework.metamodel.utils.DefaultGlobModel;
 
 public class ServerModel {
   private static GlobModel model = new DefaultGlobModel(
-    SerializableGlobType.TYPE
   );
 
   public static GlobModel get() {

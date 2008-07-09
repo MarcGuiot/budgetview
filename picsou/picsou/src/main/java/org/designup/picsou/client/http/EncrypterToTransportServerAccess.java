@@ -14,7 +14,6 @@ import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.ChangeSet;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.MutableChangeSet;
@@ -169,7 +168,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     outputStream.getOutput().writeBytes(privateId);
     SerializedInput input = clientTransport.getUserData(sessionId, outputStream.toByteArray());
     SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
-    MapOfMaps<String, Integer, Glob> stringIntegerGlobMapOfMaps = serializableGlobSerializer.deserialize(input);
+    MapOfMaps<String, Integer, SerializableGlobType> stringIntegerGlobMapOfMaps = serializableGlobSerializer.deserialize(input);
     GlobList result = new GlobList(stringIntegerGlobMapOfMaps.size());
     for (String globTypeName : stringIntegerGlobMapOfMaps.keys()) {
       GlobType globType = globModel.getType(globTypeName);
@@ -180,12 +179,12 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       }
       IntegerField field = (IntegerField)globType.getKeyFields().get(0);
       Integer id = 0;
-      for (Map.Entry<Integer, Glob> globEntry : stringIntegerGlobMapOfMaps.get(globTypeName).entrySet()) {
+      for (Map.Entry<Integer, SerializableGlobType> globEntry : stringIntegerGlobMapOfMaps.get(globTypeName).entrySet()) {
         id = globEntry.getKey();
         GlobBuilder builder = GlobBuilder.init(globType).setValue(field, id);
-        Glob glob = globEntry.getValue();
-        globSerializer.deserializeData(glob.get(SerializableGlobType.VERSION), builder,
-                                       passwordBasedEncryptor.decrypt(glob.get(SerializableGlobType.DATA)));
+        SerializableGlobType glob = globEntry.getValue();
+        globSerializer.deserializeData(glob.getVersion(), builder,
+                                       passwordBasedEncryptor.decrypt(glob.getData()));
         result.add(builder.get());
       }
       idUpdate.update(field, id);
