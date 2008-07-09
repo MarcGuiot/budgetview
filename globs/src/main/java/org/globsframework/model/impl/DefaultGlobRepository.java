@@ -267,8 +267,8 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       throw new InvalidParameter("'" + field + "' is not a field of type '" +
                                  globType.getName() + "'");
     }
-    Object oldValue = mutableGlob.getValue(field);
-    if (Utils.equal(oldValue, newValue)) {
+    Object previousValue = mutableGlob.getValue(field);
+    if (Utils.equal(previousValue, newValue)) {
       return false;
     }
     if (field.isKeyField()) {
@@ -279,9 +279,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     mutableGlob.setObject(field, newValue);
     IndexTables indexTables = indexManager.getAssociatedTable(field);
     if (indexTables != null) {
-      indexTables.add(newValue, mutableGlob, field, oldValue);
+      indexTables.add(newValue, mutableGlob, field, previousValue);
     }
-    changeSetToDispatch.processUpdate(key, field, newValue, toto);
+    changeSetToDispatch.processUpdate(key, field, newValue, previousValue);
     return true;
   }
 
@@ -315,8 +315,8 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     link.apply(new FieldMappingFunctor() {
       public void process(Field sourceField, Field targetField) {
         Object value = targetKey != null ? targetKey.getValue(targetField) : null;
-        sourceGlob.setObject(sourceField, value);
-        changeSetToDispatch.processUpdate(sourceKey, sourceField, value, toto);
+        Object previousValue = sourceGlob.setObject(sourceField, value);
+        changeSetToDispatch.processUpdate(sourceKey, sourceField, value, previousValue);
       }
     });
     notifyListeners();

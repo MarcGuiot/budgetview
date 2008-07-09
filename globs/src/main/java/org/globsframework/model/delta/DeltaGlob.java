@@ -8,25 +8,29 @@ import org.globsframework.model.FieldValuesWithPrevious;
 
 public interface DeltaGlob extends FieldValuesWithPrevious {
 
+  Key getKey();
+
+  DeltaState getState();
+
+  void setState(DeltaState state);
+
+  boolean isSet(Field field);
+
   void setValue(Field field, Object value);
 
   void setValue(Field field, Object value, Object previousValue);
 
-  boolean isSet(Field field);
+  void setValues(FieldValues values);
 
-  void setState(DeltaState state);
+  void setPreviousValues(FieldValues values);
+
+  FieldValues getValues();
+
+  FieldValues getPreviousValues();
+
+  void resetValues();
 
   void visit(ChangeSetVisitor visitor) throws Exception;
 
   void safeVisit(ChangeSetVisitor visitor);
-
-  void resetValues();
-
-  DeltaState getState();
-
-  void setValues(FieldValues values);
-
-  Key getKey();
-
-  FieldValues getValues();
 }

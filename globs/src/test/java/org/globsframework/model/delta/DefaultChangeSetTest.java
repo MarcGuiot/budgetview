@@ -34,7 +34,7 @@ public class DefaultChangeSetTest extends TestCase {
     changeSet.processCreation(DummyObject.TYPE, creationValues);
     checker.assertChangesEqual(changeSet,
                                "<create type='dummyObject' id='1' name='name1' present='true'/>");
-    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, toto);
+    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
     checker.assertChangesEqual(changeSet,
                                "<create type='dummyObject' id='1' name='name1' present='true' value='1.1'/>");
     changeSet.processDeletion(key1, FieldValues.EMPTY);
@@ -70,7 +70,7 @@ public class DefaultChangeSetTest extends TestCase {
   public void testChangesAnalysisForUpdate() throws Exception {
     assertFalse(changeSet.containsChanges(key1));
 
-    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, toto);
+    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
     assertTrue(changeSet.containsChanges(key1));
     TestUtils.assertEquals(changeSet.getUpdated(DummyObject.TYPE), key1);
     assertTrue(changeSet.containsChanges(DummyObject.TYPE));
@@ -89,7 +89,7 @@ public class DefaultChangeSetTest extends TestCase {
   }
 
   public void testUpdatedFieldsDoNoContainKeys() throws Exception {
-    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, toto);
+    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
     changeSet.visit(DummyObject.TYPE, new DefaultChangeSetVisitor() {
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         assertFalse(values.contains(DummyObject.ID));
@@ -127,7 +127,7 @@ public class DefaultChangeSetTest extends TestCase {
   }
 
   public void testSequenceStartingWithAnUpdate() throws Exception {
-    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, toto);
+    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
     checker.assertChangesEqual(changeSet,
                                "<update type='dummyObject' id='1' value='1.1'/>");
     changeSet.processDeletion(key1, FieldValues.EMPTY);
@@ -138,13 +138,13 @@ public class DefaultChangeSetTest extends TestCase {
 
   public void testUpdateToNull() throws Exception {
     changeSet.processCreation(DummyObject.TYPE, creationValues);
-    changeSet.processUpdate(key1, DummyObject.NAME, null, toto);
+    changeSet.processUpdate(key1, DummyObject.NAME, null, null);
     checker.assertChangesEqual(changeSet,
                                "<create type='dummyObject' id='1' present='true'/>");
   }
 
   public void testUpdateStateErrorTransitions() throws Exception {
-    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, toto);
+    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
     try {
       changeSet.processCreation(DummyObject.TYPE, creationValues);
       fail();
@@ -161,13 +161,13 @@ public class DefaultChangeSetTest extends TestCase {
     changeSet.processCreation(DummyObject.TYPE, creationValues);
     checker.assertChangesEqual(changeSet,
                                "<update type='dummyObject' id='1' name='name1' present='true'/>");
-    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, toto);
+    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
     checker.assertChangesEqual(changeSet,
                                "<update type='dummyObject' id='1' name='name1' present='true' value='1.1'/>");
   }
 
   public void testDeletionClearsAllValues() throws Exception {
-    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, toto);
+    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
     changeSet.processDeletion(key1, FieldValues.EMPTY);
     changeSet.processCreation(DummyObject.TYPE, creationValues);
     checker.assertChangesEqual(changeSet,
@@ -177,7 +177,7 @@ public class DefaultChangeSetTest extends TestCase {
   public void testDeleteStateErrorTransitions() throws Exception {
     changeSet.processDeletion(key1, FieldValues.EMPTY);
     try {
-      changeSet.processUpdate(key1, DummyObject.DATE, null, toto);
+      changeSet.processUpdate(key1, DummyObject.DATE, null, null);
       fail();
     }
     catch (InvalidState e) {
@@ -203,7 +203,7 @@ public class DefaultChangeSetTest extends TestCase {
 
   public void testChangedGlobTypesList() throws Exception {
     changeSet.processCreation(DummyObject.TYPE, newKey(DummyObject.TYPE, 2));
-    changeSet.processUpdate(newKey(DummyObject2.TYPE, 1), DummyObject2.LABEL, "name", toto);
+    changeSet.processUpdate(newKey(DummyObject2.TYPE, 1), DummyObject2.LABEL, "name", null);
     changeSet.processDeletion(newKey(DummyObjectWithLinks.TYPE, 0), FieldValues.EMPTY);
 
     TestUtils.assertSetEquals(changeSet.getChangedTypes(),
@@ -213,7 +213,7 @@ public class DefaultChangeSetTest extends TestCase {
   public void testMergeOnDifferentKeys() throws Exception {
     changeSet.processCreation(DummyObject.TYPE, key1);
     newChangeSet.processCreation(DummyObject.TYPE, newKey(DummyObject.TYPE, 2));
-    newChangeSet.processUpdate(newKey(DummyObject.TYPE, 3), DummyObject.NAME, "name", toto);
+    newChangeSet.processUpdate(newKey(DummyObject.TYPE, 3), DummyObject.NAME, "name", null);
     newChangeSet.processDeletion(newKey(DummyObject.TYPE, 4), FieldValues.EMPTY);
 
     checkMerge(
@@ -252,7 +252,7 @@ public class DefaultChangeSetTest extends TestCase {
   }
 
   public void testClear() throws Exception {
-    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, toto);
+    changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
     changeSet.processDeletion(Key.create(DummyObject.TYPE , 10), FieldValues.EMPTY);
     changeSet.processCreation(Key.create(DummyObject2.TYPE, 11), FieldValues.EMPTY);
     changeSet.processCreation(Key.create(DummyObjectWithLinks.TYPE, 12), FieldValues.EMPTY);

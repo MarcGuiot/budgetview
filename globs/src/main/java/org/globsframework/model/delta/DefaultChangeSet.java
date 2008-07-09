@@ -23,15 +23,15 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public void processUpdate(Key key, Field field, Object newValue, Object previousValue) {
-    DefaultDeltaGlob glob = getGlob(key);
-    glob.processUpdate(field, newValue);
+    DefaultDeltaGlob delta = getGlob(key);
+    delta.processUpdate(field, newValue, previousValue);
   }
 
-  public void processUpdate(Key key, FieldValues values) {
+  public void processUpdate(Key key, FieldValuesWithPrevious values) {
     final DefaultDeltaGlob glob = getGlob(key);
-    values.safeApply(new FieldValues.Functor() {
-      public void process(Field field, Object value) throws Exception {
-        glob.processUpdate(field, value);
+    values.safeApply(new FieldValuesWithPrevious.Functor() {
+      public void process(Field field, Object value, Object previousValue) throws Exception {
+        glob.processUpdate(field, value, previousValue);
       }
     });
   }

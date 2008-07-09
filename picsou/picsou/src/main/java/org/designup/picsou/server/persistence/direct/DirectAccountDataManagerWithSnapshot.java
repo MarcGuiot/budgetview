@@ -3,6 +3,8 @@ package org.designup.picsou.server.persistence.direct;
 import org.designup.picsou.client.SerializableDeltaGlobSerializer;
 import org.designup.picsou.client.SerializableGlobSerializer;
 import org.designup.picsou.server.model.SerializableGlobType;
+import org.designup.picsou.server.model.ServerDelta;
+import org.designup.picsou.server.model.ServerState;
 import org.designup.picsou.server.persistence.prevayler.AccountDataManager;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -86,9 +88,9 @@ public class DirectAccountDataManagerWithSnapshot implements AccountDataManager 
           throw new RuntimeException("error while reading journal file");
         }
         SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
-        MultiMap<String, DeltaGlob> map = serializableDeltaGlobSerializer.deserialize(serializedInput);
+        MultiMap<String, ServerDelta> changes = serializableDeltaGlobSerializer.deserialize(serializedInput);
         if (version >= snapshotVersion) {
-          apply(globs, map);
+          apply(globs, changes);
         }
         version++;
       }
@@ -107,15 +109,15 @@ public class DirectAccountDataManagerWithSnapshot implements AccountDataManager 
     return version;
   }
 
-  private void apply(MapOfMaps<String, Integer, Glob> globs, MultiMap<String, DeltaGlob> map) {
-    for (Map.Entry<String, List<DeltaGlob>> stringListEntry : map.values()) {
+  private void apply(MapOfMaps<String, Integer, Glob> globs, MultiMap<String, ServerDelta> changes) {
+    for (Map.Entry<String,List<ServerDelta>> stringListEntry : changes.values()) {
       Map<Integer, Glob> globToMerge = globs.get(stringListEntry.getKey());
-      for (DeltaGlob deltaGlob : stringListEntry.getValue()) {
-        if (deltaGlob.getState() == DeltaState.DELETED) {
-          globToMerge.remove(deltaGlob.get(SerializableGlobType.ID));
+      for (ServerDelta deltaGlob : stringListEntry.getValue()) {
+        if (deltaGlob.getState() == ServerState.DELETED) {
+          globToMerge.remove(deltaGlob.getId());
         }
         else {
-//          globToMerge.put(deltaGlob.get(SerializableGlobType.ID), deltaGlob);
+//          globToMerge.put(deltaGlob.getId(), deltaGlob);
         }
       }
     }
@@ -174,7 +176,7 @@ public class DirectAccountDataManagerWithSnapshot implements AccountDataManager 
 
   public void updateUserData(SerializedInput input, Integer userId) {
     SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
-    MultiMap<String, DeltaGlob> map = serializableDeltaGlobSerializer.deserialize(input);
+    MultiMap<String, DeltaGlob> map = null; //serializableDeltaGlobSerializer.deserialize(input);
     DurableOutputStream bufferedOutputStream = outputStreamMap.get(userId);
     if (bufferedOutputStream == null) {
       throw new RuntimeException("read should be call before write");
@@ -243,7 +245,7 @@ public class DirectAccountDataManagerWithSnapshot implements AccountDataManager 
         SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
         serializedOutput.writeString("Tr");
         serializedOutput.write(nextTransactionId);
-        serializableDeltaGlobSerializer.serialize(serializedOutput, deltaGlob);
+//        serializableDeltaGlobSerializer.serialize(serializedOutput, deltaGlob);
         outputStream.flush();
         fd.sync();
         nextTransactionId++;

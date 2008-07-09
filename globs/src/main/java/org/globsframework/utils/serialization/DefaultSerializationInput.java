@@ -104,7 +104,7 @@ public class DefaultSerializationInput implements SerializedInput {
 
   private FieldValuesWithPrevious readValuesWithPrevious(GlobType type) {
     FieldValuesWithPreviousBuilder builder = FieldValuesWithPreviousBuilder.init();
-    FieldReader fieldReader = new FieldReader(this, builder);
+    FieldWithPreviousReader fieldReader = new FieldWithPreviousReader(this, builder);
     int fieldCount = readNotNullInt();
     while (fieldCount != 0) {
       int fieldIndex = readNotNullInt();

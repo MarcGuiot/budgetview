@@ -6,7 +6,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Date;
 
-public interface FieldValuesWithPrevious {
+public interface FieldValuesWithPrevious extends FieldValues {
   Object getValue(Field field) throws ItemNotFound;
 
   Double get(DoubleField field) throws ItemNotFound;
@@ -50,10 +50,6 @@ public interface FieldValuesWithPrevious {
   Long getPrevious(LongField field) throws ItemNotFound;
 
   byte[] getPrevious(BlobField field) throws ItemNotFound;
-
-  boolean contains(Field field);
- 
-  int size();
 
   void apply(Functor functor) throws Exception;
 

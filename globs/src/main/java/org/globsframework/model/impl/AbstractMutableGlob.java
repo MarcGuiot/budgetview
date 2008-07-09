@@ -50,7 +50,10 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
     });
   }
 
-  public void setObject(Field field, Object value) {
-    values[field.getIndex()] = value;
+  public Object setObject(Field field, Object value) {
+    final int index = field.getIndex();
+    Object previousValue = values[index];
+    values[index] = value;
+    return previousValue;
   }
 }

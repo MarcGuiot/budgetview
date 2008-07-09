@@ -17,8 +17,6 @@ public class FieldValuesWithPreviousBuilder {
     return null;
   }
 
-  <<<<<<<local
-
   public void set(IntegerField field, Integer newValue, Integer previousValue) {
   }
 
@@ -42,7 +40,4 @@ public class FieldValuesWithPreviousBuilder {
 
   public void set(LongField field, Long newValue, Long previousValue) {
   }
-
-  =======
-    >>>>>>>other
 }

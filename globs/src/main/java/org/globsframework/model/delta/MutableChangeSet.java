@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Key;
+import org.globsframework.model.FieldValuesWithPrevious;
 import org.globsframework.utils.exceptions.InvalidState;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface MutableChangeSet extends ChangeSet {
 
   void processUpdate(Key key, Field field, Object newValue, Object previousValue);
 
-  void processUpdate(Key key, FieldValues values);
+  void processUpdate(Key key, FieldValuesWithPrevious values);
 
   void processDeletion(Key key, FieldValues values);
 

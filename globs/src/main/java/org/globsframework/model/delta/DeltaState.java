@@ -27,7 +27,7 @@ public interface DeltaState {
 
     public void processDeletion(DeltaGlob delta, FieldValues values) {
       delta.setState(DELETED);
-      delta.setValues(values);
+      delta.setPreviousValues(values);
     }
 
     public void visit(DeltaGlob glob, ChangeSetVisitor visitor) throws Exception {
@@ -39,20 +39,20 @@ public interface DeltaState {
   };
 
   DeltaState CREATED = new DeltaState() {
-    public void processCreation(DeltaGlob glob, FieldValues values) {
-      throw new InvalidState("Object " + glob.getKey() + " already exists");
+    public void processCreation(DeltaGlob delta, FieldValues values) {
+      throw new InvalidState("Object " + delta.getKey() + " already exists");
     }
 
-    public void processUpdate(DeltaGlob glob, Field field, Object value, Object previousValue) {
-      glob.setValue(field, value, previousValue);
+    public void processUpdate(DeltaGlob delta, Field field, Object value, Object previousValue) {
+      delta.setValue(field, value);
     }
 
-    public void processDeletion(DeltaGlob glob, FieldValues values) {
-      glob.setState(UNCHANGED);
+    public void processDeletion(DeltaGlob delta, FieldValues values) {
+      delta.setState(UNCHANGED);
     }
 
-    public void visit(DeltaGlob glob, ChangeSetVisitor visitor) throws Exception {
-      visitor.visitCreation(glob.getKey(), glob.getValues());
+    public void visit(DeltaGlob delta, ChangeSetVisitor visitor) throws Exception {
+      visitor.visitCreation(delta.getKey(), delta);
     }
 
     public String toString() {
@@ -66,12 +66,17 @@ public interface DeltaState {
     }
 
     public void processUpdate(DeltaGlob delta, Field field, Object value, Object previousValue) {
-      delta.setValue(field, value, previousValue);
+      if (delta.contains(field)) {
+        delta.setValue(field, value);
+      }
+      else {
+        delta.setValue(field, value, previousValue);
+      }
     }
 
     public void processDeletion(DeltaGlob delta, FieldValues values) {
       delta.setState(DELETED);
-      delta.setValues(values);
+      delta.setPreviousValues(values);
     }
 
     public void visit(DeltaGlob delta, ChangeSetVisitor visitor) throws Exception {
@@ -84,22 +89,22 @@ public interface DeltaState {
   };
 
   DeltaState DELETED = new DeltaState() {
-    public void processCreation(DeltaGlob glob, FieldValues values) {
-      glob.resetValues();
-      glob.setState(UPDATED);
-      glob.setValues(values);
+    public void processCreation(DeltaGlob delta, FieldValues values) {
+      delta.resetValues();
+      delta.setState(UPDATED);
+      delta.setValues(values);
     }
 
     public void processUpdate(DeltaGlob delta, Field field, Object value, Object previousValue) {
       throw new InvalidState("Object " + delta.getKey() + " was deleted and cannot be updated");
     }
 
-    public void processDeletion(DeltaGlob glob, FieldValues values) {
-      throw new InvalidState("Object " + glob.getKey() + " was already deleted");
+    public void processDeletion(DeltaGlob delta, FieldValues values) {
+      throw new InvalidState("Object " + delta.getKey() + " was already deleted");
     }
 
-    public void visit(DeltaGlob glob, ChangeSetVisitor visitor) throws Exception {
-      visitor.visitDeletion(glob.getKey(), glob.getValues());
+    public void visit(DeltaGlob delta, ChangeSetVisitor visitor) throws Exception {
+      visitor.visitDeletion(delta.getKey(), delta.getPreviousValues());
     }
 
     public String toString() {

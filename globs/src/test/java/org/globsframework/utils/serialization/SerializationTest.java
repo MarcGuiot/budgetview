@@ -97,7 +97,7 @@ public class SerializationTest extends TestCase {
                                 .set(DummyObject.NAME, "name1")
                                 .set(DummyObject.DATE, currentDate)
                                 .get());
-    changeSet.processUpdate(KeyBuilder.newKey(DummyObject.TYPE, 2), DummyObject.NAME, "name2", toto);
+    changeSet.processUpdate(KeyBuilder.newKey(DummyObject.TYPE, 2), DummyObject.NAME, "name2", null);
     changeSet.processDeletion(KeyBuilder.newKey(DummyObject.TYPE, 3),
                               FieldValuesBuilder.init()
                                 .set(DummyObject.ID, 3)

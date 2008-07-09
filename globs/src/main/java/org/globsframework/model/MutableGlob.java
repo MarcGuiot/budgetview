@@ -19,7 +19,7 @@ public interface MutableGlob extends Glob {
 
   void set(BlobField field, byte[] value);
 
-  void setObject(Field field, Object value);
+  Object setObject(Field field, Object value);
 
   void setValues(FieldValues values);
 }

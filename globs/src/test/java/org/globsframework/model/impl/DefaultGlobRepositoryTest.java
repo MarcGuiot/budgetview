@@ -754,7 +754,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                                 .set(DummyObject.NAME, "obj3")
                                 .get());
 
-    changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1", toto);
+    changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1", null);
     changeSet.processDeletion(getKey2(2), FieldValues.EMPTY);
 
     repository.apply(changeSet);
@@ -776,7 +776,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                                 .set(DummyObject.NAME, "obj3")
                                 .get());
 
-    changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1", toto);
+    changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1", null);
     changeSet.processDeletion(getKey2(2), FieldValues.EMPTY);
     changeSet.processDeletion(getKey(666), FieldValues.EMPTY);
 
@@ -812,7 +812,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     );
 
     MutableChangeSet changeSet = new DefaultChangeSet();
-    changeSet.processUpdate(getKey(2), DummyObject.NAME, "newObj1", toto);
+    changeSet.processUpdate(getKey(2), DummyObject.NAME, "newObj1", null);
     checkApplyChangeSetError(changeSet, "Object dummyObject[id=2] not found - cannot apply update");
   }
 

@@ -40,13 +40,13 @@ public class XmlChangeSetParser {
         throw new InvalidParameter("Missing attribute 'type' in tag '" + childName + "'");
       }
       GlobType globType = model.getType(typeName);
-      FieldValuesBuilder valuesBuilder = FieldValuesBuilder.init();
+      FieldValuesWithPreviousBuilder valuesBuilder = FieldValuesWithPreviousBuilder.init();
       final KeyBuilder keyBuilder = KeyBuilder.init(globType);
 
       processAttributes(keyBuilder, valuesBuilder, xmlAttrs, globType);
 
       final Key key = keyBuilder.get();
-      FieldValues values = valuesBuilder.get();
+      FieldValuesWithPrevious values = valuesBuilder.get();
       if ("create".equals(childName)) {
         changeSet.processCreation(key, values);
       }
@@ -61,7 +61,7 @@ public class XmlChangeSetParser {
     }
 
     private void processAttributes(KeyBuilder keyBuilder,
-                                   FieldValuesBuilder valuesBuilder,
+                                   FieldValuesWithPreviousBuilder valuesBuilder,
                                    Attributes xmlAttrs,
                                    GlobType globType) {
       int length = xmlAttrs.getLength();
