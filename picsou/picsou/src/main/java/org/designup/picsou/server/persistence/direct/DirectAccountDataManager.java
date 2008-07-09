@@ -87,10 +87,10 @@ public class DirectAccountDataManager implements AccountDataManager {
           throw new RuntimeException("error while reading journal file");
         }
         SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
-        MultiMap<String, DeltaGlob> map = serializableDeltaGlobSerializer.deserialize(serializedInput);
-        if (version >= snapshotVersion) {
-          apply(globs, map);
-        }
+//        MultiMap<String, DeltaGlob> map = serializableDeltaGlobSerializer.deserialize(serializedInput);
+//        if (version >= snapshotVersion) {
+//          apply(globs, map);
+//        }
         version++;
       }
       catch (EOFIOFailure e) {
@@ -177,12 +177,12 @@ public class DirectAccountDataManager implements AccountDataManager {
 
   public void updateUserData(SerializedInput input, Integer userId) {
     SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
-    MultiMap<String, DeltaGlob> map = serializableDeltaGlobSerializer.deserialize(input);
-    DurableOutputStream bufferedOutputStream = outputStreamMap.get(userId);
-    if (bufferedOutputStream == null) {
-      throw new RuntimeException("read should be call before write");
-    }
-    bufferedOutputStream.write(map);
+//    MultiMap<String, DeltaGlob> map = serializableDeltaGlobSerializer.deserialize(input);
+//    DurableOutputStream bufferedOutputStream = outputStreamMap.get(userId);
+//    if (bufferedOutputStream == null) {
+//      throw new RuntimeException("read should be call before write");
+//    }
+//    bufferedOutputStream.write(map);
   }
 
   public Integer getNextId(String globTypeName, Integer userId, Integer count) {
@@ -236,7 +236,7 @@ public class DirectAccountDataManager implements AccountDataManager {
         SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
         serializedOutput.writeString("Tr");
         serializedOutput.write(nextTransactionVersion);
-        serializableDeltaGlobSerializer.serialize(serializedOutput, map);
+//        serializableDeltaGlobSerializer.serialize(serializedOutput, map);
         outputStream.flush();
         fd.sync();
         nextTransactionVersion++;

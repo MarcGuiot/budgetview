@@ -35,7 +35,7 @@ public class DirectAccountDataManagerTest extends TestCase {
     SerializedByteArrayOutput output = new SerializedByteArrayOutput();
     MultiMap<String, DeltaGlob> globMultiMap = new MultiMap<String, DeltaGlob>();
     createDelta(globMultiMap, 1, "A", DeltaState.CREATED);
-    serializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
+//    serializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
     directAccountDataManager.updateUserData(output.getInput(), userId);
 
     SerializedByteArrayOutput actualOutput = new SerializedByteArrayOutput();
@@ -52,8 +52,8 @@ public class DirectAccountDataManagerTest extends TestCase {
       .setValue(SerializableGlobType.ID, id).setValue(SerializableGlobType.GLOB_TYPE_NAME, globTypeName).get();
     DefaultDeltaGlob deltaGlob = new DefaultDeltaGlob(key1);
     deltaGlob.setState(deltaState);
-    deltaGlob.set(SerializableGlobType.VERSION, 1);
-    deltaGlob.set(SerializableGlobType.DATA, "sdf".getBytes());
+//    deltaGlob.set(SerializableGlobType.VERSION, 1);
+//    deltaGlob.set(SerializableGlobType.DATA, "sdf".getBytes());
     globMultiMap.put(globTypeName, deltaGlob);
     return deltaGlob;
   }
