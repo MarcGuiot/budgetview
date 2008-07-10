@@ -4,22 +4,20 @@ import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
-import org.designup.picsou.gui.series.SeriesUpdateTrigger;
-import org.designup.picsou.gui.triggers.MonthStatComputer;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.PicsouModel;
 import org.designup.picsou.model.User;
+import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.triggers.MonthStatComputer;
+import org.designup.picsou.triggers.SeriesUpdateTrigger;
 import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.model.ChangeSet;
+import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
@@ -58,7 +56,7 @@ public class PicsouInit {
     repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
     repository.addTrigger(new MonthStatComputer(repository));
-    repository.addTrigger(new SeriesUpdateTrigger(directory, repository));
+    repository.addTrigger(new SeriesUpdateTrigger(directory));
 
     repository.create(User.TYPE,
                       value(User.ID, User.SINGLETON_ID),
@@ -80,6 +78,8 @@ public class PicsouInit {
     }
     serverAccess.applyChanges(changeSet, repository);
     if (newUser) {
+      repository.create(Key.create(UserPreferences.TYPE, UserPreferences.SINGLETON_ID),
+                        FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT, 0));
       loadGlobs("/subcats.xml");
       loadGlobs("/series.xml");
     }

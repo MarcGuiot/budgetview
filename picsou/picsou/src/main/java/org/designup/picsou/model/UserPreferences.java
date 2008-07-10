@@ -15,12 +15,16 @@ import org.globsframework.utils.serialization.SerializedOutput;
 
 public class UserPreferences {
 
+  public static final Integer SINGLETON_ID = 0;
+
   public static GlobType TYPE;
 
   @Key
   public static IntegerField ID;
 
   public static StringField LAST_DIRECTORY;
+
+  public static IntegerField FUTURE_MONTH_COUNT;
 
   static {
     GlobTypeLoader.init(UserPreferences.class);
@@ -32,6 +36,7 @@ public class UserPreferences {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeString(values.get(LAST_DIRECTORY));
+      outputStream.writeInteger(values.get(FUTURE_MONTH_COUNT));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -44,6 +49,7 @@ public class UserPreferences {
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(LAST_DIRECTORY, input.readString());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
     }
 
     public int getWriteVersion() {

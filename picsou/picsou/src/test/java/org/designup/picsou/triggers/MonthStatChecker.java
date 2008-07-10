@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.triggers;
+package org.designup.picsou.triggers;
 
 import junit.framework.Assert;
 import org.designup.picsou.gui.model.MonthStat;

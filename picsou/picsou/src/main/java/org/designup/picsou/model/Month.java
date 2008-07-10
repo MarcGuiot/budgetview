@@ -134,9 +134,19 @@ public class Month {
     return Lang.get("month." + toMonth(month) + ".long").toLowerCase() + " " + year;
   }
 
-  public static int[] createMonth(int monthId, int count) {
+  public static int[] createMonths(int monthId, int count) {
     int[] monthIds = new int[count];
     for (int i = 0; i < monthIds.length; i++) {
+      monthId = next(monthId);
+      monthIds[i] = monthId;
+    }
+    return monthIds;
+  }
+
+  public static int[] createMonthsWithFirst(int monthId, int count) {
+    int[] monthIds = new int[count + 1];
+    monthIds[0] = monthId;
+    for (int i = 1; i < monthIds.length; i++) {
       monthId = next(monthId);
       monthIds[i] = monthId;
     }

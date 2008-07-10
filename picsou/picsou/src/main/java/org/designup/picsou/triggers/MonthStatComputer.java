@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.triggers;
+package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.GlobalStat;
 import org.designup.picsou.gui.model.MonthStat;

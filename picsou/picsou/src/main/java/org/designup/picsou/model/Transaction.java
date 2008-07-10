@@ -60,7 +60,7 @@ public class Transaction {
   public static LinkField SERIES;
 
   @DefaultBoolean(false)
-  public static Boolean IS_BUDGET;
+  public static BooleanField PLANNED;
 
   public static NotUniqueIndex LABEL_FOR_CATEGORISATION_INDEX;
 
