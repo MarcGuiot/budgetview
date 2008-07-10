@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import junit.framework.TestCase;
+import org.globsframework.utils.TestUtils;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -55,5 +56,9 @@ public class MonthTest extends TestCase {
     assertEquals(20080618, Month.toInt(200806, 18));
     assertEquals(200806, Month.intToMonthId(20080618));
     assertEquals(18, Month.intToDay(20080618));
+  }
+
+  public void testCreateMonth() throws Exception {
+    TestUtils.assertEquals(Month.createMonth(200807, 3), 200808, 200809, 200810);
   }
 }

@@ -4,6 +4,7 @@ import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
+import org.designup.picsou.gui.series.SeriesUpdateTrigger;
 import org.designup.picsou.gui.triggers.MonthStatComputer;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
@@ -57,6 +58,7 @@ public class PicsouInit {
     repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
     repository.addTrigger(new MonthStatComputer(repository));
+    repository.addTrigger(new SeriesUpdateTrigger(directory, repository));
 
     repository.create(User.TYPE,
                       value(User.ID, User.SINGLETON_ID),
@@ -94,7 +96,6 @@ public class PicsouInit {
     directory.add(TransactionAnalyzerFactory.class, factory);
     ImportService importService = new ImportService();
     directory.add(ImportService.class, importService);
-    directory.add(TimeService.class, new TimeService());
   }
 
   private static class ServerChangeSetListener extends DefaultChangeSetListener {

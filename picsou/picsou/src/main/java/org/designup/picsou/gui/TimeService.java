@@ -9,18 +9,27 @@ import java.util.Date;
 
 public class TimeService {
   private static Date today = new Date();
+  private int count;
 
   public void createFuturMonth(GlobRepository repository, boolean isFull) {
-    int monthCount = isFull ? 24 : 1;
+    count = isFull ? 24 : 1;
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(today);
     calendar.set(Calendar.DAY_OF_MONTH, 1);
-    for (int i = 0; i < monthCount; i++) {
+    for (int i = 0; i < count; i++) {
       Key month = Key.create(Month.TYPE, Month.toYyyyMm(calendar.get(Calendar.YEAR),
                                                         calendar.get(Calendar.MONTH) + 1));
       repository.findOrCreate(month);
       calendar.add(Calendar.MONTH, 1);
     }
+  }
+
+  public int getCurrentMonthId() {
+    return Month.getMonthId(today);
+  }
+
+  public int getFuturMonthCount() {
+    return count;
   }
 
   public static void setCurrentDate(Date date) {

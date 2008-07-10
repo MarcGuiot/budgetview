@@ -134,6 +134,15 @@ public class Month {
     return Lang.get("month." + toMonth(month) + ".long").toLowerCase() + " " + year;
   }
 
+  public static int[] createMonth(int monthId, int count) {
+    int[] monthIds = new int[count];
+    for (int i = 0; i < monthIds.length; i++) {
+      monthId = next(monthId);
+      monthIds[i] = monthId;
+    }
+    return monthIds;
+  }
+
   private static class RangeIterator implements Iterator<Integer> {
     private int current;
     private int max;
