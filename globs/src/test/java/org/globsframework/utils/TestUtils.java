@@ -44,6 +44,12 @@ public class TestUtils {
     }
   }
 
+  public static void assertEquals(int[] expected, int... actual) {
+    if (!Arrays.equals(expected, actual)) {
+      Assert.fail("expected: " + Arrays.toString(expected) + " but was: " + Arrays.toString(actual));
+    }
+  }
+
   public static <T> void assertIteratorContains(Iterator<T> iterator, T... values) throws Exception {
     if ((values.length == 0) && iterator.hasNext()) {
       Assert.fail("Expected empty iterator, but contains at least: " + iterator.next());
