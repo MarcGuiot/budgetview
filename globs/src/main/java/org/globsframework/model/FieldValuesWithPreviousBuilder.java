@@ -1,43 +1,77 @@
 package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.model.utils.DefaultFieldValuesWithPrevious;
+import org.globsframework.utils.Unset;
 
 import java.util.Date;
 
 public class FieldValuesWithPreviousBuilder {
-  public static FieldValuesWithPreviousBuilder init() {
-    return new FieldValuesWithPreviousBuilder();
+  public static FieldValuesWithPreviousBuilder init(GlobType type) {
+    return new FieldValuesWithPreviousBuilder(type);
   }
 
-  public void setObject(Field field, Object value) {
+  private DefaultFieldValuesWithPrevious values;
+
+  public FieldValuesWithPreviousBuilder(GlobType type) {
+    this.values = new DefaultFieldValuesWithPrevious(type);
+  }
+
+  public void completePreviousValues() {
+    this.values.completePreviousValues();
+  }
+
+  public void completeWithNulls() {
+    this.values.completeWithNulls();
+  }
+
+  public void setValue(Field field, Object value) {
+    this.values.setValue(field, value);
+  }
+
+  public void setPreviousValue(Field field, Object value) {
+    this.values.setPreviousValue(field, value);
+  }
+
+  public void setValue(Field field, Object value, Object previousValue) {
+    this.values.setValue(field, value, previousValue);
   }
 
   public FieldValuesWithPrevious get() {
-    return null;
+    return values;
   }
 
   public void set(IntegerField field, Integer newValue, Integer previousValue) {
+    setValue(field, newValue, previousValue);
   }
 
   public void set(DoubleField field, Double newValue, Double previousValue) {
+    setValue(field, newValue, previousValue);
   }
 
   public void set(StringField field, String newValue, String previousValue) {
+    setValue(field, newValue, previousValue);
   }
 
   public void set(DateField field, Date newValue, Date previousValue) {
+    setValue(field, newValue, previousValue);
   }
 
   public void set(BooleanField field, Boolean newValue, Boolean previousValue) {
+    setValue(field, newValue, previousValue);
   }
 
   public void set(TimeStampField field, Date newValue, Date previousValue) {
+    setValue(field, newValue, previousValue);
   }
 
   public void set(BlobField field, byte[] newValue, byte[] previousValue) {
+    setValue(field, newValue, previousValue);
   }
 
   public void set(LongField field, Long newValue, Long previousValue) {
+    setValue(field, newValue, previousValue);
   }
 }

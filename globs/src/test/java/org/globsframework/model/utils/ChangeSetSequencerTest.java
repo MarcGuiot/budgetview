@@ -68,7 +68,7 @@ public class ChangeSetSequencerTest extends TestCase {
                   + "</changes>",
                   "<changes>"
                   + "  <create type='objectWithCompositeKey' id1='0' id2='1'/>"
-                  + "  <update type='objectWithCompositeKey' id1='0' id2='2' name='newName'/>"
+                  + "  <update type='objectWithCompositeKey' id1='0' id2='2' name='newName' _name='(null)'/>"
                   + "  <delete type='objectWithCompositeKey' id1='0' id2='3'/>"
                   + "</changes>");
   }
@@ -106,8 +106,8 @@ public class ChangeSetSequencerTest extends TestCase {
                     "<changes>"
                     + "  <create type='objectWithSelfReference' id='1'/>"
                     + "  <create type='objectWithSelfReference' id='0'/>"
-                    + "  <update type='objectWithSelfReference' id='1' link='0'/>"
-                    + "  <update type='objectWithSelfReference' id='0' link='1'/>"
+                    + "  <update type='objectWithSelfReference' id='1' link='0' _link='(null)'/>"
+                    + "  <update type='objectWithSelfReference' id='0' link='1' _link='(null)'/>"
                     + "</changes>");
     }
     catch (AssertionFailedError e) {
@@ -119,8 +119,8 @@ public class ChangeSetSequencerTest extends TestCase {
                     "<changes>"
                     + "  <create type='objectWithSelfReference' id='0'/>"
                     + "  <create type='objectWithSelfReference' id='1'/>"
-                    + "  <update type='objectWithSelfReference' id='0' link='1'/>"
-                    + "  <update type='objectWithSelfReference' id='1' link='0'/>"
+                    + "  <update type='objectWithSelfReference' id='0' link='1' _link='(null)'/>"
+                    + "  <update type='objectWithSelfReference' id='1' link='0' _link='(null)'/>"
                     + "</changes>");
     }
   }
@@ -187,9 +187,12 @@ public class ChangeSetSequencerTest extends TestCase {
                   "<changes>"
                   + "  <create type='objectWithCompositeKey' id1='1' id2='2'/>"
                   + "  <create type='linkedToObjectWithCompositeKey' id='0' link1='1' link2='2'/>"
-                  + "  <update type='objectWithCompositeKey' id1='2' id2='3' name='newName'/>"
-                  + "  <update type='linkedToObjectWithCompositeKey' id='2' link1='2' link2='3'/>"
-                  + "  <delete type='linkedToObjectWithCompositeKey' id='1' link1='3' link2='4'/>"
+                  + "  <update type='objectWithCompositeKey' id1='2' id2='3'"
+                  + "          name='newName' _name='(null)'/>"
+                  + "  <update type='linkedToObjectWithCompositeKey' id='2'"
+                  + "          link1='2' _link1='(null)' "
+                  + "          link2='3' _link2='(null)'/>"
+                  + "  <delete type='linkedToObjectWithCompositeKey' id='1' _link1='3' _link2='4'/>"
                   + "  <delete type='objectWithCompositeKey' id1='3' id2='4'/>"
                   + "</changes>");
   }
@@ -200,11 +203,12 @@ public class ChangeSetSequencerTest extends TestCase {
                   + "  <create type='linkCycle2' id1='1' id2='2' link1='1' link2='2'/>"
                   + "</changes>",
                   "<changes>"
-                  + "  <create id1='1' id2='2' type='linkCycle2'/>"
-                  + "  <create id1='0' id2='2' link1='1' link2='2'"
-                  + "          type='linkCycle1'/>"
-                  + "  <update id1='1' id2='2' link1='1' link2='2'"
-                  + "          type='linkCycle2'/>"
+                  + "  <create type='linkCycle2' id1='1' id2='2'/>"
+                  + "  <create type='linkCycle1' id1='0' id2='2'" +
+                  "            link1='1' link2='2'/>"
+                  + "  <update type='linkCycle2' id1='1' id2='2' " +
+                  "            link1='1' _link1='(null)' " +
+                  "            link2='2' _link2='(null)'/>"
                   + "</changes>");
   }
 
@@ -257,10 +261,10 @@ public class ChangeSetSequencerTest extends TestCase {
                   + "  <create type='largeLinkCycle3' id='3' link='1'/>"
                   + "</changes>",
                   "<changes>"
-                  + "  <create id='3' type='largeLinkCycle3'/>"
-                  + "  <create id='2' link='3' type='largeLinkCycle2'/>"
-                  + "  <create id='1' link='2' type='largeLinkCycle1'/>"
-                  + "  <update id='3' link='1' type='largeLinkCycle3'/>"
+                  + "  <create type='largeLinkCycle3' id='3'/>"
+                  + "  <create type='largeLinkCycle2' id='2' link='3'/>"
+                  + "  <create type='largeLinkCycle1' id='1' link='2'/>"
+                  + "  <update type='largeLinkCycle3' id='3' link='1' _link='(null)'/>"
                   + "</changes>");
   }
 

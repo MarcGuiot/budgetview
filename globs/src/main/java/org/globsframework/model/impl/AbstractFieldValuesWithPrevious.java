@@ -1,6 +1,7 @@
 package org.globsframework.model.impl;
 
 import org.globsframework.model.FieldValuesWithPrevious;
+import org.globsframework.model.FieldValues;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -97,5 +98,29 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
 
   public byte[] getPrevious(BlobField field) throws ItemNotFound {
     return (byte[])doGetPrevious(field);
+  }
+
+  public void safeApply(FieldValues.Functor functor) {
+    try {
+      apply(functor);
+    }
+    catch (RuntimeException e) {
+      throw e;
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public void safeApply(FieldValuesWithPrevious.Functor functor) {
+    try {
+      apply(functor);
+    }
+    catch (RuntimeException e) {
+      throw e;
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 }

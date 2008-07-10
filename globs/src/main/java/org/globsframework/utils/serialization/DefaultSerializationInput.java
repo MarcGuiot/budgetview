@@ -63,32 +63,6 @@ public class DefaultSerializationInput implements SerializedInput {
     return changeSet;
   }
 
-  public DeltaGlob readDeltaGlob(GlobModel model) {
-    GlobType type = model.getType(readString());
-    Key key = KeyBuilder.createFromValues(type, readValues(type));
-    DefaultDeltaGlob defaultGlob = new DefaultDeltaGlob(key);
-
-    DeltaState deltaState;
-    int state = readByte();
-    switch (state) {
-      case 1:
-        deltaState = DeltaState.CREATED;
-        break;
-      case 2:
-        deltaState = DeltaState.UPDATED;
-        break;
-      case 3:
-        deltaState = DeltaState.DELETED;
-        break;
-      default:
-        throw new UnexpectedApplicationState("Invalid state '" + state + "' undefined for: " + key);
-    }
-    defaultGlob.setState(deltaState);
-    defaultGlob.setValues(readValues(type));
-
-    return defaultGlob;
-  }
-
   private FieldValues readValues(GlobType type) {
     FieldValuesBuilder builder = FieldValuesBuilder.init();
     FieldReader fieldReader = new FieldReader(this, builder);
@@ -103,7 +77,7 @@ public class DefaultSerializationInput implements SerializedInput {
   }
 
   private FieldValuesWithPrevious readValuesWithPrevious(GlobType type) {
-    FieldValuesWithPreviousBuilder builder = FieldValuesWithPreviousBuilder.init();
+    FieldValuesWithPreviousBuilder builder = FieldValuesWithPreviousBuilder.init(type);
     FieldWithPreviousReader fieldReader = new FieldWithPreviousReader(this, builder);
     int fieldCount = readNotNullInt();
     while (fieldCount != 0) {

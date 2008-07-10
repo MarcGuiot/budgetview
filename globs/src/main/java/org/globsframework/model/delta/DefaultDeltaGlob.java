@@ -4,22 +4,16 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.impl.AbstractFieldValuesWithPrevious;
+import org.globsframework.utils.Unset;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-public class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaGlob {
+class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaGlob {
 
   private Key key;
   private Object[] values;
   private Object[] previousValues;
   private DeltaState state = DeltaState.UNCHANGED;
-
-  // TODO: to be made serialization-proof
-  public static Object UNSET_VALUE = new Object() {
-    public String toString() {
-      return "<deltaGlob.unset>";
-    }
-  };
 
   public DefaultDeltaGlob(Key key) {
     this.key = key;
@@ -72,7 +66,7 @@ public class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements
     globValues.safeApply(new FieldValues.Functor() {
       public void process(Field field, Object value) throws Exception {
         final int index = field.getIndex();
-        if (previousValues[index] == UNSET_VALUE) {
+        if (previousValues[index] == Unset.VALUE) {
           previousValues[index] = value;
         }
       }
@@ -105,11 +99,11 @@ public class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements
   }
 
   public boolean isUpdated(Field field) {
-    return (state == DeltaState.UPDATED) && (!UNSET_VALUE.equals(values[field.getIndex()]));
+    return (state == DeltaState.UPDATED) && (!Unset.VALUE.equals(values[field.getIndex()]));
   }
 
   public boolean isSet(Field field) {
-    return doGet(field) != UNSET_VALUE;
+    return doGet(field) != Unset.VALUE;
   }
 
   public void setState(DeltaState state) {
@@ -119,9 +113,9 @@ public class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements
   public void resetValues() {
     for (Field field : key.getGlobType().getFields()) {
       if (!field.isKeyField()) {
-        values[field.getIndex()] = UNSET_VALUE;
+        values[field.getIndex()] = Unset.VALUE;
       }
-      previousValues[field.getIndex()] = UNSET_VALUE;
+      previousValues[field.getIndex()] = Unset.VALUE;
     }
   }
 
@@ -156,7 +150,7 @@ public class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements
 
   public Object getValue(Field field) throws ItemNotFound {
     Object value = values[field.getIndex()];
-    if (value == UNSET_VALUE) {
+    if (value == Unset.VALUE) {
       throw new ItemNotFound(field.getName() + " not set.");
     }
     return value;
@@ -166,13 +160,13 @@ public class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements
     if (field.isKeyField()) {
       return false;
     }
-    return values[field.getIndex()] != UNSET_VALUE;
+    return values[field.getIndex()] != Unset.VALUE;
   }
 
   public int size() {
     int count = -key.getGlobType().getKeyFields().size();
     for (Object value : values) {
-      if (value != UNSET_VALUE) {
+      if (value != Unset.VALUE) {
         count++;
       }
     }
@@ -182,21 +176,9 @@ public class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements
   public void apply(FieldValues.Functor functor) throws Exception {
     for (Field field : key.getGlobType().getFields()) {
       Object value = values[field.getIndex()];
-      if ((value != UNSET_VALUE) && !field.isKeyField()) {
+      if ((value != Unset.VALUE) && !field.isKeyField()) {
         functor.process(field, value);
       }
-    }
-  }
-
-  public void safeApply(FieldValues.Functor functor) {
-    try {
-      apply(functor);
-    }
-    catch (RuntimeException e) {
-      throw e;
-    }
-    catch (Exception e) {
-      throw new RuntimeException(e);
     }
   }
 
@@ -204,21 +186,9 @@ public class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements
     for (Field field : key.getGlobType().getFields()) {
       final int index = field.getIndex();
       Object value = values[index];
-      if ((value != UNSET_VALUE) && !field.isKeyField()) {
+      if ((value != Unset.VALUE) && !field.isKeyField()) {
         functor.process(field, value, previousValues[index]);
       }
-    }
-  }
-
-  public void safeApply(FieldValuesWithPrevious.Functor functor) {
-    try {
-      apply(functor);
-    }
-    catch (RuntimeException e) {
-      throw e;
-    }
-    catch (Exception e) {
-      throw new RuntimeException(e);
     }
   }
 
@@ -227,7 +197,7 @@ public class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements
     int i = 0;
     for (Field field : key.getGlobType().getFields()) {
       Object value = values[field.getIndex()];
-      if (value != UNSET_VALUE && !field.isKeyField()) {
+      if (value != Unset.VALUE && !field.isKeyField()) {
         fieldValues[i] = new FieldValue(field, value);
         i++;
       }

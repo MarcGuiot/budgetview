@@ -65,7 +65,7 @@ public class RenameGlobActionTest extends GuiComponentTestCase {
     });
 
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' name='newName'/>");
+      "<update type='dummyObject' id='1' name='newName' _name='name1'/>");
   }
 
   public void testOkButtonIsEnabledOnlyWhenThereIsText() throws Exception {
@@ -89,7 +89,7 @@ public class RenameGlobActionTest extends GuiComponentTestCase {
     });
 
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' name='newName'/>");
+      "<update type='dummyObject' id='1' name='newName' _name='name1'/>");
   }
 
   public void testCancel() throws Exception {
@@ -134,7 +134,7 @@ public class RenameGlobActionTest extends GuiComponentTestCase {
     });
 
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' name='name10'/>");
+      "<update type='dummyObject' id='1' name='name10' _name='name1'/>");
   }
 
   public void testSpecificConditions() throws Exception {

@@ -28,10 +28,10 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public void processUpdate(Key key, FieldValuesWithPrevious values) {
-    final DefaultDeltaGlob glob = getGlob(key);
+    final DefaultDeltaGlob delta = getGlob(key);
     values.safeApply(new FieldValuesWithPrevious.Functor() {
       public void process(Field field, Object value, Object previousValue) throws Exception {
-        glob.processUpdate(field, value, previousValue);
+        delta.processUpdate(field, value, previousValue);
       }
     });
   }

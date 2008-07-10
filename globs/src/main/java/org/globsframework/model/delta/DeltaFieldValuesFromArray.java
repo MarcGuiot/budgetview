@@ -6,6 +6,7 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.Unset;
 
 import java.util.Date;
 
@@ -20,7 +21,7 @@ class DeltaFieldValuesFromArray implements FieldValues {
 
   public Object getValue(Field field) throws ItemNotFound {
     Object value = values[field.getIndex()];
-    if (value == DefaultDeltaGlob.UNSET_VALUE) {
+    if (value == Unset.VALUE) {
       throw new ItemNotFound(field.getName() + " not set.");
     }
     return value;
@@ -74,13 +75,13 @@ class DeltaFieldValuesFromArray implements FieldValues {
     if (field.isKeyField()) {
       return false;
     }
-    return values[field.getIndex()] != DefaultDeltaGlob.UNSET_VALUE;
+    return values[field.getIndex()] != Unset.VALUE;
   }
 
   public int size() {
     int count = -type.getKeyFields().size();
     for (Object value : values) {
-      if (value != DefaultDeltaGlob.UNSET_VALUE) {
+      if (value != Unset.VALUE) {
         count++;
       }
     }
@@ -90,7 +91,7 @@ class DeltaFieldValuesFromArray implements FieldValues {
   public void apply(Functor functor) throws Exception {
     for (Field field : type.getFields()) {
       Object value = values[field.getIndex()];
-      if (value != DefaultDeltaGlob.UNSET_VALUE && !field.isKeyField()) {
+      if (value != Unset.VALUE && !field.isKeyField()) {
         functor.process(field, value);
       }
     }
@@ -100,7 +101,7 @@ class DeltaFieldValuesFromArray implements FieldValues {
     try {
       for (Field field : type.getFields()) {
         Object value = values[field.getIndex()];
-        if (value != DefaultDeltaGlob.UNSET_VALUE && !field.isKeyField()) {
+        if (value != Unset.VALUE && !field.isKeyField()) {
           functor.process(field, value);
         }
       }
@@ -118,7 +119,7 @@ class DeltaFieldValuesFromArray implements FieldValues {
     int i = 0;
     for (Field field : type.getFields()) {
       Object value = values[field.getIndex()];
-      if (value != DefaultDeltaGlob.UNSET_VALUE && !field.isKeyField()) {
+      if (value != Unset.VALUE && !field.isKeyField()) {
         fieldValues[i] = new FieldValue(field, value);
         i++;
       }

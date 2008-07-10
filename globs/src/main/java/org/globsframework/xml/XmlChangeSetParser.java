@@ -4,7 +4,10 @@ import com.sun.org.apache.xerces.internal.parsers.SAXParser;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.FieldValuesWithPreviousBuilder;
+import org.globsframework.model.Key;
+import org.globsframework.model.KeyBuilder;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -40,21 +43,23 @@ public class XmlChangeSetParser {
         throw new InvalidParameter("Missing attribute 'type' in tag '" + childName + "'");
       }
       GlobType globType = model.getType(typeName);
-      FieldValuesWithPreviousBuilder valuesBuilder = FieldValuesWithPreviousBuilder.init();
+      FieldValuesWithPreviousBuilder valuesBuilder = FieldValuesWithPreviousBuilder.init(globType);
       final KeyBuilder keyBuilder = KeyBuilder.init(globType);
 
       processAttributes(keyBuilder, valuesBuilder, xmlAttrs, globType);
 
       final Key key = keyBuilder.get();
-      FieldValuesWithPrevious values = valuesBuilder.get();
       if ("create".equals(childName)) {
-        changeSet.processCreation(key, values);
+        valuesBuilder.completeWithNulls();
+        changeSet.processCreation(key, valuesBuilder.get());
       }
       else if ("update".equals(childName)) {
-        changeSet.processUpdate(key, values);
+        valuesBuilder.completePreviousValues();
+        changeSet.processUpdate(key, valuesBuilder.get());
       }
       else if ("delete".equals(childName)) {
-        changeSet.processDeletion(key, values);
+        valuesBuilder.completeWithNulls();
+        changeSet.processDeletion(key, valuesBuilder.get());
       }
 
       return super.getSubNode(typeName, xmlAttrs);
@@ -73,18 +78,33 @@ public class XmlChangeSetParser {
           continue;
         }
 
-        Field field = globType.findField(xmlAttrName);
-        if (field == null) {
-          throw new ItemNotFound(
-            "Unknown field '" + xmlAttrName + "' for type '" + globType.getName() + "'");
-        }
-
-        Object value = fieldConverter.toObject(field, xmlValue);
-        if (field.isKeyField()) {
-          keyBuilder.setValue(field, value);
+        if (xmlAttrName.startsWith("_")) {
+          final String fieldName = xmlAttrName.substring(1);
+          Field field = globType.findField(fieldName);
+          if (field == null) {
+            throw new ItemNotFound(
+              "Unknown field '" + xmlAttrName + "' for type '" + globType.getName() + "'");
+          }
+          Object value = fieldConverter.toObject(field, xmlValue);
+          if (field.isKeyField()) {
+            throw new InvalidParameter("Cannot declare previous value for key field '" + field.getName() +
+                                       "' on type: " + globType);
+          }
+          valuesBuilder.setPreviousValue(field, value);
         }
         else {
-          valuesBuilder.setObject(field, value);
+          Field field = globType.findField(xmlAttrName);
+          if (field == null) {
+            throw new ItemNotFound(
+              "Unknown field '" + xmlAttrName + "' for type '" + globType.getName() + "'");
+          }
+          Object value = fieldConverter.toObject(field, xmlValue);
+          if (field.isKeyField()) {
+            keyBuilder.setValue(field, value);
+          }
+          else {
+            valuesBuilder.setValue(field, value);
+          }
         }
       }
     }

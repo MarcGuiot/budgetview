@@ -129,10 +129,11 @@ public class DefaultChangeSetTest extends TestCase {
   public void testSequenceStartingWithAnUpdate() throws Exception {
     changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
     checker.assertChangesEqual(changeSet,
-                               "<update type='dummyObject' id='1' value='1.1'/>");
-    changeSet.processDeletion(key1, FieldValues.EMPTY);
+                               "<update type='dummyObject' id='1' value='1.1' _value='(null)'/>");
+
+    changeSet.processDeletion(key1, FieldValuesBuilder.createEmpty(DummyObject.TYPE, false));
     checker.assertChangesEqual(changeSet,
-                               "<delete type='dummyObject' id='1' _value='1.1'/>");
+                               "<delete type='dummyObject' id='1'/>");
     assertEquals(1, changeSet.size());
   }
 
@@ -155,23 +156,33 @@ public class DefaultChangeSetTest extends TestCase {
   }
 
   public void testSequenceStartingWithADeletion() throws Exception {
-    changeSet.processDeletion(key1, FieldValues.EMPTY);
+    changeSet.processDeletion(key1, FieldValuesBuilder.createEmpty(DummyObject.TYPE, false));
     checker.assertChangesEqual(changeSet,
                                "<delete type='dummyObject' id='1'/>");
+
     changeSet.processCreation(DummyObject.TYPE, creationValues);
     checker.assertChangesEqual(changeSet,
-                               "<update type='dummyObject' id='1' name='name1' present='true'/>");
+                               "<update type='dummyObject' id='1' " +
+                               "  name='name1' _name='(null)'" +
+                               "  present='true' _present='(null)'/>");
+
     changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
     checker.assertChangesEqual(changeSet,
-                               "<update type='dummyObject' id='1' name='name1' present='true' value='1.1'/>");
+                               "<update type='dummyObject' id='1' " +
+                               "  name='name1' _name='(null)'" +
+                               "  present='true' _present='(null)'" +
+                               "  value='1.1' _value='(null)'/>");
   }
 
   public void testDeletionClearsAllValues() throws Exception {
     changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
-    changeSet.processDeletion(key1, FieldValues.EMPTY);
+    changeSet.processDeletion(key1, FieldValuesBuilder.createEmpty(DummyObject.TYPE, false));
     changeSet.processCreation(DummyObject.TYPE, creationValues);
     checker.assertChangesEqual(changeSet,
-                               "<update type='dummyObject' id='1' name='name1' present='true'/>");
+                               "<update type='dummyObject' id='1' " +
+                               "  name='name1' _name='(null)'" +
+                               "  present='true' _present='(null)'" +
+                               "  value='1.1' _value='(null)'/>");
   }
 
   public void testDeleteStateErrorTransitions() throws Exception {
@@ -218,7 +229,7 @@ public class DefaultChangeSetTest extends TestCase {
 
     checkMerge(
       "<create type='dummyObject' id='1'/>" +
-      "<update type='dummyObject' id='3' name='name'/>" +
+      "<update type='dummyObject' id='3' name='name' _name='(null)'/>" +
       "<create type='dummyObject' id='2'/>" +
       "<delete type='dummyObject' id='4'/>");
     assertEquals(4, changeSet.size());

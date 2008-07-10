@@ -6,11 +6,9 @@ import org.globsframework.model.FieldValues;
 import org.globsframework.model.Key;
 import org.globsframework.model.FieldValuesWithPrevious;
 
-public interface DeltaGlob extends FieldValuesWithPrevious {
+interface DeltaGlob extends FieldValuesWithPrevious {
 
   Key getKey();
-
-  DeltaState getState();
 
   void setState(DeltaState state);
 

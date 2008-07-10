@@ -41,9 +41,9 @@ public class LocalGlobRepositoryTest extends TestCase {
                          "<dummyObject2 id='0'/>");
 
     checker.assertChangesEqual(local.getCurrentChanges(),
-                               "<update type='dummyObject' id='1' name='newName'/>" +
+                               "<update type='dummyObject' id='1' name='newName' _name='name'/>" +
                                "<create type='dummyObject' id='3' name='obj3'/>" +
-                               "<delete type='dummyObject' id='2' name='name' value='2.2'/>");
+                               "<delete type='dummyObject' id='2' _name='name' _value='2.2'/>");
 
     local.commitChanges(false);
 
@@ -135,9 +135,9 @@ public class LocalGlobRepositoryTest extends TestCase {
     local.delete(Key.create(DummyObject.TYPE, 2));
 
     checker.assertChangesEqual(local.getCurrentChanges(),
-                               "<update type='dummyObject' id='1' name='newName'/>" +
+                               "<update type='dummyObject' id='1' name='newName' _name='name'/>" +
                                "<create type='dummyObject' id='3' name='obj3'/>" +
-                               "<delete type='dummyObject' id='2' name='name' value='2.2'/>");
+                               "<delete type='dummyObject' id='2' _name='name' _value='2.2'/>");
 
     local.commitChanges(false);
 

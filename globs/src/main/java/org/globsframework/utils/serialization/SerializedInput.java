@@ -3,7 +3,6 @@ package org.globsframework.utils.serialization;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
-import org.globsframework.model.delta.DeltaGlob;
 
 import java.util.Date;
 
@@ -33,11 +32,6 @@ public interface SerializedInput {
   Glob readGlob(GlobModel model);
 
   ChangeSet readChangeSet(GlobModel model);
-
-  /**
-   * @deprecated - A SUPPRIMER
-   */
-  DeltaGlob readDeltaGlob(GlobModel model);
 
   int[] readIntArray();
 

@@ -1,6 +1,7 @@
 package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.utils.DefaultFieldValues;
 
@@ -31,6 +32,16 @@ public class FieldValuesBuilder {
       setObject(entry.getKey(), entry.getValue());
     }
     return this;
+  }
+
+  public static FieldValues createEmpty(GlobType type, boolean includeKeyFields) {
+    DefaultFieldValues values = new DefaultFieldValues();
+    for (Field field : type.getFields()) {
+      if (!field.isKeyField() || includeKeyFields) {
+        values.setValue(field, null);
+      }
+    }
+    return values;
   }
 
   public FieldValuesBuilder set(FieldValues values) {

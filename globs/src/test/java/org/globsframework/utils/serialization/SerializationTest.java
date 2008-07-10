@@ -88,7 +88,6 @@ public class SerializationTest extends TestCase {
     inputStream.close();
   }
 
-
   public void testChangeSet() throws Exception {
     MutableChangeSet changeSet = new DefaultChangeSet();
     changeSet.processCreation(KeyBuilder.newKey(DummyObject.TYPE, 1),
@@ -110,12 +109,9 @@ public class SerializationTest extends TestCase {
     ChangeSet readChangeSet = input.readChangeSet(DummyModel.get());
     GlobTestUtils.assertChangesEqual(readChangeSet,
                                      "<create type='dummyObject' id='1' name='name1' date='" + Dates.getStandardDate(currentDate) + "'/>" +
-                                     "<update type='dummyObject' id='2' name='name2'/>" +
-                                     "<delete type='dummyObject' id='3' name='name3' value='3.14'/>"
-    );
+                                     "<update type='dummyObject' id='2' name='name2' _name='(null)'/>" +
+                                     "<delete type='dummyObject' id='3' _name='name3' _value='3.14'/>");
   }
-
-
 
   private FieldValues createSampleValues() {
     return FieldValuesBuilder.init()

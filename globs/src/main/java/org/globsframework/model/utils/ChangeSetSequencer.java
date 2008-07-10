@@ -51,14 +51,14 @@ public class ChangeSetSequencer {
           return;
         }
         final FieldValuesBuilder builderForCreation = FieldValuesBuilder.init();
-        final FieldValuesWithPreviousBuilder builderForUpdate = FieldValuesWithPreviousBuilder.init();
+        final FieldValuesWithPreviousBuilder builderForUpdate = FieldValuesWithPreviousBuilder.init(key.getGlobType());
         values.apply(new FieldValues.Functor() {
           public void process(Field field, Object value) throws Exception {
             if (field.isRequired()) {
               builderForCreation.setObject(field, value);
             }
             else {
-              builderForUpdate.setObject(field, value);
+              builderForUpdate.setValue(field, value, field.getDefaultValue());
             }
           }
         });

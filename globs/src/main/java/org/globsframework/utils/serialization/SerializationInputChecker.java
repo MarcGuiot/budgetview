@@ -3,7 +3,6 @@ package org.globsframework.utils.serialization;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
-import org.globsframework.model.delta.DeltaGlob;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Date;
@@ -32,16 +31,6 @@ public class SerializationInputChecker implements SerializedInput {
     }
     else {
       throw new UnexpectedApplicationState("ChangeSet expected but got " + value);
-    }
-  }
-
-  public DeltaGlob readDeltaGlob(GlobModel model) {
-    String value = serializedInput.readString();
-    if ("DeltaGlob".equals(value)) {
-      return serializedInput.readDeltaGlob(model);
-    }
-    else {
-      throw new UnexpectedApplicationState("DeltaGlob expected but got " + value);
     }
   }
 

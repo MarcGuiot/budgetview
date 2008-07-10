@@ -32,7 +32,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     selectionService.select(glob);
     textBox.setText("2006-12-26");
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' date='2006/12/26'/>");
+      "<update type='dummyObject' id='1' date='2006/12/26' _date='2000/12/12'/>");
   }
 
   public void testTimeStamp() throws Exception {
@@ -40,7 +40,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     selectionService.select(glob);
     textBox.setText("2006-12-26 22:30:34");
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' timestamp='2006/12/26 22:30:34'/>");
+      "<update type='dummyObject' id='1' timestamp='2006/12/26 22:30:34' _timestamp='2000/12/12 22:22:24'/>");
   }
 
   public void testDouble() throws Exception {
@@ -48,11 +48,11 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     selectionService.select(glob);
     textBox.setText("8.8");
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' value='8.8'/>");
+      "<update type='dummyObject' id='1' value='8.8' _value='3.5'/>");
     changeListener.reset();
     textBox.setText("2");
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' value='2.0'/>");
+      "<update type='dummyObject' id='1' value='2.0' _value='8.8'/>");
   }
 
   public void testDoubleFr() throws Exception {
@@ -61,7 +61,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     selectionService.select(glob);
     textBox.setText("8,4");
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' value='8.4'/>");
+      "<update type='dummyObject' id='1' value='8.4' _value='3.5'/>");
   }
 
   protected void tearDown() throws Exception {

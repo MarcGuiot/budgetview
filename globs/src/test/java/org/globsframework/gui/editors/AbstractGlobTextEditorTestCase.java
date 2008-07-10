@@ -39,13 +39,13 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
     assertTrue(textBox.textEquals("name1"));
     enterTextAndValidate(textBox, "newName1");
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' name='newName1'/>");
+      "<update type='dummyObject' id='1' name='newName1' _name='name1'/>");
     assertEquals("newName1", glob1.get(DummyObject.NAME));
 
     selectionService.select(glob2);
     enterTextAndValidate(textBox, "newName2");
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='2' name='newName2'/>");
+      "<update type='dummyObject' id='2' name='newName2' _name='name2'/>");
 
     selectionService.select(Collections.EMPTY_LIST, DummyObject.TYPE);
     assertTrue(textBox.textIsEmpty());
@@ -63,8 +63,8 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
 
     enterTextAndValidate(textBox, "newName");
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' name='newName'/>" +
-      "<update type='dummyObject' id='2' name='newName'/>"
+      "<update type='dummyObject' id='1' name='newName' _name='name1'/>" +
+      "<update type='dummyObject' id='2' name='newName' _name='name2'/>"
     );
 
     selectionService.select(Collections.EMPTY_LIST, DummyObject.TYPE);
@@ -75,8 +75,8 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
 
     enterTextAndValidate(textBox, "anotherName");
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' name='anotherName'/>" +
-      "<update type='dummyObject' id='2' name='anotherName'/>"
+      "<update type='dummyObject' id='1' name='anotherName' _name='newName'/>" +
+      "<update type='dummyObject' id='2' name='anotherName' _name='newName'/>"
     );
   }
 
@@ -88,12 +88,12 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
     assertTrue(textBox.textEquals(""));
 
     changeListener.reset();
-    textBox.appendText("blah");
+    textBox.appendText("newName");
     changeListener.assertNoChanges();
 
     simulateFocusLost(textBox);
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' name='blah'/>"
+      "<update type='dummyObject' id='1' name='newName' _name='name1'/>"
     );
   }
 

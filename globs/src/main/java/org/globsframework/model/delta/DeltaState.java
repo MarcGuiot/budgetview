@@ -4,8 +4,10 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.model.ChangeSetVisitor;
 import org.globsframework.model.FieldValues;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.Unset;
 
-public interface DeltaState {
+interface DeltaState {
   void processCreation(DeltaGlob glob, FieldValues values);
 
   void processUpdate(DeltaGlob glob, Field field, Object value, Object previousValue);
@@ -66,6 +68,10 @@ public interface DeltaState {
     }
 
     public void processUpdate(DeltaGlob delta, Field field, Object value, Object previousValue) {
+      if (previousValue == Unset.VALUE){
+        throw new InvalidParameter("Cannot use unset previous value in Updated state for field " + field.getName() +
+                                   " on object: " +  delta.getKey());
+      }
       if (delta.contains(field)) {
         delta.setValue(field, value);
       }
