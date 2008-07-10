@@ -2,7 +2,6 @@ package org.globsframework.utils.serialization;
 
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
-import org.globsframework.model.delta.DeltaGlob;
 
 import java.util.Date;
 
