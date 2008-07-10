@@ -178,7 +178,7 @@ public class ChangeSetSequencerTest extends TestCase {
   public void testLink() throws Exception {
     checkSequence("<changes>"
                   + "  <create type='linkedToObjectWithCompositeKey' id='0' link1='1' link2='2'/>"
-                  + "  <delete type='linkedToObjectWithCompositeKey' id='1' link1='3' link2='4'/>"
+                  + "  <delete type='linkedToObjectWithCompositeKey' id='1' _link1='3' _link2='4'/>"
                   + "  <update type='linkedToObjectWithCompositeKey' id='2' link1='2' link2='3'/>"
                   + "  <delete type='objectWithCompositeKey' id1='3' id2='4'/>"
                   + "  <update type='objectWithCompositeKey' id1='2' id2='3' name='newName'/>"

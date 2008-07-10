@@ -6,6 +6,7 @@ import org.globsframework.model.FieldValues;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.Unset;
+import org.globsframework.utils.Utils;
 
 interface DeltaState {
   void processCreation(DeltaGlob glob, FieldValues values);
@@ -16,7 +17,14 @@ interface DeltaState {
 
   void visit(DeltaGlob glob, ChangeSetVisitor visitor) throws Exception;
 
-  DeltaState UNCHANGED = new DeltaState() {
+  DeltaState reverse();
+
+  DeltaState UNCHANGED = new UnchangedDeltaState();
+  DeltaState CREATED = new CreatedDeltaState();
+  DeltaState UPDATED = new UpdatedDeltaState();
+  DeltaState DELETED = new DeletedDeltaState();
+
+  public static class UnchangedDeltaState implements DeltaState {
     public void processCreation(DeltaGlob delta, FieldValues values) {
       delta.setState(CREATED);
       delta.setValues(values);
@@ -35,12 +43,16 @@ interface DeltaState {
     public void visit(DeltaGlob glob, ChangeSetVisitor visitor) throws Exception {
     }
 
+    public DeltaState reverse() {
+      return DeltaState.UNCHANGED;
+    }
+
     public String toString() {
       return "unchanged";
     }
-  };
+  }
 
-  DeltaState CREATED = new DeltaState() {
+  public static class CreatedDeltaState implements DeltaState {
     public void processCreation(DeltaGlob delta, FieldValues values) {
       throw new InvalidState("Object " + delta.getKey() + " already exists");
     }
@@ -57,12 +69,16 @@ interface DeltaState {
       visitor.visitCreation(delta.getKey(), delta);
     }
 
+    public DeltaState reverse() {
+      return DeltaState.DELETED;
+    }
+
     public String toString() {
       return "created";
     }
-  };
+  }
 
-  DeltaState UPDATED = new DeltaState() {
+  public static class UpdatedDeltaState implements DeltaState {
     public void processCreation(DeltaGlob delta, FieldValues values) {
       throw new InvalidState("Object " + delta.getKey() + " already exists");
     }
@@ -73,7 +89,7 @@ interface DeltaState {
                                    " on object: " +  delta.getKey());
       }
       if (delta.contains(field)) {
-        delta.setValue(field, value);
+        delta.setValueForUpdate(field, value);
       }
       else {
         delta.setValue(field, value, previousValue);
@@ -89,15 +105,20 @@ interface DeltaState {
       visitor.visitUpdate(delta.getKey(), delta);
     }
 
+    public DeltaState reverse() {
+      return DeltaState.UPDATED;
+    }
+
     public String toString() {
       return "updated";
     }
-  };
+  }
 
-  DeltaState DELETED = new DeltaState() {
+  public static class DeletedDeltaState implements DeltaState {
     public void processCreation(DeltaGlob delta, FieldValues values) {
       delta.setState(UPDATED);
       delta.setValues(values);
+      delta.cleanupChanges();
     }
 
     public void processUpdate(DeltaGlob delta, Field field, Object value, Object previousValue) {
@@ -112,8 +133,12 @@ interface DeltaState {
       visitor.visitDeletion(delta.getKey(), delta.getPreviousValues());
     }
 
+    public DeltaState reverse() {
+      return DeltaState.CREATED;
+    }
+
     public String toString() {
       return "deleted";
     }
-  };
+  }
 }

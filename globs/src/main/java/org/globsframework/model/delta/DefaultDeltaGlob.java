@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.impl.AbstractFieldValuesWithPrevious;
 import org.globsframework.utils.Unset;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
@@ -20,8 +21,20 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
     int fieldCount = key.getGlobType().getFieldCount();
     this.values = new Object[fieldCount];
     this.previousValues = new Object[fieldCount];
-    setValues(key);
+    initWithKey(key);
     resetValues();
+  }
+
+  private void initWithKey(Key key) {
+    key.safeApply(new FieldValues.Functor() {
+      public void process(Field field, Object value) throws Exception {
+        values[field.getIndex()] = value;
+        previousValues[field.getIndex()] = value;
+      }
+    });
+  }
+
+  private DefaultDeltaGlob() {
   }
 
   protected Object doGet(Field field) {
@@ -38,6 +51,41 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
 
   public void setValue(Field field, Object value) {
     values[field.getIndex()] = value;
+  }
+
+  public void setValueForUpdate(Field updatedField, Object value) {
+    if (Utils.equal(value, previousValues[updatedField.getIndex()])) {
+      previousValues[updatedField.getIndex()] = Unset.VALUE;
+      values[updatedField.getIndex()] = Unset.VALUE;
+      for (Field field : key.getGlobType().getFields()) {
+        if (!field.isKeyField() && values[field.getIndex()] != Unset.VALUE) {
+          return;
+        }
+      }
+      state = DeltaState.UNCHANGED;
+    }
+    else {
+      values[updatedField.getIndex()] = value;
+    }
+  }
+
+  public void cleanupChanges() {
+    boolean changed = false;
+    for (Field field : key.getGlobType().getFields()) {
+      if (field.isKeyField()) {
+        continue;
+      }
+      if (Utils.equal(values[field.getIndex()], previousValues[field.getIndex()])) {
+        previousValues[field.getIndex()] = Unset.VALUE;
+        values[field.getIndex()] = Unset.VALUE;
+      }
+      else {
+        changed = true;
+      }
+    }
+    if (!changed) {
+      state = DeltaState.UNCHANGED;
+    }
   }
 
   public void setValue(Field field, Object value, Object previousValue) {
@@ -79,7 +127,6 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
 
   public FieldValues getPreviousValues() {
     return new DeltaFieldValuesFromArray(key.getGlobType(), previousValues);
-
   }
 
   public boolean isModified() {
@@ -114,8 +161,8 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
     for (Field field : key.getGlobType().getFields()) {
       if (!field.isKeyField()) {
         values[field.getIndex()] = Unset.VALUE;
+        previousValues[field.getIndex()] = Unset.VALUE;
       }
-      previousValues[field.getIndex()] = Unset.VALUE;
     }
   }
 
@@ -207,5 +254,28 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
 
   public GlobType getType() {
     return key.getGlobType();
+  }
+
+  public DefaultDeltaGlob reverse() {
+    DefaultDeltaGlob reverse = new DefaultDeltaGlob();
+    reverse.key = this.key;
+    reverse.state = this.state.reverse();
+
+    reverse.values = new Object[this.previousValues.length];
+    reverse.previousValues = new Object[this.values.length];
+
+    for (Field field : key.getGlobType().getFields()) {
+      int index = field.getIndex();
+      if (field.isKeyField()) {
+        reverse.values[index] = this.values[index];
+        reverse.previousValues[index] = this.values[index];
+      }
+      else {
+        reverse.values[index] = this.previousValues[index];
+        reverse.previousValues[index] = this.values[index];
+      }
+    }
+
+    return reverse;
   }
 }

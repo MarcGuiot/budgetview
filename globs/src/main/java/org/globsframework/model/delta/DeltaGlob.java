@@ -18,6 +18,8 @@ interface DeltaGlob extends FieldValuesWithPrevious {
 
   void setValue(Field field, Object value, Object previousValue);
 
+  void setValueForUpdate(Field field, Object value);
+
   void setValues(FieldValues values);
 
   void setPreviousValues(FieldValues values);
@@ -33,4 +35,6 @@ interface DeltaGlob extends FieldValuesWithPrevious {
   void visit(ChangeSetVisitor visitor) throws Exception;
 
   void safeVisit(ChangeSetVisitor visitor);
+
+  void cleanupChanges();
 }

@@ -14,16 +14,16 @@ public class XmlChangeSetParserTest extends TestCase {
   public void testStandardCase() throws Exception {
     ChangeSet changeSet = XmlChangeSetParser.parse(DummyModel.get(), new StringReader(
       "<changes>"
-      + "  <create type='dummyObject' id='2' name='name1' value='2.0' present='true'/>"
-      + "  <update type='dummyObject' id='3' name='newName' _name='previousName' date='2007/07/11'/>"
-      + "  <delete type='dummyObject' id='4'/>"
+      + "  <create type='dummyObject' id='1' name='name1' value='2.0' present='true'/>"
+      + "  <update type='dummyObject' id='2' name='newName' _name='previousName' date='2007/07/11'/>"
+      + "  <delete type='dummyObject' id='3' _name='name3'/>"
       + "</changes>"
     ));
 
     assertEquals(3, changeSet.getChangeCount(DummyObject.TYPE));
     changeSet.visit(new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        assertEquals(2, key.get(DummyObject.ID).intValue());
+        assertEquals(1, key.get(DummyObject.ID).intValue());
         assertEquals(7, values.size());
         assertEquals("name1", values.get(DummyObject.NAME));
         assertEquals(2.0, values.get(DummyObject.VALUE), 0.01);
@@ -32,7 +32,7 @@ public class XmlChangeSetParserTest extends TestCase {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        assertEquals(3, key.get(DummyObject.ID).intValue());
+        assertEquals(2, key.get(DummyObject.ID).intValue());
         assertEquals(2, values.size());
         assertEquals("newName", values.get(DummyObject.NAME));
         assertEquals("previousName", values.getPrevious(DummyObject.NAME));
@@ -42,9 +42,9 @@ public class XmlChangeSetParserTest extends TestCase {
       }
 
       public void visitDeletion(Key key, FieldValues values) throws Exception {
-        assertEquals(4, key.get(DummyObject.ID).intValue());
+        assertEquals(3, key.get(DummyObject.ID).intValue());
         assertEquals(7, values.size());
-        assertNull(values.get(DummyObject.NAME));
+        assertEquals("name3", values.get(DummyObject.NAME));
         assertNull(values.get(DummyObject.VALUE));
         assertNull(values.get(DummyObject.PRESENT));
         assertNull(values.get(DummyObject.DATE));

@@ -4,7 +4,6 @@ import com.sun.org.apache.xerces.internal.parsers.SAXParser;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
 import org.globsframework.model.FieldValuesWithPreviousBuilder;
 import org.globsframework.model.Key;
 import org.globsframework.model.KeyBuilder;
@@ -22,7 +21,7 @@ public class XmlChangeSetParser {
   private XmlChangeSetParser() {
   }
 
-  public static ChangeSet parse(GlobModel model, Reader reader) {
+  public static MutableChangeSet parse(GlobModel model, Reader reader) {
     RootProxyNode rootNode = new RootProxyNode(model);
     SaxStackParser.parse(new SAXParser(), new XmlBootstrapNode(rootNode, "changes"), reader);
     return rootNode.getChangeSet();
@@ -50,16 +49,16 @@ public class XmlChangeSetParser {
 
       final Key key = keyBuilder.get();
       if ("create".equals(childName)) {
-        valuesBuilder.completeWithNulls();
+        valuesBuilder.completeForCreate();
         changeSet.processCreation(key, valuesBuilder.get());
       }
       else if ("update".equals(childName)) {
-        valuesBuilder.completePreviousValues();
+        valuesBuilder.completeForUpdate();
         changeSet.processUpdate(key, valuesBuilder.get());
       }
       else if ("delete".equals(childName)) {
-        valuesBuilder.completeWithNulls();
-        changeSet.processDeletion(key, valuesBuilder.get());
+        valuesBuilder.completeForDelete();
+        changeSet.processDeletion(key, valuesBuilder.get().getPreviousValues());
       }
 
       return super.getSubNode(typeName, xmlAttrs);
@@ -81,24 +80,12 @@ public class XmlChangeSetParser {
         if (xmlAttrName.startsWith("_")) {
           final String fieldName = xmlAttrName.substring(1);
           Field field = globType.findField(fieldName);
-          if (field == null) {
-            throw new ItemNotFound(
-              "Unknown field '" + xmlAttrName + "' for type '" + globType.getName() + "'");
-          }
-          Object value = fieldConverter.toObject(field, xmlValue);
-          if (field.isKeyField()) {
-            throw new InvalidParameter("Cannot declare previous value for key field '" + field.getName() +
-                                       "' on type: " + globType);
-          }
+          Object value = getValue(globType, xmlAttrName, xmlValue, field, true);
           valuesBuilder.setPreviousValue(field, value);
         }
         else {
           Field field = globType.findField(xmlAttrName);
-          if (field == null) {
-            throw new ItemNotFound(
-              "Unknown field '" + xmlAttrName + "' for type '" + globType.getName() + "'");
-          }
-          Object value = fieldConverter.toObject(field, xmlValue);
+          Object value = getValue(globType, xmlAttrName, xmlValue, field, false);
           if (field.isKeyField()) {
             keyBuilder.setValue(field, value);
           }
@@ -109,7 +96,20 @@ public class XmlChangeSetParser {
       }
     }
 
-    public ChangeSet getChangeSet() {
+    private Object getValue(GlobType globType, String xmlAttrName, String xmlValue, Field field, boolean isPrevious) {
+      if (field == null) {
+        throw new ItemNotFound(
+          "Unknown field '" + xmlAttrName + "' for type '" + globType.getName() + "'");
+      }
+      Object value = fieldConverter.toObject(field, xmlValue);
+      if (isPrevious && field.isKeyField()) {
+        throw new InvalidParameter("Cannot declare previous value for key field '" + field.getName() +
+                                   "' on type: " + globType);
+      }
+      return value;
+    }
+
+    public MutableChangeSet getChangeSet() {
       return changeSet;
     }
   }

@@ -14,8 +14,9 @@ public class DefaultChangeSet implements MutableChangeSet {
   private Map<Key, DefaultDeltaGlob> deltaGlobsByKey = new HashMap<Key, DefaultDeltaGlob>();
 
   public void processCreation(Key key, FieldValues values) {
-    DefaultDeltaGlob glob = getGlob(key);
-    glob.processCreation(values);
+    DefaultDeltaGlob delta = getGlob(key);
+    delta.processCreation(values);
+    removeIfUnchanged(delta);
   }
 
   public void processCreation(GlobType type, FieldValues values) {
@@ -25,6 +26,7 @@ public class DefaultChangeSet implements MutableChangeSet {
   public void processUpdate(Key key, Field field, Object newValue, Object previousValue) {
     DefaultDeltaGlob delta = getGlob(key);
     delta.processUpdate(field, newValue, previousValue);
+    removeIfUnchanged(delta);
   }
 
   public void processUpdate(Key key, FieldValuesWithPrevious values) {
@@ -32,15 +34,20 @@ public class DefaultChangeSet implements MutableChangeSet {
     values.safeApply(new FieldValuesWithPrevious.Functor() {
       public void process(Field field, Object value, Object previousValue) throws Exception {
         delta.processUpdate(field, value, previousValue);
+        removeIfUnchanged(delta);
       }
     });
   }
 
   public void processDeletion(Key key, FieldValues values) {
-    DefaultDeltaGlob glob = getGlob(key);
-    glob.processDeletion(values);
-    if (!glob.isModified()) {
-      deltaGlobsByKey.remove(key);
+    DefaultDeltaGlob delta = getGlob(key);
+    delta.processDeletion(values);
+    removeIfUnchanged(delta);
+  }
+
+  private void removeIfUnchanged(DefaultDeltaGlob delta) {
+    if (!delta.isModified()) {
+      deltaGlobsByKey.remove(delta.getKey());
     }
   }
 
@@ -240,5 +247,14 @@ public class DefaultChangeSet implements MutableChangeSet {
         it.remove();
       }
     }
+  }
+
+  public ChangeSet reverse() {
+    DefaultChangeSet result = new DefaultChangeSet();
+    for (DefaultDeltaGlob delta : deltaGlobsByKey.values()) {
+      DefaultDeltaGlob reverseDelta = delta.reverse();
+      result.deltaGlobsByKey.put(reverseDelta.getKey(), reverseDelta);
+    }
+    return result;
   }
 }

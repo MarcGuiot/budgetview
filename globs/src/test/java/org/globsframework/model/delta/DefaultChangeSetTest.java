@@ -1,6 +1,7 @@
 package org.globsframework.model.delta;
 
 import junit.framework.TestCase;
+import org.globsframework.metamodel.DummyModel;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.metamodel.DummyObjectWithLinks;
@@ -9,7 +10,12 @@ import static org.globsframework.model.KeyBuilder.newKey;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.globsframework.xml.XmlChangeSetParser;
+import org.globsframework.xml.XmlChangeSetWriter;
+import org.globsframework.xml.XmlTestUtils;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Arrays;
 
 public class DefaultChangeSetTest extends TestCase {
@@ -221,6 +227,34 @@ public class DefaultChangeSetTest extends TestCase {
                               DummyObject.TYPE, DummyObject2.TYPE, DummyObjectWithLinks.TYPE);
   }
 
+  public void testApplyingReverseChangesClearsTheChangeSet() throws Exception {
+    final MutableChangeSet changeSet = XmlChangeSetParser.parse(DummyModel.get(), new StringReader(
+      "<changes>" +
+      "  <create type='dummyObject' id='1' name='name1'/>" +
+      "  <update type='dummyObject' id='2' name='newName2' _name='name2'/>" +
+      "  <delete type='dummyObject' id='3' _name='name3'/>" +
+      "</changes>"
+    ));
+
+    final ChangeSet reverse = changeSet.reverse();
+
+    reverse.visit(new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        changeSet.processCreation(key, values);
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        changeSet.processUpdate(key, values);
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+        changeSet.processDeletion(key, previousValues);
+      }
+    });
+
+    assertEquals(0, changeSet.getChangeCount());
+  }
+
   public void testMergeOnDifferentKeys() throws Exception {
     changeSet.processCreation(DummyObject.TYPE, key1);
     newChangeSet.processCreation(DummyObject.TYPE, newKey(DummyObject.TYPE, 2));
@@ -264,11 +298,48 @@ public class DefaultChangeSetTest extends TestCase {
 
   public void testClear() throws Exception {
     changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
-    changeSet.processDeletion(Key.create(DummyObject.TYPE , 10), FieldValues.EMPTY);
+    changeSet.processDeletion(Key.create(DummyObject.TYPE, 10), FieldValues.EMPTY);
     changeSet.processCreation(Key.create(DummyObject2.TYPE, 11), FieldValues.EMPTY);
     changeSet.processCreation(Key.create(DummyObjectWithLinks.TYPE, 12), FieldValues.EMPTY);
     changeSet.clear(Arrays.asList(DummyObject.TYPE, DummyObject2.TYPE));
     checker.assertChangesEqual(changeSet,
                                "<create type='dummyObjectWithLinks' id='12'/>");
+  }
+
+  public void testReverse() throws Exception {
+    checkReverse("<changes>" +
+                 "  <create type='dummyObject' id='1' name='name1'/>" +
+                 "  <update type='dummyObject' id='2' name='newName2' _name='name2'/>" +
+                 "  <delete type='dummyObject' id='3' _name='name3'/>" +
+                 "</changes>",
+                 "<changes>" +
+                 "  <update type='dummyObject' id='2' _name='newName2' name='name2'/>" +
+                 "  <delete type='dummyObject' id='1' _name='name1'/>" +
+                 "  <create type='dummyObject' id='3' name='name3'/>" +
+                 "</changes>");
+  }
+
+  public void testMergeWithReverseEqualsEmpty() throws Exception {
+    MutableChangeSet changeSet = XmlChangeSetParser.parse(DummyModel.get(), new StringReader(
+      "<changes>" +
+      "  <create type='dummyObject' id='1' name='name1'/>" +
+      "  <update type='dummyObject' id='2' name='newName2' _name='name2'/>" +
+      "  <delete type='dummyObject' id='3' _name='name3'/>" +
+      "</changes>"
+    ));
+
+    changeSet.merge(changeSet.reverse());
+
+    assertEquals(0, changeSet.getChangeCount());
+  }
+
+  private void checkReverse(String input, String expected) {
+    ChangeSet changeSet = XmlChangeSetParser.parse(DummyModel.get(), new StringReader(input));
+    ChangeSet reverse = changeSet.reverse();
+
+    StringWriter writer = new StringWriter();
+    XmlChangeSetWriter.write(reverse, writer);
+
+    XmlTestUtils.assertEquivalent(expected, writer.toString());
   }
 }

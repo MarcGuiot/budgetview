@@ -886,6 +886,26 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     checkApplyChangeSetError(changeSet, "Object dummyObject[id=2] not found - cannot apply deletion");
   }
 
+  public void testChangeSetIsCleanedUpWithReverseOperations() throws Exception {
+    init(
+      "<dummyObject id='2' name='name2'/>" +
+      "<dummyObject id='3' name='name3'/>"
+    );
+    
+    repository.enterBulkDispatchingMode();
+    repository.create(getKey(1));
+    repository.update(getKey(2), DummyObject.NAME, "newName");
+    repository.delete(getKey(3));
+
+    repository.delete(getKey(1));
+    repository.update(getKey(2), DummyObject.NAME, "name2");
+    repository.create(getKey(3), value(DummyObject.NAME, "name3"));
+
+    repository.completeBulkDispatchingMode();
+
+    changeListener.assertNoChanges();
+  }
+
   private void checkApplyChangeSetError(ChangeSet changeSet, String expectedMessage) {
     try {
       repository.apply(changeSet);

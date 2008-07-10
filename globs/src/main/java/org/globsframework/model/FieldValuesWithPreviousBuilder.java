@@ -4,7 +4,6 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.utils.DefaultFieldValuesWithPrevious;
-import org.globsframework.utils.Unset;
 
 import java.util.Date;
 
@@ -19,12 +18,16 @@ public class FieldValuesWithPreviousBuilder {
     this.values = new DefaultFieldValuesWithPrevious(type);
   }
 
-  public void completePreviousValues() {
-    this.values.completePreviousValues();
+  public void completeForCreate() {
+    this.values.completeForCreate();
   }
 
-  public void completeWithNulls() {
-    this.values.completeWithNulls();
+  public void completeForUpdate() {
+    this.values.completeForUpdate();
+  }
+
+  public void completeForDelete() {
+    this.values.completeForDelete();
   }
 
   public void setValue(Field field, Object value) {

@@ -55,6 +55,8 @@ public interface FieldValuesWithPrevious extends FieldValues {
 
   void safeApply(Functor functor);
 
+  FieldValues getPreviousValues();
+
   interface Functor {
     void process(Field field, Object value, Object previousValue) throws Exception;
   }

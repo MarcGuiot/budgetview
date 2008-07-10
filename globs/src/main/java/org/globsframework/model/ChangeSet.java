@@ -40,4 +40,6 @@ public interface ChangeSet {
   void visit(Key key, ChangeSetVisitor visitor) throws Exception;
 
   void safeVisit(Key key, ChangeSetVisitor visitor);
+
+  ChangeSet reverse();
 }

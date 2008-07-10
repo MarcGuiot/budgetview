@@ -62,6 +62,10 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
     }
   }
 
+  public FieldValues getPreviousValues() {
+    return new GlobArrayFieldValues(type, previousValues);
+  }
+
   public void apply(FieldValues.Functor functor) throws Exception {
     for (Field field : type.getFields()) {
       int index = field.getIndex();
@@ -91,7 +95,7 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
     return previousValues[field.getIndex()];
   }
 
-  public void completeWithNulls() {
+  public void completeForCreate() {
     for (Field field : type.getFields()) {
       int index = field.getIndex();
       if (values[index] == Unset.VALUE) {
@@ -103,11 +107,23 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
     }
   }
 
-  public void completePreviousValues() {
+  public void completeForUpdate() {
     for (Field field : type.getFields()) {
       int index = field.getIndex();
       if ((values[index] != Unset.VALUE) && (previousValues[index] == Unset.VALUE)) {
         previousValues[index] = field.getDefaultValue();
+      }
+    }
+  }
+
+  public void completeForDelete() {
+    for (Field field : type.getFields()) {
+      int index = field.getIndex();
+      if (!field.isKeyField()) {
+        values[index] = null;
+        if (previousValues[index] == Unset.VALUE) {
+          previousValues[index] = null;
+        }
       }
     }
   }

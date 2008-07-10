@@ -5,5 +5,5 @@ public interface ChangeSetVisitor {
 
   void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception;
 
-  void visitDeletion(Key key, FieldValues values) throws Exception;
+  void visitDeletion(Key key, FieldValues previousValues) throws Exception;
 }

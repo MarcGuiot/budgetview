@@ -79,9 +79,9 @@ class DeltaFieldValuesFromArray implements FieldValues {
   }
 
   public int size() {
-    int count = -type.getKeyFields().size();
-    for (Object value : values) {
-      if (value != Unset.VALUE) {
+    int count = 0;
+    for (Field field : type.getFields()) {
+      if (!field.isKeyField() && values[field.getIndex()] != Unset.VALUE) {
         count++;
       }
     }
@@ -125,5 +125,13 @@ class DeltaFieldValuesFromArray implements FieldValues {
       }
     }
     return fieldValues;
+  }
+
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    for (Field field : type.getFields()) {
+      builder.append(field.getName()).append(":").append(values[field.getIndex()]).append(("\n"));
+    }
+    return builder.toString();
   }
 }
