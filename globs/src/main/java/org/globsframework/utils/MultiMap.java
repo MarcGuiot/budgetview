@@ -88,4 +88,9 @@ public class MultiMap<K, V> {
   public void clear() {
     map.clear();
   }
+
+  public boolean containsKey(K key) {
+    List<V> result = map.get(key);
+    return !(result == null || result.isEmpty());
+  }
 }
