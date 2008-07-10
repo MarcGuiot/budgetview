@@ -4,7 +4,6 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
-import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.*;
@@ -45,7 +44,7 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
 
   private void createMissingTransaction(Glob series) {
     int monthId = time.getCurrentMonthId();
-    repository.findByIndex(Transaction.)
+//    repository.findByIndex(Transaction.)
   }
 
   private void createMissingBudget(Glob series) {

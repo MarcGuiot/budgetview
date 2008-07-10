@@ -2,10 +2,8 @@ package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultBoolean;
-import org.globsframework.metamodel.annotations.DefaultInteger;
-import org.globsframework.metamodel.annotations.NamingField;
-import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.annotations.*;
+import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
