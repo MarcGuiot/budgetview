@@ -12,7 +12,6 @@ Import
 
 Packaging
 ---------
-* Obfuscation
 * Packaging Mac (hdiutil?)
 
 

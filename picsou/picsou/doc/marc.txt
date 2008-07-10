@@ -1,0 +1,7 @@
+- mecanique complete de licences
+  * generation des licences
+  * serveur, envoi de mails
+
+- obfuscation
+
+- 

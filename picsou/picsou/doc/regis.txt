@@ -1,0 +1,17 @@
+- joliesse importPanel (setRootPane...)
+- hyperlinkButton en UI
+- portee des styles dans splits
+- messages TransactionView
+
+
+- vue categories
+- histogramme evolution : stack recurrent/enveloppe/ponctuel
+
+- vue budget
+
+- completer panneau categorisation
+
+- edition series
+
+- filtrage vue releves
+

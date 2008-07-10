@@ -1,3 +1,15 @@
+* Reorganiser categories dans CategoryView / CatChooser
+
+* Types de revenus (actifs/passifs) + identification impots/taxes + dons ==> graphiques et rapports
+
+* QIF: Estimation de solde final / SMS
 
 * Mecanique d'upgrade soft automatique
-* Undo
+
+* Tags
+
+* Partage de donnees (couple)
+
+* Projets specifiques
+
+* 

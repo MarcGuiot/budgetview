@@ -2,11 +2,11 @@
 
 * Types de comptes (courant / carte / epargne)
 
-* Types de revenus (actifs/passifs) + identification impots/taxes + dons ==> graphiques et rapports
+* Mecanique de backup/restore pour les utilisateurs (crypte ou non?)
 
-* QIF: Estimation de solde final / SMS
+* Upgrade soft
 
-* Mecanique de backup/restore pour les utilisateurs
+* Upgrade de donnees
 
 * Recherche de transactions par libelle
 * Filtrage de transactions par compte
@@ -16,11 +16,8 @@
 
 * Mecanique pour gerer de nouvelles banques (notamment a l'international)
 
-* Reorganiser categories dans CategoryView / CatChooser
 * Enlever contrainte sur password => indicateur "password strength"
 * Mode demo (pas de connexions, fichier de donnees en dur, pas de stockage)
-
-* Gestion des projets
 
 * messages “Vous avez dépense 150€ de trop dans la catégorie Alimentation”
 * messages “Vous avez économisé 54€ dans la catégorie Sport” (uniquement pour les mois terminés)
@@ -31,3 +28,12 @@
 * Mac: stocker repository prevayler dans repertoire Documents ?
 
 * Changer date user
+
+* Undo
+
+
+Si possible
+-----------
+
+* Gestion des projets
+

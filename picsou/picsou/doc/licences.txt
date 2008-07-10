@@ -1,0 +1,83 @@
+
+Achat a partir de Picsou
+------------------------
+1. User downloade Picsou
+2. User utilise Picsou en mode "light" (mois courant uniqt + 1 projet)
+3. Dans Picsou, User fait "passer en mode complet"
+4. User saisit son @mail, clique "achat" => envoi mail
+5. User reçoit mail confirmation @mail, clique sur lien => page paiement
+6. User saisit infos paiement => achat => envoi mail : licence
+7. User copie/colle licence
+
+
+Achat a partir du site
+----------------------
+1. User va sur le site, section "achat"
+2. User saisit son @mail, clique "achat" => envoi mail
+3. User reçoit mail confirmation @mail, clique sur lien => page paiement
+4. User saisit infos paiement => achat => envoi mail : licence
+
+
+Changement d'adresse mail avec ancienne
+---------------------------------------
+1. Picsou/page d'accueil : "cette version est enregistree avec l'adresse X" + "changer d'adresse"
+2. User fait "changement d'adresse mail"
+3. User saisit nouvelle => on lui envoie un mail d'activation avec un lien
+4. User clique sur le lien
+5. Picsou voit le changement d'adresse via le serveur
+
+
+Perte de licence avec adresse mail
+----------------------------------
+1. User a reinstalle un Picsou from scratch
+2. Il fait "passer a la version complete"
+3. Il choisit l'option "j'ai perdu ma licence"
+4. Il saisit son @mail
+5. On lui envoie la licence par mail
+
+
+Perte de licence sans adresse mail
+----------------------------------
+1. PDF sur le site (nom, adresse, ancien email, nouvel email)
+2. Envoi formulaire par courrier avec photocopie carte identite
+3. On envoie la licence par mail à la nouvelle adresse
+
+
+Afficher la licence
+-------------------
+- A tout on moment User peut afficher la licence dans l'outil
+
+
+Probleme de licence
+-------------------
+- On detecte un probleme/risque de fraude sur une licence
+- Dans Picsou, affichage message "pb avec votre licence. Nous vous avons envoye un mail avec une nouvelle licence.
+  Vous avez n jours pour activer la nouvelle licence, l'autre mourra."
+
+
+==========================================================================================
+
+- Picsou se connecte a un serveur pour valider les clefs
+
+
+Fraude / partage de clef
+------------------------
+- Compteur de lancements dans le repository
+- A chaque verification de clef, Picsou envoie la licence + le compteur, cryptes avec la clef
+-
+
+
+Cas du bloquage par firewall
+----------------------------
+- On exige une connexion internet au moment de valider une licence
+- On bride la frequence des activations avec une meme clef
+
+
+Fraude / hack soft
+------------------
+
+
+Changement de machine
+---------------------
+
+
