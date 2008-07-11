@@ -13,6 +13,17 @@ public class GuiUtils {
 
   private static boolean debugModeEnabled;
 
+  public static void addShortcut(JRootPane rootPane, String command, Action action) {
+    KeyStroke stroke = KeyStroke.getKeyStroke(command);
+    addShortcut(rootPane, command, action, stroke);
+  }
+
+  public static void addShortcut(JRootPane rootPane, String command, Action action, KeyStroke stroke) {
+    InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    inputMap.put(stroke, command);
+    rootPane.getActionMap().put(command, action);
+  }
+
   static {
     debugModeEnabled = "true".equalsIgnoreCase(System.getProperty("splits.debug.enabled"));
     if (debugModeEnabled) {

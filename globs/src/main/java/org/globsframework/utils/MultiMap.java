@@ -6,12 +6,22 @@ public class MultiMap<K, V> {
   private Map<K, List<V>> map = new HashMap<K, List<V>>();
 
   public void put(K key, V value) {
+    List<V> values = getOrCreateList(key);
+    values.add(value);
+  }
+
+  public void putAll(K key, Collection<V> values) {
+    List<V> list = getOrCreateList(key);
+    list.addAll(values);
+  }
+
+  private List<V> getOrCreateList(K key) {
     List<V> values = map.get(key);
     if (values == null) {
       values = new ArrayList<V>();
       map.put(key, values);
     }
-    values.add(value);
+    return values;
   }
 
   public int size() {
@@ -92,5 +102,15 @@ public class MultiMap<K, V> {
   public boolean containsKey(K key) {
     List<V> result = map.get(key);
     return !(result == null || result.isEmpty());
+  }
+
+  public MultiMap<K, V> duplicate() {
+    MultiMap<K, V> result = new MultiMap<K,V>();
+    for (Map.Entry<K, List<V>> entry : map.entrySet()) {
+      final K key = entry.getKey();
+      final ArrayList<V> list = new ArrayList<V>(entry.getValue());
+      result.map.put(key, list);
+    }
+    return result;
   }
 }
