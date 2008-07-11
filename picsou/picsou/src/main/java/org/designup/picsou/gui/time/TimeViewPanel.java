@@ -311,6 +311,13 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     repaint();
   }
 
+  public void selectMonth(Set<Integer> monthIds) {
+    clearSelection();
+    timeGraph.selectMonth(monthIds, currentlySelected);
+    sendSelectionEvent(true);
+    repaint();
+  }
+
   public void selectAll() {
     clearSelection();
     timeGraph.selectAll(currentlySelected);

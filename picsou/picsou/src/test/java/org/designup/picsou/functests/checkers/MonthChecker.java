@@ -9,9 +9,7 @@ import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Panel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MonthChecker extends DataChecker {
   protected TimeViewPanel timeViewPanel;
@@ -71,8 +69,12 @@ public class MonthChecker extends DataChecker {
     timeViewPanel.selectMonth(index);
   }
 
-  public void selectCells(int... indexes) {
-    timeViewPanel.selectMonth(indexes);
+  public void selectCells(String... dates) {
+    Set<Integer> monthIds = new HashSet<Integer>();
+    for (String date : dates) {
+      monthIds.add(Month.getMonthId(Dates.parseMonth(date)));
+    }
+    timeViewPanel.selectMonth(monthIds);
   }
 
   public void selectLast() {
@@ -80,7 +82,7 @@ public class MonthChecker extends DataChecker {
   }
 
   public void selectNone() {
-    selectCells();
+    timeViewPanel.selectMonth(Collections.<Integer>emptySet());
   }
 
   public void selectAll() {

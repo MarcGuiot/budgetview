@@ -14,12 +14,14 @@ public class SeriesUpdateTriggerTest extends PicsouTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     directory.add(new TimeService(Dates.parse("2008/07/09")));
-    repository.create(USER_PREFERENCES_KEY, FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT, 3));
   }
 
   public void testCreateSeriesGeneratesSeriesBudgetsAndTransactions() throws Exception {
     listener.reset();
+    repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new SeriesUpdateTrigger(directory));
+    repository.create(USER_PREFERENCES_KEY, FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT, 3));
+
     createSeries(value(Series.JULY, true));
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
@@ -38,7 +40,10 @@ public class SeriesUpdateTriggerTest extends PicsouTestCase {
   }
 
   public void testDeleteSeriesDeleteBudgetSerieAndSetTransactionSeries() throws Exception {
+    repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new SeriesUpdateTrigger(directory));
+    repository.create(USER_PREFERENCES_KEY, FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT, 3));
+
     createSeries(value(Series.JULY, true));
     repository.create(Key.create(Transaction.TYPE, 10),
                       value(Transaction.SERIES, 1),
@@ -61,7 +66,9 @@ public class SeriesUpdateTriggerTest extends PicsouTestCase {
   }
 
   public void testReduceMonthDeleteTransactionAndSeriesBudget() throws Exception {
+    repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new SeriesUpdateTrigger(directory));
+    repository.create(USER_PREFERENCES_KEY, FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT, 3));
     createSeries(value(Series.JULY, true));
     repository.create(Key.create(Transaction.TYPE, 10),
                       value(Transaction.SERIES, 1),

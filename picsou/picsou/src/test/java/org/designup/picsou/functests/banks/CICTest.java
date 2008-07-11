@@ -6,7 +6,7 @@ import org.designup.picsou.model.TransactionType;
 public class CICTest extends SpecificBankTestCase {
   public void test() throws Exception {
     operations.importOfxFile(getFile("cic1.ofx"));
-    periods.selectCells(0, 1, 2);
+    periods.selectCells("2006/05", "2006/06", "2006/07");
     transactions
       .initContent()
       .add("08/07/2006", TransactionType.CREDIT_CARD, "EVEIL - JEUX ANTONY", "", -49.63)

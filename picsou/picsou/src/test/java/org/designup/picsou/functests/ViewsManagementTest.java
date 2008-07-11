@@ -35,16 +35,16 @@ public class ViewsManagementTest extends LoggedInFunctionalTestCase {
     categories.assertVisible(true);
     transactions.assertVisible(false);
     checkMessage(Lang.get("noData"));
-    
+
     categories.select(MasterCategory.HOUSE);
     categories.assertVisible(true);
     transactions.assertVisible(true);
 
-    periods.selectCell(1);
+    periods.selectCells("2005/02");
     categories.assertVisible(true);
     transactions.assertVisible(false);
 
-    periods.selectCell(2);
+    periods.selectCells("2005/03");
     categories.assertVisible(true);
     transactions.assertVisible(true);
   }

@@ -7,6 +7,7 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.directory.Directory;
@@ -33,7 +34,7 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
           updateSeriesDependanciesOnDelete(series, repository);
         }
       }
-      if (changeSet.containsChanges(UserPreferences.TYPE)) {
+      if (changeSet.containsCreationsOrDeletions(Month.TYPE)) {
         GlobList seriesList = repository.getAll(Series.TYPE);
         for (Glob series : seriesList) {
           updateBudget(series, repository);
@@ -61,7 +62,6 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
   }
 
   private void updateBudget(Glob series, GlobRepository repository) {
-    Glob userPreferences = repository.get(Key.create(UserPreferences.TYPE, UserPreferences.SINGLETON_ID));
     int currentMonthId = time.getCurrentMonthId();
     Map<Integer, Glob> monthWithBudget =
       toMap(repository.findByIndex(SeriesBudget.SERIES_INDEX, series.get(Series.ID)), SeriesBudget.MONTH);
@@ -69,7 +69,8 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
     MultiMap<Integer, Glob> monthWithTransactions =
       toMultiMap(repository.findByIndex(SeriesBudget.SERIES_INDEX, series.get(Series.ID)), SeriesBudget.MONTH);
 
-    int monthIds[] = Month.createMonthsWithFirst(currentMonthId, userPreferences.get(UserPreferences.FUTURE_MONTH_COUNT));
+    Integer[] monthIds = repository.getAll(Month.TYPE, GlobMatchers.fieldGreaterOrEqual(Month.ID, currentMonthId))
+      .getSortedArray(Month.ID);
     Calendar calendar = Calendar.getInstance();
     for (int monthId : monthIds) {
       BooleanField monthField = Series.getField(monthId);
@@ -150,5 +151,9 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
 
 
   public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+    GlobList seriesList = repository.getAll(Series.TYPE);
+    for (Glob series : seriesList) {
+      updateBudget(series, repository);
+    }
   }
 }

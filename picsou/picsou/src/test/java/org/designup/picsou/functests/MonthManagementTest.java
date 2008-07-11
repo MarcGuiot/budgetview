@@ -2,10 +2,17 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.utils.Dates;
 
 public class MonthManagementTest extends LoggedInFunctionalTestCase {
+
+  protected void setUp() throws Exception {
+    TimeService.setCurrentDate(Dates.parse("2006/01/10"));
+    super.setUp();
+  }
 
   public void testEmpty() throws Exception {
     periods.assertEmpty();
@@ -32,12 +39,12 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
     periods.assertEquals("2006/01 (0.00/10.00)", "2006/02 (5.00/0.00)");
 
     periods.assertCellSelected("2006/01", "2006/02");
-    periods.selectCell(1);
+    periods.selectCells("2006/02");
     transactions.initContent()
       .add("20/02/2006", TransactionType.VIREMENT, "income", "", 5.0, MasterCategory.NONE)
       .check();
 
-    periods.selectCell(0);
+    periods.selectCells("2006/01");
     transactions.initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "rent", "", -10, MasterCategory.NONE)
       .check();
@@ -52,23 +59,23 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
 
     periods.assertEquals("2006/01 (0.00/10.00)", "2006/02 (0.00/0.00)", "2006/03 (5.00/0.00)");
     periods.assertCellSelected("2006/01", "2006/03");
-    periods.selectCell(0);
-    periods.selectCell(2);
+    periods.selectCells("2006/01");
+    periods.selectCells("2006/03");
     transactions
       .initContent()
       .add("20/03/2006", TransactionType.VIREMENT, "income", "", 5, MasterCategory.NONE)
       .check();
 
-    periods.selectCell(0);
+    periods.selectCells("2006/01");
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "rent", "", -10, MasterCategory.NONE)
       .check();
 
-    periods.selectCell(1);
+    periods.selectCells("2006/02");
     transactions.assertEmpty();
 
-    periods.selectCell(2);
+    periods.selectCells("2006/03");
     transactions
       .initContent()
       .add("20/03/2006", TransactionType.VIREMENT, "income", "", 5, MasterCategory.NONE)
@@ -106,7 +113,7 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/03/20", +5, "income2")
       .load();
 
-    periods.selectCells(0, 1, 2);
+    periods.selectCells("2006/01", "2006/02", "2006/03");
     categories
       .initContent()
       .add(MasterCategory.ALL, 55, 1.0, -10, 1.0)

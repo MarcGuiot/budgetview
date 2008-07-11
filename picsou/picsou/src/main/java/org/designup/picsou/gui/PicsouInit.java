@@ -9,6 +9,7 @@ import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.PicsouModel;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.triggers.FutureMonthTrigger;
 import org.designup.picsou.triggers.MonthStatComputer;
 import org.designup.picsou.triggers.SeriesUpdateTrigger;
 import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
@@ -55,8 +56,9 @@ public class PicsouInit {
 
     repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
-    repository.addTrigger(new MonthStatComputer(repository));
+    repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new SeriesUpdateTrigger(directory));
+    repository.addTrigger(new MonthStatComputer(repository));
 
     repository.create(User.TYPE,
                       value(User.ID, User.SINGLETON_ID),
