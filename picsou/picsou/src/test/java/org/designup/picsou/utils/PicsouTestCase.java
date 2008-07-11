@@ -1,9 +1,6 @@
 package org.designup.picsou.utils;
 
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.model.PicsouModel;
-import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.DummyChangeSetListener;
 import org.globsframework.model.GlobChecker;
@@ -29,6 +26,7 @@ public abstract class PicsouTestCase extends ServicesTestCase {
       GlobRepositoryBuilder.init()
         .add(TransactionType.values())
         .add(MasterCategory.createGlobs())
+        .add(BudgetArea.values())
         .get();
 
     Account.createSummary(repository);

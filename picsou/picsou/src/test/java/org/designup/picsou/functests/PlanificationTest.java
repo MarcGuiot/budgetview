@@ -19,7 +19,7 @@ public abstract class PlanificationTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/07/08", -29.9, "free telecom")
       .load();
-    periods.assertSpanEquals("2008/07", "2010/06");
+    periods.assertSpanEquals("2008/07", "2010/07");
     transactions.setRecurring(0, "Internet");
     periods.selectLast();
     transactions.initContent()
@@ -30,7 +30,7 @@ public abstract class PlanificationTest extends LoggedInFunctionalTestCase {
       .checkReccuring(29.9)
       .checkPlannedRecurring(29.9);
     periods.selectCells("2008/08");
-    monthSummary.on("August 2008")
+    monthSummary.on("august 2008")
       .checkReccuring(0)
       .checkPlannedRecurring(29.9);
   }

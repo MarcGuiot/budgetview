@@ -18,6 +18,8 @@
             <label ref="budgetAreaName"/>
             <filler fill="horizontal"/>
             <label ref="budgetAreaAmount"/>
+            <filler fill="horizontal"/>
+            <label ref="budgetAreaPlannedAmount"/>
           </row>
         </repeat>
       </column>

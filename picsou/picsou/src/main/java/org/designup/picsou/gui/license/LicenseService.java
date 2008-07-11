@@ -15,6 +15,6 @@ public class LicenseService {
   public void register(GlobRepository repository, Directory directory) {
     isPro = true;
     repository.update(Key.create(UserPreferences.TYPE, UserPreferences.SINGLETON_ID),
-                      UserPreferences.FUTURE_MONTH_COUNT, 10);
+                      UserPreferences.FUTURE_MONTH_COUNT, 24);
   }
 }

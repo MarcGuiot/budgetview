@@ -1,6 +1,5 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.model.GlobalStat;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
@@ -11,7 +10,7 @@ import org.globsframework.model.impl.ThreeFieldKey;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Utils;
 
-import static java.lang.Math.*;
+import static java.lang.Math.abs;
 import java.util.*;
 
 public class MonthStatComputer implements ChangeSetListener {
@@ -29,8 +28,7 @@ public class MonthStatComputer implements ChangeSetListener {
         changeSet.containsUpdates(Transaction.SERIES) ||
         changeSet.containsCreationsOrDeletions(Transaction.TYPE) ||
         changeSet.containsChanges(Category.TYPE) ||
-        changeSet.containsCreationsOrDeletions(Month.TYPE) ||
-        changeSet.containsCreationsOrDeletions(Transaction.TYPE)) {
+        changeSet.containsCreationsOrDeletions(Month.TYPE)) {
       Set<Key> keySet = changeSet.getDeleted(Category.TYPE);
       Set<Integer> categoryToDelete = new HashSet<Integer>();
       for (Key key : keySet) {
@@ -54,7 +52,6 @@ public class MonthStatComputer implements ChangeSetListener {
   public void run(Set<Integer> categoryToDelete) {
     repository.enterBulkDispatchingMode();
     try {
-      repository.deleteAll(GlobalStat.TYPE);
 
       updateToZero(categoryToDelete);
       SortedSet<Integer> months = repository.getAll(Month.TYPE).getSortedSet(Month.ID);
@@ -68,7 +65,6 @@ public class MonthStatComputer implements ChangeSetListener {
       createMonths(monthRange);
       addMissingStats(monthRange);
       computeStatsForAll(monthRange);
-      computeGlobalStats(monthRange);
     }
     finally {
       repository.completeBulkDispatchingMode();
@@ -112,16 +108,27 @@ public class MonthStatComputer implements ChangeSetListener {
       if (series != null) {
         budgetArea = series.get(Series.BUDGET_AREA);
       }
-      updateMonthStat(month, categoryId, budgetArea, Account.SUMMARY_ACCOUNT_ID, amount, dispensableAmount);
+      if (transaction.get(Transaction.PLANNED, false)) {
+        updatePlannedMonthStat(month, categoryId, budgetArea, Account.SUMMARY_ACCOUNT_ID, amount);
+      }
+      else {
+        updateMonthStat(month, categoryId, budgetArea, Account.SUMMARY_ACCOUNT_ID, amount, dispensableAmount);
+      }
 
       Integer accountId = transaction.get(Transaction.ACCOUNT);
       if (accountId != null) {
-        updateMonthStat(month, categoryId, budgetArea, accountId, amount, dispensableAmount);
+        if (transaction.get(Transaction.PLANNED)) {
+          updatePlannedMonthStat(month, categoryId, budgetArea, accountId, amount);
+        }
+        else {
+          updateMonthStat(month, categoryId, budgetArea, accountId, amount, dispensableAmount);
+        }
       }
     }
   }
 
-  private void updateMonthStat(int month, Integer categoryId, Integer budgetAreaId, Integer accountId, double amount, double dispensableAmount) {
+  private void updateMonthStat(int month, Integer categoryId, Integer budgetAreaId,
+                               Integer accountId, double amount, double dispensableAmount) {
     Key key = getKey(month, categoryId, accountId);
     Glob monthStat = initMonthStat(key);
     GlobUtils.add(key, monthStat, MonthStat.TOTAL_RECEIVED, amount > 0 ? amount : 0, repository);
@@ -135,6 +142,23 @@ public class MonthStatComputer implements ChangeSetListener {
     Glob category = repository.get(newKey(Category.TYPE, key.get(MonthStat.CATEGORY)));
     if (!Category.isMaster(category)) {
       updateMonthStat(month, category.get(Category.MASTER), budgetAreaId, accountId, amount, dispensableAmount);
+    }
+  }
+
+  private void updatePlannedMonthStat(int month, Integer categoryId, Integer budgetAreaId,
+                                      Integer accountId, double amount) {
+    Key key = getKey(month, categoryId, accountId);
+    Glob monthStat = initMonthStat(key);
+    GlobUtils.add(key, monthStat, MonthStat.PLANNED_TOTAL_RECEIVED, amount > 0 ? amount : 0, repository);
+    GlobUtils.add(key, monthStat, MonthStat.PLANNED_TOTAL_SPENT, amount < 0 ? abs(amount) : 0, repository);
+    if (budgetAreaId >= 0) {
+      GlobUtils.add(key, monthStat, MonthStat.getPlannedReceived(BudgetArea.get(budgetAreaId)), amount > 0 ? amount : 0, repository);
+      GlobUtils.add(key, monthStat, MonthStat.getPlannedSpent(BudgetArea.get(budgetAreaId)), amount < 0 ? abs(amount) : 0, repository);
+    }
+
+    Glob category = repository.get(newKey(Category.TYPE, key.get(MonthStat.CATEGORY)));
+    if (!Category.isMaster(category)) {
+      updatePlannedMonthStat(month, category.get(Category.MASTER), budgetAreaId, accountId, amount);
     }
   }
 
@@ -173,6 +197,17 @@ public class MonthStatComputer implements ChangeSetListener {
         double incomeReceived = 0.0;
         double incomeSpent = 0.0;
 
+        double plannedTotalReceived = 0.0;
+        double plannedTotalSpent = 0.0;
+        double plannedRecurringReceived = 0.0;
+        double plannedRecurringSpent = 0.0;
+        double plannedEnvelopReceived = 0.0;
+        double plannedEnvelopSpent = 0.0;
+        double plannedOccasionalReceived = 0.0;
+        double plannedOccasionalSpent = 0.0;
+        double plannedIncomeReceived = 0.0;
+        double plannedIncomeSpent = 0.0;
+
         Key keyForAll = getKey(month, Category.ALL, accountId);
         Glob monthStatForAll = repository.get(keyForAll);
 
@@ -202,6 +237,19 @@ public class MonthStatComputer implements ChangeSetListener {
 
             incomeReceived += monthStat.get(MonthStat.INCOME_RECEIVED);
             incomeSpent += monthStat.get(MonthStat.INCOME_SPENT);
+
+            plannedTotalReceived += monthStat.get(MonthStat.PLANNED_TOTAL_RECEIVED);
+            plannedRecurringReceived += monthStat.get(MonthStat.PLANNED_RECEIVED_RECURRING);
+            plannedEnvelopReceived += monthStat.get(MonthStat.PLANNED_RECEIVED_ENVELOP);
+            plannedOccasionalReceived += monthStat.get(MonthStat.PLANNED_RECEIVED_OCCASIONAL);
+
+            plannedTotalSpent += monthStat.get(MonthStat.PLANNED_TOTAL_SPENT);
+            plannedRecurringSpent += monthStat.get(MonthStat.PLANNED_SPENT_RECURRING);
+            plannedEnvelopSpent += monthStat.get(MonthStat.PLANNED_SPENT_ENVELOP);
+            plannedOccasionalSpent += monthStat.get(MonthStat.PLANNED_SPENT_OCCASIONAL);
+
+            plannedIncomeReceived += monthStat.get(MonthStat.PLANNED_INCOME_RECEIVED);
+            plannedIncomeSpent += monthStat.get(MonthStat.PLANNED_INCOME_SPENT);
           }
 
           if (Category.isMaster(category)) {
@@ -219,40 +267,23 @@ public class MonthStatComputer implements ChangeSetListener {
                           value(MonthStat.SPENT_RECURRING, recurringSpent),
                           value(MonthStat.SPENT_ENVELOP, envelopSpent),
                           value(MonthStat.SPENT_OCCASIONAL, occasionalSpent),
+                          value(MonthStat.INCOME_SPENT, incomeSpent),
                           value(MonthStat.RECEIVED_RECURRING, recurringReceived),
                           value(MonthStat.RECEIVED_ENVELOP, envelopReceived),
                           value(MonthStat.RECEIVED_OCCASIONAL, occasionalReceived),
                           value(MonthStat.INCOME_RECEIVED, incomeReceived),
-                          value(MonthStat.INCOME_SPENT, incomeSpent));
+                          value(MonthStat.PLANNED_TOTAL_RECEIVED, plannedTotalReceived),
+                          value(MonthStat.PLANNED_TOTAL_SPENT, plannedTotalSpent),
+                          value(MonthStat.PLANNED_SPENT_RECURRING, plannedRecurringSpent),
+                          value(MonthStat.PLANNED_SPENT_ENVELOP, plannedEnvelopSpent),
+                          value(MonthStat.PLANNED_SPENT_OCCASIONAL, plannedOccasionalSpent),
+                          value(MonthStat.PLANNED_RECEIVED_RECURRING, plannedRecurringReceived),
+                          value(MonthStat.PLANNED_RECEIVED_ENVELOP, plannedEnvelopReceived),
+                          value(MonthStat.PLANNED_RECEIVED_OCCASIONAL, plannedOccasionalReceived),
+                          value(MonthStat.PLANNED_INCOME_RECEIVED, plannedIncomeReceived),
+                          value(MonthStat.PLANNED_INCOME_SPENT, plannedIncomeSpent)
+        );
       }
-    }
-  }
-
-  private void computeGlobalStats(int[] months) {
-
-    for (Glob category : repository.getAll(Category.TYPE)) {
-      double minTotalExpenses = Integer.MAX_VALUE;
-      double maxTotalExpenses = 0.0;
-      double minTotalIncome = Integer.MAX_VALUE;
-      double maxTotalIncome = 0.0;
-
-      Integer categoryId = category.get(Category.ID);
-
-      for (int month : months) {
-        Glob monthStat = repository.get(getKey(month, categoryId, Account.SUMMARY_ACCOUNT_ID));
-        minTotalIncome = min(minTotalIncome, monthStat.get(MonthStat.TOTAL_RECEIVED));
-        minTotalExpenses = min(minTotalExpenses, monthStat.get(MonthStat.TOTAL_SPENT));
-
-        maxTotalIncome = max(maxTotalIncome, monthStat.get(MonthStat.TOTAL_RECEIVED));
-        maxTotalExpenses = max(maxTotalExpenses, monthStat.get(MonthStat.TOTAL_SPENT));
-
-      }
-      repository.create(GlobalStat.TYPE,
-                        value(GlobalStat.CATEGORY, categoryId),
-                        value(GlobalStat.MIN_EXPENSES, minTotalExpenses),
-                        value(GlobalStat.MAX_EXPENSES, maxTotalExpenses),
-                        value(GlobalStat.MAX_INCOME, maxTotalIncome),
-                        value(GlobalStat.MIN_INCOME, minTotalIncome));
     }
   }
 

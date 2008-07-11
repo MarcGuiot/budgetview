@@ -58,6 +58,8 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                         public void registerComponents(RepeatCellBuilder cellBuilder, BudgetArea budgetArea) {
                           final DoubleField expenseField = MonthStat.getReceived(budgetArea);
                           final DoubleField spentField = MonthStat.getSpent(budgetArea);
+                          final DoubleField plannedExpenseField = MonthStat.getPlannedReceived(budgetArea);
+                          final DoubleField plannedSpentField = MonthStat.getPlannedReceived(budgetArea);
                           JLabel label = new JLabel(descriptionService.getStringifier(BudgetArea.TYPE)
                             .toString(budgetArea.getGlob(), repository));
                           cellBuilder.add("budgetAreaName", label);
@@ -66,6 +68,10 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                                           GlobLabelView.init(MonthStat.TYPE, repository, localDirectory,
                                                              GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT,
                                                                                       expenseField, spentField)).getComponent());
+                          cellBuilder.add("budgetAreaPlannedAmount",
+                                          GlobLabelView.init(MonthStat.TYPE, repository, localDirectory,
+                                                             GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT,
+                                                                                      plannedExpenseField, plannedSpentField)).getComponent());
                         }
                       });
     parentBuilder.add("monthSummaryView", builder);

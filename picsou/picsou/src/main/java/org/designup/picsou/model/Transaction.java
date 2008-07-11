@@ -163,6 +163,7 @@ public class Transaction {
       output.writeBoolean(fieldValues.get(Transaction.SPLIT));
       output.writeInteger(fieldValues.get(Transaction.SPLIT_SOURCE));
       output.writeBoolean(fieldValues.get(Transaction.DISPENSABLE));
+      output.writeBoolean(fieldValues.get(Transaction.PLANNED));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -189,6 +190,7 @@ public class Transaction {
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
       fieldSetter.set(Transaction.DISPENSABLE, input.readBoolean());
+      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
     }
 
     public int getWriteVersion() {

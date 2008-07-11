@@ -12,6 +12,8 @@ import java.util.Collections;
 public class MonthStatComputerTest extends PicsouTestCase {
   public void testStandardCase() throws Exception {
     String input =
+      "<series name='salary' budgetAreaName='income'/>" +
+      "<series name='groceries' budgetAreaName='expensesEnvelope'/>" +
       "<account id='" + Account.SUMMARY_ACCOUNT_ID + "'/>" +
       "<transaction month='200605' day='1' amount='-20.0' categoryName='health'/>" +
       "<transaction month='200605' day='2' amount='-40.0' categoryName='health'/>" +
@@ -26,7 +28,10 @@ public class MonthStatComputerTest extends PicsouTestCase {
       "<transaction month='200608' day='4' amount='10.0' categoryName='health'/>" +
       "<transaction month='200608' day='5' amount='-200.0' categoryName='health'/>" +
       "<transaction month='200608' day='6' amount='-410.0' categoryName='house'/>" +
-      "<transaction month='200608' day='7' amount='700.0' categoryName='income'/>";
+      "<transaction month='200608' day='7' amount='700.0' categoryName='income'/>" +
+      "<transaction month='200608' day='31' amount='900.0' categoryName='house' seriesName='groceries' planned='true'/>" +
+      "<transaction month='200608' day='31' amount='1500.0' categoryName='income' seriesName='salary' planned='true'/>" +
+      "";
     checker.parse(repository, input);
 
     updateStats();
@@ -45,11 +50,10 @@ public class MonthStatComputerTest extends PicsouTestCase {
       .add(MasterCategory.ALL, 600.0, 820.0, 0.0, 710.0)
       .check();
 
-    initGlobal()
-      .add(MasterCategory.ALL, 0.0, 610.0, 0.0, 820.0)
-      .add(MasterCategory.HEALTH, 0.0, 200.0, 0.0, 20.0)
-      .add(MasterCategory.INCOME, 0.0, 0.0, 0.0, 800.0)
-      .add(MasterCategory.HOUSE, 0.0, 410.0, 0.0, 0.0)
+    init(MonthStat.PLANNED_INCOME_RECEIVED)
+      .setMonths(200605, 200606, 200607, 200608)
+      .add(MasterCategory.INCOME, 0.0, 0.0, 0.0, 1500.0)
+      .add(MasterCategory.ALL, 0.0, 0.0, 0.0, 1500.0)
       .check();
   }
 
@@ -131,13 +135,6 @@ public class MonthStatComputerTest extends PicsouTestCase {
       .add(MasterCategory.ALL, 90.0, 70.0, 0.0, 80.0)
       .check();
 
-    initGlobal()
-      .add(MasterCategory.HEALTH, 0.0, 120.0, 0.0, 90.0)
-      .add("doctor", 0.0, 110.0, 0.0, 0.0)
-      .add("pharma", 0.0, 40.0, 0.0, 0.0)
-      .add("reimbursements", 0.0, 0.0, 0.0, 90.0)
-      .add(MasterCategory.ALL, 0.0, 120.0, 0.0, 90.0)
-      .check();
   }
 
   public void testExcludesInternalTransfers() throws Exception {
@@ -281,10 +278,6 @@ public class MonthStatComputerTest extends PicsouTestCase {
 
   private MonthStatChecker init(Field field) {
     return new MonthStatChecker(repository, field);
-  }
-
-  private GlobalStatChecker initGlobal() {
-    return new GlobalStatChecker(repository);
   }
 
 }

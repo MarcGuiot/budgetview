@@ -54,6 +54,31 @@ public class MonthStat {
   public static DoubleField RECEIVED_OCCASIONAL;
 
   @DefaultDouble(0.0)
+  public static DoubleField PLANNED_TOTAL_SPENT;
+  @DefaultDouble(0.0)
+  public static DoubleField PLANNED_TOTAL_RECEIVED;
+
+  @DefaultDouble(0.0)
+  public static DoubleField PLANNED_INCOME_SPENT;
+  @DefaultDouble(0.0)
+  public static DoubleField PLANNED_INCOME_RECEIVED;
+
+  @DefaultDouble(0.0)
+  public static DoubleField PLANNED_SPENT_RECURRING;
+  @DefaultDouble(0.0)
+  public static DoubleField PLANNED_RECEIVED_RECURRING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField PLANNED_SPENT_ENVELOP;
+  @DefaultDouble(0.0)
+  public static DoubleField PLANNED_RECEIVED_ENVELOP;
+
+  @DefaultDouble(0.0)
+  public static DoubleField PLANNED_SPENT_OCCASIONAL;
+  @DefaultDouble(0.0)
+  public static DoubleField PLANNED_RECEIVED_OCCASIONAL;
+
+  @DefaultDouble(0.0)
   public static DoubleField DISPENSABLE;
 
 
@@ -97,4 +122,35 @@ public class MonthStat {
         throw new InvalidParameter("budget area not managed");
     }
   }
+
+  public static DoubleField getPlannedSpent(BudgetArea bugdetArea) {
+    switch (bugdetArea) {
+      case RECURRING_EXPENSES:
+        return PLANNED_SPENT_RECURRING;
+      case EXPENSES_ENVELOPE:
+        return PLANNED_SPENT_ENVELOP;
+      case OCCASIONAL_EXPENSES:
+        return PLANNED_SPENT_OCCASIONAL;
+      case INCOME:
+        return PLANNED_INCOME_SPENT;
+      default:
+        throw new InvalidParameter("budget area not managed");
+    }
+  }
+
+  public static DoubleField getPlannedReceived(BudgetArea bugdetArea) {
+    switch (bugdetArea) {
+      case RECURRING_EXPENSES:
+        return PLANNED_RECEIVED_RECURRING;
+      case EXPENSES_ENVELOPE:
+        return PLANNED_RECEIVED_ENVELOP;
+      case OCCASIONAL_EXPENSES:
+        return PLANNED_RECEIVED_OCCASIONAL;
+      case INCOME:
+        return PLANNED_INCOME_RECEIVED;
+      default:
+        throw new InvalidParameter("budget area not managed");
+    }
+  }
+
 }
