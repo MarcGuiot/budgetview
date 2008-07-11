@@ -1,8 +1,7 @@
-- joliesse importPanel (setRootPane...)
-- hyperlinkButton en UI
 - portee des styles dans splits
-- messages TransactionView
 
+- joliesse importPanel (setRootPane...)
+- messages TransactionView
 
 - vue categories
 - histogramme evolution : stack recurrent/enveloppe/ponctuel
@@ -15,3 +14,4 @@
 
 - filtrage vue releves
 
+- edition comptes dans vue d'accueil

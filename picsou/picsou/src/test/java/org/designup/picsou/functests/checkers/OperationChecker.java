@@ -4,6 +4,7 @@ import org.uispec4j.Button;
 import org.uispec4j.MenuItem;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
@@ -11,12 +12,18 @@ import org.uispec4j.interception.WindowInterceptor;
 public class OperationChecker {
   private MenuItem importMenu;
   private MenuItem exportMenu;
+  private MenuItem undoMenu;
+  private MenuItem redoMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
 
   public OperationChecker(Window window) {
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
     importMenu = fileMenu.getSubMenu("Import");
     exportMenu = fileMenu.getSubMenu("Export");
+
+    MenuItem editMenu = window.getMenuBar().getMenu("Edit");
+    undoMenu = editMenu.getSubMenu("Undo");
+    redoMenu = editMenu.getSubMenu("Redo");
   }
 
   public void importOfxFile(String name) {
@@ -74,5 +81,30 @@ public class OperationChecker {
   public Trigger getExportTrigger() {
     return exportMenu.triggerClick();
   }
+
+  public void undo() {
+    undoMenu.click();
+  }
+
+  public void checkUndoAvailable() {
+    UISpecAssert.assertTrue(undoMenu.isEnabled());
+  }
+
+  public void checkUndoNotAvailable() {
+    UISpecAssert.assertFalse(undoMenu.isEnabled());
+  }
+
+  public void redo() {
+    redoMenu.click();
+  }
+
+  public void checkRedoAvailable() {
+    UISpecAssert.assertTrue(redoMenu.isEnabled());
+  }
+
+  public void checkRedoNotAvailable() {
+    UISpecAssert.assertFalse(redoMenu.isEnabled());
+  }
+
 
 }

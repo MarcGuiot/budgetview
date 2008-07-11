@@ -16,6 +16,9 @@ import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.transactions.UncategorizedMessageView;
+import org.designup.picsou.gui.undo.UndoAction;
+import org.designup.picsou.gui.undo.RedoAction;
+import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -53,6 +56,7 @@ public class MainPanel {
     this.parent = mainWindow.getFrame();
     directory.add(JFrame.class, parent);
     directory.add(new CategorizationDialog(parent, repository, directory));
+    directory.add(new UndoRedoService(repository));
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
@@ -84,7 +88,7 @@ public class MainPanel {
     selectLastMonthWithATransaction(repository, directory);
     categoryView.select(Category.ALL);
 
-    createMenuBar(parent);
+    createMenuBar(parent, directory);
   }
 
   private void selectLastMonthWithATransaction(GlobRepository repository, Directory directory) {
@@ -111,7 +115,7 @@ public class MainPanel {
     SplitsEditor.show(builder, parent);
   }
 
-  public void createMenuBar(final JFrame frame) {
+  public void createMenuBar(final JFrame frame, Directory directory) {
     JMenu fileMenu = new JMenu(Lang.get("file"));
     fileMenu.add(importFileAction);
     fileMenu.add(exportFileAction);
@@ -120,8 +124,13 @@ public class MainPanel {
     fileMenu.addSeparator();
     fileMenu.add(exitAction);
 
+    JMenu editMenu = new JMenu(Lang.get("edit"));
+    editMenu.add(new UndoAction(directory));
+    editMenu.add(new RedoAction(directory));
+
     JMenuBar menuBar = new JMenuBar();
     menuBar.add(fileMenu);
+    menuBar.add(editMenu);
 
     frame.setJMenuBar(menuBar);
   }
