@@ -23,7 +23,7 @@
             <repeat ref="incomeSeriesRepeat">
               <toggleButton ref="seriesToggle"/>
             </repeat>
-            <hyperlink action="createIncomeSeries" text="$categorization.newseries"/>
+            <button action="createIncomeSeries" text="$categorization.newseries" styleClass="hyperlink"/>
           </row>
         </card>
 
@@ -33,7 +33,7 @@
             <repeat ref="recurringSeriesRepeat">
               <toggleButton ref="seriesToggle"/>
             </repeat>
-            <hyperlink action="createRecurringSeries" text="$categorization.newseries"/>
+            <button action="createRecurringSeries" text="$categorization.newseries" styleClass="hyperlink"/>
           </row>
         </card>
 

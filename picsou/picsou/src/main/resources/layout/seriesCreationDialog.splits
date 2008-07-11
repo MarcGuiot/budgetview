@@ -9,7 +9,7 @@
       <textField ref="nameField" gridPos="(1,0)"/>
 
       <label text="$seriesCreation.category" gridPos="(0,1)"/>
-      <hyperlink action="assignCategoryAction" text="$seriesCreation.categorize" gridPos="(1,1)"/>
+      <button action="assignCategoryAction" text="$seriesCreation.categorize" gridPos="(1,1)" styleClass="hyperlink"/>
 
     </grid>
 

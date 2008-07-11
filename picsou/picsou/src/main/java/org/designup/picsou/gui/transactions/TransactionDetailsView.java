@@ -102,8 +102,7 @@ public class TransactionDetailsView extends View {
                 addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true)
                   .setAutoHideMatcher(new BankDateVisibilityMatcher()));
 
-    builder.add("categorizeLink", new HyperlinkButton(
-      new CategorizationAction(repository, directory, directory.get(JFrame.class))));
+    builder.add("categorizeLink", new CategorizationAction(repository, directory, directory.get(JFrame.class)));
 
     builder.add("transactionSeriesName", addLabel(descriptionService.getListStringifier(Transaction.SERIES), true));
     return builder;

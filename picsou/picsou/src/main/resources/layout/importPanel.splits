@@ -30,7 +30,7 @@
 
         <comboBox ref="bankCombo" marginLeft="40" marginRight="40"/>
 
-        <hyperlink name="downloadUrl" action="downloadUrl" fill="none" anchor="center" marginTop="15"/>
+        <button name="downloadUrl" styleClass="hyperlink" action="downloadUrl" fill="none" anchor="center" marginTop="15"/>
 
         <htmlEditorPane text="$login.initial.file" marginTop="30"/>
 
@@ -84,7 +84,7 @@
 
         <row>
           <filler fill="horizontal"/>
-          <hyperlink name="back" action="back" text="$import.step2.back"/>
+          <button name="back" action="back" text="$import.step2.back" styleClass="hyperlink"/>
         </row>
 
       </column>

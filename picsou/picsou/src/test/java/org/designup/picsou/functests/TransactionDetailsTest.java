@@ -121,22 +121,29 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testSplitNotVisible() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
-      .addTransaction("2008/06/14", 10.00, "Fouquet's", MasterCategory.EDUCATION)
-      .load();
-    transactionDetails.checkSplitNotVisible();
-    transactions.getTable().selectRows(0, 1);
-    transactionDetails.checkSplitNotVisible();
-  }
-
-  public void testSplitVisible() throws Exception {
+  public void testSplitButtonInitiallyVisibleWithOneTransaction() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
       .load();
     transactions.getTable().selectRow(0);
     transactionDetails.checkSplitVisible();
+  }
+
+  public void testSplitButtonInitiallyInvisibleWithTwoTransactions() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
+      .addTransaction("2008/06/14", 10.00, "Fouquet's", MasterCategory.EDUCATION)
+      .load();
+    transactionDetails.checkSplitNotVisible();
+
+    transactions.getTable().selectRows(0, 1);
+    transactionDetails.checkSplitNotVisible();
+
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkSplitVisible();
+
+    transactions.getTable().selectRows(0, 1);
+    transactionDetails.checkSplitNotVisible();
   }
 
   public void testSplitCallAction() throws Exception {

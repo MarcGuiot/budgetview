@@ -16,6 +16,8 @@
         topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
         cornerRadius="20"/>
 
+    <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
+
     <style selector=".block" ui="block" opaque="true"/>
     <style selector="label.blockTitle" anchor="center" foreground="#FFFFFF" marginBottom="5"/>
     <style selector=".block label.totalAmount" foreground="block.total" font="-,bold,20" anchor="center"/>
@@ -42,6 +44,8 @@
 
     <style selector="row.buttons button"
            fill="horizontal" weightX="10"/>
+
+    <style selector="button.hyperlink" ui="hyperlinkButton"/>
 
   </styles>
 
