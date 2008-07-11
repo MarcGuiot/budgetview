@@ -89,11 +89,11 @@ public class MonthChecker extends DataChecker {
     timeViewPanel.selectAll();
   }
 
-  public void assertSpanEquals(String frommmyyy, String tommyyyy) {
+  public void assertSpanEquals(String fromMmYyyy, String toMmYyyy) {
     GlobList list = new GlobList();
     timeViewPanel.getAllSelectableMonth(list);
     Assert.assertTrue(list.size() >= 2);
-    Assert.assertEquals(frommmyyy, Month.toString(list.get(0).get(Month.ID)));
-    Assert.assertEquals(tommyyyy, Month.toString(list.get(list.size() - 1).get(Month.ID)));
+    Assert.assertEquals(fromMmYyyy, Month.toString(list.get(0).get(Month.ID)));
+    Assert.assertEquals(toMmYyyy, Month.toString(list.get(list.size() - 1).get(Month.ID)));
   }
 }

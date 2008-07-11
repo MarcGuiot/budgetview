@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
@@ -79,10 +80,7 @@ public class PicsouDialog extends JDialog {
 
   protected JRootPane createRootPane() {
     JRootPane rootPane = new JRootPane();
-    KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
-    InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-    inputMap.put(stroke, "ESCAPE");
-    rootPane.getActionMap().put("ESCAPE", new CloseAction());
+    GuiUtils.addShortcut(rootPane, "ESCAPE", new CloseAction());
     return rootPane;
   }
 

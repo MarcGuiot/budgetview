@@ -1,31 +1,46 @@
 package org.designup.picsou.gui.undo;
 
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.MultiMap;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.GlobSelection;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Category;
+import org.designup.picsou.model.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.Arrays;
 
 public class UndoRedoService {
   private GlobRepository repository;
-  private Stack<ChangeSet> changesToUndo = new Stack<ChangeSet>();
-  private Stack<ChangeSet> changesToRedo = new Stack<ChangeSet>();
+  private Stack<Change> changesToUndo = new Stack<Change>();
+  private Stack<Change> changesToRedo = new Stack<Change>();
   private List<Listener> listeners = new ArrayList<Listener>();
   private boolean undoRedoInProgress = false;
+
+  private final GlobType[] selectionTypes = {Month.TYPE, Category.TYPE, Transaction.TYPE};
+  private final MultiMap<GlobType, Key> currentSelections = new MultiMap<GlobType, Key>();
 
   public interface Listener {
     void update();
   }
 
-  public UndoRedoService(GlobRepository repository) {
+  public UndoRedoService(GlobRepository repository, Directory directory) {
     this.repository = repository;
+    installChangeListener();
+    installSelectionListener(directory.get(SelectionService.class));
+  }
+
+  private void installChangeListener() {
     this.repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (!undoRedoInProgress) {
-          changesToUndo.push(changeSet);
+          changesToUndo.push(createChange(changeSet));
           notifyListeners();
         }
       }
@@ -36,9 +51,24 @@ public class UndoRedoService {
     });
   }
 
+  private void installSelectionListener(SelectionService selectionService) {
+    selectionService.addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        for (GlobType type : selectionTypes) {
+          if (selection.isRelevantForType(type)) {
+            currentSelections.remove(type);
+            final List<Key> keys = Arrays.asList(selection.getAll(type).getKeys());
+            currentSelections.putAll(type, keys);
+          }
+        }
+      }
+    }, selectionTypes);
+  }
+
   private void reset() {
     changesToUndo.clear();
     changesToRedo.clear();
+    currentSelections.clear();
     notifyListeners();
   }
 
@@ -53,9 +83,9 @@ public class UndoRedoService {
   public void undo() {
     undoRedoInProgress = true;
     try {
-      ChangeSet original = changesToUndo.pop();
-      repository.apply(original.reverse());
-      changesToRedo.push(original);
+      Change change = changesToUndo.pop();
+      change.revert();
+      changesToRedo.push(change);
       notifyListeners();
     }
     finally {
@@ -66,9 +96,9 @@ public class UndoRedoService {
   public void redo() {
     undoRedoInProgress = true;
     try {
-      ChangeSet original = changesToRedo.pop();
-      repository.apply(original);
-      changesToUndo.push(original);
+      Change change = changesToRedo.pop();
+      change.apply();
+      changesToUndo.push(change);
       notifyListeners();
     }
     finally {
@@ -87,6 +117,28 @@ public class UndoRedoService {
   private void notifyListeners() {
     for (Listener listener : listeners) {
       listener.update();
+    }
+  }
+
+  private Change createChange(ChangeSet changeSet) {
+    return new Change(changeSet, currentSelections);
+  }
+
+  private class Change {
+    private ChangeSet changeSet;
+    private final MultiMap<GlobType, Key> selections;
+
+    private Change(ChangeSet changeSet, MultiMap<GlobType, Key> selections) {
+      this.changeSet = changeSet;
+      this.selections = selections.duplicate();
+    }
+
+    public void apply() {
+      repository.apply(changeSet.reverse());
+    }
+
+    public void revert() {
+      repository.apply(changeSet);
     }
   }
 }

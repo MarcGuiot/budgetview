@@ -6,7 +6,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.TimeService;
 import org.globsframework.utils.Dates;
 
-public class PlanificationTest extends LoggedInFunctionalTestCase {
+public abstract class PlanificationTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/07/01"));

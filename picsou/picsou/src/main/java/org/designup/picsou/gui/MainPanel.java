@@ -27,6 +27,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.SplitsLoader;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -35,6 +36,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class MainPanel {
   private JFrame parent;
@@ -56,7 +58,7 @@ public class MainPanel {
     this.parent = mainWindow.getFrame();
     directory.add(JFrame.class, parent);
     directory.add(new CategorizationDialog(parent, repository, directory));
-    directory.add(new UndoRedoService(repository));
+    directory.add(new UndoRedoService(repository, directory));
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
@@ -125,14 +127,22 @@ public class MainPanel {
     fileMenu.add(exitAction);
 
     JMenu editMenu = new JMenu(Lang.get("edit"));
-    editMenu.add(new UndoAction(directory));
-    editMenu.add(new RedoAction(directory));
+    final UndoAction undoAction = new UndoAction(directory);
+    editMenu.add(undoAction);
+    final RedoAction redoAction = new RedoAction(directory);
+    editMenu.add(redoAction);
 
     JMenuBar menuBar = new JMenuBar();
     menuBar.add(fileMenu);
     menuBar.add(editMenu);
 
     frame.setJMenuBar(menuBar);
+
+    JRootPane rootPane = frame.getRootPane();
+    GuiUtils.addShortcut(rootPane, "UNDO", undoAction,
+                         KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.VK_CONTROL));
+    GuiUtils.addShortcut(rootPane, "REDO", redoAction,
+                         KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.VK_CONTROL));
   }
 
   private static class RegisterLicenseAction extends AbstractAction {
