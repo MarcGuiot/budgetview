@@ -69,9 +69,6 @@ public class DefaultSplitterFactory implements SplitterFactory {
     else if (name.equals("button")) {
       return createDefaultComponent(JButton.class, "button", properties, subSplitters);
     }
-    else if (name.equals("hyperlink")) {
-      return createDefaultComponent(HyperlinkButton.class, "hyperlink", properties, subSplitters);
-    }
     else if (name.equals("toggleButton")) {
       return createDefaultComponent(JToggleButton.class, "toggleButton", properties, subSplitters);
     }
