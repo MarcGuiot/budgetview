@@ -170,6 +170,16 @@ public class TimeGraph {
     }
   }
 
+  public void selectMonth(Set<Integer> monthIds, Set<Selectable> selectables) {
+    for (Glob month : months) {
+      if (monthIds.contains(month.get(Month.ID))) {
+        for (YearGraph year : years) {
+          year.select(month, selectables);
+        }
+      }
+    }
+  }
+
   public void selectAll(Collection<Selectable> selectables) {
     selectMonth(months, selectables);
   }

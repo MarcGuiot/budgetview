@@ -2,11 +2,14 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.MasterCategory;
+import org.globsframework.utils.Dates;
 
 public class GraphicManagementTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
+    TimeService.setCurrentDate(Dates.parse("2006/01/01"));
     super.setUp();
     views.selectEvolution();
   }
@@ -104,27 +107,27 @@ public class GraphicManagementTest extends LoggedInFunctionalTestCase {
   public void testMonthMarkers() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2006/10/15", -15, "tr1")
-      .addTransaction("2006/03/20", -3, "tr2")
+      .addTransaction("2006/08/15", -15, "tr1")
+      .addTransaction("2006/01/20", -3, "tr2")
       .load();
 
-    periods.selectCells(0);
+    periods.selectCells("2006/01");
     graphics.initMarker()
       .add(0.5, 1.5)
       .check();
 
-    periods.selectCells(1);
+    periods.selectCells("2006/02");
     graphics.initMarker()
       .add(1.5, 2.5)
       .check();
 
-    periods.selectCells(1, 3);
+    periods.selectCells("2006/02", "2006/04");
     graphics.initMarker()
       .add(1.5, 2.5)
       .add(3.5, 4.5)
       .check();
 
-    periods.selectCells(1, 2, 3, 5);
+    periods.selectCells("2006/02", "2006/03", "2006/04", "2006/06");
     graphics.initMarker()
       .add(1.5, 4.5)
       .add(5.5, 6.5)

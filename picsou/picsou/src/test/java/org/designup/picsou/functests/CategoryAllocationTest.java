@@ -2,8 +2,10 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.utils.Dates;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 
@@ -15,6 +17,11 @@ import java.util.List;
 public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
   private static final String DEFAULT_BG = "EBF0F7";
   private static final String ERROR_BG = "red";
+
+  protected void setUp() throws Exception {
+    TimeService.setCurrentDate(Dates.parse("2006/01/10"));
+    super.setUp();
+  }
 
   public void testAllocationDialog() throws Exception {
     OfxBuilder
@@ -107,7 +114,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .load();
 
     periods.assertEquals("2006/01 (0.00/1.00)", "2006/02 (0.00/2.00)");
-    periods.selectCell(0);
+    periods.selectCells("2006/01");
     categories.select(MasterCategory.NONE);
     transactions
       .initContent()
@@ -212,7 +219,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .load();
     transactions.assignCategory(MasterCategory.PUERICULTURE, 0, 2, 4);
     categories.select(MasterCategory.ALL);
-    periods.selectCell(0);
+    periods.selectCells("2006/01");
     transactions
       .initContent()
       .add("13/01/2006", TransactionType.CHECK, "CHEQUE N. 1", "", -1.0, MasterCategory.PUERICULTURE)

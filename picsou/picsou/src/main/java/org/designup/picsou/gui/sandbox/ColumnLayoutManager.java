@@ -30,7 +30,7 @@ public class ColumnLayoutManager implements LayoutManager {
       Dimension dimension = component.getPreferredSize();
       totalHeight += dimension.getHeight();
     }
-     double height = totalHeight / maxColumnCount;
+    double height = totalHeight / maxColumnCount;
     int tryCount = 0;
     int[] maxheight = new int[maxColumnCount];
     int[] maxWidth = new int[maxColumnCount];
@@ -40,12 +40,14 @@ public class ColumnLayoutManager implements LayoutManager {
       int width = 0;
       int currentColumn = 0;
       int i = 0;
+      int previousI = 0;
       for (Component component : components) {
         int componentHeight = component.getPreferredSize().height;
         if (y + componentHeight > height && atLeatOneComponentPerColumn(y) && notInLastColumn(currentColumn)) {
-          currentColumn++;
-          x += width;
+          x += maxWidth[currentColumn];
           y = 0;
+          currentColumn++;
+          previousI = i;
         }
         Rectangle position = positions[i];
         position.x = x;
@@ -54,6 +56,10 @@ public class ColumnLayoutManager implements LayoutManager {
         position.height = componentHeight;
         y += componentHeight;
         maxheight[currentColumn] = y;
+        maxWidth[currentColumn] = Math.max(maxWidth[currentColumn], component.getPreferredSize().width);
+        for (int j = previousI; j < i; i++) {
+          positions[j].width = maxWidth[currentColumn];
+        }
         i++;
       }
       if (currentColumn == maxColumnCount - 1) {
@@ -71,13 +77,12 @@ public class ColumnLayoutManager implements LayoutManager {
       }
     }
     int i = 0;
-    for (Component component : components) {
-      Rectangle position = positions[i];
-      component.setBounds(position.x, position.y, position.width, position.height);
-      i++;
+    Dimension preferredSize = new Dimension();
+    for (int width : maxWidth) {
+      preferredSize.width += width;
     }
-
-    return new Dimension(100, 100);
+    preferredSize.height = (int)height;
+    return preferredSize;
   }
 
   public Dimension minimumLayoutSize(Container parent) {

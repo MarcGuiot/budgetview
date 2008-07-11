@@ -5,7 +5,7 @@ import org.designup.picsou.model.TransactionType;
 public class LaPosteTest extends SpecificBankTestCase {
   public void test() throws Exception {
     operations.importOfxFile(getFile("laposte1.ofx"));
-    periods.selectCells(0, 1);
+    periods.selectCells("2006/07", "2006/08");
     transactions
       .initContent()
       .add("08/08/2006", TransactionType.CREDIT_CARD, "SANEMA", "", -5.00)

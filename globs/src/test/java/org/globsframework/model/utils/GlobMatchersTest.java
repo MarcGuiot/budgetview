@@ -78,4 +78,8 @@ public class GlobMatchersTest extends TestCase {
     GlobList actual = list.filter(matcher, repository);
     TestUtils.assertEquals(actual, result);
   }
+
+  public void testGreaterOrEqual() throws Exception {
+    check(GlobMatchers.fieldGreaterOrEqual(DummyObject.ID, 2), c, d);
+  }
 }

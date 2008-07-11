@@ -17,19 +17,19 @@ public class TitleDisplayTest extends LoggedInFunctionalTestCase {
 
   public void testCategoryAll() throws Exception {
     categories.select(MasterCategory.ALL);
-    periods.selectCell(0);
+    periods.selectCells("2005/10");
     title.checkContent("All categories - october 2005");
   }
 
   public void testSimpleSelection() throws Exception {
     categories.select(MasterCategory.HOUSE);
-    periods.selectCell(3);
+    periods.selectCells("2006/01");
     title.checkContent("Category 'Housing' - january 2006");
   }
 
   public void testCategoryNone() throws Exception {
     categories.select(MasterCategory.NONE);
-    periods.selectCell(0);
+    periods.selectCells("2005/10");
     title.checkContent("Operations to categorize - october 2005");
   }
 

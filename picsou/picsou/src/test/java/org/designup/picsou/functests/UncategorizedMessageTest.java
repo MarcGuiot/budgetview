@@ -21,7 +21,7 @@ public class UncategorizedMessageTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNoWarningDisplayedIfNoMultiCategories() throws Exception {
-    periods.selectCell(0);
+    periods.selectCells("2006/04");
     transactions.initContent()
       .add("03/04/2006", TransactionType.VIREMENT, "fouquets", "", 10.50, MasterCategory.FOOD)
       .add("01/04/2006", TransactionType.VIREMENT, "mac do", "", 12.00, MasterCategory.FOOD)
@@ -32,7 +32,7 @@ public class UncategorizedMessageTest extends LoggedInFunctionalTestCase {
   }
 
   public void testWarningIsDisplayedIfUnassignedTransactionsAreShown() throws Exception {
-    periods.selectCell(1);
+    periods.selectCells("2006/05");
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
@@ -45,7 +45,7 @@ public class UncategorizedMessageTest extends LoggedInFunctionalTestCase {
   }
 
   public void testWarningDisappearsWhenACategoryIsChosen() throws Exception {
-    periods.selectCell(1);
+    periods.selectCells("2006/05");
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
