@@ -521,11 +521,11 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     bulkDispatchingModeLevel++;
     MutableChangeSet currentChangeSetToDispatch = this.changeSetToDispatch;
     try {
-      this.changeSetToDispatch = new DefaultChangeSet();
       for (ChangeSetListener trigger : triggers) {
+        this.changeSetToDispatch = new DefaultChangeSet();
         trigger.globsChanged(currentChangeSetToDispatch, this);
+        currentChangeSetToDispatch.merge(changeSetToDispatch);
       }
-      currentChangeSetToDispatch.merge(this.changeSetToDispatch);
     }
     finally {
       bulkDispatchingModeLevel--;

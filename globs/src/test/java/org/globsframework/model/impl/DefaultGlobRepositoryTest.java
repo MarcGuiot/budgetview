@@ -393,7 +393,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
       "<delete type='dummyObject' id='0' _name='name' _value='1.4'/>"
     );
   }
-  
+
   public void testDeleteCreateSequencePreservesPreviousValues() throws Exception {
     init("<dummyObject id='0' name='name' value='1.4'/>");
 
@@ -891,7 +891,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
       "<dummyObject id='2' name='name2'/>" +
       "<dummyObject id='3' name='name3'/>"
     );
-    
+
     repository.enterBulkDispatchingMode();
     repository.create(getKey(1));
     repository.update(getKey(2), DummyObject.NAME, "newName");
@@ -904,6 +904,26 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     repository.completeBulkDispatchingMode();
 
     changeListener.assertNoChanges();
+  }
+
+  public void testTriggerShowEachOtherChanges() throws Exception {
+    final boolean[] call = new boolean[]{false};
+    repository = new DefaultGlobRepository();
+    repository.addTrigger(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        repository.create(getKey(1));
+      }
+    });
+    repository.addTrigger(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        Set<Key> keySet = changeSet.getCreated(DummyObject.TYPE);
+        assertEquals(2, keySet.size());
+        TestUtils.assertSetEquals(keySet, getKey(0), getKey(1));
+        call[0] = true;
+      }
+    });
+    repository.create(getKey(0));
+    assertTrue(call[0]);
   }
 
   private void checkApplyChangeSetError(ChangeSet changeSet, String expectedMessage) {
