@@ -76,7 +76,10 @@ public class MainPanel {
 
     createPanel(
       new TitleView(repository, directory),
-      new UncategorizedMessageView(repository, directory, transactionSelection),
+      new UncategorizedMessageView("uncategorizedMessage", "categorizeRemainingTransactions",
+                                   repository, directory),
+      new UncategorizedMessageView("uncategorizedMessage_details", "categorizeRemainingTransactions_details", 
+                                   repository, directory),
       transactionView,
       transactionDetailsView,
       timeView,
@@ -140,9 +143,9 @@ public class MainPanel {
 
     JRootPane rootPane = frame.getRootPane();
     GuiUtils.addShortcut(rootPane, "UNDO", undoAction,
-                         KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.VK_CONTROL));
+                         KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK));
     GuiUtils.addShortcut(rootPane, "REDO", redoAction,
-                         KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.VK_CONTROL));
+                         KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK));
   }
 
   private static class RegisterLicenseAction extends AbstractAction {

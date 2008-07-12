@@ -1,11 +1,8 @@
 package org.designup.picsou.gui.transactions;
 
-import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.model.Transaction;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
@@ -19,30 +16,29 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-public class UncategorizedMessageView extends View implements GlobSelectionListener, ChangeSetListener {
+public class UncategorizedMessageView extends View implements ChangeSetListener {
   private JTextArea textArea = new JTextArea();
-  private TransactionSelection transactionSelection;
   private GlobList uncategorizedTransactions = GlobList.EMPTY;
+  private String textAreaName;
+  private String buttonName;
 
-  public UncategorizedMessageView(GlobRepository repository, Directory directory, TransactionSelection transactionSelection) {
+  public UncategorizedMessageView(String textAreaName, String buttonName,
+                                  GlobRepository repository, Directory directory) {
     super(repository, directory);
-    this.transactionSelection = transactionSelection;
-    this.transactionSelection.addListener(this);
     repository.addChangeListener(this);
+    this.textAreaName = textAreaName;
+    this.buttonName = buttonName;
+    update();
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
-    builder.add("uncategorizedMessage", textArea);
-    builder.add("categorizeRemainingTransactions", new AbstractAction() {
+    builder.add(textAreaName, textArea);
+    builder.add(buttonName, new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         final CategorizationDialog dialog = directory.get(CategorizationDialog.class);
         dialog.show(uncategorizedTransactions);
       }
     });
-  }
-
-  public void selectionUpdated(GlobSelection selection) {
-    update();
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
@@ -57,10 +53,7 @@ public class UncategorizedMessageView extends View implements GlobSelectionListe
 
   private void update() {
     uncategorizedTransactions =
-      repository.getAll(Transaction.TYPE,
-                        and(transactionSelection.getCurrentMatcher(),
-                            isNull(Transaction.CATEGORY)));
+      repository.getAll(Transaction.TYPE, or(isNull(Transaction.SERIES), isNull(Transaction.CATEGORY)));
     textArea.setVisible(uncategorizedTransactions.size() > 0);
   }
-
 }

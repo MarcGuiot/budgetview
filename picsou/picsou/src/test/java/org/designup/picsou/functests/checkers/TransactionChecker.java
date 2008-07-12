@@ -159,6 +159,14 @@ public class TransactionChecker extends ViewChecker {
     categorization.validate();
   }
 
+  public void setOccasional(int rowIndex, MasterCategory category) {
+    CategorizationDialogChecker categorization = categorize(rowIndex);
+    categorization.selectOccasional();
+    categorization.selectOccasionalSeries(category);
+    categorization.validate();
+
+  }
+
   public class ContentChecker {
     private List<Object[]> content = new ArrayList<Object[]>();
 

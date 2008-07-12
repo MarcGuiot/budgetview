@@ -1,0 +1,5 @@
+Dernier plot commun: 274 mguiot MonthStat : ajout et calcul des montants planifies
+
+Vue accueil
+-----------
+- message affectation : check sur tous les mois

@@ -7,10 +7,11 @@
   <series id="5" name="occasional" budgetAreaName="occasionalExpenses"/>
   <seriesToCategory id='1' seriesName='occasional' categoryName="multimedia"/>
   <seriesToCategory id='2' seriesName='occasional' categoryName="clothing"/>
+  <seriesToCategory id='3' seriesName='occasional' categoryName="food"/>
 
   <series id="10" name="groceries" budgetAreaName="expensesEnvelope" defaultCategoryName="food"/>
-  <seriesToCategory id='3' seriesName='groceries' categoryName="food"/>
-  <seriesToCategory id='4' seriesName='groceries' categoryName="house"/>
+  <seriesToCategory id='10' seriesName='groceries' categoryName="food"/>
+  <seriesToCategory id='11' seriesName='groceries' categoryName="house"/>
 
   <series id="20" name="salary" budgetAreaName="income" defaultCategoryName="income"/>
   <series id="21" name="exceptionalIncome" budgetAreaName="income" defaultCategoryName="income"/>

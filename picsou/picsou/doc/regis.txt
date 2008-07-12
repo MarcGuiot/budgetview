@@ -1,17 +1,59 @@
+CategorizationDialog
+--------------------
+- afficher table transactions
+-
+- look toggles
+
+
+Vue accueil
+-----------
+- joliesse MonthSummaryView
+- creation de compte
+- edition comptes
+- graphique
+
+
+Vue budget
+----------
+- introduction toggle + card
+- bloc revenus
+- bloc recurrent
+- bloc enveloppes
+- bloc ponctuel
+
+
+Vue releves
+-----------
+- message affectation / selection en cours
+- filtrage par label
+- colonne "category" de transactionView => ouvrir CategorizationDialog
+
+
+Import panel
+------------
+- setRootPane plutot que CardLayout
+
+
+FMK
+---
 - portee des styles dans splits
 
-- joliesse importPanel (setRootPane...)
-- messages TransactionView
 
-- vue categories
+Vue "evolution"
+---------------
 - histogramme evolution : stack recurrent/enveloppe/ponctuel
 
-- vue budget
 
-- completer panneau categorisation
 
-- edition series
+Panneau edition series
+----------------------
+- check nom
+- selection amount
+- selection dates debut/fin et duree
+- selection mois
 
-- filtrage vue releves
 
-- edition comptes dans vue d'accueil
+
+
+
+================================================================================

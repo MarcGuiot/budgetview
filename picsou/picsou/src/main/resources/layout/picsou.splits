@@ -25,7 +25,12 @@
     <style selector="toggleButton#dataCardToggle" icon="card_list.png"/>
     <style selector="toggleButton#repartitionCardToggle" icon="card_pie.png"/>
     <style selector="toggleButton#evolutionCardToggle" icon="card_line.png"/>
+
     <style selector="panel.errorMessage" ui="errorMessage"/>
+    <style selector="panel.errorMessage column" margin="10"/>
+    <style selector="panel.errorMessage textArea" marginBottom="10"
+           anchor="left" styleClass="readonly" foreground="errorpanel.text" font="-,bold,12" opaque="false"
+           lineWrap="true" wrapStyleWord="true"/>
   </styles>
 
   <column>
@@ -66,16 +71,11 @@
                 <panel ref="accountView"/>
 
                 <panel styleClass="errorMessage" autoHideSource="uncategorizedMessage" marginTop="20"
-                       preferredSize="(50,80)" weightY="0">
-                  <row margin="5">
-                    <label icon="exclamation.png"/>
-                    <column>
-                      <textArea ref="uncategorizedMessage" text="$transaction.allocation.warning"
-                                anchor="left" styleClass="readonly" foreground="errorpanel.text" opaque="false"
-                                lineWrap="true" wrapStyleWord="true"/>
-                      <button action="categorizeRemainingTransactions"/>
-                    </column>
-                  </row>
+                       preferredSize="(50,90)" weightY="0">
+                  <column>
+                    <textArea ref="uncategorizedMessage" text="$transaction.allocation.warning"/>
+                    <button action="categorizeRemainingTransactions" text="$transaction.allocation.action"/>
+                  </column>
                 </panel>
                 <filler fill="vertical"/>
               </column>
@@ -107,8 +107,16 @@
                       <table ref="transaction" background="transactions.bg"
                              intercellSpacing="(0,0)" showGrid="false" rowHeight="20"/>
                     </scrollPane>
-                    <column>
-                      <panel ref="transactionDetails" marginLeft="15"/>
+                    <column marginLeft="15">
+                      <panel ref="transactionDetails"/>
+                      <panel styleClass="errorMessage" autoHideSource="uncategorizedMessage_details" marginTop="20"
+                             preferredSize="(50,90)" weightY="0">
+                        <column>
+                          <textArea ref="uncategorizedMessage_details" text="$transaction.allocation.warning"/>
+                          <button action="categorizeRemainingTransactions_details"
+                                  text="$transaction.allocation.action"/>
+                        </column>
+                      </panel>
                     </column>
                   </row>
                 </card>
