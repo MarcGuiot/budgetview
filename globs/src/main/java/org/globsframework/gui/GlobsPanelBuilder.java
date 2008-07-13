@@ -9,6 +9,7 @@ import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.views.*;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -19,6 +20,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
@@ -115,11 +117,34 @@ public class GlobsPanelBuilder extends SplitsBuilder {
   }
 
   public Repeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
+                          RepeatComponentFactory factory) {
+    final GlobStringifier stringifier = directory.get(DescriptionService.class).getStringifier(type);
+    return addRepeat(name, type, matcher, stringifier.getComparator(repository), factory);
+  }
+
+  public Repeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
                           Comparator<Glob> comparator, RepeatComponentFactory factory) {
+    return addRepeat(name, type, matcher, comparator, repository, this, factory);
+  }
+
+  public static Repeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
+                          Comparator<Glob> comparator, GlobRepository repository, SplitsBuilder builder,
+                          RepeatComponentFactory factory) {
     GlobRepeatListener listener = new GlobRepeatListener();
     GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
     model.setFilter(matcher);
-    Repeat<Glob> repeat = super.addRepeat(name, model.getAll(), factory);
+    Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
+    listener.set(model, repeat);
+    return repeat;
+  }
+
+  public static Repeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
+                          Comparator<Glob> comparator, GlobRepository repository, RepeatCellBuilder builder,  
+                          RepeatComponentFactory factory) {
+    GlobRepeatListener listener = new GlobRepeatListener();
+    GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
+    model.setFilter(matcher);
+    Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
     listener.set(model, repeat);
     return repeat;
   }

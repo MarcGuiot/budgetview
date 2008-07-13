@@ -130,6 +130,19 @@ public class GlobMatchers {
     };
   }
 
+  public static GlobMatcher linkTargetFieldEquals(final Link link, final Field targetField,
+                                                  final Object targetFieldValue) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        final Glob target = repository.findLinkTarget(item, link);
+        if (target == null) {
+          return false;
+        }
+        return target.getValue(targetField).equals(targetFieldValue);
+      }
+    };
+  }
+
   public static GlobMatcher isNull(final Field field) {
     return new GlobMatcher() {
       public boolean matches(Glob glob, GlobRepository repository) {
