@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <globs>
-  <series id="0" name="internet" budgetAreaName="recurringExpenses" defaultCategoryName='telecoms'/>
-  <series id="1" name="rental" budgetAreaName="recurringExpenses" defaultCategoryName='house'/>
-  <series id="2" name="electricity" budgetAreaName="recurringExpenses" defaultCategoryName='house'/>
+  <series id="0" name="occasional" budgetAreaName="occasionalExpenses"/>
 
-  <series id="5" name="occasional" budgetAreaName="occasionalExpenses"/>
-  <seriesToCategory id='1' seriesName='occasional' categoryName="multimedia"/>
-  <seriesToCategory id='2' seriesName='occasional' categoryName="clothing"/>
-  <seriesToCategory id='3' seriesName='occasional' categoryName="food"/>
+  <series id="1" name="internet" budgetAreaName="recurringExpenses" defaultCategoryName='telecoms'/>
+  <series id="2" name="rental" budgetAreaName="recurringExpenses" defaultCategoryName='house'/>
+  <series id="3" name="electricity" budgetAreaName="recurringExpenses" defaultCategoryName='house'/>
 
   <series id="10" name="groceries" budgetAreaName="expensesEnvelope" defaultCategoryName="food"/>
   <seriesToCategory id='10' seriesName='groceries' categoryName="food"/>

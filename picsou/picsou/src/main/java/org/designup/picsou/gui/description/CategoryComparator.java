@@ -5,7 +5,9 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.directory.Directory;
 
 import java.util.Comparator;
 
@@ -15,6 +17,12 @@ public class CategoryComparator implements Comparator<Glob> {
 
   private GlobRepository repository;
   private GlobStringifier nameStringifier;
+
+  public CategoryComparator(GlobRepository globRepository, Directory directory) {
+    this.repository = globRepository;
+    final DescriptionService descriptionService = directory.get(DescriptionService.class);
+    this.nameStringifier = descriptionService.getStringifier(Category.TYPE);
+  }
 
   public CategoryComparator(GlobRepository globRepository, GlobStringifier stringifier) {
     this.repository = globRepository;

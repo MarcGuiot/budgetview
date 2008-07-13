@@ -151,6 +151,11 @@ public class CategorizationDialogChecker extends DataChecker {
     getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).click();
   }
 
+  public void selectOccasionalSeries(MasterCategory masterCategory, String subcat) {
+    final String toggleName = "occasionalSeries" + ":" + masterCategory.getName() + ":" + subcat;
+    getOccasionalSeriesPanel().getToggleButton(toggleName).click();
+  }
+
   private Panel getOccasionalSeriesPanel() {
     Panel panel = dialog.getPanel("occasionalSeriesRepeat");
     assertTrue(panel.isVisible());
@@ -164,12 +169,18 @@ public class CategorizationDialogChecker extends DataChecker {
     }
   }
 
+  public void checkContainsOccasional(MasterCategory master, String subcat) {
+    Panel panel = getOccasionalSeriesPanel();
+    assertTrue(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + master.getName()));
+    assertTrue(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + master.getName() + ":" + subcat));
+  }
+
   public void checkOccasionalSeries(MasterCategory category) {
     assertTrue(dialog.getToggleButton("occasionalExpenses").isSelected());
     assertTrue(getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).isSelected());
   }
 
-  public void checkEnveloppeSeriesIsSelected(String seriesName, MasterCategory category) {
+  public void checkEnvelopeSeriesIsSelected(String seriesName, MasterCategory category) {
     assertTrue(dialog.getToggleButton("expensesEnvelope").isSelected());
     Panel panel = getEnvelopeSeriesPanel();
     assertTrue(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
@@ -181,8 +192,16 @@ public class CategorizationDialogChecker extends DataChecker {
     UISpecAssert.assertFalse(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
   }
 
+  public void checkPreviousIsEnabled() {
+    UISpecAssert.assertTrue(dialog.getButton("previousTransaction").isEnabled());
+  }
+
   public void checkPreviousIsDisabled() {
     UISpecAssert.assertFalse(dialog.getButton("previousTransaction").isEnabled());
+  }
+
+  public void checkNextIsEnabled() {
+    UISpecAssert.assertTrue(dialog.getButton("nextTransaction").isEnabled());
   }
 
   public void checkNextIsDisabled() {

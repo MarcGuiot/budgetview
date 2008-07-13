@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.categorization;
+package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
@@ -11,7 +11,7 @@ import org.globsframework.model.*;
 import javax.swing.*;
 import java.util.List;
 
-class BudgetAreaToggleUpdater implements GlobSelectionListener, ChangeSetListener {
+public class BudgetAreaToggleUpdater implements GlobSelectionListener, ChangeSetListener {
   private final JToggleButton toggleButton;
   private final Glob budgetArea;
   private GlobRepository repository;

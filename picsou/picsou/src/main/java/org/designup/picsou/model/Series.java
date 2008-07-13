@@ -68,6 +68,8 @@ public class Series {
   @DefaultBoolean(false)
   public static BooleanField DECEMBER;
 
+  public static final Integer OCCASIONAL_SERIES_ID = 0;
+
   static {
     GlobTypeLoader.init(Series.class);
   }

@@ -52,12 +52,19 @@
         </card>
 
         <card name="occasionalExpenses">
-          <row>
-            <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
-            <repeat ref="occasionalSeriesRepeat">
-              <toggleButton ref="occasionalCategoryToggle"/>
-            </repeat>
-          </row>
+          <scrollPane>
+            <column>
+              <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
+              <repeat ref="occasionalSeriesRepeat">
+                <column>
+                  <toggleButton ref="occasionalCategoryToggle"/>
+                  <repeat ref="occasionalSubcatRepeat" marginLeft="10">
+                    <toggleButton ref="occasionalSubcatToggle"/>
+                  </repeat>
+                </column>
+              </repeat>
+            </column>
+          </scrollPane>
         </card>
 
       </cards>

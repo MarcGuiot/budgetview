@@ -1,0 +1,7 @@
+- besoin grande latitude dans la zone client pour refactorings
+
+- affichage table transactions dans CategoryView
+
+- merger GlobsPanelBuilder et SplitsBuilder
+
+- 

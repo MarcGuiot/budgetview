@@ -84,6 +84,11 @@ public class TransactionDetailsChecker extends DataChecker {
     assertThat(hyperlink.textEquals(getCategoryName(category)));
   }
 
+  public void checkCategory(String category) {
+    Button hyperlink = getPanel().getButton("categoryChooserLink");
+    assertThat(hyperlink.textEquals(category));
+  }
+
   public void categorizeWithLink(MasterCategory category) {
     categorize(category, getPanel().getButton("categoryChooserLink"));
   }

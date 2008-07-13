@@ -56,6 +56,22 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
   }
   
   public void testCancel() throws Exception {
+    checkCancel(new Callback() {
+      public void process(CategorizationDialogChecker dialog) {
+        dialog.cancel();
+      }
+    });
+  }
+
+  public void testEscape() throws Exception {
+    checkCancel(new Callback() {
+      public void process(CategorizationDialogChecker dialog) {
+        dialog.pressEscapeKey();
+      }
+    });
+  }
+  
+  private void checkCancel(Callback callback) {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -60, "JaimeLeFoot.com")
@@ -71,7 +87,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     creationDialog.setCategory(MasterCategory.EDUCATION);
     creationDialog.validate();
 
-    dialog.cancel();
+    callback.process(dialog);
 
     transactionDetails.checkNoSeries();
 
@@ -79,5 +95,9 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     newDialog.checkLabel("JaimeLeFoot.com");
     newDialog.selectRecurring();
     newDialog.checkRecurringSeriesNotFound("Culture");
-  }  
+  }
+
+  private interface Callback {
+    void process(CategorizationDialogChecker dialog);
+  }
 }

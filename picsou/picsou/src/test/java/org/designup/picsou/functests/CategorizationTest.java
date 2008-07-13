@@ -72,31 +72,44 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkCategory(MasterCategory.FOOD);
 
     CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
-    reopenedDialog.checkEnveloppeSeriesIsSelected("Groceries", MasterCategory.FOOD);
+    reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
     dialog.selectEnvelopeSeries("Groceries", MasterCategory.HOUSE);
-    dialog.checkEnveloppeSeriesIsSelected("Groceries", MasterCategory.HOUSE);
+    dialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.HOUSE);
     dialog.checkEnveloppeSeriesIsNotSelected("Groceries", MasterCategory.FOOD);
   }
 
   public void testStandardOccasionalTransaction() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2008/06/30", -199.90, "LDLC")
+      .addTransaction("2008/06/30", -199.90, "Fouquet's")
       .load();
 
+    categories.createSubCategory(MasterCategory.FOOD, "Saucisson");
+    categories.select(MasterCategory.ALL);
+
     CategorizationDialogChecker dialog = transactions.categorize(0);
-    dialog.checkLabel("LDLC");
+    dialog.checkLabel("Fouquet's");
 
     dialog.selectOccasional();
-    dialog.checkContainsOccasional(MasterCategory.MULTIMEDIA, MasterCategory.CLOTHING);
-    dialog.selectOccasionalSeries(MasterCategory.MULTIMEDIA);
+    dialog.checkContainsOccasional(MasterCategory.MULTIMEDIA,
+                                   MasterCategory.CLOTHING,
+                                   MasterCategory.BEAUTY,
+                                   MasterCategory.EDUCATION);
+    dialog.checkContainsOccasional(MasterCategory.FOOD, "Saucisson");
+
+    dialog.selectOccasionalSeries(MasterCategory.FOOD);
     dialog.validate();
 
     transactionDetails.checkSeries("Occasional");
-    transactionDetails.checkCategory(MasterCategory.MULTIMEDIA);
+    transactionDetails.checkCategory(MasterCategory.FOOD);
 
     CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
-    reopenedDialog.checkOccasionalSeries(MasterCategory.MULTIMEDIA);
+    reopenedDialog.checkOccasionalSeries(MasterCategory.FOOD);
+    reopenedDialog.selectOccasionalSeries(MasterCategory.FOOD, "Saucisson");
+    reopenedDialog.validate();
+
+    transactionDetails.checkSeries("Occasional");
+    transactionDetails.checkCategory("Saucisson");
   }
 
   public void testUnassignedTransaction() throws Exception {
@@ -138,27 +151,35 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker dialog = transactions.categorize(0, 1);
     dialog.checkLabel("Free Telecom");
-
+    dialog.checkNoBudgetAreaSelected();
     dialog.selectRecurring();
     dialog.selectRecurringSeries("Internet");
+    dialog.checkNextIsEnabled();
     dialog.checkPreviousIsDisabled();
 
     dialog.selectNext();
+    dialog.checkLabel("Auchan");
     dialog.checkNoBudgetAreaSelected();
     dialog.checkNextIsDisabled();
-
+    dialog.checkPreviousIsEnabled();
+    dialog.checkNoBudgetAreaSelected();
     dialog.selectEnvelopes();
     dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD);
 
     dialog.selectPrevious();
+    dialog.checkLabel("Free Telecom");
+    dialog.checkNextIsEnabled();
     dialog.checkPreviousIsDisabled();
     dialog.checkRecurringSeriesIsSelected("Internet");
 
     dialog.selectNext();
-    dialog.checkEnveloppeSeriesIsSelected("Groceries", MasterCategory.FOOD);
+    dialog.checkLabel("Auchan");
+    dialog.checkNextIsDisabled();
+    dialog.checkPreviousIsEnabled();
+    dialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
   }
 
-  public void testSelectRecuringSelectBugdetArea() throws Exception {
+  public void testSelectingRecurringSelectsBudgetArea() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/28", -29.90, "Free Telecom")

@@ -1,8 +1,14 @@
 CategorizationDialog
 --------------------
 - afficher table transactions
--
 - look toggles
+- split
+- saisie notes
+
+
+TimeView
+--------
+- afficher des noms pour les multi-selections de mois ("juillet 2006 à août 2007")
 
 
 Vue accueil
@@ -24,7 +30,6 @@ Vue budget
 
 Vue releves
 -----------
-- message affectation / selection en cours
 - filtrage par label
 - colonne "category" de transactionView => ouvrir CategorizationDialog
 
