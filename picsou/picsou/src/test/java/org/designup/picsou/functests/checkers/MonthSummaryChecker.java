@@ -13,10 +13,8 @@ public class MonthSummaryChecker extends DataChecker {
     this.window = window;
   }
 
-  public Summary on(String month) {
+  public Summary initContent() {
     Panel panel = window.getPanel("monthSummaryView");
-    TextBox monthLabel = panel.getTextBox("monthLabel");
-    UISpecAssert.assertThat(monthLabel.textEquals(month));
     return new Summary(panel);
   }
 

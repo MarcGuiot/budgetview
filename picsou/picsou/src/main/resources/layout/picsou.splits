@@ -79,11 +79,13 @@
                 </panel>
                 <filler fill="vertical"/>
               </column>
+
               <column marginLeft="20">
-                <panel ref="monthSummaryView"/>
+                <panel ref="monthSummaryView" preferredSize="(300,400)"/>
                 <filler fill="vertical"/>
               </column>
-              <filler fill="horizontal"/>
+
+              <filler fill="horizontal" weightX="10"/>
             </row>
           </card>
 

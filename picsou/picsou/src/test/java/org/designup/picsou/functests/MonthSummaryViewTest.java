@@ -28,7 +28,7 @@ public class MonthSummaryViewTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     MonthSummaryChecker summaryChecker = new MonthSummaryChecker(mainWindow);
     summaryChecker
-      .on("july 2008")
+      .initContent()
       .total(1500, (29.9 + 1500 + 60 + 20 + 10))
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(80)
@@ -64,7 +64,7 @@ public class MonthSummaryViewTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     MonthSummaryChecker summaryChecker = new MonthSummaryChecker(mainWindow);
     summaryChecker
-      .on("")
+      .initContent()
       .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 1500 + 29.90))
       .checkRecurring(1500 + 29.90 + 1500 + 29.90)
       .checkEnvelope(80)

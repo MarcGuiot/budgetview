@@ -41,14 +41,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/monthSummaryView.splits", repository, localDirectory);
-    builder.addLabel("monthLabel", Month.TYPE, new GlobListStringifier() {
-      public String toString(GlobList selected, GlobRepository repository) {
-        if (selected.isEmpty() || selected.size() > 1) {
-          return "";
-        }
-        return Month.getLabel(selected.get(0).get(Month.ID));
-      }
-    });
     builder.addLabel("totalReceivedAmount", MonthStat.TYPE,
                      GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, MonthStat.TOTAL_RECEIVED));
     builder.addLabel("totalSpentAmount", MonthStat.TYPE,

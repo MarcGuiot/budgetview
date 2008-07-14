@@ -2,25 +2,35 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <column>
+  <styles>
+    <style selector="#monthSummary label#budgetAreaName" font="-,bold,12"/>
+    <style selector="#monthSummary label.total"
+           font="-,bold,18" foreground="monthsummary.total" anchor="center"/>
+    <style selector="#monthSummary label.amount" font="-,bold,10" foreground="monthsummary.amount"/>
+  </styles>
+
+  <column name="monthSummary">
 
     <label text="$monthsummary.title" styleClass="blockTitle"/>
 
     <panel styleClass="block">
       <column margin="10">
-        <label ref="monthLabel"/>
         <row>
-          <label ref="totalReceivedAmount"/>
-          <label ref="totalSpentAmount"/>
+          <label ref="totalReceivedAmount" styleClass="total"/>
+          <label ref="totalSpentAmount" styleClass="total"/>
         </row>
         <repeat ref="budgetAreaRepeat">
-          <row name="budgetAreaRow">
-            <label ref="budgetAreaName"/>
-            <filler fill="horizontal"/>
-            <label ref="budgetAreaAmount"/>
-            <filler fill="horizontal"/>
-            <label ref="budgetAreaPlannedAmount"/>
-          </row>
+          <column styleClass="innerBlock">
+            <row name="budgetAreaRow" margin="10" marginBottom="2" >
+              <label ref="budgetAreaName"/>
+              <filler fill="horizontal"/>
+            </row>
+            <row margin="10" marginTop="0" >
+              <label ref="budgetAreaAmount" styleClass="amount"/>
+              <filler fill="horizontal"/>
+              <label ref="budgetAreaPlannedAmount" styleClass="amount"/>
+            </row>
+          </column>
         </repeat>
       </column>
     </panel>

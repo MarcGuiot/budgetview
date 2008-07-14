@@ -10,7 +10,6 @@ CategorizationDialog
 
 Vue accueil
 -----------
-- joliesse MonthSummaryView
 - creation de compte
 - edition comptes
 - graphique

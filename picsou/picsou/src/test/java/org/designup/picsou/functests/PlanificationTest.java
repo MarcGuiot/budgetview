@@ -26,11 +26,11 @@ public abstract class PlanificationTest extends LoggedInFunctionalTestCase {
       .dumpCode();
     views.selectHome();
     periods.selectCells("2008/07");
-    monthSummary.on("july 2008")
+    monthSummary.initContent("july 2008")
       .checkRecurring(29.9)
       .checkPlannedRecurring(29.9);
     periods.selectCells("2008/08");
-    monthSummary.on("august 2008")
+    monthSummary.initContent("august 2008")
       .checkRecurring(0)
       .checkPlannedRecurring(29.9);
   }
