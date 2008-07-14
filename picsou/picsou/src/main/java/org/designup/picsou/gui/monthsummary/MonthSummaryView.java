@@ -2,6 +2,7 @@ package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
@@ -58,8 +59,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                         public void registerComponents(RepeatCellBuilder cellBuilder, BudgetArea budgetArea) {
                           final DoubleField expenseField = MonthStat.getReceived(budgetArea);
                           final DoubleField spentField = MonthStat.getSpent(budgetArea);
-                          final DoubleField plannedExpenseField = MonthStat.getPlannedReceived(budgetArea);
-                          final DoubleField plannedSpentField = MonthStat.getPlannedReceived(budgetArea);
                           JLabel label = new JLabel(descriptionService.getStringifier(BudgetArea.TYPE)
                             .toString(budgetArea.getGlob(), repository));
                           cellBuilder.add("budgetAreaName", label);
@@ -69,9 +68,12 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                                                              GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT,
                                                                                       expenseField, spentField)).getComponent());
                           cellBuilder.add("budgetAreaPlannedAmount",
-                                          GlobLabelView.init(MonthStat.TYPE, repository, localDirectory,
-                                                             GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT,
-                                                                                      plannedExpenseField, plannedSpentField)).getComponent());
+                                          GlobLabelView.init(BudgetStat.TYPE, repository, localDirectory,
+                                                             GlobListStringifiers.conditionnalSum(
+                                                               GlobMatchers.fieldEquals(BudgetStat.BUDGET_AREA,
+                                                                                        budgetArea.getId()),
+                                                               PicsouDescriptionService.DECIMAL_FORMAT,
+                                                               BudgetStat.AMOUNT)).getComponent());
                         }
                       });
     parentBuilder.add("monthSummaryView", builder);
@@ -80,6 +82,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   public void selectionUpdated(GlobSelection selection) {
     GlobList months = selection.getAll(Month.TYPE);
     GlobList selectedMonthStats = new GlobList();
+    GlobList selectedBudgetStats = new GlobList();
     for (Glob month : months) {
       Integer monthId = month.get(Month.ID);
       selectedMonthStats.addAll(
@@ -87,9 +90,12 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                           GlobMatchers.and(GlobMatchers.fieldEquals(MonthStat.MONTH, monthId),
                                            GlobMatchers.fieldEquals(MonthStat.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
                                            GlobMatchers.fieldEquals(MonthStat.CATEGORY, Category.ALL))));
+      selectedBudgetStats.addAll(
+        repository.getAll(BudgetStat.TYPE, GlobMatchers.fieldEquals(BudgetStat.MONTH, monthId)));
     }
     SelectionService selectionService = localDirectory.get(SelectionService.class);
     selectionService.select(selectedMonthStats, MonthStat.TYPE);
     selectionService.select(selection.getAll(Month.TYPE), Month.TYPE);
+    selectionService.select(selectedBudgetStats, BudgetStat.TYPE);
   }
 }

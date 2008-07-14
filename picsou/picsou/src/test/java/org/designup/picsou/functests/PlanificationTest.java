@@ -4,9 +4,11 @@ import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
 
-public abstract class PlanificationTest extends LoggedInFunctionalTestCase {
+public class PlanificationTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/07/01"));
@@ -20,18 +22,23 @@ public abstract class PlanificationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/08", -29.9, "free telecom")
       .load();
     periods.assertSpanEquals("2008/07", "2010/07");
-    transactions.setRecurring(0, "Internet");
-    periods.selectLast();
+    transactions.setRecurring(0, "Internet", true);
+    periods.selectCells("2008/07");
     transactions.initContent()
-      .dumpCode();
+      .add("08/07/2008", TransactionType.PLANNED, "", "", 0.00, MasterCategory.TELECOMS)
+      .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, MasterCategory.TELECOMS)
+      .check();
     views.selectHome();
     periods.selectCells("2008/07");
     monthSummary.on("july 2008")
       .checkReccuring(29.9)
       .checkPlannedRecurring(29.9);
     periods.selectCells("2008/08");
+    transactions.initContent()
+      .add("08/08/2008", TransactionType.PLANNED, "", "", -29.90, MasterCategory.TELECOMS)
+      .check();
     monthSummary.on("august 2008")
-      .checkReccuring(0)
+      .checkReccuring(0.0)
       .checkPlannedRecurring(29.9);
   }
 }

@@ -27,6 +27,7 @@ public abstract class PicsouTestCase extends ServicesTestCase {
         .add(TransactionType.values())
         .add(MasterCategory.createGlobs())
         .add(BudgetArea.values())
+        .add(ProfileType.values())
         .get();
 
     Account.createSummary(repository);

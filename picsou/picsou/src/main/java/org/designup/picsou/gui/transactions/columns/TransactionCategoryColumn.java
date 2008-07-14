@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.transactions.columns;
 
-import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
@@ -29,7 +28,7 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor impleme
   private JPanel rendererPanel;
   private HyperlinkButton editorButton;
   private JPanel editorPanel;
-  private CategoryChooserAction categoryChooserAction;
+  private Action categoryChooserAction;
   private Glob transaction;
   private Color normalColor;
   private Color selectedColor;
@@ -37,7 +36,7 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor impleme
   private Font normalFont;
   private Font toCategorizeFont;
 
-  public TransactionCategoryColumn(CategoryChooserAction categoryChooserAction, GlobTableView view,
+  public TransactionCategoryColumn(Action categoryChooserAction, GlobTableView view,
                                    TransactionRendererColors transactionRendererColors,
                                    DescriptionService descriptionService,
                                    GlobRepository repository,

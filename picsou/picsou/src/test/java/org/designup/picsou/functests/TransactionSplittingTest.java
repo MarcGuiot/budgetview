@@ -3,10 +3,18 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.SplitDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.utils.Dates;
 
 public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
+
+  protected void setUp() throws Exception {
+    TimeService.setCurrentDate(Dates.parseMonth("2006/01"));
+    super.setUp();
+  }
+
   public void testStandardUsage() throws Exception {
     OfxBuilder
       .init(this)
@@ -24,7 +32,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .toggleAddAmountPanel()
       .enterAmount("12.50")
       .checkCurrentCategory(MasterCategory.NONE)
-      .selectCategory(MasterCategory.LEISURES)
+      .selectOccasional(MasterCategory.LEISURES)
       .enterNote("DVD")
       .toggleDispensable()
       .add()
@@ -33,7 +41,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
         {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, "DVD"},
       })
       .enterAmount("2.50")
-      .selectCategory(MasterCategory.BEAUTY)
+      .selectOccasional(MasterCategory.BEAUTY)
       .enterNote("Youth Elixir")
       .add()
       .checkTable(new Object[][]{
@@ -61,7 +69,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
     SplitDialogChecker dialog = transactionDetails.openSplitDialog(0)
       .enterAmount("12.50")
       .enterNote("DVD")
-      .selectCategory(MasterCategory.LEISURES)
+      .selectOccasional(MasterCategory.LEISURES)
       .add();
 
     transactions
@@ -87,7 +95,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
     transactions.getTable().selectRow(0);
     transactionDetails.openSplitDialog(0)
       .enterAmount("12.50")
-      .selectCategory(MasterCategory.LEISURES)
+      .selectOccasional(MasterCategory.LEISURES)
       .add()
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -7.50, ""},
@@ -103,7 +111,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
   public void testSplittingASplitPart() throws Exception {
     openDialogWithSampleTransaction()
-      .add("12.50", MasterCategory.LEISURES, "")
+      .addOccasional("12.50", MasterCategory.LEISURES, "")
       .ok();
 
     transactions
@@ -118,11 +126,11 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -7.50, ""},
         {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, ""},
       })
-      .add("2.50", MasterCategory.BANK, "")
+      .addOccasional("2.50", MasterCategory.MULTIMEDIA, "")
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -5.00, ""},
         {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, ""},
-        {TransactionType.PRELEVEMENT, MasterCategory.BANK, "Auchan", -2.50, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.MULTIMEDIA, "Auchan", -2.50, ""},
       })
       .ok();
 
@@ -130,7 +138,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -5.00, MasterCategory.FOOD)
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50, MasterCategory.LEISURES)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -2.50, MasterCategory.BANK)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -2.50, MasterCategory.MULTIMEDIA)
       .check();
   }
 
@@ -169,7 +177,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
   public void testEnteringSeveralAmounts() throws Exception {
     openDialogWithSampleTransaction()
       .enterAmount(" 2.50 1 4. 5.000 ")
-      .selectCategory(MasterCategory.LEISURES)
+      .selectOccasional(MasterCategory.LEISURES)
       .add()
       .ok();
 
@@ -183,7 +191,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
   public void testCommasAreConvertedIntoDots() throws Exception {
     openDialogWithSampleTransaction()
       .enterAmount(" 12,50 ")
-      .selectCategory(MasterCategory.LEISURES)
+      .selectOccasional(MasterCategory.LEISURES)
       .add()
       .ok();
 
@@ -245,7 +253,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.NONE, "Auchan", -20.0, ""},
       })
-      .add("12", MasterCategory.LEISURES, "DVD")
+      .addOccasional("12", MasterCategory.LEISURES, "DVD")
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.NONE, "Auchan", -8.0, ""},
         {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.0, "DVD"},
@@ -261,7 +269,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
   public void testFieldsAreResetAndCreatedTransactionSelectedAfterAdd() throws Exception {
     openDialogWithSampleTransaction()
-      .selectCategory(MasterCategory.LEISURES)
+      .selectOccasional(MasterCategory.LEISURES)
       .enterAmount("12.50")
       .enterNote("DVD")
       .toggleDispensable()
@@ -273,23 +281,9 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  public void testFieldsAreResetAfterCancel() throws Exception {
-    openDialogWithSampleTransaction()
-      .selectCategory(MasterCategory.LEISURES)
-      .enterAmount("12.50")
-      .enterNote("DVD")
-      .toggleDispensable()
-      .cancelAddAmount()
-      .checkCurrentCategory(MasterCategory.NONE)
-      .checkAmount("")
-      .checkNote("")
-      .checkDispensable(false)
-      .cancel();
-  }
-
   public void testFieldsAreResetWhenAddAmountPanelIsHidden() throws Exception {
     openDialogWithSampleTransaction()
-      .selectCategory(MasterCategory.LEISURES)
+      .selectOccasional(MasterCategory.LEISURES)
       .enterAmount("12.50")
       .enterNote("DVD")
       .toggleDispensable()
@@ -304,14 +298,14 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
   public void testRemovingSplitParts() throws Exception {
     openDialogWithSampleTransaction()
-      .add("5", MasterCategory.LEISURES, "DVD")
-      .add("8", MasterCategory.BEAUTY, "Youth Elixir")
-      .add("3", MasterCategory.TRANSPORTS, "Cool Sticker")
+      .addOccasional("5", MasterCategory.LEISURES, "DVD")
+      .addOccasional("8", MasterCategory.BEAUTY, "Youth Elixir")
+      .addOccasional("3", MasterCategory.MULTIMEDIA, "Cool Sticker")
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -4.0, ""},
         {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -5.0, "DVD"},
         {TransactionType.PRELEVEMENT, MasterCategory.BEAUTY, "Auchan", -8.0, "Youth Elixir"},
-        {TransactionType.PRELEVEMENT, MasterCategory.TRANSPORTS, "Auchan", -3.0, "Cool Sticker"},
+        {TransactionType.PRELEVEMENT, MasterCategory.MULTIMEDIA, "Auchan", -3.0, "Cool Sticker"},
       })
 
       .deleteRow(1)
@@ -326,7 +320,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -20.0, ""}
       })
 
-      .add("7", MasterCategory.LEISURES, "Another DVD")
+      .addOccasional("7", MasterCategory.LEISURES, "Another DVD")
       .ok();
 
     transactions
@@ -345,7 +339,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
     transactions.getTable().selectRow(0);
     transactionDetails.openSplitDialog(0)
       .checkDeleteEnabled(false, 0)
-      .add("12.50", MasterCategory.LEISURES, "DVD")
+      .addOccasional("12.50", MasterCategory.LEISURES, "DVD")
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -7.50, ""},
         {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, "DVD"},

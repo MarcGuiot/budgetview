@@ -68,7 +68,7 @@ public class CategorizationDialog {
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.INCOME.getGlob(), Series.BUDGET_AREA),
                       new GlobFieldComparator(Series.ID),
-                      new SeriesComponentFactory(invisibleIncomeToggle));
+                      new SeriesComponentFactory(invisibleIncomeToggle, localDirectory));
     builder.add("createIncomeSeries", new SeriesCreationAction(BudgetArea.INCOME, localDirectory));
 
     JToggleButton invisibleRecurringToggle = new JToggleButton();
@@ -77,7 +77,7 @@ public class CategorizationDialog {
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.RECURRING_EXPENSES.getGlob(), Series.BUDGET_AREA),
                       new GlobFieldComparator(Series.ID),
-                      new SeriesComponentFactory(invisibleRecurringToggle));
+                      new SeriesComponentFactory(invisibleRecurringToggle, localDirectory));
     builder.add("createRecurringSeries", new SeriesCreationAction(BudgetArea.RECURRING_EXPENSES, localDirectory));
 
     final JToggleButton invisibleEnvelopeToggle = new JToggleButton();
@@ -86,7 +86,7 @@ public class CategorizationDialog {
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.EXPENSES_ENVELOPE.getGlob(), Series.BUDGET_AREA),
                       new GlobFieldComparator(Series.ID),
-                      new EnvelopeSeriesComponentFactory(invisibleEnvelopeToggle));
+                      new EnvelopeSeriesComponentFactory(invisibleEnvelopeToggle, localDirectory));
 
     JToggleButton invisibleOccasionalToggle = new JToggleButton();
     builder.add("invisibleOccasionalToggle", invisibleOccasionalToggle);
@@ -99,8 +99,9 @@ public class CategorizationDialog {
                         }
                       },
                       new GlobFieldComparator(SeriesToCategory.ID),
-                      new SeriesToCategoryComponentFactory("occasionalSeries", "occasionalCategoryToggle", BudgetArea.OCCASIONAL_EXPENSES,
-                                                           invisibleOccasionalToggle));
+                      new SeriesToCategoryComponentFactory("occasionalSeries", "occasionalCategoryToggle",
+                                                           BudgetArea.OCCASIONAL_EXPENSES,
+                                                           invisibleOccasionalToggle, localDirectory));
 
     builder.add("ok", new AbstractAction("ok") {
       public void actionPerformed(ActionEvent e) {
@@ -197,9 +198,11 @@ public class CategorizationDialog {
   private class SeriesComponentFactory implements RepeatComponentFactory<Glob> {
     ButtonGroup seriesGroup = new ButtonGroup();
     private JToggleButton invisibleToggle;
+    private Directory directory;
 
-    public SeriesComponentFactory(JToggleButton invisibleToggle) {
+    public SeriesComponentFactory(JToggleButton invisibleToggle, Directory directory) {
       this.invisibleToggle = invisibleToggle;
+      this.directory = directory;
       seriesGroup.add(invisibleToggle);
     }
 
@@ -212,6 +215,11 @@ public class CategorizationDialog {
         public void actionPerformed(ActionEvent e) {
           localRepository.setTarget(currentTransaction.getKey(), Transaction.SERIES, seriesKey);
           localRepository.setTarget(currentTransaction.getKey(), Transaction.CATEGORY, categoryKey);
+          if (series.get(Series.AMOUNT) == null &&
+              !ProfileType.CUSTOM.getId().equals(series.get(Series.PROFILE_TYPE))) {
+            SeriesCreationDialog seriesCreationDialog = new SeriesCreationDialog(dialog, localRepository, directory);
+            seriesCreationDialog.show(seriesKey, currentTransaction);
+          }
         }
       });
       seriesGroup.add(toggle);
@@ -246,9 +254,11 @@ public class CategorizationDialog {
 
   private class EnvelopeSeriesComponentFactory implements RepeatComponentFactory<Glob> {
     private JToggleButton invisibleToggle;
+    private Directory direcory;
 
-    public EnvelopeSeriesComponentFactory(JToggleButton invisibleToggle) {
+    public EnvelopeSeriesComponentFactory(JToggleButton invisibleToggle, Directory direcory) {
       this.invisibleToggle = invisibleToggle;
+      this.direcory = direcory;
     }
 
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
@@ -256,10 +266,11 @@ public class CategorizationDialog {
                       new JLabel(seriesStringifier.toString(series, localRepository)));
 
       cellBuilder.addRepeat("envelopeCategoryRepeat",
-                            localRepository.findLinkedTo(series, SeriesToCategory.SERIES).sort(SeriesToCategory.ID), new SeriesToCategoryComponentFactory(seriesStringifier.toString(series, localRepository),
+                            localRepository.findLinkedTo(series, SeriesToCategory.SERIES).sort(SeriesToCategory.ID),
+                            new SeriesToCategoryComponentFactory(seriesStringifier.toString(series, localRepository),
                                                                  "envelopeCategoryToggle",
                                                                  BudgetArea.EXPENSES_ENVELOPE,
-                                                                 invisibleToggle)
+                                                                 invisibleToggle, direcory)
       );
     }
   }
@@ -270,12 +281,15 @@ public class CategorizationDialog {
     private BudgetArea budgetArea;
     private ButtonGroup categoriesGroup = new ButtonGroup();
     private JToggleButton invisibleToggle;
+    private Directory directory;
 
-    public SeriesToCategoryComponentFactory(String seriesName, String name, BudgetArea budgetArea, JToggleButton invisibleToggle) {
+    public SeriesToCategoryComponentFactory(String seriesName, String name, BudgetArea budgetArea,
+                                            JToggleButton invisibleToggle, Directory directory) {
       this.seriesName = seriesName;
       this.name = name;
       this.budgetArea = budgetArea;
       this.invisibleToggle = invisibleToggle;
+      this.directory = directory;
       categoriesGroup.add(invisibleToggle);
     }
 
@@ -289,11 +303,17 @@ public class CategorizationDialog {
         public void actionPerformed(ActionEvent e) {
           localRepository.setTarget(currentTransaction.getKey(), Transaction.SERIES, seriesKey);
           localRepository.setTarget(currentTransaction.getKey(), Transaction.CATEGORY, categoryKey);
+          final Glob series = localRepository.findLinkTarget(seriesToCategory, SeriesToCategory.SERIES);
+          if (series.get(Series.AMOUNT) == null &&
+              !ProfileType.CUSTOM.getId().equals(series.get(Series.PROFILE_TYPE))) {
+            SeriesCreationDialog seriesCreationDialog = new SeriesCreationDialog(dialog, localRepository, directory);
+            seriesCreationDialog.show(seriesKey, currentTransaction);
+          }
         }
       });
 
       final CategoryUpdater updater =
-        new CategoryUpdater(toggle, invisibleToggle, seriesKey, categoryKey, budgetArea, localRepository);     
+        new CategoryUpdater(toggle, invisibleToggle, seriesKey, categoryKey, budgetArea, localRepository);
       selectionService.addListener(updater, Transaction.TYPE);
 
       cellBuilder.add(this.name, toggle);
@@ -358,8 +378,9 @@ public class CategorizationDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      SeriesCreationDialog creationDialog = new SeriesCreationDialog(budgetArea, dialog, localRepository, localDirectory);
-      creationDialog.show();
+      Glob currentTransaction = transactions.get(transactionIndex);
+      SeriesCreationDialog creationDialog = new SeriesCreationDialog(dialog, localRepository, localDirectory);
+      creationDialog.show(currentTransaction, budgetArea);
     }
   }
 }

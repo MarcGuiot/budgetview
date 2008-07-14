@@ -152,10 +152,10 @@ public class TransactionChecker extends ViewChecker {
     return transactionDetails.categorize();
   }
 
-  public void setRecurring(int rowIndex, String seriesName) {
+  public void setRecurring(int rowIndex, String seriesName, boolean showSeriesInitialization) {
     CategorizationDialogChecker categorization = categorize(rowIndex);
     categorization.selectRecurring();
-    categorization.selectRecurringSeries(seriesName);
+    categorization.selectRecurringSeries(seriesName, showSeriesInitialization);
     categorization.validate();
   }
 

@@ -8,7 +8,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 public abstract class DataChecker {
-  private DecimalFormat format = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
+  private DecimalFormat format = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
 
   protected String toString(double value) {
     return format.format(value);

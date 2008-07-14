@@ -23,7 +23,8 @@ public enum TransactionType implements GlobConstantContainer {
   CREDIT(6),
   CREDIT_CARD(7),
   BANK_FEES(9),
-  INTERNAL_TRANSFER(10);
+  INTERNAL_TRANSFER(10),
+  PLANNED(11);
 
   public static GlobType TYPE;
 
@@ -38,6 +39,9 @@ public enum TransactionType implements GlobConstantContainer {
   }
 
   public static TransactionType getType(Integer id) {
+    if (id == null) {
+      return null;
+    }
     for (TransactionType type : values()) {
       if (type.id == id) {
         return type;

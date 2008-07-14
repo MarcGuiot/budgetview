@@ -12,3 +12,4 @@
 
 - obfuscation
 
+-fichier sg qif

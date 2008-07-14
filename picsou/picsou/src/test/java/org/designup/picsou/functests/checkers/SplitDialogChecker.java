@@ -9,7 +9,6 @@ import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
-import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
 import java.awt.*;
@@ -72,15 +71,42 @@ public class SplitDialogChecker {
     return this;
   }
 
-  public SplitDialogChecker selectCategory(MasterCategory category) {
-    CategoryChooserChecker dialog = new CategoryChooserChecker(WindowInterceptor.getModalDialog(new Trigger() {
+  public SplitDialogChecker selectEnvelope(MasterCategory category, boolean showSeriesInitialization) {
+    CategorizationDialogChecker dialog = new CategorizationDialogChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
-        window.getButton("categoryChooser").click();
+        window.getButton("category").click();
       }
     }));
-    dialog.selectCategory(TransactionChecker.getCategoryName(category));
+    dialog.selectEnvelopes();
+    dialog.selectEnvelopeSeries("groceries", category, showSeriesInitialization);
+    dialog.validate();
     return this;
   }
+
+  public SplitDialogChecker selectOccasional(MasterCategory category) {
+    CategorizationDialogChecker dialog = new CategorizationDialogChecker(WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        window.getButton("category").click();
+      }
+    }));
+    dialog.selectOccasional();
+    dialog.selectOccasionalSeries(category);
+    dialog.validate();
+    return this;
+  }
+
+  public SplitDialogChecker selectRecurring(String name, boolean showSeriesInitialization) {
+    CategorizationDialogChecker dialog = new CategorizationDialogChecker(WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        window.getButton("category").click();
+      }
+    }));
+    dialog.selectRecurring();
+    dialog.selectRecurringSeries(name, showSeriesInitialization);
+    dialog.validate();
+    return this;
+  }
+
 
   public SplitDialogChecker chooseCategory(final int row, MasterCategory category) {
     CategoryChooserChecker dialog = new CategoryChooserChecker(WindowInterceptor.run(new Trigger() {
@@ -98,7 +124,7 @@ public class SplitDialogChecker {
   }
 
   public SplitDialogChecker checkCurrentCategory(MasterCategory category) {
-    org.uispec4j.assertion.UISpecAssert.assertTrue(window.getTextBox(ComponentMatchers.innerNameIdentity("category")).textEquals(DataChecker.getCategoryName(category)));
+//    org.uispec4j.assertion.UISpecAssert.assertTrue(window.getTextBox(ComponentMatchers.innerNameIdentity("category")).textEquals(DataChecker.getCategoryName(category)));
     return this;
   }
 
@@ -161,13 +187,30 @@ public class SplitDialogChecker {
     return this;
   }
 
-  public SplitDialogChecker add(String amount, MasterCategory category, String note) {
+  public SplitDialogChecker addEnvelope(String amount, MasterCategory category, String note) {
     enterAmount(amount);
-    selectCategory(category);
+    selectEnvelope(category, true);
     enterNote(note);
     add();
     return this;
   }
+
+  public SplitDialogChecker addOccasional(String amount, MasterCategory category, String note) {
+    enterAmount(amount);
+    selectOccasional(category);
+    enterNote(note);
+    add();
+    return this;
+  }
+
+  public SplitDialogChecker addRecurring(String amount, String name, String note, boolean showSeriesInitialization) {
+    enterAmount(amount);
+    selectRecurring(name, showSeriesInitialization);
+    enterNote(note);
+    add();
+    return this;
+  }
+
 
   public SplitDialogChecker checkDeleteEnabled(boolean enabled, int row) {
     org.uispec4j.assertion.UISpecAssert.assertEquals(enabled, getDeleteButton(row).isEnabled());

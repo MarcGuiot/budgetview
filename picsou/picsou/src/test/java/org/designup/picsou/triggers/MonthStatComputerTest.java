@@ -24,6 +24,7 @@ public class MonthStatComputerTest extends PicsouTestCase {
       "<transaction month='200606' day='1' amount='20.0' categoryName='health'/>" +
       "<transaction month='200606' day='2' amount='-400.0' categoryName='house'/>" +
       "<transaction month='200606' day='3' amount='800.0' categoryName='income'/>" +
+      "<transaction month='200606' day='31' amount='1500.0' categoryName='income' seriesName='salary' planned='true'/>" +
       "" +
       "<transaction month='200608' day='4' amount='10.0' categoryName='health'/>" +
       "<transaction month='200608' day='5' amount='-200.0' categoryName='health'/>" +
@@ -52,8 +53,8 @@ public class MonthStatComputerTest extends PicsouTestCase {
 
     init(MonthStat.PLANNED_INCOME_RECEIVED)
       .setMonths(200605, 200606, 200607, 200608)
-      .add(MasterCategory.INCOME, 0.0, 0.0, 0.0, 1500.0)
-      .add(MasterCategory.ALL, 0.0, 0.0, 0.0, 1500.0)
+      .add(MasterCategory.INCOME, 0.0, 1500.0, 0.0, 1500.0)
+      .add(MasterCategory.ALL, 0.0, 1500.0, 0.0, 1500.0)
       .check();
   }
 

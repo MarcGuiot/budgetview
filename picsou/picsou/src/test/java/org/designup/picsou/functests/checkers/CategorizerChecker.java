@@ -16,22 +16,22 @@ public class CategorizerChecker extends DataChecker {
     transactionDetails = new TransactionDetailsChecker(mainWindow);
   }
 
-  public void setRecurring(String label, String name) {
+  public void setRecurring(String label, String name, boolean showSeriesInitialization) {
     int index = transactions.getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
     if (index < 0) {
       Assert.fail(label + " not found");
     }
     CategorizationDialogChecker categorizationChecker = transactions.categorize(index);
     categorizationChecker.selectRecurring();
-    categorizationChecker.selectRecurringSeries(name);
+    categorizationChecker.selectRecurringSeries(name, showSeriesInitialization);
     categorizationChecker.validate();
   }
 
-  public void setEnvelope(String label, String envelopName, MasterCategory category) {
+  public void setEnvelope(String label, String envelopName, MasterCategory category, boolean showSerieInitialization) {
     int index = transactions.getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
     CategorizationDialogChecker categorizationChecker = transactions.categorize(index);
     categorizationChecker.selectEnvelopes();
-    categorizationChecker.selectEnvelopeSeries(envelopName, category);
+    categorizationChecker.selectEnvelopeSeries(envelopName, category, showSerieInitialization);
     categorizationChecker.validate();
   }
 
@@ -48,7 +48,7 @@ public class CategorizerChecker extends DataChecker {
     int index = transactions.getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
     CategorizationDialogChecker categorizationChecker = transactions.categorize(index);
     categorizationChecker.selectIncome();
-    categorizationChecker.selectIncomeSeries("salary");
+    categorizationChecker.selectIncomeSeries("salary", true);
     categorizationChecker.validate();
   }
 }

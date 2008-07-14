@@ -19,7 +19,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     dialog.selectIncome();
     dialog.checkContainsIncomeSeries("Salary", "Exceptional Income");
-    dialog.selectIncomeSeries("Salary");
+    dialog.selectIncomeSeries("Salary", true);
     dialog.validate();
 
     transactionDetails.checkSeries("Salary");
@@ -27,7 +27,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
     reopenedDialog.checkIncomeSeriesIsSelected("Salary");
-    dialog.selectIncomeSeries("Exceptional Income");
+    dialog.selectIncomeSeries("Exceptional Income", false);
     dialog.checkIncomeSeriesIsNotSelected("Salary");
   }
 
@@ -42,7 +42,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     dialog.selectRecurring();
     dialog.checkContainsRecurringSeries("Internet", "Rental", "Electricity");
-    dialog.selectRecurringSeries("Internet");
+    dialog.selectRecurringSeries("Internet", true);
     dialog.validate();
 
     transactionDetails.checkSeries("Internet");
@@ -50,7 +50,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
     reopenedDialog.checkRecurringSeriesIsSelected("Internet");
-    dialog.selectRecurringSeries("Rental");
+    dialog.selectRecurringSeries("Rental", true);
     dialog.checkRecurringSeriesIsNotSelected("Internet");
   }
 
@@ -65,7 +65,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     dialog.selectEnvelopes();
     dialog.checkContainsEnvelope("Groceries", MasterCategory.FOOD, MasterCategory.HOUSE);
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD);
+    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
     dialog.validate();
 
     transactionDetails.checkSeries("Groceries");
@@ -73,7 +73,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
     reopenedDialog.checkEnveloppeSeriesIsSelected("Groceries", MasterCategory.FOOD);
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.HOUSE);
+    dialog.selectEnvelopeSeries("Groceries", MasterCategory.HOUSE, false);
     dialog.checkEnveloppeSeriesIsSelected("Groceries", MasterCategory.HOUSE);
     dialog.checkEnveloppeSeriesIsNotSelected("Groceries", MasterCategory.FOOD);
   }
@@ -123,7 +123,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     dialog.selectRecurring();
     dialog.checkContainsRecurringSeries("Internet", "Rental", "Electricity");
-    dialog.selectRecurringSeries("Internet");
+    dialog.selectRecurringSeries("Internet", true);
     dialog.cancel();
 
     transactionDetails.checkNoSeries();
@@ -140,7 +140,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("Free Telecom");
 
     dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet");
+    dialog.selectRecurringSeries("Internet", true);
     dialog.checkPreviousIsDisabled();
 
     dialog.selectNext();
@@ -148,7 +148,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkNextIsDisabled();
 
     dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD);
+    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
     dialog.selectPrevious();
     dialog.checkPreviousIsDisabled();
@@ -167,7 +167,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     CategorizationDialogChecker dialog = transactions.categorize(0);
 
     dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet");
+    dialog.selectRecurringSeries("Internet", true);
     dialog.checkBudgetAreaIsSelected(BudgetArea.RECURRING_EXPENSES);
   }
 
@@ -180,10 +180,27 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     CategorizationDialogChecker dialog = transactions.categorize(0);
     dialog.assertVisible(true);
     dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet");
+    dialog.selectRecurringSeries("Internet", true);
 
     dialog.pressEscapeKey();
     dialog.assertVisible(false);
     transactionDetails.checkNoSeries();
   }
+
+//  public void testSplitTransactionAndDispatchSplitedTransaction() throws Exception {
+//    fail();
+//  }
+//
+//  public void testChangeTransactionSeries() throws Exception {
+//    fail();
+//  }
+//
+//  public void testSplitAndChangeOfSeries() throws Exception {
+//    fail();
+//  }
+//
+//  public void testChangeMonthAndEtc() throws Exception {
+//    fail();
+//  }
+
 }

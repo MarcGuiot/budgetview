@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.transactions.details;
 
-import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -15,6 +14,7 @@ import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.util.List;
 
 public class CategorisationHyperlinkButton extends HyperlinkButton implements GlobSelectionListener, ChangeSetListener {
@@ -22,8 +22,8 @@ public class CategorisationHyperlinkButton extends HyperlinkButton implements Gl
   private Directory directory;
   private GlobList transactions;
 
-  public CategorisationHyperlinkButton(CategoryChooserAction categoryChooserAction, GlobRepository repository, Directory directory) {
-    super(categoryChooserAction);
+  public CategorisationHyperlinkButton(Action action, GlobRepository repository, Directory directory) {
+    super(action);
     this.repository = repository;
     this.directory = directory;
     directory.get(SelectionService.class).addListener(this, Transaction.TYPE);

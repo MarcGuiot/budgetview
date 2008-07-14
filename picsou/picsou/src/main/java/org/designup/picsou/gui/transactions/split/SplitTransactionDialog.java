@@ -1,16 +1,17 @@
 package org.designup.picsou.gui.transactions.split;
 
+import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.BalanceStringifier;
 import org.designup.picsou.gui.description.TransactionCategoriesStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
-import org.designup.picsou.gui.transactions.categorization.CategoryChooserDialog;
 import org.designup.picsou.gui.transactions.categorization.TransactionCategoryChooserCallback;
 import org.designup.picsou.gui.transactions.columns.*;
+import org.designup.picsou.gui.transactions.details.CategorisationHyperlinkButton;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
-import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesToCategory;
 import org.designup.picsou.model.Transaction;
 import static org.designup.picsou.model.Transaction.LABEL;
 import static org.designup.picsou.model.Transaction.NOTE;
@@ -18,6 +19,7 @@ import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.actions.AbstractGlobSelectionAction;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
@@ -58,7 +60,7 @@ public class SplitTransactionDialog {
   public static Icon CHOOSER_ICON = Gui.ICON_LOCATOR.get("add.png");
   public static Icon CHOOSER_ROLLOVER_ICON = Gui.ICON_LOCATOR.get("addrollover.png");
 
-  private Glob transaction;
+  private Glob transactionToSplit;
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
   private DescriptionService descriptionService;
@@ -74,15 +76,15 @@ public class SplitTransactionDialog {
   private JTextField noteField;
   private JCheckBox dispensableBox = new JCheckBox();
   private PicsouDialog dialog;
-  private JLabel categoryLabel = new JLabel();
   private AddAction addAction = new AddAction();
   private JPanel addAmountPanel = new JPanel();
   private JPanel subAmountPanel = new JPanel();
   private JToggleButton toggleButton = new JToggleButton();
-  private CategoryChooserAction categoryChooserAction;
   private BalanceColorChangeListener colorChangeListener;
-  private GlobStringifier categoryStringifier;
-  private Glob selectedCategory;
+  private Glob splittedTransaction;
+  private SelectionService selectionServiceForSplitPanel;
+  private DefaultDirectory directoryForSplitPanel;
+  private LocalGlobRepository repositoryForSplitPanel;
 
   public SplitTransactionDialog(Glob initialTransaction, GlobRepository repository, Directory directory) {
     if (Transaction.isSplitPart(initialTransaction)) {
@@ -93,18 +95,27 @@ public class SplitTransactionDialog {
       LocalGlobRepositoryBuilder.init(repository)
         .copy(Category.TYPE)
         .copy(initialTransaction)
+        .copy(Series.TYPE)
+        .copy(SeriesToCategory.TYPE)
         .copy(repository.findLinkedTo(initialTransaction, Transaction.SPLIT_SOURCE))
         .get();
 
-    transaction = localRepository.get(initialTransaction.getKey());
+    transactionToSplit = localRepository.get(initialTransaction.getKey());
+
+    repositoryForSplitPanel = LocalGlobRepositoryBuilder.init(localRepository)
+      .copy(Category.TYPE)
+      .copy(Series.TYPE)
+      .copy(SeriesToCategory.TYPE)
+      .get();
+    selectionServiceForSplitPanel = new SelectionService();
+    directoryForSplitPanel = new DefaultDirectory(directory);
+    directoryForSplitPanel.add(selectionServiceForSplitPanel);
 
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
     descriptionService = localDirectory.get(DescriptionService.class);
     colorService = localDirectory.get(ColorService.class);
     rendererColors = new TransactionRendererColors(localDirectory);
-    categoryChooserAction = new CategoryChooserAction(rendererColors, localRepository, localDirectory);
-    categoryStringifier = descriptionService.getStringifier(Category.TYPE);
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), Lang.get("split.transaction.title"));
 
@@ -124,6 +135,7 @@ public class SplitTransactionDialog {
     builder.load();
 
     toggleButton.setSelected(true);
+    createSplittedTransaction();
     showAddAmountPanel();
   }
 
@@ -138,10 +150,10 @@ public class SplitTransactionDialog {
   private void addInitialTransactionPanel(GlobsPanelBuilder builder) {
     TransactionComparator comparator = TransactionComparator.ASCENDING;
 
-    initialLabel.setText(transaction.get(Transaction.LABEL));
-    initialAmount.setText(descriptionService.getStringifier(Transaction.AMOUNT).toString(transaction, localRepository));
+    initialLabel.setText(transactionToSplit.get(Transaction.LABEL));
+    initialAmount.setText(descriptionService.getStringifier(Transaction.AMOUNT).toString(transactionToSplit, localRepository));
 
-    initialDate.setText("le " + new TransactionDateStringifier(comparator).toString(transaction, localRepository));
+    initialDate.setText("le " + new TransactionDateStringifier(comparator).toString(transactionToSplit, localRepository));
     initialDate.setFont(Gui.getDefaultFont().deriveFont(Font.PLAIN, Gui.getDefaultFont().getSize() - 2));
 
     final BalanceStringifier balanceStringifier = new BalanceStringifier(localRepository, localDirectory);
@@ -160,18 +172,6 @@ public class SplitTransactionDialog {
   }
 
   private void addAmountPanel(GlobsPanelBuilder builder) {
-    selectedCategory = Category.find(MasterCategory.NONE.getName(), localRepository);
-    JButton categoryChooserButton = new JButton(new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        final MyCategoryChooserCallback callback = new MyCategoryChooserCallback(transaction);
-        CategoryChooserDialog categoryChooserDialog =
-          new CategoryChooserDialog(callback, rendererColors, localRepository, localDirectory, dialog);
-        categoryChooserDialog.show();
-      }
-    });
-    Gui.configureIconButton(categoryChooserButton, "categoryChooser", new Dimension(13, 13));
-    Gui.setIcons(categoryChooserButton, CHOOSER_ICON, CHOOSER_ROLLOVER_ICON, CHOOSER_ROLLOVER_ICON);
-
     amountField = new JTextField();
     registerAmountListener();
     noteField = new JTextField();
@@ -180,20 +180,28 @@ public class SplitTransactionDialog {
     amountField.addKeyListener(validator);
     noteField.addKeyListener(validator);
     dispensableBox.addKeyListener(validator);
+    AbstractGlobSelectionAction categorizationAction =
+      new AbstractGlobSelectionAction(Transaction.TYPE, directoryForSplitPanel) {
+
+        public String toString(GlobList globs) {
+          return "categorization";
+        }
+
+        public void actionPerformed(ActionEvent e) {
+          CategorizationDialog categorizationDialog =
+            new CategorizationDialog(dialog, repositoryForSplitPanel, directoryForSplitPanel);
+          categorizationDialog.show(new GlobList(splittedTransaction));
+        }
+      };
 
     builder.add("addAmountPanel", addAmountPanel);
-    builder.add("category", categoryLabel);
-    builder.add("categoryChooser", categoryChooserButton);
+    builder.add("category",
+                new CategorisationHyperlinkButton(categorizationAction, repositoryForSplitPanel, directoryForSplitPanel));
     builder.add("amount", amountField);
     builder.add("message", messageLabel);
     builder.add("note", noteField);
     builder.add("dispensableBox", dispensableBox);
     builder.add("add", addAction);
-    builder.add("cancelAdd", new CancelAddAction());
-  }
-
-  private void updateCategoryField() {
-    categoryLabel.setText(categoryStringifier.toString(selectedCategory, localRepository));
   }
 
   private void addSwitcher(GlobsPanelBuilder builder) {
@@ -235,13 +243,26 @@ public class SplitTransactionDialog {
     GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
     GlobStringifier categoriesStringifier =
       new TransactionCategoriesStringifier(descriptionService.getStringifier(Category.TYPE));
+    AbstractGlobSelectionAction categorizationAction =
+      new AbstractGlobSelectionAction(Transaction.TYPE, directoryForSplitPanel) {
+
+        public String toString(GlobList globs) {
+          return "categorization";
+        }
+
+        public void actionPerformed(ActionEvent e) {
+          CategorizationDialog categorizationDialog =
+            new CategorizationDialog(dialog, localRepository, directoryForSplitPanel);
+          categorizationDialog.show(new GlobList(splittedTransaction));
+        }
+      };
 
     TransactionCategoryColumn categoryColumn =
-      new TransactionCategoryColumn(categoryChooserAction, view, rendererColors,
+      new TransactionCategoryColumn(categorizationAction, view, rendererColors,
                                     descriptionService, localRepository, localDirectory);
 
     DeleteSplitTransactionColumn deleteSplitColumn =
-      new DeleteSplitTransactionColumn(transaction, view, rendererColors, descriptionService,
+      new DeleteSplitTransactionColumn(transactionToSplit, view, rendererColors, descriptionService,
                                        localRepository, localDirectory);
 
     view
@@ -260,7 +281,7 @@ public class SplitTransactionDialog {
                                                           rendererColors,
                                                           CATEGORY_COLUMN_INDEX));
 
-    TransactionViewUtils.installKeyboardCategorization(table, categoryChooserAction, NOTE_COLUMN_INDEX);
+    TransactionViewUtils.installKeyboardCategorization(table, categorizationAction, NOTE_COLUMN_INDEX);
     Gui.installRolloverOnButtons(table, new int[]{CATEGORY_COLUMN_INDEX, REMOVE_SPLIT_COLUMN_INDEX});
 
     adjustColumnsSize(table);
@@ -274,11 +295,11 @@ public class SplitTransactionDialog {
   private void adjustColumnSize(JTable table, int columnIndex) {
     TableUtils.setSize(table, columnIndex,
                        TableUtils.getPreferredWidth(
-                         TableUtils.getRenderedComponent(table, transaction, 0, columnIndex)));
+                         TableUtils.getRenderedComponent(table, transactionToSplit, 0, columnIndex)));
   }
 
   private void doSplit() {
-    Double initialAmount = transaction.get(Transaction.AMOUNT);
+    Double initialAmount = transactionToSplit.get(Transaction.AMOUNT);
 
     double amount;
     try {
@@ -300,29 +321,39 @@ public class SplitTransactionDialog {
 
     try {
       localRepository.enterBulkDispatchingMode();
-      localRepository.update(transaction.getKey(), Transaction.AMOUNT, remainder);
-      localRepository.update(transaction.getKey(), Transaction.SPLIT, Boolean.TRUE);
+      repositoryForSplitPanel.commitChanges(false);
+      localRepository.update(transactionToSplit.getKey(), Transaction.AMOUNT, remainder);
+      localRepository.update(transactionToSplit.getKey(), Transaction.SPLIT, Boolean.TRUE);
 
-      localRepository.create(Transaction.TYPE,
+      localRepository.update(splittedTransaction.getKey(),
                              value(Transaction.AMOUNT, amount),
-                             value(Transaction.NOTE, note),
-                             value(Transaction.CATEGORY, selectedCategory.get(Category.ID)),
-                             value(Transaction.ACCOUNT, transaction.get(Transaction.ACCOUNT)),
-                             value(Transaction.IMPORT, transaction.get(Transaction.IMPORT)),
-                             value(Transaction.LABEL, transaction.get(Transaction.LABEL)),
-                             value(Transaction.ORIGINAL_LABEL, transaction.get(Transaction.ORIGINAL_LABEL)),
-                             value(Transaction.MONTH, transaction.get(Transaction.MONTH)),
-                             value(Transaction.DAY, transaction.get(Transaction.DAY)),
-                             value(Transaction.BANK_MONTH, transaction.get(Transaction.BANK_MONTH)),
-                             value(Transaction.BANK_DAY, transaction.get(Transaction.BANK_DAY)),
-                             value(Transaction.TRANSACTION_TYPE, transaction.get(Transaction.TRANSACTION_TYPE)),
-                             value(Transaction.SPLIT_SOURCE, transaction.get(Transaction.ID)),
-                             value(Transaction.DISPENSABLE, dispensableBox.isSelected()));
+                             value(Transaction.DISPENSABLE, dispensableBox.isSelected()),
+                             value(Transaction.NOTE, note));
+
+      createSplittedTransaction();
     }
     finally {
       localRepository.completeBulkDispatchingMode();
     }
     resetAddAmountFields();
+  }
+
+  private void createSplittedTransaction() {
+    splittedTransaction = repositoryForSplitPanel.create(
+      Transaction.TYPE,
+//      value(Transaction.CATEGORY, transactionToSplit.get(Transaction.CATEGORY)),
+value(Transaction.ACCOUNT, transactionToSplit.get(Transaction.ACCOUNT)),
+value(Transaction.IMPORT, transactionToSplit.get(Transaction.IMPORT)),
+value(Transaction.LABEL, transactionToSplit.get(Transaction.LABEL)),
+value(Transaction.ORIGINAL_LABEL, transactionToSplit.get(Transaction.ORIGINAL_LABEL)),
+value(Transaction.MONTH, transactionToSplit.get(Transaction.MONTH)),
+value(Transaction.DAY, transactionToSplit.get(Transaction.DAY)),
+value(Transaction.BANK_MONTH, transactionToSplit.get(Transaction.BANK_MONTH)),
+value(Transaction.BANK_DAY, transactionToSplit.get(Transaction.BANK_DAY)),
+value(Transaction.TRANSACTION_TYPE, transactionToSplit.get(Transaction.TRANSACTION_TYPE)),
+value(Transaction.SPLIT_SOURCE, transactionToSplit.get(Transaction.ID))
+    );
+    selectionServiceForSplitPanel.select(splittedTransaction);
   }
 
   private double getEnteredAmount() throws NumberFormatException {
@@ -355,13 +386,7 @@ public class SplitTransactionDialog {
 
   private void showAddAmountSwitcher() {
     resetAddAmountFields();
-    resetSelectedCategory();
     addAmountPanel.setVisible(false);
-  }
-
-  private void resetSelectedCategory() {
-    selectedCategory = Category.find(MasterCategory.NONE.getName(), localRepository);
-    updateCategoryField();
   }
 
   private void resetAddAmountFields() {
@@ -383,16 +408,6 @@ public class SplitTransactionDialog {
     }
   }
 
-  private class CancelAddAction extends AbstractAction {
-    public CancelAddAction() {
-      super(Lang.get("split.transaction.cancel"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      resetAddAmountFields();
-      resetSelectedCategory();
-    }
-  }
 
   private class OkAction extends AbstractAction {
     public OkAction() {
@@ -481,8 +496,6 @@ public class SplitTransactionDialog {
     }
 
     public void categorySelected(Glob category) {
-      selectedCategory = category;
-      updateCategoryField();
       amountField.requestFocusInWindow();
       amountField.requestFocus();
     }

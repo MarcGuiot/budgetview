@@ -5,7 +5,6 @@ import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.KeyBuilder.newKey;
 import org.globsframework.model.impl.ThreeFieldKey;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Utils;
@@ -91,7 +90,17 @@ public class MonthStatComputer implements ChangeSetListener {
                           value(MonthStat.INCOME_RECEIVED, ZERO),
                           value(MonthStat.INCOME_SPENT, ZERO),
                           value(MonthStat.TOTAL_RECEIVED, ZERO),
-                          value(MonthStat.TOTAL_SPENT, ZERO));
+                          value(MonthStat.TOTAL_SPENT, ZERO),
+                          value(MonthStat.PLANNED_RECEIVED_RECURRING, ZERO),
+                          value(MonthStat.PLANNED_RECEIVED_ENVELOP, ZERO),
+                          value(MonthStat.PLANNED_RECEIVED_OCCASIONAL, ZERO),
+                          value(MonthStat.PLANNED_SPENT_RECURRING, ZERO),
+                          value(MonthStat.PLANNED_SPENT_ENVELOP, ZERO),
+                          value(MonthStat.PLANNED_SPENT_OCCASIONAL, ZERO),
+                          value(MonthStat.PLANNED_INCOME_RECEIVED, ZERO),
+                          value(MonthStat.PLANNED_INCOME_SPENT, ZERO),
+                          value(MonthStat.PLANNED_TOTAL_RECEIVED, ZERO),
+                          value(MonthStat.PLANNED_TOTAL_SPENT, ZERO));
       }
     }
   }
@@ -116,7 +125,7 @@ public class MonthStatComputer implements ChangeSetListener {
       }
 
       Integer accountId = transaction.get(Transaction.ACCOUNT);
-      if (accountId != null) {
+      if (accountId != null && accountId != -1) {
         if (transaction.get(Transaction.PLANNED)) {
           updatePlannedMonthStat(month, categoryId, budgetArea, accountId, amount);
         }
@@ -139,7 +148,7 @@ public class MonthStatComputer implements ChangeSetListener {
       GlobUtils.add(key, monthStat, MonthStat.getSpent(BudgetArea.get(budgetAreaId)), amount < 0 ? abs(amount) : 0, repository);
     }
 
-    Glob category = repository.get(newKey(Category.TYPE, key.get(MonthStat.CATEGORY)));
+    Glob category = repository.get(Key.create(Category.TYPE, key.get(MonthStat.CATEGORY)));
     if (!Category.isMaster(category)) {
       updateMonthStat(month, category.get(Category.MASTER), budgetAreaId, accountId, amount, dispensableAmount);
     }
@@ -156,7 +165,7 @@ public class MonthStatComputer implements ChangeSetListener {
       GlobUtils.add(key, monthStat, MonthStat.getPlannedSpent(BudgetArea.get(budgetAreaId)), amount < 0 ? abs(amount) : 0, repository);
     }
 
-    Glob category = repository.get(newKey(Category.TYPE, key.get(MonthStat.CATEGORY)));
+    Glob category = repository.get(Key.create(Category.TYPE, key.get(MonthStat.CATEGORY)));
     if (!Category.isMaster(category)) {
       updatePlannedMonthStat(month, category.get(Category.MASTER), budgetAreaId, accountId, amount);
     }
@@ -267,11 +276,11 @@ public class MonthStatComputer implements ChangeSetListener {
                           value(MonthStat.SPENT_RECURRING, recurringSpent),
                           value(MonthStat.SPENT_ENVELOP, envelopSpent),
                           value(MonthStat.SPENT_OCCASIONAL, occasionalSpent),
-                          value(MonthStat.INCOME_SPENT, incomeSpent),
                           value(MonthStat.RECEIVED_RECURRING, recurringReceived),
                           value(MonthStat.RECEIVED_ENVELOP, envelopReceived),
                           value(MonthStat.RECEIVED_OCCASIONAL, occasionalReceived),
                           value(MonthStat.INCOME_RECEIVED, incomeReceived),
+                          value(MonthStat.INCOME_SPENT, incomeSpent),
                           value(MonthStat.PLANNED_TOTAL_RECEIVED, plannedTotalReceived),
                           value(MonthStat.PLANNED_TOTAL_SPENT, plannedTotalSpent),
                           value(MonthStat.PLANNED_SPENT_RECURRING, plannedRecurringSpent),

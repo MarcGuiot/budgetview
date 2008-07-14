@@ -1,18 +1,18 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.*;
-import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
+import org.uispec4j.interception.WindowHandler;
+import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.Assert;
 
 public class CategorizationDialogChecker extends DataChecker {
   private Window dialog;
@@ -54,9 +54,21 @@ public class CategorizationDialogChecker extends DataChecker {
     org.globsframework.utils.TestUtils.assertContains(names, seriesNames);
   }
 
-  public void selectIncomeSeries(String name) {
+  public void selectIncomeSeries(String name, boolean showSeriesInitialization) {
     Panel panel = getIncomeSeriesPanel();
-    panel.getToggleButton(name).click();
+    if (showSeriesInitialization) {
+      WindowInterceptor.init(
+        panel.getToggleButton(name).triggerClick())
+        .process(new WindowHandler() {
+          public Trigger process(Window window) throws Exception {
+            SeriesCreationDialogChecker dialogChecker = new SeriesCreationDialogChecker(window);
+            return dialogChecker.doValidate();
+          }
+        }).run();
+    }
+    else {
+      panel.getToggleButton(name).click();
+    }
   }
 
   private Panel getIncomeSeriesPanel() {
@@ -86,9 +98,21 @@ public class CategorizationDialogChecker extends DataChecker {
     assertFalse(seriesPanel.containsUIComponent(ToggleButton.class, seriesName));
   }
 
-  public void selectRecurringSeries(String name) {
+  public void selectRecurringSeries(String name, boolean showSeriesInitialization) {
     Panel panel = getRecurringSeriesPanel();
-    panel.getToggleButton(name).click();
+    if (showSeriesInitialization) {
+      WindowInterceptor.init(
+        panel.getToggleButton(name).triggerClick())
+        .process(new WindowHandler() {
+          public Trigger process(Window window) throws Exception {
+            SeriesCreationDialogChecker dialogChecker = new SeriesCreationDialogChecker(window);
+            return dialogChecker.doValidate();
+          }
+        }).run();
+    }
+    else {
+      panel.getToggleButton(name).click();
+    }
   }
 
   private Panel getRecurringSeriesPanel() {
@@ -98,15 +122,15 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void checkRecurringSeriesIsSelected(String seriesName) {
-     assertTrue(dialog.getToggleButton("RecurringExpenses").isSelected());
+    assertTrue(dialog.getToggleButton("RecurringExpenses").isSelected());
 
-     Panel panel = getRecurringSeriesPanel();
-     assertTrue(panel.getToggleButton(seriesName).isSelected());
-   }
+    Panel panel = getRecurringSeriesPanel();
+    assertTrue(panel.getToggleButton(seriesName).isSelected());
+  }
 
-   public void checkRecurringSeriesIsNotSelected(String seriesName) {
-     UISpecAssert.assertFalse(dialog.getPanel("recurringSeriesRepeat").getToggleButton(seriesName).isSelected());
-   }
+  public void checkRecurringSeriesIsNotSelected(String seriesName) {
+    UISpecAssert.assertFalse(dialog.getPanel("recurringSeriesRepeat").getToggleButton(seriesName).isSelected());
+  }
 
 
   public void checkIncomeSeriesIsSelected(String seriesName) {
@@ -132,9 +156,21 @@ public class CategorizationDialogChecker extends DataChecker {
     }
   }
 
-  public void selectEnvelopeSeries(String envelopeName, MasterCategory category) {
+  public void selectEnvelopeSeries(String envelopeName, MasterCategory category, boolean showSeriesInitialization) {
     Panel panel = getEnvelopeSeriesPanel();
-    panel.getToggleButton(envelopeName + ":" + category.getName()).click();
+    if (showSeriesInitialization) {
+      WindowInterceptor.init(
+        panel.getToggleButton(envelopeName + ":" + category.getName()).triggerClick())
+        .process(new WindowHandler() {
+          public Trigger process(Window window) throws Exception {
+            SeriesCreationDialogChecker dialogChecker = new SeriesCreationDialogChecker(window);
+            return dialogChecker.doValidate();
+          }
+        }).run();
+    }
+    else {
+      panel.getToggleButton(envelopeName + ":" + category.getName()).click();
+    }
   }
 
   private Panel getEnvelopeSeriesPanel() {

@@ -178,7 +178,8 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
         throw new RuntimeException("missing serialializer for " + globTypeName);
       }
       IntegerField field = (IntegerField)globType.getKeyFields().get(0);
-      Integer id = 0;
+      Integer id;
+      Integer maxId = 0;
       for (Map.Entry<Integer, SerializableGlobType> globEntry : stringIntegerGlobMapOfMaps.get(globTypeName).entrySet()) {
         id = globEntry.getKey();
         GlobBuilder builder = GlobBuilder.init(globType).setValue(field, id);
@@ -186,8 +187,9 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
         globSerializer.deserializeData(glob.getVersion(), builder,
                                        passwordBasedEncryptor.decrypt(glob.getData()));
         result.add(builder.get());
+        maxId = Math.max(maxId, id);
       }
-      idUpdate.update(field, id);
+      idUpdate.update(field, maxId);
     }
     return result;
   }

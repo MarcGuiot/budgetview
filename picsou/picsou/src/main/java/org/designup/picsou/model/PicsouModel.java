@@ -20,7 +20,8 @@ public class PicsouModel {
                           UserPreferences.TYPE,
                           Series.TYPE,
                           BudgetArea.TYPE,
-                          SeriesToCategory.TYPE)
+                          SeriesToCategory.TYPE,
+                          ProfileType.TYPE)
       .get();
 
   static {
