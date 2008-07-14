@@ -9,10 +9,14 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import org.globsframework.remote.SerializedRemoteAccess;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SeriesUpdateTrigger implements ChangeSetListener {
   private TimeService time;
@@ -21,19 +25,25 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
     time = directory.get(TimeService.class);
   }
 
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+  public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     repository.enterBulkDispatchingMode();
     try {
-      if (changeSet.containsCreationsOrDeletions(Series.TYPE)) {
-        Set<Key> createdSeries = changeSet.getCreated(Series.TYPE);
-        for (Key series : createdSeries) {
-          updateBudget(repository.get(series), repository);
+      changeSet.safeVisit(Series.TYPE, new SerializedRemoteAccess.ChangeVisitor() {
+        public void complete() {
         }
-        Set<Key> deletedSeries = changeSet.getDeleted(Series.TYPE);
-        for (Key series : deletedSeries) {
-          updateSeriesDependanciesOnDelete(series, repository);
+
+        public void visitCreation(Key key, FieldValues values) throws Exception {
+          updateBudget(repository.get(key), repository);
         }
-      }
+
+        public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+          updateBudget(repository.get(key), repository);
+        }
+
+        public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+          updateSeriesDependanciesOnDelete(key, repository);
+        }
+      });
       if (changeSet.containsCreationsOrDeletions(Month.TYPE)) {
         GlobList seriesList = repository.getAll(Series.TYPE);
         for (Glob series : seriesList) {
@@ -68,20 +78,23 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
 
     MultiMap<Integer, Glob> monthWithTransactions =
       toMultiMap(repository.findByIndex(SeriesBudget.SERIES_INDEX, series.get(Series.ID)), SeriesBudget.MONTH);
-
     Integer[] monthIds = repository.getAll(Month.TYPE, GlobMatchers.fieldGreaterOrEqual(Month.ID, currentMonthId))
       .getSortedArray(Month.ID);
-    Calendar calendar = Calendar.getInstance();
-    for (int monthId : monthIds) {
-      BooleanField monthField = Series.getField(monthId);
-      if (series.get(monthField)) {
-        if (!monthWithBudget.containsKey(monthId)) {
-          repository.create(SeriesBudget.TYPE,
-                            value(SeriesBudget.SERIES, series.get(Series.ID)),
-                            value(SeriesBudget.MONTH, monthId));
-        }
-        if (!monthWithTransactions.containsKey(monthId)) {
-          createPlannedTransaction(series, repository, monthId, getDays(series, monthId, calendar));
+
+    if (series.get(Series.AMOUNT) != null) {
+      Calendar calendar = Calendar.getInstance();
+      for (int monthId : monthIds) {
+        BooleanField monthField = Series.getField(monthId);
+        if (series.get(monthField)) {
+          if (!monthWithBudget.containsKey(monthId)) {
+            repository.create(SeriesBudget.TYPE,
+                              value(SeriesBudget.SERIES, series.get(Series.ID)),
+                              value(SeriesBudget.AMOUNT, series.get(Series.AMOUNT)),
+                              value(SeriesBudget.MONTH, monthId));
+          }
+          if (!monthWithTransactions.containsKey(monthId)) {
+            createPlannedTransaction(series, repository, monthId, getDays(series, monthId, calendar));
+          }
         }
       }
     }
@@ -93,7 +106,7 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
   private void createPlannedTransaction(Glob series, GlobRepository repository, int monthId, Integer day) {
     repository.create(Transaction.TYPE,
                       value(Transaction.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
-                      value(Transaction.AMOUNT, series.get(Series.AMOUNT)),
+                      value(Transaction.AMOUNT, -series.get(Series.AMOUNT)),
                       value(Transaction.SERIES, series.get(Series.ID)),
                       value(Transaction.BANK_MONTH, monthId),
                       value(Transaction.BANK_DAY, day),
@@ -101,6 +114,7 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
                       value(Transaction.DAY, day),
                       value(Transaction.LABEL, series.get(Series.LABEL)),
                       value(Transaction.PLANNED, true),
+                      value(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId()),
                       value(Transaction.CATEGORY, series.get(Series.DEFAULT_CATEGORY)));
   }
 
