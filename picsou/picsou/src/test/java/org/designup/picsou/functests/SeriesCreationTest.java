@@ -15,12 +15,13 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker dialog = transactions.categorize(0);
     dialog.checkLabel("WorldCo/june");
-
     dialog.selectIncome();
+
     SeriesCreationDialogChecker creationDialog = dialog.createSeries();
     creationDialog.setName("Prime");
     creationDialog.checkType("Income");
     creationDialog.setCategory(MasterCategory.INCOME);
+
     creationDialog.validate();
 
     dialog.checkContainsIncomeSeries("Salary", "Prime");
@@ -54,7 +55,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkSeries("Culture");
     transactionDetails.checkCategory(MasterCategory.EDUCATION);
   }
-  
+
   public void testCancel() throws Exception {
     checkCancel(new Callback() {
       public void process(CategorizationDialogChecker dialog) {
@@ -70,7 +71,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       }
     });
   }
-  
+
   private void checkCancel(Callback callback) {
     OfxBuilder
       .init(this)

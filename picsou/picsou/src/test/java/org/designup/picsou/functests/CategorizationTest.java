@@ -235,7 +235,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    informationPanel.assertWarningIsDisplayed();
+    informationPanel.assertWarningIsDisplayed(2);
 
     CategorizationDialogChecker dialog = informationPanel.categorize();
     dialog.checkTable(new Object[][]{

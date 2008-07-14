@@ -54,7 +54,9 @@ public class BudgetAreaToggleUpdater implements GlobSelectionListener, ChangeSet
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    updateState();
+    if (changeSet.containsChanges(Transaction.TYPE)) {
+      updateState();
+    }
   }
 
   public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {

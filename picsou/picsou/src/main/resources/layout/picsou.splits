@@ -73,7 +73,7 @@
                 <panel styleClass="errorMessage" autoHideSource="uncategorizedMessage" marginTop="20"
                        preferredSize="(50,90)" weightY="0">
                   <column>
-                    <textArea ref="uncategorizedMessage" text="$transaction.allocation.warning"/>
+                    <textArea ref="uncategorizedMessage"/>
                     <button action="categorizeRemainingTransactions" text="$transaction.allocation.action"/>
                   </column>
                 </panel>
@@ -112,7 +112,7 @@
                       <panel name="uncategorizedMessagePanel" styleClass="errorMessage" autoHideSource="uncategorizedMessage_details" marginTop="20"
                              preferredSize="(50,90)" weightY="0">
                         <column>
-                          <textArea ref="uncategorizedMessage_details" text="$transaction.allocation.warning"/>
+                          <textArea ref="uncategorizedMessage_details"/>
                           <button action="categorizeRemainingTransactions_details"
                                   text="$transaction.allocation.action"/>
                         </column>

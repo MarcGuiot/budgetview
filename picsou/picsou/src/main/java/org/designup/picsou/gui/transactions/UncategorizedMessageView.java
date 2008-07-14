@@ -3,6 +3,7 @@ package org.designup.picsou.gui.transactions;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
@@ -54,6 +55,10 @@ public class UncategorizedMessageView extends View implements ChangeSetListener 
   private void update() {
     uncategorizedTransactions =
       repository.getAll(Transaction.TYPE, or(isNull(Transaction.SERIES), isNull(Transaction.CATEGORY)));
-    textArea.setVisible(uncategorizedTransactions.size() > 0);
+    final int count = uncategorizedTransactions.size();
+    textArea.setVisible(count > 0);
+    if (count > 0) {
+      textArea.setText(Lang.get("transaction.allocation.warning", count));
+    }
   }
 }

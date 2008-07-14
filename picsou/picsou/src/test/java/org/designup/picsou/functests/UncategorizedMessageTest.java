@@ -25,7 +25,7 @@ public class UncategorizedMessageTest extends LoggedInFunctionalTestCase {
     categorizer1.selectOccasionalSeries(MasterCategory.FOOD);
     categorizer1.validate();
 
-    informationPanel.assertWarningIsDisplayed();
+    informationPanel.assertWarningIsDisplayed(1);
 
     CategorizationDialogChecker categorizer2 = informationPanel.categorize();
     categorizer2.selectOccasional();
@@ -43,13 +43,13 @@ public class UncategorizedMessageTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectHome();
-    informationPanel.assertWarningIsDisplayed();
+    informationPanel.assertWarningIsDisplayed(2);
 
     views.selectData();
     transactions.setOccasional(0, MasterCategory.FOOD);
 
     views.selectHome();
-    informationPanel.assertWarningIsDisplayed();
+    informationPanel.assertWarningIsDisplayed(1);
 
     views.selectData();
     transactions.setOccasional(1, MasterCategory.FOOD);

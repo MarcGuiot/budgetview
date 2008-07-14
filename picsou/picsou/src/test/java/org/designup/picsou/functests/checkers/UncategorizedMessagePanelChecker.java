@@ -15,9 +15,9 @@ public class UncategorizedMessagePanelChecker extends DataChecker {
     this.window = window;
   }
 
-  public void assertWarningIsDisplayed() {
+  public void assertWarningIsDisplayed(int count) {
     assertTrue(getWarningLabel().isVisible());
-    assertTrue(getWarningLabel().textEquals(Lang.get("transaction.allocation.warning")));
+    assertTrue(getWarningLabel().textEquals(Lang.get("transaction.allocation.warning", count)));
   }
 
   public void assertNoWarningIsDisplayed() {
