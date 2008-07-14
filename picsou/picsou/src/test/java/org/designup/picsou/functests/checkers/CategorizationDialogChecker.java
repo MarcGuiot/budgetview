@@ -50,6 +50,7 @@ public class CategorizationDialogChecker extends DataChecker {
       final String name = area.getGlob().get(BudgetArea.NAME);
       assertFalse("Area '" + name + "' is selected", dialog.getToggleButton(name).isSelected());
     }
+    assertTrue(dialog.getTextBox("Select the series type").isVisible());
   }
 
   public void selectIncome() {

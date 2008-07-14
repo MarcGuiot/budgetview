@@ -43,14 +43,13 @@ public class BudgetAreaToggleUpdater implements GlobSelectionListener, ChangeSet
     GlobList series = GlobUtils.getTargets(selectedTransactions, Transaction.SERIES, repository);
     Set<Integer> areas = series.getValueSet(Series.BUDGET_AREA);
     if (areas.size() != 1) {
-      invisibleToggle.setSelected(true);
+      invisibleToggle.doClick(0);
       return;
     }
 
     final Integer selectedAreaId = areas.iterator().next();
     if (budgetArea.getId().equals(selectedAreaId)) {
-      toggle.setSelected(true);
-      toggle.getAction().actionPerformed(null);
+      toggle.doClick(0);
     }
   }
 

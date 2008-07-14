@@ -1,6 +1,5 @@
 CategorizationDialog
 --------------------
-- bug afficage cards lors du passage d'une transaction a l'autre
 - renderer pour distinguer les non categorisees
 - "selectionner automatiquement les transactions similaires"
 - next transaction saute les transactions categorisees

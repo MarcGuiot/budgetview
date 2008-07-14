@@ -33,7 +33,6 @@ public class CategorizationDialog {
   private LocalGlobRepository localRepository;
   private GlobList currentTransactions = GlobList.EMPTY;
   private PicsouDialog dialog;
-  private JToggleButton invisibleBudgetAreaToggle;
   private GlobTableView transactionTable;
   private NextTransactionAction nextTransactionAction;
 
@@ -68,7 +67,7 @@ public class CategorizationDialog {
 
     final CardHandler cardHandler = builder.addCardHandler("cards");
 
-    invisibleBudgetAreaToggle = new JToggleButton(new AbstractAction() {
+    JToggleButton invisibleBudgetAreaToggle = new JToggleButton(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         cardHandler.show("noBudgetArea");
       }

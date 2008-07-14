@@ -113,6 +113,33 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkCategory("Saucisson");
   }
 
+  public void testSwitchingFromTransactions() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -29.90, "Free Telecom")
+      .addTransaction("2008/06/15", -40, "Auchan")
+      .load();
+
+    CategorizationDialogChecker dialog = transactions.categorize(0, 1);
+    dialog.checkTable(new Object[][]{
+      {"15/06/2008", "Auchan", -40.00},
+      {"30/06/2008", "Free Telecom", -29.90},
+    });
+    dialog.selectTableRows(0);
+    dialog.checkLabel("Auchan");
+    dialog.checkNoBudgetAreaSelected();
+    dialog.selectEnvelopes();
+    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD);
+
+    dialog.selectTableRows(1);
+    dialog.checkLabel("Free Telecom");
+    dialog.checkNoBudgetAreaSelected();
+    dialog.selectRecurring();
+    dialog.selectRecurringSeries("Internet");
+
+    dialog.selectTableRows(0);
+  }
+
   public void testUnassignedTransaction() throws Exception {
     OfxBuilder
       .init(this)
