@@ -356,6 +356,12 @@ class DefaultFieldFactory {
         throw new UnexpectedApplicationState(e);
       }
     }
+
+    public boolean valueEqual(Object o1, Object o2) {
+      return (o1 == null) && (o2 == null) ||
+             !((o1 == null) || (o2 == null)) &&
+             ((Double)o1).doubleValue() == ((Double)o2).doubleValue();
+    }
   }
 
   private static class DefaultBooleanField extends AbstractField implements BooleanField {
