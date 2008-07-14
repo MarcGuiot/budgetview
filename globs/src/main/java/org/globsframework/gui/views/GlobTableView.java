@@ -42,6 +42,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   private JTable table;
   private boolean selectionEnabled = true;
   private Font defaultFont = new JTable().getFont();
+  private String name;
 
   public static GlobTableView init(GlobType type, GlobRepository globRepository,
                                    Comparator<Glob> comparator, Directory directory) {
@@ -59,6 +60,11 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
 
   public GlobTableView addColumn(Field field, TableCellEditor editor) {
     return addColumn(field, LabelCustomizer.NULL, CellPainter.NULL, editor);
+  }
+
+  public GlobTableView addColumn(Field field,
+                                 LabelCustomizer customizer) {
+    return addColumn(field, customizer, CellPainter.NULL, null);
   }
 
   public GlobTableView addColumn(Field field,
@@ -171,10 +177,19 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    Set newSelection = new HashSet(selection.getAll(type));
-    Set currentSelection = new HashSet(getCurrentSelection());
+    Set<Glob> newSelection = new HashSet<Glob>(selection.getAll(type));
+    Set<Glob> currentSelection = new HashSet<Glob>(getCurrentSelection());
     if (!newSelection.equals(currentSelection)) {
       select(newSelection, false);
+    }
+  }
+
+  public void selectFirst() {
+    if (tableModel.getRowCount() > 0) {
+      select(tableModel.get(0));
+    }
+    else {
+      selectionService.clear(type);
     }
   }
 
@@ -202,8 +217,8 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       tableModel = new GlobTableModel(type, repository, columns, table,
                                       new TableResetListener(), initialComparator);
       table.setModel(tableModel);
-      table.setName(type.getName());
       table.setFont(defaultFont);
+      table.setName(name != null ? name : type.getName());
       table.setDefaultRenderer(Glob.class, new CompositeRenderer());
       selectionService.addListener(this, type);
       registerSelectionListener();
@@ -233,11 +248,15 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       if (newSelection.size() > 0) {
         Glob first = newSelection.get(0);
         int index = tableModel.indexOf(first);
-        Rectangle rect = table.getCellRect(index, 0, true);
-        table.scrollRectToVisible(rect);
+        scrollToRow(index);
       }
       enableSelectionNotification(false);
     }
+  }
+
+  private void scrollToRow(int index) {
+    Rectangle rect = table.getCellRect(index, 0, true);
+    table.scrollRectToVisible(rect);
   }
 
   private void registerEditors() {
@@ -259,12 +278,28 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     return this;
   }
 
+  public GlobTableView setName(String name) {
+    this.name = name;
+    if (table != null) {
+      table.setName(name);
+    }
+    return this;
+  }
+
   public Font getDefaultFont() {
     return defaultFont;
   }
 
   public Glob getGlobAt(int index) {
     return tableModel.getValueAt(index, 0);
+  }
+
+  public int indexOf(Glob glob) {
+    return tableModel.indexOf(glob);
+  }
+
+  public int getRowCount() {
+    return tableModel.getRowCount();
   }
 
   public void refresh() {
@@ -307,10 +342,15 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
 
   private void doSelect(ListSelectionModel selectionModel, Iterable<Glob> globs) {
     selectionModel.clearSelection();
+    boolean first = true;
     for (Glob glob : globs) {
       int index = tableModel.indexOf(glob);
       if (index >= 0) {
         selectionModel.addSelectionInterval(index, index);
+        if (first) {
+          scrollToRow(index);
+          first = false;
+        }
       }
     }
   }

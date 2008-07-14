@@ -40,8 +40,8 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     super.setSource(referenceClass, file);
   }
 
-  public GlobTableView addTable(GlobType type, Comparator<Glob> comparator) {
-    return store(GlobTableView.init(type, repository, comparator, directory));
+  public GlobTableView addTable(String name, GlobType type, Comparator<Glob> comparator) {
+    return store(GlobTableView.init(type, repository, comparator, directory).setName(name));
   }
 
   public GlobListView addList(GlobType type) {

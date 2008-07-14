@@ -442,6 +442,7 @@
     <xs:attribute name="dividerSize" type="xs:integer"/>
     <xs:attribute name="dividerLocation" type="xs:float"/>
     <xs:attribute name="continuousLayout" type="xs:boolean"/>
+    <xs:attribute name="resizeWeight"  type="xs:float"/>
   </xs:attributeGroup>
 
   <!-- ====================================  -->

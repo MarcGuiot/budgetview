@@ -362,6 +362,31 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     listener.assertEquals("<log>" +
                           "<selection types='dummyObject'/>" +
                           "</log>");
+
+  }
+
+  public void testSelectFirst() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
+                    "<dummyObject id='2' name='name2' value='2.2'/>");
+
+    Table table = createTableWithNameAndValueColumns(repository);
+    DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
+
+    view.selectFirst();
+    assertTrue(table.rowIsSelected(0));
+    listener.assertEquals("<log>" +
+                          "<selection types='dummyObject'>" +
+                          "<item key='dummyObject[id=1]'/>" +
+                          "</selection>" +
+                          "</log>");
+
+    view.setFilter(GlobMatchers.NONE);
+    
+    view.selectFirst();
+    listener.assertEquals("<log>" +
+                          "<selection types='dummyObject'/>" +
+                          "</log>");
   }
 
   public void testSelectionThroughSelectionService() throws Exception {
@@ -383,7 +408,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                           "</log>");
 
     selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
-    assertTrue(table.rowsAreSelected(new int[]{0, 1}));
+    assertTrue(table.rowsAreSelected(0, 1));
     listener.assertEquals("<log>" +
                           "<selection types='dummyObject'>" +
                           "<item key='dummyObject[id=1]'/>" +
@@ -392,7 +417,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                           "</log>");
 
     selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
-    assertTrue(table.rowsAreSelected(new int[]{0, 1}));
+    assertTrue(table.rowsAreSelected(0, 1));
     listener.assertEquals("<log>" +
                           "<selection types='dummyObject'>" +
                           "<item key='dummyObject[id=1]'/>" +
@@ -421,7 +446,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     listener.assertEmpty();
 
     selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
-    assertTrue(table.rowsAreSelected(new int[]{0, 1}));
+    assertTrue(table.rowsAreSelected(0, 1));
     listener.assertEquals("<log>" +
                           "<selection types='dummyObject'>" +
                           "<item key='dummyObject[id=1]'/>" +
@@ -559,7 +584,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       {"2", "a2"},
       {"3", "a1"}
     }));
-    assertTrue(table.rowsAreSelected(new int[]{0, 1}));
+    assertTrue(table.rowsAreSelected(0, 1));
     listener.assertEmpty();
 
     view.refresh();
@@ -568,7 +593,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       {"2", "a2"},
       {"1", "a3"}
     }));
-    assertTrue(table.rowsAreSelected(new int[]{1, 2}));
+    assertTrue(table.rowsAreSelected(1, 2));
     listener.assertEmpty();
   }
 
@@ -644,9 +669,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
         public Trigger process(org.uispec4j.Window window) throws Exception {
           PopupMenuInterceptor
             .run(window.getTable().triggerRightClick(0, 1))
-            .contentEquals(new String[]{
-              "item 1", "item 2"
-            })
+            .contentEquals("item 1", "item 2")
             .check();
           return window.getButton("Close").triggerClick();
         }
@@ -684,8 +707,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
 
     Table table = new Table(view.getComponent());
     assertTrue(table.getHeader().contentEquals(
-      new String[]{"id", "name", "value", "date"}
-    ));
+      "id", "name", "value", "date"));
     assertTrue(table.contentEquals(new String[][]{
       {"1", "thisIsAName", "0.23", "2006/08/14"},
       {"2", "aName", "0.1", "2006/08/01"},
