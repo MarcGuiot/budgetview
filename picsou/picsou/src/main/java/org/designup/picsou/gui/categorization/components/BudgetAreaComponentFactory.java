@@ -1,12 +1,11 @@
 package org.designup.picsou.gui.categorization.components;
 
+import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Transaction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -33,14 +32,12 @@ public class BudgetAreaComponentFactory extends AbstractSeriesComponentFactory {
     cellBuilder.add("budgetAreaToggle", toggle);
     buttonGroup.add(toggle);
 
-    final BudgetAreaToggleUpdater listener = new BudgetAreaToggleUpdater(toggle, budgetArea, repository);
-    repository.addChangeListener(listener);
-    selectionService.addListener(listener, Transaction.TYPE);
+    final BudgetAreaToggleUpdater updater =
+      new BudgetAreaToggleUpdater(toggle, invisibleToggle, budgetArea, repository, selectionService);
     cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
       public void dispose() {
         buttonGroup.remove(toggle);
-        selectionService.removeListener(listener);
-        repository.removeChangeListener(listener);
+        updater.dispose();
       }
     });
   }

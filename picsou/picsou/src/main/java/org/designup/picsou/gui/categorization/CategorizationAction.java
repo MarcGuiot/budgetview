@@ -1,27 +1,21 @@
 package org.designup.picsou.gui.categorization;
 
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.gui.actions.AbstractGlobSelectionAction;
-import org.globsframework.utils.directory.Directory;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.gui.actions.AbstractGlobSelectionAction;
+import org.globsframework.model.GlobList;
+import org.globsframework.utils.directory.Directory;
 
 import java.awt.event.ActionEvent;
-import java.awt.*;
 
 public class CategorizationAction extends AbstractGlobSelectionAction {
-  private GlobRepository repository;
-  private Window parent;
 
-  public CategorizationAction(GlobRepository repository, Directory directory, Window parent) {
+  public CategorizationAction(Directory directory) {
     super(Transaction.TYPE, directory);
-    this.repository = repository;
-    this.parent = parent;
   }
 
   public void actionPerformed(ActionEvent e) {
     CategorizationDialog dialog = directory.get(CategorizationDialog.class);
-    dialog.show(lastSelection);
+    dialog.show(lastSelection, true);
   }
 
   public String toString(GlobList globs) {

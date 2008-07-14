@@ -3,15 +3,14 @@ package org.designup.picsou.gui.categorization.components;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.Category;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 
 import javax.swing.*;
+import java.util.Set;
 
 public class CategoryUpdater implements GlobSelectionListener {
   private JToggleButton toggle;
@@ -37,17 +36,20 @@ public class CategoryUpdater implements GlobSelectionListener {
 
   public void selectionUpdated(GlobSelection selection) {
     GlobList selectedTransactions = selection.getAll(Transaction.TYPE);
-    if (selectedTransactions.size() != 1) {
-      return;
-    }
 
-    Glob transaction = selectedTransactions.get(0);
-    Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
-    Glob category = repository.findLinkTarget(transaction, Transaction.CATEGORY);
-    if ((series == null) || (category == null)) {
+    Set<Integer> seriesIds = selectedTransactions.getValueSet(Transaction.SERIES);
+    Integer seriesId = seriesIds.size() == 1 ? seriesIds.iterator().next() : null;
+
+    Set<Integer> categoryIds = selectedTransactions.getValueSet(Transaction.CATEGORY);
+    Integer categoryId = categoryIds.size() == 1 ? categoryIds.iterator().next() : null;
+
+    if ((seriesId == null) || (categoryId == null)) {
       invisibleButton.setSelected(true);
       return;
     }
+
+    Glob series = repository.get(KeyBuilder.newKey(Series.TYPE, seriesId));
+    Glob category = repository.get(KeyBuilder.newKey(Category.TYPE, categoryId));
 
     boolean isGoodBudgetArea = series.get(Series.BUDGET_AREA).equals(budgetArea.getId());
     boolean isGoodSeries = series.getKey().equals(seriesKey);

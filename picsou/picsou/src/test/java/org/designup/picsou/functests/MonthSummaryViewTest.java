@@ -8,7 +8,7 @@ import org.designup.picsou.model.MasterCategory;
 
 public class MonthSummaryViewTest extends LoggedInFunctionalTestCase {
 
-  public void testOnMonth() throws Exception {
+  public void testOneMonth() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/07", -29.90, "free telecom")
       .addTransaction("2008/07/08", -1500, "Loyer")
@@ -30,13 +30,13 @@ public class MonthSummaryViewTest extends LoggedInFunctionalTestCase {
     summaryChecker
       .on("july 2008")
       .total(1500, (29.9 + 1500 + 60 + 20 + 10))
-      .checkReccuring(1500 + 29.90)
-      .checkEnvelop(80)
-      .checkOccational(10)
+      .checkRecurring(1500 + 29.90)
+      .checkEnvelope(80)
+      .checkOccasional(10)
       .checkIncome(1500);
   }
 
-  public void testTwoMonth() throws Exception {
+  public void testTwoMonths() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/07", -29.90, "free telecom")
       .addTransaction("2008/07/08", -1500, "Loyer")
@@ -66,9 +66,9 @@ public class MonthSummaryViewTest extends LoggedInFunctionalTestCase {
     summaryChecker
       .on("")
       .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 1500 + 29.90))
-      .checkReccuring(1500 + 29.90 + 1500 + 29.90)
-      .checkEnvelop(80)
-      .checkOccational(10)
+      .checkRecurring(1500 + 29.90 + 1500 + 29.90)
+      .checkEnvelope(80)
+      .checkOccasional(10)
       .checkIncome(1500);
   }
 }

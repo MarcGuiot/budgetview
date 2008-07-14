@@ -5,6 +5,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.TransactionType;
 
 public class CategorizationTest extends LoggedInFunctionalTestCase {
 
@@ -142,41 +143,97 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkNoSeries();
   }
 
-  public void testNextPreviousTransaction() throws Exception {
+  public void testNext() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2008/06/28", -29.90, "Free Telecom")
-      .addTransaction("2008/06/30", -40, "Auchan")
+      .addTransaction("2008/06/30", -29.90, "Free Telecom")
+      .addTransaction("2008/06/15", -40, "Auchan")
       .load();
 
     CategorizationDialogChecker dialog = transactions.categorize(0, 1);
-    dialog.checkLabel("Free Telecom");
-    dialog.checkNoBudgetAreaSelected();
-    dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet");
+    dialog.checkTable(new Object[][]{
+      {"15/06/2008", "Auchan", -40.00},
+      {"30/06/2008", "Free Telecom", -29.90},
+    });
+    dialog.selectTableRows(0);
+    dialog.checkLabel("Auchan");
     dialog.checkNextIsEnabled();
-    dialog.checkPreviousIsDisabled();
 
     dialog.selectNext();
-    dialog.checkLabel("Auchan");
-    dialog.checkNoBudgetAreaSelected();
+    dialog.checkSelectedTableRows(1);
+    dialog.checkLabel("Free Telecom");
     dialog.checkNextIsDisabled();
-    dialog.checkPreviousIsEnabled();
-    dialog.checkNoBudgetAreaSelected();
+
+    dialog.selectTableRows(0);
+    dialog.checkNextIsEnabled();
+  }
+
+  public void testMultiCategorizationFromTransactionTable() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -29.90, "Carouf")
+      .addTransaction("2008/06/15", -40.00, "Auchan")
+      .load();
+
+    CategorizationDialogChecker dialog = transactions.categorize(0, 1);
+    dialog.checkTable(new Object[][]{
+      {"15/06/2008", "Auchan", -40.00},
+      {"30/06/2008", "Carouf", -29.90},
+    });
+    dialog.checkTableSelectionEquals(0, 1);
     dialog.selectEnvelopes();
     dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD);
+    dialog.validate();
 
-    dialog.selectPrevious();
-    dialog.checkLabel("Free Telecom");
-    dialog.checkNextIsEnabled();
-    dialog.checkPreviousIsDisabled();
-    dialog.checkRecurringSeriesIsSelected("Internet");
+    transactions.initContent()
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "Carouf", "", -29.90, MasterCategory.FOOD)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, MasterCategory.FOOD)
+      .check();
+    
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkSeries("Groceries");
+    transactions.getTable().selectRow(1);
+    transactionDetails.checkSeries("Groceries");
 
-    dialog.selectNext();
-    dialog.checkLabel("Auchan");
-    dialog.checkNextIsDisabled();
-    dialog.checkPreviousIsEnabled();
-    dialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
+    CategorizationDialogChecker reopenedDialog = transactions.categorize(0, 1);
+    reopenedDialog.checkTableSelectionEquals(0, 1);
+    reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
+  }
+
+  public void testMultiCategorizationFromErrorMessageBlock() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -29.90, "Carouf")
+      .addTransaction("2008/06/15", -40.00, "Auchan")
+      .load();
+
+    views.selectHome();
+    informationPanel.assertWarningIsDisplayed();
+
+    CategorizationDialogChecker dialog = informationPanel.categorize();
+    dialog.checkTable(new Object[][]{
+      {"15/06/2008", "Auchan", -40.00},
+      {"30/06/2008", "Carouf", -29.90},
+    });
+    dialog.checkTableSelectionEquals(0);
+    dialog.selectTableRows(0, 1);
+    dialog.selectEnvelopes();
+    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD);
+    dialog.validate();
+
+    views.selectData();
+    transactions.initContent()
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "Carouf", "", -29.90, MasterCategory.FOOD)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, MasterCategory.FOOD)
+      .check();
+    
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkSeries("Groceries");
+    transactions.getTable().selectRow(1);
+    transactionDetails.checkSeries("Groceries");
+
+    views.selectHome();
+    informationPanel.assertNoWarningIsDisplayed();
   }
 
   public void testSelectingRecurringSelectsBudgetArea() throws Exception {
@@ -186,7 +243,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     CategorizationDialogChecker dialog = transactions.categorize(0);
-
     dialog.selectRecurring();
     dialog.selectRecurringSeries("Internet");
     dialog.checkBudgetAreaIsSelected(BudgetArea.RECURRING_EXPENSES);

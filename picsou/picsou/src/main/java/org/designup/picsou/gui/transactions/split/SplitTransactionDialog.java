@@ -227,7 +227,7 @@ public class SplitTransactionDialog {
     builder.add("subAmountPanel", subAmountPanel);
 
     TransactionComparator transactionComparator = TransactionComparator.ASCENDING;
-    GlobTableView view = builder.addTable(Transaction.TYPE, transactionComparator);
+    GlobTableView view = builder.addTable("transaction", Transaction.TYPE, transactionComparator);
 
     view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
     TransactionViewUtils.configureHeader(view, localDirectory);

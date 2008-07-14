@@ -5,22 +5,22 @@ import org.designup.picsou.gui.categorization.components.EnvelopeSeriesComponent
 import org.designup.picsou.gui.categorization.components.OccasionalCategoriesComponentFactory;
 import org.designup.picsou.gui.categorization.components.SeriesComponentFactory;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.series.SeriesCreationDialog;
 import org.designup.picsou.model.*;
-import org.designup.picsou.utils.TransactionComparator;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -31,11 +31,11 @@ import java.awt.event.ActionEvent;
 public class CategorizationDialog {
   private SelectionService selectionService = new SelectionService();
   private LocalGlobRepository localRepository;
-  private Glob currentTransaction;
+  private GlobList currentTransactions = GlobList.EMPTY;
   private PicsouDialog dialog;
-  private int transactionIndex = 0;
-  private GlobList transactions;
   private JToggleButton invisibleBudgetAreaToggle;
+  private GlobTableView transactionTable;
+  private NextTransactionAction nextTransactionAction;
 
   public CategorizationDialog(Window parent, final GlobRepository repository, Directory directory) {
 
@@ -44,10 +44,27 @@ public class CategorizationDialog {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationDialog.splits",
                                                       localRepository, localDirectory);
 
+    GlobFieldComparator transactionComparator = new GlobFieldComparator(Transaction.LABEL);
+    LabelCustomizer transactionHighlighter = new LabelCustomizer() {
+      public void process(JLabel label, Glob transaction, boolean isSelected, boolean hasFocus, int row, int column) {
+        if ((transaction.get(Transaction.SERIES) == null) || (transaction.get(Transaction.CATEGORY) == null)) {
+          label.setForeground(Color.RED);
+        }
+        else {
+          label.setForeground(Color.BLACK);
+        }
+      }
+    };
+    transactionTable =
+      builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
+        .addColumn(Lang.get("date"), new TransactionDateStringifier(transactionComparator), transactionHighlighter)
+        .addColumn(Transaction.LABEL, transactionHighlighter)
+        .addColumn(Transaction.AMOUNT, transactionHighlighter);
+
     builder.addMultiLineTextView("transactionLabel", Transaction.TYPE);
 
-    builder.add("nextTransaction", new NextTransactionAction(selectionService));
-    builder.add("previousTransaction", new PreviousTransactionAction(selectionService));
+    nextTransactionAction = new NextTransactionAction(selectionService);
+    builder.add("nextTransaction", nextTransactionAction);
 
     final CardHandler cardHandler = builder.addCardHandler("cards");
 
@@ -111,9 +128,10 @@ public class CategorizationDialog {
       }
     });
 
-    JPanel panel = builder.load();
+    Container panel = builder.load();
     dialog = PicsouDialog.create(parent);
     dialog.setContentPane(panel);
+    dialog.pack();
   }
 
   private Directory init(GlobRepository repository, Directory directory) {
@@ -126,71 +144,55 @@ public class CategorizationDialog {
     localDirectory.add(selectionService);
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        currentTransaction = selection.getAll(Transaction.TYPE).get(0);
-        if ((currentTransaction != null) && (currentTransaction.get(Transaction.SERIES) == null)) {
-          invisibleBudgetAreaToggle.doClick();
-        }
+        currentTransactions = selection.getAll(Transaction.TYPE);
+        nextTransactionAction.update();
       }
     }, Transaction.TYPE);
 
     return localDirectory;
   }
 
-  public void show(GlobList transactions) {
+  public void show(GlobList transactions, boolean selectAll) {
     if (transactions.isEmpty()) {
       return;
     }
     localRepository.rollback();
-    transactionIndex = 0;
     localRepository.reset(transactions, Transaction.TYPE);
-    this.transactions = localRepository.getAll(Transaction.TYPE).sort(TransactionComparator.ASCENDING);
-    selectionService.select(this.transactions.get(transactionIndex));
-    dialog.pack();
+    if (selectAll) {
+      transactionTable.select(localRepository.getAll(Transaction.TYPE), true);
+    }
+    else {
+      transactionTable.selectFirst();
+    }
     GuiUtils.showCentered(dialog);
   }
 
-  private class NextTransactionAction extends AbstractAction implements GlobSelectionListener {
+  private class NextTransactionAction extends AbstractAction {
     private SelectionService selectionService;
 
     private NextTransactionAction(SelectionService selectionService) {
       super("nextTransaction");
       this.selectionService = selectionService;
-      selectionService.addListener(this, Transaction.TYPE);
     }
 
     public void actionPerformed(ActionEvent e) {
-      if (transactionIndex < transactions.size() - 1) {
-        transactionIndex++;
-        selectionService.select(transactions.get(transactionIndex));
+      if (currentTransactions.isEmpty()) {
+        return;
       }
-      setEnabled(transactionIndex < transactions.size() - 1);
-    }
-
-    public void selectionUpdated(GlobSelection selection) {
-      setEnabled(transactionIndex < transactions.size() - 1);
-    }
-  }
-
-  private class PreviousTransactionAction extends AbstractAction implements GlobSelectionListener {
-    private SelectionService selectionService;
-
-    private PreviousTransactionAction(SelectionService selectionService) {
-      super("previousTransaction");
-      this.selectionService = selectionService;
-      setEnabled(false);
-      this.selectionService.addListener(this, Transaction.TYPE);
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      if (transactionIndex > 0) {
-        transactionIndex--;
-        selectionService.select(transactions.get(transactionIndex));
+      final int currentIndex = transactionTable.indexOf(currentTransactions.get(0));
+      if (currentIndex < transactionTable.getRowCount() - 1) {
+        Glob nextTransaction = transactionTable.getGlobAt(currentIndex + 1);
+        selectionService.select(nextTransaction);
       }
-      setEnabled(transactionIndex > 0);
     }
 
-    public void selectionUpdated(GlobSelection selection) {
-      setEnabled(transactionIndex >= 1);
+    public void update() {
+      if (currentTransactions.isEmpty()) {
+        setEnabled(false);
+        return;
+      }
+      final int currentIndex = transactionTable.indexOf(currentTransactions.get(0));
+      setEnabled(currentIndex < transactionTable.getRowCount() - 1);
     }
   }
 

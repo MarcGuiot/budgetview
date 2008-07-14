@@ -32,7 +32,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
   protected Directory directory;
   protected SelectionService selectionService;
 
-  protected Glob currentTransaction;
+  protected GlobList currentTransactions = GlobList.EMPTY;
 
   public AbstractSeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository repository, Directory directory) {
     this.invisibleToggle = invisibleToggle;
@@ -47,21 +47,11 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-          final GlobList selectedTransactions = selection.getAll(Transaction.TYPE);
-          currentTransaction = selectedTransactions.size() == 1 ? selectedTransactions.get(0) : null;
+          currentTransactions = selection.getAll(Transaction.TYPE);
       }
     }, Transaction.TYPE);
 
     this.buttonGroup.add(invisibleToggle);
-  }
-
-  protected JToggleButton createCategoryToggle(final String toggleLabel, final Key seriesKey, final Key categoryKey) {
-    return new JToggleButton(new AbstractAction(toggleLabel) {
-      public void actionPerformed(ActionEvent e) {
-        repository.setTarget(currentTransaction.getKey(), Transaction.SERIES, seriesKey);
-        repository.setTarget(currentTransaction.getKey(), Transaction.CATEGORY, categoryKey);
-      }
-    });
   }
 
   protected void createUpdatableCategoryToggle(final Glob category, final Key seriesKey,
@@ -69,12 +59,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
                                                RepeatCellBuilder cellBuilder, String toggleName) {
 
     String toggleLabel = categoryStringifier.toString(category, repository);
-    final JToggleButton toggle = new JToggleButton(new AbstractAction(toggleLabel) {
-      public void actionPerformed(ActionEvent e) {
-        repository.setTarget(currentTransaction.getKey(), Transaction.SERIES, seriesKey);
-        repository.setTarget(currentTransaction.getKey(), Transaction.CATEGORY, category.getKey());
-      }
-    });
+    final JToggleButton toggle = createCategoryUpdaterToggle(toggleLabel, seriesKey, category.getKey());
     toggle.setName(toggleName);
     cellBuilder.add(repeatToggleName, toggle);
     buttonGroup.add(toggle);
@@ -85,6 +70,25 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
       public void dispose() {
         updater.dispose();
         buttonGroup.remove(toggle);
+      }
+    });
+  }
+
+  protected JToggleButton createCategoryUpdaterToggle(final String toggleLabel, 
+                                                    final Key seriesKey,
+                                                    final Key categoryKey) {
+    return new JToggleButton(new AbstractAction(toggleLabel) {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          repository.enterBulkDispatchingMode();
+          for (Glob transaction : currentTransactions) {
+            repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
+            repository.setTarget(transaction.getKey(), Transaction.CATEGORY, categoryKey);
+          }
+        }
+        finally {
+          repository.completeBulkDispatchingMode();
+        }
       }
     });
   }

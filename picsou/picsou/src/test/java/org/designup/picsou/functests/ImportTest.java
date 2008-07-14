@@ -216,7 +216,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     assertTrue(comboBox.selectionEquals("Main account"));
   }
 
-  public void testImportWithCreateAccountCheckAccountBankIsFilled() throws Exception {
+  public void testImportWithCreateAccountChecksAccountBankIsFilled() throws Exception {
     final String path1 = QifBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
@@ -326,8 +326,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     importPanel.enterAccountNumber("0123546");
   }
 
-
-  public void testBackAtStep2CancelCurrentImport() throws Exception {
+  public void testBackToStep2CancelsCurrentImport() throws Exception {
     final String path1 = QifBuilder
       .init(this)
       .addTransaction("2001/01/01", -1.1, "Menu K")
@@ -376,7 +375,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-
   public void testImportQifBadFile() throws Exception {
     String path = org.globsframework.utils.TestUtils.getFileName(this, ".qif");
     Files.dumpStringToFile(path,
@@ -401,7 +399,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     importPanel.startImport();
     importPanel.checkErrorMessage("import.file.error", new File(path).getAbsolutePath());
   }
-
 
   private void checkImportMessage(String message) {
     TextBox accountMessage = window.getTextBox("importMessage");

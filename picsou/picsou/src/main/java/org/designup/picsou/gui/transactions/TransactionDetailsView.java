@@ -31,7 +31,6 @@ import org.globsframework.model.utils.GlobListMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -102,7 +101,7 @@ public class TransactionDetailsView extends View {
                 addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true)
                   .setAutoHideMatcher(new BankDateVisibilityMatcher()));
 
-    builder.add("categorizeLink", new CategorizationAction(repository, directory, directory.get(JFrame.class)));
+    builder.add("categorizeLink", new CategorizationAction(directory));
 
     builder.add("transactionSeriesName", addLabel(descriptionService.getListStringifier(Transaction.SERIES), true));
     return builder;

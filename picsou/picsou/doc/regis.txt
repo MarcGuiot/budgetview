@@ -1,22 +1,27 @@
 CategorizationDialog
 --------------------
-- afficher table transactions
+- bug afficage cards lors du passage d'une transaction a l'autre
+- renderer pour distinguer les non categorisees
+- "selectionner automatiquement les transactions similaires"
+- next transaction saute les transactions categorisees
 - look toggles
-- split
+- split de transaction
 - saisie notes
-
-
-TimeView
---------
-- afficher des noms pour les multi-selections de mois ("juillet 2006 à août 2007")
 
 
 Vue accueil
 -----------
 - joliesse MonthSummaryView
+- message: "{n} operations ne sont pas encore classees"
 - creation de compte
 - edition comptes
 - graphique
+
+
+TitleView
+--------
+- afficher des noms pour les multi-selections de mois ("juillet 2006 à août 2007")
+- home: titre type "Tableau de bord - juillet 2007"
 
 
 Vue budget
@@ -32,6 +37,8 @@ Vue releves
 -----------
 - filtrage par label
 - colonne "category" de transactionView => ouvrir CategorizationDialog
+- bug reset transactionDetails
+- retirer titres colonnes CategoryView
 
 
 Import panel

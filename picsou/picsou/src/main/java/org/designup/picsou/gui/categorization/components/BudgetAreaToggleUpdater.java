@@ -5,59 +5,65 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobUtils;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Set;
 
 public class BudgetAreaToggleUpdater implements GlobSelectionListener, ChangeSetListener {
-  private final JToggleButton toggleButton;
-  private final Glob budgetArea;
+  private final JToggleButton toggle;
+  private final BudgetArea budgetArea;
   private GlobRepository repository;
-  private Glob transaction;
+  private SelectionService selectionService;
+  private GlobList selectedTransactions = GlobList.EMPTY;
+  private JToggleButton invisibleToggle;
 
-
-  public BudgetAreaToggleUpdater(JToggleButton toggleButton, Glob budgetArea, GlobRepository repository) {
-    this.toggleButton = toggleButton;
-    this.budgetArea = budgetArea;
+  public BudgetAreaToggleUpdater(final JToggleButton toggle, JToggleButton invisibleToggle,
+                                 final Glob budgetAreaGlob,
+                                 GlobRepository repository, SelectionService selectionService) {
+    this.toggle = toggle;
+    this.invisibleToggle = invisibleToggle;
+    this.budgetArea = BudgetArea.get(budgetAreaGlob.get(BudgetArea.ID));
     this.repository = repository;
+    repository.addChangeListener(this);
+    this.selectionService = selectionService;
+    selectionService.addListener(this, Transaction.TYPE);
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    GlobList all = selection.getAll(Transaction.TYPE);
-    if (all.size() != 1) {
-      return;
-    }
-    transaction = all.get(0);
-    updateState(transaction);
+    this.selectedTransactions = selection.getAll(Transaction.TYPE);
+    updateState();
   }
 
-  private void updateState(Glob transaction) {
-    Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
-    if (series != null) {
-      boolean isSelected = series.get(Series.BUDGET_AREA).equals(budgetArea.get(BudgetArea.ID));
-      toggleButton.setSelected(isSelected);
-      if (isSelected) {
-        toggleButton.getAction().actionPerformed(null);
-      }
+  private void updateState() {
+    GlobList series = GlobUtils.getTargets(selectedTransactions, Transaction.SERIES, repository);
+    Set<Integer> areas = series.getValueSet(Series.BUDGET_AREA);
+    if (areas.size() != 1) {
+      invisibleToggle.setSelected(true);
+      return;
     }
-    else {
-      toggleButton.setSelected(false);
+
+    final Integer selectedAreaId = areas.iterator().next();
+    if (budgetArea.getId().equals(selectedAreaId)) {
+      toggle.setSelected(true);
+      toggle.getAction().actionPerformed(null);
     }
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(transaction.getKey())) {
-      transaction = repository.find(transaction.getKey());
-      updateState(transaction);
-    }
+    updateState();
   }
 
   public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
-    if (transaction != null) {
-      transaction = repository.find(transaction.getKey());
-      updateState(transaction);
-    }
+    this.selectedTransactions = GlobList.EMPTY;
+  }
+
+  public void dispose() {
+    repository.removeChangeListener(this);
+    selectionService.removeListener(this);
   }
 }

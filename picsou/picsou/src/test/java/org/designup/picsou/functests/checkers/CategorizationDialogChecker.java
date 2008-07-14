@@ -1,26 +1,40 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.Transaction;
+import org.globsframework.model.Glob;
 import org.uispec4j.*;
-import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.Panel;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
+import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.Assert;
 
 public class CategorizationDialogChecker extends DataChecker {
   private Window dialog;
   private TextBox transactionLabel;
+  private Table table;
 
   public CategorizationDialogChecker(Window dialog) {
     this.dialog = dialog;
     this.transactionLabel = dialog.getTextBox("transactionLabel");
+    table = this.dialog.getTable();
+    table.setCellValueConverter(0, new DateCellConverter());
+    table.setCellValueConverter(2, new TableCellValueConverter() {
+      public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
+        Glob transaction = (Glob)modelObject;
+        return transaction.get(Transaction.AMOUNT);
+      }
+    });
   }
 
   public void checkLabel(String expected) {
@@ -39,7 +53,7 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void selectIncome() {
-    dialog.getToggleButton(BudgetArea.INCOME.getGlob().get(BudgetArea.NAME)).click();
+    dialog.getPanel("budgetAreas").getToggleButton(BudgetArea.INCOME.getGlob().get(BudgetArea.NAME)).click();
   }
 
   public void checkContainsIncomeSeries(String... seriesNames) {
@@ -98,16 +112,15 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void checkRecurringSeriesIsSelected(String seriesName) {
-     assertTrue(dialog.getToggleButton("RecurringExpenses").isSelected());
+    assertTrue(dialog.getToggleButton("RecurringExpenses").isSelected());
 
-     Panel panel = getRecurringSeriesPanel();
-     assertTrue(panel.getToggleButton(seriesName).isSelected());
-   }
+    Panel panel = getRecurringSeriesPanel();
+    assertTrue(panel.getToggleButton(seriesName).isSelected());
+  }
 
-   public void checkRecurringSeriesIsNotSelected(String seriesName) {
-     UISpecAssert.assertFalse(dialog.getPanel("recurringSeriesRepeat").getToggleButton(seriesName).isSelected());
-   }
-
+  public void checkRecurringSeriesIsNotSelected(String seriesName) {
+    UISpecAssert.assertFalse(dialog.getPanel("recurringSeriesRepeat").getToggleButton(seriesName).isSelected());
+  }
 
   public void checkIncomeSeriesIsSelected(String seriesName) {
     assertTrue(dialog.getToggleButton("Income").isSelected());
@@ -192,14 +205,6 @@ public class CategorizationDialogChecker extends DataChecker {
     UISpecAssert.assertFalse(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
   }
 
-  public void checkPreviousIsEnabled() {
-    UISpecAssert.assertTrue(dialog.getButton("previousTransaction").isEnabled());
-  }
-
-  public void checkPreviousIsDisabled() {
-    UISpecAssert.assertFalse(dialog.getButton("previousTransaction").isEnabled());
-  }
-
   public void checkNextIsEnabled() {
     UISpecAssert.assertTrue(dialog.getButton("nextTransaction").isEnabled());
   }
@@ -210,10 +215,6 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void selectNext() {
     dialog.getButton("nextTransaction").click();
-  }
-
-  public void selectPrevious() {
-    dialog.getButton("previousTransaction").click();
   }
 
   public void assertVisible(boolean visible) {
@@ -240,5 +241,21 @@ public class CategorizationDialogChecker extends DataChecker {
   public SeriesCreationDialogChecker createSeries() {
     final Window creationDialog = WindowInterceptor.getModalDialog(dialog.getButton("New series").triggerClick());
     return new SeriesCreationDialogChecker(creationDialog);
+  }
+
+  public void checkTable(Object[][] content) {
+    assertTrue(table.contentEquals(content));
+  }
+
+  public void checkSelectedTableRows(int... rows) {
+    assertTrue(table.rowsAreSelected(rows));
+  }
+
+  public void selectTableRows(int... rows) {
+    table.selectRows(rows);
+  }
+
+  public void checkTableSelectionEquals(int... rows) {
+    assertTrue(table.rowsAreSelected(rows));
   }
 }

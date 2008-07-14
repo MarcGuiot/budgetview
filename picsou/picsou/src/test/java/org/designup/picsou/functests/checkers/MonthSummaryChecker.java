@@ -27,7 +27,7 @@ public class MonthSummaryChecker extends DataChecker {
       this.panel = panel;
     }
 
-    public Summary checkReccuring(double amount) {
+    public Summary checkRecurring(double amount) {
       check(BudgetArea.RECURRING_EXPENSES.getGlob().get(BudgetArea.NAME), amount);
       return this;
     }
@@ -37,12 +37,12 @@ public class MonthSummaryChecker extends DataChecker {
       return this;
     }
 
-    public Summary checkEnvelop(double amount) {
+    public Summary checkEnvelope(double amount) {
       check(BudgetArea.EXPENSES_ENVELOPE.getGlob().get(BudgetArea.NAME), amount);
       return this;
     }
 
-    public Summary checkOccational(double amount) {
+    public Summary checkOccasional(double amount) {
       check(BudgetArea.OCCASIONAL_EXPENSES.getGlob().get(BudgetArea.NAME), amount);
       return this;
     }

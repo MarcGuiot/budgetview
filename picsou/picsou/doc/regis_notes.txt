@@ -4,4 +4,4 @@
 
 - merger GlobsPanelBuilder et SplitsBuilder
 
-- 
+- TransactionView : afficher les series plutôt que les categories ?

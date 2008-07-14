@@ -12,7 +12,6 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
   ButtonGroup seriesGroup = new ButtonGroup();
@@ -22,15 +21,10 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
-    String name = seriesStringifier.toString(series, repository);
+    String toggleLabel = seriesStringifier.toString(series, repository);
     final Key seriesKey = series.getKey();
     final Key categoryKey = series.getTargetKey(Series.DEFAULT_CATEGORY);
-    final JToggleButton toggle = new JToggleButton(new AbstractAction(name) {
-      public void actionPerformed(ActionEvent e) {
-        repository.setTarget(currentTransaction.getKey(), Transaction.SERIES, seriesKey);
-        repository.setTarget(currentTransaction.getKey(), Transaction.CATEGORY, categoryKey);
-      }
-    });
+    final JToggleButton toggle = createCategoryUpdaterToggle(toggleLabel, seriesKey, categoryKey);
     seriesGroup.add(toggle);
 
     final GlobSelectionListener listener = new GlobSelectionListener() {

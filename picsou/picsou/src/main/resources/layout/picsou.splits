@@ -92,7 +92,7 @@
             <horizontalSplit ui="cleanSplitPane" dividerSize="2" dividerLocation="240"
                              continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
 
-              <scrollPane border="matte(2,2,2,2,#3A3A3A)"
+              <scrollPane border="matte(1,2,2,2,#242E50)"
                           viewportBackground="categories.bg" background="categories.bg"
                           minimumSize="(180,400)"
                           autoHideSource="category" weightX="1">
@@ -109,7 +109,7 @@
                     </scrollPane>
                     <column marginLeft="15">
                       <panel ref="transactionDetails"/>
-                      <panel styleClass="errorMessage" autoHideSource="uncategorizedMessage_details" marginTop="20"
+                      <panel name="uncategorizedMessagePanel" styleClass="errorMessage" autoHideSource="uncategorizedMessage_details" marginTop="20"
                              preferredSize="(50,90)" weightY="0">
                         <column>
                           <textArea ref="uncategorizedMessage_details" text="$transaction.allocation.warning"/>
