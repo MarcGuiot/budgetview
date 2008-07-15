@@ -2,6 +2,8 @@ package org.globsframework.gui.views;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.Link;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.DescriptionService;
@@ -17,9 +19,20 @@ public class GlobLabelView extends AbstractGlobTextView<GlobLabelView> {
     return new GlobLabelView(type, repository, directory, stringifier);
   }
 
+
   public static GlobLabelView init(Field field, GlobRepository repository, Directory directory) {
     GlobListStringifier stringifier = directory.get(DescriptionService.class).getListStringifier(field);
     return init(field.getGlobType(), repository, directory, stringifier);
+  }
+
+  public static GlobLabelView init(Link link, GlobRepository repository, Directory directory) {
+    GlobListStringifier stringifier = directory.get(DescriptionService.class).getListStringifier(link);
+    return init(link.getSourceType(), repository, directory, stringifier);
+  }
+
+  public static GlobLabelView init(LinkField link, GlobRepository repository, Directory directory) {
+    GlobListStringifier stringifier = directory.get(DescriptionService.class).getListStringifier(link);
+    return init(link.getSourceType(), repository, directory, stringifier);
   }
 
   private GlobLabelView(GlobType type, GlobRepository repository, Directory directory, GlobListStringifier stringifier) {

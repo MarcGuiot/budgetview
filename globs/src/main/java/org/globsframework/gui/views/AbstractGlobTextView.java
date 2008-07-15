@@ -10,6 +10,8 @@ import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListMatcher;
 import org.globsframework.model.utils.GlobListMatchers;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -25,9 +27,10 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   private GlobRepository repository;
   private Directory directory;
   private GlobListStringifier stringifier;
+  private GlobMatcher filter = GlobMatchers.ALL;
   private GlobList currentSelection = new GlobList();
   private boolean autoHideIfEmpty;
-  private GlobListMatcher matcher = GlobListMatchers.ALL;
+  private GlobListMatcher autoHideMatcher = GlobListMatchers.ALL;
   protected boolean initCompleted = false;
   private GlobList forcedSelection;
   protected String name;
@@ -41,6 +44,14 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
     repository.addChangeListener(this);
   }
 
+  public T setFilter(GlobMatcher matcher) {
+    this.filter = matcher;
+    if (initCompleted) {
+      update();
+    }
+    return (T)this;
+  }
+
   public T setAutoHideIfEmpty(boolean autoHide) {
     this.autoHideIfEmpty = autoHide;
     if (initCompleted) {
@@ -50,7 +61,7 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   }
 
   public T setAutoHideMatcher(GlobListMatcher matcher) {
-    this.matcher = matcher;
+    this.autoHideMatcher = matcher;
     if (initCompleted) {
       update();
     }
@@ -64,13 +75,16 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
 
   public void update() {
     JComponent component = getComponent();
-    boolean matches = matcher.matches(currentSelection, repository);
+
+    GlobList filteredSelection = currentSelection.filter(filter, repository);
+
+    boolean matches = autoHideMatcher.matches(filteredSelection, repository);
     component.setVisible(matches);
     if (!component.isVisible()) {
       return;
     }
 
-    String text = stringifier.toString(currentSelection, repository);
+    String text = stringifier.toString(filteredSelection, repository);
     if (autoHideIfEmpty) {
       component.setVisible(Strings.isNotEmpty(text));
     }
