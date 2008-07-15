@@ -1,6 +1,13 @@
 package org.designup.picsoulicence.servlet;
 
 import org.designup.picsoulicence.mail.Mailler;
+import org.designup.picsoulicence.model.Licence;
+import org.designup.picsoulicence.model.MailError;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.sqlstreams.SqlConnection;
+import org.globsframework.sqlstreams.SqlService;
+import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.directory.Directory;
 
 import javax.mail.MessagingException;
@@ -9,21 +16,93 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AskForMailServlet extends HttpServlet {
+  static Logger logger = Logger.getLogger("mail");
   private Mailler mailler;
+  private SqlService sqlService;
 
   public AskForMailServlet(Directory directory) {
     mailler = directory.get(Mailler.class);
+    sqlService = directory.get(SqlService.class);
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    String mailTo = req.getHeader("mailTo");
+    String mailTo = req.getHeader("mailTo").trim();
+    logger.info("mail : " + mailTo);
     try {
-      mailler.sendRequestLicence(mailTo);
+      if (checkIsAMailAdress(mailTo)) {
+        SqlConnection db = sqlService.getDb();
+        GlobList registeredMail;
+        try {
+          registeredMail = db.getQueryBuilder(Licence.TYPE,
+                                              Constraints.equal(Licence.MAIL, mailTo))
+            .select(Licence.MAIL)
+            .getQuery().executeAsGlobs();
+          if (registeredMail.isEmpty()) {
+            GlobBuilder.init(Licence.TYPE).set(Licence.MAIL, mailTo);
+            db.getCreateBuilder(Licence.TYPE)
+              .set(Licence.MAIL, mailTo).getRequest().run();
+          }
+        }
+        finally {
+          db.commitAndClose();
+        }
+        if (registeredMail.size() >= 1) {
+          mailler.sendExistingLicence(registeredMail.get(0));
+          replyOk(resp);
+        }
+        else {
+          mailler.sendRequestLicence(mailTo);
+          replyOk(resp);
+        }
+        if (registeredMail.size() > 1) {
+          logger.severe("mail registered multiple time '" + mailTo + "'");
+        }
+      }
+      else {
+        SqlConnection db = sqlService.getDb();
+        try {
+          db.getCreateBuilder(MailError.TYPE)
+            .set(MailError.MAIL, mailTo)
+            .getRequest().run();
+        }
+        finally {
+          db.commitAndClose();
+        }
+        replyBadAdress(resp);
+      }
     }
     catch (MessagingException e) {
-      resp.setStatus(HttpServletResponse.SC_OK);
+      logger.throwing("AskForMailServlet", "doPost", e);
+      replyFailed(resp);
+    }
+  }
+
+  private void replyBadAdress(HttpServletResponse resp) {
+    resp.addHeader("status", "badAdress");
+  }
+
+  private void replyFailed(HttpServletResponse resp) {
+    resp.addHeader("status", "mailError");
+  }
+
+  private void replyOk(HttpServletResponse resp) {
+    resp.addHeader("status", "mailSent");
+  }
+
+  private boolean checkIsAMailAdress(String to) {
+    // from http://www.regular-expressions.info/email.html
+    Pattern pattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$");
+    Matcher matcher = pattern.matcher(to.toUpperCase());
+    if (matcher.matches()) {
+      return true;
+    }
+    else {
+      return false;
     }
   }
 }

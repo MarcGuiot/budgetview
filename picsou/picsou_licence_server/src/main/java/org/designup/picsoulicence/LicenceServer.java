@@ -2,6 +2,8 @@ package org.designup.picsoulicence;
 
 import org.designup.picsoulicence.mail.Mailler;
 import org.designup.picsoulicence.servlet.AskForMailServlet;
+import org.globsframework.sqlstreams.SqlService;
+import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.mortbay.jetty.Server;
@@ -18,6 +20,9 @@ public class LicenceServer {
   private boolean useSsl = true;
   private int port = 8443;
   private int mailPort;
+  private String dabaseUrl;
+  private String databaseUser = "sa";
+  private String databasePassword = "";
 
   public LicenceServer() {
     jetty = new Server();
@@ -33,6 +38,11 @@ public class LicenceServer {
 
   public void setMailPort(int mailPort) {
     this.mailPort = mailPort;
+  }
+
+  public void setDabaseUrl(String dabaseUrl) {
+
+    this.dabaseUrl = dabaseUrl;
   }
 
   public void init() {
@@ -69,6 +79,8 @@ public class LicenceServer {
     Mailler mailler = new Mailler();
     directory.add(mailler);
     mailler.setPort(mailPort);
+    SqlService sqlService = new JdbcSqlService(dabaseUrl, databaseUser, databasePassword);
+    directory.add(SqlService.class, sqlService);
     return directory;
   }
 

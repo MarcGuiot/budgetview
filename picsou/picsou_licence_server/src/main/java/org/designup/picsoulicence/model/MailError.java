@@ -7,7 +7,7 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.sqlstreams.annotations.AutoIncrement;
 
-public class Licence {
+public class MailError {
   public static GlobType TYPE;
 
   @Key
@@ -17,7 +17,7 @@ public class Licence {
   public static StringField MAIL;
 
   static {
-    GlobTypeLoader.init(Licence.class);
+    GlobTypeLoader.init(MailError.class);
   }
 
 }
