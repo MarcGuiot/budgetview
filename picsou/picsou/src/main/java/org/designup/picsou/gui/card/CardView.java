@@ -101,7 +101,7 @@ public class CardView extends View implements GlobSelectionListener {
   }
 
   private enum Card {
-    HOME(false), DATA(true), REPARTITION(true), EVOLUTION(true);
+    HOME(false), BUDGET(false), DATA(true), REPARTITION(true), EVOLUTION(true);
 
     private boolean showCategoryCard;
 

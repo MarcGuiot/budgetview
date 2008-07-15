@@ -55,7 +55,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addCategory(MasterCategory.FOOD, "Apero")
       .addCategory(MasterCategory.TRANSPORTS, "Oil")
-      .addTransaction("2006/01/10", -1.0, "Chez Lulu", "Apero", "Oil")
+      .addTransaction("2006/01/10", -15.0, "Chez Lulu", "Apero", "Oil")
+      .addTransaction("2006/01/05", -19.0, "Chez Marcel", "Apero")
       .load();
 
     categories.assertCategoryExists("Apero");
@@ -64,7 +65,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     categories.select(MasterCategory.ALL);
     transactions
       .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, "Apero, Oil")
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -15.0, "Apero, Oil")
+      .add("05/01/2006", TransactionType.PRELEVEMENT, "Chez Marcel", "", -19.0, "Apero")
       .check();
   }
 

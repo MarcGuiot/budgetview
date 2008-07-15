@@ -180,7 +180,7 @@ public class OfxImporter implements AccountFileImporter {
               categoryIds.add(master.getId());
             }
             else {
-              Glob subCategory = Category.find(subcategoryName, initialRepository);
+              Glob subCategory = Category.find(subcategoryName, repository);
               if (subCategory == null) {
                 subCategory = repository.create(Category.TYPE,
                                                 value(Category.MASTER, master.getId()),
@@ -193,7 +193,7 @@ public class OfxImporter implements AccountFileImporter {
 
         }
         catch (IllegalArgumentException e) {
-          Integer categoryId = Category.findId(masterName, initialRepository);
+          Integer categoryId = Category.findId(masterName, repository);
           if (categoryId != null) {
             categoryIds.add(categoryId);
           }

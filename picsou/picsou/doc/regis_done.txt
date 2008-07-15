@@ -3,7 +3,7 @@ Dernier plot commun: 274 mguiot MonthStat : ajout et calcul des montants planifi
 Vue accueil
 -----------
 - message affectation : check sur tous les mois
-- joliesse MonthSummaryView
+- joliesse MonthSummaryView + ajout BalanceGraph
 
 
 CategorizationDialog

@@ -22,6 +22,7 @@
     <style selector="toggleButton.viewSelector" ui="viewSelector" opaque="false"
            minimumSize="(40,40)" preferredSize="(40,40)" margin="0" marginLeft="5" weightX="0" fill="none"/>
     <style selector="toggleButton#homeCardToggle" icon="card_home.png"/>
+    <style selector="toggleButton#budgetCardToggle" icon="card_budget.png"/>
     <style selector="toggleButton#dataCardToggle" icon="card_list.png"/>
     <style selector="toggleButton#repartitionCardToggle" icon="card_pie.png"/>
     <style selector="toggleButton#evolutionCardToggle" icon="card_line.png"/>
@@ -58,6 +59,7 @@
                  horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
           <filler fill="horizontal"/>
           <toggleButton ref="homeCardToggle" styleClass="viewSelector"/>
+          <toggleButton ref="budgetCardToggle" styleClass="viewSelector"/>
           <toggleButton ref="dataCardToggle" styleClass="viewSelector"/>
           <toggleButton ref="repartitionCardToggle" styleClass="viewSelector"/>
           <toggleButton ref="evolutionCardToggle" styleClass="viewSelector"/>
@@ -89,6 +91,10 @@
             </row>
           </card>
 
+          <card name="budget">
+            <label text="tbd"/>
+          </card>
+
           <card name="withCategories">
 
             <horizontalSplit ui="cleanSplitPane" dividerSize="2" dividerLocation="240"
@@ -111,7 +117,8 @@
                     </scrollPane>
                     <column marginLeft="15">
                       <panel ref="transactionDetails"/>
-                      <panel name="uncategorizedMessagePanel" styleClass="errorMessage" autoHideSource="uncategorizedMessage_details" marginTop="20"
+                      <panel name="uncategorizedMessagePanel" styleClass="errorMessage"
+                             autoHideSource="uncategorizedMessage_details" marginTop="20"
                              preferredSize="(50,90)" weightY="0">
                         <column>
                           <textArea ref="uncategorizedMessage_details"/>

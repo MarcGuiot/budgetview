@@ -6,6 +6,7 @@ CategorizationDialog
 - look toggles
 - split de transaction
 - saisie notes
+- tri transactions : label puis date puis montant
 
 
 Vue accueil
