@@ -17,11 +17,20 @@
       <column margin="10">
         <row>
           <label ref="totalReceivedAmount" styleClass="total"/>
+          <component ref="totalBalance"
+                     receivedColorTop="balancegraph.received.top"
+                     receivedColorBottom="balancegraph.received.bottom"
+                     spentColorTop="balancegraph.spent.top"
+                     spentColorBottom="balancegraph.spent.bottom"
+                     borderColor="balancegraph.border"
+                     preferredSize="(70,40)"
+                     weightX="0"
+                     fill="vertical"/>
           <label ref="totalSpentAmount" styleClass="total"/>
         </row>
         <repeat ref="budgetAreaRepeat">
-          <column styleClass="innerBlock">
-            <row name="budgetAreaRow" margin="10" marginBottom="2" >
+          <column name="budgetAreaRow" styleClass="innerBlock">
+            <row margin="10" marginBottom="2" >
               <label ref="budgetAreaName"/>
               <filler fill="horizontal"/>
             </row>

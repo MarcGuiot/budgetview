@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.model.Account;
@@ -18,7 +19,6 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -45,6 +45,8 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                      GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, MonthStat.TOTAL_RECEIVED));
     builder.addLabel("totalSpentAmount", MonthStat.TYPE,
                      GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, MonthStat.TOTAL_SPENT));
+    builder.add("totalBalance",
+                new BalanceGraph(MonthStat.TYPE, MonthStat.TOTAL_RECEIVED, MonthStat.TOTAL_SPENT, localDirectory));
     builder.addRepeat("budgetAreaRepeat", Arrays.asList(BudgetArea.values()),
                       new RepeatComponentFactory<BudgetArea>() {
                         public void registerComponents(RepeatCellBuilder cellBuilder, BudgetArea budgetArea) {
@@ -80,8 +82,8 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                                            GlobMatchers.fieldEquals(MonthStat.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
                                            GlobMatchers.fieldEquals(MonthStat.CATEGORY, Category.ALL))));
     }
-    SelectionService selectionService = localDirectory.get(SelectionService.class);
-    selectionService.select(selectedMonthStats, MonthStat.TYPE);
-    selectionService.select(selection.getAll(Month.TYPE), Month.TYPE);
+    SelectionService localSelectionService = localDirectory.get(SelectionService.class);
+    localSelectionService.select(selectedMonthStats, MonthStat.TYPE);
+    localSelectionService.select(selection.getAll(Month.TYPE), Month.TYPE);
   }
 }

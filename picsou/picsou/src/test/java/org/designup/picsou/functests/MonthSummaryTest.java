@@ -1,12 +1,11 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategorizerChecker;
-import org.designup.picsou.functests.checkers.MonthSummaryChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 
-public class MonthSummaryViewTest extends LoggedInFunctionalTestCase {
+public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
   public void testOneMonth() throws Exception {
     OfxBuilder.init(this)
@@ -25,11 +24,10 @@ public class MonthSummaryViewTest extends LoggedInFunctionalTestCase {
     checker.setEnvelope("ED", "groceries", MasterCategory.FOOD);
     checker.setOccasional("fnac", MasterCategory.MULTIMEDIA);
     checker.setIncome("Salaire");
+
     views.selectHome();
-    MonthSummaryChecker summaryChecker = new MonthSummaryChecker(mainWindow);
-    summaryChecker
-      .initContent()
-      .total(1500, (29.9 + 1500 + 60 + 20 + 10))
+    monthSummary.init()
+      .total(1500, (29.9 + 1500 + 60 + 20 + 10), false)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(80)
       .checkOccasional(10)
@@ -60,12 +58,11 @@ public class MonthSummaryViewTest extends LoggedInFunctionalTestCase {
     periods.selectCells("2008/08");
     checker.setRecurring("free telecom", "internet");
     checker.setRecurring("Loyer", "rental");
+
     periods.selectCells("2008/07", "2008/08");
     views.selectHome();
-    MonthSummaryChecker summaryChecker = new MonthSummaryChecker(mainWindow);
-    summaryChecker
-      .initContent()
-      .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 1500 + 29.90))
+    monthSummary.init()
+      .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 1500 + 29.90), false)
       .checkRecurring(1500 + 29.90 + 1500 + 29.90)
       .checkEnvelope(80)
       .checkOccasional(10)

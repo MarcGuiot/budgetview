@@ -39,7 +39,11 @@ public enum BudgetArea implements GlobConstantContainer {
   public ReadOnlyGlob getGlob() {
     return new ReadOnlyGlob(BudgetArea.TYPE,
                             value(BudgetArea.ID, id),
-                            value(BudgetArea.NAME, Strings.toNiceLowerCase(name())));
+                            value(BudgetArea.NAME, getName()));
+  }
+
+  public String getName() {
+    return Strings.toNiceLowerCase(name());
   }
 
   public static BudgetArea get(int id) {

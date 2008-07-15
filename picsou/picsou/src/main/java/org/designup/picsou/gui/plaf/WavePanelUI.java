@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.plaf;
 
-import org.designup.picsou.gui.components.JideFastGradientPainter;
-import org.globsframework.gui.splits.color.ColorService;
+import org.designup.picsou.gui.components.jide.JideFastGradientPainter;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicPanelUI;
