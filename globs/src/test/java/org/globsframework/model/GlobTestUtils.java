@@ -10,6 +10,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
 
+import junit.framework.AssertionFailedError;
+
 public class GlobTestUtils {
 
   public static void assertEquals(GlobRepository repository,
@@ -97,7 +99,13 @@ public class GlobTestUtils {
   public static void assertChangesEqual(ChangeSet changeSet, GlobType type, String expectedXml) {
     StringWriter writer = new StringWriter();
     XmlChangeSetWriter.write(changeSet, type, writer);
-    assertEquivalent("<changes>" + expectedXml + "</changes>", writer.toString());
+    try {
+      assertEquivalent("<changes>" + expectedXml + "</changes>", writer.toString());
+    }
+    catch (AssertionFailedError e) {
+      System.out.println("Expected changes: \n" + writer.toString());
+      throw e;
+    }
   }
 
   public static void assertChangesEqual(ChangeSet changeSet, String expectedXml) {

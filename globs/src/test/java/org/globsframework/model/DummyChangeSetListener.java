@@ -45,6 +45,12 @@ public class DummyChangeSetListener implements ChangeSetListener {
     GlobTestUtils.assertChangesEqual(lastChanges, keys, expectedXml);
   }
 
+  public void assertNoChanges(GlobType type) {
+    if ((lastChanges != null) && lastChanges.containsChanges(type)) {
+      Assert.fail("Unexpected changes: " + lastChanges);
+    }
+  }
+
   public void assertNoChanges() {
     if ((lastChanges != null) && !lastChanges.isEmpty()) {
       Assert.fail("Unexpected changes: " + lastChanges);

@@ -15,10 +15,15 @@ public class GlobLabelView extends AbstractGlobTextView<GlobLabelView> {
   private JLabel label;
 
   public static GlobLabelView init(GlobType type, GlobRepository repository,
-                                   Directory directory, GlobListStringifier stringifier) {
+                                   Directory directory) {
+    GlobListStringifier stringifier = directory.get(DescriptionService.class).getListStringifier(type);
     return new GlobLabelView(type, repository, directory, stringifier);
   }
 
+  public static GlobLabelView init(GlobType type, GlobRepository repository,
+                                   Directory directory, GlobListStringifier stringifier) {
+    return new GlobLabelView(type, repository, directory, stringifier);
+  }
 
   public static GlobLabelView init(Field field, GlobRepository repository, Directory directory) {
     GlobListStringifier stringifier = directory.get(DescriptionService.class).getListStringifier(field);

@@ -35,7 +35,10 @@ public class GlobListStringifiers {
         double total = 0;
         for (Glob glob : selected) {
           for (DoubleField field : fields) {
-            total += glob.get(field);
+            final Double value = glob.get(field);
+            if (value != null) {
+              total += value;
+            }
           }
         }
         return format.format(total);
