@@ -21,32 +21,33 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.directory.DefaultDirectory;
 
 import javax.swing.*;
 import java.util.Arrays;
 
 public class MonthSummaryView extends View implements GlobSelectionListener {
-  private Directory localDirectory;
+  public MonthSummaryView(GlobRepository repository, Directory parentDirectory) {
+    super(repository, createDirectory(parentDirectory));
+    parentDirectory.get(SelectionService.class).addListener(this, Month.TYPE);
+  }
 
-  public MonthSummaryView(GlobRepository repository, Directory directory) {
-    super(repository, directory);
-    localDirectory = new DefaultDirectory(directory);
-    SelectionService selectionService = new SelectionService();
-    localDirectory.add(selectionService);
-    directory.get(SelectionService.class).addListener(this, Month.TYPE);
+  private static Directory createDirectory(Directory parentDirectory) {
+    Directory directory = new DefaultDirectory(parentDirectory);
+    directory.add(new SelectionService());
+    return directory;
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/monthSummaryView.splits", repository, localDirectory);
+      new GlobsPanelBuilder(getClass(), "/layout/monthSummaryView.splits", repository, directory);
     builder.addLabel("totalReceivedAmount", MonthStat.TYPE,
                      GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, MonthStat.TOTAL_RECEIVED));
     builder.addLabel("totalSpentAmount", MonthStat.TYPE,
                      GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, MonthStat.TOTAL_SPENT));
     builder.add("totalBalance",
-                new BalanceGraph(MonthStat.TYPE, MonthStat.TOTAL_RECEIVED, MonthStat.TOTAL_SPENT, localDirectory));
+                new BalanceGraph(MonthStat.TYPE, MonthStat.TOTAL_RECEIVED, MonthStat.TOTAL_SPENT, directory));
     builder.addRepeat("budgetAreaRepeat", Arrays.asList(BudgetArea.values()),
                       new RepeatComponentFactory<BudgetArea>() {
                         public void registerComponents(RepeatCellBuilder cellBuilder, BudgetArea budgetArea) {
@@ -59,11 +60,11 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                           cellBuilder.add("budgetAreaName", label);
                           label.setName(budgetArea.getGlob().get(BudgetArea.NAME));
                           cellBuilder.add("budgetAreaAmount",
-                                          GlobLabelView.init(MonthStat.TYPE, repository, localDirectory,
+                                          GlobLabelView.init(MonthStat.TYPE, repository, directory,
                                                              GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT,
                                                                                       expenseField, spentField)).getComponent());
                           cellBuilder.add("budgetAreaPlannedAmount",
-                                          GlobLabelView.init(MonthStat.TYPE, repository, localDirectory,
+                                          GlobLabelView.init(MonthStat.TYPE, repository, directory,
                                                              GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT,
                                                                                       plannedExpenseField, plannedSpentField)).getComponent());
                         }
@@ -82,7 +83,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                                            GlobMatchers.fieldEquals(MonthStat.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
                                            GlobMatchers.fieldEquals(MonthStat.CATEGORY, Category.ALL))));
     }
-    SelectionService localSelectionService = localDirectory.get(SelectionService.class);
+    SelectionService localSelectionService = directory.get(SelectionService.class);
     localSelectionService.select(selectedMonthStats, MonthStat.TYPE);
     localSelectionService.select(selection.getAll(Month.TYPE), Month.TYPE);
   }

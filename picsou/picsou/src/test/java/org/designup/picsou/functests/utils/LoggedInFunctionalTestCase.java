@@ -33,6 +33,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected UncategorizedMessagePanelChecker informationPanel;
   protected TitleChecker title;
   protected MonthSummaryChecker monthSummary;
+  protected BudgetViewChecker budgetView;
   private PicsouApplication picsouApplication;
 
   protected void setUp() throws Exception {
@@ -77,6 +78,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     informationPanel = new UncategorizedMessagePanelChecker(mainWindow);
     title = new TitleChecker(mainWindow);
     monthSummary = new MonthSummaryChecker(mainWindow);
+    budgetView = new BudgetViewChecker(mainWindow);
   }
 
   protected void tearDown() throws Exception {
@@ -96,6 +98,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     title = null;
     repository = null;
     monthSummary = null;
+    budgetView = null;
     picsouApplication.shutdown();
     picsouApplication = null;
   }

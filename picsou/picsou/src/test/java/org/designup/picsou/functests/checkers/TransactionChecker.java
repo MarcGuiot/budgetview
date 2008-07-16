@@ -152,10 +152,24 @@ public class TransactionChecker extends ViewChecker {
     return transactionDetails.categorize();
   }
 
+  public void setIncome(int rowIndex, String seriesName) {
+    CategorizationDialogChecker categorization = categorize(rowIndex);
+    categorization.selectIncome();
+    categorization.selectIncomeSeries(seriesName);
+    categorization.validate();
+  }
+
   public void setRecurring(int rowIndex, String seriesName) {
     CategorizationDialogChecker categorization = categorize(rowIndex);
     categorization.selectRecurring();
     categorization.selectRecurringSeries(seriesName);
+    categorization.validate();
+  }
+
+  public void setEnvelope(int rowIndex, String seriesName, MasterCategory master) {
+    CategorizationDialogChecker categorization = categorize(rowIndex);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries(seriesName, master);
     categorization.validate();
   }
 
@@ -164,7 +178,6 @@ public class TransactionChecker extends ViewChecker {
     categorization.selectOccasional();
     categorization.selectOccasionalSeries(category);
     categorization.validate();
-
   }
 
   public class ContentChecker {

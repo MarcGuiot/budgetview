@@ -1,8 +1,0 @@
-
-
-
-- besoin grande latitude dans la zone client pour refactorings
-
-- affichage table transactions dans CategoryView
-
-- TransactionView : afficher les series plutôt que les categories ?

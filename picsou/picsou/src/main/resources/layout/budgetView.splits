@@ -1,0 +1,21 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <row>
+
+    <filler fill="horizontal" weightX="1.0"/>
+
+    <column>
+      <panel ref="incomeBudgetView"/>
+      <panel ref="recurringBudgetView"/>
+      <filler fill="vertical"/>
+    </column>
+    <column marginLeft="20">
+      <panel ref="envelopeBudgetView"/>
+      <filler fill="vertical"/>
+    </column>
+
+    <filler fill="horizontal" weightX="1.0"/>
+
+  </row>
+</splits>

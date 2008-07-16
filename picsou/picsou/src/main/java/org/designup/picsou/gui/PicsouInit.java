@@ -9,10 +9,7 @@ import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.PicsouModel;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
-import org.designup.picsou.triggers.FutureMonthTrigger;
-import org.designup.picsou.triggers.MonthStatComputer;
-import org.designup.picsou.triggers.SeriesUpdateTrigger;
-import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
+import org.designup.picsou.triggers.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
@@ -59,6 +56,7 @@ public class PicsouInit {
     repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new SeriesUpdateTrigger(directory));
     repository.addTrigger(new MonthStatComputer(repository));
+    repository.addTrigger(new SeriesStatTrigger());
 
     repository.create(User.TYPE,
                       value(User.ID, User.SINGLETON_ID),

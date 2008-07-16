@@ -19,6 +19,7 @@ import org.designup.picsou.gui.transactions.UncategorizedMessageView;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
+import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -87,6 +88,7 @@ public class MainPanel {
       new AccountView(repository, directory),
       new MonthSummaryView(repository, directory),
       new CardView(repository, directory, transactionSelection),
+      new BudgetView(repository, directory),
       new HistoricalChart(repository, directory),
       new CategoriesChart(repository, directory, transactionSelection));
 

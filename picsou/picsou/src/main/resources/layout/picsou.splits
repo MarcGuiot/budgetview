@@ -92,7 +92,7 @@
           </card>
 
           <card name="budget">
-            <label text="tbd"/>
+            <panel ref="budgetView"/>
           </card>
 
           <card name="withCategories">

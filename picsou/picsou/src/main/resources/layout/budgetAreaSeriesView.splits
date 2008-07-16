@@ -1,0 +1,33 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+   <column>
+
+    <label text="$budgetview.income.title" styleClass="blockTitle"/>
+
+    <panel styleClass="block" preferredSize="(300,400)">
+      <column margin="10">
+        <!--<row>-->
+          <!--<label ref="totalObservedAmount" styleClass="total"/>-->
+          <!--<label ref="totalPlannedAmount" styleClass="total"/>-->
+        <!--</row>-->
+
+        <repeat ref="seriesRepeat" styleClass="innerBlock">
+          <column name="seriesRow">
+            <row margin="10" marginBottom="2" >
+              <label ref="seriesName"/>
+              <filler fill="horizontal"/>
+            </row>
+            <row margin="10" marginTop="0" >
+              <label ref="observedSeriesAmount" styleClass="amount"/>
+              <filler fill="horizontal"/>
+              <label ref="plannedSeriesAmount" styleClass="amount"/>
+            </row>
+          </column>
+        </repeat>
+      </column>
+    </panel>
+
+  </column>
+</splits>

@@ -2,11 +2,13 @@ CategorizationDialog
 --------------------
 - renderer pour distinguer les non categorisees
 - "selectionner automatiquement les transactions similaires"
+- "retirer automatiquement les transactions classees"
 - next transaction saute les transactions categorisees
 - look toggles
 - split de transaction
 - saisie notes
 - tri transactions : label puis date puis montant
+- nouvelle enveloppe
 
 
 Vue accueil
@@ -49,12 +51,6 @@ FMK
 - portee des styles dans splits
 
 
-Vue "evolution"
----------------
-- histogramme evolution : stack recurrent/enveloppe/ponctuel
-
-
-
 Panneau edition series
 ----------------------
 - check nom
@@ -63,7 +59,8 @@ Panneau edition series
 - selection mois
 
 
+Vue "evolution"
+---------------
+- histogramme evolution : stack recurrent/enveloppe/ponctuel
 
 
-
-================================================================================
