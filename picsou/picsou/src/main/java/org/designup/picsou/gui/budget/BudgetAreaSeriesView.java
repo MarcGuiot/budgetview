@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
@@ -17,6 +16,8 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.metamodel.fields.DoubleField;
 
+import javax.swing.*;
+
 public class BudgetAreaSeriesView extends View {
   private String name;
   private BudgetArea budgetArea;
@@ -31,8 +32,11 @@ public class BudgetAreaSeriesView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetAreaSeriesView.splits",
                                                       repository, directory);
 
-//    builder.addLabel("totalObservedAmount", SeriesStat.AMOUNT);
-    
+    builder.add("budgetAreaTitle", new JLabel(stringify(budgetArea)));
+
+    addTotalLabel("totalObservedAmount", SeriesStat.AMOUNT, builder);
+    addTotalLabel("totalPlannedAmount", SeriesStat.PLANNED_AMOUNT, builder);
+
     builder.addRepeat("seriesRepeat",
                       Series.TYPE,
                       GlobMatchers.fieldEquals(Series.BUDGET_AREA, budgetArea.getId()),
@@ -50,8 +54,18 @@ public class BudgetAreaSeriesView extends View {
     parentBuilder.add(name, builder);
   }
 
+  private String stringify(BudgetArea budgetArea) {
+    return descriptionService.getStringifier(BudgetArea.TYPE).toString(budgetArea.getGlob(), repository);
+  }
+
+  private void addTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
+    builder.addLabel(name, SeriesStat.TYPE,
+                     GlobListStringifiers.sum(decimalFormat, field))
+      .setFilter(GlobMatchers.linkTargetFieldEquals(SeriesStat.SERIES, Series.BUDGET_AREA, budgetArea.getId()));
+  }
+
   private void addAmountLabel(String name, DoubleField field, Glob series, RepeatCellBuilder cellBuilder) {
-    final GlobListStringifier stringifier = GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, field);
+    GlobListStringifier stringifier = GlobListStringifiers.sum(decimalFormat, field);
     cellBuilder.add(name,
                     GlobLabelView.init(SeriesStat.TYPE, repository, directory, stringifier)
                       .setFilter(GlobMatchers.linkedTo(series, SeriesStat.SERIES))

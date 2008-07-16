@@ -4,8 +4,6 @@
 
   <styles>
     <style selector="#monthSummary label#budgetAreaName" font="-,bold,12"/>
-    <style selector="#monthSummary label.total"
-           font="-,bold,18" foreground="monthsummary.total" anchor="center"/>
     <style selector="#monthSummary label.amount" font="-,bold,10" foreground="monthsummary.amount"/>
   </styles>
 
@@ -15,19 +13,20 @@
 
     <panel styleClass="block">
       <column margin="10">
-        <row>
-          <label ref="totalReceivedAmount" styleClass="total"/>
-          <component ref="totalBalance"
+        <grid weightY="0">
+          <label text="$monthsummary.received" styleClass="totalAmountTitle" gridPos="(0,0)"/>
+          <label ref="totalReceivedAmount" styleClass="totalAmount" gridPos="(0,1)"/>
+          <component ref="totalBalance" gridPos="(1,0,1,2)"
                      receivedColorTop="balancegraph.received.top"
                      receivedColorBottom="balancegraph.received.bottom"
                      spentColorTop="balancegraph.spent.top"
                      spentColorBottom="balancegraph.spent.bottom"
                      borderColor="balancegraph.border"
-                     preferredSize="(70,40)"
-                     weightX="0"
-                     fill="vertical"/>
-          <label ref="totalSpentAmount" styleClass="total"/>
-        </row>
+                     preferredSize="(70,50)"
+                     weightX="0" weightY="1.0" fill="none"/>
+          <label text="$monthsummary.spent" styleClass="totalAmountTitle" gridPos="(2,0)"/>
+          <label ref="totalSpentAmount" styleClass="totalAmount" gridPos="(2,1)"/>
+        </grid>
         <repeat ref="budgetAreaRepeat">
           <column name="budgetAreaRow" styleClass="innerBlock">
             <row margin="10" marginBottom="2" >

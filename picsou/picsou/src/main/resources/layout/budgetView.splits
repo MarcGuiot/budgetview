@@ -10,6 +10,7 @@
       <panel ref="recurringBudgetView"/>
       <filler fill="vertical"/>
     </column>
+    
     <column marginLeft="20">
       <panel ref="envelopeBudgetView"/>
       <filler fill="vertical"/>

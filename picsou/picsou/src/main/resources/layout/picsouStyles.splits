@@ -17,12 +17,12 @@
     <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
         cornerRadius="20"/>
-    <style selector=".block" ui="block" opaque="false"/>
+    <style selector=".block" ui="block" opaque="false" marginBottom="20"/>
     <style selector="label.blockTitle" anchor="center"
            foreground="#FFFFFF" marginBottom="5" font="-,bold,13"
            shadowDirection="northwest" shadowColor="#222222"/>
-    <style selector=".block label.totalAmount" foreground="block.total" font="-,bold,20" anchor="center"/>
-    <style selector=".block label" foreground="#000000"/>
+    <style selector=".block label.totalAmountTitle" foreground="block.total.title" font="-,plain,10" anchor="bottom"/>
+    <style selector=".block label.totalAmount" foreground="block.total" font="-,bold,20" anchor="top"/>
 
     <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
     <ui name="innerBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"

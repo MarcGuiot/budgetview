@@ -9,6 +9,9 @@ import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
+
+import java.text.DecimalFormat;
 
 public abstract class View implements ColorChangeListener {
   protected GlobRepository repository;
@@ -17,6 +20,8 @@ public abstract class View implements ColorChangeListener {
   protected DescriptionService descriptionService;
   protected SelectionService selectionService;
   protected FontLocator fontLocator;
+  protected DecimalFormat decimalFormat;
+
 
   protected View(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -25,7 +30,8 @@ public abstract class View implements ColorChangeListener {
     this.descriptionService = directory.get(DescriptionService.class);
     this.selectionService = directory.get(SelectionService.class);
     this.fontLocator = directory.get(FontLocator.class);
-    colorService.addListener(this);
+    this.colorService.addListener(this);
+    this.decimalFormat = PicsouDescriptionService.DECIMAL_FORMAT;
   }
 
   public void colorsChanged(ColorLocator colorLocator) {

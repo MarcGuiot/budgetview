@@ -4,14 +4,16 @@
 
    <column>
 
-    <label text="$budgetview.income.title" styleClass="blockTitle"/>
+    <label ref="budgetAreaTitle" styleClass="blockTitle"/>
 
     <panel styleClass="block" preferredSize="(300,400)">
       <column margin="10">
-        <!--<row>-->
-          <!--<label ref="totalObservedAmount" styleClass="total"/>-->
-          <!--<label ref="totalPlannedAmount" styleClass="total"/>-->
-        <!--</row>-->
+        <grid>
+          <label text="$budgetview.observed" styleClass="totalAmountTitle" gridPos="(0,0)"/>
+          <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(0,1)"/>
+          <label text="$budgetview.planned" styleClass="totalAmountTitle" gridPos="(1,0)"/>
+          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(1,1)"/>
+        </grid>
 
         <repeat ref="seriesRepeat" styleClass="innerBlock">
           <column name="seriesRow">

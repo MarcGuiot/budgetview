@@ -10,3 +10,10 @@ CategorizationDialog
 --------------------
 - afficher toutes les categories dans la zone Occasional
 - afficher table transactions + gestion multi-selection + next/prev
+
+Vue budget
+----------
+- introduction toggle + card
+- bloc revenus
+- bloc recurrent
+- bloc enveloppes

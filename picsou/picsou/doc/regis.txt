@@ -26,11 +26,10 @@ TitleView
 
 Vue budget
 ----------
-- introduction toggle + card
-- bloc revenus
-- bloc recurrent
-- bloc enveloppes
+- montants totaux
 - bloc ponctuel
+- edition series
+- gauges
 
 
 Vue releves

@@ -27,6 +27,21 @@ public class BudgetViewChecker extends DataChecker {
       this.panelName = panelName;
     }
 
+    public void checkTitle(String title) {
+      Panel budgetPanel = window.getPanel(panelName);
+      TextBox label = budgetPanel.getTextBox("budgetAreaTitle");
+      UISpecAssert.assertThat(label.textEquals(title));
+    }
+
+    public void checkTotalAmounts(double received, int spent) {
+      Panel budgetPanel = window.getPanel(panelName);
+      TextBox totalObserved = budgetPanel.getTextBox("totalObservedAmount");
+      UISpecAssert.assertTrue(totalObserved.textEquals(BudgetViewChecker.this.toString(received)));
+
+      TextBox totalPlanned = budgetPanel.getTextBox("totalPlannedAmount");
+      UISpecAssert.assertTrue(totalPlanned.textEquals(BudgetViewChecker.this.toString(spent)));
+    }
+
     public void checkSeries(String seriesName, double observedAmount, double plannedAmount) {
       Panel budgetPanel = window.getPanel(panelName);
       TextBox nameBox = budgetPanel.getTextBox(seriesName);
