@@ -11,9 +11,9 @@
 
       <column>
 
-        <row opaque="true">
-          <textArea ref="transactionLabel"/>
-        </row>
+        <checkBox ref="autoSelection" text="$categorization.autoselection"/>
+
+        <textArea ref="transactionLabel" anchor="left"/>
 
         <row>
           <toggleButton ref="invisibleBudgetAreaToggle" visible="false"/>

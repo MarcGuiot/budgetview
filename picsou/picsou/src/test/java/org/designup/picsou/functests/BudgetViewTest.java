@@ -50,11 +50,11 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
   }
 
-  public void DISABLED_testUnusedSeriesAreHidden() throws Exception {
-
+  public void testUnusedSeriesAreHidden() throws Exception {
+    System.out.println("BudgetViewTest.testUnusedSeriesAreHidden: TBD");
   }
 
-  public void DISABLED_testSeveralMonths() throws Exception {
-
+  public void testSeveralMonths() throws Exception {
+    System.out.println("BudgetViewTest.testSeveralMonths: TBD");
   }
 }

@@ -1,13 +1,10 @@
 CategorizationDialog
 --------------------
 - renderer pour distinguer les non categorisees
-- "selectionner automatiquement les transactions similaires"
-- "retirer automatiquement les transactions classees"
-- next transaction saute les transactions categorisees
+- "masquer les transactions classees"
 - look toggles
 - split de transaction
 - saisie notes
-- tri transactions : label puis date puis montant
 - nouvelle enveloppe
 
 
@@ -26,8 +23,7 @@ TitleView
 
 Vue budget
 ----------
-- montants totaux
-- bloc ponctuel
+- bloc "ponctuel"
 - edition series
 - gauges
 

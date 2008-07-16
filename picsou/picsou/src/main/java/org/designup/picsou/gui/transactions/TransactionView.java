@@ -17,6 +17,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
@@ -35,7 +36,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 
-public class TransactionView extends View implements GlobSelectionListener, ChangeSetListener {
+public class TransactionView extends View implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
   public static final int DATE_COLUMN_INDEX = 0;
   public static final int CATEGORY_COLUMN_INDEX = 1;
   public static final int LABEL_COLUMN_INDEX = 2;

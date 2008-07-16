@@ -6,6 +6,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.utils.logging.Debug;
 
 public class CategorizationTest extends LoggedInFunctionalTestCase {
 
@@ -216,7 +217,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Carouf", "", -29.90, MasterCategory.FOOD)
       .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, MasterCategory.FOOD)
       .check();
-    
+
     transactions.getTable().selectRow(0);
     transactionDetails.checkSeries("Groceries");
     transactions.getTable().selectRow(1);
@@ -253,7 +254,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Carouf", "", -29.90, MasterCategory.FOOD)
       .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, MasterCategory.FOOD)
       .check();
-    
+
     transactions.getTable().selectRow(0);
     transactionDetails.checkSeries("Groceries");
     transactions.getTable().selectRow(1);
@@ -289,5 +290,85 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.pressEscapeKey();
     dialog.assertVisible(false);
     transactionDetails.checkNoSeries();
+  }
+
+  public void testAutomaticSelectionOfSimilarTransactions() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
+      .addTransaction("2008/05/25", -29.90, "Free Telecom 25/05")
+      .addTransaction("2008/04/24", -29.90, "Free Telecom 21/04")
+      .addTransaction("2008/05/15", -90.0, "Auchan 1111")
+      .addTransaction("2008/05/14", -80.0, "Auchan 2222")
+      .load();
+
+    CategorizationDialogChecker dialog = informationPanel.categorize();
+    dialog.checkTable(new Object[][]{
+      {"15/05/2008", "Auchan 1111", -90.00},
+      {"14/05/2008", "Auchan 2222", -80.00},
+      {"24/04/2008", "Free Telecom 21/04", -29.90},
+      {"25/05/2008", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "Free Telecom 26/06", -29.90}
+    });
+
+    dialog.checkAutoSelectionEnabled(true);
+    dialog.checkTableSelectionEquals(0, 1);
+    dialog.selectTableRows(3);
+    dialog.checkTableSelectionEquals(2, 3, 4);
+
+    dialog.disableAutoSelection();
+    dialog.checkTableSelectionEquals(2, 3, 4);
+    dialog.selectTableRows(1);
+    dialog.checkTableSelectionEquals(1);
+    dialog.selectTableRows(3);
+    dialog.checkTableSelectionEquals(3);
+
+    dialog.enableAutoSelection();
+    dialog.checkTableSelectionEquals(2, 3, 4);
+    dialog.selectRecurring();
+    dialog.selectRecurringSeries("Internet");
+
+    dialog.selectTableRows(0);
+    dialog.checkTableSelectionEquals(0, 1);
+    dialog.selectEnvelopes();
+    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD);
+
+    dialog.validate();
+
+    views.selectData();
+    transactions.initContent()
+      .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, MasterCategory.TELECOMS)
+      .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, MasterCategory.TELECOMS)
+      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan 1111", "", -90.00, MasterCategory.FOOD)
+      .add("14/05/2008", TransactionType.PRELEVEMENT, "Auchan 2222", "", -80.00, MasterCategory.FOOD)
+      .add("24/04/2008", TransactionType.PRELEVEMENT, "Free Telecom 21/04", "", -29.90, MasterCategory.TELECOMS)
+      .check();
+  }
+
+  public void testAutomaticSelectionExcludesChecks() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/26", -12.90, "Cheque 12345")
+      .addTransaction("2008/05/25", -34.90, "Cheque 23456")
+      .addTransaction("2008/04/24", -56.90, "Cheque 34556")
+      .load();
+
+    CategorizationDialogChecker dialog = informationPanel.categorize();
+    dialog.checkAutoSelectionEnabled(true);
+    dialog.checkTableSelectionEquals(0);    
+  }
+
+  public void testManualMultiSelectionOverridesTheAutomaticSelectionMechanism() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
+      .addTransaction("2008/05/25", -29.90, "Free Telecom 25/05")
+      .addTransaction("2008/04/24", -29.90, "Free Telecom 21/04")
+      .load();
+
+    CategorizationDialogChecker dialog = informationPanel.categorize();
+    dialog.checkAutoSelectionEnabled(true);
+    dialog.selectTableRows(0, 2);
+    dialog.checkTableSelectionEquals(0, 2);
   }
 }

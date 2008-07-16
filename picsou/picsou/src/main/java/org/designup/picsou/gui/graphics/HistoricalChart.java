@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-public class HistoricalChart extends AbstractLineChart {
+public class HistoricalChart extends AbstractLineChart implements ColorChangeListener {
 
   private java.util.List<Integer> months = new ArrayList<Integer>();
   private GlobList selectedCategories = GlobList.EMPTY;
@@ -46,6 +46,7 @@ public class HistoricalChart extends AbstractLineChart {
   public HistoricalChart(GlobRepository repository, Directory directory) {
     super(repository, directory);
     selectionService.addListener(this, Category.TYPE, Month.TYPE);
+    colorService.addListener(this);
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {

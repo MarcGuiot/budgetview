@@ -21,12 +21,14 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.*;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Comparator;
 
 public class CategorizationDialog {
   private SelectionService selectionService = new SelectionService();
@@ -35,6 +37,7 @@ public class CategorizationDialog {
   private PicsouDialog dialog;
   private GlobTableView transactionTable;
   private NextTransactionAction nextTransactionAction;
+  private JCheckBox autoSelectionCheckBox;
 
   public CategorizationDialog(Window parent, final GlobRepository repository, Directory directory) {
 
@@ -43,22 +46,17 @@ public class CategorizationDialog {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationDialog.splits",
                                                       localRepository, localDirectory);
 
-    GlobFieldComparator transactionComparator = new GlobFieldComparator(Transaction.LABEL);
-    LabelCustomizer transactionHighlighter = new LabelCustomizer() {
-      public void process(JLabel label, Glob transaction, boolean isSelected, boolean hasFocus, int row, int column) {
-        if ((transaction.get(Transaction.SERIES) == null) || (transaction.get(Transaction.CATEGORY) == null)) {
-          label.setForeground(Color.RED);
-        }
-        else {
-          label.setForeground(Color.BLACK);
-        }
-      }
-    };
+    LabelCustomizer transactionHighlighter = getTransactionHighlighter();
+    Comparator<Glob> transactionComparator = getTransactionComparator();
     transactionTable =
       builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
         .addColumn(Lang.get("date"), new TransactionDateStringifier(transactionComparator), transactionHighlighter)
         .addColumn(Transaction.LABEL, transactionHighlighter)
         .addColumn(Transaction.AMOUNT, transactionHighlighter);
+
+    autoSelectionCheckBox = new JCheckBox(new AutoSelectAction());
+    autoSelectionCheckBox.setSelected(true);
+    builder.add("autoSelection", autoSelectionCheckBox);
 
     builder.addMultiLineTextView("transactionLabel", Transaction.TYPE);
 
@@ -133,6 +131,26 @@ public class CategorizationDialog {
     dialog.pack();
   }
 
+  private LabelCustomizer getTransactionHighlighter() {
+    return new LabelCustomizer() {
+      public void process(JLabel label, Glob transaction, boolean isSelected, boolean hasFocus, int row, int column) {
+        if ((transaction.get(Transaction.SERIES) == null) || (transaction.get(Transaction.CATEGORY) == null)) {
+          label.setForeground(Color.RED);
+        }
+        else {
+          label.setForeground(Color.BLACK);
+        }
+      }
+    };
+  }
+
+  private Comparator<Glob> getTransactionComparator() {
+    return new GlobFieldsComparator(Transaction.LABEL, true,
+                                    Transaction.MONTH, false,
+                                    Transaction.DAY, false,
+                                    Transaction.AMOUNT, false);
+  }
+
   private Directory init(GlobRepository repository, Directory directory) {
 
     localRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -145,6 +163,9 @@ public class CategorizationDialog {
       public void selectionUpdated(GlobSelection selection) {
         currentTransactions = selection.getAll(Transaction.TYPE);
         nextTransactionAction.update();
+        if (autoSelectionCheckBox.isSelected()) {
+          autoSelectSimilarTransactions();
+        }
       }
     }, Transaction.TYPE);
 
@@ -207,6 +228,37 @@ public class CategorizationDialog {
     public void actionPerformed(ActionEvent e) {
       SeriesCreationDialog creationDialog = new SeriesCreationDialog(budgetArea, dialog, localRepository, localDirectory);
       creationDialog.show();
+    }
+  }
+
+  private class AutoSelectAction extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+      if (autoSelectionCheckBox.isSelected()) {
+        autoSelectSimilarTransactions();
+      }
+    }
+  }
+
+  private void autoSelectSimilarTransactions() {
+    if (currentTransactions.size() != 1) {
+      return;
+    }
+
+    Glob transaction = currentTransactions.get(0);
+    final String referenceLabel = transaction.get(Transaction.LABEL_FOR_CATEGORISATION);
+    if (Strings.isNullOrEmpty(referenceLabel)) {
+      return;
+    }
+
+    final GlobList similarTransactions =
+      localRepository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX,
+                                  referenceLabel);
+    if (similarTransactions.size() > 1) {
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          selectionService.select(similarTransactions, Transaction.TYPE);
+        }
+      });
     }
   }
 }

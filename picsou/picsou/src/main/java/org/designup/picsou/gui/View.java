@@ -13,7 +13,7 @@ import org.designup.picsou.gui.description.PicsouDescriptionService;
 
 import java.text.DecimalFormat;
 
-public abstract class View implements ColorChangeListener {
+public abstract class View {
   protected GlobRepository repository;
   protected Directory directory;
   protected ColorService colorService;
@@ -22,7 +22,6 @@ public abstract class View implements ColorChangeListener {
   protected FontLocator fontLocator;
   protected DecimalFormat decimalFormat;
 
-
   protected View(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
@@ -30,7 +29,6 @@ public abstract class View implements ColorChangeListener {
     this.descriptionService = directory.get(DescriptionService.class);
     this.selectionService = directory.get(SelectionService.class);
     this.fontLocator = directory.get(FontLocator.class);
-    this.colorService.addListener(this);
     this.decimalFormat = PicsouDescriptionService.DECIMAL_FORMAT;
   }
 

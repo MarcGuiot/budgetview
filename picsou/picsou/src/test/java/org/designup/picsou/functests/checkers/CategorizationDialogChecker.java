@@ -11,6 +11,7 @@ import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.assertEquals;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
 
@@ -257,6 +258,18 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void checkTableSelectionEquals(int... rows) {
-    assertTrue(table.rowsAreSelected(rows));
+    assertThat(table.rowsAreSelected(rows));
+  }
+
+  public void checkAutoSelectionEnabled(boolean enabled) {
+    assertEquals(enabled, dialog.getCheckBox("similar").isSelected());
+  }
+
+  public void enableAutoSelection() {
+    dialog.getCheckBox("similar").select();
+  }
+
+  public void disableAutoSelection() {
+    dialog.getCheckBox("similar").unselect();
   }
 }

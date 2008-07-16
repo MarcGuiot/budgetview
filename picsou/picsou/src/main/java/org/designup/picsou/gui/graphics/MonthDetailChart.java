@@ -10,6 +10,7 @@ import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.metamodel.GlobType;
@@ -30,7 +31,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class MonthDetailChart extends View implements GlobSelectionListener, ChangeSetListener {
+public class MonthDetailChart extends View implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
   private static int step = 6;
   private static int interval = 31 / step + 1;
   private ChartPanel panel;
@@ -51,6 +52,7 @@ public class MonthDetailChart extends View implements GlobSelectionListener, Cha
     super(repository, directory);
     repository.addChangeListener(this);
     selectionService.addListener(this, Category.TYPE, Month.TYPE);
+    colorService.addListener(this);
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
