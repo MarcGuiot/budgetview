@@ -84,4 +84,12 @@ public class PicsouMatchers {
     }
     return extendedIdSet;
   }
+
+  public static GlobMatcher masterCategories() {
+    return GlobMatchers.isNull(Category.MASTER);
+  }
+
+  public static GlobMatcher subCategories(Integer masterCategoryId) {
+    return GlobMatchers.fieldEquals(Category.MASTER, masterCategoryId);
+  }
 }

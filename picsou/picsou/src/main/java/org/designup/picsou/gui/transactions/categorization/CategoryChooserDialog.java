@@ -8,17 +8,21 @@ import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouMatchers;
+import org.designup.picsou.gui.sandbox.ColumnLayoutManager;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
-import org.globsframework.gui.splits.layout.Anchor;
-import org.globsframework.gui.splits.layout.Fill;
-import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -31,7 +35,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 public class CategoryChooserDialog implements ChangeSetListener {
@@ -44,10 +47,6 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private GlobStringifier stringifier;
   private PicsouDialog dialog;
   private JFrame mainFrame;
-  private GlobList firstPartCategories = new GlobList();
-  private GlobList secondPartCategories = new GlobList();
-  private GlobList thirdPartCategories = new GlobList();
-  private boolean needToRebuild = true;
   private CreateCategoryAction addCategoryAction;
   private DeleteCategoryAction deleteCategoryAction;
   private RenameCategoryAction renameCategoryAction;
@@ -82,14 +81,11 @@ public class CategoryChooserDialog implements ChangeSetListener {
       }
     };
     mainFrame = localDirectory.get(JFrame.class);
+    dialog = PicsouDialog.create(mainFrame, Lang.get("choose.category.title"));
+    loadDialogContent();
   }
 
   public void show() {
-    if (needToRebuild) {
-      dialog = PicsouDialog.create(mainFrame, Lang.get("choose.category.title"));
-      loadDialogContent();
-      needToRebuild = false;
-    }
     setSelectedCategories();
     GuiUtils.showCentered(dialog);
   }
@@ -105,50 +101,56 @@ public class CategoryChooserDialog implements ChangeSetListener {
         loadDialogContent();
         setSelectedCategories();
       }
-      else {
-        needToRebuild = true;
-      }
     }
   }
 
   public void globsReset(GlobRepository repository, java.util.List<GlobType> changedTypes) {
-    needToRebuild = true;
+    if (changedTypes.contains(Category.TYPE)) {
+
+    }
   }
 
   private void loadDialogContent() {
     categoryIdToJLabel.clear();
-    firstPartCategories.clear();
-    secondPartCategories.clear();
-    thirdPartCategories.clear();
 
-    splitCategories();
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categoryChooser.splits",
+                                                      repository, directory);
+    builder.addRepeat("masterRepeat",
+                      Category.TYPE,
+                      PicsouMatchers.masterCategories(),
+                      new RepeatComponentFactory<Glob>() {
+                        public void registerComponents(RepeatCellBuilder masterCellBuilder, Glob master) {
+                          masterCellBuilder.add("masterLabel", createCategoryPanel(master));
+                          GlobsPanelBuilder.addRepeat(
+                            "subcatRepeat",
+                            Category.TYPE,
+                            PicsouMatchers.subCategories(master.get(Category.ID)),
+                            new CategoryComparator(repository, directory),
+                            repository,
+                            masterCellBuilder,
+                            new RepeatComponentFactory<Glob>() {
+                              public void registerComponents(RepeatCellBuilder subCatCellBuilder, Glob subcat) {
+                                subCatCellBuilder.add("subcatLabel", createCategoryPanel(subcat));
+                              }
+                            });
+                        }
+                      });
 
-    SplitsBuilder.init(directory)
-      .setSource(getClass(), "/layout/categoryChooser.splits")
-      .add("first", getCategoriesPanel(firstPartCategories))
-      .add("second", getCategoriesPanel(secondPartCategories))
-      .add("third", getCategoriesPanel(thirdPartCategories))
-      .add("close", new AbstractAction(Lang.get("close")) {
-        public void actionPerformed(ActionEvent e) {
-          close();
-        }
-      })
-      .addLoader(new SplitsLoader() {
-        public void load(Component component) {
-          dialog.setContentPane((Container)component);
-          dialog.pack();
-        }
-      })
-      .load();
-  }
+    builder.add("close", new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        close();
+      }
+    });
+    builder.addLoader(new SplitsLoader() {
+      public void load(Component component) {
+        dialog.setContentPane((Container)component);
+        dialog.pack();
+      }
+    });
+    builder.load();
 
-  private JPanel getCategoriesPanel(GlobList categories) {
-    GridBagBuilder bagBuilder = GridBagBuilder.init().setOpaque(false);
-    int y = 0;
-    for (Glob category : categories) {
-      addCategoryPanel(bagBuilder, y++, category);
-    }
-    return bagBuilder.getPanel();
+    JPanel panel = (JPanel)builder.getComponent("masterRepeat");
+    panel.setLayout(new ColumnLayoutManager(4));
   }
 
   private void setSelectedCategories() {
@@ -170,25 +172,20 @@ public class CategoryChooserDialog implements ChangeSetListener {
     selectedCategories.clear();
   }
 
-  private void addCategoryPanel(GridBagBuilder builder, int y, final Glob category) {
-    boolean isMaster = Category.isMaster(category);
-    int leftMargin = isMaster ? 2 : 20;
-    int topMargin = isMaster ? 20 : 0;
+  private JPanel createCategoryPanel(Glob category) {
     final JPanel panel = Gui.createHorizontalBoxLayoutPanel();
 
     final JLabel label = createCategoryLabel(panel, category);
     panel.add(Box.createRigidArea(new Dimension(2, 0)));
-
-    final CategoryButtonsPanel buttonsPanel = new CategoryButtonsPanel(category,
-                                                                       label,
-                                                                       panel,
-                                                                       addCategoryAction,
-                                                                       renameCategoryAction,
-                                                                       deleteCategoryAction,
-                                                                       selectionService);
+    CategoryButtonsPanel buttonsPanel = new CategoryButtonsPanel(category,
+                                                                 label,
+                                                                 panel,
+                                                                 addCategoryAction,
+                                                                 renameCategoryAction,
+                                                                 deleteCategoryAction,
+                                                                 selectionService);
     panel.add(buttonsPanel.getPanel());
-
-    builder.add(panel, 0, y, 1, 1, 1, 0, Fill.NONE, Anchor.NORTHWEST, new Insets(topMargin, leftMargin, 0, 0));
+    return panel;
   }
 
   private JLabel createCategoryLabel(JPanel panel, final Glob category) {
@@ -225,53 +222,5 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
     panel.add(label);
     return label;
-  }
-
-  private void splitCategories() {
-    GlobList allCategories = repository.getAll(Category.TYPE).sort(new CategoryComparator(repository, stringifier));
-    int categoryCountByColumn = allCategories.size() / 3;
-    int firstPartCount;
-    int secondPartCount;
-    boolean forceSecondPart = false;
-    boolean forceThirdPart = false;
-    for (Glob category : allCategories) {
-      if (category.get(Category.ID).equals(Category.ALL)) {
-        continue;
-      }
-      firstPartCount = firstPartCategories.size();
-      if (firstPartCount < categoryCountByColumn) {
-        firstPartCategories.add(category);
-        continue;
-      }
-      if (forceSecondPart) {
-        secondPartCount = secondPartCategories.size();
-        if (secondPartCount < categoryCountByColumn) {
-          secondPartCategories.add(category);
-          continue;
-        }
-        if (forceThirdPart) {
-          thirdPartCategories.add(category);
-          continue;
-        }
-        if (!Category.isMaster(category)) {
-          secondPartCategories.add(category);
-        }
-        else {
-          thirdPartCategories.add(category);
-          forceThirdPart = true;
-        }
-        continue;
-      }
-      if (!Category.isMaster(category)) {
-        firstPartCategories.add(category);
-      }
-      else {
-        secondPartCategories.add(category);
-        forceSecondPart = true;
-      }
-    }
-    firstPartCategories.sort(new CategoryComparator(repository, stringifier));
-    secondPartCategories.sort(new CategoryComparator(repository, stringifier));
-    thirdPartCategories.sort(new CategoryComparator(repository, stringifier));
   }
 }

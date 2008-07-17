@@ -57,7 +57,7 @@ public class ColumnLayoutManager implements LayoutManager {
         y += componentHeight;
         maxheight[currentColumn] = y;
         maxWidth[currentColumn] = Math.max(maxWidth[currentColumn], component.getPreferredSize().width);
-        for (int j = previousI; j < i; i++) {
+        for (int j = previousI; j < i; j++) {
           positions[j].width = maxWidth[currentColumn];
         }
         i++;

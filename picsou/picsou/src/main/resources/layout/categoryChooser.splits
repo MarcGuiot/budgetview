@@ -2,19 +2,20 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel ui="dialog" preferredSize="(800,800)" maximumSize="(800,800)">
-    <scrollPane>
-    <column margin="5">
-      <row defaultMargin="5" defaultFill="none" defaultAnchor="northeast">
-        <component ref="first"/>
-        <component ref="second"/>
-        <component ref="third"/>
-      </row>
-      <row>
-        <filler fill="horizontal"/>
-        <button action="close"/>
-      </row>
-    </column>
+  <column styleClass="dialog" preferredSize="(800,800)">
+    <scrollPane margin="15">
+      <repeat ref="masterRepeat" margin="10">
+        <column>
+          <component ref="masterLabel" marginTop="10"/>
+          <repeat ref="subcatRepeat" marginLeft="5">
+            <component ref="subcatLabel"/>
+          </repeat>
+        </column>
+      </repeat>
     </scrollPane>
-  </panel>
+    <row margin="10" marginTop="0">
+      <filler fill="horizontal"/>
+    <button action="close" text="$close"/>
+    </row>
+  </column>
 </splits>

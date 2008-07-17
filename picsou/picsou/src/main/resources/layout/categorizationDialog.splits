@@ -1,6 +1,9 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-  <column opaque="true" preferredSize="(600,600)" margin="15">
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <column styleClass="dialog" opaque="true" preferredSize="(600,600)" margin="15">
+
     <label text="$categorization.list.title"/>
 
     <verticalSplit dividerLocation="150" resizeWeight="0">

@@ -11,7 +11,7 @@
         topColor="dialog.block.internal" bottomColor="dialog.block.internal"/>
   </styles>
 
-  <panel ui="dialog" border="matte(1,1,1,1,#666666)">
+  <panel styleClass="dialog">
 
     <column margin="20">
 

@@ -24,9 +24,9 @@ public class CategoryButtonsPanel {
   public CategoryButtonsPanel(final Glob category,
                               final JLabel categoryLabel,
                               final JPanel parentPanel,
-                              AbstractAction addCategoryAction,
-                              AbstractAction renameCategoryAction,
-                              AbstractAction deleteCategoryAction,
+                              Action addCategoryAction,
+                              Action renameCategoryAction,
+                              Action deleteCategoryAction,
                               final SelectionService selectionService) {
     this.categoryLabel = categoryLabel;
 
@@ -43,17 +43,17 @@ public class CategoryButtonsPanel {
     if (!Category.isMaster(category)) {
       buttonPanel.add(renameCategoryButton);
       configureButtonPanelEnabling(renameCategoryButton);
-      holePanel.add(Box.createRigidArea(new Dimension(13, 13)));
+      holePanel.add(Box.createRigidArea(new Dimension(13, 5)));
     }
     if (Category.isMaster(category) && (!Category.isReserved(category)) && (!Category.isSystem(category))) {
       buttonPanel.add(addCategoryButton);
       configureButtonPanelEnabling(addCategoryButton);
-      holePanel.add(Box.createRigidArea(new Dimension(13, 13)));
+      holePanel.add(Box.createRigidArea(new Dimension(13, 5)));
     }
     if (!Category.isMaster(category) && !Category.isSystem(category)) {
       buttonPanel.add(deleteCategoryButton);
       configureButtonPanelEnabling(deleteCategoryButton);
-      holePanel.add(Box.createRigidArea(new Dimension(13, 13)));
+      holePanel.add(Box.createRigidArea(new Dimension(13, 5)));
     }
 
     panel.add(buttonPanel, BUTTON_PANEL);
@@ -136,21 +136,21 @@ public class CategoryButtonsPanel {
             (mouseOnScreen.getX() < buttonLocation.getX() + buttonPanel.getWidth()));
   }
 
-  private JButton createAddCategoryButton(AbstractAction addCategoryAction) {
+  private JButton createAddCategoryButton(Action addCategoryAction) {
     final JButton addCategoryButton = new JButton(addCategoryAction);
     configureButton(addCategoryButton, Icons.ADD_ICON, Icons.ADD_ROLLOVER_ICON, "Add");
     addCategoryButton.setToolTipText(Lang.get("category.create.tooltip"));
     return addCategoryButton;
   }
 
-  private JButton createDeleteCategoryButton(AbstractAction deleteCategoryAction) {
+  private JButton createDeleteCategoryButton(Action deleteCategoryAction) {
     final JButton deleteCategoryButton = new JButton(deleteCategoryAction);
     configureButton(deleteCategoryButton, Icons.DELETE_ICON, Icons.DELETE_ROLLOVER_ICON, "Delete");
     deleteCategoryButton.setToolTipText(Lang.get("category.delete.tooltip"));
     return deleteCategoryButton;
   }
 
-  private JButton createRenameCategoryButton(AbstractAction renameCategoryAction) {
+  private JButton createRenameCategoryButton(Action renameCategoryAction) {
     final JButton renameCategoryButton = new JButton(renameCategoryAction);
     configureButton(renameCategoryButton, Icons.RENAME_ICON, Icons.RENAME_ROLLOVER_ICON, "Rename");
     renameCategoryButton.setToolTipText(Lang.get("category.rename.tooltip"));

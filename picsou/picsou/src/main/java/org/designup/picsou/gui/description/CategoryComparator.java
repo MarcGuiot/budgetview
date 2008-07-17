@@ -18,8 +18,8 @@ public class CategoryComparator implements Comparator<Glob> {
   private GlobRepository repository;
   private GlobStringifier nameStringifier;
 
-  public CategoryComparator(GlobRepository globRepository, Directory directory) {
-    this.repository = globRepository;
+  public CategoryComparator(GlobRepository repository, Directory directory) {
+    this.repository = repository;
     final DescriptionService descriptionService = directory.get(DescriptionService.class);
     this.nameStringifier = descriptionService.getStringifier(Category.TYPE);
   }

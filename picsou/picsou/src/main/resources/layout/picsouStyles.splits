@@ -9,8 +9,12 @@
         topColor="login.block.top" bottomColor="login.block.bottom" borderColor="login.block.border"
         borderWidth="2" cornerRadius="10"/>
 
+    <!-- Dialog -->
+
     <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="dialog.bg.top" bottomColor="dialog.bg.bottom"/>
+
+    <style selector="dialog" ui="dialog"/>
 
     <!-- Blocks and inner blocks -->
 
