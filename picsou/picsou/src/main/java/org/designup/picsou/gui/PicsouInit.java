@@ -56,7 +56,8 @@ public class PicsouInit {
     repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new SeriesUpdateTrigger(directory));
     repository.addTrigger(new MonthStatComputer(repository));
-    repository.addTrigger(new SeriesStatTrigger());
+    final SeriesStatTrigger seriesStatTrigger = new SeriesStatTrigger();
+    repository.addTrigger(seriesStatTrigger);
 
     repository.create(User.TYPE,
                       value(User.ID, User.SINGLETON_ID),
@@ -84,6 +85,7 @@ public class PicsouInit {
       loadGlobs("/series.xml");
     }
 
+    seriesStatTrigger.init(repository);
     initDirectory(repository);
   }
 

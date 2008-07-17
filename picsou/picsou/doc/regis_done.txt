@@ -13,6 +13,7 @@ CategorizationDialog
 - "selectionner automatiquement les transactions similaires"
 - tri transactions : label puis date puis montant
 - "masquer les transactions classees"
+- nouvelle enveloppe
 
 
 Vue budget

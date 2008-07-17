@@ -100,6 +100,7 @@ public class CategorizationDialog {
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.EXPENSES_ENVELOPE.getGlob(), Series.BUDGET_AREA),
                       new EnvelopeSeriesComponentFactory(invisibleEnvelopeToggle, localRepository, localDirectory));
+    builder.add("createEnvelopeSeries", new SeriesCreationAction(BudgetArea.EXPENSES_ENVELOPE, localDirectory));
 
     JToggleButton invisibleOccasionalToggle = new JToggleButton();
     builder.add("invisibleOccasionalToggle", invisibleOccasionalToggle);

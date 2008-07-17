@@ -56,6 +56,30 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkCategory(MasterCategory.EDUCATION);
   }
 
+  public void testNewEnvelopeSeries() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -60, "Forfait Kro")
+      .load();
+
+    CategorizationDialogChecker dialog = transactions.categorize(0);
+    dialog.checkLabel("Forfait Kro");
+
+    dialog.selectEnvelopes();
+    SeriesCreationDialogChecker creationDialog = dialog.createSeries();
+    creationDialog.setName("Regime");
+    creationDialog.checkType("Envelope");
+    creationDialog.setCategory(MasterCategory.FOOD);
+    creationDialog.validate();
+
+    dialog.checkContainsEnvelope("Regime");
+    dialog.selectEnvelopeSeries("Regime", MasterCategory.FOOD);
+    dialog.validate();
+
+    transactionDetails.checkSeries("Regime");
+    transactionDetails.checkCategory(MasterCategory.FOOD);
+  }
+
   public void testCancel() throws Exception {
     checkCancel(new Callback() {
       public void process(CategorizationDialogChecker dialog) {

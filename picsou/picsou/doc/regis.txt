@@ -4,7 +4,6 @@ CategorizationDialog
 - look toggles
 - split de transaction
 - saisie notes
-- nouvelle enveloppe
 
 
 Vue accueil

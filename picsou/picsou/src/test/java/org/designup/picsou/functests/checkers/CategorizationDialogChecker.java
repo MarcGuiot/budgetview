@@ -161,6 +161,7 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void selectEnvelopeSeries(String envelopeName, MasterCategory category) {
     Panel panel = getEnvelopeSeriesPanel();
+    System.out.println("CategorizationDialogChecker.selectEnvelopeSeries: " + panel.getDescription());
     panel.getToggleButton(envelopeName + ":" + category.getName()).click();
   }
 

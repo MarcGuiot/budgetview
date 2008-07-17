@@ -24,7 +24,7 @@
 
         <row>
           <toggleButton ref="invisibleBudgetAreaToggle" visible="false"/>
-          <repeat ref="budgetAreas">
+          <repeat ref="budgetAreas" weightX="0.1">
             <toggleButton ref="budgetAreaToggle"/>
           </repeat>
           <cards ref="cards">
@@ -34,27 +34,27 @@
             </card>
 
             <card name="income">
-              <row>
+              <column>
                 <toggleButton ref="invisibleIncomeToggle" visible="false"/>
                 <repeat ref="incomeSeriesRepeat">
                   <toggleButton ref="seriesToggle"/>
                 </repeat>
                 <button action="createIncomeSeries" text="$categorization.newseries" styleClass="hyperlink"/>
-              </row>
+              </column>
             </card>
 
             <card name="recurringExpenses">
-              <row>
+              <column>
                 <toggleButton ref="invisibleRecurringToggle" visible="false"/>
                 <repeat ref="recurringSeriesRepeat">
                   <toggleButton ref="seriesToggle"/>
                 </repeat>
                 <button action="createRecurringSeries" text="$categorization.newseries" styleClass="hyperlink"/>
-              </row>
+              </column>
             </card>
 
             <card name="expensesEnvelope">
-              <row>
+              <column>
                 <toggleButton ref="invisibleEnvelopeToggle" visible="false"/>
                 <repeat ref="envelopeSeriesRepeat">
                   <column>
@@ -64,7 +64,8 @@
                     </repeat>
                   </column>
                 </repeat>
-              </row>
+                <button action="createEnvelopeSeries" text="$categorization.newseries" styleClass="hyperlink"/>
+              </column>
             </card>
 
             <card name="occasionalExpenses">

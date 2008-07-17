@@ -69,7 +69,7 @@ public class SeriesStatTrigger implements ChangeSetListener {
   private void processTransactions(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        processCreationOrDeletion(values, 1);
+        processTransaction(values, 1, repository);
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -117,46 +117,63 @@ public class SeriesStatTrigger implements ChangeSetListener {
         if (previousSeriesId != null) {
           Glob stat = repository.find(createKey(previousSeriesId, previousMonthId));
           if (stat != null) {
-            update(stat, -1 * previousAmount, repository);
+            updateTransaction(stat, -1 * previousAmount, repository);
           }
         }
 
         if (currentSeriesId != null) {
           Glob stat = repository.find(createKey(currentSeriesId, currentMonthId));
-          update(stat, currentAmount, repository);
+          updateTransaction(stat, currentAmount, repository);
         }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        processCreationOrDeletion(previousValues, -1);
+        processTransaction(previousValues, -1, repository);
       }
 
-      private void processCreationOrDeletion(FieldValues values, int multiplier) {
-        final Integer seriesId = values.get(Transaction.SERIES);
-        if (seriesId == null) {
-          return;
-        }
-
-        Glob stat = repository.find(createKey(seriesId, values.get(Transaction.MONTH)));
-        if (stat != null) {
-          final Double transactionAmount = values.get(Transaction.AMOUNT);
-          update(stat, multiplier * transactionAmount, repository);
-        }
-      }
-
-      private void update(Glob stat, Double transactionAmount, GlobRepository repository) {
-        repository.update(stat.getKey(), SeriesStat.AMOUNT,
-                          stat.get(SeriesStat.AMOUNT) + transactionAmount);
-      }
     });
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
-    if (!changedTypes.contains(Transaction.TYPE)
-        && !changedTypes.contains(Series.TYPE)
-        && !changedTypes.contains(Month.TYPE)) {
+  private void processTransaction(FieldValues values, int multiplier, GlobRepository repository) {
+    final Integer seriesId = values.get(Transaction.SERIES);
+    if (seriesId == null) {
       return;
     }
+
+    Glob stat = repository.find(createKey(seriesId, values.get(Transaction.MONTH)));
+    if (stat != null) {
+      final Double transactionAmount = values.get(Transaction.AMOUNT);
+      updateTransaction(stat, multiplier * transactionAmount, repository);
+    }
+  }
+
+  private void updateTransaction(Glob stat, Double transactionAmount, GlobRepository repository) {
+    repository.update(stat.getKey(), SeriesStat.AMOUNT,
+                      stat.get(SeriesStat.AMOUNT) + transactionAmount);
+  }
+
+
+  public void init(GlobRepository repository) {
+    repository.enterBulkDispatchingMode();
+    try {
+      repository.deleteAll(SeriesStat.TYPE);
+
+      for (Glob month : repository.getAll(Month.TYPE)) {
+        for (Glob series : repository.getAll(Series.TYPE)) {
+          repository.create(createKey(series.get(Series.ID), month.get(Month.ID)));
+        }
+      }
+
+      for (Glob transaction : repository.getAll(Transaction.TYPE)) {
+        processTransaction(transaction, 1, repository);
+      }
+    }
+    finally {
+      repository.completeBulkDispatchingMode();
+    }
+  }
+
+  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
   }
 
   private Key createKey(Integer seriesId, Integer monthId) {

@@ -13,8 +13,12 @@
 
     <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="dialog.bg.top" bottomColor="dialog.bg.bottom"/>
-
     <style selector="dialog" ui="dialog"/>
+
+    <!-- Hyperlinks -->
+
+    <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
+    <style selector="button.hyperlink" ui="hyperlinkButton" fill="none" anchor="right"/>    
 
     <!-- Blocks and inner blocks -->
 
@@ -28,12 +32,12 @@
     <style selector=".block label.totalAmountTitle" foreground="block.total.title" font="-,plain,10" anchor="bottom"/>
     <style selector=".block label.totalAmount" foreground="block.total" font="-,bold,20" anchor="top"/>
 
-    <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
     <ui name="innerBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="block.inner.top" bottomColor="block.inner.bottom" borderColor="block.inner.border"
         borderWidth="2" cornerRadius="10"/>
     <style selector=".innerBlock" ui="innerBlock" marginTop="5" marginBottom="5"/>
     <style selector=".innerBlock hyperlink" foreground="block.inner.hyperlink"/>
+
 
     <!-- Default form elements -->
 
@@ -58,8 +62,6 @@
 
     <style selector="row.buttons button"
            fill="horizontal" weightX="10"/>
-
-    <style selector="button.hyperlink" ui="hyperlinkButton"/>
 
   </styles>
 

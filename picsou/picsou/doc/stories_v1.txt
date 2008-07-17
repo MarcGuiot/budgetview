@@ -1,3 +1,7 @@
+* TimeView : distinguer visuellement les mois precedents / courant / futur
+
+* Suppression de subcat : demander la subcat de destination (cas du pb d'import)
+
 * Sous Mac: Sauvegarde dans ~/Library/Application Support/<application name>
 
 * Types de comptes (courant / carte / epargne)

@@ -7,12 +7,14 @@ import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesToCategory;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -21,7 +23,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 
 public class SeriesCreationDialog {
@@ -91,10 +93,17 @@ public class SeriesCreationDialog {
     private class SeriesCategoryChooserCallback implements CategoryChooserCallback {
       public void categorySelected(Glob category) {
         localRepository.setTarget(series.getKey(), Series.DEFAULT_CATEGORY, category.getKey());
+        if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
+          localRepository.delete(localRepository.getAll(SeriesToCategory.TYPE,
+                                                        GlobMatchers.linkedTo(series, SeriesToCategory.SERIES)));
+          localRepository.create(SeriesToCategory.TYPE,
+                                 value(SeriesToCategory.SERIES, series.get(Series.ID)),
+                                 value(SeriesToCategory.CATEGORY, category.get(Category.ID)));
+        }
       }
 
       public Set<Integer> getPreselectedCategoryIds() {
-        return new HashSet<Integer>();
+        return Collections.emptySet();
       }
     }
   }
