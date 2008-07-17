@@ -168,9 +168,10 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     outputStream.getOutput().writeBytes(privateId);
     SerializedInput input = clientTransport.getUserData(sessionId, outputStream.toByteArray());
     SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
-    MapOfMaps<String, Integer, SerializableGlobType> stringIntegerGlobMapOfMaps = serializableGlobSerializer.deserialize(input);
-    GlobList result = new GlobList(stringIntegerGlobMapOfMaps.size());
-    for (String globTypeName : stringIntegerGlobMapOfMaps.keys()) {
+    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
+    serializableGlobSerializer.deserialize(input, data);
+    GlobList result = new GlobList(data.size());
+    for (String globTypeName : data.keys()) {
       GlobType globType = globModel.getType(globTypeName);
       PicsouGlobSerializer globSerializer =
         globType.getProperty(SerializationManager.SERIALIZATION_PROPERTY);
@@ -180,7 +181,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       IntegerField field = (IntegerField)globType.getKeyFields().get(0);
       Integer id;
       Integer maxId = 0;
-      for (Map.Entry<Integer, SerializableGlobType> globEntry : stringIntegerGlobMapOfMaps.get(globTypeName).entrySet()) {
+      for (Map.Entry<Integer, SerializableGlobType> globEntry : data.get(globTypeName).entrySet()) {
         id = globEntry.getKey();
         GlobBuilder builder = GlobBuilder.init(globType).setValue(field, id);
         SerializableGlobType glob = globEntry.getValue();

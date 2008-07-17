@@ -11,7 +11,7 @@ import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
 
 import java.util.Iterator;
 
-public class MailTestCase extends TestCase {
+public abstract class MailTestCase extends TestCase {
   protected SimpleSmtpServer mailServer;
   private LicenceServer server;
   private Thread mailThread;
@@ -45,8 +45,10 @@ public class MailTestCase extends TestCase {
     server.start();
   }
 
-  protected void stop() {
+  protected void stop() throws Exception {
     mailServer.stop();
+    mailThread.join();
+    server.stop();
   }
 
   protected void checkReceive(String mailTo) throws InterruptedException {

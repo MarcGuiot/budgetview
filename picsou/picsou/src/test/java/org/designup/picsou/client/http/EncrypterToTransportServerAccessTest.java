@@ -7,7 +7,6 @@ import org.designup.picsou.client.exceptions.UserNotRegistered;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.model.*;
-import org.designup.picsou.server.model.*;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -196,25 +195,6 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
     return persistence.getHiddenUser(cryptedLinkInfo);
   }
 
-  private GlobList getBank(Integer userId) {
-    Persistence persistence = directory.get(Persistence.class);
-    return persistence.getHiddenGlob(HiddenBank.TYPE, userId);
-  }
-
-  private GlobList getHiddenTransaction(int userId) {
-    Persistence persistence = directory.get(Persistence.class);
-    return persistence.getHiddenGlob(HiddenTransaction.TYPE, userId);
-  }
-
-  private GlobList getHiddenCateory(int userId) {
-    Persistence persistence = directory.get(Persistence.class);
-    return persistence.getHiddenGlob(HiddenCategory.TYPE, userId);
-  }
-
-  private GlobList getHiddenTransactionToCategory(int userId) {
-    Persistence persistence = directory.get(Persistence.class);
-    return persistence.getHiddenGlob(HiddenTransactionToCategory.TYPE, userId);
-  }
 
   private Glob createUser(String name, String password, EncrypterToTransportServerAccess serverAccess) {
     serverAccess.createUser(name, password.toCharArray());
@@ -225,11 +205,6 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   private EncrypterToTransportServerAccess createServerAccess() {
     LocalClientTransport dummyClentTransport = new LocalClientTransport(directory);
     return new EncrypterToTransportServerAccess(dummyClentTransport, directory);
-  }
-
-  private GlobList getAccount(Integer userId) {
-    Persistence persistence = directory.get(Persistence.class);
-    return persistence.getHiddenGlob(HiddenAccount.TYPE, userId);
   }
 
   private static class DummyIdUpdate implements ServerAccess.IdUpdate {

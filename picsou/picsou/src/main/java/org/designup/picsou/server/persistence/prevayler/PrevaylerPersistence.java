@@ -6,9 +6,7 @@ import org.designup.picsou.client.exceptions.UserNotRegistered;
 import org.designup.picsou.server.model.HiddenUser;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.Persistence;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -66,10 +64,6 @@ public class PrevaylerPersistence implements Persistence {
     return rootDataManager.getHiddenUser(Encoder.b64Decode(cryptedLinkInfo));
   }
 
-  public GlobList getHiddenGlob(GlobType type, Integer userId) {
-    return getFiltered(userId, type);
-  }
-
   public void close() {
     rootDataManager.close();
     accountDataManager.close();
@@ -81,17 +75,6 @@ public class PrevaylerPersistence implements Persistence {
 
   public void takeSnapshot(Integer userId) {
     accountDataManager.takeSnapshot(userId);
-  }
-
-  private GlobList getFiltered(int userId, GlobType globType) {
-    GlobList list = accountDataManager.getUserData(userId);
-    for (java.util.Iterator it = list.iterator(); it.hasNext();) {
-      Glob glob = (Glob)it.next();
-      if (glob.getType() != globType) {
-        it.remove();
-      }
-    }
-    return list;
   }
 
   public void getData(SerializedOutput output, Integer userId) {

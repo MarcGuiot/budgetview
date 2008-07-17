@@ -1,9 +1,7 @@
 package org.designup.picsou.server.session;
 
 import org.designup.picsou.client.exceptions.IdentificationFailed;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
@@ -29,8 +27,6 @@ public interface Persistence {
   Glob getUser(String name);
 
   Glob getHiddenUser(byte[] encryptedLinkInfo);
-
-  GlobList getHiddenGlob(GlobType type, Integer userId);
 
   void close();
 

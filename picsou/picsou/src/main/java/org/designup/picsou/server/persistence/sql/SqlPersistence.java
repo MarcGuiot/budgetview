@@ -10,7 +10,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.remote.RemoteExecutor;
 import org.globsframework.remote.impl.DefaultCreateRequest;
 import org.globsframework.remote.impl.DefaultDeleteRequest;
@@ -26,7 +25,6 @@ import org.globsframework.streams.accessors.BlobAccessor;
 import org.globsframework.streams.accessors.IntegerAccessor;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.globsframework.utils.serialization.Encoder;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -218,30 +216,6 @@ public class SqlPersistence implements Persistence {
                                               Constraints.equal(HiddenUser.ENCRYPTED_LINK_INFO,
                                                                 Encoder.b64Decode(cryptedLinkInfo)))
       .selectAll().getQuery().executeUnique();
-  }
-
-  public GlobList getHiddenGlob(GlobType type, Integer userId) {
-    IntegerField userFieldId;
-    if (type == HiddenTransaction.TYPE) {
-      userFieldId = HiddenTransaction.HIDDEN_USER_ID;
-    }
-    else if (type == HiddenBank.TYPE) {
-      userFieldId = HiddenBank.HIDDEN_USER_ID;
-    }
-    else if (type == HiddenTransactionToCategory.TYPE) {
-      userFieldId = HiddenTransactionToCategory.HIDDEN_USER_ID;
-    }
-    else if (type == HiddenAccount.TYPE) {
-      userFieldId = HiddenAccount.HIDDEN_USER_ID;
-    }
-    else {
-      throw new UnexpectedApplicationState("glob Type " + type.getName() + " not legal");
-    }
-    return sqlService.getDb()
-      .getQueryBuilder(type, Constraints.equal(userFieldId, userId))
-      .selectAll()
-      .getQuery()
-      .executeAsGlobs();
   }
 
   public void close() {

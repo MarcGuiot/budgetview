@@ -89,4 +89,8 @@ public class LicenceServer {
     init();
     jetty.start();
   }
+
+  public void stop() throws Exception {
+    jetty.stop();
+  }
 }

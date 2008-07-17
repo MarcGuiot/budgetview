@@ -9,9 +9,9 @@
 
   <modules>
     <module>picsou</module>
+    <module>picsou_licence_server</module>
     <module>picsou_server</module>
     <module>morphograph</module>
-    <module>picsou_licence_server</module>
   </modules>
 
 </project>

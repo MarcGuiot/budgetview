@@ -11,7 +11,8 @@ public class SerializableGlobSerializerTest extends TestCase {
     SerializableGlobSerializer serializer = new SerializableGlobSerializer();
     SerializedByteArrayOutput byteArrayOutput = new SerializedByteArrayOutput();
     serializer.serialize(byteArrayOutput.getOutput(), init());
-    MapOfMaps<String, Integer, SerializableGlobType> actual = serializer.deserialize(byteArrayOutput.getInput());
+    MapOfMaps<String, Integer, SerializableGlobType> actual = new MapOfMaps<String, Integer, SerializableGlobType>();
+    serializer.deserialize(byteArrayOutput.getInput(), actual);
     assertEquals(1, actual.get("A").size());
     assertEquals(1, actual.get("B").size());
     assertEquals(2, actual.get("A").get(1).getVersion());
