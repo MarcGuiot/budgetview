@@ -31,6 +31,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
       "</repeat>");
 
     assertEquals("myRepeat", panel.getName());
+    assertSame(panel, builder.getComponent("myRepeat"));
 
     checkPanel(panel,
                "panel\n" +

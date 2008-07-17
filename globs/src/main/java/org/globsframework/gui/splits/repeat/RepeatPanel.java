@@ -27,6 +27,7 @@ public class RepeatPanel implements Repeat {
     this.panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     this.panel.setName(name);
     this.panel.setOpaque(false);
+    context.addComponent(name, panel);
   }
 
   public void set(List items) {
