@@ -42,6 +42,18 @@ public class CategorizationDialogChecker extends DataChecker {
     assertTrue(transactionLabel.textEquals(expected));
   }
 
+  public void checkBudgetAreasAreEnabled() {
+    for (BudgetArea area : BudgetArea.values()) {
+      assertTrue(dialog.getToggleButton(area.getName()).isEnabled());
+    }
+  }
+
+  public void checkBudgetAreasAreDisabled() {
+    for (BudgetArea area : BudgetArea.values()) {
+      assertFalse(dialog.getToggleButton(area.getName()).isEnabled());
+    }
+  }
+
   public void checkBudgetAreaIsSelected(BudgetArea budgetArea) {
     assertTrue(dialog.getToggleButton(budgetArea.getGlob().get(BudgetArea.NAME)).isSelected());
   }
@@ -249,16 +261,24 @@ public class CategorizationDialogChecker extends DataChecker {
     assertTrue(table.contentEquals(content));
   }
 
+  public void checkTableIsEmpty() {
+    assertTrue(table.isEmpty());
+  }
+
   public void checkSelectedTableRows(int... rows) {
     assertTrue(table.rowsAreSelected(rows));
+  }
+
+  public void checkNoTransactionSelected() {
+    assertTrue(table.selectionIsEmpty());
   }
 
   public void selectTableRows(int... rows) {
     table.selectRows(rows);
   }
 
-  public void checkTableSelectionEquals(int... rows) {
-    assertThat(table.rowsAreSelected(rows));
+  public void unselectAllTransactions() {
+    table.clearSelection();
   }
 
   public void checkAutoSelectionEnabled(boolean enabled) {
@@ -271,5 +291,17 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void disableAutoSelection() {
     dialog.getCheckBox("similar").unselect();
+  }
+
+  public void checkAutoHideEnabled(boolean enabled) {
+    assertEquals(enabled, dialog.getCheckBox("hide").isSelected());
+  }
+
+  public void enableAutoHide() {
+    dialog.getCheckBox("hide").select();
+  }
+
+  public void disableAutoHide() {
+    dialog.getCheckBox("hide").unselect();
   }
 }

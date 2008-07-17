@@ -16,7 +16,6 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -38,6 +37,7 @@ public class CategorizationDialog {
   private GlobTableView transactionTable;
   private NextTransactionAction nextTransactionAction;
   private JCheckBox autoSelectionCheckBox;
+  private JCheckBox autoHideCheckBox;
 
   public CategorizationDialog(Window parent, final GlobRepository repository, Directory directory) {
 
@@ -46,17 +46,20 @@ public class CategorizationDialog {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationDialog.splits",
                                                       localRepository, localDirectory);
 
-    LabelCustomizer transactionHighlighter = getTransactionHighlighter();
     Comparator<Glob> transactionComparator = getTransactionComparator();
     transactionTable =
       builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
-        .addColumn(Lang.get("date"), new TransactionDateStringifier(transactionComparator), transactionHighlighter)
-        .addColumn(Transaction.LABEL, transactionHighlighter)
-        .addColumn(Transaction.AMOUNT, transactionHighlighter);
+        .addColumn(Lang.get("date"), new TransactionDateStringifier(transactionComparator))
+        .addColumn(Transaction.LABEL)
+        .addColumn(Transaction.AMOUNT);
 
     autoSelectionCheckBox = new JCheckBox(new AutoSelectAction());
     autoSelectionCheckBox.setSelected(true);
     builder.add("autoSelection", autoSelectionCheckBox);
+
+    autoHideCheckBox = new JCheckBox(new AutoHideAction());
+    autoHideCheckBox.setSelected(true);
+    builder.add("autoHide", autoHideCheckBox);
 
     builder.addMultiLineTextView("transactionLabel", Transaction.TYPE);
 
@@ -131,19 +134,6 @@ public class CategorizationDialog {
     dialog.pack();
   }
 
-  private LabelCustomizer getTransactionHighlighter() {
-    return new LabelCustomizer() {
-      public void process(JLabel label, Glob transaction, boolean isSelected, boolean hasFocus, int row, int column) {
-        if ((transaction.get(Transaction.SERIES) == null) || (transaction.get(Transaction.CATEGORY) == null)) {
-          label.setForeground(Color.RED);
-        }
-        else {
-          label.setForeground(Color.BLACK);
-        }
-      }
-    };
-  }
-
   private Comparator<Glob> getTransactionComparator() {
     return new GlobFieldsComparator(Transaction.LABEL, true,
                                     Transaction.MONTH, false,
@@ -178,6 +168,8 @@ public class CategorizationDialog {
     }
     localRepository.rollback();
     localRepository.reset(transactions, Transaction.TYPE);
+    autoHideCheckBox.setSelected(!selectAll);
+    updateAutoHide();
     if (selectAll) {
       transactionTable.select(localRepository.getAll(Transaction.TYPE), true);
     }
@@ -259,6 +251,21 @@ public class CategorizationDialog {
           selectionService.select(similarTransactions, Transaction.TYPE);
         }
       });
+    }
+  }
+
+  private void updateAutoHide() {
+    if (autoHideCheckBox.isSelected()) {
+      transactionTable.setFilter(GlobMatchers.isNull(Transaction.SERIES));
+    }
+    else {
+      transactionTable.setFilter(GlobMatchers.ALL);
+    }
+  }
+
+  private class AutoHideAction extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+      updateAutoHide();
     }
   }
 }

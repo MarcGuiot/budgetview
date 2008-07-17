@@ -1,7 +1,6 @@
 CategorizationDialog
 --------------------
-- renderer pour distinguer les non categorisees
-- "masquer les transactions classees"
+- afficher le nombre de transactions restantes
 - look toggles
 - split de transaction
 - saisie notes

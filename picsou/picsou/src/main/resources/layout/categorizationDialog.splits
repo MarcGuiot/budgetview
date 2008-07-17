@@ -5,13 +5,17 @@
 
     <verticalSplit dividerLocation="150" resizeWeight="0">
 
-      <scrollPane>
-        <table ref="transactionTable" showGrid="false" showVerticalLines="false"/>
-      </scrollPane>
+      <column>
+        <scrollPane>
+          <table ref="transactionTable" showGrid="false" showVerticalLines="false"/>
+        </scrollPane>
+        <row>
+          <checkBox ref="autoSelection" text="$categorization.autoselection" anchor="left"/>
+          <checkBox ref="autoHide" text="$categorization.autohide" anchor="right"/>
+        </row>
+      </column>
 
       <column>
-
-        <checkBox ref="autoSelection" text="$categorization.autoselection"/>
 
         <textArea ref="transactionLabel" anchor="left"/>
 
