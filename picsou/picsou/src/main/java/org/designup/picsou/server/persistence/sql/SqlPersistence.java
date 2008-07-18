@@ -14,12 +14,10 @@ import org.globsframework.remote.RemoteExecutor;
 import org.globsframework.remote.impl.DefaultCreateRequest;
 import org.globsframework.remote.impl.DefaultDeleteRequest;
 import org.globsframework.remote.impl.DefaultUpdateRequest;
-import org.globsframework.sqlstreams.CreateBuilder;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.constraints.Constraints;
-import org.globsframework.sqlstreams.drivers.jdbc.DbGlobIdGenerator;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.BlobAccessor;
 import org.globsframework.streams.accessors.IntegerAccessor;
@@ -176,28 +174,6 @@ public class SqlPersistence implements Persistence {
         throw new IdentificationFailed("User not associated");
       }
       return refId.get().getInteger();
-    }
-    finally {
-      sqlConnection.commitAndClose();
-    }
-  }
-
-  public Integer getNextId(String tableName, Integer count, final Integer userId) {
-    SqlConnection sqlConnection = sqlService.getDb();
-    try {
-      DbGlobIdGenerator globIdGenerator = new DbGlobIdGenerator(ReservedId.TYPE,
-                                                                ReservedId.TABLE_NAME,
-                                                                ReservedId.LAST_RESERVED_ID, sqlService) {
-
-        protected void addAdditionalInfo(CreateBuilder builder) {
-          builder.set(ReservedId.HIDDEN_USER, userId);
-        }
-
-        protected Constraint getAdditionalConstraint() {
-          return Constraints.equal(ReservedId.HIDDEN_USER, userId);
-        }
-      };
-      return globIdGenerator.getNextId(tableName, count);
     }
     finally {
       sqlConnection.commitAndClose();

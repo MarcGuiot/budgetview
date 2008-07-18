@@ -2,6 +2,7 @@ package org.designup.picsou.gui;
 
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
@@ -36,6 +37,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class PicsouApplication {
+
+  public static final Integer VERSION = 1;
 
   public static final String LOCAL_PREVAYLER_PATH_PROPERTY = "picsou.prevayler.path";
   public static final String DEFAULT_ADDRESS_PROPERTY = "picsou.server.url";
@@ -152,6 +155,7 @@ public class PicsouApplication {
 
   public static Directory createDirectory() throws IOException {
     Directory directory = new DefaultDirectory();
+    directory.add(new ConfigService(VERSION));
     directory.add(new TimeService());
     directory.add(new LicenseService());
     directory.add(DescriptionService.class, new PicsouDescriptionService());

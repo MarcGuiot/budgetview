@@ -7,7 +7,6 @@ import org.designup.picsou.server.session.IdentifiedState;
 import org.designup.picsou.server.session.SessionState;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.serialization.SerializedInput;
-import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.Arrays;
 
@@ -51,10 +50,6 @@ public abstract class AbstractSessionState implements SessionState {
 
   public CreatingUserState createUser() {
     throw new InvalidActionForState("createUser", getStateName());
-  }
-
-  public void getNextId(SerializedInput input, SerializedOutput response) {
-    throw new InvalidActionForState("getNextId", getStateName());
   }
 
   public abstract String getStateName();

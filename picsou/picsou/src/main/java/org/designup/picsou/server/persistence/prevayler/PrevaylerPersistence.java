@@ -85,8 +85,4 @@ public class PrevaylerPersistence implements Persistence {
     accountDataManager.updateUserData(input, userId);
   }
 
-  public Integer getNextId(String globTypeName, Integer count, Integer userId) {
-    return accountDataManager.getNextId(globTypeName, userId, count);
-  }
-
 }

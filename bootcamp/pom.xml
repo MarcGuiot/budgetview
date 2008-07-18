@@ -93,7 +93,7 @@
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
       <artifactId>jetty</artifactId>
-      <version>6.1.11</version>
+      <version>6.1.6</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>

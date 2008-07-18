@@ -167,6 +167,10 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
     SerializedInput input = clientTransport.getUserData(sessionId, outputStream.toByteArray());
+    return deserialize(idUpdate, input);
+  }
+
+  private GlobList deserialize(IdUpdate idUpdate, SerializedInput input) {
     SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
     MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
     serializableGlobSerializer.deserialize(input, data);
@@ -193,18 +197,6 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       idUpdate.update(field, maxId);
     }
     return result;
-  }
-
-  public int getNextId(String type, int idCount) {
-    checkConnected();
-
-    SerializedByteArrayOutput request = new SerializedByteArrayOutput();
-    request.getOutput().writeBytes(privateId);
-    request.getOutput().writeString(type);
-    request.getOutput().write(idCount);
-
-    SerializedInput response = clientTransport.getNextId(sessionId, request.toByteArray());
-    return response.readInteger();
   }
 
   public void disconnect() {
