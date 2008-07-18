@@ -1,16 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <globs>
-  <series id="0" name="occasional" budgetAreaName="occasionalExpenses"/>
+  <series id="0" name="occasional" budgetAreaName="occasionalExpenses" profileTypeName="custom"/>
+  <series id="1" name="internet" budgetAreaName="recurringExpenses" defaultCategoryName='telecoms'
+          profileTypeName="monthly"
+          january='true' february='true' march='true' april='true' may='true' june='true' july='true'
+          august='true' september='true' october='true' november='true' december='true'/>
+  <series id="2" name="rental" budgetAreaName="recurringExpenses" defaultCategoryName='house'
+          profileTypeName="monthly"
+          january='true' february='true' march='true' april='true' may='true' june='true' july='true'
+          august='true' september='true' october='true' november='true' december='true'/>
+  <series id="3" name="electricity" budgetAreaName="recurringExpenses" defaultCategoryName='house'
+          profileTypeName="monthly"
+          january='true' february='true' march='true' april='true' may='true' june='true' july='true'
+          august='true' september='true' october='true' november='true' december='true'/>
 
-  <series id="1" name="internet" budgetAreaName="recurringExpenses" defaultCategoryName='telecoms'/>
-  <series id="2" name="rental" budgetAreaName="recurringExpenses" defaultCategoryName='house'/>
-  <series id="3" name="electricity" budgetAreaName="recurringExpenses" defaultCategoryName='house'/>
+  <seriesToCategory id='1' seriesName='occasional' categoryName="multimedia"/>
+  <seriesToCategory id='2' seriesName='occasional' categoryName="clothing"/>
+  <seriesToCategory id='3' seriesName='occasional' categoryName="leisures"/>
+  <seriesToCategory id='4' seriesName='occasional' categoryName="beauty"/>
 
   <series id="10" name="groceries" budgetAreaName="expensesEnvelope" defaultCategoryName="food"/>
   <seriesToCategory id='100' seriesName='groceries' categoryName="food"/>
   <seriesToCategory id='101' seriesName='groceries' categoryName="house"/>
+  <series id="10" name="groceries" budgetAreaName="expensesEnvelope" defaultCategoryName="food"
+          profileTypeName="monthly"
+          january='true' february='true' march='true' april='true' may='true' june='true' july='true'
+          august='true' september='true' october='true' november='true' december='true'/>
+  <seriesToCategory id='100' seriesName='groceries' categoryName="food"/>
+  <seriesToCategory id='101' seriesName='groceries' categoryName="house"/>
 
-  <series id="20" name="salary" budgetAreaName="income" defaultCategoryName="income"/>
-  <series id="21" name="exceptionalIncome" budgetAreaName="income" defaultCategoryName="income"/>
+  <series id="20" name="salary" budgetAreaName="income" defaultCategoryName="income"
+          profileTypeName="monthly"
+          january='true' february='true' march='true' april='true' may='true' june='true' july='true'
+          august='true' september='true' october='true' november='true' december='true'/>
+  <series id="21" name="exceptionalIncome" budgetAreaName="income" defaultCategoryName="income"
+          profileTypeName="custom"/>
 
 </globs>

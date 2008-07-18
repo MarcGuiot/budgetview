@@ -23,8 +23,6 @@ public interface ServerRequestProcessingService {
 
   void addUserData(Long sessionId, SerializedInput input, SerializedOutput output) throws UnknownId, InvalidActionForState;
 
-  void getNextId(Long sessionId, SerializedInput serializedInput, SerializedOutput output) throws UnknownId, InvalidActionForState;
-
   void disconnect(Long sessionId, SerializedInput serializedInput);
 
   void takeSnapshot(Long sessionId, SerializedInput serializedInput);

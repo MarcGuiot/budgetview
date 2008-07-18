@@ -15,8 +15,6 @@ public interface ClientTransport {
 
   SerializedInput getUserData(Long sessionId, byte[] bytes);
 
-  SerializedInput getNextId(Long sessionId, byte[] bytes);
-
   void disconnect(Long sessionId, byte[] bytes);
 
   void takeSnapshot(Long sessionId, byte[] bytes);

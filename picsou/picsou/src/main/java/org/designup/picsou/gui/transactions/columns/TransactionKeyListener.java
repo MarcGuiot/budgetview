@@ -1,7 +1,5 @@
 package org.designup.picsou.gui.transactions.columns;
 
-import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
-
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
@@ -9,10 +7,10 @@ import java.awt.event.KeyEvent;
 
 public class TransactionKeyListener extends KeyAdapter {
   private final JTable table;
-  private CategoryChooserAction categoryChooserAction;
+  private Action categoryChooserAction;
   private int noteColumnIndex;
 
-  public TransactionKeyListener(JTable table, CategoryChooserAction categoryChooserAction, int noteColumnIndex) {
+  public TransactionKeyListener(JTable table, Action categoryChooserAction, int noteColumnIndex) {
     this.table = table;
     this.categoryChooserAction = categoryChooserAction;
     this.noteColumnIndex = noteColumnIndex;

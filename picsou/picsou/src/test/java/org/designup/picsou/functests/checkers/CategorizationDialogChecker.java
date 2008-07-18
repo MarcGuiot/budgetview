@@ -11,7 +11,7 @@ import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
-import static org.uispec4j.assertion.UISpecAssert.assertEquals;
+import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
 
@@ -82,9 +82,21 @@ public class CategorizationDialogChecker extends DataChecker {
     org.globsframework.utils.TestUtils.assertContains(names, seriesNames);
   }
 
-  public void selectIncomeSeries(String name) {
+  public void selectIncomeSeries(String name, boolean showSeriesInitialization) {
     Panel panel = getIncomeSeriesPanel();
-    panel.getToggleButton(name).click();
+    if (showSeriesInitialization) {
+      WindowInterceptor.init(
+        panel.getToggleButton(name).triggerClick())
+        .process(new WindowHandler() {
+          public Trigger process(Window window) throws Exception {
+            SeriesCreationDialogChecker dialogChecker = new SeriesCreationDialogChecker(window);
+            return dialogChecker.doValidate();
+          }
+        }).run();
+    }
+    else {
+      panel.getToggleButton(name).click();
+    }
   }
 
   private Panel getIncomeSeriesPanel() {
@@ -114,9 +126,21 @@ public class CategorizationDialogChecker extends DataChecker {
     assertFalse(seriesPanel.containsUIComponent(ToggleButton.class, seriesName));
   }
 
-  public void selectRecurringSeries(String name) {
+  public void selectRecurringSeries(String name, boolean showSeriesInitialization) {
     Panel panel = getRecurringSeriesPanel();
-    panel.getToggleButton(name).click();
+    if (showSeriesInitialization) {
+      WindowInterceptor.init(
+        panel.getToggleButton(name).triggerClick())
+        .process(new WindowHandler() {
+          public Trigger process(Window window) throws Exception {
+            SeriesCreationDialogChecker dialogChecker = new SeriesCreationDialogChecker(window);
+            return dialogChecker.doValidate();
+          }
+        }).run();
+    }
+    else {
+      panel.getToggleButton(name).click();
+    }
   }
 
   private Panel getRecurringSeriesPanel() {
@@ -159,10 +183,22 @@ public class CategorizationDialogChecker extends DataChecker {
     }
   }
 
-  public void selectEnvelopeSeries(String envelopeName, MasterCategory category) {
+  public void selectEnvelopeSeries(String envelopeName, MasterCategory category, boolean showSeriesInitialization) {
     Panel panel = getEnvelopeSeriesPanel();
     System.out.println("CategorizationDialogChecker.selectEnvelopeSeries: " + panel.getDescription());
-    panel.getToggleButton(envelopeName + ":" + category.getName()).click();
+    if (showSeriesInitialization) {
+      WindowInterceptor.init(
+        panel.getToggleButton(envelopeName + ":" + category.getName()).triggerClick())
+        .process(new WindowHandler() {
+          public Trigger process(Window window) throws Exception {
+            SeriesCreationDialogChecker dialogChecker = new SeriesCreationDialogChecker(window);
+            return dialogChecker.doValidate();
+          }
+        }).run();
+    }
+    else {
+      panel.getToggleButton(envelopeName + ":" + category.getName()).click();
+    }
   }
 
   private Panel getEnvelopeSeriesPanel() {

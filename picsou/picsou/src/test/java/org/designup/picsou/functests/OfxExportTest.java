@@ -25,7 +25,7 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
     transactionDetails.openSplitDialog(0)
       .enterAmount("-1")
       .enterNote("COCA")
-      .selectCategory(MasterCategory.FOOD)
+      .selectEnvelope(MasterCategory.FOOD, true)
       .add()
       .ok();
 

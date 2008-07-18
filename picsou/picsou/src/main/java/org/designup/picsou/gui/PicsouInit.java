@@ -55,6 +55,8 @@ public class PicsouInit {
 
     repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new SeriesUpdateTrigger(directory));
+    repository.addTrigger(new BudgetStatComputer());
+    repository.addTrigger(new TransactionPlannedTrigger());
     repository.addTrigger(new MonthStatComputer(repository));
     final SeriesStatTrigger seriesStatTrigger = new SeriesStatTrigger();
     repository.addTrigger(seriesStatTrigger);

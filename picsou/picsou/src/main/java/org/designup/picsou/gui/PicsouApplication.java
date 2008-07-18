@@ -37,6 +37,8 @@ import java.util.Locale;
 
 public class PicsouApplication {
 
+  public static final Integer VERSION = 1;
+
   public static final String LOCAL_PREVAYLER_PATH_PROPERTY = "picsou.prevayler.path";
   public static final String DEFAULT_ADDRESS_PROPERTY = "picsou.server.url";
   public static String DELETE_LOCAL_PREVAYLER_PROPERTY = "picsou.prevayler.delete";
@@ -152,6 +154,7 @@ public class PicsouApplication {
 
   public static Directory createDirectory() throws IOException {
     Directory directory = new DefaultDirectory();
+//    directory.add(new ConfigService(VERSION));
     directory.add(new TimeService());
     directory.add(new LicenseService());
     directory.add(DescriptionService.class, new PicsouDescriptionService());

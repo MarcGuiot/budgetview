@@ -87,7 +87,8 @@ public class TransactionDetailsView extends View {
                                              repository, directory));
 
     CategoryChooserAction categoryChooserAction = new CategoryChooserAction(new TransactionRendererColors(directory), repository, directory);
-    HyperlinkButton categoryChooserLink = new CategorisationHyperlinkButton(categoryChooserAction, repository, directory);
+    HyperlinkButton categoryChooserLink =
+      new CategorisationHyperlinkButton(categoryChooserAction, repository, directory);
     builder.add("categoryChooserLink", categoryChooserLink);
 
     builder.add("splitLink", new SplitTransactionAction(repository, directory));

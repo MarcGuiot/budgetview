@@ -1,8 +1,9 @@
 package org.designup.picsou.gui.categorization.components;
 
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.SeriesToCategory;
 import org.designup.picsou.model.Category;
+import org.designup.picsou.model.SeriesToCategory;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.Glob;
@@ -16,8 +17,8 @@ public class EnvelopeSeriesComponentFactory extends AbstractSeriesComponentFacto
 
   public EnvelopeSeriesComponentFactory(JToggleButton invisibleToggle,
                                         GlobRepository repository,
-                                        Directory directory) {
-    super(invisibleToggle, repository, directory);
+                                        Directory directory, PicsouDialog dialog) {
+    super(invisibleToggle, repository, directory, dialog);
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
@@ -48,7 +49,7 @@ public class EnvelopeSeriesComponentFactory extends AbstractSeriesComponentFacto
       final Key seriesKey = seriesToCategory.getTargetKey(SeriesToCategory.SERIES);
 
       createUpdatableCategoryToggle(category, seriesKey, name, budgetArea, cellBuilder,
-                                    seriesName + ":" + category.get(Category.NAME));      
+                                    seriesName + ":" + category.get(Category.NAME), dialog);
     }
   }
 }

@@ -1,21 +1,20 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.Key;
-import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
-import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.GlobSelectionListener;
+import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.series.SeriesCreationDialog;
+import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.directory.Directory;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Category;
-import org.designup.picsou.model.BudgetArea;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -30,14 +29,16 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
 
   protected GlobRepository repository;
   protected Directory directory;
+  protected PicsouDialog dialog;
   protected SelectionService selectionService;
 
   protected GlobList currentTransactions = GlobList.EMPTY;
 
-  public AbstractSeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository repository, Directory directory) {
+  public AbstractSeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository repository, Directory directory, PicsouDialog dialog) {
     this.invisibleToggle = invisibleToggle;
     this.repository = repository;
     this.directory = directory;
+    this.dialog = dialog;
 
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     seriesStringifier = descriptionService.getStringifier(Series.TYPE);
@@ -47,7 +48,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-          currentTransactions = selection.getAll(Transaction.TYPE);
+        currentTransactions = selection.getAll(Transaction.TYPE);
       }
     }, Transaction.TYPE);
 
@@ -56,10 +57,10 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
 
   protected void createUpdatableCategoryToggle(final Glob category, final Key seriesKey,
                                                String repeatToggleName, BudgetArea budgetArea,
-                                               RepeatCellBuilder cellBuilder, String toggleName) {
+                                               RepeatCellBuilder cellBuilder, String toggleName, PicsouDialog dialog) {
 
     String toggleLabel = categoryStringifier.toString(category, repository);
-    final JToggleButton toggle = createCategoryUpdaterToggle(toggleLabel, seriesKey, category.getKey());
+    final JToggleButton toggle = createCategoryUpdaterToggle(toggleLabel, seriesKey, category.getKey(), dialog);
     toggle.setName(toggleName);
     cellBuilder.add(repeatToggleName, toggle);
     buttonGroup.add(toggle);
@@ -74,9 +75,9 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
     });
   }
 
-  protected JToggleButton createCategoryUpdaterToggle(final String toggleLabel, 
-                                                    final Key seriesKey,
-                                                    final Key categoryKey) {
+  protected JToggleButton createCategoryUpdaterToggle(final String toggleLabel,
+                                                      final Key seriesKey,
+                                                      final Key categoryKey, final PicsouDialog dialog) {
     return new JToggleButton(new AbstractAction(toggleLabel) {
       public void actionPerformed(ActionEvent e) {
         try {
@@ -84,6 +85,13 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
           for (Glob transaction : currentTransactions) {
             repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
             repository.setTarget(transaction.getKey(), Transaction.CATEGORY, categoryKey);
+          }
+          Glob series = repository.get(seriesKey);
+          if (series.get(Series.AMOUNT) == null &&
+              !ProfileType.CUSTOM.getId().equals(series.get(Series.PROFILE_TYPE))) {
+            SeriesCreationDialog seriesCreationDialog =
+              new SeriesCreationDialog(dialog, repository, directory);
+            seriesCreationDialog.show(seriesKey, currentTransactions.get(0));
           }
         }
         finally {

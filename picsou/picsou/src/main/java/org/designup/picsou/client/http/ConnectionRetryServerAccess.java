@@ -66,13 +66,4 @@ public class ConnectionRetryServerAccess extends ServerAccessDecorator {
     }
   }
 
-  public int getNextId(String type, int idCount) {
-    try {
-      return super.getNextId(type, idCount);
-    }
-    catch (GlobsException e) {
-      super.initConnection(name, password, privateComputer);
-      return super.getNextId(type, idCount);
-    }
-  }
 }

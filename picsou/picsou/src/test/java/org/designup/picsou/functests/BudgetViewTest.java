@@ -2,8 +2,8 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.TransactionType;
 
 public class BudgetViewTest extends LoggedInFunctionalTestCase {
   public void test() throws Exception {
@@ -28,8 +28,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     transactions.setEnvelope(0, "Groceries", MasterCategory.FOOD);
     transactions.setEnvelope(1, "Groceries", MasterCategory.FOOD);
-    transactions.setRecurring(2, "Internet");
-    transactions.setRecurring(3, "Electricity");
+    transactions.setRecurring(2, "Internet", true);
+    transactions.setRecurring(3, "Electricity", true);
     transactions.setIncome(4, "Exceptional Income");
     transactions.setIncome(5, "Salary");
 

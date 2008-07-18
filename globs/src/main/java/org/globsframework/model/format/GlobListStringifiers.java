@@ -4,6 +4,7 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatcher;
 
 import java.text.DecimalFormat;
 
@@ -38,6 +39,30 @@ public class GlobListStringifiers {
             final Double value = glob.get(field);
             if (value != null) {
               total += value;
+            }
+          }
+        }
+        return format.format(total);
+      }
+    };
+  }
+
+  public static GlobListStringifier conditionnalSum(final GlobMatcher matcher,
+                                                    final DecimalFormat format, final DoubleField... fields) {
+    return new GlobListStringifier() {
+      public String toString(GlobList selected, GlobRepository repository) {
+        if (selected.isEmpty()) {
+          return "";
+        }
+
+        double total = 0;
+        for (Glob glob : selected) {
+          if (matcher.matches(glob, repository)) {
+            for (DoubleField field : fields) {
+              final Double value = glob.get(field);
+              if (value != null) {
+                total += glob.get(field);
+              }
             }
           }
         }

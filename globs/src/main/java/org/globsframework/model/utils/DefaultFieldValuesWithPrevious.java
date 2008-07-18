@@ -7,6 +7,7 @@ import org.globsframework.model.FieldValues;
 import org.globsframework.model.FieldValuesWithPrevious;
 import org.globsframework.model.impl.AbstractFieldValuesWithPrevious;
 import org.globsframework.utils.Unset;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevious {
 
@@ -88,6 +89,10 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
   }
 
   protected Object doGet(Field field) {
+    if (!field.getGlobType().equals(type)) {
+      throw new ItemNotFound("Field '" + field.getName() + "' is declared for type '" +
+                             field.getGlobType().getName() + "' and not for '" + type.getName() + "'");
+    }
     return values[field.getIndex()];
   }
 

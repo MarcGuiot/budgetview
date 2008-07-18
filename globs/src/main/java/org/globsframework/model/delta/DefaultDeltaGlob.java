@@ -38,6 +38,10 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
   }
 
   protected Object doGet(Field field) {
+    if (!field.getGlobType().equals(key.getGlobType())) {
+      throw new ItemNotFound("Field '" + field.getName() + "' is declared for type '" +
+                             field.getGlobType().getName() + "' and not for '" + key.getGlobType().getName() + "'");
+    }
     return values[field.getIndex()];
   }
 

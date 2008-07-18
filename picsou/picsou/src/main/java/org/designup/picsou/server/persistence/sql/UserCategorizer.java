@@ -1,7 +1,6 @@
 package org.designup.picsou.server.persistence.sql;
 
 import org.designup.picsou.server.model.UserCategoryAssociation;
-import org.designup.picsou.server.session.Persistence;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
@@ -15,11 +14,6 @@ import org.globsframework.streams.accessors.utils.ValueStringAccessor;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Ref;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 public class UserCategorizer {
   private Retriever retriever;
@@ -45,26 +39,6 @@ public class UserCategorizer {
       creator.create(userId, label, categoryId);
     }
     connection.commit();
-  }
-
-  public List<Persistence.CategoryInfo> getCategories(long userId, List<String> labels) {
-    MultiMap<String, Retriever.CategoryAndCount> category = retriever.getAssociatedCategory(userId);
-    List<Persistence.CategoryInfo> results = new ArrayList<Persistence.CategoryInfo>(labels.size());
-    for (String label : labels) {
-      List<Retriever.CategoryAndCount> categoryAndCounts = new ArrayList<Retriever.CategoryAndCount>(category.get(label));
-      Collections.sort(categoryAndCounts, new Comparator<Retriever.CategoryAndCount>() {
-        public int compare(Retriever.CategoryAndCount o1, Retriever.CategoryAndCount o2) {
-          return o2.getSecond().compareTo(o1.getSecond());
-        }
-      });
-      Persistence.CategoryInfo info = new Persistence.CategoryInfo();
-      for (Retriever.CategoryAndCount categoryAndCount : categoryAndCounts) {
-        info.add(categoryAndCount.getFirst());
-      }
-      results.add(info);
-    }
-    connection.commit();
-    return results;
   }
 
   static class Creator {

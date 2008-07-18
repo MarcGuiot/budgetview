@@ -1,20 +1,23 @@
 package org.designup.picsou.gui.undo;
 
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.MultiMap;
-import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.GlobSelection;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Category;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.directory.Directory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
-import java.util.Arrays;
 
 public class UndoRedoService {
   private GlobRepository repository;
@@ -134,11 +137,11 @@ public class UndoRedoService {
     }
 
     public void apply() {
-      repository.apply(changeSet.reverse());
+      repository.apply(changeSet);
     }
 
     public void revert() {
-      repository.apply(changeSet);
+      repository.apply(changeSet.reverse());
     }
   }
 }

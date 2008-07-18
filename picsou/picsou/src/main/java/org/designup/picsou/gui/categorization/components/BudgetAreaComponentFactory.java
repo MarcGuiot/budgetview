@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
@@ -16,8 +17,8 @@ public class BudgetAreaComponentFactory extends AbstractSeriesComponentFactory {
   public BudgetAreaComponentFactory(CardHandler cardHandler,
                                     JToggleButton invisibleToggle,
                                     GlobRepository repository,
-                                    Directory directory) {
-    super(invisibleToggle, repository, directory);
+                                    Directory directory, PicsouDialog dialog) {
+    super(invisibleToggle, repository, directory, dialog);
     this.cardHandler = cardHandler;
   }
 

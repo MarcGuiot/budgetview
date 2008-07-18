@@ -1,12 +1,21 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
 import org.designup.picsou.functests.checkers.SeriesCreationDialogChecker;
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.TransactionType;
+import org.globsframework.utils.Dates;
 
 public class SeriesCreationTest extends LoggedInFunctionalTestCase {
+
+  protected void setUp() throws Exception {
+    TimeService.setCurrentDate(Dates.parseMonth("2008/06"));
+    super.setUp();
+  }
+
   public void testNewIncomeSeries() throws Exception {
     OfxBuilder
       .init(this)
@@ -25,11 +34,15 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     creationDialog.validate();
 
     dialog.checkContainsIncomeSeries("Salary", "Prime");
-    dialog.selectIncomeSeries("Prime");
+    dialog.selectIncomeSeries("Prime", false);
     dialog.validate();
 
     transactionDetails.checkSeries("Prime");
     transactionDetails.checkCategory(MasterCategory.INCOME);
+    transactions.initContent()
+      .add("30/06/2008", TransactionType.PLANNED, "Prime", "", 0.0, MasterCategory.INCOME)
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "WorldCo/june", "", -1129.90, MasterCategory.INCOME)
+      .check();
   }
 
   public void testNewRecurringSeries() throws Exception {
@@ -49,7 +62,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     creationDialog.validate();
 
     dialog.checkContainsRecurringSeries("Internet", "Culture");
-    dialog.selectRecurringSeries("Culture");
+    dialog.selectRecurringSeries("Culture", false);
     dialog.validate();
 
     transactionDetails.checkSeries("Culture");
@@ -73,7 +86,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     creationDialog.validate();
 
     dialog.checkContainsEnvelope("Regime");
-    dialog.selectEnvelopeSeries("Regime", MasterCategory.FOOD);
+    dialog.selectEnvelopeSeries("Regime", MasterCategory.FOOD, true);
     dialog.validate();
 
     transactionDetails.checkSeries("Regime");

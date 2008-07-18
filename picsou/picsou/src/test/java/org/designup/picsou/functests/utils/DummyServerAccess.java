@@ -43,15 +43,6 @@ public class DummyServerAccess implements ServerAccess {
     return false;
   }
 
-  public int getNextId(String type, int idCount) {
-    try {
-      return nextId;
-    }
-    finally {
-      nextId += idCount;
-    }
-  }
-
   public void disconnect() {
   }
 

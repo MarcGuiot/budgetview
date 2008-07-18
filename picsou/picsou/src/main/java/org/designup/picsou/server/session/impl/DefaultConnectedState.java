@@ -30,14 +30,6 @@ public class DefaultConnectedState extends AbstractSessionState implements Conne
     persistence.updateData(input, output, userId);
   }
 
-  public void getNextId(SerializedInput input, SerializedOutput output) {
-    lastAccess();
-    checkPrivateId(input);
-    String globTypeName = input.readString();
-    int count = input.readNotNullInt();
-    output.writeInteger(persistence.getNextId(globTypeName, count, userId));
-  }
-
   public void takeSnapshot(SerializedInput input) {
     lastAccess();
     checkPrivateId(input);

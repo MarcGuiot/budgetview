@@ -1,8 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.model.MasterCategory;
+import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
-import org.designup.picsou.model.MasterCategory;
 
 public class SeriesCreationDialogChecker extends DataChecker {
   private Window dialog;
@@ -26,5 +27,9 @@ public class SeriesCreationDialogChecker extends DataChecker {
 
   public void validate() {
     dialog.getButton("OK").click();
+  }
+
+  public Trigger doValidate() {
+    return dialog.getButton("OK").triggerClick();
   }
 }

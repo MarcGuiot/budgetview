@@ -47,11 +47,6 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
     state.connected().updateData(input, output);
   }
 
-  public void getNextId(Long sessionId, SerializedInput input, SerializedOutput output) throws InvalidActionForState {
-    SessionState state = sessionService.getSessionState(sessionId);
-    state.connected().getNextId(input, output);
-  }
-
   public void disconnect(Long sessionId, SerializedInput input) {
     SessionState state = sessionService.getSessionState(sessionId);
     state.disconnect(input);

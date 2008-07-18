@@ -89,10 +89,6 @@ public class DispatcherServerAccess implements ServerAccess {
     return localServerAccess.getUserData(changeSet, idUpdate);
   }
 
-  public int getNextId(String type, int idCount) {
-    return localServerAccess.getNextId(type, idCount);
-  }
-
   public void disconnect() {
     if (remoteServerAccess != null) {
       remoteServerAccess.disconnect();

@@ -17,6 +17,7 @@ public class User {
 
   public static StringField NAME;
   public static StringField PASSWORD;
+  public static IntegerField LAUNCH_COUNT;
 
   static {
     GlobTypeLoader.init(User.class);

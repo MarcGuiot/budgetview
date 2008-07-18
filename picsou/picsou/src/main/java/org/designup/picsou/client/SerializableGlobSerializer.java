@@ -24,8 +24,8 @@ public class SerializableGlobSerializer {
     }
   }
 
-  public MapOfMaps<String, Integer, SerializableGlobType> deserialize(SerializedInput serializedInput) {
-    MapOfMaps<String, Integer, SerializableGlobType> multiMap = new MapOfMaps<String, Integer, SerializableGlobType>();
+  public void deserialize(SerializedInput serializedInput,
+                          MapOfMaps<String, Integer, SerializableGlobType> data) {
     int globTypeCount = serializedInput.readNotNullInt();
     while (globTypeCount > 0) {
       String globTypeName = serializedInput.readString();
@@ -37,11 +37,10 @@ public class SerializableGlobSerializer {
         defaultGlob.setGlobTypeName(globTypeName);
         defaultGlob.setVersion(serializedInput.readNotNullInt());
         defaultGlob.setData(serializedInput.readBytes());
-        multiMap.put(globTypeName, id, defaultGlob);
+        data.put(globTypeName, id, defaultGlob);
         deltaGlobCount--;
       }
       globTypeCount--;
     }
-    return multiMap;
   }
 }

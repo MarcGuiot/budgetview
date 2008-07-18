@@ -13,7 +13,6 @@ import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -29,7 +28,6 @@ import java.io.StringWriter;
 import java.util.Arrays;
 
 public class LoginPanel {
-
   private ServerAccess serverAccess;
 
   private JPanel panel;

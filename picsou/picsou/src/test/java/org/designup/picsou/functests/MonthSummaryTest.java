@@ -18,10 +18,10 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .load();
 
     CategorizerChecker checker = new CategorizerChecker(mainWindow);
-    checker.setRecurring("free telecom", "internet");
-    checker.setRecurring("Loyer", "rental");
-    checker.setEnvelope("Auchan", "groceries", MasterCategory.FOOD);
-    checker.setEnvelope("ED", "groceries", MasterCategory.FOOD);
+    checker.setRecurring("free telecom", "internet", true);
+    checker.setRecurring("Loyer", "rental", true);
+    checker.setEnvelope("Auchan", "groceries", MasterCategory.FOOD, true);
+    checker.setEnvelope("ED", "groceries", MasterCategory.FOOD, false);
     checker.setOccasional("fnac", MasterCategory.MULTIMEDIA);
     checker.setIncome("Salaire");
 
@@ -48,16 +48,16 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     periods.selectCells("2008/07");
     CategorizerChecker checker = new CategorizerChecker(mainWindow);
-    checker.setRecurring("free telecom", "internet");
-    checker.setRecurring("Loyer", "rental");
-    checker.setEnvelope("Auchan", "groceries", MasterCategory.FOOD);
-    checker.setEnvelope("ED", "groceries", MasterCategory.FOOD);
+    checker.setRecurring("free telecom", "internet", true);
+    checker.setRecurring("Loyer", "rental", true);
+    checker.setEnvelope("Auchan", "groceries", MasterCategory.FOOD, true);
+    checker.setEnvelope("ED", "groceries", MasterCategory.FOOD, false);
     checker.setOccasional("fnac", MasterCategory.MULTIMEDIA);
     checker.setIncome("Salaire");
 
     periods.selectCells("2008/08");
-    checker.setRecurring("free telecom", "internet");
-    checker.setRecurring("Loyer", "rental");
+    checker.setRecurring("free telecom", "internet", false);
+    checker.setRecurring("Loyer", "rental", false);
 
     periods.selectCells("2008/07", "2008/08");
     views.selectHome();

@@ -1,30 +1,31 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Glob;
-import org.globsframework.model.Key;
-import org.globsframework.model.GlobList;
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.GlobSelection;
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
 public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
   ButtonGroup seriesGroup = new ButtonGroup();
 
-  public SeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository localRepository, Directory directory) {
-    super(invisibleToggle, localRepository, directory);
+  public SeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository localRepository, Directory directory, PicsouDialog dialog) {
+    super(invisibleToggle, localRepository, directory, dialog);
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
     String toggleLabel = seriesStringifier.toString(series, repository);
     final Key seriesKey = series.getKey();
     final Key categoryKey = series.getTargetKey(Series.DEFAULT_CATEGORY);
-    final JToggleButton toggle = createCategoryUpdaterToggle(toggleLabel, seriesKey, categoryKey);
+    final JToggleButton toggle = createCategoryUpdaterToggle(toggleLabel, seriesKey, categoryKey, dialog);
     seriesGroup.add(toggle);
 
     final GlobSelectionListener listener = new GlobSelectionListener() {

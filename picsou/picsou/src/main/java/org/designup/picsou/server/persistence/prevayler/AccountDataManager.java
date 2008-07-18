@@ -1,6 +1,5 @@
 package org.designup.picsou.server.persistence.prevayler;
 
-import org.globsframework.model.GlobList;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
 
@@ -12,8 +11,6 @@ public interface AccountDataManager {
   Integer getNextId(String globTypeName, Integer userId, Integer count);
 
   void delete(Integer userId);
-
-  GlobList getUserData(Integer userId);
 
   void close();
 

@@ -60,10 +60,6 @@ public class HttpsClientTransport implements ClientTransport {
     return sendRequest(sessionId, "/getUserData", bytes);
   }
 
-  public SerializedInput getNextId(Long sessionId, byte[] bytes) {
-    return sendRequest(sessionId, "/getNextId", bytes);
-  }
-
   public void disconnect(Long sessionId, byte[] bytes) {
     sendRequest(sessionId, "/disconnect", bytes);
   }
@@ -85,7 +81,8 @@ public class HttpsClientTransport implements ClientTransport {
         postMethod.setRequestHeader(SESSION_ID, sessionId.toString());
       }
       postMethod.setRequestEntity(new ByteArrayRequestEntity(data));
-      SerializedInput serializedInput = SerializedInputOutputFactory.init(sendRequest(postMethod).getResponseBodyAsStream());
+      SerializedInput serializedInput =
+        SerializedInputOutputFactory.init(sendRequest(postMethod).getResponseBodyAsStream());
       Log.leave("send Ok");
       hasError = false;
       return serializedInput;

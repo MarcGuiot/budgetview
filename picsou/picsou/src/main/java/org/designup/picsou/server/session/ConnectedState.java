@@ -8,7 +8,5 @@ public interface ConnectedState extends SessionState {
 
   void updateData(SerializedInput transactionsInput, SerializedOutput output);
 
-  void getNextId(SerializedInput input, SerializedOutput output);
-
   void takeSnapshot(SerializedInput input);
 }

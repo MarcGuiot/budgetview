@@ -11,6 +11,7 @@
       <label text="$seriesCreation.category" gridPos="(0,1)"/>
       <button action="assignCategoryAction" text="$seriesCreation.categorize" gridPos="(1,1)" styleClass="hyperlink"/>
 
+
     </grid>
 
     <row>

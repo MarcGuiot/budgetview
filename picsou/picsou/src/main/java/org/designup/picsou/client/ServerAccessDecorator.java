@@ -34,10 +34,6 @@ public class ServerAccessDecorator implements ServerAccess {
     return serverAccess.getUserData(changeSet, idUpdate);
   }
 
-  public int getNextId(String type, int idCount) {
-    return serverAccess.getNextId(type, idCount);
-  }
-
   public void disconnect() {
     serverAccess.disconnect();
   }

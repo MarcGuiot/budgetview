@@ -29,7 +29,5 @@ public interface ServerAccess {
 
   GlobList getUserData(MutableChangeSet upgradeChangeSetToApply, IdUpdate idUpdate);
 
-  int getNextId(String type, int idCount);
-
   void disconnect();
 }

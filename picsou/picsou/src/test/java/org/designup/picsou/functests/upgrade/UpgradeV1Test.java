@@ -26,7 +26,7 @@ public class UpgradeV1Test extends LoggedInFunctionalTestCase {
     transactionDetails.openSplitDialog(0)
       .enterAmount("-1")
       .enterNote("COCA")
-      .selectCategory(MasterCategory.FOOD)
+      .selectEnvelope(MasterCategory.FOOD, true)
       .add()
       .ok();
 

@@ -167,10 +167,15 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
     SerializedInput input = clientTransport.getUserData(sessionId, outputStream.toByteArray());
+    return deserialize(idUpdate, input);
+  }
+
+  private GlobList deserialize(IdUpdate idUpdate, SerializedInput input) {
     SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
-    MapOfMaps<String, Integer, SerializableGlobType> stringIntegerGlobMapOfMaps = serializableGlobSerializer.deserialize(input);
-    GlobList result = new GlobList(stringIntegerGlobMapOfMaps.size());
-    for (String globTypeName : stringIntegerGlobMapOfMaps.keys()) {
+    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
+    serializableGlobSerializer.deserialize(input, data);
+    GlobList result = new GlobList(data.size());
+    for (String globTypeName : data.keys()) {
       GlobType globType = globModel.getType(globTypeName);
       PicsouGlobSerializer globSerializer =
         globType.getProperty(SerializationManager.SERIALIZATION_PROPERTY);
@@ -178,30 +183,20 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
         throw new RuntimeException("missing serialializer for " + globTypeName);
       }
       IntegerField field = (IntegerField)globType.getKeyFields().get(0);
-      Integer id = 0;
-      for (Map.Entry<Integer, SerializableGlobType> globEntry : stringIntegerGlobMapOfMaps.get(globTypeName).entrySet()) {
+      Integer id;
+      Integer maxId = 0;
+      for (Map.Entry<Integer, SerializableGlobType> globEntry : data.get(globTypeName).entrySet()) {
         id = globEntry.getKey();
         GlobBuilder builder = GlobBuilder.init(globType).setValue(field, id);
         SerializableGlobType glob = globEntry.getValue();
         globSerializer.deserializeData(glob.getVersion(), builder,
                                        passwordBasedEncryptor.decrypt(glob.getData()));
         result.add(builder.get());
+        maxId = Math.max(maxId, id);
       }
-      idUpdate.update(field, id);
+      idUpdate.update(field, maxId);
     }
     return result;
-  }
-
-  public int getNextId(String type, int idCount) {
-    checkConnected();
-
-    SerializedByteArrayOutput request = new SerializedByteArrayOutput();
-    request.getOutput().writeBytes(privateId);
-    request.getOutput().writeString(type);
-    request.getOutput().write(idCount);
-
-    SerializedInput response = clientTransport.getNextId(sessionId, request.toByteArray());
-    return response.readInteger();
   }
 
   public void disconnect() {

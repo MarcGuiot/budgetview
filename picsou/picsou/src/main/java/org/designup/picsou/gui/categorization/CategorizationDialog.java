@@ -40,6 +40,7 @@ public class CategorizationDialog {
   private JCheckBox autoHideCheckBox;
 
   public CategorizationDialog(Window parent, final GlobRepository repository, Directory directory) {
+    dialog = PicsouDialog.create(parent);
 
     final Directory localDirectory = init(repository, directory);
 
@@ -76,14 +77,14 @@ public class CategorizationDialog {
     builder.add("invisibleBudgetAreaToggle", invisibleBudgetAreaToggle);
     builder.addRepeat("budgetAreas", BudgetArea.TYPE.getConstants(),
                       new BudgetAreaComponentFactory(cardHandler, invisibleBudgetAreaToggle,
-                                                     localRepository, localDirectory));
+                                                     localRepository, localDirectory, dialog));
 
     JToggleButton invisibleIncomeToggle = new JToggleButton();
     builder.add("invisibleIncomeToggle", invisibleIncomeToggle);
     builder.addRepeat("incomeSeriesRepeat",
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.INCOME.getGlob(), Series.BUDGET_AREA),
-                      new SeriesComponentFactory(invisibleIncomeToggle, localRepository, localDirectory));
+                      new SeriesComponentFactory(invisibleIncomeToggle, localRepository, localDirectory, dialog));
     builder.add("createIncomeSeries", new SeriesCreationAction(BudgetArea.INCOME, localDirectory));
 
     JToggleButton invisibleRecurringToggle = new JToggleButton();
@@ -91,7 +92,7 @@ public class CategorizationDialog {
     builder.addRepeat("recurringSeriesRepeat",
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.RECURRING_EXPENSES.getGlob(), Series.BUDGET_AREA),
-                      new SeriesComponentFactory(invisibleRecurringToggle, localRepository, localDirectory));
+                      new SeriesComponentFactory(invisibleRecurringToggle, localRepository, localDirectory, dialog));
     builder.add("createRecurringSeries", new SeriesCreationAction(BudgetArea.RECURRING_EXPENSES, localDirectory));
 
     final JToggleButton invisibleEnvelopeToggle = new JToggleButton();
@@ -99,7 +100,7 @@ public class CategorizationDialog {
     builder.addRepeat("envelopeSeriesRepeat",
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.EXPENSES_ENVELOPE.getGlob(), Series.BUDGET_AREA),
-                      new EnvelopeSeriesComponentFactory(invisibleEnvelopeToggle, localRepository, localDirectory));
+                      new EnvelopeSeriesComponentFactory(invisibleEnvelopeToggle, localRepository, localDirectory, dialog));
     builder.add("createEnvelopeSeries", new SeriesCreationAction(BudgetArea.EXPENSES_ENVELOPE, localDirectory));
 
     JToggleButton invisibleOccasionalToggle = new JToggleButton();
@@ -114,7 +115,7 @@ public class CategorizationDialog {
                       new OccasionalCategoriesComponentFactory("occasionalSeries", "occasionalCategoryToggle",
                                                                BudgetArea.OCCASIONAL_EXPENSES,
                                                                invisibleOccasionalToggle,
-                                                               localRepository, localDirectory));
+                                                               localRepository, localDirectory, dialog));
 
     builder.add("ok", new AbstractAction("ok") {
       public void actionPerformed(ActionEvent e) {
@@ -130,7 +131,6 @@ public class CategorizationDialog {
     });
 
     Container panel = builder.load();
-    dialog = PicsouDialog.create(parent);
     dialog.setContentPane(panel);
     dialog.pack();
   }
@@ -219,8 +219,9 @@ public class CategorizationDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      SeriesCreationDialog creationDialog = new SeriesCreationDialog(budgetArea, dialog, localRepository, localDirectory);
-      creationDialog.show();
+      Glob currentTransaction = currentTransactions.get(0);
+      SeriesCreationDialog creationDialog = new SeriesCreationDialog(dialog, localRepository, localDirectory);
+      creationDialog.show(currentTransaction, budgetArea);
     }
   }
 
