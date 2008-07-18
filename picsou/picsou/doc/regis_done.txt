@@ -23,3 +23,8 @@ Vue budget
 - bloc recurrent
 - bloc enveloppes
 - montants totaux
+
+
+CategoryChooser
+---------------
+- Migration sous Splits (repeat) + ColumnLayout
