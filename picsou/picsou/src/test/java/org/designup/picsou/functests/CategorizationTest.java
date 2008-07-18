@@ -192,13 +192,13 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.selectRecurringSeries("Internet", true);
 //    dialog.checkPreviousIsDisabled();
 
-    dialog.selectNext();
-    dialog.checkSelectedTableRows(1);
-    dialog.checkLabel("Free Telecom");
-    dialog.checkNextIsDisabled();
-
-    dialog.selectTableRows(0);
-    dialog.checkNextIsEnabled();
+//    dialog.selectNext();
+//    dialog.checkSelectedTableRows(1);
+//    dialog.checkLabel("Free Telecom");
+//    dialog.checkNextIsDisabled();
+//
+//    dialog.selectTableRows(0);
+//    dialog.checkNextIsEnabled();
   }
 
   public void testMultiCategorizationFromTransactionTable() throws Exception {

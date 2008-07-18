@@ -69,8 +69,8 @@ public class SeriesCreationDialog {
   }
 
   public void show(Key seriesKey, Glob transaction) {
-    this.series = localRepository.get(seriesKey);
     localRepository.rollback();
+    this.series = localRepository.get(seriesKey);
     Double amount = transaction.get(Transaction.AMOUNT);
     budgetArea = BudgetArea.get(this.series.get(Series.BUDGET_AREA));
     localRepository.update(seriesKey,
@@ -92,7 +92,6 @@ public class SeriesCreationDialog {
     dialog.pack();
     GuiUtils.showCentered(dialog);
   }
-
 
   public void show(Glob transaction, BudgetArea budget) {
     localRepository.rollback();

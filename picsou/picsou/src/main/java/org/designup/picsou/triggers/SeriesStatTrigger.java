@@ -4,11 +4,13 @@ import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.TransactionType;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Utils;
 
 import java.util.List;
 
@@ -80,6 +82,9 @@ public class SeriesStatTrigger implements ChangeSetListener {
         }
 
         Glob transaction = repository.get(key);
+        if (Utils.equal(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId())) {
+          return;
+        }
 
         Integer previousSeriesId;
         Integer currentSeriesId;
@@ -136,7 +141,7 @@ public class SeriesStatTrigger implements ChangeSetListener {
 
   private void processTransaction(FieldValues values, int multiplier, GlobRepository repository) {
     final Integer seriesId = values.get(Transaction.SERIES);
-    if (seriesId == null) {
+    if ((seriesId == null) || Utils.equal(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId())) {
       return;
     }
 
