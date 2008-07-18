@@ -43,6 +43,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   private boolean selectionEnabled = true;
   private Font defaultFont = new JTable().getFont();
   private String name;
+  private boolean hiddenHeader;
 
   public static GlobTableView init(GlobType type, GlobRepository globRepository,
                                    Comparator<Glob> comparator, Directory directory) {
@@ -134,6 +135,11 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
 
   public GlobTableView addColumn(String name, TableCellRenderer renderer, TableCellEditor editor, Comparator<Glob> comparator) {
     columns.add(new GlobTableColumn(name, renderer, editor, new CompositeComparator<Glob>(comparator, initialComparator)));
+    return this;
+  }
+
+  public GlobTableView hideHeader() {
+    this.hiddenHeader = true;
     return this;
   }
 
@@ -356,6 +362,11 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   private void initHeader() {
+    if (hiddenHeader) {
+      table.setTableHeader(null);
+      return;
+    }
+
     ColumnHeaderRenderer headerRenderer = new ColumnHeaderRenderer(table, tableModel);
 
     JTableHeader header = table.getTableHeader();
