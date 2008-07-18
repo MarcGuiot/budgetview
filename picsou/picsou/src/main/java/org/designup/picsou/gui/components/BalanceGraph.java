@@ -1,14 +1,12 @@
 package org.designup.picsou.gui.components;
 
-import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.model.Glob;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,8 +32,8 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    double received=0;
-    double spent=0;
+    double received = 0;
+    double spent = 0;
     for (Glob glob : selection.getAll(type)) {
       received += Math.abs(glob.get(receivedField));
       spent += Math.abs(glob.get(spentField));
@@ -57,8 +55,12 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
   public void paint(Graphics g) {
     Graphics2D g2 = (Graphics2D)g;
 
-    int h = getHeight();
-    int w = getWidth();
+    if ((receivedPercent == 0) && (spentPercent == 0)) {
+      return;
+    }
+
+    int h = getHeight() - 1;
+    int w = getWidth() - 1;
 
     int middle = w / 2;
     int incomeHeight = (int)(h * receivedPercent);

@@ -2,11 +2,6 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <styles>
-    <style selector="#monthSummary label#budgetAreaName" font="-,bold,12"/>
-    <style selector="#monthSummary label.amount" font="-,bold,10" foreground="monthsummary.amount"/>
-  </styles>
-
   <column name="monthSummary">
 
     <label text="$monthsummary.title" styleClass="blockTitle"/>
@@ -30,7 +25,7 @@
         <repeat ref="budgetAreaRepeat">
           <column name="budgetAreaRow" styleClass="innerBlock">
             <row margin="10" marginBottom="2" >
-              <label ref="budgetAreaName"/>
+              <label ref="budgetAreaName" styleClass="item"/>
               <filler fill="horizontal"/>
             </row>
             <row margin="10" marginTop="0" >

@@ -18,7 +18,7 @@
         <repeat ref="seriesRepeat" styleClass="innerBlock">
           <column name="seriesRow">
             <row margin="10" marginBottom="2" >
-              <label ref="seriesName"/>
+              <label ref="seriesName" styleClass="item"/>
               <filler fill="horizontal"/>
             </row>
             <row margin="10" marginTop="0" >

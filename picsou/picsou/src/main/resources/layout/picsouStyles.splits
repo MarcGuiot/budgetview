@@ -9,6 +9,29 @@
         topColor="login.block.top" bottomColor="login.block.bottom" borderColor="login.block.border"
         borderWidth="2" cornerRadius="10"/>
 
+    <!-- Default form elements -->
+
+    <style selector="textArea.readOnly" opaque="false" lineWrap="true" wrapStyleWord="true"/>
+
+    <style selector="label.title"
+           font="-,bold,16" foreground="import.title"
+           fill="none" anchor="center"
+           marginBottom="25"/>
+
+    <style selector="label.header"
+           font="-,plain,11" foreground="import.header.label"
+           marginTop="5" marginBottom="3" fill="none" anchor="left"/>
+
+    <style selector="label.formLabel"
+           font="-,plain,12" foreground="import.form.label"
+           anchor="east" marginRight="10"/>
+
+    <style selector="row.buttons"
+           fill="horizontal" anchor="center"
+           marginTop="10" marginBottom="10" marginLeft="40" marginRight="40"/>
+
+    <style selector="row.buttons button" fill="horizontal" weightX="10"/>
+
     <!-- Dialog -->
 
     <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"
@@ -36,32 +59,12 @@
         topColor="block.inner.top" bottomColor="block.inner.bottom" borderColor="block.inner.border"
         borderWidth="2" cornerRadius="10"/>
     <style selector=".innerBlock" ui="innerBlock" marginTop="5" marginBottom="5"/>
-    <style selector=".innerBlock hyperlink" foreground="block.inner.hyperlink"/>
-
-
-    <!-- Default form elements -->
-
-    <style selector="textArea.readOnly" opaque="false" lineWrap="true" wrapStyleWord="true"/>
-
-    <style selector="label.title"
-           font="-,bold,16" foreground="import.title"
-           fill="none" anchor="center"
-           marginBottom="25"/>
-
-    <style selector="label.header"
-           font="-,plain,11" foreground="import.header.label"
-           marginTop="5" marginBottom="3" fill="none" anchor="left"/>
-
-    <style selector="label.formLabel"
-           font="-,plain,12" foreground="import.form.label"
-           anchor="east" marginRight="10"/>
-
-    <style selector="row.buttons"
-           fill="horizontal" anchor="center"
-           marginTop="10" marginBottom="10" marginLeft="40" marginRight="40"/>
-
-    <style selector="row.buttons button"
-           fill="horizontal" weightX="10"/>
+    <style selector=".innerBlock label.item" foreground="block.inner.item" font="-,bold,13" anchor="top"
+      shadowDirection="northwest" shadowColor="#222222"/>
+    <style selector=".innerBlock label.subitem" foreground="block.inner.subitem" font="-,plain,10" anchor="top"/>
+    <style selector=".innerBlock label.amount" foreground="block.inner.amount" font="-,bold,12" anchor="top"/>
+    <style selector=".innerBlock label.largeAmount" foreground="block.inner.amount" font="-,bold,13" anchor="top"/>
+    <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink"/>
 
   </styles>
 

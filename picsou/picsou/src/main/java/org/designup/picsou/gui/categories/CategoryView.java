@@ -89,12 +89,7 @@ public class CategoryView extends View {
     globTable.addColumn(" ", expandColumn, expandColumn, categoryStringifier.getComparator(repository))
       .addColumn(Lang.get("category"), categoryColumn, categoryColumn, categoryComparator)
       .addColumn(Lang.get("amount"), amountStringifier, chain(alignRight(), customizer), backgroundPainter)
-      .setHeaderCustomizer(new PicsouTableHeaderCustomizer(directory, PicsouColors.CATEGORY_TABLE_HEADER_TITLE),
-                           new PicsouTableHeaderPainter(directory,
-                                                        PicsouColors.CATEGORY_TABLE_HEADER_DARK,
-                                                        PicsouColors.CATEGORY_TABLE_HEADER_MEDIUM,
-                                                        PicsouColors.CATEGORY_TABLE_HEADER_LIGHT,
-                                                        PicsouColors.CATEGORY_TABLE_HEADER_BORDER))
+      .hideHeader()
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
     globTable.setPopupFactory(new CategoryPopupMenuFactory());
