@@ -18,6 +18,13 @@ public class BorderUtilsTest extends UISpecTestCase {
     assertTrue(border instanceof EmptyBorder);
   }
 
+  public void testEmptyWithInsets() throws Exception {
+    Border border = BorderUtils.parse("empty(2,3,4,5)", colorService);
+    assertTrue(border instanceof EmptyBorder);
+    EmptyBorder emptyBorder = (EmptyBorder)border;
+    checkInsets(emptyBorder.getBorderInsets(), 2, 3, 4, 5);
+  }
+
   public void testEtched() throws Exception {
     Border border = BorderUtils.parse("etched", colorService);
     assertTrue(border instanceof EtchedBorder);
@@ -36,12 +43,15 @@ public class BorderUtilsTest extends UISpecTestCase {
     assertTrue(border instanceof MatteBorder);
 
     MatteBorder matteBorder = (MatteBorder)border;
-    Insets insets = matteBorder.getBorderInsets();
-    assertEquals(1, insets.top);
-    assertEquals(2, insets.left);
-    assertEquals(3, insets.bottom);
-    assertEquals(4, insets.right);
+    checkInsets(matteBorder.getBorderInsets(), 1, 2, 3, 4);
     assertEquals(Color.GREEN, matteBorder.getMatteColor());
+  }
+
+  private void checkInsets(Insets insets, int top, int left, int bottom, int right) {
+    assertEquals(top, insets.top);
+    assertEquals(left, insets.left);
+    assertEquals(bottom, insets.bottom);
+    assertEquals(right, insets.right);
   }
 
   public void testMatteBorderWithNamedColor() throws Exception {
@@ -52,5 +62,8 @@ public class BorderUtilsTest extends UISpecTestCase {
 
     MatteBorder matteBorder = (MatteBorder)border;
     assertEquals(Color.BLUE, matteBorder.getMatteColor());
+
+    colorService.set("my.color", Color.GREEN);
+    assertEquals(Color.GREEN, matteBorder.getMatteColor());
   }
 }
