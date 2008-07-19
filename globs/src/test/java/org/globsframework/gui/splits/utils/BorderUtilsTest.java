@@ -47,13 +47,6 @@ public class BorderUtilsTest extends UISpecTestCase {
     assertEquals(Color.GREEN, matteBorder.getMatteColor());
   }
 
-  private void checkInsets(Insets insets, int top, int left, int bottom, int right) {
-    assertEquals(top, insets.top);
-    assertEquals(left, insets.left);
-    assertEquals(bottom, insets.bottom);
-    assertEquals(right, insets.right);
-  }
-
   public void testMatteBorderWithNamedColor() throws Exception {
     colorService.set("my.color", Color.BLUE);
 
@@ -65,5 +58,32 @@ public class BorderUtilsTest extends UISpecTestCase {
 
     colorService.set("my.color", Color.GREEN);
     assertEquals(Color.GREEN, matteBorder.getMatteColor());
+  }
+
+  public void testLineBorderWithFixedColor() throws Exception {
+    Border border = BorderUtils.parse("line(#00FF00)", colorService);
+    assertTrue(border instanceof LineBorder);
+    LineBorder lineBorder = (LineBorder)border;
+    assertEquals(Color.GREEN, lineBorder.getLineColor());
+  }
+
+  public void testLineBorderWithNamedColor() throws Exception {
+    colorService.set("my.color", Color.BLUE);
+
+    Border border = BorderUtils.parse("line(my.color)", colorService);
+    assertTrue(border instanceof LineBorder);
+
+    LineBorder lineBorder = (LineBorder)border;
+    assertEquals(Color.BLUE, lineBorder.getLineColor());
+
+    colorService.set("my.color", Color.GREEN);
+    assertEquals(Color.GREEN, lineBorder.getLineColor());
+  }
+
+  private void checkInsets(Insets insets, int top, int left, int bottom, int right) {
+    assertEquals(top, insets.top);
+    assertEquals(left, insets.left);
+    assertEquals(bottom, insets.bottom);
+    assertEquals(right, insets.right);
   }
 }

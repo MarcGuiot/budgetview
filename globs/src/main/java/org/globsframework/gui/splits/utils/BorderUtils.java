@@ -5,6 +5,7 @@ import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.components.MutableMatteBorder;
+import org.globsframework.gui.splits.components.MutableLineBorder;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -27,6 +28,9 @@ public class BorderUtils {
                                                         "[ ]*([0-9]+)[ ]*," +
                                                         "[ ]*([A-z\\.#0-9]+)[ ]*" +
                                                         "\\)");
+  private static Pattern LINE_FORMAT = Pattern.compile("line\\(" +
+                                                        "[ ]*([A-z\\.#0-9]+)[ ]*" +
+                                                        "\\)");
 
   public static Border parse(String desc, ColorService colorService) {
 
@@ -45,6 +49,7 @@ public class BorderUtils {
     if (desc.equalsIgnoreCase("bevel(raised)")) {
       return BorderFactory.createBevelBorder(BevelBorder.RAISED);
     }
+
     Matcher emptyMatcher = EMPTY_FORMAT.matcher(desc.trim());
     if (emptyMatcher.matches()) {
       return BorderFactory.createEmptyBorder(Integer.parseInt(emptyMatcher.group(1)),
@@ -55,11 +60,11 @@ public class BorderUtils {
 
     Matcher matteMatcher = MATTE_FORMAT.matcher(desc.trim());
     if (matteMatcher.matches()) {
-      String colorValue = matteMatcher.group(5);
       int top = Integer.parseInt(matteMatcher.group(1));
       int left = Integer.parseInt(matteMatcher.group(2));
       int bottom = Integer.parseInt(matteMatcher.group(3));
       int right = Integer.parseInt(matteMatcher.group(4));
+      String colorValue = matteMatcher.group(5);
       if (colorValue.startsWith(Colors.HEXA_PREFIX)) {
         Color color = Colors.toColor(colorValue.substring(1));
         return BorderFactory.createMatteBorder(top, left, bottom, right, color);
@@ -67,6 +72,23 @@ public class BorderUtils {
       else {
         Color initialColor = colorService.get(colorValue);
         final MutableMatteBorder border = new MutableMatteBorder(top, left, bottom, right, initialColor);
+        colorService.install(colorValue, new ColorUpdater() {
+          public void updateColor(Color color) {
+            border.setColor(color);
+          }
+        });
+        return border;
+      }
+    }
+
+    Matcher lineMatcher = LINE_FORMAT.matcher(desc.trim());
+    if (lineMatcher.matches()) {
+      String colorValue = lineMatcher.group(1);
+      if (colorValue.startsWith(Colors.HEXA_PREFIX)) {
+        return BorderFactory.createLineBorder(Colors.toColor(colorValue.substring(1)));
+      }
+      else {
+        final MutableLineBorder border = new MutableLineBorder();
         colorService.install(colorValue, new ColorUpdater() {
           public void updateColor(Color color) {
             border.setColor(color);
