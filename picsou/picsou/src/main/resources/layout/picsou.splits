@@ -52,7 +52,7 @@
     </panel>
 
     <panel ui="wave">
-      <column marginTop="10" marginLeft="20" marginRight="20" marginBottom="15">
+      <column marginTop="10" marginLeft="20" marginRight="20" marginBottom="5">
 
         <row>
           <label ref="title" opaque="false" font="Arial,bold,24"
@@ -100,34 +100,42 @@
             <horizontalSplit ui="cleanSplitPane" dividerSize="2" dividerLocation="240"
                              continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
 
-              <scrollPane border="matte(1,2,2,2,#242E50)"
-                          viewportBackground="categories.bg" background="categories.bg"
-                          minimumSize="(180,400)"
-                          autoHideSource="category" weightX="1">
-                <table ref="category" intercellSpacing="(0,0)" showGrid="false" opaque="false"/>
-              </scrollPane>
+              <panel styleClass="block" border="empty(0,0,0,5)">
 
-              <cards ref="cardsWithCategoriesView" opaque="false">
+                <panel margin="10">
+                  <scrollPane border="line(category.border)" viewportBackground="categories.bg"
+                              background="categories.bg"
+                              minimumSize="(180,400)" weightX="1">
+                    <table ref="category" intercellSpacing="(0,0)" showGrid="false" opaque="false"
+                           margin="10"/>
+                  </scrollPane>
+                </panel>
+
+              </panel>
+
+              <cards ref="cardsWithCategoriesView" opaque="false" border="empty(0,5,0,0)">
                 <card name="data">
-                  <row>
-                    <scrollPane borderPos="center" viewportBackground="transactions.bg" border="empty" opaque="false"
-                                marginLeft="5">
-                      <table ref="transaction" background="transactions.bg"
-                             intercellSpacing="(0,0)" showGrid="false" rowHeight="20"/>
-                    </scrollPane>
-                    <column marginLeft="15">
-                      <panel ref="transactionDetails"/>
-                      <panel name="uncategorizedMessagePanel" styleClass="errorMessage"
-                             autoHideSource="uncategorizedMessage_details" marginTop="20"
-                             preferredSize="(50,90)" weightY="0">
-                        <column>
-                          <textArea ref="uncategorizedMessage_details"/>
-                          <button action="categorizeRemainingTransactions_details"
-                                  text="$transaction.allocation.action"/>
-                        </column>
-                      </panel>
-                    </column>
-                  </row>
+                  <panel styleClass="block">
+                    <row margin="10">
+                      <scrollPane borderPos="center" viewportBackground="transactions.bg" border="line(transaction.border)" opaque="false"
+                                  marginLeft="5">
+                        <table ref="transaction" background="transactions.bg"
+                               intercellSpacing="(0,0)" showGrid="false" rowHeight="20"/>
+                      </scrollPane>
+                      <column marginLeft="15">
+                        <panel ref="transactionDetails"/>
+                        <panel name="uncategorizedMessagePanel" styleClass="errorMessage"
+                               autoHideSource="uncategorizedMessage_details" marginTop="20"
+                               preferredSize="(50,90)" weightY="0">
+                          <column>
+                            <textArea ref="uncategorizedMessage_details"/>
+                            <button action="categorizeRemainingTransactions_details"
+                                    text="$transaction.allocation.action"/>
+                          </column>
+                        </panel>
+                      </column>
+                    </row>
+                  </panel>
                 </card>
 
                 <card name="repartition">

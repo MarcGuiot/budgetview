@@ -60,11 +60,11 @@
         borderWidth="2" cornerRadius="10"/>
     <style selector=".innerBlock" ui="innerBlock" marginTop="5" marginBottom="5"/>
     <style selector=".innerBlock label.item" foreground="block.inner.item" font="-,bold,13" anchor="top"
-      shadowDirection="northwest" shadowColor="#222222"/>
+      shadowDirection="northwest" shadowColor="#FFFFFF"/>
     <style selector=".innerBlock label.subitem" foreground="block.inner.subitem" font="-,plain,10" anchor="top"/>
     <style selector=".innerBlock label.amount" foreground="block.inner.amount" font="-,bold,12" anchor="top"/>
     <style selector=".innerBlock label.largeAmount" foreground="block.inner.amount" font="-,bold,13" anchor="top"/>
-    <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink"/>
+    <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink" font="-,plain,10"/>
 
   </styles>
 
