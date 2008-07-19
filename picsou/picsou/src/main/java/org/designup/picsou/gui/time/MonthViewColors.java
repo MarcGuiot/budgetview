@@ -16,6 +16,7 @@ public class MonthViewColors implements ColorChangeListener {
   public Color selectedTop;
   public Color selectedBottom;
   public Color text;
+  public Color textShadow;
   public Color yearSeparator;
 
   public MonthViewColors(Directory directory) {
@@ -30,5 +31,6 @@ public class MonthViewColors implements ColorChangeListener {
     selectedTop = colorLocator.get(PicsouColors.PERIOD_SELECTION_BG_TOP);
     selectedBottom = colorLocator.get(PicsouColors.PERIOD_SELECTION_BG_BOTTOM);
     text = colorLocator.get(PicsouColors.PERIOD_TEXT);
+    textShadow = colorLocator.get(PicsouColors.PERIOD_TEXT_SHADOW);
   }
 }

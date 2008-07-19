@@ -45,17 +45,19 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
                     boolean isSelected, boolean hasFocus,
                     int width, int height) {
 
+    int adjustedHeight = height - 1;
+
     Graphics2D g2 = (Graphics2D)g;
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    int middleY = height / 2;
+    int middleY = adjustedHeight / 2;
 
     g2.setPaint(new GradientPaint(0, 0, headerLightColor, 0, middleY, headerMediumColor));
     g2.fillRect(0, 0, width, middleY);
-    g2.setPaint(new GradientPaint(0, middleY, headerDarkColor, 0, height, headerLightColor));
-    g2.fillRect(0, middleY, width, height);
+    g2.setPaint(new GradientPaint(0, middleY, headerDarkColor, 0, adjustedHeight, headerLightColor));
+    g2.fillRect(0, middleY, width, adjustedHeight);
 
-    Rectangle2D rect = new Rectangle2D.Float(0, 0, width, height);
+    Rectangle2D rect = new Rectangle2D.Float(0, 0, width, adjustedHeight);
     g2.setColor(headerBorderColor);
     g2.setStroke(new BasicStroke(1.0f));
     g2.draw(rect);

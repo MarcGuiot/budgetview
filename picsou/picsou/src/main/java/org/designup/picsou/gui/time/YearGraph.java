@@ -88,7 +88,6 @@ public class YearGraph extends DefaultCompositeComponent {
     graphics2D.drawLine(0, 0, 0, height);
     graphics2D.drawLine(monthDim, 0, monthDim, height);
 
-    graphics2D.setPaint(colors.text);
     int startX;
     if (clickableArea.getX() < 0) {
       startX = (int)(clickableArea.getWidth() - intersection.getWidth()) + 2;
@@ -98,11 +97,11 @@ public class YearGraph extends DefaultCompositeComponent {
     }
     if (monthDim < yearWidth || intersection.getWidth() < yearWidth) {
       if (intersection.getWidth() > shortYearWidth + 1) {
-        TimeGraph.drawStringIn(graphics2D, startX, height - 5, shortYearText);
+        TimeGraph.drawStringIn(graphics2D, startX, height - 5, shortYearText, colors);
       }
     }
     else {
-      TimeGraph.drawStringIn(graphics2D, startX + (int)((intersection.getWidth() - yearWidth) / 2), height - 5, yearText);
+      TimeGraph.drawStringIn(graphics2D, startX + (int)((intersection.getWidth() - yearWidth) / 2), height - 5, yearText, colors);
     }
     return monthDim;
   }

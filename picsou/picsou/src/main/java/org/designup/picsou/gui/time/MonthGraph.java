@@ -55,8 +55,8 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
 
     MonthFontMetricInfo.Size nearest = monthSize.getSize(monthRank);
 
-    graphics2D.setPaint(colors.text);
-    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, nearest.getHeigth() + 2, nearest.getName());
+    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, nearest.getHeigth() + 2, 
+                           nearest.getName(), colors);
   }
 
   public int getPreferredHeight(Graphics2D graphics2D) {

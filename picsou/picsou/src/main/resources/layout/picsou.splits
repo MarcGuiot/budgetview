@@ -34,142 +34,139 @@
            lineWrap="true" wrapStyleWord="true"/>
   </styles>
 
-  <column>
+  <panel ui="wave">
+    <column marginTop="20" marginLeft="20" marginRight="20" marginBottom="5">
 
-    <panel name="header">
-      <grid weightY="10" marginTop="10" marginBottom="10" marginLeft="30" marginRight="30">
-        <button ref="firstPeriod" gridPos="(0,0)" fill="none" anchor="southeast" size="(15,20)"
-                icon="first.png" rolloverIcon="firstrollover.png" pressedIcon="firstpressed.png"/>
-        <button ref="prevPeriod" gridPos="(0,1)" fill="none" anchor="northeast" size="(15,20)"
-                icon="prev.png" rolloverIcon="prevrollover.png" pressedIcon="prevpressed.png"/>
-        <component ref="month" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
-                   marginLeft="5" marginRight="5" weightX="1000.0" weightY="100.0" border="etched"/>
-        <button ref="lastPeriod" gridPos="(2,0)" fill="none" anchor="southeast" size="(15,20)"
-                icon="last.png" rolloverIcon="lastrollover.png" pressedIcon="lastpressed.png"/>
-        <button ref="nextPeriod" gridPos="(2,1)" fill="none" anchor="northeast" size="(15,20)"
-                icon="next.png" rolloverIcon="nextrollover.png" pressedIcon="nextpressed.png"/>
-      </grid>
-    </panel>
+      <row>
+        <label ref="title" opaque="false" font="Arial,bold,24"
+               horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
+        <filler fill="horizontal"/>
+        <toggleButton ref="homeCardToggle" styleClass="viewSelector"/>
+        <toggleButton ref="budgetCardToggle" styleClass="viewSelector"/>
+        <toggleButton ref="dataCardToggle" styleClass="viewSelector"/>
+        <toggleButton ref="repartitionCardToggle" styleClass="viewSelector"/>
+        <toggleButton ref="evolutionCardToggle" styleClass="viewSelector"/>
+      </row>
 
-    <panel ui="wave">
-      <column marginTop="10" marginLeft="20" marginRight="20" marginBottom="5">
+      <row>
+        <grid weightY="10" marginTop="20" marginBottom="10" marginLeft="30" marginRight="30">
+          <button ref="firstPeriod" gridPos="(0,0)" fill="none" anchor="southeast" size="(15,20)"
+                  icon="first.png" rolloverIcon="firstrollover.png" pressedIcon="firstpressed.png"/>
+          <button ref="prevPeriod" gridPos="(0,1)" fill="none" anchor="northeast" size="(15,20)"
+                  icon="prev.png" rolloverIcon="prevrollover.png" pressedIcon="prevpressed.png"/>
+          <component ref="month" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
+                     marginLeft="5" marginRight="5" weightX="1000.0" weightY="100.0" border="empty"/>
+          <button ref="lastPeriod" gridPos="(2,0)" fill="none" anchor="southeast" size="(15,20)"
+                  icon="last.png" rolloverIcon="lastrollover.png" pressedIcon="lastpressed.png"/>
+          <button ref="nextPeriod" gridPos="(2,1)" fill="none" anchor="northeast" size="(15,20)"
+                  icon="next.png" rolloverIcon="nextrollover.png" pressedIcon="nextpressed.png"/>
+        </grid>
+      </row>
 
-        <row>
-          <label ref="title" opaque="false" font="Arial,bold,24"
-                 horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
-          <filler fill="horizontal"/>
-          <toggleButton ref="homeCardToggle" styleClass="viewSelector"/>
-          <toggleButton ref="budgetCardToggle" styleClass="viewSelector"/>
-          <toggleButton ref="dataCardToggle" styleClass="viewSelector"/>
-          <toggleButton ref="repartitionCardToggle" styleClass="viewSelector"/>
-          <toggleButton ref="evolutionCardToggle" styleClass="viewSelector"/>
-        </row>
+      <cards ref="cardView" opaque="false" marginTop="20">
 
-        <cards ref="cardView" opaque="false" marginTop="40">
+        <card name="home">
+          <row>
+            <column>
+              <panel ref="accountView"/>
 
-          <card name="home">
-            <row>
-              <column>
-                <panel ref="accountView"/>
+              <panel styleClass="errorMessage" autoHideSource="uncategorizedMessage"
+                     preferredSize="(50,90)" weightY="0">
+                <column>
+                  <textArea ref="uncategorizedMessage"/>
+                  <button action="categorizeRemainingTransactions" text="$transaction.allocation.action"/>
+                </column>
+              </panel>
+              <filler fill="vertical"/>
+            </column>
 
-                <panel styleClass="errorMessage" autoHideSource="uncategorizedMessage"
-                       preferredSize="(50,90)" weightY="0">
-                  <column>
-                    <textArea ref="uncategorizedMessage"/>
-                    <button action="categorizeRemainingTransactions" text="$transaction.allocation.action"/>
-                  </column>
-                </panel>
-                <filler fill="vertical"/>
-              </column>
+            <column marginLeft="20">
+              <panel ref="monthSummaryView" preferredSize="(300,400)"/>
+              <filler fill="vertical"/>
+            </column>
 
-              <column marginLeft="20">
-                <panel ref="monthSummaryView" preferredSize="(300,400)"/>
-                <filler fill="vertical"/>
-              </column>
+            <filler fill="horizontal" weightX="10"/>
+          </row>
+        </card>
 
-              <filler fill="horizontal" weightX="10"/>
-            </row>
-          </card>
+        <card name="budget">
+          <panel ref="budgetView"/>
+        </card>
 
-          <card name="budget">
-            <panel ref="budgetView"/>
-          </card>
+        <card name="withCategories">
 
-          <card name="withCategories">
+          <horizontalSplit ui="cleanSplitPane" dividerSize="2" dividerLocation="240"
+                           continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
 
-            <horizontalSplit ui="cleanSplitPane" dividerSize="2" dividerLocation="240"
-                             continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
+            <panel styleClass="block" border="empty(0,0,0,5)">
 
-              <panel styleClass="block" border="empty(0,0,0,5)">
-
-                <panel margin="10">
-                  <scrollPane border="line(category.border)" viewportBackground="categories.bg"
-                              background="categories.bg"
-                              minimumSize="(180,400)" weightX="1">
-                    <table ref="category" intercellSpacing="(0,0)" showGrid="false" opaque="false"
-                           margin="10"/>
-                  </scrollPane>
-                </panel>
-
+              <panel margin="10">
+                <scrollPane border="line(category.border)" viewportBackground="categories.bg"
+                            background="categories.bg"
+                            minimumSize="(180,400)" weightX="1">
+                  <table ref="category" intercellSpacing="(0,0)" showGrid="false" opaque="false"
+                         margin="10"/>
+                </scrollPane>
               </panel>
 
-              <cards ref="cardsWithCategoriesView" opaque="false" border="empty(0,5,0,0)">
-                <card name="data">
-                  <panel styleClass="block">
-                    <row margin="10">
-                      <scrollPane borderPos="center" viewportBackground="transactions.bg" border="line(transaction.border)" opaque="false"
-                                  marginLeft="5">
-                        <table ref="transaction" background="transactions.bg"
-                               intercellSpacing="(0,0)" showGrid="false" rowHeight="20"/>
-                      </scrollPane>
-                      <column marginLeft="15">
-                        <panel ref="transactionDetails"/>
-                        <panel name="uncategorizedMessagePanel" styleClass="errorMessage"
-                               autoHideSource="uncategorizedMessage_details" marginTop="20"
-                               preferredSize="(50,90)" weightY="0">
-                          <column>
-                            <textArea ref="uncategorizedMessage_details"/>
-                            <button action="categorizeRemainingTransactions_details"
-                                    text="$transaction.allocation.action"/>
-                          </column>
-                        </panel>
-                      </column>
-                    </row>
-                  </panel>
-                </card>
+            </panel>
 
-                <card name="repartition">
-                  <column>
-                    <filler fill="vertical"/>
-                    <component ref="categoriesChart" opaque="false" fill="both"/>
-                    <filler fill="vertical"/>
-                  </column>
-                </card>
-
-                <card name="evolution">
-                  <column>
-                    <filler fill="vertical"/>
-                    <component ref="historicalChart" opaque="false" fill="both" anchor="center"
-                               marginLeft="30" marginRight="20"/>
-                    <filler fill="vertical"/>
-                  </column>
-                </card>
-
-                <card name="noData">
-                  <row marginLeft="20">
-                    <component ref="noData" opaque="false" foreground="title"/>
+            <cards ref="cardsWithCategoriesView" opaque="false" border="empty(0,5,0,0)">
+              <card name="data">
+                <panel styleClass="block">
+                  <row margin="10">
+                    <scrollPane borderPos="center" viewportBackground="transactions.bg"
+                                border="line(transaction.border)" opaque="false"
+                                marginLeft="5">
+                      <table ref="transaction" background="transactions.bg"
+                             intercellSpacing="(0,0)" showGrid="false" rowHeight="20"/>
+                    </scrollPane>
+                    <column marginLeft="15">
+                      <panel ref="transactionDetails"/>
+                      <panel name="uncategorizedMessagePanel" styleClass="errorMessage"
+                             autoHideSource="uncategorizedMessage_details" marginTop="20"
+                             preferredSize="(50,90)" weightY="0">
+                        <column>
+                          <textArea ref="uncategorizedMessage_details"/>
+                          <button action="categorizeRemainingTransactions_details"
+                                  text="$transaction.allocation.action"/>
+                        </column>
+                      </panel>
+                    </column>
                   </row>
-                </card>
+                </panel>
+              </card>
 
-              </cards>
-            </horizontalSplit>
+              <card name="repartition">
+                <column>
+                  <filler fill="vertical"/>
+                  <component ref="categoriesChart" opaque="false" fill="both"/>
+                  <filler fill="vertical"/>
+                </column>
+              </card>
 
-          </card>
+              <card name="evolution">
+                <column>
+                  <filler fill="vertical"/>
+                  <component ref="historicalChart" opaque="false" fill="both" anchor="center"
+                             marginLeft="30" marginRight="20"/>
+                  <filler fill="vertical"/>
+                </column>
+              </card>
 
-        </cards>
-      </column>
+              <card name="noData">
+                <row marginLeft="20">
+                  <component ref="noData" opaque="false" foreground="title"/>
+                </row>
+              </card>
 
-    </panel>
+            </cards>
+          </horizontalSplit>
 
-  </column>
+        </card>
+
+      </cards>
+    </column>
+
+  </panel>
 </splits>

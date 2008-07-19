@@ -114,7 +114,10 @@ public class TimeGraph {
     return monthWidth * 12;
   }
 
-  public static void drawStringIn(Graphics2D graphics2D, int x, int y, String text) {
+  public static void drawStringIn(Graphics2D graphics2D, int x, int y, String text, MonthViewColors colors) {
+    graphics2D.setPaint(colors.textShadow);
+    graphics2D.drawString(text, x-1, y-1);
+    graphics2D.setPaint(colors.text);
     graphics2D.drawString(text, x, y);
   }
 
