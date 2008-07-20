@@ -139,18 +139,22 @@
 
               <card name="repartition">
                 <column>
-                  <filler fill="vertical"/>
-                  <component ref="categoriesChart" opaque="false" fill="both"/>
-                  <filler fill="vertical"/>
+                  <panel styleClass="block">
+                    <panel styleClass="innerBlock" border="empty(10,10,10,10)">
+                      <component ref="categoriesChart" opaque="false" fill="both" border="empty(15,10,15,10)"/>
+                    </panel>
+                  </panel>
+                  <filler fill="vertical" weightY="1.0"/>
                 </column>
               </card>
 
               <card name="evolution">
                 <column>
-                  <filler fill="vertical"/>
-                  <component ref="historicalChart" opaque="false" fill="both" anchor="center"
-                             marginLeft="30" marginRight="20"/>
-                  <filler fill="vertical"/>
+                  <panel styleClass="block">
+                    <component ref="historicalChart" opaque="false" fill="both" anchor="center"
+                               marginLeft="30" marginRight="20" border="empty(10,10,10,10)"/>
+                  </panel>
+                  <filler fill="vertical" weightY="1.0"/>
                 </column>
               </card>
 

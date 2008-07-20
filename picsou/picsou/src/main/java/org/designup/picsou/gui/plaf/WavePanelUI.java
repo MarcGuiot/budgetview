@@ -43,7 +43,6 @@ public class WavePanelUI extends BasicPanelUI {
     int h = d.height;
 
     Graphics2D g2 = (Graphics2D)g.create();
-//    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     Rectangle rect = new Rectangle(0, 0, w, h);
     JideFastGradientPainter.drawGradient(g2, rect, topColor, bottomColor, true);

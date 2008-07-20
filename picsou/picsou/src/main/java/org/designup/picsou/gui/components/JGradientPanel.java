@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.components.jide.JideFastGradientPainter;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorLocator;
@@ -35,10 +36,15 @@ public class JGradientPanel extends JPanel implements ColorChangeListener {
     Graphics2D g2 = (Graphics2D)graphics.create();
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    GradientPaint gradient = new GradientPaint(0, 0, topColor, 0, getHeight(), bottomColor);
-    g2.setPaint(gradient);
+    if (topColor.equals(bottomColor)) {
+      g2.setPaint(topColor);
+      g2.fillRect(0, 0, getWidth(), getHeight());
+    }
+    else {
+      Shape rect = new Rectangle(0, 0, getWidth(), getHeight());
+      JideFastGradientPainter.drawGradient(g2, rect, topColor, bottomColor, true);
+    }
 
-    g2.fillRect(0, 0, getWidth(), getHeight());
     g2.dispose();
   }
 }

@@ -12,6 +12,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 import org.jfree.chart.ChartPanel;
@@ -125,21 +126,25 @@ public class HistoricalChart extends AbstractLineChart implements ColorChangeLis
       }
     });
 
-    Color labelColor = colorService.get(PicsouColors.CHART_LABEL);
 
-    NumberAxis domainAxis = (NumberAxis)plot.getDomainAxis();
+    final NumberAxis domainAxis = (NumberAxis)plot.getDomainAxis();
     domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
     domainAxis.setNumberFormatOverride(new MonthFormat());
-    domainAxis.setTickLabelPaint(labelColor);
-    domainAxis.setTickMarkPaint(labelColor);
     domainAxis.setTickLabelFont(fontLocator.get("chart.historical.label"));
 
-    NumberAxis rangeAxis = (NumberAxis)plot.getRangeAxis();
+    final NumberAxis rangeAxis = (NumberAxis)plot.getRangeAxis();
     rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
     rangeAxis.setAutoRangeIncludesZero(true);
-    rangeAxis.setTickLabelPaint(labelColor);
-    rangeAxis.setTickMarkPaint(labelColor);
     rangeAxis.setTickLabelFont(fontLocator.get("chart.historical.label"));
+
+    colorService.install(PicsouColors.CHART_LABEL.toString(), new ColorUpdater() {
+      public void updateColor(Color labelColor) {
+        domainAxis.setTickLabelPaint(labelColor);
+        domainAxis.setTickMarkPaint(labelColor);
+        rangeAxis.setTickLabelPaint(labelColor);
+        rangeAxis.setTickMarkPaint(labelColor);
+      }
+    });
   }
 
   private void configureSeries() {
