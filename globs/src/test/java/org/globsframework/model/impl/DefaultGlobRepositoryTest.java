@@ -926,6 +926,24 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     assertTrue(call[0]);
   }
 
+  public void testResetUpdateIndex() throws Exception {
+    init("<dummyObject id='0' name='name'/>" +
+         "<dummyObject id='1' name='name1' value='1.1'/>" +
+         "<dummyObject id='2' name='name2' value='2.2'/>");
+
+    GlobList listForName1 = repository.findByIndex(DummyObject.NAME_INDEX, "name1");
+    assertEquals(1, listForName1.size());
+    Glob dummyObject3 =
+      GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3)
+        .set(DummyObject.NAME, "name3").get();
+    repository.reset(new GlobList(dummyObject3), DummyObject.TYPE);
+    assertEquals(1, repository.getAll(DummyObject.TYPE).size());
+    GlobList shouldBeEmpty = repository.findByIndex(DummyObject.NAME_INDEX, "name1");
+    assertTrue(shouldBeEmpty.isEmpty());
+    GlobList listForName3 = repository.findByIndex(DummyObject.NAME_INDEX, "name3");
+    assertEquals(1, listForName3.size());
+  }
+
   private void checkApplyChangeSetError(ChangeSet changeSet, String expectedMessage) {
     try {
       repository.apply(changeSet);

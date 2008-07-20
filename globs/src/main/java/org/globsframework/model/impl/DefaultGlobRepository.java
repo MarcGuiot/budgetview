@@ -465,6 +465,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     List typesList = Arrays.asList(changedTypes);
     for (GlobType type : changedTypes) {
       for (Map.Entry<Key, Glob> entry : globs.get(type).entrySet()) {
+        IndexTables indexTables = indexManager.getAssociatedTable(type);
+        if (indexTables != null) {
+          indexTables.remove(entry.getValue());
+        }
         disable(entry.getValue());
       }
       globs.removeAll(type);
@@ -473,7 +477,12 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     for (Glob glob : newGlobs) {
       Key key = glob.getKey();
       if (typesList.contains(key.getGlobType())) {
-        globs.put(key.getGlobType(), key, glob.duplicate());
+        Glob duplicatedGlob = glob.duplicate();
+        globs.put(key.getGlobType(), key, duplicatedGlob);
+        IndexTables indexTables = indexManager.getAssociatedTable(key.getGlobType());
+        if (indexTables != null) {
+          indexTables.add(duplicatedGlob);
+        }
       }
     }
     for (ChangeSetListener listener : triggers) {
@@ -494,6 +503,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       Key key = glob.getKey();
       checkKeyDoesNotExist(key);
       this.globs.put(key.getGlobType(), key, glob);
+      IndexTables indexTables = indexManager.getAssociatedTable(key.getGlobType());
+      if (indexTables != null) {
+        indexTables.add(glob);
+      }
     }
   }
 
