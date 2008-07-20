@@ -219,9 +219,8 @@ public class CategorizationDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      Glob currentTransaction = currentTransactions.get(0);
       SeriesCreationDialog creationDialog = new SeriesCreationDialog(dialog, localRepository, localDirectory);
-      creationDialog.show(currentTransaction, budgetArea);
+      creationDialog.show(currentTransactions, budgetArea);
     }
   }
 

@@ -314,6 +314,14 @@ public class CategorizationDialogChecker extends DataChecker {
     table.selectRows(rows);
   }
 
+  public void selectTableRows(String... labels) {
+    int rows[] = new int[labels.length];
+    for (int i = 0; i < labels.length; i++) {
+      rows[i] = table.getRowIndex(1, labels[i]);
+    }
+    selectTableRows(rows);
+  }
+
   public void unselectAllTransactions() {
     table.clearSelection();
   }

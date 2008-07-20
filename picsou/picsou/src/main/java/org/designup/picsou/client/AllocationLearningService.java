@@ -173,7 +173,7 @@ public class AllocationLearningService {
     return anonymise(labelOrNote);
   }
 
-  private static String anonymise(String labelOrNote) {
+  public static String anonymise(String labelOrNote) {
     String[] strings = labelOrNote.split(" ");
     StringBuilder builder = new StringBuilder();
     for (String string : strings) {

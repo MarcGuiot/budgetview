@@ -66,7 +66,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     views.selectData();
   }
 
-  public void initCheckers() {
+  private void initCheckers() {
     views = new ViewSelectionChecker(mainWindow);
     accounts = new AccountChecker(mainWindow);
     operations = new OperationChecker(mainWindow);
