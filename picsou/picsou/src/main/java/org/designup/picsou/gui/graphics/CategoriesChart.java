@@ -2,9 +2,11 @@ package org.designup.picsou.gui.graphics;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -119,8 +121,8 @@ public class CategoriesChart extends View implements GlobSelectionListener, Chan
       }
     }
 
-    plot.setNoDataMessage("No data available");
-    plot.setInteriorGap(0);
+    plot.setNoDataMessage(Lang.get("category.chart.nodata"));
+    plot.setInteriorGap(0.2);
 
     plot.setLabelGenerator(new PieSectionLabelGenerator() {
       public AttributedString generateAttributedSectionLabel(PieDataset dataset, Comparable key) {
@@ -129,7 +131,8 @@ public class CategoriesChart extends View implements GlobSelectionListener, Chan
 
       public String generateSectionLabel(PieDataset dataset, Comparable categoryId) {
         Glob category = repository.get(Key.create(Category.TYPE, categoryId));
-        return categoryStringifier.toString(category, repository);
+        return categoryStringifier.toString(category, repository) + "\n" +
+               PicsouDescriptionService.DECIMAL_FORMAT.format(dataset.getValue(categoryId));
       }
     });
 
@@ -144,7 +147,8 @@ public class CategoriesChart extends View implements GlobSelectionListener, Chan
     plot.setLabelBackgroundPaint(null);
     plot.setLabelOutlinePaint(null);
     plot.setLabelShadowPaint(null);
-    plot.setMinimumArcAngleToDraw(4.0);
+
+    plot.setCircular(true);
 
     colorService.install("category.pie.link", new ColorUpdater() {
       public void updateColor(Color color) {
