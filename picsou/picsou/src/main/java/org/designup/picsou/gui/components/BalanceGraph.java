@@ -61,7 +61,7 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
 
     int h = getHeight() - 1;
     int w = getWidth() - 1;
-
+    
     int middle = w / 2;
     int incomeHeight = (int)(h * receivedPercent);
     int spentHeight = (int)(h * spentPercent);
