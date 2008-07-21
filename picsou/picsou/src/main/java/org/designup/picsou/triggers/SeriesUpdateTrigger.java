@@ -9,7 +9,6 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import org.globsframework.remote.SerializedRemoteAccess;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.directory.Directory;
 
@@ -28,10 +27,7 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     repository.enterBulkDispatchingMode();
     try {
-      changeSet.safeVisit(Series.TYPE, new SerializedRemoteAccess.ChangeVisitor() {
-        public void complete() {
-        }
-
+      changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
         public void visitCreation(Key key, FieldValues values) throws Exception {
           updateBudget(repository.get(key), repository);
         }
@@ -73,11 +69,10 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
 
   private void updateBudget(Glob series, GlobRepository repository) {
     int currentMonthId = time.getCurrentMonthId();
+    Integer seriesId = series.get(Series.ID);
     Map<Integer, Glob> monthWithBudget =
-      toMap(repository.findByIndex(SeriesBudget.SERIES_INDEX, series.get(Series.ID)), SeriesBudget.MONTH);
+      toMap(repository.findByIndex(SeriesBudget.SERIES_INDEX, seriesId), SeriesBudget.MONTH);
 
-    MultiMap<Integer, Glob> monthWithTransactions =
-      toMultiMap(repository.findByIndex(SeriesBudget.SERIES_INDEX, series.get(Series.ID)), SeriesBudget.MONTH);
     Integer[] monthIds = repository.getAll(Month.TYPE, GlobMatchers.fieldGreaterOrEqual(Month.ID, currentMonthId))
       .getSortedArray(Month.ID);
 
@@ -88,11 +83,16 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
         if (series.get(monthField)) {
           if (!monthWithBudget.containsKey(monthId)) {
             repository.create(SeriesBudget.TYPE,
-                              value(SeriesBudget.SERIES, series.get(Series.ID)),
+                              value(SeriesBudget.SERIES, seriesId),
                               value(SeriesBudget.AMOUNT, series.get(Series.AMOUNT)),
                               value(SeriesBudget.MONTH, monthId));
           }
-          if (!monthWithTransactions.containsKey(monthId)) {
+          GlobList transactions = repository.findByIndex(Transaction.MONTH_INDEX, monthId)
+            .filterSelf(GlobMatchers.and(
+              fieldEquals(Transaction.PLANNED, true),
+              fieldEquals(Transaction.SERIES, seriesId)),
+                        repository);
+          if (transactions.isEmpty()) {
             createPlannedTransaction(series, repository, monthId, getDays(series, monthId, calendar));
           }
         }

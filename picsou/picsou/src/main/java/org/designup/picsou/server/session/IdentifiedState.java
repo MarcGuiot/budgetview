@@ -8,4 +8,8 @@ public interface IdentifiedState extends SessionState {
   byte[] getLinkInfo();
 
   boolean getIsRegistered();
+
+  byte[] getMail();
+
+  byte[] getKey();
 }

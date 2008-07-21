@@ -1,13 +1,12 @@
 package org.designup.picsou.gui.utils;
 
-import org.globsframework.utils.serialization.Encoder;
-
-import java.security.*;
-import java.security.spec.InvalidKeySpecException;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.Signature;
 import java.security.spec.X509EncodedKeySpec;
 
 public class KeyChecker {
-  public static byte[] publicKey = {
+  private static byte[] publicKey = {
     48, -126, 1, -72, 48, -126, 1, 44, 6, 7, 42, -122, 72, -50, 56, 4, 1, 48, -126, 1,
     31, 2, -127, -127, 0, -3, 127, 83, -127, 29, 117, 18, 41, 82, -33, 74, -100,
     46, -20, -28, -25, -10, 17, -73, 82, 60, -17, 68, 0, -61, 30, 63, -128, -74, 81,
@@ -36,13 +35,18 @@ public class KeyChecker {
     -8, 52, 94, 36, 73, -117, -43, -2, 31, 95, -111, -118, 124};
 
 
-  public static boolean checkSignature(String data, String signature) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, InvalidKeyException, SignatureException {
-    X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKey);
-    KeyFactory keyFactory = KeyFactory.getInstance("DSA", "SUN");
-    PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
-    Signature sig = Signature.getInstance("SHA1withDSA", "SUN");
-    sig.initVerify(publicKey);
-    sig.update(data.getBytes());
-    return sig.verify(Encoder.b64Encode(signature));
+  public static boolean checkSignature(byte[] data, byte[] signature) {
+    try {
+      X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKey);
+      KeyFactory keyFactory = KeyFactory.getInstance("DSA", "SUN");
+      PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+      Signature sig = Signature.getInstance("SHA1withDSA", "SUN");
+      sig.initVerify(publicKey);
+      sig.update(data);
+      return sig.verify(signature);
+    }
+    catch (Exception e) {
+      return false;
+    }
   }
 }

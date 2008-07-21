@@ -22,6 +22,8 @@ public class User {
   public static BlobField LINK_INFO;  // information generee sur lequel on applique un PBE specific
   //  public static StringField TEMPORARY_PASSWORD;  // mot de passe en claire pour la premiere connection
   public static BooleanField IS_REGISTERED_USER;
+  public static BlobField MAIL;
+  public static BlobField KEY;
   private static final byte V1 = 1;
   // (avec un salt et count different de celui pour le mot de passe
   // de l'utilisateur)

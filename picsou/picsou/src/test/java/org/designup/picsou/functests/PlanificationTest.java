@@ -25,7 +25,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     transactions.setRecurring(0, "Internet", true);
     periods.selectCells("2008/07");
     transactions.initContent()
-      .add("08/07/2008", TransactionType.PLANNED, "", "", 0.00, MasterCategory.TELECOMS)
+      .add("08/07/2008", TransactionType.PLANNED, "Internet", "", 0.00, MasterCategory.TELECOMS)
       .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, MasterCategory.TELECOMS)
       .check();
     views.selectHome();
@@ -35,7 +35,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .checkPlannedRecurring(29.9);
     periods.selectCells("2008/08");
     transactions.initContent()
-      .add("08/08/2008", TransactionType.PLANNED, "", "", -29.90, MasterCategory.TELECOMS)
+      .add("08/08/2008", TransactionType.PLANNED, "Internet", "", -29.90, MasterCategory.TELECOMS)
       .check();
     monthSummary.init()
       .checkRecurring(0)

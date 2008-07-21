@@ -4,9 +4,11 @@ import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ExportFileAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
+import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.categorization.CategorizationDialog;
+import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.graphics.CategoriesChart;
 import org.designup.picsou.gui.graphics.HistoricalChart;
 import org.designup.picsou.gui.license.LicenseService;
@@ -16,10 +18,9 @@ import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.transactions.UncategorizedMessageView;
-import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.RedoAction;
+import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -40,7 +41,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 public class MainPanel {
-  private JFrame parent;
+  private PicsouFrame parent;
   private ImportFileAction importFileAction;
   private ExportFileAction exportFileAction;
   private ExitAction exitAction;
@@ -79,7 +80,7 @@ public class MainPanel {
       new TitleView(repository, directory),
       new UncategorizedMessageView("uncategorizedMessage", "categorizeRemainingTransactions",
                                    repository, directory),
-      new UncategorizedMessageView("uncategorizedMessage_details", "categorizeRemainingTransactions_details", 
+      new UncategorizedMessageView("uncategorizedMessage_details", "categorizeRemainingTransactions_details",
                                    repository, directory),
       transactionView,
       transactionDetailsView,
@@ -122,7 +123,7 @@ public class MainPanel {
     SplitsEditor.show(builder, parent);
   }
 
-  public void createMenuBar(final JFrame frame, Directory directory) {
+  public void createMenuBar(final PicsouFrame frame, Directory directory) {
     JMenu fileMenu = new JMenu(Lang.get("file"));
     fileMenu.add(importFileAction);
     fileMenu.add(exportFileAction);

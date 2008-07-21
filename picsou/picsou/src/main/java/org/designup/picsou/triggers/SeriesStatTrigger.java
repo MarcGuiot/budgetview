@@ -82,10 +82,9 @@ public class SeriesStatTrigger implements ChangeSetListener {
         }
 
         Glob transaction = repository.get(key);
-        if (Utils.equal(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId())) {
+        if (Utils.equal(transaction.get(Transaction.TRANSACTION_TYPE), TransactionType.PLANNED.getId())) {
           return;
         }
-
         Integer previousSeriesId;
         Integer currentSeriesId;
         if (values.contains(Transaction.SERIES)) {
@@ -141,7 +140,7 @@ public class SeriesStatTrigger implements ChangeSetListener {
 
   private void processTransaction(FieldValues values, int multiplier, GlobRepository repository) {
     final Integer seriesId = values.get(Transaction.SERIES);
-    if ((seriesId == null) || Utils.equal(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId())) {
+    if (seriesId == null || Utils.equal(TransactionType.PLANNED.getId(), values.get(Transaction.TRANSACTION_TYPE))) {
       return;
     }
 

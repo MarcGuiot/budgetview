@@ -24,6 +24,12 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
   private TimeViewPanel timeViewPanel;
   private JFrame frame;
 
+  protected void tearDown() throws Exception {
+    super.tearDown();
+    timeViewPanel = null;
+    frame = null;
+  }
+
   public void DISABLED_testMouseMove() throws Exception {
     DefaultDirectory defaultDirectory = new DefaultDirectory();
     GlobRepository repository = GlobRepositoryBuilder.init().get();

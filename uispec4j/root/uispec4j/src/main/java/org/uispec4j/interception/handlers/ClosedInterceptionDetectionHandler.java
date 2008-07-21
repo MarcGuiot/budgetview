@@ -31,8 +31,11 @@ public class ClosedInterceptionDetectionHandler extends AbstractInterceptionHand
     thread = new Thread() {
       public void run() {
         try {
-          long delay = timeout / 100;
-          for (int i = 0; i < 100; i++) {
+          long delay = timeout / 500;
+          if (delay < 10) {
+            delay = 10;
+          }
+          for (int i = 0; i < 500; i++) {
             try {
               sleep(delay);
             }

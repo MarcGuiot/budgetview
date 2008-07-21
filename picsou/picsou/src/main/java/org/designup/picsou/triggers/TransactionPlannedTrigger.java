@@ -5,6 +5,7 @@ import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidData;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 public class TransactionPlannedTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     if (changeSet.containsUpdates(Transaction.SERIES) ||
+        changeSet.containsChanges(Transaction.TYPE) ||
         changeSet.containsCreationsOrDeletions(Transaction.TYPE)) {
       changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
 
@@ -31,28 +33,45 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           if (transaction.get(Transaction.PLANNED)) {
             return;
           }
+          Integer previousSeries;
+          Integer newSeries;
+          Double previousAmount;
+          Double newAmount;
+          Integer newMonth;
+          Integer previousMonth;
           if (values.contains(Transaction.SERIES)) {
-            if (values.getPrevious(Transaction.SERIES) != null) {
-              Double amount = transaction.get(Transaction.AMOUNT);
-              if (values.contains(Transaction.AMOUNT)) {
-                amount = values.getPrevious(Transaction.AMOUNT);
-              }
-              transfertToPlanned(transaction.get(Transaction.MONTH), amount,
-                                 values.getPrevious(Transaction.SERIES), repository);
-            }
-            if (values.contains(Transaction.AMOUNT)) {
-              transfertFromPlanned(repository, values.get(Transaction.SERIES),
-                                   transaction.get(Transaction.MONTH), values.get(Transaction.AMOUNT));
-            }
-            else {
-              transfertFromPlanned(repository, values.get(Transaction.SERIES),
-                                   transaction.get(Transaction.MONTH), transaction.get(Transaction.AMOUNT));
-            }
+            previousSeries = values.getPrevious(Transaction.SERIES);
+            newSeries = values.get(Transaction.SERIES);
           }
-          else if (values.contains(Transaction.AMOUNT)) {
-            transfertFromPlanned(repository, transaction.get(Transaction.SERIES),
-                                 transaction.get(Transaction.MONTH), values.getPrevious(Transaction.AMOUNT) -
-                                                                     values.get(Transaction.AMOUNT));
+          else {
+            newSeries = transaction.get(Transaction.SERIES);
+            previousSeries = newSeries;
+          }
+          if (values.contains(Transaction.AMOUNT)) {
+            previousAmount = values.getPrevious(Transaction.AMOUNT);
+            newAmount = values.get(Transaction.AMOUNT);
+          }
+          else {
+            newAmount = transaction.get(Transaction.AMOUNT);
+            previousAmount = newAmount;
+          }
+          if (values.contains(Transaction.MONTH)) {
+            previousMonth = values.getPrevious(Transaction.MONTH);
+            newMonth = values.get(Transaction.MONTH);
+          }
+          else {
+            newMonth = transaction.get(Transaction.MONTH);
+            previousMonth = newMonth;
+          }
+          if (!Utils.equal(previousMonth, newMonth) ||
+              !Utils.equal(previousSeries, newSeries) ||
+              !Utils.equal(previousAmount, newAmount)) {
+            if (previousAmount != null && previousSeries != null) {
+              transfertToPlanned(previousMonth, previousAmount, previousSeries, repository);
+            }
+            if (newAmount != null && newSeries != null) {
+              transfertFromPlanned(repository, newSeries, newMonth, newAmount);
+            }
           }
         }
 
@@ -62,8 +81,8 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     }
   }
 
-  private void transfertToPlanned(Integer monthId, Double amount, Integer oldSeries, GlobRepository repository) {
-    GlobList plannedTransaction = getPlannedTransactions(repository, oldSeries, monthId);
+  private void transfertToPlanned(Integer monthId, Double amount, Integer series, GlobRepository repository) {
+    GlobList plannedTransaction = getPlannedTransactions(repository, series, monthId);
     if (plannedTransaction.isEmpty()) {
       throw new InvalidData("no planned transaction for month " + Month.toString(monthId));
     }
@@ -79,7 +98,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     for (Glob transaction : plannedTransaction) {
       Double available = transaction.get(Transaction.AMOUNT);
       Double newAmount;
-      if (available >= amountToDeduce) {
+      if (available < amountToDeduce) {
         newAmount = available - amountToDeduce;
         amountToDeduce = 0.0;
       }
@@ -91,6 +110,12 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
                         FieldValue.value(Transaction.AMOUNT, newAmount));
       if (amountToDeduce == 0.0) {
         break;
+      }
+    }
+    if (amountToDeduce < 0.0) {
+      if (!plannedTransaction.isEmpty()) {
+        repository.update(plannedTransaction.get(plannedTransaction.size() - 1).getKey(),
+                          FieldValue.value(Transaction.AMOUNT, -amountToDeduce));
       }
     }
   }
