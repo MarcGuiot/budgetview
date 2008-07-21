@@ -452,8 +452,15 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.validate();
 
     views.selectData();
-    transactions.initContent()
-      .dumpCode();
+    transactions
+      .initContent()
+      .add("26/06/2008", TransactionType.PLANNED, "Internet", "", 0.00, MasterCategory.TELECOMS)
+      .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, MasterCategory.TELECOMS)
+      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -90.00, MasterCategory.FOOD)
+      .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, MasterCategory.TELECOMS)
+      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, MasterCategory.FOOD)
+      .add("14/05/2008", TransactionType.PRELEVEMENT, "Carouf", "", -80.00, MasterCategory.FOOD)
+      .check();
   }
 
   public void testAutoHideActivation() throws Exception {
