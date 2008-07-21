@@ -117,7 +117,6 @@ public class SeriesCreationDialog {
     return min;
   }
 
-
   public void show(GlobList transactions, BudgetArea budget) {
     localRepository.rollback();
     budgetArea = BudgetArea.get(budget.getId());
