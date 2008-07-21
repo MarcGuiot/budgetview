@@ -26,27 +26,27 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
       .check();
 
-    transactions.setEnvelope(0, "Groceries", MasterCategory.FOOD);
-    transactions.setEnvelope(1, "Groceries", MasterCategory.FOOD);
-    transactions.setRecurring(2, "Internet", true);
-    transactions.setRecurring(3, "Electricity", true);
-    transactions.setIncome(4, "Exceptional Income");
-    transactions.setIncome(5, "Salary");
+    transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    transactions.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
+    transactions.setRecurring("Free Telecom", "Internet", true);
+    transactions.setRecurring("EDF", "Electricity", true);
+    transactions.setIncome("WorldCo - Bonus", "Exceptional Income", false);
+    transactions.setIncome("WorldCo", "Salary", true);
 
     views.selectBudget();
 
     budgetView.recurring.checkTitle("Recurring expenses");
-    budgetView.recurring.checkTotalAmounts(-84.0, 0);
-    budgetView.recurring.checkSeries("Internet", -29.0, 0.0);
-    budgetView.recurring.checkSeries("Electricity", -55.0, 0.0);
+    budgetView.recurring.checkTotalAmounts(-84.0, 84.0);
+    budgetView.recurring.checkSeries("Internet", -29.0, 29.0);
+    budgetView.recurring.checkSeries("Electricity", -55.0, 55.0);
 
     budgetView.envelopes.checkTitle("Envelope expenses");
-    budgetView.envelopes.checkTotalAmounts(-145.0, 0);
-    budgetView.envelopes.checkSeries("Groceries", -145.0, 0.0);
+    budgetView.envelopes.checkTotalAmounts(-145.0, 95);
+    budgetView.envelopes.checkSeries("Groceries", -145.0, 95.0);
 
     budgetView.income.checkTitle("Income");
-    budgetView.income.checkTotalAmounts(3740.0, 0);
-    budgetView.income.checkSeries("Salary", 3540.0, 0.0);
+    budgetView.income.checkTotalAmounts(3740.0, -3540.00);
+    budgetView.income.checkSeries("Salary", 3540.0, -3540.0);
     budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
   }
 

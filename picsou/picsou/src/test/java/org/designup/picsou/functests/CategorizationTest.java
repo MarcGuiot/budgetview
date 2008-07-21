@@ -3,11 +3,18 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.utils.Dates;
 
 public class CategorizationTest extends LoggedInFunctionalTestCase {
+
+  protected void setUp() throws Exception {
+    TimeService.setCurrentDate(Dates.parseMonth("2008/06"));
+    super.setUp();
+  }
 
   public void testStandardIncomeTransaction() throws Exception {
     OfxBuilder
@@ -186,19 +193,13 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("Auchan");
     dialog.checkNextIsEnabled();
 
+    dialog.selectNext();
+    dialog.checkSelectedTableRows(1);
     dialog.checkLabel("Free Telecom");
+    dialog.checkNextIsDisabled();
 
-    dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", true);
-//    dialog.checkPreviousIsDisabled();
-
-//    dialog.selectNext();
-//    dialog.checkSelectedTableRows(1);
-//    dialog.checkLabel("Free Telecom");
-//    dialog.checkNextIsDisabled();
-//
-//    dialog.selectTableRows(0);
-//    dialog.checkNextIsEnabled();
+    dialog.selectTableRows(0);
+    dialog.checkNextIsEnabled();
   }
 
   public void testMultiCategorizationFromTransactionTable() throws Exception {
@@ -216,8 +217,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkSelectedTableRows(0, 1);
     dialog.selectEnvelopes();
     dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    dialog.validate();
 
     transactions.initContent()
+      .add("30/06/2008", TransactionType.PLANNED, "Groceries", "", -0.0, MasterCategory.FOOD)
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Carouf", "", -29.90, MasterCategory.FOOD)
       .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, MasterCategory.FOOD)
       .check();
@@ -250,11 +253,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkSelectedTableRows(0);
     dialog.selectTableRows(0, 1);
     dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, false);
+    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
     dialog.validate();
 
     views.selectData();
     transactions.initContent()
+      .add("30/06/2008", TransactionType.PLANNED, "Groceries", "", -0.0, MasterCategory.FOOD)
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Carouf", "", -29.90, MasterCategory.FOOD)
       .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, MasterCategory.FOOD)
       .check();
@@ -353,7 +357,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.selectRecurring();
     dialog.selectRecurringSeries("Internet", true);
 
-    dialog.selectTableRows(0);
+    dialog.selectTableRows("Auchan 1111");
     dialog.checkSelectedTableRows(0, 1);
     dialog.selectEnvelopes();
     dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
@@ -362,7 +366,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
+      .add("26/06/2008", TransactionType.PLANNED, "Internet", "", 0.0, MasterCategory.TELECOMS)
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, MasterCategory.TELECOMS)
+      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -170.00, MasterCategory.FOOD)
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, MasterCategory.TELECOMS)
       .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan 1111", "", -90.00, MasterCategory.FOOD)
       .add("14/05/2008", TransactionType.PRELEVEMENT, "Auchan 2222", "", -80.00, MasterCategory.FOOD)
@@ -446,8 +452,15 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.validate();
 
     views.selectData();
-    transactions.initContent()
-      .dumpCode();
+    transactions
+      .initContent()
+      .add("26/06/2008", TransactionType.PLANNED, "Internet", "", 0.00, MasterCategory.TELECOMS)
+      .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, MasterCategory.TELECOMS)
+      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -90.00, MasterCategory.FOOD)
+      .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, MasterCategory.TELECOMS)
+      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, MasterCategory.FOOD)
+      .add("14/05/2008", TransactionType.PRELEVEMENT, "Carouf", "", -80.00, MasterCategory.FOOD)
+      .check();
   }
 
   public void testAutoHideActivation() throws Exception {

@@ -30,6 +30,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     super.tearDown();
     window.getAwtComponent().setVisible(false);
     window.dispose();
+    bankCombo = null;
+    importButton = null;
+    fileField = null;
   }
 
   private void openImportDialog() {

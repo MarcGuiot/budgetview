@@ -32,9 +32,11 @@ public class SeriesUpdateTriggerTest extends PicsouTestCase {
       Transaction.TYPE,
       "" +
       "<create type='transaction' id='0' account='-1' month='200807' series='1' planned='true' " +
-      "        amount='-29.9' bankDay='31' transactionType='11' bankMonth='200807' category='8' day='31' label='free telecom'/>" +
+      "        amount='-29.9' bankDay='31' transactionType='11' bankMonth='200807' category='8' day='31' " +
+      "        label='free telecom'/>" +
       "<create type='transaction' id='1' account='-1' month='200808' series='1' planned='true' " +
-      "        amount='-29.9' bankDay='31' transactionType='11' bankMonth='200808' category='8' day='31' label='free telecom'/>" +
+      "        amount='-29.9' bankDay='31' transactionType='11' bankMonth='200808' category='8' day='31' " +
+      "        label='free telecom'/>" +
       "");
 
   }

@@ -39,6 +39,10 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     super.tearDown();
     picsouServer.stop();
     picsouApplication.shutdown();
+    picsouApplication = null;
+    picsouServer = null;
+    window.dispose();
+    window = null;
   }
 
   public void createAndLogUser(String user, String userPassword, final String fileName) {

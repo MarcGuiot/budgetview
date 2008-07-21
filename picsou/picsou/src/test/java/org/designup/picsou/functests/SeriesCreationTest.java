@@ -86,7 +86,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     creationDialog.validate();
 
     dialog.checkContainsEnvelope("Regime");
-    dialog.selectEnvelopeSeries("Regime", MasterCategory.FOOD, true);
+    dialog.selectEnvelopeSeries("Regime", MasterCategory.FOOD, false);
     dialog.validate();
 
     transactionDetails.checkSeries("Regime");

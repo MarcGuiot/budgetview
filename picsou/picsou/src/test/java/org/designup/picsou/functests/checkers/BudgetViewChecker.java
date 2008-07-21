@@ -1,8 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.Window;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 
 public class BudgetViewChecker extends DataChecker {
@@ -33,13 +33,13 @@ public class BudgetViewChecker extends DataChecker {
       UISpecAssert.assertThat(label.textEquals(title));
     }
 
-    public void checkTotalAmounts(double received, int spent) {
+    public void checkTotalAmounts(double received, double planned) {
       Panel budgetPanel = window.getPanel(panelName);
       TextBox totalObserved = budgetPanel.getTextBox("totalObservedAmount");
       UISpecAssert.assertTrue(totalObserved.textEquals(BudgetViewChecker.this.toString(received)));
 
       TextBox totalPlanned = budgetPanel.getTextBox("totalPlannedAmount");
-      UISpecAssert.assertTrue(totalPlanned.textEquals(BudgetViewChecker.this.toString(spent)));
+      UISpecAssert.assertTrue(totalPlanned.textEquals(BudgetViewChecker.this.toString(planned)));
     }
 
     public void checkSeries(String seriesName, double observedAmount, double plannedAmount) {

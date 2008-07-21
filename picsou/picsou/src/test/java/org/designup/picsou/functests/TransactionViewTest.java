@@ -1,13 +1,13 @@
 package org.designup.picsou.functests;
 
-import org.uispec4j.Table;
-import org.uispec4j.Trigger;
-import org.uispec4j.interception.PopupMenuInterceptor;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.uispec4j.Table;
+import org.uispec4j.Trigger;
+import org.uispec4j.interception.PopupMenuInterceptor;
 
 import java.awt.event.InputEvent;
 
@@ -24,6 +24,11 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .addTransactionWithNote("2006/05/06", -100.00, "nounou", "nourrice", MasterCategory.HOUSE, MasterCategory.EDUCATION)
       .load();
     table = transactions.getTable();
+  }
+
+  protected void tearDown() throws Exception {
+    super.tearDown();
+    table = null;
   }
 
   public void testEditingANoteByCellSelection() throws Exception {

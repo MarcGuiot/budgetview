@@ -6,7 +6,6 @@ import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
-import org.globsframework.utils.exceptions.NotSupported;
 
 import java.util.List;
 

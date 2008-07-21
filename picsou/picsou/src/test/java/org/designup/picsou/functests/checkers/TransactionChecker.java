@@ -152,11 +152,16 @@ public class TransactionChecker extends ViewChecker {
     return transactionDetails.categorize();
   }
 
-  public void setIncome(int rowIndex, String seriesName) {
+  public void setIncome(int rowIndex, String seriesName, boolean showSeriesInitialization) {
     CategorizationDialogChecker categorization = categorize(rowIndex);
     categorization.selectIncome();
-    categorization.selectIncomeSeries(seriesName, true);
+    categorization.selectIncomeSeries(seriesName, showSeriesInitialization);
     categorization.validate();
+  }
+
+  public void setIncome(String label, String seriesName, boolean showSeriesInitialization) {
+    int rowIndex = table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
+    setIncome(rowIndex, seriesName, showSeriesInitialization);
   }
 
   public void setRecurring(int rowIndex, String seriesName, boolean showSeriesInitialization) {
@@ -166,11 +171,21 @@ public class TransactionChecker extends ViewChecker {
     categorization.validate();
   }
 
-  public void setEnvelope(int rowIndex, String seriesName, MasterCategory master) {
+  public void setRecurring(String label, String seriesName, boolean showSeriesInitialization) {
+    int rowIndex = table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
+    setRecurring(rowIndex, seriesName, showSeriesInitialization);
+  }
+
+  public void setEnvelope(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
     CategorizationDialogChecker categorization = categorize(rowIndex);
     categorization.selectEnvelopes();
-    categorization.selectEnvelopeSeries(seriesName, master, true);
+    categorization.selectEnvelopeSeries(seriesName, master, showSeriesInitialization);
     categorization.validate();
+  }
+
+  public void setEnvelope(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+    int rowIndex = table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
+    setEnvelope(rowIndex, seriesName, master, showSeriesInitialization);
   }
 
   public void setOccasional(int rowIndex, MasterCategory category) {
