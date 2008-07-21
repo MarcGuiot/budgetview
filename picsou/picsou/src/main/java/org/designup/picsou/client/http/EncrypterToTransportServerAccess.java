@@ -6,6 +6,7 @@ import org.designup.picsou.client.SerializableGlobSerializer;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadConnection;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
+import org.designup.picsou.gui.utils.KeyChecker;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.model.ServerDelta;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
@@ -94,6 +95,9 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedInput response = clientTransport.identifyUser(request.toByteArray());
     sessionId = response.readLong();
     privateId = response.readBytes();
+    byte[] mail = response.readBytes();
+    byte[] key = response.readBytes();
+    boolean b = KeyChecker.checkSignature(mail, key);
 
     SerializedByteArrayOutput confirmation = new SerializedByteArrayOutput();
     confirmation.getOutput().writeBytes(privateId);

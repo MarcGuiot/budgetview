@@ -5,6 +5,7 @@ import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
 import org.globsframework.model.Glob;
+import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -17,13 +18,21 @@ import java.util.Set;
 
 public class PRootData implements CustomSerializable {
   private static final byte V1 = 1;
+  private byte[] mail;
+  private byte[] key;
   private Map<String, Glob> hidenUsers = new HashMap<String, Glob>();
   private Map<String, Glob> users = new HashMap<String, Glob>();
   private Map<String, Integer> labelToCategory = new HashMap<String, Integer>();
   private static final String USERS_ROOT_DATA = "UsersRootData";
 
   public Glob getUser(String name) {
-    return users.get(name);
+    Glob glob = users.get(name);
+    if (glob == null) {
+      return null;
+    }
+    return GlobBuilder.init(glob.getKey(), glob)
+      .set(User.MAIL, mail)
+      .set(User.KEY, key).get();
   }
 
   public Glob getHiddenUser(String linkInfo) {
@@ -71,6 +80,8 @@ public class PRootData implements CustomSerializable {
         HiddenUser.write(output, entry.getValue());
       }
     }
+    output.writeBytes(mail);
+    output.writeBytes(key);
     {
       output.write(users.size());
       Set<Map.Entry<String, Glob>> entries = users.entrySet();
@@ -97,6 +108,8 @@ public class PRootData implements CustomSerializable {
         size--;
       }
     }
+    mail = input.readBytes();
+    key = input.readBytes();
     {
       int size = input.readNotNullInt();
       while (size != 0) {

@@ -18,6 +18,8 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
     IdentifiedState identifiedState = connectingState.identify(input);
     output.writeLong(identifiedState.getSessionId());
     output.writeBytes(identifiedState.getPrivateId());
+    output.writeBytes(identifiedState.getMail());
+    output.writeBytes(identifiedState.getKey());
     output.writeBytes(identifiedState.getLinkInfo());
     output.writeBoolean(identifiedState.getIsRegistered());
   }
