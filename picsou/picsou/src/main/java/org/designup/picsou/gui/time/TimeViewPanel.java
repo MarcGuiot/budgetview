@@ -20,7 +20,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
                                                      SelectableContainer,
                                                      ChangeSetListener, GlobSelectionListener {
 
-  private static final Dimension DIMENSION = new Dimension(100, 45);
+  private static final Dimension DIMENSION = new Dimension(100, 42);
 
   private TimeGraph timeGraph;
   private Set<Selectable> currentlySelected = new TreeSet<Selectable>(new Comparator<Selectable>() {
@@ -85,6 +85,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     }
     previousWidth = getWidth();
     Graphics2D d = (Graphics2D)g.create();
+    d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     try {
       timeGraph.init(d, getWidth());
       if (pendingOperation != null) {
