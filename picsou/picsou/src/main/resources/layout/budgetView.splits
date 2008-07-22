@@ -8,12 +8,12 @@
     <column>
       <panel ref="incomeBudgetView"/>
       <panel ref="recurringBudgetView"/>
-      <filler fill="vertical"/>
+      <filler fill="vertical" weightY="0.1"/>
     </column>
     
     <column marginLeft="20">
       <panel ref="envelopeBudgetView"/>
-      <filler fill="vertical"/>
+      <filler fill="vertical" weightY="0.1"/>
     </column>
 
     <filler fill="horizontal" weightX="1.0"/>

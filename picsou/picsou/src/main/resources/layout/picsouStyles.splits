@@ -50,15 +50,16 @@
         cornerRadius="20"/>
     <style selector=".block" ui="block" opaque="false" marginBottom="20"/>
     <style selector="label.blockTitle" anchor="center"
-           foreground="#FFFFFF" marginBottom="5" font="-,bold,13"
+           foreground="#FFFFFF" marginBottom="5" font="-,bold,13" weightY="0"
            shadowDirection="northwest" shadowColor="#222222"/>
-    <style selector=".block label.totalAmountTitle" foreground="block.total.title" font="-,plain,10" anchor="bottom"/>
-    <style selector=".block label.totalAmount" foreground="block.total" font="-,bold,20" anchor="top"/>
+    <style selector=".block label.totalAmountTitle" foreground="block.total.title" font="-,plain,10"
+           fill="vertical" anchor="bottom" weightY="0"/>
+    <style selector=".block label.totalAmount" foreground="block.total" font="-,bold,20"
+           fill="vertical" anchor="top" weightY="1" marginBottom="5"/>
 
-    <ui name="innerBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="block.inner.top" bottomColor="block.inner.bottom" borderColor="block.inner.border"
-        borderWidth="2" cornerRadius="10"/>
-    <style selector=".innerBlock" ui="innerBlock" marginTop="5" marginBottom="5"/>
+    <style selector=".block scrollPane" viewportBackground="block.inner.bg" border="line(block.inner.border)" marginBottom="10" weightY="100"/>
+
+    <style selector=".innerBlock" marginTop="5" marginBottom="5"/>
     <style selector=".innerBlock label.item" foreground="block.inner.item" font="-,bold,13" anchor="top"
       shadowDirection="northwest" shadowColor="#FFFFFF"/>
     <style selector=".innerBlock label.subitem" foreground="block.inner.subitem" font="-,plain,10" anchor="top"/>

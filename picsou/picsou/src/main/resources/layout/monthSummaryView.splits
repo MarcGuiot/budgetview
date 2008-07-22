@@ -22,19 +22,22 @@
           <label text="$monthsummary.spent" styleClass="totalAmountTitle" gridPos="(2,0)"/>
           <label ref="totalSpentAmount" styleClass="totalAmount" gridPos="(2,1)"/>
         </grid>
-        <repeat ref="budgetAreaRepeat" styleClass="innerBlock">
-          <column name="budgetAreaRow">
-            <row margin="10" marginBottom="2" >
-              <label ref="budgetAreaName" styleClass="item"/>
-              <filler fill="horizontal"/>
-            </row>
-            <row margin="10" marginTop="0" >
-              <label ref="budgetAreaAmount" styleClass="amount"/>
-              <filler fill="horizontal"/>
-              <label ref="budgetAreaPlannedAmount" styleClass="amount"/>
-            </row>
-          </column>
-        </repeat>
+
+        <scrollPane>
+          <repeat ref="budgetAreaRepeat" styleClass="innerBlock">
+            <column name="budgetAreaRow">
+              <row margin="10" marginBottom="2">
+                <label ref="budgetAreaName" styleClass="item"/>
+                <filler fill="horizontal"/>
+              </row>
+              <row margin="10" marginTop="0">
+                <label ref="budgetAreaAmount" styleClass="amount"/>
+                <filler fill="horizontal"/>
+                <label ref="budgetAreaPlannedAmount" styleClass="amount"/>
+              </row>
+            </column>
+          </repeat>
+        </scrollPane>
       </column>
     </panel>
 

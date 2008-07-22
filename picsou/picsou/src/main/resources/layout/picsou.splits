@@ -3,9 +3,6 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <styles>
-    <ui name="headerFrame" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="frame.bg.top" bottomColor="frame.bg.bottom"/>
-
     <ui name="errorMessage" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="errorpanel.top" bottomColor="errorpanel.bottom"
         borderColor="errorpanel.border" borderWidth="2" cornerRadius="20"/>
@@ -15,9 +12,6 @@
         borderColor="viewselector.border" borderWidth="1" cornerRadius="10"/>
 
     <ui name="cleanSplitPane" class="org.designup.picsou.gui.plaf.PicsouSplitPaneUI"/>
-
-    <style selector="panel#header" ui="headerFrame" opaque="false"
-           border="matte(0,0,2,0,#404040)" weightY="0"/>
 
     <style selector="toggleButton.viewSelector" ui="viewSelector" opaque="false"
            minimumSize="(40,40)" preferredSize="(40,40)" margin="0" marginLeft="5" weightX="0" fill="none"/>
@@ -32,12 +26,14 @@
     <style selector="panel.errorMessage textArea" marginBottom="10"
            anchor="left" styleClass="readonly" foreground="errorpanel.text" font="-,bold,12" opaque="false"
            lineWrap="true" wrapStyleWord="true"/>
+    <style selector="#time button" size="(15,20)" fill="none"/>
+
   </styles>
 
   <panel ui="wave">
     <column marginTop="20" marginLeft="20" marginRight="20" marginBottom="5">
 
-      <row>
+      <row weightY="1.0">
         <label ref="title" opaque="false" font="Arial,bold,24"
                horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
         <filler fill="horizontal"/>
@@ -48,22 +44,22 @@
         <toggleButton ref="evolutionCardToggle" styleClass="viewSelector"/>
       </row>
 
-      <row>
-        <grid weightY="10" marginTop="20" marginBottom="10" marginLeft="30" marginRight="30">
-          <button ref="firstPeriod" gridPos="(0,0)" fill="none" anchor="southeast" size="(15,20)"
+      <row weightY="1.0">
+        <grid name="time" weightY="10" marginTop="20" marginLeft="20" marginRight="20">
+          <button ref="firstPeriod" gridPos="(0,0)" anchor="southeast"
                   icon="first.png" rolloverIcon="firstrollover.png" pressedIcon="firstpressed.png"/>
-          <button ref="prevPeriod" gridPos="(0,1)" fill="none" anchor="northeast" size="(15,20)"
+          <button ref="prevPeriod" gridPos="(0,1)" anchor="northeast"
                   icon="prev.png" rolloverIcon="prevrollover.png" pressedIcon="prevpressed.png"/>
           <component ref="month" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
                      marginLeft="5" marginRight="5" weightX="1000.0" weightY="100.0" border="empty"/>
-          <button ref="lastPeriod" gridPos="(2,0)" fill="none" anchor="southeast" size="(15,20)"
+          <button ref="lastPeriod" gridPos="(2,0)" anchor="southeast"
                   icon="last.png" rolloverIcon="lastrollover.png" pressedIcon="lastpressed.png"/>
-          <button ref="nextPeriod" gridPos="(2,1)" fill="none" anchor="northeast" size="(15,20)"
+          <button ref="nextPeriod" gridPos="(2,1)" anchor="northeast"
                   icon="next.png" rolloverIcon="nextrollover.png" pressedIcon="nextpressed.png"/>
         </grid>
       </row>
 
-      <cards ref="cardView" opaque="false" marginTop="20">
+      <cards ref="cardView" opaque="false" marginTop="20" weightY="10.0">
 
         <card name="home">
           <row>
