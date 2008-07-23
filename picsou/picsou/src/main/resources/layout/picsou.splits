@@ -45,7 +45,7 @@
       </row>
 
       <row weightY="1.0">
-        <grid name="time" weightY="10" marginTop="20" marginLeft="20" marginRight="20">
+        <grid name="time" weightY="10" marginTop="10" marginLeft="20" marginRight="20">
           <button ref="firstPeriod" gridPos="(0,0)" anchor="southeast"
                   icon="first.png" rolloverIcon="firstrollover.png" pressedIcon="firstpressed.png"/>
           <button ref="prevPeriod" gridPos="(0,1)" anchor="northeast"

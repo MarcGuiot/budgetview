@@ -30,7 +30,6 @@ public class CategoryBackgroundPainter implements CellPainter, ColorChangeListen
   public void paint(Graphics g, Glob glob, int row, int column,
                     boolean isSelected, boolean hasFocus, int width, int height) {
     Graphics2D g2 = (Graphics2D)g;
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     if (!isSelected) {
       g2.setColor(background);
