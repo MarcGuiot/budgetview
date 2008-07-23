@@ -6,6 +6,7 @@ import java.awt.*;
 public class GridBagBuilder {
   private JPanel panel;
   private GridBagConstraints constraints = new GridBagConstraints();
+  private Insets defaultInsets = null;
 
   public static GridBagBuilder init(JPanel panel) {
     return new GridBagBuilder(panel);
@@ -34,6 +35,11 @@ public class GridBagBuilder {
       .getPanel();
   }
 
+  public GridBagBuilder setDefaultInsets(int top, int left, int bottom, int right) {
+    this.defaultInsets = new Insets(top, left, bottom, right);
+    return this;
+  }
+
   public GridBagBuilder(JPanel panel) {
     this.panel = panel;
     panel.setLayout(new GridBagLayout());
@@ -51,6 +57,11 @@ public class GridBagBuilder {
         stretch.getFill(), stretch.getAnchor(),
         insets);
     return this;
+  }
+
+  public GridBagBuilder add(Component component,
+                            int gridx, int gridy) {
+    return add(component, gridx, gridy, 1, 1, defaultInsets);
   }
 
   public GridBagBuilder add(Component component,
