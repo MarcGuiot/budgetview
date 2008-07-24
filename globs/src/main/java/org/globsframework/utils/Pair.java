@@ -1,6 +1,8 @@
 package org.globsframework.utils;
 
-public class Pair<T, D> {
+import java.io.Serializable;
+
+public class Pair<T, D> implements Serializable {
   private T first;
   private D second;
 

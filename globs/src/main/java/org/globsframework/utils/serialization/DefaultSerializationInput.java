@@ -5,7 +5,8 @@ import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.*;
-import org.globsframework.model.delta.*;
+import org.globsframework.model.delta.DefaultChangeSet;
+import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.exceptions.EOFIOFailure;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -319,6 +320,12 @@ public class DefaultSerializationInput implements SerializedInput {
         return null;
       }
       int readed = 0;
+      if (length > 65 * 1024) {
+        throw new InvalidData("More than " + 65 * 1024 + " : " + length);
+      }
+      if (length < 0) {
+        throw new InvalidData("negative length : " + length);
+      }
       byte[] bytes = new byte[length];
       while (readed != length) {
         int readSize = inputStream.read(bytes, readed, length - readed);

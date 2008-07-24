@@ -3,15 +3,19 @@ package org.globsframework.model.delta;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.xml.XmlChangeSetWriter;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class DefaultChangeSet implements MutableChangeSet {
-  private Map<Key, DefaultDeltaGlob> deltaGlobsByKey = new HashMap<Key, DefaultDeltaGlob>();
+  private MapOfMaps<GlobType, Key, DefaultDeltaGlob> deltaGlobsByKey = new MapOfMaps<GlobType, Key, DefaultDeltaGlob>();
 
   public void processCreation(Key key, FieldValues values) {
     DefaultDeltaGlob delta = getGlob(key);
@@ -47,15 +51,15 @@ public class DefaultChangeSet implements MutableChangeSet {
 
   private void removeIfUnchanged(DefaultDeltaGlob delta) {
     if (!delta.isModified()) {
-      deltaGlobsByKey.remove(delta.getKey());
+      deltaGlobsByKey.remove(delta.getKey().getGlobType(), delta.getKey());
     }
   }
 
   private DefaultDeltaGlob getGlob(Key key) {
-    DefaultDeltaGlob glob = deltaGlobsByKey.get(key);
+    DefaultDeltaGlob glob = deltaGlobsByKey.get(key.getGlobType(), key);
     if (glob == null) {
       glob = new DefaultDeltaGlob(key);
-      deltaGlobsByKey.put(key, glob);
+      deltaGlobsByKey.put(key.getGlobType(), key, glob);
     }
     return glob;
   }
@@ -99,7 +103,7 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public void visit(Key key, ChangeSetVisitor visitor) throws Exception {
-    DefaultDeltaGlob deltaGlob = deltaGlobsByKey.get(key);
+    DefaultDeltaGlob deltaGlob = deltaGlobsByKey.get(key.getGlobType(), key);
     if (deltaGlob != null) {
       deltaGlob.visit(visitor);
     }
@@ -147,7 +151,7 @@ public class DefaultChangeSet implements MutableChangeSet {
 
   public Set<Key> getCreated(GlobType type) {
     Set<Key> result = new HashSet<Key>();
-    for (Map.Entry entry : deltaGlobsByKey.entrySet()) {
+    for (Map.Entry entry : deltaGlobsByKey.get(type).entrySet()) {
       DefaultDeltaGlob delta = (DefaultDeltaGlob)entry.getValue();
       if (delta.getType().equals(type) && delta.isCreated()) {
         result.add((Key)entry.getKey());
@@ -158,7 +162,7 @@ public class DefaultChangeSet implements MutableChangeSet {
 
   public Set<Key> getUpdated(GlobType type) {
     Set<Key> result = new HashSet<Key>();
-    for (Map.Entry entry : deltaGlobsByKey.entrySet()) {
+    for (Map.Entry entry : deltaGlobsByKey.get(type).entrySet()) {
       DefaultDeltaGlob delta = (DefaultDeltaGlob)entry.getValue();
       if (delta.getType().equals(type) && delta.isUpdated()) {
         result.add((Key)entry.getKey());
@@ -169,7 +173,7 @@ public class DefaultChangeSet implements MutableChangeSet {
 
   public Set<Key> getDeleted(GlobType type) {
     Set<Key> result = new HashSet<Key>();
-    for (Map.Entry entry : deltaGlobsByKey.entrySet()) {
+    for (Map.Entry entry : deltaGlobsByKey.get(type).entrySet()) {
       DefaultDeltaGlob delta = (DefaultDeltaGlob)entry.getValue();
       if (delta.getType().equals(type) && delta.isDeleted()) {
         result.add((Key)entry.getKey());
@@ -198,7 +202,7 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public boolean containsChanges(Key key) {
-    return deltaGlobsByKey.containsKey(key);
+    return deltaGlobsByKey.containsKey(key.getGlobType(), key);
   }
 
   public boolean isEmpty() {
@@ -241,11 +245,8 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public void clear(List<GlobType> globTypes) {
-    for (Iterator<Key> it = deltaGlobsByKey.keySet().iterator(); it.hasNext();) {
-      Key key = it.next();
-      if (globTypes.contains(key.getGlobType())){
-        it.remove();
-      }
+    for (GlobType type : globTypes) {
+      deltaGlobsByKey.removeAll(type);
     }
   }
 
@@ -253,7 +254,7 @@ public class DefaultChangeSet implements MutableChangeSet {
     DefaultChangeSet result = new DefaultChangeSet();
     for (DefaultDeltaGlob delta : deltaGlobsByKey.values()) {
       DefaultDeltaGlob reverseDelta = delta.reverse();
-      result.deltaGlobsByKey.put(reverseDelta.getKey(), reverseDelta);
+      result.deltaGlobsByKey.put(reverseDelta.getType(), reverseDelta.getKey(), reverseDelta);
     }
     return result;
   }

@@ -38,14 +38,19 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
   }
 
   protected Object doGet(Field field) {
+    checkFieldType(field);
+    return values[field.getIndex()];
+  }
+
+  private void checkFieldType(Field field) {
     if (!field.getGlobType().equals(key.getGlobType())) {
       throw new ItemNotFound("Field '" + field.getName() + "' is declared for type '" +
                              field.getGlobType().getName() + "' and not for '" + key.getGlobType().getName() + "'");
     }
-    return values[field.getIndex()];
   }
 
   protected Object doGetPrevious(Field field) {
+    checkFieldType(field);
     return previousValues[field.getIndex()];
   }
 
@@ -54,10 +59,12 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
   }
 
   public void setValue(Field field, Object value) {
+    checkFieldType(field);
     values[field.getIndex()] = value;
   }
 
   public void setValueForUpdate(Field updatedField, Object value) {
+    checkFieldType(updatedField);
     if (Utils.equal(value, previousValues[updatedField.getIndex()])) {
       previousValues[updatedField.getIndex()] = Unset.VALUE;
       values[updatedField.getIndex()] = Unset.VALUE;
@@ -93,6 +100,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
   }
 
   public void setValue(Field field, Object value, Object previousValue) {
+    checkFieldType(field);
     int index = field.getIndex();
     values[index] = value;
     previousValues[index] = previousValue;
@@ -200,6 +208,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
   }
 
   public Object getValue(Field field) throws ItemNotFound {
+    checkFieldType(field);
     Object value = values[field.getIndex()];
     if (value == Unset.VALUE) {
       throw new ItemNotFound(field.getName() + " not set.");
@@ -211,6 +220,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
     if (field.isKeyField()) {
       return false;
     }
+    checkFieldType(field);
     return values[field.getIndex()] != Unset.VALUE;
   }
 

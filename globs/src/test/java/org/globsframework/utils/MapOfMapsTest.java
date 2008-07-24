@@ -29,5 +29,10 @@ public class MapOfMapsTest extends TestCase {
 
     map.removeAll(1);
     TestUtils.assertSetEquals(map.values(), "4", "5");
+
+    assertFalse(map.isEmpty());
+    map.removeAll(3);
+    map.removeAll(5);
+    assertTrue(map.isEmpty());
   }
 }

@@ -82,6 +82,18 @@ public class MapOfMaps<KEY1, KEY2, VALUE> {
     maps.remove(key1);
   }
 
+  public boolean isEmpty() {
+    if (maps.isEmpty()) {
+      return true;
+    }
+    for (Map<KEY2, VALUE> map : maps.values()) {
+      if (!map.isEmpty()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   private class MapOfMapIterator implements Iterator<VALUE> {
     Iterator<Map<KEY2, VALUE>> iterator1;
     Iterator<VALUE> iterator2;

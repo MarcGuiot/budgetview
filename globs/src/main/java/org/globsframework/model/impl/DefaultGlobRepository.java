@@ -458,10 +458,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   public void reset(GlobList newGlobs, GlobType... changedTypes) {
     enterBulkDispatchingMode();
-    if (changedTypes.length == 0) {
-      Set<GlobType> allTypes = getTypes();
-      changedTypes = allTypes.toArray(new GlobType[allTypes.size()]);
-    }
+//    if (changedTypes.length == 0) {
+//      Set<GlobType> allTypes = getTypes();
+//      changedTypes = allTypes.toArray(new GlobType[allTypes.size()]);
+//    }
     List typesList = Arrays.asList(changedTypes);
     for (GlobType type : changedTypes) {
       for (Map.Entry<Key, Glob> entry : globs.get(type).entrySet()) {

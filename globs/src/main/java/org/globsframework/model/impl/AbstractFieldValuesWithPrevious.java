@@ -1,15 +1,16 @@
 package org.globsframework.model.impl;
 
-import org.globsframework.model.FieldValuesWithPrevious;
-import org.globsframework.model.FieldValues;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.FieldValuesWithPrevious;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Date;
 
 public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWithPrevious {
   protected abstract Object doGet(Field field);
+
   protected abstract Object doGetPrevious(Field field);
 
   public Object getValue(Field field) throws ItemNotFound {
@@ -53,7 +54,7 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
   }
 
   public byte[] get(BlobField field) throws ItemNotFound {
-    return new byte[0];
+    return (byte[])doGet(field);
   }
 
   public Object getPreviousValue(Field field) throws ItemNotFound {
