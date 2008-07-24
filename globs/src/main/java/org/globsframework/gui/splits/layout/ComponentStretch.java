@@ -76,6 +76,10 @@ public class ComponentStretch {
     return insets;
   }
 
+  public void setInsets(Insets insets) {
+    this.insets = insets;
+  }
+
   public String toString() {
     return component.getClass().getSimpleName() + "[" + component.getName() + "] " +
            (gridPos != null ? gridPos + " " : "") +

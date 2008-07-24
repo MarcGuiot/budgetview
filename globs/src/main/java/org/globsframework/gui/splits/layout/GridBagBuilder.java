@@ -45,18 +45,25 @@ public class GridBagBuilder {
     panel.setLayout(new GridBagLayout());
   }
 
+  public GridBagBuilder add(ComponentStretch stretch,
+                            int gridx, int gridy,
+                            int gridwidth, int gridheight) {
+    add(stretch.getComponent(),
+        gridx, gridy,
+        gridwidth, gridheight,
+        stretch.getWeightX(), stretch.getWeightY(),
+        stretch.getFill(), stretch.getAnchor(),
+        stretch.getInsets());
+    return this;
+  }
+
   public GridBagBuilder add(Component component,
                             int gridx, int gridy,
                             int gridwidth, int gridheight,
                             Insets insets) {
     ComponentStretch stretch = SwingStretches.get(component);
-    add(component,
-        gridx, gridy,
-        gridwidth, gridheight,
-        stretch.getWeightX(), stretch.getWeightY(),
-        stretch.getFill(), stretch.getAnchor(),
-        insets);
-    return this;
+    stretch.setInsets(insets);
+    return add(stretch, gridx, gridy, gridwidth, gridheight);
   }
 
   public GridBagBuilder add(Component component,
