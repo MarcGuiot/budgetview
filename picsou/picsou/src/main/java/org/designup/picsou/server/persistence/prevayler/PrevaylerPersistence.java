@@ -8,6 +8,7 @@ import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.T3uples;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.serialization.Encoder;
@@ -48,6 +49,10 @@ public class PrevaylerPersistence implements Persistence {
     return hiddenUser.get(HiddenUser.USER_ID);
   }
 
+  public void register(Integer userId, byte[] mail, byte[] signature) {
+    rootDataManager.register(mail, signature);
+  }
+
   public UserInfo createUser(String name, boolean isRegisteredUser, byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
     return rootDataManager.createUserAndHiddenUser(name, isRegisteredUser, cryptedPassword, linkInfo, cryptedLinkInfo);
   }
@@ -83,6 +88,14 @@ public class PrevaylerPersistence implements Persistence {
 
   public void updateData(SerializedInput input, SerializedOutput output, Integer userId) {
     accountDataManager.updateUserData(input, userId);
+  }
+
+  public void connect(SerializedOutput output) {
+    T3uples<byte[], byte[], Long> accountInfo = rootDataManager.getAccountInfo();
+    output.write(true);
+    output.writeBytes(accountInfo.getFirst());
+    output.writeBytes(accountInfo.getSecond());
+    output.write(accountInfo.getThird());
   }
 
 }

@@ -6,6 +6,7 @@ import org.designup.picsou.server.persistence.prevayler.RootDataManager;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.T3uples;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.GlobsException;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -54,6 +55,7 @@ public class PRootDataManager implements RootDataManager {
     CustomSerializablePolicy serializablePolicy = new CustomSerializablePolicy(directory);
     serializablePolicy.registerFactory(CreateUserAndHiddenUser.getFactory());
     serializablePolicy.registerFactory(DeleteUserAndHiddenUser.getFactory());
+    serializablePolicy.registerFactory(Register.getFactory());
     serializablePolicy.registerFactory(PRootData.getFactory());
     return serializablePolicy;
   }
@@ -82,6 +84,10 @@ public class PRootDataManager implements RootDataManager {
     catch (Exception e) {
       throw new UnexpectedApplicationState(e);
     }
+  }
+
+  public void register(final byte[] mail, final byte[] signature) {
+    prevayler.execute(new Register(mail, signature));
   }
 
   public Persistence.UserInfo createUserAndHiddenUser(String name, boolean isRegisteredUser,
@@ -122,4 +128,17 @@ public class PRootDataManager implements RootDataManager {
     }
   }
 
+  public T3uples<byte[], byte[], Long> getAccountInfo() {
+    try {
+      return (T3uples<byte[], byte[], Long>)prevayler.execute(new Query() {
+        public Object query(Object prevalentSystem, Date executionTime) throws Exception {
+          PRootData rootData = (PRootData)prevalentSystem;
+          return new T3uples<byte[], byte[], Long>(rootData.getMail(), rootData.getSignature(), rootData.getCount());
+        }
+      });
+    }
+    catch (Exception e) {
+      throw new UnexpectedApplicationState(e);
+    }
+  }
 }

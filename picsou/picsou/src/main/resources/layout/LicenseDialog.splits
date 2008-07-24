@@ -1,0 +1,21 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel ui="wave">
+
+    <column>
+      <filler fill="vertical" weightY="10"/>
+      <row>
+        <label text="$license.mail"/>
+        <textField ref="mail"/>
+      </row>
+      <row>
+        <label text="$license.code"/>
+        <textField ref="code"/>
+      </row>
+      <filler fill="vertical" weightY="20"/>
+    </column>
+
+  </panel>
+</splits>

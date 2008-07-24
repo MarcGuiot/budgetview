@@ -19,9 +19,13 @@ public interface ServerAccess {
   boolean initConnection(String name, char[] password, boolean privateComputer)
     throws BadPassword, UserNotRegistered;
 
+  void register(byte[] mail, byte[] signature);
+
   void applyChanges(ChangeSet changeSet, GlobRepository globRepository);
 
   void takeSnapshot();
+
+  void connect();
 
   interface IdUpdate {
     void update(IntegerField field, Integer lastAllocatedId);

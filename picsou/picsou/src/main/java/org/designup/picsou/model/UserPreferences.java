@@ -16,6 +16,7 @@ import org.globsframework.utils.serialization.SerializedOutput;
 public class UserPreferences {
 
   public static final Integer SINGLETON_ID = 0;
+  public static org.globsframework.model.Key key;
 
   public static GlobType TYPE;
 
@@ -28,6 +29,7 @@ public class UserPreferences {
 
   static {
     GlobTypeLoader.init(UserPreferences.class);
+    key = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 
   public static class UserPreferencesSerialization implements PicsouGlobSerializer {

@@ -57,6 +57,7 @@ public class MainWindowLauncher {
 
   public static GlobRepository run(ServerAccess serverAccess) throws Exception {
     try {
+      serverAccess.connect();
       serverAccess.createUser(user, password.toCharArray());
     }
     catch (UserAlreadyExists userAlreadyExists) {

@@ -2,10 +2,7 @@ package org.designup.picsoulicence.model;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.fields.BooleanField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.LongField;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.sqlstreams.annotations.AutoIncrement;
 
@@ -16,13 +13,25 @@ public class Licence {
   @AutoIncrement
   public static IntegerField ID;
 
-  public static StringField KEY;
-
   public static StringField MAIL;
 
-  public static BooleanField KILLED;
+  public static StringField ACTIVATION_CODE;
+
+  public static StringField LAST_ACTIVATION_CODE;
+
+  public static BlobField SIGNATURE;
 
   public static LongField LAST_COUNT;
+
+  public static DateField LAST_KILLED_1;  // plus recent
+
+  public static DateField LAST_KILLED_2;
+
+  public static DateField LAST_KILLED_3;
+
+  public static DateField LAST_KILLED_4; // plus vieux
+
+  public static LongField KILLED_COUNT;
 
   static {
     GlobTypeLoader.init(Licence.class);

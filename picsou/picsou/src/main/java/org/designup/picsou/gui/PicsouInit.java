@@ -3,6 +3,7 @@ package org.designup.picsou.gui;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.browsing.BrowsingService;
+import org.designup.picsou.gui.config.RegistrationListener;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
@@ -53,6 +54,8 @@ public class PicsouInit {
 
     repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
+    repository.addTrigger(new RegistrationListener(directory));
+    repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
     repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new SeriesUpdateTrigger(directory));
     repository.addTrigger(new BudgetStatComputer());
@@ -81,7 +84,7 @@ public class PicsouInit {
     }
     serverAccess.applyChanges(changeSet, repository);
     if (newUser) {
-      repository.create(Key.create(UserPreferences.TYPE, UserPreferences.SINGLETON_ID),
+      repository.create(UserPreferences.key,
                         FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT, 0));
       loadGlobs("/subcats.xml");
       loadGlobs("/series.xml");

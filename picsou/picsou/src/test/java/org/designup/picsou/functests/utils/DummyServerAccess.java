@@ -28,6 +28,9 @@ public class DummyServerAccess implements ServerAccess {
   public void takeSnapshot() {
   }
 
+  public void connect() {
+  }
+
   public void addTransaction(GlobList transactions) {
   }
 
@@ -41,6 +44,9 @@ public class DummyServerAccess implements ServerAccess {
 
   public boolean initConnection(String name, char[] password, boolean privateComputer) {
     return false;
+  }
+
+  public void register(byte[] mail, byte[] signature) {
   }
 
   public void disconnect() {

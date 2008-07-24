@@ -22,12 +22,20 @@ public class ServerAccessDecorator implements ServerAccess {
     return serverAccess.initConnection(name, password, privateComputer);
   }
 
+  public void register(byte[] mail, byte[] signature) {
+    serverAccess.register(mail, signature);
+  }
+
   public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {
     serverAccess.applyChanges(changeSet, globRepository);
   }
 
   public void takeSnapshot() {
     serverAccess.takeSnapshot();
+  }
+
+  public void connect() {
+    serverAccess.connect();
   }
 
   public GlobList getUserData(MutableChangeSet changeSet, IdUpdate idUpdate) {

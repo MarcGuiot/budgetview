@@ -6,8 +6,8 @@ import static org.designup.picsou.model.TransactionTypeMatcher.*;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.xml.XmlGlobParser;
 
 import java.io.BufferedReader;
@@ -24,24 +24,29 @@ public class TransactionAnalyzerFactory {
   public TransactionAnalyzerFactory(GlobModel modelRepository, GlobRepository globRepository) {
     this.modelRepository = modelRepository;
     this.globRepository = globRepository;
+    load(getClass().getClassLoader());
+  }
+
+  synchronized public void load(ClassLoader loader) {
     this.analyzer = new DefaultTransactionAnalyzer();
-    loadMatchers();
+    loadMatchers(loader);
     analyzer.add(new LabelForCategorizationUpdater());
     analyzer.add(new TransactionDateUpdater());
   }
 
-  public TransactionAnalyzer getAnalyzer() {
+  synchronized public TransactionAnalyzer getAnalyzer() {
     return analyzer;
   }
 
-  private void loadMatchers() {
-    parseDefinitionFile(globRepository);
+  private void loadMatchers(ClassLoader loader) {
+    parseDefinitionFile(globRepository, loader);
     registerMatchers(globRepository);
   }
 
-  private void parseDefinitionFile(GlobRepository globRepository) {
-    String bankListFileName = "/banks/bankList.txt";
-    InputStream bankListStream = getClass().getResourceAsStream(bankListFileName);
+  private void parseDefinitionFile(GlobRepository globRepository, ClassLoader loader) {
+    String bankListFileName = "banks/bankList.txt";
+    InputStream bankListStream = loader.getResourceAsStream(bankListFileName);
+
     if (bankListStream == null) {
       throw new ResourceAccessFailed("missing bank file list'" + bankListFileName + "'");
     }
@@ -58,8 +63,8 @@ public class TransactionAnalyzerFactory {
       if (bankFileName == null) {
         break;
       }
-      String path = "/banks/" + bankFileName;
-      InputStream stream = getClass().getResourceAsStream(path);
+      String path = "banks/" + bankFileName;
+      InputStream stream = loader.getResourceAsStream(path);
       if (stream != null) {
         InputStreamReader reader = new InputStreamReader(stream);
         XmlGlobParser.parse(modelRepository, globRepository, reader, "globs");

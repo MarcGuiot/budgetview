@@ -136,6 +136,9 @@ public class SqlPersistence implements Persistence {
     }
   }
 
+  public void connect(SerializedOutput output) {
+  }
+
   public Glob identify(String name, byte[] cryptedPassword) throws IdentificationFailed {
     SqlConnection sqlConnection = sqlService.getDb();
     try {
@@ -178,6 +181,9 @@ public class SqlPersistence implements Persistence {
     finally {
       sqlConnection.commitAndClose();
     }
+  }
+
+  public void register(Integer userId, byte[] mail, byte[] signature) {
   }
 
   public void delete(String name, byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo, Integer userId) {

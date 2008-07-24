@@ -36,6 +36,16 @@ public class ConnectionRetryServerAccess extends ServerAccessDecorator {
     return super.initConnection(this.name, this.password, privateComputer);
   }
 
+  public void register(byte[] mail, byte[] signature) {
+    try {
+      super.register(mail, signature);
+    }
+    catch (GlobsException e) {
+      super.initConnection(name, password, privateComputer);
+      super.register(mail, signature);
+    }
+  }
+
   public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {
     try {
       super.applyChanges(changeSet, globRepository);

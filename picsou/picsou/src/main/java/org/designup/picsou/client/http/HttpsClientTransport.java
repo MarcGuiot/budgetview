@@ -13,6 +13,7 @@ import org.designup.picsou.client.ClientTransport;
 import org.designup.picsou.client.exceptions.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
@@ -44,12 +45,21 @@ public class HttpsClientTransport implements ClientTransport {
     this.httpClient = new HttpClient();
   }
 
-  public SerializedInput createUser(byte[] bytes) {
-    return sendRequest(null, "/createUser", bytes);
+  public SerializedInput connect() throws BadConnection {
+    SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
+    serializedByteArrayOutput.getOutput().writeBoolean(false);
+    return sendRequest(null, "/connect", serializedByteArrayOutput.toByteArray());
   }
 
-  public SerializedInput identifyUser(byte[] data) {
-    return sendRequest(null, "/identifyUser", data);
+  public void register(Long sessionId, byte[] privateId, byte[] mail, byte[] signature) {
+  }
+
+  public SerializedInput createUser(Long sessionId, byte[] bytes) {
+    return sendRequest(sessionId, "/createUser", bytes);
+  }
+
+  public SerializedInput identifyUser(Long sessionId, byte[] data) {
+    return sendRequest(sessionId, "/identifyUser", data);
   }
 
   public SerializedInput updateUserData(Long sessionId, byte[] bytes) {

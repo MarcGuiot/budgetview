@@ -13,29 +13,35 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
     sessionService = directory.get(SessionService.class);
   }
 
-  public void identify(SerializedInput input, SerializedOutput output) throws InvalidActionForState {
+  public void connect(SerializedInput input, SerializedOutput output) {
     ConnectingState connectingState = sessionService.createSessionState();
+    connectingState.connect(input, output);
+    output.writeLong(connectingState.getSessionId());
+    output.writeBytes(connectingState.getPrivateId());
+  }
+
+  public void identify(Long sessionId, SerializedInput input, SerializedOutput output) throws InvalidActionForState {
+    SessionState connectingState = sessionService.getSessionState(sessionId);
     IdentifiedState identifiedState = connectingState.identify(input);
-    output.writeLong(identifiedState.getSessionId());
-    output.writeBytes(identifiedState.getPrivateId());
-    output.writeBytes(identifiedState.getMail());
-    output.writeBytes(identifiedState.getKey());
     output.writeBytes(identifiedState.getLinkInfo());
     output.writeBoolean(identifiedState.getIsRegistered());
   }
 
-  public void createUser(SerializedInput input, SerializedOutput output) throws InvalidActionForState {
-    ConnectingState sessionState = sessionService.createSessionState();
-    CreatingUserState creatingUserState = sessionState.createUser();
+  public void createUser(Long sessionId, SerializedInput input, SerializedOutput output) throws InvalidActionForState {
+    SessionState connectingState = sessionService.getSessionState(sessionId);
+    CreatingUserState creatingUserState = connectingState.createUser();
     creatingUserState.createUser(input);
-    output.writeLong(creatingUserState.getSessionId());
-    output.writeBytes(creatingUserState.getPrivateId());
     output.writeBoolean(creatingUserState.getIsRegisteredUser());
   }
 
   public void confirmUser(Long sessionId, SerializedInput input, SerializedOutput output) throws InvalidActionForState {
     SessionState state = sessionService.getSessionState(sessionId);
     state.confirmUser(input);
+  }
+
+  public void register(Long sessionId, SerializedInput input) {
+    SessionState state = sessionService.getSessionState(sessionId);
+    state.register(input);
   }
 
   public void getUserData(Long sessionId, SerializedInput input, SerializedOutput output) throws InvalidActionForState {

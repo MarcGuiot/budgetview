@@ -36,6 +36,12 @@ public class DefaultConnectedState extends AbstractSessionState implements Conne
     persistence.takeSnapshot(userId);
   }
 
+  public void register(SerializedInput input) {
+    lastAccess();
+    checkPrivateId(input);
+    persistence.register(userId, input.readBytes(), input.readBytes());
+  }
+
   public String getStateName() {
     return "Connected";
   }

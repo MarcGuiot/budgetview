@@ -1,9 +1,9 @@
-package org.designup.picsoulicence.functests;
+package org.designup.picsoulicence.mail;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.designup.picsoulicence.MailTestCase;
+import org.designup.picsoulicence.LicenceTestCase;
 import org.designup.picsoulicence.model.Licence;
 import org.designup.picsoulicence.model.MailError;
 import org.globsframework.sqlstreams.SqlConnection;
@@ -11,7 +11,7 @@ import org.globsframework.sqlstreams.constraints.Constraints;
 
 import java.io.IOException;
 
-public class AskMailTest extends MailTestCase {
+public class AskMailTest extends LicenceTestCase {
   private HttpClient client;
 
   protected void setUp() throws Exception {

@@ -1,12 +1,10 @@
 package org.designup.picsou.server.session.impl;
 
 import org.designup.picsou.client.exceptions.InvalidActionForState;
-import org.designup.picsou.server.session.ConnectedState;
-import org.designup.picsou.server.session.CreatingUserState;
-import org.designup.picsou.server.session.IdentifiedState;
-import org.designup.picsou.server.session.SessionState;
+import org.designup.picsou.server.session.*;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.Arrays;
 
@@ -44,6 +42,10 @@ public abstract class AbstractSessionState implements SessionState {
     defaultSessionService.remove(sessionId);
   }
 
+  public void register(SerializedInput input) {
+    throw new InvalidActionForState("register", getStateName());
+  }
+
   public long getLastAccess() {
     return lastAccess;
   }
@@ -53,6 +55,10 @@ public abstract class AbstractSessionState implements SessionState {
   }
 
   public abstract String getStateName();
+
+  public ConnectingState connect(SerializedInput input, SerializedOutput output) throws InvalidActionForState {
+    throw new InvalidActionForState("connect", getStateName());
+  }
 
   protected void checkPrivateId(SerializedInput input) {
     byte[] actualPrivateId = input.readBytes();

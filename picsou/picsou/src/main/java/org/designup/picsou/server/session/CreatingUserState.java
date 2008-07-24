@@ -6,9 +6,5 @@ public interface CreatingUserState extends SessionState {
 
   void createUser(SerializedInput input);
 
-  byte[] getPrivateId();
-
-  Long getSessionId();
-
   Boolean getIsRegisteredUser();
 }

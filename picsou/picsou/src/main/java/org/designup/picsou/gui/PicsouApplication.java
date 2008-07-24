@@ -2,6 +2,7 @@ package org.designup.picsou.gui;
 
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
@@ -165,6 +166,7 @@ public class PicsouApplication {
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
     directory.add(new UIService());
+    directory.add(new ConfigService(VERSION, directory));
 
     UIManager.put("ColorService", directory.get(ColorService.class));
 

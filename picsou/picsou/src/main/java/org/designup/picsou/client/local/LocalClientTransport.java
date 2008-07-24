@@ -1,11 +1,13 @@
 package org.designup.picsou.client.local;
 
 import org.designup.picsou.client.ClientTransport;
+import org.designup.picsou.client.exceptions.BadConnection;
 import org.designup.picsou.server.ServerRequestProcessingService;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public class LocalClientTransport implements ClientTransport {
   private ServerRequestProcessingService serverRequestProcessingService;
@@ -14,15 +16,38 @@ public class LocalClientTransport implements ClientTransport {
     serverRequestProcessingService = serverDirectory.get(ServerRequestProcessingService.class);
   }
 
-  public SerializedInput createUser(byte[] data) {
+  public SerializedInput connect() throws BadConnection {
+    SerializedInput input = getTrueInByteArray();
+    SerializedByteArrayOutput byteOutput = new SerializedByteArrayOutput();
+    serverRequestProcessingService.connect(input, byteOutput.getOutput());
+    return byteOutput.getInput();
+  }
+
+  public void register(Long sessionId, byte[] privateId, byte[] mail, byte[] signature) {
+    SerializedByteArrayOutput byteOutput = new SerializedByteArrayOutput();
+    SerializedOutput output = byteOutput.getOutput();
+    output.writeBytes(privateId);
+    output.writeBytes(mail);
+    output.writeBytes(signature);
+    serverRequestProcessingService.register(sessionId, byteOutput.getInput());
+  }
+
+  private SerializedInput getTrueInByteArray() {
+    SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
+    SerializedOutput output = serializedByteArrayOutput.getOutput();
+    output.writeBoolean(true);
+    return serializedByteArrayOutput.getInput();
+  }
+
+  public SerializedInput createUser(Long sessionId, byte[] data) {
     SerializedByteArrayOutput output = new SerializedByteArrayOutput();
-    serverRequestProcessingService.createUser(SerializedInputOutputFactory.init(data), output.getOutput());
+    serverRequestProcessingService.createUser(sessionId, SerializedInputOutputFactory.init(data), output.getOutput());
     return output.getInput();
   }
 
-  public SerializedInput identifyUser(byte[] data) {
+  public SerializedInput identifyUser(Long sessionId, byte[] data) {
     SerializedByteArrayOutput output = new SerializedByteArrayOutput();
-    serverRequestProcessingService.identify(SerializedInputOutputFactory.init(data), output.getOutput());
+    serverRequestProcessingService.identify(sessionId, SerializedInputOutputFactory.init(data), output.getOutput());
     return output.getInput();
   }
 

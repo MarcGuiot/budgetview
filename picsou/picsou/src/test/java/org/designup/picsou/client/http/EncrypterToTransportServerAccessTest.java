@@ -131,6 +131,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   public void testConnectFailsWithBadPassword() throws Exception {
     createUser("name", "password", createServerAccess());
     final EncrypterToTransportServerAccess categorizer = createServerAccess();
+    categorizer.connect();
     TestUtils.assertFails(new Functor() {
       public void run() throws Exception {
         categorizer.initConnection("name", "other password".toCharArray(), false);
@@ -140,6 +141,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
 
   public void testConnectFailsIfNotRecognized() throws Exception {
     final EncrypterToTransportServerAccess categorizer = createServerAccess();
+    categorizer.connect();
     TestUtils.assertFails(new Functor() {
       public void run() throws Exception {
         categorizer.initConnection("other Name", "other password".toCharArray(), false);
@@ -197,6 +199,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
 
 
   private Glob createUser(String name, String password, EncrypterToTransportServerAccess serverAccess) {
+    serverAccess.connect();
     serverAccess.createUser(name, password.toCharArray());
     Persistence persistence = directory.get(Persistence.class);
     return persistence.getUser(name);

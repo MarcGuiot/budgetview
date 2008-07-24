@@ -11,7 +11,7 @@ import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.graphics.CategoriesChart;
 import org.designup.picsou.gui.graphics.HistoricalChart;
-import org.designup.picsou.gui.license.LicenseService;
+import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
@@ -73,7 +73,7 @@ public class MainPanel {
 
     importFileAction = ImportFileAction.initAndRegisterInOpenRequestManager(repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
-    registerAction = new RegisterLicenseAction(repository, directory);
+    registerAction = new RegisterLicenseAction(parent, repository, directory);
     exitAction = new ExitAction(directory);
 
     createPanel(
@@ -152,17 +152,20 @@ public class MainPanel {
   }
 
   private static class RegisterLicenseAction extends AbstractAction {
+    private Frame parent;
     private GlobRepository repository;
     private Directory directory;
 
-    public RegisterLicenseAction(GlobRepository repository, Directory directory) {
+    public RegisterLicenseAction(Frame parent, GlobRepository repository, Directory directory) {
       super(Lang.get("license.register"));
+      this.parent = parent;
       this.repository = repository;
       this.directory = directory;
     }
 
     public void actionPerformed(ActionEvent e) {
-      directory.get(LicenseService.class).register(repository, directory);
+      LicenseDialog dialog = new LicenseDialog(parent, repository, directory);
+      dialog.show();
     }
   }
 }

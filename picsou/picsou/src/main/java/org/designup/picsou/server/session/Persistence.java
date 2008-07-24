@@ -13,9 +13,13 @@ public interface Persistence {
 
   void updateData(SerializedInput input, SerializedOutput output, Integer userId);
 
+  void connect(SerializedOutput output);
+
   Glob identify(String name, byte[] encryptedPassword);
 
   Integer confirmUser(String b64LinkInfo) throws IdentificationFailed;
+
+  void register(Integer userId, byte[] mail, byte[] signature);
 
   void delete(String name, byte[] encryptedPassword, byte[] linkInfo, byte[] encryptedLinkInfo, Integer userId);
 

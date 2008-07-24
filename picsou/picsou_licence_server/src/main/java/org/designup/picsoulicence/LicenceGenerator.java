@@ -1,7 +1,5 @@
 package org.designup.picsoulicence;
 
-import org.globsframework.utils.serialization.Encoder;
-
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -29,7 +27,7 @@ public class LicenceGenerator {
     20, 78, -78, -128, 75, -112, 86, -91, -87, 8, -102, 92, 20, -53, 40, 67, 74, -69,
     -42, 13, 126};
 
-  public static String generateSignature(String data) throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
+  public static byte[] generateSignature(String data) throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
     byte[] key = data.getBytes();
     PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKey);
     KeyFactory keyFactory = KeyFactory.getInstance("DSA", "SUN");
@@ -37,8 +35,7 @@ public class LicenceGenerator {
     Signature dsa = Signature.getInstance("SHA1withDSA", "SUN");
     dsa.initSign(privateKey);
     dsa.update(key, 0, key.length);
-    byte[] realSig = dsa.sign();
-    return Encoder.b64Decode(realSig);
+    return dsa.sign();
   }
 
   public static void main(String[] args) throws NoSuchProviderException, NoSuchAlgorithmException {

@@ -13,11 +13,15 @@ public interface ServerRequestProcessingService {
 //  static final int USER_ALREADY_EXIST = 5;
 //  static final int USER_NOT_REGISTERED = 6;
 
-  void createUser(SerializedInput input, SerializedOutput output);
+  void connect(SerializedInput input, SerializedOutput output);
+
+  void createUser(Long sessionId, SerializedInput input, SerializedOutput output);
+
+  void identify(Long sessionId, SerializedInput input, SerializedOutput output);
 
   void confirmUser(Long sessionId, SerializedInput input, SerializedOutput output) throws UnknownId, InvalidActionForState;
 
-  void identify(SerializedInput input, SerializedOutput output);
+  void register(Long id, SerializedInput input);
 
   void getUserData(Long sessionId, SerializedInput input, SerializedOutput output) throws UnknownId, InvalidActionForState;
 

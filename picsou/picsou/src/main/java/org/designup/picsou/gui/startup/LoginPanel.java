@@ -39,9 +39,7 @@ public class LoginPanel {
   private JCheckBox creationCheckBox = new JCheckBox();
   private JLabel messageLabel = new JLabel();
 
-  private JComponent[] creationComponents = {
-    confirmPasswordLabel, confirmPasswordField
-  };
+  private JComponent[] creationComponents = {confirmPasswordLabel, confirmPasswordField};
   private MainWindow mainWindow;
   private Directory directory;
   private ServerDirectory serverDirectory;
@@ -232,6 +230,7 @@ public class LoginPanel {
         new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
     }
     serverAccess = new DispatcherServerAccess(localServerAccess, remoteAccess);
+    serverAccess.connect();
   }
 
   public JPanel getJPanel() {

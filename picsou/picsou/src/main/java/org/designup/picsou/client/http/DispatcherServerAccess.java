@@ -77,6 +77,14 @@ public class DispatcherServerAccess implements ServerAccess {
     return isRegistered;
   }
 
+  public void connect() {
+    localServerAccess.connect();
+  }
+
+  public void register(byte[] mail, byte[] signature) {
+    localServerAccess.register(mail, signature);
+  }
+
   public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {
     localServerAccess.applyChanges(changeSet, globRepository);
   }

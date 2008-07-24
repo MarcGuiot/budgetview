@@ -6,7 +6,7 @@ import org.designup.picsou.client.SerializableGlobSerializer;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadConnection;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
-import org.designup.picsou.gui.utils.KeyChecker;
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.model.ServerDelta;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
@@ -45,6 +45,18 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     globModel = directory.get(GlobModel.class);
   }
 
+  public void connect() {
+    SerializedInput response = clientTransport.connect();
+    if (response.readBoolean()) {
+      byte[] mail = response.readBytes();
+      byte[] key = response.readBytes();
+      long count = response.readNotNullLong();
+      ConfigService.set(count, mail, key);
+    }
+    sessionId = response.readLong();
+    privateId = response.readBytes();
+  }
+
   public boolean createUser(String name, char[] password) throws UserAlreadyExists {
     try {
       this.name = name;
@@ -59,9 +71,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       output.writeBytes(linkInfo);
       output.writeBytes(passwordBasedEncryptor.encrypt(linkInfo));
 
-      SerializedInput response = clientTransport.createUser(request.toByteArray());
-      sessionId = response.readLong();
-      privateId = response.readBytes();
+      SerializedInput response = clientTransport.createUser(sessionId, request.toByteArray());
       notConnected = false;
       return response.readBoolean();
     }
@@ -92,12 +102,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     output.writeString(this.name);
     output.writeBytes(generatePassword(password, passwordBasedEncryptor));
 
-    SerializedInput response = clientTransport.identifyUser(request.toByteArray());
-    sessionId = response.readLong();
-    privateId = response.readBytes();
-    byte[] mail = response.readBytes();
-    byte[] key = response.readBytes();
-    boolean b = KeyChecker.checkSignature(mail, key);
+    SerializedInput response = clientTransport.identifyUser(sessionId, request.toByteArray());
 
     SerializedByteArrayOutput confirmation = new SerializedByteArrayOutput();
     confirmation.getOutput().writeBytes(privateId);
@@ -106,6 +111,10 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     clientTransport.confirmUser(sessionId, confirmation.toByteArray());
     notConnected = false;
     return isRegistered;
+  }
+
+  public void register(byte[] mail, byte[] signature) {
+    clientTransport.register(sessionId, privateId, mail, signature);
   }
 
   private byte[] generateLinkInfo() {

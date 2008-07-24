@@ -50,12 +50,4 @@ public class DefaultIdentifiedState extends AbstractSessionState implements Iden
   public boolean getIsRegistered() {
     return user.get(User.IS_REGISTERED_USER);
   }
-
-  public byte[] getMail() {
-    return user.get(User.MAIL);
-  }
-
-  public byte[] getKey() {
-    return user.get(User.KEY);
-  }
 }

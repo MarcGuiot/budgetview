@@ -1,5 +1,6 @@
 package org.designup.picsou.importer.http;
 
+import org.designup.picsou.client.http.HttpsClientTransport;
 import org.designup.picsou.server.ServerRequestProcessingService;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -16,8 +17,9 @@ public class CreateUserServlet extends ExceptionToStatusHttpServlet {
   }
 
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
-    serverRequestProcessingService.createUser(
-      SerializedInputOutputFactory.init(httpServletRequest.getInputStream()),
-      SerializedInputOutputFactory.init(httpServletResponse.getOutputStream()));
+    String sessionId = httpServletRequest.getHeader(HttpsClientTransport.SESSION_ID);
+    serverRequestProcessingService.createUser(Long.parseLong(sessionId),
+                                              SerializedInputOutputFactory.init(httpServletRequest.getInputStream()),
+                                              SerializedInputOutputFactory.init(httpServletResponse.getOutputStream()));
   }
 }

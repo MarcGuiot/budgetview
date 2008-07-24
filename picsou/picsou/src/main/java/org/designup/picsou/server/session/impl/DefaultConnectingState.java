@@ -1,10 +1,12 @@
 package org.designup.picsou.server.session.impl;
 
+import org.designup.picsou.client.exceptions.InvalidActionForState;
 import org.designup.picsou.server.session.ConnectingState;
 import org.designup.picsou.server.session.CreatingUserState;
 import org.designup.picsou.server.session.IdentifiedState;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public class DefaultConnectingState extends AbstractSessionState implements ConnectingState {
   private Persistence persistence;
@@ -16,6 +18,18 @@ public class DefaultConnectingState extends AbstractSessionState implements Conn
     super(defaultSessionService, sessionId, privateId);
     this.persistence = persistence;
     getDefaultSessionService().register(sessionId, this);
+  }
+
+  public ConnectingState connect(SerializedInput input, SerializedOutput output) throws InvalidActionForState {
+    lastAccess();
+    Boolean isLocal = input.readBoolean();
+    if (isLocal) {
+      persistence.connect(output);
+    }
+    else {
+      output.write(false);
+    }
+    return this;
   }
 
   public IdentifiedState identify(SerializedInput input) {

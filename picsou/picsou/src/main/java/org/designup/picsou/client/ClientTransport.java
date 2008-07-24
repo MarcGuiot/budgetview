@@ -4,10 +4,15 @@ import org.designup.picsou.client.exceptions.*;
 import org.globsframework.utils.serialization.SerializedInput;
 
 public interface ClientTransport {
-  SerializedInput createUser(byte[] bytes) throws UserAlreadyExists, IdentificationFailed, BadConnection;
 
-  SerializedInput identifyUser(byte[] data) throws BadConnection, BadPassword,
-                                                   UserNotRegistered;
+  SerializedInput connect() throws BadConnection;
+
+  void register(Long sessionId, byte[] privateId, byte[] mail, byte[] signature);
+
+  SerializedInput createUser(Long sessionId, byte[] bytes) throws UserAlreadyExists, IdentificationFailed, BadConnection;
+
+  SerializedInput identifyUser(Long sessionId, byte[] data) throws BadConnection, BadPassword,
+                                                                   UserNotRegistered;
 
   void confirmUser(Long sessionId, byte[] data) throws IdentificationFailed, BadConnection;
 

@@ -17,7 +17,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
 
   public void testFirstSeriesInitialization() throws Exception {
     LicenseChecker license = new LicenseChecker(mainWindow);
-    license.enterLicense("");
+    license.enterLicense("admin", "");
     OfxBuilder.init(this)
       .addTransaction("2008/07/08", -29.9, "free telecom")
       .load();
