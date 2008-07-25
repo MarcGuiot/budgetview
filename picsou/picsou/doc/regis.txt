@@ -21,9 +21,8 @@ TitleView
 
 Vue budget
 ----------
-- bloc "ponctuel"
+- bloc "ponctuel" => OccasionalSeriesStat + trigger
 - edition series
-- gauges
 
 
 Vue releves

@@ -77,7 +77,8 @@
            filledColorTop="gauge.total.filled.top" filledColorBottom="gauge.total.filled.bottom"
            warningColorTop="gauge.total.warning.top" warningColorBottom="gauge.total.warning.bottom"
            triangleTopColor="gauge.total.triangle.top" triangleBottomColor="gauge.total.triangle.bottom"
-           triangleBorderColor="gauge.total.triangle.border" triangleShadowColor="gauge.total.triangle.shadow"/>
+           triangleBorderColor="gauge.total.triangle.border" triangleShadowColor="gauge.total.triangle.shadow"
+           triangleSignColor="gauge.total.triangle.sign"/>
 
     <style selector=".detailGauge"
            fill="horizontal" weightX="100"
@@ -87,7 +88,8 @@
            filledColorTop="gauge.detail.filled.top" filledColorBottom="gauge.detail.filled.bottom"
            warningColorTop="gauge.detail.warning.top" warningColorBottom="gauge.detail.warning.bottom"
            triangleTopColor="gauge.detail.triangle.top" triangleBottomColor="gauge.detail.triangle.bottom"
-           triangleBorderColor="gauge.detail.triangle.border" triangleShadowColor="gauge.detail.triangle.shadow"/>
+           triangleBorderColor="gauge.detail.triangle.border" triangleShadowColor="gauge.detail.triangle.shadow"
+           triangleSignColor="gauge.detail.triangle.sign"/>
 
   </styles>
 

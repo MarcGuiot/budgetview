@@ -20,10 +20,11 @@ public class Gauge extends JPanel {
   private Color triangleBottomColor = Color.YELLOW.darker();
   private Color triangleBorderColor = Color.LIGHT_GRAY;
   private Color triangleShadowColor = Color.DARK_GRAY;
+  private Color triangleSignColor = Color.DARK_GRAY;
 
   private static final int BAR_HEIGHT = 10;
-  private static final float TRIANGLE_HEIGHT = 14f;
-  private static final float TRIANGLE_WIDTH = 14f;
+  private static final float TRIANGLE_HEIGHT = 16f;
+  private static final float TRIANGLE_WIDTH = 16f;
 
   public Gauge() {
     setMinimumSize(new Dimension(60, 28));
@@ -73,25 +74,66 @@ public class Gauge extends JPanel {
     GeneralPath shape = createWarningShape();
 
     Rectangle rectangle = shape.getBounds();
-    shape.transform(AffineTransform.getScaleInstance(TRIANGLE_WIDTH / (float)rectangle.width,
-                                                     TRIANGLE_HEIGHT / (float)rectangle.height));
+    AffineTransform scaling =
+      AffineTransform.getScaleInstance(TRIANGLE_WIDTH / (float)rectangle.width,
+                                       TRIANGLE_HEIGHT / (float)rectangle.height);
+    shape.transform(scaling);
 
     rectangle = shape.getBounds();
-    shape.transform(AffineTransform.getTranslateInstance(((float)width / 2.0f) - TRIANGLE_WIDTH / 2.0f,
-                                                         rectangle.y + (float)height / 2 - TRIANGLE_HEIGHT / 2));
+    float middleX = (float)width / 2.0f;
+    float middleY = (float)height / 2;
+    AffineTransform translation =
+      AffineTransform.getTranslateInstance(middleX - TRIANGLE_WIDTH / 2.0f - rectangle.x,
+                                           middleY - TRIANGLE_HEIGHT / 2 - rectangle.y);
+    shape.transform(translation);
 
     shape.transform(AffineTransform.getTranslateInstance(2, 2));
-
     g2.setColor(triangleShadowColor);
     g2.fill(shape);
 
     shape.transform(AffineTransform.getTranslateInstance(-2, -2));
-
     g2.setPaint(new GradientPaint(0, 0, triangleTopColor, 0, height, triangleBottomColor));
     g2.fill(shape);
 
     g2.setColor(triangleBorderColor);
     g2.draw(shape);
+
+    g2.setColor(triangleSignColor);
+    GeneralPath sign = createWarningSign();
+    sign.transform(scaling);
+    sign.transform(translation);
+    g2.fill(sign);
+  }
+
+  private GeneralPath createWarningShape() {
+    GeneralPath shape = new GeneralPath();
+    shape.moveTo(1, 9);
+    shape.lineTo(5.5f, 1.0f);
+    shape.curveTo(5.75f, 0.4f, 6.25f, 0.4f, 6.5f, 1.0f);
+    shape.lineTo(11, 9);
+    shape.curveTo(11.3f, 9.5f, 11.5f, 10.0f, 11f, 10f);
+    shape.lineTo(1, 10);
+    shape.moveTo(1, 9);
+    shape.curveTo(0.7f, 9.5f, 0.5f, 10.0f, 1.0f, 10.0f);
+    shape.closePath();
+    return shape;
+  }
+
+  private GeneralPath createWarningSign() {
+    GeneralPath shape = new GeneralPath();
+    shape.moveTo(5, 4);
+    shape.lineTo(6, 3);
+    shape.lineTo(7, 4);
+    shape.lineTo(6, 8);
+    shape.closePath();
+
+    shape.moveTo(5, 8.5f);
+    shape.lineTo(6, 8.0f);
+    shape.lineTo(7, 8.5f);
+    shape.lineTo(6, 9.5f);
+    shape.closePath();
+
+    return shape;
   }
 
   private void fill(Graphics2D g2, Color topColor, Color bottomColor, int barWidth, int barHeight, int barTop, int barBottom) {
@@ -165,17 +207,7 @@ public class Gauge extends JPanel {
     this.triangleShadowColor = triangleShadowColor;
   }
 
-  private GeneralPath createWarningShape() {
-    GeneralPath shape = new GeneralPath();
-    shape.moveTo(1, 9);
-    shape.lineTo(5.5f, 1.0f);
-    shape.curveTo(5.75f, 0.4f, 6.25f, 0.4f, 6.5f, 1.0f);
-    shape.lineTo(11, 9);
-    shape.curveTo(11.3f, 9.5f, 11.5f, 10.0f, 11f, 10f);
-    shape.lineTo(1, 10);
-    shape.moveTo(1, 9);
-    shape.curveTo(0.7f, 9.5f, 0.5f, 10.0f, 1.0f, 10.0f);
-    shape.closePath();
-    return shape;
+  public void setTriangleSignColor(Color triangleSignColor) {
+    this.triangleSignColor = triangleSignColor;
   }
 }

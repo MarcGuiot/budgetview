@@ -31,7 +31,7 @@
   </styles>
 
   <panel ui="wave">
-    <column marginTop="20" marginLeft="20" marginRight="20" marginBottom="5">
+    <column marginTop="20" marginLeft="20" marginRight="20" marginBottom="10">
 
       <row weightY="1.0">
         <label ref="title" opaque="false" font="Arial,bold,24"
