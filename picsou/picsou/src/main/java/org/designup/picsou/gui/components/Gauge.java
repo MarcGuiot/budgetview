@@ -2,8 +2,8 @@ package org.designup.picsou.gui.components;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
 
 public class Gauge extends JPanel {
   private double actualValue;
@@ -21,12 +21,13 @@ public class Gauge extends JPanel {
   private Color triangleBorderColor = Color.LIGHT_GRAY;
   private Color triangleShadowColor = Color.DARK_GRAY;
 
-  private static final int BAR_HEIGHT = 12;
-  private static final float TRIANGLE_HEIGHT = 25f;
-  private static final float TRIANGLE_WIDTH = 25f;
+  private static final int BAR_HEIGHT = 10;
+  private static final float TRIANGLE_HEIGHT = 14f;
+  private static final float TRIANGLE_WIDTH = 14f;
 
   public Gauge() {
-    setMinimumSize(new Dimension(60,30));
+    setMinimumSize(new Dimension(60, 28));
+    setPreferredSize(new Dimension(200, 28));
   }
 
   public void paint(Graphics g) {
@@ -77,7 +78,7 @@ public class Gauge extends JPanel {
 
     rectangle = shape.getBounds();
     shape.transform(AffineTransform.getTranslateInstance(((float)width / 2.0f) - TRIANGLE_WIDTH / 2.0f,
-                                                                1 - rectangle.y));
+                                                         rectangle.y + (float)height / 2 - TRIANGLE_HEIGHT / 2));
 
     shape.transform(AffineTransform.getTranslateInstance(2, 2));
 
@@ -100,9 +101,9 @@ public class Gauge extends JPanel {
 
   public void setActualValue(double actualValue) {
     this.actualValue = actualValue;
-// REMOVE THIS - FOR GRAPHICAL TESTS ONLY
+// TODO: REMOVE THIS - FOR GRAPHICAL TESTS ONLY
 //    this.actualValue = Math.random();
-// REMOVE THIS - FOR GRAPHICAL TESTS ONLY
+// TODO: REMOVE THIS - FOR GRAPHICAL TESTS ONLY
   }
 
   public double getActualValue() {
@@ -111,9 +112,9 @@ public class Gauge extends JPanel {
 
   public void setTargetValue(double targetValue) {
     this.targetValue = targetValue;
-// REMOVE THIS - FOR GRAPHICAL TESTS ONLY
+// TODO: REMOVE THIS - FOR GRAPHICAL TESTS ONLY
 //    this.targetValue = Math.random() * 1.3;
-// REMOVE THIS - FOR GRAPHICAL TESTS ONLY
+// TODO: REMOVE THIS - FOR GRAPHICAL TESTS ONLY
   }
 
   public double getTargetValue() {

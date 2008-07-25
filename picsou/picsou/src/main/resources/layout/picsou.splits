@@ -93,7 +93,6 @@
 
           <horizontalSplit ui="cleanSplitPane" dividerSize="2" dividerLocation="210"
                            continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
-
             <panel styleClass="block" border="empty(0,0,0,5)">
 
               <panel margin="10">

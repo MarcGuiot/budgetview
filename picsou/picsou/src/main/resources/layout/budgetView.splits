@@ -5,13 +5,12 @@
 
     <filler fill="horizontal" weightX="1.0"/>
 
-    <column>
+    <verticalSplit dividerLocation="300" opaque="false"  weightX="1.0">
       <panel ref="incomeBudgetView"/>
       <panel ref="recurringBudgetView"/>
-      <filler fill="vertical" weightY="0.1"/>
-    </column>
+    </verticalSplit>
     
-    <column marginLeft="20">
+    <column marginLeft="20"  weightX="1.0">
       <panel ref="envelopeBudgetView"/>
       <filler fill="vertical" weightY="0.1"/>
     </column>

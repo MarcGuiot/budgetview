@@ -48,7 +48,7 @@
     <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
         cornerRadius="20"/>
-    <style selector=".block" ui="block" opaque="false" marginBottom="20"/>
+    <style selector=".block" ui="block" opaque="false" marginBottom="5"/>
     <style selector="label.blockTitle" anchor="center"
            foreground="#FFFFFF" marginBottom="5" font="-,bold,13" weightY="0"
            shadowDirection="northwest" shadowColor="#222222"/>
@@ -81,7 +81,7 @@
 
     <style selector=".detailGauge"
            fill="horizontal" weightX="100"
-           marginLeft="10" marginRight="10"
+           marginLeft="6" marginRight="6"
            borderColor="gauge.detail.border"
            emptyColorTop="gauge.detail.empty.top" emptyColorBottom="gauge.detail.empty.bottom"
            filledColorTop="gauge.detail.filled.top" filledColorBottom="gauge.detail.filled.bottom"
