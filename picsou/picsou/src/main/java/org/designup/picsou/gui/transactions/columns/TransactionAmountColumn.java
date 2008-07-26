@@ -3,11 +3,9 @@ package org.designup.picsou.gui.transactions.columns;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -16,66 +14,26 @@ import java.awt.*;
 
 public class TransactionAmountColumn implements TableCellRenderer {
   private GlobStringifier amountStringifier;
-  private JLabel amount;
-  private JLabel splitPart;
-  private JPanel panel;
   private TransactionRendererColors rendererColors;
   private GlobRepository repository;
+  private JLabel label = new JLabel();
 
   public TransactionAmountColumn(GlobTableView view, TransactionRendererColors transactionRendererColors,
                                  DescriptionService descriptionService, GlobRepository repository, Directory directory) {
     this.repository = repository;
     amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
-    panel = new JPanel();
-    amount = new JLabel();
-    splitPart = new JLabel();
-    amount.setBackground(Color.WHITE);
-    amount.setName("amount");
-    splitPart.setName("");
-    panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-    panel.add(Box.createHorizontalGlue());
-    panel.add(splitPart);
-    panel.add(amount);
+    label.setName("amount");
+    label.setOpaque(true);
+    label.setHorizontalAlignment(SwingConstants.RIGHT);
     this.rendererColors = transactionRendererColors;
-    amount.setFont(view.getDefaultFont());
-    splitPart.setFont(view.getDefaultFont());
-  }
-
-
-  private void updateTotalAmount(Glob transaction, boolean selected) {
-    GlobList splittedTransactions = Transaction.getSplittedTransactions(transaction, repository);
-    if (!splittedTransactions.isEmpty()) {
-      splitPart.setVisible(true);
-      double total = 0;
-      for (Glob glob : splittedTransactions) {
-        total += glob.get(Transaction.AMOUNT);
-      }
-      String totalAmount = stringifyNumber(total, repository);
-      splitPart.setText(" (" + totalAmount + ")");
-      updateColor(splitPart, Color.LIGHT_GRAY, Color.GRAY, selected);
-    }
-    else {
-      splitPart.setVisible(false);
-    }
-  }
-
-  private void updateColor(JLabel label, Color selectionForeground, Color foreground, boolean isSelected) {
-    label.setForeground(isSelected ? selectionForeground : foreground);
-
-  }
-
-  private String stringifyNumber(double value, GlobRepository globRepository) {
-    Glob globForNumber = GlobBuilder.init(Transaction.TYPE).set(Transaction.AMOUNT, value).get();
-    return amountStringifier.toString(globForNumber, globRepository);
+    label.setFont(view.getDefaultFont());
   }
 
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     Glob transaction = (Glob)value;
-    amount.setText(amountStringifier.toString(transaction, repository));
-    updateColor(amount, Color.WHITE, Color.BLACK, isSelected);
-    updateTotalAmount(transaction, isSelected);
-    rendererColors.setTransactionBackground(panel, isSelected, row);
-    return panel;
+    label.setText(amountStringifier.toString(transaction, repository));
+    rendererColors.update(label, isSelected, transaction, row);
+    return label;
   }
 
 }

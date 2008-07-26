@@ -36,14 +36,12 @@ public enum PicsouColors {
   TRANSACTION_TABLE_HEADER_DARK,
   TRANSACTION_TABLE_HEADER_TITLE,
   TRANSACTION_ERROR_TEXT,
+  TRANSACTION_TEXT_PLANNED,
   TRANSACTION_TEXT,
   TRANSACTION_SELECTED_TEXT,
   TRANSACTION_SELECTED_BG,
-  TRANSACTION_SELECTED_ERROR_BG,
   TRANSACTION_EVEN_ROWS_BG,
   TRANSACTION_ODD_ROWS_BG,
-  TRANSACTION_EVEN_ERROR_BG,
-  TRANSACTION_ODD_ERROR_BG,
   ROLLOVER_CATEGORY_LABEL,
   CATEGORY_LABEL,
   INCOME_TEXT,
@@ -112,6 +110,8 @@ public enum PicsouColors {
                                                  "/seb.properties",
                                                  "/regis.properties",
                                                  "/darkgreycolors.properties",
+                                                 "/blackcolors.properties",
+                                                 "/purplecolors.properties",
                                                  "/grey_yellow1.properties");
     check(colorService);
     return colorService;

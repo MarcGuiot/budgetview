@@ -160,6 +160,10 @@ public class Transaction {
     return splittedTransactions;
   }
 
+  public static boolean isPlanned(Glob transaction) {
+    return Utils.equal(TransactionType.PLANNED.getId(), transaction.get(Transaction.TRANSACTION_TYPE));
+  }
+
   public static class Serialization implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues fieldValues) {

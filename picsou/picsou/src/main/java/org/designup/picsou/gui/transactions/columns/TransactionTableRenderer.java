@@ -1,11 +1,9 @@
 package org.designup.picsou.gui.transactions.columns;
 
 import org.globsframework.model.Glob;
-import org.globsframework.utils.Utils;
-import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.model.Transaction;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
@@ -13,6 +11,7 @@ public class TransactionTableRenderer implements TableCellRenderer {
   private TableCellRenderer renderer;
   private TransactionRendererColors rendererColors;
   private int categoryColumnIndex;
+  private Border border = BorderFactory.createEmptyBorder(0, 3, 0, 3);
 
   public TransactionTableRenderer(TableCellRenderer renderer, TransactionRendererColors rendererColors,
                                   int categoryColumnIndex) {
@@ -31,20 +30,11 @@ public class TransactionTableRenderer implements TableCellRenderer {
     if (column == categoryColumnIndex) {
       return component;
     }
-    component.setForeground(getForeground((Glob)value, isSelected));
-    
-    rendererColors.setTransactionBackground(component, isSelected, row);
+    if (component instanceof JLabel) {
+      JLabel label = (JLabel)component;
+      label.setBorder(border);
+    }
+    rendererColors.update(component, isSelected, (Glob)value, row);
     return component;
-  }
-
-  private Color getForeground(Glob transaction, boolean isSelected) {
-    if (isSelected) {
-      return Color.WHITE;
-    }
-    if (Utils.equal(TransactionType.PLANNED.getId(), transaction.get(Transaction.TRANSACTION_TYPE))) {
-      return Color.LIGHT_GRAY;
-    }
-    return rendererColors.getTransactionTextColor();
-
   }
 }
