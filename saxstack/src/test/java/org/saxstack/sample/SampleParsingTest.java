@@ -1,7 +1,6 @@
 package org.saxstack.sample;
 
 import junit.framework.TestCase;
-import org.apache.xerces.parsers.SAXParser;
 import org.saxstack.parser.DefaultXmlNode;
 import org.saxstack.parser.SaxStackParser;
 import org.saxstack.parser.XmlBootstrapNode;
@@ -28,7 +27,7 @@ public class SampleParsingTest extends TestCase {
 
     List contacts = new ArrayList();
     ContactsNode root = new ContactsNode(contacts);
-    SaxStackParser.parse(new SAXParser(), new XmlBootstrapNode(root, "contacts"), new StringReader(input));
+    SaxStackParser.parse(XmlUtils.getXmlReader(), new XmlBootstrapNode(root, "contacts"), new StringReader(input));
 
     assertEquals(2, contacts.size());
     assertEquals("Homer Simpson [dad@simpsons.net, homer@simpsons.net]", contacts.get(0).toString());

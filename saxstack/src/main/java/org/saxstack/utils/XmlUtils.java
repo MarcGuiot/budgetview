@@ -1,11 +1,16 @@
 package org.saxstack.utils;
 
+import org.saxstack.parser.ExceptionHolder;
 import org.saxstack.parser.SaxStackParser;
 import org.saxstack.parser.XmlAttributeNotFoundException;
 import org.saxstack.writer.*;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -138,6 +143,21 @@ public class XmlUtils {
       write(newTag, xmlBuilder.processNext(newTag), factory);
       factory.leave();
       newTag.end();
+    }
+  }
+
+  public static XMLReader getXmlReader() {
+    SAXParserFactory factory = SAXParserFactory.newInstance();
+    factory.setNamespaceAware(true);
+    try {
+      SAXParser parser = factory.newSAXParser();
+      return parser.getXMLReader();
+    }
+    catch (ParserConfigurationException e) {
+      throw new ExceptionHolder(e);
+    }
+    catch (SAXException e) {
+      throw new ExceptionHolder(e);
     }
   }
 }

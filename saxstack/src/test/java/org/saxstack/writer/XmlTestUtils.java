@@ -1,19 +1,21 @@
 package org.saxstack.writer;
 
 import junit.framework.Assert;
-import org.apache.xerces.parsers.SAXParser;
 import org.saxstack.comparator.XmlComparator;
 import org.saxstack.utils.XmlUtils;
+import org.xml.sax.XMLReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
 public class XmlTestUtils {
+
   public static void assertEquivalent(String expectedXml, String resultXml) throws Exception {
-    SAXParser parser = new SAXParser();
-    if (!XmlComparator.areEquivalent(expectedXml, resultXml, parser)) {
-      Assert.assertEquals(XmlUtils.format(expectedXml, parser, 4), XmlUtils.format(resultXml, parser, 4));
+    XMLReader reader = XmlUtils.getXmlReader();
+    if (!XmlComparator.areEquivalent(expectedXml, resultXml, reader)) {
+      Assert.assertEquals(XmlUtils.format(expectedXml, reader, 4),
+                          XmlUtils.format(resultXml, reader, 4));
     }
   }
 
@@ -22,9 +24,10 @@ public class XmlTestUtils {
   }
 
   public static void assertEquals(String xmlA, String xmlB) throws Exception {
-    SAXParser parser = new SAXParser();
-    if (!XmlComparator.areEqual(xmlA, xmlB, parser)) {
-      Assert.assertEquals(XmlUtils.format(xmlA, parser, 4), XmlUtils.format(xmlB, parser, 4));
+    XMLReader reader = XmlUtils.getXmlReader();
+    if (!XmlComparator.areEqual(xmlA, xmlB, reader)) {
+      Assert.assertEquals(XmlUtils.format(xmlA, reader, 4),
+                          XmlUtils.format(xmlB, reader, 4));
     }
   }
 

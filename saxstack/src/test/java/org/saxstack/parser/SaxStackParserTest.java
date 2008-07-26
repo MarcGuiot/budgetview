@@ -1,7 +1,7 @@
 package org.saxstack.parser;
 
 import junit.framework.TestCase;
-import org.apache.xerces.parsers.SAXParser;
+import org.saxstack.utils.XmlUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -16,7 +16,7 @@ public class SaxStackParserTest extends TestCase {
 
   public void testParsingWithNamespace() throws Exception {
     DummyXmlNode node = new DummyXmlNode();
-    SaxStackParser.parse(new SAXParser(), node,
+    SaxStackParser.parse(XmlUtils.getXmlReader(), node,
                          new StringReader(
                            "<root xmlns:ptf='aa'>" +
                            "  <ptf:item>Baby food</ptf:item>" +
@@ -51,7 +51,7 @@ public class SaxStackParserTest extends TestCase {
 
   public void testNewLineInValueShouldNotBeIgnored() throws Exception {
     DummyXmlNode node = new DummyXmlNode();
-    SaxStackParser.parse(new SAXParser(), node,
+    SaxStackParser.parse(XmlUtils.getXmlReader(), node,
                          new StringReader(
                            "<root xmlns:ptf='aa'>" +
                            "  <ptf:item>Baby\n" +
@@ -63,7 +63,7 @@ public class SaxStackParserTest extends TestCase {
 
   public void testWithThreeLevels() throws Exception {
     DummyXmlNode node = new DummyXmlNode();
-    SaxStackParser.parse(new SAXParser(), node,
+    SaxStackParser.parse(XmlUtils.getXmlReader(), node,
                          new StringReader(
                            "<root >" +
                            "  <item>" +
@@ -77,7 +77,7 @@ public class SaxStackParserTest extends TestCase {
 
   public void testWithDTD() throws Exception {
     DummyXmlNode node = new DummyXmlNode();
-    SaxStackParser.parse(new SAXParser(), node,
+    SaxStackParser.parse(XmlUtils.getXmlReader(), node,
                          new StringReader(
                            "<?xml version='1.0' encoding='UTF-8'?>" +
                            "<!DOCTYPE root [" +
@@ -104,7 +104,7 @@ public class SaxStackParserTest extends TestCase {
         .append("<!ATTLIST root name CDATA #IMPLIED>")
         .append("<!ATTLIST root otherName CDATA #IMPLIED>")
         .toString().getBytes());
-    SaxStackParser.parse(new SAXParser(), node,
+    SaxStackParser.parse(XmlUtils.getXmlReader(), node,
                          new StringReader(
                            "<?xml version='1.0' encoding='UTF-8'?>" +
                            "<!DOCTYPE test SYSTEM 'file:test.dtd' >" +

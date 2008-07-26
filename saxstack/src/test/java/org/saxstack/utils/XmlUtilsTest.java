@@ -1,7 +1,6 @@
 package org.saxstack.utils;
 
 import junit.framework.TestCase;
-import org.apache.xerces.parsers.SAXParser;
 import org.saxstack.writer.PathFilter;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -17,11 +16,11 @@ public class XmlUtilsTest extends TestCase {
       "  <C/>" +
       "</A>";
 
-    String s = XmlUtils.format(input, new SAXParser(), 4, new PathFilter("A/B"));
+    String s = XmlUtils.format(input, XmlUtils.getXmlReader(), 4, new PathFilter("A/B"));
     assertEquals("<A>\n" +
                  "  <B a=\"a\" b=\"b\"/>\n" +
                  "</A>", s);
-    s = XmlUtils.format(input, new SAXParser(), 4, new PathFilter("A/B/*"));
+    s = XmlUtils.format(input, XmlUtils.getXmlReader(), 4, new PathFilter("A/B/*"));
     assertEquals("<A>\n" +
                  "  <B a=\"a\" b=\"b\">\n" +
                  "    <C/>\n" +

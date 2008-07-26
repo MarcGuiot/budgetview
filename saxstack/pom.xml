@@ -13,6 +13,13 @@
     <url>http://www.design-up.com</url>
   </organization>
 
+  <repositories>
+    <repository>
+      <id>xml sax parser picolo</id>
+      <url>http://mirrors.ibiblio.org/pub/mirrors/maven2/</url>
+    </repository>
+  </repositories>
+
   <scm>
     <connection>scm:cvs:pserver:mguiot:@cvs.dev.java.net:/cvs:saxstack</connection>
     <!--<developerConnection>scm:svn:https://somerepository.com/svn_repo/trunk</developerConnection>-->
@@ -27,11 +34,17 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-      <version>2.4.0</version>
-      <scope>test</scope>
+      <groupId>piccolo</groupId>
+      <artifactId>piccolo</artifactId>
+      <version>1.0.4</version>
     </dependency>
+
+    <!--<dependency>-->
+    <!--<groupId>xerces</groupId>-->
+    <!--<artifactId>xercesImpl</artifactId>-->
+    <!--<version>2.4.0</version>-->
+    <!--<scope>test</scope>-->
+    <!--</dependency>-->
   </dependencies>
 
   <issueManagement>

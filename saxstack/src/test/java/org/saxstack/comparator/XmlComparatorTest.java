@@ -1,7 +1,7 @@
 package org.saxstack.comparator;
 
 import junit.framework.TestCase;
-import org.apache.xerces.parsers.SAXParser;
+import org.saxstack.utils.XmlUtils;
 
 import java.io.StringReader;
 
@@ -231,31 +231,36 @@ public class XmlComparatorTest extends TestCase {
   }
 
   private void checkAssertEquivalentFailsForStringAndReader(String xmlA, String xmlB) throws Exception {
-    assertFalse(XmlComparator.areEquivalent(xmlA, xmlB, new SAXParser()));
+    assertFalse(XmlComparator.areEquivalent(xmlA, xmlB, XmlUtils.getXmlReader()));
   }
 
   private void checkAssertEqualsFailsForStringAndReader(String xmlA, String xmlB) throws Exception {
-    assertFalse(XmlComparator.areEqual(xmlA, xmlB, new SAXParser()));
+    assertFalse(XmlComparator.areEqual(xmlA, xmlB, XmlUtils.getXmlReader()));
   }
 
   private void checkAssertEquivalentIsOkForStringAndReader(String xmlA, String xmlB) throws Exception {
-    assertTrue(XmlComparator.areEquivalent(xmlA, xmlB, new SAXParser()));
-    assertTrue(XmlComparator.areEquivalent(new StringReader(xmlA), new StringReader(xmlB), new SAXParser()));
+    assertTrue(XmlComparator.areEquivalent(xmlA, xmlB, XmlUtils.getXmlReader()));
+    assertTrue(XmlComparator.areEquivalent(new StringReader(xmlA),
+                                           new StringReader(xmlB), XmlUtils.getXmlReader()));
   }
 
   private void checkAssertEqualIsOkForStringAndReader(String xmlA, String xmlB) throws Exception {
-    assertTrue(XmlComparator.areEqual(xmlA, xmlB, new SAXParser()));
-    assertTrue(XmlComparator.areEqual(new StringReader(xmlA), new StringReader(xmlB), new SAXParser()));
+    assertTrue(XmlComparator.areEqual(xmlA, xmlB, XmlUtils.getXmlReader()));
+    assertTrue(XmlComparator.areEqual(new StringReader(xmlA),
+                                      new StringReader(xmlB),
+                                      XmlUtils.getXmlReader()));
   }
 
   private void checkIsSubset(String expected, String actual) throws Exception {
-    assertTrue(XmlComparator.computeDiff(expected, actual, new SAXParser()) == null);
+    assertTrue(XmlComparator.computeDiff(expected, actual, XmlUtils.getXmlReader()) == null);
   }
 
   private void checkNotASubset(String expected, String actual, String filteredActual) throws Exception {
-    XmlComparator.Diff subset = XmlComparator.computeDiff(expected, actual, new SAXParser());
+    XmlComparator.Diff subset =
+      XmlComparator.computeDiff(expected, actual, XmlUtils.getXmlReader());
     assertNotNull(subset);
-    if (!XmlComparator.areEqual(filteredActual, subset.getFilteredActual(), new SAXParser())) {
+    if (!XmlComparator.areEqual(filteredActual,
+                                subset.getFilteredActual(), XmlUtils.getXmlReader())) {
       assertEquals(filteredActual, subset.getFilteredActual());
       fail();
     }

@@ -1,10 +1,11 @@
 package org.saxstack.utils;
 
 import junit.framework.TestCase;
-import org.apache.xerces.parsers.SAXParser;
 import org.saxstack.parser.SaxStackParser;
 import org.saxstack.writer.PrettyPrintRootXmlTag;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -31,10 +32,10 @@ public class XmlNodeToBuilderTest extends TestCase {
 
   }
 
-  private void checkFormat(String input, String output) throws IOException {
+  private void checkFormat(String input, String output) throws IOException, SAXException, ParserConfigurationException {
 
     StringWriter actual = new StringWriter();
-    SaxStackParser.parse(new SAXParser(), new XmlNodeToBuilder(new PrettyPrintRootXmlTag(actual, 4), null),
+    SaxStackParser.parse(XmlUtils.getXmlReader(), new XmlNodeToBuilder(new PrettyPrintRootXmlTag(actual, 4), null),
                          new StringReader(input));
     assertEquals(output,
                  actual.toString());
