@@ -6,7 +6,6 @@ import org.designup.picsou.server.persistence.prevayler.RootDataManager;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.T3uples;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.GlobsException;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -18,6 +17,7 @@ import org.prevayler.foundation.serialization.Serializer;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Random;
 
 public class PRootDataManager implements RootDataManager {
   private Prevayler prevayler;
@@ -33,7 +33,10 @@ public class PRootDataManager implements RootDataManager {
     prevaylerFactory.configureJournalSerializer("journal", serializer);
     prevaylerFactory.configureSnapshotSerializer("snapshot", serializer);
     prevaylerFactory.configureTransientMode(inMemory);
-    prevaylerFactory.configurePrevalentSystem(new PRootData());
+    Random random = new Random();
+    byte[] repoId = new byte[40];
+    random.nextBytes(repoId);
+    prevaylerFactory.configurePrevalentSystem(new PRootData(repoId));
     try {
       prevayler = prevaylerFactory.create();
     }
@@ -55,6 +58,7 @@ public class PRootDataManager implements RootDataManager {
     CustomSerializablePolicy serializablePolicy = new CustomSerializablePolicy(directory);
     serializablePolicy.registerFactory(CreateUserAndHiddenUser.getFactory());
     serializablePolicy.registerFactory(DeleteUserAndHiddenUser.getFactory());
+    serializablePolicy.registerFactory(GetAndUpdateCount.getFactory());
     serializablePolicy.registerFactory(Register.getFactory());
     serializablePolicy.registerFactory(PRootData.getFactory());
     return serializablePolicy;
@@ -128,17 +132,13 @@ public class PRootDataManager implements RootDataManager {
     }
   }
 
-  public T3uples<byte[], byte[], Long> getAccountInfo() {
+  public RepoInfo getAndUpdateAccountInfo() {
     try {
-      return (T3uples<byte[], byte[], Long>)prevayler.execute(new Query() {
-        public Object query(Object prevalentSystem, Date executionTime) throws Exception {
-          PRootData rootData = (PRootData)prevalentSystem;
-          return new T3uples<byte[], byte[], Long>(rootData.getMail(), rootData.getSignature(), rootData.getCount());
-        }
-      });
+      return (RepoInfo)prevayler.execute(new GetAndUpdateCount());
     }
     catch (Exception e) {
       throw new UnexpectedApplicationState(e);
     }
   }
+
 }

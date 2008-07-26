@@ -34,10 +34,10 @@ public class MainWindowLauncher {
     user = parseArguments(arguments, "-u", "user");
     password = parseArguments(arguments, "-p", "pwd");
     ServerDirectory serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), false);
-    Directory directory = serverDirectory.getServiceDirectory();
     ServerAccess serverAccess =
-      new EncrypterToTransportServerAccess(new LocalClientTransport(directory), directory);
-    run(serverAccess);
+      new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
+                                           PicsouApplication.createDirectory());
+    run(serverAccess, PicsouApplication.createDirectory());
   }
 
   private static String parseArguments(List<String> args, String key, String defaultValue) {
@@ -55,7 +55,7 @@ public class MainWindowLauncher {
     return defaultValue;
   }
 
-  public static GlobRepository run(ServerAccess serverAccess) throws Exception {
+  private static GlobRepository run(ServerAccess serverAccess, Directory directory) throws Exception {
     try {
       serverAccess.connect();
       serverAccess.createUser(user, password.toCharArray());
@@ -63,7 +63,6 @@ public class MainWindowLauncher {
     catch (UserAlreadyExists userAlreadyExists) {
       serverAccess.initConnection(user, password.toCharArray(), false);
     }
-    Directory directory = PicsouApplication.createDirectory();
     directory.add(OpenRequestManager.class, openRequestManager);
     PicsouInit init = PicsouInit.init(serverAccess, user, true, directory);
 

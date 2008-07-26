@@ -33,6 +33,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     bankCombo = null;
     importButton = null;
     fileField = null;
+    window = null;
   }
 
   private void openImportDialog() {

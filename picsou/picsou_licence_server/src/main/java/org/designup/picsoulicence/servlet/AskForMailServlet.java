@@ -1,7 +1,7 @@
 package org.designup.picsoulicence.servlet;
 
 import org.designup.picsoulicence.mail.Mailler;
-import org.designup.picsoulicence.model.Licence;
+import org.designup.picsoulicence.model.License;
 import org.designup.picsoulicence.model.MailError;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.GlobBuilder;
@@ -38,14 +38,14 @@ public class AskForMailServlet extends HttpServlet {
         SqlConnection db = sqlService.getDb();
         GlobList registeredMail;
         try {
-          registeredMail = db.getQueryBuilder(Licence.TYPE,
-                                              Constraints.equal(Licence.MAIL, mailTo))
-            .select(Licence.MAIL)
+          registeredMail = db.getQueryBuilder(License.TYPE,
+                                              Constraints.equal(License.MAIL, mailTo))
+            .select(License.MAIL)
             .getQuery().executeAsGlobs();
           if (registeredMail.isEmpty()) {
-            GlobBuilder.init(Licence.TYPE).set(Licence.MAIL, mailTo);
-            db.getCreateBuilder(Licence.TYPE)
-              .set(Licence.MAIL, mailTo).getRequest().run();
+            GlobBuilder.init(License.TYPE).set(License.MAIL, mailTo);
+            db.getCreateBuilder(License.TYPE)
+              .set(License.MAIL, mailTo).getRequest().run();
           }
         }
         finally {

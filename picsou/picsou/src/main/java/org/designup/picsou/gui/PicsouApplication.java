@@ -155,7 +155,6 @@ public class PicsouApplication {
 
   public static Directory createDirectory() throws IOException {
     Directory directory = new DefaultDirectory();
-//    directory.add(new ConfigService(VERSION));
     directory.add(new TimeService());
     directory.add(new LicenseService());
     directory.add(DescriptionService.class, new PicsouDescriptionService());

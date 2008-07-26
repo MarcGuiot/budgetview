@@ -4,7 +4,6 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
-import org.designup.picsou.client.exceptions.BadConnection;
 import org.designup.picsou.client.http.HttpsClientTransport;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.KeyChecker;
@@ -12,7 +11,6 @@ import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.User;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Files;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.serialization.Encoder;
@@ -37,6 +35,10 @@ public class ConfigService {
   public static final String HEADER_MAIL_SENT = "mailSent";
   public static final String HEADER_MAIL_UNKNOWN = "mailUnknown";
   public static final String HEADER_ACTIVATION_CODE_NOT_VALIDE = "activationCodeNotValide";
+  public static final String HEADER_CONFIG_VERSION = "configVersion";
+  public static final String HEADER_APPLICATION_VERSION = "applicationVersion";
+  public static final String HEADER_NEW_VERSION = "newVersion";
+  public static final String HEADER_REPO_ID = "repoId";
   private HttpClient httpClient;
   private File pathToConfig;
   private File configFile;
@@ -44,13 +46,18 @@ public class ConfigService {
   private int newVersion = -1;
   private Integer applicationVersion;
   private Directory directory;
-  static private Long launchCount;
-  static private String mail;
-  static private String signature;
-  private static boolean isV1;
-  private boolean isValide;
-  private static final String REGISTER = "/register";
+  private Long launchCount;
+  private String mail;
+  private String signature;
+  private byte[] repoId;
+  private String activationCode;
+  private boolean isValideSignature;
+  private boolean isStillValide;
+  public static final String REGISTER_SERVLET = "register";
+  private static final String REGISTER = "/" + REGISTER_SERVLET;
   private static final String REQUEST_FOR_CONFIG = "/requestForConfig";
+  private static final String REQUEST_SERVLET = "requestForLicence";
+  private static final String REQUEST_FOR_LICENCE = "/" + REQUEST_SERVLET;
 
   public ConfigService(Integer applicationversion, Directory directory) {
     URL = System.getProperty("com.picsou.licence.url");
@@ -67,7 +74,6 @@ public class ConfigService {
       }
     });
     if (files == null) {
-      startCheckForNewVersion();
       return;
     }
 
@@ -84,12 +90,6 @@ public class ConfigService {
       this.localVersion = Long.parseLong(configFile.getName().substring(0, configFile.getName().indexOf(".")));
     }
 
-    startCheckForNewVersion();
-  }
-
-  private void startCheckForNewVersion() {
-    Thread thread = new ConfigRequest();
-    thread.start();
   }
 
   public void loadConfig(GlobRepository repository) {
@@ -98,35 +98,39 @@ public class ConfigService {
     }
   }
 
-  private void sendRequestForNewConfig(String url) {
+  private boolean sendRequestForNewConfig(String url) {
     url += REQUEST_FOR_CONFIG;
-    boolean hasError = true;
     try {
-      Log.enter("send request " + url);
       PostMethod postMethod = new PostMethod(url);
-      postMethod.setRequestHeader("configVersion", Long.toString(localVersion));
-      postMethod.setRequestHeader("applicationVersion", Integer.toString(applicationVersion));
-      httpClient.executeMethod(postMethod);
-      Header versionHeader = postMethod.getRequestHeader("newVersion");
-      int statusCode = postMethod.getStatusCode();
-      if (statusCode == 400 && versionHeader != null) {
-        newVersion = Integer.parseInt(versionHeader.getValue());
-        InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
-        String fileName = "0000000000000000000" + newVersion;
-        configFile = new File(pathToConfig, fileName.substring(fileName.length() - 19) + ".jar");
-        Files.copyStreamTofile(responseBodyAsStream, configFile.getAbsolutePath());
+      postMethod.setRequestHeader(HEADER_CONFIG_VERSION, Long.toString(localVersion));
+      postMethod.setRequestHeader(HEADER_APPLICATION_VERSION, Integer.toString(applicationVersion));
+      postMethod.setRequestHeader(HEADER_REPO_ID, repoId.toString());
+      if (signature != null && signature.length() > 1) {
+        postMethod.setRequestHeader(HEADER_MAIL, mail);
+        postMethod.setRequestHeader(HEADER_SIGNATURE, signature);
+        postMethod.setRequestHeader(HEADER_CODE, activationCode);
+        postMethod.setRequestHeader(HEADER_COUNT, launchCount.toString());
       }
-      Log.leave("send Ok");
-      hasError = false;
+      httpClient.executeMethod(postMethod);
+      int statusCode = postMethod.getStatusCode();
+      if (statusCode == 200) {
+        Header versionHeader = postMethod.getRequestHeader(HEADER_NEW_VERSION);
+        if (versionHeader != null) {
+          newVersion = Integer.parseInt(versionHeader.getValue());
+          InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
+          String fileName = "0000000000000000000" + newVersion;
+          configFile = new File(pathToConfig, fileName.substring(fileName.length() - 19) + ".jar");
+          Files.copyStreamTofile(responseBodyAsStream, configFile.getAbsolutePath());
+        }
+        Header validity = postMethod.getRequestHeader(HEADER_IS_VALIDE);
+        if (validity != null) {
+          return "true".equalsIgnoreCase(validity.getValue());
+        }
+      }
+      return true;
     }
     catch (IOException e) {
-      Log.write("ex : ", e);
-      throw new BadConnection(e);
-    }
-    finally {
-      if (hasError) {
-        Log.leave("send with Error");
-      }
+      return true;
     }
   }
 
@@ -144,47 +148,6 @@ public class ConfigService {
     URLClassLoader loader = new URLClassLoader(new URL[]{url});
     TransactionAnalyzerFactory analyzerFactory = directory.get(TransactionAnalyzerFactory.class);
     analyzerFactory.load(loader);
-  }
-
-  private boolean sendRequestForLicence(String url) {
-    long endDate = System.currentTimeMillis() + 1000;
-    synchronized (this) {
-      while (launchCount == null) {
-        try {
-          long still = endDate - System.currentTimeMillis();
-          if (still > 0) {
-            wait(System.currentTimeMillis());
-          }
-          else {
-            return false;
-          }
-        }
-        catch (InterruptedException e) {
-          return false;
-        }
-      }
-    }
-    return sendRequestToServer(url);
-  }
-
-  private boolean sendRequestToServer(String url) {
-    try {
-      url += "/requestForLicence";
-      PostMethod postMethod = new PostMethod(url);
-      postMethod.setRequestHeader(HEADER_MAIL, mail);
-      postMethod.setRequestHeader(HEADER_CODE, signature);
-      postMethod.setRequestHeader(HEADER_COUNT, launchCount.toString());
-      httpClient.executeMethod(postMethod);
-      Header validity = postMethod.getRequestHeader(HEADER_IS_VALIDE);
-      int statusCode = postMethod.getStatusCode();
-      if (statusCode == 400 && validity != null) {
-        return Boolean.parseBoolean(validity.getValue());
-      }
-    }
-    catch (IOException e) {
-      return true;
-    }
-    return true;
   }
 
   public static void register(final Directory directory, GlobRepository repository) {
@@ -219,25 +182,30 @@ public class ConfigService {
     }
   }
 
-  public static void set(long launchCount, byte[] mail, byte[] signature) {
-    if (mail.length == 0 && signature.length == 0) {
-      return;
+  public void update(byte[] repoId, long launchCount, byte[] mail, byte[] signature, String activationCode) {
+    this.repoId = repoId;
+    if (mail.length != 0 && signature.length != 0) {
+      isValideSignature = KeyChecker.checkSignature(mail, signature);
+      this.mail = new String(mail);
+      this.signature = Encoder.b64Decode(signature);
+      this.launchCount = launchCount;
+      this.activationCode = activationCode;
     }
-    isV1 = KeyChecker.checkSignature(mail, signature);
-    ConfigService.mail = new String(mail);
-    ConfigService.signature = Encoder.b64Decode(signature);
-    ConfigService.launchCount = launchCount;
+    ConfigRequest request = new ConfigRequest();
+    request.start();
   }
 
   private class ConfigRequest extends Thread {
+    private ConfigRequest() {
+      setDaemon(true);
+    }
 
     public void run() {
       if (URL == null) {
         return;
       }
-      sendRequestForNewConfig(URL);
+      isStillValide = sendRequestForNewConfig(URL);
       loadNewConfig();
-      isValide = sendRequestForLicence(URL);
     }
   }
 }

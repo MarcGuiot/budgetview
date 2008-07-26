@@ -39,19 +39,23 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   private boolean notConnected = true;
   static final byte[] salt = {0x54, 0x12, 0x43, 0x65, 0x77, 0x2, 0x79, 0x72};
   private GlobModel globModel;
+  private ConfigService configService;
 
   public EncrypterToTransportServerAccess(ClientTransport transport, Directory directory) {
     this.clientTransport = transport;
     globModel = directory.get(GlobModel.class);
+    configService = directory.get(ConfigService.class);
   }
 
   public void connect() {
     SerializedInput response = clientTransport.connect();
     if (response.readBoolean()) {
+      byte[] repoId = response.readBytes();
       byte[] mail = response.readBytes();
       byte[] key = response.readBytes();
+      String activationCode = response.readString();
       long count = response.readNotNullLong();
-      ConfigService.set(count, mail, key);
+      configService.update(repoId, count, mail, key, activationCode);
     }
     sessionId = response.readLong();
     privateId = response.readBytes();

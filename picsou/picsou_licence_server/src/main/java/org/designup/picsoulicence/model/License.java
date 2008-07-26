@@ -6,7 +6,7 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.sqlstreams.annotations.AutoIncrement;
 
-public class Licence {
+public class License {
   public static GlobType TYPE;
 
   @Key
@@ -23,18 +23,20 @@ public class Licence {
 
   public static LongField LAST_COUNT;
 
-  public static DateField LAST_KILLED_1;  // plus recent
+  public static DateField LAST_ACCESS_DATE;
 
-  public static DateField LAST_KILLED_2;
+  public static DateField LAST_DATE_KILLED_1;  // plus recent
 
-  public static DateField LAST_KILLED_3;
+  public static DateField LAST_DATE_KILLED_2;
 
-  public static DateField LAST_KILLED_4; // plus vieux
+  public static DateField LAST_DATE_KILLED_3;
+
+  public static DateField LAST_DATE_KILLED_4; // plus vieux
 
   public static LongField KILLED_COUNT;
 
   static {
-    GlobTypeLoader.init(Licence.class);
+    GlobTypeLoader.init(License.class);
   }
 
 }

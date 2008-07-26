@@ -12,7 +12,6 @@ public class DefaultCreatingUserState extends AbstractSessionState implements Cr
                                   DefaultSessionService defaultSessionService, Long sessionId, byte[] privateId) {
     super(defaultSessionService, sessionId, privateId);
     this.persistence = persistence;
-    defaultSessionService.register(sessionId, this);
   }
 
   public String getStateName() {

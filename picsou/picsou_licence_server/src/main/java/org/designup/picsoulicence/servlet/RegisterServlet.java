@@ -2,7 +2,8 @@ package org.designup.picsoulicence.servlet;
 
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsoulicence.LicenceGenerator;
-import org.designup.picsoulicence.model.Licence;
+import org.designup.picsoulicence.mail.Mailler;
+import org.designup.picsoulicence.model.License;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SelectQuery;
@@ -20,11 +21,13 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class RegisterServlet extends HttpServlet {
-  static Logger logger = Logger.getLogger("register");
+  static Logger logger = Logger.getLogger(ConfigService.REGISTER_SERVLET);
   private SqlService sqlService;
+  private Mailler mailler;
 
   public RegisterServlet(Directory directory) {
     sqlService = directory.get(SqlService.class);
+    mailler = directory.get(Mailler.class);
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,8 +36,8 @@ public class RegisterServlet extends HttpServlet {
     logger.info("mail : '" + mail + "' code d'activation :'" + activationCode + "'");
     try {
       SqlConnection db = sqlService.getDb();
-      SelectQuery query = db.getQueryBuilder(Licence.TYPE,
-                                             Constraints.equal(Licence.MAIL, mail))
+      SelectQuery query = db.getQueryBuilder(License.TYPE,
+                                             Constraints.equal(License.MAIL, mail))
         .selectAll()
         .getQuery();
       GlobList globList = query.executeAsGlobs();
@@ -43,14 +46,13 @@ public class RegisterServlet extends HttpServlet {
         resp.addHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
       }
       else {
-        Glob licence = globList.get(0);
-        if (activationCode.equals(licence.get(Licence.ACTIVATION_CODE))) {
+        Glob license = globList.get(0);
+        if (activationCode.equals(license.get(License.ACTIVATION_CODE))) {
           byte[] signature = LicenceGenerator.generateSignature(mail);
-          db.getUpdateBuilder(Licence.TYPE, Constraints.equal(Licence.MAIL, mail))
-            .update(Licence.LAST_COUNT, 0L)
-            .update(Licence.SIGNATURE, signature)
-            .update(Licence.LAST_ACTIVATION_CODE, activationCode)
-            .update(Licence.ACTIVATION_CODE, "")
+          db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+            .update(License.LAST_COUNT, 1L)
+            .update(License.SIGNATURE, signature)
+            .update(License.LAST_ACTIVATION_CODE, activationCode)
             .getRequest()
             .run();
           db.commit();

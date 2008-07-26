@@ -4,7 +4,7 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.designup.picsoulicence.LicenceTestCase;
-import org.designup.picsoulicence.model.Licence;
+import org.designup.picsoulicence.model.License;
 import org.designup.picsoulicence.model.MailError;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraints;
@@ -18,7 +18,7 @@ public class AskMailTest extends LicenceTestCase {
     super.setUp();
     start();
     SqlConnection connection = getSqlConnection();
-    connection.createTable(Licence.TYPE);
+    connection.createTable(License.TYPE);
     connection.createTable(MailError.TYPE);
     connection.commitAndClose();
     client = new HttpClient();
@@ -66,7 +66,7 @@ public class AskMailTest extends LicenceTestCase {
 
   private void checkInBase(String mailTo) {
     SqlConnection connection = getSqlConnection();
-    connection.getQueryBuilder(Licence.TYPE, Constraints.equal(Licence.MAIL, mailTo))
+    connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mailTo))
       .getQuery().executeUnique();
     connection.commitAndClose();
   }

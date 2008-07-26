@@ -38,6 +38,12 @@ public class LicenceGenerator {
     return dsa.sign();
   }
 
+
+  static public String generateActivationCode() {
+    SecureRandom random = new SecureRandom();
+    return Integer.toString(random.nextInt(9999));
+  }
+
   public static void main(String[] args) throws NoSuchProviderException, NoSuchAlgorithmException {
     KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA", "SUN");
     SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");

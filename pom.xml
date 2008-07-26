@@ -14,6 +14,13 @@
     <module>prevayler</module>
   </modules>
 
+  <repositories>
+    <repository>
+      <id>xml sax parser picolo</id>
+      <url>http://mirrors.ibiblio.org/pub/mirrors/maven2/</url>
+    </repository>
+  </repositories>
+
   <build>
     <plugins>
       <plugin>

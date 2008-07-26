@@ -2,8 +2,8 @@ package org.designup.picsoulicence;
 
 import org.designup.picsoulicence.mail.Mailler;
 import org.designup.picsoulicence.servlet.AskForMailServlet;
-import org.designup.picsoulicence.servlet.ConnectServlet;
 import org.designup.picsoulicence.servlet.RegisterServlet;
+import org.designup.picsoulicence.servlet.RequestForConfigServlet;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -74,7 +74,7 @@ public class LicenceServer {
     context.setResourceBase("classes");
     Directory directory = createDirectory();
     context.addServlet(new ServletHolder(new AskForMailServlet(directory)), "/mailTo");
-    context.addServlet(new ServletHolder(new ConnectServlet(directory)), "/connect");
+    context.addServlet(new ServletHolder(new RequestForConfigServlet(directory)), "/requestForConfig");
     context.addServlet(new ServletHolder(new RegisterServlet(directory)), "/register");
   }
 

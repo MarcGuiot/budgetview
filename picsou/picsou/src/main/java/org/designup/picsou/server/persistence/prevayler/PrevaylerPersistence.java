@@ -8,7 +8,6 @@ import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.T3uples;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.serialization.Encoder;
@@ -91,11 +90,13 @@ public class PrevaylerPersistence implements Persistence {
   }
 
   public void connect(SerializedOutput output) {
-    T3uples<byte[], byte[], Long> accountInfo = rootDataManager.getAccountInfo();
+    RootDataManager.RepoInfo accountInfo = rootDataManager.getAndUpdateAccountInfo();
     output.write(true);
-    output.writeBytes(accountInfo.getFirst());
-    output.writeBytes(accountInfo.getSecond());
-    output.write(accountInfo.getThird());
+    output.writeBytes(accountInfo.getId());
+    output.writeBytes(accountInfo.getMail());
+    output.writeBytes(accountInfo.getSignature());
+    output.writeString(accountInfo.getActivationCode());
+    output.write(accountInfo.getCount());
   }
 
 }

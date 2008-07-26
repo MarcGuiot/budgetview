@@ -51,11 +51,13 @@ public class WavePanelUI extends BasicPanelUI {
 
     AffineTransform transform = new AffineTransform();
     transform.setToScale(w * 0.9, h * 0.3);
-    g2.transform(transform);
-    JideFastGradientPainter.drawGradient(g2, path, waveColor, bottomColor, true);
+//    g2.transform(transform);
+    Shape transformedShape = path.createTransformedShape(transform);
+    JideFastGradientPainter.drawGradient(g2, transformedShape, waveColor, bottomColor, true);
 
-    transform.setToScale(0.3, 2.5);
-    g2.transform(transform);
-    JideFastGradientPainter.drawGradient(g2, path, waveColor, bottomColor, true);
+    transform.setToScale(w * 0.3, h * 2.5);
+//    g2.transform(transform);
+    transformedShape = path.createTransformedShape(transform);
+    JideFastGradientPainter.drawGradient(g2, transformedShape, waveColor, bottomColor, true);
   }
 }

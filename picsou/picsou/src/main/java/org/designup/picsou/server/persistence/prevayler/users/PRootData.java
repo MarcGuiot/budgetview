@@ -4,6 +4,7 @@ import org.designup.picsou.server.model.HiddenUser;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
+import org.designup.picsou.server.persistence.prevayler.RootDataManager;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -17,13 +18,22 @@ import java.util.Set;
 
 public class PRootData implements CustomSerializable {
   private static final byte V1 = 1;
+  private byte[] id = new byte[0];
   private byte[] mail = new byte[0];
   private byte[] signature = new byte[0];
-  private long count;
+  private String activationCode;
+  private long count = 0;
   private Map<String, Glob> hidenUsers = new HashMap<String, Glob>();
   private Map<String, Glob> users = new HashMap<String, Glob>();
   private Map<String, Integer> labelToCategory = new HashMap<String, Integer>();
   private static final String USERS_ROOT_DATA = "UsersRootData";
+
+  public PRootData() {
+  }
+
+  public PRootData(byte[] id) {
+    this.id = id;
+  }
 
   public Glob getUser(String name) {
     return users.get(name);
@@ -58,18 +68,6 @@ public class PRootData implements CustomSerializable {
     return USERS_ROOT_DATA;
   }
 
-  public byte[] getMail() {
-    return mail;
-  }
-
-  public byte[] getSignature() {
-    return signature;
-  }
-
-  public long getCount() {
-    return count;
-  }
-
   public void read(SerializedInput input, Directory directory) {
     byte version = input.readByte();
     switch (version) {
@@ -91,8 +89,10 @@ public class PRootData implements CustomSerializable {
         HiddenUser.write(output, entry.getValue());
       }
     }
+    output.writeBytes(id);
     output.writeBytes(mail);
     output.write(count);
+    output.writeString(activationCode);
     output.writeBytes(signature);
     {
       output.write(users.size());
@@ -120,8 +120,10 @@ public class PRootData implements CustomSerializable {
         size--;
       }
     }
+    id = input.readBytes();
     mail = input.readBytes();
     count = input.readNotNullLong();
+    activationCode = input.readString();
     signature = input.readBytes();
     {
       int size = input.readNotNullInt();
@@ -172,6 +174,11 @@ public class PRootData implements CustomSerializable {
 
   public static CustomSerializableFactory getFactory() {
     return new Factory();
+  }
+
+  public RootDataManager.RepoInfo getRepoInfo() {
+    count++;
+    return new RootDataManager.RepoInfo(id, mail, signature, activationCode, count);
   }
 
   private static class Factory implements CustomSerializableFactory {

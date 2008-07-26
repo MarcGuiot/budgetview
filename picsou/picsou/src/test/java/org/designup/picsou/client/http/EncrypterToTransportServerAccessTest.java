@@ -6,6 +6,7 @@ import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.functests.FunctionalTestCase;
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.Persistence;
@@ -27,6 +28,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   protected void setUp() throws Exception {
     setInMemory(false);
     super.setUp();
+    directory.add(new ConfigService(1, directory));
   }
 
   protected void tearDown() throws Exception {

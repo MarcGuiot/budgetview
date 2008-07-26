@@ -1,6 +1,6 @@
 package org.designup.picsoulicence.mail;
 
-import org.designup.picsoulicence.model.Licence;
+import org.designup.picsoulicence.model.License;
 import org.globsframework.model.Glob;
 
 import javax.mail.Message;
@@ -32,13 +32,13 @@ public class Mailler {
     sendMail(to, fromAdress, "picsou", "Bonjour\nCliquez sur le lien suivant pour achetez Picsou.");
   }
 
-  private void sendMail(String to, String adresse, String subjet, String content) throws MessagingException {
+  private void sendMail(String to, String from, String subjet, String content) throws MessagingException {
     Properties mailProperties = new Properties();
     mailProperties.setProperty("mail.smtp.host", host);
     mailProperties.setProperty("mail.smtp.port", Integer.toString(port));
     Session session = Session.getDefaultInstance(mailProperties);
     MimeMessage message = new MimeMessage(session);
-    message.setFrom(new InternetAddress(adresse));
+    message.setFrom(new InternetAddress(from));
     message.setSubject(subjet);
     message.setSentDate(new Date());
     message.setText(content);
@@ -48,11 +48,23 @@ public class Mailler {
 
   public void sendExistingLicence(Glob licence) {
     try {
-      sendMail(licence.get(Licence.MAIL), fromAdress, "picsou",
+      sendMail(licence.get(License.MAIL), fromAdress, "picsou",
                "Bonjour\nVous avez demander a ce qu'on vous renvoie votre licence.");
     }
     catch (MessagingException e) {
       e.printStackTrace();
+    }
+  }
+
+  public boolean sendNewLicense(String mail, String code) {
+    try {
+      sendMail(mail, fromAdress, "picsou code d'activation",
+               "Bonjour\nNous vous renvoyons un nouveau code d'activation car le précédent");
+      return true;
+    }
+    catch (MessagingException e) {
+      e.printStackTrace();
+      return false;
     }
   }
 }
