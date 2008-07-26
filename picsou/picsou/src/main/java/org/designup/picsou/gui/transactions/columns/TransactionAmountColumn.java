@@ -43,7 +43,7 @@ public class TransactionAmountColumn implements TableCellRenderer {
 
 
   private void updateTotalAmount(Glob transaction, boolean selected) {
-    GlobList splittedTransactions = getSplittedTransactions(transaction);
+    GlobList splittedTransactions = Transaction.getSplittedTransactions(transaction, repository);
     if (!splittedTransactions.isEmpty()) {
       splitPart.setVisible(true);
       double total = 0;
@@ -62,20 +62,6 @@ public class TransactionAmountColumn implements TableCellRenderer {
   private void updateColor(JLabel label, Color selectionForeground, Color foreground, boolean isSelected) {
     label.setForeground(isSelected ? selectionForeground : foreground);
 
-  }
-
-  private GlobList getSplittedTransactions(Glob transaction) {
-    GlobList splittedTransactions = new GlobList();
-    if (Transaction.isSplitSource(transaction)) {
-      splittedTransactions.add(transaction);
-      splittedTransactions.addAll(repository.findLinkedTo(transaction, Transaction.SPLIT_SOURCE));
-    }
-    else if (Transaction.isSplitPart(transaction)) {
-      Glob initialTransaction = repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE);
-      splittedTransactions.add(initialTransaction);
-      splittedTransactions.addAll(repository.findLinkedTo(initialTransaction, Transaction.SPLIT_SOURCE));
-    }
-    return splittedTransactions;
   }
 
   private String stringifyNumber(double value, GlobRepository globRepository) {

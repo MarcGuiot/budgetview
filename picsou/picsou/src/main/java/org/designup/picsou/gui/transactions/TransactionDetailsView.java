@@ -91,6 +91,8 @@ public class TransactionDetailsView extends View {
       new CategorisationHyperlinkButton(categoryChooserAction, repository, directory);
     builder.add("categoryChooserLink", categoryChooserLink);
 
+    builder.addMultiLineTextView("splitMessage", Transaction.TYPE, new SplitStringifier()).setAutoHideIfEmpty(true);
+
     builder.add("splitLink", new SplitTransactionAction(repository, directory));
 
     builder.add("originalLabel",
@@ -163,5 +165,30 @@ public class TransactionDetailsView extends View {
     }
   }
 
+  private static class SplitStringifier implements GlobListStringifier {
+    private GlobListStringifier totalAmountStringifier =
+      GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, Transaction.AMOUNT);
+
+    public String toString(GlobList transactions, GlobRepository repository) {
+      if (transactions.size() != 1) {
+        return "";
+      }
+      Glob transaction = transactions.get(0);
+      if (!Transaction.isSplitSource(transaction) && !Transaction.isSplitPart(transaction)) {
+        return "";
+      }
+
+      String totalAmount =
+        totalAmountStringifier.toString(Transaction.getSplittedTransactions(transaction, repository), repository);
+      if (Transaction.isSplitSource(transaction)) {
+        return Lang.get("transaction.details.split.source", totalAmount);
+      }
+      if (Transaction.isSplitPart(transaction)) {
+        return Lang.get("transaction.details.split.part", totalAmount);
+      }
+
+      return "";
+    }
+  }
 }
 

@@ -38,15 +38,11 @@ public class Gauge extends JPanel {
     int width = getWidth() - 1;
     int height = getHeight() - 1;
 
-    if (targetValue == 0) {
-      return;
-    }
-
-    float ratio = (float)actualValue / (float)targetValue;
-
     int barVerticalMargin = (height - BAR_HEIGHT) / 2;
     int barTop = barVerticalMargin;
     int barBottom = height - barVerticalMargin;
+    
+    float ratio = targetValue != 0 ? (float)actualValue / (float)targetValue : -1;
 
     if (ratio > 1) {
       fill(g2, warningColorTop, warningColorBottom, width, BAR_HEIGHT, barTop, barBottom);

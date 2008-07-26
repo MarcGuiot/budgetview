@@ -1,5 +1,10 @@
 package org.designup.picsou.gui.transactions.columns;
 
+import org.globsframework.model.Glob;
+import org.globsframework.utils.Utils;
+import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.Transaction;
+
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
@@ -26,8 +31,20 @@ public class TransactionTableRenderer implements TableCellRenderer {
     if (column == categoryColumnIndex) {
       return component;
     }
-    component.setForeground(isSelected ? Color.WHITE : Color.BLACK);
+    component.setForeground(getForeground((Glob)value, isSelected));
+    
     rendererColors.setTransactionBackground(component, isSelected, row);
     return component;
+  }
+
+  private Color getForeground(Glob transaction, boolean isSelected) {
+    if (isSelected) {
+      return Color.WHITE;
+    }
+    if (Utils.equal(TransactionType.PLANNED.getId(), transaction.get(Transaction.TRANSACTION_TYPE))) {
+      return Color.LIGHT_GRAY;
+    }
+    return rendererColors.getTransactionTextColor();
+
   }
 }

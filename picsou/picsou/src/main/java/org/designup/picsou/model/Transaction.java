@@ -146,6 +146,20 @@ public class Transaction {
     return Math.rint(Math.signum(initialValue) * (Math.abs(initialValue) - Math.abs(amount)) * 100.0) / 100.0;
   }
 
+  public static GlobList getSplittedTransactions(Glob transaction, GlobRepository repository) {
+    GlobList splittedTransactions = new GlobList();
+    if (isSplitSource(transaction)) {
+      splittedTransactions.add(transaction);
+      splittedTransactions.addAll(repository.findLinkedTo(transaction, SPLIT_SOURCE));
+    }
+    else if (isSplitPart(transaction)) {
+      Glob initialTransaction = repository.findLinkTarget(transaction, SPLIT_SOURCE);
+      splittedTransactions.add(initialTransaction);
+      splittedTransactions.addAll(repository.findLinkedTo(initialTransaction, SPLIT_SOURCE));
+    }
+    return splittedTransactions;
+  }
+
   public static class Serialization implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues fieldValues) {
