@@ -2,6 +2,7 @@ package org.uispec4j.interception.handlers;
 
 import org.uispec4j.Window;
 import org.uispec4j.utils.ComponentUtils;
+import org.uispec4j.utils.ThreadManager;
 
 public class ClosedInterceptionDetectionHandler extends AbstractInterceptionHandlerDecorator {
   public static final String MODAL_DIALOG_NOT_CLOSED_ERROR_MESSAGE =
@@ -14,7 +15,7 @@ public class ClosedInterceptionDetectionHandler extends AbstractInterceptionHand
   private String windowTitle;
   private Window window;
   private boolean windowClosed = false;
-  private Thread thread;
+  private ThreadManager.ThreadDelegate interuptible;
 
   public ClosedInterceptionDetectionHandler(InterceptionHandler innerHandler, long timeout) {
     super(innerHandler);
@@ -28,7 +29,7 @@ public class ClosedInterceptionDetectionHandler extends AbstractInterceptionHand
     }
     this.window = window;
     windowTitle = window.getTitle();
-    thread = new Thread() {
+    interuptible = ThreadManager.getInstance().addRunnable(" [WindowInterceptor.CloseHandler]", new Runnable() {
       public void run() {
         try {
           long delay = timeout / 500;
@@ -37,7 +38,7 @@ public class ClosedInterceptionDetectionHandler extends AbstractInterceptionHand
           }
           for (int i = 0; i < 500; i++) {
             try {
-              sleep(delay);
+              Thread.sleep(delay);
             }
             catch (InterruptedException e) {
               return;
@@ -52,10 +53,7 @@ public class ClosedInterceptionDetectionHandler extends AbstractInterceptionHand
           ComponentUtils.close(window);
         }
       }
-    };
-    thread.setName(thread.getName() + " [WindowInterceptor.CloseHandler]");
-    thread.setDaemon(true);
-    thread.start();
+    });
     try {
       super.process(window);
     }
@@ -107,8 +105,8 @@ public class ClosedInterceptionDetectionHandler extends AbstractInterceptionHand
   }
 
   public void stop() {
-    if (thread != null) {
-      thread.interrupt();
+    if (interuptible != null) {
+      interuptible.interrupt();
     }
   }
 }
