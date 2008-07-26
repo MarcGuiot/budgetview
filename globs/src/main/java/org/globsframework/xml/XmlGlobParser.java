@@ -1,6 +1,5 @@
 package org.globsframework.xml;
 
-import com.sun.org.apache.xerces.internal.parsers.SAXParser;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
@@ -15,6 +14,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.saxstack.parser.*;
+import org.saxstack.utils.XmlUtils;
 import org.xml.sax.Attributes;
 
 import java.io.Reader;
@@ -37,7 +37,7 @@ public class XmlGlobParser {
   private void parse(Reader reader, String rootTag) {
     repository.enterBulkDispatchingMode();
     try {
-      SaxStackParser.parse(new SAXParser(), new XmlBootstrapNode(new RootProxyNode(), rootTag), reader);
+      SaxStackParser.parse(XmlUtils.getXmlReader(), new XmlBootstrapNode(new RootProxyNode(), rootTag), reader);
     }
     finally {
       repository.completeBulkDispatchingMode();

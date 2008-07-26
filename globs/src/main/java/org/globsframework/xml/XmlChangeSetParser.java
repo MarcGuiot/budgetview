@@ -1,6 +1,5 @@
 package org.globsframework.xml;
 
-import com.sun.org.apache.xerces.internal.parsers.SAXParser;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
@@ -12,6 +11,7 @@ import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.saxstack.parser.*;
+import org.saxstack.utils.XmlUtils;
 import org.xml.sax.Attributes;
 
 import java.io.Reader;
@@ -23,7 +23,7 @@ public class XmlChangeSetParser {
 
   public static MutableChangeSet parse(GlobModel model, Reader reader) {
     RootProxyNode rootNode = new RootProxyNode(model);
-    SaxStackParser.parse(new SAXParser(), new XmlBootstrapNode(rootNode, "changes"), reader);
+    SaxStackParser.parse(XmlUtils.getXmlReader(), new XmlBootstrapNode(rootNode, "changes"), reader);
     return rootNode.getChangeSet();
   }
 

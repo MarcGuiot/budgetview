@@ -1,6 +1,5 @@
 package org.globsframework.streams.xml;
 
-import com.sun.org.apache.xerces.internal.parsers.SAXParser;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
@@ -16,6 +15,7 @@ import org.saxstack.parser.DefaultXmlNode;
 import org.saxstack.parser.ExceptionHolder;
 import org.saxstack.parser.SaxStackParser;
 import org.saxstack.parser.XmlNode;
+import org.saxstack.utils.XmlUtils;
 import org.xml.sax.Attributes;
 
 import java.io.StringReader;
@@ -37,7 +37,7 @@ public class XmlGlobStreamReader {
 
   private GlobStream parse() {
     xmlMoStream = new XmlGlobStream();
-    SaxStackParser.parse(new SAXParser(), new RootProxyNode(), new StringReader(xml));
+    SaxStackParser.parse(XmlUtils.getXmlReader(), new RootProxyNode(), new StringReader(xml));
     return xmlMoStream;
   }
 

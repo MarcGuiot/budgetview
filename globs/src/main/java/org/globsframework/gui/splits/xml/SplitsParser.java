@@ -1,18 +1,20 @@
 package org.globsframework.gui.splits.xml;
 
-import com.sun.org.apache.xerces.internal.parsers.SAXParser;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.SplitterFactory;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.impl.DefaultSplitProperties;
 import org.globsframework.gui.splits.impl.XmlComponentNode;
-import org.globsframework.utils.exceptions.InvalidData;
 import org.saxstack.parser.DefaultXmlNode;
+import org.saxstack.parser.ExceptionHolder;
 import org.saxstack.parser.SaxStackParser;
 import org.saxstack.parser.XmlNode;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import java.awt.*;
 import java.io.Reader;
 import java.util.Arrays;
@@ -21,7 +23,11 @@ public class SplitsParser {
 
   private SplitsContext context;
   private SplitterFactory factory;
-  private final SAXParser PARSER = new SAXParser();
+  private static SAXParserFactory xmlFactory = SAXParserFactory.newInstance();
+
+  static {
+    xmlFactory.setNamespaceAware(true);
+  }
 
   public SplitsParser(SplitsContext context, SplitterFactory factory) {
     this.context = context;
@@ -29,11 +35,19 @@ public class SplitsParser {
   }
 
   public Component parse(Reader reader) {
-    synchronized (PARSER) {
-      SplitsBootstrapXmlNode bootstrap = new SplitsBootstrapXmlNode();
-      SaxStackParser.parse(PARSER, bootstrap, reader);
-      return bootstrap.getRootComponent();
+
+    SplitsBootstrapXmlNode bootstrap = new SplitsBootstrapXmlNode();
+    try {
+      javax.xml.parsers.SAXParser PARSER = xmlFactory.newSAXParser();
+      SaxStackParser.parse(PARSER.getXMLReader(), bootstrap, reader);
     }
+    catch (SAXException e) {
+      throw new ExceptionHolder(e);
+    }
+    catch (ParserConfigurationException e) {
+      throw new ExceptionHolder(e);
+    }
+    return bootstrap.getRootComponent();
   }
 
   public static SplitProperties createProperties(Attributes attributes,
