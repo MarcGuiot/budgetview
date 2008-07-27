@@ -41,30 +41,55 @@
     <!-- Hyperlinks -->
 
     <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
-    <style selector="button.hyperlink" ui="hyperlinkButton" fill="none" anchor="right"/>    
+    <style selector="button.hyperlink" ui="hyperlinkButton" fill="none" anchor="right"/>
 
     <!-- Blocks and inner blocks -->
 
     <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
         cornerRadius="20"/>
-    <style selector=".block" ui="block" opaque="false" marginBottom="20"/>
+    <style selector=".block" ui="block" opaque="false" marginBottom="5"/>
     <style selector="label.blockTitle" anchor="center"
-           foreground="#FFFFFF" marginBottom="5" font="-,bold,13"
+           foreground="#FFFFFF" marginBottom="5" font="-,bold,13" weightY="0"
            shadowDirection="northwest" shadowColor="#222222"/>
-    <style selector=".block label.totalAmountTitle" foreground="block.total.title" font="-,plain,10" anchor="bottom"/>
-    <style selector=".block label.totalAmount" foreground="block.total" font="-,bold,20" anchor="top"/>
+    <style selector=".block label.totalAmountTitle" foreground="block.total.title" font="-,plain,10"
+           fill="vertical" anchor="bottom" weightY="0"/>
+    <style selector=".block label.totalAmount" foreground="block.total" font="-,bold,20"
+           fill="vertical" anchor="top" weightY="1" marginBottom="5"/>
 
-    <ui name="innerBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="block.inner.top" bottomColor="block.inner.bottom" borderColor="block.inner.border"
-        borderWidth="2" cornerRadius="10"/>
-    <style selector=".innerBlock" ui="innerBlock" marginTop="5" marginBottom="5"/>
+    <style selector=".block scrollPane" viewportBackground="block.inner.bg" border="line(block.inner.border)"
+           marginBottom="10" weightY="100"/>
+
+    <style selector=".innerBlock" marginTop="5" marginBottom="5"/>
     <style selector=".innerBlock label.item" foreground="block.inner.item" font="-,bold,13" anchor="top"
-      shadowDirection="northwest" shadowColor="#FFFFFF"/>
+           shadowDirection="northwest" shadowColor="#FFFFFF"/>
     <style selector=".innerBlock label.subitem" foreground="block.inner.subitem" font="-,plain,10" anchor="top"/>
     <style selector=".innerBlock label.amount" foreground="block.inner.amount" font="-,bold,12" anchor="top"/>
     <style selector=".innerBlock label.largeAmount" foreground="block.inner.amount" font="-,bold,13" anchor="top"/>
     <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink" font="-,plain,10"/>
+
+    <!-- Gauge -->
+    <style selector=".totalGauge"
+           fill="horizontal" weightX="100"
+           marginLeft="10" marginRight="10"
+           borderColor="gauge.total.border"
+           emptyColorTop="gauge.total.empty.top" emptyColorBottom="gauge.total.empty.bottom"
+           filledColorTop="gauge.total.filled.top" filledColorBottom="gauge.total.filled.bottom"
+           warningColorTop="gauge.total.warning.top" warningColorBottom="gauge.total.warning.bottom"
+           triangleTopColor="gauge.total.triangle.top" triangleBottomColor="gauge.total.triangle.bottom"
+           triangleBorderColor="gauge.total.triangle.border" triangleShadowColor="gauge.total.triangle.shadow"
+           triangleSignColor="gauge.total.triangle.sign"/>
+
+    <style selector=".detailGauge"
+           fill="horizontal" weightX="100"
+           marginLeft="6" marginRight="6"
+           borderColor="gauge.detail.border"
+           emptyColorTop="gauge.detail.empty.top" emptyColorBottom="gauge.detail.empty.bottom"
+           filledColorTop="gauge.detail.filled.top" filledColorBottom="gauge.detail.filled.bottom"
+           warningColorTop="gauge.detail.warning.top" warningColorBottom="gauge.detail.warning.bottom"
+           triangleTopColor="gauge.detail.triangle.top" triangleBottomColor="gauge.detail.triangle.bottom"
+           triangleBorderColor="gauge.detail.triangle.border" triangleShadowColor="gauge.detail.triangle.shadow"
+           triangleSignColor="gauge.detail.triangle.sign"/>
 
   </styles>
 

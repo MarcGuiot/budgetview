@@ -53,7 +53,12 @@ public class AbstractUIComponentTest extends UnitTestCase {
     JLabel jLabel = new JLabel();
     middlePanel.add(jLabel);
     TextBox label = new TextBox(jLabel);
+
+    assertSame(middlePanel, label.getContainer().getAwtComponent());
+    
     assertSame(rootPanel, label.getContainer("rootPanel").getAwtComponent());
     assertNull(label.getContainer("unknown"));
+
+    assertNull(new Panel(rootPanel).getContainer());
   }
 }

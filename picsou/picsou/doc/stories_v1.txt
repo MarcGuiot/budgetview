@@ -29,8 +29,6 @@
 
 * Navigation back/forward
 
-* Mac: stocker repository prevayler dans repertoire Documents ?
-
 * Changer date user
 
 * Undo

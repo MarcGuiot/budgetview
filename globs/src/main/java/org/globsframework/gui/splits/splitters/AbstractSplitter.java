@@ -42,6 +42,9 @@ public abstract class AbstractSplitter implements Splitter {
     if (addMargin) {
       addMargin(stretch);
     }
+    else {
+      stretch.setInsets(getMarginInsets());
+    }
     complete(component);
     processAttributes(component, context);
     processAutoHide(component, context);

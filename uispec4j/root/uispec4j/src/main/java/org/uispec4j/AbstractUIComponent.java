@@ -153,6 +153,14 @@ public abstract class AbstractUIComponent implements UIComponent {
     return ((component instanceof Panel) && computeComponentName(component.getAwtComponent()).equals(""));
   }
 
+  public Panel getContainer() {
+    Container parent = getAwtComponent().getParent();
+    if (parent == null) {
+      return null;
+    }
+    return new Panel(parent);
+  }
+
   public Panel getContainer(String parentName) {
     Container parent = getAwtComponent().getParent();
     while (parent != null && !parentName.equalsIgnoreCase(parent.getName())) {

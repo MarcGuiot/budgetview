@@ -21,9 +21,8 @@ TitleView
 
 Vue budget
 ----------
-- bloc "ponctuel"
+- bloc "ponctuel" => OccasionalSeriesStat + trigger
 - edition series
-- gauges
 
 
 Vue releves
@@ -32,6 +31,7 @@ Vue releves
 - colonne "category" de transactionView => ouvrir CategorizationDialog
 - bug reset transactionDetails
 - retirer titres colonnes CategoryView
+- icones CategoryView
 
 
 Import panel

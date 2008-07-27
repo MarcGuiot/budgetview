@@ -1,33 +1,40 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-  <styleImport file="/layout/picsouStyles.splits"/>
 
-   <column>
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="#budgetAreaSeriesView #seriesName" font="-,bold,13"
+           margin="0" marginRight="10" anchor="center" preferredSize="(150,13)"/>
+    <style selector="#budgetAreaSeriesView .amount" font="-,plain,11" anchor="right"/>
+    <style selector="#budgetAreaSeriesView .detailGauge" anchor="center" preferredSize="(40,30)"
+      marginLeft="5" marginRight="5"/>
+  </styles>
+
+  <column name="budgetAreaSeriesView">
 
     <label ref="budgetAreaTitle" styleClass="blockTitle"/>
 
     <panel styleClass="block" preferredSize="(300,400)">
       <column margin="10">
-        <grid>
+        <grid weightY="0" marginLeft="20" marginRight="20">
           <label text="$budgetview.observed" styleClass="totalAmountTitle" gridPos="(0,0)"/>
           <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(0,1)"/>
-          <label text="$budgetview.planned" styleClass="totalAmountTitle" gridPos="(1,0)"/>
-          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(1,1)"/>
+          <component ref="totalGauge" styleClass="totalGauge" gridPos="(1,0,1,2)" anchor="south" marginBottom="3"/>
+          <label text="$budgetview.planned" styleClass="totalAmountTitle" gridPos="(2,0)"/>
+          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(2,1)"/>
         </grid>
 
-        <repeat ref="seriesRepeat" styleClass="innerBlock">
-          <column name="seriesRow">
-            <row margin="10" marginBottom="2" >
-              <label ref="seriesName" styleClass="item"/>
-              <filler fill="horizontal"/>
-            </row>
-            <row margin="10" marginTop="0" >
-              <label ref="observedSeriesAmount" styleClass="amount"/>
-              <filler fill="horizontal"/>
-              <label ref="plannedSeriesAmount" styleClass="amount"/>
-            </row>
+        <scrollPane>
+          <column>
+          <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid" marginLeft="10" marginRight="10">
+            <label ref="seriesName" styleClass="item"/>
+            <label ref="observedSeriesAmount" styleClass="amount" marginRight="6"/>
+            <component ref="gauge" styleClass="detailGauge"/>
+            <label ref="plannedSeriesAmount" styleClass="amount"/>
+          </repeat>
+          <filler fill="vertical"/>
           </column>
-        </repeat>
+        </scrollPane>
       </column>
     </panel>
 

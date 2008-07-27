@@ -13,23 +13,25 @@
         <label text="$account.total.title" styleClass="totalAmountTitle"/>
         <label ref="totalBalance" styleClass="totalAmount"/>
 
-        <repeat ref="accountRepeat" marginTop="5" marginBottom="15" styleClass="innerBlock">
-          <panel name="accountParent">
-            <column margin="6" marginLeft="10" marginRight="10">
-              <grid>
-                <label ref="accountName" gridPos="(0,0)" anchor="west" styleClass="item"/>
-                <label ref="accountNumber" gridPos="(0,1)" anchor="west" styleClass="subitem"/>
-                <label ref="accountBalance" gridPos="(1,0)" anchor="east" styleClass="largeAmount"/>
-                <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
-              </grid>
-              <row>
-                <filler fill="horizontal"/>
-                <button action="gotoWebsite" text="$account.goto.website" styleClass="hyperlink" />
-                <button action="importData" text="$account.import.data" styleClass="hyperlink" />
-              </row>
-            </column>
-          </panel>
-        </repeat>
+        <scrollPane>
+          <repeat ref="accountRepeat" marginTop="5" marginBottom="15" styleClass="innerBlock">
+            <panel name="accountParent">
+              <column margin="6" marginLeft="10" marginRight="10">
+                <grid>
+                  <label ref="accountName" gridPos="(0,0)" anchor="west" styleClass="item"/>
+                  <label ref="accountNumber" gridPos="(0,1)" anchor="west" styleClass="subitem"/>
+                  <label ref="accountBalance" gridPos="(1,0)" anchor="east" styleClass="largeAmount"/>
+                  <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
+                </grid>
+                <row>
+                  <filler fill="horizontal"/>
+                  <button action="gotoWebsite" text="$account.goto.website" styleClass="hyperlink"/>
+                  <button action="importData" text="$account.import.data" styleClass="hyperlink"/>
+                </row>
+              </column>
+            </panel>
+          </repeat>
+        </scrollPane>
       </column>
 
     </panel>

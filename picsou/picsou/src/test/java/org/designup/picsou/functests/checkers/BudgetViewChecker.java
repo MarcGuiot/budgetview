@@ -5,6 +5,9 @@ import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class BudgetViewChecker extends DataChecker {
 
   public final BudgetAreaChecker income;
@@ -45,11 +48,24 @@ public class BudgetViewChecker extends DataChecker {
     public void checkSeries(String seriesName, double observedAmount, double plannedAmount) {
       Panel budgetPanel = window.getPanel(panelName);
       TextBox nameBox = budgetPanel.getTextBox(seriesName);
-      Panel seriesRow = nameBox.getContainer("seriesRow");
-      TextBox observedLabel = seriesRow.getTextBox("observedSeriesAmount");
+
+      JPanel panel = (JPanel)nameBox.getContainer().getAwtContainer();
+      int nameIndex = getIndex(panel, nameBox.getAwtComponent());
+
+      TextBox observedLabel = new TextBox((JLabel)panel.getComponent(nameIndex + 1));
       UISpecAssert.assertTrue(observedLabel.textEquals(BudgetViewChecker.this.toString(observedAmount)));
-      TextBox plannedLabel = seriesRow.getTextBox("plannedSeriesAmount");
+
+      TextBox plannedLabel = new TextBox((JLabel)panel.getComponent(nameIndex + 3));
       UISpecAssert.assertTrue(plannedLabel.textEquals(BudgetViewChecker.this.toString(plannedAmount)));
+    }
+
+    private int getIndex(JPanel panel, Component component) {
+      for (int i = 0; i < panel.getComponentCount(); i++) {
+        if (component == panel.getComponent(i)) {
+          return i;
+        }
+      }
+      return -1;
     }
   }
 }

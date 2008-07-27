@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
@@ -13,6 +14,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.metamodel.fields.DoubleField;
 
@@ -21,11 +23,13 @@ import javax.swing.*;
 public class BudgetAreaSeriesView extends View {
   private String name;
   private BudgetArea budgetArea;
+  private GlobMatcher totalMatcher;
 
   protected BudgetAreaSeriesView(String name, BudgetArea budgetArea, GlobRepository repository, Directory directory) {
     super(repository, directory);
     this.name = name;
     this.budgetArea = budgetArea;
+    this.totalMatcher = GlobMatchers.linkTargetFieldEquals(SeriesStat.SERIES, Series.BUDGET_AREA, budgetArea.getId());
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -33,9 +37,12 @@ public class BudgetAreaSeriesView extends View {
                                                       repository, directory);
 
     builder.add("budgetAreaTitle", new JLabel(stringify(budgetArea)));
-
     addTotalLabel("totalObservedAmount", SeriesStat.AMOUNT, builder);
     addTotalLabel("totalPlannedAmount", SeriesStat.PLANNED_AMOUNT, builder);
+
+    final GlobGaugeView gaugeView = new GlobGaugeView(SeriesStat.TYPE, SeriesStat.AMOUNT, SeriesStat.PLANNED_AMOUNT,
+                                                totalMatcher, repository, directory);
+    builder.add("totalGauge", gaugeView.getComponent());
 
     builder.addRepeat("seriesRepeat",
                       Series.TYPE,
@@ -48,6 +55,18 @@ public class BudgetAreaSeriesView extends View {
                                             .getComponent());
                           addAmountLabel("observedSeriesAmount", SeriesStat.AMOUNT, series, cellBuilder);
                           addAmountLabel("plannedSeriesAmount", SeriesStat.PLANNED_AMOUNT, series, cellBuilder);
+
+                          final GlobGaugeView gaugeView = new GlobGaugeView(SeriesStat.TYPE, SeriesStat.AMOUNT, SeriesStat.PLANNED_AMOUNT,
+                                                                      GlobMatchers.keyEquals(series.getKey()),
+                                                                      repository, directory);
+                          cellBuilder.add("gauge", gaugeView.getComponent());
+
+                          cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+                            public void dispose() {
+                              gaugeView.dispose();
+
+                            }
+                          });
                         }
                       });
 
@@ -61,7 +80,7 @@ public class BudgetAreaSeriesView extends View {
   private void addTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
     builder.addLabel(name, SeriesStat.TYPE,
                      GlobListStringifiers.sum(decimalFormat, field))
-      .setFilter(GlobMatchers.linkTargetFieldEquals(SeriesStat.SERIES, Series.BUDGET_AREA, budgetArea.getId()));
+      .setFilter(totalMatcher);
   }
 
   private void addAmountLabel(String name, DoubleField field, Glob series, RepeatCellBuilder cellBuilder) {

@@ -13,59 +13,62 @@ public class RepeatPanel implements Repeat {
   private ComponentStretch stretch;
   private JPanel panel = new JPanel();
   private RepeatHandler repeatHandler;
-  private Splitter templateSplitter;
+  private Splitter[] splitterTemplates;
   private SplitsContext context;
   private List<RepeatContext> repeatContexts = new ArrayList<RepeatContext>();
+  private RepeatLayout layout;
 
-  public RepeatPanel(String name, RepeatHandler repeatHandler, Splitter templateSplitter, SplitsContext context) {
+  public RepeatPanel(String name, RepeatHandler repeatHandler, RepeatLayout layout,
+                     Splitter[] splitterTemplates, SplitsContext context) {
     this.repeatHandler = repeatHandler;
-    this.templateSplitter = templateSplitter;
+    this.splitterTemplates = splitterTemplates;
     this.context = context;
+    this.layout = layout;
     repeatHandler.register(this);
-    set(repeatHandler.getInitialItems());
-    this.stretch = SwingStretches.get(panel);
-    this.panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    this.layout.init(panel);
     this.panel.setName(name);
     this.panel.setOpaque(false);
-    context.addComponent(name, panel);
+    this.context.addComponent(name, panel);
+    set(repeatHandler.getInitialItems());
+    this.stretch = SwingStretches.get(panel);
   }
 
   public void set(List items) {
-    panel.removeAll();
     for (RepeatContext context : repeatContexts) {
       context.dispose();
     }
     repeatContexts.clear();
+
+    List<ComponentStretch[]> stretches = new ArrayList<ComponentStretch[]>();
     int index = 0;
     for (Object item : items) {
-      panel.add(createStretch(item, index).getComponent());
+      stretches.add(createStretches(item, index));
       index++;
     }
-    panel.validate();
+
+    layout.set(panel, stretches);
   }
 
   public void insert(Object item, int index) {
-    panel.add(createStretch(item, index).getComponent(), index);
-    panel.validate();
+    layout.insert(panel, createStretches(item, index), index);
   }
 
   public void remove(int index) {
-    panel.remove(index);
-    panel.validate();
+    layout.remove(panel, index);
     RepeatContext context = repeatContexts.remove(index);
     context.dispose();
   }
 
-  public void add(ComponentStretch componentStretch) {
-    panel.add(componentStretch.getComponent());
-    panel.validate();
-  }
-
-  private ComponentStretch createStretch(Object item, int index) {
+  private ComponentStretch[] createStretches(Object item, int index) {
     RepeatContext repeatContext = new RepeatContext(context);
     repeatContexts.add(index, repeatContext);
     repeatHandler.getFactory().registerComponents(new ContextualRepeatCellBuilder(repeatContext), item);
-    return templateSplitter.createComponentStretch(repeatContext, true);
+
+    ComponentStretch[] stretches = new ComponentStretch[splitterTemplates.length];
+    for (int i = 0; i < splitterTemplates.length; i++) {
+      stretches[i] = splitterTemplates[i].createComponentStretch(repeatContext, !layout.managesInsets());
+    }
+    return stretches;
   }
 
   public ComponentStretch getStretch() {

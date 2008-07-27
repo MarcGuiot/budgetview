@@ -66,6 +66,7 @@
           <label text="$transaction.details.category" styleClass="formLabel"/>
           <button ref="categoryChooserLink" styleClass="hyperlink"/>
         </row>
+        <textArea ref="splitMessage"/>
         <button name="splitLink" action="splitLink" marginTop="0" styleClass="hyperlink"/>
       </column>
     </panel>

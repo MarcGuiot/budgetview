@@ -7,6 +7,8 @@ import org.globsframework.gui.splits.styles.StyleService;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.DummyIconLocator;
 import org.globsframework.gui.splits.utils.DummyTextLocator;
+import org.globsframework.gui.splits.layout.Fill;
+import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.uispec4j.UISpecTestCase;
@@ -19,6 +21,7 @@ import javax.xml.validation.Validator;
 import java.awt.*;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Arrays;
 
 public abstract class SplitsTestCase extends UISpecTestCase {
   protected SplitsBuilder builder;
@@ -83,16 +86,36 @@ public abstract class SplitsTestCase extends UISpecTestCase {
     }
   }
 
-  protected GridBagConstraints getConstraints(Component parent, JComponent component) {
-    JPanel panel = (JPanel)parent;
-    GridBagLayout layout = (GridBagLayout)panel.getLayout();
-    return layout.getConstraints(component);
-  }
-
   protected void checkException(Exception e, String message) {
     if (!e.getMessage().contains(message)) {
       fail("Exception does not contain message: " + message + "\n" +
            "Actual message is: " + e.getMessage());
     }
+  }
+
+  protected void checkGridPos(JPanel panel, Component component,
+                              int x, int y, int w, int h,
+                              double weightX, double weightY,
+                              Fill fill, Anchor anchor, Insets insets) {
+
+    assertEquals(panel, component.getParent());
+    assertTrue(Arrays.asList(panel.getComponents()).contains(component));
+
+    GridBagConstraints constraints = getConstraints(panel, component);
+    assertEquals(x, constraints.gridx);
+    assertEquals(y, constraints.gridy);
+    assertEquals(w, constraints.gridwidth);
+    assertEquals(h, constraints.gridheight);
+    assertEquals(weightX, constraints.weightx);
+    assertEquals(weightY, constraints.weighty);
+    assertEquals(fill.getValue(), constraints.fill);
+    assertEquals(anchor.getValue(), constraints.anchor);
+    assertEquals(insets, constraints.insets);
+  }
+
+  protected GridBagConstraints getConstraints(Component parent, Component component) {
+    JPanel panel = (JPanel)parent;
+    GridBagLayout layout = (GridBagLayout)panel.getLayout();
+    return layout.getConstraints(component);
   }
 }

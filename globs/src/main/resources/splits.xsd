@@ -291,6 +291,14 @@
         <xs:group ref="splitsComponents"/>
       </xs:sequence>
       <xs:attributeGroup ref="componentAttributes"/>
+      <xs:attribute name="layout" use="optional">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="column"/>
+            <xs:enumeration value="verticalGrid"/>
+          </xs:restriction>          
+        </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 
@@ -340,22 +348,48 @@
       </xs:annotation>
     </xs:attribute>
 
-    <xs:attribute name="fill" type="fillType">
-      <xs:annotation>
-        <xs:documentation xml:lang="en">
-          "fill" property used in the GridBag constraints of the component in the parent panel.
-          Value can be one of: horizontal, vertical, none, both.
-        </xs:documentation>
-      </xs:annotation>
+    <xs:attribute name="fill">
+      <xs:simpleType>
+        <xs:annotation>
+          <xs:documentation xml:lang="en">
+            "fill" property used in the GridBag constraints of the component in the parent panel.
+            Value can be one of: horizontal, vertical, none, both.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:NMTOKEN">
+          <xs:enumeration value="horizontal"/>
+          <xs:enumeration value="vertical"/>
+          <xs:enumeration value="none"/>
+          <xs:enumeration value="both"/>
+        </xs:restriction>
+      </xs:simpleType>      
     </xs:attribute>
 
-    <xs:attribute name="anchor" type="anchorType">
+    <xs:attribute name="anchor">
       <xs:annotation>
         <xs:documentation xml:lang="en">
           "anchor" property used in the GridBag constraints of the component in the parent panel.
           Value can be one of: center, east, west, north, northeast, northwest, south, southeast, southwest.
         </xs:documentation>
       </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:NMTOKEN">
+          <xs:enumeration value="center"/>
+          <xs:enumeration value="east"/>
+          <xs:enumeration value="west"/>
+          <xs:enumeration value="north"/>
+          <xs:enumeration value="northeast"/>
+          <xs:enumeration value="northwest"/>
+          <xs:enumeration value="south"/>
+          <xs:enumeration value="southeast"/>
+          <xs:enumeration value="southwest"/>
+          <xs:enumeration value="left"/>
+          <xs:enumeration value="right"/>
+          <xs:enumeration value="top"/>
+          <xs:enumeration value="bottom"/>
+        </xs:restriction>
+      </xs:simpleType>
+
     </xs:attribute>
 
     <xs:attribute name="gridPos" type="xs:string">
@@ -646,30 +680,4 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="fillType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="horizontal"/>
-      <xs:enumeration value="vertical"/>
-      <xs:enumeration value="none"/>
-      <xs:enumeration value="both"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="anchorType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="center"/>
-      <xs:enumeration value="east"/>
-      <xs:enumeration value="west"/>
-      <xs:enumeration value="north"/>
-      <xs:enumeration value="northeast"/>
-      <xs:enumeration value="northwest"/>
-      <xs:enumeration value="south"/>
-      <xs:enumeration value="southeast"/>
-      <xs:enumeration value="southwest"/>
-      <xs:enumeration value="left"/>
-      <xs:enumeration value="right"/>
-      <xs:enumeration value="top"/>
-      <xs:enumeration value="bottom"/>
-    </xs:restriction>
-  </xs:simpleType>
 </xs:schema>

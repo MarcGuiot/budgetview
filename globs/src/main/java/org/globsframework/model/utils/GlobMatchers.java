@@ -6,6 +6,7 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.links.FieldMappingFunctor;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.Utils;
 
@@ -223,6 +224,14 @@ public class GlobMatchers {
     return new GlobMatcher() {
       public boolean matches(Glob glob, GlobRepository repository) {
         return !matcher.matches(glob, repository);
+      }
+    };
+  }
+
+  public static GlobMatcher keyEquals(final Key key) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return key.equals(item.getKey());
       }
     };
   }

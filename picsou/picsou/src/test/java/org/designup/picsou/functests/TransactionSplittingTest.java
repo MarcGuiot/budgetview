@@ -22,6 +22,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .load();
 
     transactions.getTable().selectRow(0);
+    transactionDetails.checkSplitMessageNotDisplayed();
+
     transactionDetails.openSplitDialog(0)
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -20.00, ""},
@@ -57,6 +59,18 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "DVD", -12.50, MasterCategory.LEISURES)
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "Youth Elixir", -2.50, MasterCategory.BEAUTY)
       .check();
+
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkSplitMessage("This operation (initial amount -20.00) has been split " +
+                                         "among several categories");
+
+    transactions.getTable().selectRow(1);
+    transactionDetails.checkSplitMessage("This operation has been extracted from an original operation " +
+                                         "(total amount -20.00)");
+
+    transactions.getTable().selectRow(2);
+    transactionDetails.checkSplitMessage("This operation has been extracted from an original operation " +
+                                         "(total amount -20.00)");
   }
 
   public void testTransactionTableIsUpdatedOnlyWhenClickingOnOk() throws Exception {
@@ -217,7 +231,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
   public void testAmountGreaterThanInitialTransactionAmount() throws Exception {
     openDialogWithSampleTransaction()
       .enterAmount("100")
-      .checkErrorMessage("Amount must be less than 20\u20ac")
+      .checkErrorMessage("Amount must be less than 20")
       .cancel();
     transactions
       .initContent()
@@ -234,7 +248,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
         {TransactionType.PRELEVEMENT, MasterCategory.NONE, "Auchan", -12.0, ""},
       })
       .enterAmount("15")
-      .checkErrorMessage("Amount must be less than 8€")
+      .checkErrorMessage("Amount must be less than 8")
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -8.0, ""},
         {TransactionType.PRELEVEMENT, MasterCategory.NONE, "Auchan", -12.0, ""},
