@@ -28,7 +28,7 @@ public class PRootDataManager implements RootDataManager {
     PrevaylerFactory prevaylerFactory = new PrevaylerFactory();
 
     prevaylerFactory.configurePrevalenceDirectory(getPathToPrevayler(path));
-
+    prevaylerFactory.configureTransactionFiltering(false);
     Serializer serializer = new DefaultSerializer(initSerializerPolicy());
     prevaylerFactory.configureJournalSerializer("journal", serializer);
     prevaylerFactory.configureSnapshotSerializer("snapshot", serializer);

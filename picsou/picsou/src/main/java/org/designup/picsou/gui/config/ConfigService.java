@@ -191,8 +191,10 @@ public class ConfigService {
       this.launchCount = launchCount;
       this.activationCode = activationCode;
     }
-    ConfigRequest request = new ConfigRequest();
-    request.start();
+    if (URL != null) {
+      ConfigRequest request = new ConfigRequest();
+      request.start();
+    }
   }
 
   private class ConfigRequest extends Thread {
