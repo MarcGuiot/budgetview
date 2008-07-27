@@ -140,7 +140,7 @@ public class Gauge extends JPanel {
   public void setActualValue(double actualValue) {
     this.actualValue = actualValue;
 // TODO: REMOVE THIS - FOR GRAPHICAL TESTS ONLY
-//    this.actualValue = Math.random();
+    this.actualValue = Math.random();
 // TODO: REMOVE THIS - FOR GRAPHICAL TESTS ONLY
   }
 
@@ -151,7 +151,7 @@ public class Gauge extends JPanel {
   public void setTargetValue(double targetValue) {
     this.targetValue = targetValue;
 // TODO: REMOVE THIS - FOR GRAPHICAL TESTS ONLY
-//    this.targetValue = Math.random() * 1.3;
+    this.targetValue = Math.random() * 1.3;
 // TODO: REMOVE THIS - FOR GRAPHICAL TESTS ONLY
   }
 
