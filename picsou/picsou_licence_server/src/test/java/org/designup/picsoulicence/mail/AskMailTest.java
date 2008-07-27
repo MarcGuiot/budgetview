@@ -3,7 +3,7 @@ package org.designup.picsoulicence.mail;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.designup.picsoulicence.LicenceTestCase;
+import org.designup.picsoulicence.LicenseTestCase;
 import org.designup.picsoulicence.model.License;
 import org.designup.picsoulicence.model.MailError;
 import org.globsframework.sqlstreams.SqlConnection;
@@ -11,7 +11,7 @@ import org.globsframework.sqlstreams.constraints.Constraints;
 
 import java.io.IOException;
 
-public class AskMailTest extends LicenceTestCase {
+public class AskMailTest extends LicenseTestCase {
   private HttpClient client;
 
   protected void setUp() throws Exception {

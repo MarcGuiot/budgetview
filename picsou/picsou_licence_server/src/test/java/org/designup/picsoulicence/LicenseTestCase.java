@@ -13,7 +13,7 @@ import org.uispec4j.UISpecTestCase;
 
 import java.util.Iterator;
 
-public abstract class LicenceTestCase extends UISpecTestCase {
+public abstract class LicenseTestCase extends UISpecTestCase {
   protected SimpleSmtpServer mailServer;
   private LicenceServer server;
   private Thread mailThread;

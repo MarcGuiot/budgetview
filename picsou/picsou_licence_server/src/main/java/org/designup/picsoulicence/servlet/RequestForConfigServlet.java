@@ -39,15 +39,33 @@ public class RequestForConfigServlet extends HttpServlet {
     String signature = req.getHeader(ConfigService.HEADER_SIGNATURE);
     String count = req.getHeader(ConfigService.HEADER_COUNT);
     if (mail != null && activationCode != null) {
-      computeLicense(resp, mail, activationCode, Long.parseLong(count));
+      computeLicense(resp, mail, activationCode, Long.parseLong(count), id);
     }
     else {
       SqlConnection db = sqlService.getDb();
-      db.getCreateBuilder(RepoInfo.TYPE)
-        .set(RepoInfo.REPO_ID, id)
-        .getRequest()
-        .run();
+      GlobList globList = db.getQueryBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, id))
+        .selectAll()
+        .getQuery().executeAsGlobs();
       db.commit();
+      if (globList.size() == 0) {
+        db.getCreateBuilder(RepoInfo.TYPE)
+          .set(RepoInfo.REPO_ID, id)
+          .set(RepoInfo.LAST_ACCESS_DATE, new Date())
+          .set(RepoInfo.COUNT, 1L)
+          .getRequest()
+          .run();
+        db.commit();
+      }
+      else if (globList.size() > 1) {
+        logger.finest("many repo with the same id");
+      }
+      if (globList.size() >= 1) {
+        db.getUpdateBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, id))
+          .update(RepoInfo.LAST_ACCESS_DATE, new Date())
+          .update(RepoInfo.COUNT, globList.get(0).get(RepoInfo.COUNT) + 1)
+          .getRequest().run();
+        db.commit();
+      }
     }
     String s = req.getHeader(ConfigService.HEADER_CONFIG_VERSION);
     if (s != null) {
@@ -58,8 +76,9 @@ public class RequestForConfigServlet extends HttpServlet {
     }
   }
 
-  private void computeLicense(HttpServletResponse resp, String mail, String activationCode, Long count) {
-    logger.info("mail : '" + mail + "' count :'" + count + "'");
+  private void computeLicense(HttpServletResponse resp, String mail, String activationCode,
+                              Long count, String repoId) {
+    logger.info("mail : '" + mail + "' count :'" + count + "' " + "repoId :'" + repoId + "'");
     SqlConnection db = null;
     try {
       db = sqlService.getDb();
@@ -78,6 +97,7 @@ public class RequestForConfigServlet extends HttpServlet {
           resp.addHeader(ConfigService.HEADER_MAIL_SENT, "true");
           String code = LicenceGenerator.generateActivationCode();
           db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+            .update(License.REPO_ID, repoId)
             .update(License.ACTIVATION_CODE, code)
             .update(License.LAST_DATE_KILLED_1, new Date())
             .update(License.LAST_DATE_KILLED_2, license.get(License.LAST_DATE_KILLED_1))

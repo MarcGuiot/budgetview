@@ -17,6 +17,8 @@ public class License {
 
   public static StringField ACTIVATION_CODE;
 
+  public static StringField REPO_ID;
+
   public static StringField LAST_ACTIVATION_CODE;
 
   public static BlobField SIGNATURE;

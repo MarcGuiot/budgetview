@@ -17,7 +17,6 @@ import org.prevayler.foundation.serialization.Serializer;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Random;
 
 public class PRootDataManager implements RootDataManager {
   private Prevayler prevayler;
@@ -33,12 +32,10 @@ public class PRootDataManager implements RootDataManager {
     prevaylerFactory.configureJournalSerializer("journal", serializer);
     prevaylerFactory.configureSnapshotSerializer("snapshot", serializer);
     prevaylerFactory.configureTransientMode(inMemory);
-    Random random = new Random();
-    byte[] repoId = new byte[40];
-    random.nextBytes(repoId);
-    prevaylerFactory.configurePrevalentSystem(new PRootData(repoId));
+    prevaylerFactory.configurePrevalentSystem(new PRootData());
     try {
       prevayler = prevaylerFactory.create();
+      prevayler.execute(InitialRepoIdTransaction.create());
     }
     catch (Exception e) {
       throw new UnexpectedApplicationState(e);
@@ -59,6 +56,7 @@ public class PRootDataManager implements RootDataManager {
     serializablePolicy.registerFactory(CreateUserAndHiddenUser.getFactory());
     serializablePolicy.registerFactory(DeleteUserAndHiddenUser.getFactory());
     serializablePolicy.registerFactory(GetAndUpdateCount.getFactory());
+    serializablePolicy.registerFactory(InitialRepoIdTransaction.getFactory());
     serializablePolicy.registerFactory(Register.getFactory());
     serializablePolicy.registerFactory(PRootData.getFactory());
     return serializablePolicy;

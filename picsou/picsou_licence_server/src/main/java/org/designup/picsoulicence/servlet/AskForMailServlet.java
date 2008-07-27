@@ -1,5 +1,6 @@
 package org.designup.picsoulicence.servlet;
 
+import org.designup.picsoulicence.LicenceGenerator;
 import org.designup.picsoulicence.mail.Mailler;
 import org.designup.picsoulicence.model.License;
 import org.designup.picsoulicence.model.MailError;
@@ -38,13 +39,17 @@ public class AskForMailServlet extends HttpServlet {
         SqlConnection db = sqlService.getDb();
         GlobList registeredMail;
         try {
+          String activationCode = LicenceGenerator.generateActivationCode();
           registeredMail = db.getQueryBuilder(License.TYPE,
                                               Constraints.equal(License.MAIL, mailTo))
             .select(License.MAIL)
             .getQuery().executeAsGlobs();
           if (registeredMail.isEmpty()) {
-            GlobBuilder.init(License.TYPE).set(License.MAIL, mailTo);
+            GlobBuilder.init(License.TYPE)
+              .set(License.MAIL, mailTo)
+              .set(License.ACTIVATION_CODE, activationCode);
             db.getCreateBuilder(License.TYPE)
+
               .set(License.MAIL, mailTo).getRequest().run();
           }
         }

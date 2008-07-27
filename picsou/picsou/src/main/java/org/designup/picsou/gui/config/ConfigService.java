@@ -104,7 +104,7 @@ public class ConfigService {
       PostMethod postMethod = new PostMethod(url);
       postMethod.setRequestHeader(HEADER_CONFIG_VERSION, Long.toString(localVersion));
       postMethod.setRequestHeader(HEADER_APPLICATION_VERSION, Integer.toString(applicationVersion));
-      postMethod.setRequestHeader(HEADER_REPO_ID, repoId.toString());
+      postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.b64Decode(repoId));
       if (signature != null && signature.length() > 1) {
         postMethod.setRequestHeader(HEADER_MAIL, mail);
         postMethod.setRequestHeader(HEADER_SIGNATURE, signature);
@@ -184,7 +184,7 @@ public class ConfigService {
 
   public void update(byte[] repoId, long launchCount, byte[] mail, byte[] signature, String activationCode) {
     this.repoId = repoId;
-    if (mail.length != 0 && signature.length != 0) {
+    if (mail != null && mail.length != 0 && signature != null && signature.length != 0) {
       isValideSignature = KeyChecker.checkSignature(mail, signature);
       this.mail = new String(mail);
       this.signature = Encoder.b64Decode(signature);

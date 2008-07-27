@@ -481,6 +481,10 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
           return;
         }
         InputStream inputStream = node.getInputStream();
+//        ClassReader classReader = new ClassReader(inputStream);
+//        ClassWriter classWriter = new FilterWriter(classReader,
+//                                                  ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+//        classWriter.toByteArray()
         jarOutputStream.putNextEntry(new ZipEntry(cachePath.toString() + node.getName()));
         int c;
         while ((c = inputStream.read()) != -1) {

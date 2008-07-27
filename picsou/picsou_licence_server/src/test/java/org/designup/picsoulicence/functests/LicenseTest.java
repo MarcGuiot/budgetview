@@ -5,12 +5,13 @@ import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.checkers.MonthChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsoulicence.LicenceTestCase;
+import org.designup.picsoulicence.LicenseTestCase;
 import org.designup.picsoulicence.model.License;
 import org.designup.picsoulicence.model.MailError;
 import org.designup.picsoulicence.model.RepoInfo;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.Dates;
@@ -18,7 +19,9 @@ import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class LicenceTest extends LicenceTestCase {
+import java.util.Date;
+
+public class LicenseTest extends LicenseTestCase {
   private PicsouApplication picsouApplication;
   private Window window;
 
@@ -27,9 +30,8 @@ public class LicenceTest extends LicenceTestCase {
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
     start();
     SqlConnection connection = getSqlConnection();
-    connection.createTable(License.TYPE);
-    connection.createTable(RepoInfo.TYPE);
-    connection.createTable(MailError.TYPE);
+    connection.createTable(License.TYPE, RepoInfo.TYPE, MailError.TYPE);
+    connection.emptyTable(License.TYPE, RepoInfo.TYPE, MailError.TYPE);
     startPicsou();
   }
 
@@ -49,10 +51,11 @@ public class LicenceTest extends LicenceTestCase {
 
   public void testConnectAtStartup() throws Exception {
     SqlConnection connection = getSqlConnection();
+    checkRepoIdIsUpdated(connection, 1L);
     String mail = "alfred@free.fr";
     connection.getCreateBuilder(License.TYPE)
       .set(License.MAIL, mail)
-      .set(License.ACTIVATION_CODE, "ZE23E-342SC")
+      .set(License.ACTIVATION_CODE, "1234")
       .getRequest()
       .run();
     connection.commit();
@@ -60,18 +63,43 @@ public class LicenceTest extends LicenceTestCase {
     loginChecker.logNewUser("user", "passw@rd");
     loginChecker.skipImport();
     LicenseChecker checker = new LicenseChecker(window);
-    checker.enterLicense(mail, "ZE23E-342SC");
-    Glob license = getLicense(connection, mail, License.SIGNATURE, null);
-    assertTrue(license.get(License.SIGNATURE).length > 1);
+    checker.enterLicense(mail, "1234");
+    Glob license = getLicense(connection, mail, License.LAST_COUNT, 1L);
     assertEquals(1L, license.get(License.LAST_COUNT).longValue());
+    assertTrue(license.get(License.SIGNATURE).length > 1);
     MonthChecker monthChecker = new MonthChecker(window);
     monthChecker.assertSpanEquals("2008/07", "2010/07");
 
     window.dispose();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
-    license = getLicense(connection, mail, License.LAST_COUNT, 2);
+    license = getLicense(connection, mail, License.LAST_COUNT, 2L);
     assertEquals(2L, license.get(License.LAST_COUNT).longValue());
+  }
+
+  public void testMultipleAnonymousConnect() throws Exception {
+    SqlConnection connection = getSqlConnection();
+    checkRepoIdIsUpdated(connection, 1L);
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
+    loginChecker.skipImport();
+    window.dispose();
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    startPicsou();
+    checkRepoIdIsUpdated(connection, 2L);
+    loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
+  }
+
+  private void checkRepoIdIsUpdated(SqlConnection connection, long repoCount) {
+    GlobList globList = connection.getQueryBuilder(RepoInfo.TYPE)
+      .selectAll()
+      .getQuery().executeAsGlobs();
+    assertEquals(1, globList.size());
+    Glob repoInfo = globList.get(0);
+    Date target = repoInfo.get(RepoInfo.LAST_ACCESS_DATE);
+    assertTrue(Dates.isNear(new Date(), target, 1000));
+    assertEquals(repoCount, repoInfo.get(RepoInfo.COUNT).longValue());
   }
 
   private Glob getLicense(SqlConnection connection, String mail, Field field, Object expected) throws InterruptedException {
@@ -86,7 +114,7 @@ public class LicenceTest extends LicenceTestCase {
       if (actual != null && (expected == null || actual.equals(expected))) {
         break;
       }
-      Thread.sleep(50);
+      Thread.sleep(10);
     }
     return license;
   }
