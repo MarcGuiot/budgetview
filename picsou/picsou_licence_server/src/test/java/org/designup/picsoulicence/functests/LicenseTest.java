@@ -54,6 +54,9 @@ public class LicenseTest extends LicenseTestCase {
 
   public void testConnectAtStartup() throws Exception {
     SqlConnection connection = getSqlConnection();
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
+    loginChecker.skipImport();
     checkRepoIdIsUpdated(connection, 1L);
     String mail = "alfred@free.fr";
     connection.getCreateBuilder(License.TYPE)
@@ -62,9 +65,6 @@ public class LicenseTest extends LicenseTestCase {
       .getRequest()
       .run();
     connection.commit();
-    LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("user", "passw@rd");
-    loginChecker.skipImport();
     LicenseChecker checker = new LicenseChecker(window);
     checker.enterLicense(mail, "1234");
     Glob license = getLicense(connection, mail, License.LAST_COUNT, 1L);
@@ -76,22 +76,24 @@ public class LicenseTest extends LicenseTestCase {
     window.dispose();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
+    loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
     license = getLicense(connection, mail, License.LAST_COUNT, 2L);
     assertEquals(2L, license.get(License.LAST_COUNT).longValue());
   }
 
   public void testMultipleAnonymousConnect() throws Exception {
     SqlConnection connection = getSqlConnection();
-    checkRepoIdIsUpdated(connection, 1L);
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
     loginChecker.skipImport();
+    checkRepoIdIsUpdated(connection, 1L);
     window.dispose();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
-    checkRepoIdIsUpdated(connection, 2L);
     loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
+    checkRepoIdIsUpdated(connection, 2L);
   }
 
   private void checkRepoIdIsUpdated(SqlConnection connection, long repoCount) {
