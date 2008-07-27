@@ -9,6 +9,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.Strings;
 
 import java.util.*;
 
@@ -93,6 +94,18 @@ public class GlobMatchers {
 
   public static GlobMatcher fieldEqualsObject(Field field, Object value) {
     return new SingleFieldMatcher(field, value);
+  }
+
+  public static GlobMatcher fieldContainsIgnoreCase(final StringField field, final String value) {
+    if (Strings.isNullOrEmpty(value)) {
+      return ALL;
+    }
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        String actual = item.get(field);
+        return actual != null && actual.toLowerCase().contains(value.toLowerCase());
+      }
+    };
   }
 
   public static GlobMatcher contained(Field field, Object... values) {
