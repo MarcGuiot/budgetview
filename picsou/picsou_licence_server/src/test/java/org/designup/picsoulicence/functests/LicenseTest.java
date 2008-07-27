@@ -32,12 +32,15 @@ public class LicenseTest extends LicenseTestCase {
     SqlConnection connection = getSqlConnection();
     connection.createTable(License.TYPE, RepoInfo.TYPE, MailError.TYPE);
     connection.emptyTable(License.TYPE, RepoInfo.TYPE, MailError.TYPE);
+    connection.commitAndClose();
     startPicsou();
   }
 
   protected void tearDown() throws Exception {
     super.tearDown();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    stop();
+    window = null;
   }
 
   private void startPicsou() {

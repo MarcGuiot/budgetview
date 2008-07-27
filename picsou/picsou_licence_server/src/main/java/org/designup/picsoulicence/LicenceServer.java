@@ -96,5 +96,6 @@ public class LicenceServer {
 
   public void stop() throws Exception {
     jetty.stop();
+    jetty.join();
   }
 }

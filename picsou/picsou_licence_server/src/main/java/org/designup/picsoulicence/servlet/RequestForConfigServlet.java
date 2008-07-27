@@ -42,6 +42,7 @@ public class RequestForConfigServlet extends HttpServlet {
       computeLicense(resp, mail, activationCode, Long.parseLong(count), id);
     }
     else {
+      logger.info("id='" + id + "'");
       SqlConnection db = sqlService.getDb();
       GlobList globList = db.getQueryBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, id))
         .selectAll()
