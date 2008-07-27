@@ -79,6 +79,13 @@ public class DispatcherServerAccess implements ServerAccess {
 
   public void connect() {
     localServerAccess.connect();
+    if (remoteServerAccess != null) {
+      try {
+        remoteServerAccess.connect();
+      }
+      catch (Exception e) {
+      }
+    }
   }
 
   public void register(byte[] mail, byte[] signature) {

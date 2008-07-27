@@ -34,8 +34,9 @@ public class RegisterServlet extends HttpServlet {
     String mail = req.getHeader(ConfigService.HEADER_MAIL).trim();
     String activationCode = req.getHeader(ConfigService.HEADER_CODE).trim();
     logger.info("mail : '" + mail + "' code d'activation :'" + activationCode + "'");
+    SqlConnection db = null;
     try {
-      SqlConnection db = sqlService.getDb();
+      db = sqlService.getDb();
       SelectQuery query = db.getQueryBuilder(License.TYPE,
                                              Constraints.equal(License.MAIL, mail))
         .selectAll()
@@ -66,6 +67,12 @@ public class RegisterServlet extends HttpServlet {
     catch (Exception e) {
       logger.throwing("AskForMailServlet", "doPost", e);
       resp.addHeader(ConfigService.HEADER_IS_VALIDE, "true");
+    }
+    finally {
+      if (db != null) {
+        db.commitAndClose();
+      }
+
     }
   }
 }

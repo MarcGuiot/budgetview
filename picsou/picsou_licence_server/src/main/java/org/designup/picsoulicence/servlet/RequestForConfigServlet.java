@@ -60,8 +60,9 @@ public class RequestForConfigServlet extends HttpServlet {
 
   private void computeLicense(HttpServletResponse resp, String mail, String activationCode, Long count) {
     logger.info("mail : '" + mail + "' count :'" + count + "'");
+    SqlConnection db = null;
     try {
-      SqlConnection db = sqlService.getDb();
+      db = sqlService.getDb();
       SelectQuery query = db.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
         .selectAll()
         .getQuery();
@@ -97,12 +98,18 @@ public class RequestForConfigServlet extends HttpServlet {
             .update(License.LAST_ACCESS_DATE, new Date())
             .getRequest()
             .run();
+          db.commit();
         }
       }
     }
     catch (Exception e) {
       logger.throwing("AskForMailServlet", "doPost", e);
       resp.addHeader(ConfigService.HEADER_IS_VALIDE, "true");
+    }
+    finally {
+      if (db != null) {
+        db.commitAndClose();
+      }
     }
   }
 }

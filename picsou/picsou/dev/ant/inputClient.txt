@@ -18,6 +18,7 @@ C org.jfree.chart.resources.JFreeChartResources
 C org.globsframework.gui.splits.components.StyledPanelUI
 C org.globsframework.gui.splits.components.StyledToggleButtonUI
 C org.globsframework.gui.splits.components.ShadowedLabelUI
+C org.globsframework.gui.splits.components.HyperlinkButtonUI
 P com/jgoodies/looks true
 R org/jfree/resources/JCommonResources.class
 R org/jfree/chart/LocalizationBundle.properties

@@ -16,9 +16,9 @@ import java.util.Comparator;
 public class PrevaylerDirectory {
 
   private static final int DIGITS_IN_FILENAME = 19;
-  private static final String SNAPSHOT_SUFFIX_PATTERN = "snapshot";
+  private static final String SNAPSHOT_SUFFIX_PATTERN = "[a-zA-Z0-9]*[Ss]napshot";
   private static final String SNAPSHOT_FILENAME_PATTERN = "\\d{" + DIGITS_IN_FILENAME + "}\\." + SNAPSHOT_SUFFIX_PATTERN;
-  private static final String JOURNAL_SUFFIX_PATTERN = "journal";
+  private static final String JOURNAL_SUFFIX_PATTERN = "[a-zA-Z0-9]*[Jj]ournal";
   private static final String JOURNAL_FILENAME_PATTERN = "\\d{" + DIGITS_IN_FILENAME + "}\\." + JOURNAL_SUFFIX_PATTERN;
 
   private File _directory;
