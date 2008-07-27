@@ -7,6 +7,7 @@ import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.details.CategorisationHyperlinkButton;
+import org.designup.picsou.gui.transactions.details.TransactionSearch;
 import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -15,6 +16,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobMultiLineTextEditor;
 import org.globsframework.gui.splits.components.HyperlinkButton;
+import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobMultiLineTextView;
@@ -31,12 +33,18 @@ import org.globsframework.model.utils.GlobListMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 import java.util.HashSet;
 import java.util.Set;
 
 public class TransactionDetailsView extends View {
-  public TransactionDetailsView(GlobRepository repository, Directory directory) {
+  private TransactionView transactionView;
+
+  public TransactionDetailsView(GlobRepository repository, Directory directory, TransactionView transactionView) {
     super(repository, directory);
+    this.transactionView = transactionView;
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -107,6 +115,10 @@ public class TransactionDetailsView extends View {
     builder.add("categorizeLink", new CategorizationAction(directory));
 
     builder.add("transactionSeriesName", addLabel(descriptionService.getListStringifier(Transaction.SERIES), true));
+
+    TransactionSearch search = new TransactionSearch(transactionView, directory);
+    builder.add("searchField", search.getTextField());
+
     return builder;
   }
 

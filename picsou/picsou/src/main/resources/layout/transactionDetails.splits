@@ -1,7 +1,7 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
-  
+
   <styles>
     <style selector="#transactionDetails label" foreground="transaction.detail.text"/>
 
@@ -16,7 +16,7 @@
     <style selector="panel" opaque="false"/>
 
     <style selector="textArea" foreground="transaction.detail.text" opaque="false" anchor="top"
-       lineWrap="true" wrapStyleWord="true"/>
+           lineWrap="true" wrapStyleWord="true"/>
     <style selector="textArea#userLabel" font="$transaction.label"/>
 
     <style selector="label#amountValue" font="-,bold,16"/>
@@ -83,5 +83,11 @@
     </row>
 
     <filler fill="vertical"/>
+
+    <row>
+      <label text="$transaction.details.search" styleClass="formLabel"/>
+      <textField ref="searchField"/>
+    </row>
+
   </column>
 </splits>

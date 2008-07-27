@@ -1,11 +1,13 @@
 package org.designup.picsou.gui.transactions.categorization;
 
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.PicsouTableHeaderCustomizer;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.description.TransactionCategoriesStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
-import org.designup.picsou.gui.transactions.columns.TransactionViewUtils;
 import org.designup.picsou.gui.transactions.columns.TransactionTableRenderer;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
@@ -91,7 +93,8 @@ public class CategoryPropagationDialog {
     GlobTableView view = builder.addTable("transaction", Transaction.TYPE, comparator);
 
     view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
-    TransactionViewUtils.configureHeader(view, localDirectory);
+    view.setHeaderCustomizer(new PicsouTableHeaderCustomizer(localDirectory, PicsouColors.TRANSACTION_TABLE_HEADER_TITLE),
+                             new PicsouTableHeaderPainter(view, localDirectory));
 
     GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
     GlobStringifier categoriesStringifier =

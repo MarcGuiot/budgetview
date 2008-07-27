@@ -2,6 +2,8 @@ package org.designup.picsou.gui.transactions.split;
 
 import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.PicsouTableHeaderCustomizer;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.BalanceStringifier;
 import org.designup.picsou.gui.description.TransactionCategoriesStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
@@ -9,6 +11,7 @@ import org.designup.picsou.gui.transactions.categorization.TransactionCategoryCh
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.transactions.details.CategorisationHyperlinkButton;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesToCategory;
@@ -238,7 +241,8 @@ public class SplitTransactionDialog {
     GlobTableView view = builder.addTable("transaction", Transaction.TYPE, transactionComparator);
 
     view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
-    TransactionViewUtils.configureHeader(view, localDirectory);
+    view.setHeaderCustomizer(new PicsouTableHeaderCustomizer(localDirectory, PicsouColors.TRANSACTION_TABLE_HEADER_TITLE),
+                             new PicsouTableHeaderPainter(view, localDirectory));
 
     GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
     GlobStringifier categoriesStringifier =

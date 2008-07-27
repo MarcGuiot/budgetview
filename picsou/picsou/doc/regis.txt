@@ -27,11 +27,8 @@ Vue budget
 
 Vue releves
 -----------
-- filtrage par label
 - colonne "category" de transactionView => ouvrir CategorizationDialog
 - bug reset transactionDetails
-- retirer titres colonnes CategoryView
-- icones CategoryView
 
 
 Import panel

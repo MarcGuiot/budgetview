@@ -181,4 +181,8 @@ public class TransactionDetailsChecker extends DataChecker {
     TextBox splitMessage = getPanel().getTextBox("splitMessage");
     assertFalse(splitMessage.isVisible());
   }
+
+  public TextBox getSearchField() {
+    return getPanel().getInputTextBox("searchField");
+  }
 }

@@ -32,6 +32,13 @@ CategoryChooser
 - Migration sous Splits (repeat) + ColumnLayout
 
 
+Vue releve
+----------
+- affichage infos split
+- couleur transactions ghost
+- recherche
+
+
 Misc
 ----
 - joliesse generale picsou (retrait barre du haut, look blocks)
