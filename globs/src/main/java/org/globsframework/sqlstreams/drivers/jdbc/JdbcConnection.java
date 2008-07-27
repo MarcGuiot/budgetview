@@ -86,7 +86,13 @@ public abstract class JdbcConnection implements SqlConnection {
     return new SqlCreateBuilder(connection, globType, sqlService, blobUpdater, this);
   }
 
-  public void createTable(GlobType globType) {
+  public void createTable(GlobType... globTypes) {
+    for (GlobType type : globTypes) {
+      createTable(type);
+    }
+  }
+
+  private void createTable(GlobType globType) {
     if (checker.tableExists(globType)) {
       return;
     }
@@ -121,7 +127,13 @@ public abstract class JdbcConnection implements SqlConnection {
     }
   }
 
-  public void emptyTable(GlobType globType) {
+  public void emptyTable(GlobType... globTypes) {
+    for (GlobType globType : globTypes) {
+      emptyTable(globType);
+    }
+  }
+
+  private void emptyTable(GlobType globType) {
     StringPrettyWriter writer = new StringPrettyWriter();
     writer.append("DELETE FROM ")
       .append(sqlService.getTableName(globType))

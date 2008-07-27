@@ -99,28 +99,36 @@ public class SqlCreateBuilder implements CreateBuilder {
     return setObject(field, accessor);
   }
 
+  public CreateBuilder set(TimeStampField field, Date date) {
+    return setObject(field, new ValueDateAccessor(date));
+  }
+
   public CreateBuilder set(BlobField field, BlobAccessor accessor) {
     return setObject(field, accessor);
   }
 
+  public CreateBuilder set(DateField field, DateAccessor accessor) {
+    return setObject(field, accessor);
+  }
+
   public CreateBuilder set(BlobField field, byte[] values) {
-    setObject(field, new ValueBlobAccessor(values));
-    return this;
+    return setObject(field, new ValueBlobAccessor(values));
   }
 
   public CreateBuilder set(StringField field, String value) {
-    setObject(field, new ValueStringAccessor(value));
-    return this;
+    return setObject(field, new ValueStringAccessor(value));
   }
 
   public CreateBuilder set(LongField field, Long value) {
-    setObject(field, new ValueLongAccessor(value));
-    return this;
+    return setObject(field, new ValueLongAccessor(value));
   }
 
   public CreateBuilder set(IntegerField field, Integer value) {
-    setObject(field, new ValueIntegerAccessor(value));
-    return this;
+    return setObject(field, new ValueIntegerAccessor(value));
+  }
+
+  public CreateBuilder set(DateField field, Date date) {
+    return setObject(field, new ValueDateAccessor(date));
   }
 
   public LongAccessor getKeyGeneratedAccessor() {

@@ -9,10 +9,7 @@ import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.sqlstreams.exceptions.SqlException;
 import org.globsframework.streams.accessors.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MultiCreateBuilder implements CreateBuilder {
   private Map<GlobType, CreateBuilder> createBuilders;
@@ -60,6 +57,21 @@ public class MultiCreateBuilder implements CreateBuilder {
   }
 
   public CreateBuilder set(TimeStampField field, DateAccessor accessor) {
+    createBuilders.get(field.getGlobType()).set(field, accessor);
+    return this;
+  }
+
+  public CreateBuilder set(TimeStampField field, Date date) {
+    createBuilders.get(field.getGlobType()).set(field, date);
+    return this;
+  }
+
+  public CreateBuilder set(DateField field, Date date) {
+    createBuilders.get(field.getGlobType()).set(field, date);
+    return this;
+  }
+
+  public CreateBuilder set(DateField field, DateAccessor accessor) {
     createBuilders.get(field.getGlobType()).set(field, accessor);
     return this;
   }

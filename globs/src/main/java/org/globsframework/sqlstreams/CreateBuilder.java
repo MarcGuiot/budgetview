@@ -4,6 +4,8 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.streams.accessors.*;
 
+import java.util.Date;
+
 public interface CreateBuilder {
   CreateBuilder set(IntegerField field, Integer value);
 
@@ -20,6 +22,12 @@ public interface CreateBuilder {
   CreateBuilder set(StringField field, StringAccessor accessor);
 
   CreateBuilder set(TimeStampField field, DateAccessor accessor);
+
+  CreateBuilder set(TimeStampField field, Date date);
+
+  CreateBuilder set(DateField field, Date date);
+
+  CreateBuilder set(DateField field, DateAccessor accessor);
 
   CreateBuilder set(BlobField field, BlobAccessor accessor);
 
