@@ -10,9 +10,12 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class JdbcSqlService extends AbstractSqlService {
+  private static Map<String, Driver> loadedDrivers = new HashMap<String, Driver>();
   private Driver driver;
   private String dbName;
   private Properties dbInfo;
@@ -33,7 +36,9 @@ public class JdbcSqlService extends AbstractSqlService {
   private void loadDriver() {
     try {
       if (dbName.contains("hsqldb")) {
-        driver = (Driver)Class.forName("org.hsqldb.jdbcDriver").newInstance();
+        if (!loadedDrivers.containsKey("hsqldb")) {
+          driver = (Driver)Class.forName("org.hsqldb.jdbcDriver").newInstance();
+        }
         dbFactory = new DbFactory() {
           public SqlConnection create() {
             Connection connection = getConnection();
@@ -48,7 +53,9 @@ public class JdbcSqlService extends AbstractSqlService {
         };
       }
       else if (dbName.contains("mysql")) {
-        driver = (Driver)Class.forName("com.mysql.jdbc.Driver").newInstance();
+        if (!loadedDrivers.containsKey("mysdb")) {
+          driver = (Driver)Class.forName("com.mysql.jdbc.Driver").newInstance();
+        }
         dbFactory = new DbFactory() {
           public SqlConnection create() {
             Connection connection = getConnection();
