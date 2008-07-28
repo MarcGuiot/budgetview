@@ -43,6 +43,7 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     picsouServer = null;
     window.dispose();
     window = null;
+    System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
   }
 
   public void createAndLogUser(String user, String userPassword, final String fileName) {

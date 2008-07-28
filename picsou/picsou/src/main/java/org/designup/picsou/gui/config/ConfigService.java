@@ -9,6 +9,10 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.KeyChecker;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.User;
+import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.utils.BeginRemove;
+import org.designup.picsou.utils.EndRemove;
+import org.designup.picsou.utils.Inline;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
@@ -51,8 +55,8 @@ public class ConfigService {
   private String signature;
   private byte[] repoId;
   private String activationCode;
-  private boolean isValideSignature;
-  private boolean isStillValide;
+  private boolean isValideSignature = true;
+  private boolean isStillValide = true;
   public static final String REGISTER_SERVLET = "register";
   private static final String REGISTER = "/" + REGISTER_SERVLET;
   private static final String REQUEST_FOR_CONFIG = "/requestForConfig";
@@ -92,12 +96,6 @@ public class ConfigService {
 
   }
 
-  public void loadConfig(GlobRepository repository) {
-    synchronized (this) {
-      notify();
-    }
-  }
-
   private boolean sendRequestForNewConfig(String url) {
     url += REQUEST_FOR_CONFIG;
     try {
@@ -105,6 +103,8 @@ public class ConfigService {
       postMethod.setRequestHeader(HEADER_CONFIG_VERSION, Long.toString(localVersion));
       postMethod.setRequestHeader(HEADER_APPLICATION_VERSION, Integer.toString(applicationVersion));
       postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.b64Decode(repoId));
+      System.out.println("ConfigService.sendRequestForNewConfig " + signature + " " +
+                         "" + mail + " " + activationCode);
       if (signature != null && signature.length() > 1) {
         postMethod.setRequestHeader(HEADER_MAIL, mail);
         postMethod.setRequestHeader(HEADER_SIGNATURE, signature);
@@ -150,14 +150,14 @@ public class ConfigService {
     analyzerFactory.load(loader);
   }
 
-  public static void register(final Directory directory, GlobRepository repository) {
-    repository.addChangeListener(new RegistrationListener(directory));
-  }
-
   public void sendRegister(String mail, String code, GlobRepository repository) {
-    if (URL == null) {
+    @BeginRemove
+    int a;
+    if (URL == null || URL.length() == 0) {
       return;
     }
+    @EndRemove
+    int b;
     try {
       String url = URL + REGISTER;
       PostMethod postMethod = new PostMethod(url);
@@ -191,10 +191,26 @@ public class ConfigService {
       this.launchCount = launchCount;
       this.activationCode = activationCode;
     }
-    if (URL != null) {
+    if (URL != null && URL.length() != 0) {
       ConfigRequest request = new ConfigRequest();
       request.start();
     }
+  }
+
+  @Inline
+  public static void check(Directory directory, GlobRepository repository) {
+    ConfigService configService = directory.get(ConfigService.class);
+    if (!configService.isValideSignature() || !configService.isStillValide()) {
+      repository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT, 1);
+    }
+  }
+
+  public boolean isValideSignature() {
+    return isValideSignature;
+  }
+
+  public boolean isStillValide() {
+    return isStillValide;
   }
 
   private class ConfigRequest extends Thread {

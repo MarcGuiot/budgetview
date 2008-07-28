@@ -18,6 +18,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
   private LicenceServer server;
   private Thread mailThread;
   private static final String databaseUrl = "jdbc:hsqldb:.";
+  private SqlService sqlService = null;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -37,7 +38,9 @@ public abstract class LicenseTestCase extends UISpecTestCase {
   }
 
   public SqlConnection getSqlConnection() {
-    SqlService sqlService = new JdbcSqlService(databaseUrl, "sa", "");
+    if (sqlService == null) {
+      sqlService = new JdbcSqlService(databaseUrl, "sa", "");
+    }
     return sqlService.getDb();
   }
 
@@ -56,6 +59,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     mailServer.stop();
     mailThread.join();
     server.stop();
+    System.setProperty("com.picsou.licence.url", "");
   }
 
   protected void checkReceive(String mailTo) throws InterruptedException {

@@ -25,6 +25,15 @@ public class LoginChecker {
     loginButton.click();
   }
 
+  public void logUser(String user, String password) {
+    userField = panel.getInputTextBox("name");
+    passwordField = panel.getPasswordField("password");
+    loginButton = panel.getButton("Enter");
+    userField.setText(user);
+    passwordField.setPassword(password);
+    loginButton.click();
+  }
+
   public void skipImport() {
     panel.getButton("Close").click();
   }

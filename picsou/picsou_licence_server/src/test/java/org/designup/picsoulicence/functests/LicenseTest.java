@@ -10,9 +10,11 @@ import org.designup.picsoulicence.model.License;
 import org.designup.picsoulicence.model.MailError;
 import org.designup.picsoulicence.model.RepoInfo;
 import org.globsframework.metamodel.Field;
+import org.globsframework.model.EmptyGlobList;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;
+import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
@@ -27,6 +29,7 @@ public class LicenseTest extends LicenseTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
+    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
     start();
     SqlConnection connection = getSqlConnection();
@@ -54,10 +57,10 @@ public class LicenseTest extends LicenseTestCase {
 
   public void testConnectAtStartup() throws Exception {
     SqlConnection connection = getSqlConnection();
+    checkRepoIdIsUpdated(connection, 1L);
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
     loginChecker.skipImport();
-    checkRepoIdIsUpdated(connection, 1L);
     String mail = "alfred@free.fr";
     connection.getCreateBuilder(License.TYPE)
       .set(License.MAIL, mail)
@@ -77,50 +80,59 @@ public class LicenseTest extends LicenseTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
     loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("user", "passw@rd");
+    loginChecker.logUser("user", "passw@rd");
     license = getLicense(connection, mail, License.LAST_COUNT, 2L);
     assertEquals(2L, license.get(License.LAST_COUNT).longValue());
   }
 
   public void testMultipleAnonymousConnect() throws Exception {
     SqlConnection connection = getSqlConnection();
+    checkRepoIdIsUpdated(connection, 1L);
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
     loginChecker.skipImport();
-    checkRepoIdIsUpdated(connection, 1L);
     window.dispose();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
-    loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("user", "passw@rd");
     checkRepoIdIsUpdated(connection, 2L);
+    loginChecker = new LoginChecker(window);
+    loginChecker.logUser("user", "passw@rd");
   }
 
-  private void checkRepoIdIsUpdated(SqlConnection connection, long repoCount) {
-    GlobList globList = connection.getQueryBuilder(RepoInfo.TYPE)
-      .selectAll()
-      .getQuery().executeAsGlobs();
-    assertEquals(1, globList.size());
-    Glob repoInfo = globList.get(0);
+  public void testResendActivationKeyIfCountDecrease() throws Exception {
+  }
+
+  private void checkRepoIdIsUpdated(SqlConnection connection, long repoCount) throws InterruptedException {
+    Glob repoInfo = getGlob(connection, RepoInfo.COUNT, repoCount, null);
     Date target = repoInfo.get(RepoInfo.LAST_ACCESS_DATE);
     assertTrue(Dates.isNear(new Date(), target, 1000));
     assertEquals(repoCount, repoInfo.get(RepoInfo.COUNT).longValue());
   }
 
   private Glob getLicense(SqlConnection connection, String mail, Field field, Object expected) throws InterruptedException {
-    long end = System.currentTimeMillis() + 2000;
-    Glob license = null;
+    return getGlob(connection, field, expected, Constraints.equal(License.MAIL, mail));
+  }
+
+  private Glob getGlob(SqlConnection connection, Field field, Object expected,
+                       Constraint constraint) throws InterruptedException {
+    long end = System.currentTimeMillis() + 3000;
+    GlobList glob = new EmptyGlobList();
     while (end > System.currentTimeMillis()) {
-      license = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+      glob = connection.getQueryBuilder(field.getGlobType(), constraint)
         .selectAll()
-        .getQuery().executeUnique();
+        .getQuery().executeAsGlobs();
       connection.commit();
-      Object actual = license.getValue(field);
-      if (actual != null && (expected == null || actual.equals(expected))) {
-        break;
+      if (glob.size() == 1) {
+        Object actual = glob.get(0).getValue(field);
+        if (actual != null && (expected == null || actual.equals(expected))) {
+          System.out.println("LicenseTest.getGlob OK");
+          break;
+        }
       }
-      Thread.sleep(10);
+      Thread.sleep(50);
     }
-    return license;
+    assertEquals(1, glob.size());
+    System.out.println("LicenseTest.getGlob " + new Date());
+    return glob.get(0);
   }
 }
