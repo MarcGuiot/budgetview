@@ -12,17 +12,9 @@ public class TransactionViewUtils {
   private TransactionViewUtils() {
   }
 
-  public static void installKeyboardCategorization(final JTable table, Action categoryChooserAction,
+  public static void installKeyboardCategorization(final JTable table,
+                                                   Action categoryChooserAction,
                                                    int noteColumnIndex) {
     table.addKeyListener(new TransactionKeyListener(table, categoryChooserAction, noteColumnIndex));
-  }
-
-  public static void configureHeader(GlobTableView view, Directory directory) {
-    view.setHeaderCustomizer(new PicsouTableHeaderCustomizer(directory, PicsouColors.TRANSACTION_TABLE_HEADER_TITLE),
-                             new PicsouTableHeaderPainter(directory,
-                                                          PicsouColors.TRANSACTION_TABLE_HEADER_DARK,
-                                                          PicsouColors.TRANSACTION_TABLE_HEADER_MEDIUM,
-                                                          PicsouColors.TRANSACTION_TABLE_HEADER_LIGHT,
-                                                          PicsouColors.TRANSACTION_TABLE_HEADER_BORDER));
   }
 }
