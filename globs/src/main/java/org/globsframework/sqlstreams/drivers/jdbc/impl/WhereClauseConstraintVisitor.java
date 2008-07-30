@@ -26,6 +26,10 @@ public class WhereClauseConstraintVisitor implements ConstraintVisitor, OperandV
     visitBinary(constraint, " = ");
   }
 
+  public void visitNotEqual(NotEqualConstraint constraint) {
+    visitBinary(constraint, " <> ");
+  }
+
   public void visitAnd(AndConstraint constraint) {
     visitBinary(constraint, " AND ");
   }

@@ -39,15 +39,24 @@ public abstract class JdbcConnection implements SqlConnection {
   }
 
   public SelectBuilder getQueryBuilder(GlobType globType) {
+    checkConnectionIsNotClosed();
     return new SqlQueryBuilder(connection, globType, null, sqlService, blobUpdater);
   }
 
   public SelectBuilder getQueryBuilder(GlobType globType, Constraint constraint) {
+    checkConnectionIsNotClosed();
     return new SqlQueryBuilder(connection, globType, constraint, sqlService, blobUpdater);
   }
 
   public UpdateBuilder getUpdateBuilder(GlobType globType, Constraint constraint) {
+    checkConnectionIsNotClosed();
     return new SqlUpdateBuilder(connection, globType, sqlService, constraint, blobUpdater);
+  }
+
+  private void checkConnectionIsNotClosed() {
+    if (connection == null) {
+      throw new UnexpectedApplicationState("closed was connection");
+    }
   }
 
   interface DbFunctor {
@@ -55,9 +64,7 @@ public abstract class JdbcConnection implements SqlConnection {
   }
 
   public void commit() throws RollbackFailed {
-    if (connection == null) {
-      throw new UnexpectedApplicationState("closed was connection");
-    }
+    checkConnectionIsNotClosed();
     try {
       connection.commit();
     }

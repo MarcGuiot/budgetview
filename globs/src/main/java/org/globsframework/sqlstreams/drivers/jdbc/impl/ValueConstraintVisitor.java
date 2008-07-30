@@ -25,6 +25,11 @@ public class ValueConstraintVisitor extends SqlValueFieldVisitor implements Cons
     visitBinary(constraint);
   }
 
+  public void visitNotEqual(NotEqualConstraint constraint) {
+    constraint.getLeftOperand().visitOperand(this);
+    constraint.getRightOperand().visitOperand(this);
+  }
+
   private void visitBinary(BinaryOperandConstraint operandConstraint) {
     operandConstraint.getLeftOperand().visitOperand(this);
     operandConstraint.getRightOperand().visitOperand(this);

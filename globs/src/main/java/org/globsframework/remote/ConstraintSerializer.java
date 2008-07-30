@@ -55,6 +55,10 @@ public class ConstraintSerializer {
       constraint.getRightOperand().visitOperand(this);
     }
 
+    public void visitNotEqual(NotEqualConstraint constraint) {
+      output.writeByte(ConstraintId.NotEqualConstraint.getId());
+    }
+
     public void visitAnd(AndConstraint constraint) {
       output.writeByte(ConstraintId.AndConstraint.getId());
       constraint.getLeftConstraint().visit(this);
@@ -167,7 +171,8 @@ public class ConstraintSerializer {
     BiggerThanConstraint(5),
     StrictlyBiggerThanConstraint(6),
     StrictlyLesserThanConstraint(7),
-    InConstraint(8);
+    InConstraint(8),
+    NotEqualConstraint(9);
     private int id;
 
     ConstraintId(int id) {
