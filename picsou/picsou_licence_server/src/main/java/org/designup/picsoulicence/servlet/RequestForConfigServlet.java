@@ -11,6 +11,7 @@ import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.servlet.ServletException;
@@ -109,37 +110,39 @@ public class RequestForConfigServlet extends HttpServlet {
       db.commit();
       GlobList globList = query.executeAsGlobs();
       if (globList.isEmpty()) {
+        resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
         resp.addHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
       }
       else {
         Glob license = globList.get(0);
-        if (count < license.get(License.LAST_COUNT)) {
+        if (count < license.get(License.ACCESS_COUNT)) {
           resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
-          resp.addHeader(ConfigService.HEADER_MAIL_SENT, "true");
-          String code = LicenceGenerator.generateActivationCode();
-          db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
-            .update(License.REPO_ID, repoId)
-            .update(License.ACTIVATION_CODE, code)
-            .update(License.LAST_DATE_KILLED_1, new Date())
-            .update(License.LAST_DATE_KILLED_2, license.get(License.LAST_DATE_KILLED_1))
-            .update(License.LAST_DATE_KILLED_3, license.get(License.LAST_DATE_KILLED_2))
-            .update(License.LAST_DATE_KILLED_4, license.get(License.LAST_DATE_KILLED_3))
-            .update(License.KILLED_COUNT, license.get(License.KILLED_COUNT) + 1)
-            .getRequest()
-            .run();
-          db.commit();
-          mailler.sendNewLicense(mail, code);
+          if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
+            resp.addHeader(ConfigService.HEADER_MAIL_SENT, "true");
+            String code = LicenceGenerator.generateActivationCode();
+            System.out.println("RequestForConfigServlet.computeLicense : " + code);
+            db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+              .update(License.ACTIVATION_CODE, code)
+              .getRequest()
+              .run();
+            db.commit();
+            mailler.sendNewLicense(mail, code);
+          }
         }
         else {
-          if (activationCode.equalsIgnoreCase(license.get(License.LAST_ACTIVATION_CODE))) {
+          if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
             resp.addHeader(ConfigService.HEADER_IS_VALIDE, "true");
+            db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+              .update(License.ACCESS_COUNT, count)
+              .update(License.LAST_ACCESS_DATE, new Date())
+              .getRequest()
+              .run();
+            db.commit();
           }
-          db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
-            .update(License.LAST_COUNT, count)
-            .update(License.LAST_ACCESS_DATE, new Date())
-            .getRequest()
-            .run();
-          db.commit();
+          else {
+            resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
+            resp.addHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
+          }
         }
       }
     }

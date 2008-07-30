@@ -2,10 +2,8 @@ package org.designup.picsoulicence.model;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.LongField;
-import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.fields.TimeStampField;
+import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.sqlstreams.annotations.AutoIncrement;
 
@@ -21,6 +19,9 @@ public class RepoInfo {
   public static TimeStampField LAST_ACCESS_DATE;
 
   public static LongField COUNT;
+
+  @Target(License.class)
+  public static LinkField LICENSE_ID;
 
   static {
     GlobTypeLoader.init(RepoInfo.class);

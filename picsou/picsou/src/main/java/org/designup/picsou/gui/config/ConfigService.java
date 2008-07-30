@@ -38,7 +38,8 @@ public class ConfigService {
   public static final String HEADER_COUNT = "count";
   public static final String HEADER_MAIL_SENT = "mailSent";
   public static final String HEADER_MAIL_UNKNOWN = "mailUnknown";
-  public static final String HEADER_ACTIVATION_CODE_NOT_VALIDE = "activationCodeNotValide";
+  public static final String HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT = "activationCodeNotValideMailNotSent";
+  public static final String HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT = "activationCodeNotValideMailSent";
   public static final String HEADER_CONFIG_VERSION = "configVersion";
   public static final String HEADER_APPLICATION_VERSION = "applicationVersion";
   public static final String HEADER_NEW_VERSION = "newVersion";
@@ -56,7 +57,7 @@ public class ConfigService {
   private byte[] repoId;
   private String activationCode;
   private boolean isValideSignature = true;
-  private boolean isStillValide = true;
+  private Boolean isStillValide = null;
   public static final String REGISTER_SERVLET = "register";
   private static final String REGISTER = "/" + REGISTER_SERVLET;
   private static final String REQUEST_FOR_CONFIG = "/requestForConfig";
@@ -122,16 +123,30 @@ public class ConfigService {
           configFile = new File(pathToConfig, fileName.substring(fileName.length() - 19) + ".jar");
           Files.copyStreamTofile(responseBodyAsStream, configFile.getAbsolutePath());
         }
-        Header validity = postMethod.getRequestHeader(HEADER_IS_VALIDE);
-        if (validity != null) {
-          return "true".equalsIgnoreCase(validity.getValue());
+        Header validityHeader = postMethod.getResponseHeader(HEADER_IS_VALIDE);
+        System.out.println("ConfigService.sendRequestForNewConfig " + validityHeader.getValue());
+        boolean validity = "true".equalsIgnoreCase(validityHeader.getValue());
+        if (!validity) {
+          if (checkMailSent(postMethod)) {
+            //Push Message
+          }
         }
+        else {
+
+        }
+        return validity;
+
       }
       return true;
     }
     catch (IOException e) {
       return true;
     }
+  }
+
+  private boolean checkMailSent(PostMethod postMethod) {
+    Header header = postMethod.getResponseHeader(HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT);
+    return header != null && header.getValue().equals("true");
   }
 
   private void loadNewConfig() {
@@ -163,6 +178,7 @@ public class ConfigService {
       PostMethod postMethod = new PostMethod(url);
       postMethod.setRequestHeader(HEADER_MAIL, mail);
       postMethod.setRequestHeader(HEADER_CODE, code);
+      postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.b64Decode(repoId));
       httpClient.executeMethod(postMethod);
       Header header = postMethod.getRequestHeader(HEADER_MAIL_UNKNOWN);
       int statusCode = postMethod.getStatusCode();
@@ -184,7 +200,8 @@ public class ConfigService {
 
   public void update(byte[] repoId, long launchCount, byte[] mail, byte[] signature, String activationCode) {
     this.repoId = repoId;
-    if (mail != null && mail.length != 0 && signature != null && signature.length != 0) {
+    if (mail != null && mail.length != 0 && signature != null && signature.length != 0
+        && activationCode != null) {
       isValideSignature = KeyChecker.checkSignature(mail, signature);
       this.mail = new String(mail);
       this.signature = Encoder.b64Decode(signature);
@@ -200,7 +217,8 @@ public class ConfigService {
   @Inline
   public static void check(Directory directory, GlobRepository repository) {
     ConfigService configService = directory.get(ConfigService.class);
-    if (!configService.isValideSignature() || !configService.isStillValide()) {
+    if (!configService.isValideSignature() ||
+        (configService.isStillValide() != null && !configService.isStillValide())) {
       repository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT, 1);
     }
   }
@@ -209,8 +227,22 @@ public class ConfigService {
     return isValideSignature;
   }
 
-  public boolean isStillValide() {
+  public Boolean isStillValide() {
     return isStillValide;
+  }
+
+  @Inline
+  public static void waitEndOfConfigRequest(Directory directory) {
+    ConfigService configService = directory.get(ConfigService.class);
+    synchronized (configService) {
+      while (configService.isStillValide() == null) {
+        try {
+          configService.wait();
+        }
+        catch (InterruptedException e) {
+        }
+      }
+    }
   }
 
   private class ConfigRequest extends Thread {
@@ -223,6 +255,9 @@ public class ConfigService {
         return;
       }
       isStillValide = sendRequestForNewConfig(URL);
+      synchronized (this) {
+        notify();
+      }
       loadNewConfig();
     }
   }

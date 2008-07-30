@@ -19,7 +19,7 @@ public interface Persistence {
 
   Integer confirmUser(String b64LinkInfo) throws IdentificationFailed;
 
-  void register(Integer userId, byte[] mail, byte[] signature);
+  void register(Integer userId, byte[] mail, byte[] signature, String activationCode);
 
   void delete(String name, byte[] encryptedPassword, byte[] linkInfo, byte[] encryptedLinkInfo, Integer userId);
 

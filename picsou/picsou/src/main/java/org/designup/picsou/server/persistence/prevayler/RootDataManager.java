@@ -9,7 +9,7 @@ public interface RootDataManager {
 
   Glob getUser(String name);
 
-  void register(byte[] mail, byte[] signature);
+  void register(byte[] mail, byte[] signature, String activationCode);
 
   Persistence.UserInfo createUserAndHiddenUser(String name, boolean isRegisteredUser, byte[] cryptedPassword,
                                                byte[] linkInfo, byte[] cryptedLinkInfo);

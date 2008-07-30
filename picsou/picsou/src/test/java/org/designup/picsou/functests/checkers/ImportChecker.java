@@ -50,6 +50,10 @@ public class ImportChecker {
     panel.getButton("OK").click();
   }
 
+  public void close() {
+    panel.getButton("close").click();
+  }
+
   public void checkErrorMessage(String message, String... arg) {
     UISpecAssert.assertTrue(panel.getTextBox("message").textContains(Lang.get(message, arg)));
   }

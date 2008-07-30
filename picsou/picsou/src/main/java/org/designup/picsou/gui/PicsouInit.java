@@ -3,6 +3,7 @@ package org.designup.picsou.gui;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.browsing.BrowsingService;
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.importer.ImportService;
@@ -28,6 +29,7 @@ import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.globsframework.xml.XmlGlobParser;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.Collection;
 
@@ -40,7 +42,7 @@ public class PicsouInit {
     return new PicsouInit(serverAccess, user, newUser, directory);
   }
 
-  private PicsouInit(ServerAccess serverAccess, String user, boolean newUser, Directory directory) throws IOException {
+  private PicsouInit(ServerAccess serverAccess, String user, boolean newUser, final Directory directory) throws IOException {
     this.directory = directory;
 
     final DefaultGlobIdGenerator generator = new DefaultGlobIdGenerator();
@@ -92,6 +94,9 @@ public class PicsouInit {
 
     seriesStatTrigger.init(repository);
     initDirectory(repository);
+    LicenseCheckerThread licenseCheckerThread = new LicenseCheckerThread(directory, repository);
+    licenseCheckerThread.setDaemon(true);
+    licenseCheckerThread.start();
   }
 
   private void initDirectory(GlobRepository repository) {
@@ -139,4 +144,24 @@ public class PicsouInit {
     }
     XmlGlobParser.parse(PicsouModel.get(), repository, reader, "globs");
   }
+
+  private static class LicenseCheckerThread extends Thread {
+    private Directory directory;
+    private GlobRepository repository;
+
+    private LicenseCheckerThread(Directory directory, GlobRepository repository) {
+      this.directory = directory;
+      this.repository = repository;
+    }
+
+    public void run() {
+      ConfigService.waitEndOfConfigRequest(directory);
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          ConfigService.check(directory, repository);
+        }
+      });
+    }
+  }
+
 }

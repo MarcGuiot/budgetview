@@ -23,12 +23,13 @@ public class LocalClientTransport implements ClientTransport {
     return byteOutput.getInput();
   }
 
-  public void register(Long sessionId, byte[] privateId, byte[] mail, byte[] signature) {
+  public void register(Long sessionId, byte[] privateId, byte[] mail, byte[] signature, String activationCode) {
     SerializedByteArrayOutput byteOutput = new SerializedByteArrayOutput();
     SerializedOutput output = byteOutput.getOutput();
     output.writeBytes(privateId);
     output.writeBytes(mail);
     output.writeBytes(signature);
+    output.writeString(activationCode);
     serverRequestProcessingService.register(sessionId, byteOutput.getInput());
   }
 

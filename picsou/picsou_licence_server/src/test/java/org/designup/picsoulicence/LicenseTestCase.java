@@ -19,13 +19,14 @@ public abstract class LicenseTestCase extends UISpecTestCase {
   private Thread mailThread;
   private static final String databaseUrl = "jdbc:hsqldb:.";
   private SqlService sqlService = null;
+  protected static final String PATH_TO_DATA = "tmp/localprevayler";
 
   protected void setUp() throws Exception {
     super.setUp();
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty("com.picsou.licence.url", "http://localhost:5000");
 //    System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "http://localhost:8443");
-    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, "tmp/localprevayler");
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     mailServer = new SimpleSmtpServer(2500);
     server = new LicenceServer();
@@ -62,7 +63,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     System.setProperty("com.picsou.licence.url", "");
   }
 
-  protected void checkReceive(String mailTo) throws InterruptedException {
+  protected String checkReceive(String mailTo) throws InterruptedException {
     long end = System.currentTimeMillis() + 1000;
     synchronized (mailServer) {
       Iterator receivedEmail = mailServer.getReceivedEmail();
@@ -75,8 +76,13 @@ public abstract class LicenseTestCase extends UISpecTestCase {
       if (receivedEmail.hasNext()) {
         SmtpMessage message = (SmtpMessage)receivedEmail.next();
         assertEquals(mailTo, message.getHeaderValue("To"));
+        return message.getBody();
+      }
+      else {
+        fail("no mail received");
       }
     }
+    return null;
   }
 
 }

@@ -14,17 +14,19 @@ class Register implements Transaction, CustomSerializable {
   private static final String REGISTER = "register";
   private byte[] mail;
   private byte[] signature;
+  private String activationCode;
 
   private Register() {
   }
 
-  public Register(byte[] mail, byte[] signature) {
+  public Register(byte[] mail, byte[] signature, String activationCode) {
     this.mail = mail;
     this.signature = signature;
+    this.activationCode = activationCode;
   }
 
   public void executeOn(Object prevalentSystem, Date executionTime) {
-    ((PRootData)prevalentSystem).register(mail, signature);
+    ((PRootData)prevalentSystem).register(mail, signature, activationCode);
   }
 
   public String getSerializationName() {
@@ -36,6 +38,7 @@ class Register implements Transaction, CustomSerializable {
     if (version == V1) {
       mail = input.readBytes();
       signature = input.readBytes();
+      activationCode = input.readString();
     }
   }
 
@@ -43,6 +46,7 @@ class Register implements Transaction, CustomSerializable {
     output.write(V1);
     output.writeBytes(mail);
     output.writeBytes(signature);
+    output.writeString(activationCode);
   }
 
   public static CustomSerializableFactory getFactory() {

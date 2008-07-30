@@ -88,8 +88,8 @@ public class DispatcherServerAccess implements ServerAccess {
     }
   }
 
-  public void register(byte[] mail, byte[] signature) {
-    localServerAccess.register(mail, signature);
+  public void register(byte[] mail, byte[] signature, String activationCode) {
+    localServerAccess.register(mail, signature, activationCode);
   }
 
   public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {

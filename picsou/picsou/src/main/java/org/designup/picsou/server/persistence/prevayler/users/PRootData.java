@@ -55,9 +55,10 @@ public class PRootData implements CustomSerializable {
     hidenUsers.remove(cryptedLinkInfo);
   }
 
-  public void register(byte[] mail, byte[] signature) {
+  public void register(byte[] mail, byte[] signature, String activationCode) {
     this.mail = mail;
     this.signature = signature;
+    this.activationCode = activationCode;
   }
 
   public String getSerializationName() {

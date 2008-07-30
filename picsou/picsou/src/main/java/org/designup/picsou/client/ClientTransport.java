@@ -7,7 +7,7 @@ public interface ClientTransport {
 
   SerializedInput connect() throws BadConnection;
 
-  void register(Long sessionId, byte[] privateId, byte[] mail, byte[] signature);
+  void register(Long sessionId, byte[] privateId, byte[] mail, byte[] signature, String activationCode);
 
   SerializedInput createUser(Long sessionId, byte[] bytes) throws UserAlreadyExists, IdentificationFailed, BadConnection;
 

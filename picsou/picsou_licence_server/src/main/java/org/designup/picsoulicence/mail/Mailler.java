@@ -59,7 +59,7 @@ public class Mailler {
   public boolean sendNewLicense(String mail, String code) {
     try {
       sendMail(mail, fromAdress, "picsou code d'activation",
-               "Bonjour\nNous vous renvoyons un nouveau code d'activation car le précédent");
+               "Bonjour\nVoici votre nouveau code d'activation : " + code);
       return true;
     }
     catch (MessagingException e) {

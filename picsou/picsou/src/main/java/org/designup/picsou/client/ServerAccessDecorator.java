@@ -22,8 +22,8 @@ public class ServerAccessDecorator implements ServerAccess {
     return serverAccess.initConnection(name, password, privateComputer);
   }
 
-  public void register(byte[] mail, byte[] signature) {
-    serverAccess.register(mail, signature);
+  public void register(byte[] mail, byte[] signature, String activationCode) {
+    serverAccess.register(mail, signature, activationCode);
   }
 
   public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {

@@ -41,7 +41,11 @@ public class LicenceGenerator {
 
   static public String generateActivationCode() {
     SecureRandom random = new SecureRandom();
-    return Integer.toString(random.nextInt(9999));
+    int value = 0;
+    while (value < 1000) {
+      value = random.nextInt(9999);
+    }
+    return Integer.toString(value);
   }
 
   public static void main(String[] args) throws NoSuchProviderException, NoSuchAlgorithmException {

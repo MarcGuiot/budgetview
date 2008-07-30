@@ -20,5 +20,6 @@ public class SerializationManager {
     TransactionToCategory.TYPE.updateProperty(SERIALIZATION_PROPERTY, new TransactionToCategory.Serialization());
     Month.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Month.Serialization());
     Series.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Series.Serialization());
+    UserPreferences.TYPE.updateProperty(SERIALIZATION_PROPERTY, new UserPreferences.Serialization());
   }
 }

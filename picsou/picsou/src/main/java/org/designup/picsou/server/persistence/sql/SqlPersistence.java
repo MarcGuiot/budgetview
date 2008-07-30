@@ -183,7 +183,7 @@ public class SqlPersistence implements Persistence {
     }
   }
 
-  public void register(Integer userId, byte[] mail, byte[] signature) {
+  public void register(Integer userId, byte[] mail, byte[] signature, String activationCode) {
   }
 
   public void delete(String name, byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo, Integer userId) {
