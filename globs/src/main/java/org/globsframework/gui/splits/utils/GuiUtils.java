@@ -56,6 +56,14 @@ public class GuiUtils {
     }
   }
 
+  public static <T> T getEnclosingComponent(Component component, final Class<T> containerClass) {
+    return (T)getEnclosingComponent(component, new ComponentMatcher() {
+      public boolean matches(Component component) {
+        return containerClass.isInstance(component);
+      }
+    });
+  }
+
   public static JFrame getEnclosingFrame(Component component) {
     return (JFrame)getEnclosingComponent(component, new ComponentMatcher() {
       public boolean matches(Component component) {
@@ -88,9 +96,17 @@ public class GuiUtils {
   }
 
   /**
-   * Shows the window center on its parent window, or the screen if there is no parent window.
+   * Shows the window centered on its parent window, or the screen if there is no parent window.
    */
   public static void showCentered(Window window) {
+    center(window);
+    window.setVisible(true);
+  }
+
+  /**
+   * Centers the window on its parent window, or the screen if there is no parent window.
+   */
+  public static void center(Window window) {
     Point origin;
     Dimension parentSize;
 
@@ -108,7 +124,6 @@ public class GuiUtils {
     Dimension windowSize = window.getSize();
     window.setLocation(origin.x + parentSize.width / 2 - windowSize.width / 2,
                        origin.y + parentSize.height / 2 - windowSize.height / 2);
-    window.setVisible(true);
   }
 
   public static JFrame getFrame(ActionEvent e) {

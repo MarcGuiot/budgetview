@@ -1,0 +1,52 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <styles>
+    <style selector="label#fileName"
+           fill="none" anchor="left" font="-,bold,12" marginBottom="5"/>
+
+    <style selector="hyperlink#back"
+           font="-,plain,10" marginTop="10" fill="none" weightX="0.001"/>
+
+    <style selector="scrollPane" marginBottom="10"/>
+
+  </styles>
+
+  <column margin="20" anchor="center" fill="none">
+
+    <label text="$import.step2.title" styleClass="title"/>
+
+    <label text="$import.file.to.import" styleClass="header"/>
+    <label ref="fileName"/>
+
+    <label text="$import.file.content" styleClass="header"/>
+
+    <scrollPane maximumSize="(400,300)">
+      <table ref="table"/>
+    </scrollPane>
+
+    <panel ref="dateSelectionPanel"/>
+
+    <panel ref="bankEntityEditionPanel"/>
+
+    <row>
+      <comboBox ref="accountCombo"/>
+      <button ref="newAccount"/>
+    </row>
+    <panel ref="accountEditionPanel"/>
+    <label ref="importMessage" foreground="#FF0000"/>
+
+    <row styleClass="buttons">
+      <button action="finish"/>
+      <button action="skipFile"/>
+    </row>
+
+    <row>
+      <filler fill="horizontal"/>
+      <button name="back" action="back" text="$import.step2.back" styleClass="hyperlink"/>
+    </row>
+
+  </column>
+
+</splits>

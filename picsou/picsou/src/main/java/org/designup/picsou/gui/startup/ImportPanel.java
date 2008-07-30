@@ -12,7 +12,9 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.AbstractGlobSelectionAction;
-import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.SplitsLoader;
+import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
@@ -48,7 +50,6 @@ public abstract class ImportPanel {
   private JPanel filePanel = new JPanel();
   private final JTextField fileField = new JTextField();
   private JButton fileButton = new JButton();
-  protected CardHandler cardHandler;
   private JLabel fileNameLabel = new JLabel();
 
   private ImportSession importSession;
@@ -69,12 +70,15 @@ public abstract class ImportPanel {
   private boolean step1 = true;
   private boolean step2 = true;
   private OpenRequestManager openRequestManager;
-  protected GlobsPanelBuilder builder;
   private Glob defaultAccount;
   private DialogOwner owner;
   private GlobRepository repository;
   private Directory directory;
   private Set<Integer> importKeys = new HashSet<Integer>();
+  private JPanel mainPanel;
+  private JPanel panelStep1;
+  private JPanel panelStep2;
+  private GlobsPanelBuilder mainBuilder;
 
   protected ImportPanel(String textForCloseButton, List<File> files, Glob defaultAccount,
                         final DialogOwner owner, final GlobRepository repository, Directory directory) {
@@ -82,7 +86,140 @@ public abstract class ImportPanel {
     this.owner = owner;
     this.repository = repository;
     this.directory = directory;
+
     updateFileField(files);
+    initOpenRequestManager(directory);
+    loadLocalRepository(repository);
+
+    this.localDirectory = new DefaultDirectory(directory);
+    localDirectory.add(new SelectionService());
+
+    initStep1Panel(textForCloseButton, directory);
+    initStep2Panel(textForCloseButton, owner);
+    initMainPanel();
+
+    if (defaultAccount != null) {
+      Glob bank = Account.getBank(defaultAccount, localRepository);
+      localDirectory.get(SelectionService.class).select(bank);
+    }
+  }
+
+  private void initMainPanel() {
+    mainBuilder = new GlobsPanelBuilder(getClass(), "/layout/importPanel.splits", localRepository, localDirectory);
+    mainPanel = new JPanel();
+    mainBuilder.add("mainPanel", mainPanel);
+    mainBuilder.addLoader(new SplitsLoader() {
+      public void load(Component component) {
+        showStep(panelStep1);
+      }
+    });
+    mainBuilder.load();
+  }
+
+  private void initStep1Panel(String textForCloseButton, Directory directory) {
+    fileButton.setAction(new BrowseFilesAction());
+
+    GlobsPanelBuilder builder1 = new GlobsPanelBuilder(getClass(), "/layout/importPanelStep1.splits", localRepository, localDirectory);
+    builder1.add("message", messageLabel);
+    builder1.add("filePanel", filePanel);
+    builder1.add("fileField", fileField);
+    builder1.add("fileButton", fileButton);
+    builder1.add("bankCombo",
+                 GlobComboView.init(Bank.TYPE, localRepository, localDirectory).setShowEmptyOption(true).getComponent());
+    builder1.add("downloadUrl", new DownloadAction(directory));
+
+    builder1.add("import", new ImportAction());
+    builder1.add("close", new AbstractAction(textForCloseButton) {
+      public void actionPerformed(ActionEvent e) {
+        complete();
+      }
+    });
+
+    panelStep1 = builder1.load();
+  }
+
+  private void initStep2Panel(final String textForCloseButton, DialogOwner owner) {
+    localDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        GlobList banks = selection.getAll();
+        bank = banks.isEmpty() ? null : banks.get(0);
+      }
+    }, Bank.TYPE);
+
+    GlobsPanelBuilder builder2 = new GlobsPanelBuilder(getClass(), "/layout/importPanelStep2.splits", localRepository, localDirectory);
+    dateRenderer = new ImportedTransactionDateRenderer();
+    dateFormatSelectionPanel = new DateFormatSelectionPanel(localRepository, localDirectory,
+                                                            new DateFormatSelectionPanel.Callback() {
+                                                              public void dateFormatSelected(String format) {
+                                                                dateRenderer.changeDateFormat(format);
+                                                              }
+                                                            }, importMessageLabel);
+    builder2.add("dateSelectionPanel", dateFormatSelectionPanel.getBuilder());
+    sessionDirectory = new DefaultDirectory(localDirectory);
+    sessionDirectory.add(new SelectionService());
+    sessionDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        currentlySelectedAccount = selection.getAll().isEmpty() ? null : selection.getAll().get(0);
+      }
+    }, Account.TYPE);
+
+    importSession = new ImportSession(localRepository, sessionDirectory);
+    sessionRepository = importSession.getTempRepository();
+
+    GlobTableView importedTransactionTableView = GlobTableView.init(ImportedTransaction.TYPE, sessionRepository,
+                                                                    dateRenderer.getComparator(), sessionDirectory)
+      .addColumn(ImportedTransaction.BANK_DATE, dateRenderer, CellPainter.NULL)
+      .addColumn(ImportedTransaction.LABEL)
+      .addColumn(ImportedTransaction.AMOUNT);
+    JTable transactionTable = importedTransactionTableView.getComponent();
+    dateRenderer.setTable(importedTransactionTableView);
+
+    builder2.add("table", transactionTable);
+    builder2.add("fileName", fileNameLabel);
+
+    newAccountButton = new JButton(new NewAccountAction(sessionRepository, sessionDirectory, owner));
+    builder2.add("newAccount", newAccountButton);
+
+    GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory);
+    accountComboBox = comboView.getComponent();
+    builder2.add("accountCombo", accountComboBox);
+    comboView.setFilter(new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return item != null && !item.get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID);
+      }
+    });
+
+    bankEntityEditionPanel = new BankEntityEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
+    builder2.add("bankEntityEditionPanel", bankEntityEditionPanel.getPanel());
+
+    accountEditionPanel = new AccountEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
+    builder2.add("accountEditionPanel", accountEditionPanel.getBuilder());
+
+    builder2.add("importMessage", importMessageLabel);
+
+    builder2.add("skipFile", new SkipFileAction());
+    builder2.add("finish", new FinishAction());
+    builder2.add("close", new AbstractAction(textForCloseButton) {
+      public void actionPerformed(ActionEvent e) {
+        complete();
+      }
+    });
+    builder2.add("back", new AbstractAction("back") {
+      public void actionPerformed(ActionEvent e) {
+        step1 = true;
+        step2 = true;
+        ImportPanel.this.files.clear();
+        ImportPanel.this.fileField.setText("");
+        importSession.discard();
+        loadLocalRepository(ImportPanel.this.repository);
+        showStep(panelStep1);
+      }
+    });
+
+    this.panelStep2 = builder2.load();
+  }
+
+  private void initOpenRequestManager(Directory directory) {
     openRequestManager = directory.get(OpenRequestManager.class);
     openRequestManager.pushCallback(new OpenRequestManager.Callback() {
       public void openFiles(final List<File> files) {
@@ -100,105 +237,16 @@ public abstract class ImportPanel {
         });
       }
     });
-    loadLocalRepository(repository);
+  }
 
-    this.localDirectory = new DefaultDirectory(directory);
-    localDirectory.add(new SelectionService());
-    fileButton.setAction(new BrowseFilesAction());
-
-    builder = new GlobsPanelBuilder(getClass(), "/layout/importPanel.splits", localRepository, localDirectory);
-    //Step 1
-    builder.add("message", messageLabel);
-    builder.add("filePanel", filePanel);
-    builder.add("fileField", fileField);
-    builder.add("fileButton", fileButton);
-    builder.add("bankCombo",
-                GlobComboView.init(Bank.TYPE, localRepository, localDirectory).setShowEmptyOption(true).getComponent());
-    builder.add("downloadUrl", new DownloadAction(directory));
-
-    builder.add("import", new ImportAction());
-
-    localDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        GlobList banks = selection.getAll();
-        bank = banks.isEmpty() ? null : banks.get(0);
-      }
-    }, Bank.TYPE);
-
-    //step 2
-    dateRenderer = new ImportedTransactionDateRenderer();
-    dateFormatSelectionPanel = new DateFormatSelectionPanel(repository, directory,
-                                                            new DateFormatSelectionPanel.Callback() {
-                                                              public void dateFormatSelected(String format) {
-                                                                dateRenderer.changeDateFormat(format);
-                                                              }
-                                                            }, importMessageLabel);
-    builder.add("dateSelectionPanel", dateFormatSelectionPanel.getBuilder());
-    sessionDirectory = new DefaultDirectory(localDirectory);
-    sessionDirectory.add(new SelectionService());
-    sessionDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        currentlySelectedAccount = selection.getAll().isEmpty() ? null : selection.getAll().get(0);
-      }
-    }, Account.TYPE);
-
-    importSession = new ImportSession(localRepository, sessionDirectory);
-    sessionRepository = importSession.getTempRepository();
-
-    GlobTableView importedTransactionTableView = GlobTableView.init(ImportedTransaction.TYPE, sessionRepository,
-                                                                    dateRenderer, sessionDirectory)
-        .addColumn(ImportedTransaction.BANK_DATE, dateRenderer, CellPainter.NULL)
-        .addColumn(ImportedTransaction.LABEL)
-        .addColumn(ImportedTransaction.AMOUNT);
-    JTable transactionTable = importedTransactionTableView.getComponent();
-    dateRenderer.setTable(importedTransactionTableView);
-
-    builder.add("table", transactionTable);
-    builder.add("fileName", fileNameLabel);
-
-    newAccountButton = new JButton(new NewAccountAction(sessionRepository, sessionDirectory, owner));
-    builder.add("newAccount", newAccountButton);
-
-    GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory);
-    accountComboBox = comboView.getComponent();
-    builder.add("accountCombo", accountComboBox);
-    comboView.setFilter(new GlobMatcher() {
-      public boolean matches(Glob item, GlobRepository repository) {
-        return item != null && !item.get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID);
-      }
-    });
-
-    bankEntityEditionPanel = new BankEntityEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
-    builder.add("bankEntityEditionPanel", bankEntityEditionPanel.getPanel());
-
-    accountEditionPanel = new AccountEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
-    builder.add("accountEditionPanel", accountEditionPanel.getBuilder());
-
-    builder.add("importMessage", importMessageLabel);
-
-    builder.add("skipFile", new SkipFileAction());
-    builder.add("finish", new FinishAction());
-    builder.add("close", new AbstractAction(textForCloseButton) {
-      public void actionPerformed(ActionEvent e) {
-        complete();
-      }
-    });
-    builder.add("back", new AbstractAction("back") {
-      public void actionPerformed(ActionEvent e) {
-        step1 = true;
-        step2 = true;
-        ImportPanel.this.files.clear();
-        ImportPanel.this.fileField.setText("");
-        importSession.discard();
-        loadLocalRepository(repository);
-        cardHandler.show("step1");
-      }
-    });
-    cardHandler = builder.addCardHandler("cardHandler");
-
-    if (defaultAccount != null) {
-      Glob bank = Account.getBank(defaultAccount, localRepository);
-      localDirectory.get(SelectionService.class).select(bank);
+  private void showStep(JPanel step) {
+    mainPanel.removeAll();
+    GridBagBuilder.setSingleCell(mainPanel, step);
+    mainPanel.validate();
+    JDialog dialog = GuiUtils.getEnclosingComponent(mainPanel.getParent(), JDialog.class);
+    if (dialog != null) {
+      dialog.pack();
+      GuiUtils.center(dialog);
     }
   }
 
@@ -270,7 +318,7 @@ public abstract class ImportPanel {
   }
 
   public GlobsPanelBuilder getBuilder() {
-    return builder;
+    return mainBuilder;
   }
 
   private class ImportAction extends AbstractAction {
@@ -301,7 +349,7 @@ public abstract class ImportPanel {
         files.addAll(Arrays.asList(file));
       }
       if (nextImport()) {
-        cardHandler.show("step2");
+        showStep(panelStep2);
       }
     }
   }
@@ -451,17 +499,6 @@ public abstract class ImportPanel {
     }
   }
 
-  private static class BankUrlStringifier implements GlobListStringifier {
-    public String toString(GlobList selected, GlobRepository repository) {
-      if (selected.size() != 1) {
-        return "";
-      }
-      Glob bank = selected.get(0);
-      String url = bank.get(Bank.DOWNLOAD_URL);
-      return "<a href='" + url + "'>" + url + "</a>";
-    }
-  }
-
   private File[] queryFile(Component parent) {
     JFileChooser chooser = new JFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -509,7 +546,7 @@ public abstract class ImportPanel {
     }
   }
 
-  private class ImportedTransactionDateRenderer implements LabelCustomizer, Comparator<Glob> {
+  private class ImportedTransactionDateRenderer implements LabelCustomizer {
     private GlobTableView transactionTable;
     private SimpleDateFormat format;
 
@@ -542,27 +579,28 @@ public abstract class ImportPanel {
       this.transactionTable = transactionTable;
     }
 
-    public int compare(Glob o1, Glob o2) {
-      if (format == null) {
-        return Utils.compare(o1.get(ImportedTransaction.BANK_DATE), o2.get(ImportedTransaction.BANK_DATE));
-      }
-      try {
-        Date date1 = format.parse(o1.get(ImportedTransaction.BANK_DATE));
-        Date date2 = format.parse(o2.get(ImportedTransaction.BANK_DATE));
-        int compareResult = date2.compareTo(date1);
-        if (compareResult == 0) {
-          Integer id2 = o2.get(ImportedTransaction.ID);
-          Integer id1 = o1.get(ImportedTransaction.ID);
-//          System.out.println("------");
-//          System.out.println(id1 + " " + o1.get(ImportedTransaction.LABEL));
-//          System.out.println(id2 + " " + o2.get(ImportedTransaction.LABEL));
-          return Utils.compare(id2, id1);
+    public Comparator<Glob> getComparator() {
+      return new Comparator<Glob>() {
+        public int compare(Glob o1, Glob o2) {
+          if (format == null) {
+            return Utils.compare(o1.get(ImportedTransaction.BANK_DATE), o2.get(ImportedTransaction.BANK_DATE));
+          }
+          try {
+            Date date1 = format.parse(o1.get(ImportedTransaction.BANK_DATE));
+            Date date2 = format.parse(o2.get(ImportedTransaction.BANK_DATE));
+            int compareResult = date2.compareTo(date1);
+            if (compareResult == 0) {
+              Integer id2 = o2.get(ImportedTransaction.ID);
+              Integer id1 = o1.get(ImportedTransaction.ID);
+              return Utils.compare(id2, id1);
+            }
+            return compareResult;
+          }
+          catch (ParseException e) {
+            return Utils.compare(o1.get(ImportedTransaction.BANK_DATE), o2.get(ImportedTransaction.BANK_DATE));
+          }
         }
-        return compareResult;
-      }
-      catch (ParseException e) {
-        return Utils.compare(o1.get(ImportedTransaction.BANK_DATE), o2.get(ImportedTransaction.BANK_DATE));
-      }
+      };
     }
   }
 
