@@ -382,7 +382,8 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                           "</log>");
 
     view.setFilter(GlobMatchers.NONE);
-    
+    listener.reset();
+
     view.selectFirst();
     listener.assertEquals("<log>" +
                           "<selection types='dummyObject'/>" +
@@ -460,6 +461,44 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                           "<item key='dummyObject[id=1]'/>" +
                           "</selection>" +
                           "</log>");
+  }
+
+  public void testSelectionIsAdjustedIfChangedByNewFilter() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1'/>" +
+                    "<dummyObject id='2' name='name2'/>");
+    Glob glob1 = repository.get(key1);
+    Glob glob2 = repository.get(key2);
+
+    Table table = createTableWithNameAndValueColumns(repository);
+    selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
+    DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
+
+    view.setFilter(GlobMatchers.fieldEquals(DummyObject.ID, 1));
+    assertTrue(table.rowIsSelected(0));
+    listener.assertEquals("<log>" +
+                          "<selection types='dummyObject'>" +
+                          "<item key='dummyObject[id=1]'/>" +
+                          "</selection>" +
+                          "</log>");
+  }
+
+  public void testEmptySelectionSentIfNewFilterDoesNotMatchCurrentSelection() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1'/>" +
+                    "<dummyObject id='2' name='name2'/>");
+    createTableWithNameAndValueColumns(repository);
+    selectionService.select(repository.get(key1));
+    DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
+
+    view.setFilter(GlobMatchers.NONE);
+    listener.assertEquals("<log>" +
+                          "  <selection types='dummyObject'/>" +
+                          "</log>");
+    listener.reset();
+
+    view.setFilter(GlobMatchers.ALL);
+    listener.assertEmpty();
   }
 
   public void testModelUpdatePreservesSelection() throws Exception {

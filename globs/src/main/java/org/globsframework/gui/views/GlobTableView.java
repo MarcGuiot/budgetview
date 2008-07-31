@@ -176,8 +176,11 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       enableSelectionNotification(false);
     }
 
-    if (!selection.isEmpty() && selectionChanged) {
+    if ((initialSize > 0) && selectionChanged) {
       select(selection, true);
+      if (selection.isEmpty()) {
+        selectionService.select(Collections.<Glob>emptyList(), type);
+      }
     }
     return this;
   }
@@ -203,7 +206,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     select(Arrays.asList(globs), true);
   }
 
-  public void select(Iterable<Glob> globs, boolean sendPending) throws ItemNotFound {
+  public void select(Collection<Glob> globs, boolean sendPending) throws ItemNotFound {
     ListSelectionModel selectionModel = table.getSelectionModel();
     try {
       disableSelectionNotification();
