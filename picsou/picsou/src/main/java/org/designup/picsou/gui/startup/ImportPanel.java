@@ -147,9 +147,9 @@ public abstract class ImportPanel {
 
     GlobTableView importedTransactionTableView = GlobTableView.init(ImportedTransaction.TYPE, sessionRepository,
                                                                     dateRenderer, sessionDirectory)
-        .addColumn(ImportedTransaction.BANK_DATE, dateRenderer, CellPainter.NULL)
-        .addColumn(ImportedTransaction.LABEL)
-        .addColumn(ImportedTransaction.AMOUNT);
+      .addColumn(ImportedTransaction.BANK_DATE, dateRenderer, CellPainter.NULL)
+      .addColumn(ImportedTransaction.LABEL)
+      .addColumn(ImportedTransaction.AMOUNT);
     JTable transactionTable = importedTransactionTableView.getComponent();
     dateRenderer.setTable(importedTransactionTableView);
 
@@ -424,19 +424,25 @@ public abstract class ImportPanel {
     }
 
     public void actionPerformed(ActionEvent event) {
-      messageLabel.setText("");
-      if (!dateFormatSelectionPanel.check()) {
-        return;
+      setEnabled(false);
+      try {
+        messageLabel.setText("");
+        if (!dateFormatSelectionPanel.check()) {
+          return;
+        }
+        if (!bankEntityEditionPanel.check()) {
+          return;
+        }
+        if (!accountEditionPanel.check()) {
+          return;
+        }
+        Key importKey = importSession.importTransactions(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
+        importKeys.add(importKey.get(TransactionImport.ID));
+        nextImport();
       }
-      if (!bankEntityEditionPanel.check()) {
-        return;
+      finally {
+        setEnabled(true);
       }
-      if (!accountEditionPanel.check()) {
-        return;
-      }
-      Key importKey = importSession.importTransactions(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
-      importKeys.add(importKey.get(TransactionImport.ID));
-      nextImport();
     }
   }
 
@@ -446,8 +452,14 @@ public abstract class ImportPanel {
     }
 
     public void actionPerformed(ActionEvent e) {
-      importSession.discard();
-      nextImport();
+      setEnabled(false);
+      try {
+        importSession.discard();
+        nextImport();
+      }
+      finally {
+        setEnabled(true);
+      }
     }
   }
 

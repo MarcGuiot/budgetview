@@ -196,6 +196,7 @@ File ::F56B1EB7-E593-4BD3-84D9-6BACDD58A4DA -name picsou.exe -parent 8E95AD9C-73
 File ::50BE3C17-029A-4A6A-BC74-2130C6ABA4C7 -name ../images/picsou_icon_32.ico -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::2B46BFAC-3F00-4290-B80A-D790CCEB6778 -name msvcr71.dll -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::09B3F2A4-3934-FAA3-B4DF-514E8A7332E9 -name license.txt -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
+File ::C54B8A06-802E-796F-D149-A82EF337D0D2 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/picsou00000000000001.jar -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 FileGroup ::89CD3510-FDE9-0208-D7B5-DE37109ECD51 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 MacOS-X Solaris-sparc TarArchive} -name {linux program files} -parent FileGroups
 File ::2FB1AD48-CACB-8786-FF0B-91202764BB49 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/images/picsou_icon_32.png -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
 File ::4C60DC39-5780-FE0B-6BF3-22B7D15526FC -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/install/picsou.sh -permissions 00555 -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
@@ -378,7 +379,7 @@ disabled
 {Back Button;Next Button}
 
 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5,CommandLineArguments
-{-l <%Language%>}
+{-l <%Language%> -j "<%InstallDir%>"}
 
 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5,Conditions
 {2 conditions}
@@ -696,7 +697,7 @@ false
 {can create}
 
 518566B8-E4AF-6C59-4C80-8E4545D21CA6,Command
-{"<%InstallDir%>\picsou.exe"  "-l" "<%Language%>" "%1"}
+{"<%InstallDir%>\picsou.exe"  "-l" "<%Language%>" "-j" "<%InstallDir%>" "%1"}
 
 518566B8-E4AF-6C59-4C80-8E4545D21CA6,CommandName
 Open
@@ -966,7 +967,7 @@ Picsou
 Finish
 
 7ED948AD-24B3-4EDB-A79B-0F00DACFAC57,CommandLineArguments
-{ -l <%Language%>}
+{ -l <%Language%> -j <%InstallDir%>}
 
 7ED948AD-24B3-4EDB-A79B-0F00DACFAC57,Conditions
 {1 condition}
@@ -1005,7 +1006,7 @@ Yes
 <%InstallDir%>
 
 89CD3510-FDE9-0208-D7B5-DE37109ECD51,FileSize
-2930723
+3180386
 
 89CD3510-FDE9-0208-D7B5-DE37109ECD51,Name
 {linux program files}
@@ -1029,7 +1030,7 @@ Yes
 {3 conditions}
 
 8C9FCEF1-5721-4F82-B78C-4F773FD8A11C,ProgramCommandLine
-{<%ProgramExecutable%> -l <%Language%>}
+{<%ProgramExecutable%> -l <%Language%>  -j "<%InstallDir%>"}
 
 8C9FCEF1-5721-4F82-B78C-4F773FD8A11C,WaitForProgram
 No
@@ -1278,7 +1279,7 @@ BEF85513-C17E-C854-1584-C6A50E5E906C,Name
 {unix component}
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,Command
-{"<%InstallDir%>\picsou.exe"  "-l" "<%Language%>" "%1"}
+{"<%InstallDir%>\picsou.exe"  "-l" "<%Language%>" "-j" "<%InstallDir%>" "%1"}
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,CommandName
 Open
@@ -1455,7 +1456,7 @@ E0F4E853-A044-473B-AD88-F372BB9BFB7F,ExitType
 Finish
 
 E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,CommandLineArguments
-{ -l <%Language%>}
+{ -l <%Language%> -j "<%InstallDir%>"}
 
 E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,Conditions
 {2 conditions}

@@ -44,7 +44,12 @@ public class LicenseTest extends LicenseTestCase {
     super.tearDown();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     stop();
+    if (window != null) {
+      window.dispose();
+    }
     window = null;
+    picsouApplication.shutdown();
+    picsouApplication = null;
   }
 
   private void startPicsou() {
@@ -204,14 +209,12 @@ public class LicenseTest extends LicenseTestCase {
       if (glob.size() == 1) {
         Object actual = glob.get(0).getValue(field);
         if (actual != null && (expected == null || actual.equals(expected))) {
-          System.out.println("LicenseTest.getGlob OK");
           break;
         }
       }
       Thread.sleep(50);
     }
     assertEquals(1, glob.size());
-    System.out.println("LicenseTest.getGlob " + new Date());
     return glob.get(0);
   }
 }

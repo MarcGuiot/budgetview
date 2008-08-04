@@ -77,34 +77,12 @@
                     <path refid="maven.runtime.classpath"/>
                   </classpath>
                   <arg
-                    line="striped_picsou.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
+                    line="picsou00000000000001.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
                 </java>
                 <manifest file="target/classes/MANIFEST.MF">
                   <attribute name="Main-Class" value="org.designup.picsou.gui.PicsouApplication"/>
                 </manifest>
-                <jar update="true" jarfile="striped_picsou.jar" manifest="target/classes/MANIFEST.MF"/>
-                <taskdef name="jarbundler"
-                         classpath="dev/install/jarbundler-1.9.jar;dev/install/xercesImpl-2.4.0.jar"
-                         classname="net.sourceforge.jarbundler.JarBundler"/>
-
-                <jarbundler dir="${basedir}"
-                            name="Picsou"
-                            mainclass="org.designup.picsou.gui.PicsouApplication"
-                            jar="striped_picsou.jar"
-                            stubfile="dev/install/JavaApplicationStub"
-                            icon="dev/images/picsou_icon.icns"
-                            jvmversion="1.5+"
-                            vmoptions="-Xmx128m">
-
-                  <documenttype name="Financial information"
-                                extensions="ofx qif"
-                                iconFile="dev/images/picsou_icon.icns"
-                                role="Editor"/>
-                  <documenttype name="Financial information"
-                                mimetypes="text/ofx text/qif"
-                                iconFile="dev/images/picsou_icon.icns"
-                                role="Editor"/>
-                </jarbundler>
+                <jar update="true" jarfile="picsou00000000000001.jar" manifest="target/classes/MANIFEST.MF"/>
               </tasks>
             </configuration>
             <goals>
