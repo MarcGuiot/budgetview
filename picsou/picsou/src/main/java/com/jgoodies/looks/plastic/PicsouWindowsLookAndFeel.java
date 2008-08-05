@@ -5,9 +5,9 @@ import org.designup.picsou.gui.plaf.PicsouButtonUI;
 import org.designup.picsou.gui.plaf.PicsouWindowsLabelUI;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicLookAndFeel;
+import javax.swing.plaf.InsetsUIResource;
 
-public class PicsouWindowsLookAndFeel extends BasicLookAndFeel {
+public class PicsouWindowsLookAndFeel extends Plastic3DLookAndFeel {
   protected void initClassDefaults(UIDefaults defaults) {
     super.initClassDefaults(defaults);
     try {
@@ -19,37 +19,18 @@ public class PicsouWindowsLookAndFeel extends BasicLookAndFeel {
     }
   }
 
-//  protected void initComponentDefaults(UIDefaults defaults) {
-//    super.initComponentDefaults(defaults);
-//
-//    Object[] properties = {
-//      "Button.margin", new InsetsUIResource(6, 12, 6, 12),
-//    };
-//
-//    defaults.putDefaults(properties);
-//  }
+  protected void initComponentDefaults(UIDefaults defaults) {
+    super.initComponentDefaults(defaults);
 
-  public String getName() {
-    return "picsou";
-  }
+    Object[] properties = {
+      "Button.margin", new InsetsUIResource(6, 12, 6, 12),
+    };
 
-  public String getID() {
-    return "picsou";
-  }
-
-  public String getDescription() {
-    return "picsou";
+    defaults.putDefaults(properties);
   }
 
   public boolean getSupportsWindowDecorations() {
     return false;
   }
-
-  public boolean isNativeLookAndFeel() {
-    return false;
-  }
-
-  public boolean isSupportedLookAndFeel() {
-    return true;
-  }
 }
+

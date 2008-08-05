@@ -45,6 +45,11 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     return sqlService.getDb();
   }
 
+  protected void tearDown() throws Exception {
+    super.tearDown();
+    stop();
+  }
+
   protected void start() throws Exception {
     mailThread = new Thread() {
       public void run() {
@@ -57,9 +62,19 @@ public abstract class LicenseTestCase extends UISpecTestCase {
   }
 
   protected void stop() throws Exception {
-    mailServer.stop();
-    mailThread.join();
-    server.stop();
+    if (mailServer != null) {
+      mailServer.stop();
+      mailServer = null;
+    }
+    if (mailThread != null) {
+      mailThread.join();
+      mailThread = null;
+    }
+    if (server != null) {
+      server.stop();
+      server = null;
+    }
+    sqlService = null;
     System.setProperty("com.picsou.licence.url", "");
   }
 

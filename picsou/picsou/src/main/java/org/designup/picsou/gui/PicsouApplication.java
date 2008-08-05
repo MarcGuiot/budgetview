@@ -48,6 +48,7 @@ public class PicsouApplication {
 
   private OpenRequestManager openRequestManager = new OpenRequestManager();
   private SingleApplicationInstanceListener singleInstanceListener;
+  private Directory directory;
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
@@ -87,7 +88,7 @@ public class PicsouApplication {
 
     clearRepositoryIfNeeded();
 
-    Directory directory = createDirectory();
+    directory = createDirectory();
     directory.add(openRequestManager);
 
     final MainWindow mainWindow = new MainWindow();
@@ -138,6 +139,9 @@ public class PicsouApplication {
 
   public void shutdown() throws Exception {
     singleInstanceListener.shutdown();
+    if (directory != null) {
+      directory.get(ColorService.class).removeAllListeners();
+    }
   }
 
   private static String getSystemValue(String propertyName, String defaultPropertyValue) {

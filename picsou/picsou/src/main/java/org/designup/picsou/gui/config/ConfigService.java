@@ -219,7 +219,7 @@ public class ConfigService {
     ConfigService configService = directory.get(ConfigService.class);
     if (!configService.isValideSignature() ||
         (configService.isStillValide() != null && !configService.isStillValide())) {
-      repository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT, 1);
+      repository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT, 0);
     }
   }
 
@@ -228,6 +228,9 @@ public class ConfigService {
   }
 
   public Boolean isStillValide() {
+    if (URL == null || URL.length() == 0) {
+      return false;
+    }
     return isStillValide;
   }
 
@@ -237,7 +240,7 @@ public class ConfigService {
     synchronized (configService) {
       while (configService.isStillValide() == null) {
         try {
-          configService.wait();
+          configService.wait(10000);
         }
         catch (InterruptedException e) {
         }

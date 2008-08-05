@@ -27,6 +27,7 @@ public class AskMailTest extends LicenseTestCase {
   protected void tearDown() throws Exception {
     super.tearDown();
     stop();
+    client = null;
   }
 
   public void testSendMail() throws Exception {

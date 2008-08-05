@@ -34,6 +34,14 @@ public abstract class PicsouTestCase extends ServicesTestCase {
     repository.addChangeListener(listener);
   }
 
+  protected void tearDown() throws Exception {
+    super.tearDown();
+    repository = null;
+    directory = null;
+    model = null;
+    listener = null;
+  }
+
   protected GlobModel getModel() {
     return PicsouModel.get();
   }
