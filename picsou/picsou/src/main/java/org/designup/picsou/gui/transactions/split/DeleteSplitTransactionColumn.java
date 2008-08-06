@@ -40,7 +40,7 @@ class DeleteSplitTransactionColumn extends AbstractTransactionEditor {
     panel.add(Box.createRigidArea(new Dimension(3, 0)));
     addDeleteButton(panel, transaction);
     panel.add(Box.createRigidArea(new Dimension(3, 0)));
-    rendererColors.setTransactionBackground(panel, isSelected, row);
+    rendererColors.setBackground(panel, isSelected, row);
     return panel;
   }
 

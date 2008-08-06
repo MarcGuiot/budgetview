@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.functests.checkers.converters.AmountCellConverter;
 import org.designup.picsou.functests.checkers.converters.CategoryCellConverter;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -50,7 +49,6 @@ public class TransactionChecker extends ViewChecker {
       table = window.getTable(Transaction.TYPE.getName());
       table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
       table.setCellValueConverter(TransactionView.CATEGORY_COLUMN_INDEX, new CategoryCellConverter(window));
-      table.setCellValueConverter(TransactionView.AMOUNT_COLUMN_INDEX, new AmountCellConverter());
     }
     return table;
   }

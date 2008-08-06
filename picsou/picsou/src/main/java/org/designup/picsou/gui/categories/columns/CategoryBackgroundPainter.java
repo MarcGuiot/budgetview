@@ -2,8 +2,8 @@ package org.designup.picsou.gui.categories.columns;
 
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
@@ -30,7 +30,6 @@ public class CategoryBackgroundPainter implements CellPainter, ColorChangeListen
   public void paint(Graphics g, Glob glob, int row, int column,
                     boolean isSelected, boolean hasFocus, int width, int height) {
     Graphics2D g2 = (Graphics2D)g;
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     if (!isSelected) {
       g2.setColor(background);

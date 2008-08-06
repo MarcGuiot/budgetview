@@ -30,7 +30,6 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor impleme
   private JPanel editorPanel;
   private Action categoryChooserAction;
   private Glob transaction;
-  private Color normalColor;
   private Color selectedColor;
   private Color toCategorizeColor;
   private Font normalFont;
@@ -66,7 +65,6 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor impleme
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    normalColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT);
     selectedColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_TEXT);
     toCategorizeColor = colorLocator.get(PicsouColors.TRANSACTION_ERROR_TEXT);
   }
@@ -93,7 +91,7 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor impleme
     boolean categoryNone = Transaction.hasNoCategory(transaction);
     boolean multiCategorized = TransactionToCategory.hasCategories(transaction, repository);
     if (!categoryNone && !multiCategorized) {
-      button.setForeground(isSelected ? selectedColor : normalColor);
+      rendererColors.setForeground(button, isSelected, transaction);
       button.setFont(normalFont);
       button.setUnderline(false);
       Glob category = repository.findLinkTarget(transaction, Transaction.CATEGORY);
@@ -105,7 +103,7 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor impleme
       button.setUnderline(true);
       button.setText(Lang.get("category.assignement.required"));
     }
-    rendererColors.setTransactionBackground(panel, isSelected, row);
+    rendererColors.setBackground(panel, isSelected, row);
     return panel;
   }
 

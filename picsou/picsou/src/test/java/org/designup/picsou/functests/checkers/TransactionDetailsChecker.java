@@ -170,4 +170,19 @@ public class TransactionDetailsChecker extends DataChecker {
     TextBox seriesName = getPanel().getTextBox("transactionSeriesName");
     assertFalse(seriesName.isVisible());
   }
+
+  public void checkSplitMessage(String expectedMessage) {
+    TextBox splitMessage = getPanel().getTextBox("splitMessage");
+    assertThat(splitMessage.isVisible());
+    assertThat(splitMessage.textContains(expectedMessage));
+  }
+
+  public void checkSplitMessageNotDisplayed() {
+    TextBox splitMessage = getPanel().getTextBox("splitMessage");
+    assertFalse(splitMessage.isVisible());
+  }
+
+  public TextBox getSearchField() {
+    return getPanel().getInputTextBox("searchField");
+  }
 }

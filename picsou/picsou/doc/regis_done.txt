@@ -19,12 +19,27 @@ CategorizationDialog
 Vue budget
 ----------
 - introduction toggle + card
+- trigger SeriesStat
 - bloc revenus
 - bloc recurrent
 - bloc enveloppes
 - montants totaux
+- gauges
 
 
 CategoryChooser
 ---------------
 - Migration sous Splits (repeat) + ColumnLayout
+
+
+Vue releve
+----------
+- affichage infos split
+- couleur transactions ghost
+- recherche
+
+
+Misc
+----
+- joliesse generale picsou (retrait barre du haut, look blocks)
+- VerticalGridLayout

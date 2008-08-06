@@ -1,6 +1,9 @@
 package org.designup.picsou.gui.transactions.columns;
 
+import org.globsframework.model.Glob;
+
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
@@ -8,6 +11,7 @@ public class TransactionTableRenderer implements TableCellRenderer {
   private TableCellRenderer renderer;
   private TransactionRendererColors rendererColors;
   private int categoryColumnIndex;
+  private Border border = BorderFactory.createEmptyBorder(0, 3, 0, 3);
 
   public TransactionTableRenderer(TableCellRenderer renderer, TransactionRendererColors rendererColors,
                                   int categoryColumnIndex) {
@@ -26,8 +30,11 @@ public class TransactionTableRenderer implements TableCellRenderer {
     if (column == categoryColumnIndex) {
       return component;
     }
-    component.setForeground(isSelected ? Color.WHITE : Color.BLACK);
-    rendererColors.setTransactionBackground(component, isSelected, row);
+    if (component instanceof JLabel) {
+      JLabel label = (JLabel)component;
+      label.setBorder(border);
+    }
+    rendererColors.update(component, isSelected, (Glob)value, row);
     return component;
   }
 }

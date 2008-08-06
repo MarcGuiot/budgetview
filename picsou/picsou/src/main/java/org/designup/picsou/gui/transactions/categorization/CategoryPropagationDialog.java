@@ -1,12 +1,14 @@
 package org.designup.picsou.gui.transactions.categorization;
 
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.components.PicsouTableHeaderCustomizer;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.TransactionCategoriesStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
-import org.designup.picsou.gui.transactions.columns.TransactionViewUtils;
 import org.designup.picsou.gui.transactions.columns.TransactionTableRenderer;
+import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import static org.designup.picsou.model.Transaction.LABEL;
@@ -15,8 +17,8 @@ import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.SplitsLoader;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -33,8 +35,8 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class CategoryPropagationDialog {
   private static final int DATE_COLUMN_INDEX = 0;
@@ -91,7 +93,8 @@ public class CategoryPropagationDialog {
     GlobTableView view = builder.addTable("transaction", Transaction.TYPE, comparator);
 
     view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
-    TransactionViewUtils.configureHeader(view, localDirectory);
+    view.setHeaderCustomizer(new PicsouTableHeaderCustomizer(localDirectory, PicsouColors.TRANSACTION_TABLE_HEADER_TITLE),
+                             new PicsouTableHeaderPainter(view, localDirectory));
 
     GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
     GlobStringifier categoriesStringifier =

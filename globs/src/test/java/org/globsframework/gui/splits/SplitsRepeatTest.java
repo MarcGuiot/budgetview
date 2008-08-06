@@ -1,5 +1,8 @@
 package org.globsframework.gui.splits;
 
+import org.globsframework.gui.splits.layout.Anchor;
+import org.globsframework.gui.splits.layout.Fill;
+import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -11,9 +14,9 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class SplitsRepeatTest extends SplitsTestCase {
-  public void testRepeat() throws Exception {
 
-    Repeat<String> futur =
+  public void testRepeat() throws Exception {
+    Repeat<String> repeat =
       builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                         new RepeatComponentFactory<String>() {
                           public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
@@ -41,7 +44,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "  label:bb\n" +
                "  button:bb\n");
 
-    futur.insert("cc", 1);
+    repeat.insert("cc", 1);
 
     checkPanel(panel,
                "panel\n" +
@@ -54,7 +57,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "  label:bb\n" +
                "  button:bb\n");
 
-    futur.remove(0);
+    repeat.remove(0);
 
     checkPanel(panel,
                "panel\n" +
@@ -65,7 +68,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "  button:bb\n");
   }
 
-  public void testRepeatAcceptsOnlyOneSubComponent() throws Exception {
+  public void testRepeatWithDefaultLayoutAcceptsOnlyOneSubComponent() throws Exception {
     checkParsingError("<repeat ref='myRepeat'>" +
                       "  <label ref='label'/>" +
                       "  <button ref='btn'/>" +
@@ -174,6 +177,79 @@ public class SplitsRepeatTest extends SplitsTestCase {
                  logger.toString());
   }
 
+  public void testVerticalGridLayout() throws Exception {
+    Repeat<String> repeat = builder.addRepeat("repeat", Arrays.asList("aa", "bb"), new RepeatComponentFactory<String>() {
+      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+        cellBuilder.add("label", new JLabel(object));
+        cellBuilder.add("button", new JButton(object));
+      }
+    });
+    JPanel panel = parse(
+      "<repeat ref='repeat' layout='verticalGrid'>" +
+      "  <label ref='label' fill='horizontal' anchor='south' marginTop='10' marginBottom='5'/>" +
+      "  <button ref='button' marginLeft='5' marginRight='5'/>" +
+      "</repeat>");
+
+    checkPanel(panel,
+               "label:aa\n" +
+               "button:aa\n" +
+               "label:bb\n" +
+               "button:bb\n");
+
+    checkLabel(panel, 0, "aa", 0, 0);
+    checkButton(panel, 1, "aa", 1, 0);
+    checkLabel(panel, 2, "bb", 0, 1);
+    checkButton(panel, 3, "bb", 1, 1);
+
+    repeat.insert("cc", 1);
+
+    checkPanel(panel,
+               "label:aa\n" +
+               "button:aa\n" +
+               "label:cc\n" +
+               "button:cc\n" +
+               "label:bb\n" +
+               "button:bb\n");
+    checkLabel(panel, 0, "aa", 0, 0);
+    checkButton(panel, 1, "aa", 1, 0);
+    checkLabel(panel, 2, "cc", 0, 1);
+    checkButton(panel, 3, "cc", 1, 1);
+    checkLabel(panel, 4, "bb", 0, 2);
+    checkButton(panel, 5, "bb", 1, 2);
+
+    repeat.remove(0);
+
+    checkPanel(panel,
+               "label:cc\n" +
+               "button:cc\n" +
+               "label:bb\n" +
+               "button:bb\n");
+    checkLabel(panel, 0, "cc", 0, 0);
+    checkButton(panel, 1, "cc", 1, 0);
+    checkLabel(panel, 2, "bb", 0, 1);
+    checkButton(panel, 3, "bb", 1, 1);
+  }
+
+  private void checkButton(JPanel panel, int componentIndex, String label, int x, int y) {
+    JButton aaButton = (JButton)panel.getComponent(componentIndex);
+    assertEquals(label, aaButton.getText());
+    checkGridPos(panel, aaButton,
+                 x, y, 1, 1,
+                 SwingStretches.NORMAL_WEIGHT, SwingStretches.NULL_WEIGHT,
+                 Fill.HORIZONTAL, Anchor.CENTER,
+                 new Insets(0, 5, 0, 5));
+  }
+
+  private void checkLabel(JPanel panel, int componentIndex, String label, int x, int y) {
+    JLabel aaLabel = (JLabel)panel.getComponent(componentIndex);
+    assertEquals(label, aaLabel.getText());
+    checkGridPos(panel, aaLabel,
+                 x, y, 1, 1,
+                 SwingStretches.NULL_WEIGHT, SwingStretches.NULL_WEIGHT,
+                 Fill.HORIZONTAL, Anchor.SOUTH,
+                 new Insets(10, 0, 5, 0));
+  }
+
   public static void checkPanel(JPanel panel, String expected) {
     StringBuilder builder = new StringBuilder();
     dump(panel, builder, 0);
@@ -197,7 +273,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
         dump((JPanel)component, builder, level + 1);
       }
       else {
-        throw new RuntimeException(component.toString());
+        throw new RuntimeException("Unexpected component type: " + component.toString());
       }
     }
   }

@@ -5,13 +5,14 @@ import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
-import org.globsframework.gui.splits.repeat.RepeatHandler;
-import org.globsframework.gui.splits.repeat.RepeatPanel;
+import org.globsframework.gui.splits.repeat.*;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public class RepeatSplitter extends AbstractSplitter {
-  private Splitter templateSplitter;
+  private Splitter[] splitterTemplates;
   private String ref;
+  private RepeatLayout layout;
 
   public RepeatSplitter(SplitProperties properties, Splitter[] subSplitters) {
     super(properties, null);
@@ -20,10 +21,10 @@ public class RepeatSplitter extends AbstractSplitter {
       throw new SplitsException("Repeat items must have a 'ref' attribute");
     }
 
-    if (subSplitters.length != 1) {
-      throw new SplitsException("Repeat component '" + ref + "' must have exactly one subcomponent");
-    }
-    this.templateSplitter = subSplitters[0];
+    this.splitterTemplates = subSplitters;
+
+    layout = getLayout(properties.get("layout"), ref);
+    layout.check(subSplitters, ref);
   }
 
   protected ComponentStretch createRawStretch(SplitsContext context) {
@@ -31,12 +32,26 @@ public class RepeatSplitter extends AbstractSplitter {
     if (repeatHandler == null) {
       throw new ItemNotFound("Repeat '" + ref + "' not declared");
     }
-    RepeatPanel repeatPanel = new RepeatPanel(ref, repeatHandler, templateSplitter, context);
+    RepeatPanel repeatPanel = new RepeatPanel(ref, repeatHandler, layout, splitterTemplates, context);
     return repeatPanel.getStretch();
+  }
+
+  private RepeatLayout getLayout(String layoutProperty, String ref) {
+    if (Strings.isNullOrEmpty(layoutProperty) || "column".equalsIgnoreCase(layoutProperty)) {
+      return new ColumnRepeatLayout();
+    }
+    else if ("verticalGrid".equalsIgnoreCase(layoutProperty)) {
+      return new GridRepeatLayout();
+    }
+    throw new SplitsException("Unknown layout type '" + layoutProperty + "' for repeat '" + ref +
+                              "' - use one of [column|verticalGrid]");
   }
 
   public String getName() {
     return ref;
   }
 
+  protected String[] getExcludedParameters() {
+    return new String[]{"layout"};
+  }
 }

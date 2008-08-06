@@ -9,7 +9,6 @@ import org.uispec4j.finder.ComponentMatchers;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 public class SplitsBuilderTest extends SplitsTestCase {
 
@@ -464,25 +463,5 @@ public class SplitsBuilderTest extends SplitsTestCase {
   public void testTextLocator() throws Exception {
     JLabel label = parse("<label text='$aa.bb.cc'/>");
     assertEquals("aa bb cc", label.getText());
-  }
-
-  private void checkGridPos(JPanel panel, JComponent component,
-                            int x, int y, int w, int h,
-                            double weightX, double weightY,
-                            Fill fill, Anchor anchor, Insets insets) {
-
-    assertEquals(panel, component.getParent());
-    assertTrue(Arrays.asList(panel.getComponents()).contains(component));
-
-    GridBagConstraints constraints = getConstraints(panel, component);
-    assertEquals(x, constraints.gridx);
-    assertEquals(y, constraints.gridy);
-    assertEquals(w, constraints.gridwidth);
-    assertEquals(h, constraints.gridheight);
-    assertEquals(weightX, constraints.weightx);
-    assertEquals(weightY, constraints.weighty);
-    assertEquals(fill.getValue(), constraints.fill);
-    assertEquals(anchor.getValue(), constraints.anchor);
-    assertEquals(insets, constraints.insets);
   }
 }

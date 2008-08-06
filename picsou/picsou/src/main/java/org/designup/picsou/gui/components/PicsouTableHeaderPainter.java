@@ -1,43 +1,50 @@
 package org.designup.picsou.gui.components;
 
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.views.CellPainter;
+import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
-import org.designup.picsou.gui.utils.PicsouColors;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListener {
-  private Color headerLightColor;
-  private Color headerMediumColor;
-  private Color headerDarkColor;
-  private Color headerBorderColor;
-  private PicsouColors tableHeaderDark;
-  private PicsouColors tableHeaderMedium;
-  private PicsouColors tableHeaderLight;
-  private PicsouColors tableHeaderBorder;
+  private Color lightColor;
+  private Color mediumColor;
+  private Color darkColor;
+  private Color borderColor;
+  private Color filteredLightColor;
+  private Color filteredMediumColor;
+  private Color filteredDarkColor;
+  private Color filteredBorderColor;
 
-  public PicsouTableHeaderPainter(Directory directory,
-                                  PicsouColors tableHeaderDark,
-                                  PicsouColors tableHeaderMedium,
-                                  PicsouColors tableHeaderLight,
-                                  PicsouColors tableHeaderBorder) {
-    this.tableHeaderDark = tableHeaderDark;
-    this.tableHeaderMedium = tableHeaderMedium;
-    this.tableHeaderLight = tableHeaderLight;
-    this.tableHeaderBorder = tableHeaderBorder;
+  private boolean filtered = false;
+  private GlobTableView tableView;
+
+  public PicsouTableHeaderPainter(GlobTableView tableView, Directory directory) {
     directory.get(ColorService.class).addListener(this);
+    this.tableView = tableView;
+  }
+
+  public void setFiltered(boolean filtered) {
+    this.filtered = filtered;
+    this.tableView.getComponent().getTableHeader().repaint();
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    headerLightColor = colorLocator.get(tableHeaderLight);
-    headerMediumColor = colorLocator.get(tableHeaderMedium);
-    headerDarkColor = colorLocator.get(tableHeaderDark);
-    headerBorderColor = colorLocator.get(tableHeaderBorder);
+    lightColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_LIGHT);
+    mediumColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_MEDIUM);
+    darkColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_DARK);
+    borderColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_BORDER);
+
+    filteredLightColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_FILTERED_LIGHT);
+    filteredMediumColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_FILTERED_MEDIUM);
+    filteredDarkColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_FILTERED_DARK);
+    filteredBorderColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_FILTERED_BORDER);
   }
 
   public void paint(Graphics g, Glob glob,
@@ -52,14 +59,30 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
 
     int middleY = adjustedHeight / 2;
 
-    g2.setPaint(new GradientPaint(0, 0, headerLightColor, 0, middleY, headerMediumColor));
+    g2.setPaint(new GradientPaint(0, 0, getLightColor(), 0, middleY, getMediumColor()));
     g2.fillRect(0, 0, width, middleY);
-    g2.setPaint(new GradientPaint(0, middleY, headerDarkColor, 0, adjustedHeight, headerLightColor));
+    g2.setPaint(new GradientPaint(0, middleY, getDarkColor(), 0, adjustedHeight, getLightColor()));
     g2.fillRect(0, middleY, width, adjustedHeight);
 
     Rectangle2D rect = new Rectangle2D.Float(0, 0, width, adjustedHeight);
-    g2.setColor(headerBorderColor);
+    g2.setColor(getBorderColor());
     g2.setStroke(new BasicStroke(1.0f));
     g2.draw(rect);
+  }
+
+  private Color getBorderColor() {
+    return filtered ? filteredBorderColor : borderColor;
+  }
+
+  private Color getLightColor() {
+    return filtered ? filteredLightColor : lightColor;
+  }
+
+  private Color getMediumColor() {
+    return filtered ? filteredMediumColor : mediumColor;
+  }
+
+  private Color getDarkColor() {
+    return filtered ? filteredDarkColor : darkColor;
   }
 }

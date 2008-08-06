@@ -1,9 +1,11 @@
 package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
@@ -13,12 +15,10 @@ public class TransactionRendererColors implements ColorChangeListener {
   private Color selectionBgColor;
   private Color evenRowsBgColor;
   private Color oddRowsBgColor;
-  private Color evenErrorBgColor;
-  private Color oddErrorBgColor;
-  private Color selectionErrorBgColor;
   private Color rolloverCategoryColor;
   private Color transactionTextColor;
   private Color transactionSelectedTextColor;
+  private Color transactionPlannedTextColor;
   private Color categoryColor;
 
   public TransactionRendererColors(Directory directory) {
@@ -30,25 +30,15 @@ public class TransactionRendererColors implements ColorChangeListener {
     selectionBgColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_BG);
     evenRowsBgColor = colorLocator.get(PicsouColors.TRANSACTION_EVEN_ROWS_BG);
     oddRowsBgColor = colorLocator.get(PicsouColors.TRANSACTION_ODD_ROWS_BG);
-    selectionErrorBgColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_ERROR_BG);
-    evenErrorBgColor = colorLocator.get(PicsouColors.TRANSACTION_EVEN_ERROR_BG);
-    oddErrorBgColor = colorLocator.get(PicsouColors.TRANSACTION_ODD_ERROR_BG);
     rolloverCategoryColor = colorLocator.get(PicsouColors.ROLLOVER_CATEGORY_LABEL);
     categoryColor = colorLocator.get(PicsouColors.CATEGORY_LABEL);
     transactionTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT);
     transactionSelectedTextColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_TEXT);
-  }
-
-  public Color getEvenErrorBgColor() {
-    return evenErrorBgColor;
+    transactionPlannedTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT_PLANNED);
   }
 
   public Color getEvenRowsBgColor() {
     return evenRowsBgColor;
-  }
-
-  public Color getOddErrorBgColor() {
-    return oddErrorBgColor;
   }
 
   public Color getOddRowsBgColor() {
@@ -67,19 +57,26 @@ public class TransactionRendererColors implements ColorChangeListener {
     return selectionBgColor;
   }
 
-  public Color getSelectionErrorBgColor() {
-    return selectionErrorBgColor;
+  public void update(Component component, boolean isSelected, Glob transaction, int row) {
+    setForeground(component, isSelected, transaction);
+    setBackground(component, isSelected, row);
   }
 
-  public Color getTransactionTextColor() {
+  public void setForeground(Component component, boolean isSelected, Glob transaction) {
+    component.setForeground(getForeground(transaction, isSelected));
+  }
+
+  private Color getForeground(Glob transaction, boolean isSelected) {
+    if (isSelected) {
+      return transactionSelectedTextColor;
+    }
+    if (Transaction.isPlanned(transaction)) {
+      return transactionPlannedTextColor;
+    }
     return transactionTextColor;
   }
 
-  public Color getTransactionSelectedTextColor() {
-    return transactionSelectedTextColor;
-  }
-
-  public void setTransactionBackground(Component component, boolean isSelected, int row) {
+  public void setBackground(Component component, boolean isSelected, int row) {
     if (isSelected) {
       component.setBackground(getSelectionBgColor());
     }
@@ -87,4 +84,5 @@ public class TransactionRendererColors implements ColorChangeListener {
       component.setBackground((row % 2) == 0 ? getEvenRowsBgColor() : getOddRowsBgColor());
     }
   }
+
 }

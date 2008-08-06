@@ -214,9 +214,15 @@ public class GlobTypeLoader {
   }
 
   private static RuntimeException getFieldAccessException(Class<?> targetClass, java.lang.reflect.Field classField, Object value, Exception e) {
+    String valueDescription;
+    if (value != null) {
+      valueDescription = value.toString() + " (class " + value.getClass().getName() + ")";
+    }
+    else {
+      valueDescription = "'null'";
+    }
     return new RuntimeException("Unable to initialize field " + targetClass.getName() + "." + classField.getName() +
-                                " with object " + value +
-                                " (class " + value.getClass().getName() + ")", e);
+                                " with value " + valueDescription, e);
   }
 
   GlobTypeLoader addField(AbstractField field) throws ItemAlreadyExists {

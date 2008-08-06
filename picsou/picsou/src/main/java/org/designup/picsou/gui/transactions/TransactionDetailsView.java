@@ -7,6 +7,7 @@ import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.details.CategorisationHyperlinkButton;
+import org.designup.picsou.gui.transactions.details.TransactionSearch;
 import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -35,8 +36,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class TransactionDetailsView extends View {
-  public TransactionDetailsView(GlobRepository repository, Directory directory) {
+  private TransactionView transactionView;
+
+  public TransactionDetailsView(GlobRepository repository, Directory directory, TransactionView transactionView) {
     super(repository, directory);
+    this.transactionView = transactionView;
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -91,6 +95,8 @@ public class TransactionDetailsView extends View {
       new CategorisationHyperlinkButton(categoryChooserAction, repository, directory);
     builder.add("categoryChooserLink", categoryChooserLink);
 
+    builder.addMultiLineTextView("splitMessage", Transaction.TYPE, new SplitStringifier()).setAutoHideIfEmpty(true);
+
     builder.add("splitLink", new SplitTransactionAction(repository, directory));
 
     builder.add("originalLabel",
@@ -105,6 +111,10 @@ public class TransactionDetailsView extends View {
     builder.add("categorizeLink", new CategorizationAction(directory));
 
     builder.add("transactionSeriesName", addLabel(descriptionService.getListStringifier(Transaction.SERIES), true));
+
+    TransactionSearch search = new TransactionSearch(transactionView, directory);
+    builder.add("searchField", search.getTextField());
+
     return builder;
   }
 
@@ -163,5 +173,30 @@ public class TransactionDetailsView extends View {
     }
   }
 
+  private static class SplitStringifier implements GlobListStringifier {
+    private GlobListStringifier totalAmountStringifier =
+      GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, Transaction.AMOUNT);
+
+    public String toString(GlobList transactions, GlobRepository repository) {
+      if (transactions.size() != 1) {
+        return "";
+      }
+      Glob transaction = transactions.get(0);
+      if (!Transaction.isSplitSource(transaction) && !Transaction.isSplitPart(transaction)) {
+        return "";
+      }
+
+      String totalAmount =
+        totalAmountStringifier.toString(Transaction.getSplittedTransactions(transaction, repository), repository);
+      if (Transaction.isSplitSource(transaction)) {
+        return Lang.get("transaction.details.split.source", totalAmount);
+      }
+      if (Transaction.isSplitPart(transaction)) {
+        return Lang.get("transaction.details.split.part", totalAmount);
+      }
+
+      return "";
+    }
+  }
 }
 

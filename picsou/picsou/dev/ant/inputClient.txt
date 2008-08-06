@@ -35,6 +35,8 @@ R logging/
 R i18n/
 R images/
 R darkgreycolors.properties
+R purplecolors.properties
+R blackcolors.properties
 R grey_yellow1.properties
 R regis.properties
 R seb.properties

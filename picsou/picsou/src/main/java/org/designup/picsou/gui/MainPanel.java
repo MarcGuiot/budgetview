@@ -67,7 +67,7 @@ public class MainPanel {
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
-    TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory);
+    TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory, transactionView);
     CategoryView categoryView = new CategoryView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
 

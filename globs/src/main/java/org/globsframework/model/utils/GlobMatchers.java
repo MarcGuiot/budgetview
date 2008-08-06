@@ -6,7 +6,9 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.links.FieldMappingFunctor;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.utils.Ref;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 
 import java.util.*;
@@ -92,6 +94,18 @@ public class GlobMatchers {
 
   public static GlobMatcher fieldEqualsObject(Field field, Object value) {
     return new SingleFieldMatcher(field, value);
+  }
+
+  public static GlobMatcher fieldContainsIgnoreCase(final StringField field, final String value) {
+    if (Strings.isNullOrEmpty(value)) {
+      return ALL;
+    }
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        String actual = item.get(field);
+        return actual != null && actual.toLowerCase().contains(value.toLowerCase());
+      }
+    };
   }
 
   public static GlobMatcher contained(Field field, Object... values) {
@@ -223,6 +237,14 @@ public class GlobMatchers {
     return new GlobMatcher() {
       public boolean matches(Glob glob, GlobRepository repository) {
         return !matcher.matches(glob, repository);
+      }
+    };
+  }
+
+  public static GlobMatcher keyEquals(final Key key) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return key.equals(item.getKey());
       }
     };
   }

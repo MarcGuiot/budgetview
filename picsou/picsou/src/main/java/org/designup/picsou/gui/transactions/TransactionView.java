@@ -2,11 +2,14 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.PicsouTableHeaderCustomizer;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.TransactionCategoriesStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import static org.designup.picsou.model.Transaction.*;
@@ -16,8 +19,8 @@ import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
@@ -30,7 +33,8 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.utils.GlobMatcher;
+import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -50,6 +54,8 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
   private TransactionRendererColors rendererColors;
   private CategoryChooserAction categoryChooserAction;
   private TransactionSelection transactionSelection;
+  private String searchFilter;
+  private PicsouTableHeaderPainter headerPainter;
 
   public TransactionView(GlobRepository repository, Directory directory, TransactionSelection transactionSelection) {
     super(repository, directory);
@@ -63,7 +69,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    setFilter(transactionSelection.getCurrentMatcher());
+    updateFilter();
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -80,15 +86,25 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
     builder.add(view.getComponent());
   }
 
-  public void setFilter(GlobMatcher matcher) {
-    view.setFilter(matcher);
+  public void setSearchFilter(String filter) {
+    this.searchFilter = filter;
+    updateFilter();
+  }
+
+  private void updateFilter() {
+    view.setFilter(and(or(fieldContainsIgnoreCase(Transaction.LABEL, searchFilter),
+                          fieldContainsIgnoreCase(Transaction.NOTE, searchFilter)),
+                       transactionSelection.getCurrentMatcher()));
+    headerPainter.setFiltered(Strings.isNotEmpty(searchFilter));
   }
 
   private JTable createTable() {
     view = createGlobTableView(categoryChooserAction, repository, descriptionService, directory, rendererColors);
     view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
-    TransactionViewUtils.configureHeader(view, directory);
+    headerPainter = new PicsouTableHeaderPainter(view, directory);
+    view.setHeaderCustomizer(new PicsouTableHeaderCustomizer(directory, PicsouColors.TRANSACTION_TABLE_HEADER_TITLE),
+                             headerPainter);
 
     JTable table = view.getComponent();
 

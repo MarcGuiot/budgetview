@@ -6,6 +6,7 @@ import java.awt.*;
 public class GridBagBuilder {
   private JPanel panel;
   private GridBagConstraints constraints = new GridBagConstraints();
+  private Insets defaultInsets = null;
 
   public static GridBagBuilder init(JPanel panel) {
     return new GridBagBuilder(panel);
@@ -34,9 +35,26 @@ public class GridBagBuilder {
       .getPanel();
   }
 
+  public GridBagBuilder setDefaultInsets(int top, int left, int bottom, int right) {
+    this.defaultInsets = new Insets(top, left, bottom, right);
+    return this;
+  }
+
   public GridBagBuilder(JPanel panel) {
     this.panel = panel;
     panel.setLayout(new GridBagLayout());
+  }
+
+  public GridBagBuilder add(ComponentStretch stretch,
+                            int gridx, int gridy,
+                            int gridwidth, int gridheight) {
+    add(stretch.getComponent(),
+        gridx, gridy,
+        gridwidth, gridheight,
+        stretch.getWeightX(), stretch.getWeightY(),
+        stretch.getFill(), stretch.getAnchor(),
+        stretch.getInsets());
+    return this;
   }
 
   public GridBagBuilder add(Component component,
@@ -44,13 +62,13 @@ public class GridBagBuilder {
                             int gridwidth, int gridheight,
                             Insets insets) {
     ComponentStretch stretch = SwingStretches.get(component);
-    add(component,
-        gridx, gridy,
-        gridwidth, gridheight,
-        stretch.getWeightX(), stretch.getWeightY(),
-        stretch.getFill(), stretch.getAnchor(),
-        insets);
-    return this;
+    stretch.setInsets(insets);
+    return add(stretch, gridx, gridy, gridwidth, gridheight);
+  }
+
+  public GridBagBuilder add(Component component,
+                            int gridx, int gridy) {
+    return add(component, gridx, gridy, 1, 1, defaultInsets);
   }
 
   public GridBagBuilder add(Component component,

@@ -127,7 +127,7 @@ public class LicenseTest extends LicenseTestCase {
     window.dispose();
     checkPreviousVersionValidity("2010/07");
     activateNewLicenseInNewVersion(newActivationCode);
-    checkPreviousVersionValidity("2008/08");
+    checkPreviousVersionValidity("2008/07");
   }
 
   private void restartPicsouToIncrementCount() {
@@ -161,7 +161,12 @@ public class LicenseTest extends LicenseTestCase {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logUser("user", "passw@rd");
     MonthChecker monthChecker = new MonthChecker(window);
-    monthChecker.assertSpanEquals("2008/07", lastMonth);
+    if (lastMonth.equals("2008/07")) {
+      monthChecker.assertEquals("2008/07");
+    }
+    else {
+      monthChecker.assertSpanEquals("2008/07", lastMonth);
+    }
     window.dispose();
   }
 

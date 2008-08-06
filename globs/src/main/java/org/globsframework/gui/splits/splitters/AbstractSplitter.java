@@ -42,6 +42,9 @@ public abstract class AbstractSplitter implements Splitter {
     if (addMargin) {
       addMargin(stretch);
     }
+    else {
+      stretch.setInsets(getMarginInsets());
+    }
     complete(component);
     processAttributes(component, context);
     processAutoHide(component, context);
@@ -114,7 +117,7 @@ public abstract class AbstractSplitter implements Splitter {
     return properties;
   }
 
-   private void setGridPos(ComponentStretch stretch) {
+  private void setGridPos(ComponentStretch stretch) {
     String value = properties.getString("gridPos");
     if (value != null) {
       stretch.setGridPos(SplitsUtils.parseGridPos(value));
