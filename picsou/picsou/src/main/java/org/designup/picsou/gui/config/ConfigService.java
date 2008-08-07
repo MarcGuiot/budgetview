@@ -10,11 +10,10 @@ import org.designup.picsou.gui.utils.KeyChecker;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
-import org.designup.picsou.utils.BeginRemove;
-import org.designup.picsou.utils.EndRemove;
 import org.designup.picsou.utils.Inline;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.serialization.Encoder;
@@ -166,13 +165,11 @@ public class ConfigService {
   }
 
   public void sendRegister(String mail, String code, GlobRepository repository) {
-    @BeginRemove
-    int a;
+    Utils.beginRemove();
     if (URL == null || URL.length() == 0) {
       return;
     }
-    @EndRemove
-    int b;
+    Utils.endRemove();
     try {
       String url = URL + REGISTER;
       PostMethod postMethod = new PostMethod(url);

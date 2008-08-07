@@ -2,8 +2,7 @@ package org.designup.picsou.server.persistence.prevayler.users;
 
 import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
-import org.designup.picsou.utils.BeginRemove;
-import org.designup.picsou.utils.EndRemove;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
@@ -49,11 +48,9 @@ public class InitialRepoIdTransaction implements Transaction, CustomSerializable
 
   public static Transaction create() {
     Random random = new SecureRandom();
-    @BeginRemove
-    int a;
+    Utils.beginRemove();
     random = new Random();
-    @EndRemove
-    int b;
+    Utils.endRemove();
     byte repoId[] = new byte[50];
     random.nextBytes(repoId);
     return new InitialRepoIdTransaction(repoId);

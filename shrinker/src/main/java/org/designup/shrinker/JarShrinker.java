@@ -7,7 +7,7 @@ import java.io.IOException;
 public class JarShrinker {
   public static void main(String[] args) throws ClassNotFoundException, IOException {
     if (args.length < 3) {
-      System.out.println("Usage: targetDirectory contentFileToFollow contentFileToIgnore");
+      System.out.println("Usage: targetJar contentFileToFollow contentFileToIgnore");
       return;
     }
     ClassPathDependExtractorBuilder builder = ClassPathDependExtractorBuilder.init();

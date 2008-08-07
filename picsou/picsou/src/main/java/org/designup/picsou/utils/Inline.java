@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.CLASS)
-@Target({ElementType.LOCAL_VARIABLE})
-
-public @interface BeginRemove {
+@Target({ElementType.METHOD})
+public @interface Inline {
 }
