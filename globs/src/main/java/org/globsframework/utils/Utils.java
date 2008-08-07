@@ -210,4 +210,10 @@ public class Utils {
     }
     return result;
   }
+
+  public static void beginRemove() {
+  }
+
+  public static void endRemove() {
+  }
 }
