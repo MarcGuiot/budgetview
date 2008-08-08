@@ -63,12 +63,10 @@ public class DirectAccountDataManagerTest extends TestCase {
     directAccountDataManager.close();
 
     directAccountDataManager = new DirectAccountDataManager(PATH, false);
-    directAccountDataManager.setCountFileNotToDelete(1);
+    directAccountDataManager.setCountFileNotToDelete(2);
     initialOutput = SerializedInputOutputFactory.init(new ByteArrayOutputStream());
     directAccountDataManager.getUserData(initialOutput, userId);
     createDelta(globMultiMap, 3, "A", ServerState.UPDATED);
-    createDelta(globMultiMap, 2, "A", ServerState.UPDATED);
-    createDelta(globMultiMap, 3, "A", ServerState.DELETED);
     serializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
     directAccountDataManager.updateUserData(output.getInput(), userId);
 
@@ -77,16 +75,25 @@ public class DirectAccountDataManagerTest extends TestCase {
                               new File(pathForUser).list());
 
     directAccountDataManager.takeSnapshot(userId);
+
+    globMultiMap.clear();
+    createDelta(globMultiMap, 2, "A", ServerState.UPDATED);
+    createDelta(globMultiMap, 3, "A", ServerState.DELETED);
+    serializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
+    directAccountDataManager.updateUserData(output.getInput(), userId);
+
     PrevaylerDirectory directory = new PrevaylerDirectory(pathForUser);
     File permanent = directory.snapshotFile(3, "snapshot");
     checkSnapshot(directAccountDataManager, permanent);
 
-    TestUtils.assertSetEquals(new String[]{"0000000000000000003.snapshot", "0000000000000000002.journal"},
+    TestUtils.assertSetEquals(new String[]{"0000000000000000003.snapshot", "0000000000000000002.journal",
+                                           "0000000000000000001.journal"},
                               new File(pathForUser).list());
     directAccountDataManager.takeSnapshot(userId);
-    permanent = directory.snapshotFile(3, "snapshot");
+    permanent = directory.snapshotFile(4, "snapshot");
     checkSnapshot(directAccountDataManager, permanent);
-    TestUtils.assertSetEquals(new String[]{"0000000000000000003.snapshot", "0000000000000000002.journal"},
+    TestUtils.assertSetEquals(new String[]{"0000000000000000004.snapshot", "0000000000000000003.snapshot",
+                                           "0000000000000000002.journal"},
                               new File(pathForUser).list());
     continueWriting(pathForUser);
   }
@@ -102,7 +109,7 @@ public class DirectAccountDataManagerTest extends TestCase {
 
   private void continueWriting(String pathForUser) {
     DirectAccountDataManager directAccountDataManager = new DirectAccountDataManager(PATH, false);
-    directAccountDataManager.setCountFileNotToDelete(1);
+    directAccountDataManager.setCountFileNotToDelete(2);
     Integer userId = 123;
     SerializedOutput initialOutput = SerializedInputOutputFactory.init(new ByteArrayOutputStream());
     directAccountDataManager.getUserData(initialOutput, userId);
@@ -113,13 +120,13 @@ public class DirectAccountDataManagerTest extends TestCase {
     createDelta(globMultiMap, 1, "B", ServerState.CREATED);
     serializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
     directAccountDataManager.updateUserData(output.getInput(), userId);
-    TestUtils.assertSetEquals(new String[]{"0000000000000000003.snapshot", "0000000000000000002.journal",
-                                           "0000000000000000003.journal"},
+    TestUtils.assertSetEquals(new String[]{"0000000000000000004.snapshot", "0000000000000000003.snapshot",
+                                           "0000000000000000002.journal", "0000000000000000004.journal"},
                               new File(pathForUser).list());
 
     directAccountDataManager.takeSnapshot(userId);
-    TestUtils.assertSetEquals(new String[]{"0000000000000000004.snapshot",
-                                           "0000000000000000003.journal"},
+    TestUtils.assertSetEquals(new String[]{"0000000000000000005.snapshot", "0000000000000000004.snapshot",
+                                           "0000000000000000004.journal"},
                               new File(pathForUser).list());
     directAccountDataManager.getUserData(initialOutput, userId);
     serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
@@ -140,7 +147,6 @@ public class DirectAccountDataManagerTest extends TestCase {
     assertEquals(1, data.get("B").size());
     assertEquals(1, data.get("B").get(1).getVersion());
   }
-
 
   private ServerDelta createDelta(MultiMap<String, ServerDelta> globMultiMap, int id,
                                   String globTypeName, ServerState deltaState) {

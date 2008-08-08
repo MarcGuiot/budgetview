@@ -5,11 +5,11 @@
   * serveur, envoi de mails
   * Paypal ou CA?
 
-- generer un snapshot
+- generer un snapshot  --OK
 - mecanique de changement de version
 
 - edition de transaction
 
 - obfuscation
 
--fichier sg qif
+- fichier sg qif

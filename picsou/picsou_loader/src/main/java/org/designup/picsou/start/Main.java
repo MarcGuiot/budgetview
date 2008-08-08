@@ -3,6 +3,7 @@ package org.designup.picsou.start;
 import sun.security.action.GetPropertyAction;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -22,17 +23,8 @@ public class Main {
   }
 
   private void go(String[] args) {
-    String pathToInstallDir = null;
-    for (int i = 0; i < args.length; i++) {
-      String arg = args[i];
-      if ("-j".equalsIgnoreCase(arg) && i + 1 < args.length) {
-        pathToInstallDir = args[i + 1];
-      }
-    }
-    File jarFile = null;
-    if (pathToInstallDir != null) {
-      jarFile = findLastJar(pathToInstallDir);
-    }
+    String pathToInstallDir = System.getProperty("user.dir");
+    File jarFile = findLastJar(pathToInstallDir);
     Long installedVersion = null;
     if (jarFile != null) {
       installedVersion = extractVersion(jarFile.getName());
@@ -78,7 +70,11 @@ public class Main {
 
   private File findLastJar(String path) {
     File directory = new File(path);
-    File[] files = directory.listFiles();
+    File[] files = directory.listFiles(new FilenameFilter() {
+      public boolean accept(File dir, String name) {
+        return FILTER.matcher(name).matches();
+      }
+    });
     if (files == null || files.length == 0) {
       return null;
     }

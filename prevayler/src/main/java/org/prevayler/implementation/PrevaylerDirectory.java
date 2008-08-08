@@ -147,15 +147,44 @@ public class PrevaylerDirectory {
     journalFile.renameTo(new File(journalFile.getAbsolutePath() + ".unusedFile" + System.currentTimeMillis()));
   }
 
-  public void deletePreviousJournal(long transactionId, int countJournalNotToDelete) {
-    deletePreviousFiles(transactionId, JOURNAL_FILENAME_PATTERN, countJournalNotToDelete);
+  public void deletePreviousJournal(long transactionId) {
+    if (transactionId == -1) {
+      return;
+    }
+    File[] files = getOrderedFiles(JOURNAL_FILENAME_PATTERN);
+    if (files == null) {
+      return;
+    }
+
+    for (int i = files.length - 1; i >= 0; i--) {
+      File file = files[i];
+      long version = version(file, JOURNAL_FILENAME_PATTERN);
+      if (version <= transactionId) {
+        for (int j = i - 1; j >= 0; j--) {
+          files[j].delete();
+        }
+      }
+    }
   }
 
-  public void deletePreviousSnapshot(long transactionId, int countSnapshotNotToDelete) {
-    deletePreviousFiles(transactionId, SNAPSHOT_FILENAME_PATTERN, countSnapshotNotToDelete);
+  public long deletePreviousSnapshot(int countSnapshotNotToDelete) {
+    File[] files = getOrderedFiles(SNAPSHOT_FILENAME_PATTERN);
+    if (files == null) {
+      return -1;
+    }
+    if (files.length < countSnapshotNotToDelete) {
+      return -1;
+    }
+    long transactionId = version(files[files.length - countSnapshotNotToDelete], SNAPSHOT_FILENAME_PATTERN);
+
+    for (int i = files.length - countSnapshotNotToDelete - 1; i >= 0; i--) {
+      File file = files[i];
+      file.delete();
+    }
+    return transactionId;
   }
 
-  public void deletePreviousFiles(long transactionId, final String pattern, int countFileNotToDelete) {
+  private File[] getOrderedFiles(final String pattern) {
     File[] files = _directory.listFiles(new FileFilter() {
       public boolean accept(File pathname) {
         return pathname.getName().matches(pattern);
@@ -170,17 +199,6 @@ public class PrevaylerDirectory {
           .compareTo(new Long(version(f2, pattern)));
       }
     });
-
-    for (int i = files.length - 1; i >= 0; i--) {
-      File file = files[i];
-      long version = version(file, pattern);
-      if (version <= transactionId) {
-        for (int j = i - countFileNotToDelete; j >= 0; j--) {
-          files[j].delete();
-        }
-        return;
-      }
-    }
+    return files;
   }
-
 }

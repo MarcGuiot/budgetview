@@ -6,6 +6,7 @@ import com.gnosia.morphograph.model.Model;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.JarIconLocator;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
@@ -54,6 +55,7 @@ public class Morphograph {
 
     Directory directory = new DefaultDirectory();
 
+    directory.add(new UIService());
     directory.add(new SelectionService());
     directory.add(DescriptionService.class, new DefaultDescriptionService());
     directory.add(new ColorService(Morphograph.class, "/morphcolors.properties"));

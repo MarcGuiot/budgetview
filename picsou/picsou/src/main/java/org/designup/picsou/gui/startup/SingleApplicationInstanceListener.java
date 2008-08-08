@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.startup;
 
-import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.globsframework.utils.Log;
 
 import java.io.*;
@@ -11,7 +10,7 @@ import java.util.List;
 public class SingleApplicationInstanceListener {
   public static final String SINGLE_INSTANCE_DISABLED = "SINGLE_INSTANCE_DISABLED";
   public static final int[] PORTS = new int[]{5454, 3474, 14457, 9381};
-  public static int ACCEPT_TIMEOUT = 2000;
+  public static int ACCEPT_TIMEOUT = 200000;
   public static int REMOTE_APPLICATION_DETECTION_TIMEOUT = 2000;
 
   private static final String USER_MESSAGE_KEY = "user";
@@ -85,6 +84,7 @@ public class SingleApplicationInstanceListener {
       }
     }
     catch (Exception e) {
+      Log.write("socket", e);
     }
     return false;
   }
@@ -104,38 +104,41 @@ public class SingleApplicationInstanceListener {
       outputStream = new ObjectOutputStream(socket.getOutputStream());
       outputStream.flush();
       try {
-        while (true) {
-          String message = (String)inputStream.readObject();
-          if (USER_MESSAGE_KEY.equals(message)) {
-            String identity = (String)inputStream.readObject();
-            if (System.getProperty("user.name").equals(identity)) {
-              outputStream.writeObject(RESPONSE_OK);
-              outputStream.flush();
-              continue;
-            }
-          }
-          if (FILES_MESSAGE_KEY.equals(message)) {
-            List<File> files = readFileName(inputStream);
+        String firstMessage = (String)inputStream.readObject();
+        if (USER_MESSAGE_KEY.equals(firstMessage)) {
+          String identity = (String)inputStream.readObject();
+          Log.write("SingleApplicationInstanceListener.readFromSocket user : " + identity);
+          if (System.getProperty("user.name").equals(identity)) {
             outputStream.writeObject(RESPONSE_OK);
-            outputStream.flush();
-            openRequestManager.openFiles(files);
-            continue;
           }
-          if (SHOW_MESSAGE_KEY.equals(message)) {
-            readFileName(inputStream);
-            outputStream.writeObject(RESPONSE_OK);
-            outputStream.flush();
-            bringToFront();
-            continue;
+          else {
+            outputStream.writeObject(RESPONSE_FAIL);
+            return;
           }
-          break;
         }
-        outputStream.writeObject(RESPONSE_FAIL);
+        outputStream.flush();
+        String message = (String)inputStream.readObject();
+        if (FILES_MESSAGE_KEY.equals(message)) {
+          Log.write("SingleApplicationInstanceListener.readFromSocket files");
+          List<File> files = readFileName(inputStream);
+          outputStream.writeObject(RESPONSE_OK);
+          openRequestManager.openFiles(files);
+        }
+        else if (SHOW_MESSAGE_KEY.equals(message)) {
+          Log.write("SingleApplicationInstanceListener.readFromSocket show");
+          readFileName(inputStream);
+          outputStream.writeObject(RESPONSE_OK);
+          bringToFront();
+        }
+        else {
+          outputStream.writeObject(RESPONSE_FAIL);
+        }
+        outputStream.flush();
       }
       catch (Exception e) {
         outputStream.writeObject(RESPONSE_FAIL);
+        Log.write("socket", e);
       }
-      outputStream.flush();
     }
     finally {
       try {
@@ -156,11 +159,15 @@ public class SingleApplicationInstanceListener {
   private void bringToFront() {
   }
 
-  public void shutdown() throws Exception {
+  public void shutdown() {
     if (threadReader != null) {
-      threadReader.requestShutdown();
-      threadReader.join();
-      threadReader = null;
+      try {
+        threadReader.requestShutdown();
+        threadReader.join();
+        threadReader = null;
+      }
+      catch (Exception e) {
+      }
     }
   }
 
@@ -173,6 +180,7 @@ public class SingleApplicationInstanceListener {
       if (file.exists() && file.isFile()) {
         tryReadToEnsureWeHaveTheRightToReadThisFile(file);
         filesToOpen.add(file);
+        Log.write("Open file : " + fileName);
       }
     }
     return filesToOpen;
@@ -207,11 +215,6 @@ public class SingleApplicationInstanceListener {
       return socket != null && RESPONSE_OK.equals(answer);
     }
 
-    public void close() throws IOException {
-      socket.close();
-      socket = null;
-    }
-
     public void openFiles(List<File> file) {
       trySendToRemote(file);
     }
@@ -239,18 +242,19 @@ public class SingleApplicationInstanceListener {
         return RESPONSE_OK.equals(result);
       }
       catch (Exception e) {
+        Log.write("socket", e);
         return false;
       }
       finally {
         try {
-          if (socket != null) {
-            socket.close();
-          }
           if (input != null) {
             input.close();
           }
           if (output != null) {
             output.close();
+          }
+          if (socket != null) {
+            socket.close();
           }
           if (tempFile != null) {
             tempFile.delete();
@@ -298,7 +302,7 @@ public class SingleApplicationInstanceListener {
             Log.write("wait");
             countFailed++;
             try {
-              Thread.sleep(200);
+              Thread.sleep(100);
             }
             catch (InterruptedException e1) {
             }

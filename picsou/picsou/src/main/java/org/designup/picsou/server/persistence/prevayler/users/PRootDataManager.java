@@ -13,6 +13,7 @@ import org.prevayler.Prevayler;
 import org.prevayler.PrevaylerFactory;
 import org.prevayler.Query;
 import org.prevayler.foundation.serialization.Serializer;
+import org.prevayler.implementation.PrevaylerDirectory;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,12 +22,15 @@ import java.util.Date;
 public class PRootDataManager implements RootDataManager {
   private Prevayler prevayler;
   private Directory directory;
+  private String pathToPrevaylerDirectory;
+  private static final int SNASPHOT_TO_PRESERVE = 3;
 
   public PRootDataManager(String path, Directory directory, boolean inMemory) {
     this.directory = directory;
     PrevaylerFactory prevaylerFactory = new PrevaylerFactory();
 
-    prevaylerFactory.configurePrevalenceDirectory(getPathToPrevayler(path));
+    pathToPrevaylerDirectory = getPathToPrevayler(path);
+    prevaylerFactory.configurePrevalenceDirectory(pathToPrevaylerDirectory);
     prevaylerFactory.configureTransactionFiltering(false);
     Serializer serializer = new DefaultSerializer(initSerializerPolicy());
     prevaylerFactory.configureJournalSerializer("journal", serializer);
@@ -123,7 +127,11 @@ public class PRootDataManager implements RootDataManager {
 
   public void close() {
     try {
+      prevayler.takeSnapshot();
       prevayler.close();
+      PrevaylerDirectory directory = new PrevaylerDirectory(pathToPrevaylerDirectory);
+      long lastTransactionId = directory.deletePreviousSnapshot(SNASPHOT_TO_PRESERVE);
+      directory.deletePreviousJournal(lastTransactionId);
     }
     catch (IOException e) {
       Log.write("prevayler close fail", e);

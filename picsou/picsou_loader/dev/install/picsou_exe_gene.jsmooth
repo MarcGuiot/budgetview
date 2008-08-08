@@ -6,13 +6,19 @@
   <JVMSearchPath>jdkpath</JVMSearchPath>
   <JVMSearchPath>exepath</JVMSearchPath>
   <JVMSearchPath>jview</JVMSearchPath>
+  <arguments></arguments>
+  <currentDirectory>${EXECUTABLEPATH}</currentDirectory>
   <embeddedJar>true</embeddedJar>
   <executableName>picsou.exe</executableName>
   <iconLocation>../images/picsou_icon_32.png</iconLocation>
   <initialMemoryHeap>-1</initialMemoryHeap>
   <jarLocation>../../target/picsouloader-1.0.jar</jarLocation>
+  <javaProperties>
+    <name>picsou.working.dir</name>
+    <value>${EXECUTABLEPATH}</value>
+  </javaProperties>
   <mainClassName>org.designup.picsou.start.Main</mainClassName>
-  <maximumMemoryHeap>-1</maximumMemoryHeap>
+  <maximumMemoryHeap>268435456</maximumMemoryHeap>
   <maximumVersion></maximumVersion>
   <minimumVersion>1.5</minimumVersion>
   <skeletonName>Windowed Wrapper</skeletonName>
@@ -27,6 +33,14 @@
   <skeletonProperties>
     <key>SingleProcess</key>
     <value>1</value>
+  </skeletonProperties>
+  <skeletonProperties>
+    <key>SingleInstance</key>
+    <value>0</value>
+  </skeletonProperties>
+  <skeletonProperties>
+    <key>JniSmooth</key>
+    <value>0</value>
   </skeletonProperties>
   <skeletonProperties>
     <key>Debug</key>

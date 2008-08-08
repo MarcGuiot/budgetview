@@ -118,6 +118,13 @@ public abstract class ImportPanel {
 
     builder.add("import", new ImportAction());
 
+    builder.add("close", new AbstractAction(textForCloseButton) {
+      public void actionPerformed(ActionEvent e) {
+        openRequestManager.popCallback();
+        complete();
+      }
+    });
+
     localDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         GlobList banks = selection.getAll();
@@ -178,11 +185,7 @@ public abstract class ImportPanel {
 
     builder.add("skipFile", new SkipFileAction());
     builder.add("finish", new FinishAction());
-    builder.add("close", new AbstractAction(textForCloseButton) {
-      public void actionPerformed(ActionEvent e) {
-        complete();
-      }
-    });
+
     builder.add("back", new AbstractAction("back") {
       public void actionPerformed(ActionEvent e) {
         step1 = true;
@@ -322,8 +325,7 @@ public abstract class ImportPanel {
         return true;
       }
       catch (Exception e) {
-        Log.write("", e);
-        e.printStackTrace();
+        Log.write("nextImport", e);
         return false;
       }
     }

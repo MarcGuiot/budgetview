@@ -128,6 +128,49 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     picsouApplication.shutdown();
   }
 
+  public void testOpenRequestAndCloseAndOpenRequest() throws Exception {
+    final PicsouApplication picsouApplication = new PicsouApplication();
+    final Window window = WindowInterceptor.run(new Trigger() {
+      public void run() throws Exception {
+        picsouApplication.run();
+      }
+    });
+
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("calimero", "C@limero2");
+    loginChecker.skipImport();
+
+    final String initialFile = OfxBuilder.init(this)
+      .addTransaction("2000/01/03", 1.2, "menu K")
+      .save();
+    Window importDialog = WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        PicsouApplication.main(initialFile);
+      }
+    });
+
+    ImportChecker firstImporter = new ImportChecker(importDialog);
+    firstImporter.checkSelectedFiles(initialFile);
+    firstImporter.close();
+    assertFalse(importDialog.isVisible());
+
+    importDialog = WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        PicsouApplication.main(initialFile);
+      }
+    });
+
+    ImportChecker importer = new ImportChecker(importDialog);
+    importer.checkSelectedFiles(initialFile);
+    importer.startImport();
+    importer.doImport();
+    getTransactionView(window).initContent()
+      .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
+      .check();
+    window.dispose();
+    picsouApplication.shutdown();
+  }
+
   public void testWhenFirstPortAreInUse() throws Exception {
     ServerSocket serverSocket1 = new ServerSocket(5454);
     ServerSocket serverSocket2 = new ServerSocket(3474);

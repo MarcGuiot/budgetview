@@ -379,7 +379,7 @@ disabled
 {Back Button;Next Button}
 
 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5,CommandLineArguments
-{-l <%Language%> -j "<%InstallDir%>"}
+{-l <%Language%>}
 
 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5,Conditions
 {2 conditions}
@@ -697,7 +697,7 @@ false
 {can create}
 
 518566B8-E4AF-6C59-4C80-8E4545D21CA6,Command
-{"<%InstallDir%>\picsou.exe"  "-l" "<%Language%>" "-j" "<%InstallDir%>" "%1"}
+{<%InstallDir%>\picsou.exe -l <%Language%> "%1"}
 
 518566B8-E4AF-6C59-4C80-8E4545D21CA6,CommandName
 Open
@@ -967,7 +967,7 @@ Picsou
 Finish
 
 7ED948AD-24B3-4EDB-A79B-0F00DACFAC57,CommandLineArguments
-{ -l <%Language%> -j <%InstallDir%>}
+{ -l <%Language%>}
 
 7ED948AD-24B3-4EDB-A79B-0F00DACFAC57,Conditions
 {1 condition}
@@ -1030,7 +1030,7 @@ Yes
 {3 conditions}
 
 8C9FCEF1-5721-4F82-B78C-4F773FD8A11C,ProgramCommandLine
-{<%ProgramExecutable%> -l <%Language%>  -j "<%InstallDir%>"}
+{<%ProgramExecutable%> -l <%Language%>}
 
 8C9FCEF1-5721-4F82-B78C-4F773FD8A11C,WaitForProgram
 No
@@ -1279,7 +1279,7 @@ BEF85513-C17E-C854-1584-C6A50E5E906C,Name
 {unix component}
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,Command
-{"<%InstallDir%>\picsou.exe"  "-l" "<%Language%>" "-j" "<%InstallDir%>" "%1"}
+{<%InstallDir%>\picsou.exe  -l <%Language%> "%1"}
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,CommandName
 Open
@@ -1456,7 +1456,7 @@ E0F4E853-A044-473B-AD88-F372BB9BFB7F,ExitType
 Finish
 
 E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,CommandLineArguments
-{ -l <%Language%> -j "<%InstallDir%>"}
+{-l <%Language%>}
 
 E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,Conditions
 {2 conditions}

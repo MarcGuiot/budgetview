@@ -22,6 +22,7 @@ import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -30,7 +31,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -55,7 +58,22 @@ public class PicsouApplication {
   }
 
   public static void main(String... args) throws Exception {
+    initLogger();
+    Log.write("arg : ");
+    for (String arg : args) {
+      Log.write(arg);
+    }
     new PicsouApplication().run(args);
+  }
+
+  private static void initLogger() {
+    FileOutputStream stream;
+    try {
+      stream = new FileOutputStream(File.createTempFile("picsoulog", ".txt"));
+      Log.init(new PrintStream(stream));
+    }
+    catch (IOException e) {
+    }
   }
 
   public void run(String... args) throws Exception {
@@ -72,7 +90,7 @@ public class PicsouApplication {
     List<File> fileToOpen = new ArrayList<File>();
     for (String arg : args) {
       File file = new File(arg);
-      if (file.exists()) {
+      if (file.exists() && !file.isDirectory()) {
         fileToOpen.add(file);
       }
     }
@@ -97,6 +115,10 @@ public class PicsouApplication {
     mainWindow.getFrame().addWindowListener(new WindowAdapter() {
       public void windowOpened(WindowEvent e) {
         loginPanel.initFocus();
+      }
+
+      public void windowClosing(WindowEvent e) {
+        shutdown();
       }
     });
     mainWindow.show();
@@ -137,7 +159,7 @@ public class PicsouApplication {
     }
   }
 
-  public void shutdown() throws Exception {
+  public void shutdown() {
     singleInstanceListener.shutdown();
     if (directory != null) {
       directory.get(ColorService.class).removeAllListeners();
