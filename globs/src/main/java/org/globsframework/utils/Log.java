@@ -11,6 +11,10 @@ public class Log {
   private static String BANNER =
     "=================================================================";
 
+  public static void init(PrintStream stream) {
+    Log.stream = stream;
+  }
+
   public static void reset() {
     indentation = 0;
   }

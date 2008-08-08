@@ -1,7 +1,5 @@
 package org.globsframework.gui.splits.components;
 
-import com.sun.java.swing.SwingUtilities2;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
@@ -61,8 +59,22 @@ public class ShadowedLabelUI extends BasicLabelUI {
     }
     int mnemIndex = l.getDisplayedMnemonicIndex();
     g.setColor(shadowColor);
-    SwingUtilities2.drawStringUnderlineCharAt(l, g, s, mnemIndex, textX + direction.x, textY + direction.y);
+    drawStringUnderlineCharAt(g, s, mnemIndex, textX + direction.x, textY + direction.y);
     g.setColor(l.getForeground());
-    SwingUtilities2.drawStringUnderlineCharAt(l, g, s, mnemIndex, textX, textY);
+    drawStringUnderlineCharAt(g, s, mnemIndex, textX, textY);
   }
+
+  public static void drawStringUnderlineCharAt(Graphics g, String text, int underlinedIndex, int x, int y) {
+    g.drawString(text, x, y);
+    if (underlinedIndex >= 0 && underlinedIndex < text.length()) {
+      // PENDING: this needs to change.
+      FontMetrics fm = g.getFontMetrics();
+      int underlineRectX = x + fm.stringWidth(text.substring(0, underlinedIndex));
+      int underlineRectY = y;
+      int underlineRectWidth = fm.charWidth(text.charAt(underlinedIndex));
+      int underlineRectHeight = 1;
+      g.fillRect(underlineRectX, underlineRectY + 1, underlineRectWidth, underlineRectHeight);
+    }
+  }
+
 }
