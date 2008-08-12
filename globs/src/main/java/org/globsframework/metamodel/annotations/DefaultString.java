@@ -7,5 +7,5 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target({ElementType.FIELD})
 public @interface DefaultString {
-  public abstract String value();
+  @NoObfuscation String value();
 }

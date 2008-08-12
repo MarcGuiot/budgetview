@@ -2,8 +2,8 @@ package org.globsframework.gui.splits.ui;
 
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
-import org.globsframework.gui.splits.utils.PropertySetter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
+import org.globsframework.gui.splits.utils.PropertySetter;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
@@ -16,6 +16,7 @@ import java.util.Map;
 public class UIService {
 
   private Map<String, UIFactory> factories = new HashMap<String, UIFactory>();
+  private Map<String, Class> classes = new HashMap<String, Class>();
 
   public ComponentUI getUI(String name, SplitsContext context) {
     UIFactory factory = factories.get(name);
@@ -25,10 +26,19 @@ public class UIService {
     return factory.createUI(context);
   }
 
+  public void registerClass(String className, Class uiClass) {
+    classes.put(className, uiClass);
+  }
+
   public void registerUI(String name, String className, SplitProperties properties) {
     Class uiClass;
     try {
-      uiClass = Class.forName(className);
+      if (classes.containsKey(className)) {
+        uiClass = classes.get(className);
+      }
+      else {
+        uiClass = Class.forName(className);
+      }
     }
     catch (ClassNotFoundException e) {
       throw new ItemNotFound("Cannot find class '" + className + "' for ui: " + name);

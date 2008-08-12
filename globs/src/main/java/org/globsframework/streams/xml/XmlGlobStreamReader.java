@@ -104,6 +104,9 @@ public class XmlGlobStreamReader {
       return accessors.get(field.getName());
     }
 
+    public void close() {
+    }
+
     public void add(Glob glob) {
       if (globs.isEmpty()) {
         globType = glob.getType();

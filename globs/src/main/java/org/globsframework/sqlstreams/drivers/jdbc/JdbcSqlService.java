@@ -80,7 +80,7 @@ public class JdbcSqlService extends AbstractSqlService {
     return dbFactory.create();
   }
 
-  public Connection getConnection() {
+  synchronized public Connection getConnection() {
     try {
       return driver.connect(dbName, dbInfo);
     }
