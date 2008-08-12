@@ -21,8 +21,8 @@ public class User {
   public static StringField PASSWORD;
   public static StringField MAIL;
   public static StringField ACTIVATION_CODE;
-  public static IntegerField ACTIVATION_STEP;
   public static BlobField SIGNATURE;
+  public static IntegerField ACTIVATION_STEP;
 
   public static final int ACTIVATION_IN_PROCESS = 1;
   public static final int ACTIVATION_OK = 2;

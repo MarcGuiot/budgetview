@@ -56,15 +56,18 @@ public class MainWindowLauncher {
   }
 
   private static GlobRepository run(ServerAccess serverAccess, Directory directory) throws Exception {
+    boolean newUser;
     try {
       serverAccess.connect();
       serverAccess.createUser(user, password.toCharArray());
+      newUser = true;
     }
     catch (UserAlreadyExists userAlreadyExists) {
       serverAccess.initConnection(user, password.toCharArray(), false);
+      newUser = false;
     }
     directory.add(OpenRequestManager.class, openRequestManager);
-    PicsouInit init = PicsouInit.init(serverAccess, user, true, directory);
+    PicsouInit init = PicsouInit.init(serverAccess, user, newUser, directory);
 
     MainWindow window = new MainWindow();
     MainPanel.show(init.getRepository(), init.getDirectory(), window);

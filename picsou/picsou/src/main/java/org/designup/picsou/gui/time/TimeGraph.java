@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.time;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.ChainedSelectableElement;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.TransformationAdapter;
@@ -15,13 +16,15 @@ import java.util.List;
 public class TimeGraph {
   protected List<YearGraph> years = Collections.emptyList();
   private GlobList months;
+  private TimeService timeService;
   private MonthFontMetricInfo monthFontMetricInfo;
   private int monthWidth;
   private int yearHeight;
   private int monthRank;
 
-  public TimeGraph(GlobList months, MonthViewColors colors) {
+  public TimeGraph(GlobList months, MonthViewColors colors, TimeService timeService) {
     this.months = months;
+    this.timeService = timeService;
     this.years = new ArrayList<YearGraph>();
     if (months.isEmpty()) {
       return;
@@ -34,7 +37,7 @@ public class TimeGraph {
       if (currentYear != year) {
         years.add(new YearGraph(currentYear, monthForYear, colors,
                                 new MonthChainedSelectableElement(yearCount),
-                                new YearChainedSelectableElement(yearCount)));
+                                new YearChainedSelectableElement(yearCount), timeService));
         monthForYear.clear();
         currentYear = year;
         yearCount++;
@@ -43,7 +46,7 @@ public class TimeGraph {
     }
     years.add(new YearGraph(currentYear, monthForYear, colors,
                             new MonthChainedSelectableElement(yearCount),
-                            new YearChainedSelectableElement(yearCount)));
+                            new YearChainedSelectableElement(yearCount), timeService));
   }
 
   private void initFontMetrics(Graphics2D graphics2D) {
@@ -116,7 +119,7 @@ public class TimeGraph {
 
   public static void drawStringIn(Graphics2D graphics2D, int x, int y, String text, MonthViewColors colors) {
     graphics2D.setPaint(colors.textShadow);
-    graphics2D.drawString(text, x-1, y-1);
+    graphics2D.drawString(text, x - 1, y - 1);
     graphics2D.setPaint(colors.text);
     graphics2D.drawString(text, x, y);
   }

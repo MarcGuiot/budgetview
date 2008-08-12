@@ -14,7 +14,6 @@ public class TimeService {
     TimeService.today = day;
   }
 
-
   public int getCurrentMonthId() {
     return Month.getMonthId(today);
   }

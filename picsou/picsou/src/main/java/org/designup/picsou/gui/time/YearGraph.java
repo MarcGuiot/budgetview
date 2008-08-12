@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.time;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.ChainedSelectableElement;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.TransformationAdapter;
@@ -13,6 +14,7 @@ import java.util.Collection;
 public class YearGraph extends DefaultCompositeComponent {
   private int year;
   private MonthViewColors colors;
+  private TimeService timeService;
   protected int yearCellHeight;
   private int yearWidth;
   private int shortYearWidth;
@@ -22,14 +24,15 @@ public class YearGraph extends DefaultCompositeComponent {
 
   public YearGraph(int year, java.util.List<Glob> months,
                    MonthViewColors colors, ChainedSelectableElement monthElement,
-                   ChainedSelectableElement yearElement) {
+                   ChainedSelectableElement yearElement, TimeService timeService) {
     super(monthElement, yearElement);
     this.year = year;
     this.colors = colors;
+    this.timeService = timeService;
     this.monthsGraph = new MonthGraph[months.size()];
     int i = 0;
     for (Glob month : months) {
-      this.monthsGraph[i] = new MonthGraph(month, colors, new DefaultChainedSelectableElement(i));
+      this.monthsGraph[i] = new MonthGraph(month, colors, new DefaultChainedSelectableElement(i), timeService);
       i++;
     }
     add(this.monthsGraph);

@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.time;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Month;
@@ -32,6 +33,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
 
   public void DISABLED_testMouseMove() throws Exception {
     DefaultDirectory defaultDirectory = new DefaultDirectory();
+    defaultDirectory.add(new TimeService());
     GlobRepository repository = GlobRepositoryBuilder.init().get();
     final JFrame jFrame = initPanel(defaultDirectory, repository, 270);
 
@@ -132,6 +134,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
 
   private void init(int width) {
     DefaultDirectory defaultDirectory = new DefaultDirectory();
+    defaultDirectory.add(new TimeService());
     GlobRepository repository = GlobRepositoryBuilder.init().get();
     frame = initPanel(defaultDirectory, repository, width);
 

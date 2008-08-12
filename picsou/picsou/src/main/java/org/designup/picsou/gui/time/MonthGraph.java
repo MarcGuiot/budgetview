@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.time;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.ChainedSelectableElement;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.TransformationAdapter;
@@ -13,12 +14,14 @@ import java.util.Collection;
 public class MonthGraph extends AbstractComponent implements Comparable<MonthGraph> {
   private Glob month;
   private MonthViewColors colors;
+  private TimeService timeService;
   private MonthFontMetricInfo.MonthSizes monthSize;
 
-  public MonthGraph(Glob month, MonthViewColors colors, ChainedSelectableElement element) {
+  public MonthGraph(Glob month, MonthViewColors colors, ChainedSelectableElement element, TimeService timeService) {
     super(element);
     this.month = month;
     this.colors = colors;
+    this.timeService = timeService;
   }
 
   public void init(Graphics2D graphics2D, MonthFontMetricInfo monthFontMetricInfo) {
@@ -43,19 +46,38 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
       isVisible = Visibility.NOT_VISIBLE;
       return;
     }
-    if (selected) {
-      Paint previousPaint = graphics2D.getPaint();
-      graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedTop, 0, height, colors.selectedBottom));
-      graphics2D.fillRect(1, 1, width - 1, height - 1);
-      graphics2D.setPaint(previousPaint);
+    else if (timeService.getCurrentMonthId() > month.get(Month.ID)) {
+      if (selected) {
+        graphics2D.setPaint(new GradientPaint(0, 0, colors.pastSelectedTop, 0, height, colors.pastSelectedBottom));
+      }
+      else {
+        graphics2D.setPaint(new GradientPaint(0, 0, colors.pastBackgroundTop, 0, height, colors.pastBackgroundBottom));
+      }
     }
+    else if (timeService.getCurrentMonthId() < month.get(Month.ID)) {
+      if (selected) {
+        graphics2D.setPaint(new GradientPaint(0, 0, colors.futureSelectedTop, 0, height, colors.futureSelectedBottom));
+      }
+      else {
+        graphics2D.setPaint(new GradientPaint(0, 0, colors.futureBackgroundTop, 0, height, colors.futureBackgroundBottom));
+      }
+    }
+    else if (timeService.getCurrentMonthId() == month.get(Month.ID)) {
+      if (selected) {
+        graphics2D.setPaint(new GradientPaint(0, 0, colors.currentSelectedTop, 0, height, colors.currentSelectedBottom));
+      }
+      else {
+        graphics2D.setPaint(new GradientPaint(0, 0, colors.currentBackgroundTop, 0, height, colors.currentBackgroundBottom));
+      }
+    }
+    graphics2D.fillRect(1, 1, width - 1, height - 1);
 
     graphics2D.setPaint(colors.grid);
     graphics2D.drawRect(0, 0, width, height);
 
     MonthFontMetricInfo.Size nearest = monthSize.getSize(monthRank);
 
-    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, nearest.getHeigth() + 2, 
+    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, nearest.getHeigth() + 2,
                            nearest.getName(), colors);
   }
 

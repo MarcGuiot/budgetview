@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.time;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.*;
 import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobSelection;
@@ -51,13 +52,15 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private int previousWidth = -1;
   private int paintCount = 0;
   private int currentPaintCount = 0;
+  private TimeService timeService;
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
     this.repository = globRepository;
     colors = new MonthViewColors(directory);
 
     GlobList list = globRepository.getAll(Month.TYPE).sort(Month.ID);
-    timeGraph = new TimeGraph(list, colors);
+    timeService = directory.get(TimeService.class);
+    timeGraph = new TimeGraph(list, colors, timeService);
     selectionService = directory.get(SelectionService.class);
     setName("MonthSelector");
     globRepository.addChangeListener(this);
@@ -241,7 +244,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
 
   private void reloadMonth() {
     GlobList list = repository.getAll(Month.TYPE).sort(Month.ID);
-    timeGraph = new TimeGraph(list, colors);
+    timeGraph = new TimeGraph(list, colors, timeService);
   }
 
   public void globsReset(GlobRepository globRepository, List<GlobType> changedTypes) {
