@@ -20,32 +20,47 @@ public class TransactionAnalyzerFactory {
   private GlobModel modelRepository;
   private GlobRepository globRepository;
   private DefaultTransactionAnalyzer analyzer;
+  private Long version = 0L;
 
   public TransactionAnalyzerFactory(GlobModel modelRepository, GlobRepository globRepository) {
     this.modelRepository = modelRepository;
     this.globRepository = globRepository;
-    load(getClass().getClassLoader());
   }
 
-  synchronized public void load(ClassLoader loader) {
-    this.analyzer = new DefaultTransactionAnalyzer();
-    loadMatchers(loader);
-    analyzer.add(new LabelForCategorizationUpdater());
-    analyzer.add(new TransactionDateUpdater());
+  public interface Loader {
+    InputStream load(String file);
+  }
+
+  synchronized public void load(final ClassLoader loader, Long version) {
+    load(new Loader() {
+      public InputStream load(String file) {
+        return loader.getResourceAsStream(file);
+      }
+    }, version);
+  }
+
+  synchronized public void load(Loader loader, Long version) {
+    if (this.version < version) {
+      this.version = version;
+      this.analyzer = new DefaultTransactionAnalyzer();
+      loadMatchers(loader);
+      analyzer.add(new LabelForCategorizationUpdater());
+      analyzer.add(new TransactionDateUpdater());
+    }
   }
 
   synchronized public TransactionAnalyzer getAnalyzer() {
     return analyzer;
   }
 
-  private void loadMatchers(ClassLoader loader) {
+  private void loadMatchers(Loader loader) {
     parseDefinitionFile(globRepository, loader);
     registerMatchers(globRepository);
   }
 
-  private void parseDefinitionFile(GlobRepository globRepository, ClassLoader loader) {
+  private void parseDefinitionFile(GlobRepository globRepository, Loader loader) {
     String bankListFileName = "banks/bankList.txt";
-    InputStream bankListStream = loader.getResourceAsStream(bankListFileName);
+    InputStream bankListStream = loader.load(bankListFileName);
 
     if (bankListStream == null) {
       throw new ResourceAccessFailed("missing bank file list'" + bankListFileName + "'");
@@ -64,7 +79,7 @@ public class TransactionAnalyzerFactory {
         break;
       }
       String path = "banks/" + bankFileName;
-      InputStream stream = loader.getResourceAsStream(path);
+      InputStream stream = loader.load(path);
       if (stream != null) {
         InputStreamReader reader = new InputStreamReader(stream);
         XmlGlobParser.parse(modelRepository, globRepository, reader, "globs");

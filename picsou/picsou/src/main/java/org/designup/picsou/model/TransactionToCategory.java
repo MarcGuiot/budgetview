@@ -33,7 +33,7 @@ public class TransactionToCategory {
   public static MultiFieldUniqueIndex TRANSACTION_INDEX;
 
   static {
-    GlobTypeLoader.init(TransactionToCategory.class)
+    GlobTypeLoader.init(TransactionToCategory.class, "transactionToCategory")
       .defineMultiFieldUniqueIndex(TRANSACTION_INDEX, TRANSACTION, CATEGORY);
   }
 

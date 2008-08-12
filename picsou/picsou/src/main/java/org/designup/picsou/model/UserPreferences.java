@@ -28,7 +28,7 @@ public class UserPreferences {
   public static IntegerField FUTURE_MONTH_COUNT;
 
   static {
-    GlobTypeLoader.init(UserPreferences.class);
+    GlobTypeLoader.init(UserPreferences.class, "userPreferences");
     key = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 

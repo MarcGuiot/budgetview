@@ -67,7 +67,7 @@ public class Transaction {
   public static NotUniqueIndex MONTH_INDEX;
 
   static {
-    GlobTypeLoader loader = GlobTypeLoader.init(Transaction.class);
+    GlobTypeLoader loader = GlobTypeLoader.init(Transaction.class, "transaction");
     loader.defineNotUniqueIndex(LABEL_FOR_CATEGORISATION_INDEX, LABEL_FOR_CATEGORISATION);
     loader.defineNotUniqueIndex(MONTH_INDEX, MONTH);
   }

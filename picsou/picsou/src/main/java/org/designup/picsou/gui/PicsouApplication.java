@@ -7,6 +7,8 @@ import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
+import org.designup.picsou.gui.plaf.PicsouSplitPaneUI;
+import org.designup.picsou.gui.plaf.WavePanelUI;
 import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
@@ -17,6 +19,10 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.components.HyperlinkButtonUI;
+import org.globsframework.gui.splits.components.ShadowedLabelUI;
+import org.globsframework.gui.splits.components.StyledPanelUI;
+import org.globsframework.gui.splits.components.StyledToggleButtonUI;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.metamodel.GlobModel;
@@ -30,28 +36,34 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.io.*;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final Integer VERSION = 1;
+  public static final Long APPLICATION_VERSION = 1L;
+  public static final Long JAR_VERSION = 1L;
+  public static final Long CONFIG_VERSION = 1L;
+  public static final String PICSOU = "picsou";
+  private static final String CONFIG = "config";
+  private static final Pattern CONFIG_FILTER = Pattern.compile(CONFIG + "[0-9][0-9]*" + "\\.jar");
 
-  public static final String LOCAL_PREVAYLER_PATH_PROPERTY = "picsou.prevayler.path";
-  public static final String DEFAULT_ADDRESS_PROPERTY = "picsou.server.url";
-  public static String DELETE_LOCAL_PREVAYLER_PROPERTY = "picsou.prevayler.delete";
-  public static String IS_DATA_IN_MEMORY = "picsou.data.in.memory";
+  public static final String LOCAL_PREVAYLER_PATH_PROPERTY = PICSOU + ".prevayler.path";
+  public static final String DEFAULT_ADDRESS_PROPERTY = PICSOU + ".server.url";
+  public static String DELETE_LOCAL_PREVAYLER_PROPERTY = PICSOU + ".prevayler.delete";
+  public static String IS_DATA_IN_MEMORY = PICSOU + ".data.in.memory";
   private static String DEFAULT_ADDRESS = "https://startupxp.dynalias.org";
 
   private OpenRequestManager openRequestManager = new OpenRequestManager();
   private SingleApplicationInstanceListener singleInstanceListener;
   private Directory directory;
+  private static final String PANEL_UI = "org" + dot() + "designup.picsou.gui.plaf.WavePanelUI";
+  private static final String LINK_BUTTON_UI = "org" + dot() + "globsframework.gui.splits.components.HyperlinkButtonUI";
+  private static final String STYLED_TOGGLE_BUTTON_UI = "org" + dot() + "globsframework.gui.splits.components.StyledToggleButtonUI";
+  private static final String STYLED_PANEL_UI = "org" + dot() + "globsframework.gui.splits.components.StyledPanelUI";
+  private static final String SHADOWED_LABEL_UI = "org" + dot() + "globsframework.gui.splits.components.ShadowedLabelUI";
+  private static final String SPLITPANE_UI = "org" + dot() + "designup.picsou.gui.plaf.PicsouSplitPaneUI";
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
@@ -146,7 +158,11 @@ public class PicsouApplication {
   }
 
   public static String getLocalPrevaylerPath() {
-    return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.picsou/data");
+    return getPicsouPath() + "/data";
+  }
+
+  public static String getPicsouPath() {
+    return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.picsou");
   }
 
   public static void clearRepository() {
@@ -190,12 +206,74 @@ public class PicsouApplication {
     directory.add(IconLocator.class, Gui.ICON_LOCATOR);
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
-    directory.add(new UIService());
-    directory.add(new ConfigService(VERSION, directory));
+    UIService uiService = initUiService();
+    directory.add(uiService);
+    Long localConfigVersion = getConfigVersion();
+    String configPath = getPicsouPath() + "/config";
+    File lastJar = findLastJar(configPath);
+    if (lastJar != null) {
+      localConfigVersion = extractVersion(lastJar.getName());
+    }
+    else {
+      localConfigVersion = CONFIG_VERSION;
+    }
+
+    directory.add(new ConfigService(APPLICATION_VERSION, JAR_VERSION, localConfigVersion,
+                                    lastJar));
 
     UIManager.put("ColorService", directory.get(ColorService.class));
 
     return directory;
   }
 
+  private static UIService initUiService() {
+    UIService uiService = new UIService();
+    uiService.registerClass(PANEL_UI, WavePanelUI.class);
+    uiService.registerClass(LINK_BUTTON_UI, HyperlinkButtonUI.class);
+    uiService.registerClass(STYLED_TOGGLE_BUTTON_UI, StyledToggleButtonUI.class);
+    uiService.registerClass(STYLED_PANEL_UI, StyledPanelUI.class);
+    uiService.registerClass(SHADOWED_LABEL_UI, ShadowedLabelUI.class);
+    uiService.registerClass(SPLITPANE_UI, PicsouSplitPaneUI.class);
+    return uiService;
+  }
+
+  private static String dot() {
+    return ".";
+  }
+
+  static private Long getConfigVersion() {
+    String configPath = getPicsouPath() + "/config";
+    File lastJar = findLastJar(configPath);
+    if (lastJar != null) {
+      return extractVersion(lastJar.getName());
+    }
+    return PicsouApplication.CONFIG_VERSION;
+  }
+
+  static private File findLastJar(String path) {
+    File directory = new File(path);
+    File[] files = directory.listFiles(new FilenameFilter() {
+      public boolean accept(File dir, String name) {
+        return CONFIG_FILTER.matcher(name).matches();
+      }
+    });
+    if (files == null || files.length == 0) {
+      return null;
+    }
+    Arrays.sort(files, new Comparator<File>() {
+      public int compare(File s1, File s2) {
+        return extractVersion(s1.getName()).compareTo(extractVersion(s2.getName()));
+      }
+    });
+
+    return files[files.length - 1];
+  }
+
+  static private Long extractVersion(String fileName) {
+    if (fileName != null && CONFIG_FILTER.matcher(fileName).matches()) {
+      return Long.parseLong(fileName.substring(fileName.indexOf(CONFIG) + CONFIG.length(),
+                                               fileName.indexOf(".")));
+    }
+    return null;
+  }
 }

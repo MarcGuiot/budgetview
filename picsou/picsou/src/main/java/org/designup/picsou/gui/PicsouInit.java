@@ -9,6 +9,7 @@ import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.PicsouModel;
+import org.designup.picsou.model.ServerInformation;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.triggers.*;
@@ -70,6 +71,8 @@ public class PicsouInit {
                       value(User.ID, User.SINGLETON_ID),
                       value(User.NAME, user));
 
+    repository.create(ServerInformation.KEY,
+                      value(ServerInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.CONFIG_VERSION));
     MutableChangeSet changeSet = new DefaultChangeSet();
     try {
       GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdate() {
@@ -88,12 +91,17 @@ public class PicsouInit {
     if (newUser) {
       repository.create(UserPreferences.key,
                         FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT, 0));
+
       loadGlobs("/subcats.xml");
       loadGlobs("/series.xml");
     }
 
     seriesStatTrigger.init(repository);
     initDirectory(repository);
+    if (!directory.get(ConfigService.class).loadConfigFileFromLastestJar(directory, repository)) {
+      directory.get(TransactionAnalyzerFactory.class).load(this.getClass().getClassLoader(),
+                                                           PicsouApplication.JAR_VERSION);
+    }
     LicenseCheckerThread licenseCheckerThread = new LicenseCheckerThread(directory, repository);
     licenseCheckerThread.setDaemon(true);
     licenseCheckerThread.start();
@@ -131,7 +139,7 @@ public class PicsouInit {
   }
 
   private void loadGlobs(String fileName) {
-    Reader reader = null;
+    Reader reader;
     try {
       InputStream stream = PicsouInit.class.getResourceAsStream(fileName);
       if (stream == null) {

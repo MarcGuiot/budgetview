@@ -2,6 +2,7 @@ package org.designup.picsoulicence;
 
 import org.designup.picsoulicence.mail.Mailler;
 import org.designup.picsoulicence.servlet.AskForMailServlet;
+import org.designup.picsoulicence.servlet.QueryVersionTask;
 import org.designup.picsoulicence.servlet.RegisterServlet;
 import org.designup.picsoulicence.servlet.RequestForConfigServlet;
 import org.globsframework.sqlstreams.SqlService;
@@ -14,6 +15,8 @@ import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
+import java.util.Timer;
+
 public class LicenceServer {
   public static final String USE_SSHL = "picsou.server.useSsl";
   public static final String KEYSTORE = "picsou.server.keystore";
@@ -25,6 +28,8 @@ public class LicenceServer {
   private String dabaseUrl;
   private String databaseUser = "sa";
   private String databasePassword = "";
+  private QueryVersionTask queryVersionTask;
+  private Timer timer;
 
   public LicenceServer() {
     jetty = new Server();
@@ -70,9 +75,16 @@ public class LicenceServer {
       connector.setPort(port);
       jetty.addConnector(connector);
     }
+    Directory directory = createDirectory();
+
+    timer = new Timer(true);
+    queryVersionTask = new QueryVersionTask(directory.get(SqlService.class),
+                                            directory.get(VersionService.class));
+    queryVersionTask.run();
+    timer.schedule(queryVersionTask, 1000, 5000);
+
     Context context = new Context(jetty, "/", Context.SESSIONS);
     context.setResourceBase("classes");
-    Directory directory = createDirectory();
     context.addServlet(new ServletHolder(new AskForMailServlet(directory)), "/mailTo");
     context.addServlet(new ServletHolder(new RequestForConfigServlet(directory)), "/requestForConfig");
     context.addServlet(new ServletHolder(new RegisterServlet(directory)), "/register");
@@ -85,6 +97,7 @@ public class LicenceServer {
     mailler.setPort(mailPort);
     SqlService sqlService = new JdbcSqlService(dabaseUrl, databaseUser, databasePassword);
     directory.add(SqlService.class, sqlService);
+    directory.add(new VersionService());
     return directory;
   }
 
@@ -97,5 +110,6 @@ public class LicenceServer {
   public void stop() throws Exception {
     jetty.stop();
     jetty.join();
+    timer.cancel();
   }
 }

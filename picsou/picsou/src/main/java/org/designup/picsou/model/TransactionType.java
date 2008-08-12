@@ -89,6 +89,6 @@ public enum TransactionType implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(TransactionType.class);
+    GlobTypeLoader.init(TransactionType.class, "transactionType");
   }
 }

@@ -35,7 +35,7 @@ public class AccountEditionPanel {
     localDirectory.add(selectionService);
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/accountEditionPanel.splits",
-                                     repository, localDirectory);
+                                    repository, localDirectory);
 
     builder.addCombo("accountBank", Bank.TYPE).setSelectionHandler(new GlobComboView.GlobSelectionHandler() {
       public void processSelection(Glob bank) {
@@ -49,8 +49,8 @@ public class AccountEditionPanel {
         }
       }
     });
-    builder.addEditor(Account.NAME);
-    builder.addEditor(Account.NUMBER);
+    builder.addEditor("name", Account.NAME);
+    builder.addEditor("number", Account.NUMBER);
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
         panel = (JPanel)component;

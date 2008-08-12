@@ -7,7 +7,6 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsoulicence.LicenseTestCase;
 import org.designup.picsoulicence.model.License;
-import org.designup.picsoulicence.model.MailError;
 import org.designup.picsoulicence.model.RepoInfo;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.EmptyGlobList;
@@ -33,17 +32,12 @@ public class LicenseTest extends LicenseTestCase {
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
     start();
-    SqlConnection connection = getSqlConnection();
-    connection.createTable(License.TYPE, RepoInfo.TYPE, MailError.TYPE);
-    connection.emptyTable(License.TYPE, RepoInfo.TYPE, MailError.TYPE);
-    connection.commitAndClose();
     startPicsou();
   }
 
   protected void tearDown() throws Exception {
     super.tearDown();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
-    stop();
     if (window != null) {
       window.dispose();
     }

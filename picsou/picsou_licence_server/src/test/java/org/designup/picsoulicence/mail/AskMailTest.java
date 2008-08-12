@@ -17,10 +17,6 @@ public class AskMailTest extends LicenseTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     start();
-    SqlConnection connection = getSqlConnection();
-    connection.createTable(License.TYPE);
-    connection.createTable(MailError.TYPE);
-    connection.commitAndClose();
     client = new HttpClient();
   }
 

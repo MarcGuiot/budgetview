@@ -2,6 +2,7 @@ package org.designup.picsoulicence.servlet;
 
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsoulicence.LicenceGenerator;
+import org.designup.picsoulicence.VersionService;
 import org.designup.picsoulicence.mail.Mailler;
 import org.designup.picsoulicence.model.License;
 import org.designup.picsoulicence.model.RepoInfo;
@@ -27,32 +28,29 @@ public class RequestForConfigServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("requestForConfig");
   private SqlService sqlService;
   private Mailler mailler;
-  private int currentVersion;
+  private VersionService versionService;
 
   public RequestForConfigServlet(Directory directory) {
     sqlService = directory.get(SqlService.class);
     mailler = directory.get(Mailler.class);
+    versionService = directory.get(VersionService.class);
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String id = req.getHeader(ConfigService.HEADER_REPO_ID).trim();
     String mail = req.getHeader(ConfigService.HEADER_MAIL);
     String activationCode = req.getHeader(ConfigService.HEADER_CODE);
-    String signature = req.getHeader(ConfigService.HEADER_SIGNATURE);
     String count = req.getHeader(ConfigService.HEADER_COUNT);
+    String signature = req.getHeader(ConfigService.HEADER_SIGNATURE);
+    String applicationVersion = req.getHeader(ConfigService.HEADER_CONFIG_VERSION);
     if (mail != null && activationCode != null) {
       computeLicense(resp, mail, activationCode, Long.parseLong(count), id);
     }
     else {
       computeAnonymous(id, resp);
     }
-    String s = req.getHeader(ConfigService.HEADER_CONFIG_VERSION);
-    if (s != null) {
-      int remoteVersion = Integer.parseInt(s);
-      if (remoteVersion < currentVersion) {
-
-      }
-    }
+    resp.setHeader(ConfigService.HEADER_NEW_JAR_VERSION, Long.toString(versionService.getJarVersion()));
+    resp.setHeader(ConfigService.HEADER_NEW_CONFIG_VERSION, Long.toString(versionService.getConfigVersion()));
   }
 
   private void computeAnonymous(String id, HttpServletResponse resp) {
@@ -120,7 +118,6 @@ public class RequestForConfigServlet extends HttpServlet {
           if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
             resp.addHeader(ConfigService.HEADER_MAIL_SENT, "true");
             String code = LicenceGenerator.generateActivationCode();
-            System.out.println("RequestForConfigServlet.computeLicense : " + code);
             db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
               .update(License.ACTIVATION_CODE, code)
               .getRequest()
@@ -156,4 +153,5 @@ public class RequestForConfigServlet extends HttpServlet {
       }
     }
   }
+
 }

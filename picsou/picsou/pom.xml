@@ -83,6 +83,10 @@
                   <attribute name="Main-Class" value="org.designup.picsou.gui.PicsouApplication"/>
                 </manifest>
                 <jar update="true" jarfile="picsou00000000000001.jar" manifest="target/classes/MANIFEST.MF"/>
+                <jar destfile="config00000000000001.jar" basedir="target/classes"
+                     includes="org/designup/picsou/gui/config/LoaderImpl.class">
+                  <fileset dir="src/main/resources" includes="banks/**"/>
+                </jar>
               </tasks>
             </configuration>
             <goals>
@@ -136,6 +140,11 @@
       <groupId>commons-httpclient</groupId>
       <artifactId>commons-httpclient</artifactId>
       <version>3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-net</groupId>
+      <artifactId>commons-net</artifactId>
+      <version>1.4.1</version>
     </dependency>
     <dependency>
       <groupId>org.uispec4j</groupId>

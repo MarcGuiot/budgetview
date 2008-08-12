@@ -3,6 +3,7 @@ package org.designup.picsou.model;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
@@ -22,9 +23,11 @@ import org.globsframework.utils.serialization.SerializedOutput;
 public class BankEntity {
   public static GlobType TYPE;
 
+  @NoObfuscation
   @Key
   public static IntegerField ID;
 
+  @NoObfuscation
   @Target(Bank.class)
   public static LinkField BANK;
 
@@ -39,7 +42,7 @@ public class BankEntity {
   }
 
   static {
-    GlobTypeLoader.init(BankEntity.class)
+    GlobTypeLoader.init(BankEntity.class, "bankEntity")
       .defineNotUniqueIndex(BANK_INDEX, BANK);
   }
 

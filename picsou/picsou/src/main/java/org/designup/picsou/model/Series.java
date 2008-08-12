@@ -2,10 +2,7 @@ package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultBoolean;
-import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.NamingField;
-import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
@@ -19,20 +16,26 @@ import org.globsframework.utils.serialization.SerializedOutput;
 public class Series {
   public static GlobType TYPE;
 
+  @NoObfuscation
   @Key
   public static IntegerField ID;
 
+  @NoObfuscation
   public static StringField LABEL;
 
+  @NoObfuscation
   @NamingField
   public static StringField NAME;
 
+  @NoObfuscation
   @Target(BudgetArea.class)
   public static LinkField BUDGET_AREA;
 
+  @NoObfuscation
   @Target(Category.class)
   public static LinkField DEFAULT_CATEGORY;
 
+  @NoObfuscation
   @Target(ProfileType.class)
   public static LinkField PROFILE_TYPE;
 
@@ -50,35 +53,47 @@ public class Series {
 
   public static DoubleField MAX_AMOUNT;
 
+  @NoObfuscation
   @DefaultBoolean(false)
   public static BooleanField JANUARY;
+  @NoObfuscation
   @DefaultBoolean(false)
   public static BooleanField FEBRUARY;
+  @NoObfuscation
   @DefaultBoolean(false)
   public static BooleanField MARCH;
+  @NoObfuscation
   @DefaultBoolean(false)
   public static BooleanField APRIL;
+  @NoObfuscation
   @DefaultBoolean(false)
   public static BooleanField MAY;
+  @NoObfuscation
   @DefaultBoolean(false)
   public static BooleanField JUNE;
+  @NoObfuscation
   @DefaultBoolean(false)
   public static BooleanField JULY;
+  @NoObfuscation
   @DefaultBoolean(false)
   public static BooleanField AUGUST;
+  @NoObfuscation
   @DefaultBoolean(false)
   public static BooleanField SEPTEMBER;
+  @NoObfuscation
   @DefaultBoolean(false)
   public static BooleanField OCTOBER;
+  @NoObfuscation
   @DefaultBoolean(false)
   public static BooleanField NOVEMBER;
+  @NoObfuscation
   @DefaultBoolean(false)
   public static BooleanField DECEMBER;
 
   public static final Integer OCCASIONAL_SERIES_ID = 0;
 
   static {
-    GlobTypeLoader.init(Series.class);
+    GlobTypeLoader.init(Series.class, "series");
   }
 
   public static BooleanField getField(int monthId) {
