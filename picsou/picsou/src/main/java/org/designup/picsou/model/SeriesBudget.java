@@ -8,6 +8,13 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
+import org.globsframework.utils.serialization.SerializedOutput;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.FieldSetter;
+import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 
 public class SeriesBudget {
   public static GlobType TYPE;
@@ -29,4 +36,32 @@ public class SeriesBudget {
     loader.defineNotUniqueIndex(SERIES_INDEX, SERIES);
   }
 
+  public static class Serializer implements PicsouGlobSerializer {
+
+    public byte[] serializeData(FieldValues fieldValues) {
+      SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
+      SerializedOutput output = serializedByteArrayOutput.getOutput();
+      output.writeInteger(fieldValues.get(SeriesBudget.SERIES));
+      output.writeInteger(fieldValues.get(SeriesBudget.MONTH));
+      output.writeDouble(fieldValues.get(SeriesBudget.AMOUNT));
+      return serializedByteArrayOutput.toByteArray();
+    }
+
+    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
+      if (version == 1) {
+        deserializeDataV1(fieldSetter, data);
+      }
+    }
+
+    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(SeriesBudget.SERIES, input.readInteger());
+      fieldSetter.set(SeriesBudget.MONTH, input.readInteger());
+      fieldSetter.set(SeriesBudget.AMOUNT, input.readDouble());
+    }
+
+    public int getWriteVersion() {
+      return 1;
+    }
+  }
 }

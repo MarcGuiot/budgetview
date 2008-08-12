@@ -36,7 +36,7 @@ public class LabelToCategory {
       .defineNotUniqueIndex(LABEL_INDEX, LABEL);
   }
 
-  public static class Serialization implements PicsouGlobSerializer {
+  public static class Serializer implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();

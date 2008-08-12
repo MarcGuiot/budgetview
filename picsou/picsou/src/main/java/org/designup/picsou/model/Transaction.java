@@ -164,7 +164,7 @@ public class Transaction {
     return Utils.equal(TransactionType.PLANNED.getId(), transaction.get(Transaction.TRANSACTION_TYPE));
   }
 
-  public static class Serialization implements PicsouGlobSerializer {
+  public static class Serializer implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues fieldValues) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();

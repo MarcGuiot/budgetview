@@ -126,7 +126,7 @@ public class Series {
     throw new InvalidData(Month.toString(monthId) + " not managed");
   }
 
-  public static class Serialization implements PicsouGlobSerializer {
+  public static class Serializer implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues fieldValues) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();

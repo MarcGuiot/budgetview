@@ -10,16 +10,17 @@ public class SerializationManager {
 
   public static void init(GlobModel globModel) {
     SERIALIZATION_PROPERTY = globModel.createGlobTypeProperty("serialization");
-    Account.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Account.Serialization());
-    Bank.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Bank.Serialization());
-    BankEntity.TYPE.updateProperty(SERIALIZATION_PROPERTY, new BankEntity.Serialization());
-    Category.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Category.Serialization());
-    LabelToCategory.TYPE.updateProperty(SERIALIZATION_PROPERTY, new LabelToCategory.Serialization());
-    Transaction.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Transaction.Serialization());
-    TransactionImport.TYPE.updateProperty(SERIALIZATION_PROPERTY, new TransactionImport.Serialization());
-    TransactionToCategory.TYPE.updateProperty(SERIALIZATION_PROPERTY, new TransactionToCategory.Serialization());
-    Month.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Month.Serialization());
-    Series.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Series.Serialization());
-    UserPreferences.TYPE.updateProperty(SERIALIZATION_PROPERTY, new UserPreferences.Serialization());
+    Account.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Account.Serializer());
+    Bank.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Bank.Serializer());
+    BankEntity.TYPE.updateProperty(SERIALIZATION_PROPERTY, new BankEntity.Serializer());
+    Category.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Category.Serializer());
+    LabelToCategory.TYPE.updateProperty(SERIALIZATION_PROPERTY, new LabelToCategory.Serializer());
+    Transaction.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Transaction.Serializer());
+    TransactionImport.TYPE.updateProperty(SERIALIZATION_PROPERTY, new TransactionImport.Serializer());
+    TransactionToCategory.TYPE.updateProperty(SERIALIZATION_PROPERTY, new TransactionToCategory.Serializer());
+    Month.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Month.Serializer());
+    Series.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Series.Serializer());
+    SeriesBudget.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SeriesBudget.Serializer());
+    UserPreferences.TYPE.updateProperty(SERIALIZATION_PROPERTY, new UserPreferences.Serializer());
   }
 }

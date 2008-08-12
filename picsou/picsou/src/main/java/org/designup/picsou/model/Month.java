@@ -180,7 +180,7 @@ public class Month {
     }
   }
 
-  public static class Serialization implements PicsouGlobSerializer {
+  public static class Serializer implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();

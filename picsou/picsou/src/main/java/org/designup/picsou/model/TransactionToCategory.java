@@ -125,7 +125,7 @@ public class TransactionToCategory {
     return ((categories.size() == 1) && (categories.get(0).get(Category.ID) == MasterCategory.INTERNAL.getId()));
   }
 
-  public static class Serialization implements PicsouGlobSerializer {
+  public static class Serializer implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
