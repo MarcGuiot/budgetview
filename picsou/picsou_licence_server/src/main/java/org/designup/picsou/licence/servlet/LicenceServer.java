@@ -1,10 +1,6 @@
-package org.designup.picsoulicence;
+package org.designup.picsou.licence.servlet;
 
-import org.designup.picsoulicence.mail.Mailler;
-import org.designup.picsoulicence.servlet.AskForMailServlet;
-import org.designup.picsoulicence.servlet.QueryVersionTask;
-import org.designup.picsoulicence.servlet.RegisterServlet;
-import org.designup.picsoulicence.servlet.RequestForConfigServlet;
+import org.designup.picsou.licence.mail.Mailler;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
 import org.globsframework.utils.directory.DefaultDirectory;

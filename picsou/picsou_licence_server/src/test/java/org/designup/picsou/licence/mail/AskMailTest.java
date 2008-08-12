@@ -1,11 +1,11 @@
-package org.designup.picsoulicence.mail;
+package org.designup.picsou.licence.mail;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.designup.picsoulicence.LicenseTestCase;
-import org.designup.picsoulicence.model.License;
-import org.designup.picsoulicence.model.MailError;
+import org.designup.picsou.licence.LicenseTestCase;
+import org.designup.picsou.licence.model.License;
+import org.designup.picsou.licence.model.MailError;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraints;
 

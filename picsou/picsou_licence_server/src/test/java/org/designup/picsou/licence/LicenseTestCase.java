@@ -1,4 +1,4 @@
-package org.designup.picsoulicence;
+package org.designup.picsou.licence;
 
 import com.dumbster.smtp.SimpleSmtpServer;
 import com.dumbster.smtp.SmtpMessage;
@@ -7,10 +7,11 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
-import org.designup.picsoulicence.model.License;
-import org.designup.picsoulicence.model.MailError;
-import org.designup.picsoulicence.model.RepoInfo;
-import org.designup.picsoulicence.model.SoftwareInfo;
+import org.designup.picsou.licence.model.License;
+import org.designup.picsou.licence.model.MailError;
+import org.designup.picsou.licence.model.RepoInfo;
+import org.designup.picsou.licence.model.SoftwareInfo;
+import org.designup.picsou.licence.servlet.LicenceServer;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
@@ -38,7 +39,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     super.setUp();
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(ConfigService.COM_PICSOU_LICENCE_URL, "http://localhost:5000");
-    System.setProperty(ConfigService.COM_PICSOU_LICENCE_FTP_URL, "ftp://localhost:8000");
+    System.setProperty(ConfigService.COM_PICSOU_LICENCE_FTP_URL, "ftp://localhost:12000");
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     mailServer = new SimpleSmtpServer(2500);
@@ -50,7 +51,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     Protocol http = new Protocol("http", new DefaultProtocolSocketFactory(), 5000);
     Protocol.registerProtocol("http", http);
     ftpServer = new StubFtpServer();
-    ftpServer.setServerControlPort(8000);
+    ftpServer.setServerControlPort(12000);
 
     SqlConnection connection = getSqlConnection();
     connection.createTable(License.TYPE, RepoInfo.TYPE, MailError.TYPE, SoftwareInfo.TYPE);

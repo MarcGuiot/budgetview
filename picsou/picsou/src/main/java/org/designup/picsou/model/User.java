@@ -21,7 +21,15 @@ public class User {
   public static StringField PASSWORD;
   public static StringField MAIL;
   public static StringField ACTIVATION_CODE;
+  public static IntegerField ACTIVATION_STEP;
   public static BlobField SIGNATURE;
+
+  public static final int ACTIVATION_IN_PROCESS = 1;
+  public static final int ACTIVATION_OK = 2;
+  public static final int ACTIVATION_FAIL_BAD_SIGNATURE = 3;
+  public static final int ACTIVATION_FAIL_CAN_NOT_CONNECT = 4;
+  public static final int ACTIVATION_FAIL_HTTP_REQUEST = 5;
+
 
   static {
     GlobTypeLoader.init(User.class, "user");

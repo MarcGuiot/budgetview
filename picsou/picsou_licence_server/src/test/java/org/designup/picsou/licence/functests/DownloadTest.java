@@ -1,12 +1,12 @@
-package org.designup.picsoulicence.functests;
+package org.designup.picsou.licence.functests;
 
 import org.designup.picsou.functests.checkers.ImportChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsoulicence.LicenseTestCase;
-import org.designup.picsoulicence.model.SoftwareInfo;
+import org.designup.picsou.licence.LicenseTestCase;
+import org.designup.picsou.licence.model.SoftwareInfo;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;

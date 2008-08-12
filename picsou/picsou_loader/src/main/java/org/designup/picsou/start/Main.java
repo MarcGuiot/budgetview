@@ -17,6 +17,7 @@ public class Main {
   private static final String LINUX_PLATFORM_ID = "Linux";
   private static final String PICSOU = "picsou";
   private static final Pattern FILTER = Pattern.compile(PICSOU + "[0-9][0-9]*" + "\\.jar");
+  private static final String JAR_DIRECTORY = "/jars";
 
   public static void main(String[] args) {
     new Main().go(args);
@@ -88,13 +89,13 @@ public class Main {
   }
 
   private File loadJar() {
-    String path = System.getProperty("user.home") + "/." + PICSOU + "/jars";
+    String path = System.getProperty("user.home") + "/." + PICSOU + JAR_DIRECTORY;
     if (isMacOSX()) {
-      //    path = "";
+      path = "~/Library/Application Support/" + PICSOU;
     }
     File jarFile = findLastJar(path);
     if (jarFile == null) {
-      path = System.getProperty("user.home") + "/." + PICSOU + "/jars";
+      path = System.getProperty("user.home") + "/." + PICSOU + JAR_DIRECTORY;
       jarFile = findLastJar(path);
     }
     return jarFile;

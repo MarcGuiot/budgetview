@@ -46,7 +46,7 @@ public class DummyServerAccess implements ServerAccess {
     return false;
   }
 
-  public void register(byte[] mail, byte[] signature, String activationCode) {
+  public void localRegister(byte[] mail, byte[] signature, String activationCode) {
   }
 
   public void disconnect() {

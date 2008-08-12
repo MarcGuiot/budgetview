@@ -1,13 +1,13 @@
-package org.designup.picsoulicence.functests;
+package org.designup.picsou.licence.functests;
 
 import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.checkers.MonthChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsoulicence.LicenseTestCase;
-import org.designup.picsoulicence.model.License;
-import org.designup.picsoulicence.model.RepoInfo;
+import org.designup.picsou.licence.LicenseTestCase;
+import org.designup.picsou.licence.model.License;
+import org.designup.picsou.licence.model.RepoInfo;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.EmptyGlobList;
 import org.globsframework.model.Glob;
@@ -38,6 +38,7 @@ public class LicenseTest extends LicenseTestCase {
   protected void tearDown() throws Exception {
     super.tearDown();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "true");
     if (window != null) {
       window.dispose();
     }

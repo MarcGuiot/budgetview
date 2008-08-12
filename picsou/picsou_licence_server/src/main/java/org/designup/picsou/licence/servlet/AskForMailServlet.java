@@ -1,9 +1,8 @@
-package org.designup.picsoulicence.servlet;
+package org.designup.picsou.licence.servlet;
 
-import org.designup.picsoulicence.LicenceGenerator;
-import org.designup.picsoulicence.mail.Mailler;
-import org.designup.picsoulicence.model.License;
-import org.designup.picsoulicence.model.MailError;
+import org.designup.picsou.licence.mail.Mailler;
+import org.designup.picsou.licence.model.License;
+import org.designup.picsou.licence.model.MailError;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.sqlstreams.SqlConnection;

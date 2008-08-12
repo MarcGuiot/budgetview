@@ -87,6 +87,11 @@
                      includes="org/designup/picsou/gui/config/LoaderImpl.class">
                   <fileset dir="src/main/resources" includes="banks/**"/>
                 </jar>
+                <delete dir="ofuscated"/>
+                <java fork="yes" jar="dev/Zelix/ZKM.jar">
+                  <jvmarg line="-Xmx512M"/>
+                  <arg line="dev/ant/zelix.txt"/>
+                </java>
               </tasks>
             </configuration>
             <goals>

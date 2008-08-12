@@ -51,8 +51,8 @@ public class ConfigService {
   private static final String REGISTER = "/" + REGISTER_SERVLET;
   private static final String REQUEST_FOR_CONFIG = "/requestForConfig";
 
-  private String URL = null;
-  private String FTP_URL;
+  private String URL = PicsouApplication.REGISTER_URL;
+  private String FTP_URL = PicsouApplication.FTP_URL;
   private HttpClient httpClient;
   private long localJarVersion = -1;
   private long localConfigVersion = -1;
@@ -74,8 +74,10 @@ public class ConfigService {
   public ConfigService(Long applicationVersion, Long jarVersion, Long localConfigVersion,
                        File pathToconfigFileToLoad) {
     this.pathToconfigFileToLoad = pathToconfigFileToLoad;
+    Utils.beginRemove();
     URL = System.getProperty(COM_PICSOU_LICENCE_URL);
     FTP_URL = System.getProperty(COM_PICSOU_LICENCE_FTP_URL);
+    Utils.endRemove();
     this.applicationVersion = applicationVersion;
     localJarVersion = jarVersion;
     this.localConfigVersion = localConfigVersion;
@@ -88,8 +90,8 @@ public class ConfigService {
     return loadConfig(directory, repository);
   }
 
-  private boolean sendRequestForNewConfig(String url) {
-    url += REQUEST_FOR_CONFIG;
+  private boolean sendRequestForNewConfig() {
+    String url = URL + REQUEST_FOR_CONFIG;
     try {
       PostMethod postMethod = new PostMethod(url);
       postMethod.setRequestHeader(HEADER_CONFIG_VERSION, Long.toString(localConfigVersion));
@@ -110,8 +112,9 @@ public class ConfigService {
           long newConfigVersion = Long.parseLong(configVersionHeader.getValue());
           if (localConfigVersion < newConfigVersion) {
             configReceive = new ConfigReceive();
-            dowloadConfigThread = new DownloadThread(FTP_URL, PicsouApplication.getPicsouPath() + "/configs",
-                                                     generateConfigJarName(newConfigVersion), newConfigVersion, configReceive);
+            dowloadConfigThread =
+              new DownloadThread(FTP_URL, PicsouApplication.getPicsouPath() + PicsouApplication.CONFIG_DIRECTORY,
+                                 generateConfigJarName(newConfigVersion), newConfigVersion, configReceive);
             dowloadConfigThread.start();
           }
         }
@@ -120,8 +123,9 @@ public class ConfigService {
           long newJarVersion = Long.parseLong(jarVersionHeader.getValue());
           if (localJarVersion < newJarVersion) {
             jarReceive = new JarReceive();
-            dowloadJarThread = new DownloadThread(FTP_URL, PicsouApplication.getPicsouPath() + "/jars",
-                                                  generatePicsouJarName(newJarVersion), newJarVersion, jarReceive);
+            dowloadJarThread =
+              new DownloadThread(FTP_URL, PicsouApplication.getPicsouPath() + PicsouApplication.JAR_DIRECTORY,
+                                 generatePicsouJarName(newJarVersion), newJarVersion, jarReceive);
             dowloadJarThread.start();
           }
         }
@@ -167,13 +171,34 @@ public class ConfigService {
           String value = signature.getValue();
           repository.update(User.KEY, User.SIGNATURE, Encoder.b64Encode(value));
         }
+        else {
+          repository.update(User.KEY, User.ACTIVATION_STEP, User.ACTIVATION_FAIL_BAD_SIGNATURE);
+        }
       }
       else {
-        Log.write("request fail : " + statusCode);
+        repository.update(User.KEY, User.ACTIVATION_STEP, User.ACTIVATION_FAIL_HTTP_REQUEST);
       }
     }
-    catch (Exception e) {
-      Log.write("request fail", e);
+    catch (final Exception e) {
+      repository.update(User.KEY, User.ACTIVATION_STEP, User.ACTIVATION_FAIL_CAN_NOT_CONNECT);
+
+      // pas de stack risque de faciliter le piratage
+      Thread thread = new Thread() {
+        public void run() {
+          Throwable f = e;
+          while (f != null) {
+            Log.write("For activation : " + f.getMessage());
+            if (f != f.getCause()) {
+              f = f.getCause();
+            }
+            else {
+              f = null;
+            }
+          }
+        }
+      };
+      thread.setDaemon(true);
+      thread.run();
     }
   }
 
@@ -198,6 +223,7 @@ public class ConfigService {
     ConfigService configService = directory.get(ConfigService.class);
     if (!configService.isValideSignature() ||
         (configService.serverVerifiedValidity() != null && !configService.serverVerifiedValidity())) {
+//      repository.update(User.KEY, User.ACTIVATION_STEP, User.ACTIVATION_FAIL);
       repository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT, 0);
     }
     if (configService.isMailSend()) {
@@ -258,7 +284,7 @@ public class ConfigService {
       if (URL == null) {
         return;
       }
-      serverVerifiedValidity = sendRequestForNewConfig(URL);
+      serverVerifiedValidity = sendRequestForNewConfig();
       synchronized (ConfigService.this) {
         ConfigService.this.notify();
       }

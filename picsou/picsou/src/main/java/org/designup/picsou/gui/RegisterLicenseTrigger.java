@@ -41,19 +41,16 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
           }
           if (mail != null || signature != null || activationCode != null) {
             Glob user = repository.get(User.KEY);
-            if (mail == null) {
-              mail = user.get(User.MAIL);
-            }
-            if (signature == null) {
-              signature = user.get(User.SIGNATURE);
-            }
-            if (activationCode == null) {
-              activationCode = user.get(User.ACTIVATION_CODE);
-            }
-            byte[] mailAsByte = mail.getBytes();
-            if (KeyChecker.checkSignature(mailAsByte, signature)) {
-              serverAccess.register(mailAsByte, signature, activationCode);
-              repository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT, 24);
+            mail = user.get(User.MAIL);
+            signature = user.get(User.SIGNATURE);
+            activationCode = user.get(User.ACTIVATION_CODE);
+            if (mail != null && signature != null && activationCode != null) {
+              byte[] mailAsByte = mail.getBytes();
+              if (KeyChecker.checkSignature(mailAsByte, signature)) {
+                serverAccess.localRegister(mailAsByte, signature, activationCode);
+                repository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT, 24);
+                repository.update(User.KEY, User.ACTIVATION_STEP, User.ACTIVATION_OK);
+              }
             }
           }
         }

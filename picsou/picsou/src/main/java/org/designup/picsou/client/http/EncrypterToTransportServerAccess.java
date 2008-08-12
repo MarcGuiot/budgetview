@@ -117,7 +117,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     return isRegistered;
   }
 
-  public void register(byte[] mail, byte[] signature, String activationCode) {
+  public void localRegister(byte[] mail, byte[] signature, String activationCode) {
     clientTransport.register(sessionId, privateId, mail, signature, activationCode);
   }
 

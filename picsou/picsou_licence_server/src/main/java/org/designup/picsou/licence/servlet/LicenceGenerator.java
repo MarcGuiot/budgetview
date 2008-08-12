@@ -1,4 +1,4 @@
-package org.designup.picsoulicence;
+package org.designup.picsou.licence.servlet;
 
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;

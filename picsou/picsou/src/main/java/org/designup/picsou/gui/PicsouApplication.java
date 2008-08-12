@@ -27,8 +27,10 @@ import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.format.DescriptionService;
+import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -45,6 +47,8 @@ public class PicsouApplication {
   public static final Long APPLICATION_VERSION = 1L;
   public static final Long JAR_VERSION = 1L;
   public static final Long CONFIG_VERSION = 1L;
+  public static final String JAR_DIRECTORY = "jars";
+  public static final String CONFIG_DIRECTORY = "configs";
   public static final String PICSOU = "picsou";
   private static final String CONFIG = "config";
   private static final Pattern CONFIG_FILTER = Pattern.compile(CONFIG + "[0-9][0-9]*" + "\\.jar");
@@ -53,11 +57,15 @@ public class PicsouApplication {
   public static final String DEFAULT_ADDRESS_PROPERTY = PICSOU + ".server.url";
   public static String DELETE_LOCAL_PREVAYLER_PROPERTY = PICSOU + ".prevayler.delete";
   public static String IS_DATA_IN_MEMORY = PICSOU + ".data.in.memory";
+  public static String FORCE_DATE = PICSOU + ".today";
   private static String DEFAULT_ADDRESS = "https://startupxp.dynalias.org";
+  public static final String REGISTER_URL = "https://startupxp.dynalias.org";
+  public static final String FTP_URL = "ftp://startupxp.dynalias.org";
 
   private OpenRequestManager openRequestManager = new OpenRequestManager();
   private SingleApplicationInstanceListener singleInstanceListener;
   private Directory directory;
+
   private static final String PANEL_UI = "org" + dot() + "designup.picsou.gui.plaf.WavePanelUI";
   private static final String LINK_BUTTON_UI = "org" + dot() + "globsframework.gui.splits.components.HyperlinkButtonUI";
   private static final String STYLED_TOGGLE_BUTTON_UI = "org" + dot() + "globsframework.gui.splits.components.StyledToggleButtonUI";
@@ -70,12 +78,22 @@ public class PicsouApplication {
   }
 
   public static void main(String... args) throws Exception {
+    Utils.beginRemove();
+    changeDate();
+    Utils.endRemove();
     initLogger();
     Log.write("arg : ");
     for (String arg : args) {
       Log.write(arg);
     }
     new PicsouApplication().run(args);
+  }
+
+  private static void changeDate() {
+    String date = System.getProperty(FORCE_DATE);
+    if (date != null) {
+      TimeService.setCurrentDate(Dates.parseMonth(date));
+    }
   }
 
   private static void initLogger() {

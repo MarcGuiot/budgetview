@@ -27,7 +27,9 @@ public class RegistrationTrigger implements ChangeSetListener {
           Glob user = repository.get(User.KEY);
           String mail = user.get(User.MAIL);
           String code = values.get(User.ACTIVATION_CODE);
-          directory.get(ConfigService.class).sendRegister(mail, code, repository);
+          if (mail != null && code != null) {
+            directory.get(ConfigService.class).sendRegister(mail, code, repository);
+          }
         }
       }
 

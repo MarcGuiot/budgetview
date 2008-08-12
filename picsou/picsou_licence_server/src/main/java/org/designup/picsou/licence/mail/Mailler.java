@@ -1,6 +1,6 @@
-package org.designup.picsoulicence.mail;
+package org.designup.picsou.licence.mail;
 
-import org.designup.picsoulicence.model.License;
+import org.designup.picsou.licence.model.License;
 import org.globsframework.model.Glob;
 
 import javax.mail.Message;
