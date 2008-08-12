@@ -37,9 +37,16 @@ Vue releve
 - affichage infos split
 - couleur transactions ghost
 - recherche
+- pb de selection dans TransactionDetail lors du changement de filtrage TransactionView
+
+
+Import panel
+------------
+- changement de panel plutot que CardLayout
 
 
 Misc
 ----
 - joliesse generale picsou (retrait barre du haut, look blocks)
 - VerticalGridLayout
+

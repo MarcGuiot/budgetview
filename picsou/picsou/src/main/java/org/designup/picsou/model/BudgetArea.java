@@ -11,6 +11,7 @@ import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum BudgetArea implements GlobConstantContainer {
   INCOME(0),
@@ -57,7 +58,7 @@ public enum BudgetArea implements GlobConstantContainer {
       case 3:
         return OCCASIONAL_EXPENSES;
     }
-    throw new InvalidData(id + " not associated to any BugdetArea enum value");
+    throw new ItemNotFound(id + " not associated to any BugdetArea enum value");
   }
 
   public Integer getId() {

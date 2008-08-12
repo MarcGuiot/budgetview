@@ -111,12 +111,12 @@ public class GraphicManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/20", -3, "tr2")
       .load();
 
-    periods.selectCells("2006/01");
+    periods.selectCell("2006/01");
     graphics.initMarker()
       .add(0.5, 1.5)
       .check();
 
-    periods.selectCells("2006/02");
+    periods.selectCell("2006/02");
     graphics.initMarker()
       .add(1.5, 2.5)
       .check();

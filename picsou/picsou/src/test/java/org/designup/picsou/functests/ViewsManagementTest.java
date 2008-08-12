@@ -40,11 +40,11 @@ public class ViewsManagementTest extends LoggedInFunctionalTestCase {
     categories.assertVisible(true);
     transactions.assertVisible(true);
 
-    periods.selectCells("2005/02");
+    periods.selectCell("2005/02");
     categories.assertVisible(true);
     transactions.assertVisible(false);
 
-    periods.selectCells("2005/03");
+    periods.selectCell("2005/03");
     categories.assertVisible(true);
     transactions.assertVisible(true);
   }

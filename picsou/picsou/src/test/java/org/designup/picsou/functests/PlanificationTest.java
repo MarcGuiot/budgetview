@@ -23,17 +23,17 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .load();
     periods.assertSpanEquals("2008/07", "2010/07");
     transactions.setRecurring(0, "Internet", true);
-    periods.selectCells("2008/07");
+    periods.selectCell("2008/07");
     transactions.initContent()
       .add("08/07/2008", TransactionType.PLANNED, "Internet", "", 0.00, MasterCategory.TELECOMS)
       .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, MasterCategory.TELECOMS)
       .check();
     views.selectHome();
-    periods.selectCells("2008/07");
+    periods.selectCell("2008/07");
     monthSummary.init()
       .checkRecurring(29.9)
       .checkPlannedRecurring(29.9);
-    periods.selectCells("2008/08");
+    periods.selectCell("2008/08");
     transactions.initContent()
       .add("08/08/2008", TransactionType.PLANNED, "Internet", "", -29.90, MasterCategory.TELECOMS)
       .check();

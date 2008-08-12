@@ -98,9 +98,11 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
         }
       }
     }
-    int lastMonth = monthIds[monthIds.length - 1];
-    deleteFutureBudgets(repository, monthWithBudget, lastMonth);
-    deleteFutureTransactions(series, repository, lastMonth);
+    if (monthIds.length > 0) {
+      int lastMonth = monthIds[monthIds.length - 1];
+      deleteFutureBudgets(repository, monthWithBudget, lastMonth);
+      deleteFutureTransactions(series, repository, lastMonth);
+    }
   }
 
   private void createPlannedTransaction(Glob series, GlobRepository repository, int monthId, Integer day) {

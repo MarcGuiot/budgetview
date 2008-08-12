@@ -96,7 +96,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     periods.assertCellSelected("2006/01", "2006/02");
     categories.select(MasterCategory.FOOD, MasterCategory.TRANSPORTS);
 
-    periods.selectCells("2006/01");
+    periods.selectCell("2006/01");
 
     categories.assertSelectionEquals(MasterCategory.FOOD, MasterCategory.TRANSPORTS);
   }

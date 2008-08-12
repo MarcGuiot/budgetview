@@ -10,32 +10,33 @@ public class TitleDisplayTest extends LoggedInFunctionalTestCase {
     super.setUp();
     OfxBuilder
       .init(this)
-      .addTransaction("2005/10/01", -10, "rent")
-      .addTransaction("2006/04/20", +50, "income")
+      .addTransaction("2009/02/10", -10, "rent")
+      .addTransaction("2009/01/10", -10, "rent")
+      .addTransaction("2008/12/10", -10, "rent")
+      .addTransaction("2008/11/10", -10, "rent")
+      .addTransaction("2008/10/10", -10, "rent")
+      .addTransaction("2008/09/10", -10, "rent")
+      .addTransaction("2008/08/10", -10, "rent")
       .load();
   }
 
-  public void testCategoryAll() throws Exception {
-    categories.select(MasterCategory.ALL);
-    periods.selectCells("2005/10");
-    title.checkContent("All categories - october 2005");
-  }
+  public void testViewNames() throws Exception {
+    periods.selectCell("2008/10");
 
-  public void testSimpleSelection() throws Exception {
-    categories.select(MasterCategory.HOUSE);
-    periods.selectCells("2006/01");
-    title.checkContent("Category 'Housing' - january 2006");
-  }
+    views.selectHome();
+    title.checkContent("Dashboard - october 2008");
 
-  public void testCategoryNone() throws Exception {
-    categories.select(MasterCategory.NONE);
-    periods.selectCells("2005/10");
-    title.checkContent("Operations to categorize - october 2005");
-  }
+    views.selectBudget();
+    title.checkContent("Budget - october 2008");
 
-  public void testNoCategory() throws Exception {
-    categories.selectNone();
-    title.checkContent("Select a category");
+    views.selectData();
+    title.checkContent("Operations - october 2008");
+
+    views.selectEvolution();
+    title.checkContent("Evolution - october 2008");
+
+    views.selectRepartition();
+    title.checkContent("Repartition - october 2008");
   }
 
   public void testNoMonth() throws Exception {

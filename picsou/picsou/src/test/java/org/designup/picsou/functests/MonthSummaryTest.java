@@ -46,7 +46,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/08", -1500, "Loyer")
       .load();
 
-    periods.selectCells("2008/07");
+    periods.selectCell("2008/07");
     CategorizerChecker checker = new CategorizerChecker(mainWindow);
     checker.setRecurring("free telecom", "internet", true);
     checker.setRecurring("Loyer", "rental", true);
@@ -55,7 +55,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     checker.setOccasional("fnac", MasterCategory.MULTIMEDIA);
     checker.setIncome("Salaire");
 
-    periods.selectCells("2008/08");
+    periods.selectCell("2008/08");
     checker.setRecurring("free telecom", "internet", false);
     checker.setRecurring("Loyer", "rental", false);
 

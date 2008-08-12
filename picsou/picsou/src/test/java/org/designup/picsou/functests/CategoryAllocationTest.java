@@ -114,7 +114,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .load();
 
     periods.assertEquals("2006/01 (0.00/1.00)", "2006/02 (0.00/2.00)");
-    periods.selectCells("2006/01");
+    periods.selectCell("2006/01");
     categories.select(MasterCategory.NONE);
     transactions
       .initContent()
@@ -219,7 +219,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .load();
     transactions.assignCategory(MasterCategory.PUERICULTURE, 0, 2, 4);
     categories.select(MasterCategory.ALL);
-    periods.selectCells("2006/01");
+    periods.selectCell("2006/01");
     transactions
       .initContent()
       .add("13/01/2006", TransactionType.CHECK, "CHEQUE N. 1", "", -1.0, MasterCategory.PUERICULTURE)

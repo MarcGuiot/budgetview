@@ -31,10 +31,6 @@ Vue releves
 - bug reset transactionDetails
 
 
-Import panel
-------------
-- setRootPane plutot que CardLayout
-
 
 FMK
 ---

@@ -6,13 +6,14 @@ import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.utils.DefaultGlobModel;
 
 public class PicsouGuiModel {
-  private static GlobModel model = new DefaultGlobModel(
+  private static GlobModel INSTANCE = new DefaultGlobModel(
     PicsouModel.get(),
     MonthStat.TYPE,
-    Series.TYPE
+    Series.TYPE,
+    Card.TYPE
   );
 
   public static GlobModel get() {
-    return model;
+    return INSTANCE;
   }
 }

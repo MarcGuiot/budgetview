@@ -69,6 +69,10 @@ public class MonthChecker extends DataChecker {
     timeViewPanel.selectMonth(index);
   }
 
+  public void selectCell(String date) {
+    selectCells(date);
+  }
+
   public void selectCells(String... dates) {
     Set<Integer> monthIds = new HashSet<Integer>();
     for (String date : dates) {

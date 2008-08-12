@@ -1,0 +1,28 @@
+
+* serialiser SeriesBudget
+
+* Budget / SeriesStat : mettre montants attendus en negatif si depenses
+
+* Bug MAJ SeriesStat apres activation licence
+
+* TransactionView : colonne categorie ==> serie + hyperlien ouvre CategorizationDialog et plus CategoryChooser
+
+* TransactionDetail : retirer hyperlien categorie + revoir bouton selection serie
+
+* MonthStatView : afficher non classe
+
+* CategorizationDialog : ajouter une categorie a une enveloppe
+
+* TimeView : couleurs pour mois courant et futurs
+
+* Categorisation : selectionner serie apres creation
+
+* MonthStatView : gauge
+
+* Categorisation : bug selection apres affectation (selectionner les suivants)
+
+* Categorisation / occasionnel : multicolonnes
+
+* Budget : block Occasionel => OccasionalSeriesStat
+
+* Activation licence : cas ou pas de connexion internet

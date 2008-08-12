@@ -39,12 +39,12 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
     periods.assertEquals("2006/01 (0.00/10.00)", "2006/02 (5.00/0.00)");
 
     periods.assertCellSelected("2006/01", "2006/02");
-    periods.selectCells("2006/02");
+    periods.selectCell("2006/02");
     transactions.initContent()
       .add("20/02/2006", TransactionType.VIREMENT, "income", "", 5.0, MasterCategory.NONE)
       .check();
 
-    periods.selectCells("2006/01");
+    periods.selectCell("2006/01");
     transactions.initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "rent", "", -10, MasterCategory.NONE)
       .check();
@@ -59,23 +59,23 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
 
     periods.assertEquals("2006/01 (0.00/10.00)", "2006/02 (0.00/0.00)", "2006/03 (5.00/0.00)");
     periods.assertCellSelected("2006/01", "2006/03");
-    periods.selectCells("2006/01");
-    periods.selectCells("2006/03");
+    periods.selectCell("2006/01");
+    periods.selectCell("2006/03");
     transactions
       .initContent()
       .add("20/03/2006", TransactionType.VIREMENT, "income", "", 5, MasterCategory.NONE)
       .check();
 
-    periods.selectCells("2006/01");
+    periods.selectCell("2006/01");
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "rent", "", -10, MasterCategory.NONE)
       .check();
 
-    periods.selectCells("2006/02");
+    periods.selectCell("2006/02");
     transactions.assertEmpty();
 
-    periods.selectCells("2006/03");
+    periods.selectCell("2006/03");
     transactions
       .initContent()
       .add("20/03/2006", TransactionType.VIREMENT, "income", "", 5, MasterCategory.NONE)

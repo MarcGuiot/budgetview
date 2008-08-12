@@ -1,4 +1,3 @@
-* TimeView : distinguer visuellement les mois precedents / courant / futur
 
 * Suppression de subcat : demander la subcat de destination (cas du pb d'import)
 

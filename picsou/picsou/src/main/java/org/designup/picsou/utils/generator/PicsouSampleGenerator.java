@@ -27,8 +27,8 @@ public class PicsouSampleGenerator {
   public static void main(String[] args) throws Exception {
     PicsouSampleGenerator generator = new PicsouSampleGenerator();
     generator.init();
-    generator.run(200001, 200703);
-    generator.write("tmp/sample_huge.ofx");
+    generator.run(200612, 200807);
+    generator.write("tmp/sample.ofx");
   }
 
   private GlobRepository repository;

@@ -2,9 +2,12 @@ package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Category;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -29,6 +32,7 @@ public class CardView extends View implements GlobSelectionListener {
     super(repository, directory);
     this.transactionSelection = transactionSelection;
     this.transactionSelection.addListener(this);
+    this.selectionService.addListener(this, Card.TYPE);
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -74,7 +78,16 @@ public class CardView extends View implements GlobSelectionListener {
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    showCard(lastSelectedCard);
+    if (selection.isRelevantForType(Card.TYPE)) {
+      GlobList cards = selection.getAll(Card.TYPE);
+      if (cards.size() == 1) {
+        lastSelectedCard = Card.get(cards.get(0).get(Card.ID));
+        showCard(lastSelectedCard);
+      }
+    }
+    if (selection.isRelevantForType(Month.TYPE) || selection.isRelevantForType(Category.TYPE)) {
+      showCard(lastSelectedCard);
+    }
   }
 
   private boolean hasData(GlobList monthStats) {
@@ -98,26 +111,7 @@ public class CardView extends View implements GlobSelectionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-      lastSelectedCard = card;
-      showCard(lastSelectedCard);
-    }
-  }
-
-  private enum Card {
-    HOME(false), BUDGET(false), DATA(true), REPARTITION(true), EVOLUTION(true);
-
-    private boolean showCategoryCard;
-
-    Card(boolean showCategoryCard) {
-      this.showCategoryCard = showCategoryCard;
-    }
-
-    String getName() {
-      return name().toLowerCase();
-    }
-
-    String getLabel() {
-      return Lang.get("cards." + getName());
+      selectionService.select(repository.get(card.getKey()));
     }
   }
 }
