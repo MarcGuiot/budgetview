@@ -6,17 +6,17 @@ import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.views.GlobLabelView;
-import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Glob;
-import org.globsframework.model.format.GlobListStringifiers;
-import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.utils.directory.Directory;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.GlobListStringifiers;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
@@ -41,7 +41,7 @@ public class BudgetAreaSeriesView extends View {
     addTotalLabel("totalPlannedAmount", SeriesStat.PLANNED_AMOUNT, builder);
 
     final GlobGaugeView gaugeView = new GlobGaugeView(SeriesStat.TYPE, SeriesStat.AMOUNT, SeriesStat.PLANNED_AMOUNT,
-                                                totalMatcher, repository, directory);
+                                                      totalMatcher, repository, directory);
     builder.add("totalGauge", gaugeView.getComponent());
 
     builder.addRepeat("seriesRepeat",
@@ -57,8 +57,8 @@ public class BudgetAreaSeriesView extends View {
                           addAmountLabel("plannedSeriesAmount", SeriesStat.PLANNED_AMOUNT, series, cellBuilder);
 
                           final GlobGaugeView gaugeView = new GlobGaugeView(SeriesStat.TYPE, SeriesStat.AMOUNT, SeriesStat.PLANNED_AMOUNT,
-                                                                      GlobMatchers.keyEquals(series.getKey()),
-                                                                      repository, directory);
+                                                                            GlobMatchers.keyEquals(series.getKey()),
+                                                                            repository, directory);
                           cellBuilder.add("gauge", gaugeView.getComponent());
 
                           cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {

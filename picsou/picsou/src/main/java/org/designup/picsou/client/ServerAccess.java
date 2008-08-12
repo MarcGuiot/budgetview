@@ -19,7 +19,7 @@ public interface ServerAccess {
   boolean initConnection(String name, char[] password, boolean privateComputer)
     throws BadPassword, UserNotRegistered;
 
-  void register(byte[] mail, byte[] signature);
+  void localRegister(byte[] mail, byte[] signature, String activationCode);
 
   void applyChanges(ChangeSet changeSet, GlobRepository globRepository);
 

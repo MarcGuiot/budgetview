@@ -52,10 +52,10 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     if (response.readBoolean()) {
       byte[] repoId = response.readBytes();
       byte[] mail = response.readBytes();
-      byte[] key = response.readBytes();
+      byte[] signature = response.readBytes();
       String activationCode = response.readString();
       long count = response.readNotNullLong();
-      configService.update(repoId, count, mail, key, activationCode);
+      configService.update(repoId, count, mail, signature, activationCode);
     }
     sessionId = response.readLong();
     privateId = response.readBytes();
@@ -117,8 +117,8 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     return isRegistered;
   }
 
-  public void register(byte[] mail, byte[] signature) {
-    clientTransport.register(sessionId, privateId, mail, signature);
+  public void localRegister(byte[] mail, byte[] signature, String activationCode) {
+    clientTransport.register(sessionId, privateId, mail, signature, activationCode);
   }
 
   private byte[] generateLinkInfo() {

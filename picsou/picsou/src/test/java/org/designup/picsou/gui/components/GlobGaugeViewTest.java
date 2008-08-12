@@ -8,11 +8,11 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 import java.util.Arrays;
@@ -65,8 +65,8 @@ public class GlobGaugeViewTest extends GuiTestCase {
     checkGauge(20.0d, 30.0d);
 
     repository.update(obj1.getKey(),
-                    value(MyObject.ACTUAL, 25.0),
-                    value(MyObject.TARGET, 50.0));
+                      value(MyObject.ACTUAL, 25.0),
+                      value(MyObject.TARGET, 50.0));
     checkGauge(30.0d, 60.0d);
 
     repository.delete(obj2.getKey());

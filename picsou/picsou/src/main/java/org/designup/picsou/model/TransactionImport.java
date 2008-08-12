@@ -26,7 +26,7 @@ public class TransactionImport {
   public static DoubleField BALANCE;
 
   static {
-    GlobTypeLoader.init(TransactionImport.class);
+    GlobTypeLoader.init(TransactionImport.class, "transactionImport");
   }
 
   public static class Serialization implements PicsouGlobSerializer {

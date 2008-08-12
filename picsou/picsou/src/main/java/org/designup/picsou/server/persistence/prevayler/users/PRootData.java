@@ -18,9 +18,9 @@ import java.util.Set;
 
 public class PRootData implements CustomSerializable {
   private static final byte V1 = 1;
-  private byte[] id = new byte[0];
-  private byte[] mail = new byte[0];
-  private byte[] signature = new byte[0];
+  private byte[] id = null;
+  private byte[] mail = null;
+  private byte[] signature = null;
   private String activationCode;
   private long count = 0;
   private Map<String, Glob> hidenUsers = new HashMap<String, Glob>();
@@ -29,10 +29,6 @@ public class PRootData implements CustomSerializable {
   private static final String USERS_ROOT_DATA = "UsersRootData";
 
   public PRootData() {
-  }
-
-  public PRootData(byte[] id) {
-    this.id = id;
   }
 
   public Glob getUser(String name) {
@@ -59,9 +55,10 @@ public class PRootData implements CustomSerializable {
     hidenUsers.remove(cryptedLinkInfo);
   }
 
-  public void register(byte[] mail, byte[] signature) {
+  public void register(byte[] mail, byte[] signature, String activationCode) {
     this.mail = mail;
     this.signature = signature;
+    this.activationCode = activationCode;
   }
 
   public String getSerializationName() {
@@ -179,6 +176,12 @@ public class PRootData implements CustomSerializable {
   public RootDataManager.RepoInfo getRepoInfo() {
     count++;
     return new RootDataManager.RepoInfo(id, mail, signature, activationCode, count);
+  }
+
+  public void setRepoId(byte[] repoId) {
+    if (id == null) {
+      id = repoId;
+    }
   }
 
   private static class Factory implements CustomSerializableFactory {

@@ -6,8 +6,8 @@ import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.repeat.*;
-import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 public class RepeatSplitter extends AbstractSplitter {
   private Splitter[] splitterTemplates;
@@ -24,7 +24,7 @@ public class RepeatSplitter extends AbstractSplitter {
     this.splitterTemplates = subSplitters;
 
     layout = getLayout(properties.get("layout"), ref);
-    layout.check(subSplitters, ref);    
+    layout.check(subSplitters, ref);
   }
 
   protected ComponentStretch createRawStretch(SplitsContext context) {

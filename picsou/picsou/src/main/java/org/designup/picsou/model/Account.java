@@ -40,7 +40,7 @@ public class Account {
   public static BooleanField IS_CARD_ACCOUNT;
 
   static {
-    GlobTypeLoader.init(Account.class);
+    GlobTypeLoader.init(Account.class, "account");
   }
 
   public static void createSummary(GlobRepository repository) {

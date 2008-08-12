@@ -172,6 +172,16 @@ public class SqlSelectQueryTest extends DbServicesTestCase {
     assertEquals(4, list.size());
   }
 
+  public void testNotEqual() throws Exception {
+    populate(sqlConnection,
+             XmlGlobStreamReader.parse(directory,
+                                       "<dummyObject id='1' name='hello' value='1.1' present='true'/>" +
+                                       "<dummyObject id='3' name='world' value='2.2' present='false'/>"));
+
+    Glob glob = execute(Constraints.notEqual(DummyObject.NAME, "hello"));
+    assertEquals(glob.get(DummyObject.ID).intValue(), 3);
+  }
+
   private SqlConnection init() {
     GlobStream streamToWrite =
       XmlGlobStreamReader.parse(directory,

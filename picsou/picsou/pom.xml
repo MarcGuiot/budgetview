@@ -77,34 +77,21 @@
                     <path refid="maven.runtime.classpath"/>
                   </classpath>
                   <arg
-                    line="striped_picsou.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
+                    line="picsou00000000000001.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
                 </java>
                 <manifest file="target/classes/MANIFEST.MF">
                   <attribute name="Main-Class" value="org.designup.picsou.gui.PicsouApplication"/>
                 </manifest>
-                <jar update="true" jarfile="striped_picsou.jar" manifest="target/classes/MANIFEST.MF"/>
-                <taskdef name="jarbundler"
-                         classpath="dev/install/jarbundler-1.9.jar;dev/install/xercesImpl-2.4.0.jar"
-                         classname="net.sourceforge.jarbundler.JarBundler"/>
-
-                <jarbundler dir="${basedir}"
-                            name="Picsou"
-                            mainclass="org.designup.picsou.gui.PicsouApplication"
-                            jar="striped_picsou.jar"
-                            stubfile="dev/install/JavaApplicationStub"
-                            icon="dev/images/picsou_icon.icns"
-                            jvmversion="1.5+"
-                            vmoptions="-Xmx128m">
-
-                  <documenttype name="Financial information"
-                                extensions="ofx qif"
-                                iconFile="dev/images/picsou_icon.icns"
-                                role="Editor"/>
-                  <documenttype name="Financial information"
-                                mimetypes="text/ofx text/qif"
-                                iconFile="dev/images/picsou_icon.icns"
-                                role="Editor"/>
-                </jarbundler>
+                <jar update="true" jarfile="picsou00000000000001.jar" manifest="target/classes/MANIFEST.MF"/>
+                <jar destfile="config00000000000001.jar" basedir="target/classes"
+                     includes="org/designup/picsou/gui/config/LoaderImpl.class">
+                  <fileset dir="src/main/resources" includes="banks/**"/>
+                </jar>
+                <delete dir="ofuscated"/>
+                <java fork="yes" jar="dev/Zelix/ZKM.jar">
+                  <jvmarg line="-Xmx512M"/>
+                  <arg line="dev/ant/zelix.txt"/>
+                </java>
               </tasks>
             </configuration>
             <goals>
@@ -137,7 +124,7 @@
     <dependency>
       <groupId>com.jgoodies</groupId>
       <artifactId>looks</artifactId>
-      <version>2.1.4</version>
+      <version>2.2.0</version>
     </dependency>
     <dependency>
       <groupId>com.apple</groupId>
@@ -158,6 +145,11 @@
       <groupId>commons-httpclient</groupId>
       <artifactId>commons-httpclient</artifactId>
       <version>3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-net</groupId>
+      <artifactId>commons-net</artifactId>
+      <version>1.4.1</version>
     </dependency>
     <dependency>
       <groupId>org.uispec4j</groupId>

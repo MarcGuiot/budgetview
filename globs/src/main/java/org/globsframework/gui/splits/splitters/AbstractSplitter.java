@@ -117,7 +117,7 @@ public abstract class AbstractSplitter implements Splitter {
     return properties;
   }
 
-   private void setGridPos(ComponentStretch stretch) {
+  private void setGridPos(ComponentStretch stretch) {
     String value = properties.getString("gridPos");
     if (value != null) {
       stretch.setGridPos(SplitsUtils.parseGridPos(value));

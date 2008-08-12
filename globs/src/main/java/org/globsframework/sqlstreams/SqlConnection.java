@@ -30,9 +30,9 @@ public interface SqlConnection {
 
   Connection getConnection();
 
-  void createTable(GlobType globType);
+  void createTable(GlobType... globType);
 
-  void emptyTable(GlobType globType);
+  void emptyTable(GlobType... globType);
 
   void showDb();
 

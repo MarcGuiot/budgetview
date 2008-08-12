@@ -2,10 +2,17 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.utils.Dates;
 
 public class BudgetViewTest extends LoggedInFunctionalTestCase {
+  protected void setUp() throws Exception {
+    TimeService.setCurrentDate(Dates.parseMonth("2008/08"));
+    super.setUp();
+  }
+
   public void test() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
@@ -48,6 +55,22 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkTotalAmounts(3740.0, -3540.00);
     budgetView.income.checkSeries("Salary", 3540.0, -3540.0);
     budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
+
+    periods.selectCells("2008/08");
+
+    budgetView.recurring.checkTitle("Recurring expenses");
+    budgetView.recurring.checkTotalAmounts(0.0, 84.0);
+    budgetView.recurring.checkSeries("Internet", 0.0, 29.0);
+    budgetView.recurring.checkSeries("Electricity", 0.0, 55.0);
+
+    budgetView.envelopes.checkTitle("Envelope expenses");
+    budgetView.envelopes.checkTotalAmounts(0.0, 95);
+    budgetView.envelopes.checkSeries("Groceries", 0.0, 95.0);
+
+    budgetView.income.checkTitle("Income");
+    budgetView.income.checkTotalAmounts(0.0, -3540.00);
+    budgetView.income.checkSeries("Salary", 0.0, -3540.0);
+    budgetView.income.checkSeries("Exceptional Income", 0.0, 0.0);
   }
 
   public void testUnusedSeriesAreHidden() throws Exception {

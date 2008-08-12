@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultString;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
+import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -20,17 +21,20 @@ public class Bank {
 
   public static GlobType TYPE;
 
+  @NoObfuscation
   @Key
   public static IntegerField ID;
 
+  @NoObfuscation
   @NamingField
   public static StringField NAME;
 
+  @NoObfuscation
   @DefaultString("")
   public static StringField DOWNLOAD_URL;
 
   static {
-    GlobTypeLoader.init(Bank.class);
+    GlobTypeLoader.init(Bank.class, "bank");
   }
 
 

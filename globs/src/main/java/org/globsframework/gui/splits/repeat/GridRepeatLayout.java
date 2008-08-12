@@ -1,12 +1,12 @@
 package org.globsframework.gui.splits.repeat;
 
+import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
-import org.globsframework.gui.splits.Splitter;
 
 import javax.swing.*;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class GridRepeatLayout implements RepeatLayout {
 

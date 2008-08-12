@@ -8,8 +8,8 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Ref;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 
 import java.util.*;
 

@@ -39,15 +39,24 @@ public abstract class JdbcConnection implements SqlConnection {
   }
 
   public SelectBuilder getQueryBuilder(GlobType globType) {
+    checkConnectionIsNotClosed();
     return new SqlQueryBuilder(connection, globType, null, sqlService, blobUpdater);
   }
 
   public SelectBuilder getQueryBuilder(GlobType globType, Constraint constraint) {
+    checkConnectionIsNotClosed();
     return new SqlQueryBuilder(connection, globType, constraint, sqlService, blobUpdater);
   }
 
   public UpdateBuilder getUpdateBuilder(GlobType globType, Constraint constraint) {
+    checkConnectionIsNotClosed();
     return new SqlUpdateBuilder(connection, globType, sqlService, constraint, blobUpdater);
+  }
+
+  private void checkConnectionIsNotClosed() {
+    if (connection == null) {
+      throw new UnexpectedApplicationState("closed was connection");
+    }
   }
 
   interface DbFunctor {
@@ -55,9 +64,7 @@ public abstract class JdbcConnection implements SqlConnection {
   }
 
   public void commit() throws RollbackFailed {
-    if (connection == null) {
-      throw new UnexpectedApplicationState("closed was connection");
-    }
+    checkConnectionIsNotClosed();
     try {
       connection.commit();
     }
@@ -86,7 +93,13 @@ public abstract class JdbcConnection implements SqlConnection {
     return new SqlCreateBuilder(connection, globType, sqlService, blobUpdater, this);
   }
 
-  public void createTable(GlobType globType) {
+  public void createTable(GlobType... globTypes) {
+    for (GlobType type : globTypes) {
+      createTable(type);
+    }
+  }
+
+  private void createTable(GlobType globType) {
     if (checker.tableExists(globType)) {
       return;
     }
@@ -121,7 +134,13 @@ public abstract class JdbcConnection implements SqlConnection {
     }
   }
 
-  public void emptyTable(GlobType globType) {
+  public void emptyTable(GlobType... globTypes) {
+    for (GlobType globType : globTypes) {
+      emptyTable(globType);
+    }
+  }
+
+  private void emptyTable(GlobType globType) {
     StringPrettyWriter writer = new StringPrettyWriter();
     writer.append("DELETE FROM ")
       .append(sqlService.getTableName(globType))

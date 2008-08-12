@@ -3,8 +3,6 @@ package org.designup.picsou.gui.license;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
-import org.designup.picsou.utils.BeginRemove;
-import org.designup.picsou.utils.EndRemove;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -12,6 +10,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -30,11 +29,9 @@ public class LicenseDialog {
     directory.add(selectionService);
     LocalGlobRepositoryBuilder localGlobRepositoryBuilder = LocalGlobRepositoryBuilder.init(repository)
       .copy(User.TYPE);
-    @BeginRemove
-    int a;
-    localGlobRepositoryBuilder.copy(UserPreferences.TYPE);
-    @EndRemove
-    int b;
+    Utils.beginRemove();
+    localGlobRepositoryBuilder = localGlobRepositoryBuilder.copy(UserPreferences.TYPE);
+    Utils.endRemove();
     this.localRepository = localGlobRepositoryBuilder.get();
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/LicenseDialog.splits",
                                                       localRepository, directory);
@@ -60,13 +57,11 @@ public class LicenseDialog {
 
     public void actionPerformed(ActionEvent e) {
       Glob user = localRepository.get(User.KEY);
-      @BeginRemove
-      int a;
+      Utils.beginRemove();
       if (user.get(User.MAIL).equals("admin")) {
         localRepository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT, 24);
       }
-      @EndRemove
-      int b;
+      Utils.endRemove();
       localRepository.commitChanges(true);
       dialog.setVisible(false);
     }

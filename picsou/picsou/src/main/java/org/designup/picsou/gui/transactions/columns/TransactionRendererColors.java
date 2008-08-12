@@ -2,12 +2,10 @@ package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionType;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.Glob;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;

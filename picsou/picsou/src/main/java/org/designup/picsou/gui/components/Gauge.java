@@ -41,7 +41,7 @@ public class Gauge extends JPanel {
     int barVerticalMargin = (height - BAR_HEIGHT) / 2;
     int barTop = barVerticalMargin;
     int barBottom = height - barVerticalMargin;
-    
+
     float ratio = targetValue != 0 ? (float)actualValue / (float)targetValue : -1;
 
     if (ratio > 1) {

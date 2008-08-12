@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,8 +62,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     }
 
     try {
-      Constructor constructor = componentClass.getConstructor();
-      Component newComponent = (Component)constructor.newInstance();
+      Component newComponent = componentClass.newInstance();
       createdComponents.add(newComponent);
       if (name != null) {
         newComponent.setName(name);

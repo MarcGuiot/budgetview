@@ -28,11 +28,11 @@ public class UserPreferences {
   public static IntegerField FUTURE_MONTH_COUNT;
 
   static {
-    GlobTypeLoader.init(UserPreferences.class);
+    GlobTypeLoader.init(UserPreferences.class, "userPreferences");
     key = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 
-  public static class UserPreferencesSerialization implements PicsouGlobSerializer {
+  public static class Serialization implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();

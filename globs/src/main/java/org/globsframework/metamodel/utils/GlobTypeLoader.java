@@ -29,9 +29,14 @@ public class GlobTypeLoader {
     new HashMap<String, Map<Class<? extends Annotation>, Annotation>>();
   private DefaultFieldFactory fieldFactory;
   private Class<?> targetClass;
+  private String name;
 
   public static GlobTypeLoader init(Class<?> targetClass) {
-    GlobTypeLoader loader = new GlobTypeLoader(targetClass);
+    return init(targetClass, null);
+  }
+
+  public static GlobTypeLoader init(Class<?> targetClass, String name) {
+    GlobTypeLoader loader = new GlobTypeLoader(targetClass, name);
     loader.run();
     loader.type.completeInit();
     return loader;
@@ -45,8 +50,9 @@ public class GlobTypeLoader {
     return LinkBuilder.init((DefaultLink)link);
   }
 
-  private GlobTypeLoader(Class<?> targetClass) {
+  private GlobTypeLoader(Class<?> targetClass, String name) {
     this.targetClass = targetClass;
+    this.name = name;
   }
 
   private void run() {
@@ -235,9 +241,14 @@ public class GlobTypeLoader {
   }
 
   private String getTypeName(Class<?> aClass) {
-    String fullName = aClass.getName();
-    int lastSeparatorIndex = Math.max(fullName.lastIndexOf("."), fullName.lastIndexOf("$"));
-    return Strings.uncapitalize(fullName.substring(lastSeparatorIndex + 1));
+    if (name != null) {
+      return name;
+    }
+    else {
+      String fullName = aClass.getName();
+      int lastSeparatorIndex = Math.max(fullName.lastIndexOf("."), fullName.lastIndexOf("$"));
+      return Strings.uncapitalize(fullName.substring(lastSeparatorIndex + 1));
+    }
   }
 
   private String getFieldName(java.lang.reflect.Field field) {

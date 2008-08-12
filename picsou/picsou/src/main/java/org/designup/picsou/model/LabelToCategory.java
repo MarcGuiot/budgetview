@@ -32,7 +32,7 @@ public class LabelToCategory {
   public static NotUniqueIndex LABEL_INDEX;
 
   static {
-    GlobTypeLoader.init(LabelToCategory.class)
+    GlobTypeLoader.init(LabelToCategory.class, "labelToCategory")
       .defineNotUniqueIndex(LABEL_INDEX, LABEL);
   }
 

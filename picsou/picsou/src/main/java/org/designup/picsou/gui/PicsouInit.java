@@ -3,11 +3,13 @@ package org.designup.picsou.gui;
 import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.browsing.BrowsingService;
-import org.designup.picsou.gui.config.RegistrationListener;
+import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.PicsouModel;
+import org.designup.picsou.model.ServerInformation;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.triggers.*;
@@ -28,6 +30,7 @@ import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.globsframework.xml.XmlGlobParser;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.Collection;
 
@@ -40,7 +43,7 @@ public class PicsouInit {
     return new PicsouInit(serverAccess, user, newUser, directory);
   }
 
-  private PicsouInit(ServerAccess serverAccess, String user, boolean newUser, Directory directory) throws IOException {
+  private PicsouInit(ServerAccess serverAccess, String user, boolean newUser, final Directory directory) throws IOException {
     this.directory = directory;
 
     final DefaultGlobIdGenerator generator = new DefaultGlobIdGenerator();
@@ -54,7 +57,7 @@ public class PicsouInit {
 
     repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
-    repository.addTrigger(new RegistrationListener(directory));
+    repository.addTrigger(new RegistrationTrigger(directory));
     repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
     repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new SeriesUpdateTrigger(directory));
@@ -68,6 +71,8 @@ public class PicsouInit {
                       value(User.ID, User.SINGLETON_ID),
                       value(User.NAME, user));
 
+    repository.create(ServerInformation.KEY,
+                      value(ServerInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.CONFIG_VERSION));
     MutableChangeSet changeSet = new DefaultChangeSet();
     try {
       GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdate() {
@@ -86,12 +91,20 @@ public class PicsouInit {
     if (newUser) {
       repository.create(UserPreferences.key,
                         FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT, 0));
+
       loadGlobs("/subcats.xml");
       loadGlobs("/series.xml");
     }
 
     seriesStatTrigger.init(repository);
     initDirectory(repository);
+    if (!directory.get(ConfigService.class).loadConfigFileFromLastestJar(directory, repository)) {
+      directory.get(TransactionAnalyzerFactory.class).load(this.getClass().getClassLoader(),
+                                                           PicsouApplication.JAR_VERSION);
+    }
+    LicenseCheckerThread licenseCheckerThread = new LicenseCheckerThread(directory, repository);
+    licenseCheckerThread.setDaemon(true);
+    licenseCheckerThread.start();
   }
 
   private void initDirectory(GlobRepository repository) {
@@ -126,7 +139,7 @@ public class PicsouInit {
   }
 
   private void loadGlobs(String fileName) {
-    Reader reader = null;
+    Reader reader;
     try {
       InputStream stream = PicsouInit.class.getResourceAsStream(fileName);
       if (stream == null) {
@@ -139,4 +152,24 @@ public class PicsouInit {
     }
     XmlGlobParser.parse(PicsouModel.get(), repository, reader, "globs");
   }
+
+  private static class LicenseCheckerThread extends Thread {
+    private Directory directory;
+    private GlobRepository repository;
+
+    private LicenseCheckerThread(Directory directory, GlobRepository repository) {
+      this.directory = directory;
+      this.repository = repository;
+    }
+
+    public void run() {
+      ConfigService.waitEndOfConfigRequest(directory);
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          ConfigService.check(directory, repository);
+        }
+      });
+    }
+  }
+
 }

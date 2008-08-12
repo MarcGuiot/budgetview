@@ -1,8 +1,8 @@
 package org.globsframework.gui.splits.repeat;
 
-import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
+import org.globsframework.gui.splits.layout.ComponentStretch;
 
 import javax.swing.*;
 import java.util.List;

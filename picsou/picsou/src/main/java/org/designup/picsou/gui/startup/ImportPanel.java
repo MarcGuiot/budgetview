@@ -24,7 +24,6 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
@@ -131,6 +130,7 @@ public abstract class ImportPanel {
     builder1.add("import", new ImportAction());
     builder1.add("close", new AbstractAction(textForCloseButton) {
       public void actionPerformed(ActionEvent e) {
+        openRequestManager.popCallback();
         complete();
       }
     });
@@ -370,8 +370,7 @@ public abstract class ImportPanel {
         return true;
       }
       catch (Exception e) {
-        Log.write("", e);
-        e.printStackTrace();
+        Log.write("nextImport", e);
         return false;
       }
     }
@@ -472,19 +471,25 @@ public abstract class ImportPanel {
     }
 
     public void actionPerformed(ActionEvent event) {
-      messageLabel.setText("");
-      if (!dateFormatSelectionPanel.check()) {
-        return;
+      setEnabled(false);
+      try {
+        messageLabel.setText("");
+        if (!dateFormatSelectionPanel.check()) {
+          return;
+        }
+        if (!bankEntityEditionPanel.check()) {
+          return;
+        }
+        if (!accountEditionPanel.check()) {
+          return;
+        }
+        Key importKey = importSession.importTransactions(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
+        importKeys.add(importKey.get(TransactionImport.ID));
+        nextImport();
       }
-      if (!bankEntityEditionPanel.check()) {
-        return;
+      finally {
+        setEnabled(true);
       }
-      if (!accountEditionPanel.check()) {
-        return;
-      }
-      Key importKey = importSession.importTransactions(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
-      importKeys.add(importKey.get(TransactionImport.ID));
-      nextImport();
     }
   }
 
@@ -494,8 +499,14 @@ public abstract class ImportPanel {
     }
 
     public void actionPerformed(ActionEvent e) {
-      importSession.discard();
-      nextImport();
+      setEnabled(false);
+      try {
+        importSession.discard();
+        nextImport();
+      }
+      finally {
+        setEnabled(true);
+      }
     }
   }
 

@@ -28,7 +28,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   protected void setUp() throws Exception {
     setInMemory(false);
     super.setUp();
-    directory.add(new ConfigService(1, directory));
+    directory.add(new ConfigService(1L, 1L, 1L, null));
   }
 
   protected void tearDown() throws Exception {

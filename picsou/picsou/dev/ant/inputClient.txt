@@ -10,6 +10,7 @@ C org.designup.picsou.gui.plaf.PicsouRootPaneUI
 C org.designup.picsou.gui.plaf.PicsouOptionPaneUI
 C org.designup.picsou.gui.plaf.PicsouMacFileChooserUI
 C org.designup.picsou.gui.plaf.PicsouWindowsFileChooserUI
+C org.designup.picsou.gui.plaf.PicsouSplitPaneUI
 C org.apache.commons.logging.impl.LogFactoryImpl
 C org.apache.commons.logging.impl.SimpleLog
 C org.apache.commons.httpclient.auth.CredentialsNotAvailableException
@@ -18,6 +19,7 @@ C org.jfree.chart.resources.JFreeChartResources
 C org.globsframework.gui.splits.components.StyledPanelUI
 C org.globsframework.gui.splits.components.StyledToggleButtonUI
 C org.globsframework.gui.splits.components.ShadowedLabelUI
+C org.globsframework.gui.splits.components.HyperlinkButtonUI
 P com/jgoodies/looks true
 R org/jfree/resources/JCommonResources.class
 R org/jfree/chart/LocalizationBundle.properties

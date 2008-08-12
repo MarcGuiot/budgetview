@@ -12,4 +12,6 @@ public interface GlobStream {
   Collection<Field> getFields();
 
   Accessor getAccessor(Field field);
+
+  void close();
 }

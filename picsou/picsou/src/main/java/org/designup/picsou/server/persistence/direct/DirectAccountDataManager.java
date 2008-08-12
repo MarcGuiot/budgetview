@@ -6,10 +6,12 @@ import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.model.ServerDelta;
 import org.designup.picsou.server.model.ServerState;
 import org.designup.picsou.server.persistence.prevayler.AccountDataManager;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.exceptions.EOFIOFailure;
 import org.globsframework.utils.exceptions.IOFailure;
+import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
@@ -19,12 +21,8 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DirectAccountDataManager implements AccountDataManager {
-
-  static Logger logger = Logger.getLogger(DirectAccountDataManager.class.getName());
 
   private Map<Integer, DurableOutputStream> outputStreamMap = new HashMap<Integer, DurableOutputStream>();
   private String prevaylerPath;
@@ -88,7 +86,7 @@ public class DirectAccountDataManager implements AccountDataManager {
           SerializedInputOutputFactory.init(inputStream);
         long readVersion = readJournalVersion(serializedInput);
         if (readVersion != version) {
-          throw new RuntimeException("error while reading journal file");
+          throw new InvalidState("error while reading journal file");
         }
         SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
         MultiMap<String, ServerDelta> map = serializableDeltaGlobSerializer.deserialize(serializedInput);
@@ -158,7 +156,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     MultiMap<String, ServerDelta> data = serializableDeltaGlobSerializer.deserialize(input);
     DurableOutputStream bufferedOutputStream = outputStreamMap.get(userId);
     if (bufferedOutputStream == null) {
-      throw new RuntimeException("read should be call before write");
+      throw new InvalidState("read should be call before write");
     }
     bufferedOutputStream.write(data);
   }
@@ -171,6 +169,9 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   public void close() {
+    for (DurableOutputStream durableOutputStream : outputStreamMap.values()) {
+      durableOutputStream.close();
+    }
   }
 
   public void close(Integer userId) {
@@ -187,11 +188,11 @@ public class DirectAccountDataManager implements AccountDataManager {
     long transactionId = readData(userId, globs);
     try {
       writeSnapshot(transactionId, globs, directory);
-      directory.deletePreviousJournal(transactionId, countFileNotToDelete);
-      directory.deletePreviousSnapshot(transactionId, countFileNotToDelete);
+      long lastDeletedSnasphotId = directory.deletePreviousSnapshot(countFileNotToDelete);
+      directory.deletePreviousJournal(lastDeletedSnasphotId);
     }
-    catch (IOException e) {
-      logger.log(Level.FINEST, "for " + userId, e);
+    catch (Exception e) {
+      Log.write("for " + userId, e);
     }
   }
 
@@ -217,10 +218,6 @@ public class DirectAccountDataManager implements AccountDataManager {
     SerializableGlobSerializer serializer = new SerializableGlobSerializer();
     serializer.serialize(serializedOutput, data);
     outputStream.close();
-  }
-
-  public void deleteOldJournal() {
-
   }
 
   private class DurableOutputStream {
@@ -265,7 +262,7 @@ public class DirectAccountDataManager implements AccountDataManager {
           outputStream.close();
         }
         catch (IOException e) {
-          throw new IOFailure(e);
+          Log.write("stream close error", e);
         }
       }
     }

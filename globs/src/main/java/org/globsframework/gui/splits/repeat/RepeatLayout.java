@@ -1,13 +1,13 @@
 package org.globsframework.gui.splits.repeat;
 
-import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.Splitter;
+import org.globsframework.gui.splits.layout.ComponentStretch;
 
 import javax.swing.*;
 import java.util.List;
 
 public interface RepeatLayout {
-  
+
   void check(Splitter[] splitterTemplates, String repeatRef);
 
   void init(JPanel panel);

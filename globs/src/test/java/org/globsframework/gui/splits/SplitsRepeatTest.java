@@ -1,11 +1,11 @@
 package org.globsframework.gui.splits;
 
+import org.globsframework.gui.splits.layout.Anchor;
+import org.globsframework.gui.splits.layout.Fill;
+import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.layout.Fill;
-import org.globsframework.gui.splits.layout.Anchor;
-import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.utils.Strings;
 
 import javax.swing.*;

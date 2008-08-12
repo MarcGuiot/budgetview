@@ -34,7 +34,7 @@ public enum BudgetArea implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(BudgetArea.class);
+    GlobTypeLoader.init(BudgetArea.class, "budgetArea");
   }
 
   public ReadOnlyGlob getGlob() {

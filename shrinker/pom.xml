@@ -55,8 +55,16 @@
       <dependency>
         <groupId>asm</groupId>
         <artifactId>asm</artifactId>
-        <version>3.0</version>
+        <version>3.1</version>
         <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>asm</groupId>
+        <artifactId>asm-util</artifactId>
+        <version>3.1</version>
+        <!--<optional>true</optional>-->
+        <type>jar</type>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -75,6 +83,10 @@
     <dependency>
       <groupId>asm</groupId>
       <artifactId>asm</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>asm</groupId>
+      <artifactId>asm-util</artifactId>
     </dependency>
   </dependencies>
 

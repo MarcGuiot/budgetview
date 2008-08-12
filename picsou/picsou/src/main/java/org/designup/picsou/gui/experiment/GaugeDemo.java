@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.experiment;
 
 import org.designup.picsou.gui.components.Gauge;
-import org.globsframework.gui.splits.layout.GridBagBuilder;
-import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.Anchor;
+import org.globsframework.gui.splits.layout.Fill;
+import org.globsframework.gui.splits.layout.GridBagBuilder;
 
 import javax.swing.*;
 import java.awt.*;

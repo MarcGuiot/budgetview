@@ -2,8 +2,8 @@ package org.designup.picsou.gui.categories.columns;
 
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;

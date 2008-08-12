@@ -39,7 +39,7 @@ public class DefaultConnectedState extends AbstractSessionState implements Conne
   public void register(SerializedInput input) {
     lastAccess();
     checkPrivateId(input);
-    persistence.register(userId, input.readBytes(), input.readBytes());
+    persistence.register(userId, input.readBytes(), input.readBytes(), input.readString());
   }
 
   public String getStateName() {

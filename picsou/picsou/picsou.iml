@@ -9,12 +9,9 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/Picsou.app" />
-      <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
+      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
-      <excludeFolder url="file://$MODULE_DIR$/tmp" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -23,9 +20,11 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/jfree/jfreechart/1.0.7/jfreechart-1.0.7.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/jfree/jfreechart/1.0.7/jfreechart-1.0.7-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/jfree/jfreechart/1.0.7/jfreechart-0.7-src.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/jfree/jfreechart/1.0.7/jfreechart-1.0.7-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -358,15 +357,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="com.jgoodies:looks:2.1.4">
+      <library name="com.jgoodies:looks:2.2.0">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/com/jgoodies/looks/2.1.4/looks-2.1.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/com/jgoodies/looks/2.2.0/looks-2.2.0.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/com/jgoodies/looks/2.1.4/looks-2.1.4-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/com/jgoodies/looks/2.2.0/looks-2.2.0-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/com/jgoodies/looks/2.1.4/looks-2.1.4-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/com/jgoodies/looks/2.2.0/looks-2.2.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -397,6 +396,32 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="prevayler" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="commons-net:commons-net:1.4.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/commons-net/commons-net/1.4.1/commons-net-1.4.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/commons-net/commons-net/1.4.1/commons-net-1.4.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/commons-net/commons-net/1.4.1/commons-net-1.4.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="oro:oro:2.0.8">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/oro/oro/2.0.8/oro-2.0.8.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/oro/oro/2.0.8/oro-2.0.8-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/oro/oro/2.0.8/oro-2.0.8-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntry type="module" module-name="uispec" exported="" />
     <orderEntry type="module-library">
       <library name="org.mortbay.jetty:jetty:6.1.6">
@@ -438,6 +463,19 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="globs" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="piccolo:piccolo:1.0.4">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/piccolo/piccolo/1.0.4/piccolo-1.0.4.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/piccolo/piccolo/1.0.4/piccolo-1.0.4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../../../.m2/repository/piccolo/piccolo/1.0.4/piccolo-1.0.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntryProperties />
   </component>
 </module>

@@ -2,10 +2,10 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.MasterCategory;
-import org.uispec4j.TextBox;
+import org.designup.picsou.model.TransactionType;
 import org.uispec4j.Key;
+import org.uispec4j.TextBox;
 
 public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
@@ -44,7 +44,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .add("17/07/2008", TransactionType.PRELEVEMENT, "Pizza Lapino", "beurk", -20.00)
       .add("16/07/2008", TransactionType.PRELEVEMENT, "Pizza Pino", "miam miam", -15.00)
       .check();
-    
+
     searchField.insertText("c", 0);
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un cafe", -500.00)
@@ -74,7 +74,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
     TextBox searchField = transactionDetails.getSearchField();
     searchField.setText("vi");
-    
+
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, MasterCategory.TRANSPORTS)
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
@@ -82,7 +82,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .add("15/06/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
       .check();
 
-    periods.selectLast();
+    periods.selectCell("2008/07");
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, MasterCategory.TRANSPORTS)
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
@@ -92,7 +92,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
       .check();
-    
+
     searchField.clear();
     transactions.initContent()
       .add("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, MasterCategory.LEISURES)

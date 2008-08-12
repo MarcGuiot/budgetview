@@ -8,6 +8,7 @@ import org.globsframework.metamodel.utils.IdProperty;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+import org.objectweb.asm.ClassReader;
 
 import java.io.*;
 import java.util.*;
@@ -480,15 +481,29 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
             !pathOfImportedState.peek()) {
           return;
         }
-        InputStream inputStream = node.getInputStream();
-        jarOutputStream.putNextEntry(new ZipEntry(cachePath.toString() + node.getName()));
-        int c;
-        while ((c = inputStream.read()) != -1) {
-          jarOutputStream.write(c);
+        if (node.getName().endsWith(".class")) {
+          InputStream inputStream = node.getInputStream();
+          ClassReader classReader = new ClassReader(inputStream);
+          FilterWriter classWriter = new FilterWriter();
+          classReader.accept(classWriter, ClassReader.SKIP_DEBUG);
+          inputStream.close();
+          jarOutputStream.putNextEntry(new ZipEntry(cachePath.toString() + node.getName()));
+          jarOutputStream.write(classWriter.toByteArray());
+        }
+        else {
+          int c;
+          InputStream inputStream = node.getInputStream();
+          jarOutputStream.putNextEntry(new ZipEntry(cachePath.toString() + node.getName()));
+          while ((c = inputStream.read()) != -1) {
+            jarOutputStream.write(c);
+          }
         }
       }
       catch (IOException e) {
         throw new InvalidData(e);
+      }
+      catch (Exception e) {
+        throw new RuntimeException(cachePath.toString() + node.getName(), e);
       }
     }
 

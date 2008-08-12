@@ -5,6 +5,8 @@ import org.globsframework.sqlstreams.constraints.impl.*;
 public interface ConstraintVisitor {
   void visitEqual(EqualConstraint constraint);
 
+  void visitNotEqual(NotEqualConstraint constraint);
+
   void visitAnd(AndConstraint constraint);
 
   void visitOr(OrConstraint constraint);

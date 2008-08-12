@@ -26,7 +26,7 @@ public class Month {
   public static IntegerField ID;
 
   static {
-    GlobTypeLoader.init(Month.class);
+    GlobTypeLoader.init(Month.class, "month");
   }
 
   private static NumberFormat MONTH_FORMAT = new DecimalFormat("00");

@@ -1,13 +1,13 @@
 package org.designup.picsou.gui.components;
 
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
-import org.designup.picsou.gui.utils.PicsouColors;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;

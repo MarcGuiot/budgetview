@@ -29,24 +29,28 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
           byte[] signature = null;
           String mail = null;
+          String activationCode = null;
           if (values.contains(User.SIGNATURE)) {
             signature = values.get(User.SIGNATURE);
           }
           if (values.contains(User.MAIL)) {
             mail = values.get(User.MAIL);
           }
-          if (mail != null || signature != null) {
+          if (values.contains(User.ACTIVATION_CODE)) {
+            activationCode = values.get(User.ACTIVATION_CODE);
+          }
+          if (mail != null || signature != null || activationCode != null) {
             Glob user = repository.get(User.KEY);
-            if (mail == null) {
-              mail = user.get(User.MAIL);
-            }
-            if (signature == null) {
-              signature = user.get(User.SIGNATURE);
-            }
-            byte[] mailAsByte = mail.getBytes();
-            if (KeyChecker.checkSignature(mailAsByte, signature)) {
-              serverAccess.register(mailAsByte, signature);
-              repository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT, 24);
+            mail = user.get(User.MAIL);
+            signature = user.get(User.SIGNATURE);
+            activationCode = user.get(User.ACTIVATION_CODE);
+            if (mail != null && signature != null && activationCode != null) {
+              byte[] mailAsByte = mail.getBytes();
+              if (KeyChecker.checkSignature(mailAsByte, signature)) {
+                serverAccess.localRegister(mailAsByte, signature, activationCode);
+                repository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT, 24);
+                repository.update(User.KEY, User.ACTIVATION_STEP, User.ACTIVATION_OK);
+              }
             }
           }
         }

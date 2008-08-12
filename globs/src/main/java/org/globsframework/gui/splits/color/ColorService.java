@@ -155,4 +155,10 @@ public class ColorService implements ColorLocator {
     }
     return file.substring(file.indexOf('/') + 1);
   }
+
+  public void removeAllListeners() {
+    listeners.clear();
+    colorCreationListeners.clear();
+    colorSets.clear();
+  }
 }

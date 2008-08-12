@@ -51,7 +51,7 @@ public class HttpsClientTransport implements ClientTransport {
     return sendRequest(null, "/connect", serializedByteArrayOutput.toByteArray());
   }
 
-  public void register(Long sessionId, byte[] privateId, byte[] mail, byte[] signature) {
+  public void register(Long sessionId, byte[] privateId, byte[] mail, byte[] signature, String activationCode) {
   }
 
   public SerializedInput createUser(Long sessionId, byte[] bytes) {

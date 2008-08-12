@@ -30,12 +30,26 @@ public class SqlGlobStream implements GlobStream {
   public boolean next() {
     try {
       rowId++;
-      return resultSet.next();
+      boolean hasNext = resultSet.next();
+      if (!hasNext) {
+        resultSet.close();
+      }
+      return hasNext;
     }
     catch (SQLException e) {
       throw new UnexpectedApplicationState(e);
     }
   }
+
+  public void close() {
+    try {
+      resultSet.close();
+    }
+    catch (SQLException e) {
+      throw new UnexpectedApplicationState(e);
+    }
+  }
+
 
   public Collection<Field> getFields() {
     return fieldToAccessorHolder.keySet();

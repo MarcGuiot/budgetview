@@ -296,7 +296,7 @@
           <xs:restriction base="xs:NMTOKEN">
             <xs:enumeration value="column"/>
             <xs:enumeration value="verticalGrid"/>
-          </xs:restriction>          
+          </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
     </xs:complexType>
@@ -362,7 +362,7 @@
           <xs:enumeration value="none"/>
           <xs:enumeration value="both"/>
         </xs:restriction>
-      </xs:simpleType>      
+      </xs:simpleType>
     </xs:attribute>
 
     <xs:attribute name="anchor">
@@ -476,7 +476,7 @@
     <xs:attribute name="dividerSize" type="xs:integer"/>
     <xs:attribute name="dividerLocation" type="xs:float"/>
     <xs:attribute name="continuousLayout" type="xs:boolean"/>
-    <xs:attribute name="resizeWeight"  type="xs:float"/>
+    <xs:attribute name="resizeWeight" type="xs:float"/>
   </xs:attributeGroup>
 
   <!-- ====================================  -->

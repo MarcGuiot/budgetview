@@ -16,7 +16,6 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobMultiLineTextEditor;
 import org.globsframework.gui.splits.components.HyperlinkButton;
-import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobMultiLineTextView;
@@ -33,9 +32,6 @@ import org.globsframework.model.utils.GlobListMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.DocumentEvent;
 import java.util.HashSet;
 import java.util.Set;
 

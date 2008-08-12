@@ -173,6 +173,10 @@ public class Constraints {
     return new InConstraint(field, infos);
   }
 
+  public static Constraint notEqual(StringField field, String value) {
+    return new NotEqualConstraint(new FieldOperand(field), new ValueOperand(field, value));
+  }
+
   private static class ConstraintsFunctor implements FieldValues.Functor {
     private Constraint constraint = null;
     private final FieldValues key;

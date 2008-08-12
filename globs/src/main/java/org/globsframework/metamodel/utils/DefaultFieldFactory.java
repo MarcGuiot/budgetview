@@ -594,6 +594,8 @@ class DefaultFieldFactory {
         return annotationClass.getMethod("value").invoke(annotation);
       }
       catch (Exception e) {
+        System.out.println("on type : '" + field.getGlobType().getName() + "'; on field '" + field.getName() + "'");
+        e.printStackTrace();
         throw new InvalidParameter("Cannot determine default value for field: " + field, e);
       }
     }

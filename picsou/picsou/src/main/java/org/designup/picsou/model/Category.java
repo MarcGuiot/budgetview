@@ -4,6 +4,7 @@ import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
+import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -24,19 +25,22 @@ public class Category {
   @Key
   public static IntegerField ID;
 
+  @NoObfuscation
   @NamingField
   public static StringField NAME;
 
+  @NoObfuscation
   @Target(Category.class)
   public static LinkField MASTER;
 
+  @NoObfuscation
   public static BooleanField SYSTEM;
 
   public static final Integer ALL = MasterCategory.ALL.getId();
   public static final Integer NONE = MasterCategory.NONE.getId();
 
   static {
-    GlobTypeLoader loader = GlobTypeLoader.init(Category.class);
+    GlobTypeLoader loader = GlobTypeLoader.init(Category.class, "category");
     loader.addConstants(MasterCategory.createGlobs());
   }
 

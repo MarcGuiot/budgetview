@@ -34,8 +34,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import static org.globsframework.model.utils.GlobMatchers.*;
-import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;

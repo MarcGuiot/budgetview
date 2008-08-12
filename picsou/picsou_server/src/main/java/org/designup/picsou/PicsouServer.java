@@ -77,6 +77,7 @@ public class PicsouServer {
     context.addServlet(new ServletHolder(new GetUserDataServlet(directory)), "/getUserData");
     context.addServlet(new ServletHolder(new CreateUserServlet(directory)), "/createUser");
     context.addServlet(new ServletHolder(new DisconnectServlet(directory)), "/disconnect");
+    context.addServlet(new ServletHolder(new ConnectServlet(directory)), "/connect");
 
     jetty.start();
   }

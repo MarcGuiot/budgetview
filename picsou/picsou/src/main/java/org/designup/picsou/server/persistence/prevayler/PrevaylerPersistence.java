@@ -48,8 +48,8 @@ public class PrevaylerPersistence implements Persistence {
     return hiddenUser.get(HiddenUser.USER_ID);
   }
 
-  public void register(Integer userId, byte[] mail, byte[] signature) {
-    rootDataManager.register(mail, signature);
+  public void register(Integer userId, byte[] mail, byte[] signature, String activationCode) {
+    rootDataManager.register(mail, signature, activationCode);
   }
 
   public UserInfo createUser(String name, boolean isRegisteredUser, byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {

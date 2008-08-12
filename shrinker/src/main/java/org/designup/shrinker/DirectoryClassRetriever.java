@@ -2,6 +2,7 @@ package org.designup.shrinker;
 
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+import org.objectweb.asm.ClassReader;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -53,8 +54,14 @@ public class DirectoryClassRetriever implements DependExtractor.ClassRetreiver {
       try {
         if (sourceFile.exists() && sourceFile.isFile()) {
           output.getParentFile().mkdirs();
-          new FileInputStream(sourceFile).getChannel().transferTo(0, sourceFile.length(),
-                                                                  new FileOutputStream(output).getChannel());
+          FileInputStream inputStream = new FileInputStream(sourceFile);
+          ClassReader classReader = new ClassReader(inputStream);
+          FilterWriter classWriter = new FilterWriter();
+          classReader.accept(classWriter, ClassReader.SKIP_DEBUG);
+          FileOutputStream outputStream = new FileOutputStream(output);
+          outputStream.write(classWriter.toByteArray());
+          outputStream.close();
+          inputStream.close();
         }
       }
       catch (IOException e) {
