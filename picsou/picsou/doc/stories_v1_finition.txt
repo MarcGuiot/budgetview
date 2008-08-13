@@ -1,4 +1,16 @@
-=== v0.6 : stabilisation + import de donnees ===
+Import
+------
+* LoginPanel: error login + "new user" => effacer message
+* LoginPanel: si aucun utilisateur, mode "accompagnement" pour la creation d'un compte
+* Bring to front sur Open With...
+
+Packaging
+---------
+* Packaging Mac (hdiutil?)
+
+Misc
+----
+* CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
 
 Bugs graphiques
 ---------------
@@ -28,4 +40,3 @@ Misc
 Fenetre import
 --------------
 * En mode "dialog", revoir hyperlien "annuler" et bouton "ignorer fichier" => introduire bouton "cancel" ?
-

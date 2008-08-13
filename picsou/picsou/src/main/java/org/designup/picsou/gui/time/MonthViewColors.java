@@ -46,14 +46,14 @@ public class MonthViewColors implements ColorChangeListener {
     futureBackgroundBottom = colorLocator.get(PicsouColors.PERIOD_FUTURE_BG_BOTTOM);
     grid = colorLocator.get(PicsouColors.PERIOD_GRID);
     yearSeparator = colorLocator.get(PicsouColors.PERIOD_YEAR_SEPARATOR);
-    futureSelectedTop = colorLocator.get(PicsouColors.PERIOD_FUTURE_SELECTION_BG_TOP);
-    futureSelectedBottom = colorLocator.get(PicsouColors.PERIOD_FUTURE_SELECTION_BG_BOTTOM);
-    currentSelectedTop = colorLocator.get(PicsouColors.PERIOD_CURRENT_SELECTION_BG_TOP);
-    currentSelectedBottom = colorLocator.get(PicsouColors.PERIOD_CURRENT_SELECTION_BG_BOTTOM);
-    pastSelectedTop = colorLocator.get(PicsouColors.PERIOD_PAST_SELECTION_BG_TOP);
-    pastSelectedBottom = colorLocator.get(PicsouColors.PERIOD_PAST_SELECTION_BG_BOTTOM);
-    selectedBottom = colorLocator.get(PicsouColors.PERIOD_YEAR_SELECTION_BG_BOTTOM);
-    selectedTop = colorLocator.get(PicsouColors.PERIOD_YEAR_SELECTION_BG_BOTTOM);
+    futureSelectedTop = colorLocator.get(PicsouColors.PERIOD_FUTURE_SELECTED_BG_TOP);
+    futureSelectedBottom = colorLocator.get(PicsouColors.PERIOD_FUTURE_SELECTED_BG_BOTTOM);
+    currentSelectedTop = colorLocator.get(PicsouColors.PERIOD_CURRENT_SELECTED_BG_TOP);
+    currentSelectedBottom = colorLocator.get(PicsouColors.PERIOD_CURRENT_SELECTED_BG_BOTTOM);
+    pastSelectedTop = colorLocator.get(PicsouColors.PERIOD_PAST_SELECTED_BG_TOP);
+    pastSelectedBottom = colorLocator.get(PicsouColors.PERIOD_PAST_SELECTED_BG_BOTTOM);
+    selectedBottom = colorLocator.get(PicsouColors.PERIOD_YEAR_SELECTED_BG_BOTTOM);
+    selectedTop = colorLocator.get(PicsouColors.PERIOD_YEAR_SELECTED_BG_TOP);
 
     text = colorLocator.get(PicsouColors.PERIOD_TEXT);
     textShadow = colorLocator.get(PicsouColors.PERIOD_TEXT_SHADOW);

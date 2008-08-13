@@ -1,5 +1,4 @@
-
-* serialiser SeriesBudget
+* Budget : block Occasionel => OccasionalSeriesStat
 
 * Budget / SeriesStat : mettre montants attendus en negatif si depenses
 
@@ -13,8 +12,6 @@
 
 * CategorizationDialog : ajouter une categorie a une enveloppe
 
-* TimeView : couleurs pour mois courant et futurs
-
 * Categorisation : selectionner serie apres creation
 
 * MonthStatView : gauge
@@ -22,7 +19,5 @@
 * Categorisation : bug selection apres affectation (selectionner les suivants)
 
 * Categorisation / occasionnel : multicolonnes
-
-* Budget : block Occasionel => OccasionalSeriesStat
 
 * Activation licence : cas ou pas de connexion internet

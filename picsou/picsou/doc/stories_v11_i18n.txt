@@ -2,8 +2,6 @@
 
 * Choix de la langue
 * I18N: sous-categories
-
-
 * Parsing transactions : internationaliser les regexp de transactionMatcher
 
 Gestion des devises

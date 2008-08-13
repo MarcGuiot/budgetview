@@ -16,7 +16,6 @@ Vue accueil
 TitleView
 --------
 - afficher des noms pour les multi-selections de mois ("juillet 2006 à août 2007")
-- home: titre type "Tableau de bord - juillet 2007"
 
 
 Vue budget
@@ -31,12 +30,6 @@ Vue releves
 - bug reset transactionDetails
 
 
-
-FMK
----
-- portee des styles dans splits
-
-
 Panneau edition series
 ----------------------
 - check nom
@@ -45,8 +38,5 @@ Panneau edition series
 - selection mois
 
 
-Vue "evolution"
----------------
-- histogramme evolution : stack recurrent/enveloppe/ponctuel
 
 
