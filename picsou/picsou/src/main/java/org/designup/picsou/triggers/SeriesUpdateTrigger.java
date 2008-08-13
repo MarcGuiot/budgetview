@@ -54,7 +54,8 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
 
   private void updateSeriesDependanciesOnDelete(Key series, GlobRepository repository) {
     Integer seriesId = series.get(Series.ID);
-    GlobList seriesBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, seriesId);
+    GlobList seriesBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
+      .getGlobs();
     repository.delete(seriesBudget);
     GlobList transactions = repository.getAll(Transaction.TYPE, fieldEquals(Transaction.SERIES, seriesId));
     for (Glob transaction : transactions) {
@@ -71,7 +72,8 @@ public class SeriesUpdateTrigger implements ChangeSetListener {
     int currentMonthId = time.getCurrentMonthId();
     Integer seriesId = series.get(Series.ID);
     Map<Integer, Glob> monthWithBudget =
-      toMap(repository.findByIndex(SeriesBudget.SERIES_INDEX, seriesId), SeriesBudget.MONTH);
+      toMap(repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId).getGlobs(),
+            SeriesBudget.MONTH);
 
     Integer[] monthIds = repository.getAll(Month.TYPE, GlobMatchers.fieldGreaterOrEqual(Month.ID, currentMonthId))
       .getSortedArray(Month.ID);

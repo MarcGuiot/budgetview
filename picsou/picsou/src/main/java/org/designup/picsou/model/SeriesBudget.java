@@ -1,20 +1,20 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.index.NotUniqueIndex;
+import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.utils.serialization.SerializedByteArrayOutput;
-import org.globsframework.utils.serialization.SerializedOutput;
-import org.globsframework.utils.serialization.SerializedInputOutputFactory;
-import org.globsframework.utils.serialization.SerializedInput;
-import org.globsframework.model.FieldValues;
 import org.globsframework.model.FieldSetter;
-import org.designup.picsou.server.serialization.PicsouGlobSerializer;
+import org.globsframework.model.FieldValues;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public class SeriesBudget {
   public static GlobType TYPE;
@@ -29,11 +29,11 @@ public class SeriesBudget {
 
   public static DoubleField AMOUNT;
 
-  public static NotUniqueIndex SERIES_INDEX;
+  public static MultiFieldUniqueIndex SERIES_INDEX;
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(SeriesBudget.class);
-    loader.defineNotUniqueIndex(SERIES_INDEX, SERIES);
+    loader.defineMultiFieldUniqueIndex(SERIES_INDEX, SERIES, MONTH);
   }
 
   public static class Serializer implements PicsouGlobSerializer {
