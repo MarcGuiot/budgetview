@@ -4,6 +4,7 @@ import org.globsframework.gui.splits.SplitsRepeatTest;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFieldComparator;
@@ -30,12 +31,13 @@ public class GlobsPanelBuilderTest extends UISpecTestCase {
       "    <label ref='name'/>" +
       "  </repeat>" +
       "</splits>");
-    builder.addRepeat("repeat", DummyObject.TYPE, GlobMatchers.ALL,
-                      new GlobFieldComparator(DummyObject.NAME), new RepeatComponentFactory<Glob>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, Glob item) {
-        cellBuilder.add("name", new JLabel(item.get(DummyObject.NAME)));
-      }
-    });
+    GlobRepeat repeat =
+      builder.addRepeat("repeat", DummyObject.TYPE, GlobMatchers.ALL,
+                        new GlobFieldComparator(DummyObject.NAME), new RepeatComponentFactory<Glob>() {
+        public void registerComponents(RepeatCellBuilder cellBuilder, Glob item) {
+          cellBuilder.add("name", new JLabel(item.get(DummyObject.NAME)));
+        }
+      });
     JPanel component = (JPanel)builder.doLoad();
     SplitsRepeatTest.checkPanel(component, "label:a\n" +
                                            "label:c\n");
@@ -46,5 +48,8 @@ public class GlobsPanelBuilderTest extends UISpecTestCase {
     repository.delete(key1);
     SplitsRepeatTest.checkPanel(component, "label:b\n" +
                                            "label:c\n");
+    
+    repeat.setFilter(GlobMatchers.fieldEquals(DummyObject.NAME, "b"));
+    SplitsRepeatTest.checkPanel(component, "label:b\n");
   }
 }

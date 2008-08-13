@@ -90,7 +90,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
       public void process(Field sourceField, Field targetField) {
         Object value = getValue(sourceField);
         if (value != null) {
-          valuesBuilder.setObject(targetField, value);
+          valuesBuilder.setValue(targetField, value);
         }
       }
     });
@@ -116,7 +116,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
     FieldValuesBuilder builder = FieldValuesBuilder.init();
     for (Field field : type.getFields()) {
       if (!field.isKeyField()) {
-        builder.setObject(field, values[field.getIndex()]);
+        builder.setValue(field, values[field.getIndex()]);
       }
     }
     return builder.get();

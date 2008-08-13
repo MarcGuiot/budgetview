@@ -63,12 +63,12 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter {
   }
 
   public GlobBuilder setValue(Field field, Object value) throws ItemNotFound {
-    fieldValuesBuilder.setObject(field, value);
+    fieldValuesBuilder.setValue(field, value);
     return this;
   }
 
   public GlobBuilder setObject(Field field, Object objectValue) {
-    fieldValuesBuilder.setObject(field, objectValue);
+    fieldValuesBuilder.setValue(field, objectValue);
     return this;
   }
 
@@ -78,11 +78,21 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter {
 
   private GlobBuilder(GlobType globType) {
     this.globType = globType;
+    for (Field field : globType.getFields()) {
+      fieldValuesBuilder.setValue(field, field.getDefaultValue());
+    }
   }
 
   public static GlobBuilder init(GlobType type, FieldValues values) {
     GlobBuilder builder = new GlobBuilder(type);
     values.safeApply(builder);
+    return builder;
+  }
+
+  public static GlobBuilder init(GlobType type, FieldValue... values) {
+    GlobBuilder builder = new GlobBuilder(type);
+    FieldValues fieldValues = new ArrayFieldValues(values);
+    fieldValues.safeApply(builder);
     return builder;
   }
 

@@ -278,7 +278,7 @@ public class GlobTypeLoader {
     ((DefaultUniqueIndex)type.getIndex(index.getName())).setField(field);
   }
 
-  public void defineNotUniqueIndex(NotUniqueIndex index, Field field) {
+  public void defineNonUniqueIndex(NotUniqueIndex index, Field field) {
     ((DefaultNotUniqueIndex)type.getIndex(index.getName())).setField(field);
   }
 

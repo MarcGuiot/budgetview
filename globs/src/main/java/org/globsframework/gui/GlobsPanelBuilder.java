@@ -11,6 +11,7 @@ import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.views.*;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
@@ -116,18 +117,18 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return this;
   }
 
-  public Repeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
+  public GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
                           RepeatComponentFactory factory) {
     final GlobStringifier stringifier = directory.get(DescriptionService.class).getStringifier(type);
     return addRepeat(name, type, matcher, stringifier.getComparator(repository), factory);
   }
 
-  public Repeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
+  public GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
                           Comparator<Glob> comparator, RepeatComponentFactory factory) {
     return addRepeat(name, type, matcher, comparator, repository, this, factory);
   }
 
-  public static Repeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
+  public static GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
                           Comparator<Glob> comparator, GlobRepository repository, SplitsBuilder builder,
                           RepeatComponentFactory factory) {
     GlobRepeatListener listener = new GlobRepeatListener();
@@ -135,10 +136,10 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     model.setFilter(matcher);
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
     listener.set(model, repeat);
-    return repeat;
+    return listener;
   }
 
-  public static Repeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
+  public static GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
                           Comparator<Glob> comparator, GlobRepository repository, RepeatCellBuilder builder,  
                           RepeatComponentFactory factory) {
     GlobRepeatListener listener = new GlobRepeatListener();
@@ -146,7 +147,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     model.setFilter(matcher);
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
     listener.set(model, repeat);
-    return repeat;
+    return listener;
   }
 
   private <T extends ComponentHolder> T store(T component) {
@@ -162,7 +163,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     componentHolders.clear();
   }
 
-  private static class GlobRepeatListener implements GlobViewModel.Listener {
+  private static class GlobRepeatListener implements GlobViewModel.Listener, GlobRepeat {
     private GlobViewModel model;
     private Repeat<Glob> repeat;
 
@@ -189,6 +190,10 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     public void set(GlobViewModel model, Repeat<Glob> repeat) {
       this.model = model;
       this.repeat = repeat;
+    }
+
+    public void setFilter(GlobMatcher matcher) {
+      model.setFilter(matcher);
     }
   }
 }

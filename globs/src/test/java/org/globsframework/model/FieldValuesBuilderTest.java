@@ -7,7 +7,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 public class FieldValuesBuilderTest extends TestCase {
   public void testValuesMustComplyWithTheFieldType() throws Exception {
     try {
-      FieldValuesBuilder.init().setObject(DummyObject.PRESENT, "a");
+      FieldValuesBuilder.init().setValue(DummyObject.PRESENT, "a");
       fail();
     }
     catch (InvalidParameter e) {

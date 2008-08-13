@@ -97,7 +97,7 @@ public class RemoteExecutor {
     final FieldValuesBuilder values = FieldValuesBuilder.init();
     Deserializer deserializer = new Deserializer(new Request() {
       public void update(Field field, Object value) {
-        values.setObject(field, value);
+        values.setValue(field, value);
       }
     }, input);
     int attrCount = input.readNotNullInt();

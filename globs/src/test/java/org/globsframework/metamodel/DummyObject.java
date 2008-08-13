@@ -36,6 +36,6 @@ public class DummyObject {
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(DummyObject.class);
     loader.defineUniqueIndex(NAME_INDEX, NAME);
-    loader.defineNotUniqueIndex(DATE_INDEX, DATE);
+    loader.defineNonUniqueIndex(DATE_INDEX, DATE);
   }
 }

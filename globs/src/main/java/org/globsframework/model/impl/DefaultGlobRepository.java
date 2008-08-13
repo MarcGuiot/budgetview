@@ -610,7 +610,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
           public void process(Field sourceField, Field targetField) {
             Object value = glob.getValue(sourceField);
             if (value != null) {
-              valuesBuilder.setObject(targetField, value);
+              valuesBuilder.setValue(targetField, value);
             }
           }
         });

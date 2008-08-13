@@ -38,7 +38,7 @@ public class KeyBuilder {
 
   private KeyBuilder(Field field, Object value) {
     globType = field.getGlobType();
-    fieldValuesBuilder.setObject(field, value);
+    fieldValuesBuilder.setValue(field, value);
   }
 
   public KeyBuilder set(Field field, Object value) throws InvalidParameter {
@@ -46,7 +46,7 @@ public class KeyBuilder {
       throw new InvalidParameter("Unexpected field '" + field.toString() + "' used in a '" +
                                  globType.getName() + "' key");
     }
-    fieldValuesBuilder.setObject(field, value);
+    fieldValuesBuilder.setValue(field, value);
     return this;
   }
 

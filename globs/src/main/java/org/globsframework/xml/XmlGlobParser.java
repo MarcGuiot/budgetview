@@ -113,7 +113,7 @@ public class XmlGlobParser {
       }
       linkToUse.apply(new FieldMappingFunctor() {
         public void process(Field sourceField, Field targetField) {
-          builder.setObject(sourceField, parent.getValue(targetField));
+          builder.setValue(sourceField, parent.getValue(targetField));
         }
       });
     }
@@ -152,7 +152,7 @@ public class XmlGlobParser {
     }
 
     private void processFieldValue(FieldValuesBuilder fieldValuesBuilder, Field field, String xmlValue) {
-      fieldValuesBuilder.setObject(field, fieldConverter.toObject(field, xmlValue));
+      fieldValuesBuilder.setValue(field, fieldConverter.toObject(field, xmlValue));
     }
 
     private void processLinkValue(Link link,
@@ -174,7 +174,7 @@ public class XmlGlobParser {
 
       link.apply(new FieldMappingFunctor() {
         public void process(Field sourceField, Field targetField) {
-          fieldValuesBuilder.setObject(sourceField, targetGlob.getValue(targetField));
+          fieldValuesBuilder.setValue(sourceField, targetGlob.getValue(targetField));
         }
       });
     }

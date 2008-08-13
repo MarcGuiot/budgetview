@@ -55,7 +55,7 @@ public class ChangeSetSequencer {
         values.apply(new FieldValues.Functor() {
           public void process(Field field, Object value) throws Exception {
             if (field.isRequired()) {
-              builderForCreation.setObject(field, value);
+              builderForCreation.setValue(field, value);
             }
             else {
               builderForUpdate.setValue(field, value, field.getDefaultValue());
