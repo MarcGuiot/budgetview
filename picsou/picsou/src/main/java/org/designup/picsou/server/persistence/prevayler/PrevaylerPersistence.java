@@ -65,7 +65,7 @@ public class PrevaylerPersistence implements Persistence {
   }
 
   public Glob getHiddenUser(byte[] cryptedLinkInfo) {
-    return rootDataManager.getHiddenUser(Encoder.b64Decode(cryptedLinkInfo));
+    return rootDataManager.getHiddenUser(Encoder.byteToString(cryptedLinkInfo));
   }
 
   public void close() {

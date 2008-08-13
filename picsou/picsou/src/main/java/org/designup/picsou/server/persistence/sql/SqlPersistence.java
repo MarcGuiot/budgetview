@@ -60,7 +60,7 @@ public class SqlPersistence implements Persistence {
       GlobStream hiddenUserStream =
         sqlConnection.getQueryBuilder(HiddenUser.TYPE,
                                       Constraints.equal(HiddenUser.ENCRYPTED_LINK_INFO,
-                                                        Encoder.b64Decode(cryptedLinkInfo)))
+                                                        Encoder.byteToString(cryptedLinkInfo)))
           .getQuery().execute();
       if (hiddenUserStream.next()) {
         throw new IdentificationFailed("Duplicate info");
@@ -83,7 +83,7 @@ public class SqlPersistence implements Persistence {
         .getRequest()
         .run();
       sqlConnection.getCreateBuilder(HiddenUser.TYPE)
-        .set(HiddenUser.ENCRYPTED_LINK_INFO, Encoder.b64Decode(cryptedLinkInfo))
+        .set(HiddenUser.ENCRYPTED_LINK_INFO, Encoder.byteToString(cryptedLinkInfo))
         .set(HiddenUser.USER_ID, userId)
         .getRequest()
         .run();
@@ -196,7 +196,7 @@ public class SqlPersistence implements Persistence {
   public Glob getHiddenUser(byte[] cryptedLinkInfo) {
     return sqlService.getDb().getQueryBuilder(HiddenUser.TYPE,
                                               Constraints.equal(HiddenUser.ENCRYPTED_LINK_INFO,
-                                                                Encoder.b64Decode(cryptedLinkInfo)))
+                                                                Encoder.byteToString(cryptedLinkInfo)))
       .selectAll().getQuery().executeUnique();
   }
 

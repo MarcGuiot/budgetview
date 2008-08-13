@@ -140,6 +140,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
         if (System.currentTimeMillis() > end) {
           fail("no mail received");
         }
+        receivedEmail = mailServer.getReceivedEmail();
       }
       if (receivedEmail.hasNext()) {
         SmtpMessage message = (SmtpMessage)receivedEmail.next();

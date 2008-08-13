@@ -22,13 +22,17 @@ public class User {
   public static StringField MAIL;
   public static StringField ACTIVATION_CODE;
   public static BlobField SIGNATURE;
-  public static IntegerField ACTIVATION_STEP;
+  public static IntegerField ACTIVATION_STATE;
 
   public static final int ACTIVATION_IN_PROCESS = 1;
   public static final int ACTIVATION_OK = 2;
   public static final int ACTIVATION_FAIL_BAD_SIGNATURE = 3;
   public static final int ACTIVATION_FAIL_CAN_NOT_CONNECT = 4;
   public static final int ACTIVATION_FAIL_HTTP_REQUEST = 5;
+  public static final int ACTIVATION_FAIL_MAIL_UNKNOWN = 6;
+  public static final int ACTIVATED_AS_ANONYMOUS_BUT_REGISTERED_USER = 7;
+  // On n'a pas envoyé au serveur les mail, signature et code d'activation alors que c'est un utilisateur
+  // enregistré (donc le a priori le repo a ete modifié manuellement)
 
 
   static {

@@ -58,11 +58,25 @@ public class LicenseTest extends LicenseTestCase {
 
   public void testConnectAtStartup() throws Exception {
     SqlConnection connection = getSqlConnection();
+    String mail = "alfred@free.fr";
+    register(connection, mail);
+
+    window.dispose();
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    startPicsou();
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logUser("user", "passw@rd");
+    Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
+    assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
+    MonthChecker monthChecker = new MonthChecker(window);
+    monthChecker.assertSpanEquals("2008/07", "2010/07");
+  }
+
+  private void register(SqlConnection connection, String mail) throws InterruptedException {
     checkRepoIdIsUpdated(connection, 1L, null);
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
     loginChecker.skipImport();
-    String mail = "alfred@free.fr";
     connection.getCreateBuilder(License.TYPE)
       .set(License.MAIL, mail)
       .set(License.ACTIVATION_CODE, "1234")
@@ -75,16 +89,6 @@ public class LicenseTest extends LicenseTestCase {
     assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
     assertTrue(license.get(License.SIGNATURE).length > 1);
     MonthChecker monthChecker = new MonthChecker(window);
-    monthChecker.assertSpanEquals("2008/07", "2010/07");
-
-    window.dispose();
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
-    startPicsou();
-    loginChecker = new LoginChecker(window);
-    loginChecker.logUser("user", "passw@rd");
-    license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
-    assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
-    monthChecker = new MonthChecker(window);
     monthChecker.assertSpanEquals("2008/07", "2010/07");
   }
 
@@ -123,6 +127,26 @@ public class LicenseTest extends LicenseTestCase {
     checkPreviousVersionValidity("2010/07");
     activateNewLicenseInNewVersion(newActivationCode);
     checkPreviousVersionValidity("2008/07");
+  }
+
+  public void testRegisterAndBadlyReRegister() throws Exception {
+    SqlConnection connection = getSqlConnection();
+    String mail = "alfred@free.fr";
+    register(connection, mail);
+
+    window.dispose();
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    startPicsou();
+
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logUser("user", "passw@rd");
+    LicenseChecker checker = new LicenseChecker(window);
+    checker.enterLicense("titi@foo.org", "4321");
+
+    Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
+    assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
+    MonthChecker monthChecker = new MonthChecker(window);
+    monthChecker.assertSpanEquals("2008/07", "2010/07");
   }
 
   private void restartPicsouToIncrementCount() {

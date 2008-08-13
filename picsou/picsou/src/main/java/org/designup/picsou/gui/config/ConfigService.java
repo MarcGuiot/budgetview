@@ -6,7 +6,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.designup.picsou.client.http.HttpsClientTransport;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.utils.KeyChecker;
+import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.ServerInformation;
 import org.designup.picsou.model.User;
@@ -18,6 +18,7 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.Encoder;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -90,15 +91,15 @@ public class ConfigService {
     return loadConfig(directory, repository);
   }
 
-  private boolean sendRequestForNewConfig() {
+  private Boolean sendRequestForNewConfig() {
     String url = URL + REQUEST_FOR_CONFIG;
     try {
       PostMethod postMethod = new PostMethod(url);
       postMethod.setRequestHeader(HEADER_CONFIG_VERSION, Long.toString(localConfigVersion));
       postMethod.setRequestHeader(HEADER_JAR_VERSION, Long.toString(localJarVersion));
       postMethod.setRequestHeader(HEADER_APPLICATION_VERSION, Long.toString(applicationVersion));
-      postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.b64Decode(repoId));
-      if (signature != null && signature.length() > 1) {
+      postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
+      if (signature != null && signature.length() > 1 && mail != null && activationCode != null) {
         postMethod.setRequestHeader(HEADER_MAIL, mail);
         postMethod.setRequestHeader(HEADER_SIGNATURE, signature);
         postMethod.setRequestHeader(HEADER_CODE, activationCode);
@@ -130,13 +131,16 @@ public class ConfigService {
           }
         }
         Header validityHeader = postMethod.getResponseHeader(HEADER_IS_VALIDE);
+        if (validityHeader == null) {
+          return null;
+        }
         boolean validity = "true".equalsIgnoreCase(validityHeader.getValue());
         if (!validity) {
           if (checkMailSent(postMethod)) {
             mailSend = true;
           }
+          return false;
         }
-        return validity;
       }
       return true;
     }
@@ -150,7 +154,7 @@ public class ConfigService {
     return header != null && header.getValue().equals("true");
   }
 
-  public void sendRegister(String mail, String code, GlobRepository repository) {
+  public void sendRegister(String mail, String code, final GlobRepository repository) {
     Utils.beginRemove();
     if (URL == null || URL.length() == 0) {
       return;
@@ -158,30 +162,25 @@ public class ConfigService {
     Utils.endRemove();
     try {
       String url = URL + REGISTER;
-      PostMethod postMethod = new PostMethod(url);
+      final PostMethod postMethod = new PostMethod(url);
       postMethod.setRequestHeader(HEADER_MAIL, mail);
       postMethod.setRequestHeader(HEADER_CODE, code);
-      postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.b64Decode(repoId));
+      postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
       httpClient.executeMethod(postMethod);
-      Header header = postMethod.getRequestHeader(HEADER_MAIL_UNKNOWN);
       int statusCode = postMethod.getStatusCode();
       if (statusCode == 200) {
-        Header signature = postMethod.getResponseHeader(HEADER_SIGNATURE);
-        if (signature != null) {
-          String value = signature.getValue();
-          repository.update(User.KEY, User.SIGNATURE, Encoder.b64Encode(value));
-        }
-        else {
-          repository.update(User.KEY, User.ACTIVATION_STEP, User.ACTIVATION_FAIL_BAD_SIGNATURE);
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            computeResponse(repository, postMethod);
+          }
+        });
       }
       else {
-        repository.update(User.KEY, User.ACTIVATION_STEP, User.ACTIVATION_FAIL_HTTP_REQUEST);
+        updateRepository(repository, User.ACTIVATION_FAIL_HTTP_REQUEST);
       }
     }
     catch (final Exception e) {
-      repository.update(User.KEY, User.ACTIVATION_STEP, User.ACTIVATION_FAIL_CAN_NOT_CONNECT);
-
+      updateRepository(repository, User.ACTIVATION_FAIL_CAN_NOT_CONNECT);
       // pas de stack risque de faciliter le piratage
       Thread thread = new Thread() {
         public void run() {
@@ -202,13 +201,45 @@ public class ConfigService {
     }
   }
 
+  private void updateRepository(final GlobRepository repository, final int cause) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        repository.update(User.KEY, User.ACTIVATION_STATE, cause);
+      }
+    });
+  }
+
+  private void computeResponse(GlobRepository repository, PostMethod postMethod) {
+    repository.enterBulkDispatchingMode();
+    try {
+      Header header = postMethod.getRequestHeader(HEADER_MAIL_UNKNOWN);
+      if (header != null && "true".equalsIgnoreCase(header.getValue())) {
+        repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_MAIL_UNKNOWN);
+      }
+      else {
+        Header signature = postMethod.getResponseHeader(HEADER_SIGNATURE);
+        if (signature != null) {
+          String value = signature.getValue();
+          repository.update(UserPreferences.key, UserPreferences.REGISTRED_USER, true);
+          repository.update(User.KEY, User.SIGNATURE, Encoder.stringToByte(value));
+        }
+        else {
+          repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_BAD_SIGNATURE);
+        }
+      }
+    }
+    finally {
+      repository.completeBulkDispatchingMode();
+    }
+  }
+
   public void update(byte[] repoId, long launchCount, byte[] mail, byte[] signature, String activationCode) {
     this.repoId = repoId;
     if (mail != null && mail.length != 0 && signature != null && signature.length != 0
         && activationCode != null) {
-      isValideSignature = KeyChecker.checkSignature(mail, signature);
+      isValideSignature = KeyService.checkSignature(mail, signature);
       this.mail = new String(mail);
-      this.signature = Encoder.b64Decode(signature);
+      this.signature = Encoder.byteToString(signature);
       this.launchCount = launchCount;
       this.activationCode = activationCode;
     }
@@ -221,10 +252,20 @@ public class ConfigService {
   @Inline
   public static void check(Directory directory, GlobRepository repository) {
     ConfigService configService = directory.get(ConfigService.class);
+    if (repository.get(UserPreferences.key).get(UserPreferences.REGISTRED_USER)) {
+      if (configService.serverVerifiedValidity() == null) {
+        repository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT,
+                          UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS);
+        repository.update(User.KEY, User.ACTIVATION_STATE,
+                          User.ACTIVATED_AS_ANONYMOUS_BUT_REGISTERED_USER);
+      }
+    }
     if (!configService.isValideSignature() ||
         (configService.serverVerifiedValidity() != null && !configService.serverVerifiedValidity())) {
-//      repository.update(User.KEY, User.ACTIVATION_STEP, User.ACTIVATION_FAIL); todo
-      repository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT, 0);
+
+      repository.update(UserPreferences.key, UserPreferences.REGISTRED_USER, false);
+      repository.update(UserPreferences.key, UserPreferences.FUTURE_MONTH_COUNT,
+                        UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS);
     }
     if (configService.isMailSend()) {
       repository.update(ServerInformation.KEY, ServerInformation.MAIL_SEND, true);

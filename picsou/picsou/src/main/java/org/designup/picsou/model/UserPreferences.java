@@ -2,7 +2,9 @@ package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -27,6 +29,11 @@ public class UserPreferences {
 
   public static IntegerField FUTURE_MONTH_COUNT;
 
+  @DefaultBoolean(false)
+  public static BooleanField REGISTRED_USER;
+
+  public static final Integer VISIBLE_MONTH_COUNT_FOR_ANONYMOUS = 0;
+
   static {
     GlobTypeLoader.init(UserPreferences.class, "userPreferences");
     key = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
@@ -39,6 +46,7 @@ public class UserPreferences {
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeString(values.get(LAST_DIRECTORY));
       outputStream.writeInteger(values.get(FUTURE_MONTH_COUNT));
+      outputStream.writeBoolean(values.get(REGISTRED_USER));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -52,6 +60,7 @@ public class UserPreferences {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(LAST_DIRECTORY, input.readString());
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTRED_USER, input.readBoolean());
     }
 
     public int getWriteVersion() {

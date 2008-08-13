@@ -19,7 +19,7 @@ public class DeleteUserAndHiddenUser implements Transaction, CustomSerializable 
 
   public DeleteUserAndHiddenUser(String name, byte[] cryptedLinkInfo) {
     this.name = name;
-    this.cryptedLinkInfo = Encoder.b64Decode(cryptedLinkInfo);
+    this.cryptedLinkInfo = Encoder.byteToString(cryptedLinkInfo);
   }
 
   private DeleteUserAndHiddenUser() {

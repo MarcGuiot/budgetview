@@ -33,7 +33,7 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
     this.isRegisteredUser = isRegisteredUser;
     this.encryptedPassword = cryptedPassword;
     this.linkInfo = linkInfo;
-    this.encryptedLinkInfo = Encoder.b64Decode(cryptedLinkInfo);
+    this.encryptedLinkInfo = Encoder.byteToString(cryptedLinkInfo);
   }
 
   private CreateUserAndHiddenUser() {
