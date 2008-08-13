@@ -236,18 +236,4 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactions.getTable().selectRows(1);
     transactionDetails.checkBankDateNotVisible();
   }
-
-  public void testChangeMonthClearTransactionSelection(){
-    OfxBuilder
-      .init(this)
-      .addTransactionWithNote("2006/06/01", -70.00, "essence", "frais pro", MasterCategory.TRANSPORTS)
-      .addTransactionWithNote("2006/05/01", -70.00, "essence", "frais pro", MasterCategory.TRANSPORTS)
-      .load();
-
-    periods.selectCell(0);
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkAmount("Amount", "-70.00");
-    periods.selectCell(1);
-    transactionDetails.checkNoAmount();
-  }
 }

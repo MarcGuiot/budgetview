@@ -4,6 +4,7 @@ import org.designup.picsou.gui.components.JGradientPanel;
 import org.designup.picsou.gui.components.RoundedButton;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.ColorServiceEditor;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
