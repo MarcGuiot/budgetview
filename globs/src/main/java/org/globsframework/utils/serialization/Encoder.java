@@ -8,12 +8,12 @@ public class Encoder {
   private Encoder() {
   }
 
-  public static String b64Decode(byte[] cryptedBytes) {
+  public static String byteToString(byte[] cryptedBytes) {
     BASE64Encoder b64 = new BASE64Encoder();
     return b64.encode(cryptedBytes);
   }
 
-  public static byte[] b64Encode(String text) {
+  public static byte[] stringToByte(String text) {
     try {
       BASE64Decoder b64 = new BASE64Decoder();
       return b64.decodeBuffer(text);
