@@ -20,7 +20,7 @@ public class TransactionPlannedTriggerTest extends PicsouTestCase {
     listener.reset();
     repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new SeriesUpdateTrigger(directory));
-    repository.addTrigger(new BudgetStatComputer());
+    repository.addTrigger(new BudgetStatTrigger());
     repository.addTrigger(new TransactionPlannedTrigger());
 
     repository.create(USER_PREFERENCES_KEY, FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT, 3));

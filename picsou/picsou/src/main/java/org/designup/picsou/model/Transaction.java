@@ -70,8 +70,8 @@ public class Transaction {
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(Transaction.class, "transaction");
-    loader.defineNotUniqueIndex(LABEL_FOR_CATEGORISATION_INDEX, LABEL_FOR_CATEGORISATION);
-    loader.defineNotUniqueIndex(MONTH_INDEX, MONTH);
+    loader.defineNonUniqueIndex(LABEL_FOR_CATEGORISATION_INDEX, LABEL_FOR_CATEGORISATION);
+    loader.defineNonUniqueIndex(MONTH_INDEX, MONTH);
   }
 
   public static int fullDate(Glob transaction) {

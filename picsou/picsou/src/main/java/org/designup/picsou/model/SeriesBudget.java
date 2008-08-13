@@ -33,7 +33,7 @@ public class SeriesBudget {
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(SeriesBudget.class);
-    loader.defineNotUniqueIndex(SERIES_INDEX, SERIES);
+    loader.defineNonUniqueIndex(SERIES_INDEX, SERIES);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

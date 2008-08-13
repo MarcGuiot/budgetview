@@ -43,7 +43,7 @@ public class BankEntity {
 
   static {
     GlobTypeLoader.init(BankEntity.class, "bankEntity")
-      .defineNotUniqueIndex(BANK_INDEX, BANK);
+      .defineNonUniqueIndex(BANK_INDEX, BANK);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

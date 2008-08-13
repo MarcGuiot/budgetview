@@ -10,6 +10,7 @@ public class SerializationManager {
 
   public static void init(GlobModel globModel) {
     SERIALIZATION_PROPERTY = globModel.createGlobTypeProperty("serialization");
+
     Account.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Account.Serializer());
     Bank.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Bank.Serializer());
     BankEntity.TYPE.updateProperty(SERIALIZATION_PROPERTY, new BankEntity.Serializer());
@@ -21,6 +22,7 @@ public class SerializationManager {
     Month.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Month.Serializer());
     Series.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Series.Serializer());
     SeriesBudget.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SeriesBudget.Serializer());
+    SeriesToCategory.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SeriesToCategory.Serializer());
     UserPreferences.TYPE.updateProperty(SERIALIZATION_PROPERTY, new UserPreferences.Serializer());
   }
 }

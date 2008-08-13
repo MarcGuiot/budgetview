@@ -10,10 +10,12 @@
       <panel ref="recurringBudgetView"/>
     </verticalSplit>
 
-    <column marginLeft="20" weightX="1.0">
+    <filler fill="horizontal" weightX="0.5"/>
+
+    <verticalSplit dividerLocation="300" opaque="false" weightX="1.0">
       <panel ref="envelopeBudgetView"/>
-      <filler fill="vertical" weightY="0.1"/>
-    </column>
+      <panel ref="occasionalBudgetView"/>
+    </verticalSplit>
 
     <filler fill="horizontal" weightX="1.0"/>
 

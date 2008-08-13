@@ -61,11 +61,12 @@ public class PicsouInit {
     repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
     repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new SeriesUpdateTrigger(directory));
-    repository.addTrigger(new BudgetStatComputer());
+    repository.addTrigger(new BudgetStatTrigger());
     repository.addTrigger(new TransactionPlannedTrigger());
-    repository.addTrigger(new MonthStatComputer(repository));
+    repository.addTrigger(new MonthStatTrigger(repository));
     final SeriesStatTrigger seriesStatTrigger = new SeriesStatTrigger();
     repository.addTrigger(seriesStatTrigger);
+    repository.addTrigger(new OccasionalSeriesStatTrigger());
 
     repository.create(User.TYPE,
                       value(User.ID, User.SINGLETON_ID),
@@ -81,8 +82,8 @@ public class PicsouInit {
           generator.update(field, lastAllocatedId);
         }
       });
-      Collection<GlobType> serverType = userData.getTypes();
-      repository.reset(userData, serverType.toArray(new GlobType[serverType.size()]));
+      Collection<GlobType> serverTypes = userData.getTypes();
+      repository.reset(userData, serverTypes.toArray(new GlobType[serverTypes.size()]));
     }
     catch (Exception e) {
       throw new InvalidData(Lang.get("login.data.load.fail"), e);

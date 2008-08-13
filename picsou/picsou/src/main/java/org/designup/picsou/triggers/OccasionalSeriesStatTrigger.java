@@ -7,8 +7,7 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Utils;
 
 import java.util.List;
@@ -118,12 +117,11 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
   }
 
   private void updateStat(Glob stat, Integer categoryId, Integer monthId, int multiplier, Double amount, GlobRepository repository) {
-    double newAmount = stat.get(OccasionalSeriesStat.AMOUNT) + multiplier * amount;
-    repository.update(stat.getKey(), OccasionalSeriesStat.AMOUNT, newAmount);
+    double newAmount = updateStat(stat, multiplier, amount, repository);
 
     if (newAmount == 0.0) {
       GlobList transactions = repository.findByIndex(Transaction.MONTH_INDEX, monthId)
-        .filterSelf(GlobMatchers.and(
+        .filterSelf(and(
           fieldEquals(Transaction.CATEGORY, categoryId),
           fieldEquals(Transaction.SERIES, Series.OCCASIONAL_SERIES_ID),
           fieldEquals(Transaction.PLANNED, false)), repository);
@@ -131,6 +129,12 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
         repository.delete(stat.getKey());
       }
     }
+  }
+
+  private double updateStat(Glob stat, int multiplier, Double amount, GlobRepository repository) {
+    double newAmount = stat.get(OccasionalSeriesStat.AMOUNT) + multiplier * amount;
+    repository.update(stat.getKey(), OccasionalSeriesStat.AMOUNT, newAmount);
+    return newAmount;
   }
 
   private Key getKey(Integer categoryId, Integer monthId) {
@@ -154,5 +158,18 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+    if (!changedTypes.contains(Transaction.TYPE)) {
+      return;
+    }
+
+    repository.deleteAll(OccasionalSeriesStat.TYPE);
+
+    for (Glob transaction : repository.getAll(Transaction.TYPE,
+                                              and(fieldEquals(Transaction.SERIES, Series.OCCASIONAL_SERIES_ID),
+                                                  fieldEquals(Transaction.PLANNED, false)))) {
+      Glob stat =
+        repository.findOrCreate(getKey(transaction.get(Transaction.CATEGORY), transaction.get(Transaction.MONTH)));
+      updateStat(stat, +1, transaction.get(Transaction.AMOUNT), repository);
+    }
   }
 }

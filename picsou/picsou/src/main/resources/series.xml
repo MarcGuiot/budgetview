@@ -14,14 +14,6 @@
           january='true' february='true' march='true' april='true' may='true' june='true' july='true'
           august='true' september='true' october='true' november='true' december='true'/>
 
-  <seriesToCategory id='1' seriesName='occasional' categoryName="multimedia"/>
-  <seriesToCategory id='2' seriesName='occasional' categoryName="clothing"/>
-  <seriesToCategory id='3' seriesName='occasional' categoryName="leisures"/>
-  <seriesToCategory id='4' seriesName='occasional' categoryName="beauty"/>
-
-  <series id="10" name="groceries" budgetAreaName="expensesEnvelope" defaultCategoryName="food"/>
-  <seriesToCategory id='100' seriesName='groceries' categoryName="food"/>
-  <seriesToCategory id='101' seriesName='groceries' categoryName="house"/>
   <series id="10" name="groceries" budgetAreaName="expensesEnvelope" defaultCategoryName="food"
           profileTypeName="monthly"
           january='true' february='true' march='true' april='true' may='true' june='true' july='true'

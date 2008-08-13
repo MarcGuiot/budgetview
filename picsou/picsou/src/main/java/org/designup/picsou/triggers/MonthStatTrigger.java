@@ -12,10 +12,10 @@ import org.globsframework.utils.Utils;
 import static java.lang.Math.abs;
 import java.util.*;
 
-public class MonthStatComputer implements ChangeSetListener {
+public class MonthStatTrigger implements ChangeSetListener {
   private GlobRepository repository;
 
-  public MonthStatComputer(GlobRepository repository) {
+  public MonthStatTrigger(GlobRepository repository) {
     this.repository = repository;
   }
 

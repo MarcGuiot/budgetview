@@ -10,7 +10,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Dates;
 
-public class BudgetStatComputerTest extends PicsouTestCase {
+public class BudgetStatTriggerTest extends PicsouTestCase {
   private Key budget_0;
 
   protected void setUp() throws Exception {
@@ -26,7 +26,7 @@ public class BudgetStatComputerTest extends PicsouTestCase {
   }
 
   private void createSeriesBudget() {
-    repository.addTrigger(new BudgetStatComputer());
+    repository.addTrigger(new BudgetStatTrigger());
     repository.create(Key.create(Series.TYPE, 0),
                       value(Series.BUDGET_AREA, BudgetArea.RECURRING_EXPENSES.getId()),
                       value(Series.AMOUNT, 30.0));

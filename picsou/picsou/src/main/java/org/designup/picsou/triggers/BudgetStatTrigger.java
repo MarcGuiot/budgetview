@@ -9,7 +9,7 @@ import org.globsframework.model.utils.GlobUtils;
 
 import java.util.List;
 
-public class BudgetStatComputer implements ChangeSetListener {
+public class BudgetStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {

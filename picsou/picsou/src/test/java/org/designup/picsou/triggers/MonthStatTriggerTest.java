@@ -9,7 +9,7 @@ import org.globsframework.metamodel.Field;
 
 import java.util.Collections;
 
-public class MonthStatComputerTest extends PicsouTestCase {
+public class MonthStatTriggerTest extends PicsouTestCase {
   public void testStandardCase() throws Exception {
     String input =
       "<series name='salary' budgetAreaName='income'/>" +
@@ -273,8 +273,8 @@ public class MonthStatComputerTest extends PicsouTestCase {
   }
 
   private void updateStats() {
-    MonthStatComputer computer = new MonthStatComputer(repository);
-    computer.run(Collections.<Integer>emptySet());
+    MonthStatTrigger trigger = new MonthStatTrigger(repository);
+    trigger.run(Collections.<Integer>emptySet());
   }
 
   private MonthStatChecker init(Field field) {

@@ -19,6 +19,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/10", -50.00, "Monoprix")
       .addTransaction("2008/07/05", -29.00, "Free Telecom")
       .addTransaction("2008/07/04", -55.00, "EDF")
+      .addTransaction("2008/07/03", -15.00, "McDo")
       .addTransaction("2008/07/02", 200.00, "WorldCo - Bonus")
       .addTransaction("2008/07/01", 3540.00, "WorldCo")
       .load();
@@ -29,6 +30,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00)
       .add("05/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
       .add("04/07/2008", TransactionType.PRELEVEMENT, "EDF", "", -55.00)
+      .add("03/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -15.00)
       .add("02/07/2008", TransactionType.VIREMENT, "WorldCo - Bonus", "", 200.00)
       .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
       .check();

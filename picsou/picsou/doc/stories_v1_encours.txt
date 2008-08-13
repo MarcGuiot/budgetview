@@ -16,7 +16,7 @@
 
 * MonthStatView : gauge
 
-* Categorisation : bug selection apres affectation (selectionner les suivants)
+* CategorizationDialog : bug selection apres affectation (selectionner les suivants)
 
 * Categorisation / occasionnel : multicolonnes
 

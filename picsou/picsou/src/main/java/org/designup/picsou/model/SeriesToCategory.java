@@ -7,6 +7,13 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.FieldSetter;
+import org.globsframework.utils.serialization.SerializedByteArrayOutput;
+import org.globsframework.utils.serialization.SerializedOutput;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedInputOutputFactory;
+import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 
 public class SeriesToCategory {
   public static GlobType TYPE;
@@ -26,4 +33,32 @@ public class SeriesToCategory {
   static {
     GlobTypeLoader.init(SeriesToCategory.class, "seriesToCategory");
   }
+
+  public static class Serializer implements PicsouGlobSerializer {
+
+    public byte[] serializeData(FieldValues fieldValues) {
+      SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
+      SerializedOutput output = serializedByteArrayOutput.getOutput();
+      output.writeInteger(fieldValues.get(SeriesToCategory.SERIES));
+      output.writeInteger(fieldValues.get(SeriesToCategory.CATEGORY));
+      return serializedByteArrayOutput.toByteArray();
+    }
+
+    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
+      if (version == 1) {
+        deserializeDataV1(fieldSetter, data);
+      }
+    }
+
+    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(SeriesToCategory.SERIES, input.readInteger());
+      fieldSetter.set(SeriesToCategory.CATEGORY, input.readInteger());
+    }
+
+    public int getWriteVersion() {
+      return 1;
+    }
+  }
+
 }

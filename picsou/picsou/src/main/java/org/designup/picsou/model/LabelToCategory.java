@@ -33,7 +33,7 @@ public class LabelToCategory {
 
   static {
     GlobTypeLoader.init(LabelToCategory.class, "labelToCategory")
-      .defineNotUniqueIndex(LABEL_INDEX, LABEL);
+      .defineNonUniqueIndex(LABEL_INDEX, LABEL);
   }
 
   public static class Serializer implements PicsouGlobSerializer {
