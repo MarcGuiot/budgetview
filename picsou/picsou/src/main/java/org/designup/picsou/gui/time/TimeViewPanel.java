@@ -102,7 +102,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     }
     if (shouldScroll) {
       scrollToLastVisible();
-      paintComponent(g);
+      repaint();
     }
     synchronized (this) {
       paintCount++;
@@ -297,13 +297,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       return;
     }
     Selectable mostLeftSelectable = timeGraph.getFirstSelectable();
-    while (mostLeftSelectable != null && mostLeftSelectable.isVisible() == Selectable.Visibility.NOT_VISIBLE) {
-      mostLeftSelectable = mostLeftSelectable.getRight();
-    }
-    if (mostLeftSelectable == null) { // cas de l'init
-      mostLeftSelectable = timeGraph.getFirstSelectable();
-    }
-    int count = 0;
+    int count = 1;
     while (mostLeftSelectable != lastSelected) {
       mostLeftSelectable = mostLeftSelectable.getRight();
       count++;
@@ -315,7 +309,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     clearSelection();
     timeGraph.selectMonth(indexes, currentlySelected);
     sendSelectionEvent(true);
-    scrollToLastVisible();
     repaint();
   }
 
@@ -382,7 +375,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public synchronized void waitRepaint() {
-    long mili = System.currentTimeMillis() + 200;
+    long mili = System.currentTimeMillis() + 150000;
     while (currentPaintCount == paintCount) {
       try {
         long duration = mili - System.currentTimeMillis();
@@ -397,10 +390,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       }
     }
     currentPaintCount = paintCount;
-  }
-
-  int getPreviousWidth() {
-    return previousWidth;
   }
 
   private class ScrollAndRepaint implements Runnable {
