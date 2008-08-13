@@ -22,10 +22,12 @@ public class Transaction {
   @Key
   public static IntegerField ID;
 
-  public static IntegerField MONTH; // yyyymm format
+  @Target(Month.class)
+  public static LinkField MONTH; // yyyymm format
   public static IntegerField DAY; // Starts at 1
 
-  public static IntegerField BANK_MONTH; // yyyymm format
+  @Target(Month.class)
+  public static LinkField BANK_MONTH; // yyyymm format
   public static IntegerField BANK_DAY; // Starts at 1
 
   public static DoubleField AMOUNT;

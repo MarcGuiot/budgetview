@@ -15,7 +15,7 @@ public class SeriesStat {
   public static GlobType TYPE;
 
   @Key @Target(Month.class)
-  public static IntegerField MONTH;
+  public static LinkField MONTH;
 
   @Key @Target(Series.class)
   public static LinkField SERIES;
