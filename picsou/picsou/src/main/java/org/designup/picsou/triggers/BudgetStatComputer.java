@@ -44,8 +44,7 @@ public class BudgetStatComputer implements ChangeSetListener {
       Integer budgetAreaId = series.get(Series.BUDGET_AREA);
       if (budgetAreaId != null) {
         Key budgetStatId = Key.create(BudgetStat.TYPE)
-          .add(BudgetStat.BUDGET_AREA, budgetAreaId)
-          .add(BudgetStat.MONTH, monthId).get();
+          .set(BudgetStat.BUDGET_AREA, budgetAreaId).set(BudgetStat.MONTH, monthId).get();
         Glob bugdetStat = repository.findOrCreate(budgetStatId);
         GlobUtils.add(budgetStatId, bugdetStat, BudgetStat.AMOUNT, amount, repository);
       }

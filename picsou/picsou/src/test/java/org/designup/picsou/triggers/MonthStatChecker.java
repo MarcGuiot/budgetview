@@ -121,8 +121,8 @@ class MonthStatChecker {
   private Glob getMonthStat(int month, Integer categoryId) {
     Key key =
       KeyBuilder.init(MonthStat.MONTH, month)
-        .setValue(MonthStat.CATEGORY, categoryId)
-        .setValue(MonthStat.ACCOUNT, accountId)
+        .set(MonthStat.CATEGORY, categoryId)
+        .set(MonthStat.ACCOUNT, accountId)
         .get();
     return repository.get(key);
   }

@@ -94,6 +94,17 @@ public class Category {
     return MasterCategory.isReserved(category);
   }
 
+  public static Integer getMasterCategoryId(Integer categoryId, GlobRepository repository) {
+    if (categoryId == null) {
+      categoryId = MasterCategory.NONE.getId();
+    }
+    Glob category = repository.get(org.globsframework.model.Key.create(TYPE, categoryId));
+    if (!isMaster(category)) {
+      categoryId = category.get(MASTER);
+    }
+    return categoryId;
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues values) {

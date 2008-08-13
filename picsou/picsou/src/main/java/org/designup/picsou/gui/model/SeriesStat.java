@@ -3,11 +3,10 @@ package org.designup.picsou.gui.model;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
-import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 

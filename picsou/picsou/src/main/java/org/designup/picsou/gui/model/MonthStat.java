@@ -88,8 +88,8 @@ public class MonthStat {
 
   public static org.globsframework.model.Key getKey(Integer month, Integer categoryId, int accountId) {
     return KeyBuilder.init(MONTH, month)
-      .setValue(CATEGORY, categoryId)
-      .setValue(ACCOUNT, accountId)
+      .set(CATEGORY, categoryId)
+      .set(ACCOUNT, accountId)
       .get();
   }
 

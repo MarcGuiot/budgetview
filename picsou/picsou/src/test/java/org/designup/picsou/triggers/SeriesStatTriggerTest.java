@@ -24,7 +24,7 @@ public class SeriesStatTriggerTest extends PicsouTestCase {
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<create type='seriesStat' series='1' month='200807'" +
                                     "        amount='0.0' plannedAmount='0.0'/>");
-
+    
     repository.create(KeyBuilder.newKey(Transaction.TYPE, 10),
                       value(Transaction.SERIES, 1),
                       value(Transaction.MONTH, 200807),
