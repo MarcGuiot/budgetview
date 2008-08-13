@@ -37,7 +37,7 @@ public class DefaultIdentifiedState extends AbstractSessionState implements Iden
     lastAccess();
     checkPrivateId(input);
     byte[] cryptedLinkInfo = input.readBytes();
-    Integer userId = persistence.confirmUser(Encoder.b64Decode(cryptedLinkInfo));
+    Integer userId = persistence.confirmUser(Encoder.byteToString(cryptedLinkInfo));
     new DefaultConnectedState(persistence, userId, getDefaultSessionService(),
                               getSessionId(), getPrivateId());
 

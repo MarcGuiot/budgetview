@@ -24,6 +24,18 @@ public class MonthChecker extends DataChecker {
   }
 
   public void assertEquals(String... elements) {
+    long end = System.currentTimeMillis() + 1000;
+    GlobList list = new GlobList();
+    timeViewPanel.getAllSelectableMonth(list);
+    while (list.size() != elements.length && System.currentTimeMillis() < end) {
+      try {
+        Thread.sleep(50);
+      }
+      catch (InterruptedException e) {
+      }
+      list.clear();
+      timeViewPanel.getAllSelectableMonth(list);
+    }
     List<Integer> ids = new ArrayList<Integer>();
     for (String element : elements) {
       int index = element.indexOf(" (");
@@ -32,8 +44,6 @@ public class MonthChecker extends DataChecker {
       }
       ids.add(Month.getMonthId(Dates.parseMonth(element.substring(0, index))));
     }
-    GlobList list = new GlobList();
-    timeViewPanel.getAllSelectableMonth(list);
     Set<Integer> valueSet = list.getValueSet(Month.ID);
     TestUtils.assertSetEquals(ids, valueSet);
   }
@@ -94,8 +104,18 @@ public class MonthChecker extends DataChecker {
   }
 
   public void assertSpanEquals(String fromMmYyyy, String toMmYyyy) {
+    long end = System.currentTimeMillis() + 1000;
     GlobList list = new GlobList();
     timeViewPanel.getAllSelectableMonth(list);
+    while (list.size() < 2 && System.currentTimeMillis() < end) {
+      try {
+        Thread.sleep(50);
+      }
+      catch (InterruptedException e) {
+      }
+      list.clear();
+      timeViewPanel.getAllSelectableMonth(list);
+    }
     Assert.assertTrue(list.size() >= 2);
     Assert.assertEquals(fromMmYyyy, Month.toString(list.get(0).get(Month.ID)));
     Assert.assertEquals(toMmYyyy, Month.toString(list.get(list.size() - 1).get(Month.ID)));

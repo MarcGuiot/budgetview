@@ -73,7 +73,7 @@ public class RegisterServlet extends HttpServlet {
             .getRequest()
             .run();
           db.commit();
-          resp.addHeader(ConfigService.HEADER_SIGNATURE, Encoder.b64Decode(signature));
+          resp.addHeader(ConfigService.HEADER_SIGNATURE, Encoder.byteToString(signature));
         }
         else if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
           logger.info("Mail sent with new code");

@@ -90,7 +90,8 @@ public class PicsouInit {
     serverAccess.applyChanges(changeSet, repository);
     if (newUser) {
       repository.create(UserPreferences.key,
-                        FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT, 0));
+                        FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT,
+                                         UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS));
 
       loadGlobs("/subcats.xml");
       loadGlobs("/series.xml");
