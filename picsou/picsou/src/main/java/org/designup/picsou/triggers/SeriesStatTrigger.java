@@ -92,7 +92,7 @@ public class SeriesStatTrigger implements ChangeSetListener {
           currentSeriesId = values.get(Transaction.SERIES);
         }
         else {
-          previousSeriesId = null;
+          previousSeriesId = transaction.get(Transaction.SERIES);
           currentSeriesId = transaction.get(Transaction.SERIES);
         }
 

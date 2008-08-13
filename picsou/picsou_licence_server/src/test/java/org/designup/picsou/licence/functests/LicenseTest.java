@@ -72,6 +72,13 @@ public class LicenseTest extends LicenseTestCase {
     monthChecker.assertSpanEquals("2008/07", "2010/07");
   }
 
+
+  public void testNoServerAccessForRegistration() throws Exception {
+  }
+
+  public void testNoServerAccessAfterRegistration() throws Exception {
+  }
+
   private void register(SqlConnection connection, String mail) throws InterruptedException {
     checkRepoIdIsUpdated(connection, 1L, null);
     LoginChecker loginChecker = new LoginChecker(window);
