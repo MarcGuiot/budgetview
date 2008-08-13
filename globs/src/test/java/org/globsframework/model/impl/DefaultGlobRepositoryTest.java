@@ -114,7 +114,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     Glob target = repository.get(
       KeyBuilder
         .init(DummyObjectWithCompositeKey.ID1, 1)
-        .setValue(DummyObjectWithCompositeKey.ID2, 2)
+        .set(DummyObjectWithCompositeKey.ID2, 2)
         .get());
 
     Glob source0 = repository.get(Key.create(DummyObjectWithLinks.TYPE, 0));

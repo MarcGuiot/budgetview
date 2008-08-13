@@ -82,7 +82,7 @@ public class DefaultLink extends AnnotatedPropertyHolder<Link> implements Link {
       if (targetValue == null) {
         return null;
       }
-      builder.add(targetField, targetValue);
+      builder.set(targetField, targetValue);
     }
     return builder.get();
   }

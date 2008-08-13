@@ -41,17 +41,13 @@ public class KeyBuilder {
     fieldValuesBuilder.setObject(field, value);
   }
 
-  public KeyBuilder setValue(Field field, Object value) throws InvalidParameter {
+  public KeyBuilder set(Field field, Object value) throws InvalidParameter {
     if (!field.getGlobType().equals(globType)) {
       throw new InvalidParameter("Unexpected field '" + field.toString() + "' used in a '" +
                                  globType.getName() + "' key");
     }
     fieldValuesBuilder.setObject(field, value);
     return this;
-  }
-
-  public KeyBuilder add(Field field, Object value) {
-    return setValue(field, value);
   }
 
   public Key get() {

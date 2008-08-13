@@ -30,7 +30,7 @@ public class KeyBuilderTest extends TestCase {
   public void testCompositeKeyUsingInit() throws Exception {
     Key key = KeyBuilder
       .init(DummyObjectWithCompositeKey.ID1, 1)
-      .setValue(DummyObjectWithCompositeKey.ID2, 2)
+      .set(DummyObjectWithCompositeKey.ID2, 2)
       .get();
     assertEquals(DummyObjectWithCompositeKey.TYPE, key.getGlobType());
     assertEquals("dummyObjectWithCompositeKey[id1=1, id2=2]", key.toString());
@@ -40,7 +40,7 @@ public class KeyBuilderTest extends TestCase {
     try {
       KeyBuilder
         .init(DummyObjectWithCompositeKey.ID1, 1)
-        .setValue(DummyObject.ID, 2);
+        .set(DummyObject.ID, 2);
       fail();
     }
     catch (InvalidParameter e) {
