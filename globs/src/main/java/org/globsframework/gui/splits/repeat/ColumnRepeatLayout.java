@@ -6,8 +6,9 @@ import org.globsframework.gui.splits.layout.ComponentStretch;
 
 import javax.swing.*;
 import java.util.List;
+import java.awt.*;
 
-public class ColumnRepeatLayout implements RepeatLayout {
+public abstract class ColumnRepeatLayout implements RepeatLayout {
 
   public void check(Splitter[] splitterTemplates, String repeatRef) {
     if (splitterTemplates.length != 1) {
@@ -16,8 +17,10 @@ public class ColumnRepeatLayout implements RepeatLayout {
   }
 
   public void init(JPanel panel) {
-    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    panel.setLayout(getLayout(panel));
   }
+
+  protected abstract LayoutManager getLayout(JPanel panel);
 
   public void set(JPanel panel, List<ComponentStretch[]> stretches) {
     panel.removeAll();

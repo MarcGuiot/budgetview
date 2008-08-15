@@ -3,6 +3,7 @@ package org.globsframework.gui.splits;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.SwingStretches;
+import org.globsframework.gui.splits.layout.WrappedColumnLayout;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -253,6 +254,26 @@ public class SplitsRepeatTest extends SplitsTestCase {
     checkButton(panel, 1, "aa", 0, 1);
     checkLabel(panel, 2, "bb", 1, 0);
     checkButton(panel, 3, "bb", 1, 1);
+  }
+
+  public void testWrappedColumnLayout() throws Exception {
+    builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                      new RepeatComponentFactory<String>() {
+                        public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          cellBuilder.add("label", new JLabel(object));
+                          cellBuilder.add("btn", new JButton(object));
+                        }
+                      });
+
+    JPanel panel = parse(
+      "<repeat ref='myRepeat' layout='wrappedColumn'>" +
+      "  <row>" +
+      "    <label ref='label'/>" +
+      "    <button ref='btn'/>" +
+      "  </row>" +
+      "</repeat>");
+
+    assertEquals(WrappedColumnLayout.class, panel.getLayout().getClass());
   }
 
   private void checkButton(JPanel panel, int componentIndex, String label, int x, int y) {
