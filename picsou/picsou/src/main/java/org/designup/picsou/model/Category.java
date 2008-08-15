@@ -98,7 +98,10 @@ public class Category {
     if (categoryId == null) {
       categoryId = MasterCategory.NONE.getId();
     }
-    Glob category = repository.get(org.globsframework.model.Key.create(TYPE, categoryId));
+    Glob category = repository.find(org.globsframework.model.Key.create(TYPE, categoryId));
+    if (category == null) {
+      return null;
+    }
     if (!isMaster(category)) {
       categoryId = category.get(MASTER);
     }

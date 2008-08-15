@@ -6,6 +6,7 @@ import org.designup.picsou.utils.PicsouTestCase;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobBuilder;
 
 public class OccasionalSeriesStatTriggerTest extends PicsouTestCase {
@@ -160,9 +161,33 @@ public class OccasionalSeriesStatTriggerTest extends PicsouTestCase {
                                     "        amount='10.0'/>");
   }
 
-  public void testDeletingASubcategory() throws Exception {
-    Glob subcat = repository.create(Category.TYPE, value(Category.MASTER, MasterCategory.FOOD.getId()));
-    fail();
+  public void testDeletingASubCategoryAndUsingTheSameMaster() throws Exception {
+    Key subcatKey = repository.create(Category.TYPE, value(Category.MASTER, MasterCategory.FOOD.getId())).getKey();
+    Glob transaction = createTransaction(200808, Series.OCCASIONAL_SERIES_ID, subcatKey.get(Category.ID), 10.0);
+
+    repository.enterBulkDispatchingMode();
+    repository.delete(subcatKey);
+    repository.setTarget(transaction.getKey(), Transaction.CATEGORY, MasterCategory.FOOD.getKey());
+    repository.completeBulkDispatchingMode();
+
+    listener.assertNoChanges(OccasionalSeriesStat.TYPE);
+  }
+
+  public void testDeletingASubcategoryAndChangingMaster() throws Exception {
+    Key subcatKey = repository.create(Category.TYPE, value(Category.MASTER, MasterCategory.FOOD.getId())).getKey();
+    Glob transaction = createTransaction(200808, Series.OCCASIONAL_SERIES_ID, subcatKey.get(Category.ID), 10.0);
+
+    repository.enterBulkDispatchingMode();
+    repository.delete(subcatKey);
+    repository.setTarget(transaction.getKey(), Transaction.CATEGORY, MasterCategory.HOUSE.getKey());
+    repository.completeBulkDispatchingMode();
+    listener.assertLastChangesEqual(OccasionalSeriesStat.TYPE,
+                                    "<delete type='occasionalSeriesStat' month='200808' " +
+                                    "        category='" + MasterCategory.FOOD.getId() + "' " +
+                                    "        _amount='10.0'/>" +
+                                    "<create type='occasionalSeriesStat' month='200808' " +
+                                    "        category='" + MasterCategory.HOUSE.getId() + "' " +
+                                    "        amount='10.0'/>");
   }
 
   public void testUpdatingTransactionMonth() throws Exception {
@@ -175,8 +200,7 @@ public class OccasionalSeriesStatTriggerTest extends PicsouTestCase {
                                     "        _amount='10.0'/>" +
                                     "<create type='occasionalSeriesStat' month='200809' " +
                                     "        category='" + MasterCategory.FOOD.getId() + "' " +
-                                    "        amount='10.0'/>"
-    );
+                                    "        amount='10.0'/>");
   }
 
   public void testReset() throws Exception {
@@ -196,8 +220,7 @@ public class OccasionalSeriesStatTriggerTest extends PicsouTestCase {
                                     "        _amount='10.0'/>" +
                                     "<create type='occasionalSeriesStat' month='200809' " +
                                     "        category='" + MasterCategory.HOUSE.getId() + "' " +
-                                    "        amount='20.0'/>"
-    );
+                                    "        amount='20.0'/>");
   }
 
   private Glob createTransaction(int monthId, Integer seriesId, MasterCategory category, double amount) {
