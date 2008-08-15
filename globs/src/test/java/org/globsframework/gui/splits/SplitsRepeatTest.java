@@ -230,10 +230,35 @@ public class SplitsRepeatTest extends SplitsTestCase {
     checkButton(panel, 3, "bb", 1, 1);
   }
 
+  public void testHorizontalGridLayout() throws Exception {
+    builder.addRepeat("repeat", Arrays.asList("aa", "bb"), new RepeatComponentFactory<String>() {
+      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+        cellBuilder.add("label", new JLabel(object));
+        cellBuilder.add("button", new JButton(object));
+      }
+    });
+    JPanel panel = parse(
+      "<repeat ref='repeat' layout='horizontalGrid'>" +
+      "  <label ref='label' fill='horizontal' anchor='south' marginTop='10' marginBottom='5'/>" +
+      "  <button ref='button' marginLeft='5' marginRight='5'/>" +
+      "</repeat>");
+
+    checkPanel(panel,
+               "label:aa\n" +
+               "button:aa\n" +
+               "label:bb\n" +
+               "button:bb\n");
+
+    checkLabel(panel, 0, "aa", 0, 0);
+    checkButton(panel, 1, "aa", 0, 1);
+    checkLabel(panel, 2, "bb", 1, 0);
+    checkButton(panel, 3, "bb", 1, 1);
+  }
+
   private void checkButton(JPanel panel, int componentIndex, String label, int x, int y) {
-    JButton aaButton = (JButton)panel.getComponent(componentIndex);
-    assertEquals(label, aaButton.getText());
-    checkGridPos(panel, aaButton,
+    JButton button = (JButton)panel.getComponent(componentIndex);
+    assertEquals(label, button.getText());
+    checkGridPos(panel, button,
                  x, y, 1, 1,
                  SwingStretches.NORMAL_WEIGHT, SwingStretches.NULL_WEIGHT,
                  Fill.HORIZONTAL, Anchor.CENTER,
@@ -241,9 +266,9 @@ public class SplitsRepeatTest extends SplitsTestCase {
   }
 
   private void checkLabel(JPanel panel, int componentIndex, String label, int x, int y) {
-    JLabel aaLabel = (JLabel)panel.getComponent(componentIndex);
-    assertEquals(label, aaLabel.getText());
-    checkGridPos(panel, aaLabel,
+    JLabel jLabel = (JLabel)panel.getComponent(componentIndex);
+    assertEquals(label, jLabel.getText());
+    checkGridPos(panel, jLabel,
                  x, y, 1, 1,
                  SwingStretches.NULL_WEIGHT, SwingStretches.NULL_WEIGHT,
                  Fill.HORIZONTAL, Anchor.SOUTH,

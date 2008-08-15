@@ -41,7 +41,10 @@ public class RepeatSplitter extends AbstractSplitter {
       return new ColumnRepeatLayout();
     }
     else if ("verticalGrid".equalsIgnoreCase(layoutProperty)) {
-      return new GridRepeatLayout();
+      return new GridRepeatLayout(GridRepeatLayout.Direction.VERTICAL);
+    }
+    else if ("horizontalGrid".equalsIgnoreCase(layoutProperty)) {
+      return new GridRepeatLayout(GridRepeatLayout.Direction.HORIZONTAL);
     }
     throw new SplitsException("Unknown layout type '" + layoutProperty + "' for repeat '" + ref +
                               "' - use one of [column|verticalGrid]");

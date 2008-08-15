@@ -10,8 +10,18 @@ import java.util.List;
 
 public class GridRepeatLayout implements RepeatLayout {
 
+  private Direction direction;
   private List<ComponentStretch[]> lineStretches = new ArrayList<ComponentStretch[]>();
   private GridBagBuilder builder;
+
+  public enum Direction {
+    HORIZONTAL,
+    VERTICAL
+  }
+
+  public GridRepeatLayout(Direction direction) {
+    this.direction = direction;
+  }
 
   public void check(Splitter[] splitterTemplates, String repeatRef) {
   }
@@ -41,14 +51,21 @@ public class GridRepeatLayout implements RepeatLayout {
 
   private void rebuild(JPanel panel) {
     panel.removeAll();
-    int row = 0;
+    int line = 0;
     for (ComponentStretch[] stretches : this.lineStretches) {
-      int column = 0;
+      int item = 0;
       for (ComponentStretch stretch : stretches) {
-        builder.add(stretch, column, row, 1, 1);
-        column++;
+        switch (direction) {
+          case HORIZONTAL:
+            builder.add(stretch, line, item, 1, 1);
+            break;
+          case VERTICAL:
+            builder.add(stretch, item, line, 1, 1);
+            break;
+        }
+        item++;
       }
-      row++;
+      line++;
     }
     panel.validate();
   }

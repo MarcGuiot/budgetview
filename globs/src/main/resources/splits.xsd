@@ -296,6 +296,7 @@
           <xs:restriction base="xs:NMTOKEN">
             <xs:enumeration value="column"/>
             <xs:enumeration value="verticalGrid"/>
+            <xs:enumeration value="horizontalGrid"/>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
