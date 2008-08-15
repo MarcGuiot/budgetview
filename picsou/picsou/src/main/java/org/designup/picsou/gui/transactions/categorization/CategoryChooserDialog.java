@@ -9,7 +9,7 @@ import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouMatchers;
-import org.designup.picsou.gui.sandbox.ColumnLayoutManager;
+import org.globsframework.gui.splits.layout.WrappedColumnLayout;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -150,7 +150,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
     builder.load();
 
     JPanel panel = (JPanel)builder.getComponent("masterRepeat");
-    panel.setLayout(new ColumnLayoutManager(4));
+    panel.setLayout(new WrappedColumnLayout(4));
   }
 
   private void setSelectedCategories() {

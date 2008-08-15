@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <column styleClass="dialog" opaque="true" preferredSize="(600,600)" margin="15">
+  <column styleClass="dialog" opaque="true" preferredSize="(900,680)" margin="15">
 
     <label text="$categorization.list.title"/>
 
@@ -20,14 +20,14 @@
 
       <column>
 
-        <textArea ref="transactionLabel" anchor="left"/>
+        <label ref="transactionLabel" anchor="left"/>
 
         <row>
           <toggleButton ref="invisibleBudgetAreaToggle" visible="false"/>
           <repeat ref="budgetAreas" weightX="0.1">
             <toggleButton ref="budgetAreaToggle"/>
           </repeat>
-          <cards ref="cards">
+          <cards ref="cards" weightX="100">
 
             <card name="noBudgetArea">
               <htmlEditorPane text="$categorization.no.budget.area" editable="false" opaque="false"/>
@@ -36,9 +36,11 @@
             <card name="income">
               <column>
                 <toggleButton ref="invisibleIncomeToggle" visible="false"/>
-                <repeat ref="incomeSeriesRepeat">
-                  <toggleButton ref="seriesToggle"/>
-                </repeat>
+                <scrollPane>
+                  <repeat ref="incomeSeriesRepeat">
+                    <toggleButton ref="seriesToggle"/>
+                  </repeat>
+                </scrollPane>
                 <button action="createIncomeSeries" text="$categorization.newseries" styleClass="hyperlink"/>
               </column>
             </card>
@@ -46,9 +48,11 @@
             <card name="recurringExpenses">
               <column>
                 <toggleButton ref="invisibleRecurringToggle" visible="false"/>
-                <repeat ref="recurringSeriesRepeat">
-                  <toggleButton ref="seriesToggle"/>
-                </repeat>
+                <scrollPane>
+                  <repeat ref="recurringSeriesRepeat">
+                    <toggleButton ref="seriesToggle"/>
+                  </repeat>
+                </scrollPane>
                 <button action="createRecurringSeries" text="$categorization.newseries" styleClass="hyperlink"/>
               </column>
             </card>
@@ -56,14 +60,16 @@
             <card name="expensesEnvelope">
               <column>
                 <toggleButton ref="invisibleEnvelopeToggle" visible="false"/>
-                <repeat ref="envelopeSeriesRepeat">
-                  <column>
-                    <label ref="envelopeSeriesName"/>
-                    <repeat ref="envelopeCategoryRepeat">
-                      <toggleButton ref="envelopeCategoryToggle"/>
-                    </repeat>
-                  </column>
-                </repeat>
+                <scrollPane>
+                  <repeat ref="envelopeSeriesRepeat">
+                    <column>
+                      <label ref="envelopeSeriesName"/>
+                      <repeat ref="envelopeCategoryRepeat">
+                        <toggleButton ref="envelopeCategoryToggle"/>
+                      </repeat>
+                    </column>
+                  </repeat>
+                </scrollPane>
                 <button action="createEnvelopeSeries" text="$categorization.newseries" styleClass="hyperlink"/>
               </column>
             </card>
@@ -72,7 +78,7 @@
               <scrollPane>
                 <column>
                   <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
-                  <repeat ref="occasionalSeriesRepeat">
+                  <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn">
                     <column>
                       <toggleButton ref="occasionalCategoryToggle"/>
                       <repeat ref="occasionalSubcatRepeat" marginLeft="10">

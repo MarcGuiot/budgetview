@@ -1,0 +1,12 @@
+* Undo
+
+* Gestion des projets
+
+* Joliesse boutons timeview
+
+* Mecanique pour gerer de nouvelles banques (notamment a l'international)
+
+* Mecanique de backup/restore pour les utilisateurs (crypte ou non?)
+
+* Changer date user
+  

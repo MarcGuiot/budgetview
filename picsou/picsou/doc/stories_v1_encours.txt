@@ -18,6 +18,4 @@
 
 * CategorizationDialog : bug selection apres affectation (selectionner les suivants)
 
-* Categorisation / occasionnel : multicolonnes
-
 * Activation licence : cas ou pas de connexion internet

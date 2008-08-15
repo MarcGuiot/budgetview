@@ -5,18 +5,12 @@
 
 * Types de comptes (courant / carte / epargne)
 
-* Mecanique de backup/restore pour les utilisateurs (crypte ou non?)
-
 * Upgrade soft
-
-* Upgrade de donnees
 
 * Filtrage de transactions par compte
 * Filtrage de transactions par import
 
-* Creer/supprimer des categories
-
-* Mecanique pour gerer de nouvelles banques (notamment a l'international)
+* Creer/supprimer des master categories
 
 * Enlever contrainte sur password => indicateur "password strength"
 * Mode demo (pas de connexions, fichier de donnees en dur, pas de stockage)
@@ -27,13 +21,5 @@
 
 * Navigation back/forward
 
-* Changer date user
 
-* Undo
-
-
-Si possible
------------
-
-* Gestion des projets
 

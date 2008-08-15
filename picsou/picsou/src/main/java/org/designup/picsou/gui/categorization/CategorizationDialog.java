@@ -62,7 +62,7 @@ public class CategorizationDialog {
     autoHideCheckBox.setSelected(true);
     builder.add("autoHide", autoHideCheckBox);
 
-    builder.addMultiLineTextView("transactionLabel", Transaction.TYPE);
+    builder.addLabel("transactionLabel", Transaction.LABEL);
 
     nextTransactionAction = new NextTransactionAction(selectionService);
     builder.add("nextTransaction", nextTransactionAction);
