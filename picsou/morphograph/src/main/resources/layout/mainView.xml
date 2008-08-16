@@ -2,15 +2,17 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styles>
+    <ui name="background" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="background.top" bottomColor="background.bottom"/>
     <ui name="main" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="titlebar.top" bottomColor="titlebar.bottom" borderColor="titlebar.border"
         borderWidth="1"
         cornerRadius="10" distance="1"/>
   </styles>
 
-  <frame title="Morphographe - v1" size="(800,600)" background="background">
-    <column opaque="true" background="background">
-      <row weighty="0.1">
+  <frame title="Morphographe - v1" size="(800,600)" background="background.bottom">
+    <column opaque="true">
+      <row weighty="0.1" opaque="true" background="background.top">
         <label icon="morpho.jpg" anchor="center" marginLeft="20"/>
         <panel ui="main" weightx="0.5" weightY="0.1" margin="20" anchor="center">
           <row marginTop="5" marginBottom="3" opaque="false">
@@ -19,7 +21,7 @@
           </row>
         </panel>
       </row>
-      <component ref="seriesPanel" opaque="true" background="background" weighty="10"/>
+      <component ref="seriesPanel" opaque="false" weighty="10"/>
     </column>
   </frame>
 </splits>

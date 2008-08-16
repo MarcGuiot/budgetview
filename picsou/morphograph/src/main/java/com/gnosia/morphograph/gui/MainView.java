@@ -6,6 +6,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -25,18 +26,18 @@ public class MainView {
 
     setNativeLookAndFeel();
 
-    SplitsBuilder splits = new SplitsBuilder(directory);
+    SplitsBuilder builder = new SplitsBuilder(directory);
 
     SeriesView seriesView = new SeriesView(globRepository, directory);
-    splits.add("seriesPanel", seriesView.createPanel());
+    builder.add("seriesPanel", seriesView.createPanel());
 
     topicsCombo = GlobComboView.init(Topic.TYPE, globRepository, directory)
       .setComparator(new GlobFieldComparator(Topic.ID));
-    splits.add(topicsCombo.getComponent());
+    builder.add(topicsCombo.getComponent());
 
     seriesCombo = GlobComboView.init(Series.TYPE, globRepository, directory)
       .setComparator(new GlobFieldComparator(Series.ID));
-    splits.add(seriesCombo.getComponent());
+    builder.add(seriesCombo.getComponent());
 
     directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -46,11 +47,11 @@ public class MainView {
       }
     }, Topic.TYPE);
 
-    splits.setSource(MainView.class, "/layout/mainView.xml", "UTF-8");
-    frame = splits.load();
+    builder.setSource(MainView.class, "/layout/mainView.xml", "UTF-8");
+    frame = builder.load();
     seriesView.setFrame(frame);
 
-//    SplitsEditor.showInFrame(directory.get(ColorService.class), frame);
+    SplitsEditor.show(builder, frame);
   }
 
   private static void setNativeLookAndFeel() throws Exception {

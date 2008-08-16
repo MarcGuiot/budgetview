@@ -36,7 +36,8 @@ public class SeriesView implements GlobSelectionListener {
     builder.add("exoPanel", exoPanelContainer);
     nextAction = new NextAction();
     builder.add("next", nextAction);
-    panel = (JPanel)parseSplitsFile(builder, "/layout/series.xml");
+    builder.setSource(SeriesView.class, "/layout/series.xml");
+    panel = (JPanel)builder.load();
     panel.setOpaque(true);
     exoPanelContainer.setOpaque(true);
   }

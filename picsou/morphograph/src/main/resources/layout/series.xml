@@ -1,7 +1,15 @@
-<splits>
-  <column margin="20" opaque="false">
-    <component ref="exoPanel" marginBottom="5" weightX="1.0" fill="horizontal" anchor="north"
-               opaque="true" background="background"/>
-    <button opaque="false" action="next"/>
+<?xml version="1.0" encoding="utf-8"?>
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+  <styles>
+    <ui name="background" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="background.top" bottomColor="background.bottom"/>
+  </styles>
+
+  <column opaque="true" background="background.bottom">
+    <component ref="exoPanel" weightX="1.0" weighty="100" fill="both" anchor="north"
+               opaque="true" ui="background"/>
+    <row opaque="true" background="background.bottom">
+      <button opaque="false" action="next" fill="none" anchor="center" marginBottom="30"/>
+    </row>
   </column>
 </splits>

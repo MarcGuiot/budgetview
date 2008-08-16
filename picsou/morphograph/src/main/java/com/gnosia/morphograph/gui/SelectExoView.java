@@ -27,7 +27,7 @@ public class SelectExoView extends AbstractExoView {
   }
 
   private void initPanel() {
-    for (Glob select : globRepository.findLinkedTo(exercise, Select.EXERCISE).sort(Select.ID)) {
+    for (Glob select : repository.findLinkedTo(exercise, Select.EXERCISE).sort(Select.ID)) {
       Question question = new Question(select);
       questions.add(question);
       question.register(builder);

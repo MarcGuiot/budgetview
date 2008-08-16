@@ -1,15 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styles>
+    <ui name="background" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="background.top" bottomColor="background.bottom"/>
     <ui name="exoPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
-      topColor="exo.top" bottomColor="exo.bottom"
-      borderWidth="1" borderColor="exo.border" cornerRadius="10"/>
+        topColor="exo.top" bottomColor="exo.bottom"
+        borderWidth="1" borderColor="exo.border" cornerRadius="10"/>
   </styles>
 
- <column opaque="false" background="background">
+  <column opaque="false" margin="20">
 
     <label text="${exo.name}" foreground="exo.title" marginBottom="5" marginTop="0"/>
-    <label text="${exo.title}" foreground="exo.title" marginBottom="5" marginTop="0" font="Arial,bold,24"/>
+    <label text="${exo.title}" foreground="exo.title" marginBottom="5" marginTop="0" font="Arial,bold,24"
+           shadowDirection="northwest" shadowColor="exo.title.shadow"/>
     <label text="${exo.description!}" foreground="exo.title" marginBottom="5" marginTop="0"/>
     [#if exo.example??]
     <label text="Exemple : ${exo.example!}" foreground="exo.title" marginBottom="5" marginTop="0"/>
@@ -21,7 +25,8 @@
           [#list exo.getQuestions() as question]
           [#assign y=question_index]
           <label text="${question.getTitle()}" anchor="east" marginLeft="10"
-                 gridPos="(0, ${y})"/>
+                 gridPos="(0, ${y})" font="-,bold,14" foreground="exo.text"
+                 shadowDirection="southeast" shadowColor="exo.text.shadow"/>
           [#assign x=0]
           [#list question.getAnswers() as answer]
           [#assign x=x+1]
@@ -33,6 +38,8 @@
     </panel>
 
     <label text="${exo.comment!}" foreground="exo.title" marginBottom="5" marginTop="20"/>
+
+    <filler fill="vertical" weightY="1.0" opaque="true" background="background.bottom"/>
 
   </column>
 </splits>

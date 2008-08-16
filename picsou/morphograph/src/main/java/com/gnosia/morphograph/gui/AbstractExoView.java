@@ -13,7 +13,7 @@ import javax.swing.*;
 
 public abstract class AbstractExoView implements ExoView {
   protected Glob exercise;
-  protected GlobRepository globRepository;
+  protected GlobRepository repository;
   protected Directory directory;
   protected ColorService colorService;
   protected String templateFile;
@@ -21,9 +21,9 @@ public abstract class AbstractExoView implements ExoView {
   protected Icon okIcon;
   protected Icon failedIcon;
 
-  public AbstractExoView(Glob exercise, GlobRepository globRepository, Directory directory, String velocityFile) {
+  public AbstractExoView(Glob exercise, GlobRepository repository, Directory directory, String velocityFile) {
     this.exercise = exercise;
-    this.globRepository = globRepository;
+    this.repository = repository;
     this.directory = directory;
     this.colorService = directory.get(ColorService.class);
     this.templateFile = velocityFile;

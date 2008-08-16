@@ -22,7 +22,7 @@ public class InputExoView extends AbstractExoView {
 
   private void initQuestions() {
     int index = 0;
-    for (Glob question : globRepository.findLinkedTo(exercise, Input.EXERCISE).sort(Input.ID)) {
+    for (Glob question : repository.findLinkedTo(exercise, Input.EXERCISE).sort(Input.ID)) {
       int id = index++;
       Question q = new Question(question.get(Input.TITLE),
                                 question.get(Input.ANSWER),

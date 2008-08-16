@@ -26,11 +26,11 @@ public class MorphographTest extends UISpecTestCase {
       "  </topic>" +
       "</morphograph>");
 
-    assertTrue(topicCombo.contentEquals(new String[]{"Topic One", "Topic Two", "Topic Three"}));
+    assertTrue(topicCombo.contentEquals("Topic One", "Topic Two", "Topic Three"));
     assertTrue(topicCombo.selectionEquals("Topic One"));
 
     topicCombo.select("Topic Three");
-    assertTrue(seriesCombo.contentEquals(new String[]{"One", "Two", "Three"}));
+    assertEquals(true, seriesCombo.contentEquals("One", "Two", "Three"));
     assertTrue(seriesCombo.selectionEquals("One"));
   }
 
