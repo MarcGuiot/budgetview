@@ -7,16 +7,18 @@
     <ui name="exoPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="exo.top" bottomColor="exo.bottom"
         borderWidth="1" borderColor="exo.border" cornerRadius="10"/>
+    <style selector="label.exotitle" foreground="exo.title" marginBottom="5" marginTop="0"
+           fill="none" anchor="center"/>
   </styles>
 
   <column opaque="false" margin="20">
 
-    <label text="${exo.name}" foreground="exo.title" marginBottom="5" marginTop="0"/>
-    <label text="${exo.title}" foreground="exo.title" marginBottom="5" marginTop="0" font="Arial,bold,24"
+    <label text="${exo.name}" styleClass="exotitle"/>
+    <label text="${exo.title}" styleClass="exotitle" font="Arial,bold,30"
            shadowDirection="northwest" shadowColor="exo.title.shadow"/>
-    <label text="${exo.description!}" foreground="exo.title" marginBottom="5" marginTop="0"/>
+    <label text="${exo.description!}" styleClass="exotitle"/>
     [#if exo.example??]
-    <label text="Exemple : ${exo.example!}" foreground="exo.title" marginBottom="5" marginTop="0"/>
+    <label text="Exemple : ${exo.example!}" styleClass="exotitle"/>
     [/#if]
 
     <panel ui="exoPanel" opaque="false" marginTop="15">
