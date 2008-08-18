@@ -1,25 +1,24 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.gui.components.GlobGaugeView;
-import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.model.OccasionalSeriesStat;
+import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
-import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.GlobSelectionListener;
+import org.designup.picsou.model.Series;
 import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.utils.GlobRepeat;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobMatcher;
@@ -54,17 +53,17 @@ public class OccasionalSeriesView extends View {
 
     final GlobRepeat repeat =
       builder.addRepeat("seriesRepeat",
-                      Category.TYPE,
-                      PicsouMatchers.masterCategories(),
-                      new RepeatComponentFactory<Glob>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, Glob master) {
-                          cellBuilder.add("categoryName",
-                                          GlobLabelView.init(Category.TYPE, repository, directory)
-                                            .forceSelection(master)
-                                            .getComponent());
-                          addAmountLabel("observedCategoryAmount", master, cellBuilder);
-                        }
-                      });
+                        Category.TYPE,
+                        GlobMatchers.NONE,
+                        new RepeatComponentFactory<Glob>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder, Glob master) {
+                            cellBuilder.add("categoryName",
+                                            GlobLabelView.init(Category.TYPE, repository, directory)
+                                              .forceSelection(master)
+                                              .getComponent());
+                            addAmountLabel("observedCategoryAmount", master, cellBuilder);
+                          }
+                        });
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {

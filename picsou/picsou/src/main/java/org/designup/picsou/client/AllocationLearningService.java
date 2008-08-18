@@ -50,9 +50,8 @@ public class AllocationLearningService {
     for (Glob labelToCategory : labelToCategories) {
       if (labelToCategory.get(LabelToCategory.CATEGORY).equals(deletedCategory)) {
         if (!parentCategory.equals(Category.ALL) && !parentCategory.equals(Category.NONE)) {
-          List<Glob> list = labels.get(labelToCategory.get(LabelToCategory.LABEL));
           boolean updated = false;
-          for (Glob glob : list) {
+          for (Glob glob : labels.get(labelToCategory.get(LabelToCategory.LABEL))) {
             if (parentCategory.equals(glob.get(LabelToCategory.CATEGORY))) {
               repository.update(glob.getKey(), LabelToCategory.COUNT, glob.get(LabelToCategory.COUNT) + 1);
               updated = true;
@@ -108,11 +107,6 @@ public class AllocationLearningService {
                         value(LabelToCategory.LABEL, label),
                         value(LabelToCategory.COUNT, 1));
     }
-  }
-
-  private boolean match(Glob transaction, String label) {
-    String pattern = extractCategorisationPattern(transaction);
-    return pattern != null && pattern.equals(label);
   }
 
   private String extractCategorisationPattern(Glob transaction) {

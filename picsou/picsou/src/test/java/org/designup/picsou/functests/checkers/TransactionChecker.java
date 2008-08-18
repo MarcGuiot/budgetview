@@ -66,53 +66,57 @@ public class TransactionChecker extends ViewChecker {
 
   public void assignCategory(MasterCategory category, final int... rows) {
     getTable().selectRows(rows);
-    chooseCategoryViaButtonClick(DataChecker.getCategoryName(category), rows[0]);
+    chooseCategoryViaButtonClick(category, rows[0]);
   }
 
   public void assignCategoryWithoutSelection(MasterCategory category, int row) {
-    chooseCategoryViaButtonClick(DataChecker.getCategoryName(category), row);
+    chooseCategoryViaButtonClick(category, row);
   }
 
-  public void assignCategory(String subCategory, int... rows) {
+  public void assignCategory(MasterCategory master, String subCategory, int... rows) {
     getTable().selectRows(rows);
-    chooseCategoryViaButtonClick(subCategory, rows[0]);
+    chooseCategoryViaButtonClick(master, subCategory, rows[0]);
   }
 
   public void assignCategoryViaKeyboard(MasterCategory category, int modifier, final int... rows) {
     getTable().selectRows(rows);
-    chooseCategoryViaKeyboard(getCategoryName(category), modifier);
+    chooseCategoryViaKeyboard(category, modifier);
   }
 
-  public void assignCategoryViaKeyboard(String subCategory, int modifier, int... rows) {
+  public CategorizationDialogChecker openCategoryChooserDialog(final int... rows) {
     getTable().selectRows(rows);
-    chooseCategoryViaKeyboard(subCategory, modifier);
+    return getCategorizationDialog(rows[0]);
   }
 
-  public CategoryChooserChecker openCategoryChooserDialog(final int... rows) {
-    getTable().selectRows(rows);
-    return new CategoryChooserChecker(WindowInterceptor.getModalDialog(new Trigger() {
-      public void run() throws Exception {
-        getTable().editCell(rows[0], TransactionView.CATEGORY_COLUMN_INDEX).getButton().click();
-      }
-    }));
+  private void chooseCategoryViaButtonClick(MasterCategory category, final int row) {
+    CategorizationDialogChecker checker = getCategorizationDialog(row);
+    checker.selectOccasionalSeries(category);
+    checker.validate();
   }
 
-  private void chooseCategoryViaButtonClick(String categoryName, final int row) {
-    CategoryChooserChecker checker = new CategoryChooserChecker(WindowInterceptor.getModalDialog(new Trigger() {
+  private void chooseCategoryViaButtonClick(MasterCategory category, String subcat, final int row) {
+    CategorizationDialogChecker checker = getCategorizationDialog(row);
+    checker.selectOccasionalSeries(category, subcat);
+    checker.validate();
+  }
+
+  private CategorizationDialogChecker getCategorizationDialog(final int row) {
+    Window dialog = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         getTable().editCell(row, TransactionView.CATEGORY_COLUMN_INDEX).getButton().click();
       }
-    }));
-    checker.selectCategory(categoryName);
+    });
+    return new CategorizationDialogChecker(dialog);
   }
 
-  private void chooseCategoryViaKeyboard(String categoryName, final int modifier) {
-    CategoryChooserChecker checker = new CategoryChooserChecker(WindowInterceptor.getModalDialog(new Trigger() {
+  private void chooseCategoryViaKeyboard(MasterCategory category, final int modifier) {
+    CategorizationDialogChecker checker = new CategorizationDialogChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         GuiUtils.pressKey(getTable().getJTable(), KeyEvent.VK_SPACE, modifier);
       }
     }));
-    checker.selectCategory(categoryName);
+    checker.selectOccasionalSeries(category);
+    checker.validate();
   }
 
   static String stringifyCategoryNames(MasterCategory... categories) {

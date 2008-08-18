@@ -43,7 +43,6 @@ public class OfxImporter implements AccountFileImporter {
 
   private static class Functor implements OfxFunctor {
     private GlobRepository repository;
-    private ReadOnlyGlobRepository initialRepository;
     private GlobList createdTransactions = new GlobList();
     private GlobList transactionsForAccount = new GlobList();
     private Map<String, Key> fIdToTransaction = new HashMap<String, Key>();
@@ -64,10 +63,8 @@ public class OfxImporter implements AccountFileImporter {
     private String name;
     private String memo;
 
-
     public Functor(GlobRepository targetRepository, ReadOnlyGlobRepository initialRepository) {
       this.repository = targetRepository;
-      this.initialRepository = initialRepository;
       generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
     }
 

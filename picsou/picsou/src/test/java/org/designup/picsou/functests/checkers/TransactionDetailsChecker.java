@@ -80,27 +80,17 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkCategory(MasterCategory category) {
-    Button hyperlink = getPanel().getButton("categoryChooserLink");
-    assertThat(hyperlink.textEquals(getCategoryName(category)));
+    TextBox label = getPanel().getTextBox("categoryName");
+    assertThat(label.textEquals(getCategoryName(category)));
   }
 
   public void checkCategory(String category) {
-    Button hyperlink = getPanel().getButton("categoryChooserLink");
-    assertThat(hyperlink.textEquals(category));
-  }
-
-  public void categorizeWithLink(MasterCategory category) {
-    categorize(category, getPanel().getButton("categoryChooserLink"));
-  }
-
-  private void categorize(MasterCategory category, Button button) {
-    CategoryChooserChecker categoryChooserDialog =
-      new CategoryChooserChecker(WindowInterceptor.getModalDialog(button.triggerClick()));
-    categoryChooserDialog.selectCategory(getCategoryName(category));
+    TextBox label = getPanel().getTextBox("categoryName");
+    assertThat(label.textEquals(category));
   }
 
   public void checkNoCategory() {
-    assertFalse(getPanel().getPanel("categoryChooserPanel").isVisible());
+    assertFalse(getPanel().getTextBox("categoryName").isVisible());
   }
 
   public void checkSplitNotVisible() {

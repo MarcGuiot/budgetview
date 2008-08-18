@@ -9,4 +9,7 @@
 * Mecanique de backup/restore pour les utilisateurs (crypte ou non?)
 
 * Changer date user
-  
+
+* Apprentissage regexps pour internationalisation
+
+* Pb d'affichage de mois futurs en version basique si transactions dans le futur

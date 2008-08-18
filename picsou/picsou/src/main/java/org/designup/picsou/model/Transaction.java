@@ -119,6 +119,7 @@ public class Transaction {
 
     try {
       repository.setTarget(transaction.getKey(), CATEGORY, create(Category.TYPE, categoryId));
+      repository.update(transaction.getKey(), Transaction.SERIES, Series.OCCASIONAL_SERIES_ID);
       repository.delete(repository.findByIndex(TransactionToCategory.TRANSACTION_INDEX,
                                                TransactionToCategory.TRANSACTION,
                                                transaction.get(Transaction.ID)).getGlobs());

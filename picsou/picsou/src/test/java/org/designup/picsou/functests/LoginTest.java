@@ -93,7 +93,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .check();
   }
 
-  public void testBankAreCorrectlyReImported() throws Exception {
+  public void testBanksAreCorrectlyReImported() throws Exception {
     final String filePath = OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
@@ -270,6 +270,13 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .init(this, new OperationChecker(window))
       .addTransaction("2006/01/12", -2, "Menu K")
       .load();
+
+    getTransactionView().initContent()
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2, MasterCategory.NONE)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
+      .check();
+
+    getTransactionView().assignCategory(MasterCategory.FOOD, 0);
 
     getTransactionView().initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2, MasterCategory.FOOD)

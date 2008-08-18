@@ -85,5 +85,4 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     }
     return super.getStringifier(globType);
   }
-
 }

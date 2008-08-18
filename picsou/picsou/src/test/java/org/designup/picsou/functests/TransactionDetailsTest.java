@@ -3,10 +3,12 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
+import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
+
   public void testLabel() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/18", 15.10, "Quick")
@@ -64,60 +66,94 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkNoAmountStatistics();
   }
 
-  public void testCategoriesWthoutSelection() throws Exception {
+  public void testCategoriesWithoutSelection() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/18", 10.00, "Quick")
       .load();
     transactionDetails.checkNoCategory();
   }
 
-  public void testCategoriesWithSingleSelection() throws Exception {
+  public void testDisplayedCategory() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/18", 10.00, "Quick")
       .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
-      .addTransaction("2008/06/14", 10.00, "Fouquet's", MasterCategory.FOOD)
       .load();
+
     transactions.getTable().selectRow(0);
-    transactionDetails.checkToCategorize();
-    transactionDetails.categorizeWithLink(MasterCategory.FOOD);
+    transactionDetails.checkNoCategory();
+
+    transactions.getTable().selectRow(1);
     transactionDetails.checkCategory(MasterCategory.FOOD);
-    transactions.getTable().selectRow(2);
-    transactionDetails.categorizeWithLink(MasterCategory.EDUCATION);
-    transactionDetails.checkCategory(MasterCategory.EDUCATION);
-    transactions.initContent()
-      .add("18/06/2008", TransactionType.VIREMENT, "Quick", "", 10.00, MasterCategory.FOOD)
-      .add("15/06/2008", TransactionType.VIREMENT, "McDo", "", 20.00, MasterCategory.FOOD)
-      .add("14/06/2008", TransactionType.VIREMENT, "Fouquet's", "", 10.00, MasterCategory.EDUCATION)
-      .check();
   }
 
-  public void testCategoriesWithMultipleSimilarTransactions() throws Exception {
+  public void testCategorizationWithSingleSelection() throws Exception {
     OfxBuilder.init(this)
+      .addTransaction("2008/06/18", 10.00, "Quick")
       .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
-      .addTransaction("2008/06/14", 10.00, "Fouquet's", MasterCategory.FOOD)
       .load();
-    transactions.getTable().selectRows(0, 1);
+
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkNoCategory();
+    CategorizationDialogChecker dialog = transactionDetails.categorize();
+    dialog.checkTable(new Object[][]{
+        {"18/06/2008", "Quick", 10.0},
+      });
+    dialog.checkSelectedTableRows(0);
+    dialog.selectOccasional();
+    dialog.selectOccasionalSeries(MasterCategory.FOOD);
+    dialog.validate();
+
     transactionDetails.checkCategory(MasterCategory.FOOD);
-    transactionDetails.categorizeWithLink(MasterCategory.EDUCATION);
-    transactionDetails.checkCategory(MasterCategory.EDUCATION);
+  }
+
+  public void testCategorizationWithMultipleSimilarTransactions() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/15", 20.00, "McDo 15/06")
+      .addTransaction("2008/06/14", 10.00, "McDo 14/06")
+      .load();
     transactions.initContent()
-      .add("15/06/2008", TransactionType.VIREMENT, "McDo", "", 20.00, MasterCategory.EDUCATION)
-      .add("14/06/2008", TransactionType.VIREMENT, "Fouquet's", "", 10.00, MasterCategory.EDUCATION)
+       .add("15/06/2008", TransactionType.VIREMENT, "McDo 15/06", "", 20.00)
+       .add("14/06/2008", TransactionType.VIREMENT, "McDo 14/06", "", 10.00)
+       .check();
+
+    transactions.getTable().selectRow(0);
+    CategorizationDialogChecker dialog = transactionDetails.categorize();
+    dialog.checkTable(new Object[][]{
+        {"14/06/2008", "McDo 14/06", 10.0},
+        {"15/06/2008", "McDo 15/06", 20.0},
+      });
+    dialog.checkSelectedTableRows(0, 1);
+    dialog.selectOccasional();
+    dialog.selectOccasionalSeries(MasterCategory.FOOD);
+    dialog.validate();
+
+    transactions.initContent()
+      .add("15/06/2008", TransactionType.VIREMENT, "McDo 15/06", "", 20.00, MasterCategory.FOOD)
+      .add("14/06/2008", TransactionType.VIREMENT, "McDo 14/06", "", 10.00, MasterCategory.FOOD)
       .check();
   }
 
-  public void testCategoriesWithMultipleDifferentTransactions() throws Exception {
+  public void testCategorizationWithMultipleDifferentTransactions() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
       .addTransaction("2008/06/14", 10.00, "Fouquet's", MasterCategory.EDUCATION)
       .load();
+
     transactions.getTable().selectRows(0, 1);
-    transactionDetails.checkManyCategories();
-    transactionDetails.categorizeWithLink(MasterCategory.EDUCATION);
-    transactionDetails.checkCategory(MasterCategory.EDUCATION);
+
+    CategorizationDialogChecker dialog = transactionDetails.categorize();
+    dialog.checkTable(new Object[][]{
+        {"14/06/2008", "Fouquet's", 10.0},
+        {"15/06/2008", "McDo", 20.0},
+      });
+    dialog.checkSelectedTableRows(0, 1);
+    dialog.selectOccasional();
+    dialog.selectOccasionalSeries(MasterCategory.FOOD);
+    dialog.validate();
+
     transactions.initContent()
-      .add("15/06/2008", TransactionType.VIREMENT, "McDo", "", 20.00, MasterCategory.EDUCATION)
-      .add("14/06/2008", TransactionType.VIREMENT, "Fouquet's", "", 10.00, MasterCategory.EDUCATION)
+      .add("15/06/2008", TransactionType.VIREMENT, "McDo", "", 20.00, MasterCategory.FOOD)
+      .add("14/06/2008", TransactionType.VIREMENT, "Fouquet's", "", 10.00, MasterCategory.FOOD)
       .check();
   }
 

@@ -1,12 +1,8 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.categorization.CategorizationAction;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
-import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
-import org.designup.picsou.gui.transactions.details.CategorisationHyperlinkButton;
 import org.designup.picsou.gui.transactions.details.TransactionSearch;
 import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
 import org.designup.picsou.model.Month;
@@ -15,7 +11,6 @@ import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobMultiLineTextEditor;
-import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobMultiLineTextView;
@@ -90,10 +85,7 @@ public class TransactionDetailsView extends View {
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_ONE,
                                              repository, directory));
 
-    CategoryChooserAction categoryChooserAction = new CategoryChooserAction(new TransactionRendererColors(directory), repository, directory);
-    HyperlinkButton categoryChooserLink =
-      new CategorisationHyperlinkButton(categoryChooserAction, repository, directory);
-    builder.add("categoryChooserLink", categoryChooserLink);
+    builder.addLabel("categoryName", Transaction.CATEGORY).setAutoHideIfEmpty(true);
 
     builder.addMultiLineTextView("splitMessage", Transaction.TYPE, new SplitStringifier()).setAutoHideIfEmpty(true);
 
@@ -108,7 +100,7 @@ public class TransactionDetailsView extends View {
                 addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true)
                   .setAutoHideMatcher(new BankDateVisibilityMatcher()));
 
-    builder.add("categorizeLink", new CategorizationAction(directory));
+    builder.add("categorizeLink", transactionView.getCategorizationAction());
 
     builder.add("transactionSeriesName", addLabel(descriptionService.getListStringifier(Transaction.SERIES), true));
 

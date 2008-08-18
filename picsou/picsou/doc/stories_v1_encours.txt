@@ -1,10 +1,10 @@
-* Budget : block Occasionel => OccasionalSeriesStat
+* Revoir tests F gestion series
 
 * Budget / SeriesStat : mettre montants attendus en negatif si depenses
 
 * Bug MAJ SeriesStat apres activation licence
 
-* TransactionView : colonne categorie ==> serie + hyperlien ouvre CategorizationDialog et plus CategoryChooser
+* TransactionView : pour les transactions planned, pas d'hyperliens et pas de "A classer"
 
 * TransactionDetail : retirer hyperlien categorie + revoir bouton selection serie
 
@@ -19,3 +19,7 @@
 * CategorizationDialog : bug selection apres affectation (selectionner les suivants)
 
 * Activation licence : cas ou pas de connexion internet
+
+* Creation d'enveloppe : forcer la selection d'une serie au moins
+
+* Gauge : depassements pour montants positifs + afficher niveau depassement

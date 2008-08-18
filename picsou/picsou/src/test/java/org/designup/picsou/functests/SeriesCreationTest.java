@@ -40,8 +40,8 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkSeries("Prime");
     transactionDetails.checkCategory(MasterCategory.INCOME);
     transactions.initContent()
-      .add("30/06/2008", TransactionType.PLANNED, "Prime", "", 0.0, MasterCategory.INCOME)
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "WorldCo/june", "", -1129.90, MasterCategory.INCOME)
+      .add("30/06/2008", TransactionType.PLANNED, "Prime", "", 0.0, "Prime")
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "WorldCo/june", "", -1129.90, "Prime")
       .check();
   }
 

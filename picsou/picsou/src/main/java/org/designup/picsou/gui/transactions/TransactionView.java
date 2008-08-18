@@ -2,11 +2,11 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.categorization.CategorizationAction;
 import org.designup.picsou.gui.components.PicsouTableHeaderCustomizer;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.TransactionCategoriesStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.gui.transactions.categorization.CategoryChooserAction;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
@@ -27,10 +27,7 @@ import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -52,7 +49,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
 
   private GlobTableView view;
   private TransactionRendererColors rendererColors;
-  private CategoryChooserAction categoryChooserAction;
+  private CategorizationAction categorizationAction;
   private TransactionSelection transactionSelection;
   private String searchFilter;
   private PicsouTableHeaderPainter headerPainter;
@@ -60,7 +57,11 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
   public TransactionView(GlobRepository repository, Directory directory, TransactionSelection transactionSelection) {
     super(repository, directory);
     rendererColors = new TransactionRendererColors(directory);
-    categoryChooserAction = new CategoryChooserAction(rendererColors, repository, directory);
+    categorizationAction = new CategorizationAction(repository, directory) {
+      protected GlobList getAllGlobs() {
+        return view.getGlobs();
+      }
+    };
     createTable();
     this.transactionSelection = transactionSelection;
     directory.get(ColorService.class).addListener(this);
@@ -98,8 +99,12 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
     headerPainter.setFiltered(Strings.isNotEmpty(searchFilter));
   }
 
+  public CategorizationAction getCategorizationAction() {
+    return categorizationAction;
+  }
+
   private JTable createTable() {
-    view = createGlobTableView(categoryChooserAction, repository, descriptionService, directory, rendererColors);
+    view = createGlobTableView(categorizationAction, repository, descriptionService, directory, rendererColors);
     view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
     headerPainter = new PicsouTableHeaderPainter(view, directory);
@@ -113,7 +118,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
                                                           rendererColors,
                                                           CATEGORY_COLUMN_INDEX));
 
-    TransactionViewUtils.installKeyboardCategorization(table, categoryChooserAction, NOTE_COLUMN_INDEX);
+    TransactionViewUtils.installKeyboardCategorization(table, categorizationAction, NOTE_COLUMN_INDEX);
     Gui.installRolloverOnButtons(table, new int[]{CATEGORY_COLUMN_INDEX, AMOUNT_COLUMN_INDEX});
     table.setDragEnabled(false);
     table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -124,7 +129,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
     return table;
   }
 
-  private static GlobTableView createGlobTableView(CategoryChooserAction categoryChooserAction, GlobRepository repository,
+  private static GlobTableView createGlobTableView(Action categoryChooserAction, GlobRepository repository,
                                                    DescriptionService descriptionService, Directory directory,
                                                    TransactionRendererColors rendererColors) {
     TransactionComparator comparator = TransactionComparator.DESCENDING;
@@ -134,8 +139,8 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
 
     GlobTableView view = GlobTableView.init(TYPE, repository, comparator, directory);
 
-    TransactionCategoryColumn categoryColumn =
-      new TransactionCategoryColumn(categoryChooserAction, view, rendererColors, descriptionService, repository, directory);
+    TransactionSeriesColumn seriesColumn =
+      new TransactionSeriesColumn(view, rendererColors, descriptionService, repository, directory);
 
     TransactionAmountColumn amountColumn =
       new TransactionAmountColumn(view, rendererColors, descriptionService, repository, directory);
@@ -145,7 +150,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
 
     return view
       .addColumn(Lang.get("date"), new TransactionDateStringifier(comparator), LabelCustomizers.font(dateFont))
-      .addColumn(descriptionService.getLabel(Category.TYPE), categoryColumn, categoryColumn,
+      .addColumn(descriptionService.getLabel(Category.TYPE), seriesColumn, seriesColumn,
                  new TransactionCategoriesStringifier(categoryStringifier).getComparator(repository))
       .addColumn(LABEL, LabelCustomizers.bold(), CellPainter.NULL)
       .addColumn(Lang.get("amount"), amountColumn, amountStringifier.getComparator(repository))

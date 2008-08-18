@@ -13,8 +13,10 @@
           <table ref="transactionTable" showGrid="false" showVerticalLines="false"/>
         </scrollPane>
         <row>
-          <checkBox ref="autoSelection" text="$categorization.autoselection" anchor="left"/>
-          <checkBox ref="autoHide" text="$categorization.autohide" anchor="right"/>
+          <checkBox ref="autoSelection" text="$categorization.autoselection" anchor="left" font="-,plain,10"/>
+          <checkBox ref="autoHide" text="$categorization.autohide" anchor="right" font="-,plain,10"/>
+          <button name="nextTransaction" action="nextTransaction" text="$categorization.next"
+                  fill="none" anchor="east" font="-,plain,10"/>
         </row>
       </column>
 
@@ -37,7 +39,7 @@
               <column>
                 <toggleButton ref="invisibleIncomeToggle" visible="false"/>
                 <scrollPane>
-                  <repeat ref="incomeSeriesRepeat">
+                  <repeat ref="incomeSeriesRepeat" layout="wrappedColumn">
                     <toggleButton ref="seriesToggle"/>
                   </repeat>
                 </scrollPane>
@@ -49,7 +51,7 @@
               <column>
                 <toggleButton ref="invisibleRecurringToggle" visible="false"/>
                 <scrollPane>
-                  <repeat ref="recurringSeriesRepeat">
+                  <repeat ref="recurringSeriesRepeat" layout="wrappedColumn">
                     <toggleButton ref="seriesToggle"/>
                   </repeat>
                 </scrollPane>
@@ -61,7 +63,7 @@
               <column>
                 <toggleButton ref="invisibleEnvelopeToggle" visible="false"/>
                 <scrollPane>
-                  <repeat ref="envelopeSeriesRepeat">
+                  <repeat ref="envelopeSeriesRepeat" layout="wrappedColumn">
                     <column>
                       <label ref="envelopeSeriesName"/>
                       <repeat ref="envelopeCategoryRepeat">
@@ -91,11 +93,6 @@
             </card>
 
           </cards>
-        </row>
-
-        <row margin="10">
-          <filler fill="horizontal"/>
-          <button name="nextTransaction" action="nextTransaction" text="$categorization.next"/>
         </row>
 
       </column>

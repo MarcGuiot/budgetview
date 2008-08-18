@@ -163,13 +163,13 @@ public class CategorizationDialog {
     return localDirectory;
   }
 
-  public void show(GlobList transactions, boolean selectAll) {
+  public void show(GlobList transactions, boolean selectAll, boolean autoHideCategorized) {
     if (transactions.isEmpty()) {
       return;
     }
     localRepository.rollback();
     localRepository.reset(transactions, Transaction.TYPE);
-    autoHideCheckBox.setSelected(!selectAll);
+    autoHideCheckBox.setSelected(autoHideCategorized);
     updateAutoHide();
     if (selectAll) {
       transactionTable.select(localRepository.getAll(Transaction.TYPE), true);
@@ -237,15 +237,7 @@ public class CategorizationDialog {
       return;
     }
 
-    Glob transaction = currentTransactions.get(0);
-    final String referenceLabel = transaction.get(Transaction.LABEL_FOR_CATEGORISATION);
-    if (Strings.isNullOrEmpty(referenceLabel)) {
-      return;
-    }
-
-    final GlobList similarTransactions =
-      localRepository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX,
-                                  referenceLabel);
+    final GlobList similarTransactions = getSimilarTransactions(currentTransactions.get(0), localRepository);
     if (similarTransactions.size() > 1) {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
@@ -253,6 +245,16 @@ public class CategorizationDialog {
         }
       });
     }
+  }
+
+  public static GlobList getSimilarTransactions(Glob transaction, GlobRepository repository) {
+    final String referenceLabel = transaction.get(Transaction.LABEL_FOR_CATEGORISATION);
+    if (Strings.isNullOrEmpty(referenceLabel)) {
+      return new GlobList(transaction);
+    }
+
+    return repository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX, referenceLabel);
+
   }
 
   private void updateAutoHide() {

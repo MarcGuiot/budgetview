@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.transactions.columns;
 
+import org.designup.picsou.gui.categorization.CategorizationDialog;
+import org.designup.picsou.gui.description.TransactionSeriesStringifier;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
@@ -16,34 +16,36 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class TransactionCategoryColumn extends AbstractTransactionEditor implements ColorChangeListener {
-  private GlobStringifier categoryStringifier;
+public class TransactionSeriesColumn extends AbstractTransactionEditor implements ColorChangeListener {
+  private GlobStringifier seriesStringifier;
   private HyperlinkButton rendererButton;
   private JPanel rendererPanel;
   private HyperlinkButton editorButton;
   private JPanel editorPanel;
-  private Action categoryChooserAction;
+  private GlobTableView tableView;
   private Glob transaction;
   private Color selectedColor;
   private Color toCategorizeColor;
   private Font normalFont;
   private Font toCategorizeFont;
 
-  public TransactionCategoryColumn(Action categoryChooserAction, GlobTableView view,
-                                   TransactionRendererColors transactionRendererColors,
-                                   DescriptionService descriptionService,
-                                   GlobRepository repository,
-                                   Directory directory) {
+  public TransactionSeriesColumn(GlobTableView view,
+                                 TransactionRendererColors transactionRendererColors,
+                                 DescriptionService descriptionService,
+                                 GlobRepository repository,
+                                 Directory directory) {
     super(view, transactionRendererColors, descriptionService, repository, directory);
-    this.categoryChooserAction = categoryChooserAction;
+    this.tableView = view;
 
-    categoryStringifier = descriptionService.getStringifier(Category.TYPE);
+    seriesStringifier = new TransactionSeriesStringifier();
 
     FontLocator fontLocator = directory.get(FontLocator.class);
     normalFont = fontLocator.get("transactionView.category");
@@ -88,14 +90,11 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor impleme
       button = this.editorButton;
       panel = this.editorPanel;
     }
-    boolean categoryNone = Transaction.hasNoCategory(transaction);
-    boolean multiCategorized = TransactionToCategory.hasCategories(transaction, repository);
-    if (!categoryNone && !multiCategorized) {
+    if (transaction.get(Transaction.SERIES) != null) {
       rendererColors.setForeground(button, isSelected, transaction);
       button.setFont(normalFont);
       button.setUnderline(false);
-      Glob category = repository.findLinkTarget(transaction, Transaction.CATEGORY);
-      button.setText(categoryStringifier.toString(category, repository));
+      button.setText(seriesStringifier.toString(transaction, repository));
     }
     else {
       button.setForeground(isSelected ? selectedColor : toCategorizeColor);
@@ -109,13 +108,29 @@ public class TransactionCategoryColumn extends AbstractTransactionEditor impleme
 
   private class OpenChooserAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
-      openCategoryChooser(transaction);
-    }
-
-    private void openCategoryChooser(Glob transaction) {
       tableView.getComponent().requestFocus();
       selectTransactionIfNeeded(transaction);
-      categoryChooserAction.actionPerformed(null);
+
+      CategorizationDialog dialog = directory.get(CategorizationDialog.class);
+      dialog.show(getTransactionList(transaction), true, false);
+    }
+
+    private GlobList getTransactionList(Glob transaction) {
+      GlobList selection = tableView.getCurrentSelection();
+      if (selection.size() > 1) {
+        return selection;
+      }
+      else if ((transaction.get(Transaction.SERIES) != null) ||
+               (Strings.isNullOrEmpty(transaction.get(Transaction.LABEL_FOR_CATEGORISATION)))) {
+        return new GlobList(transaction);
+      }
+      else {
+        return tableView.getGlobs()
+          .filter(and(fieldEquals(Transaction.LABEL_FOR_CATEGORISATION,
+                                  transaction.get(Transaction.LABEL_FOR_CATEGORISATION)),
+                      isNull(Transaction.SERIES)),
+                  repository);
+      }
     }
 
     private void selectTransactionIfNeeded(Glob transaction) {

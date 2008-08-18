@@ -15,8 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
-  private static final String DEFAULT_BG = "EBF0F7";
-  private static final String ERROR_BG = "red";
 
   protected void setUp() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2006/01/10"));
@@ -32,9 +30,10 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     List<MasterCategory> proposedCategories = new ArrayList<MasterCategory>();
     proposedCategories.addAll(Arrays.asList(MasterCategory.values()));
     proposedCategories.remove(MasterCategory.ALL);
+    proposedCategories.remove(MasterCategory.NONE);
     String[] names = categories.getSortedCategoryNames(proposedCategories);
 
-    transactions.openCategoryChooserDialog(0).checkContains(names);
+    transactions.openCategoryChooserDialog(0).checkContainsOccasionalCategories(names);
   }
 
   public void testAllocation() throws Exception {

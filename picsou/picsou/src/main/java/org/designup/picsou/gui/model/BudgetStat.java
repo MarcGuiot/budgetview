@@ -14,12 +14,10 @@ import org.globsframework.metamodel.utils.GlobTypeLoader;
 public class BudgetStat {
   public static GlobType TYPE;
 
-  @Key
-  @Target(Month.class)
+  @Key @Target(Month.class)
   public static IntegerField MONTH;
 
-  @Key
-  @Target(BudgetArea.class)
+  @Key @Target(BudgetArea.class)
   public static LinkField BUDGET_AREA;
 
   @DefaultDouble(0.0)

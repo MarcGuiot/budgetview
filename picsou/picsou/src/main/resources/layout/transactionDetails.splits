@@ -8,8 +8,7 @@
     <style selector="label.formLabel"
            fill="none" anchor="left"
            foreground="transaction.detail.formLabel" font="-,plain,10"/>
-    <style selector=".formValue"
-           fill="none" anchor="right"/>
+    <style selector=".formValue" fill="none" anchor="right" font="-,plain,11"/>
 
     <style selector="hyperlink" foreground="#6666FF" opaque="false"/>
     <style selector="hyperlink#splitLink" font="-,plain,10"/>
@@ -64,7 +63,7 @@
       <column>
         <row marginBottom="0">
           <label text="$transaction.details.category" styleClass="formLabel"/>
-          <button ref="categoryChooserLink" styleClass="hyperlink"/>
+          <label ref="categoryName" styleClass="formValue"/>
         </row>
         <textArea ref="splitMessage"/>
         <button name="splitLink" action="splitLink" marginTop="0" styleClass="hyperlink"/>
@@ -76,11 +75,12 @@
       <textArea ref="originalLabel"/>
     </column>
 
-    <button action="categorizeLink" styleClass="hyperlink"/>
     <row>
       <label text="$transaction.details.series" styleClass="formLabel" autoHideSource="transactionSeriesName"/>
       <label ref="transactionSeriesName"/>
     </row>
+
+    <button action="categorizeLink"/>
 
     <filler fill="vertical"/>
 

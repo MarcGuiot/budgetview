@@ -105,9 +105,6 @@ public class CategoryChooserDialog implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, java.util.List<GlobType> changedTypes) {
-    if (changedTypes.contains(Category.TYPE)) {
-
-    }
   }
 
   private void loadDialogContent() {

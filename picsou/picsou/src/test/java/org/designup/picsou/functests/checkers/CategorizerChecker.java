@@ -6,14 +6,10 @@ import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.Window;
 
 public class CategorizerChecker extends DataChecker {
-  private Window mainWindow;
   private TransactionChecker transactions;
-  private TransactionDetailsChecker transactionDetails;
 
   public CategorizerChecker(Window mainWindow) {
-    this.mainWindow = mainWindow;
     transactions = new TransactionChecker(mainWindow);
-    transactionDetails = new TransactionDetailsChecker(mainWindow);
   }
 
   public void setRecurring(String label, String name, boolean showSeriesInitialization) {

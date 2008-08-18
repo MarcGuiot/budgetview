@@ -30,12 +30,10 @@ Details transactions
 * Cas de transaction deja splittee
 * Notes
 
-
 Misc
 ----
 * Split transaction : supprimer "disposable"
 * Memoriser dernier repertoire pour le filechooser
-
 
 Fenetre import
 --------------

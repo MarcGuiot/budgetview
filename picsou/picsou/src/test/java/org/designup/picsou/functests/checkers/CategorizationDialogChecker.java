@@ -211,10 +211,12 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void selectOccasionalSeries(MasterCategory category) {
+    selectOccasional();
     getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).click();
   }
 
   public void selectOccasionalSeries(MasterCategory masterCategory, String subcat) {
+    selectOccasional();
     final String toggleName = "occasionalSeries" + ":" + masterCategory.getName() + ":" + subcat;
     getOccasionalSeriesPanel().getToggleButton(toggleName).click();
   }
@@ -241,6 +243,14 @@ public class CategorizationDialogChecker extends DataChecker {
   public void checkOccasionalSeries(MasterCategory category) {
     assertTrue(dialog.getToggleButton("occasionalExpenses").isSelected());
     assertTrue(getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).isSelected());
+  }
+
+  public void checkContainsOccasionalCategories(String[] names) {
+    selectOccasional();
+    Panel panel = getOccasionalSeriesPanel();
+    for (String name : names) {
+      UISpecAssert.assertTrue(panel.getToggleButton(name).isVisible());
+    }
   }
 
   public void checkEnvelopeSeriesIsSelected(String seriesName, MasterCategory category) {

@@ -193,7 +193,7 @@ public class SplitTransactionDialog {
         public void actionPerformed(ActionEvent e) {
           CategorizationDialog categorizationDialog =
             new CategorizationDialog(dialog, repositoryForSplitPanel, directoryForSplitPanel);
-          categorizationDialog.show(new GlobList(splittedTransaction), false);
+          categorizationDialog.show(new GlobList(splittedTransaction), false, true);
         }
       };
 
@@ -257,12 +257,12 @@ public class SplitTransactionDialog {
         public void actionPerformed(ActionEvent e) {
           CategorizationDialog categorizationDialog =
             new CategorizationDialog(dialog, localRepository, directoryForSplitPanel);
-          categorizationDialog.show(new GlobList(splittedTransaction), false);
+          categorizationDialog.show(new GlobList(splittedTransaction), false, true);
         }
       };
 
-    TransactionCategoryColumn categoryColumn =
-      new TransactionCategoryColumn(categorizationAction, view, rendererColors,
+    TransactionSeriesColumn seriesColumn =
+      new TransactionSeriesColumn(view, rendererColors,
                                     descriptionService, localRepository, localDirectory);
 
     DeleteSplitTransactionColumn deleteSplitColumn =
@@ -270,7 +270,7 @@ public class SplitTransactionDialog {
                                        localRepository, localDirectory);
 
     view
-      .addColumn(descriptionService.getLabel(Category.TYPE), categoryColumn, categoryColumn,
+      .addColumn(descriptionService.getLabel(Category.TYPE), seriesColumn, seriesColumn,
                  categoriesStringifier.getComparator(localRepository))
       .addColumn(LABEL)
       .addColumn(Lang.get("amount"),

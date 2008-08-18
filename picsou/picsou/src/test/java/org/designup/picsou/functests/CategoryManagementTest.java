@@ -13,6 +13,7 @@ import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class CategoryManagementTest extends LoggedInFunctionalTestCase {
+
   public void testFiltering() throws Exception {
     learn("BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", MasterCategory.FOOD);
     learn("STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", MasterCategory.TRANSPORTS);
@@ -21,8 +22,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
 
     String fileName = org.globsframework.utils.TestUtils.getFileName(this, ".qif");
 
-    Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"),
-                           fileName);
+    Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"), fileName);
 
     operations.importQifFile(0.0, fileName, "Societe Generale");
 
@@ -176,7 +176,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -2.0, "MenuK", MasterCategory.FOOD)
       .load();
     categories.select(MasterCategory.ALL);
-    transactions.openCategoryChooserDialog(0).checkContains(remove(expectedCategories, "All categories"));
+    transactions.openCategoryChooserDialog(0).checkContainsOccasionalCategories(remove(expectedCategories, "All categories", "Unassigned"));
   }
 
   public void testCreatingASiblingSubCategory() throws Exception {
