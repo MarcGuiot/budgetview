@@ -130,14 +130,5 @@ public class GlobPrinter {
     }
     return row.toArray(new String[row.size()]);
   }
-
-  public static String dump(Glob glob) {
-    StringBuilder builder = new StringBuilder();
-    GlobType type = glob.getType();
-    for (Field field : type.getFields()) {
-      builder.append(field.getName()).append("=").append(glob.getValue(field)).append(('\n'));
-    }
-    return builder.toString();
-  }
 }
 
