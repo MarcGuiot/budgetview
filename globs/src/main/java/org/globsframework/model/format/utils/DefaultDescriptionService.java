@@ -178,6 +178,10 @@ public class DefaultDescriptionService implements DescriptionService {
     return new CompositeGlobListStringifier(stringifier);
   }
 
+  public GlobStringifier getStringifier(LinkField link) {
+    return getStringifier((Link)link);
+  }
+
   public GlobListStringifier getListStringifier(LinkField link) {
     return getListStringifier((Link)link);
   }

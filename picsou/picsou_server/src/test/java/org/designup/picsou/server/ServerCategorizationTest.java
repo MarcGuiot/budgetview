@@ -2,6 +2,7 @@ package org.designup.picsou.server;
 
 import org.designup.picsou.functests.checkers.CategoryChooserChecker;
 import org.designup.picsou.functests.checkers.DataChecker;
+import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Category;
@@ -34,7 +35,9 @@ public class ServerCategorizationTest extends ServerFuncTestCase {
         public Trigger process(final Window window) throws Exception {
           return new Trigger() {
             public void run() throws Exception {
-              CategoryChooserChecker.selectCategory(window, DataChecker.getCategoryName(MasterCategory.FOOD));
+              CategorizationDialogChecker checker = new CategorizationDialogChecker(window);
+              checker.selectOccasionalSeries(MasterCategory.FOOD);
+              checker.validate();
             }
           };
         }

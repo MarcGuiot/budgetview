@@ -6,6 +6,7 @@ import org.globsframework.gui.views.GlobViewModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.GlobMatcher;
 
 import javax.swing.*;
@@ -143,6 +144,10 @@ public class GlobTableModel extends AbstractTableModel implements SortableTableM
 
   public Glob get(int index) {
     return model.get(index);
+  }
+
+  public GlobList getAll() {
+    return model.getAll();
   }
 
   public void dispose() {

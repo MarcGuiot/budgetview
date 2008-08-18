@@ -17,6 +17,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
@@ -91,6 +92,14 @@ public class GlobsPanelBuilder extends SplitsBuilder {
 
   public GlobLabelView addLabel(String name, Field field) {
     return store(GlobLabelView.init(field, repository, directory)).setName(name);
+  }
+
+  public GlobLabelView addLabel(String name, Link link) {
+    return store(GlobLabelView.init(link, repository, directory)).setName(name);
+  }
+
+  public GlobLabelView addLabel(String name, LinkField link) {
+    return store(GlobLabelView.init(link, repository, directory)).setName(name);
   }
 
   public GlobMultiLineTextView addMultiLineTextView(String name, GlobType type) {

@@ -25,6 +25,8 @@ public interface DescriptionService {
   
   GlobStringifier getStringifier(Link link);
 
+  GlobStringifier getStringifier(LinkField link);
+
   GlobListStringifier getListStringifier(Link link);
 
   GlobListStringifier getListStringifier(LinkField link);

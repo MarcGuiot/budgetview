@@ -299,6 +299,10 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     return defaultFont;
   }
 
+  public GlobList getGlobs() {
+    return tableModel.getAll();
+  }
+
   public Glob getGlobAt(int index) {
     return tableModel.getValueAt(index, 0);
   }
