@@ -4,6 +4,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
+import org.globsframework.gui.utils.DefaultSelection;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -19,16 +20,17 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   protected Field field;
   private GlobList lastSelectedGlobs;
   protected COMPONENT_TYPE textComponent;
+  private Directory directory;
   private Object valueForMultiSelection;
   private boolean forceNotEditable;
+  private GlobList forcedSelection;
 
   protected AbstractGlobTextEditor(Field field, COMPONENT_TYPE component, GlobRepository repository, Directory directory) {
     super(field.getGlobType(), repository, directory);
     this.field = field;
     this.textComponent = component;
+    this.directory = directory;
     initTextComponent();
-    SelectionService service = directory.get(SelectionService.class);
-    service.addListener(this, field.getGlobType());
   }
 
   public AbstractGlobTextEditor setMultiSelectionText(Object valueForMultiSelection) {
@@ -64,7 +66,19 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   protected abstract void registerChangeListener();
 
   public final COMPONENT_TYPE getComponent() {
+    if (forcedSelection != null) {
+      selectionUpdated(new DefaultSelection(forcedSelection, forcedSelection.getTypes()));
+    }
+    else {
+      SelectionService service = directory.get(SelectionService.class);
+      service.addListener(this, field.getGlobType());
+    }
     return textComponent;
+  }
+
+  public AbstractGlobTextEditor forceSelection(Glob glob) {
+    this.forcedSelection = new GlobList(glob);
+    return this;
   }
 
   protected void applyChanges() {

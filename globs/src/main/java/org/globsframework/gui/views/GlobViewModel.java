@@ -7,7 +7,10 @@ import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.SortedGlobList;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class GlobViewModel implements ChangeSetListener {
   private SortedGlobList globs;
@@ -120,7 +123,7 @@ public class GlobViewModel implements ChangeSetListener {
     }
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(type)) {
       initList(true);
     }

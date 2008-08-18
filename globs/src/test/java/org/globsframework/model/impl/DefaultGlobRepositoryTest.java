@@ -770,7 +770,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         log.add("trigger.globsChanged.end " + nextId);
       }
 
-      public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
         long nextId = idGenerator.getNextId(DummyObject.ID, 1);
         log.add("trigger.globsReset.begin " + nextId);
         createDummyObject(repository, nextId);
@@ -782,7 +782,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         log.add("listener.globsChanged");
       }
 
-      public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
         log.add("listener.globsReset");
       }
     });

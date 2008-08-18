@@ -4,9 +4,9 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 
-import java.util.List;
+import java.util.Set;
 
 public abstract class DefaultChangeSetListener implements ChangeSetListener {
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

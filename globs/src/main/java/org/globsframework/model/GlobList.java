@@ -144,6 +144,15 @@ public class GlobList extends ArrayList<Glob> {
     return result;
   }
 
+  public Integer[] getValues(IntegerField field) {
+    Integer[] result = new Integer[size()];
+    int index = 0;
+    for (Glob glob : this) {
+      result[index++] = glob.get(field);
+    }
+    return result;
+  }
+
   public SortedSet<Integer> getSortedSet(IntegerField field) {
     SortedSet<Integer> result = new TreeSet<Integer>();
     for (FieldValues values : this) {

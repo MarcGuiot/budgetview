@@ -70,7 +70,7 @@ public class GlobTableModel extends AbstractTableModel implements SortableTableM
   }
 
   public void reset() {
-    model.globsReset(repository, Collections.singletonList(type));
+    model.globsReset(repository, Collections.singleton(type));
   }
 
   public int getRowCount() {

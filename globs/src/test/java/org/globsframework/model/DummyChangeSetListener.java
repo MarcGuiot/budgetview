@@ -7,16 +7,17 @@ import org.globsframework.utils.TestUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class DummyChangeSetListener implements ChangeSetListener {
   private ChangeSet lastChanges;
-  private List<GlobType> lastResetTypes;
+  private Set<GlobType> lastResetTypes;
 
   public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
     lastChanges = changeSet;
   }
 
-  public void globsReset(GlobRepository globRepository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
     lastResetTypes = changedTypes;
   }
 

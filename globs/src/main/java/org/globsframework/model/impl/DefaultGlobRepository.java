@@ -458,7 +458,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   public void reset(GlobList newGlobs, GlobType... changedTypes) {
     enterBulkDispatchingMode();
-    List typesList = Arrays.asList(changedTypes);
+    Set<GlobType> typesList = new HashSet<GlobType>(Arrays.asList(changedTypes));
     for (GlobType type : changedTypes) {
       for (Map.Entry<Key, Glob> entry : globs.get(type).entrySet()) {
         IndexTables indexTables = indexManager.getAssociatedTable(type);

@@ -8,14 +8,15 @@ import org.globsframework.gui.editors.GlobPasswordEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
-import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
-import org.globsframework.gui.views.*;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.GlobRepeat;
+import org.globsframework.gui.views.*;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -71,7 +72,23 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return store(GlobTextEditor.init(field, repository, directory));
   }
 
+  public GlobNumericEditor addEditor(String name, DoubleField field) {
+    GlobNumericEditor numericEditor = store(GlobNumericEditor.init(field, repository, directory));
+    numericEditor.setName(name);
+    return numericEditor;
+  }
+
   public GlobNumericEditor addEditor(DoubleField field) {
+    return store(GlobNumericEditor.init(field, repository, directory));
+  }
+
+  public GlobNumericEditor addEditor(String name, IntegerField field) {
+    GlobNumericEditor numericEditor = store(GlobNumericEditor.init(field, repository, directory));
+    numericEditor.setName(name);
+    return numericEditor;
+  }
+
+  public GlobNumericEditor addEditor(IntegerField field) {
     return store(GlobNumericEditor.init(field, repository, directory));
   }
 
@@ -118,19 +135,19 @@ public class GlobsPanelBuilder extends SplitsBuilder {
   }
 
   public GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
-                          RepeatComponentFactory factory) {
+                              RepeatComponentFactory factory) {
     final GlobStringifier stringifier = directory.get(DescriptionService.class).getStringifier(type);
     return addRepeat(name, type, matcher, stringifier.getComparator(repository), factory);
   }
 
   public GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
-                          Comparator<Glob> comparator, RepeatComponentFactory factory) {
+                              Comparator<Glob> comparator, RepeatComponentFactory factory) {
     return addRepeat(name, type, matcher, comparator, repository, this, factory);
   }
 
   public static GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
-                          Comparator<Glob> comparator, GlobRepository repository, SplitsBuilder builder,
-                          RepeatComponentFactory factory) {
+                                     Comparator<Glob> comparator, GlobRepository repository, SplitsBuilder builder,
+                                     RepeatComponentFactory factory) {
     GlobRepeatListener listener = new GlobRepeatListener();
     GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
     model.setFilter(matcher);
@@ -140,8 +157,8 @@ public class GlobsPanelBuilder extends SplitsBuilder {
   }
 
   public static GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
-                          Comparator<Glob> comparator, GlobRepository repository, RepeatCellBuilder builder,  
-                          RepeatComponentFactory factory) {
+                                     Comparator<Glob> comparator, GlobRepository repository, RepeatCellBuilder builder,
+                                     RepeatComponentFactory factory) {
     GlobRepeatListener listener = new GlobRepeatListener();
     GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
     model.setFilter(matcher);

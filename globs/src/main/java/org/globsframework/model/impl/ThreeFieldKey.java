@@ -5,10 +5,13 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Key;
+import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.MissingInfo;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 public class ThreeFieldKey extends Key {
   private Field keyField1;
@@ -26,12 +29,23 @@ public class ThreeFieldKey extends Key {
     SingleFieldKey.checkValue(keyField2, value2);
     SingleFieldKey.checkValue(keyField3, value3);
 
-    this.keyField1 = keyField1;
-    this.value1 = value1;
-    this.keyField2 = keyField2;
-    this.value2 = value2;
-    this.keyField3 = keyField3;
-    this.value3 = value3;
+    List<Field> keyFields = keyField1.getGlobType().getKeyFields();
+    if (keyFields.size() != 3) {
+      throw new InvalidParameter("Cannot use a Three field key for type " + keyField1.getGlobType() + " - " +
+                                 "key fields=" + keyFields);
+    }
+    Iterator<Field> iterator = keyFields.iterator();
+    Field field;
+    field = iterator.next();
+    this.keyField1 = field;
+    this.value1 = field == keyField1 ? value1 : field == keyField2 ? value2 : value3;
+    field = iterator.next();
+    this.keyField2 = field;
+    this.value2 = field == keyField2 ? value2 : field == keyField1 ? value1 : value3;
+    field = iterator.next();
+    this.keyField3 = field;
+    this.value3 = field == keyField3 ? value3 : field == keyField2 ? value2 : value1;
+
     this.keyField1.checkValue(value1);
     this.keyField2.checkValue(value2);
     this.keyField3.checkValue(value3);

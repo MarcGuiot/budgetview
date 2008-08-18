@@ -16,10 +16,12 @@ public class LocalGlobRepository extends GlobRepositoryDecorator {
   private List<GlobType> globTypes;
   private GlobList globs;
   private ChangeSetAggregator aggregator;
+  private Exception ex;
 
   LocalGlobRepository(GlobRepository reference, GlobRepository temporary,
                       List<GlobType> globTypes, GlobList globs) {
     super(temporary);
+    ex = new Exception();
     this.reference = reference;
     this.globTypes = globTypes;
     this.globs = globs;
@@ -61,4 +63,10 @@ public class LocalGlobRepository extends GlobRepositoryDecorator {
     return repository;
   }
 
+  public void printStackTrace() {
+    ex.printStackTrace();
+    if (reference instanceof LocalGlobRepository) {
+      ((LocalGlobRepository)reference).printStackTrace();
+    }
+  }
 }

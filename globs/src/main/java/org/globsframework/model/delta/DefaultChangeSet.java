@@ -9,8 +9,8 @@ import org.globsframework.xml.XmlChangeSetWriter;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -244,7 +244,7 @@ public class DefaultChangeSet implements MutableChangeSet {
     }
   }
 
-  public void clear(List<GlobType> globTypes) {
+  public void clear(Collection<GlobType> globTypes) {
     for (GlobType type : globTypes) {
       deltaGlobsByKey.removeAll(type);
     }
