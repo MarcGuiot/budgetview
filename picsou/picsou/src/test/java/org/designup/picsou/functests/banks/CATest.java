@@ -5,7 +5,7 @@ import org.designup.picsou.model.TransactionType;
 public class CATest extends SpecificBankTestCase {
   public void test() throws Exception {
     operations.importOfxFile(getFile("ca1.ofx"));
-    periods.selectAll();
+    timeline.selectAll();
     transactions
       .initContent()
       .add("14/08/2006", TransactionType.PRELEVEMENT, "Prel 459654 Free Telecom Free Hautdebit 44804529", "", -45.78)

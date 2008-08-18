@@ -261,7 +261,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .check();
 
     TransactionChecker checker = getTransactionView();
-    checker.assignCategory(MasterCategory.FOOD, 0);
+    checker.assignOccasionalSeries(MasterCategory.FOOD, 0);
 
     openNewLoginWindow();
     enterUserPassword("toto", "p4ssw0rd", false);
@@ -276,7 +276,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
       .check();
 
-    getTransactionView().assignCategory(MasterCategory.FOOD, 0);
+    getTransactionView().assignOccasionalSeries(MasterCategory.FOOD, 0);
 
     getTransactionView().initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2, MasterCategory.FOOD)

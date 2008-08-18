@@ -82,7 +82,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .add("15/06/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
       .check();
 
-    periods.selectCell("2008/07");
+    timeline.selectMonth("2008/07");
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, MasterCategory.TRANSPORTS)
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)

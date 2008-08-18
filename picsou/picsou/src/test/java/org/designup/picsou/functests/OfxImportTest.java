@@ -142,7 +142,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2005/12/25", -10.0, "Tx 0", MasterCategory.HOUSE)
       .load();
 
-    periods.selectCells("2005/12", "2006/01");
+    timeline.selectMonths("2005/12", "2006/01");
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -2.2, MasterCategory.NONE)

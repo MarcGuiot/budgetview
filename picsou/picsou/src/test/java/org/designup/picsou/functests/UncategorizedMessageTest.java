@@ -36,7 +36,7 @@ public class UncategorizedMessageTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCategorizationFromTransactionDetailsView() throws Exception {
-    periods.selectCells("2008/03","2008/04");
+    timeline.selectMonths("2008/03","2008/04");
     transactions.initContent()
       .add("15/04/2008", TransactionType.VIREMENT, "mac do", "", 12.00)
       .add("15/03/2008", TransactionType.VIREMENT, "fouquets", "", 100.00)

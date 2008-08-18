@@ -23,7 +23,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker dialog = transactions.categorize(0);
     dialog.checkLabel("WorldCo/june");
-
     dialog.selectIncome();
     dialog.checkContainsIncomeSeries("Salary", "Exceptional Income");
     dialog.selectIncomeSeries("Salary", true);
@@ -46,7 +45,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker dialog = transactions.categorize(0);
     dialog.checkLabel("Free Telecom");
-
     dialog.selectRecurring();
     dialog.checkContainsRecurringSeries("Internet", "Rental", "Electricity");
     dialog.selectRecurringSeries("Internet", true);
@@ -69,7 +67,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker dialog = transactions.categorize(0);
     dialog.checkLabel("AUCHAN C'EST BON");
-
     dialog.selectEnvelopes();
     dialog.checkContainsEnvelope("Groceries", MasterCategory.FOOD, MasterCategory.HOUSE);
     dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
@@ -96,14 +93,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker dialog = transactions.categorize(0);
     dialog.checkLabel("Fouquet's");
-
     dialog.selectOccasional();
     dialog.checkContainsOccasional(MasterCategory.MULTIMEDIA,
                                    MasterCategory.CLOTHING,
                                    MasterCategory.BEAUTY,
                                    MasterCategory.EDUCATION);
     dialog.checkContainsOccasional(MasterCategory.FOOD, "Saucisson");
-
     dialog.selectOccasionalSeries(MasterCategory.FOOD);
     dialog.validate();
 

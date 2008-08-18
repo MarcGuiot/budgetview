@@ -29,7 +29,7 @@ public abstract class PerfsTest extends LoggedInFunctionalTestCase {
     Chrono chrono = Chrono.start();
     for (int i = 0; i < 100; i++) {
       for (int m = 0; m < 10; m++) {
-        periods.selectCell(m);
+        timeline.selectCell(m);
       }
       System.out.println("Round " + i + " done in " + chrono.getElapsedTime());
     }
@@ -41,7 +41,7 @@ public abstract class PerfsTest extends LoggedInFunctionalTestCase {
     Chrono chrono = Chrono.start();
     for (int i = 0; i < 12; i++) {
       for (int m = 0; m < 10; m++) {
-        periods.selectCell(m);
+        timeline.selectCell(m);
         for (MasterCategory category : MasterCategory.values()) {
           categories.select(category);
         }
@@ -56,10 +56,10 @@ public abstract class PerfsTest extends LoggedInFunctionalTestCase {
     Chrono chrono = Chrono.start();
     for (int i = 0; i < 5; i++) {
       for (int row = 0; row < 5; row++) {
-        transactions.assignCategory(MasterCategory.FOOD, row);
+        transactions.assignOccasionalSeries(MasterCategory.FOOD, row);
       }
       for (int row = 0; row < 5; row++) {
-        transactions.assignCategory(MasterCategory.NONE, row);
+        transactions.assignOccasionalSeries(MasterCategory.NONE, row);
       }
       System.out.println("Round " + i + " done in " + chrono.getElapsedTime());
     }

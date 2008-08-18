@@ -64,7 +64,7 @@ public class TransactionChecker extends ViewChecker {
     return DataChecker.getCategoryName(category);
   }
 
-  public void assignCategory(MasterCategory category, final int... rows) {
+  public void assignOccasionalSeries(MasterCategory category, final int... rows) {
     getTable().selectRows(rows);
     chooseCategoryViaButtonClick(category, rows[0]);
   }

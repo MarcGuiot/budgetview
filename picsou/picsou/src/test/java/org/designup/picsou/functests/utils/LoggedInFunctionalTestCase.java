@@ -26,7 +26,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected ViewSelectionChecker views;
   protected AccountChecker accounts;
   protected CategoryChecker categories;
-  protected MonthChecker periods;
+  protected MonthChecker timeline;
   protected TransactionChecker transactions;
   protected TransactionDetailsChecker transactionDetails;
   protected OperationChecker operations;
@@ -80,7 +80,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     accounts = new AccountChecker(mainWindow);
     operations = new OperationChecker(mainWindow);
     categories = new CategoryChecker(mainWindow);
-    periods = new MonthChecker(mainWindow);
+    timeline = new MonthChecker(mainWindow);
     transactions = new TransactionChecker(mainWindow);
     transactionDetails = new TransactionDetailsChecker(mainWindow);
     graphics = new GraphicChecker(mainWindow);
@@ -97,7 +97,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     views = null;
     accounts = null;
     categories = null;
-    periods = null;
+    timeline = null;
     transactions = null;
     transactionDetails = null;
     operations = null;

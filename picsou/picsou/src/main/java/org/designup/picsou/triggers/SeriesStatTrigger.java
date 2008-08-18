@@ -14,7 +14,6 @@ public class SeriesStatTrigger implements ChangeSetListener {
     processTransactions(changeSet, repository);
   }
 
-
   private void processSeriesBudget(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {

@@ -21,7 +21,7 @@ public class BNPTest extends SpecificBankTestCase {
 
   public void test4() throws Exception {
     operations.importQifFile(100.0, getFile("bnp_Herve.qif"), "BNP");
-    periods.selectAll();
+    timeline.selectAll();
     transactions
       .initContent()
       .add("06/05/2008", TransactionType.PRELEVEMENT, "EDF PR QE CLIO BNPP NUM 001007 ECH 06.05", "", -24.00)
@@ -39,7 +39,7 @@ public class BNPTest extends SpecificBankTestCase {
 
   private void checkFile(String path) throws IOException {
     operations.importQifFile(100.0, getFile(path), "BNP");
-    periods.selectAll();
+    timeline.selectAll();
     transactions
       .initContent()
       .add("05/06/2008", TransactionType.CHECK, "CHEQUE N. 6872464", "", -20.50, "To categorize")

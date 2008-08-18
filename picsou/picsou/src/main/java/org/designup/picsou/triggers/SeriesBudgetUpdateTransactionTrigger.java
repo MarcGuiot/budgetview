@@ -69,7 +69,6 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
   }
 
   private boolean generatesPlannedTransactions(FieldValues values, Glob series) {
-    System.out.println("series = " + series);
     return values.get(SeriesBudget.ACTIVE) &&
            (values.get(SeriesBudget.AMOUNT) != null) &&
            (Math.abs(values.get(SeriesBudget.AMOUNT)) != 0.0) &&

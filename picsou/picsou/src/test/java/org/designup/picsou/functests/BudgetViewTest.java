@@ -70,7 +70,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
       .check();
 
-    periods.selectCells("2008/08");
+    timeline.selectMonths("2008/08");
 
     budgetView.recurring.checkTitle("Recurring expenses");
     budgetView.recurring.checkTotalAmounts(0.0, 84.0);

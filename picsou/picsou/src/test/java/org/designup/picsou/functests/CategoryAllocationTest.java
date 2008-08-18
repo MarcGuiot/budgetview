@@ -20,7 +20,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
-  public void testAllocationDialog() throws Exception {
+  public void testOccasionalCategoriesList() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Blah")
@@ -52,7 +52,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .add(MasterCategory.NONE, 0.0, 0.0, 2.2, 1.0)
       .check();
 
-    transactions.assignCategory(MasterCategory.FOOD, 0);
+    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "MiamMiam", "", -1.1, MasterCategory.FOOD)
@@ -76,7 +76,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD, MasterCategory.LEISURES)
       .check();
 
-    transactions.assignCategory(MasterCategory.HEALTH, 0);
+    transactions.assignOccasionalSeries(MasterCategory.HEALTH, 0);
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.HEALTH)
@@ -95,7 +95,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .add(MasterCategory.NONE, 0.0, 0.0, 4.4, 1.0)
       .check();
 
-    transactions.assignCategory(MasterCategory.INTERNAL, 0);
+    transactions.assignOccasionalSeries(MasterCategory.INTERNAL, 0);
     categories
       .initContent()
       .add(MasterCategory.ALL, 0.0, 0.0, -1.1, 1.0)
@@ -111,8 +111,8 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/02/10", -2.0, "MiamMiam")
       .load();
 
-    periods.assertEquals("2006/01 (0.00/1.00)", "2006/02 (0.00/2.00)");
-    periods.selectCell("2006/01");
+    timeline.assertDisplays("2006/01 (0.00/1.00)", "2006/02 (0.00/2.00)");
+    timeline.selectMonth("2006/01");
     categories.select(MasterCategory.NONE);
     transactions
       .initContent()
@@ -120,9 +120,9 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .check();
     categories.assertSelectionEquals(MasterCategory.NONE);
 
-    transactions.assignCategory(MasterCategory.FOOD, 0);
+    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
     categories.assertSelectionEquals(MasterCategory.NONE);
-    periods.assertCellSelected("2006/01");
+    timeline.checkSelection("2006/01");
 
     transactions.assertEmpty();
   }
@@ -136,7 +136,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     Button lintToClasified = new Panel((Container)transactions.getTable().getSwingRendererComponentAt(0, 1)).getButton();
     assertTrue(lintToClasified.foregroundEquals("red"));
 
-    transactions.assignCategory(MasterCategory.FOOD, 0);
+    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
     transactions.getTable().clearSelection();
     Button categorizedLink = new Panel((Container)transactions.getTable().getSwingRendererComponentAt(0, 1)).getButton();
     assertTrue(categorizedLink.foregroundEquals("black"));
@@ -166,7 +166,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/11", -1.0, "Menu K")
       .addTransaction("2006/01/10", -1.0, "Quick")
       .load();
-    transactions.assignCategory(MasterCategory.FOOD, 0);
+    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
     transactions
       .initContent()
       .add("13/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.0, MasterCategory.FOOD)
@@ -182,7 +182,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/11", -1.0, "Menu 14")
       .addTransaction("2006/01/10", -1.0, "Menu 12321")
       .load();
-    transactions.assignCategory(MasterCategory.FOOD, 0);
+    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Menu 14", "", -1.0, MasterCategory.FOOD)
@@ -196,7 +196,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/11", -1.0, "Cheque 123")
       .addTransaction("2006/01/10", -1.0, "Cheque 234")
       .load();
-    transactions.assignCategory(MasterCategory.FOOD, 0);
+    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 123", "", -1.0, MasterCategory.FOOD)
@@ -215,9 +215,9 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/11", -2.0, "REM CHQ 4")
       .addTransactionWithNote("2006/01/10", -1.0, "2", "note 1")
       .load();
-    transactions.assignCategory(MasterCategory.PUERICULTURE, 0, 2, 4);
+    transactions.assignOccasionalSeries(MasterCategory.PUERICULTURE, 0, 2, 4);
     categories.select(MasterCategory.ALL);
-    periods.selectCell("2006/01");
+    timeline.selectMonth("2006/01");
     transactions
       .initContent()
       .add("13/01/2006", TransactionType.CHECK, "CHEQUE N. 1", "", -1.0, MasterCategory.PUERICULTURE)

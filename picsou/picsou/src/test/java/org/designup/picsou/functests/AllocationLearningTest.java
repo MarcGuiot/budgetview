@@ -16,7 +16,7 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2006/01/10", -1.0, "Menu K")
       .load();
-    transactions.assignCategory(MasterCategory.FOOD, 0);
+    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
 
     OfxBuilder.init(this)
       .addTransaction("2006/01/11", -2.0, "Menu K")
@@ -88,7 +88,7 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2006/01/10", -1.0, "Cheque 123")
       .load();
-    transactions.assignCategory(MasterCategory.FOOD, 0);
+    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
 
     OfxBuilder.init(this)
       .addTransaction("2006/01/11", -2.0, "Cheque 123")
@@ -104,7 +104,7 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2006/01/10", -1.0, "123")
       .load();
-    transactions.assignCategory(MasterCategory.FOOD, 0);
+    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
 
     OfxBuilder.init(this)
       .addTransaction("2006/01/11", -2.0, "123")
@@ -121,7 +121,7 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.0, "123")
       .addTransaction("2006/01/11", -2.0, "123")
       .load();
-    transactions.assignCategory(MasterCategory.FOOD, 0);
+    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
 
     transactions
       .initContent()
@@ -135,7 +135,7 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -1.0, "Menu K")
       .load();
-    transactions.assignCategory(MasterCategory.FOOD, 0);
+    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.0, MasterCategory.FOOD)
@@ -145,7 +145,7 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/11", -1.0, "Menu K")
       .load();
-    transactions.assignCategory(MasterCategory.HEALTH, 0);
+    transactions.assignOccasionalSeries(MasterCategory.HEALTH, 0);
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.0, MasterCategory.HEALTH)
@@ -170,14 +170,14 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.0, "Menu K")
       .addTransaction("2006/01/11", -1.0, "Menu K")
       .load();
-    transactions.assignCategory(MasterCategory.FOOD, 0);
+    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.0, MasterCategory.FOOD)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.0, MasterCategory.FOOD)
       .check();
 
-    transactions.assignCategory(MasterCategory.NONE, 0);
+    transactions.assignOccasionalSeries(MasterCategory.NONE, 0);
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.0)
@@ -195,7 +195,7 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.0, MasterCategory.FOOD)
       .check();
 
-    transactions.assignCategory(MasterCategory.NONE, 0, 2);
+    transactions.assignOccasionalSeries(MasterCategory.NONE, 0, 2);
     transactions
       .initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.0)
@@ -222,7 +222,7 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.0, "TIP   4543634 IMPOT CEL OV34Z 4365345 65456")
       .addTransaction("2006/01/13", -2.0, "TIP   4543634 IMPOT CEL MT34DE 4365345 65456")
       .load();
-    transactions.assignCategory(MasterCategory.TAXES, 0);
+    transactions.assignOccasionalSeries(MasterCategory.TAXES, 0);
     transactions
       .initContent()
       .add("13/01/2006", TransactionType.PRELEVEMENT, "TIP   4543634 IMPOT CEL MT34DE 4365345 65456",
@@ -230,8 +230,8 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "TIP   4543634 IMPOT CEL OV34Z 4365345 65456",
            "", -1.0, MasterCategory.TAXES)
       .check();
-    transactions.assignCategory(MasterCategory.NONE, 0, 1);
-    transactions.assignCategory(MasterCategory.TAXES, 0);
+    transactions.assignOccasionalSeries(MasterCategory.NONE, 0, 1);
+    transactions.assignOccasionalSeries(MasterCategory.TAXES, 0);
     transactions
       .initContent()
       .add("13/01/2006", TransactionType.PRELEVEMENT, "TIP   4543634 IMPOT CEL MT34DE 4365345 65456",

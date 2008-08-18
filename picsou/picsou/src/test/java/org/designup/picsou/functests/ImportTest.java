@@ -373,7 +373,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     importPanel.enterAccountNumber("0123546");
     importPanel.doImport();
-    periods.selectAll();
+    timeline.selectAll();
     transactions.initContent()
       .add("02/01/2001", TransactionType.PRELEVEMENT, "Big Mac", "", -2.00)
       .check();

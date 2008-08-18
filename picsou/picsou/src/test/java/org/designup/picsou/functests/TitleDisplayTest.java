@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 
 public class TitleDisplayTest extends LoggedInFunctionalTestCase {
 
@@ -21,7 +20,7 @@ public class TitleDisplayTest extends LoggedInFunctionalTestCase {
   }
 
   public void testViewNames() throws Exception {
-    periods.selectCell("2008/10");
+    timeline.selectMonth("2008/10");
 
     views.selectHome();
     title.checkContent("Dashboard - october 2008");
@@ -40,7 +39,7 @@ public class TitleDisplayTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNoMonth() throws Exception {
-    periods.selectNone();
+    timeline.selectNone();
     title.checkContent("Select a period");
   }
 }

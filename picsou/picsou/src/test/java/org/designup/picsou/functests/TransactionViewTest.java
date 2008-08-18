@@ -157,7 +157,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
       .check();
 
-    transactions.assignCategory(MasterCategory.BEAUTY, 1, 3);
+    transactions.assignOccasionalSeries(MasterCategory.BEAUTY, 1, 3);
 
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)

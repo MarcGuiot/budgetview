@@ -173,7 +173,7 @@ public class LicenseTest extends LicenseTestCase {
     LoginChecker login = new LoginChecker(window);
     login.logUser("user", "passw@rd");
     MonthChecker monthChecker = new MonthChecker(window);
-    monthChecker.assertEquals("2008/07");
+    monthChecker.assertDisplays("2008/07");
     LicenseChecker license = new LicenseChecker(window);
     license.enterLicense(MAIL, code);
     monthChecker.assertSpanEquals("2008/07", "2010/07");
@@ -188,7 +188,7 @@ public class LicenseTest extends LicenseTestCase {
     loginChecker.logUser("user", "passw@rd");
     MonthChecker monthChecker = new MonthChecker(window);
     if (lastMonth.equals("2008/07")) {
-      monthChecker.assertEquals("2008/07");
+      monthChecker.assertDisplays("2008/07");
     }
     else {
       monthChecker.assertSpanEquals("2008/07", lastMonth);

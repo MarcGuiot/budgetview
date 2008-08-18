@@ -6,7 +6,7 @@ public class SGTest extends SpecificBankTestCase {
 
   public void test1() throws Exception {
     operations.importQifFile(100.0, getFile("sg1.qif"), "Societe Generale");
-    periods.selectAll();
+    timeline.selectAll();
     transactions
       .initContent()
       .add("22/04/2006", TransactionType.CREDIT_CARD, "SACLAY", "", -55.49)
@@ -19,7 +19,7 @@ public class SGTest extends SpecificBankTestCase {
 
   public void test2() throws Exception {
     operations.importQifFile(100.0, getFile("sg2.qif"), "Societe Generale");
-    periods.selectAll();
+    timeline.selectAll();
     transactions
       .initContent()
       .add("22/07/2006", TransactionType.CREDIT_CARD, "ANTONYCARBURANT", "", -45.83)

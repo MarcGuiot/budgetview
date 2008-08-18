@@ -69,21 +69,21 @@ public abstract class UndoRedoTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/15", 95.00, "Orange")
       .load();
 
-    periods.selectCell(0);
+    timeline.selectMonth("2008/07");
     transactions.initContent()
       .add("15/07/2008", TransactionType.VIREMENT, "Orange", "", 95.00)
       .check();
 
-    transactions.assignCategory(MasterCategory.TELECOMS, 0);
+    transactions.assignOccasionalSeries(MasterCategory.TELECOMS, 0);
 
-    periods.selectCell(1);
+    timeline.selectMonth("2008/08");
     transactions.initContent()
       .add("15/08/2008", TransactionType.VIREMENT, "McDo", "", 15.00, MasterCategory.FOOD)
       .check();
 
     operations.undo();
 
-    periods.assertCellSelected(0);
+    timeline.checkSelection("2008/07");
     transactions.initContent()
       .add("15/07/2008", TransactionType.VIREMENT, "Orange", "", 95.00)
       .check();

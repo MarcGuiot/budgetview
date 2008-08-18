@@ -14,7 +14,7 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
   }
 
   public void testEmpty() throws Exception {
-    periods.assertEmpty();
+    timeline.assertEmpty();
   }
 
   public void testSingleMonth() throws Exception {
@@ -24,8 +24,8 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/20", +5, "income")
       .load();
 
-    periods.assertEquals("2006/01 (5.00/10.00)");
-    periods.assertCellSelected("2006/01");
+    timeline.assertDisplays("2006/01 (5.00/10.00)");
+    timeline.checkSelection("2006/01");
   }
 
   public void testTwoMonths() throws Exception {
@@ -35,15 +35,15 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/02/20", +5, "income")
       .load();
 
-    periods.assertEquals("2006/01 (0.00/10.00)", "2006/02 (5.00/0.00)");
+    timeline.assertDisplays("2006/01 (0.00/10.00)", "2006/02 (5.00/0.00)");
 
-    periods.assertCellSelected("2006/01", "2006/02");
-    periods.selectCell("2006/02");
+    timeline.checkSelection("2006/01", "2006/02");
+    timeline.selectMonth("2006/02");
     transactions.initContent()
       .add("20/02/2006", TransactionType.VIREMENT, "income", "", 5.0, MasterCategory.NONE)
       .check();
 
-    periods.selectCell("2006/01");
+    timeline.selectMonth("2006/01");
     transactions.initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "rent", "", -10, MasterCategory.NONE)
       .check();
@@ -56,25 +56,25 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/03/20", +5, "income")
       .load();
 
-    periods.assertEquals("2006/01 (0.00/10.00)", "2006/02 (0.00/0.00)", "2006/03 (5.00/0.00)");
-    periods.assertCellSelected("2006/01", "2006/03");
-    periods.selectCell("2006/01");
-    periods.selectCell("2006/03");
+    timeline.assertDisplays("2006/01 (0.00/10.00)", "2006/02 (0.00/0.00)", "2006/03 (5.00/0.00)");
+    timeline.checkSelection("2006/01", "2006/03");
+    timeline.selectMonth("2006/01");
+    timeline.selectMonth("2006/03");
     transactions
       .initContent()
       .add("20/03/2006", TransactionType.VIREMENT, "income", "", 5, MasterCategory.NONE)
       .check();
 
-    periods.selectCell("2006/01");
+    timeline.selectMonth("2006/01");
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "rent", "", -10, MasterCategory.NONE)
       .check();
 
-    periods.selectCell("2006/02");
+    timeline.selectMonth("2006/02");
     transactions.assertEmpty();
 
-    periods.selectCell("2006/03");
+    timeline.selectMonth("2006/03");
     transactions
       .initContent()
       .add("20/03/2006", TransactionType.VIREMENT, "income", "", 5, MasterCategory.NONE)
@@ -87,21 +87,21 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -10, "misc")
       .addTransaction("2006/01/11", -50, "internal")
       .load();
-    periods.assertEquals("2006/01 (0.00/60.00)");
+    timeline.assertDisplays("2006/01 (0.00/60.00)");
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "internal", "", -50, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "misc", "", -10, MasterCategory.NONE)
       .check();
 
-    transactions.assignCategory(MasterCategory.INTERNAL, 0);
+    transactions.assignOccasionalSeries(MasterCategory.INTERNAL, 0);
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "internal", "", -50, MasterCategory.INTERNAL)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "misc", "", -10, MasterCategory.NONE)
       .check();
 
-    periods.assertEquals("2006/01 (0.00/10.00)");
+    timeline.assertDisplays("2006/01 (0.00/10.00)");
   }
 
   public void testMultiselectionCumulatesTransactions() throws Exception {
@@ -112,7 +112,7 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/03/20", +5, "income2")
       .load();
 
-    periods.selectCells("2006/01", "2006/02", "2006/03");
+    timeline.selectMonths("2006/01", "2006/02", "2006/03");
     categories
       .initContent()
       .add(MasterCategory.ALL, 55, 1.0, -10, 1.0)
@@ -126,7 +126,7 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "rent", "", -10, MasterCategory.NONE)
       .check();
 
-    periods.selectNone();
+    timeline.selectNone();
     categories
       .initContent()
       .check();

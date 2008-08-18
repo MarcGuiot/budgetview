@@ -23,7 +23,7 @@ public class MonthChecker extends DataChecker {
     Assert.assertTrue(timeViewPanel.getCurrentlySelectedToUpdate().isEmpty());
   }
 
-  public void assertEquals(String... elements) {
+  public void assertDisplays(String... elements) {
     long end = System.currentTimeMillis() + 1000;
     GlobList list = new GlobList();
     timeViewPanel.getAllSelectableMonth(list);
@@ -48,22 +48,7 @@ public class MonthChecker extends DataChecker {
     TestUtils.assertSetEquals(ids, valueSet);
   }
 
-  public void assertCellSelected(int index) {
-    Set<Selectable> list = timeViewPanel.getCurrentlySelectedToUpdate();
-    Assert.assertEquals(1, list.size());
-    Selectable selectable = list.iterator().next();
-    GlobList globList = new GlobList();
-    selectable.getSelectedGlobs(globList);
-    Assert.assertEquals(1, globList.size());
-    Integer currentyymm = globList.get(0).get(Month.ID);
-    GlobList currentMonths = timeViewPanel.getRepository().getAll(Month.TYPE).sort(Month.ID);
-    if (!currentyymm.equals(currentMonths.get(index).get(Month.ID))) {
-      Assert.fail(Month.toString(currentMonths.get(index).get(Month.ID)) + " not selected\n" +
-                  "Selection: " + currentMonths);
-    }
-  }
-
-  public void assertCellSelected(String... dates) {
+  public void checkSelection(String... dates) {
     Set<Selectable> list = timeViewPanel.getCurrentlySelectedToUpdate();
     GlobList selectedMonth = new GlobList();
     for (Selectable selectable : list) {
@@ -75,15 +60,16 @@ public class MonthChecker extends DataChecker {
     }
   }
 
+  /** @deprecated */
   public void selectCell(int index) {
     timeViewPanel.selectMonth(index);
   }
 
-  public void selectCell(String date) {
-    selectCells(date);
+  public void selectMonth(String date) {
+    selectMonths(date);
   }
 
-  public void selectCells(String... dates) {
+  public void selectMonths(String... dates) {
     Set<Integer> monthIds = new HashSet<Integer>();
     for (String date : dates) {
       monthIds.add(Month.getMonthId(Dates.parseMonth(date)));

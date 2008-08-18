@@ -19,19 +19,19 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/07/08", -29.9, "free telecom")
       .load();
-    periods.assertSpanEquals("2008/07", "2010/07");
+    timeline.assertSpanEquals("2008/07", "2010/07");
     transactions.setRecurring(0, "Internet", true);
-    periods.selectCell("2008/07");
+    timeline.selectMonth("2008/07");
     transactions.initContent()
       .add("08/07/2008", TransactionType.PLANNED, "Internet", "", 0.00, "Internet")
       .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, "Internet")
       .check();
     views.selectHome();
-    periods.selectCell("2008/07");
+    timeline.selectMonth("2008/07");
     monthSummary.init()
       .checkRecurring(29.9)
       .checkPlannedRecurring(29.9);
-    periods.selectCell("2008/08");
+    timeline.selectMonth("2008/08");
     transactions.initContent()
       .add("08/08/2008", TransactionType.PLANNED, "Internet", "", -29.90, "Internet")
       .check();
