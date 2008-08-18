@@ -12,14 +12,16 @@
 
 * CategorizationDialog : ajouter une categorie a une enveloppe
 
+* CategorizationDialog : bug selection apres affectation (selectionner les suivants)
+
 * Categorisation : selectionner serie apres creation
 
 * MonthStatView : gauge
-
-* CategorizationDialog : bug selection apres affectation (selectionner les suivants)
 
 * Activation licence : cas ou pas de connexion internet
 
 * Creation d'enveloppe : forcer la selection d'une serie au moins
 
 * Gauge : depassements pour montants positifs + afficher niveau depassement
+
+* Revoir lecture de ImportPanel (combo banques sous TextField ?)

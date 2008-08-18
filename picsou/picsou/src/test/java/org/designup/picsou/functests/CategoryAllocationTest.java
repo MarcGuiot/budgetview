@@ -32,7 +32,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     proposedCategories.remove(MasterCategory.NONE);
     String[] names = categories.getSortedCategoryNames(proposedCategories);
 
-    transactions.openCategoryChooserDialog(0).checkContainsOccasionalCategories(names);
+    transactions.openCategorizationDialog(0).checkContainsOccasionalCategories(names);
   }
 
   public void testAllocation() throws Exception {

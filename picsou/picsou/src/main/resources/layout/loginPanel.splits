@@ -12,10 +12,7 @@
 
         <column margin="20" anchor="center" fill="none" marginBottom="60">
 
-          <label icon="picsou_icon_128.png" fill="none" anchor="center" marginBottom="10"/>
-
-          <checkBox ref="createAccountCheckBox" margin="5" marginBottom="15" opaque="false"
-                    text="$login.create.user.checkbox"/>
+          <label icon="picsou_icon_128.png" fill="none" anchor="center" marginBottom="30"/>
 
           <grid background="#00FF00" defaultMarginBottom="5">
             <label text="$login.id" gridPos="(0,0)" styleClass="formLabel"/>
@@ -28,6 +25,10 @@
                    ref="confirmLabel" styleClass="formLabel"/>
             <component ref="confirmPassword" gridPos="(1,2)"/>
           </grid>
+
+          <checkBox ref="createAccountCheckBox" text="$login.create.user.checkbox"
+                    margin="5" marginBottom="15" opaque="false"
+                    fill="none" anchor="east"/>
 
           <label ref="message" margin="5" horizontalAlignment="center"/>
 

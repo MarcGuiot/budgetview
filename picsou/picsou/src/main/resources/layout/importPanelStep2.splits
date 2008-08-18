@@ -13,7 +13,7 @@
 
   </styles>
 
-  <column margin="20" anchor="center" fill="none">
+  <column margin="20" anchor="center" fill="none" opaque="true">
 
     <label text="$import.step2.title" styleClass="title"/>
 

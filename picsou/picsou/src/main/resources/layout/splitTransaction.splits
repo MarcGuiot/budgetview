@@ -3,10 +3,6 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <styles>
-    <ui name="dialogBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="dialog.block.top" bottomColor="dialog.block.bottom"
-        borderColor="dialog.block.border" borderWidth="1" cornerRadius="10"/>
-
     <ui name="dialogBlockInternal" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="dialog.block.internal" bottomColor="dialog.block.internal"/>
   </styles>
@@ -38,7 +34,7 @@
         </column>
       </panel>
 
-      <panel ui="dialogBlock"
+      <panel styleClass="dialogBlock"
              opaque="true" anchor="north" weightY="100" fill="both" marginTop="5" marginBottom="5">
         <column margin="5">
           <component ref="switchToAddAmountButton" anchor="west"/>

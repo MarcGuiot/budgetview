@@ -83,7 +83,7 @@ public class TransactionChecker extends ViewChecker {
     chooseCategoryViaKeyboard(category, modifier);
   }
 
-  public CategorizationDialogChecker openCategoryChooserDialog(final int... rows) {
+  public CategorizationDialogChecker openCategorizationDialog(final int... rows) {
     getTable().selectRows(rows);
     return getCategorizationDialog(rows[0]);
   }

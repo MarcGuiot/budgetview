@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel ref="mainPanel"/>
+  <panel ref="mainPanel" opaque="true"/>
 
 </splits>
   
