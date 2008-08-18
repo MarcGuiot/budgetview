@@ -8,22 +8,22 @@ import org.designup.picsou.model.TransactionType;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.Utils;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class OccasionalSeriesStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-
     final Map<Integer, Integer> deletedCategoriesMasters = getDeletedCategoriesMasters(changeSet);
 
     changeSet.safeVisit(Transaction.TYPE, new TransactionChangeVisitor(repository, deletedCategoriesMasters));
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (!changedTypes.contains(Transaction.TYPE)) {
       return;
     }

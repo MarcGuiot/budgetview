@@ -10,7 +10,10 @@ import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Utils;
 
 import static java.lang.Math.abs;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.SortedSet;
 
 public class MonthStatTrigger implements ChangeSetListener {
   private GlobRepository repository;
@@ -37,7 +40,7 @@ public class MonthStatTrigger implements ChangeSetListener {
     }
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     repository.enterBulkDispatchingMode();
     try {
       repository.deleteAll(MonthStat.TYPE);

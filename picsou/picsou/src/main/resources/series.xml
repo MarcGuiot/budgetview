@@ -2,29 +2,19 @@
 <globs>
   <series id="0" name="occasional" budgetAreaName="occasionalExpenses" profileTypeName="custom"/>
   <series id="1" name="internet" budgetAreaName="recurringExpenses" defaultCategoryName='telecoms'
-          profileTypeName="monthly"
-          january='true' february='true' march='true' april='true' may='true' june='true' july='true'
-          august='true' september='true' october='true' november='true' december='true'/>
+          profileTypeName="monthly"/>
   <series id="2" name="rental" budgetAreaName="recurringExpenses" defaultCategoryName='house'
-          profileTypeName="monthly"
-          january='true' february='true' march='true' april='true' may='true' june='true' july='true'
-          august='true' september='true' october='true' november='true' december='true'/>
+          profileTypeName="monthly"/>
   <series id="3" name="electricity" budgetAreaName="recurringExpenses" defaultCategoryName='house'
-          profileTypeName="monthly"
-          january='true' february='true' march='true' april='true' may='true' june='true' july='true'
-          august='true' september='true' october='true' november='true' december='true'/>
+          profileTypeName="monthly"/>
 
   <series id="10" name="groceries" budgetAreaName="expensesEnvelope" defaultCategoryName="food"
-          profileTypeName="monthly"
-          january='true' february='true' march='true' april='true' may='true' june='true' july='true'
-          august='true' september='true' october='true' november='true' december='true'/>
+          profileTypeName="monthly"/>
   <seriesToCategory id='100' seriesName='groceries' categoryName="food"/>
   <seriesToCategory id='101' seriesName='groceries' categoryName="house"/>
 
   <series id="20" name="salary" budgetAreaName="income" defaultCategoryName="income"
-          profileTypeName="monthly"
-          january='true' february='true' march='true' april='true' may='true' june='true' july='true'
-          august='true' september='true' october='true' november='true' december='true'/>
+          profileTypeName="monthly"/>
   <series id="21" name="exceptionalIncome" budgetAreaName="income" defaultCategoryName="income"
           profileTypeName="custom"/>
 

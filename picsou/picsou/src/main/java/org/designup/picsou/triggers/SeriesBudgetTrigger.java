@@ -1,68 +1,104 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.BooleanField;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 
-import java.util.List;
+import java.util.*;
 
 public class SeriesBudgetTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-    changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
+    changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        Glob series = repository.get(Key.create(Series.TYPE, values.get(SeriesBudget.SERIES)));
-        Double amount = values.get(SeriesBudget.AMOUNT);
-        update(values, series, amount, repository);
+        if (values.get(Series.AMOUNT) != null) {
+          updateSeriesBudget(repository.get(key), repository);
+        }
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(SeriesBudget.AMOUNT)) {
-          Glob seriesBudget = repository.get(key);
-          Glob series = repository.get(Key.create(Series.TYPE, seriesBudget.get(SeriesBudget.SERIES)));
-          Double amount = values.getPrevious(SeriesBudget.AMOUNT) - values.get(SeriesBudget.AMOUNT);
-          update(values, series, amount, repository);
+        Glob series = repository.get(key);
+        if (series.get(Series.AMOUNT) != null) {
+          updateSeriesBudget(series, repository);
         }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        Glob series = repository.get(Key.create(Series.TYPE, previousValues.get(SeriesBudget.SERIES)));
-        Double amount = previousValues.get(SeriesBudget.AMOUNT);
-        update(previousValues, series, -amount, repository);
+        GlobList seriesToBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, key.get(Series.ID)).getGlobs();
+        repository.delete(seriesToBudget);
       }
     });
   }
 
-  private void update(FieldValues values, Glob series, Double amount, GlobRepository repository) {
-    if (BudgetArea.OCCASIONAL_EXPENSES.getId().equals(series.get(Series.BUDGET_AREA))) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    if (changedTypes.contains(Series.TYPE)) {
+      GlobList list = repository.getAll(Series.TYPE);
+      Set<Integer> seriesWithBudget = repository.getAll(SeriesBudget.TYPE).getValueSet(SeriesBudget.SERIES);
+      for (Glob series : list) {
+        updateSeriesBudget(series, repository);
+        seriesWithBudget.remove(series.get(Series.ID));
+      }
+      for (Integer seriesId : seriesWithBudget) {
+        repository.delete(Key.create(Series.TYPE, seriesId));
+      }
+    }
+  }
+
+  void updateSeriesBudget(Glob series, GlobRepository repository) {
+    Integer seriesId = series.get(Series.ID);
+    Map<Integer, Glob> monthWithBudget =
+      toMap(repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId).getGlobs(),
+            SeriesBudget.MONTH);
+
+    Integer[] monthIds = repository.getAll(Month.TYPE).getSortedArray(Month.ID);
+    if (monthIds.length == 0) {
       return;
     }
-    if (BudgetArea.INCOME.getId().equals(series.get(Series.BUDGET_AREA))) {
-      updateOccasionalSeriesBudget(amount, repository, values.get(SeriesBudget.MONTH));
+    int fromIndex = 0;
+    Integer firstMonth = series.get(Series.FIRST_MONTH);
+    Integer fromDate = firstMonth == null ? monthIds[0] : Math.max(firstMonth, monthIds[0]);
+    if (fromDate != null) {
+      fromIndex = Arrays.binarySearch(monthIds, fromDate);
     }
-    else {
-      updateOccasionalSeriesBudget(-amount, repository, values.get(SeriesBudget.MONTH));
+    int toIndex = monthIds.length - 1;
+    Integer lastMonth = series.get(Series.LAST_MONTH);
+    Integer toDate = lastMonth == null ? monthIds[monthIds.length - 1] : Math.min(lastMonth, monthIds[monthIds.length - 1]);
+    if (toDate == null) {
+      toIndex = Arrays.binarySearch(monthIds, toDate);
+    }
+
+    Calendar calendar = Calendar.getInstance();
+    for (int i = fromIndex; i <= toIndex; i++) {
+      int monthId = monthIds[i];
+      BooleanField monthField = Series.getField(monthId);
+      Boolean active = series.get(monthField);
+      Glob seriesBudget = monthWithBudget.remove(monthId);
+      FieldValue fieldValues[] = {value(SeriesBudget.SERIES, seriesId),
+                                  value(SeriesBudget.AMOUNT, series.get(Series.AMOUNT)),
+                                  value(SeriesBudget.MONTH, monthId),
+                                  value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
+                                  value(SeriesBudget.ACTIVE, active)};
+      if (seriesBudget == null) {
+        repository.create(SeriesBudget.TYPE, fieldValues);
+      }
+      else {
+        repository.update(seriesBudget.getKey(), fieldValues);
+      }
+    }
+    for (Glob seriesBudget : monthWithBudget.values()) {
+      repository.delete(seriesBudget.getKey());
     }
   }
 
-  private void updateOccasionalSeriesBudget(Double amount, GlobRepository repository, Integer monthId) {
-    GlobList seriesBudgets =
-      repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, Series.OCCASIONAL_SERIES_ID)
-        .findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
-    if (seriesBudgets.isEmpty()) {
-      repository.create(SeriesBudget.TYPE,
-                        FieldValue.value(SeriesBudget.AMOUNT, amount),
-                        FieldValue.value(SeriesBudget.MONTH, monthId),
-                        FieldValue.value(SeriesBudget.SERIES, Series.OCCASIONAL_SERIES_ID));
+  private Map<Integer, Glob> toMap(GlobList globs, IntegerField field) {
+    Map<Integer, Glob> globMap = new HashMap<Integer, Glob>();
+    for (Glob glob : globs) {
+      globMap.put(glob.get(field), glob);
     }
-    else {
-      Glob budgetSerieToUpdate = seriesBudgets.get(0);
-      repository.update(budgetSerieToUpdate.getKey(), SeriesBudget.AMOUNT,
-                        budgetSerieToUpdate.get(SeriesBudget.AMOUNT) + amount);
-    }
-  }
-
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+    return globMap;
   }
 }

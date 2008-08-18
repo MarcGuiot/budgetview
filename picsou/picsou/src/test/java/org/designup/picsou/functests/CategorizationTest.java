@@ -370,10 +370,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .add("26/06/2008", TransactionType.PLANNED, "Internet", "", 0.0, MasterCategory.TELECOMS)
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, MasterCategory.TELECOMS)
       .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -170.00, MasterCategory.FOOD)
+      .add("26/05/2008", TransactionType.PLANNED, "Internet", "", 0.0, MasterCategory.TELECOMS)
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, MasterCategory.TELECOMS)
+      .add("15/05/2008", TransactionType.PLANNED, "Groceries", "", 0.00, MasterCategory.FOOD)
       .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan 1111", "", -90.00, MasterCategory.FOOD)
       .add("14/05/2008", TransactionType.PRELEVEMENT, "Auchan 2222", "", -80.00, MasterCategory.FOOD)
+      .add("26/04/2008", TransactionType.PLANNED, "Internet", "", 0.0, MasterCategory.TELECOMS)
       .add("24/04/2008", TransactionType.PRELEVEMENT, "Free Telecom 21/04", "", -29.90, MasterCategory.TELECOMS)
+      .add("15/04/2008", TransactionType.PLANNED, "Groceries", "", -170.00, MasterCategory.FOOD)
       .check();
   }
 
@@ -458,7 +462,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .add("26/06/2008", TransactionType.PLANNED, "Internet", "", 0.00, MasterCategory.TELECOMS)
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, MasterCategory.TELECOMS)
       .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -90.00, MasterCategory.FOOD)
+      .add("26/05/2008", TransactionType.PLANNED, "Internet", "", 0.00, MasterCategory.TELECOMS)
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, MasterCategory.TELECOMS)
+      .add("15/05/2008", TransactionType.PLANNED, "Groceries", "", 80.00, MasterCategory.FOOD)
       .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, MasterCategory.FOOD)
       .add("14/05/2008", TransactionType.PRELEVEMENT, "Carouf", "", -80.00, MasterCategory.FOOD)
       .check();

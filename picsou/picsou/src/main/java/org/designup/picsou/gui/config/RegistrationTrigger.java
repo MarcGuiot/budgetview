@@ -5,7 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.List;
+import java.util.Set;
 
 public class RegistrationTrigger implements ChangeSetListener {
   private final Directory directory;
@@ -44,6 +44,6 @@ public class RegistrationTrigger implements ChangeSetListener {
     });
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

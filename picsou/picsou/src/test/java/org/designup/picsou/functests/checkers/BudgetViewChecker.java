@@ -13,6 +13,7 @@ public class BudgetViewChecker extends DataChecker {
   public final BudgetAreaChecker income;
   public final BudgetAreaChecker recurring;
   public final BudgetAreaChecker envelopes;
+  public final OccasionalAreaChecker occasional;
 
   private Window window;
 
@@ -21,6 +22,26 @@ public class BudgetViewChecker extends DataChecker {
     this.income = new BudgetAreaChecker("incomeBudgetView");
     this.recurring = new BudgetAreaChecker("recurringBudgetView");
     this.envelopes = new BudgetAreaChecker("envelopeBudgetView");
+    this.occasional = new OccasionalAreaChecker();
+  }
+
+  public class OccasionalAreaChecker {
+
+    public void checkTitle(String title) {
+      Panel budgetPanel = window.getPanel("occasionalBudgetView");
+      TextBox label = budgetPanel.getTextBox("budgetAreaTitle");
+      UISpecAssert.assertThat(label.textEquals(title));
+    }
+
+    public void checkTotalAmounts(double spent, double free) {
+      Panel budgetPanel = window.getPanel("occasionalBudgetView");
+      TextBox totalObserved = budgetPanel.getTextBox("totalObservedAmount");
+      UISpecAssert.assertTrue(totalObserved.textEquals(BudgetViewChecker.this.toString(spent)));
+
+      TextBox totalPlanned = budgetPanel.getTextBox("totalPlannedAmount");
+      UISpecAssert.assertTrue(totalPlanned.textEquals(BudgetViewChecker.this.toString(free)));
+    }
+
   }
 
   public class BudgetAreaChecker {

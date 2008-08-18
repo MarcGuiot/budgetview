@@ -5,12 +5,14 @@ import org.objectweb.asm.*;
 import java.lang.reflect.Method;
 
 public class KeyService {
+  static final String checkSignature = "a";
+  private static final String className = "a/b";
 
   public static boolean checkSignature(byte[] data, byte[] signature) {
     try {
       KeyClassLoader classLoader = new KeyClassLoader();
       Class<?> aClass = classLoader.load();
-      Method method = aClass.getMethod("checkSignature", byte[].class, byte[].class);
+      Method method = aClass.getMethod(checkSignature, byte[].class, byte[].class);
       return (Boolean)method.invoke(null, data, signature);
     }
     catch (Exception e) {
@@ -19,10 +21,11 @@ public class KeyService {
   }
 
   private static class KeyClassLoader extends ClassLoader {
+
     public Class<?> load() throws Exception {
       byte[] b = KeyCheckerDump.dump();
-      defineClass("org.designup.picsou.gui.utils.KeyChecker", b, 0, b.length);
-      return loadClass("org.designup.picsou.gui.utils.KeyChecker");
+      defineClass(className.replace('/', '.'), b, 0, b.length);
+      return loadClass(className.replace('/', '.'));
     }
   }
 
@@ -35,7 +38,7 @@ public class KeyService {
       MethodVisitor mv;
       AnnotationVisitor av0;
 
-      cw.visit(V1_5, ACC_PUBLIC + ACC_SUPER, "org/designup/picsou/gui/utils/KeyChecker", null, "java/lang/Object", null);
+      cw.visit(V1_5, ACC_PUBLIC + ACC_SUPER, className, null, "java/lang/Object", null);
 
       {
         fv = cw.visitField(ACC_PRIVATE + ACC_STATIC, "publicKey", "[B", null, null);
@@ -51,7 +54,7 @@ public class KeyService {
         mv.visitEnd();
       }
       {
-        mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "checkSignature", "([B[B)Z", null, null);
+        mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, checkSignature, "([B[B)Z", null, null);
         mv.visitCode();
         Label l0 = new Label();
         Label l1 = new Label();
@@ -60,7 +63,7 @@ public class KeyService {
         mv.visitLabel(l0);
         mv.visitTypeInsn(NEW, "java/security/spec/X509EncodedKeySpec");
         mv.visitInsn(DUP);
-        mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/gui/utils/KeyChecker", "publicKey", "[B");
+        mv.visitFieldInsn(GETSTATIC, className, "publicKey", "[B");
         mv.visitMethodInsn(INVOKESPECIAL, "java/security/spec/X509EncodedKeySpec", "<init>", "([B)V");
         mv.visitVarInsn(ASTORE, 2);
         mv.visitLdcInsn("DSA");
@@ -1874,7 +1877,7 @@ public class KeyService {
         mv.visitIntInsn(SIPUSH, 443);
         mv.visitIntInsn(BIPUSH, 124);
         mv.visitInsn(BASTORE);
-        mv.visitFieldInsn(PUTSTATIC, "org/designup/picsou/gui/utils/KeyChecker", "publicKey", "[B");
+        mv.visitFieldInsn(PUTSTATIC, className, "publicKey", "[B");
         mv.visitInsn(RETURN);
         mv.visitMaxs(4, 0);
         mv.visitEnd();

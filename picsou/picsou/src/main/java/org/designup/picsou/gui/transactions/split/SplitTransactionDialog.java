@@ -12,10 +12,7 @@ import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.transactions.details.CategorisationHyperlinkButton;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.model.Category;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesToCategory;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.LABEL;
 import static org.designup.picsou.model.Transaction.NOTE;
 import org.designup.picsou.utils.Lang;
@@ -96,19 +93,15 @@ public class SplitTransactionDialog {
 
     localRepository =
       LocalGlobRepositoryBuilder.init(repository)
-        .copy(Category.TYPE)
+        .copy(Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE)
         .copy(initialTransaction)
-        .copy(Series.TYPE)
-        .copy(SeriesToCategory.TYPE)
         .copy(repository.findLinkedTo(initialTransaction, Transaction.SPLIT_SOURCE))
         .get();
 
     transactionToSplit = localRepository.get(initialTransaction.getKey());
 
     repositoryForSplitPanel = LocalGlobRepositoryBuilder.init(localRepository)
-      .copy(Category.TYPE)
-      .copy(Series.TYPE)
-      .copy(SeriesToCategory.TYPE)
+      .copy(Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE)
       .get();
     selectionServiceForSplitPanel = new SelectionService();
     directoryForSplitPanel = new DefaultDirectory(directory);

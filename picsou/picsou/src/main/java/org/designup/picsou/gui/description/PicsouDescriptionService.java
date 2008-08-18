@@ -5,8 +5,11 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.Formats;
 import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.format.utils.DefaultDescriptionService;
 import org.globsframework.utils.Strings;
 
@@ -82,6 +85,14 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     }
     if (globType.equals(Account.TYPE)) {
       return new AccountStringifier();
+    }
+    if (globType.equals(Month.TYPE)) {
+      return new AbstractGlobStringifier() {
+
+        public String toString(Glob glob, GlobRepository repository) {
+          return Month.getLabel(glob.get(Month.ID));
+        }
+      };
     }
     return super.getStringifier(globType);
   }

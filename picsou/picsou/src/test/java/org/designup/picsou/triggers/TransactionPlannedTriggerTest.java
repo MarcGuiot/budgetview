@@ -1,38 +1,21 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.model.*;
-import org.designup.picsou.utils.PicsouTestCase;
-import org.globsframework.model.FieldValue;
+import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.Transaction;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Key;
-import org.globsframework.utils.Dates;
+import org.globsframework.model.utils.GlobMatchers;
 
-public class TransactionPlannedTriggerTest extends PicsouTestCase {
-  private static final Key USER_PREFERENCES_KEY = Key.create(UserPreferences.TYPE, UserPreferences.SINGLETON_ID);
+public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
 
-  protected void setUp() throws Exception {
-    super.setUp();
-    directory.add(new TimeService(Dates.parse("2008/07/05")));
-  }
-
-  public void testCreatesNoSummaryForOnlyOneAccount() throws Exception {
-    listener.reset();
-    repository.addTrigger(new FutureMonthTrigger(directory));
-    repository.addTrigger(new SeriesUpdateTrigger(directory));
-    repository.addTrigger(new BudgetStatTrigger());
-    repository.addTrigger(new TransactionPlannedTrigger());
-
-    repository.create(USER_PREFERENCES_KEY, FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT, 3));
+  public void test() throws Exception {
     repository.enterBulkDispatchingMode();
-    createSeries(value(Series.JULY, true),
-                 value(Series.AUGUST, true),
-                 value(Series.SEPTEMBER, true));
-    createSeriesBudget(200807);
-    createSeriesBudget(200808);
-    createSeriesBudget(200809);
+    createSeries();
+    createMonth(200807);
+    createMonth(200808);
     repository.completeBulkDispatchingMode();
-    listener.reset();
     Key transactionKey = Key.create(Transaction.TYPE, 10);
     repository.create(transactionKey,
                       value(Transaction.SERIES, 1),
@@ -40,19 +23,26 @@ public class TransactionPlannedTriggerTest extends PicsouTestCase {
                       value(Transaction.DAY, 1),
                       value(Transaction.AMOUNT, -40.0),
                       value(Transaction.LABEL, "free"));
+    Integer trId = repository.getAll(Transaction.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+                                                                        GlobMatchers.fieldEquals(Transaction.MONTH, 200807)))
+      .get(0).get(Transaction.ID);
     listener.assertLastChangesEqual(Transaction.TYPE,
-                                    "<create amount='-40.0' day='1' id='10' label='free'" +
-                                    "        month='200807' planned='false' series='1' type='transaction'/>" +
-                                    "<update _amount='-29.9' amount='10.1' id='0' type='transaction'/>");
+                                    "<update type='transaction' _amount='-29.9' amount='10.1' id='" + trId + "'/>" +
+                                    "<create type='transaction' amount='-40.0' day='1' id='10' label='free'" +
+                                    "        month='200807' planned='false' series='1'/>" +
+                                    "");
     listener.reset();
     repository.update(transactionKey, value(Transaction.MONTH, 200808));
+    Integer Tr08 = repository.getAll(Transaction.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+                                                                        GlobMatchers.fieldEquals(Transaction.MONTH, 200808)))
+      .get(0).get(Transaction.ID);
     listener.assertLastChangesEqual(Transaction.TYPE,
                                     "<update type='transaction' _month='200807' id='10' month='200808'/>" +
-                                    "<update type='transaction' _amount='10.1' amount='-29.9' id='0'/>" +
-                                    "<update type='transaction' _amount='-29.9' amount='10.1' id='1'/>");
+                                    "<update type='transaction' _amount='10.1' amount='-29.9' id='" + trId + "'/>" +
+                                    "<update type='transaction' _amount='-29.9' amount='10.1' id='" + Tr08 + "'/>");
   }
 
-  private void createSeries(FieldValue... value) {
+  private void createSeries() {
     Key seriesKey = Key.create(Series.TYPE, 1);
     repository.create(seriesKey,
                       value(Series.AMOUNT, 29.90),
@@ -60,14 +50,7 @@ public class TransactionPlannedTriggerTest extends PicsouTestCase {
                       value(Series.AUGUST, true),
                       value(Series.LABEL, "free telecom"),
                       value(Series.DEFAULT_CATEGORY, MasterCategory.TELECOMS.getId()));
-    repository.update(seriesKey, value);
   }
 
-  private void createSeriesBudget(int monthId) {
-    repository.create(SeriesBudget.TYPE,
-                      value(SeriesBudget.SERIES, 1),
-                      value(SeriesBudget.AMOUNT, 29.9),
-                      value(SeriesBudget.MONTH, monthId));
-  }
 }
 

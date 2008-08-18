@@ -280,8 +280,10 @@ public class SingleApplicationInstanceListener {
       int countFailed = 0;
       while (countFailed < 10) {
         try {
-          if (shutdownRequested) {
-            return;
+          synchronized (this) {
+            if (shutdownRequested) {
+              return;
+            }
           }
           final Socket socket = serverSocket.accept();
           Thread thread = new Thread() {
@@ -316,8 +318,10 @@ public class SingleApplicationInstanceListener {
     }
 
     public void requestShutdown() throws IOException {
-      shutdownRequested = true;
-      serverSocket.close();
+      synchronized (this) {
+        shutdownRequested = true;
+        serverSocket.close();
+      }
     }
   }
 }

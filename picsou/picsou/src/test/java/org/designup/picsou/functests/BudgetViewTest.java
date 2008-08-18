@@ -58,6 +58,19 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 3540.0, -3540.0);
     budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
 
+    budgetView.occasional.checkTitle("Occasional expenses");
+    budgetView.occasional.checkTotalAmounts(3540 - 145 - 84, 3740);
+
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00)
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00)
+      .add("05/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
+      .add("04/07/2008", TransactionType.PRELEVEMENT, "EDF", "", -55.00)
+      .add("03/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -15.00)
+      .add("02/07/2008", TransactionType.VIREMENT, "WorldCo - Bonus", "", 200.00)
+      .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
+      .check();
+
     periods.selectCells("2008/08");
 
     budgetView.recurring.checkTitle("Recurring expenses");

@@ -54,40 +54,40 @@ public class Series {
   public static DoubleField MAX_AMOUNT;
 
   @NoObfuscation
-  @DefaultBoolean(false)
+  @DefaultBoolean(true)
   public static BooleanField JANUARY;
   @NoObfuscation
-  @DefaultBoolean(false)
+  @DefaultBoolean(true)
   public static BooleanField FEBRUARY;
   @NoObfuscation
-  @DefaultBoolean(false)
+  @DefaultBoolean(true)
   public static BooleanField MARCH;
   @NoObfuscation
-  @DefaultBoolean(false)
+  @DefaultBoolean(true)
   public static BooleanField APRIL;
   @NoObfuscation
-  @DefaultBoolean(false)
+  @DefaultBoolean(true)
   public static BooleanField MAY;
   @NoObfuscation
-  @DefaultBoolean(false)
+  @DefaultBoolean(true)
   public static BooleanField JUNE;
   @NoObfuscation
-  @DefaultBoolean(false)
+  @DefaultBoolean(true)
   public static BooleanField JULY;
   @NoObfuscation
-  @DefaultBoolean(false)
+  @DefaultBoolean(true)
   public static BooleanField AUGUST;
   @NoObfuscation
-  @DefaultBoolean(false)
+  @DefaultBoolean(true)
   public static BooleanField SEPTEMBER;
   @NoObfuscation
-  @DefaultBoolean(false)
+  @DefaultBoolean(true)
   public static BooleanField OCTOBER;
   @NoObfuscation
-  @DefaultBoolean(false)
+  @DefaultBoolean(true)
   public static BooleanField NOVEMBER;
   @NoObfuscation
-  @DefaultBoolean(false)
+  @DefaultBoolean(true)
   public static BooleanField DECEMBER;
 
   public static final Integer OCCASIONAL_SERIES_ID = 0;
