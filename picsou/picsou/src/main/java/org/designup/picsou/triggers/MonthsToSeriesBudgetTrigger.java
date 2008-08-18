@@ -5,6 +5,7 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.Set;
@@ -20,13 +21,14 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
                                                   GlobMatchers.fieldGreaterOrEqual(Series.LAST_MONTH, monthId)
                                                 ));
         for (Glob series : seriesList) {
-          if (series.get(Series.AMOUNT) != null) {
-            repository.create(SeriesBudget.TYPE,
-                              FieldValue.value(SeriesBudget.ACTIVE, series.get(Series.getField(monthId))),
-                              FieldValue.value(SeriesBudget.SERIES, series.get(Series.ID)),
-                              FieldValue.value(SeriesBudget.AMOUNT, series.get(Series.AMOUNT)),
-                              FieldValue.value(SeriesBudget.DAY, series.get(Series.DAY)),
-                              FieldValue.value(SeriesBudget.MONTH, monthId));
+          Glob budget = repository.create(SeriesBudget.TYPE,
+                                          value(SeriesBudget.ACTIVE, series.get(Series.getField(monthId))),
+                                          value(SeriesBudget.SERIES, series.get(Series.ID)),
+                                          value(SeriesBudget.DAY, series.get(Series.DAY)),
+                                          value(SeriesBudget.MONTH, monthId));
+          Double seriesAmount = series.get(Series.AMOUNT);
+          if (seriesAmount != null) {
+            repository.update(budget.getKey(), SeriesBudget.AMOUNT, seriesAmount);
           }
         }
       }

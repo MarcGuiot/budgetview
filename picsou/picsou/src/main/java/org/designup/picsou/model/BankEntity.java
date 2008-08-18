@@ -36,7 +36,7 @@ public class BankEntity {
   public static Glob getBank(Glob bankEntity, GlobRepository repository) {
     Glob bank = repository.findLinkTarget(bankEntity, BANK);
     if (bank == null) {
-      throw new ItemNotFound("BankEntity with no bank: " + GlobPrinter.dump(bankEntity));
+      throw new ItemNotFound("BankEntity with no bank: " + bankEntity);
     }
     return bank;
   }

@@ -52,7 +52,7 @@ public class Account {
   public static Glob getBank(Glob account, GlobRepository repository) {
     Glob bankEntity = repository.findLinkTarget(account, Account.BANK_ENTITY);
     if (bankEntity == null) {
-      throw new ItemNotFound("Account with no bank entity: " + GlobPrinter.dump(account));
+      throw new ItemNotFound("Account with no bank entity: " + account);
     }
     return BankEntity.getBank(bankEntity, repository);
   }

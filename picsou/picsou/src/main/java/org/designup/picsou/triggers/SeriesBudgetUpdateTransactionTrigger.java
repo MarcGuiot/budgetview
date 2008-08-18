@@ -69,7 +69,11 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
   }
 
   private boolean generatesPlannedTransactions(FieldValues values, Glob series) {
+    System.out.println("series = " + series);
     return values.get(SeriesBudget.ACTIVE) &&
+           (values.get(SeriesBudget.AMOUNT) != null) &&
+           (Math.abs(values.get(SeriesBudget.AMOUNT)) != 0.0) &&
+           (values.get(SeriesBudget.DAY) != null) &&
            !BudgetArea.OCCASIONAL_EXPENSES.getId().equals(series.get(Series.BUDGET_AREA));
   }
 
@@ -81,7 +85,6 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
         GlobMatchers.fieldEquals(Transaction.SERIES, seriesBudget.get(SeriesBudget.SERIES))),
                   repository).sort(Transaction.DAY);
   }
-
 
   private void createPlannedTransaction(Glob series, GlobRepository repository, int monthId, Integer day, Double amount) {
     repository.create(Transaction.TYPE,
