@@ -33,7 +33,6 @@ public class OccasionalSeriesBudgetCreationTrigger implements ChangeSetListener 
     });
     changeSet.safeVisit(Month.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        System.out.println("OccasionalSeriesBudgetCreationTrigger.visitCreation " + values.get(Month.ID));
         if (repository.find(Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID)) != null) {
           repository.create(SeriesBudget.TYPE,
                             FieldValue.value(SeriesBudget.AMOUNT, 0.),

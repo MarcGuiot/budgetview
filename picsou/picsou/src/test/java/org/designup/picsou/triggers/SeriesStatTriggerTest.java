@@ -132,6 +132,10 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                                     "<create amount='0.0' month='200807' plannedAmount='400.0' series='0'" +
                                     "        type='seriesStat'/>" +
                                     "<create amount='200.0' month='200807' plannedAmount='500.0' series='3'" +
+                                    "        type='seriesStat'/>");
+    createTransaction(10, 2, 200807, 750.);
+    listener.assertLastChangesEqual(SeriesStat.TYPE,
+                                    "<update _amount='0.0' amount='750.0' month='200807' series='2'" +
                                     "        type='seriesStat'/>" +
                                     "");
   }

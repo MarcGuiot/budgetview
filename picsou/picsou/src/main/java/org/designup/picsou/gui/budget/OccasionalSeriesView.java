@@ -36,7 +36,7 @@ public class OccasionalSeriesView extends View {
     super(repository, directory);
     this.name = name;
     this.totalMatcher =
-      GlobMatchers.linkTargetFieldEquals(SeriesStat.SERIES, Series.BUDGET_AREA, Series.OCCASIONAL_SERIES_ID);
+      GlobMatchers.linkTargetFieldEquals(SeriesStat.SERIES, Series.ID, Series.OCCASIONAL_SERIES_ID);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {

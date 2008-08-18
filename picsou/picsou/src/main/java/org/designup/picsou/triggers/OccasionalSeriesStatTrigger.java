@@ -173,9 +173,8 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
   }
 
   private Key getKey(Integer categoryId, Integer monthId) {
-    return KeyBuilder.init(OccasionalSeriesStat.MONTH, monthId)
-      .set(OccasionalSeriesStat.CATEGORY, categoryId)
-      .get();
+    return Key.create(OccasionalSeriesStat.MONTH, monthId,
+                      OccasionalSeriesStat.CATEGORY, categoryId);
   }
 
   private Glob getStat(GlobRepository repository, Integer seriesId, Integer categoryId, Integer monthId) {
