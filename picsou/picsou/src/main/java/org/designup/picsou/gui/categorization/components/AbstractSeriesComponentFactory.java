@@ -91,7 +91,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
               !ProfileType.CUSTOM.getId().equals(series.get(Series.PROFILE_TYPE))) {
             SeriesCreationDialog seriesCreationDialog =
               new SeriesCreationDialog(dialog, repository, directory);
-            seriesCreationDialog.show(seriesKey, currentTransactions);
+            seriesCreationDialog.show(series, currentTransactions);
           }
         }
         finally {

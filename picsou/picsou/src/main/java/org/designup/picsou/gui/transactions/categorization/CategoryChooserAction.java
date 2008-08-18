@@ -45,7 +45,7 @@ public class CategoryChooserAction extends AbstractAction implements GlobSelecti
   public void actionPerformed(final ActionEvent e) {
     if (dialog == null) {
       dialog = new CategoryChooserDialog(new MyCategoryChooserCallback(),
-                                         colors, repository, directory, directory.get(JFrame.class));
+                                         colors, repository, directory);
     }
     dialog.show();
   }

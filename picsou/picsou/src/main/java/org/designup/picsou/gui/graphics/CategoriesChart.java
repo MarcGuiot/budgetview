@@ -28,8 +28,8 @@ import org.jfree.ui.RectangleInsets;
 import java.awt.*;
 import java.text.AttributedString;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class CategoriesChart extends View implements GlobSelectionListener, ChangeSetListener {
   private TransactionSelection transactionSelection;
@@ -60,7 +60,7 @@ public class CategoriesChart extends View implements GlobSelectionListener, Chan
     }
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     update();
   }
 

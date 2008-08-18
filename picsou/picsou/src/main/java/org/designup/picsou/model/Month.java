@@ -134,13 +134,22 @@ public class Month {
     return Lang.get("month." + toMonth(month) + ".long").toLowerCase() + " " + year;
   }
 
-  public static int[] createMonths(int monthId, int count) {
-    int[] monthIds = new int[count];
-    for (int i = 0; i < monthIds.length; i++) {
-      monthId = next(monthId);
-      monthIds[i] = monthId;
+  public static String getMediumSizeLetterLabelFromMonth(Integer month) {
+    return Lang.get("month." + toMonth(month) + ".medium").toLowerCase();
+  }
+
+  public static String getOneLetterLabelFromMonth(Integer month) {
+    return Lang.get("month." + toMonth(month) + ".short").toLowerCase();
+  }
+
+  public static List<Integer> createMonths(int firstMonth, int lastMonth) {
+    List<Integer> month = new ArrayList<Integer>();
+    int currentMonth = firstMonth;
+    while (currentMonth <= lastMonth) {
+      month.add(currentMonth);
+      currentMonth = next(currentMonth);
     }
-    return monthIds;
+    return month;
   }
 
   public static int[] createMonthsWithFirst(int monthId, int count) {
@@ -151,6 +160,15 @@ public class Month {
       monthIds[i] = monthId;
     }
     return monthIds;
+  }
+
+  public static Integer getDay(Integer day, int monthId, Calendar calendar) {
+    calendar.setTime(toDate(monthId, 1));
+    int lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+    if (day == null || day < 0 || day > lastDay) {
+      return lastDay;
+    }
+    return day;
   }
 
   private static class RangeIterator implements Iterator<Integer> {

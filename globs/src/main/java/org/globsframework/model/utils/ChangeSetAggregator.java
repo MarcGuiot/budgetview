@@ -7,7 +7,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 
-import java.util.List;
+import java.util.Set;
 
 public class ChangeSetAggregator {
   private GlobRepository repository;
@@ -49,7 +49,7 @@ public class ChangeSetAggregator {
       changeSet.merge(newChanges);
     }
 
-    public void globsReset(GlobRepository globRepository, List<GlobType> changedTypes) {
+    public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
       changeSet.clear(changedTypes);
     }
   }

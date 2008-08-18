@@ -12,7 +12,10 @@ import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class MonthDataProvider implements ChangeSetListener, GlobSelectionListener {
 
@@ -35,7 +38,7 @@ public class MonthDataProvider implements ChangeSetListener, GlobSelectionListen
     }
   }
 
-  public void globsReset(GlobRepository globRepository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
     update();
   }
 

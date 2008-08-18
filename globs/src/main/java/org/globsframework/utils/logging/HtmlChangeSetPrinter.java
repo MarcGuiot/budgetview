@@ -14,6 +14,7 @@ import org.globsframework.utils.Strings;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 class HtmlChangeSetPrinter {
   private GlobRepository repository;
@@ -28,7 +29,7 @@ class HtmlChangeSetPrinter {
         run(changeSet);
       }
 
-      public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
       }
     });
   }

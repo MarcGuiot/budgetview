@@ -15,7 +15,7 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.List;
+import java.util.Set;
 
 public class CategorisationHyperlinkButton extends HyperlinkButton implements GlobSelectionListener, ChangeSetListener {
   private GlobRepository repository;
@@ -65,7 +65,7 @@ public class CategorisationHyperlinkButton extends HyperlinkButton implements Gl
     }
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(Transaction.TYPE)) {
       updateLabel();
     }

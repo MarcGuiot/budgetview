@@ -8,7 +8,7 @@ import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 
 public class FutureMonthTrigger implements ChangeSetListener {
@@ -57,7 +57,7 @@ public class FutureMonthTrigger implements ChangeSetListener {
   }
 
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(UserPreferences.TYPE)) {
       Glob userPreferences = repository.get(Key.create(UserPreferences.TYPE, UserPreferences.SINGLETON_ID));
       updateFuturMonth(repository, userPreferences.get(UserPreferences.FUTURE_MONTH_COUNT));

@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.startup;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.DialogOwner;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
@@ -252,7 +253,8 @@ public abstract class ImportPanel {
 
   private void loadLocalRepository(GlobRepository repository) {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE, Transaction.TYPE,
-                            TransactionToCategory.TYPE, TransactionTypeMatcher.TYPE, LabelToCategory.TYPE};
+                            TransactionToCategory.TYPE, TransactionTypeMatcher.TYPE, LabelToCategory.TYPE,
+                            Month.TYPE};
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
         .copy(globTypes).get();
@@ -364,8 +366,9 @@ public abstract class ImportPanel {
     if (!step2) {
       try {
         openRequestManager.popCallback();
+        Set<Integer> month = createMonth();
         localRepository.commitChanges(true);
-        selectImportedMonth();
+        selectImportedMonth(month);
         complete();
         return true;
       }
@@ -399,20 +402,32 @@ public abstract class ImportPanel {
     }
   }
 
-  private void selectImportedMonth() {
-    repository.enterBulkDispatchingMode();
-    Set<Integer> monthIds;
+  private Set<Integer> createMonth() {
+    localRepository.enterBulkDispatchingMode();
+    SortedSet<Integer> monthIds;
     try {
-      monthIds = repository.getAll(Transaction.TYPE,
-                                   GlobMatchers.fieldIn(Transaction.IMPORT, importKeys)).getValueSet(Transaction.BANK_MONTH);
-      for (Integer monthId : monthIds) {
-        repository.findOrCreate(Key.create(Month.TYPE, monthId));
+      monthIds = localRepository.getAll(Transaction.TYPE,
+                                        GlobMatchers.fieldIn(Transaction.IMPORT, importKeys))
+        .getSortedSet(Transaction.BANK_MONTH);
+      if (monthIds.isEmpty()) {
+        return monthIds;
+      }
+      int firstMonth = monthIds.first();
+      TimeService time = directory.get(TimeService.class);
+      int currentMonth = time.getCurrentMonthId();
+      List<Integer> futureMonth = Month.createMonths(firstMonth, currentMonth);
+      for (int month : futureMonth) {
+        localRepository.findOrCreate(Key.create(Month.TYPE, month));
       }
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      localRepository.completeBulkDispatchingMode();
     }
-    GlobList monthToSelect = repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, monthIds));
+    return monthIds;
+  }
+
+  private void selectImportedMonth(Set<Integer> month) {
+    GlobList monthToSelect = repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, month));
     if (!monthToSelect.isEmpty()) {
       directory.get(SelectionService.class).select(monthToSelect, Month.TYPE);
     }

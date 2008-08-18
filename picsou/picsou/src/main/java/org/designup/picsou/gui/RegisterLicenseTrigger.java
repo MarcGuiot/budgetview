@@ -7,7 +7,7 @@ import org.designup.picsou.model.UserPreferences;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
-import java.util.List;
+import java.util.Set;
 
 public class RegisterLicenseTrigger implements ChangeSetListener {
   private ServerAccess serverAccess;
@@ -79,6 +79,6 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
     }
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

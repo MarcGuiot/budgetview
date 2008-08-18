@@ -13,6 +13,7 @@ import org.globsframework.utils.directory.Directory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> implements ChangeSetListener,
                                                                                          GlobSelectionListener {
@@ -51,7 +52,7 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
     });
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(type)) {
       update();
     }

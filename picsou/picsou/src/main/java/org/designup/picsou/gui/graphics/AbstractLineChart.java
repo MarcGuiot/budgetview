@@ -21,6 +21,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import java.awt.*;
+import java.util.Set;
 
 public abstract class AbstractLineChart extends View implements GlobSelectionListener, ChangeSetListener {
   protected ChartPanel panel;
@@ -33,7 +34,7 @@ public abstract class AbstractLineChart extends View implements GlobSelectionLis
     repository.addChangeListener(this);
   }
 
-  public void globsReset(GlobRepository globRepository, java.util.List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
     updateChart();
   }
 

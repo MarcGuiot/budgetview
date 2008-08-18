@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.categories.columns;
 
+import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.gui.categories.CategoryView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
@@ -94,7 +94,7 @@ public class CategoryExpansionModel implements GlobMatcher, ChangeSetListener {
     view.setFilter(this);
   }
 
-  public void globsReset(GlobRepository repository, java.util.List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(Category.TYPE)) {
       updateExpandabilities();
     }

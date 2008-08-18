@@ -22,20 +22,20 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -1129.90, "WorldCo/june")
       .load();
 
-    CategorizationDialogChecker dialog = transactions.categorize(0);
-    dialog.checkLabel("WorldCo/june");
-    dialog.selectIncome();
+    CategorizationDialogChecker categorization = transactions.categorize(0);
+    categorization.checkLabel("WorldCo/june");
+    categorization.selectIncome();
 
-    SeriesCreationDialogChecker creationDialog = dialog.createSeries();
-    creationDialog.setName("Prime");
-    creationDialog.checkType("Income");
-    creationDialog.setCategory(MasterCategory.INCOME);
+    SeriesCreationDialogChecker creationSeries = categorization.createSeries();
+    creationSeries.setName("Prime");
+    creationSeries.checkType("Income");
+    creationSeries.setCategory(MasterCategory.INCOME);
 
-    creationDialog.validate();
+    creationSeries.validate();
 
-    dialog.checkContainsIncomeSeries("Salary", "Prime");
-    dialog.selectIncomeSeries("Prime", false);
-    dialog.validate();
+    categorization.checkContainsIncomeSeries("Salary", "Prime");
+    categorization.selectIncomeSeries("Prime", false);
+    categorization.validate();
 
     transactionDetails.checkSeries("Prime");
     transactionDetails.checkCategory(MasterCategory.INCOME);

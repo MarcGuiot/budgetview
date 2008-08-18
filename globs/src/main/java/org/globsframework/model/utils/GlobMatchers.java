@@ -281,6 +281,14 @@ public class GlobMatchers {
     };
   }
 
+  public static GlobMatcher fieldIsNull(final Field field) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return item.getValue(field) == null;
+      }
+    };
+  }
+
   private static class SingleFieldMatcher implements GlobMatcher {
     private Field field;
     private Object value;

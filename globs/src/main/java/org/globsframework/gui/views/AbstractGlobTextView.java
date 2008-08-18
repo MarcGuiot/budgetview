@@ -17,7 +17,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
@@ -111,7 +110,7 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
     }
   }
 
-  public void globsReset(GlobRepository globRepository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
     currentSelection = new GlobList();
     update();
   }

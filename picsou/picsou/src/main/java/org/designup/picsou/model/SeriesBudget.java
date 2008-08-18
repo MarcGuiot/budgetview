@@ -4,6 +4,7 @@ import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
@@ -25,9 +26,15 @@ public class SeriesBudget {
   @Target(Series.class)
   public static LinkField SERIES;
 
-  public static IntegerField MONTH;
+  @Target(Month.class)
+  public static LinkField MONTH;
 
   public static DoubleField AMOUNT;
+
+  public static IntegerField DAY;
+
+  public static BooleanField ACTIVE;
+
 
   public static MultiFieldUniqueIndex SERIES_INDEX;
 
@@ -44,6 +51,8 @@ public class SeriesBudget {
       output.writeInteger(fieldValues.get(SeriesBudget.SERIES));
       output.writeInteger(fieldValues.get(SeriesBudget.MONTH));
       output.writeDouble(fieldValues.get(SeriesBudget.AMOUNT));
+      output.writeInteger(fieldValues.get(SeriesBudget.DAY));
+      output.writeBoolean(fieldValues.get(SeriesBudget.ACTIVE));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -58,6 +67,8 @@ public class SeriesBudget {
       fieldSetter.set(SeriesBudget.SERIES, input.readInteger());
       fieldSetter.set(SeriesBudget.MONTH, input.readInteger());
       fieldSetter.set(SeriesBudget.AMOUNT, input.readDouble());
+      fieldSetter.set(SeriesBudget.DAY, input.readInteger());
+      fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
     }
 
     public int getWriteVersion() {

@@ -1,69 +1,47 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.utils.DefaultChangeSetVisitor;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 
-import java.util.List;
+import java.util.Set;
 
 public class SeriesStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-    processSeries(changeSet, repository);
-    processMonths(changeSet, repository);
+    processSeriesBudget(changeSet, repository);
     processTransactions(changeSet, repository);
   }
 
-  private void processSeries(ChangeSet changeSet, final GlobRepository repository) {
-    changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
-      public void visitCreation(Key seriesKey, FieldValues values) throws Exception {
-        Integer seriesId = seriesKey.get(Series.ID);
-        for (Glob month : repository.getAll(Month.TYPE)) {
-          final Key statKey = createKey(seriesId, month.get(Month.ID));
-          repository.findOrCreate(statKey);
-          repository.update(statKey, SeriesStat.PLANNED_AMOUNT, values.get(Series.AMOUNT));
-        }
+
+  private void processSeriesBudget(ChangeSet changeSet, final GlobRepository repository) {
+    changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        Key seriesStat = createKey(values.get(SeriesBudget.SERIES),
+                                   values.get(SeriesBudget.MONTH));
+        repository.findOrCreate(seriesStat);
+        repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT, values.get(SeriesBudget.AMOUNT));
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (!values.contains(Series.AMOUNT)) {
-          return;
-        }
-        for (Glob seriesStat : repository.getAll(SeriesStat.TYPE,
-                                                 GlobMatchers.fieldEquals(SeriesStat.SERIES, key.get(Series.ID)))) {
-          repository.update(seriesStat.getKey(), SeriesStat.PLANNED_AMOUNT, values.getValue(Series.AMOUNT));
+        Glob series = repository.get(key);
+        if (values.contains(SeriesBudget.AMOUNT)) {
+          Key seriesStat = createKey(series.get(SeriesBudget.SERIES),
+                                     series.get(SeriesBudget.MONTH));
+          repository.findOrCreate(seriesStat);
+          repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT,
+                            values.get(SeriesBudget.AMOUNT));
         }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        GlobList stats = repository.getAll(SeriesStat.TYPE,
-                                           GlobMatchers.fieldEquals(SeriesStat.SERIES, key.get(Series.ID)));
-        repository.delete(stats);
-      }
-    });
-  }
-
-  private void processMonths(ChangeSet changeSet, final GlobRepository repository) {
-    changeSet.safeVisit(Month.TYPE, new DefaultChangeSetVisitor() {
-      public void visitCreation(Key monthKey, FieldValues values) throws Exception {
-        Integer monthId = monthKey.get(Month.ID);
-        for (Glob series : repository.getAll(Series.TYPE)) {
-          repository.findOrCreate(createKey(series.get(Series.ID), monthId));
+        Key seriesStat = createKey(previousValues.get(SeriesBudget.SERIES),
+                                   previousValues.get(SeriesBudget.MONTH));
+        Glob glob = repository.find(seriesStat);
+        if (glob != null) {
+          repository.delete(seriesStat);
         }
-      }
-
-      public void visitDeletion(Key monthKey, FieldValues values) throws Exception {
-        final Integer monthId = monthKey.get(Month.ID);
-        GlobList stats = repository.getAll(SeriesStat.TYPE,
-                                           GlobMatchers.fieldEquals(SeriesStat.MONTH, monthId));
-        repository.delete(stats);
       }
     });
   }
@@ -121,20 +99,22 @@ public class SeriesStatTrigger implements ChangeSetListener {
         if (previousSeriesId != null) {
           Glob stat = repository.find(createKey(previousSeriesId, previousMonthId));
           if (stat != null) {
-            updateTransaction(stat, -1 * previousAmount, repository);
+            updateStat(stat, -1 * previousAmount, repository);
           }
         }
 
         if (currentSeriesId != null) {
           Glob stat = repository.find(createKey(currentSeriesId, currentMonthId));
-          updateTransaction(stat, currentAmount, repository);
+          if (stat == null) {
+            throw new RuntimeException("SeriesStatTrigger.visitUpdate " + currentSeriesId);
+          }
+          updateStat(stat, currentAmount, repository);
         }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         processTransaction(previousValues, -1, repository);
       }
-
     });
   }
 
@@ -147,15 +127,14 @@ public class SeriesStatTrigger implements ChangeSetListener {
     Glob stat = repository.find(createKey(seriesId, values.get(Transaction.MONTH)));
     if (stat != null) {
       final Double transactionAmount = values.get(Transaction.AMOUNT);
-      updateTransaction(stat, multiplier * transactionAmount, repository);
+      updateStat(stat, multiplier * transactionAmount, repository);
     }
   }
 
-  private void updateTransaction(Glob stat, Double transactionAmount, GlobRepository repository) {
+  private void updateStat(Glob stat, Double transactionAmount, GlobRepository repository) {
     repository.update(stat.getKey(), SeriesStat.AMOUNT,
                       stat.get(SeriesStat.AMOUNT) + transactionAmount);
   }
-
 
   public void init(GlobRepository repository) {
     repository.enterBulkDispatchingMode();
@@ -171,18 +150,26 @@ public class SeriesStatTrigger implements ChangeSetListener {
       for (Glob transaction : repository.getAll(Transaction.TYPE)) {
         processTransaction(transaction, 1, repository);
       }
+
+      GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE);
+      for (Glob seriesBudget : seriesBudgets) {
+        Key seriesStat = Key.create(SeriesStat.SERIES, seriesBudget.get(SeriesBudget.SERIES),
+                                    SeriesStat.MONTH, seriesBudget.get(SeriesBudget.MONTH));
+        repository.findOrCreate(seriesStat);
+        repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.AMOUNT));
+      }
     }
     finally {
       repository.completeBulkDispatchingMode();
     }
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    init(repository);
   }
 
   private Key createKey(Integer seriesId, Integer monthId) {
-    return KeyBuilder.createFromValues(SeriesStat.TYPE,
-                                       value(SeriesStat.MONTH, monthId),
-                                       value(SeriesStat.SERIES, seriesId));
+    return Key.create(SeriesStat.SERIES, seriesId,
+                      SeriesStat.MONTH, monthId);
   }
 }

@@ -247,7 +247,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     timeGraph = new TimeGraph(list, colors, timeService);
   }
 
-  public void globsReset(GlobRepository globRepository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
     reloadMonth();
     repaint();
   }

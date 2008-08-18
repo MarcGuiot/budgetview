@@ -62,7 +62,7 @@ public class MonthDetailChart extends View implements GlobSelectionListener, Cha
     }
   }
 
-  public void globsReset(GlobRepository globRepository, java.util.List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
     updateChart();
   }
 

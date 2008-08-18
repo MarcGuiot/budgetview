@@ -12,7 +12,10 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class CategoryDataProvider implements ChangeSetListener, GlobSelectionListener {
 
@@ -44,7 +47,7 @@ public class CategoryDataProvider implements ChangeSetListener, GlobSelectionLis
     }
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     update();
   }
 

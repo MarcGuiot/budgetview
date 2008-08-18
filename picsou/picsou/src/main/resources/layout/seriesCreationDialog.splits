@@ -1,18 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
-  <column opaque="true">
+  <column opaque="true" preferredSize="(400,400)">
 
     <label text="$seriesCreation.title"/>
 
-    <grid>
+    <grid weightY="0">
       <label text="$seriesCreation.name" gridPos="(0,0)"/>
       <textField ref="nameField" gridPos="(1,0)"/>
 
       <label text="$seriesCreation.category" gridPos="(0,1)"/>
       <button action="assignCategoryAction" text="$seriesCreation.categorize" gridPos="(1,1)" styleClass="hyperlink"/>
-
-
     </grid>
+
+    <row weightY="0">
+      <label text="$seriesCreation.amount"/>
+      <textField ref="amountEditor"/>
+    </row>
+
+    <row weightY="0">
+      <label text="$seriesCreation.begin"/>
+      <textField ref="beginSeriesDate"/>
+      <label text="$seriesCreation.end"/>
+      <textField ref="endSeriesDate"/>
+    </row>
+
+    <repeat ref="monthRepeat" styleClass="innerBlock" marginLeft="10" marginRight="10" layout="horizontalGrid"
+            weightY="0">
+      <column>
+        <label ref="monthLabel"/>
+        <row>
+          <checkBox ref="monthSelected"/>
+          <filler fill="horizontal"/>
+        </row>
+      </column>
+    </repeat>
+
+    <scrollPane weightY="1">
+      <column>
+        <repeat ref="budgetSeries" layout="verticalGrid">
+          <label ref="budgetMonth"/>
+          <textField ref="budgetAmount"/>
+        </repeat>
+        <filler fill="vertical"/>
+      </column>
+    </scrollPane>
 
     <row>
       <button action="ok" text="$ok"/>

@@ -35,8 +35,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
     reopenedDialog.checkIncomeSeriesIsSelected("Salary");
-    dialog.selectIncomeSeries("Exceptional Income", false);
-    dialog.checkIncomeSeriesIsNotSelected("Salary");
+    reopenedDialog.selectIncomeSeries("Exceptional Income", false);
+    reopenedDialog.checkIncomeSeriesIsNotSelected("Salary");
   }
 
   public void testStandardRecurringTransaction() throws Exception {
@@ -58,8 +58,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
     reopenedDialog.checkRecurringSeriesIsSelected("Internet");
-    dialog.selectRecurringSeries("Rental", true);
-    dialog.checkRecurringSeriesIsNotSelected("Internet");
+    reopenedDialog.selectRecurringSeries("Rental", true);
+    reopenedDialog.checkRecurringSeriesIsNotSelected("Internet");
   }
 
   public void testStandardEnvelopeTransaction() throws Exception {
@@ -81,9 +81,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
     reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.HOUSE, false);
-    dialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.HOUSE);
-    dialog.checkEnveloppeSeriesIsNotSelected("Groceries", MasterCategory.FOOD);
+    reopenedDialog.selectEnvelopeSeries("Groceries", MasterCategory.HOUSE, false);
+    reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.HOUSE);
+    reopenedDialog.checkEnveloppeSeriesIsNotSelected("Groceries", MasterCategory.FOOD);
   }
 
   public void testStandardOccasionalTransaction() throws Exception {
@@ -369,11 +369,15 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("26/06/2008", TransactionType.PLANNED, "Internet", "", 0.0, "Internet")
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet")
-      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -170.00, MasterCategory.FOOD)
+      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -170.00, "Groceries")
+      .add("26/05/2008", TransactionType.PLANNED, "Internet", "", 0.0, "Internet")
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet")
-      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan 1111", "", -90.00, MasterCategory.FOOD)
-      .add("14/05/2008", TransactionType.PRELEVEMENT, "Auchan 2222", "", -80.00, MasterCategory.FOOD)
+      .add("15/05/2008", TransactionType.PLANNED, "Groceries", "", 0.00, "Groceries")
+      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan 1111", "", -90.00, "Groceries")
+      .add("14/05/2008", TransactionType.PRELEVEMENT, "Auchan 2222", "", -80.00, "Groceries")
+      .add("26/04/2008", TransactionType.PLANNED, "Internet", "", 0.0, "Internet")
       .add("24/04/2008", TransactionType.PRELEVEMENT, "Free Telecom 21/04", "", -29.90, "Internet")
+      .add("15/04/2008", TransactionType.PLANNED, "Groceries", "", -170.00, "Groceries")
       .check();
   }
 
@@ -457,10 +461,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("26/06/2008", TransactionType.PLANNED, "Internet", "", 0.00, "Internet")
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet")
-      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -90.00, MasterCategory.FOOD)
+      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -90.00, "Groceries")
+      .add("26/05/2008", TransactionType.PLANNED, "Internet", "", 0.00, "Internet")
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet")
-      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, MasterCategory.FOOD)
-      .add("14/05/2008", TransactionType.PRELEVEMENT, "Carouf", "", -80.00, MasterCategory.FOOD)
+      .add("15/05/2008", TransactionType.PLANNED, "Groceries", "", 80.00, "Groceries")
+      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "Groceries")
+      .add("14/05/2008", TransactionType.PRELEVEMENT, "Carouf", "", -80.00, "Groceries")
       .check();
   }
 

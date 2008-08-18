@@ -60,8 +60,10 @@ public class PicsouInit {
     repository.addTrigger(new RegistrationTrigger(directory));
     repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
     repository.addTrigger(new FutureMonthTrigger(directory));
-    repository.addTrigger(new SeriesBudgetTrigger());
-    repository.addTrigger(new SeriesUpdateTrigger(directory));
+    repository.addTrigger(new MonthsToSeriesBudgetTrigger());
+    repository.addTrigger(new OccasionalSeriesBudgetCreationTrigger());
+    repository.addTrigger(new SeriesBudgetUpdateOccasionnalTrigger());
+    repository.addTrigger(new SeriesBudgetUpdateTransactionTrigger());
     repository.addTrigger(new BudgetStatTrigger());
     repository.addTrigger(new TransactionPlannedTrigger());
     repository.addTrigger(new MonthStatTrigger(repository));
@@ -91,15 +93,16 @@ public class PicsouInit {
     }
     serverAccess.applyChanges(changeSet, repository);
     if (newUser) {
+      repository.enterBulkDispatchingMode();
       repository.create(UserPreferences.key,
                         FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT,
                                          UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS));
 
       loadGlobs("/subcats.xml");
       loadGlobs("/series.xml");
+      repository.completeBulkDispatchingMode();
     }
 
-    seriesStatTrigger.init(repository);
     initDirectory(repository);
     if (!directory.get(ConfigService.class).loadConfigFileFromLastestJar(directory, repository)) {
       directory.get(TransactionAnalyzerFactory.class).load(this.getClass().getClassLoader(),

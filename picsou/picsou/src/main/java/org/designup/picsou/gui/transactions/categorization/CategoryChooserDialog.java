@@ -9,12 +9,12 @@ import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouMatchers;
-import org.globsframework.gui.splits.layout.WrappedColumnLayout;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsLoader;
+import org.globsframework.gui.splits.layout.WrappedColumnLayout;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -46,7 +46,6 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private GlobRepository repository;
   private GlobStringifier stringifier;
   private PicsouDialog dialog;
-  private JFrame mainFrame;
   private CreateCategoryAction addCategoryAction;
   private DeleteCategoryAction deleteCategoryAction;
   private RenameCategoryAction renameCategoryAction;
@@ -54,7 +53,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
   protected Font masterFont;
 
   public CategoryChooserDialog(CategoryChooserCallback callback, TransactionRendererColors colors,
-                               GlobRepository repository, Directory directory, Window parent) {
+                               GlobRepository repository, Directory directory) {
     this.callback = callback;
     this.colors = colors;
     this.directory = directory;
@@ -80,8 +79,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
         return PicsouDialog.create(dialog);
       }
     };
-    mainFrame = localDirectory.get(JFrame.class);
-    dialog = PicsouDialog.create(mainFrame, Lang.get("choose.category.title"));
+    dialog = PicsouDialog.create(localDirectory.get(JFrame.class), Lang.get("choose.category.title"));
     loadDialogContent();
   }
 
@@ -104,7 +102,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
     }
   }
 
-  public void globsReset(GlobRepository repository, java.util.List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 
   private void loadDialogContent() {

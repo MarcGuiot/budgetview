@@ -13,7 +13,7 @@ import org.globsframework.sqlstreams.drivers.jdbc.DbServicesTestCase;
 import org.globsframework.streams.xml.XmlGlobStreamReader;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
-import java.util.List;
+import java.util.Set;
 
 public class RemoteExecutorTest extends DbServicesTestCase {
 
@@ -45,7 +45,7 @@ public class RemoteExecutorTest extends DbServicesTestCase {
         executor.execute(SerializedInputOutputFactory.init(bytes));
       }
 
-      public void globsReset(GlobRepository globRepository, List<GlobType> changedTypes) {
+      public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
       }
     });
 

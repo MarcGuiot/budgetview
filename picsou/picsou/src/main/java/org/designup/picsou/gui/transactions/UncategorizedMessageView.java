@@ -10,12 +10,13 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.isNull;
+import static org.globsframework.model.utils.GlobMatchers.or;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.List;
+import java.util.Set;
 
 public class UncategorizedMessageView extends View implements ChangeSetListener {
   private JTextArea textArea = new JTextArea();
@@ -48,7 +49,7 @@ public class UncategorizedMessageView extends View implements ChangeSetListener 
     }
   }
 
-  public void globsReset(GlobRepository globRepository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
     update();
   }
 

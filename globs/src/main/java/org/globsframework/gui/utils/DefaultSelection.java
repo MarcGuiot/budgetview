@@ -1,18 +1,17 @@
 package org.globsframework.gui.utils;
 
 import org.globsframework.gui.GlobSelection;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.metamodel.GlobType;
 
 import java.util.Collection;
-import java.util.List;
 
 public class DefaultSelection implements GlobSelection {
   private Collection<Glob> selection;
-  private List<GlobType> relevantTypes;
+  private Collection<GlobType> relevantTypes;
 
-  public DefaultSelection(Collection<Glob> selection, List<GlobType> types) {
+  public DefaultSelection(Collection<Glob> selection, Collection<GlobType> types) {
     this.selection = selection;
     this.relevantTypes = types;
   }

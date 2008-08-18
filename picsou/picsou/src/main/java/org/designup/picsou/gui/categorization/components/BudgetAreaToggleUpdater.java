@@ -11,7 +11,6 @@ import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobUtils;
 
 import javax.swing.*;
-import java.util.List;
 import java.util.Set;
 
 public class BudgetAreaToggleUpdater implements GlobSelectionListener, ChangeSetListener {
@@ -66,7 +65,7 @@ public class BudgetAreaToggleUpdater implements GlobSelectionListener, ChangeSet
     }
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     this.selectedTransactions = GlobList.EMPTY;
   }
 

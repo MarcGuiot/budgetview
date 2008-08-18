@@ -14,10 +14,7 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class UndoRedoService {
   private GlobRepository repository;
@@ -48,7 +45,7 @@ public class UndoRedoService {
         }
       }
 
-      public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
         reset();
       }
     });

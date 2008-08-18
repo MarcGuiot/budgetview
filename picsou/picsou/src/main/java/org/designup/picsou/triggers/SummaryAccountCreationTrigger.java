@@ -8,7 +8,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.utils.Utils;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 public class SummaryAccountCreationTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
@@ -18,7 +18,7 @@ public class SummaryAccountCreationTrigger implements ChangeSetListener {
     updateSummary(globRepository);
   }
 
-  public void globsReset(GlobRepository globRepository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
     updateSummary(globRepository);
   }
 

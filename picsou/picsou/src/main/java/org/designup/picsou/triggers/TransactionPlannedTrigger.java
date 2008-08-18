@@ -1,90 +1,90 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
-import org.globsframework.utils.exceptions.InvalidData;
 
-import java.util.List;
+import java.util.Set;
 
 public class TransactionPlannedTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-    if (changeSet.containsUpdates(Transaction.SERIES) ||
-        changeSet.containsChanges(Transaction.TYPE) ||
-        changeSet.containsCreationsOrDeletions(Transaction.TYPE)) {
-      changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
-
-        public void visitCreation(Key key, FieldValues values) throws Exception {
-          if (values.get(Transaction.PLANNED)) {
-            return;
-          }
-          Integer series = values.get(Transaction.SERIES);
-          if (series == null) {
-            return;
-          }
-          transfertFromPlanned(repository, series, values.get(Transaction.MONTH), values.get(Transaction.AMOUNT));
-        }
-
-        public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-          Glob transaction = repository.get(key);
-          if (transaction.get(Transaction.PLANNED)) {
-            return;
-          }
-          Integer previousSeries;
-          Integer newSeries;
-          Double previousAmount;
-          Double newAmount;
-          Integer newMonth;
-          Integer previousMonth;
-          if (values.contains(Transaction.SERIES)) {
-            previousSeries = values.getPrevious(Transaction.SERIES);
-            newSeries = values.get(Transaction.SERIES);
-          }
-          else {
-            newSeries = transaction.get(Transaction.SERIES);
-            previousSeries = newSeries;
-          }
-          if (values.contains(Transaction.AMOUNT)) {
-            previousAmount = values.getPrevious(Transaction.AMOUNT);
-            newAmount = values.get(Transaction.AMOUNT);
-          }
-          else {
-            newAmount = transaction.get(Transaction.AMOUNT);
-            previousAmount = newAmount;
-          }
-          if (values.contains(Transaction.MONTH)) {
-            previousMonth = values.getPrevious(Transaction.MONTH);
-            newMonth = values.get(Transaction.MONTH);
-          }
-          else {
-            newMonth = transaction.get(Transaction.MONTH);
-            previousMonth = newMonth;
-          }
-          if (!Utils.equal(previousMonth, newMonth) ||
-              !Utils.equal(previousSeries, newSeries) ||
-              !Utils.equal(previousAmount, newAmount)) {
-            if (previousAmount != null && previousSeries != null) {
-              transfertToPlanned(previousMonth, previousAmount, previousSeries, repository);
-            }
-            if (newAmount != null && newSeries != null) {
-              transfertFromPlanned(repository, newSeries, newMonth, newAmount);
-            }
-          }
-        }
-
-        public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        }
-      });
+    if (!changeSet.containsUpdates(Transaction.SERIES) &&
+        !changeSet.containsChanges(Transaction.TYPE) &&
+        !changeSet.containsCreationsOrDeletions(Transaction.TYPE)) {
+      return;
     }
+
+    changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
+
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        if (values.get(Transaction.PLANNED)) {
+          return;
+        }
+        Integer series = values.get(Transaction.SERIES);
+        if (series == null) {
+          return;
+        }
+        transfertFromPlanned(repository, series, values.get(Transaction.MONTH), values.get(Transaction.AMOUNT));
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        Glob transaction = repository.get(key);
+        if (transaction.get(Transaction.PLANNED)) {
+          return;
+        }
+        Integer previousSeries;
+        Integer newSeries;
+        Double previousAmount;
+        Double newAmount;
+        Integer newMonth;
+        Integer previousMonth;
+        if (values.contains(Transaction.SERIES)) {
+          previousSeries = values.getPrevious(Transaction.SERIES);
+          newSeries = values.get(Transaction.SERIES);
+        }
+        else {
+          newSeries = transaction.get(Transaction.SERIES);
+          previousSeries = newSeries;
+        }
+        if (values.contains(Transaction.AMOUNT)) {
+          previousAmount = values.getPrevious(Transaction.AMOUNT);
+          newAmount = values.get(Transaction.AMOUNT);
+        }
+        else {
+          newAmount = transaction.get(Transaction.AMOUNT);
+          previousAmount = newAmount;
+        }
+        if (values.contains(Transaction.MONTH)) {
+          previousMonth = values.getPrevious(Transaction.MONTH);
+          newMonth = values.get(Transaction.MONTH);
+        }
+        else {
+          newMonth = transaction.get(Transaction.MONTH);
+          previousMonth = newMonth;
+        }
+        if (!Utils.equal(previousMonth, newMonth) ||
+            !Utils.equal(previousSeries, newSeries) ||
+            !Utils.equal(previousAmount, newAmount)) {
+          if (previousAmount != null && previousSeries != null) {
+            transfertToPlanned(previousMonth, previousAmount, previousSeries, repository);
+          }
+          if (newAmount != null && newSeries != null) {
+            transfertFromPlanned(repository, newSeries, newMonth, newAmount);
+          }
+        }
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      }
+    });
   }
 
   private void transfertToPlanned(Integer monthId, Double amount, Integer series, GlobRepository repository) {
     GlobList plannedTransaction = getPlannedTransactions(repository, series, monthId);
     if (plannedTransaction.isEmpty()) {
-      throw new InvalidData("no planned transaction for month " + Month.toString(monthId));
+      return;
     }
     Key plannedTransactionKeyToUpdate = plannedTransaction.get(0).getKey();
     Double currentAmount = repository.get(plannedTransactionKeyToUpdate).get(Transaction.AMOUNT);
@@ -129,6 +129,6 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       .sort(Transaction.DAY);
   }
 
-  public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

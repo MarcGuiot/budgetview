@@ -36,6 +36,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
 
 public class TransactionView extends View implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
   public static final int DATE_COLUMN_INDEX = 0;
@@ -79,7 +80,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
     }
   }
 
-  public void globsReset(GlobRepository repository, java.util.List<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     view.reset();
   }
 
