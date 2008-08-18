@@ -7,6 +7,7 @@ import org.designup.picsou.gui.transactions.categorization.CategoryChooserDialog
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -109,14 +110,14 @@ public class SeriesCreationDialog {
       }
     });
 
-    builder.add("ok", new AbstractAction() {
+    builder.add("ok", new AbstractAction(Lang.get("ok")) {
       public void actionPerformed(ActionEvent e) {
         localRepository.commitChanges(false);
         dialog.setVisible(false);
       }
     });
 
-    builder.add("cancel", new AbstractAction() {
+    builder.add("cancel", new AbstractAction(Lang.get("cancel")) {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
       }

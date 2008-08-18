@@ -117,14 +117,14 @@ public class CategorizationDialog {
                                                                invisibleOccasionalToggle,
                                                                localRepository, localDirectory, dialog));
 
-    builder.add("ok", new AbstractAction("ok") {
+    builder.add("ok", new AbstractAction(Lang.get("ok")) {
       public void actionPerformed(ActionEvent e) {
         localRepository.commitChanges(false);
         dialog.setVisible(false);
       }
     });
 
-    builder.add("cancel", new AbstractAction("cancel") {
+    builder.add("cancel", new AbstractAction(Lang.get("cancel")) {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
       }
@@ -145,7 +145,7 @@ public class CategorizationDialog {
   private Directory init(GlobRepository repository, Directory directory) {
 
     localRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(BudgetArea.TYPE, Category.TYPE, Series.TYPE, SeriesToCategory.TYPE)
+      .copy(BudgetArea.TYPE, Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE)
       .get();
 
     Directory localDirectory = new DefaultDirectory(directory);
