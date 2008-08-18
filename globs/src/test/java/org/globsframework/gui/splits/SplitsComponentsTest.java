@@ -176,6 +176,11 @@ public class SplitsComponentsTest extends SplitsTestCase {
     assertNotNull(check);
   }
 
+  public void testCreatingAProgressBar() throws Exception {
+    JProgressBar progressBar = parse("<progressBar/>");
+    assertNotNull(progressBar);
+  }
+
   public void testReferencingACheckBox() throws Exception {
     JCheckBox check = new JCheckBox();
     builder.add("check", check);

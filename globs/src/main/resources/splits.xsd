@@ -113,6 +113,7 @@
       <xs:element ref="label"/>
       <xs:element ref="checkBox"/>
       <xs:element ref="comboBox"/>
+      <xs:element ref="progressBar"/>
       <xs:element ref="table"/>
       <xs:element ref="list"/>
       <xs:element ref="textField"/>
@@ -536,6 +537,12 @@
       <xs:attributeGroup ref="iconAttributes"/>
       <xs:attribute name="action" type="xs:string"/>
       <xs:attribute name="text" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="progressBar">
+    <xs:complexType>
+      <xs:attributeGroup ref="componentAttributes"/>
     </xs:complexType>
   </xs:element>
 

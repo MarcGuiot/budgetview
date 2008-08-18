@@ -3,7 +3,6 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.SplitterFactory;
-import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 
 import javax.swing.*;
@@ -89,6 +88,9 @@ public class DefaultSplitterFactory implements SplitterFactory {
     }
     else if (name.equals("checkBox")) {
       return createDefaultComponent(JCheckBox.class, "checkBox", properties, subSplitters);
+    }
+    else if (name.equals("progressBar")) {
+      return createDefaultComponent(JProgressBar.class, "progressBar", properties, subSplitters);
     }
     else if (name.equals("tabs")) {
       return new TabGroupSplitter(properties, subSplitters);
