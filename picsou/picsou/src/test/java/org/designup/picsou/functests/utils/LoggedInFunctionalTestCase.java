@@ -5,6 +5,7 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.LabelToCategory;
@@ -16,6 +17,8 @@ import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
+
+import java.util.Date;
 
 public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected Window mainWindow;
@@ -38,6 +41,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
+    TimeService.setCurrentDate(new Date());
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, FunctionalTestCase.getUrl());
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
