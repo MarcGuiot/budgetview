@@ -51,11 +51,6 @@ public class MonthStatTriggerTest extends PicsouTestCase {
       .add(MasterCategory.ALL, 600.0, 820.0, 0.0, 710.0)
       .check();
 
-    init(MonthStat.PLANNED_INCOME_RECEIVED)
-      .setMonths(200605, 200606, 200607, 200608)
-      .add(MasterCategory.INCOME, 0.0, 1500.0, 0.0, 1500.0)
-      .add(MasterCategory.ALL, 0.0, 1500.0, 0.0, 1500.0)
-      .check();
   }
 
   public void testDoesNothingWhenThereAreNoTransactions() throws Exception {

@@ -1,14 +1,28 @@
 package org.designup.picsou.triggers;
 
+import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidState;
 
+import java.util.Iterator;
 import java.util.Set;
 
 public class TransactionPlannedTrigger implements ChangeSetListener {
+  private TimeService timeService;
+
+  public TransactionPlannedTrigger(Directory directory) {
+    timeService = directory.get(TimeService.class);
+  }
+
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     if (!changeSet.containsUpdates(Transaction.SERIES) &&
         !changeSet.containsChanges(Transaction.TYPE) &&
@@ -68,7 +82,8 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
             !Utils.equal(previousSeries, newSeries) ||
             !Utils.equal(previousAmount, newAmount)) {
           if (previousAmount != null && previousSeries != null) {
-            transfertToPlanned(previousMonth, previousAmount, previousSeries, repository);
+            transfertToPlanned(previousMonth, previousAmount, previousSeries,
+                               transaction.get(Transaction.DAY), repository);
           }
           if (newAmount != null && newSeries != null) {
             transfertFromPlanned(repository, newSeries, newMonth, newAmount);
@@ -81,24 +96,50 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     });
   }
 
-  private void transfertToPlanned(Integer monthId, Double amount, Integer series, GlobRepository repository) {
-    GlobList plannedTransaction = getPlannedTransactions(repository, series, monthId);
-    if (plannedTransaction.isEmpty()) {
+  private void transfertToPlanned(Integer monthId, Double amount, Integer seriesId, Integer day, GlobRepository repository) {
+    int id = timeService.getLastAvailableTransactionMonthId();
+    if (monthId < id) {
       return;
     }
-    Key plannedTransactionKeyToUpdate = plannedTransaction.get(0).getKey();
-    Double currentAmount = repository.get(plannedTransactionKeyToUpdate).get(Transaction.AMOUNT);
-    repository.update(plannedTransactionKeyToUpdate,
-                      FieldValue.value(Transaction.AMOUNT, currentAmount + amount));
+    GlobList plannedTransaction = getPlannedTransactions(repository, seriesId, monthId);
+    if (plannedTransaction.isEmpty()) {
+      GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
+        .findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
+      if (budgets.isEmpty()) {
+        throw new InvalidState("missing budgetSeries for series : " + seriesId + " at " + monthId);
+      }
+      Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+      double multiplier = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome() ? -1 : 1;
+      Double overBurnAmount = budgets.get(0).get(SeriesBudget.OVER_BURN_AMOUNT);
+      if (amount * multiplier < overBurnAmount * multiplier) {
+        Double amountToDeduce = overBurnAmount - amount;
+        GlobUtils.add(budgets.get(0), SeriesBudget.OVER_BURN_AMOUNT, amountToDeduce, repository);
+      }
+      else {
+        Double amountToDeduce = overBurnAmount - amount;
+        repository.update(budgets.get(0).getKey(), SeriesBudget.OVER_BURN_AMOUNT, 0.0);
+        SeriesBudgetUpdateTransactionTrigger
+          .createPlannedTransaction(series, repository, monthId, day, amountToDeduce);
+      }
+    }
+    else {
+      Key plannedTransactionKeyToUpdate = plannedTransaction.get(0).getKey();
+      Double currentAmount = repository.get(plannedTransactionKeyToUpdate).get(Transaction.AMOUNT);
+      repository.update(plannedTransactionKeyToUpdate,
+                        FieldValue.value(Transaction.AMOUNT, currentAmount + amount));
+    }
   }
 
-  private void transfertFromPlanned(GlobRepository repository, Integer series,
+  private void transfertFromPlanned(GlobRepository repository, Integer seriesId,
                                     Integer monthId, Double amountToDeduce) {
-    GlobList plannedTransaction = getPlannedTransactions(repository, series, monthId);
-    for (Glob transaction : plannedTransaction) {
+    Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+    double multiplier = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome() ? -1 : 1;
+    GlobList plannedTransaction = getPlannedTransactions(repository, seriesId, monthId);
+    for (Iterator it = plannedTransaction.iterator(); it.hasNext();) {
+      Glob transaction = (Glob)it.next();
       Double available = transaction.get(Transaction.AMOUNT);
       Double newAmount;
-      if (available < amountToDeduce) {
+      if (available * multiplier < amountToDeduce * multiplier) {
         newAmount = available - amountToDeduce;
         amountToDeduce = 0.0;
       }
@@ -106,17 +147,24 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         amountToDeduce -= available;
         newAmount = 0.0;
       }
-      repository.update(transaction.getKey(),
-                        FieldValue.value(Transaction.AMOUNT, newAmount));
+      if (newAmount == 0.0) {
+        repository.delete(transaction.getKey());
+        it.remove();
+      }
+      else {
+        repository.update(transaction.getKey(), FieldValue.value(Transaction.AMOUNT, newAmount));
+      }
       if (amountToDeduce == 0.0) {
         break;
       }
     }
-    if (amountToDeduce < 0.0) {
-      if (!plannedTransaction.isEmpty()) {
-        repository.update(plannedTransaction.get(plannedTransaction.size() - 1).getKey(),
-                          FieldValue.value(Transaction.AMOUNT, -amountToDeduce));
+    if (amountToDeduce != 0.0) {
+      GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
+        .findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
+      if (budgets.isEmpty()) {
+        throw new InvalidState("missing budgetSeries for series : " + seriesId + " at " + monthId);
       }
+      GlobUtils.add(budgets.get(0), SeriesBudget.OVER_BURN_AMOUNT, amountToDeduce, repository);
     }
   }
 

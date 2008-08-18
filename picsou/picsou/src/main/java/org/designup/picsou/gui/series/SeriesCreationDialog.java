@@ -140,7 +140,7 @@ public class SeriesCreationDialog {
     budgetArea = BudgetArea.get(this.series.get(Series.BUDGET_AREA));
     String name = stringifier.toString(series, localRepository);
     localRepository.update(series.getKey(),
-                           value(Series.AMOUNT, -min),
+                           value(Series.AMOUNT, min),
                            value(Series.DAY, days.last()),
                            value(Series.LABEL, name),
                            value(Series.JANUARY, true),
@@ -185,7 +185,7 @@ public class SeriesCreationDialog {
     String label = AllocationLearningService.anonymise(firstTransaction.get(Transaction.LABEL));
     series = localRepository.create(Series.TYPE,
                                     value(Series.BUDGET_AREA, budgetArea.getId()),
-                                    value(Series.AMOUNT, -min),
+                                    value(Series.AMOUNT, min),
                                     value(Series.LABEL, label),
                                     value(Series.DAY, days.last()),
                                     value(Series.JANUARY, true),

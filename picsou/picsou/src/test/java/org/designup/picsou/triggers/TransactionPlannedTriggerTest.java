@@ -20,26 +20,27 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     repository.create(transactionKey,
                       value(Transaction.SERIES, 1),
                       value(Transaction.MONTH, 200807),
+                      value(Transaction.BANK_MONTH, 200807),
                       value(Transaction.DAY, 1),
                       value(Transaction.AMOUNT, -40.0),
                       value(Transaction.LABEL, "free"));
-    Integer trId = repository.getAll(Transaction.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+    Integer tr07 = repository.getAll(Transaction.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
                                                                         GlobMatchers.fieldEquals(Transaction.MONTH, 200807)))
       .get(0).get(Transaction.ID);
     listener.assertLastChangesEqual(Transaction.TYPE,
-                                    "<update type='transaction' _amount='-29.9' amount='10.1' id='" + trId + "'/>" +
+                                    "<update type='transaction' _amount='-29.9' amount='10.1' id='" + tr07 + "'/>" +
                                     "<create type='transaction' amount='-40.0' day='1' id='10' label='free'" +
                                     "        month='200807' planned='false' series='1'/>" +
                                     "");
     listener.reset();
     repository.update(transactionKey, value(Transaction.MONTH, 200808));
-    Integer Tr08 = repository.getAll(Transaction.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+    Integer tr08 = repository.getAll(Transaction.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
                                                                         GlobMatchers.fieldEquals(Transaction.MONTH, 200808)))
       .get(0).get(Transaction.ID);
     listener.assertLastChangesEqual(Transaction.TYPE,
                                     "<update type='transaction' _month='200807' id='10' month='200808'/>" +
-                                    "<update type='transaction' _amount='10.1' amount='-29.9' id='" + trId + "'/>" +
-                                    "<update type='transaction' _amount='-29.9' amount='10.1' id='" + Tr08 + "'/>");
+                                    "<update type='transaction' _amount='10.1' amount='-29.9' id='" + tr07 + "'/>" +
+                                    "<update type='transaction' _amount='-29.9' amount='10.1' id='" + tr08 + "'/>");
   }
 
   private void createSeries() {

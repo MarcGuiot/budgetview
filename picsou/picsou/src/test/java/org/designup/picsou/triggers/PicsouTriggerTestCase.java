@@ -11,15 +11,16 @@ import org.globsframework.utils.Dates;
 public abstract class PicsouTriggerTestCase extends PicsouTestCase {
 
   protected void setUp() throws Exception {
-    TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
+    TimeService.setCurrentDate(Dates.parseMonth("2008/08"));
+    TimeService.setLastAvailableTransactionMonthId(200808);
     super.setUp();
     directory.add(new TimeService());
+    repository.addTrigger(new LastTransactionToTimeServiceTrigger(directory));
     repository.addTrigger(new MonthsToSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetUpdateOccasionnalTrigger());
-    repository.addTrigger(new SeriesBudgetUpdateTransactionTrigger());
-    repository.addTrigger(new BudgetStatTrigger());
-    repository.addTrigger(new TransactionPlannedTrigger());
+    repository.addTrigger(new SeriesBudgetUpdateTransactionTrigger(directory));
+    repository.addTrigger(new TransactionPlannedTrigger(directory));
     repository.addTrigger(new MonthStatTrigger(repository));
     final SeriesStatTrigger seriesStatTrigger = new SeriesStatTrigger();
     repository.addTrigger(seriesStatTrigger);

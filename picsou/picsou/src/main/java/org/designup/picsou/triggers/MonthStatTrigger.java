@@ -84,26 +84,8 @@ public class MonthStatTrigger implements ChangeSetListener {
       else {
         repository.update(key,
                           value(MonthStat.DISPENSABLE, ZERO),
-                          value(MonthStat.RECEIVED_RECURRING, ZERO),
-                          value(MonthStat.RECEIVED_ENVELOP, ZERO),
-                          value(MonthStat.RECEIVED_OCCASIONAL, ZERO),
-                          value(MonthStat.SPENT_RECURRING, ZERO),
-                          value(MonthStat.SPENT_ENVELOP, ZERO),
-                          value(MonthStat.SPENT_OCCASIONAL, ZERO),
-                          value(MonthStat.INCOME_RECEIVED, ZERO),
-                          value(MonthStat.INCOME_SPENT, ZERO),
                           value(MonthStat.TOTAL_RECEIVED, ZERO),
-                          value(MonthStat.TOTAL_SPENT, ZERO),
-                          value(MonthStat.PLANNED_RECEIVED_RECURRING, ZERO),
-                          value(MonthStat.PLANNED_RECEIVED_ENVELOP, ZERO),
-                          value(MonthStat.PLANNED_RECEIVED_OCCASIONAL, ZERO),
-                          value(MonthStat.PLANNED_SPENT_RECURRING, ZERO),
-                          value(MonthStat.PLANNED_SPENT_ENVELOP, ZERO),
-                          value(MonthStat.PLANNED_SPENT_OCCASIONAL, ZERO),
-                          value(MonthStat.PLANNED_INCOME_RECEIVED, ZERO),
-                          value(MonthStat.PLANNED_INCOME_SPENT, ZERO),
-                          value(MonthStat.PLANNED_TOTAL_RECEIVED, ZERO),
-                          value(MonthStat.PLANNED_TOTAL_SPENT, ZERO));
+                          value(MonthStat.TOTAL_SPENT, ZERO));
       }
     }
   }
@@ -146,10 +128,6 @@ public class MonthStatTrigger implements ChangeSetListener {
     GlobUtils.add(key, monthStat, MonthStat.TOTAL_RECEIVED, amount > 0 ? amount : 0, repository);
     GlobUtils.add(key, monthStat, MonthStat.TOTAL_SPENT, amount < 0 ? abs(amount) : 0, repository);
     GlobUtils.add(key, monthStat, MonthStat.DISPENSABLE, dispensableAmount, repository);
-    if (budgetAreaId >= 0) {
-      GlobUtils.add(key, monthStat, MonthStat.getReceived(BudgetArea.get(budgetAreaId)), amount > 0 ? amount : 0, repository);
-      GlobUtils.add(key, monthStat, MonthStat.getSpent(BudgetArea.get(budgetAreaId)), amount < 0 ? abs(amount) : 0, repository);
-    }
 
     Glob category = repository.get(Key.create(Category.TYPE, key.get(MonthStat.CATEGORY)));
     if (!Category.isMaster(category)) {
@@ -163,11 +141,6 @@ public class MonthStatTrigger implements ChangeSetListener {
     Glob monthStat = initMonthStat(key);
     GlobUtils.add(key, monthStat, MonthStat.PLANNED_TOTAL_RECEIVED, amount > 0 ? amount : 0, repository);
     GlobUtils.add(key, monthStat, MonthStat.PLANNED_TOTAL_SPENT, amount < 0 ? abs(amount) : 0, repository);
-    if (budgetAreaId >= 0) {
-      GlobUtils.add(key, monthStat, MonthStat.getPlannedReceived(BudgetArea.get(budgetAreaId)), amount > 0 ? amount : 0, repository);
-      GlobUtils.add(key, monthStat, MonthStat.getPlannedSpent(BudgetArea.get(budgetAreaId)), amount < 0 ? abs(amount) : 0, repository);
-    }
-
     Glob category = repository.get(Key.create(Category.TYPE, key.get(MonthStat.CATEGORY)));
     if (!Category.isMaster(category)) {
       updatePlannedMonthStat(month, category.get(Category.MASTER), budgetAreaId, accountId, amount);
@@ -200,25 +173,8 @@ public class MonthStatTrigger implements ChangeSetListener {
       for (int month : months) {
         double totalReceived = 0.0;
         double totalSpent = 0.0;
-        double recurringReceived = 0.0;
-        double recurringSpent = 0.0;
-        double envelopReceived = 0.0;
-        double envelopSpent = 0.0;
-        double occasionalReceived = 0.0;
-        double occasionalSpent = 0.0;
-        double incomeReceived = 0.0;
-        double incomeSpent = 0.0;
-
         double plannedTotalReceived = 0.0;
         double plannedTotalSpent = 0.0;
-        double plannedRecurringReceived = 0.0;
-        double plannedRecurringSpent = 0.0;
-        double plannedEnvelopReceived = 0.0;
-        double plannedEnvelopSpent = 0.0;
-        double plannedOccasionalReceived = 0.0;
-        double plannedOccasionalSpent = 0.0;
-        double plannedIncomeReceived = 0.0;
-        double plannedIncomeSpent = 0.0;
 
         Key keyForAll = getKey(month, Category.ALL, accountId);
         Glob monthStatForAll = repository.get(keyForAll);
@@ -238,30 +194,9 @@ public class MonthStatTrigger implements ChangeSetListener {
           Glob monthStat = repository.get(monthStatKey);
           if (Category.isMaster(category)) {
             totalReceived += monthStat.get(MonthStat.TOTAL_RECEIVED);
-            recurringReceived += monthStat.get(MonthStat.RECEIVED_RECURRING);
-            envelopReceived += monthStat.get(MonthStat.RECEIVED_ENVELOP);
-            occasionalReceived += monthStat.get(MonthStat.RECEIVED_OCCASIONAL);
-
             totalSpent += monthStat.get(MonthStat.TOTAL_SPENT);
-            recurringSpent += monthStat.get(MonthStat.SPENT_RECURRING);
-            envelopSpent += monthStat.get(MonthStat.SPENT_ENVELOP);
-            occasionalSpent += monthStat.get(MonthStat.SPENT_OCCASIONAL);
-
-            incomeReceived += monthStat.get(MonthStat.INCOME_RECEIVED);
-            incomeSpent += monthStat.get(MonthStat.INCOME_SPENT);
-
             plannedTotalReceived += monthStat.get(MonthStat.PLANNED_TOTAL_RECEIVED);
-            plannedRecurringReceived += monthStat.get(MonthStat.PLANNED_RECEIVED_RECURRING);
-            plannedEnvelopReceived += monthStat.get(MonthStat.PLANNED_RECEIVED_ENVELOP);
-            plannedOccasionalReceived += monthStat.get(MonthStat.PLANNED_RECEIVED_OCCASIONAL);
-
             plannedTotalSpent += monthStat.get(MonthStat.PLANNED_TOTAL_SPENT);
-            plannedRecurringSpent += monthStat.get(MonthStat.PLANNED_SPENT_RECURRING);
-            plannedEnvelopSpent += monthStat.get(MonthStat.PLANNED_SPENT_ENVELOP);
-            plannedOccasionalSpent += monthStat.get(MonthStat.PLANNED_SPENT_OCCASIONAL);
-
-            plannedIncomeReceived += monthStat.get(MonthStat.PLANNED_INCOME_RECEIVED);
-            plannedIncomeSpent += monthStat.get(MonthStat.PLANNED_INCOME_SPENT);
           }
 
           if (Category.isMaster(category)) {
@@ -276,24 +211,8 @@ public class MonthStatTrigger implements ChangeSetListener {
         repository.update(keyForAll,
                           value(MonthStat.TOTAL_RECEIVED, totalReceived),
                           value(MonthStat.TOTAL_SPENT, totalSpent),
-                          value(MonthStat.SPENT_RECURRING, recurringSpent),
-                          value(MonthStat.SPENT_ENVELOP, envelopSpent),
-                          value(MonthStat.SPENT_OCCASIONAL, occasionalSpent),
-                          value(MonthStat.RECEIVED_RECURRING, recurringReceived),
-                          value(MonthStat.RECEIVED_ENVELOP, envelopReceived),
-                          value(MonthStat.RECEIVED_OCCASIONAL, occasionalReceived),
-                          value(MonthStat.INCOME_RECEIVED, incomeReceived),
-                          value(MonthStat.INCOME_SPENT, incomeSpent),
                           value(MonthStat.PLANNED_TOTAL_RECEIVED, plannedTotalReceived),
-                          value(MonthStat.PLANNED_TOTAL_SPENT, plannedTotalSpent),
-                          value(MonthStat.PLANNED_SPENT_RECURRING, plannedRecurringSpent),
-                          value(MonthStat.PLANNED_SPENT_ENVELOP, plannedEnvelopSpent),
-                          value(MonthStat.PLANNED_SPENT_OCCASIONAL, plannedOccasionalSpent),
-                          value(MonthStat.PLANNED_RECEIVED_RECURRING, plannedRecurringReceived),
-                          value(MonthStat.PLANNED_RECEIVED_ENVELOP, plannedEnvelopReceived),
-                          value(MonthStat.PLANNED_RECEIVED_OCCASIONAL, plannedOccasionalReceived),
-                          value(MonthStat.PLANNED_INCOME_RECEIVED, plannedIncomeReceived),
-                          value(MonthStat.PLANNED_INCOME_SPENT, plannedIncomeSpent)
+                          value(MonthStat.PLANNED_TOTAL_SPENT, plannedTotalSpent)
         );
       }
     }

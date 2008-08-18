@@ -1,16 +1,22 @@
 package org.designup.picsou.triggers;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
 public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
+  private Directory directory;
+  private TimeService timeService;
 
-  public SeriesBudgetUpdateTransactionTrigger() {
+  public SeriesBudgetUpdateTransactionTrigger(Directory directory) {
+    this.directory = directory;
+    timeService = directory.get(TimeService.class);
   }
 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -29,6 +35,9 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
 
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
           Glob seriesBudget = repository.get(key);
+          if (seriesBudget.get(SeriesBudget.MONTH) < timeService.getLastAvailableTransactionMonthId()) {
+            return;
+          }
           Glob series = repository.get(Key.create(Series.TYPE, seriesBudget.get(SeriesBudget.SERIES)));
           if (BudgetArea.OCCASIONAL_EXPENSES.getId().equals(series.get(Series.BUDGET_AREA))) {
             return;
@@ -73,6 +82,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
            (values.get(SeriesBudget.AMOUNT) != null) &&
            (Math.abs(values.get(SeriesBudget.AMOUNT)) != 0.0) &&
            (values.get(SeriesBudget.DAY) != null) &&
+           values.get(SeriesBudget.MONTH) >= timeService.getLastAvailableTransactionMonthId() &&
            !BudgetArea.OCCASIONAL_EXPENSES.getId().equals(series.get(Series.BUDGET_AREA));
   }
 
@@ -85,7 +95,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
                   repository).sort(Transaction.DAY);
   }
 
-  private void createPlannedTransaction(Glob series, GlobRepository repository, int monthId, Integer day, Double amount) {
+  public static void createPlannedTransaction(Glob series, GlobRepository repository, int monthId, Integer day, Double amount) {
     repository.create(Transaction.TYPE,
                       value(Transaction.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
                       value(Transaction.AMOUNT, -amount),

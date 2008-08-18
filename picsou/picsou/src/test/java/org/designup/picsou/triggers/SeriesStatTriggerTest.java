@@ -30,9 +30,9 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                   "<series id='1' amount='100.0' budgetAreaName='recurringExpenses' july='true'/>" +
                   "<series id='2' amount='100.0' budgetAreaName='recurringExpenses' july='true'/>" +
                   "<month id='200807'/>" +
-                  "<transaction id='1' series='1' month='200807' amount='10.0'/>" +
-                  "<transaction id='2' series='2' month='200807' amount='10.0'/>" +
-                  "<transaction id='3' series='2' month='200807' amount='10.0'/>");
+                  "<transaction id='1' series='1' month='200807' bankMonth='200807' amount='10.0'/>" +
+                  "<transaction id='2' series='2' month='200807' bankMonth='200807' amount='10.0'/>" +
+                  "<transaction id='3' series='2' month='200807' bankMonth='200807' amount='10.0'/>");
 
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<create type='seriesStat' series='1' month='200807'" +
@@ -88,8 +88,8 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                   "<series id='1' amount='100.0'  budgetAreaName='recurringExpenses' july='true'/>" +
                   "<month id='200807'/>" +
                   "<month id='200808'/>" +
-                  "<transaction id='1' series='1' month='200807' amount='10.0'/>" +
-                  "<transaction id='2' series='1' month='200808' amount='20.0'/>");
+                  "<transaction id='1' series='1' month='200807' bankMonth='200807' amount='10.0'/>" +
+                  "<transaction id='2' series='1' month='200808' bankMonth='200808' amount='20.0'/>");
 
     repository.update(Key.create(Transaction.TYPE, 1), value(Transaction.MONTH, 200808));
     listener.assertLastChangesEqual(SeriesStat.TYPE,
@@ -103,7 +103,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     checker.parse(repository,
                   "<series id='1' amount='100.0' budgetAreaName='recurringExpenses' />" +
                   "<month id='200807'/>" +
-                  "<transaction id='1' series='1' month='200807' amount='10.0'/>");
+                  "<transaction id='1' series='1' month='200807' bankMonth='200807' amount='10.0'/>");
 
     repository.update(Key.create(Series.TYPE, 1), value(Series.AMOUNT, 150.0));
 
@@ -121,8 +121,8 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                   "<series id='2' amount='1000.0' budgetAreaName='income'/>" +
                   "<series id='3' amount='500.0' budgetAreaName='expensesEnvelope'/>" +
                   "<month id='200807'/>" +
-                  "<transaction id='1' series='1' month='200807' amount='90.0'/>" +
-                  "<transaction id='2' series='3' month='200807' amount='200.0'/>" +
+                  "<transaction id='1' series='1' month='200807' bankMonth='200807' amount='90.0'/>" +
+                  "<transaction id='2' series='3' month='200807' bankMonth='200807' amount='200.0'/>" +
                   "");
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<create amount='90.0' month='200807' plannedAmount='100.0' series='1'" +
@@ -152,6 +152,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     repository.create(Key.create(Transaction.TYPE, transactionId),
                       value(Transaction.SERIES, seriesId),
                       value(Transaction.MONTH, monthId),
+                      value(Transaction.BANK_MONTH, monthId),
                       value(Transaction.AMOUNT, amount));
   }
 }

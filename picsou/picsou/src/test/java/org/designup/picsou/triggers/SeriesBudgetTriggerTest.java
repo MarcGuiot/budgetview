@@ -18,11 +18,12 @@ public class SeriesBudgetTriggerTest extends PicsouTriggerTestCase {
     createSeries(1, BudgetArea.INCOME, 100.);
     createSeries(2, BudgetArea.EXPENSES_ENVELOPE, 50.);
     repository.completeBulkDispatchingMode();
+    Integer[] ids = repository.getAll(SeriesBudget.TYPE).sort(SeriesBudget.SERIES).getValues(SeriesBudget.ID);
     listener.assertLastChangesEqual(SeriesBudget.TYPE,
                                     "<update _amount='0.0' amount='50.0' id='0' type='seriesBudget'/>" +
-                                    "<create active='true' amount='50.0' day='30' id='2'" +
+                                    "<create active='true' amount='50.0' day='30' id='" + ids[2] + "'" +
                                     "        month='200809' series='2' type='seriesBudget'/>" +
-                                    "<create active='true' amount='100.0' day='30' id='1' type='seriesBudget'" +
+                                    "<create active='true' amount='100.0' day='30' id='" + ids[1] + "' type='seriesBudget'" +
                                     "        month='200809' series='1'/>");
   }
 

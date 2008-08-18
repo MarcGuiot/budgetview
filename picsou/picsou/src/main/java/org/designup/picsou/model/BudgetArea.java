@@ -14,9 +14,9 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum BudgetArea implements GlobConstantContainer {
   INCOME(0, true),
-  RECURRING_EXPENSES(1, true),
-  EXPENSES_ENVELOPE(2, true),
-  OCCASIONAL_EXPENSES(3, true);
+  RECURRING_EXPENSES(1, false),
+  EXPENSES_ENVELOPE(2, false),
+  OCCASIONAL_EXPENSES(3, false);
 
   public static GlobType TYPE;
 
