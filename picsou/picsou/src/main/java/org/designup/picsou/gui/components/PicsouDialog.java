@@ -12,22 +12,20 @@ import java.awt.event.WindowEvent;
 
 public class PicsouDialog extends JDialog {
 
-  public static PicsouDialog create(Window owner) {
-    if (owner instanceof JFrame) {
-      return create((JFrame)owner, "");
-    }
-    else if (owner instanceof JDialog) {
-      return create((JDialog)owner, "");
-    }
-    throw new InvalidParameter("unknown type " + owner.getClass());
-  }
-
   public static PicsouDialog create(JFrame owner) {
     return new PicsouDialog(owner);
   }
 
   public static PicsouDialog create(JDialog owner) {
     return new PicsouDialog(owner);
+  }
+
+  public static PicsouDialog create(Window owner, String title) {
+    PicsouDialog modalWindow = create(owner);
+    if (title != null) {
+      modalWindow.setTitle(title);
+    }
+    return modalWindow;
   }
 
   public static PicsouDialog create(JFrame owner, String title) {
@@ -60,6 +58,16 @@ public class PicsouDialog extends JDialog {
     PicsouDialog dialog = create(owner);
     dialog.setContentPane(builder.getPanel());
     return dialog;
+  }
+
+  private static PicsouDialog create(Window owner) {
+    if (owner instanceof JFrame) {
+      return create((JFrame)owner, "");
+    }
+    else if (owner instanceof JDialog) {
+      return create((JDialog)owner, "");
+    }
+    throw new InvalidParameter("unknown type " + owner.getClass());
   }
 
   public void setWindowCloseCallback(final DisposeCallback disposeCallback) {

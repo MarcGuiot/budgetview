@@ -124,7 +124,7 @@ public class SeriesCreationDialog {
     });
 
     JPanel panel = builder.load();
-    dialog = PicsouDialog.create(parent);
+    dialog = PicsouDialog.create(parent, Lang.get("seriesCreation.title"));
     dialog.setContentPane(panel);
   }
 

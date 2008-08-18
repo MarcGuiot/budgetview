@@ -10,14 +10,13 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum BudgetArea implements GlobConstantContainer {
-  INCOME(0),
-  RECURRING_EXPENSES(1),
-  EXPENSES_ENVELOPE(2),
-  OCCASIONAL_EXPENSES(3);
+  INCOME(0, true),
+  RECURRING_EXPENSES(1, true),
+  EXPENSES_ENVELOPE(2, true),
+  OCCASIONAL_EXPENSES(3, true);
 
   public static GlobType TYPE;
 
@@ -28,9 +27,15 @@ public enum BudgetArea implements GlobConstantContainer {
   public static StringField NAME;
 
   private int id;
+  private boolean income;
 
-  BudgetArea(int id) {
+  BudgetArea(int id, boolean isIncome) {
     this.id = id;
+    this.income = isIncome;
+  }
+
+  public boolean isIncome() {
+    return income;
   }
 
   static {

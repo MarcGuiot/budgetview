@@ -3,7 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <column styleClass="dialog" preferredSize="(800,800)">
-    <scrollPane margin="15">
+    <scrollPane margin="15" weightY="100">
       <repeat ref="masterRepeat" margin="10">
         <column>
           <component ref="masterLabel" marginTop="10"/>
@@ -15,7 +15,7 @@
     </scrollPane>
     <row margin="10" marginTop="0">
       <filler fill="horizontal"/>
-    <button action="close" text="$close"/>
+      <button action="close" text="$close"/>
     </row>
   </column>
 </splits>

@@ -23,7 +23,7 @@
 
     <htmlEditorPane text="$login.initial.file"/>
 
-    <row marginTop="5" marginLeft="40" marginRight="40" defaultAnchor="center">
+    <row marginTop="5" marginLeft="5" marginRight="5" defaultAnchor="center">
       <textField ref="fileField" marginRight="10" anchor="center" weightX="100"/>
       <button ref="fileButton" text="$browse" anchor="west"/>
     </row>

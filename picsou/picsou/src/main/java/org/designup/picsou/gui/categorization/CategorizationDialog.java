@@ -40,7 +40,7 @@ public class CategorizationDialog {
   private JCheckBox autoHideCheckBox;
 
   public CategorizationDialog(Window parent, final GlobRepository repository, Directory directory) {
-    dialog = PicsouDialog.create(parent);
+    dialog = PicsouDialog.create(parent, Lang.get("categorization.title"));
 
     final Directory localDirectory = init(repository, directory);
 

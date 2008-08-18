@@ -78,16 +78,18 @@ public class BudgetAreaSeriesView extends View {
   }
 
   private void addTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
-    builder.addLabel(name, SeriesStat.TYPE,
-                     GlobListStringifiers.sum(decimalFormat, field))
+    builder.addLabel(name, SeriesStat.TYPE, getStringifier(field))
       .setFilter(totalMatcher);
   }
 
   private void addAmountLabel(String name, DoubleField field, Glob series, RepeatCellBuilder cellBuilder) {
-    GlobListStringifier stringifier = GlobListStringifiers.sum(decimalFormat, field);
     cellBuilder.add(name,
-                    GlobLabelView.init(SeriesStat.TYPE, repository, directory, stringifier)
+                    GlobLabelView.init(SeriesStat.TYPE, repository, directory, getStringifier(field))
                       .setFilter(GlobMatchers.linkedTo(series, SeriesStat.SERIES))
                       .getComponent());
+  }
+
+  private GlobListStringifier getStringifier(DoubleField field) {
+    return GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome());
   }
 }
