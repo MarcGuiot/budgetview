@@ -16,26 +16,31 @@ public abstract class AbstractGlobSelectionAction extends AbstractAction impleme
   private String name;
   protected GlobList lastSelection = GlobList.EMPTY;
 
-  protected AbstractGlobSelectionAction(GlobType type, Directory directory) {
+  protected AbstractGlobSelectionAction(String name, GlobType type, Directory directory) {
+    super(name);
+    this.name = name;
     this.type = type;
     this.directory = directory;
     directory.get(SelectionService.class).addListener(this, type);
     setEnabled(false);
   }
 
+  protected AbstractGlobSelectionAction(GlobType type, Directory directory) {
+    this(null, type, directory);
+  }
+
   public void selectionUpdated(GlobSelection selection) {
     lastSelection = selection.getAll(type);
+    name = toString(lastSelection);
     if (lastSelection.size() == 0) {
-      name = null;
       setEnabled(false);
     }
     else {
-      setEnabled(true);
-      name = toString(lastSelection);
       if (Strings.isNullOrEmpty(name)) {
         setEnabled(false);
       }
       else {
+        setEnabled(true);
         putValue(NAME, name);
       }
     }
@@ -45,5 +50,7 @@ public abstract class AbstractGlobSelectionAction extends AbstractAction impleme
     return name;
   }
 
-  public abstract String toString(GlobList globs);
+  public String toString(GlobList globs) {
+    return getName();
+  }
 }

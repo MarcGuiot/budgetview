@@ -61,7 +61,7 @@
 
     <panel ref="categoryChooserPanel">
       <column>
-        <row marginBottom="0">
+        <row marginBottom="0" autoHideSource="categoryName">
           <label text="$transaction.details.category" styleClass="formLabel"/>
           <label ref="categoryName" styleClass="formValue"/>
         </row>
@@ -80,7 +80,7 @@
       <label ref="transactionSeriesName"/>
     </row>
 
-    <button action="categorizeLink"/>
+    <button action="categorize" marginTop="10"/>
 
     <filler fill="vertical"/>
 

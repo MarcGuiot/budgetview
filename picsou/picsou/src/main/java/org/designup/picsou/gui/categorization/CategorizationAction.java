@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.actions.AbstractGlobSelectionAction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -15,7 +16,7 @@ public abstract class CategorizationAction extends AbstractGlobSelectionAction {
   private GlobRepository repository;
 
   public CategorizationAction(GlobRepository repository, Directory directory) {
-    super(Transaction.TYPE, directory);
+    super(Lang.get("categorization.button"), Transaction.TYPE, directory);
     this.repository = repository;
   }
 
@@ -44,8 +45,4 @@ public abstract class CategorizationAction extends AbstractGlobSelectionAction {
   }
 
   protected abstract GlobList getAllGlobs();
-
-  public String toString(GlobList globs) {
-    return "categorize";
-  }
 }
