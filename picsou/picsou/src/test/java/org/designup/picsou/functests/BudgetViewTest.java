@@ -2,14 +2,13 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
 
 public class BudgetViewTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
-    TimeService.setCurrentDate(Dates.parseMonth("2008/08"));
+    setCurrentDate(Dates.parseMonth("2008/08"));
     super.setUp();
   }
 

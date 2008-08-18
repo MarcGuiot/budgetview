@@ -106,7 +106,9 @@ public class SeriesStatTrigger implements ChangeSetListener {
         if (currentSeriesId != null) {
           Glob stat = repository.find(createKey(currentSeriesId, currentMonthId));
           if (stat == null) {
-            throw new RuntimeException("SeriesStatTrigger.visitUpdate " + currentSeriesId);
+            String name = repository.get(Key.create(Series.TYPE, currentSeriesId)).get(Series.NAME);
+            throw new RuntimeException("SeriesStatTrigger.visitUpdate seires : " + name + " : " + currentSeriesId +
+                                       " month = " + currentMonthId);
           }
           updateStat(stat, currentAmount, repository);
         }

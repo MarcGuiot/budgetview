@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
@@ -10,7 +9,7 @@ import org.globsframework.utils.Dates;
 public class MonthManagementTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    TimeService.setCurrentDate(Dates.parse("2006/01/10"));
+    setCurrentDate(Dates.parse("2006/01/10"));
     super.setUp();
   }
 

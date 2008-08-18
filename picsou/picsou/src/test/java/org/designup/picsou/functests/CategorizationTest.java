@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
@@ -12,7 +11,7 @@ import org.globsframework.utils.Dates;
 public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    TimeService.setCurrentDate(Dates.parseMonth("2008/06"));
+    setCurrentDate(Dates.parseMonth("2008/06"));
     super.setUp();
   }
 

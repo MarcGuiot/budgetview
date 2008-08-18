@@ -38,10 +38,11 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected MonthSummaryChecker monthSummary;
   protected BudgetViewChecker budgetView;
   private PicsouApplication picsouApplication;
+  private Date currentDate = new Date();
 
   protected void setUp() throws Exception {
     super.setUp();
-    TimeService.setCurrentDate(new Date());
+    TimeService.setCurrentDate(currentDate);
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, FunctionalTestCase.getUrl());
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
@@ -68,6 +69,10 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
     views.selectData();
+  }
+
+  protected void setCurrentDate(Date currentDate) {
+    this.currentDate = currentDate;
   }
 
   private void initCheckers() {
