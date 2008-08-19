@@ -49,12 +49,12 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Electricity", 55.0, 55.0);
 
     budgetView.envelopes.checkTitle("Envelope expenses");
-    budgetView.envelopes.checkTotalAmounts(-145.0, 95);
-    budgetView.envelopes.checkSeries("Groceries", -145.0, 95.0);
+    budgetView.envelopes.checkTotalAmounts(145.0, 95);
+    budgetView.envelopes.checkSeries("Groceries", 145.0, 95.0);
 
     budgetView.income.checkTitle("Income");
-    budgetView.income.checkTotalAmounts(3740.0, -3540.00);
-    budgetView.income.checkSeries("Salary", 3540.0, -3540.0);
+    budgetView.income.checkTotalAmounts(3740.0, 3540.00);
+    budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
     budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
 
     budgetView.occasional.checkTitle("Occasional expenses");
