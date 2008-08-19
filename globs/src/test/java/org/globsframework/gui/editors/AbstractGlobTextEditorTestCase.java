@@ -97,7 +97,7 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
     );
   }
 
-  public void testMultiSelectionWithDifferentValue() throws Exception {
+  public void testMultiSelectionWithDifferentValues() throws Exception {
     TextBox textBox = init(DummyObject.NAME, "...", false);
     selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
     assertFalse(textBox.isEditable());

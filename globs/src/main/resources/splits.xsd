@@ -539,13 +539,15 @@
       <xs:attributeGroup ref="iconAttributes"/>
       <xs:attribute name="action" type="xs:string"/>
       <xs:attribute name="text" type="xs:string"/>
-      <xs:attribute name="horizontalAlignment" type="xs:string">
-        <xs:annotation>
-          <xs:documentation xml:lang="en">
-            Can be one of SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.LEADING,
-            SwingConstants.TRAILING
-          </xs:documentation>
-        </xs:annotation>
+      <xs:attribute name="horizontalAlignment">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="left"/>
+            <xs:enumeration value="center"/>
+            <xs:enumeration value="right"/>
+            <xs:enumeration value="trailing"/>
+          </xs:restriction>
+        </xs:simpleType>
       </xs:attribute>
       <xs:attribute name="verticalAlignment" type="xs:string"/>
       <xs:attribute name="shadowColor" type="xs:string"/>
