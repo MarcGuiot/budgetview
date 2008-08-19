@@ -57,6 +57,14 @@ public class TransactionRendererColors implements ColorChangeListener {
     return selectionBgColor;
   }
 
+  public Color getTransactionSelectedTextColor() {
+    return transactionSelectedTextColor;
+  }
+
+  public Color getTransactionPlannedTextColor() {
+    return transactionPlannedTextColor;
+  }
+
   public void update(Component component, boolean isSelected, Glob transaction, int row) {
     setForeground(component, isSelected, transaction);
     setBackground(component, isSelected, row);

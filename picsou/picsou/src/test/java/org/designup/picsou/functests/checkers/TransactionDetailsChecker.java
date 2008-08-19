@@ -151,6 +151,14 @@ public class TransactionDetailsChecker extends DataChecker {
     return new CategorizationDialogChecker(dialog);
   }
 
+  public void checkCategorizationAvailable() {
+    assertTrue(getPanel().getButton("categorize").isVisible());
+  }
+
+  public void checkCategorizationUnavailable() {
+    assertFalse(getPanel().getButton("categorize").isVisible());
+  }
+
   public void checkSeries(String name) {
     TextBox seriesName = getPanel().getTextBox("transactionSeriesName");
     assertTrue(seriesName.textEquals(name));

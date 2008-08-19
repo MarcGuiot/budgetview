@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.transactions.columns;
 
+import org.designup.picsou.gui.categorization.CategorizationAction;
 import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.description.TransactionSeriesStringifier;
 import org.designup.picsou.gui.utils.PicsouColors;
@@ -17,8 +18,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import static org.globsframework.model.utils.GlobMatchers.*;
-import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,6 +75,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
   private HyperlinkButton createHyperlink() {
     HyperlinkButton button = new HyperlinkButton(new OpenChooserAction());
     button.setOpaque(false);
+    button.setAutoHide(false);
     button.setUnderline(false);
     return button;
   }
@@ -90,13 +92,23 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
       button = this.editorButton;
       panel = this.editorPanel;
     }
-    if (transaction.get(Transaction.SERIES) != null) {
+    if (Transaction.isPlanned(transaction)) {
+      button.setEnabled(false);
+      rendererColors.setForeground(button, isSelected, transaction);
+      button.setDisabledColor(isSelected ? rendererColors.getTransactionSelectedTextColor() : rendererColors.getTransactionPlannedTextColor());
+      button.setFont(normalFont);
+      button.setUnderline(false);
+      button.setText(seriesStringifier.toString(transaction, repository));
+    }
+    else if (transaction.get(Transaction.SERIES) != null) {
+      button.setEnabled(true);
       rendererColors.setForeground(button, isSelected, transaction);
       button.setFont(normalFont);
       button.setUnderline(false);
       button.setText(seriesStringifier.toString(transaction, repository));
     }
     else {
+      button.setEnabled(true);
       button.setForeground(isSelected ? selectedColor : toCategorizeColor);
       button.setFont(toCategorizeFont);
       button.setUnderline(true);
@@ -108,29 +120,38 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
 
   private class OpenChooserAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
+      if (Transaction.isPlanned(transaction)) {
+        return;
+      }
+
       tableView.getComponent().requestFocus();
       selectTransactionIfNeeded(transaction);
 
+      GlobList list = getTransactionList(transaction);
+      if (list.isEmpty()) {
+        return;
+      }
       CategorizationDialog dialog = directory.get(CategorizationDialog.class);
-      dialog.show(getTransactionList(transaction), true, false);
+      dialog.show(list, true, false);
     }
 
     private GlobList getTransactionList(Glob transaction) {
-      GlobList selection = tableView.getCurrentSelection();
+      GlobList selection = tableView.getCurrentSelection().filterSelf(CategorizationAction.getMatcher(), repository);
       if (selection.size() > 1) {
         return selection;
       }
-      else if ((transaction.get(Transaction.SERIES) != null) ||
-               (Strings.isNullOrEmpty(transaction.get(Transaction.LABEL_FOR_CATEGORISATION)))) {
+
+      if ((transaction.get(Transaction.SERIES) != null) ||
+          (Strings.isNullOrEmpty(transaction.get(Transaction.LABEL_FOR_CATEGORISATION)))) {
         return new GlobList(transaction);
       }
-      else {
-        return tableView.getGlobs()
-          .filter(and(fieldEquals(Transaction.LABEL_FOR_CATEGORISATION,
-                                  transaction.get(Transaction.LABEL_FOR_CATEGORISATION)),
-                      isNull(Transaction.SERIES)),
-                  repository);
-      }
+
+      return tableView.getGlobs()
+        .filter(and(CategorizationAction.getMatcher(),
+                    fieldEquals(Transaction.LABEL_FOR_CATEGORISATION,
+                                transaction.get(Transaction.LABEL_FOR_CATEGORISATION)),
+                    isNull(Transaction.SERIES)),
+                repository);
     }
 
     private void selectTransactionIfNeeded(Glob transaction) {

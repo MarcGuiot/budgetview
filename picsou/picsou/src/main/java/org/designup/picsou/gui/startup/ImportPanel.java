@@ -634,7 +634,7 @@ public abstract class ImportPanel {
     private Directory directory;
 
     public DownloadAction(Directory directory) {
-      super(Bank.TYPE, ImportPanel.this.localDirectory);
+      super(Bank.TYPE, repository, ImportPanel.this.localDirectory);
       this.directory = directory;
     }
 

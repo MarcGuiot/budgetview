@@ -1,9 +1,9 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
-import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
@@ -96,8 +96,8 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkNoCategory();
     CategorizationDialogChecker dialog = transactionDetails.categorize();
     dialog.checkTable(new Object[][]{
-        {"18/06/2008", "Quick", 10.0},
-      });
+      {"18/06/2008", "Quick", 10.0},
+    });
     dialog.checkSelectedTableRows(0);
     dialog.selectOccasional();
     dialog.selectOccasionalSeries(MasterCategory.FOOD);
@@ -112,16 +112,16 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/14", 10.00, "McDo 14/06")
       .load();
     transactions.initContent()
-       .add("15/06/2008", TransactionType.VIREMENT, "McDo 15/06", "", 20.00)
-       .add("14/06/2008", TransactionType.VIREMENT, "McDo 14/06", "", 10.00)
-       .check();
+      .add("15/06/2008", TransactionType.VIREMENT, "McDo 15/06", "", 20.00)
+      .add("14/06/2008", TransactionType.VIREMENT, "McDo 14/06", "", 10.00)
+      .check();
 
     transactions.getTable().selectRow(0);
     CategorizationDialogChecker dialog = transactionDetails.categorize();
     dialog.checkTable(new Object[][]{
-        {"14/06/2008", "McDo 14/06", 10.0},
-        {"15/06/2008", "McDo 15/06", 20.0},
-      });
+      {"14/06/2008", "McDo 14/06", 10.0},
+      {"15/06/2008", "McDo 15/06", 20.0},
+    });
     dialog.checkSelectedTableRows(0, 1);
     dialog.selectOccasional();
     dialog.selectOccasionalSeries(MasterCategory.FOOD);
@@ -143,9 +143,9 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker dialog = transactionDetails.categorize();
     dialog.checkTable(new Object[][]{
-        {"14/06/2008", "Fouquet's", 10.0},
-        {"15/06/2008", "McDo", 20.0},
-      });
+      {"14/06/2008", "Fouquet's", 10.0},
+      {"15/06/2008", "McDo", 20.0},
+    });
     dialog.checkSelectedTableRows(0, 1);
     dialog.selectOccasional();
     dialog.selectOccasionalSeries(MasterCategory.FOOD);
@@ -155,6 +155,48 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .add("15/06/2008", TransactionType.VIREMENT, "McDo", "", 20.00, MasterCategory.FOOD)
       .add("14/06/2008", TransactionType.VIREMENT, "Fouquet's", "", 10.00, MasterCategory.FOOD)
       .check();
+  }
+
+  public void testCategorizationNotAvailableForPlannedTransactions() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/15", 50.00, "FNAC", MasterCategory.LEISURES)
+      .addTransaction("2008/06/15", 20.00, "Auchan", MasterCategory.FOOD)
+      .load();
+
+    timeline.selectMonth("2008/06");
+    transactions.getTable().selectRow(0);
+
+    CategorizationDialogChecker dialog = transactionDetails.categorize();
+    dialog.checkTable(new Object[][]{
+      {"15/06/2008", "Auchan", 20.0},
+    });
+    dialog.selectEnvelopes();
+    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    dialog.validate();
+
+    timeline.selectMonth("2008/07");
+    transactions.initContent()
+      .add("15/07/2008", TransactionType.PLANNED, "Groceries", "", 20.00, "Groceries")
+      .add("15/07/2008", TransactionType.VIREMENT, "FNAC", "", 50.00, MasterCategory.LEISURES)
+      .check();
+
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkCategorizationUnavailable();
+    transactions.checkCategorizationDisabled(0);
+
+    transactions.getTable().selectRows(0, 1);
+    CategorizationDialogChecker reopenedDialog1 = transactionDetails.categorize();
+    reopenedDialog1.checkTable(new Object[][]{
+      {"15/07/2008", "FNAC", 50.0},
+    });
+    reopenedDialog1.cancel();
+
+    transactions.checkCategorizationDisabled(0);
+    CategorizationDialogChecker reopenedDialog2 = transactions.openCategorizationDialog(1);
+    reopenedDialog2.checkTable(new Object[][]{
+      {"15/07/2008", "FNAC", 50.0},
+    });
+    reopenedDialog2.cancel();
   }
 
   public void testSplitButtonInitiallyVisibleWithOneTransaction() throws Exception {

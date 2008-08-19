@@ -80,7 +80,7 @@
       <label ref="transactionSeriesName"/>
     </row>
 
-    <button action="categorize" marginTop="10"/>
+    <button action="categorize" marginTop="10" autoHideIfDisabled='true'/>
 
     <filler fill="vertical"/>
 
