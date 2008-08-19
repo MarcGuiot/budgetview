@@ -5,6 +5,7 @@ import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.JarIconLocator;
+import org.globsframework.gui.utils.TableUtils;
 import org.designup.picsou.gui.components.DialogMovingListener;
 import org.designup.picsou.gui.components.PicsouDialogPainter;
 import sun.security.action.GetPropertyAction;
@@ -31,6 +32,7 @@ public class Gui {
   public static final FontLocator FONT_LOCATOR = new FontService(Gui.class, "/fonts.properties");
 
   private static Font font;
+  public static final int DEFAULT_COLUMN_CHAR_WIDTH = 7;
 
   static {
     Font labelFont = new JLabel().getFont();
@@ -182,6 +184,13 @@ public class Gui {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     return new Dimension(Math.min(width, screenSize.width),
                          Math.min(height, screenSize.height));
+  }
+
+  public static void setColumnSizes(JTable targetTable, int[] columnSizes) {
+    for (int column = 0; column < targetTable.getColumnCount() - 1; column++) {
+      final int width = columnSizes[column] * DEFAULT_COLUMN_CHAR_WIDTH;
+      TableUtils.setSize(targetTable, column, width);
+    }
   }
 
   public static class RolloverColorListener extends MouseAdapter {

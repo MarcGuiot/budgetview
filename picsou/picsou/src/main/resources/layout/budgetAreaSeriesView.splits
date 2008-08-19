@@ -15,7 +15,7 @@
     <label ref="budgetAreaTitle" styleClass="blockTitle"/>
 
     <panel styleClass="block" preferredSize="(300,400)">
-      <column margin="10">
+      <column border="empty(10)">
         <grid weightY="0" marginLeft="20" marginRight="20">
           <label text="$budgetview.observed" styleClass="totalAmountTitle" gridPos="(0,0)"/>
           <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(0,1)"/>
