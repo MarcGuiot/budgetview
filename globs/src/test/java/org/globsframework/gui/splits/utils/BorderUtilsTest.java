@@ -6,8 +6,7 @@ import org.uispec4j.UISpecTestCase;
 import javax.swing.border.*;
 import java.awt.*;
 
-public class
-  BorderUtilsTest extends UISpecTestCase {
+public class BorderUtilsTest extends UISpecTestCase {
   private ColorService colorService = new ColorService();
 
   public void testNoBorder() throws Exception {
