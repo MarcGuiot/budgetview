@@ -29,7 +29,7 @@ public class UncategorizedMessagePanelChecker extends DataChecker {
   }
 
   public CategorizationDialogChecker categorize() {
-    final Button categorizationButton = window.getButton("Categorize");
+    final Button categorizationButton = window.getPanel("uncategorizedMessagePanel").getButton("Categorize");
     final Window dialog = WindowInterceptor.getModalDialog(categorizationButton.triggerClick());
     return new CategorizationDialogChecker(dialog);
   }

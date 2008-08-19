@@ -2,6 +2,8 @@
 
 * Budget / SeriesStat : mettre montants attendus en negatif si depenses
 
+* Vue budget : ne pas montrer les series qui ne sont pas utilisees 
+
 * TransactionDetail : hyperlien pour editer la serie
 
 * MonthStatView : afficher non classe

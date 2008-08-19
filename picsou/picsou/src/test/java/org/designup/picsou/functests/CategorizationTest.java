@@ -151,7 +151,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("LDLC");
 
     dialog.checkNoBudgetAreaSelected();
-    dialog.checkTextVisible("Select the series type");
+    dialog.checkTextVisible("You must select the type first");
   }
 
   public void testCancel() throws Exception {
@@ -361,17 +361,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
-      .add("26/06/2008", TransactionType.PLANNED, "Internet", "", 0.0, "Internet")
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet")
       .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -170.00, "Groceries")
-      .add("26/05/2008", TransactionType.PLANNED, "Internet", "", 0.0, "Internet")
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet")
-      .add("15/05/2008", TransactionType.PLANNED, "Groceries", "", 0.00, "Groceries")
       .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan 1111", "", -90.00, "Groceries")
       .add("14/05/2008", TransactionType.PRELEVEMENT, "Auchan 2222", "", -80.00, "Groceries")
-      .add("26/04/2008", TransactionType.PLANNED, "Internet", "", 0.0, "Internet")
       .add("24/04/2008", TransactionType.PRELEVEMENT, "Free Telecom 21/04", "", -29.90, "Internet")
-      .add("15/04/2008", TransactionType.PLANNED, "Groceries", "", -170.00, "Groceries")
       .check();
   }
 
@@ -453,12 +448,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("26/06/2008", TransactionType.PLANNED, "Internet", "", 0.00, "Internet")
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet")
       .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -90.00, "Groceries")
-      .add("26/05/2008", TransactionType.PLANNED, "Internet", "", 0.00, "Internet")
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet")
-      .add("15/05/2008", TransactionType.PLANNED, "Groceries", "", 80.00, "Groceries")
       .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "Groceries")
       .add("14/05/2008", TransactionType.PRELEVEMENT, "Carouf", "", -80.00, "Groceries")
       .check();

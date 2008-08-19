@@ -66,8 +66,8 @@
             <column>
               <panel ref="accountView"/>
 
-              <panel styleClass="errorMessage" autoHideSource="uncategorizedMessage"
-                     preferredSize="(50,90)" weightY="0">
+              <panel name="uncategorizedMessagePanel" styleClass="errorMessage"
+                     autoHideSource="uncategorizedMessage" preferredSize="(50,90)" weightY="0">
                 <column>
                   <textArea ref="uncategorizedMessage"/>
                   <button action="categorizeRemainingTransactions" text="$transaction.allocation.action"/>
