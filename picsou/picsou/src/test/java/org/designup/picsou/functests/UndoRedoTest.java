@@ -5,7 +5,8 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
-public abstract class UndoRedoTest extends LoggedInFunctionalTestCase {
+public class UndoRedoTest extends LoggedInFunctionalTestCase {
+
   public void testUndoRedoSequence() throws Exception {
 
     operations.checkUndoNotAvailable();
@@ -59,7 +60,7 @@ public abstract class UndoRedoTest extends LoggedInFunctionalTestCase {
     operations.undo();
     operations.undo();
 
-    transactions.assertVisible(false);
+    transactions.assertEmpty();
   }
 
   public void DISABLED_testUndoRedoMaintainsSelection() throws Exception {

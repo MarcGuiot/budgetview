@@ -2,11 +2,7 @@
 
 * Budget / SeriesStat : mettre montants attendus en negatif si depenses
 
-* Bug MAJ SeriesStat apres activation licence
-
 * TransactionDetail : hyperlien pour editer la serie
-
-* TransactionDetail : afficher infos generales TransactionView si pas de selection
 
 * MonthStatView : afficher non classe
 
@@ -18,12 +14,12 @@
 
 * MonthStatView : gauge
 
+* Bug MAJ SeriesStat apres activation licence
+
 * Activation licence : cas ou pas de connexion internet
 
 * Creation d'enveloppe : forcer la selection d'une serie au moins
 
 * Gauge : depassements pour montants positifs + afficher niveau depassement
-
-* Revoir lecture de ImportPanel (combo banques sous TextField ?)
 
 * Faire fonctionner undo

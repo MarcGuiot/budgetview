@@ -1,7 +1,6 @@
 CategorizationDialog
 --------------------
 - afficher le nombre de transactions restantes
-- look toggles
 - split de transaction
 - saisie notes
 
@@ -17,16 +16,9 @@ TitleView
 - afficher des noms pour les multi-selections de mois ("juillet 2006 à août 2007")
 
 
-Vue budget
-----------
-- bloc "ponctuel" => OccasionalSeriesStat + trigger
-- edition series
-
-
 Vue releves
 -----------
-- colonne "category" de transactionView => ouvrir CategorizationDialog
-- bug reset transactionDetails
+- TransactionDetail : afficher infos generales TransactionView si pas de selection
 
 
 Panneau edition series
