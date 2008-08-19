@@ -21,3 +21,14 @@ iCash
 Cockpit
 MoneyBoard
 
+StashCash
+CashManager
+
+Thomas     : CashPlanner, Cashboard, CashPilot
+Michael    : Cashboard, Moneyboard, iCash, CashDrive
+Mere Regis : CashPilot, CashDrive, MoneyBoard
+Mere Marc  : CashPilot, CashDrive, MoneyBoard (pas Ant)
+Laure      : CashDrive, CashTuning, CashCash
+Corinne    : CashDrive, CashPilot, Cashboard (pas Ant)
+Franck     : CashPilot, Cashboard, iCash
+Sandrine   : CashCash, iCash, Cashboard

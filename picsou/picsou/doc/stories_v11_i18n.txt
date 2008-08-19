@@ -3,6 +3,7 @@
 * Choix de la langue
 * I18N: sous-categories
 * Parsing transactions : internationaliser les regexp de transactionMatcher
+* Verifier formats de date (mode americain : mm/dd/yyyy)
 
 Gestion des devises
 -------------------

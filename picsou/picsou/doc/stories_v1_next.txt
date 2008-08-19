@@ -1,8 +1,10 @@
 * Undo
 
+* Graphique pae accueil
+
 * Gestion des projets
 
-* Joliesse boutons timeview
+* Joliesse boutons/bords timeview
 
 * Mecanique pour gerer de nouvelles banques (notamment a l'international)
 

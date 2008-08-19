@@ -5,8 +5,6 @@
 
 * Types de comptes (courant / carte / epargne)
 
-* Upgrade soft
-
 * Filtrage de transactions par compte
 * Filtrage de transactions par import
 
@@ -18,8 +16,6 @@
 * messages “Vous avez dépense 150€ de trop dans la catégorie Alimentation”
 * messages “Vous avez économisé 54€ dans la catégorie Sport” (uniquement pour les mois terminés)
 * Sensibilité des messages : inutile de parler d’une économie de 3€
-
-* Navigation back/forward
 
 
 
