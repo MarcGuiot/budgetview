@@ -44,9 +44,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.checkTitle("Recurring expenses");
-    budgetView.recurring.checkTotalAmounts(-84.0, 84.0);
-    budgetView.recurring.checkSeries("Internet", -29.0, 29.0);
-    budgetView.recurring.checkSeries("Electricity", -55.0, 55.0);
+    budgetView.recurring.checkTotalAmounts(84.0, 84.0);
+    budgetView.recurring.checkSeries("Internet", 29.0, 29.0);
+    budgetView.recurring.checkSeries("Electricity", 55.0, 55.0);
 
     budgetView.envelopes.checkTitle("Envelope expenses");
     budgetView.envelopes.checkTotalAmounts(-145.0, 95);

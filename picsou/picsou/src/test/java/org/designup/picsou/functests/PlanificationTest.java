@@ -23,7 +23,6 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     transactions.setRecurring(0, "Internet", true);
     timeline.selectMonth("2008/07");
     transactions.initContent()
-      .add("08/07/2008", TransactionType.PLANNED, "Internet", "", 0.00, "Internet")
       .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, "Internet")
       .check();
     views.selectHome();

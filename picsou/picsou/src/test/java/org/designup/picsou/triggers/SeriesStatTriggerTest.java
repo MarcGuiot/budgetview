@@ -117,22 +117,19 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testWithIncomeAndReccuring() throws Exception {
     checker.parse(repository,
-                  "<series id='1' amount='100.0' budgetAreaName='recurringExpenses'/>" +
+                  "<series id='1' amount='-100.0' budgetAreaName='recurringExpenses'/>" +
                   "<series id='2' amount='1000.0' budgetAreaName='income'/>" +
-                  "<series id='3' amount='500.0' budgetAreaName='expensesEnvelope'/>" +
+                  "<series id='3' amount='-500.0' budgetAreaName='expensesEnvelope'/>" +
                   "<month id='200807'/>" +
-                  "<transaction id='1' series='1' month='200807' bankMonth='200807' amount='90.0'/>" +
+                  "<transaction id='1' series='1' month='200807' bankMonth='200807' amount='-90.0'/>" +
                   "<transaction id='2' series='3' month='200807' bankMonth='200807' amount='200.0'/>" +
                   "");
-    listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<create amount='90.0' month='200807' plannedAmount='100.0' series='1'" +
-                                    "        type='seriesStat'/>" +
-                                    "<create amount='0.0' month='200807' plannedAmount='1000.0' series='2'" +
-                                    "        type='seriesStat'/>" +
-                                    "<create amount='0.0' month='200807' plannedAmount='400.0' series='0'" +
-                                    "        type='seriesStat'/>" +
-                                    "<create amount='200.0' month='200807' plannedAmount='500.0' series='3'" +
-                                    "        type='seriesStat'/>");
+    listener.assertLastChangesEqual(
+      SeriesStat.TYPE,
+      "<create amount='-90.0' month='200807' plannedAmount='-100.0' series='1' type='seriesStat'/>" +
+      "<create amount='0.0' month='200807' plannedAmount='1000.0' series='2' type='seriesStat'/>" +
+      "<create amount='0.0' month='200807' plannedAmount='-400.0' series='0' type='seriesStat'/>" +
+      "<create amount='200.0' month='200807' plannedAmount='-500.0' series='3' type='seriesStat'/>");
     createTransaction(10, 2, 200807, 750.);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<update _amount='0.0' amount='750.0' month='200807' series='2'" +

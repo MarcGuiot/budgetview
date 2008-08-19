@@ -21,7 +21,7 @@ public class LastTransactionToTimeServiceTrigger implements ChangeSetListener {
       int lastMonthId = 0;
       for (Glob transaction : transactions) {
         Integer monthId = transaction.get(Transaction.BANK_MONTH);
-        if (monthId > lastMonthId) {
+        if (!transaction.get(Transaction.PLANNED) && monthId > lastMonthId) {
           lastMonthId = monthId;
         }
       }

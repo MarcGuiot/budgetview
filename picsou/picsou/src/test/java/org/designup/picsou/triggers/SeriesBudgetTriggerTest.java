@@ -16,37 +16,35 @@ public class SeriesBudgetTriggerTest extends PicsouTriggerTestCase {
   public void testCreateIncomeCreateOccasionalBudget() throws Exception {
     repository.enterBulkDispatchingMode();
     createSeries(1, BudgetArea.INCOME, 100.);
-    createSeries(2, BudgetArea.EXPENSES_ENVELOPE, 50.);
+    createSeries(2, BudgetArea.EXPENSES_ENVELOPE, -50.);
     repository.completeBulkDispatchingMode();
     Integer[] ids = repository.getAll(SeriesBudget.TYPE).sort(SeriesBudget.SERIES).getValues(SeriesBudget.ID);
-    listener.assertLastChangesEqual(SeriesBudget.TYPE,
-                                    "<update _amount='0.0' amount='50.0' id='0' type='seriesBudget'/>" +
-                                    "<create active='true' amount='50.0' day='30' id='" + ids[2] + "'" +
-                                    "        month='200809' series='2' type='seriesBudget'/>" +
-                                    "<create active='true' amount='100.0' day='30' id='" + ids[1] + "' type='seriesBudget'" +
-                                    "        month='200809' series='1'/>");
+    listener.assertLastChangesEqual(
+      SeriesBudget.TYPE,
+      "<update _amount='0.0' amount='-50.0' id='" + ids[0] + "' type='seriesBudget'/>" +
+      "<create active='true' amount='-50.0' day='30' id='" + ids[2] + "'" +
+      "        month='200809' series='2' type='seriesBudget' overBurnAmount='0.0'/>" +
+      "<create active='true' amount='100.0' day='30' id='" + ids[1] + "' type='seriesBudget' overBurnAmount='0.0'" +
+      "        month='200809' series='1'/>");
   }
 
   public void testUpdateBudgetChangeOccasionalBudget() throws Exception {
     createSeries(1, BudgetArea.INCOME, 100.);
-    listener.reset();
-    createSeries(2, BudgetArea.RECURRING_EXPENSES, 100.);
+    createSeries(2, BudgetArea.RECURRING_EXPENSES, -100.);
     listener.assertLastChangesEqual(SeriesBudget.TYPE,
-                                    "<update _amount='100.0' amount='0.0' id='0' type='seriesBudget'/>" +
-                                    "<create active='true' amount='100.0' day='30' id='2'" +
-                                    "        month='200809' series='2' type='seriesBudget'/>");
+                                    "<update _amount='-100.0' amount='0.0' id='0' type='seriesBudget'/>" +
+                                    "<create active='true' amount='-100.0' day='30' id='2'" +
+                                    "        month='200809' series='2' type='seriesBudget' overBurnAmount='0.0'/>");
   }
 
   public void testDeleteChangeOccasionalBudget() throws Exception {
     createSeries(1, BudgetArea.INCOME, 100.);
-    listener.reset();
-    createSeries(2, BudgetArea.RECURRING_EXPENSES, 100.);
-    listener.reset();
+    createSeries(2, BudgetArea.RECURRING_EXPENSES, -100.);
     repository.delete(Key.create(SeriesBudget.TYPE, 2));
     listener.assertLastChangesEqual(SeriesBudget.TYPE,
-                                    "<update _amount='0.0' amount='100.0' id='0' type='seriesBudget'/>" +
-                                    "<delete _amount='100.0' _month='200809' _series='2' id='2'" +
-                                    "        type='seriesBudget' _active='true' _day='30'/>");
+                                    "<update _amount='0.0' amount='-100.0' id='0' type='seriesBudget'/>" +
+                                    "<delete _amount='-100.0' _month='200809' _series='2' id='2'" +
+                                    "        type='seriesBudget' _active='true' _day='30' _overBurnAmount='0.0'/>");
   }
 
   private void createSeries(int seriesId, BudgetArea budgetArea, double amount) {

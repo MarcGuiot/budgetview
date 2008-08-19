@@ -11,11 +11,9 @@ import org.globsframework.utils.directory.Directory;
 import java.util.Set;
 
 public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
-  private Directory directory;
   private TimeService timeService;
 
   public SeriesBudgetUpdateTransactionTrigger(Directory directory) {
-    this.directory = directory;
     timeService = directory.get(TimeService.class);
   }
 
@@ -56,9 +54,10 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
           }
           else if (values.contains(SeriesBudget.AMOUNT)) {
             Double diff = values.getPrevious(SeriesBudget.AMOUNT) - values.get(SeriesBudget.AMOUNT);
-            GlobList transactions = getPlannedTransactions(key, repository);
-            Glob last = transactions.getLast();
-            repository.update(last.getKey(), Transaction.AMOUNT, last.get(Transaction.AMOUNT) - diff);
+            TransactionPlannedTrigger.transfertAmount(series.get(Series.ID),
+                                                      seriesBudget.get(SeriesBudget.MONTH),
+                                                      BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome(),
+                                                      diff, repository, timeService.getLastAvailableTransactionMonthId());
           }
         }
 
@@ -98,7 +97,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
   public static void createPlannedTransaction(Glob series, GlobRepository repository, int monthId, Integer day, Double amount) {
     repository.create(Transaction.TYPE,
                       value(Transaction.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
-                      value(Transaction.AMOUNT, -amount),
+                      value(Transaction.AMOUNT, amount),
                       value(Transaction.SERIES, series.get(Series.ID)),
                       value(Transaction.BANK_MONTH, monthId),
                       value(Transaction.BANK_DAY, day),

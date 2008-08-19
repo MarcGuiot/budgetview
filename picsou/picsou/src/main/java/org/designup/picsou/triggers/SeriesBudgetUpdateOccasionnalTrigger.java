@@ -67,12 +67,7 @@ public class SeriesBudgetUpdateOccasionnalTrigger implements ChangeSetListener {
   }
 
   private void updateOccasional(Glob series, Double amount, GlobRepository repository, Integer monthId, Glob seriesBudget) {
-    if (BudgetArea.INCOME.getId().equals(series.get(Series.BUDGET_AREA))) {
-      updateOccasionalSeriesBudget(amount, repository, monthId, seriesBudget);
-    }
-    else {
-      updateOccasionalSeriesBudget(-amount, repository, monthId, seriesBudget);
-    }
+    updateOccasionalSeriesBudget(-amount, repository, monthId, seriesBudget);
   }
 
   private void updateOccasionalSeriesBudget(Double amount, GlobRepository repository, Integer monthId,
