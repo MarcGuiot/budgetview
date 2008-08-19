@@ -73,6 +73,16 @@ public class LabelCustomizers {
     };
   }
 
+  public static LabelCustomizer fontSize(float newSize) {
+    JLabel defaultLabel = new JLabel();
+    final Font font = defaultLabel.getFont().deriveFont(newSize);
+    return new LabelCustomizer() {
+      public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
+        label.setFont(font);
+      }
+    };
+  }
+
   private static class AligmentCustomizer implements LabelCustomizer {
     private int alignment;
 

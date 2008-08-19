@@ -48,10 +48,24 @@ public class RepeatSplitter extends AbstractSplitter {
         }
       };
     }
+    else if ("row".equalsIgnoreCase(layoutProperty)) {
+      return new ColumnRepeatLayout() {
+        protected LayoutManager getLayout(JPanel panel) {
+          return new BoxLayout(panel, BoxLayout.X_AXIS);
+        }
+      };
+    }
     else if ("wrappedColumn".equalsIgnoreCase(layoutProperty)) {
       return new ColumnRepeatLayout() {
         protected LayoutManager getLayout(JPanel panel) {
           return new WrappedColumnLayout();
+        }
+      };
+    }
+    else if ("wrappedRow".equalsIgnoreCase(layoutProperty)) {
+      return new ColumnRepeatLayout() {
+        protected LayoutManager getLayout(JPanel panel) {
+          return new FlowLayout(FlowLayout.LEFT);
         }
       };
     }
