@@ -28,8 +28,8 @@ public class LabelComponent extends DefaultComponent<JLabel> {
       label.setUI(ui);
 
       if (shadowColor != null) {
-        if (shadowColor.startsWith(Colors.HEXA_PREFIX)) {
-          ui.setShadowColor(Colors.toColor(shadowColor.substring(1)));
+        if (Colors.isHexaString(shadowColor)) {
+          ui.setShadowColor(Colors.toColor(shadowColor));
         }
         else if (shadowColor.length() == 0) {
           ui.setShadowColor(null);

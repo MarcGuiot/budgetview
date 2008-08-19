@@ -67,8 +67,8 @@ public class PropertySetter {
     }
     Class<?> targetClass = setter.getParameterTypes()[0];
     if (targetClass == Color.class) {
-      if (value.startsWith(Colors.HEXA_PREFIX)) {
-        invokeSetter(object, setter, Colors.toColor(value.substring(1)), property, objectClass);
+      if (Colors.isHexaString(value)) {
+        invokeSetter(object, setter, Colors.toColor(value), property, objectClass);
       }
       else if (value.length() == 0) {
         invokeSetter(object, setter, null, property, objectClass);

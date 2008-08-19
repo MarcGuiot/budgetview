@@ -74,8 +74,8 @@ public class BorderUtils {
       int bottom = Integer.parseInt(matteMatcher.group(3));
       int right = Integer.parseInt(matteMatcher.group(4));
       String colorValue = matteMatcher.group(5);
-      if (colorValue.startsWith(Colors.HEXA_PREFIX)) {
-        Color color = Colors.toColor(colorValue.substring(1));
+      if (Colors.isHexaString(colorValue)) {
+        Color color = Colors.toColor(colorValue);
         return BorderFactory.createMatteBorder(top, left, bottom, right, color);
       }
       else {
@@ -93,8 +93,8 @@ public class BorderUtils {
     Matcher lineMatcher = LINE_FORMAT.matcher(desc.trim());
     if (lineMatcher.matches()) {
       String colorValue = lineMatcher.group(1);
-      if (colorValue.startsWith(Colors.HEXA_PREFIX)) {
-        return BorderFactory.createLineBorder(Colors.toColor(colorValue.substring(1)));
+      if (Colors.isHexaString(colorValue)) {
+        return BorderFactory.createLineBorder(Colors.toColor(colorValue));
       }
       else {
         final MutableLineBorder border = new MutableLineBorder();

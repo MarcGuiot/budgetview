@@ -260,10 +260,19 @@ public class SplitsComponentsTest extends SplitsTestCase {
 
   public void testScrollPaneBackgroundColor() throws Exception {
     JScrollPane scrollPane = parse(
-      "<scrollPane viewportBackground='#FF0000'>" +
+      "<scrollPane viewportBackground='#00FF00'>" +
       "  <button/>" +
       "</scrollPane>");
-    assertEquals(Color.RED, scrollPane.getViewport().getBackground());
+    assertEquals(Color.GREEN, scrollPane.getViewport().getBackground());
+  }
+
+  public void testScrollPaneBackgroundColorWithNamedColor() throws Exception {
+    colorService.set("bgcolor", Color.PINK);
+    JScrollPane scrollPane = parse(
+      "<scrollPane viewportBackground='bgcolor'>" +
+      "  <button/>" +
+      "</scrollPane>");
+    assertEquals(Color.PINK, scrollPane.getViewport().getBackground());
   }
 
   public void testScrollPaneViewportOpacity() throws Exception {

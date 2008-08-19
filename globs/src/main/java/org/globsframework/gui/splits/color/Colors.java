@@ -19,6 +19,13 @@ public class Colors {
     if ((hexaString == null) || "".equals(hexaString)) {
       return null;
     }
+    if ((hexaString.length() > 1) && hexaString.startsWith("#")) {
+      hexaString = hexaString.substring(1);
+    }
     return new Color(Integer.parseInt(hexaString, 16));
+  }
+
+  public static boolean isHexaString(String text) {
+    return text.startsWith(Colors.HEXA_PREFIX);
   }
 }
