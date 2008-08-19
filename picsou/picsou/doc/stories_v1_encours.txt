@@ -6,11 +6,15 @@
 
 * TransactionDetail : hyperlien pour editer la serie
 
+* TransactionDetail : afficher infos generales TransactionView si pas de selection
+
 * MonthStatView : afficher non classe
 
 * CategorizationDialog : ajouter une categorie a une enveloppe
 
 * CategorizationDialog : bug selection apres affectation (selectionner les suivants)
+
+* CategorizationDialog : joliesse + guidage utilisateur
 
 * Categorisation : selectionner serie apres creation
 
@@ -23,7 +27,5 @@
 * Gauge : depassements pour montants positifs + afficher niveau depassement
 
 * Revoir lecture de ImportPanel (combo banques sous TextField ?)
-
-* Finition CategorizationDialog (joliesse + guidage utilisateur)
 
 * Faire fonctionner undo
