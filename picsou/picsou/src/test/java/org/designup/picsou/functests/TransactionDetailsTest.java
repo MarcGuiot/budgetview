@@ -18,12 +18,15 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     transactions.getTable().selectRow(0);
     transactionDetails.checkLabel("Quick");
+    transactionDetails.checkLabelIsNotEditable();
 
     transactions.getTable().selectRows(0, 1);
-    transactionDetails.checkLabel("Quick");
-    transactionDetails.labelIsNotEditable();
+    transactionDetails.checkLabel("Quick [2 operations]");
+    transactionDetails.checkLabelIsNotEditable();
+
     transactions.getTable().selectRows(0, 2);
-    transactionDetails.checkLabel("...");
+    transactionDetails.checkLabel("2 operations");
+    transactionDetails.checkLabelIsNotEditable();
   }
 
   public void testDate() throws Exception {
@@ -36,10 +39,10 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactions.getTable().selectRow(0);
     transactionDetails.checkDate("18/06/2008");
 
-    transactions.getTable().selectRows(0, 1);
+    transactions.getTable().selectRowSpan(0, 1);
     transactionDetails.checkDate("18/06/2008");
 
-    transactions.getTable().selectRows(0, 2);
+    transactions.getTable().selectRowSpan(0, 2);
     transactionDetails.checkNoDate();
 
     transactions.getTable().clearSelection();
@@ -57,7 +60,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkAmount("Amount", "10.00");
     transactionDetails.checkNoAmountStatistics();
 
-    transactions.getTable().selectRows(0, 1);
+    transactions.getTable().selectRowSpan(0, 1);
     transactionDetails.checkAmount("Total amount", "40.00");
     transactionDetails.checkAmountStatistics("10.00", "30.00", "20.00");
 
@@ -139,7 +142,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/14", 10.00, "Fouquet's", MasterCategory.EDUCATION)
       .load();
 
-    transactions.getTable().selectRows(0, 1);
+    transactions.getTable().selectRowSpan(0, 1);
 
     CategorizationDialogChecker dialog = transactionDetails.categorize();
     dialog.checkTable(new Object[][]{
@@ -184,7 +187,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkCategorizationUnavailable();
     transactions.checkCategorizationDisabled(0);
 
-    transactions.getTable().selectRows(0, 1);
+    transactions.getTable().selectRowSpan(0, 1);
     CategorizationDialogChecker reopenedDialog1 = transactionDetails.categorize();
     reopenedDialog1.checkTable(new Object[][]{
       {"15/07/2008", "FNAC", 50.0},
@@ -214,13 +217,13 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .load();
     transactionDetails.checkSplitNotVisible();
 
-    transactions.getTable().selectRows(0, 1);
+    transactions.getTable().selectRowSpan(0, 1);
     transactionDetails.checkSplitNotVisible();
 
     transactions.getTable().selectRow(0);
     transactionDetails.checkSplitVisible();
 
-    transactions.getTable().selectRows(0, 1);
+    transactions.getTable().selectRowSpan(0, 1);
     transactionDetails.checkSplitNotVisible();
   }
 
@@ -243,7 +246,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .save();
     operations.importQifFiles(10, "Societe generale", fileName);
     transactionDetails.checkOriginalLabelNotVisible();
-    transactions.getTable().selectRows(0, 1);
+    transactions.getTable().selectRowSpan(0, 1);
     transactionDetails.checkOriginalLabelNotVisible();
   }
 
@@ -276,11 +279,11 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     operations.importQifFiles(10, "Societe generale", fileName);
     transactions.getTable().selectRow(0);
     transactionDetails.checkType(TransactionType.PRELEVEMENT);
-    transactions.getTable().selectRows(0, 1);
+    transactions.getTable().selectRowSpan(0, 1);
     transactionDetails.checkType(TransactionType.PRELEVEMENT);
     transactions.getTable().selectRow(2);
     transactionDetails.checkType(TransactionType.CHECK);
-    transactions.getTable().selectRows(1, 2);
+    transactions.getTable().selectRowSpan(1, 2);
     transactionDetails.checkTypeNotVisible();
     transactions
       .initContent()
@@ -315,7 +318,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactions.getTable().selectRow(0);
     transactionDetails.checkBankDate("15/06/2008");
 
-    transactions.getTable().selectRows(0, 1);
+    transactions.getTable().selectRowSpan(0, 1);
     transactionDetails.checkBankDateNotVisible();
 
     transactions.getTable().selectRows(1);

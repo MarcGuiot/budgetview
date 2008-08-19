@@ -17,5 +17,4 @@
 * messages “Vous avez économisé 54€ dans la catégorie Sport” (uniquement pour les mois terminés)
 * Sensibilité des messages : inutile de parler d’une économie de 3€
 
-
-
+* Recuperation d'un nouveau JAR : afficher les nouveautes

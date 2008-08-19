@@ -15,3 +15,7 @@
 * Apprentissage regexps pour internationalisation
 
 * Pb d'affichage de mois futurs en version basique si transactions dans le futur
+
+* Filtrage transactions par Serie
+
+* Filtrage transactions par type

@@ -25,7 +25,7 @@ public class TransactionDetailsChecker extends DataChecker {
     checkValue("userLabel", expected);
   }
 
-  public void labelIsNotEditable() {
+  public void checkLabelIsNotEditable() {
     assertFalse(getPanel().getTextBox("userLabel").isEditable());
   }
 
