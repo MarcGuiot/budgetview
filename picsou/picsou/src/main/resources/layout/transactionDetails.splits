@@ -8,7 +8,8 @@
     <style selector="label.formLabel"
            fill="none" anchor="left"
            foreground="transaction.detail.formLabel" font="-,plain,10"/>
-    <style selector=".formValue" fill="none" anchor="right" font="-,plain,11"/>
+
+    <style selector=".formValue" fill="horizontal" anchor="right" horizontalAlignment="right" font="-,plain,11"/>
 
     <style selector="hyperlink" foreground="#6666FF" opaque="false"/>
     <style selector="hyperlink#splitLink" font="-,plain,10"/>
@@ -80,7 +81,7 @@
       <label ref="transactionSeriesName"/>
     </row>
 
-    <button action="categorize" marginTop="10"/>
+    <button action="categorize" marginTop="10" autoHideIfDisabled='true'/>
 
     <filler fill="vertical"/>
 

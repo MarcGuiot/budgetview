@@ -18,6 +18,13 @@ public class BorderUtilsTest extends UISpecTestCase {
     assertTrue(border instanceof EmptyBorder);
   }
 
+  public void testEmptyWithGeneralInsets() throws Exception {
+    Border border = BorderUtils.parse("empty(8)", colorService);
+    assertTrue(border instanceof EmptyBorder);
+    EmptyBorder emptyBorder = (EmptyBorder)border;
+    checkInsets(emptyBorder.getBorderInsets(), 8, 8, 8, 8);
+  }
+
   public void testEmptyWithInsets() throws Exception {
     Border border = BorderUtils.parse("empty(2,3,4,5)", colorService);
     assertTrue(border instanceof EmptyBorder);

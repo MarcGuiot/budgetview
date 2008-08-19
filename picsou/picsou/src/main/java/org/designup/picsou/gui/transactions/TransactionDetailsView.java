@@ -10,7 +10,6 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.editors.GlobMultiLineTextEditor;
 import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobMultiLineTextView;
@@ -24,6 +23,7 @@ import org.globsframework.model.format.utils.GlobListFieldStringifier;
 import org.globsframework.model.format.utils.GlobListStringFieldStringifier;
 import org.globsframework.model.utils.GlobListMatcher;
 import org.globsframework.model.utils.GlobListMatchers;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -54,9 +54,8 @@ public class TransactionDetailsView extends View {
                 }, true));
 
     builder.add("userLabel",
-                GlobMultiLineTextEditor.init(Transaction.LABEL, repository, directory)
-                  .setMultiSelectionText(Lang.get("transaction.details.multilabel"))
-                  .setEditable(false));
+                GlobMultiLineTextView.init(Transaction.TYPE, repository, directory, new UserLabelStringifier())
+                  .setAutoHideIfEmpty(true));
 
     builder.add("userDate",
                 addLabel(new TransactionDateListStringifier(Transaction.MONTH, Transaction.DAY), true));
@@ -149,8 +148,8 @@ public class TransactionDetailsView extends View {
         return false;
       }
       Glob transaction = list.get(0);
-      return !Utils.equal(transaction.get(Transaction.LABEL),
-                          transaction.get(Transaction.ORIGINAL_LABEL));
+      return Strings.isNotEmpty(transaction.get(Transaction.ORIGINAL_LABEL)) &&
+             !Utils.equal(transaction.get(Transaction.LABEL), transaction.get(Transaction.ORIGINAL_LABEL));
     }
   }
 
@@ -188,6 +187,25 @@ public class TransactionDetailsView extends View {
       }
 
       return "";
+    }
+  }
+
+  private static class UserLabelStringifier implements GlobListStringifier {
+    public String toString(GlobList list, GlobRepository repository) {
+      if (list.isEmpty()) {
+        return "";
+      }
+
+      if (list.size() == 1) {
+        return list.getFirst().get(Transaction.LABEL);
+      }
+
+      Set<String> names = list.getValueSet(Transaction.LABEL);
+      if (names.size() > 1) {
+        return Lang.get("transaction.details.multilabel.different", list.size());
+      }
+
+      return Lang.get("transaction.details.multilabel.similar", names.iterator().next(), list.size());
     }
   }
 }

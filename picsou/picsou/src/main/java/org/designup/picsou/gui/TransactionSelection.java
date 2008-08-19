@@ -9,6 +9,7 @@ import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -83,7 +84,10 @@ public class TransactionSelection implements GlobSelectionListener {
       for (MasterCategory master : MasterCategory.values()) {
         for (Integer month : currentMonths) {
           Key key = MonthStat.getKey(month, master.getId(), accountId);
-          result.add(repository.get(key));
+          Glob monthStat = repository.find(key);
+          if (monthStat != null) {
+            result.add(monthStat);
+          }
         }
       }
     }

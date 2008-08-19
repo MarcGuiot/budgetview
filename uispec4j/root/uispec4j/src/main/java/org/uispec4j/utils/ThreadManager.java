@@ -5,19 +5,19 @@ import java.util.List;
 
 public class ThreadManager {
   private static ThreadManager manager = new ThreadManager();
-  private List<Thread> threads = new ArrayList<Thread>();
+  private List<ManagedThread> threads = new ArrayList<ManagedThread>();
   private long id = Long.MIN_VALUE + 1;
 
   public static ThreadManager getInstance() {
     return manager;
   }
 
-  class Thread extends java.lang.Thread {
+  private class ManagedThread extends java.lang.Thread {
     private Runnable runnable;
     private String name;
     private Long id = Long.MIN_VALUE + 1;
 
-    Thread() {
+    ManagedThread() {
       setPriority(MAX_PRIORITY);
     }
 
@@ -92,12 +92,12 @@ public class ThreadManager {
     synchronized (this) {
       id++;
       if (threads.isEmpty()) {
-        Thread thread = new Thread();
+        ManagedThread thread = new ManagedThread();
         thread.start();
         return new ThreadDelegateImpl(id, thread, name, runnable);
       }
       else {
-        ThreadManager.Thread thread = threads.remove(threads.size() - 1);
+        ManagedThread thread = threads.remove(threads.size() - 1);
         return new ThreadDelegateImpl(id, thread, name, runnable);
       }
     }
@@ -105,9 +105,9 @@ public class ThreadManager {
 
   private static class ThreadDelegateImpl implements ThreadDelegate {
     private final Long id;
-    private Thread thread;
+    private ManagedThread thread;
 
-    public ThreadDelegateImpl(Long id, Thread thread, String name, Runnable runnable) {
+    public ThreadDelegateImpl(Long id, ManagedThread thread, String name, Runnable runnable) {
       this.id = id;
       this.thread = thread;
       thread.push(this.id, name, runnable);

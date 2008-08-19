@@ -130,6 +130,10 @@ public class GlobRepositoryDecorator implements GlobRepository {
     getRepository().completeBulkDispatchingMode();
   }
 
+  public void completeBulkDispatchingModeWithoutTriggers() {
+    getRepository().completeBulkDispatchingModeWithoutTriggers();
+  }
+
   public void reset(GlobList newGlobs, GlobType... changedTypes) {
     getRepository().reset(newGlobs, changedTypes);
   }

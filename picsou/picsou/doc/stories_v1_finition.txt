@@ -1,3 +1,34 @@
+CategorizationDialog
+--------------------
+- afficher le nombre de transactions restantes
+- split de transaction
+- saisie notes
+
+
+Vue accueil
+-----------
+- creation de compte
+- edition comptes
+
+
+TitleView
+--------
+- afficher des noms pour les multi-selections de mois ("juillet 2006 à août 2007")
+
+
+Vue releves
+-----------
+- TransactionDetail : afficher infos generales TransactionView si pas de selection
+
+
+Panneau edition series
+----------------------
+- check nom
+- selection amount
+- selection dates debut/fin et duree
+- selection mois
+
+
 Import
 ------
 * LoginPanel: error login + "new user" => effacer message

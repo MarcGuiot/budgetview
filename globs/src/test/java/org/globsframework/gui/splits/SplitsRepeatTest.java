@@ -256,6 +256,39 @@ public class SplitsRepeatTest extends SplitsTestCase {
     checkButton(panel, 3, "bb", 1, 1);
   }
 
+  public void testRowLayout() throws Exception {
+    builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                      new RepeatComponentFactory<String>() {
+                        public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          cellBuilder.add("label", new JLabel(object));
+                        }
+                      });
+
+    JPanel panel = parse(
+      "<repeat ref='myRepeat' layout='row'>" +
+      "  <label ref='label'/>" +
+      "</repeat>");
+
+    assertTrue(panel.getLayout() instanceof BoxLayout);
+  }
+
+  public void testWrappedRowLayout() throws Exception {
+    builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                      new RepeatComponentFactory<String>() {
+                        public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          cellBuilder.add("label", new JLabel(object));
+                        }
+                      });
+
+    JPanel panel = parse(
+      "<repeat ref='myRepeat' layout='wrappedRow'>" +
+      "  <label ref='label'/>" +
+      "</repeat>");
+
+    FlowLayout layout = (FlowLayout)panel.getLayout();
+    assertEquals(FlowLayout.LEFT,  layout.getAlignment());
+  }
+
   public void testWrappedColumnLayout() throws Exception {
     builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                       new RepeatComponentFactory<String>() {

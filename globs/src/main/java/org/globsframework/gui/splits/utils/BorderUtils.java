@@ -1,11 +1,11 @@
 package org.globsframework.gui.splits.utils;
 
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.color.ColorUpdater;
-import org.globsframework.gui.splits.exceptions.SplitsException;
-import org.globsframework.gui.splits.components.MutableMatteBorder;
+import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.components.MutableLineBorder;
+import org.globsframework.gui.splits.components.MutableMatteBorder;
+import org.globsframework.gui.splits.exceptions.SplitsException;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -15,12 +15,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BorderUtils {
-  private static Pattern EMPTY_FORMAT = Pattern.compile("empty\\(" +
-                                                        "[ ]*([0-9]+)[ ]*," +
-                                                        "[ ]*([0-9]+)[ ]*," +
-                                                        "[ ]*([0-9]+)[ ]*," +
-                                                        "[ ]*([0-9]+)[ ]*" +
-                                                        "\\)");
+  private static Pattern EMPTY_SHORT_FORMAT = Pattern.compile("empty\\(" +
+                                                              "[ ]*([0-9]+)[ ]*" +
+                                                              "\\)");
+  private static Pattern EMPTY_LONG_FORMAT = Pattern.compile("empty\\(" +
+                                                             "[ ]*([0-9]+)[ ]*," +
+                                                             "[ ]*([0-9]+)[ ]*," +
+                                                             "[ ]*([0-9]+)[ ]*," +
+                                                             "[ ]*([0-9]+)[ ]*" +
+                                                             "\\)");
   private static Pattern MATTE_FORMAT = Pattern.compile("matte\\(" +
                                                         "[ ]*([0-9]+)[ ]*," +
                                                         "[ ]*([0-9]+)[ ]*," +
@@ -29,8 +32,8 @@ public class BorderUtils {
                                                         "[ ]*([A-z\\.#0-9]+)[ ]*" +
                                                         "\\)");
   private static Pattern LINE_FORMAT = Pattern.compile("line\\(" +
-                                                        "[ ]*([A-z\\.#0-9]+)[ ]*" +
-                                                        "\\)");
+                                                       "[ ]*([A-z\\.#0-9]+)[ ]*" +
+                                                       "\\)");
 
   public static Border parse(String desc, ColorService colorService) {
 
@@ -50,7 +53,13 @@ public class BorderUtils {
       return BorderFactory.createBevelBorder(BevelBorder.RAISED);
     }
 
-    Matcher emptyMatcher = EMPTY_FORMAT.matcher(desc.trim());
+    Matcher shortEmptyMatcher = EMPTY_SHORT_FORMAT.matcher(desc.trim());
+    if (shortEmptyMatcher.matches()) {
+      int margin = Integer.parseInt(shortEmptyMatcher.group(1));
+      return BorderFactory.createEmptyBorder(margin, margin, margin, margin);
+    }
+
+    Matcher emptyMatcher = EMPTY_LONG_FORMAT.matcher(desc.trim());
     if (emptyMatcher.matches()) {
       return BorderFactory.createEmptyBorder(Integer.parseInt(emptyMatcher.group(1)),
                                              Integer.parseInt(emptyMatcher.group(2)),
@@ -65,8 +74,8 @@ public class BorderUtils {
       int bottom = Integer.parseInt(matteMatcher.group(3));
       int right = Integer.parseInt(matteMatcher.group(4));
       String colorValue = matteMatcher.group(5);
-      if (colorValue.startsWith(Colors.HEXA_PREFIX)) {
-        Color color = Colors.toColor(colorValue.substring(1));
+      if (Colors.isHexaString(colorValue)) {
+        Color color = Colors.toColor(colorValue);
         return BorderFactory.createMatteBorder(top, left, bottom, right, color);
       }
       else {
@@ -84,8 +93,8 @@ public class BorderUtils {
     Matcher lineMatcher = LINE_FORMAT.matcher(desc.trim());
     if (lineMatcher.matches()) {
       String colorValue = lineMatcher.group(1);
-      if (colorValue.startsWith(Colors.HEXA_PREFIX)) {
-        return BorderFactory.createLineBorder(Colors.toColor(colorValue.substring(1)));
+      if (Colors.isHexaString(colorValue)) {
+        return BorderFactory.createLineBorder(Colors.toColor(colorValue));
       }
       else {
         final MutableLineBorder border = new MutableLineBorder();

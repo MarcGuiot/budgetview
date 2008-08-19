@@ -24,24 +24,50 @@ import java.util.*;
 
 public class GlobPrinter {
 
+  public static String toString(Glob glob) {
+    StringBuilder builder = new StringBuilder();
+    for (Field field : glob.getType().getFields()) {
+      builder.append(field.getName()).append("=").append(glob.getValue(field)).append(('\n'));
+    }
+    return builder.toString();
+  }
+
   public static void print(GlobRepository repository, GlobType... types) {
     GlobPrinter.init(repository).showOnly(types).run();
+  }
+
+  public static void print(GlobList list) {
+    GlobPrinter.init(list).run();
   }
 
   public static GlobPrinter init(GlobRepository repository) {
     return new GlobPrinter(repository);
   }
 
+  public static GlobPrinter init(GlobList list) {
+    return new GlobPrinter(list);
+  }
+
   private GlobRepository repository;
-  private List<GlobType> types = Collections.emptyList();
+  private Set<GlobType> types;
+  private GlobList globs;
   private List<Field> excludedFields = Collections.emptyList();
 
   private GlobPrinter(GlobRepository repository) {
     this.repository = repository;
+    this.types = repository.getTypes();
+    this.globs = repository.getAll();
   }
 
-  public GlobPrinter showOnly(GlobType... types) {
-    this.types = Arrays.asList(types);
+  private GlobPrinter(GlobList list) {
+    this.types = list.getTypes();
+    this.globs = list;
+  }
+
+  public GlobPrinter showOnly(GlobType... shownTypes) {
+    if (shownTypes.length > 0) {
+      this.types = new HashSet<GlobType>(Arrays.asList(shownTypes));
+    }
     return this;
   }
 
@@ -51,12 +77,9 @@ public class GlobPrinter {
   }
 
   public void run(Writer writer) {
-    if (types.isEmpty()) {
-      types = sort(repository.getTypes(), GlobTypeComparator.INSTANCE);
-    }
     PrintWriter printer = new PrintWriter(writer);
-    for (GlobType type : types) {
-      printType(type, printer);
+    for (GlobType type : sort(types, GlobTypeComparator.INSTANCE)) {
+      printType(type, globs.getAll(type), printer);
     }
   }
 
@@ -64,18 +87,17 @@ public class GlobPrinter {
     run(new OutputStreamWriter(System.out));
   }
 
-  public String dumpToString() {
+  public String toString() {
     StringWriter writer = new StringWriter();
     run(writer);
     return writer.toString();
   }
 
-  private void printType(GlobType type, PrintWriter printer) {
+  private void printType(GlobType type, GlobList globs, PrintWriter printer) {
     printer.println("===== " + type.getName() + " ======");
 
     List<Object[]> rows = new ArrayList<Object[]>();
     String[] headerRow = createHeaderRow(type);
-    GlobList globs = repository.getAll(type);
     for (Glob glob : globs) {
       rows.add(createRow(type, glob));
     }
@@ -111,7 +133,7 @@ public class GlobPrinter {
       LinkField link = (LinkField)field;
       StringField namingField = GlobTypeUtils.findNamingField(link.getTargetType());
       if (namingField != null) {
-        Glob target = repository.findLinkTarget(glob, link);
+        Glob target = repository != null ? repository.findLinkTarget(glob, link) : null;
         if (target != null) {
           return Strings.toString(target.get(namingField));
         }

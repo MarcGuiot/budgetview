@@ -177,7 +177,7 @@ public class SplitTransactionDialog {
     noteField.addKeyListener(validator);
     dispensableBox.addKeyListener(validator);
     AbstractGlobSelectionAction categorizationAction =
-      new AbstractGlobSelectionAction(Transaction.TYPE, directoryForSplitPanel) {
+      new AbstractGlobSelectionAction(Transaction.TYPE, repositoryForSplitPanel, directoryForSplitPanel) {
 
         public String toString(GlobList globs) {
           return "categorization";
@@ -241,7 +241,7 @@ public class SplitTransactionDialog {
     GlobStringifier categoriesStringifier =
       new TransactionCategoriesStringifier(descriptionService.getStringifier(Category.TYPE));
     AbstractGlobSelectionAction categorizationAction =
-      new AbstractGlobSelectionAction(Transaction.TYPE, directoryForSplitPanel) {
+      new AbstractGlobSelectionAction(Transaction.TYPE, repositoryForSplitPanel, directoryForSplitPanel) {
 
         public String toString(GlobList globs) {
           return "categorization";

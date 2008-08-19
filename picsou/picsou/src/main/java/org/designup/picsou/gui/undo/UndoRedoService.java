@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.undo;
 
+import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -23,7 +24,7 @@ public class UndoRedoService {
   private List<Listener> listeners = new ArrayList<Listener>();
   private boolean undoRedoInProgress = false;
 
-  private final GlobType[] selectionTypes = {Month.TYPE, Category.TYPE, Transaction.TYPE};
+  private final GlobType[] selectionTypes = {Card.TYPE, Month.TYPE, Category.TYPE, Transaction.TYPE};
   private final MultiMap<GlobType, Key> currentSelections = new MultiMap<GlobType, Key>();
 
   public interface Listener {
@@ -134,11 +135,21 @@ public class UndoRedoService {
     }
 
     public void apply() {
-      repository.apply(changeSet);
+      applyChanges(changeSet);
     }
 
     public void revert() {
-      repository.apply(changeSet.reverse());
+      applyChanges(changeSet.reverse());
+    }
+
+    private void applyChanges(ChangeSet changeSet) {
+      repository.enterBulkDispatchingMode();
+      try {
+        repository.apply(changeSet);
+      }
+      finally {
+        repository.completeBulkDispatchingModeWithoutTriggers();
+      }
     }
   }
 }

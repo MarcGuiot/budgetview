@@ -209,7 +209,7 @@ public class GlobList extends ArrayList<Glob> {
     return list;
   }
 
-  public Collection<GlobType> getTypes() {
+  public Set<GlobType> getTypes() {
     Set<GlobType> types = new HashSet<GlobType>();
     for (Glob glob : this) {
       types.add(glob.getType());
@@ -223,5 +223,15 @@ public class GlobList extends ArrayList<Glob> {
 
   public Glob getLast() {
     return get(size() - 1);
+  }
+
+  public GlobList getAll(GlobType type) {
+    GlobList result = new GlobList();
+    for (Glob glob : this) {
+      if (glob.getType().equals(type)) {
+        result.add(glob);
+      }
+    }
+    return result;
   }
 }

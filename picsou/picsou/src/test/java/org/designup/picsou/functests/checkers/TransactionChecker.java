@@ -11,7 +11,9 @@ import org.globsframework.model.Glob;
 import org.globsframework.utils.Strings;
 import org.uispec4j.*;
 import org.uispec4j.Window;
+import org.uispec4j.Button;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -83,30 +85,25 @@ public class TransactionChecker extends ViewChecker {
     chooseCategoryViaKeyboard(category, modifier);
   }
 
-  public CategorizationDialogChecker openCategorizationDialog(final int... rows) {
-    getTable().selectRows(rows);
-    return getCategorizationDialog(rows[0]);
-  }
-
-  private void chooseCategoryViaButtonClick(MasterCategory category, final int row) {
-    CategorizationDialogChecker checker = getCategorizationDialog(row);
-    checker.selectOccasionalSeries(category);
-    checker.validate();
-  }
-
-  private void chooseCategoryViaButtonClick(MasterCategory category, String subcat, final int row) {
-    CategorizationDialogChecker checker = getCategorizationDialog(row);
-    checker.selectOccasionalSeries(category, subcat);
-    checker.validate();
-  }
-
-  private CategorizationDialogChecker getCategorizationDialog(final int row) {
+  public CategorizationDialogChecker openCategorizationDialog(final int row) {
     Window dialog = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         getTable().editCell(row, TransactionView.CATEGORY_COLUMN_INDEX).getButton().click();
       }
     });
     return new CategorizationDialogChecker(dialog);
+  }
+
+  private void chooseCategoryViaButtonClick(MasterCategory category, final int row) {
+    CategorizationDialogChecker checker = openCategorizationDialog(row);
+    checker.selectOccasionalSeries(category);
+    checker.validate();
+  }
+
+  private void chooseCategoryViaButtonClick(MasterCategory category, String subcat, final int row) {
+    CategorizationDialogChecker checker = openCategorizationDialog(row);
+    checker.selectOccasionalSeries(category, subcat);
+    checker.validate();
   }
 
   private void chooseCategoryViaKeyboard(MasterCategory category, final int modifier) {
@@ -149,8 +146,9 @@ public class TransactionChecker extends ViewChecker {
     return builder.toString();
   }
 
-  public CategorizationDialogChecker categorize(int... row) {
-    getTable().selectRows(row);
+  public CategorizationDialogChecker categorize(int... rows) {
+    getTable().selectRows(rows);
+    transactionDetails.checkCategorizationAvailable();
     return transactionDetails.categorize();
   }
 
@@ -194,9 +192,12 @@ public class TransactionChecker extends ViewChecker {
     CategorizationDialogChecker categorization = categorize(rowIndex);
     categorization.selectOccasional();
     categorization.selectOccasionalSeries(category);
-
-//    categorization.selectRecurringSeries(seriesName, showSeriesInitialization);
     categorization.validate();
+  }
+
+  public void checkCategorizationDisabled(int clickedRow) {
+    Button seriesButton = getTable().editCell(clickedRow, TransactionView.CATEGORY_COLUMN_INDEX).getButton();
+    UISpecAssert.assertFalse(seriesButton.isEnabled());
   }
 
   public class ContentChecker {

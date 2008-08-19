@@ -1,23 +1,44 @@
 Vision
 ------
 
-Objectif : contrôler ses depenses pour realiser des projets
-3 etapes :
-- comprendre ses depenses actuelles
-- acquerir une discipline de contrôle de ses depenses
-- anticiper les depenses futures
+  Objectif : contrôler ses depenses pour realiser des projets
+  3 etapes :
+  - comprendre ses depenses actuelles
+  - acquerir une discipline de contrôle de ses depenses
+  - anticiper les depenses futures
+
+
+  Pour les gens qui ne voient pas où passent leur argent...
+  XXX est le logiciel de gestion de comptes qui permet de voir l'avenir.
+
 
 
 Propositions
 ------------
-Ant
-CashDrive
-CashPlanner
-CashTuning
-CashCash
-CashPilot
-CashBoard
-iCash
-Cockpit
-MoneyBoard
 
+  Ant
+  CashDrive
+  CashPlanner
+  CashTuning
+  CashCash
+  CashPilot
+  CashBoard
+  iCash
+  Cockpit
+  MoneyBoard
+
+  StashCash
+  CashManager
+
+
+Retours
+-------
+
+  Thomas     : CashPlanner, Cashboard, CashPilot
+  Michael    : Cashboard, Moneyboard, iCash, CashDrive
+  Mere Regis : CashPilot, CashDrive, MoneyBoard
+  Mere Marc  : CashPilot, CashDrive, MoneyBoard (pas Ant)
+  Laure      : CashDrive, CashTuning, CashCash
+  Corinne    : CashDrive, CashPilot, Cashboard (pas Ant)
+  Franck     : CashPilot, Cashboard, iCash
+  Sandrine   : CashCash, iCash, Cashboard

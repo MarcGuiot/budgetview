@@ -22,6 +22,8 @@ public class GaugeDemo {
     addGauge(19.0, 19.0);
     addGauge(19.01, 19.0);
     addGauge(21.0, 19.0);
+    addGauge(-12.0, -19.0);
+    addGauge(-19.0, -19.0);
 
     JFrame frame = new JFrame();
     frame.setContentPane(builder.getPanel());

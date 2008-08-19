@@ -108,7 +108,6 @@ public class StyledPanelUI extends BasicPanelUI {
       g2d.fillRoundRect(x, y, rectWidth, rectHeight, cornerRadius, cornerRadius);
     }
 
-
     int innerWidth = rectWidth - 2 * borderWidth;
     int innerHeight = rectHeight - 2 * borderWidth;
     int widthRadius = Math.max(0, cornerRadius  - borderWidth);

@@ -7,6 +7,7 @@ import org.designup.picsou.gui.categorization.components.SeriesComponentFactory;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.series.SeriesCreationDialog;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -16,6 +17,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -39,6 +41,9 @@ public class CategorizationDialog {
   private JCheckBox autoSelectionCheckBox;
   private JCheckBox autoHideCheckBox;
 
+  private static final int[] COLUMN_SIZES = {10, 28, 10};
+
+
   public CategorizationDialog(Window parent, final GlobRepository repository, Directory directory) {
     dialog = PicsouDialog.create(parent, Lang.get("categorization.title"));
 
@@ -50,9 +55,12 @@ public class CategorizationDialog {
     Comparator<Glob> transactionComparator = getTransactionComparator();
     transactionTable =
       builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
-        .addColumn(Lang.get("date"), new TransactionDateStringifier(transactionComparator))
+        .addColumn(Lang.get("date"), new TransactionDateStringifier(transactionComparator),
+                   LabelCustomizers.fontSize(9))
         .addColumn(Transaction.LABEL)
         .addColumn(Transaction.AMOUNT);
+    Gui.setColumnSizes(transactionTable.getComponent(), COLUMN_SIZES);
+
 
     autoSelectionCheckBox = new JCheckBox(new AutoSelectAction());
     autoSelectionCheckBox.setSelected(true);

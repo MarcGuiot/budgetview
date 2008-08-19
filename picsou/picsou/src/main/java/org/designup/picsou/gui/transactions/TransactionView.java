@@ -22,7 +22,6 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
-import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -46,7 +45,6 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
   public static final int NOTE_COLUMN_INDEX = 4;
 
   private static final int[] COLUMN_SIZES = {10, 16, 30, 9};
-  private static final int DEFAULT_COLUMN_CHAR_WIDTH = 7;
 
   private GlobTableView view;
   private TransactionRendererColors rendererColors;
@@ -105,7 +103,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
   }
 
   private JTable createTable() {
-    view = createGlobTableView(categorizationAction, repository, descriptionService, directory, rendererColors);
+    view = createGlobTableView(repository, descriptionService, directory, rendererColors);
     view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
     headerPainter = new PicsouTableHeaderPainter(view, directory);
@@ -124,13 +122,12 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
     table.setDragEnabled(false);
     table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     ToolTipManager.sharedInstance().unregisterComponent(table.getTableHeader());
-
-    setInitialColumnSizes(table);
+    Gui.setColumnSizes(table, COLUMN_SIZES);
 
     return table;
   }
 
-  private static GlobTableView createGlobTableView(Action categoryChooserAction, GlobRepository repository,
+  private static GlobTableView createGlobTableView(GlobRepository repository,
                                                    DescriptionService descriptionService, Directory directory,
                                                    TransactionRendererColors rendererColors) {
     TransactionComparator comparator = TransactionComparator.DESCENDING;
@@ -156,12 +153,5 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
       .addColumn(LABEL, LabelCustomizers.bold(), CellPainter.NULL)
       .addColumn(Lang.get("amount"), amountColumn, amountStringifier.getComparator(repository))
       .addColumn(NOTE, new TransactionNoteEditor(repository, directory));
-  }
-
-  private void setInitialColumnSizes(JTable targetTable) {
-    for (int column = 0; column < targetTable.getColumnCount() - 1; column++) {
-      final int width = COLUMN_SIZES[column] * DEFAULT_COLUMN_CHAR_WIDTH;
-      TableUtils.setSize(targetTable, column, width);
-    }
   }
 }

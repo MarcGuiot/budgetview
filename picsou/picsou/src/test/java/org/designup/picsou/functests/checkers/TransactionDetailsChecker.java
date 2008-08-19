@@ -25,7 +25,7 @@ public class TransactionDetailsChecker extends DataChecker {
     checkValue("userLabel", expected);
   }
 
-  public void labelIsNotEditable() {
+  public void checkLabelIsNotEditable() {
     assertFalse(getPanel().getTextBox("userLabel").isEditable());
   }
 
@@ -149,6 +149,14 @@ public class TransactionDetailsChecker extends DataChecker {
     Button button = getPanel().getButton("Categorize");
     Window dialog = WindowInterceptor.getModalDialog(button.triggerClick());
     return new CategorizationDialogChecker(dialog);
+  }
+
+  public void checkCategorizationAvailable() {
+    assertTrue(getPanel().getButton("categorize").isVisible());
+  }
+
+  public void checkCategorizationUnavailable() {
+    assertFalse(getPanel().getButton("categorize").isVisible());
   }
 
   public void checkSeries(String name) {

@@ -693,6 +693,49 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
       "<create type='dummyObject2' id='1' label='dummyObject[id=1] deleted'/>");
   }
 
+  public void testCompleteBulkDispatchingWithoutTriggers() throws Exception {
+    init("<dummyObject2 id='2'/>");
+
+    DummyChangeSetListener listener = new DummyChangeSetListener();
+    repository.addTrigger(listener);
+
+    repository.enterBulkDispatchingMode();
+
+    repository.create(DummyObject.TYPE, value(DummyObject.ID, 1), value(DummyObject.NAME, "obj1"));
+
+    DefaultChangeSet changeSet = new DefaultChangeSet();
+    changeSet.processCreation(DummyObject.TYPE,
+                              FieldValuesBuilder.init()
+                                .set(DummyObject.ID, 3)
+                                .set(DummyObject.NAME, "obj3")
+                                .get());
+    changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1", null);
+    changeSet.processDeletion(getKey2(2), FieldValues.EMPTY);
+
+    repository.apply(changeSet);
+
+    repository.completeBulkDispatchingModeWithoutTriggers();
+
+    listener.assertNoChanges();
+    checker.assertEquals(repository,
+                         "<dummyObject id='1' name='newObj1'/>" +
+                         "<dummyObject id='3' name='obj3'/>");
+  }
+
+  public void testCompleteBulkDispatchingWithoutTriggersMustBeTheTopLevelComplete() throws Exception {
+    init("<dummyObject id='1'/>");
+
+    repository.enterBulkDispatchingMode();
+    repository.enterBulkDispatchingMode();
+    try {
+      repository.completeBulkDispatchingModeWithoutTriggers();
+      fail();
+    }
+    catch (InvalidState e) {
+      assertEquals("This method must be called for the outermost enterBulkDispatchingMode call", e.getMessage());
+    }
+  }
+
   private void createObj2(GlobRepository repository, Key referenceKey, String text) {
     repository.create(DummyObject2.TYPE,
                       value(DummyObject2.ID, referenceKey.get(DummyObject.ID)),

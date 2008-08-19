@@ -17,6 +17,7 @@ public class HyperlinkButton extends JButton {
   private boolean underline = true;
   private Color rolloverColor = Color.BLUE.brighter();
   private Color disabledColor = Color.GRAY;
+  private boolean autoHide = true;
 
   public HyperlinkButton() {
     init();
@@ -29,8 +30,16 @@ public class HyperlinkButton extends JButton {
 
   private void init() {
     setRolloverEnabled(true);
-    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    setEnabledCursor(true);
     setForeground(Color.BLUE);
+  }
+
+  public void setAutoHide(boolean autoHide) {
+    this.autoHide = autoHide;
+  }
+
+  public void setEnabledCursor(boolean enabled) {
+      setCursor(Cursor.getPredefinedCursor(enabled ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
   }
 
   public void setUnderline(boolean underline) {
@@ -47,7 +56,7 @@ public class HyperlinkButton extends JButton {
 
   public void setEnabled(boolean b) {
     super.setEnabled(b);
-    setVisible(b);
+    setVisible(b || !autoHide);
   }
 
   public void paint(Graphics g) {
