@@ -6,7 +6,8 @@ import org.uispec4j.UISpecTestCase;
 import javax.swing.border.*;
 import java.awt.*;
 
-public class BorderUtilsTest extends UISpecTestCase {
+public class
+  BorderUtilsTest extends UISpecTestCase {
   private ColorService colorService = new ColorService();
 
   public void testNoBorder() throws Exception {
@@ -16,6 +17,13 @@ public class BorderUtilsTest extends UISpecTestCase {
   public void testEmpty() throws Exception {
     Border border = BorderUtils.parse("empty", colorService);
     assertTrue(border instanceof EmptyBorder);
+  }
+
+  public void testEmptyWithGeneralInsets() throws Exception {
+    Border border = BorderUtils.parse("empty(8)", colorService);
+    assertTrue(border instanceof EmptyBorder);
+    EmptyBorder emptyBorder = (EmptyBorder)border;
+    checkInsets(emptyBorder.getBorderInsets(), 8, 8, 8, 8);
   }
 
   public void testEmptyWithInsets() throws Exception {
