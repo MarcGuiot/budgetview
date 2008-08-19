@@ -7,11 +7,14 @@ import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 
+import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.TreeSet;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class PropertySetter {
   public static void process(Object component,
@@ -27,11 +30,34 @@ public class PropertySetter {
       if (excludeSet.contains(property.toLowerCase())) {
         continue;
       }
-      process(component, property, properties.get(property), context);
+      if (property.equalsIgnoreCase("autoHideIfDisabled")) {
+        installAutoHideListener(component, property, properties.get(property));
+      }
+      else {
+        invokeSetter(component, property, properties.get(property), context);
+      }
     }
   }
 
-  private static void process(final Object object, final String property, String value, SplitsContext context) {
+  private static void installAutoHideListener(Object component, String propertyName, String propertyValue) {
+    if (!"true".equalsIgnoreCase(propertyValue)) {
+      return;
+    }
+
+    if (!JComponent.class.isAssignableFrom(component.getClass())) {
+      throw new SplitsException("autoHideIfDisabled can only be used with JComponent objects");
+    }
+    final JComponent jComponent = (JComponent)component;
+    jComponent.setVisible(jComponent.isEnabled());
+
+    jComponent.addPropertyChangeListener("enabled", new PropertyChangeListener() {
+      public void propertyChange(PropertyChangeEvent evt) {
+        jComponent.setVisible(jComponent.isEnabled());
+      }
+    });
+  }
+
+  private static void invokeSetter(final Object object, final String property, String value, SplitsContext context) {
     final Class objectClass = object.getClass();
     Method[] methods = objectClass.getMethods();
     final Method setter = findMethod(methods, property);

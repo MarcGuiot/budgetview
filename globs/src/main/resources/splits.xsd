@@ -494,19 +494,13 @@
 
   <xs:element name="button">
     <xs:complexType>
-      <xs:attributeGroup ref="componentAttributes"/>
-      <xs:attributeGroup ref="iconAttributes"/>
-      <xs:attribute name="action" type="xs:string"/>
-      <xs:attribute name="text" type="xs:string"/>
+      <xs:attributeGroup ref="buttonAttributes"/>
     </xs:complexType>
   </xs:element>
 
   <xs:element name="hyperlink">
     <xs:complexType>
-      <xs:attributeGroup ref="componentAttributes"/>
-      <xs:attributeGroup ref="iconAttributes"/>
-      <xs:attribute name="action" type="xs:string"/>
-      <xs:attribute name="text" type="xs:string"/>
+      <xs:attributeGroup ref="buttonAttributes"/>
       <xs:attribute name="rolloverColor" type="xs:string"/>
       <xs:attribute name="disabledColor" type="xs:string"/>
     </xs:complexType>
@@ -514,29 +508,20 @@
 
   <xs:element name="toggleButton">
     <xs:complexType>
-      <xs:attributeGroup ref="componentAttributes"/>
-      <xs:attributeGroup ref="iconAttributes"/>
-      <xs:attribute name="action" type="xs:string"/>
-      <xs:attribute name="text" type="xs:string"/>
+      <xs:attributeGroup ref="buttonAttributes"/>
       <xs:attribute name="selected" type="xs:boolean"/>
     </xs:complexType>
   </xs:element>
 
   <xs:element name="checkBox">
     <xs:complexType>
-      <xs:attributeGroup ref="componentAttributes"/>
-      <xs:attributeGroup ref="iconAttributes"/>
-      <xs:attribute name="action" type="xs:string"/>
-      <xs:attribute name="text" type="xs:string"/>
+      <xs:attributeGroup ref="buttonAttributes"/>
     </xs:complexType>
   </xs:element>
 
   <xs:element name="comboBox">
     <xs:complexType>
-      <xs:attributeGroup ref="componentAttributes"/>
-      <xs:attributeGroup ref="iconAttributes"/>
-      <xs:attribute name="action" type="xs:string"/>
-      <xs:attribute name="text" type="xs:string"/>
+      <xs:attributeGroup ref="buttonAttributes"/>
     </xs:complexType>
   </xs:element>
 
@@ -671,13 +656,30 @@
       </xs:annotation>
     </xs:attribute>
 
+    <xs:attribute name="autoHideIfDisabled" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Calls setVisible(b) when setEnabled(b) is called.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+
     <xs:anyAttribute processContents="skip"/>
+
   </xs:attributeGroup>
 
   <xs:attributeGroup name="iconAttributes">
     <xs:attribute name="icon" type="xs:string"/>
     <xs:attribute name="rolloverIcon" type="xs:string"/>
     <xs:attribute name="pressedIcon" type="xs:string"/>
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="buttonAttributes">
+    <xs:attributeGroup ref="componentAttributes"/>
+    <xs:attributeGroup ref="iconAttributes"/>
+    <xs:attribute name="action" type="xs:string"/>
+    <xs:attribute name="text" type="xs:string"/>
   </xs:attributeGroup>
 
   <!-- ====================================  -->

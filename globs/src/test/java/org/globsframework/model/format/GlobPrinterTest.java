@@ -70,7 +70,7 @@ public class GlobPrinterTest extends TestCase {
       GlobPrinter.init(repository)
         .showOnly(DummyObject2.TYPE)
         .exclude(DummyObject2.ID)
-        .dumpToString();
+        .toString();
 
     assertEquals("===== dummyObject2 ======" + LINE_SEPARATOR +
                  "| label |" + LINE_SEPARATOR +
@@ -87,15 +87,20 @@ public class GlobPrinterTest extends TestCase {
                       value(DummyObject.ID, 2),
                       value(DummyObject.NAME, "obj2"));
 
-    checkOutput("===== dummyObject ======" + LINE_SEPARATOR +
-                "| id | name | value | present | date | timestamp | password | link |" + LINE_SEPARATOR +
-                "| 1  | obj1 |       |         |      |           |          | obj2 |" + LINE_SEPARATOR +
-                "| 2  | obj2 |       |         |      |           |          |      |" + LINE_SEPARATOR +
-                "" + LINE_SEPARATOR, DummyObject.TYPE);
+    checkRepositoryOutput("===== dummyObject ======" + LINE_SEPARATOR +
+                          "| id | name | value | present | date | timestamp | password | link |" + LINE_SEPARATOR +
+                          "| 1  | obj1 |       |         |      |           |          | obj2 |" + LINE_SEPARATOR +
+                          "| 2  | obj2 |       |         |      |           |          |      |" + LINE_SEPARATOR +
+                          "" + LINE_SEPARATOR, DummyObject.TYPE);
   }
 
   private void checkOutput(String expected, GlobType... types) {
-    assertEquals(expected, GlobPrinter.init(repository).showOnly(types).dumpToString());
+    checkRepositoryOutput(expected, types);
+    assertEquals(expected, GlobPrinter.init(repository.getAll()).showOnly(types).toString());
+  }
+
+  private void checkRepositoryOutput(String expected, GlobType... types) {
+    assertEquals(expected, GlobPrinter.init(repository).showOnly(types).toString());
   }
 
   private void createObj(int id, String name, String date, String timestamp) {

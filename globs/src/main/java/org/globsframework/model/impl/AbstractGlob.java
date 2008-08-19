@@ -129,11 +129,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
   }
 
   public String toString() {
-    StringBuilder builder = new StringBuilder();
-    for (Field field : type.getFields()) {
-      builder.append(field.getName()).append("=").append(getValue(field)).append(('\n'));
-    }
-    return builder.toString();
+    return getKey().toString();
   }
 
   public final boolean matches(FieldValues values) {

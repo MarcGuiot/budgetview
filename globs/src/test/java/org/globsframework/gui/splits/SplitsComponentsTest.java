@@ -1,20 +1,20 @@
 package org.globsframework.gui.splits;
 
+import org.globsframework.gui.splits.components.ShadowedLabelUI;
+import org.globsframework.gui.splits.font.Fonts;
+import org.globsframework.gui.splits.font.FontsTest;
+import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.splits.utils.DummyIconLocator;
-import org.globsframework.gui.splits.components.ShadowedLabelUI;
-import org.globsframework.gui.splits.layout.SwingStretches;
-import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.splits.font.FontsTest;
-import org.globsframework.gui.splits.font.Fonts;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
 public class SplitsComponentsTest extends SplitsTestCase {
@@ -217,7 +217,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
         "</panel>");
     }
     catch (Exception e) {
-     checkException(e, "panel components cannot have more than one subcomponent");
+      checkException(e, "panel components cannot have more than one subcomponent");
     }
   }
 
@@ -243,7 +243,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-     checkException(e, "scrollPane must have exactly one subcomponent");
+      checkException(e, "scrollPane must have exactly one subcomponent");
     }
   }
 
@@ -254,7 +254,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-     checkException(e, "scrollPane must have exactly one subcomponent");
+      checkException(e, "scrollPane must have exactly one subcomponent");
     }
   }
 
@@ -543,6 +543,28 @@ public class SplitsComponentsTest extends SplitsTestCase {
     catch (ItemNotFound e) {
       assertTrue(e.getMessage().contains("unknown value 'unknown'"));
     }
+  }
 
+  public void testAutoHideIfDisabled() throws Exception {
+    JButton button = parse("<button autoHideIfDisabled='true'/>");
+    assertTrue(button.isVisible());
+
+    button.setVisible(true);
+    assertTrue(button.isEnabled());
+    assertTrue(button.isVisible());
+
+    button.setEnabled(false);
+    assertFalse(button.isVisible());
+
+    button.setEnabled(true);
+    assertTrue(button.isVisible());
+
+    button.setEnabled(false);
+    assertFalse(button.isVisible());
+  }
+
+  public void testAutoHideIfDisabledInitializedWithDisabledComponent() throws Exception {
+    JButton button = parse("<button enabled='false' autoHideIfDisabled='true'/>");
+    assertFalse(button.isVisible());
   }
 }
