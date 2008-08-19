@@ -14,8 +14,6 @@
 
 * CategorizationDialog : bug selection apres affectation (selectionner les suivants)
 
-* CategorizationDialog : joliesse + guidage utilisateur
-
 * Categorisation : selectionner serie apres creation
 
 * MonthStatView : gauge
