@@ -386,7 +386,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
   }
 
   public void testCanUseConstantsForIntegers() throws Exception {
-    JLabel label = parse("<label horizontalAlignment='JLabel.RIGHT'/>");
+    JLabel label = parse("<label horizontalAlignment='right'/>");
     assertEquals(JLabel.RIGHT, label.getHorizontalAlignment());
   }
 

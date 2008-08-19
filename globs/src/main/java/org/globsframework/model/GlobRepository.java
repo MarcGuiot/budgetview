@@ -57,6 +57,8 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
 
   void completeBulkDispatchingMode();
 
+  void completeBulkDispatchingModeWithoutTriggers();
+
   /**
    * @deprecated Unused - at least remove the "count" parameter (caching should be done at the
    *             GlobIdGenerator level

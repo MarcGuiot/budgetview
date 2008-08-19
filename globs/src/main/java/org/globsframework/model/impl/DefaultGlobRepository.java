@@ -183,7 +183,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     }
 
     changeSetToDispatch.processCreation(key, glob);
-    notifyListeners();
+    notifyListeners(true);
     return glob;
   }
 
@@ -244,7 +244,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   public void update(Key key, Field field, Object newValue) throws ItemNotFound {
     MutableGlob mutableGlob = getGlobForUpdate(key);
     if (doUpdate(mutableGlob, key, field, newValue)) {
-      notifyListeners();
+      notifyListeners(true);
     }
   }
 
@@ -285,7 +285,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     return true;
   }
 
-
   public GlobList findByIndex(Index index, Object value) {
     return indexManager.getAssociatedTable(index).findByIndex(value);
   }
@@ -319,7 +318,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         changeSetToDispatch.processUpdate(sourceKey, sourceField, value, previousValue);
       }
     });
-    notifyListeners();
+    notifyListeners(true);
   }
 
   public void delete(Key key) throws ItemNotFound, OperationDenied {
@@ -332,7 +331,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     disable(glob);
     globs.remove(key.getGlobType(), key);
     changeSetToDispatch.processDeletion(key, glob);
-    notifyListeners();
+    notifyListeners(true);
   }
 
   public void delete(GlobList list) throws OperationDenied {
@@ -447,12 +446,23 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   }
 
   public void completeBulkDispatchingMode() {
+    completeBulkDispatchingMode(true);
+  }
+
+  public void completeBulkDispatchingModeWithoutTriggers() {
+    if (bulkDispatchingModeLevel > 1) {
+      throw new InvalidState("This method must be called for the outermost enterBulkDispatchingMode call");
+    }
+    completeBulkDispatchingMode(false);
+  }
+
+  private void completeBulkDispatchingMode(boolean applyTriggers) {
     if (bulkDispatchingModeLevel < 0) {
       return;
     }
     bulkDispatchingModeLevel--;
     if (bulkDispatchingModeLevel == 0) {
-      notifyListeners();
+      notifyListeners(applyTriggers);
     }
   }
 
@@ -520,25 +530,28 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     changeListeners.remove(listener);
   }
 
-  private void notifyListeners() {
+  private void notifyListeners(boolean applyTriggers) {
     if (bulkDispatchingModeLevel > 0) {
       return;
     }
     if (this.changeSetToDispatch.isEmpty()) {
       return;
     }
-    bulkDispatchingModeLevel++;
     MutableChangeSet currentChangeSetToDispatch = this.changeSetToDispatch;
     try {
-      for (ChangeSetListener trigger : triggers) {
-        this.changeSetToDispatch = new DefaultChangeSet();
-        trigger.globsChanged(currentChangeSetToDispatch, this);
-        currentChangeSetToDispatch.merge(changeSetToDispatch);
+      bulkDispatchingModeLevel++;
+      if (applyTriggers) {
+        for (ChangeSetListener trigger : triggers) {
+          this.changeSetToDispatch = new DefaultChangeSet();
+          trigger.globsChanged(currentChangeSetToDispatch, this);
+          currentChangeSetToDispatch.merge(changeSetToDispatch);
+        }
       }
     }
     finally {
       bulkDispatchingModeLevel--;
     }
+
     this.changeSetToDispatch = new DefaultChangeSet();
     for (ChangeSetListener listener : changeListeners) {
       listener.globsChanged(currentChangeSetToDispatch, this);
