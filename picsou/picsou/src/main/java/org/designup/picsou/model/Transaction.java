@@ -59,6 +59,8 @@ public class Transaction {
   public static LinkField SPLIT_SOURCE;
 
   @Target(Series.class)
+  @Required()
+  @DefaultInteger(1)
   public static LinkField SERIES;
 
   @DefaultBoolean(false)

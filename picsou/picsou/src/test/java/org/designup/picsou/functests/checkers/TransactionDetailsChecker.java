@@ -90,8 +90,14 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkNoCategory() {
+    TextBox label = getPanel().getTextBox("categoryName");
+    assertThat(label.textEquals("Unassigned"));
+  }
+
+  public void checkCategoryNotVisible() {
     assertFalse(getPanel().getTextBox("categoryName").isVisible());
   }
+
 
   public void checkSplitNotVisible() {
     assertFalse(getPanel().getButton("splitLink").isVisible());

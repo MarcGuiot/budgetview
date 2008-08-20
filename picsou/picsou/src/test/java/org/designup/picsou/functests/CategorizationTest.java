@@ -225,7 +225,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     transactions.getTable().selectRow(1);
     transactionDetails.checkSeries("Groceries");
 
-    CategorizationDialogChecker reopenedDialog = transactions.categorize(0, 1);
+    CategorizationDialogChecker reopenedDialog = transactions.categorize(1, 2);
     reopenedDialog.checkSelectedTableRows(0, 1);
     reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
   }

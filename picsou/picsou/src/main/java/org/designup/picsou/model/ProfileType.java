@@ -14,7 +14,7 @@ import org.globsframework.utils.exceptions.InvalidData;
 
 public enum ProfileType implements GlobConstantContainer {
   MONTHLY(0),
-  CUSTOM(1),
+  UNKNOWN(1),
   CREDIT(2);
 
   public static GlobType TYPE;
@@ -46,7 +46,7 @@ public enum ProfileType implements GlobConstantContainer {
       case 0:
         return MONTHLY;
       case 1:
-        return CUSTOM;
+        return UNKNOWN;
       case 2:
         return CREDIT;
     }

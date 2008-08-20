@@ -36,7 +36,7 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
         }
         Glob transaction = transactions.get(0);
         Glob transactionSeries = repository.findLinkTarget(transaction, Transaction.SERIES);
-        if (transactionSeries != null) {
+        if (!Series.UNKNOWN_SERIES_ID.equals(transactionSeries.get(Series.ID))) {
           toggle.setSelected(transactionSeries.getKey().equals(seriesKey));
         }
         else {

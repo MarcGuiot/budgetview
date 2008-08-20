@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.Category;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -38,12 +38,12 @@ public class CategoryUpdater implements GlobSelectionListener {
     GlobList selectedTransactions = selection.getAll(Transaction.TYPE);
 
     Set<Integer> seriesIds = selectedTransactions.getValueSet(Transaction.SERIES);
-    Integer seriesId = seriesIds.size() == 1 ? seriesIds.iterator().next() : null;
+    Integer seriesId = seriesIds.size() == 1 ? seriesIds.iterator().next() : Series.UNKNOWN_SERIES_ID;
 
     Set<Integer> categoryIds = selectedTransactions.getValueSet(Transaction.CATEGORY);
     Integer categoryId = categoryIds.size() == 1 ? categoryIds.iterator().next() : null;
 
-    if ((seriesId == null) || (categoryId == null)) {
+    if ((Series.UNKNOWN_SERIES_ID.equals(seriesId)) || (categoryId == null)) {
       invisibleButton.setSelected(true);
       return;
     }

@@ -58,7 +58,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
 
     budgetView.occasional.checkTitle("Occasional expenses");
-    budgetView.occasional.checkTotalAmounts(0, -3540 - 95 - 84);
+    budgetView.occasional.checkTotalAmounts(0, -3540 + 95 + 84);
 
 //    transactions.initContent()
 //      .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00)

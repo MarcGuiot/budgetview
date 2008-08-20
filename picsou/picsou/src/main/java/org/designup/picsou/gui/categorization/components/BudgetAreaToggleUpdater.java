@@ -12,6 +12,7 @@ import org.globsframework.model.utils.GlobUtils;
 
 import javax.swing.*;
 import java.util.Set;
+import java.util.SortedSet;
 
 public class BudgetAreaToggleUpdater implements GlobSelectionListener, ChangeSetListener {
   private final JToggleButton toggle;
@@ -47,8 +48,8 @@ public class BudgetAreaToggleUpdater implements GlobSelectionListener, ChangeSet
     toggle.setEnabled(true);
 
     GlobList series = GlobUtils.getTargets(selectedTransactions, Transaction.SERIES, repository);
-    Set<Integer> areas = series.getValueSet(Series.BUDGET_AREA);
-    if (areas.size() != 1) {
+    SortedSet<Integer> areas = series.getSortedSet(Series.BUDGET_AREA);
+    if (areas.size() != 1 || BudgetArea.UNCLASSIFIED.getId().equals(areas.first())) {
       invisibleToggle.doClick(0);
       return;
     }

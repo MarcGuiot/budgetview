@@ -54,10 +54,11 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
           }
           else if (values.contains(SeriesBudget.AMOUNT)) {
             Double diff = values.getPrevious(SeriesBudget.AMOUNT) - values.get(SeriesBudget.AMOUNT);
-            TransactionPlannedTrigger.transfertAmount(series.get(Series.ID),
-                                                      seriesBudget.get(SeriesBudget.MONTH),
-                                                      BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome(),
-                                                      diff, repository, timeService.getLastAvailableTransactionMonthId());
+            TransactionPlannedTrigger.transfertAmount(
+              repository.get(Key.create(Series.TYPE, series.get(Series.ID))), diff, seriesBudget.get(SeriesBudget.MONTH),
+              BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome(),
+              timeService.getLastAvailableTransactionMonthId(), repository
+            );
           }
         }
 
@@ -82,7 +83,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
            (Math.abs(values.get(SeriesBudget.AMOUNT)) != 0.0) &&
            (values.get(SeriesBudget.DAY) != null) &&
            values.get(SeriesBudget.MONTH) >= timeService.getLastAvailableTransactionMonthId() &&
-           !BudgetArea.OCCASIONAL_EXPENSES.getId().equals(series.get(Series.BUDGET_AREA));
+           !ProfileType.UNKNOWN.getId().equals(series.get(Series.PROFILE_TYPE));
   }
 
   private GlobList getPlannedTransactions(Key key, GlobRepository repository) {

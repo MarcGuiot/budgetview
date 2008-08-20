@@ -95,22 +95,18 @@ public class SeriesStatTrigger implements ChangeSetListener {
           currentAmount = transaction.get(Transaction.AMOUNT);
         }
 
-        if (previousSeriesId != null) {
-          Glob stat = repository.find(createKey(previousSeriesId, previousMonthId));
-          if (stat != null) {
-            updateStat(stat, -1 * previousAmount, repository);
-          }
+        Glob previousStat = repository.find(createKey(previousSeriesId, previousMonthId));
+        if (previousStat != null) {
+          updateStat(previousStat, -1 * previousAmount, repository);
         }
 
-        if (currentSeriesId != null) {
-          Glob stat = repository.find(createKey(currentSeriesId, currentMonthId));
-          if (stat == null) {
-            String name = repository.get(Key.create(Series.TYPE, currentSeriesId)).get(Series.NAME);
-            throw new RuntimeException("SeriesStatTrigger.visitUpdate seires : " + name + " : " + currentSeriesId +
-                                       " month = " + currentMonthId);
-          }
-          updateStat(stat, currentAmount, repository);
+        Glob currentStat = repository.find(createKey(currentSeriesId, currentMonthId));
+        if (currentStat == null) {
+          String name = repository.get(Key.create(Series.TYPE, currentSeriesId)).get(Series.NAME);
+          throw new RuntimeException("SeriesStatTrigger.visitUpdate seires : " + name + " : " + currentSeriesId +
+                                     " month = " + currentMonthId);
         }
+        updateStat(currentStat, currentAmount, repository);
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {

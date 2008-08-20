@@ -34,7 +34,7 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
       "        _category='2' _day='25' _label='course' _month='200808' _planned='true'\n" +
       "        _series='101' _transactionType='11' id='0' type='transaction'/>\n" +
       "<create amount='-1000.0' bankMonth='200808' id='100' month='200808'\n" +
-      "        planned='false' series='101' type='transaction'/>");
+      "        planned='false' series='101' type='transaction' category='0'/>");
     repository.update(Key.create(SeriesBudget.TYPE, budgetId[1]), SeriesBudget.AMOUNT, -1200.);
     listener.assertLastChangesEqual(
       Transaction.TYPE,
@@ -97,7 +97,7 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
       Transaction.TYPE,
       "<update _amount='2000.0' amount='500.0' id='" + transaction[0] + "' type='transaction'/>\n" +
       "<create amount='1500.0' bankMonth='200808' id='100' month='200808'\n" +
-      "        planned='false' series='102' type='transaction'/>");
+      "        planned='false' series='102' type='transaction' category='0'/>");
     repository.update(budget, SeriesBudget.AMOUNT, 1800.);
     Integer[] occasionalBudgetIds = getBudgetId(Series.OCCASIONAL_SERIES_ID);
     Integer[] incomeBudget = getBudgetId(INCOME_SERIES_ID);

@@ -1,11 +1,11 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.model.BudgetArea;
+import junit.framework.Assert;
 import org.designup.picsou.gui.components.BalanceGraph;
+import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import junit.framework.Assert;
 
 public class MonthSummaryChecker extends DataChecker {
   private Window window;
@@ -51,6 +51,11 @@ public class MonthSummaryChecker extends DataChecker {
       return this;
     }
 
+    public Summary checkUnclassified(double amount) {
+      check(BudgetArea.UNCLASSIFIED.getName(), amount);
+      return this;
+    }
+
     private void check(String budgetAreaName, double amount) {
       UISpecAssert.assertThat(panel.getTextBox(budgetAreaName).getContainer("budgetAreaRow")
         .getTextBox("budgetAreaAmount").textEquals(MonthSummaryChecker.this.toString(amount)));
@@ -72,7 +77,7 @@ public class MonthSummaryChecker extends DataChecker {
         Assert.assertEquals(spent / received, balanceGraph.getSpentPercent(), 0.1);
       }
       else {
-        Assert.assertEquals(received/spent, balanceGraph.getReceivedPercent(), 0.1);
+        Assert.assertEquals(received / spent, balanceGraph.getReceivedPercent(), 0.1);
         Assert.assertEquals(1.0, balanceGraph.getSpentPercent());
       }
       return this;

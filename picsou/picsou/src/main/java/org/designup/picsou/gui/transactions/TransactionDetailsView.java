@@ -101,7 +101,8 @@ public class TransactionDetailsView extends View {
 
     builder.add("categorize", transactionView.getCategorizationAction());
 
-    builder.add("transactionSeriesName", addLabel(descriptionService.getListStringifier(Transaction.SERIES), true));
+    builder.add("transactionSeriesName",
+                addLabel(descriptionService.getListStringifier(Transaction.SERIES), true));
 
     TransactionSearch search = new TransactionSearch(transactionView, directory);
     builder.add("searchField", search.getTextField());
