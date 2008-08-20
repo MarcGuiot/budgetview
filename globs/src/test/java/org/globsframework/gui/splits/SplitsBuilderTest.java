@@ -129,8 +129,8 @@ public class SplitsBuilderTest extends SplitsTestCase {
     Component[] rowComponents = row.getComponents();
     assertEquals(3, rowComponents.length);
     assertSame(aList, rowComponents[0]);
-    assertEquals(new Insets(1, 3, 2, 4), getConstraints(rowComponents[1], aTable).insets);
-    assertEquals(new Insets(20, 10, 10, 10), getConstraints(rowComponents[2], aButton).insets);
+    assertEquals(new Insets(1, 3, 2, 4), getInsets(rowComponents[1], aTable));
+    assertEquals(new Insets(20, 10, 10, 10), getInsets(rowComponents[2], aButton));
   }
 
   public void testGrid() throws Exception {
@@ -318,9 +318,9 @@ public class SplitsBuilderTest extends SplitsTestCase {
 
     Component[] rowComponents = panel.getComponents();
     assertEquals(3, rowComponents.length);
-    assertEquals(new Insets(10, 10, 10, 10), getConstraints(rowComponents[0], aButton).insets);
-    assertEquals(new Insets(5, 10, 20, 10), getConstraints(rowComponents[1], aList).insets);
-    assertEquals(new Insets(10, 2, 10, 3), getConstraints(rowComponents[2], aTable).insets);
+    assertEquals(new Insets(10, 10, 10, 10), getInsets(rowComponents[0], aButton));
+    assertEquals(new Insets(5, 10, 20, 10), getInsets(rowComponents[1], aList));
+    assertEquals(new Insets(10, 2, 10, 3), getInsets(rowComponents[2], aTable));
   }
 
   public void testCreatingAComponentWithAName() throws Exception {
