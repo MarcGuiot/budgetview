@@ -56,9 +56,10 @@ public class BudgetAreaSeriesView extends View {
                           addAmountLabel("observedSeriesAmount", SeriesStat.AMOUNT, series, cellBuilder);
                           addAmountLabel("plannedSeriesAmount", SeriesStat.PLANNED_AMOUNT, series, cellBuilder);
 
-                          final GlobGaugeView gaugeView = new GlobGaugeView(SeriesStat.TYPE, SeriesStat.AMOUNT, SeriesStat.PLANNED_AMOUNT,
-                                                                            GlobMatchers.keyEquals(series.getKey()),
-                                                                            repository, directory);
+                          final GlobGaugeView gaugeView =
+                            new GlobGaugeView(SeriesStat.TYPE, SeriesStat.AMOUNT, SeriesStat.PLANNED_AMOUNT,
+                                              GlobMatchers.fieldEquals(SeriesStat.SERIES, series.get(Series.ID)),
+                                              repository, directory);
                           cellBuilder.add("gauge", gaugeView.getComponent());
 
                           cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
