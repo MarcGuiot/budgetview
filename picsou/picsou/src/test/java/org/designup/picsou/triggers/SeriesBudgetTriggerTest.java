@@ -33,9 +33,10 @@ public class SeriesBudgetTriggerTest extends PicsouTriggerTestCase {
   public void testCreateRecurringBudgetChangeOccasionalBudget() throws Exception {
     createSeries(10, BudgetArea.INCOME, 100.);
     createSeries(20, BudgetArea.RECURRING_EXPENSES, -100.);
+    Integer[] occasional = getBudgetId(Series.OCCASIONAL_SERIES_ID);
     Integer[] id20 = getBudgetId(20);
     listener.assertLastChangesEqual(SeriesBudget.TYPE,
-                                    "<update _amount='-100.0' amount='0.0' id='0' type='seriesBudget'/>" +
+                                    "<update _amount='-100.0' amount='0.0' id='" + occasional[0] + "' type='seriesBudget'/>" +
                                     "<create active='true' amount='-100.0' day='30' id='" + id20[0] + "'" +
                                     "        month='200809' series='20' type='seriesBudget' overBurnAmount='0.0'/>");
   }
