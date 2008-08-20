@@ -41,7 +41,11 @@ public class MapOfMaps<KEY1, KEY2, VALUE> {
   public VALUE remove(KEY1 key1, KEY2 key2) {
     Map<KEY2, VALUE> map = maps.get(key1);
     if (map != null) {
-      return map.remove(key2);
+      VALUE value = map.remove(key2);
+      if (map.isEmpty()) {
+        maps.remove(key1);
+      }
+      return value;
     }
     return null;
   }

@@ -83,10 +83,8 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public void visit(GlobType type, ChangeSetVisitor visitor) throws Exception {
-    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.values()) {
-      if (deltaGlob.getType().equals(type)) {
-        deltaGlob.visit(visitor);
-      }
+    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(type).values()) {
+      deltaGlob.visit(visitor);
     }
   }
 
@@ -119,18 +117,15 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public boolean containsChanges(GlobType type) {
-    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.values()) {
-      if (deltaGlob.getType().equals(type)) {
-        return true;
-      }
-    }
-    return false;
+    return !deltaGlobsByKey.get(type).isEmpty();
   }
 
   public GlobType[] getChangedTypes() {
     Set<GlobType> result = new HashSet<GlobType>();
-    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.values()) {
-      result.add(deltaGlob.getType());
+    for (GlobType globType : deltaGlobsByKey.keys()) {
+      if (!deltaGlobsByKey.get(globType).isEmpty()) {
+        result.add(globType);
+      }
     }
     return result.toArray(new GlobType[result.size()]);
   }
@@ -140,20 +135,14 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public int getChangeCount(GlobType type) {
-    int count = 0;
-    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.values()) {
-      if (deltaGlob.getType().equals(type)) {
-        count++;
-      }
-    }
-    return count;
+    return deltaGlobsByKey.get(type).size();
   }
 
   public Set<Key> getCreated(GlobType type) {
     Set<Key> result = new HashSet<Key>();
     for (Map.Entry entry : deltaGlobsByKey.get(type).entrySet()) {
       DefaultDeltaGlob delta = (DefaultDeltaGlob)entry.getValue();
-      if (delta.getType().equals(type) && delta.isCreated()) {
+      if (delta.isCreated()) {
         result.add((Key)entry.getKey());
       }
     }
@@ -162,10 +151,9 @@ public class DefaultChangeSet implements MutableChangeSet {
 
   public Set<Key> getUpdated(GlobType type) {
     Set<Key> result = new HashSet<Key>();
-    for (Map.Entry entry : deltaGlobsByKey.get(type).entrySet()) {
-      DefaultDeltaGlob delta = (DefaultDeltaGlob)entry.getValue();
-      if (delta.getType().equals(type) && delta.isUpdated()) {
-        result.add((Key)entry.getKey());
+    for (DefaultDeltaGlob delta : deltaGlobsByKey.get(type).values()) {
+      if (delta.isUpdated()) {
+        result.add(delta.getKey());
       }
     }
     return result;
@@ -173,19 +161,17 @@ public class DefaultChangeSet implements MutableChangeSet {
 
   public Set<Key> getDeleted(GlobType type) {
     Set<Key> result = new HashSet<Key>();
-    for (Map.Entry entry : deltaGlobsByKey.get(type).entrySet()) {
-      DefaultDeltaGlob delta = (DefaultDeltaGlob)entry.getValue();
-      if (delta.getType().equals(type) && delta.isDeleted()) {
-        result.add((Key)entry.getKey());
+    for (DefaultDeltaGlob delta : deltaGlobsByKey.get(type).values()) {
+      if (delta.isDeleted()) {
+        result.add(delta.getKey());
       }
     }
     return result;
   }
 
   public boolean containsCreationsOrDeletions(GlobType type) {
-    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.values()) {
-      if (deltaGlob.getType().equals(type) &&
-          (deltaGlob.isCreated() || deltaGlob.isDeleted())) {
+    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(type).values()) {
+      if (deltaGlob.isCreated() || deltaGlob.isDeleted()) {
         return true;
       }
     }
@@ -193,8 +179,8 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public boolean containsUpdates(Field field) {
-    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.values()) {
-      if (deltaGlob.getType().equals(field.getGlobType()) && deltaGlob.isUpdated(field)) {
+    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(field.getGlobType()).values()) {
+      if (deltaGlob.isUpdated(field)) {
         return true;
       }
     }

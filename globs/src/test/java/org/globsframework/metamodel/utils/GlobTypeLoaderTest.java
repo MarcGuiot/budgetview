@@ -441,6 +441,7 @@ public class GlobTypeLoaderTest extends TestCase {
     assertEquals(5l, DummyObjectWithDefaultValues.LONG.getDefaultValue());
     assertEquals(true, DummyObjectWithDefaultValues.BOOLEAN.getDefaultValue());
     assertEquals("Hello", DummyObjectWithDefaultValues.STRING.getDefaultValue());
+    assertEquals(1, DummyObjectWithDefaultValues.LINK.getDefaultValue());
     TestUtils.assertDateEquals(new Date(), (Date)DummyObjectWithDefaultValues.DATE.getDefaultValue(), 360000);
     TestUtils.assertDateEquals(new Date(), (Date)DummyObjectWithDefaultValues.TIMESTAMP.getDefaultValue(), 360000);
   }

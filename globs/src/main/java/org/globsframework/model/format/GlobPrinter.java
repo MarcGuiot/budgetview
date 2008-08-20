@@ -8,6 +8,7 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.fields.TimeStampField;
 import org.globsframework.metamodel.utils.GlobTypeComparator;
 import org.globsframework.metamodel.utils.GlobTypeUtils;
+import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -24,11 +25,13 @@ import java.util.*;
 
 public class GlobPrinter {
 
-  public static String toString(Glob glob) {
-    StringBuilder builder = new StringBuilder();
-    for (Field field : glob.getType().getFields()) {
-      builder.append(field.getName()).append("=").append(glob.getValue(field)).append(('\n'));
-    }
+  public static String toString(final FieldValues glob) {
+    final StringBuilder builder = new StringBuilder();
+    glob.safeApply(new FieldValues.Functor() {
+      public void process(Field field, Object value) throws Exception {
+        builder.append(field.getName()).append("=").append(glob.getValue(field)).append(('\n'));
+      }
+    });
     return builder.toString();
   }
 
