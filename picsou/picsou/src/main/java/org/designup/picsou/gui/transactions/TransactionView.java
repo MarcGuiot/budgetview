@@ -154,4 +154,9 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
       .addColumn(Lang.get("amount"), amountColumn, amountStringifier.getComparator(repository))
       .addColumn(NOTE, new TransactionNoteEditor(repository, directory));
   }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(this);
+  }
 }

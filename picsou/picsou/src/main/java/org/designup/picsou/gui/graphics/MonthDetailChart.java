@@ -272,4 +272,9 @@ public class MonthDetailChart extends View implements GlobSelectionListener, Cha
       }
     }
   }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(this);
+  }
 }

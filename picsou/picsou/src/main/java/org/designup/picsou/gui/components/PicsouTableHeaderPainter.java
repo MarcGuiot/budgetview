@@ -24,9 +24,11 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
 
   private boolean filtered = false;
   private GlobTableView tableView;
+  private ColorService colorService;
 
   public PicsouTableHeaderPainter(GlobTableView tableView, Directory directory) {
-    directory.get(ColorService.class).addListener(this);
+    colorService = directory.get(ColorService.class);
+    colorService.addListener(this);
     this.tableView = tableView;
   }
 
@@ -84,5 +86,10 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
 
   private Color getDarkColor() {
     return filtered ? filteredDarkColor : darkColor;
+  }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(this);
   }
 }

@@ -39,6 +39,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
   private Color toCategorizeColor;
   private Font normalFont;
   private Font toCategorizeFont;
+  private ColorService colorService;
 
   public TransactionSeriesColumn(GlobTableView view,
                                  TransactionRendererColors transactionRendererColors,
@@ -66,7 +67,8 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
     editorPanel.add(editorButton);
     editorPanel.add(Box.createHorizontalGlue());
 
-    directory.get(ColorService.class).addListener(this);
+    colorService = directory.get(ColorService.class);
+    colorService.addListener(this);
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
@@ -162,5 +164,10 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
         tableView.select(transaction);
       }
     }
+  }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(this);
   }
 }

@@ -20,9 +20,10 @@ public class TransactionRendererColors implements ColorChangeListener {
   private Color transactionSelectedTextColor;
   private Color transactionPlannedTextColor;
   private Color categoryColor;
+  private ColorService colorService;
 
   public TransactionRendererColors(Directory directory) {
-    ColorService colorService = directory.get(ColorService.class);
+    colorService = directory.get(ColorService.class);
     colorService.addListener(this);
   }
 
@@ -93,4 +94,8 @@ public class TransactionRendererColors implements ColorChangeListener {
     }
   }
 
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(this);
+  }
 }

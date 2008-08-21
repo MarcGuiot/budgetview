@@ -272,4 +272,9 @@ public class HistoricalChart extends AbstractLineChart implements ColorChangeLis
         .toString();
     }
   }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(this);
+  }
 }

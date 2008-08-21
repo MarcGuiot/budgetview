@@ -503,6 +503,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
     dialog.checkNoTransactionSelected();
   }
+
 //  public void testSplitTransactionAndDispatchSplitedTransaction() throws Exception {
 //    fail();
 //  }

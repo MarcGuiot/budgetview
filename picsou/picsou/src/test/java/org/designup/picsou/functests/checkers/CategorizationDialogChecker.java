@@ -44,13 +44,17 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void checkBudgetAreasAreEnabled() {
     for (BudgetArea area : BudgetArea.values()) {
-      assertTrue(dialog.getToggleButton(area.getName()).isEnabled());
+      if (area != BudgetArea.UNCLASSIFIED) {
+        assertTrue(dialog.getToggleButton(area.getName()).isEnabled());
+      }
     }
   }
 
   public void checkBudgetAreasAreDisabled() {
     for (BudgetArea area : BudgetArea.values()) {
-      assertFalse(dialog.getToggleButton(area.getName()).isEnabled());
+      if (area != BudgetArea.UNCLASSIFIED) {
+        assertFalse(dialog.getToggleButton(area.getName()).isEnabled());
+      }
     }
   }
 
@@ -60,8 +64,10 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void checkNoBudgetAreaSelected() {
     for (BudgetArea area : BudgetArea.values()) {
-      final String name = area.getGlob().get(BudgetArea.NAME);
-      assertFalse("Area '" + name + "' is selected", dialog.getToggleButton(name).isSelected());
+      if (area != BudgetArea.UNCLASSIFIED) {
+        final String name = area.getGlob().get(BudgetArea.NAME);
+        assertFalse("Area '" + name + "' is selected", dialog.getToggleButton(name).isSelected());
+      }
     }
     assertTrue(dialog.getTextBox("Select the series type").isVisible());
   }

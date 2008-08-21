@@ -17,10 +17,13 @@ public class TransactionSearch {
   private TransactionView transactionView;
   private JTextField textField;
   private Color backgroundColor;
+  private ColorService colorService;
+  private ColorChangeListener listener;
 
   public TransactionSearch(TransactionView transactionView, Directory directory) {
     this.transactionView = transactionView;
-    directory.get(ColorService.class).addListener(new ColorChangeListener() {
+    colorService = directory.get(ColorService.class);
+    listener = new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
         backgroundColor = colorLocator.get(PicsouColors.TRANSACTION_SEARCH_FIELD);
         if (textField != null) {
@@ -29,7 +32,8 @@ public class TransactionSearch {
           }
         }
       }
-    });
+    };
+    colorService.addListener(listener);
   }
 
   public JTextField getTextField() {
@@ -63,4 +67,8 @@ public class TransactionSearch {
     textField.setBackground(Strings.isNullOrEmpty(text) ? Color.WHITE : backgroundColor);
   }
 
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(listener);
+  }
 }

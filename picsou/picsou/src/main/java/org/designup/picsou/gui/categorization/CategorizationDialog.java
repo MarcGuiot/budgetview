@@ -83,7 +83,9 @@ public class CategorizationDialog {
       }
     });
     builder.add("invisibleBudgetAreaToggle", invisibleBudgetAreaToggle);
-    builder.addRepeat("budgetAreas", BudgetArea.TYPE.getConstants(),
+    GlobList constants = BudgetArea.TYPE.getConstants();
+    constants.removeAll(GlobMatchers.fieldEquals(BudgetArea.ID, BudgetArea.UNCLASSIFIED.getId()), repository);
+    builder.addRepeat("budgetAreas", constants,
                       new BudgetAreaComponentFactory(cardHandler, invisibleBudgetAreaToggle,
                                                      localRepository, localDirectory, dialog));
 

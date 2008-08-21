@@ -54,7 +54,7 @@ public class BudgetAreaToggleUpdater implements GlobSelectionListener, ChangeSet
       return;
     }
 
-    final Integer selectedAreaId = areas.iterator().next();
+    final Integer selectedAreaId = areas.first();
     if (budgetArea.getId().equals(selectedAreaId)) {
       toggle.doClick(0);
     }
