@@ -98,7 +98,7 @@ public class DefaultGlobType extends AnnotatedPropertyHolder<GlobType> implement
   }
 
   public GlobList getConstants() {
-    return constants;
+    return new GlobList(constants);
   }
 
   public String toString() {

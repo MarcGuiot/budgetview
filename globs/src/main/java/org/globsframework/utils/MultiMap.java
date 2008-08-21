@@ -63,10 +63,12 @@ public class MultiMap<K, V> {
     return map.remove(k);
   }
 
-  public void removeValue(V value) {
+  public boolean removeValue(V value) {
+    boolean removed = false;
     for (List<V> list : map.values()) {
-      list.remove(value);
+      removed |= list.remove(value);
     }
+    return removed;
   }
 
   public boolean removeValue(K key, V value) {
@@ -105,7 +107,7 @@ public class MultiMap<K, V> {
   }
 
   public MultiMap<K, V> duplicate() {
-    MultiMap<K, V> result = new MultiMap<K,V>();
+    MultiMap<K, V> result = new MultiMap<K, V>();
     for (Map.Entry<K, List<V>> entry : map.entrySet()) {
       final K key = entry.getKey();
       final ArrayList<V> list = new ArrayList<V>(entry.getValue());

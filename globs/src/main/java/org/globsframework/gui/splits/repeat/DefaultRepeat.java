@@ -42,6 +42,7 @@ public class DefaultRepeat<T> implements Repeat<T>, RepeatHandler<T> {
     if (repeatPanel != null) {
       repeatPanel.dispose();
     }
+    repeatPanel = null;
   }
 
   public List<T> getInitialItems() {
