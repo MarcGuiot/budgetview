@@ -24,6 +24,7 @@ public class SqlQueryBuilder implements SelectBuilder {
   private Constraint constraint;
   private SqlService sqlService;
   private BlobUpdater blobUpdater;
+  private boolean autoClose = true;
   private Map<Field, SqlAccessor> fieldToAccessorHolder = new HashMap<Field, SqlAccessor>();
 
   public SqlQueryBuilder(Connection connection, GlobType globType, Constraint constraint, SqlService sqlService, BlobUpdater blobUpdater) {
@@ -37,11 +38,16 @@ public class SqlQueryBuilder implements SelectBuilder {
   public SelectQuery getQuery() {
     try {
       completeWithKeys();
-      return new SqlSelectQuery(connection, constraint, fieldToAccessorHolder, sqlService, blobUpdater);
+      return new SqlSelectQuery(connection, constraint, fieldToAccessorHolder, sqlService, blobUpdater, autoClose);
     }
     finally {
       fieldToAccessorHolder.clear();
     }
+  }
+
+  public SelectQuery getNotAutoCloseQuery() {
+    autoClose = false;
+    return getQuery();
   }
 
   private void completeWithKeys() {

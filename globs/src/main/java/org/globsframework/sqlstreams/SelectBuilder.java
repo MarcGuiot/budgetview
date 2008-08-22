@@ -11,6 +11,8 @@ public interface SelectBuilder {
 
   SelectQuery getQuery();
 
+  SelectQuery getNotAutoCloseQuery();
+
   SelectBuilder select(Field field);
 
   SelectBuilder selectAll();

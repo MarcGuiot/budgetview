@@ -25,6 +25,7 @@ public class SqlSelectQuery implements SelectQuery {
   private Set<GlobType> globTypes = new HashSet<GlobType>();
   private Constraint constraint;
   private BlobUpdater blobUpdater;
+  private boolean autoClose;
   private Map<Field, SqlAccessor> fieldToAccessorHolder;
   private SqlService sqlService;
   private PreparedStatement preparedStatement;
@@ -32,9 +33,10 @@ public class SqlSelectQuery implements SelectQuery {
 
   public SqlSelectQuery(Connection connection, Constraint constraint,
                         Map<Field, SqlAccessor> fieldToAccessorHolder, SqlService sqlService,
-                        BlobUpdater blobUpdater) {
+                        BlobUpdater blobUpdater, boolean autoClose) {
     this.constraint = constraint;
     this.blobUpdater = blobUpdater;
+    this.autoClose = autoClose;
     this.fieldToAccessorHolder = new HashMap<Field, SqlAccessor>(fieldToAccessorHolder);
     this.sqlService = sqlService;
     sql = prepareSqlRequest();
@@ -81,11 +83,14 @@ public class SqlSelectQuery implements SelectQuery {
   }
 
   public GlobStream execute() {
+    if (preparedStatement == null) {
+      throw new UnexpectedApplicationState("Query closed " + sql);
+    }
     try {
       if (constraint != null) {
         constraint.visit(new ValueConstraintVisitor(preparedStatement, blobUpdater));
       }
-      return new SqlGlobStream(preparedStatement.executeQuery(), fieldToAccessorHolder);
+      return new SqlGlobStream(preparedStatement.executeQuery(), fieldToAccessorHolder, this);
     }
     catch (SQLException e) {
       throw new UnexpectedApplicationState("for request : " + sql, e);
@@ -111,5 +116,23 @@ public class SqlSelectQuery implements SelectQuery {
       throw new ItemNotFound("No result returned for: " + sql);
     }
     throw new TooManyItems("Too many results for: " + sql);
+  }
+
+  public void resultSetClose() {
+    if (autoClose) {
+      close();
+    }
+  }
+
+  public void close() {
+    if (preparedStatement != null) {
+      try {
+        preparedStatement.close();
+        preparedStatement = null;
+      }
+      catch (SQLException e) {
+        throw new UnexpectedApplicationState("PreparedStatement close fail", e);
+      }
+    }
   }
 }

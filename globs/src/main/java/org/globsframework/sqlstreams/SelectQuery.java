@@ -12,4 +12,6 @@ public interface SelectQuery {
   GlobList executeAsGlobs();
 
   Glob executeUnique() throws ItemNotFound, TooManyItems;
+
+  void close();
 }
