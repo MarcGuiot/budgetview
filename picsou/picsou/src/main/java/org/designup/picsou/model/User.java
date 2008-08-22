@@ -1,8 +1,10 @@
 package org.designup.picsou.model;
 
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.BlobField;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -23,6 +25,8 @@ public class User {
   public static StringField ACTIVATION_CODE;
   public static BlobField SIGNATURE;
   public static IntegerField ACTIVATION_STATE;
+  @DefaultBoolean(false)
+  public static BooleanField CONNECTED;
 
   public static final int ACTIVATION_IN_PROCESS = 1;
   public static final int ACTIVATION_OK = 2;
@@ -31,8 +35,9 @@ public class User {
   public static final int ACTIVATION_FAIL_HTTP_REQUEST = 5;
   public static final int ACTIVATION_FAIL_MAIL_UNKNOWN = 6;
   public static final int ACTIVATED_AS_ANONYMOUS_BUT_REGISTERED_USER = 7;
-  // On n'a pas envoyé au serveur les mail, signature et code d'activation alors que c'est un utilisateur
   // enregistré (donc le a priori le repo a ete modifié manuellement)
+  // On n'a pas envoyé au serveur les mail, signature et code d'activation alors que c'est un utilisateur
+  public static final int ACTIVATION_FAIL_MAIL_SEND = 8;
 
 
   static {

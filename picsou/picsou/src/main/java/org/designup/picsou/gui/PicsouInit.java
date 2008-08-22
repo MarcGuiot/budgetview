@@ -93,13 +93,17 @@ public class PicsouInit {
     serverAccess.applyChanges(changeSet, repository);
     if (newUser) {
       repository.enterBulkDispatchingMode();
-      repository.create(UserPreferences.key,
-                        FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT,
-                                         UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS));
+      try {
+        repository.create(UserPreferences.KEY,
+                          FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT,
+                                           UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS));
 
-      loadGlobs("/subcats.xml");
-      loadGlobs("/series.xml");
-      repository.completeBulkDispatchingMode();
+        loadGlobs("/subcats.xml");
+        loadGlobs("/series.xml");
+      }
+      finally {
+        repository.completeBulkDispatchingMode();
+      }
     }
 
     initDirectory(repository);
@@ -172,6 +176,7 @@ public class PicsouInit {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
           ConfigService.check(directory, repository);
+          repository.update(User.KEY, User.CONNECTED, true);
         }
       });
     }

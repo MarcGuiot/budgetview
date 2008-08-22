@@ -134,30 +134,24 @@ public class SeriesStatTrigger implements ChangeSetListener {
   }
 
   public void init(GlobRepository repository) {
-    repository.enterBulkDispatchingMode();
-    try {
-      repository.deleteAll(SeriesStat.TYPE);
+    repository.deleteAll(SeriesStat.TYPE);
 
-      for (Glob month : repository.getAll(Month.TYPE)) {
-        for (Glob series : repository.getAll(Series.TYPE)) {
-          repository.create(createKey(series.get(Series.ID), month.get(Month.ID)));
-        }
-      }
-
-      for (Glob transaction : repository.getAll(Transaction.TYPE)) {
-        processTransaction(transaction, 1, repository);
-      }
-
-      GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE);
-      for (Glob seriesBudget : seriesBudgets) {
-        Key seriesStat = Key.create(SeriesStat.SERIES, seriesBudget.get(SeriesBudget.SERIES),
-                                    SeriesStat.MONTH, seriesBudget.get(SeriesBudget.MONTH));
-        repository.findOrCreate(seriesStat);
-        repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.AMOUNT));
+    for (Glob month : repository.getAll(Month.TYPE)) {
+      for (Glob series : repository.getAll(Series.TYPE)) {
+        repository.create(createKey(series.get(Series.ID), month.get(Month.ID)));
       }
     }
-    finally {
-      repository.completeBulkDispatchingMode();
+
+    for (Glob transaction : repository.getAll(Transaction.TYPE)) {
+      processTransaction(transaction, 1, repository);
+    }
+
+    GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE);
+    for (Glob seriesBudget : seriesBudgets) {
+      Key seriesStat = Key.create(SeriesStat.SERIES, seriesBudget.get(SeriesBudget.SERIES),
+                                  SeriesStat.MONTH, seriesBudget.get(SeriesBudget.MONTH));
+      repository.findOrCreate(seriesStat);
+      repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.AMOUNT));
     }
   }
 

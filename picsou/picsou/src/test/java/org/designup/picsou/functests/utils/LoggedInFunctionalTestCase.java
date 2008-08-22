@@ -35,6 +35,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected ServerAccess serverAccess;
   protected UncategorizedMessagePanelChecker informationPanel;
   protected TitleChecker title;
+  protected LicenseChecker license;
   protected MonthSummaryChecker monthSummary;
   protected BudgetViewChecker budgetView;
   private PicsouApplication picsouApplication;
@@ -68,6 +69,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     loginChecker.skipImport();
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
+    license.enterLicense("admin", "zz", 0);
     views.selectData();
   }
 
@@ -88,6 +90,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     title = new TitleChecker(mainWindow);
     monthSummary = new MonthSummaryChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
+    license = new LicenseChecker(mainWindow);
   }
 
   protected void tearDown() throws Exception {
@@ -110,6 +113,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     budgetView = null;
     picsouApplication.shutdown();
     picsouApplication = null;
+    license = null;
   }
 
   public OperationChecker getOperations() {

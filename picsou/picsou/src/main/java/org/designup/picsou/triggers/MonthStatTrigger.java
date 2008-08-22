@@ -41,36 +41,23 @@ public class MonthStatTrigger implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    repository.enterBulkDispatchingMode();
-    try {
-      repository.deleteAll(MonthStat.TYPE);
-      run(Collections.<Integer>emptySet());
-    }
-    finally {
-      repository.completeBulkDispatchingMode();
-    }
+    repository.deleteAll(MonthStat.TYPE);
+    run(Collections.<Integer>emptySet());
   }
 
   public void run(Set<Integer> categoryToDelete) {
-    repository.enterBulkDispatchingMode();
-    try {
-
-      updateToZero(categoryToDelete);
-      SortedSet<Integer> months = repository.getAll(Month.TYPE).getSortedSet(Month.ID);
-      processTransactions(months);
-      if (months.isEmpty()) {
-        return;
-      }
-
-      int[] monthRange = Month.range(months.first(), months.last());
-
-      createMonths(monthRange);
-      addMissingStats(monthRange);
-      computeStatsForAll(monthRange);
+    updateToZero(categoryToDelete);
+    SortedSet<Integer> months = repository.getAll(Month.TYPE).getSortedSet(Month.ID);
+    processTransactions(months);
+    if (months.isEmpty()) {
+      return;
     }
-    finally {
-      repository.completeBulkDispatchingMode();
-    }
+
+    int[] monthRange = Month.range(months.first(), months.last());
+
+    createMonths(monthRange);
+    addMissingStats(monthRange);
+    computeStatsForAll(monthRange);
   }
 
   private void updateToZero(Set<Integer> categoryToDelete) {

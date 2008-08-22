@@ -5,7 +5,6 @@ import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.components.SeriesToggleUI;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
-import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.plaf.PicsouSplitPaneUI;
@@ -226,7 +225,6 @@ public class PicsouApplication {
   public static Directory createDirectory() throws IOException {
     Directory directory = new DefaultDirectory();
     directory.add(new TimeService());
-    directory.add(new LicenseService());
     directory.add(DescriptionService.class, new PicsouDescriptionService());
     directory.add(GlobModel.class, PicsouGuiModel.get());
     directory.add(SelectionService.class, new SelectionService());

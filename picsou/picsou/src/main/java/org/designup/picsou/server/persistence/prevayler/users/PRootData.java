@@ -25,7 +25,6 @@ public class PRootData implements CustomSerializable {
   private long count = 0;
   private Map<String, Glob> hidenUsers = new HashMap<String, Glob>();
   private Map<String, Glob> users = new HashMap<String, Glob>();
-  private Map<String, Integer> labelToCategory = new HashMap<String, Integer>();
   private static final String USERS_ROOT_DATA = "UsersRootData";
 
   public PRootData() {
@@ -99,14 +98,6 @@ public class PRootData implements CustomSerializable {
         User.write(output, entry.getValue());
       }
     }
-    {
-      output.write(labelToCategory.size());
-      Set<Map.Entry<String, Integer>> entries = labelToCategory.entrySet();
-      for (Map.Entry<String, Integer> entry : entries) {
-        output.writeString(entry.getKey());
-        output.write(entry.getValue());
-      }
-    }
   }
 
   private void readV1(SerializedInput input) {
@@ -126,13 +117,6 @@ public class PRootData implements CustomSerializable {
       int size = input.readNotNullInt();
       while (size != 0) {
         addUser(input.readString(), User.read(input));
-        size--;
-      }
-    }
-    {
-      int size = input.readNotNullInt();
-      while (size != 0) {
-        labelToCategory.put(input.readString(), input.readNotNullInt());
         size--;
       }
     }

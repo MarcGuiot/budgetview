@@ -3,6 +3,7 @@ package org.designup.picsou.model;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
+import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -18,7 +19,7 @@ import org.globsframework.utils.serialization.SerializedOutput;
 public class UserPreferences {
 
   public static final Integer SINGLETON_ID = 0;
-  public static org.globsframework.model.Key key;
+  public static org.globsframework.model.Key KEY;
 
   public static GlobType TYPE;
 
@@ -27,6 +28,7 @@ public class UserPreferences {
 
   public static StringField LAST_DIRECTORY;
 
+  @DefaultInteger(24)
   public static IntegerField FUTURE_MONTH_COUNT;
 
   @DefaultBoolean(false)
@@ -36,7 +38,7 @@ public class UserPreferences {
 
   static {
     GlobTypeLoader.init(UserPreferences.class, "userPreferences");
-    key = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
+    KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

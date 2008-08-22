@@ -26,6 +26,7 @@ public class LicenseTest extends LicenseTestCase {
   private PicsouApplication picsouApplication;
   private Window window;
   private static final String MAIL = "alfred@free.fr";
+  private static final String SECOND_PATH = "tmp/otherprevayler";
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -60,7 +61,6 @@ public class LicenseTest extends LicenseTestCase {
     SqlConnection connection = getSqlConnection();
     String mail = "alfred@free.fr";
     register(connection, mail);
-
     window.dispose();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
@@ -70,13 +70,6 @@ public class LicenseTest extends LicenseTestCase {
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
     MonthChecker monthChecker = new MonthChecker(window);
     monthChecker.assertSpanEquals("2008/07", "2010/07");
-  }
-
-
-  public void testNoServerAccessForRegistration() throws Exception {
-  }
-
-  public void testNoServerAccessAfterRegistration() throws Exception {
   }
 
   private void register(SqlConnection connection, String mail) throws InterruptedException {
@@ -91,7 +84,7 @@ public class LicenseTest extends LicenseTestCase {
       .run();
     connection.commit();
     LicenseChecker checker = new LicenseChecker(window);
-    checker.enterLicense(mail, "1234");
+    checker.enterLicense(mail, "1234", 24);
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 1L);
     assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
     assertTrue(license.get(License.SIGNATURE).length > 1);
@@ -117,7 +110,7 @@ public class LicenseTest extends LicenseTestCase {
     String repoId = startFirstPicsou();
     window.dispose();
     restartPicsouToIncrementCount();
-    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, "tmp/otherprevayler");
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     startPicsou();
     LoginChecker login = new LoginChecker(window);
@@ -125,7 +118,7 @@ public class LicenseTest extends LicenseTestCase {
     login.skipImport();
     checkRepoIdIsUpdated(getSqlConnection(), 1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
     LicenseChecker license = new LicenseChecker(window);
-    license.enterLicense(MAIL, "1234");
+    license.enterBadLicense(MAIL, "1234", 24);
     String mailcontent = checkReceive(MAIL);
     assertTrue(mailcontent, mailcontent.contains(": "));
     int startCode = mailcontent.indexOf(": ") + 2;
@@ -148,7 +141,7 @@ public class LicenseTest extends LicenseTestCase {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logUser("user", "passw@rd");
     LicenseChecker checker = new LicenseChecker(window);
-    checker.enterLicense("titi@foo.org", "4321");
+    checker.enterBadLicense("titi@foo.org", "4321", 24);
 
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
@@ -167,7 +160,7 @@ public class LicenseTest extends LicenseTestCase {
   }
 
   private void activateNewLicenseInNewVersion(String code) {
-    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, "tmp/otherprevayler");
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
     LoginChecker login = new LoginChecker(window);
@@ -175,7 +168,7 @@ public class LicenseTest extends LicenseTestCase {
     MonthChecker monthChecker = new MonthChecker(window);
     monthChecker.assertDisplays("2008/07");
     LicenseChecker license = new LicenseChecker(window);
-    license.enterLicense(MAIL, code);
+    license.enterLicense(MAIL, code, 24);
     monthChecker.assertSpanEquals("2008/07", "2010/07");
     window.dispose();
   }
@@ -209,7 +202,7 @@ public class LicenseTest extends LicenseTestCase {
       .run();
     connection.commit();
     LicenseChecker checker = new LicenseChecker(window);
-    checker.enterLicense(MAIL, "1234");
+    checker.enterLicense(MAIL, "1234", 24);
     Glob license = getLicense(connection, MAIL, License.ACCESS_COUNT, 1L);
     assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
     connection.commitAndClose();

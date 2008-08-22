@@ -52,7 +52,7 @@ public class RegisterServlet extends HttpServlet {
       else {
         Glob license = globList.get(0);
         if (activationCode.equals(license.get(License.ACTIVATION_CODE))) {
-          logger.info("License activation done");
+          logger.info("License activation ok");
           byte[] signature = LicenceGenerator.generateSignature(mail);
           db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
             .update(License.ACCESS_COUNT, 1L)
@@ -100,7 +100,6 @@ public class RegisterServlet extends HttpServlet {
       if (db != null) {
         db.commitAndClose();
       }
-
     }
   }
 }

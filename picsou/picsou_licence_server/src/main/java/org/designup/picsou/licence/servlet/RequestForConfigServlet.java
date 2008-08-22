@@ -10,6 +10,7 @@ import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.streams.accessors.utils.ValueStringAccessor;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -27,11 +28,19 @@ public class RequestForConfigServlet extends HttpServlet {
   private SqlService sqlService;
   private Mailler mailler;
   private VersionService versionService;
+  private SelectQuery repoIdQuery;
+  private ValueStringAccessor repoIdAccessor;
+  private SqlConnection db;
 
   public RequestForConfigServlet(Directory directory) {
     sqlService = directory.get(SqlService.class);
     mailler = directory.get(Mailler.class);
     versionService = directory.get(VersionService.class);
+    db = sqlService.getDb();
+    repoIdAccessor = new ValueStringAccessor();
+    repoIdQuery = db.getQueryBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoIdAccessor))
+      .selectAll()
+      .getNotAutoCloseQuery();
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -52,13 +61,10 @@ public class RequestForConfigServlet extends HttpServlet {
   }
 
   private void computeAnonymous(String id, HttpServletResponse resp) {
-    SqlConnection db = null;
     try {
-      logger.info("requestForConfig " + id);
-      db = sqlService.getDb();
-      GlobList globList = db.getQueryBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, id))
-        .selectAll()
-        .getQuery().executeAsGlobs();
+      logger.info("computeAnonymous " + id);
+      repoIdAccessor.setValue(id);
+      GlobList globList = repoIdQuery.executeAsGlobs();
       db.commit();
       if (globList.size() == 0) {
         db.getCreateBuilder(RepoInfo.TYPE)
@@ -80,23 +86,22 @@ public class RequestForConfigServlet extends HttpServlet {
           .update(RepoInfo.COUNT, accessCount)
           .getRequest().run();
         db.commit();
-        logger.info("commit " + accessCount);
       }
     }
     catch (Exception e) {
-      logger.log(Level.FINE, "RequestForConfigServlet : ", e);
+      logger.log(Level.SEVERE, "RequestForConfigServlet : ", e);
     }
     finally {
       if (db != null) {
-        db.commitAndClose();
+        db.commit();
       }
     }
-    resp.addHeader(ConfigService.HEADER_IS_VALIDE, "true");
+    resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
   }
 
   private void computeLicense(HttpServletResponse resp, String mail, String activationCode,
                               Long count, String repoId) {
-    logger.info("mail : '" + mail + "' count :'" + count + "' " + "repoId :'" + repoId + "'");
+    logger.info("compute licence : mail : '" + mail + "' count :'" + count + "' " + "repoId :'" + repoId + "'");
     SqlConnection db = null;
     try {
       db = sqlService.getDb();
@@ -108,6 +113,7 @@ public class RequestForConfigServlet extends HttpServlet {
       if (globList.isEmpty()) {
         resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
         resp.addHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
+        logger.info("unknown mail : " + mail);
       }
       else {
         Glob license = globList.get(0);
@@ -122,6 +128,7 @@ public class RequestForConfigServlet extends HttpServlet {
               .run();
             db.commit();
             mailler.sendNewLicense(mail, code);
+            logger.info("send new license to " + mail);
           }
         }
         else {
@@ -137,19 +144,25 @@ public class RequestForConfigServlet extends HttpServlet {
           else {
             resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
             resp.addHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
+            logger.info("Bad activation code for " + mail);
           }
         }
       }
     }
     catch (Exception e) {
-      logger.throwing("AskForMailServlet", "doPost", e);
+      logger.throwing("RequestForConfigServlet", "computeLicense", e);
       resp.addHeader(ConfigService.HEADER_IS_VALIDE, "true");
     }
     finally {
       if (db != null) {
-        db.commitAndClose();
+        db.commit();
       }
     }
   }
 
+  public void destroy() {
+    super.destroy();
+    repoIdQuery.close();
+    db.commitAndClose();
+  }
 }
