@@ -1,21 +1,22 @@
-* Undo
+* Graphique page accueil
 
-* Graphique pae accueil
+* Projets
 
-* Gestion des projets
+* Affichage synthèse des mois suivants (+/- MonthSummaryView en sequence horizontale, avec projets)
 
-* Joliesse boutons/bords timeview
+* Edition des TransactionMatchers pour gerer de nouvelles banques
 
-* Mecanique pour gerer de nouvelles banques (notamment a l'international)
+* Undo (verifier + generaliser dans les boîtes de dialogue)
 
 * Mecanique de backup/restore pour les utilisateurs (crypte ou non?)
 
-* Changer date user
+* Changer date user des transactions
 
-* Apprentissage regexps pour internationalisation
+* Creer des transactions utilisateur (soit achats effectues mais pas encore dans les releves, soit previsions plus vagues)
 
 * Pb d'affichage de mois futurs en version basique si transactions dans le futur
 
 * Filtrage transactions par Serie
 
-* Filtrage transactions par type
+* Filtrage transactions par Type
+

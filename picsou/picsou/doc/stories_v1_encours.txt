@@ -14,7 +14,7 @@
 
 * Categorisation : selectionner serie apres creation
 
-* MonthStatView : gauge
+* MonthStatView : ajouter gauge
 
 * Bug MAJ SeriesStat apres activation licence
 
@@ -24,4 +24,4 @@
 
 * Gauge : depassements pour montants positifs + afficher niveau depassement
 
-* Faire fonctionner undo
+* Message si l'on affecte deux transactions differentes a une serie recurrente ?

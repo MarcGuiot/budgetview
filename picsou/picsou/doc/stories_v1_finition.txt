@@ -5,6 +5,11 @@ CategorizationDialog
 - saisie notes
 
 
+TimeView
+--------
+* Joliesse boutons/bords timeview
+
+
 Vue accueil
 -----------
 - creation de compte
@@ -25,8 +30,6 @@ Panneau edition series
 ----------------------
 - check nom
 - selection amount
-- selection dates debut/fin et duree
-- selection mois
 
 
 Import
@@ -35,13 +38,18 @@ Import
 * LoginPanel: si aucun utilisateur, mode "accompagnement" pour la creation d'un compte
 * Bring to front sur Open With...
 
+
 Packaging
 ---------
 * Packaging Mac (hdiutil?)
+* Look installer
+* Afficher SLA au premier lancement (cas de repository vide ?)
+
 
 Misc
 ----
 * CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
+
 
 Bugs graphiques
 ---------------
