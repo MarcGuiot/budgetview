@@ -153,12 +153,6 @@
                 </column>
               </card>
 
-              <card name="noData">
-                <row marginLeft="20">
-                  <component ref="noData" opaque="false" foreground="title"/>
-                </row>
-              </card>
-
             </cards>
           </horizontalSplit>
 

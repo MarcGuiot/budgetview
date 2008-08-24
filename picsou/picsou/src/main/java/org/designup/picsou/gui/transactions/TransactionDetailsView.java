@@ -27,6 +27,9 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -67,7 +70,9 @@ public class TransactionDetailsView extends View {
     builder.add("amountValue",
                 addLabel(GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, Transaction.AMOUNT), true));
 
-    builder.add("amountPanel",
+    addNoSelectionPanel(builder);
+
+    builder.add("multiSelectionPanel",
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_TWO,
                                              repository, directory));
 
@@ -107,6 +112,41 @@ public class TransactionDetailsView extends View {
     builder.add("searchField", search.getTextField());
 
     return builder;
+  }
+
+  private void addNoSelectionPanel(GlobsPanelBuilder builder) {
+
+    builder.add("noSelectionPanel",
+                new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.EMPTY,
+                                             repository, directory));
+
+    final JLabel label = new JLabel();
+    final JLabel amount = new JLabel();
+    builder.add("noSelectionLabel", label);
+    builder.add("noSelectionAmount", amount);
+
+    final GlobListStringifier stringifier =
+      GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, Transaction.AMOUNT);
+
+    transactionView.addTableListener(new TableModelListener() {
+      public void tableChanged(TableModelEvent e) {
+        GlobList transactions = transactionView.getView().getGlobs();
+        if (transactions.isEmpty()) {
+          label.setText(Lang.get("transaction.details.noselection.label.none"));
+          amount.setText("");
+          return;
+        }
+
+        if (transactions.size() == 1) {
+          label.setText(Lang.get("transaction.details.noselection.label.single"));
+        }
+        else {
+          label.setText(Lang.get("transaction.details.noselection.label.multi", transactions.size()));
+        }
+
+        amount.setText(stringifier.toString(transactions, repository));
+      }
+    });
   }
 
   private GlobLabelView addLabel(GlobListStringifier stringifier, boolean autoHide) {

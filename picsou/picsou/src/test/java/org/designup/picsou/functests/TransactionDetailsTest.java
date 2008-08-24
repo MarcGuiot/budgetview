@@ -69,6 +69,31 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkNoAmountStatistics();
   }
 
+  public void testDisplayWithNoSelection() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/18", 10.00, "Quick", MasterCategory.FOOD)
+      .addTransaction("2008/06/18", 30.00, "Quick", MasterCategory.FOOD)
+      .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
+      .load();
+
+    timeline.selectAll();
+    transactionDetails.checkNoSelectionLabels("3 operations", "60.00");
+
+    timeline.selectMonth("2008/07");
+    transactionDetails.checkNoSelectionLabels("1 operation", "10.00");
+
+    categories.select(MasterCategory.HOUSE);
+    transactionDetails.checkNoSelectionLabels("No operation", "");
+
+    timeline.selectAll();
+    categories.select(MasterCategory.ALL);
+    transactions.getTable().selectRow(0);
+    transactionDetails.checkNoSelectionPanelHidden();
+
+    categories.select(MasterCategory.HOUSE);
+    transactionDetails.checkNoSelectionLabels("No operation", "");
+  }
+
   public void testCategoriesWithoutSelection() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/18", 10.00, "Quick")

@@ -19,7 +19,7 @@
            lineWrap="true" wrapStyleWord="true"/>
     <style selector="textArea#userLabel" font="$transaction.label"/>
 
-    <style selector="label#amountValue" font="-,bold,16"/>
+    <style selector="label.mainAmount" font="-,bold,16"/>
 
     <style selector="#transactionDetails .hyperlink" foreground="transaction.detail.hyperlink"/>
 
@@ -32,7 +32,7 @@
 
     <row>
       <label ref="amountLabel" styleClass="formLabel"/>
-      <label ref="amountValue" styleClass="formValue"/>
+      <label ref="amountValue" styleClass="mainAmount"/>
     </row>
     <row>
       <label text="$transaction.detail.userDate" styleClass="formLabel" autoHideSource="userDate"/>
@@ -43,7 +43,17 @@
       <label ref="bankDate" font="$transaction.date" styleClass="formValue"/>
     </row>
 
-    <panel ref="amountPanel">
+    <panel ref="noSelectionPanel" visible="true">
+      <column>
+        <label ref="noSelectionLabel" font="$transaction.label"/>
+        <row>
+          <label text="$transaction.details.noselection.amount" styleClass="formLabel"/>
+          <label ref="noSelectionAmount" styleClass="mainAmount"/>
+        </row>
+      </column>
+    </panel>
+
+    <panel ref="multiSelectionPanel">
       <column>
         <row>
           <label text="$transaction.details.amount.minimum" styleClass="formLabel"/>

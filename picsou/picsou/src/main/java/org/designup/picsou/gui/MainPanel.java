@@ -88,7 +88,7 @@ public class MainPanel {
       categoryView,
       new AccountView(repository, directory),
       new MonthSummaryView(repository, directory),
-      new CardView(repository, directory, transactionSelection),
+      new CardView(repository, directory),
       new BudgetView(repository, directory),
       new HistoricalChart(repository, directory),
       new CategoriesChart(repository, directory, transactionSelection));

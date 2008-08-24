@@ -34,6 +34,7 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.event.TableModelListener;
 import java.awt.*;
 import java.util.Set;
 
@@ -89,6 +90,10 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
   public void setSearchFilter(String filter) {
     this.searchFilter = filter;
     updateFilter();
+  }
+
+  public void addTableListener(TableModelListener listener) {
+    this.view.getComponent().getModel().addTableModelListener(listener);
   }
 
   private void updateFilter() {
@@ -153,5 +158,9 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
       .addColumn(LABEL, LabelCustomizers.bold(), CellPainter.NULL)
       .addColumn(Lang.get("amount"), amountColumn, amountStringifier.getComparator(repository))
       .addColumn(NOTE, new TransactionNoteEditor(repository, directory));
+  }
+
+  public GlobTableView getView() {
+    return view;
   }
 }

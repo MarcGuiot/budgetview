@@ -28,13 +28,13 @@ public class ViewsManagementTest extends LoggedInFunctionalTestCase {
 
     categories.select(MasterCategory.BANK);
     categories.assertVisible(true);
-    transactions.assertVisible(false);
-    checkMessage(Lang.get("noData"));
+    transactions.assertVisible(true);
+    transactions.assertEmpty();
 
     categories.selectNone();
     categories.assertVisible(true);
-    transactions.assertVisible(false);
-    checkMessage(Lang.get("noData"));
+    transactions.assertVisible(true);
+    transactions.assertEmpty();
 
     categories.select(MasterCategory.HOUSE);
     categories.assertVisible(true);
@@ -42,7 +42,8 @@ public class ViewsManagementTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2005/02");
     categories.assertVisible(true);
-    transactions.assertVisible(false);
+    transactions.assertVisible(true);
+    transactions.assertEmpty();
 
     timeline.selectMonth("2005/03");
     categories.assertVisible(true);

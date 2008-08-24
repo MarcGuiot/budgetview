@@ -1,18 +1,14 @@
 package org.designup.picsou.gui.card;
 
-import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.model.Card;
-import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.utils.Lang;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Category;
+import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -26,12 +22,9 @@ public class CardView extends View implements GlobSelectionListener {
   private CardHandler categoryCardHandler;
 
   private Card lastSelectedCard = Card.HOME;
-  private TransactionSelection transactionSelection;
 
-  public CardView(GlobRepository repository, Directory directory, TransactionSelection transactionSelection) {
+  public CardView(GlobRepository repository, Directory directory) {
     super(repository, directory);
-    this.transactionSelection = transactionSelection;
-    this.transactionSelection.addListener(this);
     this.selectionService.addListener(this, Card.TYPE);
   }
 
@@ -55,22 +48,12 @@ public class CardView extends View implements GlobSelectionListener {
     }
 
     toggles[0].setSelected(true);
-
-    JTextArea textArea = new JTextArea();
-    textArea.setText(Lang.get("noData"));
-    builder.add("noData", textArea);
   }
 
   private void showCard(Card card) {
     if (card.showCategoryCard) {
-      if (hasData(transactionSelection.getSelectedMonthStats())) {
-        categoryCardHandler.show(card.getName());
-        masterCardHandler.show("withCategories");
-      }
-      else {
-        categoryCardHandler.show("noData");
-        masterCardHandler.show("withCategories");
-      }
+      categoryCardHandler.show(card.getName());
+      masterCardHandler.show("withCategories");
     }
     else {
       masterCardHandler.show(card.getName());
@@ -88,18 +71,6 @@ public class CardView extends View implements GlobSelectionListener {
     if (selection.isRelevantForType(Month.TYPE) || selection.isRelevantForType(Category.TYPE)) {
       showCard(lastSelectedCard);
     }
-  }
-
-  private boolean hasData(GlobList monthStats) {
-    for (Glob monthStat : monthStats) {
-      if ((monthStat.get(MonthStat.TOTAL_SPENT) != 0.0)
-          || (monthStat.get(MonthStat.TOTAL_RECEIVED) != 0.0)
-          || monthStat.get(MonthStat.PLANNED_TOTAL_RECEIVED) != 0.0
-          || monthStat.get(MonthStat.PLANNED_TOTAL_SPENT) != 0.0) {
-        return true;
-      }
-    }
-    return false;
   }
 
   private class ToggleAction extends AbstractAction {

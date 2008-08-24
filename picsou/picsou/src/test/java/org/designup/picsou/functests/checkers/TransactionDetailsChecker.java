@@ -50,14 +50,14 @@ public class TransactionDetailsChecker extends DataChecker {
   public void checkAmountStatistics(String minAmount,
                                     String maxAmount,
                                     String averageAmount) {
-    assertTrue(getPanel().getPanel("amountPanel").isVisible());
+    assertTrue(getPanel().getPanel("multiSelectionPanel").isVisible());
     checkValue("minimumAmount", minAmount);
     checkValue("maximumAmount", maxAmount);
     checkValue("averageAmount", averageAmount);
   }
 
   public void checkNoAmountStatistics() {
-    assertFalse(getPanel().getPanel("amountPanel").isVisible());
+    assertFalse(getPanel().getPanel("multiSelectionPanel").isVisible());
   }
 
   private void checkValue(String name, String label) {
@@ -182,5 +182,15 @@ public class TransactionDetailsChecker extends DataChecker {
 
   public TextBox getSearchField() {
     return getPanel().getInputTextBox("searchField");
+  }
+
+  public void checkNoSelectionLabels(String label, String amount) {
+    assertTrue(getPanel().getPanel("noSelectionPanel").isVisible());
+    assertTrue(getPanel().getTextBox("noSelectionLabel").textEquals(label));
+    assertTrue(getPanel().getTextBox("noSelectionAmount").textEquals(amount));
+  }
+
+  public void checkNoSelectionPanelHidden() {
+    assertFalse(getPanel().getPanel("noSelectionPanel").isVisible());
   }
 }
