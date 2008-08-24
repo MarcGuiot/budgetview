@@ -80,7 +80,7 @@
            borderColor="gauge.total.border"
            emptyColorTop="gauge.total.empty.top" emptyColorBottom="gauge.total.empty.bottom"
            filledColorTop="gauge.total.filled.top" filledColorBottom="gauge.total.filled.bottom"
-           warningColorTop="gauge.total.warning.top" warningColorBottom="gauge.total.warning.bottom"
+           overrunColorTop="gauge.total.warning.top" overrunColorBottom="gauge.total.warning.bottom"
            triangleTopColor="gauge.total.triangle.top" triangleBottomColor="gauge.total.triangle.bottom"
            triangleBorderColor="gauge.total.triangle.border" triangleShadowColor="gauge.total.triangle.shadow"
            triangleSignColor="gauge.total.triangle.sign"/>
@@ -91,7 +91,7 @@
            borderColor="gauge.detail.border"
            emptyColorTop="gauge.detail.empty.top" emptyColorBottom="gauge.detail.empty.bottom"
            filledColorTop="gauge.detail.filled.top" filledColorBottom="gauge.detail.filled.bottom"
-           warningColorTop="gauge.detail.warning.top" warningColorBottom="gauge.detail.warning.bottom"
+           overrunColorTop="gauge.detail.warning.top" overrunColorBottom="gauge.detail.warning.bottom"
            triangleTopColor="gauge.detail.triangle.top" triangleBottomColor="gauge.detail.triangle.bottom"
            triangleBorderColor="gauge.detail.triangle.border" triangleShadowColor="gauge.detail.triangle.shadow"
            triangleSignColor="gauge.detail.triangle.sign"/>

@@ -6,16 +6,29 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 
 public class Gauge extends JPanel {
+
+  private final boolean overrunIsAnError;
+  private final boolean showWarningForErrors;
+  private final boolean invertedSignIsAnError;
+
   private double actualValue;
   private double targetValue;
+
+  private double fillPercent = 0;
+  private double overrunPercent = 0;
+  private double emptyPercent = 1.0;
+  private boolean overrunError = false;
+  private boolean warningShown = false;
 
   private Color borderColor = Color.DARK_GRAY;
   private Color filledColorTop = Color.BLUE.brighter();
   private Color filledColorBottom = Color.BLUE.darker();
   private Color emptyColorTop = Color.LIGHT_GRAY;
   private Color emptyColorBottom = Color.LIGHT_GRAY.brighter();
-  private Color warningColorTop = Color.RED.brighter();
-  private Color warningColorBottom = Color.RED.darker();
+  private Color overrunColorTop = Color.CYAN.brighter();
+  private Color overrunColorBottom = Color.CYAN.darker();
+  private Color overrunErrorColorTop = Color.RED.brighter();
+  private Color overrunErrorColorBottom = Color.RED.darker();
   private Color triangleTopColor = Color.YELLOW.brighter();
   private Color triangleBottomColor = Color.YELLOW.darker();
   private Color triangleBorderColor = Color.LIGHT_GRAY;
@@ -27,8 +40,64 @@ public class Gauge extends JPanel {
   private static final float TRIANGLE_WIDTH = 16f;
 
   public Gauge() {
+    this(true, true, true);
+  }
+
+  public Gauge(boolean overrunIsAnError, boolean showWarningForErrors, boolean invertedSignIsAnError) {
+    this.overrunIsAnError = overrunIsAnError;
+    this.showWarningForErrors = showWarningForErrors;
+    this.invertedSignIsAnError = invertedSignIsAnError;
+
     setMinimumSize(new Dimension(60, 28));
     setPreferredSize(new Dimension(200, 28));
+  }
+
+  public void setValues(double actualValue, double targetValue) {
+    this.actualValue = actualValue;
+    this.targetValue = targetValue;
+    updateValues();
+  }
+
+  private void updateValues() {
+    boolean sameSign = Math.signum(actualValue) * Math.signum(targetValue) >= 0;
+    double absActual = Math.abs(actualValue);
+    double absTarget = Math.abs(targetValue);
+
+    if ((absTarget == 0) && (absActual == 0)) {
+      fillPercent = 0;
+      overrunPercent = 0;
+      emptyPercent = 1;
+      overrunError = false;
+      warningShown = false;
+    }
+    else if (absTarget == 0) {
+      fillPercent = 0;
+      overrunPercent = 1;
+      emptyPercent = 0;
+      overrunError = overrunIsAnError;
+      warningShown = overrunError && showWarningForErrors;      
+    }
+    else if (!sameSign) {
+      fillPercent = 0;
+      overrunPercent = absActual / (absActual + absTarget);
+      emptyPercent = 1 - overrunPercent;
+      overrunError = invertedSignIsAnError;
+      warningShown = overrunError && showWarningForErrors;
+    }
+    else if (absActual > absTarget) {
+      overrunPercent = (absActual - absTarget) / absTarget;
+      fillPercent = 1 - overrunPercent;
+      emptyPercent = 0;
+      overrunError = overrunIsAnError;
+      warningShown = overrunError && showWarningForErrors;
+    }
+    else {
+      fillPercent = absActual / absTarget;
+      overrunPercent = 0;
+      emptyPercent = 1 - fillPercent;
+      overrunError = false;
+      warningShown = false;
+    }
   }
 
   public void paint(Graphics g) {
@@ -38,27 +107,36 @@ public class Gauge extends JPanel {
     int width = getWidth() - 1;
     int height = getHeight() - 1;
 
-    int barVerticalMargin = (height - BAR_HEIGHT) / 2;
-    int barTop = barVerticalMargin;
-    int barBottom = height - barVerticalMargin;
+    int barTop = (height - BAR_HEIGHT) / 2;
+    int barBottom = height - barTop;
 
-    float ratio = targetValue != 0 ? (float)actualValue / (float)targetValue : -1;
+    int fillWidth = (int)(width * fillPercent);
+    int emptyWidth = (int)(width * emptyPercent);
 
-    if (ratio > 1) {
-      fill(g2, warningColorTop, warningColorBottom, width, BAR_HEIGHT, barTop, barBottom);
-      drawBorder(g2, width, barTop, BAR_HEIGHT);
+    int overrunWidth = width - fillWidth - emptyWidth;
+    int overrunEnd = fillWidth + overrunWidth;
+
+    if (fillPercent > 0) {
+      fillBar(g2, filledColorTop, filledColorBottom, 0, fillWidth, barTop, barBottom);
+    }
+
+    if (overrunPercent > 0) {
+      if (overrunError) {
+        fillBar(g2, overrunErrorColorTop, overrunErrorColorBottom, fillWidth, overrunWidth, barTop, barBottom);
+      }
+      else {
+        fillBar(g2, overrunColorTop, overrunColorBottom, fillWidth, overrunWidth, barTop, barBottom);
+      }
+    }
+
+    if (emptyPercent > 0) {
+      fillBar(g2, emptyColorTop, emptyColorBottom, overrunEnd, emptyWidth, barTop, barBottom);
+    }
+
+    drawBorder(g2, width, barTop, BAR_HEIGHT);
+    if (warningShown) {
       drawWarning(g2, width, height);
     }
-    else if (ratio > 0) {
-      fill(g2, emptyColorTop, emptyColorBottom, width, BAR_HEIGHT, barTop, barBottom);
-      fill(g2, filledColorTop, filledColorBottom, (int)(width * ratio), BAR_HEIGHT, barTop, barBottom);
-      drawBorder(g2, width, barTop, BAR_HEIGHT);
-    }
-    else if (ratio <= 0) {
-      fill(g2, emptyColorTop, emptyColorBottom, width, BAR_HEIGHT, barTop, barBottom);
-      drawBorder(g2, width, barTop, BAR_HEIGHT);
-    }
-
   }
 
   private void drawBorder(Graphics2D g2, int width, int barTop, int barHeight) {
@@ -132,31 +210,37 @@ public class Gauge extends JPanel {
     return shape;
   }
 
-  private void fill(Graphics2D g2, Color topColor, Color bottomColor, int barWidth, int barHeight, int barTop, int barBottom) {
+  private void fillBar(Graphics2D g2, Color topColor, Color bottomColor, int barX, int barWidth, int barTop, int barBottom) {
     g2.setPaint(new GradientPaint(0, barTop, topColor, 0, barBottom, bottomColor));
-    g2.fillRect(0, barTop, barWidth, barHeight);
-  }
-
-  public void setActualValue(double actualValue) {
-    this.actualValue = actualValue;
-// TODO: REMOVE THIS - FOR GRAPHICAL TESTS ONLY
-//    this.actualValue = Math.random();
-// TODO: REMOVE THIS - FOR GRAPHICAL TESTS ONLY
+    g2.fillRect(barX, barTop, barWidth, BAR_HEIGHT);
   }
 
   public double getActualValue() {
     return actualValue;
   }
 
-  public void setTargetValue(double targetValue) {
-    this.targetValue = targetValue;
-// TODO: REMOVE THIS - FOR GRAPHICAL TESTS ONLY
-//    this.targetValue = Math.random() * 1.3;
-// TODO: REMOVE THIS - FOR GRAPHICAL TESTS ONLY
-  }
-
   public double getTargetValue() {
     return targetValue;
+  }
+
+  public double getFillPercent() {
+    return fillPercent;
+  }
+
+  public double getOverrunPercent() {
+    return overrunPercent;
+  }
+
+  public double getEmptyPercent() {
+    return emptyPercent;
+  }
+
+  public boolean isWarningShown() {
+    return warningShown;
+  }
+
+  public boolean isOverrunErrorShown() {
+    return overrunIsAnError && (overrunPercent > 0);
   }
 
   public void setBorderColor(Color borderColor) {
@@ -179,12 +263,20 @@ public class Gauge extends JPanel {
     this.emptyColorBottom = emptyColorBottom;
   }
 
-  public void setWarningColorTop(Color warningColorTop) {
-    this.warningColorTop = warningColorTop;
+  public void setOverrunColorTop(Color overrunColorTop) {
+    this.overrunColorTop = overrunColorTop;
   }
 
-  public void setWarningColorBottom(Color warningColorBottom) {
-    this.warningColorBottom = warningColorBottom;
+  public void setOverrunColorBottom(Color overrunColorBottom) {
+    this.overrunColorBottom = overrunColorBottom;
+  }
+
+  public void setOverrunErrorColorTop(Color overrunErrorColorTop) {
+    this.overrunErrorColorTop = overrunErrorColorTop;
+  }
+
+  public void setOverrunErrorColorBottom(Color overrunErrorColorBottom) {
+    this.overrunErrorColorBottom = overrunErrorColorBottom;
   }
 
   public void setTriangleTopColor(Color triangleTopColor) {

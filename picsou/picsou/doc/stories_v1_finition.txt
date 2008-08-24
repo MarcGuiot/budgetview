@@ -1,3 +1,6 @@
+- Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
+
+
 CategorizationDialog
 --------------------
 - afficher le nombre de transactions restantes

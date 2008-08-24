@@ -1,9 +1,11 @@
 package org.designup.picsou.gui.experiment;
 
 import org.designup.picsou.gui.components.Gauge;
+import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,30 +15,74 @@ public class GaugeDemo {
   private static int row = 0;
   private static GridBagBuilder builder = GridBagBuilder.init();
 
+  private static final boolean[] booleans = {true, false};
+
+  private static final double[][] pairs = {
+    {0, 0},
+    {0, 20},
+    {12, 20},
+    {20, 20},
+    {25, 20},
+    {-5, 20},
+    {5, 0},
+  };
+
   public static void main(String[] args) {
 
     builder.setDefaultInsets(20, 20, 20, 20);
 
-    addGauge(0.0, 19.0);
-    addGauge(12.0, 19.0);
-    addGauge(19.0, 19.0);
-    addGauge(19.01, 19.0);
-    addGauge(21.0, 19.0);
-    addGauge(-12.0, -19.0);
-    addGauge(-19.0, -19.0);
+    int row = 0;
+    int column = 0;
+
+    addLabel(row, column++, "overrun");
+    addLabel(row, column++, "warning");
+    addLabel(row, column++, "inverted");
+    for (double[] pair : pairs) {
+      StringBuilder builder = new StringBuilder();
+      builder.append(pair[0]);
+      builder.append(" / ");
+      builder.append(pair[1]);
+      addLabel(row, column++, builder.toString());
+    }
+
+    row++;
+
+    for (boolean overrunIsAnError : booleans) {
+      for (boolean showWarningForErrors : booleans) {
+        for (boolean invertedSignIsAnError : booleans) {
+
+          column = 0;
+          addLabel(row, column++, overrunIsAnError);
+          addLabel(row, column++, showWarningForErrors);
+          addLabel(row, column++, invertedSignIsAnError);
+
+          for (double[] pair : pairs) {
+            Gauge gauge = new Gauge(overrunIsAnError, showWarningForErrors, invertedSignIsAnError);
+            gauge.setPreferredSize(new Dimension(100, 28));
+            gauge.setMaximumSize(new Dimension(100, 28));
+            gauge.setValues(pair[0], pair[1]);
+            builder.add(gauge, column++, row, 1, 1, 1, 1, Fill.HORIZONTAL, Anchor.CENTER,
+                        new Insets(5,5,5,5));
+          }
+
+          row++;
+        }
+      }
+    }
 
     JFrame frame = new JFrame();
-    frame.setContentPane(builder.getPanel());
-    frame.setSize(new Dimension(200, 450));
+    frame.setContentPane(new JScrollPane(builder.getPanel()));
+    frame.setSize(new Dimension(1200, 500));
     frame.setVisible(true);
   }
 
-  private static void addGauge(double actual, double target) {
-    Gauge gauge = new Gauge();
-    gauge.setActualValue(actual);
-    gauge.setTargetValue(target);
+  private static void addLabel(int row, int column, boolean value) {
+    addLabel(row, column, Boolean.toString(value));
+  }
 
-    builder.add(Box.createGlue(), 0, row++);
-    builder.add(gauge, 0, row++, 1, 1, 10.0, 0.1, Fill.HORIZONTAL, Anchor.CENTER);
+  private static void addLabel(int row, int column, String value) {
+    JLabel label = new JLabel();
+    label.setText(value);
+    builder.add(label, column, row, 1, 1, 1, 1, Fill.NONE, Anchor.WEST);
   }
 }
