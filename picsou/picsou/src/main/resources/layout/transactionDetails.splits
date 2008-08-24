@@ -19,7 +19,7 @@
            lineWrap="true" wrapStyleWord="true"/>
     <style selector="textArea#userLabel" font="$transaction.label"/>
 
-    <style selector="label.mainAmount" font="-,bold,16"/>
+    <style selector="label.mainAmount" font="-,bold,16" fill="horizontal" anchor="center" horizontalAlignment="right"/>
 
     <style selector="#transactionDetails .hyperlink" foreground="transaction.detail.hyperlink"/>
 
@@ -46,10 +46,19 @@
     <panel ref="noSelectionPanel" visible="true">
       <column>
         <label ref="noSelectionLabel" font="$transaction.label"/>
-        <row>
-          <label text="$transaction.details.noselection.amount" styleClass="formLabel"/>
-          <label ref="noSelectionAmount" styleClass="mainAmount"/>
-        </row>
+        <grid>
+          <label gridPos="(0,0)" text="$transaction.details.noselection.received"
+                 autoHideSource="noSelectionReceived" styleClass="formLabel"/>
+          <label gridPos="(1,0)" ref="noSelectionReceived" styleClass="mainAmount"/>
+
+          <label gridPos="(0,1)" text="$transaction.details.noselection.spent"
+                 autoHideSource="noSelectionSpent" styleClass="formLabel"/>
+          <label gridPos="(1,1)" ref="noSelectionSpent" styleClass="mainAmount"/>
+
+          <label gridPos="(0,2)" text="$transaction.details.noselection.total"
+                 autoHideSource="noSelectionTotal" styleClass="formLabel"/>
+          <label gridPos="(1,2)" ref="noSelectionTotal" styleClass="mainAmount"/>
+        </grid>
       </column>
     </panel>
 

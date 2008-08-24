@@ -184,10 +184,21 @@ public class TransactionDetailsChecker extends DataChecker {
     return getPanel().getInputTextBox("searchField");
   }
 
-  public void checkNoSelectionLabels(String label, String amount) {
+  public void checkNoSelectionLabels(String label, String received, String spent, String total) {
     assertTrue(getPanel().getPanel("noSelectionPanel").isVisible());
     assertTrue(getPanel().getTextBox("noSelectionLabel").textEquals(label));
-    assertTrue(getPanel().getTextBox("noSelectionAmount").textEquals(amount));
+
+    checkNoSelectionLabel("noSelectionReceived", received);
+    checkNoSelectionLabel("noSelectionSpent", spent);
+    checkNoSelectionLabel("noSelectionTotal", total);
+  }
+
+  private void checkNoSelectionLabel(String componentName, String expectedText) {
+    TextBox label = getPanel().getTextBox(componentName);
+    assertEquals(expectedText != null, label.isVisible());
+    if (expectedText != null) {
+      assertTrue(label.textEquals(expectedText));
+    }
   }
 
   public void checkNoSelectionPanelHidden() {

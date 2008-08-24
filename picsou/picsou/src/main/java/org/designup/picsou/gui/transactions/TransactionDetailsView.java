@@ -32,6 +32,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.util.HashSet;
 import java.util.Set;
+import java.text.DecimalFormat;
 
 public class TransactionDetailsView extends View {
   private TransactionView transactionView;
@@ -121,19 +122,23 @@ public class TransactionDetailsView extends View {
                                              repository, directory));
 
     final JLabel label = new JLabel();
-    final JLabel amount = new JLabel();
+    final JLabel spent = new JLabel();
+    final JLabel received = new JLabel();
+    final JLabel total = new JLabel();
     builder.add("noSelectionLabel", label);
-    builder.add("noSelectionAmount", amount);
-
-    final GlobListStringifier stringifier =
-      GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, Transaction.AMOUNT);
+    builder.add("noSelectionSpent", spent);
+    builder.add("noSelectionReceived", received);
+    builder.add("noSelectionTotal", total);
 
     transactionView.addTableListener(new TableModelListener() {
       public void tableChanged(TableModelEvent e) {
         GlobList transactions = transactionView.getView().getGlobs();
         if (transactions.isEmpty()) {
           label.setText(Lang.get("transaction.details.noselection.label.none"));
-          amount.setText("");
+          total.setText("");
+          received.setVisible(false);
+          spent.setVisible(false);
+          total.setVisible(false);
           return;
         }
 
@@ -144,7 +149,26 @@ public class TransactionDetailsView extends View {
           label.setText(Lang.get("transaction.details.noselection.label.multi", transactions.size()));
         }
 
-        amount.setText(stringifier.toString(transactions, repository));
+        double receivedAmount = 0;
+        double spentAmount = 0;
+        for (Glob transaction : transactions) {
+          double transactionAmount = transaction.get(Transaction.AMOUNT);
+          if (transactionAmount > 0) {
+            receivedAmount += transactionAmount;
+          }
+          else {
+            spentAmount += transactionAmount;
+          }
+        }
+
+        DecimalFormat format = PicsouDescriptionService.DECIMAL_FORMAT;
+        received.setText(format.format(receivedAmount));
+        spent.setText(format.format(spentAmount));
+        total.setText(format.format(receivedAmount + spentAmount));
+
+        received.setVisible(Math.abs(receivedAmount) > 0.001);
+        spent.setVisible(Math.abs(spentAmount) > 0.001);
+        total.setVisible((Math.abs(receivedAmount) > 0.001) && (Math.abs(spentAmount) > 0.001));
       }
     });
   }

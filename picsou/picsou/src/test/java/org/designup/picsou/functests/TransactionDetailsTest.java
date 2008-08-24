@@ -71,19 +71,20 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testDisplayWithNoSelection() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/07/18", 10.00, "Quick", MasterCategory.FOOD)
-      .addTransaction("2008/06/18", 30.00, "Quick", MasterCategory.FOOD)
-      .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
+      .addTransaction("2008/07/18", -10.00, "Quick", MasterCategory.FOOD)
+      .addTransaction("2008/06/18", -30.00, "Quick", MasterCategory.FOOD)
+      .addTransaction("2008/06/15", -20.00, "McDo", MasterCategory.FOOD)
+      .addTransaction("2008/05/13", 1000.00, "Wages", MasterCategory.INCOME)
       .load();
 
     timeline.selectAll();
-    transactionDetails.checkNoSelectionLabels("3 operations", "60.00");
+    transactionDetails.checkNoSelectionLabels("4 operations", "1000.00", "-60.00", "940.00");
 
     timeline.selectMonth("2008/07");
-    transactionDetails.checkNoSelectionLabels("1 operation", "10.00");
+    transactionDetails.checkNoSelectionLabels("1 operation", null, "-10.00", null);
 
     categories.select(MasterCategory.HOUSE);
-    transactionDetails.checkNoSelectionLabels("No operation", "");
+    transactionDetails.checkNoSelectionLabels("No operation", null, null, null);
 
     timeline.selectAll();
     categories.select(MasterCategory.ALL);
@@ -91,7 +92,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkNoSelectionPanelHidden();
 
     categories.select(MasterCategory.HOUSE);
-    transactionDetails.checkNoSelectionLabels("No operation", "");
+    transactionDetails.checkNoSelectionLabels("No operation", null, null, null);
   }
 
   public void testCategoriesWithoutSelection() throws Exception {
