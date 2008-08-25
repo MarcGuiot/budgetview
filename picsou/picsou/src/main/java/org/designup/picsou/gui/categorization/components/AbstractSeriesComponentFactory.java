@@ -60,7 +60,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
                                                RepeatCellBuilder cellBuilder, String toggleName, PicsouDialog dialog) {
 
     String toggleLabel = categoryStringifier.toString(category, repository);
-    final JToggleButton toggle = createCategoryUpdaterToggle(toggleLabel, seriesKey, category.getKey(), dialog);
+    final JToggleButton toggle = createSeriesToggle(toggleLabel, seriesKey, category.getKey(), dialog);
     toggle.setName(toggleName);
     cellBuilder.add(repeatToggleName, toggle);
     buttonGroup.add(toggle);
@@ -75,9 +75,9 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
     });
   }
 
-  protected JToggleButton createCategoryUpdaterToggle(final String toggleLabel,
-                                                      final Key seriesKey,
-                                                      final Key categoryKey, final PicsouDialog dialog) {
+  protected JToggleButton createSeriesToggle(final String toggleLabel, 
+                                             final Key seriesKey, final Key categoryKey,
+                                             final PicsouDialog dialog) {
     return new JToggleButton(new AbstractAction(toggleLabel) {
       public void actionPerformed(ActionEvent e) {
         try {

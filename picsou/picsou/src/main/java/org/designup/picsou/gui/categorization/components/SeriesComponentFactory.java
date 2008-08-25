@@ -25,7 +25,7 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
     String toggleLabel = seriesStringifier.toString(series, repository);
     final Key seriesKey = series.getKey();
     final Key categoryKey = series.getTargetKey(Series.DEFAULT_CATEGORY);
-    final JToggleButton toggle = createCategoryUpdaterToggle(toggleLabel, seriesKey, categoryKey, dialog);
+    final JToggleButton toggle = createSeriesToggle(toggleLabel, seriesKey, categoryKey, dialog);
     seriesGroup.add(toggle);
 
     final GlobSelectionListener listener = new GlobSelectionListener() {

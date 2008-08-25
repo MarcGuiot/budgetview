@@ -2,7 +2,6 @@
 
 
 CategorizationDialog
-* ajouter une categorie a une enveloppe
 * Renommage de serie : mettre a jour le toggle
 * Liens "edition des series"
 * Supprimer series initiales (xml) + afficher message creation
@@ -10,7 +9,8 @@ CategorizationDialog
 
 SeriesCreationDialog (edition)
 * Afficher nom categorie
-* Forcer la selection d'une categorie
+* Forcer la selection d'une categorie au moins
+* Selection multi-categories
 * Bug repaint / mois
 * Mise a jour auto des montants par mois lors de la modification du montant global
 * Joliesse
