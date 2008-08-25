@@ -14,7 +14,7 @@
   <initialMemoryHeap>-1</initialMemoryHeap>
   <jarLocation>../../target/picsouloader-1.0.jar</jarLocation>
   <javaProperties>
-    <name>picsou.working.dir</name>
+    <name>picsou.exe.dir</name>
     <value>${EXECUTABLEPATH}</value>
   </javaProperties>
   <mainClassName>org.designup.picsou.start.Main</mainClassName>

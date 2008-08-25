@@ -9,10 +9,8 @@ import org.globsframework.utils.directory.Directory;
 import java.util.Set;
 
 public class LastTransactionToTimeServiceTrigger implements ChangeSetListener {
-  private TimeService timeService;
 
   public LastTransactionToTimeServiceTrigger(Directory directory) {
-    timeService = directory.get(TimeService.class);
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -26,7 +24,7 @@ public class LastTransactionToTimeServiceTrigger implements ChangeSetListener {
         }
       }
       if (lastMonthId != 0) {
-        timeService.setLastAvailableTransactionMonthId(lastMonthId);
+        TimeService.setLastAvailableTransactionMonthId(lastMonthId);
       }
     }
   }

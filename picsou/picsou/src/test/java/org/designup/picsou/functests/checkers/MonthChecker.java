@@ -60,18 +60,20 @@ public class MonthChecker extends DataChecker {
     }
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   public void selectCell(int index) {
     timeViewPanel.selectMonth(index);
   }
 
-  public void selectMonth(String date) {
-    selectMonths(date);
+  public void selectMonth(String yyyymm) {
+    selectMonths(yyyymm);
   }
 
-  public void selectMonths(String... dates) {
+  public void selectMonths(String... yyyymm) {
     Set<Integer> monthIds = new HashSet<Integer>();
-    for (String date : dates) {
+    for (String date : yyyymm) {
       monthIds.add(Month.getMonthId(Dates.parseMonth(date)));
     }
     timeViewPanel.selectMonth(monthIds);

@@ -1,4 +1,4 @@
-package org.globsframework.rooms.web.login;
+package org.crossbowlabs.rooms.web.login;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.security.actions.RegistrationException;

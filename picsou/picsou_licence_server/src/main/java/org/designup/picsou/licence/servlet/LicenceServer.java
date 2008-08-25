@@ -21,7 +21,7 @@ public class LicenceServer {
   private boolean useSsl = true;
   private int port = 8443;
   private int mailPort;
-  private String dabaseUrl;
+  private String dabaseUrl = "jdbc:hsqldb:.";
   private String databaseUser = "sa";
   private String databasePassword = "";
   private QueryVersionTask queryVersionTask;
@@ -39,12 +39,16 @@ public class LicenceServer {
     this.port = port;
   }
 
+  public static void main(String[] args) throws Exception {
+    LicenceServer server = new LicenceServer();
+    server.start();
+  }
+
   public void setMailPort(int mailPort) {
     this.mailPort = mailPort;
   }
 
   public void setDabaseUrl(String dabaseUrl) {
-
     this.dabaseUrl = dabaseUrl;
   }
 
@@ -53,7 +57,7 @@ public class LicenceServer {
       SslSocketConnector connector = new SslSocketConnector();
       String keyStore = System.getProperty(KEYSTORE);
       if (keyStore == null) {
-        keyStore = "picsou_licence/resources/.keystore";
+        keyStore = "resources/.keystore";
       }
       connector.setKeystore(keyStore);
       String host = System.getProperty(HOST_PROPERTY);

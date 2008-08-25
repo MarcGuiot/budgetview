@@ -1,11 +1,11 @@
-package org.globsframework.rooms.web.pages;
+package org.crossbowlabs.rooms.web.pages;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.security.WaspSession;
 import org.apache.wicket.security.components.SecureWebPage;
-import org.globsframework.rooms.web.RoomSession;
-import org.globsframework.rooms.web.login.RoomContext;
+import org.crossbowlabs.rooms.web.RoomSession;
+import org.crossbowlabs.rooms.web.login.RoomContext;
 
 import java.util.ResourceBundle;
 

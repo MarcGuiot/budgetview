@@ -1,4 +1,4 @@
-package org.globsframework.rooms.web;
+package org.crossbowlabs.rooms.web;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -7,10 +7,10 @@ import com.gargoylesoftware.htmlunit.html.*;
 import junit.framework.TestCase;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.wicket.protocol.http.WicketServlet;
-import org.globsframework.rooms.DemoRoomsServer;
-import org.globsframework.rooms.model.PersistenceManager;
-import org.globsframework.rooms.model.Room;
-import org.globsframework.rooms.model.User;
+import org.crossbowlabs.rooms.DemoRoomsServer;
+import org.crossbowlabs.rooms.model.PersistenceManager;
+import org.crossbowlabs.rooms.model.Room;
+import org.crossbowlabs.rooms.model.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mortbay.jetty.servlet.Context;

@@ -18,6 +18,10 @@
       <id>xml sax parser picolo</id>
       <url>http://mirrors.ibiblio.org/pub/mirrors/maven2/</url>
     </repository>
+    <repository>
+      <id>jgoodies, prevayler</id>
+      <url>http://startupxp.dynalias.org/maven2/</url>
+    </repository>
   </repositories>
 
   <scm>

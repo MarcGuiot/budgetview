@@ -80,7 +80,7 @@
     <dependency>
       <groupId>htmlunit</groupId>
       <artifactId>htmlunit</artifactId>
-      <version>1.13</version>
+      <version>1.14</version>
       <scope>test</scope>
     </dependency>
     <dependency>

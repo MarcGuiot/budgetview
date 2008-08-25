@@ -273,15 +273,10 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.MONTH, 200808),
                       value(Transaction.BANK_MONTH, 200808),
                       value(Transaction.LABEL, "Auchan"));
-//    Integer[] budget = getBudgetId(INCOME_SERIES_ID);
-//    listener.assertLastChangesEqual(
-//      SeriesBudget.TYPE,
-//      "<update _overBurnAmount='0.0' id='" + budget[1] +"' overBurnAmount='200.0' type='seriesBudget'/>");
-
     repository.update(Key.create(Transaction.TYPE, 103), Transaction.AMOUNT, 1900.);
     listener.assertLastChangesEqual(
       Transaction.TYPE,
-      "  <update _amount=\"2200.0\" amount=\"1900.0\" id=\"103\" type=\"transaction\"/>");
+      "  <update _amount='2200.0' amount='1900.0' id='103' type='transaction'/>");
   }
 }
 

@@ -84,7 +84,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           if (previousAmount != null && previousSeries != null) {
             Glob series = repository.find(Key.create(Series.TYPE, previousSeries));
             if (series != null) {
-              transfertToPlanned(series, previousMonth, -previousAmount, TransactionPlannedTrigger.this.timeService.getLastAvailableTransactionMonthId(), repository);
+              transfertToPlanned(series, previousMonth, -previousAmount, timeService.getLastAvailableTransactionMonthId(), repository);
             }
           }
           if (newAmount != null && newSeries != null) {
