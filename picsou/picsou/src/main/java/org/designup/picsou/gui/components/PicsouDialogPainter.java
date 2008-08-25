@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.components;
 
-import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorLocator;
-import org.globsframework.gui.splits.utils.Java2DUtils;
 import org.designup.picsou.gui.utils.PicsouColors;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.utils.Java2DUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,9 +14,10 @@ public class PicsouDialogPainter implements ColorChangeListener {
   private Color topColor;
   private Color bottomColor;
   private Color borderColor;
+  private ColorService colorService;
 
   public PicsouDialogPainter() {
-    ColorService colorService = (ColorService)UIManager.get("ColorService");
+    colorService = (ColorService)UIManager.get("ColorService");
     colorService.addListener(this);
     topColor = colorService.get(PicsouColors.DIALOG_BG_TOP);
     bottomColor = colorService.get(PicsouColors.DIALOG_BG_BOTTOM);
@@ -51,5 +52,10 @@ public class PicsouDialogPainter implements ColorChangeListener {
     topColor = colorLocator.get(PicsouColors.DIALOG_BG_TOP);
     bottomColor = colorLocator.get(PicsouColors.DIALOG_BG_BOTTOM);
     borderColor = colorLocator.get(PicsouColors.DIALOG_BORDER);
+  }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(this);
   }
 }

@@ -3,11 +3,13 @@ package org.designup.picsou.gui.time;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.*;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.UserPreferences;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -53,19 +55,21 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private int paintCount = 0;
   private int currentPaintCount = 0;
   private TimeService timeService;
+  private boolean isRegisteredUser;
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
     this.repository = globRepository;
-    colors = new MonthViewColors(directory);
-
-    GlobList list = globRepository.getAll(Month.TYPE).sort(Month.ID);
     timeService = directory.get(TimeService.class);
+    colors = new MonthViewColors(directory);
+    isRegisteredUser = repository.get(UserPreferences.KEY).get(UserPreferences.REGISTRED_USER);
+    GlobList list = globRepository.getAll(Month.TYPE).sort(Month.ID);
+    filterMonth(list);
     timeGraph = new TimeGraph(list, colors, timeService);
     selectionService = directory.get(SelectionService.class);
     setName("MonthSelector");
     globRepository.addChangeListener(this);
     enableEvents(AWTEvent.KEY_EVENT_MASK);
-    selectionService.addListener(this, Month.TYPE);
+    selectionService.addListener(this, Month.TYPE, UserPreferences.TYPE);
     setFocusable(true);
     addMouseListener(this);
     addMouseMotionListener(this);
@@ -236,20 +240,36 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
+    if (changeSet.containsChanges(UserPreferences.KEY)) {
+      if (repository.get(UserPreferences.KEY).get(UserPreferences.REGISTRED_USER) != isRegisteredUser) {
+        isRegisteredUser = !isRegisteredUser;
+        reloadMonth();
+        repaint();
+        return;
+      }
+    }
     if (changeSet.containsChanges(Month.TYPE)) {
       reloadMonth();
       repaint();
     }
   }
 
+  public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
+    isRegisteredUser = repository.get(UserPreferences.KEY).get(UserPreferences.REGISTRED_USER);
+    reloadMonth();
+    repaint();
+  }
+
   private void reloadMonth() {
     GlobList list = repository.getAll(Month.TYPE).sort(Month.ID);
+    filterMonth(list);
     timeGraph = new TimeGraph(list, colors, timeService);
   }
 
-  public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
-    reloadMonth();
-    repaint();
+  private void filterMonth(GlobList list) {
+    if (!isRegisteredUser) {
+      list.filterSelf(GlobMatchers.fieldLesserOrEqual(Month.ID, timeService.getCurrentMonthId()), repository);
+    }
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -296,7 +316,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     for (Selectable selected : currentlySelected) {
       lastSelected = selected;
     }
-    if (lastSelected.isVisible().equals(Selectable.Visibility.FULLY)) {
+    if (lastSelected == null || lastSelected.isVisible().equals(Selectable.Visibility.FULLY)) {
       return;
     }
     Selectable mostLeftSelectable = timeGraph.getFirstSelectable();

@@ -1,12 +1,12 @@
-package org.globsframework.rooms.web.login;
+package org.crossbowlabs.rooms.web.login;
 
 import org.apache.wicket.security.hive.authentication.LoginContext;
 import org.apache.wicket.security.hive.authentication.Subject;
 import org.apache.wicket.security.hive.authentication.DefaultSubject;
 import org.apache.wicket.security.hive.authorization.SimplePrincipal;
 import org.apache.wicket.security.strategies.LoginException;
-import org.globsframework.rooms.model.PersistenceManager;
-import org.globsframework.rooms.model.User;
+import org.crossbowlabs.rooms.model.PersistenceManager;
+import org.crossbowlabs.rooms.model.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.Criteria;

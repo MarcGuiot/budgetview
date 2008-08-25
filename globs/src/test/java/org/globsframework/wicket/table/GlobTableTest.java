@@ -1,6 +1,9 @@
 package org.globsframework.wicket.table;
 
 import com.gargoylesoftware.htmlunit.html.*;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.Model;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObjectWithMultiLineText;
 import static org.globsframework.model.FieldValue.value;
@@ -11,9 +14,6 @@ import org.globsframework.utils.TestUtils;
 import org.globsframework.wicket.*;
 import org.globsframework.wicket.table.columns.AbstractGlobTableColumn;
 import org.globsframework.wicket.table.columns.DeleteButtonColumn;
-import wicket.Component;
-import wicket.markup.html.basic.Label;
-import wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,8 @@ public class GlobTableTest extends WebTestCase {
 
     HtmlTable table = (HtmlTable)renderComponent(new ComponentFactory() {
       public Component create(String componentId, GlobRepositoryLoader repositoryLoader) {
-        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY)
+        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY,
+                                     repository, directory)
           .add(DummyObject.NAME)
           .add(DummyObject.VALUE)
           .getPanel(componentId);
@@ -45,7 +46,7 @@ public class GlobTableTest extends WebTestCase {
 
     HtmlTable table = (HtmlTable)renderComponent(new ComponentFactory() {
       public Component create(String componentId, GlobRepositoryLoader repositoryLoader) {
-        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY)
+        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY, repository, directory)
           .setMatcher(GlobMatchers.fieldEquals(DummyObject.NAME, "name2"))
           .add(DummyObject.NAME)
           .add(DummyObject.VALUE)
@@ -64,7 +65,7 @@ public class GlobTableTest extends WebTestCase {
 
     HtmlTable table = (HtmlTable)renderComponent(new ComponentFactory() {
       public Component create(String componentId, GlobRepositoryLoader repositoryLoader) {
-        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY)
+        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY, repository, directory)
           .add(DummyObject.NAME)
           .add(DummyObject.LINK)
           .getPanel(componentId);
@@ -83,7 +84,7 @@ public class GlobTableTest extends WebTestCase {
 
     HtmlTable table = (HtmlTable)renderComponent(new ComponentFactory() {
       public Component create(String componentId, GlobRepositoryLoader repositoryLoader) {
-        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY)
+        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY, repository, directory)
           .add(DummyObject.NAME)
           .add(new AbstractGlobTableColumn("Key") {
             public Component getComponent(String id,
@@ -112,7 +113,7 @@ public class GlobTableTest extends WebTestCase {
 
     HtmlTable table = (HtmlTable)renderComponent(new ComponentFactory() {
       public Component create(String componentId, GlobRepositoryLoader repositoryLoader) {
-        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.ROW)
+        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.ROW, repository, directory)
           .add(DummyObject.NAME)
           .addFieldEditor(DummyObject.PRESENT)
           .addSubmitListener(new DummySubmitListener())
@@ -139,7 +140,7 @@ public class GlobTableTest extends WebTestCase {
 
     HtmlTable table = (HtmlTable)renderComponent(new ComponentFactory() {
       public Component create(String componentId, GlobRepositoryLoader repositoryLoader) {
-        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.TABLE)
+        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.TABLE, repository, directory)
           .add(DummyObject.NAME)
           .addFieldEditor(DummyObject.PRESENT)
           .addSubmitListener(new DummySubmitListener())
@@ -184,7 +185,7 @@ public class GlobTableTest extends WebTestCase {
 
     HtmlTable table = (HtmlTable)renderComponent(new ComponentFactory() {
       public Component create(String componentId, GlobRepositoryLoader repositoryLoader) {
-        return GlobTableBuilder.init(DummyObjectWithMultiLineText.TYPE, TableEditPolicy.READ_ONLY)
+        return GlobTableBuilder.init(DummyObjectWithMultiLineText.TYPE, TableEditPolicy.READ_ONLY, repository, directory)
           .add(DummyObjectWithMultiLineText.COMMENT)
           .getPanel(componentId);
       }
@@ -222,7 +223,7 @@ public class GlobTableTest extends WebTestCase {
 
     HtmlTable table = (HtmlTable)renderComponent(new ComponentFactory() {
       public Component create(String componentId, GlobRepositoryLoader repositoryLoader) {
-        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY)
+        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY, repository, directory)
           .add(DummyObject.NAME)
           .add(DummyObject.PRESENT)
           .addDefaultRowEditor("Edition", "edit")
@@ -259,7 +260,7 @@ public class GlobTableTest extends WebTestCase {
                           new ComponentFactory() {
                             public Component create(String componentId,
                                                     GlobRepositoryLoader repositoryLoader) {
-                              return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.ROW)
+                              return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.ROW, repository, directory)
                                 .add(DummyObject.NAME)
                                 .add(DummyObject.PRESENT)
                                 .addDefaultRowEditor("edition", "edit")
@@ -275,7 +276,7 @@ public class GlobTableTest extends WebTestCase {
 
     HtmlTable table = (HtmlTable)renderComponent(new ComponentFactory() {
       public Component create(String componentId, GlobRepositoryLoader repositoryLoader) {
-        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY)
+        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY, repository, directory)
           .add(DummyObject.NAME)
           .add(DummyObject.PRESENT)
           .addDefaultRowEditor("Edition", "edit")
@@ -305,7 +306,7 @@ public class GlobTableTest extends WebTestCase {
 
     HtmlTable table = (HtmlTable)renderComponent(new ComponentFactory() {
       public Component create(String componentId, GlobRepositoryLoader repositoryLoader) {
-        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY)
+        return GlobTableBuilder.init(DummyObject.TYPE, TableEditPolicy.READ_ONLY, repository, directory)
           .add(DummyObject.NAME)
           .add(new DummyDeleteButtonColumn())
           .getPanel(componentId);

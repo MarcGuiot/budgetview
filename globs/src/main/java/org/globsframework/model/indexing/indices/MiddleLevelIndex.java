@@ -78,7 +78,7 @@ public class MiddleLevelIndex implements UpdatableMultiFieldIndex, GlobRepositor
     if (multiFieldIndexed != null) {
       return multiFieldIndexed.getGlobs();
     }
-    return GlobList.EMPTY;
+    return new GlobList();
   }
 
   public boolean remove(Glob glob) {

@@ -1,4 +1,4 @@
-package org.globsframework.rooms.web.pages;
+package org.crossbowlabs.rooms.web.pages;
 
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;

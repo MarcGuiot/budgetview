@@ -1,12 +1,12 @@
 package org.designup.picsou.gui.description;
 
-import org.globsframework.model.format.utils.AbstractGlobStringifier;
+import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.BudgetArea;
+import org.globsframework.model.format.utils.AbstractGlobStringifier;
 
 public class TransactionSeriesStringifier extends AbstractGlobStringifier {
 
@@ -15,7 +15,7 @@ public class TransactionSeriesStringifier extends AbstractGlobStringifier {
 
   public String toString(Glob transaction, GlobRepository repository) {
     Integer seriesId = transaction.get(Transaction.SERIES);
-    if (seriesId == null) {
+    if (Series.UNKNOWN_SERIES_ID.equals(seriesId)) {
       return "";
     }
     Glob series = repository.get(Key.create(Series.TYPE, seriesId));

@@ -135,38 +135,39 @@ public class ImportSession {
     for (Glob importedTransaction : importedTransactions) {
       Date bankDate = parseDate(dateFormat, importedTransaction, ImportedTransaction.BANK_DATE);
       Date userDate = parseDate(dateFormat, importedTransaction, ImportedTransaction.DATE);
-      
-      createdTransactions.add(
-        localRepository.create(
-          Key.create(Transaction.TYPE, importedTransaction.getValue(ImportedTransaction.ID)),
-          value(Transaction.TRANSACTION_TYPE,
-                importedTransaction.get(ImportedTransaction.IS_CARD, false) ? TransactionType.getId(TransactionType.CREDIT_CARD) : null),
-          value(Transaction.BANK_MONTH, Month.getMonthId(bankDate)),
-          value(Transaction.BANK_DAY, Month.getDay(bankDate)),
-          value(Transaction.BANK_MONTH, bankDate == null ? null : Month.getMonthId(bankDate)),
-          value(Transaction.BANK_DAY, bankDate == null ? null : Month.getDay(bankDate)),
-          value(Transaction.MONTH, userDate == null ? null : Month.getMonthId(userDate)),
-          value(Transaction.DAY, userDate == null ? null : Month.getDay(userDate)),
-          value(Transaction.LABEL, importedTransaction.get(ImportedTransaction.LABEL)),
-          value(Transaction.ACCOUNT, importedTransaction.get(ImportedTransaction.ACCOUNT)),
-          value(Transaction.AMOUNT, importedTransaction.get(ImportedTransaction.AMOUNT)),
-          value(Transaction.CATEGORY, importedTransaction.get(ImportedTransaction.CATEGORY)),
-          value(Transaction.SERIES, getSeriesId(importedTransaction)),
-          value(Transaction.DISPENSABLE, importedTransaction.get(ImportedTransaction.DISPENSABLE)),
-          value(Transaction.LABEL_FOR_CATEGORISATION, importedTransaction.get(ImportedTransaction.LABEL_FOR_CATEGORISATION)),
-          value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
-          value(Transaction.ORIGINAL_LABEL, importedTransaction.get(ImportedTransaction.ORIGINAL_LABEL)),
-          value(Transaction.SPLIT, importedTransaction.get(ImportedTransaction.SPLIT)),
-          value(Transaction.SPLIT_SOURCE, importedTransaction.get(ImportedTransaction.SPLIT_SOURCE))
-        ));
+
+      Glob transaction = localRepository.create(
+        Key.create(Transaction.TYPE, importedTransaction.getValue(ImportedTransaction.ID)),
+        value(Transaction.TRANSACTION_TYPE,
+              importedTransaction.get(ImportedTransaction.IS_CARD, false) ? TransactionType.getId(TransactionType.CREDIT_CARD) : null),
+        value(Transaction.BANK_MONTH, Month.getMonthId(bankDate)),
+        value(Transaction.BANK_DAY, Month.getDay(bankDate)),
+        value(Transaction.MONTH, userDate == null ? null : Month.getMonthId(userDate)),
+        value(Transaction.DAY, userDate == null ? null : Month.getDay(userDate)),
+        value(Transaction.LABEL, importedTransaction.get(ImportedTransaction.LABEL)),
+        value(Transaction.ACCOUNT, importedTransaction.get(ImportedTransaction.ACCOUNT)),
+        value(Transaction.AMOUNT, importedTransaction.get(ImportedTransaction.AMOUNT)),
+        value(Transaction.CATEGORY, importedTransaction.get(ImportedTransaction.CATEGORY)),
+        value(Transaction.DISPENSABLE, importedTransaction.get(ImportedTransaction.DISPENSABLE)),
+        value(Transaction.LABEL_FOR_CATEGORISATION, importedTransaction.get(ImportedTransaction.LABEL_FOR_CATEGORISATION)),
+        value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
+        value(Transaction.ORIGINAL_LABEL, importedTransaction.get(ImportedTransaction.ORIGINAL_LABEL)),
+        value(Transaction.SPLIT, importedTransaction.get(ImportedTransaction.SPLIT)),
+        value(Transaction.SPLIT_SOURCE, importedTransaction.get(ImportedTransaction.SPLIT_SOURCE))
+      );
+      Integer seriesId = getSeriesId(importedTransaction);
+      if (seriesId != null) {
+        localRepository.update(transaction.getKey(), Transaction.SERIES, seriesId);
+      }
+      createdTransactions.add(transaction);
+
     }
     return createdTransactions;
   }
 
   private Integer getSeriesId(Glob importedTransaction) {
     Integer categoryId = importedTransaction.get(ImportedTransaction.CATEGORY);
-    Integer integer = categoryId != null ? Series.OCCASIONAL_SERIES_ID : null;
-    return integer;
+    return categoryId != 0 ? Series.OCCASIONAL_SERIES_ID : null;
   }
 
   private Date parseDate(DateFormat dateFormat, Glob glob, StringField dateField) {

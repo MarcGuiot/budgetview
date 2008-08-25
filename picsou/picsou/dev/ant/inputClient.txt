@@ -1,7 +1,7 @@
+C picsou.Main
 C org.designup.picsou.gui.MainWindow
 C org.designup.picsou.gui.MainWindowLauncher
 C org.designup.picsou.gui.PicsouApplet
-C org.designup.picsou.gui.PicsouApplication
 C org.designup.picsou.client.local.LocalClientTransport
 C org.designup.picsou.gui.plaf.WavePanelUI
 C org.designup.picsou.gui.plaf.PicsouButtonUI

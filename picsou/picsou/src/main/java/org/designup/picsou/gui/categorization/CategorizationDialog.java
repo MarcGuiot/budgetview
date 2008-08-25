@@ -83,7 +83,9 @@ public class CategorizationDialog {
       }
     });
     builder.add("invisibleBudgetAreaToggle", invisibleBudgetAreaToggle);
-    builder.addRepeat("budgetAreas", BudgetArea.TYPE.getConstants(),
+    GlobList constants = BudgetArea.TYPE.getConstants();
+    constants.removeAll(GlobMatchers.fieldEquals(BudgetArea.ID, BudgetArea.UNCLASSIFIED.getId()), repository);
+    builder.addRepeat("budgetAreas", constants,
                       new BudgetAreaComponentFactory(cardHandler, invisibleBudgetAreaToggle,
                                                      localRepository, localDirectory, dialog));
 
@@ -267,7 +269,7 @@ public class CategorizationDialog {
 
   private void updateAutoHide() {
     if (autoHideCheckBox.isSelected()) {
-      transactionTable.setFilter(GlobMatchers.isNull(Transaction.SERIES));
+      transactionTable.setFilter(GlobMatchers.fieldEquals(Transaction.SERIES, Series.UNKNOWN_SERIES_ID));
     }
     else {
       transactionTable.setFilter(GlobMatchers.ALL);

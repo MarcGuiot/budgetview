@@ -57,7 +57,7 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
       }
 
       public GlobList findByIndex(Object value) {
-        return GlobList.EMPTY;
+        return new GlobList();
       }
 
       public GlobRepository.MultiFieldIndexed findByIndex(Field field, Object value) {

@@ -44,7 +44,7 @@ public class SeriesBudget {
   public static MultiFieldUniqueIndex SERIES_INDEX;
 
   static {
-    GlobTypeLoader loader = GlobTypeLoader.init(SeriesBudget.class);
+    GlobTypeLoader loader = GlobTypeLoader.init(SeriesBudget.class, "seriesBudget");
     loader.defineMultiFieldUniqueIndex(SERIES_INDEX, SERIES, MONTH);
   }
 

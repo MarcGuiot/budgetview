@@ -1,5 +1,12 @@
 package org.globsframework.wicket.table.rows;
 
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -10,13 +17,6 @@ import org.globsframework.wicket.GlobPage;
 import org.globsframework.wicket.table.GlobTableColumn;
 import org.globsframework.wicket.table.GlobTableRowEditor;
 import org.globsframework.wicket.table.GlobTableRowEditorFactory;
-import wicket.AttributeModifier;
-import wicket.Component;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
-import wicket.markup.html.panel.Panel;
-import wicket.model.Model;
 
 import java.util.List;
 

@@ -1,5 +1,7 @@
 package org.globsframework.wicket.model;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -7,9 +9,6 @@ import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.wicket.GlobRepositoryLoader;
 import org.globsframework.wicket.GlobSession;
-import wicket.Component;
-import wicket.Session;
-import wicket.model.AbstractReadOnlyModel;
 
 public abstract class AbstractGlobStringifierModel extends AbstractReadOnlyModel {
   protected final Key key;
@@ -21,7 +20,7 @@ public abstract class AbstractGlobStringifierModel extends AbstractReadOnlyModel
     this.repositoryLoader = repositoryLoader;
   }
 
-  public Object getObject(final Component component) {
+  public Object getObject() {
     GlobRepository repository = repositoryLoader.getRepository();
     Glob glob = repository.get(key);
     return getStringifier().toString(glob, repository);

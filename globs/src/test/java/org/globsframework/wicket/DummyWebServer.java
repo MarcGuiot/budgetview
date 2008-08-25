@@ -1,10 +1,10 @@
 package org.globsframework.wicket;
 
+import org.apache.wicket.protocol.http.WicketServlet;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.ErrorHandler;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-import wicket.protocol.http.WicketServlet;
 
 public class DummyWebServer {
   private Server jetty;

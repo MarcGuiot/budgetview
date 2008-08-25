@@ -2,8 +2,8 @@ package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +23,7 @@ public abstract class RoundedButton extends JButton implements ColorChangeListen
   protected Color pressedInnerBorderBottomColor;
   protected Color pressedOuterBorderTopColor;
   protected Color pressedOuterBorderBottomColor;
+  private ColorService colorService;
 
   public static RoundedButton createRoundedRectangle(Action action, ColorService colorService) {
     return new RoundedButton(action, colorService) {
@@ -98,7 +99,8 @@ public abstract class RoundedButton extends JButton implements ColorChangeListen
 
   private RoundedButton(Action action, ColorService colorService) {
     super(action);
-    colorService.addListener(this);
+    this.colorService = colorService;
+    this.colorService.addListener(this);
     setOpaque(false);
     setBorderPainted(false);
     setFocusPainted(false);
@@ -156,5 +158,10 @@ public abstract class RoundedButton extends JButton implements ColorChangeListen
       icon = getRolloverIcon();
     }
     return icon;
+  }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(this);
   }
 }

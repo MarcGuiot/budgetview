@@ -23,7 +23,7 @@ public class QueryVersionTask extends TimerTask {
     query = sqlService.getDb().getQueryBuilder(SoftwareInfo.TYPE)
       .select(SoftwareInfo.LATEST_JAR_VERSION, jarVersionRef)
       .select(SoftwareInfo.LATEST_CONFIG_VERSION, configVersionRef)
-      .getQuery();
+      .getNotAutoCloseQuery();
   }
 
 

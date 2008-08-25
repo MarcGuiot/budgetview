@@ -2,6 +2,7 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.categorization.CategorizationDialog;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -10,8 +11,7 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import static org.globsframework.model.utils.GlobMatchers.isNull;
-import static org.globsframework.model.utils.GlobMatchers.or;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -55,7 +55,8 @@ public class UncategorizedMessageView extends View implements ChangeSetListener 
 
   private void update() {
     uncategorizedTransactions =
-      repository.getAll(Transaction.TYPE, or(isNull(Transaction.SERIES), isNull(Transaction.CATEGORY)));
+      repository.getAll(Transaction.TYPE, or(fieldEquals(Transaction.SERIES, Series.UNKNOWN_SERIES_ID),
+                                             isNull(Transaction.CATEGORY)));
     final int count = uncategorizedTransactions.size();
     textArea.setVisible(count > 0);
     if (count > 0) {

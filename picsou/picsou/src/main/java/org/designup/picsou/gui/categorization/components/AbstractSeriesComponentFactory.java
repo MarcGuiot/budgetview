@@ -88,7 +88,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
           }
           Glob series = repository.get(seriesKey);
           if (series.get(Series.AMOUNT) == null &&
-              !ProfileType.CUSTOM.getId().equals(series.get(Series.PROFILE_TYPE))) {
+              !ProfileType.UNKNOWN.getId().equals(series.get(Series.PROFILE_TYPE))) {
             SeriesCreationDialog seriesCreationDialog =
               new SeriesCreationDialog(dialog, repository, directory);
             seriesCreationDialog.show(series, currentTransactions);

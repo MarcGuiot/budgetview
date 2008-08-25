@@ -1,11 +1,15 @@
 package org.globsframework.wicket.table;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidConfiguration;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.wicket.FormSubmitListener;
@@ -17,14 +21,14 @@ import org.globsframework.wicket.table.columns.SubmitColumn;
 import org.globsframework.wicket.table.rows.DefaultRowEditorFactory;
 import org.globsframework.wicket.table.rows.GlobTableRowEditorColumnAdapter;
 import org.globsframework.wicket.table.wrapper.FormWrapper;
-import wicket.Session;
-import wicket.markup.html.panel.Panel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GlobTableBuilder {
   private GlobType type;
+  private GlobRepository repository;
+  private Directory directory;
   private List<GlobTableColumn> columns = new ArrayList<GlobTableColumn>();
   private List fields = new ArrayList();
   private GlobMatcher matcher = GlobMatchers.ALL;
@@ -32,13 +36,16 @@ public class GlobTableBuilder {
   private List<FormSubmitListener> submitListeners = new ArrayList<FormSubmitListener>();
   private GlobTableRowEditorFactory rowEditorFactory = GlobTableRowEditorFactory.NULL;
 
-  public static GlobTableBuilder init(GlobType type, TableEditPolicy editPolicy) {
-    return new GlobTableBuilder(type, editPolicy);
+  public static GlobTableBuilder init(GlobType type, TableEditPolicy editPolicy,
+                                      GlobRepository repository, Directory directory) {
+    return new GlobTableBuilder(type, editPolicy, repository, directory);
   }
 
-  private GlobTableBuilder(GlobType type, TableEditPolicy editPolicy) {
+  private GlobTableBuilder(GlobType type, TableEditPolicy editPolicy, GlobRepository repository, Directory directory) {
     this.editPolicy = editPolicy;
     this.type = type;
+    this.repository = repository;
+    this.directory = directory;
   }
 
   public GlobTableBuilder setMatcher(GlobMatcher matcher) {
@@ -113,6 +120,7 @@ public class GlobTableBuilder {
   }
 
   private GlobTable createTable(String id) {
-    return new GlobTable(id, type, columns, matcher, editPolicy, rowEditorFactory, submitListeners);
+    return new GlobTable(id, type, columns, matcher, editPolicy,
+                         rowEditorFactory, submitListeners, repository, directory);
   }
 }

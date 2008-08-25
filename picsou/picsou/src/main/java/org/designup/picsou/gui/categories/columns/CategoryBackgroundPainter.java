@@ -15,9 +15,11 @@ public class CategoryBackgroundPainter implements CellPainter, ColorChangeListen
   private Color background;
   private Color selectionTop;
   private Color selectionBottom;
+  private ColorService colorService;
 
   public CategoryBackgroundPainter(Directory directory) {
-    directory.get(ColorService.class).addListener(this);
+    colorService = directory.get(ColorService.class);
+    colorService.addListener(this);
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
@@ -42,5 +44,10 @@ public class CategoryBackgroundPainter implements CellPainter, ColorChangeListen
       g2.drawLine(0, 0, width, 0);
       g2.drawLine(0, height - 1, width, height - 1);
     }
+  }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(this);
   }
 }

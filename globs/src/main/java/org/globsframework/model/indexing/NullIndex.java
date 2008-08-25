@@ -8,11 +8,11 @@ public class NullIndex implements GlobRepository.MultiFieldIndexed {
   public static GlobRepository.MultiFieldIndexed INSTANCE = new NullIndex();
 
   public GlobList getGlobs() {
-    return GlobList.EMPTY;
+    return new GlobList();
   }
 
   public GlobList findByIndex(Object value) {
-    return GlobList.EMPTY;
+    return new GlobList();
   }
 
   public GlobRepository.MultiFieldIndexed findByIndex(Field field, Object value) {

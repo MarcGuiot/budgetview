@@ -53,44 +53,44 @@ public class Series {
 
   public static DoubleField MAX_AMOUNT;
 
-  @NoObfuscation
   @DefaultBoolean(true)
   public static BooleanField JANUARY;
-  @NoObfuscation
+
   @DefaultBoolean(true)
   public static BooleanField FEBRUARY;
-  @NoObfuscation
+
   @DefaultBoolean(true)
   public static BooleanField MARCH;
-  @NoObfuscation
+
   @DefaultBoolean(true)
   public static BooleanField APRIL;
-  @NoObfuscation
+
   @DefaultBoolean(true)
   public static BooleanField MAY;
-  @NoObfuscation
+
   @DefaultBoolean(true)
   public static BooleanField JUNE;
-  @NoObfuscation
+
   @DefaultBoolean(true)
   public static BooleanField JULY;
-  @NoObfuscation
+
   @DefaultBoolean(true)
   public static BooleanField AUGUST;
-  @NoObfuscation
+
   @DefaultBoolean(true)
   public static BooleanField SEPTEMBER;
-  @NoObfuscation
+
   @DefaultBoolean(true)
   public static BooleanField OCTOBER;
-  @NoObfuscation
+
   @DefaultBoolean(true)
   public static BooleanField NOVEMBER;
-  @NoObfuscation
+
   @DefaultBoolean(true)
   public static BooleanField DECEMBER;
 
   public static final Integer OCCASIONAL_SERIES_ID = 0;
+  public static final Integer UNKNOWN_SERIES_ID = 1;
 
   static {
     GlobTypeLoader.init(Series.class, "series");

@@ -1,12 +1,12 @@
-package org.globsframework.rooms;
+package org.crossbowlabs.rooms;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.wicket.protocol.http.WicketServlet;
-import org.globsframework.rooms.model.PersistenceManager;
-import org.globsframework.rooms.model.Room;
-import org.globsframework.rooms.model.UseDateByRoom;
-import org.globsframework.rooms.model.User;
-import org.globsframework.rooms.web.RoomsApplication;
+import org.crossbowlabs.rooms.model.PersistenceManager;
+import org.crossbowlabs.rooms.model.Room;
+import org.crossbowlabs.rooms.model.UseDateByRoom;
+import org.crossbowlabs.rooms.model.User;
+import org.crossbowlabs.rooms.web.RoomsApplication;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mortbay.jetty.servlet.Context;

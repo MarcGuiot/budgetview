@@ -1,5 +1,7 @@
 package org.globsframework.wicket.labels;
 
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.LinkField;
@@ -7,8 +9,6 @@ import org.globsframework.model.Key;
 import org.globsframework.wicket.GlobRepositoryLoader;
 import org.globsframework.wicket.model.GlobFieldStringifierModel;
 import org.globsframework.wicket.model.GlobLinkStringifierModel;
-import wicket.MarkupContainer;
-import wicket.markup.html.basic.Label;
 
 public class GlobLabels {
   private final MarkupContainer parent;

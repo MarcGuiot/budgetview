@@ -1,9 +1,9 @@
 package org.globsframework.wicket.component;
 
-import wicket.AttributeModifier;
-import wicket.markup.html.link.Link;
-import wicket.markup.html.panel.Panel;
-import wicket.model.Model;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 
 public class LinkButtonPanel extends Panel {
   public static final String ID = "linkButton";

@@ -1,9 +1,9 @@
 package org.globsframework.wicket.editors.converters;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
 import org.globsframework.wicket.GlobSession;
-import wicket.Session;
-import wicket.util.convert.ConversionException;
-import wicket.util.convert.IConverter;
 
 import java.text.DateFormat;
 import java.text.ParsePosition;
@@ -15,6 +15,26 @@ public class DateConverter implements IConverter {
 
   protected Class getTargetType() {
     return Date.class;
+  }
+
+  public Object convertToObject(String value, Locale locale) {
+    if (value == null) {
+      return null;
+    }
+
+    GlobSession session = (GlobSession)Session.get();
+    DateFormat dateFormat = session.getDescriptionService().getFormats().getDateFormat();
+    return parse(dateFormat, value);
+  }
+
+  public String convertToString(Object value, Locale locale) {
+    if (value == null) {
+      return null;
+    }
+
+    GlobSession session = (GlobSession)Session.get();
+    DateFormat dateFormat = session.getDescriptionService().getFormats().getDateFormat();
+    return dateFormat.format(value);
   }
 
   public Object convert(Object value, Class targetClass) {

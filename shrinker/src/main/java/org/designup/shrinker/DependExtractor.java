@@ -141,6 +141,11 @@ public class DependExtractor {
       for (Type argumentType : argumentTypes) {
         add(argumentType);
       }
+      if (exceptions != null) {
+        for (String exception : exceptions) {
+          add(Type.getObjectType(exception));
+        }
+      }
       add(Type.getReturnType(desc));
       return this;
     }

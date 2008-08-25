@@ -30,6 +30,10 @@ public class DummyObjectWithDefaultValues {
   @DefaultDate()
   public static TimeStampField TIMESTAMP;
 
+  @Target(DummyObject.class)
+  @DefaultInteger(1)
+  public static LinkField LINK;
+
   @DefaultString("Hello")
   public static StringField STRING;
 

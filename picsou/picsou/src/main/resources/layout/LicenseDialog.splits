@@ -14,6 +14,12 @@
         <label text="$license.code"/>
         <textField ref="code"/>
       </row>
+      <row>
+        <label text="$license.month.count"/>
+        <textField ref="monthCount"/>
+      </row>
+      <progressBar ref="connectionState"/>
+      <label ref="connectionMessage"/>
       <filler fill="vertical" weightY="20"/>
     </column>
 

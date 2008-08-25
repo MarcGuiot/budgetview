@@ -1,7 +1,7 @@
 package org.globsframework.wicket.editors;
 
-import wicket.markup.html.form.AbstractTextComponent;
-import wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.form.AbstractTextComponent;
+import org.apache.wicket.markup.html.panel.Panel;
 
 public class TextEditorPanel extends Panel {
 

@@ -1,10 +1,10 @@
 package org.globsframework.wicket.table.columns;
 
+import org.apache.wicket.Component;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.MutableFieldValues;
 import org.globsframework.model.format.DescriptionService;
-import wicket.Component;
 
 public abstract class ButtonColumn extends AbstractGlobTableColumn {
   protected String buttonLabel;

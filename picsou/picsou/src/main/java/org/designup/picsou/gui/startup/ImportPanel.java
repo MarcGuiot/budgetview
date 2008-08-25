@@ -404,11 +404,14 @@ public abstract class ImportPanel {
 
   private Set<Integer> createMonth() {
     localRepository.enterBulkDispatchingMode();
-    SortedSet<Integer> monthIds;
+    SortedSet<Integer> monthIds = new TreeSet<Integer>();
     try {
-      monthIds = localRepository.getAll(Transaction.TYPE,
-                                        GlobMatchers.fieldIn(Transaction.IMPORT, importKeys))
-        .getSortedSet(Transaction.BANK_MONTH);
+      GlobList months = localRepository.getAll(Transaction.TYPE,
+                                               GlobMatchers.fieldIn(Transaction.IMPORT, importKeys));
+      for (Glob month : months) {
+        monthIds.add(month.get(Transaction.BANK_MONTH));
+        monthIds.add(month.get(Transaction.MONTH));
+      }
       if (monthIds.isEmpty()) {
         return monthIds;
       }
@@ -498,7 +501,8 @@ public abstract class ImportPanel {
         if (!accountEditionPanel.check()) {
           return;
         }
-        Key importKey = importSession.importTransactions(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
+        Key importKey = importSession.importTransactions(currentlySelectedAccount,
+                                                         dateFormatSelectionPanel.getSelectedFormat());
         importKeys.add(importKey.get(TransactionImport.ID));
         nextImport();
       }

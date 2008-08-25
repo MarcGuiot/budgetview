@@ -1,15 +1,15 @@
 package org.globsframework.wicket.table.rows;
 
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.wicket.FormSubmitListener;
 import org.globsframework.wicket.table.GlobTableColumn;
 import org.globsframework.wicket.table.GlobTableRowEditorFactory;
-import wicket.AttributeModifier;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.panel.Panel;
-import wicket.model.Model;
 
 import java.util.List;
 

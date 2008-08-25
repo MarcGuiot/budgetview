@@ -125,6 +125,11 @@ public class UndoRedoService {
     return new Change(changeSet, currentSelections);
   }
 
+  public void cleanUndo() {
+    changesToUndo.clear();
+    notifyListeners();
+  }
+
   private class Change {
     private ChangeSet changeSet;
     private final MultiMap<GlobType, Key> selections;
@@ -152,4 +157,5 @@ public class UndoRedoService {
       }
     }
   }
+
 }

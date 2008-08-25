@@ -15,6 +15,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/10", -20, "ED")
       .addTransaction("2008/07/11", -10, "fnac")
       .addTransaction("2008/07/12", 1500, "Salaire")
+      .addTransaction("2008/07/13", -23, "cheque")
       .load();
 
     CategorizerChecker checker = new CategorizerChecker(mainWindow);
@@ -27,11 +28,12 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     monthSummary.init()
-      .total(1500, (29.9 + 1500 + 60 + 20 + 10), false)
+      .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 23), false)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(80)
       .checkOccasional(10)
-      .checkIncome(1500);
+      .checkIncome(1500)
+      .checkUnclassified(23);
   }
 
   public void testTwoMonths() throws Exception {

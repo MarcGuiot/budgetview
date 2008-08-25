@@ -1,12 +1,12 @@
 package org.globsframework.wicket.table.columns;
 
+import org.apache.wicket.Component;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.MutableFieldValues;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.wicket.editors.FieldEditorPanelFactory;
-import wicket.Component;
 
 public class GlobFieldEditorColumn extends AbstractGlobTableColumn {
   private final Field field;

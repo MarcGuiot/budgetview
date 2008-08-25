@@ -1,4 +1,4 @@
-package org.globsframework.rooms.model;
+package org.crossbowlabs.rooms.model;
 
 import javax.persistence.*;
 

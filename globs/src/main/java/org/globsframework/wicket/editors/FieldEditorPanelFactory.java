@@ -1,5 +1,13 @@
 package org.globsframework.wicket.editors;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.validation.validator.StringValidator;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.annotations.MultiLineText;
 import org.globsframework.metamodel.fields.*;
@@ -10,14 +18,6 @@ import org.globsframework.utils.exceptions.NotSupported;
 import org.globsframework.wicket.editors.converters.DoubleConverter;
 import org.globsframework.wicket.form.GlobFormFeedbackBorder;
 import org.globsframework.wicket.model.FieldValueModel;
-import wicket.Component;
-import wicket.markup.html.form.TextArea;
-import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.StringValidator;
-import wicket.markup.html.panel.Panel;
-import wicket.model.IModel;
-import wicket.model.Model;
-import wicket.util.convert.IConverter;
 
 public class FieldEditorPanelFactory {
   private FieldEditorPanelFactory() {
@@ -128,7 +128,7 @@ public class FieldEditorPanelFactory {
       super(componentId, model, label, Double.class);
     }
 
-    public IConverter getConverter() {
+    public IConverter getConverter(Class/* <?> */type) {
       return new DoubleConverter();
     }
   }

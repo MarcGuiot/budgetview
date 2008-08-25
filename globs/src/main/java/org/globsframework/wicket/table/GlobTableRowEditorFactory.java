@@ -1,11 +1,11 @@
 package org.globsframework.wicket.table;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.MutableFieldValues;
 import org.globsframework.model.format.DescriptionService;
-import wicket.Component;
-import wicket.markup.html.WebMarkupContainer;
 
 import java.io.Serializable;
 

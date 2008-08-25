@@ -2,10 +2,8 @@ package org.designup.picsou.gui.components;
 
 import com.sun.java.swing.SwingUtilities2;
 
-import javax.swing.plaf.basic.BasicToggleButtonUI;
-import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.*;
-import javax.swing.text.View;
+import javax.swing.plaf.basic.BasicToggleButtonUI;
 import java.awt.*;
 
 public class SeriesToggleUI extends BasicToggleButtonUI {
@@ -22,53 +20,7 @@ public class SeriesToggleUI extends BasicToggleButtonUI {
     super.installDefaults(b);
     b.setRolloverEnabled(true);
     b.setOpaque(false);
-  }
-
-  public void paint(Graphics g, JComponent component) {
-    AbstractButton button = (AbstractButton)component;
-    ButtonModel model = button.getModel();
-
-    Dimension size = button.getSize();
-    Insets insets = button.getInsets();
-    Rectangle viewRect = new Rectangle(size);
-    viewRect.x += insets.left;
-    viewRect.y += insets.top;
-    viewRect.width -= (insets.right + viewRect.x);
-    viewRect.height -= (insets.bottom + viewRect.y);
-
-    Rectangle iconRect = new Rectangle();
-    Rectangle textRect = new Rectangle();
-
-    g.setColor(button.getBackground());
-
-    if (model.isArmed() && model.isPressed() || model.isSelected()) {
-      paintButtonPressed(g, button);
-    }
-
-    // Paint the Icon
-    if (button.getIcon() != null) {
-      paintIcon(g, button, iconRect);
-    }
-
-    // Draw the Text
-    Font f = button.getFont();
-    g.setFont(f);
-
-    String text = SwingUtilities.layoutCompoundLabel(
-      button, g.getFontMetrics(), button.getText(), button.getIcon(),
-      button.getVerticalAlignment(), button.getHorizontalAlignment(),
-      button.getVerticalTextPosition(), button.getHorizontalTextPosition(),
-      viewRect, iconRect, textRect,
-      button.getText() == null ? 0 : button.getIconTextGap());
-    if (text != null && !text.equals("")) {
-      View v = (View)component.getClientProperty(BasicHTML.propertyKey);
-      if (v != null) {
-        v.paint(g, textRect);
-      }
-      else {
-        paintText(g, button, textRect, text);
-      }
-    }
+    b.setBorderPainted(false);
   }
 
   protected void paintButtonPressed(Graphics g, AbstractButton button) {

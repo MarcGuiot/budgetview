@@ -18,10 +18,12 @@ public class SqlGlobStream implements GlobStream {
   private ResultSet resultSet;
   private int rowId = 0;
   private Map<Field, SqlAccessor> fieldToAccessorHolder;
+  private SqlSelectQuery query;
 
-  public SqlGlobStream(ResultSet resultSet, Map<Field, SqlAccessor> fieldToAccessorHolder) {
+  public SqlGlobStream(ResultSet resultSet, Map<Field, SqlAccessor> fieldToAccessorHolder, SqlSelectQuery query) {
     this.resultSet = resultSet;
     this.fieldToAccessorHolder = fieldToAccessorHolder;
+    this.query = query;
     for (SqlAccessor sqlAccessor : fieldToAccessorHolder.values()) {
       sqlAccessor.setMoStream(this);
     }
@@ -32,7 +34,7 @@ public class SqlGlobStream implements GlobStream {
       rowId++;
       boolean hasNext = resultSet.next();
       if (!hasNext) {
-        resultSet.close();
+        close();
       }
       return hasNext;
     }
@@ -44,6 +46,7 @@ public class SqlGlobStream implements GlobStream {
   public void close() {
     try {
       resultSet.close();
+      query.resultSetClose();
     }
     catch (SQLException e) {
       throw new UnexpectedApplicationState(e);

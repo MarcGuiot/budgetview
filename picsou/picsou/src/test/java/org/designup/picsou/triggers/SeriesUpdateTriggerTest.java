@@ -16,16 +16,18 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
   }
 
   public void testCreateSeriesGeneratesSeriesBudgetsAndTransactions() throws Exception {
+    Integer[] occasional = getBudgetId(0);
+    Integer[] free = getBudgetId(FREE_SERIES_ID);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "  <update _amount='0.0' amount='29.9' id='0' type='seriesBudget'/>" +
-      "  <update _amount='0.0' amount='29.9' id='1' type='seriesBudget'/>" +
-      "  <update _amount='0.0' amount='29.9' id='2' type='seriesBudget'/>" +
-      "  <create active='true' amount='-29.9' day='7' id='5'" +
+      "  <update _amount='0.0' amount='29.9' id='" + occasional[0] + "' type='seriesBudget'/>" +
+      "  <update _amount='0.0' amount='29.9' id='" + occasional[1] + "' type='seriesBudget'/>" +
+      "  <update _amount='0.0' amount='29.9' id='" + occasional[2] + "' type='seriesBudget'/>" +
+      "  <create active='true' amount='-29.9' day='7' id='" + free[2] + "'" +
       "          month='200809' series='100' type='seriesBudget' overBurnAmount='0.0'/>" +
-      "  <create active='true' amount='-29.9' day='7' id='4'" +
+      "  <create active='true' amount='-29.9' day='7' id='" + free[1] + "'" +
       "          month='200808' series='100' type='seriesBudget' overBurnAmount='0.0'/>" +
-      "  <create active='true' amount='-29.9' day='7' id='3'" +
+      "  <create active='true' amount='-29.9' day='7' id='" + free[0] + "'" +
       "          month='200807' series='100' type='seriesBudget' overBurnAmount='0.0'/>");
     Integer[] ids = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true))
       .sort(Transaction.MONTH).getValues(Transaction.ID);
@@ -49,18 +51,20 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.AMOUNT, -40.));
     Integer[] ids = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true))
       .sort(Transaction.MONTH).getValues(Transaction.ID);
+    Integer[] free = getBudgetId(FREE_SERIES_ID);
     repository.delete(Key.create(Series.TYPE, FREE_SERIES_ID));
+    Integer[] occasional = getBudgetId(0);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "  <update _amount='29.9' amount='0.0' id='0' type='seriesBudget'/>" +
-      "  <update _amount='29.9' amount='0.0' id='1' type='seriesBudget'/>" +
-      "  <update _amount='29.9' amount='0.0' id='2' type='seriesBudget'/>" +
+      "  <update _amount='29.9' amount='0.0' id='" + occasional[0] + "' type='seriesBudget'/>" +
+      "  <update _amount='29.9' amount='0.0' id='" + occasional[1] + "' type='seriesBudget'/>" +
+      "  <update _amount='29.9' amount='0.0' id='" + occasional[2] + "' type='seriesBudget'/>" +
       "  <delete _active='true' _amount='-29.9' _day='7' _month='200809'" +
-      "          _series='100' id='5' type='seriesBudget' _overBurnAmount='0.0'/>" +
+      "          _series='100' id='" + free[2] + "' type='seriesBudget' _overBurnAmount='0.0'/>" +
       "  <delete _active='true' _amount='-29.9' _day='7' _month='200808'" +
-      "          _series='100' id='4' _overBurnAmount='-10.1' type='seriesBudget'/>" +
+      "          _series='100' id='" + free[1] + "' _overBurnAmount='-10.1' type='seriesBudget'/>" +
       "  <delete _active='true' _amount='-29.9' _day='7' _month='200807'" +
-      "          _series='100' id='3' type='seriesBudget' _overBurnAmount='0.0'/>");
+      "          _series='100' id='" + free[0] + "' type='seriesBudget' _overBurnAmount='0.0'/>");
 
     listener.assertLastChangesEqual(
       Transaction.TYPE,

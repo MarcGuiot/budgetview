@@ -273,6 +273,22 @@ public class GlobMatchers {
     };
   }
 
+  public static GlobMatcher fieldStricklyGreater(final IntegerField field, final int value) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return item.get(field) > value;
+      }
+    };
+  }
+
+  public static GlobMatcher fieldLesserOrEqual(final IntegerField field, final int value) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return item.get(field) <= value;
+      }
+    };
+  }
+
   public static GlobMatcher fieldContained(final Field field, final Collection values) {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {

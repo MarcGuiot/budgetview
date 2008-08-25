@@ -4,6 +4,7 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.UserPreferences;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -136,6 +137,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     DefaultDirectory defaultDirectory = new DefaultDirectory();
     defaultDirectory.add(new TimeService());
     GlobRepository repository = GlobRepositoryBuilder.init().get();
+    repository.create(UserPreferences.KEY);
     frame = initPanel(defaultDirectory, repository, width);
 
     SelectionService service = defaultDirectory.get(SelectionService.class);

@@ -10,6 +10,9 @@ public class KeyService {
 
   public static boolean checkSignature(byte[] data, byte[] signature) {
     try {
+      if (data == null || signature == null) {
+        return false;
+      }
       KeyClassLoader classLoader = new KeyClassLoader();
       Class<?> aClass = classLoader.load();
       Method method = aClass.getMethod(checkSignature, byte[].class, byte[].class);

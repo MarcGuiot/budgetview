@@ -1,13 +1,13 @@
 package org.globsframework.wicket.table.columns;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.link.Link;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.MutableFieldValues;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.wicket.utils.AlertModifier;
 import org.globsframework.wicket.utils.OnClickConfirmationModifier;
-import wicket.Component;
-import wicket.markup.html.link.Link;
 
 public class DeleteButtonColumn extends ButtonColumn {
   public DeleteButtonColumn(String title, String buttonLabel, String buttonIdPrefix) {

@@ -2,7 +2,8 @@ open "picsou00000000000001.jar"
      -"picsou00000000000001.jar!apple/laf/*.class"
      -"picsou00000000000001.jar!net/roydesign/mac/*.class";
 
-exclude org.designup.picsou.gui.PicsouApplication main(*) and
+exclude   picsou.^Main and
+          picsou.Main main(*) and
           org.xml.* *(*) and
           *.* @*.NoObfuscation * and
           *.* @*.NoObfuscation *(*) and
@@ -12,15 +13,19 @@ exclude org.designup.picsou.gui.PicsouApplication main(*) and
           org.designup.picsou.gui.components.* get*(*)
           ;
 
-stringEncryptionExclude
-org.designup.picsou.gui.PicsouApplication PANEL_UI and
-org.designup.picsou.gui.PicsouApplication LINK_BUTTON_UI and
-org.designup.picsou.gui.PicsouApplication STYLED_TOGGLE_BUTTON_UI and
-org.designup.picsou.gui.PicsouApplication STYLED_PANEL_UI and
-org.designup.picsou.gui.PicsouApplication SHADOWED_LABEL_UI
-        ;
-
+/*
 obfuscate  changeLogFileOut="ChangeLogOutput.txt"
-           lineNumbers=scramble;
+           aggressiveMethodRenaming=false
+           obfuscateFlow=none
+           encryptStringLiterals=none
+           lineNumbers=keep
+;
+*/
+obfuscate  changeLogFileOut="ChangeLogOutput.txt"
+           aggressiveMethodRenaming=true
+           obfuscateFlow=aggressive
+           encryptStringLiterals=aggressive
+           lineNumbers=scramble 
+;
 
-saveAll "ofuscated";
+saveAll archiveCompression=all "ofuscated";

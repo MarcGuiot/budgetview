@@ -129,33 +129,39 @@ public class SeriesCreationDialog {
   }
 
   public void show(Glob series, GlobList transactions) {
-    localRepository.rollback();
-    localRepository.reset(new GlobList(series), Series.TYPE);
-    localRepository.reset(repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
-                                                 series.get(Series.ID)).getGlobs(),
-                          SeriesBudget.TYPE);
-    this.series = localRepository.get(series.getKey());
-    Double min = computeMinAmountPerMonth(transactions);
-    SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
-    budgetArea = BudgetArea.get(this.series.get(Series.BUDGET_AREA));
-    String name = stringifier.toString(series, localRepository);
-    localRepository.update(series.getKey(),
-                           value(Series.AMOUNT, min),
-                           value(Series.DAY, days.last()),
-                           value(Series.LABEL, name),
-                           value(Series.JANUARY, true),
-                           value(Series.FEBRUARY, true),
-                           value(Series.MARCH, true),
-                           value(Series.APRIL, true),
-                           value(Series.MAY, true),
-                           value(Series.JUNE, true),
-                           value(Series.JULY, true),
-                           value(Series.AUGUST, true),
-                           value(Series.SEPTEMBER, true),
-                           value(Series.OCTOBER, true),
-                           value(Series.NOVEMBER, true),
-                           value(Series.DECEMBER, true));
-    selectionService.select(localRepository.get(series.getKey()));
+    try {
+      localRepository.enterBulkDispatchingMode();
+      localRepository.rollback();
+      GlobList globs = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
+                                              series.get(Series.ID)).getGlobs();
+      globs.add(series);
+      localRepository.reset(globs, SeriesBudget.TYPE, Series.TYPE);
+      this.series = localRepository.get(series.getKey());
+      Double min = computeMinAmountPerMonth(transactions);
+      SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
+      budgetArea = BudgetArea.get(this.series.get(Series.BUDGET_AREA));
+      String name = stringifier.toString(series, localRepository);
+      localRepository.update(series.getKey(),
+                             value(Series.AMOUNT, min),
+                             value(Series.DAY, days.last()),
+                             value(Series.LABEL, name),
+                             value(Series.JANUARY, true),
+                             value(Series.FEBRUARY, true),
+                             value(Series.MARCH, true),
+                             value(Series.APRIL, true),
+                             value(Series.MAY, true),
+                             value(Series.JUNE, true),
+                             value(Series.JULY, true),
+                             value(Series.AUGUST, true),
+                             value(Series.SEPTEMBER, true),
+                             value(Series.OCTOBER, true),
+                             value(Series.NOVEMBER, true),
+                             value(Series.DECEMBER, true));
+      selectionService.select(localRepository.get(series.getKey()));
+    }
+    finally {
+      localRepository.completeBulkDispatchingMode();
+    }
     dialog.pack();
     GuiUtils.showCentered(dialog);
   }
@@ -177,29 +183,35 @@ public class SeriesCreationDialog {
   }
 
   public void show(GlobList transactions, BudgetArea budget) {
-    localRepository.rollback();
-    budgetArea = BudgetArea.get(budget.getId());
-    Double min = computeMinAmountPerMonth(transactions);
-    SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
-    Glob firstTransaction = transactions.get(0);
-    String label = AllocationLearningService.anonymise(firstTransaction.get(Transaction.LABEL));
-    series = localRepository.create(Series.TYPE,
-                                    value(Series.BUDGET_AREA, budgetArea.getId()),
-                                    value(Series.AMOUNT, min),
-                                    value(Series.LABEL, label),
-                                    value(Series.DAY, days.last()),
-                                    value(Series.JANUARY, true),
-                                    value(Series.FEBRUARY, true),
-                                    value(Series.MARCH, true),
-                                    value(Series.APRIL, true),
-                                    value(Series.MAY, true),
-                                    value(Series.JUNE, true),
-                                    value(Series.JULY, true),
-                                    value(Series.AUGUST, true),
-                                    value(Series.SEPTEMBER, true),
-                                    value(Series.OCTOBER, true),
-                                    value(Series.NOVEMBER, true),
-                                    value(Series.DECEMBER, true));
+    try {
+      localRepository.enterBulkDispatchingMode();
+      localRepository.rollback();
+      budgetArea = BudgetArea.get(budget.getId());
+      Double min = computeMinAmountPerMonth(transactions);
+      SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
+      Glob firstTransaction = transactions.get(0);
+      String label = AllocationLearningService.anonymise(firstTransaction.get(Transaction.LABEL));
+      series = localRepository.create(Series.TYPE,
+                                      value(Series.BUDGET_AREA, budgetArea.getId()),
+                                      value(Series.AMOUNT, min),
+                                      value(Series.LABEL, label),
+                                      value(Series.DAY, days.last()),
+                                      value(Series.JANUARY, true),
+                                      value(Series.FEBRUARY, true),
+                                      value(Series.MARCH, true),
+                                      value(Series.APRIL, true),
+                                      value(Series.MAY, true),
+                                      value(Series.JUNE, true),
+                                      value(Series.JULY, true),
+                                      value(Series.AUGUST, true),
+                                      value(Series.SEPTEMBER, true),
+                                      value(Series.OCTOBER, true),
+                                      value(Series.NOVEMBER, true),
+                                      value(Series.DECEMBER, true));
+    }
+    finally {
+      localRepository.completeBulkDispatchingMode();
+    }
     selectionService.select(series);
     dialog.pack();
     GuiUtils.showCentered(dialog);

@@ -163,4 +163,9 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
   public GlobTableView getView() {
     return view;
   }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(this);
+  }
 }

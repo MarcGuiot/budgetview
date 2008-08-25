@@ -223,6 +223,8 @@ class DefaultFieldFactory {
                                    "' because it does not use an integer key");
       }
       targetKeyField = (IntegerField)field;
+      setDefaultValue(computeDefaultValue(this, annotations, DefaultInteger.class));
+
     }
 
     public IntegerField getTargetKeyField() {

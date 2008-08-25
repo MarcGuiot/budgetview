@@ -5,6 +5,7 @@ import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
+import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.styles.StyleService;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.DummyIconLocator;
@@ -117,5 +118,14 @@ public abstract class SplitsTestCase extends UISpecTestCase {
     JPanel panel = (JPanel)parent;
     GridBagLayout layout = (GridBagLayout)panel.getLayout();
     return layout.getConstraints(component);
+  }
+
+  protected Insets getInsets(Component parent, Component component) {
+    JPanel panel = (JPanel)parent;
+    if (panel.getLayout() instanceof GridBagBuilder.UniqueComponentLayoutManager) {
+      return ((GridBagBuilder.UniqueComponentLayoutManager)panel.getLayout()).getInsets();
+    }
+    GridBagLayout layout = (GridBagLayout)panel.getLayout();
+    return layout.getConstraints(component).insets;
   }
 }

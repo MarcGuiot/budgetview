@@ -1,11 +1,12 @@
 package org.globsframework.wicket;
 
+import org.apache.wicket.Request;
+import org.apache.wicket.Response;
+import org.apache.wicket.Session;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
-import wicket.ISessionFactory;
-import wicket.Session;
-import wicket.protocol.http.WebApplication;
 
 public abstract class GlobApplication extends WebApplication {
 
@@ -25,11 +26,17 @@ public abstract class GlobApplication extends WebApplication {
     return directory;
   }
 
-  protected ISessionFactory getSessionFactory() {
-    return new ISessionFactory() {
-      public Session newSession() {
-        return new GlobSession(GlobApplication.this);
-      }
-    };
+
+  public Session newSession(Request request, Response response) {
+    return new GlobSession(request, response, this);
+//    return super.newSession(request, response);
   }
+
+//  protected ISessionFactory getSessionFactory() {
+//    return new ISessionFactory() {
+//      public Session newSession() {
+//        return new GlobSession(GlobApplication.this);
+//      }
+//    };
+//  }
 }

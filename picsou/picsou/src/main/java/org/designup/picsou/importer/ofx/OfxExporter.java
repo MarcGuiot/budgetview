@@ -80,7 +80,7 @@ public class OfxExporter {
         .sort(Category.NAME);
     categories.add(repository.findLinkTarget(transaction, Transaction.CATEGORY));
     for (Glob category : categories) {
-      if (category != null) {
+      if (category != null && !category.get(Category.ID).equals(MasterCategory.NONE.getId())) {
         if (Category.isMaster(category)) {
           writer.add("category", category.get(Category.NAME).toLowerCase());
         }

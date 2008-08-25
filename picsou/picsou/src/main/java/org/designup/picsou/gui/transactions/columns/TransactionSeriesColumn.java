@@ -4,6 +4,7 @@ import org.designup.picsou.gui.categorization.CategorizationAction;
 import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.description.TransactionSeriesStringifier;
 import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorChangeListener;
@@ -17,7 +18,8 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -37,6 +39,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
   private Color toCategorizeColor;
   private Font normalFont;
   private Font toCategorizeFont;
+  private ColorService colorService;
 
   public TransactionSeriesColumn(GlobTableView view,
                                  TransactionRendererColors transactionRendererColors,
@@ -64,7 +67,8 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
     editorPanel.add(editorButton);
     editorPanel.add(Box.createHorizontalGlue());
 
-    directory.get(ColorService.class).addListener(this);
+    colorService = directory.get(ColorService.class);
+    colorService.addListener(this);
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
@@ -100,7 +104,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
       button.setUnderline(false);
       button.setText(seriesStringifier.toString(transaction, repository));
     }
-    else if (transaction.get(Transaction.SERIES) != null) {
+    else if (!Series.UNKNOWN_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
       button.setEnabled(true);
       rendererColors.setForeground(button, isSelected, transaction);
       button.setFont(normalFont);
@@ -141,7 +145,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
         return selection;
       }
 
-      if ((transaction.get(Transaction.SERIES) != null) ||
+      if ((!Series.UNKNOWN_SERIES_ID.equals(transaction.get(Transaction.SERIES))) ||
           (Strings.isNullOrEmpty(transaction.get(Transaction.LABEL_FOR_CATEGORISATION)))) {
         return new GlobList(transaction);
       }
@@ -150,7 +154,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
         .filter(and(CategorizationAction.getMatcher(),
                     fieldEquals(Transaction.LABEL_FOR_CATEGORISATION,
                                 transaction.get(Transaction.LABEL_FOR_CATEGORISATION)),
-                    isNull(Transaction.SERIES)),
+                    fieldEquals(Transaction.SERIES, Series.UNKNOWN_SERIES_ID)),
                 repository);
     }
 
@@ -160,5 +164,10 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
         tableView.select(transaction);
       }
     }
+  }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(this);
   }
 }

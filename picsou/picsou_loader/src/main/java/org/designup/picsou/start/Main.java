@@ -24,11 +24,17 @@ public class Main {
   }
 
   private void go(String[] args) {
-    String pathToInstallDir = System.getProperty("user.dir");
-    File jarFile = findLastJar(pathToInstallDir);
+    String pathToInstallDir = System.getProperty("picsou.exe.dir");
+    if (pathToInstallDir == null) {
+      pathToInstallDir = System.getProperty("user.dir");
+    }
+    File jarFile = null;
     Long installedVersion = null;
-    if (jarFile != null) {
-      installedVersion = extractVersion(jarFile.getName());
+    if (pathToInstallDir != null) {
+      jarFile = findLastJar(pathToInstallDir);
+      if (jarFile != null) {
+        installedVersion = extractVersion(jarFile.getName());
+      }
     }
     File downloadedFileName = loadJar();
     Long downloadedVersion = null;
@@ -52,7 +58,7 @@ public class Main {
       url = new URL("file", "", jarFile.getAbsolutePath());
       ClassLoader parent = getClass().getClassLoader();
       URLClassLoader loader = new URLClassLoader(new URL[]{url}, parent);
-      Class<?> applicationClass = loader.loadClass("org.designup.picsou.gui.PicsouApplication");
+      Class<?> applicationClass = loader.loadClass("picsou.Main");
       Method method = applicationClass.getMethod("main", String[].class);
       method.invoke(null, new Object[]{args});
     }

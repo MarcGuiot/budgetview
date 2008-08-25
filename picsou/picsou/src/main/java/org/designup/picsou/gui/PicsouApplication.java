@@ -2,9 +2,9 @@ package org.designup.picsou.gui;
 
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
+import org.designup.picsou.gui.components.SeriesToggleUI;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
-import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.plaf.PicsouSplitPaneUI;
@@ -72,6 +72,7 @@ public class PicsouApplication {
   private static final String STYLED_PANEL_UI = "org" + dot() + "globsframework.gui.splits.components.StyledPanelUI";
   private static final String SHADOWED_LABEL_UI = "org" + dot() + "globsframework.gui.splits.components.ShadowedLabelUI";
   private static final String SPLITPANE_UI = "org" + dot() + "designup.picsou.gui.plaf.PicsouSplitPaneUI";
+  private static final String SERIES_TOGGLE_UI = "org" + dot() + "designup.picsou.gui.components.SeriesToggleUI";
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
@@ -184,11 +185,11 @@ public class PicsouApplication {
   }
 
   public static String getPicsouConfigPath() {
-      return getPicsouPath() + "/" + PicsouApplication.CONFIG_DIRECTORY;
+    return getPicsouPath() + "/" + PicsouApplication.CONFIG_DIRECTORY;
   }
 
   public static String getPicsouJarPath() {
-      return getPicsouPath() + "/" + PicsouApplication.JAR_DIRECTORY;
+    return getPicsouPath() + "/" + PicsouApplication.JAR_DIRECTORY;
   }
 
   public static void clearRepository() {
@@ -224,7 +225,6 @@ public class PicsouApplication {
   public static Directory createDirectory() throws IOException {
     Directory directory = new DefaultDirectory();
     directory.add(new TimeService());
-    directory.add(new LicenseService());
     directory.add(DescriptionService.class, new PicsouDescriptionService());
     directory.add(GlobModel.class, PicsouGuiModel.get());
     directory.add(SelectionService.class, new SelectionService());
@@ -260,6 +260,7 @@ public class PicsouApplication {
     uiService.registerClass(STYLED_PANEL_UI, StyledPanelUI.class);
     uiService.registerClass(SHADOWED_LABEL_UI, ShadowedLabelUI.class);
     uiService.registerClass(SPLITPANE_UI, PicsouSplitPaneUI.class);
+    uiService.registerClass(SERIES_TOGGLE_UI, SeriesToggleUI.class);
     return uiService;
   }
 

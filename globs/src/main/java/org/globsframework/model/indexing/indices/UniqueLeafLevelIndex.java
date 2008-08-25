@@ -30,7 +30,7 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
   public GlobList findByIndex(Object value) {
     Glob glob = indexedGlob.get(value);
     if (glob == null) {
-      return GlobList.EMPTY;
+      return new GlobList();
     }
     else {
       return new GlobList(glob);
@@ -57,7 +57,7 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
       }
 
       public GlobList findByIndex(Object value) {
-        return GlobList.EMPTY;
+        return new GlobList();
       }
 
       public GlobRepository.MultiFieldIndexed findByIndex(Field field, Object value) {

@@ -269,7 +269,9 @@ public class MonthStatTriggerTest extends PicsouTestCase {
 
   private void updateStats() {
     MonthStatTrigger trigger = new MonthStatTrigger(repository);
+    repository.enterBulkDispatchingMode();
     trigger.run(Collections.<Integer>emptySet());
+    repository.completeBulkDispatchingMode();
   }
 
   private MonthStatChecker init(Field field) {

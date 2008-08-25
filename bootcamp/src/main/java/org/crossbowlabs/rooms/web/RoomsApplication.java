@@ -1,4 +1,4 @@
-package org.globsframework.rooms.web;
+package org.crossbowlabs.rooms.web;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
@@ -7,9 +7,9 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.security.hive.HiveMind;
 import org.apache.wicket.security.hive.config.PolicyFileHiveFactory;
 import org.apache.wicket.security.swarm.SwarmWebApplication;
-import org.globsframework.rooms.web.login.ActionFactory;
-import org.globsframework.rooms.web.pages.LoginPage;
-import org.globsframework.rooms.web.pages.RoomsPage;
+import org.crossbowlabs.rooms.web.login.ActionFactory;
+import org.crossbowlabs.rooms.web.pages.LoginPage;
+import org.crossbowlabs.rooms.web.pages.RoomsPage;
 
 import java.net.MalformedURLException;
 

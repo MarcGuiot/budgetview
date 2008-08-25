@@ -1,12 +1,12 @@
 package org.globsframework.wicket.list;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.globsframework.model.Glob;
 import org.globsframework.wicket.GlobPage;
 import org.globsframework.wicket.GlobRepositoryLoader;
 import org.globsframework.wicket.model.GlobListModel;
-import wicket.Component;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
 
 public abstract class GlobListView extends ListView {
 

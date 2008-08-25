@@ -1,8 +1,8 @@
 package org.globsframework.wicket.editors;
 
-import wicket.markup.html.form.AbstractTextComponent;
-import wicket.markup.html.form.validation.StringValidator;
-import wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.form.AbstractTextComponent;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.validation.validator.StringValidator;
 
 public class MultiLineTextEditorPanel extends Panel {
 

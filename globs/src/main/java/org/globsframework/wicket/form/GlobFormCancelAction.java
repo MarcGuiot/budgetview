@@ -1,6 +1,6 @@
 package org.globsframework.wicket.form;
 
-import wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.io.Serializable;
 

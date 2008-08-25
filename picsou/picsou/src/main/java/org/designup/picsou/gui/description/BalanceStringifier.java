@@ -3,8 +3,8 @@ package org.designup.picsou.gui.description;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -24,12 +24,14 @@ public class BalanceStringifier implements GlobListStringifier, ColorChangeListe
   private Color negativeAmountColor;
 
   private GlobRepository repository;
+  private ColorService colorService;
 
   public BalanceStringifier(GlobRepository repository, Directory directory) {
     this.repository = repository;
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
-    directory.get(ColorService.class).addListener(this);
+    colorService = directory.get(ColorService.class);
+    colorService.addListener(this);
   }
 
   public String toString(GlobList transactions, GlobRepository repository) {
@@ -58,5 +60,10 @@ public class BalanceStringifier implements GlobListStringifier, ColorChangeListe
     Glob globForNumber = GlobBuilder.init(Transaction.TYPE).set(Transaction.AMOUNT, value).get();
     String amount = amountStringifier.toString(globForNumber, globRepository);
     return value > 0 ? "+" + amount : amount;
+  }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    colorService.removeListener(this);
   }
 }

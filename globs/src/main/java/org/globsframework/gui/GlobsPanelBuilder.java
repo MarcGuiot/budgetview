@@ -17,8 +17,8 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
@@ -169,9 +169,14 @@ public class GlobsPanelBuilder extends SplitsBuilder {
                                      Comparator<Glob> comparator, GlobRepository repository, RepeatCellBuilder builder,
                                      RepeatComponentFactory factory) {
     GlobRepeatListener listener = new GlobRepeatListener();
-    GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
+    final GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
     model.setFilter(matcher);
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
+    builder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+      public void dispose() {
+        model.dispose();
+      }
+    });
     listener.set(model, repeat);
     return listener;
   }

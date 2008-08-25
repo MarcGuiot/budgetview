@@ -99,7 +99,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/06/18", 10.00, "Quick")
       .load();
-    transactionDetails.checkNoCategory();
+    transactionDetails.checkCategoryNotVisible();
   }
 
   public void testDisplayedCategory() throws Exception {

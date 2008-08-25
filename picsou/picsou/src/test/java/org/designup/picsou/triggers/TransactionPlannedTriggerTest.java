@@ -25,6 +25,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "");
     Integer[] budgetId = getBudgetId(FREE_SERIES_ID);
     Integer[] occasionalBudget = getBudgetId(Series.OCCASIONAL_SERIES_ID);
+    Integer[] unknownBudget = getBudgetId(Series.UNKNOWN_SERIES_ID);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
       "<create active='true' amount='-29.9' day='7' id='" + budgetId[2] + "'" +
@@ -38,7 +39,13 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "<create active='true' amount='29.9' id='" + occasionalBudget[1] + "' month='200808'" +
       "        series='0' type='seriesBudget' overBurnAmount='0.0'/>" +
       "<create active='true' amount='29.9' id='" + occasionalBudget[0] + "' month='200807'" +
-      "        series='0' type='seriesBudget' overBurnAmount='0.0'/>");
+      "        series='0' type='seriesBudget' overBurnAmount='0.0'/>" +
+      "<create active='true' amount='0.0' id='" + unknownBudget[2] + "' month='200809'" +
+      "        overBurnAmount='0.0' series='1' type='seriesBudget'/>" +
+      "<create active='true' amount='0.0' id='" + unknownBudget[1] + "' month='200808'" +
+      "        overBurnAmount='0.0' series='1' type='seriesBudget'/>" +
+      "<create active='true' amount='0.0' id='" + unknownBudget[0] + "' month='200807'" +
+      "        overBurnAmount='0.0' series='1' type='seriesBudget'/>");
     Key transactionKey = Key.create(Transaction.TYPE, 10);
     repository.create(transactionKey,
                       value(Transaction.SERIES, FREE_SERIES_ID),
@@ -53,7 +60,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "  <delete _account='-1' _amount='-29.9' _bankDay='7' _bankMonth='200808'" +
       "          _category='8' _day='7' _label='free telecom' _month='200808' _planned='true'" +
       "          _series='100' _transactionType='11' id='" + plannedTransaction[0] + "' type='transaction'/>" +
-      "  <create amount='-40.0' bankMonth='200808' day='1' id='10'" +
+      "  <create amount='-40.0' bankMonth='200808' day='1' id='10' category='0'" +
       "          label='free' month='200808' planned='false' series='100' type='transaction'/>" +
       "");
     listener.assertLastChangesEqual(SeriesBudget.TYPE,
@@ -98,7 +105,8 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "          category='2' day='25' id='" + enveloppePlannedTransaction[1] + "' label='course' month='200809'\n" +
       "          planned='true' series='101' transactionType='11' type='transaction'/>\n" +
       "");
-    Integer[] occasionalBudgetIds = getBudgetId(0);
+    Integer[] occasionalBudgetIds = getBudgetId(Series.OCCASIONAL_SERIES_ID);
+    Integer[] unknownBudgetIds = getBudgetId(Series.UNKNOWN_SERIES_ID);
     Integer[] incomBudgetIds = getBudgetId(INCOME_SERIES_ID);
     Integer[] enveloppeBudgetIds = getBudgetId(ENVELOPPE_SERIES_ID);
     listener.assertLastChangesEqual(
@@ -121,7 +129,12 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "        month='200808' series='101' type='seriesBudget' overBurnAmount='0.0'/>" +
       "<create active='true' amount='-1000.0' day='25' id='" + enveloppeBudgetIds[2] + "'" +
       "        month='200809' series='101' type='seriesBudget' overBurnAmount='0.0'/>" +
-      "");
+      "<create active='true' amount='0.0' id='" + unknownBudgetIds[2] + "' month='200809'" +
+      "        overBurnAmount='0.0' series='1' type='seriesBudget'/>" +
+      "<create active='true' amount='0.0' id='" + unknownBudgetIds[1] + "' month='200808'" +
+      "        overBurnAmount='0.0' series='1' type='seriesBudget'/>" +
+      "<create active='true' amount='0.0' id='" + unknownBudgetIds[0] + "' month='200807'" +
+      "        overBurnAmount='0.0' series='1' type='seriesBudget'/>");
     repository.enterBulkDispatchingMode();
     repository.create(Transaction.TYPE,
                       value(Transaction.ID, 100),
@@ -141,10 +154,10 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "<update _amount='2000.0' amount='100.0' id='" + incomePlannedTransaction[0] + "' type='transaction'/>" +
-      "<create amount='-300.0' bankMonth='200808' id='101' label='Auchan'\n" +
-      "        month='200808' planned='false' series='101' type='transaction'/>\n" +
-      "<create amount='1900.0' bankMonth='200808' id='100' label='picsou'\n" +
-      "        month='200808' planned='false' series='102' type='transaction'/>\n" +
+      "<create amount='-300.0' bankMonth='200808' id='101' label='Auchan' category='0'" +
+      "        month='200808' planned='false' series='101' type='transaction'/>" +
+      "<create amount='1900.0' bankMonth='200808' id='100' label='picsou' category='0'" +
+      "        month='200808' planned='false' series='102' type='transaction'/>" +
       "<update _amount='-1000.0' amount='-700.0' id='" + enveloppePlannedTransaction[0] + "' type='transaction'/>");
     repository.enterBulkDispatchingMode();
     repository.update(Key.create(Transaction.TYPE, 101),
@@ -164,7 +177,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "<update _amount='-300.0' amount='-200.0' id='101' type='transaction'/>\n" +
       "<update _amount='-700.0' amount='-800.0' id='" + enveloppePlannedTransaction[0] + "' type='transaction'/>\n" +
       "<create amount='-100.0' bankMonth='200808' id='102' month='200808'\n" +
-      "        planned='false' series='0' type='transaction'/>");
+      "        planned='false' series='0' type='transaction' category='0'/>");
   }
 
   public void testOverBurnEnveloppe() throws Exception {
@@ -260,15 +273,10 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.MONTH, 200808),
                       value(Transaction.BANK_MONTH, 200808),
                       value(Transaction.LABEL, "Auchan"));
-//    Integer[] budget = getBudgetId(INCOME_SERIES_ID);
-//    listener.assertLastChangesEqual(
-//      SeriesBudget.TYPE,
-//      "<update _overBurnAmount='0.0' id='" + budget[1] +"' overBurnAmount='200.0' type='seriesBudget'/>");
-
     repository.update(Key.create(Transaction.TYPE, 103), Transaction.AMOUNT, 1900.);
     listener.assertLastChangesEqual(
       Transaction.TYPE,
-      "  <update _amount=\"2200.0\" amount=\"1900.0\" id=\"103\" type=\"transaction\"/>");
+      "  <update _amount='2200.0' amount='1900.0' id='103' type='transaction'/>");
   }
 }
 

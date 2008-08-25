@@ -1,8 +1,8 @@
 package org.globsframework.wicket.component;
 
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Container for links with markup <a>, for instance {@link wicket.markup.html.link.Link}, {@link
