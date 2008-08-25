@@ -33,7 +33,6 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     creationSeries.validate();
 
     categorization.checkContainsIncomeSeries("Salary", "Prime");
-    categorization.selectIncomeSeries("Prime", false);
     categorization.validate();
 
     transactionDetails.checkSeries("Prime");
@@ -60,7 +59,6 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     creationDialog.validate();
 
     dialog.checkContainsRecurringSeries("Internet", "Culture");
-    dialog.selectRecurringSeries("Culture", false);
     dialog.validate();
 
     transactionDetails.checkSeries("Culture");
@@ -84,11 +82,44 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     creationDialog.validate();
 
     dialog.checkContainsEnvelope("Regime");
-    dialog.selectEnvelopeSeries("Regime", MasterCategory.FOOD, false);
     dialog.validate();
 
     transactionDetails.checkSeries("Regime");
     transactionDetails.checkCategory(MasterCategory.FOOD);
+  }
+
+  public void testSeriesUnselectedAfterCategorization() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -60, "Forfait Kro")
+      .addTransaction("2008/06/20", -60, "Forfait Kro")
+      .addTransaction("2008/06/10", -60, "Forfait Kro")
+      .addTransaction("2008/06/28", -150, "Palette Leffe")
+      .load();
+
+    CategorizationDialogChecker dialog = informationPanel.categorize();
+    dialog.checkTable(new Object[][]{
+      {"30/06/2008", "Forfait Kro", -60.00},
+      {"20/06/2008", "Forfait Kro", -60.00},
+      {"10/06/2008", "Forfait Kro", -60.00},
+      {"28/06/2008", "Palette Leffe", -150.00},
+    });
+    dialog.checkSelectedTableRows(0,1,2);
+
+    dialog.selectEnvelopes();
+    SeriesCreationDialogChecker creationDialog = dialog.createSeries();
+    creationDialog.setName("Regime");
+    creationDialog.checkType("Envelope");
+    creationDialog.setCategory(MasterCategory.FOOD);
+
+    creationDialog.validate();
+
+    dialog.checkTable(new Object[][]{
+      {"28/06/2008", "Palette Leffe", -150.00},
+    });
+    dialog.checkNoTransactionSelected();
+    dialog.checkNoBudgetAreaSelected();
+    dialog.validate();
   }
 
   public void testCancel() throws Exception {

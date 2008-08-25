@@ -19,14 +19,10 @@
         <scrollPane viewportBackground="#FFFFFF">
           <table ref="transactionTable" showGrid="false" showVerticalLines="false"/>
         </scrollPane>
-        <row>
-          <column>
-            <checkBox ref="autoSelection" text="$categorization.autoselection" anchor="left"/>
-            <checkBox ref="autoHide" text="$categorization.autohide" anchor="left"/>
-          </column>
-          <button name="nextTransaction" action="nextTransaction" text="$categorization.next"
-                  fill="none" anchor="right" font="-,plain,10"/>
-        </row>
+        <column>
+          <checkBox ref="autoSelection" text="$categorization.autoselection" anchor="left"/>
+          <checkBox ref="autoHide" text="$categorization.autohide" anchor="left"/>
+        </column>
       </column>
 
       <column>

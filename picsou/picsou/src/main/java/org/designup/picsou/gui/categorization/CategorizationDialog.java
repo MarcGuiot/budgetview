@@ -18,9 +18,7 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -30,6 +28,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Comparator;
+import java.util.Set;
 
 public class CategorizationDialog {
   private SelectionService selectionService = new SelectionService();
@@ -37,17 +36,16 @@ public class CategorizationDialog {
   private GlobList currentTransactions = GlobList.EMPTY;
   private PicsouDialog dialog;
   private GlobTableView transactionTable;
-  private NextTransactionAction nextTransactionAction;
   private JCheckBox autoSelectionCheckBox;
   private JCheckBox autoHideCheckBox;
 
   private static final int[] COLUMN_SIZES = {10, 28, 10};
-
+  private Directory localDirectory;
 
   public CategorizationDialog(Window parent, final GlobRepository repository, Directory directory) {
     dialog = PicsouDialog.create(parent, Lang.get("categorization.title"));
 
-    final Directory localDirectory = init(repository, directory);
+    init(repository, directory);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationDialog.splits",
                                                       localRepository, localDirectory);
@@ -61,7 +59,6 @@ public class CategorizationDialog {
         .addColumn(Transaction.AMOUNT);
     Gui.setColumnSizes(transactionTable.getComponent(), COLUMN_SIZES);
 
-
     autoSelectionCheckBox = new JCheckBox(new AutoSelectAction());
     autoSelectionCheckBox.setSelected(true);
     builder.add("autoSelection", autoSelectionCheckBox);
@@ -71,9 +68,6 @@ public class CategorizationDialog {
     builder.add("autoHide", autoHideCheckBox);
 
     builder.addLabel("transactionLabel", Transaction.LABEL);
-
-    nextTransactionAction = new NextTransactionAction(selectionService);
-    builder.add("nextTransaction", nextTransactionAction);
 
     final CardHandler cardHandler = builder.addCardHandler("cards");
 
@@ -152,25 +146,59 @@ public class CategorizationDialog {
                                     Transaction.AMOUNT, false);
   }
 
-  private Directory init(GlobRepository repository, Directory directory) {
+  private void init(GlobRepository repository, Directory directory) {
 
     localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(BudgetArea.TYPE, Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE)
       .get();
 
-    Directory localDirectory = new DefaultDirectory(directory);
+    localDirectory = new DefaultDirectory(directory);
     localDirectory.add(selectionService);
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         currentTransactions = selection.getAll(Transaction.TYPE);
-        nextTransactionAction.update();
         if (autoSelectionCheckBox.isSelected()) {
           autoSelectSimilarTransactions();
         }
       }
     }, Transaction.TYPE);
 
-    return localDirectory;
+    localRepository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        Set<Key> created = changeSet.getCreated(Series.TYPE);
+        if (created.size() == 1) {
+          setSeries(created.iterator().next());
+        }
+      }
+    });
+  }
+
+  private void setSeries(Key seriesKey) {
+    Glob series = localRepository.get(seriesKey);
+    GlobList seriesToCategories = localRepository.findLinkedTo(series, SeriesToCategory.SERIES);
+    if (seriesToCategories.size() > 1) {
+      return;
+    }
+
+    Key categoryKey;
+    if (seriesToCategories.isEmpty()) {
+      categoryKey = Key.create(Category.TYPE, series.get(Series.DEFAULT_CATEGORY));
+    }
+    else {
+      categoryKey = Key.create(Category.TYPE, seriesToCategories.iterator().next().get(SeriesToCategory.CATEGORY));
+    }
+
+    try {
+      localRepository.enterBulkDispatchingMode();
+      for (Glob transaction : currentTransactions) {
+        localRepository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
+        localRepository.setTarget(transaction.getKey(), Transaction.CATEGORY, categoryKey);
+      }
+    }
+    finally {
+      localRepository.completeBulkDispatchingMode();
+    }
+
   }
 
   public void show(GlobList transactions, boolean selectAll, boolean autoHideCategorized) {
@@ -188,35 +216,6 @@ public class CategorizationDialog {
       transactionTable.selectFirst();
     }
     GuiUtils.showCentered(dialog);
-  }
-
-  private class NextTransactionAction extends AbstractAction {
-    private SelectionService selectionService;
-
-    private NextTransactionAction(SelectionService selectionService) {
-      super("nextTransaction");
-      this.selectionService = selectionService;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      if (currentTransactions.isEmpty()) {
-        return;
-      }
-      final int currentIndex = transactionTable.indexOf(currentTransactions.get(0));
-      if (currentIndex < transactionTable.getRowCount() - 1) {
-        Glob nextTransaction = transactionTable.getGlobAt(currentIndex + 1);
-        selectionService.select(nextTransaction);
-      }
-    }
-
-    public void update() {
-      if (currentTransactions.isEmpty()) {
-        setEnabled(false);
-        return;
-      }
-      final int currentIndex = transactionTable.indexOf(currentTransactions.get(0));
-      setEnabled(currentIndex < transactionTable.getRowCount() - 1);
-    }
   }
 
   private class SeriesCreationAction extends AbstractAction {

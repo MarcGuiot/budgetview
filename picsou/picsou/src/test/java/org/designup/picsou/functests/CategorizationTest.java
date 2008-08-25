@@ -1,6 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
+import org.designup.picsou.functests.checkers.SeriesCreationDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
@@ -114,6 +115,32 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkCategory("Saucisson");
   }
 
+  public void testSeriesUnselectedAfterCategorization() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -60, "Forfait Kro")
+      .addTransaction("2008/06/28", -50, "France Telecom")
+      .load();
+
+    timeline.selectAll();
+    CategorizationDialogChecker dialog = transactions.categorize(0, 1);
+    dialog.checkTable(new Object[][]{
+      {"30/06/2008", "Forfait Kro", -60.00},
+      {"28/06/2008", "France Telecom", -50.00},
+    });
+    dialog.selectTableRows(1);
+    dialog.enableAutoHide();
+
+    dialog.selectRecurring();
+    dialog.selectRecurringSeries("Internet", true);
+    dialog.checkTable(new Object[][]{
+      {"30/06/2008", "Forfait Kro", -60.00},
+    });
+    dialog.checkNoTransactionSelected();
+    dialog.checkNoBudgetAreaSelected();
+    dialog.validate();
+  }
+
   public void testSwitchingFromTransactions() throws Exception {
     OfxBuilder
       .init(this)
@@ -169,32 +196,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.cancel();
 
     transactionDetails.checkNoSeries();
-  }
-
-  public void testNext() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/30", -29.90, "Free Telecom")
-      .addTransaction("2008/06/15", -40, "Auchan")
-      .load();
-
-    CategorizationDialogChecker dialog = transactions.categorize(0, 1);
-    dialog.checkTable(new Object[][]{
-      {"15/06/2008", "Auchan", -40.00},
-      {"30/06/2008", "Free Telecom", -29.90},
-    });
-    dialog.selectTableRows(0);
-    dialog.checkLabel("Auchan");
-    dialog.checkNextIsEnabled();
-
-    dialog.selectNext();
-    dialog.checkSelectedTableRows(1);
-    dialog.checkLabel("Free Telecom");
-    dialog.checkNextIsDisabled();
-    dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", true);
-    dialog.selectTableRows(0);
-    dialog.checkNextIsEnabled();
   }
 
   public void testMultiCategorizationFromTransactionTable() throws Exception {

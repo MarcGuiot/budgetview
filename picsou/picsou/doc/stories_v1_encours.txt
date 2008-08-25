@@ -2,9 +2,7 @@
 
 
 CategorizationDialog
-* selectionner serie apres creation
 * ajouter une categorie a une enveloppe
-* selectionner le suivant automatiquement apres affectation
 * Renommage de serie : mettre a jour le toggle
 * Liens "edition des series"
 * Supprimer series initiales (xml) + afficher message creation
