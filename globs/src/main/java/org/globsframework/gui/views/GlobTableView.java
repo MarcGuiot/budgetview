@@ -175,13 +175,6 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       }
       enableSelectionNotification(false);
     }
-
-    if ((initialSize > 0) && selectionChanged) {
-      select(selection, true);
-      if (selection.isEmpty()) {
-        selectionService.select(Collections.<Glob>emptyList(), type);
-      }
-    }
     return this;
   }
 
@@ -211,7 +204,6 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     try {
       disableSelectionNotification();
       selectionModel.setValueIsAdjusting(true);
-      selectionEnabled = false;
       doSelect(selectionModel, globs);
     }
     finally {
@@ -260,6 +252,9 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
         scrollToRow(index);
       }
       enableSelectionNotification(false);
+      if (newSelection.size() != currentSelection.size()) {
+        selectionService.select(newSelection, type);
+      }
     }
   }
 

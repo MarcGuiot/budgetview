@@ -307,7 +307,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                           "</selection>" +
                           "</log>");
 
-    table.selectRows(new int[]{0, 1});
+    table.selectRows(0, 1);
     listener.assertEquals("<log>" +
                           "<selection types='dummyObject'>" +
                           "<item key='dummyObject[id=1]'/>" +
@@ -491,14 +491,55 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     selectionService.select(repository.get(key1));
     DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
 
-    view.setFilter(GlobMatchers.NONE);
+    view.setFilter(GlobMatchers.fieldEquals(DummyObject.ID, 2));
     listener.assertEquals("<log>" +
                           "  <selection types='dummyObject'/>" +
                           "</log>");
+    assertTrue(view.getCurrentSelection().isEmpty());
+
     listener.reset();
 
     view.setFilter(GlobMatchers.ALL);
     listener.assertEmpty();
+  }
+
+  public void testEmptySelectionSentIfSelectedObjectIsChangedAndDoesNotMatchFilter() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name'/>" +
+                    "<dummyObject id='2' name='name'/>");
+    createTableWithNameAndValueColumns(repository);
+    view.setFilter(GlobMatchers.fieldEquals(DummyObject.NAME, "name"));
+    selectionService.select(repository.get(key1));
+
+    DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
+    repository.update(key1, DummyObject.NAME, "newName");
+    listener.assertEquals("<log>" +
+                          "  <selection types='dummyObject'/>" +
+                          "</log>");
+    assertTrue(view.getCurrentSelection().isEmpty());
+  }
+
+  public void testEmptySelectionSentIfMultipleSelectedObjectsAreChangedAndDoNotMatchFilter() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name'/>" +
+                    "<dummyObject id='2' name='name'/>" +
+                    "<dummyObject id='3' name='name'/>" +
+                    "<dummyObject id='4' name='name'/>");
+    createTableWithNameAndValueColumns(repository);
+    view.setFilter(GlobMatchers.fieldEquals(DummyObject.NAME, "name"));
+    view.select(repository.get(key1));
+
+    DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
+    repository.enterBulkDispatchingMode();
+    repository.update(Key.create(DummyObject.TYPE, 1), DummyObject.NAME, "newName");
+    repository.update(Key.create(DummyObject.TYPE, 2), DummyObject.NAME, "newName");
+    repository.update(Key.create(DummyObject.TYPE, 3), DummyObject.NAME, "newName");
+    repository.completeBulkDispatchingMode();
+    
+    listener.assertEquals("<log>" +
+                          "  <selection types='dummyObject'/>" +
+                          "</log>");
+    assertTrue(view.getCurrentSelection().isEmpty());
   }
 
   public void testModelUpdatePreservesSelection() throws Exception {
@@ -614,7 +655,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       {"2", "a2"},
       {"3", "a3"}
     }));
-    table.selectRows(new int[]{0, 1});
+    table.selectRows(0, 1);
     DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
 
     stringifier.setReversed(true);
