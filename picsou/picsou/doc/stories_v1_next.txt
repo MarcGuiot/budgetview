@@ -20,3 +20,9 @@
 
 * Filtrage transactions par Type
 
+* Decouverte des mois actifs pour les series a partir des transactions
+
+* Graphiques (camembert / histogramme)
+
+* SMS
+

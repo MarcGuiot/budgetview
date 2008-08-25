@@ -10,29 +10,19 @@ CategorizationDialog
 
 TimeView
 --------
-* Joliesse boutons/bords timeview
+- Joliesse boutons/bords timeview
 
 
 Vue accueil
 -----------
 - creation de compte
 - edition comptes
+- masquer un compte
 
 
 TitleView
 --------
 - afficher des noms pour les multi-selections de mois ("juillet 2006 à août 2007")
-
-
-Vue releves
------------
-- TransactionDetail : afficher infos generales TransactionView si pas de selection
-
-
-Panneau edition series
-----------------------
-- check nom
-- selection amount
 
 
 Import
@@ -65,7 +55,6 @@ Bugs graphiques
 Details transactions
 --------------------
 * Min/Max/Moy sur une ligne
-* Categorie "A classer" en rouge
 * Categorie "..." en multi-selection ("<plusieurs categories>")
 * Voir position lien "split"
 * Afficher propagation d'affectation
@@ -76,6 +65,7 @@ Misc
 ----
 * Split transaction : supprimer "disposable"
 * Memoriser dernier repertoire pour le filechooser
+
 
 Fenetre import
 --------------
