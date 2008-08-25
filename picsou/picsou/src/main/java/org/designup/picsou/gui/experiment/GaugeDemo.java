@@ -12,7 +12,6 @@ import java.awt.*;
 
 public class GaugeDemo {
 
-  private static int row = 0;
   private static GridBagBuilder builder = GridBagBuilder.init();
 
   private static final boolean[] booleans = {true, false};
@@ -23,6 +22,7 @@ public class GaugeDemo {
     {12, 20},
     {20, 20},
     {25, 20},
+    {50, 20},
     {-5, 20},
     {5, 0},
   };

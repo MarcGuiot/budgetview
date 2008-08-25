@@ -38,30 +38,30 @@ public class GaugeTest extends TestCase {
 
   public void testOverrun() throws Exception {
     init(true, true, true)
-      .set(11, 10)
-      .checkFill(0.9)
-      .checkOverrun(0.1, true)
+      .set(15, 10)
+      .checkFill(0.66)
+      .checkOverrun(0.33, true)
       .checkEmpty(0)
       .checkWarningShown();
 
     init(true, false, true)
-      .set(11, 10)
-      .checkFill(0.9)
-      .checkOverrun(0.1, true)
+      .set(15, 10)
+      .checkFill(0.66)
+      .checkOverrun(0.33, true)
       .checkEmpty(0)
       .checkWarningNotShown();
 
     init(false, true, true)
-      .set(11, 10)
-      .checkFill(0.9)
-      .checkOverrun(0.1, false)
+      .set(15, 10)
+      .checkFill(0.66)
+      .checkOverrun(0.33, false)
       .checkEmpty(0)
       .checkWarningNotShown();
 
     init(false, false, true)
-      .set(11, 10)
-      .checkFill(0.9)
-      .checkOverrun(0.1, false)
+      .set(15, 10)
+      .checkFill(0.66)
+      .checkOverrun(0.33, false)
       .checkEmpty(0)
       .checkWarningNotShown();
   }
