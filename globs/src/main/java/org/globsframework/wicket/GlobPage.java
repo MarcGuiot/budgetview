@@ -1,9 +1,9 @@
 package org.globsframework.wicket;
 
+import org.apache.wicket.markup.html.WebPage;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
-import wicket.markup.html.WebPage;
 
 public abstract class GlobPage extends WebPage {
   private GlobRepositoryLoader repositoryLoader;

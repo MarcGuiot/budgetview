@@ -1,6 +1,6 @@
 package org.globsframework.wicket.table;
 
-import wicket.Component;
+import org.apache.wicket.Component;
 
 public class GlobTableRowEditor {
   private final Component switcher;

@@ -1,9 +1,9 @@
 package org.globsframework.wicket.labels;
 
+import org.apache.wicket.markup.html.panel.Panel;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.model.Key;
 import org.globsframework.wicket.GlobRepositoryLoader;
-import wicket.markup.html.panel.Panel;
 
 public class LabelsPanel extends Panel {
 

@@ -1,5 +1,7 @@
 package org.globsframework.wicket.table.columns;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
 import org.globsframework.metamodel.Link;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -7,8 +9,6 @@ import org.globsframework.model.Key;
 import org.globsframework.model.MutableFieldValues;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
-import wicket.Component;
-import wicket.markup.html.basic.Label;
 
 public class GlobLinkColumn extends AbstractGlobTableColumn {
   private final Link link;

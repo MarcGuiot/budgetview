@@ -1,29 +1,32 @@
 package org.globsframework.wicket.table;
 
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.utils.directory.Directory;
 import org.globsframework.wicket.FormSubmitListener;
 import org.globsframework.wicket.GlobPage;
 import org.globsframework.wicket.model.GlobListModel;
 import org.globsframework.wicket.table.rows.FormRowPanel;
 import org.globsframework.wicket.table.rows.RowPanel;
 import org.globsframework.wicket.table.rows.Submittable;
-import wicket.AttributeModifier;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
-import wicket.markup.html.panel.Panel;
-import wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class GlobTable extends Panel implements Submittable {
   private List<GlobTableColumn> columns;
+  private GlobRepository repository;
+  private Directory directory;
   private List<Submittable> submittables = new ArrayList<Submittable>();
 
   private static final String TABLE_CLASS = "content";
@@ -34,9 +37,11 @@ class GlobTable extends Panel implements Submittable {
             final GlobMatcher matcher,
             final TableEditPolicy editPolicy,
             GlobTableRowEditorFactory rowEditorFactory,
-            final List<FormSubmitListener> submitListeners) {
+            final List<FormSubmitListener> submitListeners, GlobRepository repository, Directory directory) {
     super(tableId);
     this.columns = columns;
+    this.repository = repository;
+    this.directory = directory;
     setRenderBodyOnly(true);
 
     WebMarkupContainer table = new WebMarkupContainer("table");
@@ -83,7 +88,7 @@ class GlobTable extends Panel implements Submittable {
                         String tableId,
                         GlobTableRowEditorFactory rowEditorFactory,
                         List<FormSubmitListener> submitListeners) {
-      super("rows", new GlobListModel(type, matcher));
+      super("rows", new GlobListModel(type, matcher, repository, directory));
       this.editPolicy = editPolicy;
       this.columns = columns;
       this.tableId = tableId;

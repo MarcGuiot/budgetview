@@ -1,7 +1,7 @@
 package org.globsframework.wicket;
 
+import org.apache.wicket.model.IDetachable;
 import org.globsframework.model.GlobRepository;
-import wicket.model.IDetachable;
 
 /**
  * Proxy for accessing a repository without having to reference (and thus serialize) it.

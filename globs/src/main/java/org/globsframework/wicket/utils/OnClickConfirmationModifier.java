@@ -1,7 +1,7 @@
 package org.globsframework.wicket.utils;
 
-import wicket.AttributeModifier;
-import wicket.model.Model;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.model.Model;
 
 public class OnClickConfirmationModifier extends AttributeModifier {
   public OnClickConfirmationModifier(String message) {

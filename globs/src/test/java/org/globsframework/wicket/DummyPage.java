@@ -1,8 +1,8 @@
 package org.globsframework.wicket;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.globsframework.model.GlobRepository;
-import wicket.Component;
-import wicket.markup.html.panel.FeedbackPanel;
 
 public class DummyPage extends GlobPage {
   public static final String COMPONENT_ID = "component";
@@ -13,6 +13,7 @@ public class DummyPage extends GlobPage {
   public DummyPage() {
     FeedbackPanel feedbackPanel = new FeedbackPanel(FEEDBACK_COMPONENT_ID);
     feedbackPanel.setOutputMarkupId(true);
+    feedbackPanel.setMarkupId(FEEDBACK_COMPONENT_ID);
     add(feedbackPanel);
 
     Component component = componentFactory.create(COMPONENT_ID, getRepositoryLoader());

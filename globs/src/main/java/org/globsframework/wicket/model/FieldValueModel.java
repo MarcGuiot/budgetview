@@ -1,17 +1,10 @@
 package org.globsframework.wicket.model;
 
+import org.apache.wicket.model.Model;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.MutableFieldValues;
-import wicket.Component;
-import wicket.model.AbstractModel;
-import wicket.util.convert.ConversionException;
-import wicket.util.convert.ConverterFactory;
-import wicket.util.convert.IConverter;
 
-import java.util.Locale;
-
-public class FieldValueModel extends AbstractModel {
-
+public class FieldValueModel extends Model {
   private final MutableFieldValues values;
   private Field field;
 
@@ -24,19 +17,19 @@ public class FieldValueModel extends AbstractModel {
     return field.getName();
   }
 
-  public Object getObject(final Component component) {
+  public Object getObject() {
     return values.getValue(field);
   }
 
-  public void setObject(final Component component, final Object newValue) {
-    IConverter converter = new ConverterFactory().newConverter(Locale.getDefault());
-    Object convertedValue = null;
-    try {
-      convertedValue = converter.convert(newValue, field.getValueClass());
-    }
-    catch (ConversionException e) {
-
-    }
-    values.setValue(field, convertedValue);
+  public void setObject(final Object newValue) {
+//    IConverter converter = new ConverterLocator().getConverter(field.getValueClass());
+//    Object convertedValue = null;
+//    try {
+//      convertedValue = converter.convertToObject((String)newValue, Locale.getDefault());
+//    }
+//    catch (ConversionException e) {
+//
+//    }
+    values.setValue(field, newValue);
   }
 }

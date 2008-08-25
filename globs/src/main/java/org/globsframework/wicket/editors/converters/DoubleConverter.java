@@ -1,9 +1,9 @@
 package org.globsframework.wicket.editors.converters;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
 import org.globsframework.wicket.GlobSession;
-import wicket.Session;
-import wicket.util.convert.ConversionException;
-import wicket.util.convert.IConverter;
 
 import java.text.DecimalFormat;
 import java.text.ParsePosition;
@@ -12,25 +12,27 @@ import java.util.Locale;
 public class DoubleConverter implements IConverter {
   private Locale locale;
 
-  protected Class getTargetType() {
-    return Double.class;
+  public DoubleConverter() {
   }
 
-  public Object convert(Object value, Class targetClass) {
+  public Object convertToObject(String value, Locale locale) {
     if (value == null) {
       return null;
     }
 
     GlobSession session = (GlobSession)Session.get();
     DecimalFormat decimalFormat = session.getDescriptionService().getFormats().getDecimalFormat();
-    if (targetClass.equals(String.class)) {
-      return decimalFormat.format(value);
+    return parse(decimalFormat, value);
+  }
+
+  public String convertToString(Object value, Locale locale) {
+    if (value == null) {
+      return null;
     }
-    else if (targetClass.equals(Double.class)) {
-      String string = (String)value;
-      return parse(decimalFormat, string);
-    }
-    throw new RuntimeException("Unexpected type: " + value.getClass().getName());
+
+    GlobSession session = (GlobSession)Session.get();
+    DecimalFormat decimalFormat = session.getDescriptionService().getFormats().getDecimalFormat();
+    return decimalFormat.format(value);
   }
 
   private Object parse(DecimalFormat format, String stringValue) {

@@ -1,14 +1,14 @@
 package org.globsframework.wicket.form;
 
-import wicket.feedback.ContainerFeedbackMessageFilter;
-import wicket.feedback.FeedbackMessages;
-import wicket.feedback.IFeedback;
-import wicket.feedback.IFeedbackMessageFilter;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.panel.Panel;
-import wicket.model.Model;
+import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.feedback.FeedbackMessages;
+import org.apache.wicket.feedback.IFeedback;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.Model;
 
-public class GlobFormFeedbackBorder extends Panel implements IFeedback {
+public class GlobFormFeedbackBorder extends FeedbackPanel implements IFeedback {
   public static final String CHILD_ID = "child";
 
   private static final long serialVersionUID = 1L;
@@ -20,7 +20,7 @@ public class GlobFormFeedbackBorder extends Panel implements IFeedback {
   }
 
   public void updateFeedback() {
-    FeedbackMessages feedbackMessages = getPage().getFeedbackMessages();
+    FeedbackMessages feedbackMessages = getPage().getSession().getFeedbackMessages();
     error = feedbackMessages.messages(getMessagesFilter()).size() > 0;
   }
 

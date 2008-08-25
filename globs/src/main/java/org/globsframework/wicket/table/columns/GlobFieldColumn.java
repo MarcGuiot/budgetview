@@ -1,5 +1,7 @@
 package org.globsframework.wicket.table.columns;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.annotations.MultiLineText;
 import org.globsframework.model.Glob;
@@ -10,8 +12,6 @@ import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.Strings;
 import org.globsframework.wicket.component.CollapsibleTextPanel;
-import wicket.Component;
-import wicket.markup.html.basic.Label;
 
 public class GlobFieldColumn extends AbstractGlobTableColumn {
   private final Field field;

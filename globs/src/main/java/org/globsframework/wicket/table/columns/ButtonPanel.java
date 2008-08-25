@@ -1,14 +1,14 @@
 package org.globsframework.wicket.table.columns;
 
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.MutableFieldValues;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.wicket.GlobPage;
-import wicket.AttributeModifier;
-import wicket.markup.html.link.Link;
-import wicket.markup.html.panel.Panel;
-import wicket.model.Model;
 
 class ButtonPanel extends Panel {
 

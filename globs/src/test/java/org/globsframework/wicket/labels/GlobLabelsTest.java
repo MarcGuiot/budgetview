@@ -1,12 +1,12 @@
 package org.globsframework.wicket.labels;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.apache.wicket.Component;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.model.Key;
 import org.globsframework.wicket.ComponentFactory;
 import org.globsframework.wicket.GlobRepositoryLoader;
 import org.globsframework.wicket.WebTestCase;
-import wicket.Component;
 
 public class GlobLabelsTest extends WebTestCase {
 

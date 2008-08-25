@@ -1,5 +1,9 @@
 package org.globsframework.wicket.table.rows;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.Link;
 import org.globsframework.model.GlobRepository;
@@ -12,10 +16,6 @@ import org.globsframework.wicket.form.GlobFormBuilder;
 import org.globsframework.wicket.form.GlobFormCancelAction;
 import org.globsframework.wicket.table.GlobTableRowEditor;
 import org.globsframework.wicket.table.GlobTableRowEditorFactory;
-import wicket.Component;
-import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.markup.html.AjaxFallbackLink;
-import wicket.markup.html.panel.Panel;
 
 import java.util.List;
 

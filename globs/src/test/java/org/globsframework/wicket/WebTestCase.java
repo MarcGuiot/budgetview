@@ -9,6 +9,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import junit.framework.TestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.model.*;
+import org.globsframework.utils.directory.Directory;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public abstract class WebTestCase extends TestCase {
   protected GlobRepository repository;
   protected DummyChangeSetListener changeSetListener;
   private List collectedAlerts = new ArrayList();
+  public Directory directory;
 
   protected void setUp() throws Exception {
     Locale.setDefault(Locale.US);
@@ -30,6 +32,7 @@ public abstract class WebTestCase extends TestCase {
     server = new DummyWebServer();
     server.start();
     DummyApplication.reset(repository);
+    directory = DummyApplication.getStaticDirectory();
     DummyPage.reset();
   }
 

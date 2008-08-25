@@ -1,5 +1,6 @@
 package org.globsframework.wicket.form;
 
+import org.apache.wicket.markup.html.panel.Panel;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
@@ -8,7 +9,6 @@ import org.globsframework.model.Key;
 import org.globsframework.model.MutableFieldValues;
 import org.globsframework.model.utils.DefaultFieldValues;
 import org.globsframework.utils.exceptions.InvalidParameter;
-import wicket.markup.html.panel.Panel;
 
 import java.util.ArrayList;
 import java.util.List;

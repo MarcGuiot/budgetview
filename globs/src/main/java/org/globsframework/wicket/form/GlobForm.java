@@ -1,5 +1,14 @@
 package org.globsframework.wicket.form;
 
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
@@ -12,15 +21,6 @@ import org.globsframework.utils.exceptions.MissingInfo;
 import org.globsframework.wicket.GlobPage;
 import org.globsframework.wicket.editors.FieldEditorPanelFactory;
 import org.globsframework.wicket.editors.LinkEditorPanelFactory;
-import wicket.AttributeModifier;
-import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.markup.html.AjaxFallbackLink;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
-import wicket.markup.html.panel.Panel;
-import wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.List;

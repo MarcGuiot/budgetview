@@ -1,6 +1,7 @@
 package org.globsframework.wicket.form;
 
 import com.gargoylesoftware.htmlunit.html.*;
+import org.apache.wicket.Component;
 import org.globsframework.metamodel.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.FieldValues;
@@ -12,7 +13,6 @@ import org.globsframework.utils.Dates;
 import org.globsframework.wicket.ComponentFactory;
 import org.globsframework.wicket.GlobRepositoryLoader;
 import org.globsframework.wicket.WebTestCase;
-import wicket.Component;
 
 import java.util.List;
 
@@ -35,6 +35,7 @@ public class GlobFormTest extends WebTestCase {
     form.getInputByName("component_date").setValueAttribute("25/12/2007");
     HtmlPage newPage = (HtmlPage)form.getInputByName("submit").click();
 
+    dumpPage(newPage);
     assertNoMessages(form);
 
     Glob createdObject = repository.get(Key.create(DummyObject.TYPE, 1));

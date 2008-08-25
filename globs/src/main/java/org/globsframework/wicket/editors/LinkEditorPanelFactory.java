@@ -1,11 +1,11 @@
 package org.globsframework.wicket.editors;
 
+import org.apache.wicket.Component;
 import org.globsframework.metamodel.Link;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.MutableFieldValues;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.wicket.form.GlobFormFeedbackBorder;
-import wicket.Component;
 
 public class LinkEditorPanelFactory {
   public static Component getPanel(String panelId,

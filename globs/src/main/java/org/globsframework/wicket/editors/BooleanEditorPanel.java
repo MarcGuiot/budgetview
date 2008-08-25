@@ -1,9 +1,9 @@
 package org.globsframework.wicket.editors;
 
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.globsframework.wicket.model.FieldValueModel;
-import wicket.markup.html.form.CheckBox;
-import wicket.markup.html.panel.Panel;
-import wicket.model.Model;
 
 public class BooleanEditorPanel extends Panel {
 

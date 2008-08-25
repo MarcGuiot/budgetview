@@ -1,11 +1,14 @@
 package org.globsframework.wicket;
 
+import org.apache.wicket.Request;
+import org.apache.wicket.Response;
+import org.apache.wicket.Session;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.Formats;
 import static org.globsframework.model.format.Formats.*;
 import org.globsframework.model.format.utils.DefaultDescriptionService;
-import wicket.Session;
+import org.globsframework.utils.directory.Directory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +46,10 @@ public class DummyApplication extends GlobApplication {
     return repository;
   }
 
+  public static Directory getStaticDirectory() {
+    return currentInstance.getDirectory();
+  }
+
   protected DescriptionService createDescriptionService() {
     try {
       InputStream propertiesStream = getClass().getResourceAsStream("description.properties");
@@ -62,8 +69,8 @@ public class DummyApplication extends GlobApplication {
     return DummyPage.class;
   }
 
-  public Session newSession() {
-    DummySession session = new DummySession(this);
+  public Session newSession(Request request, Response response) {
+    DummySession session = new DummySession(request, response, this);
     Session.set(session);
     return session;
   }

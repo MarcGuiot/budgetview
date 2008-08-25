@@ -1,6 +1,6 @@
 package org.globsframework.wicket;
 
-import wicket.Component;
+import org.apache.wicket.Component;
 
 public interface ComponentFactory {
   public Component create(String componentId, GlobRepositoryLoader repositoryLoader);
