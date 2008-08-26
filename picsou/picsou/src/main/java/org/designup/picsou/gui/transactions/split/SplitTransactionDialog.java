@@ -256,7 +256,7 @@ public class SplitTransactionDialog {
 
     TransactionSeriesColumn seriesColumn =
       new TransactionSeriesColumn(view, rendererColors,
-                                    descriptionService, localRepository, localDirectory);
+                                  descriptionService, localRepository, localDirectory);
 
     DeleteSplitTransactionColumn deleteSplitColumn =
       new DeleteSplitTransactionColumn(transactionToSplit, view, rendererColors, descriptionService,
@@ -492,7 +492,7 @@ value(Transaction.SPLIT_SOURCE, transactionToSplit.get(Transaction.ID))
       this.transactions = new GlobList(transaction);
     }
 
-    public void categorySelected(Glob category) {
+    public void processSelection(GlobList categories) {
       amountField.requestFocusInWindow();
       amountField.requestFocus();
     }

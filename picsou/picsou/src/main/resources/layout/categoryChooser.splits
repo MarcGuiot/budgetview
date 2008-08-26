@@ -15,6 +15,7 @@
     </scrollPane>
     <row margin="10" marginTop="0">
       <filler fill="horizontal"/>
+      <button action="ok" text="$ok"/>
       <button action="close" text="$close"/>
     </row>
   </column>

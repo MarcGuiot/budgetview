@@ -4,28 +4,29 @@
 
     <label text="$seriesCreation.title"/>
 
-    <grid weightY="0">
-      <label text="$seriesCreation.name" gridPos="(0,0)"/>
-      <textField ref="nameField" gridPos="(1,0)"/>
+    <row>
+      <label text="$seriesCreation.name"/>
+      <textField ref="nameField"/>
+    </row>
+    <row>
+      <label text="$seriesCreation.category"/>
+      <label ref="singleCategoryLabel"/>
+      <button action="assignCategoryAction" text="$seriesCreation.categorize"/>
+    </row>
 
-      <label text="$seriesCreation.category" gridPos="(0,1)"/>
-      <button action="assignCategoryAction" text="$seriesCreation.categorize" gridPos="(1,1)" styleClass="hyperlink"/>
-    </grid>
-
-    <row weightY="0">
+    <row>
       <label text="$seriesCreation.amount"/>
       <textField ref="amountEditor"/>
     </row>
 
-    <row weightY="0">
+    <row>
       <label text="$seriesCreation.begin"/>
       <textField ref="beginSeriesDate"/>
       <label text="$seriesCreation.end"/>
       <textField ref="endSeriesDate"/>
     </row>
 
-    <repeat ref="monthRepeat" styleClass="innerBlock" marginLeft="10" marginRight="10" layout="horizontalGrid"
-            weightY="0">
+    <repeat ref="monthRepeat" styleClass="innerBlock" marginLeft="10" marginRight="10" layout="horizontalGrid">
       <column>
         <label ref="monthLabel"/>
         <row>
@@ -35,7 +36,7 @@
       </column>
     </repeat>
 
-    <scrollPane weightY="1">
+    <scrollPane weightY="1000">
       <column>
         <repeat ref="budgetSeries" layout="verticalGrid">
           <label ref="budgetMonth"/>

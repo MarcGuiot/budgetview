@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class SeriesCreationDialogChecker extends DataChecker {
@@ -23,6 +24,7 @@ public class SeriesCreationDialogChecker extends DataChecker {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
     CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
     categoryChooser.selectCategory(getCategoryName(category));
+    UISpecAssert.assertThat(dialog.getTextBox("singleCategoryLabel").textEquals(getCategoryName(category)));
   }
 
   public void validate() {

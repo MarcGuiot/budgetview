@@ -66,6 +66,7 @@ public class SeriesCreationDialog {
 
     builder.addEditor("nameField", Series.LABEL);
 
+    builder.addLabel("singleCategoryLabel", Series.DEFAULT_CATEGORY);
     builder.add("assignCategoryAction", new AssignCategoryAction());
 
     builder.addEditor("beginSeriesDate", Series.FIRST_MONTH);
@@ -220,7 +221,7 @@ public class SeriesCreationDialog {
   private class AssignCategoryAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       CategoryChooserDialog chooser =
-        new CategoryChooserDialog(new SeriesCategoryChooserCallback(),
+        new CategoryChooserDialog(new SeriesCategoryChooserCallback(), true,
                                   new TransactionRendererColors(localDirectory),
                                   localRepository, localDirectory);
 
@@ -228,14 +229,16 @@ public class SeriesCreationDialog {
     }
 
     private class SeriesCategoryChooserCallback implements CategoryChooserCallback {
-      public void categorySelected(Glob category) {
-        localRepository.setTarget(series.getKey(), Series.DEFAULT_CATEGORY, category.getKey());
-        if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
-          localRepository.delete(localRepository.getAll(SeriesToCategory.TYPE,
-                                                        GlobMatchers.linkedTo(series, SeriesToCategory.SERIES)));
-          localRepository.create(SeriesToCategory.TYPE,
-                                 value(SeriesToCategory.SERIES, series.get(Series.ID)),
-                                 value(SeriesToCategory.CATEGORY, category.get(Category.ID)));
+      public void processSelection(GlobList categories) {
+        for (Glob category : categories) {
+          localRepository.setTarget(series.getKey(), Series.DEFAULT_CATEGORY, category.getKey());
+          if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
+            localRepository.delete(localRepository.getAll(SeriesToCategory.TYPE,
+                                                          GlobMatchers.linkedTo(series, SeriesToCategory.SERIES)));
+            localRepository.create(SeriesToCategory.TYPE,
+                                   value(SeriesToCategory.SERIES, series.get(Series.ID)),
+                                   value(SeriesToCategory.CATEGORY, category.get(Category.ID)));
+          }
         }
       }
 
