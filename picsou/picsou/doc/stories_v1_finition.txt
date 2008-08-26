@@ -35,6 +35,7 @@ Import
 Packaging
 ---------
 * Packaging Mac (hdiutil?)
+* Sous Mac: Sauvegarde dans ~/Library/Application Support/<application name>
 * Look installer
 * Afficher SLA au premier lancement (cas de repository vide ?)
 
@@ -46,8 +47,6 @@ Misc
 
 Bugs graphiques
 ---------------
-* CategoryView: selection par drag dans colonne expand
-* CategoryView: selection par drag dans colonne name
 * CategoryView: desactiver tri
 * CategoryView: creation d'une sous-categorie ignoree au open suivant
 

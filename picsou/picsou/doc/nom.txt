@@ -29,6 +29,7 @@ Propositions
 
   StashCash
   CashManager
+  Finboard
 
 
 Retours

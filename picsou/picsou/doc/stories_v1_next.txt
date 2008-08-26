@@ -28,3 +28,12 @@
 
 * SMS
 
+* Virements internes
+
+* Remboursements
+
+* Affiner version basique / pro
+
+* Bloc "vous utilisez la version basique"
+
+* Afficher les infos de mise a dispo d'une nouvelle version

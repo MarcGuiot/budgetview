@@ -1,8 +1,6 @@
 
 * Suppression de subcat : demander la subcat de destination (cas du pb d'import)
 
-* Sous Mac: Sauvegarde dans ~/Library/Application Support/<application name>
-
 * Types de comptes (courant / carte / epargne)
 
 * Filtrage de transactions par compte
@@ -16,5 +14,3 @@
 * messages “Vous avez dépense 150€ de trop dans la catégorie Alimentation”
 * messages “Vous avez économisé 54€ dans la catégorie Sport” (uniquement pour les mois terminés)
 * Sensibilité des messages : inutile de parler d’une économie de 3€
-
-* Recuperation d'un nouveau JAR : afficher les nouveautes
