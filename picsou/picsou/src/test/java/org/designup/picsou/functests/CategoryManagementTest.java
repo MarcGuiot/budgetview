@@ -158,8 +158,8 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       "Taxes",
       "Telecommunications",
       "Transports",
+      "Achat véhicule",
       "Assurance",
-      "Crédit auto",
       "Entretien/Réparations",
       "Essence",
       "Moto",
@@ -297,15 +297,6 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
 
     categories.select(MasterCategory.FOOD);
-    categories.assertDeletionNotAvailable();
-  }
-
-  public void testCannotDeleteSystemCategories() throws Exception {
-    categories.assertExpanded(MasterCategory.INCOME, false);
-
-    categories.toggleExpanded(MasterCategory.INCOME);
-    categories.assertExpanded(MasterCategory.INCOME, true);
-    categories.select("Revenus immobiliers");
     categories.assertDeletionNotAvailable();
   }
 

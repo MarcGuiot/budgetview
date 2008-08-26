@@ -25,15 +25,12 @@ public class Category {
   @Key
   public static IntegerField ID;
 
-  @NoObfuscation
   @NamingField
   public static StringField NAME;
 
-  @NoObfuscation
   @Target(Category.class)
   public static LinkField MASTER;
 
-  @NoObfuscation
   public static BooleanField SYSTEM;
 
   public static final Integer ALL = MasterCategory.ALL.getId();

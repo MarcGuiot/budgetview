@@ -1,5 +1,7 @@
 * Graphique page accueil
 
+* Apprentissage series
+
 * Projets
 
 * Affichage synthèse des mois suivants (+/- MonthSummaryView en sequence horizontale, avec projets)
