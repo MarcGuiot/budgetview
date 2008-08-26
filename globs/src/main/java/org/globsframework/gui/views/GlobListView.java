@@ -31,6 +31,7 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
   private boolean showEmptyOption = false;
   private boolean selectionEnabled = true;
   private boolean singleSelectionMode = false;
+  private String name;
 
   public static GlobListView init(GlobType type, GlobRepository repository, Directory directory) {
     return new GlobListView(type, repository, directory);
@@ -94,9 +95,14 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     return this;
   }
 
+  public GlobListView setName(String name) {
+    this.name = name;
+    return this;
+  }
+
   public JList getComponent() {
     complete();
-    jList.setName(type.getName());
+    jList.setName(name != null ? name : type.getName());
     jList.setModel(model);
     jList.setCellRenderer(renderer);
     registerSelectionListener();
