@@ -30,6 +30,7 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
   private boolean updateWithIncomingSelections = true;
   private boolean showEmptyOption = false;
   private boolean selectionEnabled = true;
+  private boolean singleSelectionMode = false;
 
   public static GlobListView init(GlobType type, GlobRepository repository, Directory directory) {
     return new GlobListView(type, repository, directory);
@@ -45,8 +46,8 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    Set newSelection = new HashSet(selection.getAll(type));
-    Set currentSelection = new HashSet(getCurrentSelection());
+    Set<Glob> newSelection = new HashSet<Glob>(selection.getAll(type));
+    Set<Glob> currentSelection = new HashSet<Glob>(getCurrentSelection());
     if (!newSelection.equals(currentSelection)) {
       try {
         selectionEnabled = false;
@@ -56,6 +57,11 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
         selectionEnabled = true;
       }
     }
+  }
+
+  public GlobListView setSingleSelectionMode() {
+    this.singleSelectionMode = true;
+    return this;
   }
 
   public GlobListView setUpdateWithIncomingSelections(boolean updateWithIncomingSelections) {
@@ -101,7 +107,8 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
   }
 
   private void registerSelectionListener() {
-    jList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    jList.setSelectionMode(
+      singleSelectionMode ? ListSelectionModel.SINGLE_SELECTION : ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     jList.addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent event) {
         if (jList.getSelectionModel().getValueIsAdjusting()) {

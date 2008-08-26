@@ -288,6 +288,13 @@ public class GlobListViewTest extends GuiComponentTestCase {
     assertTrue(listBox.selectionIsEmpty());
   }
 
+  public void testSingleSelection() throws Exception {
+    GlobRepository repository = GlobRepositoryBuilder.init().get();
+    view = GlobListView.init(TYPE, repository, directory).setSingleSelectionMode();
+    JList list = view.getComponent();
+    assertEquals(ListSelectionModel.SINGLE_SELECTION, list.getSelectionMode());
+  }
+
   public void testFiltering() throws Exception {
     GlobRepository repository =
       checker.parse("<dummyObject name='name1'/>" +
