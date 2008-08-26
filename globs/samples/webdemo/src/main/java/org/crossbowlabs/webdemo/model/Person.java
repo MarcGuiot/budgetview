@@ -1,11 +1,11 @@
-package org.globsframework.webdemo.model;
+package org.crossbowlabs.webdemo.model;
 
-import org.globsframework.globs.metamodel.GlobType;
-import org.globsframework.globs.metamodel.annotations.Key;
-import org.globsframework.globs.metamodel.annotations.MultiLineText;
-import org.globsframework.globs.metamodel.annotations.Required;
-import org.globsframework.globs.metamodel.fields.*;
-import org.globsframework.globs.metamodel.utils.GlobTypeLoader;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.MultiLineText;
+import org.globsframework.metamodel.annotations.Required;
+import org.globsframework.metamodel.fields.*;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class Person {
   public static GlobType TYPE;

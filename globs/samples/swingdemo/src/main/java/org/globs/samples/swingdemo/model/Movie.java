@@ -1,11 +1,11 @@
 package org.globs.samples.swingdemo.model;
 
-import org.globsframework.globs.metamodel.GlobType;
-import org.globsframework.globs.metamodel.utils.GlobTypeLoader;
-import org.globsframework.globs.metamodel.fields.IntegerField;
-import org.globsframework.globs.metamodel.fields.StringField;
-import org.globsframework.globs.metamodel.fields.DateField;
-import org.globsframework.globs.metamodel.annotations.Key;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.DateField;
+import org.globsframework.metamodel.annotations.Key;
 
 public class Movie {
   public static GlobType TYPE;

@@ -1,26 +1,27 @@
 package org.globs.samples.swingdemo;
 
-import org.globsframework.globs.gui.GlobsPanelBuilder;
-import org.globsframework.globs.gui.SelectionService;
-import org.globsframework.globs.gui.ComponentHolder;
-import org.globsframework.globs.gui.views.GlobRepeatView;
-import org.globsframework.globs.metamodel.GlobType;
-import org.globsframework.globs.model.*;
-import org.globsframework.globs.model.format.DescriptionService;
-import org.globsframework.globs.model.format.Formats;
-import org.globsframework.globs.model.format.utils.DefaultDescriptionService;
-import org.globsframework.globs.model.utils.GlobFieldComparator;
-import org.globsframework.globs.utils.Dates;
-import org.globsframework.globs.utils.directory.DefaultDirectory;
-import org.globsframework.globs.utils.directory.Directory;
+import org.globs.samples.swingdemo.model.Movie;
+import org.globsframework.gui.ComponentHolder;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globs.samples.swingdemo.model.Movie;
+import org.globsframework.gui.views.GlobRepeatView;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.Formats;
+import org.globsframework.model.format.utils.DefaultDescriptionService;
+import org.globsframework.model.utils.GlobFieldComparator;
+import org.globsframework.utils.Dates;
+import org.globsframework.utils.directory.DefaultDirectory;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class RepeatDemo {
   public static void main(String[] args) {
@@ -30,11 +31,11 @@ public class RepeatDemo {
 
     Directory directory = initDirectory();
 
-    GlobsPanelBuilder builder = GlobsPanelBuilder.init(repository, directory);
-    builder.addTable(Movie.TYPE, new GlobFieldComparator(Movie.TITLE))
-            .addColumn(Movie.TITLE)
-            .addColumn(Movie.DATE)
-            .addColumn(Movie.DIRECTOR);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(RepeatDemo.class, "/repeatdemo.splits", repository, directory);
+    builder.addTable("movie", Movie.TYPE, new GlobFieldComparator(Movie.TITLE))
+      .addColumn(Movie.TITLE)
+      .addColumn(Movie.DATE)
+      .addColumn(Movie.DIRECTOR);
     builder.addCreateAction("+", "newMovie", Movie.TYPE);
     builder.addDeleteAction("-", "deleteMovie", Movie.TYPE);
     builder.addEditor(Movie.TITLE);
@@ -49,7 +50,7 @@ public class RepeatDemo {
                                               }).getComponent());
 
 
-    JFrame frame = (JFrame) builder.parse(RepeatDemo.class, "/repeatdemo.splits");
+    JFrame frame = (JFrame)builder.load();
     frame.setVisible(true);
 
     createMovie(repository, "Bambi", Dates.parse("2005/12/26"));
@@ -57,11 +58,9 @@ public class RepeatDemo {
 
   private static void createMovie(GlobRepository repository, String title, Date date) {
     repository.create(Movie.TYPE,
-                      FieldValuesBuilder.init()
-                              .set(Movie.TITLE, title)
-                              .set(Movie.DATE, date)
-                              .set(Movie.DIRECTOR, "moi")
-                              .get());
+                      FieldValue.value(Movie.TITLE, title),
+                      FieldValue.value(Movie.DATE, date),
+                      FieldValue.value(Movie.DIRECTOR, "moi"));
   }
 
   private static Directory initDirectory() {
@@ -84,11 +83,11 @@ public class RepeatDemo {
       this.repository = repository;
       repository.addChangeListener(this);
 
-      GlobsPanelBuilder builder = GlobsPanelBuilder.init(repository, directory);
+      GlobsPanelBuilder builder = new GlobsPanelBuilder(RepeatDemo.class, "/moviepanel.splits", repository, directory);
       builder.add("title", new JLabel(glob.get(Movie.TITLE)));
       builder.add("date", new JLabel(Dates.toString(glob.get(Movie.DATE))));
       builder.add("director", new JLabel(glob.get(Movie.DIRECTOR)));
-      jPanel = (JPanel) builder.parse(RepeatDemo.class, "/moviepanel.splits");
+      jPanel = (JPanel)builder.load();
     }
 
     public JComponent getComponent() {
@@ -99,8 +98,16 @@ public class RepeatDemo {
       repository.removeChangeListener(this);
     }
 
+    public ComponentHolder setName(String name) {
+      jPanel.setName(name);
+      return this;
+    }
+
     public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
       Glob glob = repository.find(key);
+    }
+
+    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     }
 
     public void globsReset(GlobRepository repository, List<GlobType> changedTypes) {

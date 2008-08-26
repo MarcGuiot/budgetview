@@ -174,7 +174,7 @@
   </dependencies>
 
   <scm>
-    <connection>scm:svn:https://mguiot:ninja600@globs.dev.java.net/svn/globs/trunk</connection>
+    <connection>scm:svn:https://name:password@globs.dev.java.net/svn/globs/trunk</connection>
   </scm>
 
 </project>

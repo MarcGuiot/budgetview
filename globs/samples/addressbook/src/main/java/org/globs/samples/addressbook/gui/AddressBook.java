@@ -1,16 +1,16 @@
 package org.globs.samples.addressbook.gui;
 
-import org.globsframework.addressbook.model.Contact;
-import org.globsframework.globs.gui.GlobsPanelBuilder;
-import org.globsframework.globs.gui.SelectionService;
-import org.globsframework.globs.model.GlobRepository;
-import org.globsframework.globs.model.GlobRepositoryBuilder;
-import org.globsframework.globs.model.format.DescriptionService;
-import org.globsframework.globs.model.format.Formats;
-import org.globsframework.globs.model.format.utils.DefaultDescriptionService;
-import org.globsframework.globs.model.utils.GlobFieldComparator;
-import org.globsframework.globs.utils.directory.DefaultDirectory;
-import org.globsframework.globs.utils.directory.Directory;
+import org.globs.samples.addressbook.model.Contact;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.Formats;
+import org.globsframework.model.format.utils.DefaultDescriptionService;
+import org.globsframework.model.utils.GlobFieldComparator;
+import org.globsframework.utils.directory.DefaultDirectory;
+import org.globsframework.utils.directory.Directory;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.color.ColorService;
 
@@ -27,8 +27,8 @@ public class AddressBook {
 
     Directory directory = initDirectory();
 
-    GlobsPanelBuilder builder = GlobsPanelBuilder.init(repository, directory);
-    builder.addTable(Contact.TYPE, new GlobFieldComparator(Contact.FIRST_NAME))
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(AddressBook.class, "/addressbook.splits",repository, directory);
+    builder.addTable("contact", Contact.TYPE, new GlobFieldComparator(Contact.FIRST_NAME))
       .addColumn(Contact.FIRST_NAME)
       .addColumn(Contact.LAST_NAME)
       .addColumn(Contact.PHONE)
@@ -40,7 +40,7 @@ public class AddressBook {
     builder.addEditor(Contact.PHONE);
     builder.addEditor(Contact.EMAIL);
 
-    JFrame frame = (JFrame)builder.parse(AddressBook.class, "/addressbook.splits");
+    JFrame frame = (JFrame)builder.load();
     frame.setVisible(true);
   }
 

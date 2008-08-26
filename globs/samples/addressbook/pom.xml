@@ -1,0 +1,36 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.globsframework.samples</groupId>
+  <packaging>jar</packaging>
+  <artifactId>addressbook</artifactId>
+  <name>Sample addressbook</name>
+  <version>1.0</version>
+
+  <url>http://www.design-up.com</url>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.globsframework</groupId>
+      <artifactId>globs</artifactId>
+      <version>1.0</version>
+    </dependency>
+  </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://name:password@globs.dev.java.net/svn/globs/trunk</connection>
+  </scm>
+
+</project>

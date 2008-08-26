@@ -1,17 +1,16 @@
-package org.globsframework.addressbook.model;
+package org.globs.samples.addressbook.model;
 
-import org.globsframework.globs.metamodel.GlobType;
-import org.globsframework.globs.metamodel.annotations.Key;
-import org.globsframework.globs.metamodel.annotations.Target;
-import org.globsframework.globs.metamodel.fields.IntegerField;
-import org.globsframework.globs.metamodel.fields.LinkField;
-import org.globsframework.globs.metamodel.fields.StringField;
-import org.globsframework.globs.metamodel.utils.GlobTypeLoader;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class Contact {
   public static GlobType TYPE;
 
-  @Key public static IntegerField ID;
+  @Key
+  public static IntegerField ID;
 
   public static StringField FIRST_NAME;
   public static StringField LAST_NAME;

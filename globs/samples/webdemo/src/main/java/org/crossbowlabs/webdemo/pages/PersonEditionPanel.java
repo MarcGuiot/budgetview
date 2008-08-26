@@ -1,9 +1,11 @@
-package org.globsframework.webdemo.pages;
-import wicket.Component;
-import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.markup.html.AjaxFallbackLink;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.panel.Panel;
+package org.crossbowlabs.webdemo.pages;
+
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Panel;
+
 
 public class PersonEditionPanel extends Panel {
   public PersonEditionPanel(String editorId, final Component tr) {

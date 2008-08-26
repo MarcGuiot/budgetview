@@ -1,26 +1,27 @@
 package org.globs.samples.blog.gui;
 
-import org.globsframework.globs.gui.SelectionService;
-import org.globsframework.globs.gui.GlobSelectionListener;
-import org.globsframework.globs.gui.GlobSelection;
-import org.globsframework.globs.gui.actions.CreateGlobAction;
-import org.globsframework.globs.gui.editors.GlobTextEditor;
-import org.globsframework.globs.gui.editors.GlobMultiLineTextEditor;
-import org.globsframework.globs.gui.views.GlobTableView;
-import org.globsframework.globs.metamodel.GlobType;
-import org.globsframework.globs.metamodel.fields.StringField;
-import org.globsframework.globs.model.Glob;
-import org.globsframework.globs.model.GlobRepository;
-import org.globsframework.globs.model.GlobRepositoryBuilder;
-import org.globsframework.globs.model.GlobList;
-import org.globsframework.globs.model.format.DescriptionService;
-import org.globsframework.globs.model.format.Formats;
-import org.globsframework.globs.model.format.utils.DefaultDescriptionService;
-import org.globsframework.globs.model.utils.GlobFieldComparator;
-import org.globsframework.globs.model.utils.GlobMatchers;
-import org.globsframework.globs.utils.directory.DefaultDirectory;
-import org.globsframework.globs.utils.directory.Directory;
-import org.globsframework.globs.utils.logging.Debug;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.actions.CreateGlobAction;
+import org.globsframework.gui.editors.GlobTextEditor;
+import org.globsframework.gui.editors.GlobMultiLineTextEditor;
+import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.Formats;
+import org.globsframework.model.format.utils.DefaultDescriptionService;
+import org.globsframework.model.utils.GlobFieldComparator;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.directory.DefaultDirectory;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.logging.Debug;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.color.ColorService;
@@ -46,7 +47,7 @@ public class BlogApplication {
     directory.add(colorService);
     directory.add(IconLocator.class, new JarIconLocator(BlogApplication.class, ""));
 
-    SplitsBuilder splits = new SplitsBuilder(colorService);
+    SplitsBuilder splits = new GlobsPanelBuilder(BlogApplication.class, "/blogapplication.splits", repository, directory);
     addTable("draftPosts", false, splits, repository, directory);
     addTable("publishedPosts", true, splits, repository, directory);
 
@@ -62,7 +63,7 @@ public class BlogApplication {
     splits.add("contentField", GlobMultiLineTextEditor.init(Post.CONTENT, repository, directory).getComponent());
     splits.add("publish", new PublishAction(repository, directory));
 
-    JFrame frame = (JFrame) splits.parse(BlogApplication.class, "/blogapplication.splits");
+    JFrame frame = (JFrame) splits.load();
     frame.setVisible(true);
   }
 
