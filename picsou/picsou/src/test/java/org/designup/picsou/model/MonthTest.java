@@ -63,6 +63,6 @@ public class MonthTest extends TestCase {
   }
 
   public void testCreateMonthWithFirst() throws Exception {
-    TestUtils.assertEquals(Month.createMonthsWithFirst(200807, 3), 200807, 200808, 200809, 200810);
+    TestUtils.assertEquals(Month.createCountMonthsWithFirst(200807, 3), 200807, 200808, 200809, 200810);
   }
 }

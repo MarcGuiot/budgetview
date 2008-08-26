@@ -143,6 +143,9 @@ public class Month {
   }
 
   public static List<Integer> createMonths(int firstMonth, int lastMonth) {
+    if (firstMonth > lastMonth) {
+      return Collections.emptyList();
+    }
     List<Integer> month = new ArrayList<Integer>();
     int currentMonth = firstMonth;
     while (currentMonth <= lastMonth) {
@@ -152,7 +155,7 @@ public class Month {
     return month;
   }
 
-  public static int[] createMonthsWithFirst(int monthId, int count) {
+  public static int[] createCountMonthsWithFirst(int monthId, int count) {
     int[] monthIds = new int[count + 1];
     monthIds[0] = monthId;
     for (int i = 1; i < monthIds.length; i++) {

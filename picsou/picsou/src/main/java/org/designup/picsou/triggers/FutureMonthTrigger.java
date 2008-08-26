@@ -38,7 +38,7 @@ public class FutureMonthTrigger implements ChangeSetListener {
 
   public void updateFuturMonth(GlobRepository repository, Integer monthCount) {
     int currentMonth = time.getCurrentMonthId();
-    int[] futureMonth = Month.createMonthsWithFirst(currentMonth, monthCount);
+    int[] futureMonth = Month.createCountMonthsWithFirst(currentMonth, monthCount);
     for (int month : futureMonth) {
       repository.findOrCreate(Key.create(Month.TYPE, month));
     }

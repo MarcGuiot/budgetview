@@ -261,9 +261,7 @@ public class CategorizationDialog {
     if (Strings.isNullOrEmpty(referenceLabel)) {
       return new GlobList(transaction);
     }
-
     return repository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX, referenceLabel);
-
   }
 
   private void updateAutoHide() {
