@@ -7,6 +7,7 @@ import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
@@ -34,7 +35,7 @@ public class LicenseDialog {
   private Integer activationState;
   private JProgressBar progressBar;
   private JLabel registrationMessageLabel;
-  private LicenseDialog.ValidAction validAction;
+  private ValidateAction validateAction;
 
   public LicenseDialog(Window parent, GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -44,6 +45,7 @@ public class LicenseDialog {
     LocalGlobRepositoryBuilder localGlobRepositoryBuilder = LocalGlobRepositoryBuilder.init(repository)
       .copy(User.TYPE, UserPreferences.TYPE);
     this.localRepository = localGlobRepositoryBuilder.get();
+
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/LicenseDialog.splits",
                                                       localRepository, this.localDirectory);
     builder.addEditor("mail", User.MAIL);
@@ -57,13 +59,20 @@ public class LicenseDialog {
     progressBar = new JProgressBar();
     builder.add("connectionState", progressBar);
 
-    validAction = new ValidAction();
+    validateAction = new ValidateAction();
     dialog = PicsouDialog.createWithButtons(parent, builder.<JPanel>load(),
-                                            validAction,
+                                            validateAction,
                                             new CancelAction());
+    dialog.setTitle(Lang.get("license.title"));
     Boolean isConnected = localRepository.get(User.KEY).get(User.CONNECTED);
     connectMessageLabel.setVisible(!isConnected);
 
+    registerChangeListener();
+    repository.addChangeListener(changeSetListener);
+    dialog.pack();
+  }
+
+  private void registerChangeListener() {
     changeSetListener = new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {
@@ -85,7 +94,7 @@ public class LicenseDialog {
             connectMessageLabel.setText(Lang.get("license.activation.fail"));
             connectMessageLabel.setVisible(true);
             progressBar.setVisible(false);
-            validAction.setEnabled(true);
+            validateAction.setEnabled(true);
           }
         }
       }
@@ -93,8 +102,6 @@ public class LicenseDialog {
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
       }
     };
-    repository.addChangeListener(changeSetListener);
-    dialog.pack();
   }
 
   public void show() {
@@ -103,12 +110,13 @@ public class LicenseDialog {
       selectionService.select(localRepository.get(User.KEY));
       selectionService.select(localRepository.get(UserPreferences.KEY));
     }
+    GuiUtils.center(dialog);
     dialog.setVisible(true);
   }
 
 
-  private class ValidAction extends AbstractAction {
-    public ValidAction() {
+  private class ValidateAction extends AbstractAction {
+    public ValidateAction() {
       super(Lang.get("ok"));
     }
 

@@ -5,6 +5,7 @@ CategorizationDialog
 * Renommage de serie : mettre a jour le toggle
 * Liens "edition des series"
 * Supprimer series initiales (xml) + afficher message creation
+* Message special quand il n'y a pas de series.
 
 
 SeriesCreationDialog (edition)
@@ -18,16 +19,16 @@ SeriesCreationDialog (edition)
 * Selection de profil : mensuel pur / personnalise / aleatoire
 * Joliesse
 
-
 BudgetView
+* Ne plus creer de series par defaut
 * Ne pas montrer les series qui ne sont pas utilisees
 * Block "non classe" (avec bouton categorisation)
 * Hyperliens edition series
 * Hyperliens montants ==> transactionView 
 
 Licence
-* Joliesse panneau
 * Activation licence : cas ou pas de connexion internet (test manuel)
+* Voir nb mois
 
 CategoryChooserDialog
 * exclure "none" et "all"

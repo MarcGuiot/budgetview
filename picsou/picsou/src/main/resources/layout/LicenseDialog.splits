@@ -2,26 +2,19 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel ui="wave">
+  <column margin="10">
+    <filler fill="vertical" weightY="10"/>
+    <grid>
+      <label gridPos="(0,0)" text="$license.mail" styleClass="formLabel"/>
+      <textField gridPos="(1,0)" ref="mail"/>
+      <label gridPos="(0,1)" text="$license.code" styleClass="formLabel"/>
+      <textField gridPos="(1,1)" ref="code" columns="20"/>
+      <label gridPos="(0,2)" text="$license.month.count" styleClass="formLabel"/>
+      <textField gridPos="(1,2)" ref="monthCount"/>
+    </grid>
+    <progressBar ref="connectionState" visible="false"/>
+    <label ref="connectionMessage"/>
+    <filler fill="vertical" weightY="20"/>
+  </column>
 
-    <column>
-      <filler fill="vertical" weightY="10"/>
-      <row>
-        <label text="$license.mail"/>
-        <textField ref="mail"/>
-      </row>
-      <row>
-        <label text="$license.code"/>
-        <textField ref="code"/>
-      </row>
-      <row>
-        <label text="$license.month.count"/>
-        <textField ref="monthCount"/>
-      </row>
-      <progressBar ref="connectionState"/>
-      <label ref="connectionMessage"/>
-      <filler fill="vertical" weightY="20"/>
-    </column>
-
-  </panel>
 </splits>
