@@ -314,6 +314,66 @@ public class GlobListViewTest extends GuiComponentTestCase {
                                      "name21"));
   }
 
+  public void testSetFilterSendsSelectionEvents() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject name='name1'/>" +
+                    "<dummyObject name='name2'/>" +
+                    "<dummyObject name='name21'/>");
+    ListBox listBox = createList(repository);
+    assertTrue(listBox.contentEquals("name1",
+                                     "name2",
+                                     "name21"));
+    listBox.selectIndices(0, 1, 2);
+    DummySelectionListener listener = DummySelectionListener.register(directory, DummyObject.TYPE);
+
+    view.setFilter(createNameMatcher("1"));
+    assertTrue(listBox.contentEquals("name1",
+                                     "name21"));
+    assertTrue(listBox.selectionEquals("name1", "name21"));
+    listener.assertEquals("<log>" +
+                          "  <selection types='dummyObject'>" +
+                          "    <item key='dummyObject[id=0]'/>" +
+                          "    <item key='dummyObject[id=2]'/>" +
+                          "  </selection>" +
+                          "</log>");
+
+    view.setFilter(GlobMatchers.ALL);
+    assertTrue(listBox.contentEquals("name1",
+                                     "name2",
+                                     "name21"));
+    assertTrue(listBox.selectionEquals("name1", "name21"));
+    listener.assertEmpty();
+
+    view.setFilter(createNameMatcher("2"));
+    assertTrue(listBox.selectionEquals("name21"));
+    listener.assertEquals("<log>" +
+                          "  <selection types='dummyObject'>" +
+                          "    <item key='dummyObject[id=2]'/>" +
+                          "  </selection>" +
+                          "</log>");
+
+    view.setFilter(createNameMatcher("3"));
+    assertTrue(listBox.selectionIsEmpty());
+    listener.assertEquals("<log>" +
+                          "  <selection types='dummyObject'>" +
+                          "  </selection>" +
+                          "</log>");
+  }
+
+  public void testSelectionIsClearedByNewFilter() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject name='name1'/>" +
+                    "<dummyObject name='name2'/>" +
+                    "<dummyObject name='name21'/>");
+    ListBox listBox = createList(repository);
+    assertTrue(listBox.contentEquals("name1",
+                                     "name2",
+                                     "name21"));
+    listBox.selectIndices(0);
+    view.setFilter(createNameMatcher("2"));
+    assertTrue(listBox.selectionIsEmpty());
+  }
+
   public void testFilteringIsTakenIntoAccountDuringUpdates() throws Exception {
     GlobRepository repository =
       checker.parse("<dummyObject id='1' name='name1'/>" +

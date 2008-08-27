@@ -16,10 +16,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class GlobListView extends AbstractGlobComponentHolder<GlobListView> implements GlobSelectionListener {
   private ListCellRenderer renderer;
@@ -50,13 +47,17 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     Set<Glob> newSelection = new HashSet<Glob>(selection.getAll(type));
     Set<Glob> currentSelection = new HashSet<Glob>(getCurrentSelection());
     if (!newSelection.equals(currentSelection)) {
-      try {
-        selectionEnabled = false;
-        select(newSelection);
-      }
-      finally {
-        selectionEnabled = true;
-      }
+      selectSilently(newSelection);
+    }
+  }
+
+  private void selectSilently(Collection<Glob> newSelection) {
+    try {
+      selectionEnabled = false;
+      select(newSelection);
+    }
+    finally {
+      selectionEnabled = true;
     }
   }
 
@@ -182,7 +183,20 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
 
   public void setFilter(GlobMatcher matcher) {
     complete();
+
+    GlobList selection = getCurrentSelection();
+    int initialSize = selection.size();
+    selection.filterSelf(matcher, repository);
+    boolean selectionChanged = (initialSize != selection.size());
+
     model.model.setFilter(matcher);
+
+    if (selectionChanged) {
+      select(selection);
+    }
+    else {
+      selectSilently(selection);
+    }
   }
 
   public Glob getGlobAt(int index) {
