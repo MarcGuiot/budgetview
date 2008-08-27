@@ -49,7 +49,6 @@ public abstract class CategorizationAction extends AbstractGlobSelectionAction {
                     fieldEquals(Transaction.SERIES, Series.UNKNOWN_SERIES_ID)),
                 repository);
     }
-
   }
 
   protected abstract GlobList getAllGlobs();

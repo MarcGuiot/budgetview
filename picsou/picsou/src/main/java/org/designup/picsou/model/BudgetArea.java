@@ -17,7 +17,7 @@ public enum BudgetArea implements GlobConstantContainer {
   RECURRING_EXPENSES(1, false),
   EXPENSES_ENVELOPE(2, false),
   OCCASIONAL_EXPENSES(3, false),
-  UNCLASSIFIED(4, false);
+  UNCATEGORIZED(4, false);
 
   public static GlobType TYPE;
 

@@ -1,11 +1,13 @@
 package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -20,14 +22,16 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.ChangeSetMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.event.ActionEvent;
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class MonthSummaryView extends View implements GlobSelectionListener {
   public MonthSummaryView(GlobRepository repository, Directory parentDirectory) {
@@ -50,7 +54,9 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                      GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, MonthStat.TOTAL_SPENT));
     builder.add("totalBalance",
                 new BalanceGraph(MonthStat.TYPE, MonthStat.TOTAL_RECEIVED, MonthStat.TOTAL_SPENT, directory));
-    builder.addRepeat("budgetAreaRepeat", Arrays.asList(BudgetArea.values()),
+
+    builder.addRepeat("budgetAreaRepeat",
+                      getBudgetAreas(),
                       new RepeatComponentFactory<BudgetArea>() {
                         public void registerComponents(RepeatCellBuilder cellBuilder, BudgetArea budgetArea) {
                           JLabel label = new JLabel(descriptionService.getStringifier(BudgetArea.TYPE)
@@ -69,7 +75,20 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                                                                                           budgetArea.isIncome())).getComponent());
                         }
                       });
+
+    builder.addLabel("uncategorizedAmountLabel", Month.TYPE, new UncategorizedStringifier())
+      .setAutoHideIfEmpty(true)
+      .setUpdateMatcher(ChangeSetMatchers.changesForType(Transaction.TYPE));
+
+    builder.add("categorize", new CategorizationAction());
+
     parentBuilder.add("monthSummaryView", builder);
+  }
+
+  private List<BudgetArea> getBudgetAreas() {
+    List<BudgetArea> result = new ArrayList<BudgetArea>(Arrays.asList(BudgetArea.values()));
+    result.remove(BudgetArea.UNCATEGORIZED);
+    return result;
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -80,11 +99,11 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       Integer monthId = month.get(Month.ID);
       selectedMonthStats.addAll(
         repository.getAll(MonthStat.TYPE,
-                          GlobMatchers.and(GlobMatchers.fieldEquals(MonthStat.MONTH, monthId),
-                                           GlobMatchers.fieldEquals(MonthStat.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
-                                           GlobMatchers.fieldEquals(MonthStat.CATEGORY, Category.ALL))));
+                          and(fieldEquals(MonthStat.MONTH, monthId),
+                              fieldEquals(MonthStat.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
+                              fieldEquals(MonthStat.CATEGORY, Category.ALL))));
       selectedSeriesStats.addAll(
-        repository.getAll(SeriesStat.TYPE, GlobMatchers.fieldEquals(SeriesStat.MONTH, monthId)));
+        repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, monthId)));
     }
     SelectionService localSelectionService = directory.get(SelectionService.class);
     localSelectionService.select(selectedMonthStats, MonthStat.TYPE);
@@ -119,5 +138,68 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       }
       return PicsouDescriptionService.DECIMAL_FORMAT.format(value);
     }
+  }
+
+  private class UncategorizedStringifier implements GlobListStringifier {
+    public String toString(GlobList monthList, GlobRepository repository) {
+      double spent = 0;
+      double received = 0;
+      for (Glob month : monthList) {
+        for (Glob transaction : getUncategorizedTransactions(month, repository)) {
+          double amount = transaction.get(Transaction.AMOUNT);
+          if (amount < 0) {
+            spent -= amount;
+          }
+          else {
+            received += amount;
+          }
+        }
+      }
+
+      DecimalFormat format = PicsouDescriptionService.DECIMAL_FORMAT;
+      StringBuilder builder = new StringBuilder();
+      if (received > 0) {
+        builder.append(format.format(received));
+      }
+      if ((received > 0) && (spent > 0)) {
+        builder.append(" / ");
+      }
+      if (spent > 0) {
+        builder.append("-").append(format.format(spent));
+      }
+      return builder.toString();
+    }
+  }
+
+  private class CategorizationAction extends AbstractAction implements GlobSelectionListener {
+    private GlobList selectedMonthList;
+
+    private CategorizationAction() {
+      super(Lang.get("budgetArea.uncategorized"));
+      directory.get(SelectionService.class).addListener(this, Month.TYPE);
+    }
+
+    public void selectionUpdated(GlobSelection selection) {
+      this.selectedMonthList = selection.getAll(Month.TYPE);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      GlobList transactions = new GlobList();
+      for (Glob month : selectedMonthList) {
+        transactions.addAll(getUncategorizedTransactions(month, repository));
+      }
+
+      CategorizationDialog dialog = new CategorizationDialog(directory.get(JFrame.class), repository, directory);
+      dialog.show(transactions, false, true);
+    }
+  }
+
+  private GlobList getUncategorizedTransactions(Glob month, GlobRepository repository) {
+    GlobMatcher matcher = and(
+      fieldEquals(Transaction.SERIES, Series.UNKNOWN_SERIES_ID),
+      not(fieldEquals(Transaction.PLANNED, true))
+    );
+    return repository.findByIndex(Transaction.MONTH_INDEX, month.get(Month.ID))
+      .filterSelf(matcher, repository);
   }
 }

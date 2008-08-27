@@ -5,7 +5,9 @@ import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.interception.WindowInterceptor;
 
 public class MonthSummaryChecker extends DataChecker {
   private Window window;
@@ -51,26 +53,19 @@ public class MonthSummaryChecker extends DataChecker {
       return this;
     }
 
-    public Summary checkUnclassified(double amount) {
-      check(BudgetArea.UNCLASSIFIED.getName(), amount);
-      return this;
-    }
-
     private void check(String budgetAreaName, double amount) {
-      UISpecAssert.assertThat(panel.getTextBox(budgetAreaName).getContainer("budgetAreaRow")
+      assertThat(panel.getTextBox(budgetAreaName).getContainer("budgetAreaRow")
         .getTextBox("budgetAreaAmount").textEquals(MonthSummaryChecker.this.toString(amount)));
     }
 
     private void checkPlanned(String budgetAreaName, double amount) {
-      UISpecAssert.assertThat(panel.getTextBox(budgetAreaName).getContainer("budgetAreaRow")
+      assertThat(panel.getTextBox(budgetAreaName).getContainer("budgetAreaRow")
         .getTextBox("budgetAreaPlannedAmount").textEquals(MonthSummaryChecker.this.toString(amount)));
     }
 
     public Summary total(double received, double spent, boolean receivedGreaterThanExpenses) {
-      UISpecAssert.assertThat(panel.getTextBox("totalSpentAmount")
-        .textEquals(MonthSummaryChecker.this.toString(spent)));
-      UISpecAssert.assertThat(panel.getTextBox("totalReceivedAmount")
-        .textEquals(MonthSummaryChecker.this.toString(received)));
+      assertThat(panel.getTextBox("totalSpentAmount").textEquals(MonthSummaryChecker.this.toString(spent)));
+      assertThat(panel.getTextBox("totalReceivedAmount").textEquals(MonthSummaryChecker.this.toString(received)));
       BalanceGraph balanceGraph = (BalanceGraph)panel.getSwingComponents(BalanceGraph.class)[0];
       if (receivedGreaterThanExpenses) {
         Assert.assertEquals(1.0, balanceGraph.getReceivedPercent());
@@ -82,5 +77,22 @@ public class MonthSummaryChecker extends DataChecker {
       }
       return this;
     }
+
+    public Summary checkUncategorized(String amount) {
+      assertThat(panel.getTextBox("uncategorizedAmountLabel").textEquals(amount));
+      return this;
+    }
+
+    public Summary checkNoUncategorized() {
+      UISpecAssert.assertFalse(panel.getTextBox("uncategorizedAmountLabel").isVisible());
+      UISpecAssert.assertFalse(panel.getButton("To Categorize").isVisible());
+      return this;
+    }
+
+    public CategorizationDialogChecker categorize() {
+      Window dialog = WindowInterceptor.getModalDialog(panel.getButton("categorize").triggerClick());
+      return new CategorizationDialogChecker(dialog);
+    }
+
   }
 }

@@ -23,11 +23,11 @@ public class CategorizerChecker extends DataChecker {
     categorizationChecker.validate();
   }
 
-  public void setEnvelope(String label, String envelopName, MasterCategory category, boolean showSerieInitialization) {
+  public void setEnvelope(String label, String envelopeName, MasterCategory category, boolean showSeriesInitialization) {
     int index = transactions.getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
     CategorizationDialogChecker categorizationChecker = transactions.categorize(index);
     categorizationChecker.selectEnvelopes();
-    categorizationChecker.selectEnvelopeSeries(envelopName, category, showSerieInitialization);
+    categorizationChecker.selectEnvelopeSeries(envelopeName, category, showSeriesInitialization);
     categorizationChecker.validate();
   }
 

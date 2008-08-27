@@ -1,6 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategorizerChecker;
+import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -33,7 +34,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkEnvelope(80)
       .checkOccasional(10)
       .checkIncome(1500)
-      .checkUnclassified(23);
+      .checkUncategorized("-23.00");
   }
 
   public void testTwoMonths() throws Exception {
@@ -69,5 +70,59 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkEnvelope(80)
       .checkOccasional(10)
       .checkIncome(1500);
+  }
+
+  public void testUncategorized() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/26", 1000, "MyCompany")
+      .addTransaction("2008/08/26", -10, "FNAC")
+      .addTransaction("2008/07/26", -10, "Another month")
+      .load();
+
+    views.selectHome();
+    timeline.selectMonth("2008/08");
+
+    monthSummary.init()
+      .total(1000, 10, true)
+      .checkIncome(0)
+      .checkRecurring(0)
+      .checkEnvelope(0)
+      .checkOccasional(0)
+      .checkUncategorized("1000.00 / -10.00");
+
+    CategorizationDialogChecker dialog = monthSummary.init().categorize();
+    dialog.checkTable(new Object[][] {
+      {"26/08/2008", "FNAC", -10.0},
+      {"26/08/2008", "MyCompany", 1000.0},
+    });
+    dialog.selectTableRow(0);
+    dialog.selectOccasional();
+    dialog.selectOccasionalSeries(MasterCategory.LEISURES);
+    dialog.validate();
+
+    monthSummary.init()
+      .total(1000, 10, true)
+      .checkIncome(0)
+      .checkRecurring(0)
+      .checkEnvelope(0)
+      .checkOccasional(10)
+      .checkUncategorized("1000.00");
+
+    CategorizationDialogChecker secondDialog = monthSummary.init().categorize();
+    secondDialog.checkTable(new Object[][] {
+      {"26/08/2008", "MyCompany", 1000.0},
+    });
+    secondDialog.selectTableRow(0);
+    secondDialog.selectIncome();
+    secondDialog.selectIncomeSeries("Salary", true);
+    secondDialog.validate();
+
+    monthSummary.init()
+      .total(1000, 10, true)
+      .checkIncome(1000)
+      .checkRecurring(0)
+      .checkEnvelope(0)
+      .checkOccasional(10)
+      .checkNoUncategorized();
   }
 }

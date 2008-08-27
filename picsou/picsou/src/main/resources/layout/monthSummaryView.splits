@@ -24,19 +24,27 @@
         </grid>
 
         <scrollPane>
-          <repeat ref="budgetAreaRepeat" styleClass="innerBlock">
-            <column name="budgetAreaRow">
-              <row margin="10" marginBottom="2">
-                <label ref="budgetAreaName" styleClass="item"/>
-                <filler fill="horizontal"/>
-              </row>
-              <row margin="10" marginTop="0">
-                <label ref="budgetAreaAmount" styleClass="amount"/>
-                <filler fill="horizontal"/>
-                <label ref="budgetAreaPlannedAmount" styleClass="amount"/>
-              </row>
-            </column>
-          </repeat>
+          <column styleClass="innerBlock">
+            <repeat ref="budgetAreaRepeat">
+              <column name="budgetAreaRow">
+                <row margin="10" marginBottom="2">
+                  <label ref="budgetAreaName" styleClass="item"/>
+                  <filler fill="horizontal"/>
+                </row>
+                <row margin="10" marginTop="0">
+                  <label ref="budgetAreaAmount" styleClass="amount"/>
+                  <filler fill="horizontal"/>
+                  <label ref="budgetAreaPlannedAmount" styleClass="amount"/>
+                </row>
+              </column>
+            </repeat>
+            <row margin="10" autoHideSource="uncategorizedAmountLabel">
+              <button action="categorize" autoHideSource="uncategorizedAmountLabel" anchor="left"
+                      styleClass="hyperlink" font="-,bold,12"/>
+              <filler fill="horizontal"/>
+              <label ref="uncategorizedAmountLabel" styleClass="amount"/>
+            </row>
+          </column>
         </scrollPane>
       </column>
     </panel>

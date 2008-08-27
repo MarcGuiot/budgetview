@@ -25,18 +25,8 @@ BudgetView
 * Hyperliens montants ==> transactionView 
 
 
-TransactionView
-* Filtrage par serie
-* Filtrage par budgetArea
-
-
-* TransactionDetail : hyperlien pour editer la serie
-
-
 MonthStatView
-* Non classe : erreur + hyperlien
 * ajouter gauge + retablir ordre releve/prevu
-
 
 Licence
 * Joliesse panneau
@@ -46,3 +36,8 @@ Licence
 CategoryChooserDialog
 * exclure "none" et "all"
 * titre "choisir une categorie"
+
+TransactionView
+* Filtrage par serie
+* Filtrage par budgetArea
+* TransactionDetail : hyperlien pour editer la serie

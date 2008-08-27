@@ -44,7 +44,7 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void checkBudgetAreasAreEnabled() {
     for (BudgetArea area : BudgetArea.values()) {
-      if (area != BudgetArea.UNCLASSIFIED) {
+      if (area != BudgetArea.UNCATEGORIZED) {
         assertTrue(dialog.getToggleButton(area.getName()).isEnabled());
       }
     }
@@ -52,7 +52,7 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void checkBudgetAreasAreDisabled() {
     for (BudgetArea area : BudgetArea.values()) {
-      if (area != BudgetArea.UNCLASSIFIED) {
+      if (area != BudgetArea.UNCATEGORIZED) {
         assertFalse(dialog.getToggleButton(area.getName()).isEnabled());
       }
     }
@@ -64,7 +64,7 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void checkNoBudgetAreaSelected() {
     for (BudgetArea area : BudgetArea.values()) {
-      if (area != BudgetArea.UNCLASSIFIED) {
+      if (area != BudgetArea.UNCATEGORIZED) {
         final String name = area.getGlob().get(BudgetArea.NAME);
         assertFalse("Area '" + name + "' is selected", dialog.getToggleButton(name).isSelected());
       }
@@ -323,6 +323,10 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void checkNoTransactionSelected() {
     assertTrue(table.selectionIsEmpty());
+  }
+
+  public void selectTableRow(int row) {
+    selectTableRows(row);
   }
 
   public void selectTableRows(int... rows) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <globs>
   <series id="0" name="occasional" budgetAreaName="occasionalExpenses" profileTypeName="unknown"/>
-  <series id="1" name="notAllocated" budgetAreaName="unclassified" profileTypeName="unknown"/>
+  <series id="1" name="notAllocated" budgetAreaName="uncategorized" profileTypeName="unknown"/>
   <series id="2" name="internet" budgetAreaName="recurringExpenses" defaultCategoryName='telecoms'
           profileTypeName="monthly"/>
   <series id="3" name="rental" budgetAreaName="recurringExpenses" defaultCategoryName='house'
