@@ -3,14 +3,10 @@ package org.globsframework.gui.views;
 import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.Field;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.metamodel.DummyObject2;
+import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.utils.GlobListMatcher;
-import org.globsframework.model.utils.GlobListMatchers;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.*;
 import org.uispec4j.TextBox;
 
 import java.util.ArrayList;
@@ -175,6 +171,22 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     assertTrue(textBox.textEquals("[dummyObject[id=1]]"));
     repository.delete(glob1.getKey());
     assertTrue(textBox.textEquals(""));
+  }
+
+  public void testUpdateWithChangeSetMatcher() throws Exception {
+    textBox = createTextBox(initView(repository, new GlobListStringifier() {
+      public String toString(GlobList list, GlobRepository repository) {
+        int count = repository.getAll(DummyObject2.TYPE).size();
+        return Integer.toString(count);
+      }
+    })
+      .setUpdateMatcher(ChangeSetMatchers.changesForType(DummyObject2.TYPE)));
+
+    selectionService.select(glob1);
+    assertTrue(textBox.textEquals("1"));
+    
+    repository.create(DummyObject2.TYPE);
+    assertTrue(textBox.textEquals("2"));
   }
 
   protected TextBox init(final GlobRepository repository) {

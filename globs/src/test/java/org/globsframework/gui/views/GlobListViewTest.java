@@ -40,7 +40,6 @@ public class GlobListViewTest extends GuiComponentTestCase {
       checker.parse("<dummyObject id='1' name='name1'/>" +
                     "<dummyObject id='2' name='name2'/>");
     ListBox list = createList(repository);
-
     repository.create(TYPE,
                       value(NAME, "name3"),
                       value(VALUE, 3.3));
@@ -51,6 +50,20 @@ public class GlobListViewTest extends GuiComponentTestCase {
 
     repository.delete(Key.create(TYPE, 2));
     assertTrue(list.contentEquals("name3", "newName1"));
+  }
+
+  public void testSelectionAfterCreation() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject id='1' name='name1'/>" +
+                    "<dummyObject id='2' name='name2'/>");
+    ListBox list = createList(repository);
+    list.selectIndex(0);
+
+    Glob glob3 = repository.create(TYPE,
+                                   value(NAME, "name3"),
+                                   value(VALUE, 3.3));
+    selectionService.select(glob3);
+    assertTrue(list.selectionEquals("name3"));
   }
 
   public void testListensOnlyToChangesForItsMainType() throws Exception {

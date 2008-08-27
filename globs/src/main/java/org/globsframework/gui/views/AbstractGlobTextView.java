@@ -8,10 +8,7 @@ import org.globsframework.gui.utils.DefaultSelection;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.utils.GlobListMatcher;
-import org.globsframework.model.utils.GlobListMatchers;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -30,6 +27,7 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   private GlobList currentSelection = new GlobList();
   private boolean autoHideIfEmpty;
   private GlobListMatcher autoHideMatcher = GlobListMatchers.ALL;
+  private ChangeSetMatcher updateMatcher = ChangeSetMatchers.NONE;
   protected boolean initCompleted = false;
   private GlobList forcedSelection;
   protected String name;
@@ -64,6 +62,11 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
     if (initCompleted) {
       update();
     }
+    return (T)this;
+  }
+
+  public T setUpdateMatcher(ChangeSetMatcher updateMatcher) {
+    this.updateMatcher = updateMatcher;
     return (T)this;
   }
 
@@ -106,6 +109,9 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
       if (!deleted.isEmpty()) {
         currentSelection.removeAll(deleted);
       }
+      update();
+    }
+    else if (updateMatcher.matches(changeSet, repository)) {
       update();
     }
   }
