@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.ref.WeakReference;
 import java.util.Set;
 import java.util.TreeSet;
 import java.beans.PropertyChangeListener;
@@ -31,7 +32,7 @@ public class PropertySetter {
         continue;
       }
       if (property.equalsIgnoreCase("autoHideIfDisabled")) {
-        installAutoHideListener(component, property, properties.get(property));
+        installAutoHideListener(component, properties.get(property));
       }
       else {
         invokeSetter(component, property, properties.get(property), context);
@@ -39,7 +40,7 @@ public class PropertySetter {
     }
   }
 
-  private static void installAutoHideListener(Object component, String propertyName, String propertyValue) {
+  private static void installAutoHideListener(Object component, String propertyValue) {
     if (!"true".equalsIgnoreCase(propertyValue)) {
       return;
     }
@@ -74,9 +75,16 @@ public class PropertySetter {
         invokeSetter(object, setter, null, property, objectClass);
       }
       else {
-        context.getService(ColorService.class).install(value, new ColorUpdater() {
+        final WeakReference ref = new WeakReference<Object>(object);
+        final ColorService colorService = context.getService(ColorService.class);
+        colorService.install(value, new ColorUpdater() {
           public void updateColor(Color color) {
-            invokeSetter(object, setter, color, property, objectClass);
+            Object target = ref.get();
+            if (target == null) {
+              colorService.uninstall(this);
+              return;
+            }
+            invokeSetter(target, setter, color, property, objectClass);
           }
         });
       }
@@ -87,7 +95,7 @@ public class PropertySetter {
     }
   }
 
-  private static void invokeSetter(Object object, Method setter, Object targetValue, String attribute, Class<? extends Component> componentClass) {
+  private static void invokeSetter(Object object, Method setter, Object targetValue, String attribute, Class componentClass) {
     try {
       setter.invoke(object, targetValue);
     }

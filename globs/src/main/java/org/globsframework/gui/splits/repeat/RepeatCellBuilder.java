@@ -5,9 +5,9 @@ import java.awt.*;
 import java.util.List;
 
 public interface RepeatCellBuilder {
-  void add(String name, Component component);
+  <T extends Component> T add(String name, T component);
 
-  void add(String name, Action action);
+  <T extends Action> T add(String name, T action);
 
   <T> Repeat<T> addRepeat(String name, List<T> items, RepeatComponentFactory<T> repeatFactory);
 

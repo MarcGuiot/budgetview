@@ -11,12 +11,14 @@ public class ContextualRepeatCellBuilder implements RepeatCellBuilder {
     this.repeatContext = repeatContext;
   }
 
-  public void add(String name, Component component) {
+  public <T extends Component> T add(String name, T component)  {
     repeatContext.addComponent(name, component);
+    return component;
   }
 
-  public void add(String name, Action action) {
+  public <T extends Action> T add(String name, T action) {
     repeatContext.add(name, action);
+    return action;
   }
 
   public <T> DefaultRepeat<T> addRepeat(String name, List<T> items, RepeatComponentFactory<T> repeatFactory) {

@@ -52,6 +52,16 @@ public class GlobListViewTest extends GuiComponentTestCase {
     assertTrue(list.contentEquals("name3", "newName1"));
   }
 
+  public void testDeletionUpdatesSelection() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject id='1' name='name1'/>" +
+                    "<dummyObject id='2' name='name2'/>");
+    ListBox list = createList(repository);
+    list.selectIndices(0, 1);
+    repository.delete(key2);
+    assertTrue(list.selectionEquals("name1"));
+  }
+
   public void testSelectionAfterCreation() throws Exception {
     GlobRepository repository =
       checker.parse("<dummyObject id='1' name='name1'/>" +

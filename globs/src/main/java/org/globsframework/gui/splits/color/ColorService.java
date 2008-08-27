@@ -7,16 +7,14 @@ import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.awt.*;
 import java.io.PrintStream;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ColorService implements ColorLocator {
 
   public static final String DEFAULT_COLOR_SET = "DEFAULT_COLOR_SET";
 
-  private List<WeakReference<ColorChangeListener>> listeners = new ArrayList<WeakReference<ColorChangeListener>>();
+  private List<ColorChangeListener> listeners = new ArrayList<ColorChangeListener>();
   private ColorSet currentSet;
   private List<ColorSet> colorSets = new ArrayList<ColorSet>();
   private List<ColorCreationListener> colorCreationListeners = new ArrayList<ColorCreationListener>();
@@ -80,6 +78,10 @@ public class ColorService implements ColorLocator {
     });
   }
 
+  public void uninstall(ColorUpdater updater) {
+    listeners.remove(updater);
+  }
+
   public void set(String key, Color color) {
     currentSet.set(key, color);
     notifyListeners();
@@ -117,20 +119,12 @@ public class ColorService implements ColorLocator {
   }
 
   public void addListener(ColorChangeListener listener) {
-    listeners.add(new WeakReference<ColorChangeListener>(listener));
+    listeners.add(listener);
     listener.colorsChanged(this);
   }
 
   public void removeListener(ColorChangeListener listener) {
-    for (Iterator<WeakReference<ColorChangeListener>> it = listeners.iterator(); it.hasNext();) {
-      WeakReference<ColorChangeListener> reference = it.next();
-      if (reference.get() == listener) {
-        it.remove();
-      }
-      else if (reference.get() == null) {
-        it.remove();
-      }
-    }
+    listeners.remove(listener);
   }
 
   public void addListener(ColorCreationListener listener) {
@@ -150,12 +144,9 @@ public class ColorService implements ColorLocator {
   }
 
   private void notifyListeners() {
-    ArrayList<WeakReference<ColorChangeListener>> copy = new ArrayList<WeakReference<ColorChangeListener>>(listeners);
-    for (WeakReference<ColorChangeListener> listener : copy) {
-      ColorChangeListener weakListener = listener.get();
-      if (weakListener != null) {
-        weakListener.colorsChanged(this);
-      }
+    List<ColorChangeListener> copy = new ArrayList<ColorChangeListener>(listeners);
+    for (ColorChangeListener listener : copy) {
+      listener.colorsChanged(this);
     }
   }
 

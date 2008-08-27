@@ -15,7 +15,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 
 public class TypeConverter {
-  static Object getValue(Class<?> targetClass, String property, String value, Class<? extends Component> componentClass, SplitsContext context) {
+  static Object getValue(Class<?> targetClass, String property, String value, Class componentClass, SplitsContext context) {
     if (targetClass == String.class) {
       return SplitsUtils.convertString(value, context.getService(TextLocator.class));
     }
