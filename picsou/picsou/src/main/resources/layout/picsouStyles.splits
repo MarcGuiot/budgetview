@@ -75,23 +75,27 @@
 
     <!-- Gauge -->
     <style selector=".totalGauge"
+           opaque="false"
            fill="horizontal" weightX="100"
            marginLeft="10" marginRight="10"
            borderColor="gauge.total.border"
            emptyColorTop="gauge.total.empty.top" emptyColorBottom="gauge.total.empty.bottom"
            filledColorTop="gauge.total.filled.top" filledColorBottom="gauge.total.filled.bottom"
-           overrunColorTop="gauge.total.warning.top" overrunColorBottom="gauge.total.warning.bottom"
+           overrunColorTop="gauge.total.overrun.top" overrunColorBottom="gauge.total.overrun.bottom"
+           overrunErrorColorTop="gauge.total.warning.top" overrunErrorColorBottom="gauge.total.warning.bottom"
            triangleTopColor="gauge.total.triangle.top" triangleBottomColor="gauge.total.triangle.bottom"
            triangleBorderColor="gauge.total.triangle.border" triangleShadowColor="gauge.total.triangle.shadow"
            triangleSignColor="gauge.total.triangle.sign"/>
 
     <style selector=".detailGauge"
+           opaque="false" background="block.inner.bg"
            fill="horizontal" weightX="100"
            marginLeft="6" marginRight="6"
            borderColor="gauge.detail.border"
            emptyColorTop="gauge.detail.empty.top" emptyColorBottom="gauge.detail.empty.bottom"
            filledColorTop="gauge.detail.filled.top" filledColorBottom="gauge.detail.filled.bottom"
-           overrunColorTop="gauge.detail.warning.top" overrunColorBottom="gauge.detail.warning.bottom"
+           overrunColorTop="gauge.detail.overrun.top" overrunColorBottom="gauge.detail.overrun.bottom"
+           overrunErrorColorTop="gauge.detail.warning.top" overrunErrorColorBottom="gauge.detail.warning.bottom"
            triangleTopColor="gauge.detail.triangle.top" triangleBottomColor="gauge.detail.triangle.bottom"
            triangleBorderColor="gauge.detail.triangle.border" triangleShadowColor="gauge.detail.triangle.shadow"
            triangleSignColor="gauge.detail.triangle.sign"/>

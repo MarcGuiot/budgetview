@@ -10,12 +10,13 @@ CategorizationDialog
 SeriesCreationDialog (edition)
 * Afficher nom categorie
 * Forcer la selection d'une categorie au moins
-* Selection multi-categories
-* Bug repaint / mois
-* Mise a jour auto des montants par mois lors de la modification du montant global
-* Joliesse
+* Selection multi-categories pour les enveloppes, mono-categories pour les recurrences
+* Table de SeriesBudget + edition apres selection
 * Liste de series
+* Creation de serie
+* Suppression de serie (avec report des transactions ? proposer plutôt end date) 
 * Selection de profil : mensuel pur / personnalise / aleatoire
+* Joliesse
 
 
 BudgetView
@@ -24,14 +25,9 @@ BudgetView
 * Hyperliens edition series
 * Hyperliens montants ==> transactionView 
 
-
-MonthStatView
-* ajouter gauge + retablir ordre releve/prevu
-
 Licence
 * Joliesse panneau
 * Activation licence : cas ou pas de connexion internet (test manuel)
-
 
 CategoryChooserDialog
 * exclure "none" et "all"

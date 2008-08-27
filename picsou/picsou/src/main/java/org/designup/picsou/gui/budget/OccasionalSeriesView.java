@@ -47,7 +47,8 @@ public class OccasionalSeriesView extends View {
     addTotalLabel("totalObservedAmount", SeriesStat.AMOUNT, builder);
     addTotalLabel("totalPlannedAmount", SeriesStat.PLANNED_AMOUNT, builder);
 
-    final GlobGaugeView gaugeView = new GlobGaugeView(SeriesStat.TYPE, SeriesStat.AMOUNT, SeriesStat.PLANNED_AMOUNT,
+    final GlobGaugeView gaugeView = new GlobGaugeView(SeriesStat.TYPE, BudgetArea.OCCASIONAL_EXPENSES,
+                                                      SeriesStat.AMOUNT, SeriesStat.PLANNED_AMOUNT,
                                                       totalMatcher, repository, directory);
     builder.add("totalGauge", gaugeView.getComponent());
 

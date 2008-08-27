@@ -9,6 +9,7 @@ import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
+import org.designup.picsou.model.BudgetArea;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,15 +19,17 @@ import java.util.Set;
 public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> implements ChangeSetListener,
                                                                                          GlobSelectionListener {
 
-  private Gauge gauge = new Gauge();
+  private Gauge gauge;
   private DoubleField actualField;
   private DoubleField targetField;
   private GlobMatcher matcher;
   private List<Key> currentSelection = new ArrayList<Key>();
 
-  public GlobGaugeView(GlobType type, DoubleField actualField, DoubleField targetField, GlobMatcher matcher,
+  public GlobGaugeView(GlobType type, BudgetArea budgetArea,
+                       DoubleField actualField, DoubleField targetField, GlobMatcher matcher,
                        GlobRepository repository, Directory directory) {
     super(type, repository, directory);
+    this.gauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
     this.actualField = actualField;
     this.targetField = targetField;
     this.matcher = matcher;

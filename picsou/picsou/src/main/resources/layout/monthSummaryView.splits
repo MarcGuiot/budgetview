@@ -18,7 +18,9 @@
                      spentColorBottom="balancegraph.spent.bottom"
                      borderColor="balancegraph.border"
                      preferredSize="(70,50)"
-                     weightX="0" weightY="1.0" fill="none"/>
+                     minimumSize="(70,50)"
+                     weightX="0.1" weightY="1.0"
+                     fill="none"/>
           <label text="$monthsummary.spent" styleClass="totalAmountTitle" gridPos="(2,0)"/>
           <label ref="totalSpentAmount" styleClass="totalAmount" gridPos="(2,1)"/>
         </grid>
@@ -32,9 +34,11 @@
                   <filler fill="horizontal"/>
                 </row>
                 <row margin="10" marginTop="0">
-                  <label ref="budgetAreaAmount" styleClass="amount"/>
-                  <filler fill="horizontal"/>
-                  <label ref="budgetAreaPlannedAmount" styleClass="amount"/>
+                  <label ref="budgetAreaAmount" styleClass="amount" preferredSize="(75,28)"
+                         horizontalAlignment="right"/>
+                  <component ref="budgetAreaGauge" styleClass="totalGauge" preferredSize="(50,28)"/>
+                  <label ref="budgetAreaPlannedAmount" styleClass="amount" preferredSize="(75,28)"
+                         horizontalAlignment="left"/>
                 </row>
               </column>
             </repeat>

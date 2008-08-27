@@ -56,6 +56,7 @@ public class Gauge extends JPanel {
     this.actualValue = actualValue;
     this.targetValue = targetValue;
     updateValues();
+    repaint();
   }
 
   private void updateValues() {
@@ -75,7 +76,7 @@ public class Gauge extends JPanel {
       overrunPercent = 1;
       emptyPercent = 0;
       overrunError = overrunIsAnError;
-      warningShown = overrunError && showWarningForErrors;      
+      warningShown = overrunError && showWarningForErrors;
     }
     else if (!sameSign) {
       fillPercent = 0;
@@ -106,6 +107,11 @@ public class Gauge extends JPanel {
 
     int width = getWidth() - 1;
     int height = getHeight() - 1;
+
+    if (isOpaque()) {
+      g2.setColor(getBackground());
+      g2.fillRect(0, 0, width, height);
+    }
 
     int barTop = (height - BAR_HEIGHT) / 2;
     int barBottom = height - barTop;

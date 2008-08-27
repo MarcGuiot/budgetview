@@ -2,9 +2,11 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.gui.components.BalanceGraph;
+import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
+import org.uispec4j.TextBox;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
@@ -29,38 +31,64 @@ public class MonthSummaryChecker extends DataChecker {
     }
 
     public Summary checkRecurring(double amount) {
-      check(BudgetArea.RECURRING_EXPENSES.getName(), amount);
+      check(BudgetArea.RECURRING_EXPENSES, amount);
       return this;
     }
 
     public Summary checkPlannedRecurring(double amount) {
-      checkPlanned(BudgetArea.RECURRING_EXPENSES.getName(), amount);
+      checkPlanned(BudgetArea.RECURRING_EXPENSES, amount);
       return this;
     }
 
     public Summary checkEnvelope(double amount) {
-      check(BudgetArea.EXPENSES_ENVELOPE.getName(), amount);
+      check(BudgetArea.EXPENSES_ENVELOPE, amount);
+      return this;
+    }
+
+    public Summary checkOccasional(double amount, double planned) {
+      checkBudgetArea(BudgetArea.OCCASIONAL_EXPENSES, amount, planned);
       return this;
     }
 
     public Summary checkOccasional(double amount) {
-      check(BudgetArea.OCCASIONAL_EXPENSES.getName(), amount);
+      check(BudgetArea.OCCASIONAL_EXPENSES, amount);
+      return this;
+    }
+
+    public Summary checkIncome(double amount, double planned) {
+      checkBudgetArea(BudgetArea.INCOME, amount, planned);
       return this;
     }
 
     public Summary checkIncome(double amount) {
-      check(BudgetArea.INCOME.getName(), amount);
+      check(BudgetArea.INCOME, amount);
       return this;
     }
 
-    private void check(String budgetAreaName, double amount) {
-      assertThat(panel.getTextBox(budgetAreaName).getContainer("budgetAreaRow")
-        .getTextBox("budgetAreaAmount").textEquals(MonthSummaryChecker.this.toString(amount)));
+    private void checkBudgetArea(BudgetArea budgetArea, double amount, double planned) {
+      check(budgetArea, amount);
+      checkPlanned(budgetArea, planned);
+      checkGauge(budgetArea, amount, planned);
     }
 
-    private void checkPlanned(String budgetAreaName, double amount) {
-      assertThat(panel.getTextBox(budgetAreaName).getContainer("budgetAreaRow")
-        .getTextBox("budgetAreaPlannedAmount").textEquals(MonthSummaryChecker.this.toString(amount)));
+    private void check(BudgetArea budgetArea, double amount) {
+      TextBox textBox = getContainer(budgetArea).getTextBox("budgetAreaAmount");
+      assertThat(textBox.textEquals(MonthSummaryChecker.this.toString(amount)));
+    }
+
+    private void checkPlanned(BudgetArea budgetArea, double amount) {
+      TextBox textBox = getContainer(budgetArea).getTextBox("budgetAreaPlannedAmount");
+      assertThat(textBox.textEquals(MonthSummaryChecker.this.toString(amount)));
+    }
+
+    private void checkGauge(BudgetArea budgetArea, double amount, double planned) {
+      Gauge gauge = getContainer(budgetArea).findSwingComponent(Gauge.class);
+      Assert.assertEquals(amount, gauge.getActualValue(), 0.01);
+      Assert.assertEquals(planned, gauge.getTargetValue(), 0.01);
+    }
+
+    private Panel getContainer(BudgetArea budgetArea) {
+      return panel.getTextBox(budgetArea.getName()).getContainer("budgetAreaRow");
     }
 
     public Summary total(double received, double spent, boolean receivedGreaterThanExpenses) {

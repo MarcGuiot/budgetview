@@ -14,6 +14,7 @@ import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import org.designup.picsou.model.BudgetArea;
 
 import java.util.Arrays;
 
@@ -33,7 +34,8 @@ public class GlobGaugeViewTest extends GuiTestCase {
     obj3 = create(3, 10.0, 10.0);
     obj4 = create(4, null, null);
 
-    GlobGaugeView view = new GlobGaugeView(MyObject.TYPE, MyObject.ACTUAL, MyObject.TARGET,
+    GlobGaugeView view = new GlobGaugeView(MyObject.TYPE, BudgetArea.OCCASIONAL_EXPENSES,
+                                           MyObject.ACTUAL, MyObject.TARGET,
                                            GlobMatchers.not(fieldEquals(MyObject.ID, 3)),
                                            repository, directory);
     gauge = view.getComponent();

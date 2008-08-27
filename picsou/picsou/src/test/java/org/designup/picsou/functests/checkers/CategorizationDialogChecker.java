@@ -72,8 +72,9 @@ public class CategorizationDialogChecker extends DataChecker {
     assertTrue(dialog.getTextBox("Select the series type").isVisible());
   }
 
-  public void selectIncome() {
+  public CategorizationDialogChecker selectIncome() {
     dialog.getPanel("budgetAreas").getToggleButton(BudgetArea.INCOME.getGlob().get(BudgetArea.NAME)).click();
+    return this;
   }
 
   public void checkContainsIncomeSeries(String... seriesNames) {
@@ -88,7 +89,7 @@ public class CategorizationDialogChecker extends DataChecker {
     org.globsframework.utils.TestUtils.assertContains(names, seriesNames);
   }
 
-  public void selectIncomeSeries(String name, boolean showSeriesInitialization) {
+  public CategorizationDialogChecker selectIncomeSeries(String name, boolean showSeriesInitialization) {
     Panel panel = getIncomeSeriesPanel();
     if (showSeriesInitialization) {
       WindowInterceptor.init(
@@ -103,6 +104,7 @@ public class CategorizationDialogChecker extends DataChecker {
     else {
       panel.getToggleButton(name).click();
     }
+    return this;
   }
 
   private Panel getIncomeSeriesPanel() {
@@ -212,19 +214,22 @@ public class CategorizationDialogChecker extends DataChecker {
     return panel;
   }
 
-  public void selectOccasional() {
+  public CategorizationDialogChecker selectOccasional() {
     dialog.getToggleButton("occasionalExpenses").click();
+    return this;
   }
 
-  public void selectOccasionalSeries(MasterCategory category) {
+  public CategorizationDialogChecker selectOccasionalSeries(MasterCategory category) {
     selectOccasional();
     getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).click();
+    return this;
   }
 
-  public void selectOccasionalSeries(MasterCategory masterCategory, String subcat) {
+  public CategorizationDialogChecker selectOccasionalSeries(MasterCategory masterCategory, String subcat) {
     selectOccasional();
     final String toggleName = "occasionalSeries" + ":" + masterCategory.getName() + ":" + subcat;
     getOccasionalSeriesPanel().getToggleButton(toggleName).click();
+    return this;
   }
 
   private Panel getOccasionalSeriesPanel() {
@@ -309,40 +314,48 @@ public class CategorizationDialogChecker extends DataChecker {
     return new SeriesCreationDialogChecker(creationDialog);
   }
 
-  public void checkTable(Object[][] content) {
+  public CategorizationDialogChecker checkTable(Object[][] content) {
     assertTrue(table.contentEquals(content));
+    return this;
   }
 
-  public void checkTableIsEmpty() {
+  public CategorizationDialogChecker checkTableIsEmpty() {
     assertTrue(table.isEmpty());
+    return this;
   }
 
-  public void checkSelectedTableRows(int... rows) {
+  public CategorizationDialogChecker checkSelectedTableRows(int... rows) {
     assertTrue(table.rowsAreSelected(rows));
+    return this;
   }
 
-  public void checkNoTransactionSelected() {
+  public CategorizationDialogChecker checkNoTransactionSelected() {
     assertTrue(table.selectionIsEmpty());
+    return this;
   }
 
-  public void selectTableRow(int row) {
+  public CategorizationDialogChecker selectTableRow(int row) {
     selectTableRows(row);
+    return this;
   }
 
-  public void selectTableRows(int... rows) {
+  public CategorizationDialogChecker selectTableRows(int... rows) {
     table.selectRows(rows);
+    return this;
   }
 
-  public void selectTableRows(String... labels) {
+  public CategorizationDialogChecker selectTableRows(String... labels) {
     int rows[] = new int[labels.length];
     for (int i = 0; i < labels.length; i++) {
       rows[i] = table.getRowIndex(1, labels[i]);
     }
     selectTableRows(rows);
+    return this;
   }
 
-  public void unselectAllTransactions() {
+  public CategorizationDialogChecker unselectAllTransactions() {
     table.clearSelection();
+    return this;
   }
 
   public void checkAutoSelectionEnabled(boolean enabled) {
