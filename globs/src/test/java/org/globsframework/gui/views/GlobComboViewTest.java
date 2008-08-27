@@ -315,6 +315,26 @@ public class GlobComboViewTest extends GuiComponentTestCase {
     assertThat(combo.selectionEquals(null));
   }
 
+  public void testSettingANullOptionLabel() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject id='1' name='name1'/>" +
+                    "<dummyObject id='2' name='name2'/>");
+    view =
+      GlobComboView.init(DummyObject.TYPE, repository, directory)
+        .setShowEmptyOption(true)
+        .setEmptyOptionLabel("empty");
+
+    ComboBox combo = new ComboBox(view.getComponent());
+    assertThat(combo.selectionEquals(null));
+    assertThat(combo.contentEquals("empty", "name1", "name2"));
+
+    combo.select("name1");
+    assertThat(combo.selectionEquals("name1"));
+
+    combo.select("empty");
+    assertThat(combo.selectionEquals(null));
+  }
+
   public void testReset() throws Exception {
     GlobRepository repository =
       checker.parse("<dummyObject id='1' name='name1'/>" +

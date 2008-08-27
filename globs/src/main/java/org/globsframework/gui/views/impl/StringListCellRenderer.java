@@ -19,7 +19,17 @@ public class StringListCellRenderer extends DefaultListCellRenderer {
   public Component getListCellRendererComponent(JList list, Object object, int index,
                                                 boolean isSelected, boolean cellHasFocus) {
     Glob glob = (Glob)object;
-    String value = stringifier.toString(glob, globRepository);
+    String value;
+    if (glob != null) {
+      value = stringifier.toString(glob, globRepository);
+    }
+    else {
+      value = getValueForNull();
+    }
     return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+  }
+
+  protected String getValueForNull() {
+    return "";
   }
 }

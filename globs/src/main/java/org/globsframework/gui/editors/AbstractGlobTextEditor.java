@@ -4,7 +4,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
-import org.globsframework.gui.utils.DefaultSelection;
+import org.globsframework.gui.utils.DefaultGlobSelection;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -67,7 +67,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
 
   public final COMPONENT_TYPE getComponent() {
     if (forcedSelection != null) {
-      selectionUpdated(new DefaultSelection(forcedSelection, forcedSelection.getTypes()));
+      selectionUpdated(new DefaultGlobSelection(forcedSelection, forcedSelection.getTypes()));
     }
     else {
       SelectionService service = directory.get(SelectionService.class);

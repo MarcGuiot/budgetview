@@ -1,6 +1,6 @@
 package org.globsframework.gui;
 
-import org.globsframework.gui.utils.DefaultSelection;
+import org.globsframework.gui.utils.DefaultGlobSelection;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.MultiMap;
@@ -36,7 +36,7 @@ public class SelectionService {
   public void select(Collection<Glob> globs, GlobType type, GlobType... types) {
     List<GlobType> allTypes = list(type, types);
     Set<GlobSelectionListener> listeners = getListeners(allTypes);
-    DefaultSelection selection = new DefaultSelection(globs, allTypes);
+    DefaultGlobSelection selection = new DefaultGlobSelection(globs, allTypes);
     for (GlobSelectionListener listener : listeners) {
       listener.selectionUpdated(selection);
     }

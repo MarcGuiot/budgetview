@@ -6,14 +6,26 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 
 import java.util.Collection;
+import java.util.Arrays;
+import java.util.ArrayList;
 
-public class DefaultSelection implements GlobSelection {
-  private Collection<Glob> selection;
+public class DefaultGlobSelection implements GlobSelection {
+  private Collection<Glob> globs;
   private Collection<GlobType> relevantTypes;
 
-  public DefaultSelection(Collection<Glob> selection, Collection<GlobType> types) {
-    this.selection = selection;
+  public DefaultGlobSelection(GlobSelection selection) {
+    globs = selection.getAll();
+    relevantTypes = new ArrayList<GlobType>(Arrays.asList(selection.getRelevantTypes()));
+  }
+
+  public DefaultGlobSelection(Collection<Glob> globs, Collection<GlobType> types) {
+    this.globs = globs;
     this.relevantTypes = types;
+  }
+
+  public void add(GlobList globs, GlobType type) {
+    this.globs.addAll(globs);
+    relevantTypes.add(type);
   }
 
   public GlobType[] getRelevantTypes() {
@@ -25,7 +37,7 @@ public class DefaultSelection implements GlobSelection {
   }
 
   public GlobList getAll() {
-    return new GlobList(selection);
+    return new GlobList(globs);
   }
 
   public GlobList getAll(GlobType type) {
@@ -33,7 +45,7 @@ public class DefaultSelection implements GlobSelection {
       return new GlobList();
     }
     GlobList result = new GlobList();
-    for (Glob glob : selection) {
+    for (Glob glob : globs) {
       if (glob.getType().equals(type)) {
         result.add(glob);
       }

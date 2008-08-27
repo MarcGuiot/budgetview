@@ -28,6 +28,8 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
   private boolean showEmptyOption = false;
   private boolean updateWithIncomingSelections = true;
   private boolean selectionEnabled = true;
+  private String name;
+  private String emptyOptionLabel = "";
 
   public static GlobComboView init(GlobType type, GlobRepository globRepository, Directory directory) {
     return new GlobComboView(type, globRepository, directory);
@@ -62,7 +64,6 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
       return jComboBox;
     }
     complete();
-    String name = jComboBox.getName();
     jComboBox.setName(name == null ? type.getName() : name);
     model = new Model();
     jComboBox.setModel(model);
@@ -73,6 +74,11 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
 
   public GlobComboView setShowEmptyOption(boolean showEmptyOption) {
     this.showEmptyOption = showEmptyOption;
+    return this;
+  }
+
+  public GlobComboView setName(String name) {
+    this.name = name;
     return this;
   }
 
@@ -105,6 +111,11 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
     return this;
   }
 
+  public GlobComboView setEmptyOptionLabel(String emptyOptionLabel) {
+    this.emptyOptionLabel = emptyOptionLabel;
+    return this;
+  }
+
   public interface GlobSelectionHandler {
     void processSelection(Glob glob);
   }
@@ -130,7 +141,11 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
       comparator = stringifier.getComparator(repository);
     }
     if (renderer == null) {
-      setRenderer(new StringListCellRenderer(stringifier, repository), comparator);
+      setRenderer(new StringListCellRenderer(stringifier, repository) {
+        protected String getValueForNull() {
+          return emptyOptionLabel;
+        }
+      }, comparator);
     }
     if (jComboBox == null) {
       jComboBox = new JComboBox();
