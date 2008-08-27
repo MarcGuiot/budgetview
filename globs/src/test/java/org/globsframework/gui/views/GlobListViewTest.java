@@ -62,6 +62,22 @@ public class GlobListViewTest extends GuiComponentTestCase {
     assertTrue(list.selectionEquals("name1"));
   }
 
+  public void testMultiDeletionUpdatesSelection() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject id='1' name='name1'/>" +
+                    "<dummyObject id='2' name='name2'/>" +
+                    "<dummyObject id='3' name='name3'/>");
+    ListBox list = createList(repository);
+    list.selectIndices(1);
+
+    repository.enterBulkDispatchingMode();
+    repository.delete(key1);
+    repository.delete(key2);
+    repository.completeBulkDispatchingMode();
+    
+    assertTrue(list.selectionIsEmpty());
+  }
+
   public void testSelectionAfterCreation() throws Exception {
     GlobRepository repository =
       checker.parse("<dummyObject id='1' name='name1'/>" +
@@ -350,8 +366,7 @@ public class GlobListViewTest extends GuiComponentTestCase {
     DummySelectionListener listener = DummySelectionListener.register(directory, DummyObject.TYPE);
 
     view.setFilter(createNameMatcher("1"));
-    assertTrue(listBox.contentEquals("name1",
-                                     "name21"));
+    assertTrue(listBox.contentEquals("name1", "name21"));
     assertTrue(listBox.selectionEquals("name1", "name21"));
     listener.assertEquals("<log>" +
                           "  <selection types='dummyObject'>" +

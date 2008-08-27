@@ -9,6 +9,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
@@ -191,10 +192,7 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
 
     model.model.setFilter(matcher);
 
-    if (selectionChanged) {
-      select(selection);
-    }
-    else {
+    if (!selectionChanged) {
       selectSilently(selection);
     }
   }
@@ -217,6 +215,9 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
 
     public Model() {
       model = new GlobViewModel(type, repository, comparator, showEmptyOption, new GlobViewModel.Listener() {
+
+        private Key[] lastSelection;
+
         public void globInserted(int index) {
           fireIntervalAdded(this, index, index);
         }
@@ -230,10 +231,21 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
         }
 
         public void globListPreReset() {
+          lastSelection = GlobListView.this.getCurrentSelection().getKeys();
         }
 
         public void globListReset() {
           fireContentsChanged(this, 0, model != null ? model.size() : 0);
+          GlobList newSelection = new GlobList();
+          for (Key key : lastSelection) {
+            Glob glob = repository.find(key);
+            if ((glob != null) && (model.indexOf(glob) >= 0)) {
+              newSelection.add(glob);
+            }
+          }
+          if (newSelection.size() != lastSelection.length) {
+            select(newSelection);
+          }
         }
       });
     }
