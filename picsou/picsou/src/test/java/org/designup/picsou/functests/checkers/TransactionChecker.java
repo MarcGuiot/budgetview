@@ -9,11 +9,11 @@ import org.designup.picsou.model.TransactionType;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Strings;
+import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
-import org.uispec4j.Button;
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -160,7 +160,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void setIncome(String label, String seriesName, boolean showSeriesInitialization) {
-    int rowIndex = table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
+    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
     setIncome(rowIndex, seriesName, showSeriesInitialization);
   }
 
@@ -172,7 +172,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void setRecurring(String label, String seriesName, boolean showSeriesInitialization) {
-    int rowIndex = table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
+    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
     setRecurring(rowIndex, seriesName, showSeriesInitialization);
   }
 
@@ -184,7 +184,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void setEnvelope(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    int rowIndex = table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
+    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
     setEnvelope(rowIndex, seriesName, master, showSeriesInitialization);
   }
 

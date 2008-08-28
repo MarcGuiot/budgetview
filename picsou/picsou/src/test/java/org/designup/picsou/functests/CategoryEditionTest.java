@@ -63,6 +63,17 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     UISpecAssert.assertTrue(categoryEdition.getDeleteSubButton().isEnabled());
   }
 
+  public void testButtonStatusWithEmptyMasterCategory() throws Exception {
+    categories.select(MasterCategory.BANK);
+    CategoryEditionChecker categoryEdition = categories.openEditionDialog();
+    UISpecAssert.assertTrue(categoryEdition.getEditMasterButton().isEnabled());
+    UISpecAssert.assertTrue(categoryEdition.getDeleteMasterButton().isEnabled());
+    UISpecAssert.assertTrue(categoryEdition.getCreateMasterButton().isEnabled());
+    UISpecAssert.assertTrue(categoryEdition.getCreateSubButton().isEnabled());
+    UISpecAssert.assertFalse(categoryEdition.getDeleteSubButton().isEnabled());
+    UISpecAssert.assertFalse(categoryEdition.getEditSubButton().isEnabled());
+  }
+
   public void testRename() throws Exception {
     CategoryEditionChecker categoryEdition = categories.openEditionDialog();
     categoryEdition.selectMaster(MasterCategory.FOOD);
@@ -109,8 +120,11 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           DeleteCategoryChecker categoryChecker = new DeleteCategoryChecker(window);
-          categoryChecker.checkCategory("");
+          categoryChecker.checkCategory("None");
+          UISpecAssert.assertFalse(categoryChecker.getOkButton().isEnabled());
           categoryChecker.selectCategory(getCategoryName(MasterCategory.HOUSE));
+          UISpecAssert.assertTrue(categoryChecker.getOkButton().isEnabled());
+          categoryChecker.checkCategory(getCategoryName(MasterCategory.HOUSE));
           return categoryChecker.validate();
         }
       }).run();
@@ -121,5 +135,34 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Station BP", "", -1.0, MasterCategory.HOUSE)
       .check();
+  }
+
+  public void testCanNotDeleteCategoryIfUsedInSeries() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/15", -2.0, "Auchan", MasterCategory.HOUSE)
+      .load();
+    transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    CategoryEditionChecker categoryEdition = categories.openEditionDialog();
+    categoryEdition.selectMaster(MasterCategory.FOOD);
+    WindowInterceptor.init(categoryEdition.getDeleteMasterButton().triggerClick())
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          DeleteCategoryChecker categoryChecker = new DeleteCategoryChecker(window);
+          categoryChecker.selectCategory(getCategoryName(MasterCategory.TELECOMS));
+          return categoryChecker.validate();
+        }
+      }).run();
+    categoryEdition.validate();
+    transactionDetails.checkSeries("Groceries");
+  }
+
+  public void testCanReuseNameUseInOtherMaster() throws Exception {
+    CategoryEditionChecker categoryEdition = categories.openEditionDialog();
+    categoryEdition.selectMaster(MasterCategory.FOOD);
+    categoryEdition.createSubCategory("Internet");
+    categoryEdition.validate();
+    categories.toggleExpanded(MasterCategory.TELECOMS);
+    categories.assertCategoryExists("Internet", 2);
   }
 }

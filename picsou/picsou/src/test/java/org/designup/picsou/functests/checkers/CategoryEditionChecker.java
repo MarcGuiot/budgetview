@@ -56,12 +56,12 @@ public class CategoryEditionChecker extends DataChecker {
 
   }
 
-  public void deleteSubCategory(final String name) {
+  public void deleteSubCategoryWithTransactionUpdate(final String newCategory) {
     WindowInterceptor.init(getDeleteMasterButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           DeleteCategoryChecker categoryChecker = new DeleteCategoryChecker(window);
-          categoryChecker.selectCategory(name);
+          categoryChecker.selectCategory(newCategory);
           return categoryChecker.validate();
         }
       }).run();
@@ -69,7 +69,7 @@ public class CategoryEditionChecker extends DataChecker {
   }
 
   public void deleteSubCategory() {
-    getDeleteMasterButton().click();
+    getDeleteSubButton().click();
   }
 
 

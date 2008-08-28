@@ -192,7 +192,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
   public void testCategoryNamesMustBeUnique() throws Exception {
     categories.select(MasterCategory.FOOD);
     CategoryEditionChecker edition = categories.openEditionDialog();
-    WindowInterceptor.init(edition.getCreateSubCategoryTrigger())
+    WindowInterceptor.init(edition.getCreateMasterCategoryTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox().setText(getCategoryName(MasterCategory.FOOD));
@@ -313,7 +313,6 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .run();
     editor.validate();
     categories.assertCategoryExists("Apero");
-    categories.assertCategoryNotFound("Pastis");
   }
 
   public void testCannotReuseAnExistingName() throws Exception {
@@ -335,7 +334,6 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .run();
     editor.validate();
     categories.assertCategoryExists("Apero");
-    categories.assertCategoryNotFound("Pastis");
   }
 
   public void testRenameCancelled() throws Exception {
@@ -420,11 +418,29 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.assertExpansionEnabled(MasterCategory.MISC_SPENDINGS, true);
 
     categories.select("Misc");
-    categories.deleteSelected();
+    categories.deleteSubSelected();
     categories.assertExpansionEnabled(MasterCategory.MISC_SPENDINGS, false);
+    categories.assertSelectionEquals(MasterCategory.MISC_SPENDINGS);
   }
 
-  public void testCanNotDeleteCategoryIfUsedInSeries() throws Exception {
-    fail();
+  public void testDeleteDifferentSubcategory() throws Exception {
+    categories.createSubCategory(MasterCategory.FOOD, "Apero");
+    categories.createSubCategory(MasterCategory.TELECOMS, "3G++");
+    categories.select(MasterCategory.EDUCATION);
+    categories.assertCategoryExists("Apero");
+    categories.assertCategoryExists("3G++");
+    CategoryEditionChecker edition = categories.openEditionDialog();
+    edition.selectMaster(MasterCategory.FOOD);
+    edition.selectSub("Apero");
+    edition.deleteSubCategory();
+    edition.selectMaster(MasterCategory.TELECOMS);
+    edition.selectSub("3G++");
+    edition.deleteSubCategory();
+    edition.validate();
+
+    categories.assertCategoryNotFound("Apero");
+    categories.assertCategoryNotFound("3G++");
+
+    categories.assertSelectionEquals(MasterCategory.EDUCATION);
   }
 }

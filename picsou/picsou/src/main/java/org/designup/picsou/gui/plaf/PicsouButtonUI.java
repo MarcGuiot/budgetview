@@ -26,7 +26,7 @@ public class PicsouButtonUI extends BasicButtonUI implements MouseListener {
   private Color shadowColor;
   private int borderWidth = 1;
   private int shadowWidth = 2;
-  private int distance = 0;
+  private int distance = 1;
   private float opacity;
 
   public static ComponentUI createUI(JComponent c) {
@@ -58,27 +58,24 @@ public class PicsouButtonUI extends BasicButtonUI implements MouseListener {
     AbstractButton button = (AbstractButton)c;
     Graphics2D g2d = (Graphics2D)g;
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-    Insets insets = button.getInsets();
-    Insets margin = button.getMargin();
     Dimension size = button.getSize();
 
-    int width = size.width - (insets.left - margin.left) - (insets.right - margin.right) - 1;
-    int height = size.height - (insets.top - margin.top) - (insets.bottom - margin.bottom) - 1;
+    int width = size.width;
+    int height = size.height;
 
-    int x = insets.left - margin.left;
-    int y = insets.top - margin.top;
+    int x = 0;
+    int y = 0;
 
-    int rectX = (distance == 0) ? x + shadowWidth : x;
-    int rectY = (distance == 0) ? y + shadowWidth : y;
-    int rectWidth = (distance == 0) ? width - (shadowWidth * 2) : width - (distance * 2);
-    int rectHeight = (distance == 0) ? height - (shadowWidth * 2) : height - (distance * 2);
+    int rectX = x;
+    int rectY = y;
+    int rectWidth = width - 1;
+    int rectHeight = height - 1;
 
     if (button.getIcon() == null) {
       ButtonModel buttonModel = button.getModel();
       if (buttonModel.isRollover() && button.isEnabled() && !buttonModel.isPressed()) {
         shadowColor = focusColorShadow;
-        borderColor = focusColorBorder;
+        borderColor = noFocusColorBorder; //focusColorBorder;
         opacity = 0.8f;
       }
       else {
@@ -87,29 +84,32 @@ public class PicsouButtonUI extends BasicButtonUI implements MouseListener {
         opacity = 0.2f;
       }
 
-      int shadowX = x + distance;
-      int shadowY = y + distance;
-
-      Java2DUtils.fillShadow(g2d, shadowColor, opacity, shadowWidth, cornerRadius, shadowX,
-                             shadowY, width - (distance * 2), height - (distance * 2));
-
-      if (borderWidth > 0) {
-        g2d.setColor(borderColor);
-        g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, cornerRadius, cornerRadius);
-      }
-
       GradientPaint gradient = new GradientPaint(x, y, topColor, x, height, bottomColor);
       g2d.setPaint(gradient);
       g2d.fillRoundRect(rectX + borderWidth, rectY + borderWidth,
                         rectWidth - 2 * borderWidth, rectHeight - 2 * borderWidth,
                         cornerRadius, cornerRadius);
+
+      if (borderWidth > 0) {
+        g2d.setColor(borderColor);
+
+        g2d.drawRoundRect(rectX, rectY,
+                          rectWidth, rectHeight, cornerRadius, cornerRadius);
+      }
+
+      if (buttonModel.isRollover()) {
+        g2d.setColor(shadowColor);
+        Java2DUtils.drawShadow(g2d, shadowColor, opacity, shadowWidth, cornerRadius, x + distance,
+                               y + distance, width - (distance * 2), height - (distance * 2));
+      }
       super.paint(g, c);
+
       if (!button.isEnabled()) {
         g2d.setColor(Color.WHITE);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
         g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, cornerRadius, cornerRadius);
       }
-      if (button.getModel().isPressed()) {
+      if (button.getModel().isPressed() && button.getModel().isRollover()) {
         g2d.setColor(Color.DARK_GRAY);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
         g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, cornerRadius, cornerRadius);
