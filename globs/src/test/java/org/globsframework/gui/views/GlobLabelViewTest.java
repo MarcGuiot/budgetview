@@ -4,7 +4,6 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
-import org.uispec4j.TextBox;
 
 public class GlobLabelViewTest extends GlobTextViewTestCase {
 
@@ -16,7 +15,7 @@ public class GlobLabelViewTest extends GlobTextViewTestCase {
     return GlobLabelView.init(field, repository, directory);
   }
 
-  protected TextBox createTextBox(AbstractGlobTextView view) {
-    return new TextBox(((GlobLabelView)view).getComponent());
+  protected TextComponent createComponent(AbstractGlobTextView view) {
+    return new TextBoxComponent(((GlobLabelView)view).getComponent());
   }
 }

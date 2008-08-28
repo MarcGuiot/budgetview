@@ -2,20 +2,30 @@ package org.globsframework.gui.views;
 
 import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.metamodel.DummyObject;
-import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.DummyObject2;
-import org.globsframework.model.*;
+import org.globsframework.metamodel.Field;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.utils.*;
-import org.uispec4j.TextBox;
+import org.globsframework.model.utils.ChangeSetMatchers;
+import org.globsframework.model.utils.GlobListMatcher;
+import org.globsframework.model.utils.GlobListMatchers;
+import org.globsframework.model.utils.GlobMatchers;
+import org.uispec4j.*;
+import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   protected Glob glob1;
   protected Glob glob2;
-  private TextBox textBox;
+  private TextComponent textBox;
   protected GlobListStringifier stringifier = new GlobListStringifier() {
     public String toString(GlobList selected, GlobRepository repository) {
       if (selected.isEmpty()) {
@@ -102,7 +112,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   public void testFilter() throws Exception {
     AbstractGlobTextView view = initView(repository, DummyObject.NAME)
       .setFilter(GlobMatchers.fieldEquals(DummyObject.NAME, "name2"));
-    textBox = createTextBox(view);
+    textBox = createComponent(view);
 
     selectionService.select(glob1);
     assertTrue(textBox.textIsEmpty());
@@ -150,7 +160,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   }
 
   public void testAutoHideFilterAppliedAfterGeneralFilter() throws Exception {
-    textBox = createTextBox(initView(repository, DummyObject.NAME)
+    textBox = createComponent(initView(repository, DummyObject.NAME)
       .setFilter(GlobMatchers.NONE)
       .setAutoHideIfEmpty(true)
       .setAutoHideMatcher(GlobListMatchers.ALL));
@@ -174,7 +184,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   }
 
   public void testUpdateWithChangeSetMatcher() throws Exception {
-    textBox = createTextBox(initView(repository, new GlobListStringifier() {
+    textBox = createComponent(initView(repository, new GlobListStringifier() {
       public String toString(GlobList list, GlobRepository repository) {
         int count = repository.getAll(DummyObject2.TYPE).size();
         return Integer.toString(count);
@@ -184,39 +194,103 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
 
     selectionService.select(glob1);
     assertTrue(textBox.textEquals("1"));
-    
+
     repository.create(DummyObject2.TYPE);
     assertTrue(textBox.textEquals("2"));
   }
 
-  protected TextBox init(final GlobRepository repository) {
-    return createTextBox(initView(repository, stringifier));
+  protected TextComponent init(final GlobRepository repository) {
+    return createComponent(initView(repository, stringifier));
   }
 
-  protected TextBox initWithAutoHide(final GlobRepository repository) {
+  protected TextComponent initWithAutoHide(final GlobRepository repository) {
     return init(repository, true, stringifier, GlobListMatchers.ALL);
   }
 
-  protected final TextBox init(GlobRepository repository, Glob glob) {
-    return createTextBox(initView(repository, stringifier).forceSelection(glob));
+  protected final TextComponent init(GlobRepository repository, Glob glob) {
+    return createComponent(initView(repository, stringifier).forceSelection(glob));
   }
 
-  protected final TextBox init(GlobRepository repository, boolean autoHide,
-                               GlobListStringifier stringifier, GlobListMatcher matcher) {
+  protected final TextComponent init(GlobRepository repository, boolean autoHide,
+                                     GlobListStringifier stringifier, GlobListMatcher matcher) {
     AbstractGlobTextView view =
       initView(repository, stringifier)
         .setAutoHideMatcher(matcher)
         .setAutoHideIfEmpty(autoHide);
-    return createTextBox(view);
+    return createComponent(view);
   }
 
-  protected final TextBox init(GlobRepository repository, Field field) {
-    return createTextBox(initView(repository, field));
+  protected final TextComponent init(GlobRepository repository, Field field) {
+    return createComponent(initView(repository, field));
   }
 
-  protected abstract TextBox createTextBox(AbstractGlobTextView view);
+  protected abstract TextComponent createComponent(AbstractGlobTextView view);
 
   protected abstract AbstractGlobTextView initView(GlobRepository repository, GlobListStringifier stringifier);
 
   protected abstract AbstractGlobTextView initView(GlobRepository repository, Field field);
+
+  protected interface TextComponent {
+
+    Assertion textIsEmpty();
+
+    Assertion textEquals(String text);
+
+    Assertion isVisible();
+
+    Assertion isEditable();
+  }
+
+  protected class TextBoxComponent implements TextComponent {
+
+    private TextBox textBox;
+
+    public TextBoxComponent(JTextComponent textComponent) {
+      this.textBox = new TextBox(textComponent);
+    }
+
+    public TextBoxComponent(JLabel label) {
+      this.textBox = new TextBox(label);
+    }
+
+    public Assertion textIsEmpty() {
+      return textBox.textIsEmpty();
+    }
+
+    public Assertion textEquals(String text) {
+      return textBox.textEquals(text);
+    }
+
+    public Assertion isVisible() {
+      return textBox.isVisible();
+    }
+
+    public Assertion isEditable() {
+      return textBox.isEditable();
+    }
+  }
+
+  protected class ButtonComponent implements TextComponent {
+    protected org.uispec4j.AbstractButton button;
+
+    public ButtonComponent(org.uispec4j.AbstractButton button) {
+      this.button = button;
+    }
+
+    public Assertion textIsEmpty() {
+      return button.textEquals("");
+    }
+
+    public Assertion textEquals(String text) {
+      return button.textEquals(text);
+    }
+
+    public Assertion isVisible() {
+      return button.isVisible();
+    }
+
+    public Assertion isEditable() {
+      return UISpecAssert.fail("Buttons are not editable");
+    }
+  }
 }

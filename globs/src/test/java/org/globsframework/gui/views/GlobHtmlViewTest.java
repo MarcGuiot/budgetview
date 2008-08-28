@@ -20,8 +20,8 @@ public class GlobHtmlViewTest extends GlobTextViewTestCase {
     return GlobHtmlView.init(field, repository, directory);
   }
 
-  protected TextBox createTextBox(AbstractGlobTextView view) {
-    return new TextBox(((GlobHtmlView)view).getComponent());
+  protected TextComponent createComponent(AbstractGlobTextView view) {
+    return new TextBoxComponent(((GlobHtmlView)view).getComponent());
   }
 
   public void testHtml() throws Exception {
@@ -37,7 +37,7 @@ public class GlobHtmlViewTest extends GlobTextViewTestCase {
         builder.append("click");
       }
     });
-    TextBox textBox = createTextBox(view);
+    TextBox textBox = new TextBox(view.getComponent());
     textBox.clickOnHyperlink("globs");
     assertEquals("click", builder.toString());
   }

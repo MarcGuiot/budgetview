@@ -4,7 +4,6 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
-import org.uispec4j.TextBox;
 
 public class GlobMultiLineTextViewTest extends GlobTextViewTestCase {
 
@@ -16,12 +15,12 @@ public class GlobMultiLineTextViewTest extends GlobTextViewTestCase {
     return GlobMultiLineTextView.init(field, repository, directory);
   }
 
-  protected TextBox createTextBox(AbstractGlobTextView view) {
-    return new TextBox(((GlobMultiLineTextView)view).getComponent());
+  protected TextComponent createComponent(AbstractGlobTextView view) {
+    return new TextBoxComponent(((GlobMultiLineTextView)view).getComponent());
   }
 
   public void testComponentIsNotEditable() throws Exception {
-    TextBox textBox = initWithAutoHide(repository);
+    TextComponent textBox = initWithAutoHide(repository);
     assertFalse(textBox.isEditable());
   }
 }
