@@ -1,13 +1,17 @@
 package org.designup.picsou.gui.description;
 
 import org.designup.picsou.model.Category;
+import org.designup.picsou.utils.Lang;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.utils.AbstractGlobStringifier;
 
-public class CategoryStringifier extends BundleBasedStringifier {
+public class CategoryStringifier extends AbstractGlobStringifier {
+  private static StringField namingField = Category.NAME;
+  private static String prefix = Category.TYPE.getName() + ".";
 
   public CategoryStringifier() {
-    super(Category.NAME, Category.TYPE.getName() + ".");
   }
 
   public String toString(Glob glob, GlobRepository repository) {
@@ -15,7 +19,13 @@ public class CategoryStringifier extends BundleBasedStringifier {
       return "";
     }
     if (glob.get(Category.MASTER) == null) {
-      return super.toString(glob, repository);
+      String translatedName = Lang.find(prefix + glob.get(namingField));
+      if (translatedName == null) {
+        return glob.get(Category.NAME);
+      }
+      else {
+        return translatedName;
+      }
     }
     return glob.get(Category.NAME);
   }

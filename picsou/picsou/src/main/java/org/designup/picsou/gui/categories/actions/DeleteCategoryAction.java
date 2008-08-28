@@ -1,27 +1,39 @@
 package org.designup.picsou.gui.categories.actions;
 
 import org.designup.picsou.client.AllocationLearningService;
-import org.designup.picsou.model.Category;
-import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionToCategory;
+import org.designup.picsou.gui.categories.CategoryChooserCallback;
+import org.designup.picsou.gui.categories.CategoryChooserDialog;
+import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
+import org.designup.picsou.gui.utils.PicsouMatchers;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import static org.globsframework.model.KeyBuilder.newKey;
+import org.globsframework.model.Key;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.HashSet;
+import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.Set;
 
-public class DeleteCategoryAction extends AbstractCategoryAction {
+public abstract class DeleteCategoryAction extends AbstractCategoryAction {
   protected AllocationLearningService learningService;
+  private Directory directory;
 
   public DeleteCategoryAction(GlobRepository repository, Directory directory) {
-    super("-", repository, directory);
+    super(Lang.get("delete"), repository, directory);
+    this.directory = directory;
     learningService = directory.get(AllocationLearningService.class);
   }
 
@@ -30,7 +42,7 @@ public class DeleteCategoryAction extends AbstractCategoryAction {
       return false;
     }
     for (Glob category : categories) {
-      if (Category.isMaster(category) || Category.isSystem(category)) {
+      if (Category.isReserved(category)) {
         return false;
       }
     }
@@ -38,64 +50,228 @@ public class DeleteCategoryAction extends AbstractCategoryAction {
   }
 
   protected void process(GlobList selectedCategories) {
-    int confirm = JOptionPane.showConfirmDialog(parent, Lang.get("confirm.delete.subcategory"));
-    if (confirm != JOptionPane.YES_OPTION) {
+    if (selectedCategories.size() != 1) {
       return;
     }
+    Glob category = selectedCategories.get(0);
+    Integer masterId = null;
+    if (!Category.isMaster(category)) {
+      masterId = category.get(Category.MASTER);
+    }
+    Integer targetId = migrateTransactionAndSeriesInCategory(category, masterId);
+    if (targetId != null) {
+      selectionService.select(repository.get(Key.create(Category.TYPE, targetId)));
+    }
+  }
 
-    int masterId = getCommonMaster(selectedCategories);
+  private Integer migrateTransactionAndSeriesInCategory(Glob category, final Integer masterId) {
+    Set<Integer> categories;
+    if (Category.isMaster(category)) {
+      categories = repository.getAll(Category.TYPE, PicsouMatchers.subCategories(category.get(Category.ID)))
+        .getSortedSet(Category.ID);
+      categories.add(category.get(Category.ID));
+    }
+    else {
+      categories = Collections.singleton(category.get(Category.ID));
+    }
+    GlobList transactions = repository.getAll(Transaction.TYPE,
+                                              GlobMatchers.fieldIn(Transaction.CATEGORY, categories));
+    GlobList series = repository.getAll(Series.TYPE,
+                                        GlobMatchers.fieldIn(Series.DEFAULT_CATEGORY, categories));
+    GlobList transactionToCategory = repository.getAll(TransactionToCategory.TYPE,
+                                                       GlobMatchers.fieldIn(TransactionToCategory.CATEGORY, categories));
+    GlobList seriesToCategory = repository.getAll(SeriesToCategory.TYPE,
+                                                  GlobMatchers.fieldIn(SeriesToCategory.CATEGORY, categories));
 
     repository.enterBulkDispatchingMode();
+    Integer targetId;
     try {
-      for (Glob category : selectedCategories) {
-        updateTransactions(category);
-        updateTTC(category);
-        learningService.deleteCategory(category.get(Category.ID), masterId, repository);
-        repository.delete(category.getKey());
+      if (series.isEmpty() && transactions.isEmpty() && transactionToCategory.isEmpty()) {
+        delete(categories, seriesToCategory);
+        return null;
       }
+
+      NewCategoryDialog categoryDialog = new NewCategoryDialog(directory, repository);
+      if (!categoryDialog.selectTargetCategory(masterId, getParent())) {
+        return null;
+      }
+
+      targetId = categoryDialog.getTargetId();
+      if (targetId == null) {
+        return null;
+      }
+      for (Glob glob : transactions) {
+        repository.update(glob.getKey(), Transaction.CATEGORY, targetId);
+      }
+
+      for (Glob glob : series) {
+        repository.update(glob.getKey(), Series.DEFAULT_CATEGORY, targetId);
+      }
+      for (Glob glob : seriesToCategory) {
+        GlobList seriesToNewMasterCategory =
+          repository.getAll(SeriesToCategory.TYPE,
+                            GlobMatchers.or(
+                              GlobMatchers.fieldEquals(SeriesToCategory.SERIES, glob.get(SeriesToCategory.SERIES)),
+                              GlobMatchers.fieldEquals(SeriesToCategory.CATEGORY, targetId)));
+        if (seriesToNewMasterCategory.isEmpty()) {
+          repository.create(SeriesToCategory.TYPE,
+                            value(SeriesToCategory.CATEGORY, targetId),
+                            value(SeriesToCategory.SERIES, glob.get(SeriesToCategory.SERIES)));
+        }
+      }
+      for (Glob glob : transactionToCategory) {
+        GlobList existingTransctionToCategory =
+          repository.getAll(TransactionToCategory.TYPE,
+                            GlobMatchers.and(
+                              GlobMatchers.fieldEquals(TransactionToCategory.TRANSACTION,
+                                                       glob.get(TransactionToCategory.TRANSACTION)),
+                              GlobMatchers.fieldEquals(TransactionToCategory.CATEGORY, targetId)));
+        if (existingTransctionToCategory.isEmpty()) {
+          repository.create(TransactionToCategory.TYPE,
+                            value(TransactionToCategory.CATEGORY, targetId),
+                            value(TransactionToCategory.TRANSACTION,
+                                  glob.get(TransactionToCategory.TRANSACTION)));
+        }
+      }
+      delete(categories, seriesToCategory);
     }
     finally {
       repository.completeBulkDispatchingMode();
     }
-    selectionService.select(repository.get(newKey(Category.TYPE, masterId)));
+    return targetId;
   }
 
-  private int getCommonMaster(GlobList categories) {
-    Set<Integer> ids = new HashSet<Integer>();
-    for (Glob category : categories) {
-      ids.add(category.get(Category.MASTER));
+  private void delete(Set<Integer> categories, GlobList seriesToCategory) {
+    repository.delete(seriesToCategory);
+    for (Integer id : categories) {
+      repository.delete(Key.create(Category.TYPE, id));
     }
-    if (ids.size() == 1) {
-      return ids.iterator().next();
-    }
-    return MasterCategory.ALL.getId();
-
   }
 
-  private void updateTransactions(Glob category) {
-    Integer masterId = category.get(Category.MASTER);
-    Integer categoryId = category.get(Category.ID);
-    for (Glob transaction : repository.getAll(Transaction.TYPE)) {
-      if (categoryId.equals(transaction.get(Transaction.CATEGORY))) {
-        repository.update(transaction.getKey(), Transaction.CATEGORY, masterId);
+  protected abstract JDialog getParent();
+
+
+  static class NewCategoryDialog {
+    private Directory directory;
+    private GlobRepository repository;
+    private PicsouDialog categoryChooserDialog;
+    private Integer targetId;
+    private boolean returnStatus;
+
+    NewCategoryDialog(Directory directory, GlobRepository repository) {
+      this.directory = directory;
+      this.repository = repository;
+    }
+
+    private boolean selectTargetCategory(Integer masterId, JDialog dialog) {
+      Directory localDirectory = new DefaultDirectory(directory);
+      SelectionService selectionService = new SelectionService();
+      localDirectory.add(selectionService);
+      GlobsPanelBuilder builder = new GlobsPanelBuilder(DeleteCategoryAction.class,
+                                                        "/layout/deleteCategory.splits", repository, localDirectory);
+
+      GlobListStringifier categoryStringfier = directory.get(DescriptionService.class).getListStringifier(Category.TYPE);
+      builder.add("warmText", new JTextArea(Lang.get("delete.category.warm.text")));
+      builder.addLabel("categoryLabel", Category.TYPE, categoryStringfier);
+      CategorieChooserAction chooserAction = new CategorieChooserAction(masterId, directory, repository);
+      builder.add("categoryChooser", chooserAction);
+      categoryChooserDialog = PicsouDialog.createWithButtons(Lang.get("delete.category.button.label"),
+                                                             dialog,
+                                                             builder.<JPanel>load(),
+                                                             new OkAction(),
+                                                             new CancelAction());
+      if (masterId != null) {
+        selectionService.select(repository.get(Key.create(Category.TYPE, masterId)));
+      }
+      categoryChooserDialog.pack();
+      GuiUtils.showCentered(categoryChooserDialog);
+      targetId = chooserAction.getTargetId();
+      return returnStatus;
+    }
+
+    public Integer getTargetId() {
+      return targetId;
+    }
+
+    private class OkAction extends AbstractAction {
+      private OkAction() {
+        super(Lang.get("ok"));
+      }
+
+      public void actionPerformed(ActionEvent e) {
+        categoryChooserDialog.setVisible(false);
+        returnStatus = true;
+      }
+    }
+
+    private class CancelAction extends AbstractAction {
+      private CancelAction() {
+        super(Lang.get("cancel"));
+      }
+
+      public void actionPerformed(ActionEvent e) {
+        categoryChooserDialog.setVisible(false);
+        returnStatus = false;
       }
     }
   }
 
-  private void updateTTC(Glob category) {
-    Integer masterId = category.get(Category.MASTER);
-    Integer categoryId = category.get(Category.ID);
-    for (Glob ttc : repository.getAll(TransactionToCategory.TYPE)) {
-      if (categoryId.equals(ttc.get(TransactionToCategory.CATEGORY))) {
-        GlobList existingLink = repository.findByIndex(TransactionToCategory.TRANSACTION_INDEX, TransactionToCategory.TRANSACTION,
-                                                       ttc.get(TransactionToCategory.TRANSACTION)).findByIndex(TransactionToCategory.CATEGORY);
-        if (existingLink.isEmpty()) {
-          repository.create(TransactionToCategory.TYPE,
-                            value(TransactionToCategory.TRANSACTION, ttc.get(TransactionToCategory.TRANSACTION)),
-                            value(TransactionToCategory.CATEGORY, masterId));
-          repository.delete(ttc.getKey());
-        }
+  private static class CategoryCallback implements CategoryChooserCallback {
+    private Integer targetId;
+    private final Integer masterId;
+
+    public CategoryCallback(Integer masterId) {
+      this.masterId = masterId;
+    }
+
+    public Integer getTargetId() {
+      return targetId;
+    }
+
+    public void processSelection(GlobList categories) {
+      if (categories.isEmpty()) {
+        targetId = null;
+      }
+      else {
+        targetId = categories.get(0).get(Category.ID);
       }
     }
+
+    public Set<Integer> getPreselectedCategoryIds() {
+      if (masterId != null) {
+        return Collections.singleton(masterId);
+      }
+      return Collections.emptySet();
+    }
   }
+
+  private static class CategorieChooserAction extends AbstractAction {
+    private Integer masterId;
+    private Directory directory;
+    private GlobRepository repository;
+    private Integer targetId;
+
+    private CategorieChooserAction(Integer masterId, Directory directory, GlobRepository repository) {
+      super(Lang.get("delete.category.button.label"));
+      this.masterId = masterId;
+      this.directory = directory;
+      this.repository = repository;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      CategoryCallback callback = new CategoryCallback(masterId);
+      CategoryChooserDialog dialog = new CategoryChooserDialog(callback, true, new TransactionRendererColors(directory),
+                                                               repository, directory);
+      dialog.show();
+      targetId = callback.getTargetId();
+      if (targetId != null) {
+        directory.get(SelectionService.class).select(repository.get(Key.create(Category.TYPE, targetId)));
+      }
+    }
+
+    public Integer getTargetId() {
+      return targetId;
+    }
+  }
+
 }

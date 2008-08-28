@@ -8,7 +8,8 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public enum MasterCategory {
   NONE(0),
@@ -33,11 +34,11 @@ public enum MasterCategory {
   GIFTS(20);
 
   private Integer id;
-  public static final List<Integer> RESERVED_CATEGORY_IDS;
+  public static final Set<Integer> RESERVED_CATEGORY_IDS;
 
   static {
     RESERVED_CATEGORY_IDS =
-      Arrays.asList(MasterCategory.ALL.getId(), MasterCategory.NONE.getId(), MasterCategory.INTERNAL.getId());
+      new HashSet<Integer>(Arrays.asList(MasterCategory.ALL.getId(), MasterCategory.NONE.getId(), MasterCategory.INTERNAL.getId()));
   }
 
   MasterCategory(Integer id) {

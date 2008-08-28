@@ -1,0 +1,29 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <column styleClass="dialog" preferredSize="(800,800)">
+    <row>
+      <column weightX="1" margin="10">
+        <scrollPane>
+          <list ref="masterCategoryList"/>
+        </scrollPane>
+        <row>
+          <button action="createMasterCategory" name="createMasterCategory"/>
+          <button action="deleteMasterCategory" name="deleteMasterCategory"/>
+          <button action="renameMasterCategory" name="renameMasterCategory"/>
+        </row>
+      </column>
+      <column weightX="1" margin="10">
+        <scrollPane>
+          <list ref="subCategoryList"/>
+        </scrollPane>
+        <row>
+          <button action="createSubCategory" name="createSubCategory"/>
+          <button action="deleteSubCategory" name="deleteSubCategory"/>
+          <button action="renameSubCategory" name="renameSubCategory"/>
+        </row>
+      </column>
+    </row>
+  </column>
+</splits>

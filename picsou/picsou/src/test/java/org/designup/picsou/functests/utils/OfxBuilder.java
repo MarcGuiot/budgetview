@@ -6,6 +6,7 @@ import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.importer.ofx.OfxExporter;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
+import org.designup.picsou.model.initial.InitialCategories;
 import org.globsframework.model.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Dates;
@@ -45,8 +46,8 @@ public class OfxBuilder {
     this.repository =
       GlobRepositoryBuilder.init()
         .add(TransactionType.values())
-        .add(MasterCategory.createGlobs())
         .get();
+    InitialCategories.run(repository);
     repository.create(Key.create(Bank.TYPE, Bank.UNKNOWN_BANK_ID));
   }
 

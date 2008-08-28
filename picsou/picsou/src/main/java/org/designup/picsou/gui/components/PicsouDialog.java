@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components;
 
+import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -44,18 +45,23 @@ public class PicsouDialog extends JDialog {
     return modalWindow;
   }
 
-  public static PicsouDialog createWithButtons(Window owner, JPanel panel, Action... buttonActions) {
+  public static PicsouDialog createWithButtons(String name, Window owner, JPanel panel, Action ok, Action cancel) {
     Insets noInsets = new Insets(0, 0, 0, 0);
     GridBagBuilder builder = GridBagBuilder.init()
-      .add(panel, 0, 0, buttonActions.length + 1, 1, noInsets)
+      .add(panel, 0, 0, 2 + 1, 1, noInsets)
       .add(Box.createHorizontalGlue(), 0, 1, 1, 1, noInsets);
 
     Insets buttonInsets = new Insets(10, 10, 10, 10);
     int index = 1;
-    for (Action action : buttonActions) {
-      builder.add(new JButton(action), index++, 1, 1, 1, buttonInsets);
+    if (Gui.isMacOSX()) {
+      builder.add(new JButton(cancel), index++, 1, 1, 1, buttonInsets);
+      builder.add(new JButton(ok), index++, 1, 1, 1, buttonInsets);
     }
-    PicsouDialog dialog = create(owner);
+    else {
+      builder.add(new JButton(ok), index++, 1, 1, 1, buttonInsets);
+      builder.add(new JButton(cancel), index++, 1, 1, 1, buttonInsets);
+    }
+    PicsouDialog dialog = create(owner, name);
     dialog.setContentPane(builder.getPanel());
     return dialog;
   }

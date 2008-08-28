@@ -1,8 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.designup.picsou.gui.categories.columns.CategoryExpansionColumn;
 import org.designup.picsou.gui.categories.CategoryView;
+import org.designup.picsou.gui.categories.columns.CategoryExpansionColumn;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
@@ -11,10 +11,8 @@ import org.globsframework.utils.ArrayTestUtils;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.uispec4j.Button;
 import org.uispec4j.*;
-import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
-import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
@@ -42,8 +40,7 @@ public class CategoryChecker extends ViewChecker {
       });
       getTable().setCellValueConverter(CategoryView.CATEGORY_COLUMN_INDEX, new TableCellValueConverter() {
         public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-          Panel panel = new Panel((Container)renderedComponent);
-          return panel.getTextBox().getText();
+          return ((JLabel)renderedComponent).getText();
         }
       });
     }
@@ -143,18 +140,9 @@ public class CategoryChecker extends ViewChecker {
 
   public void createSubCategory(final MasterCategory master, final String name) {
     select(master);
-    WindowInterceptor.init(triggerCreate())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          window.getInputTextBox().setText(name);
-          return window.getButton("OK").triggerClick();
-        }
-      })
-      .run();
-  }
-
-  public Trigger triggerCreate() {
-    return triggerButton("Add");
+    CategoryEditionChecker edition = openEditionDialog();
+    edition.createSubCategory(name);
+    edition.validate();
   }
 
   public Trigger triggerRename() {
@@ -165,14 +153,6 @@ public class CategoryChecker extends ViewChecker {
     Assert.assertNull(rolloverOnCategoryLabel().findUIComponent(Button.class, "Add"));
   }
 
-  public void assertRenameNotAvailable() {
-    Assert.assertNull(rolloverOnCategoryLabel().findUIComponent(Button.class, "Rename"));
-  }
-
-  public void assertDeletionNotAvailable() {
-    Assert.assertNull(rolloverOnCategoryLabel().findUIComponent(Button.class, "Delete"));
-  }
-
   public void assertCategoryExists(String categoryName) {
     Assert.assertTrue(getIndex(categoryName) >= 0);
   }
@@ -181,18 +161,16 @@ public class CategoryChecker extends ViewChecker {
     Assert.assertTrue(getIndex(categoryName) < 0);
   }
 
+  public void deleteSelected(MasterCategory replaceByCategory) {
+    CategoryEditionChecker edition = openEditionDialog();
+    edition.deleteSubCategory(getCategoryName(replaceByCategory));
+    edition.validate();
+  }
+
   public void deleteSelected() {
-    WindowInterceptor.init(triggerButton("Delete"))
-      .processWithButtonClick("Yes")
-      .run();
-  }
-
-  public Trigger triggerPopup(String name) {
-    return getTable().triggerRightClick(getIndex(name), NAME_COLUMN_INDEX);
-  }
-
-  public Trigger triggerPopup(MasterCategory master) {
-    return getTable().triggerRightClick(getIndex(master), NAME_COLUMN_INDEX);
+    CategoryEditionChecker edition = openEditionDialog();
+    edition.deleteSubCategory();
+    edition.validate();
   }
 
   private int getIndex(MasterCategory master) {
@@ -252,6 +230,11 @@ public class CategoryChecker extends ViewChecker {
   private void mouseEnterInComponent(Component component) {
     MouseEvent event = new MouseEvent(component, MouseEvent.MOUSE_ENTERED, 1, 0, 0, 0, 0, false);
     component.dispatchEvent(event);
+  }
+
+  public CategoryEditionChecker openEditionDialog() {
+    Window dialog = WindowInterceptor.getModalDialog(window.getButton("edit").triggerClick());
+    return new CategoryEditionChecker(dialog);
   }
 
   public class ContentChecker {

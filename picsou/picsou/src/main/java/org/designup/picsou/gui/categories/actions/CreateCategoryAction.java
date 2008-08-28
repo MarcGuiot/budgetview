@@ -1,10 +1,8 @@
 package org.designup.picsou.gui.categories.actions;
 
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.CreateGlobAction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
@@ -18,35 +16,42 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class CreateCategoryAction extends CreateGlobAction implements GlobSelectionListener {
+public abstract class CreateCategoryAction extends CreateGlobAction {
   private GlobStringifier categoryStringifier;
-  private Glob selectedCategory;
+  private Glob masterSelectedCategory;
+  private Directory directory;
+  private boolean isMaster;
 
-  public CreateCategoryAction(GlobRepository repository, Directory directory) {
-    super("+", Category.TYPE, repository, directory);
-    directory.get(SelectionService.class).addListener(this, Category.TYPE);
+  public CreateCategoryAction(GlobRepository repository, Directory directory, boolean isMaster) {
+    super(Lang.get("create"), Category.TYPE, repository, directory);
+    this.directory = directory;
+    this.isMaster = isMaster;
     categoryStringifier = directory.get(DescriptionService.class).getStringifier(Category.TYPE);
-    setEnabled(false);
+    setEnabled(isMaster);
   }
 
-  public void selectionUpdated(GlobSelection selection) {
-    GlobList categories = selection.getAll(Category.TYPE);
-    if (categories.size() != 1) {
-      selectedCategory = null;
-      return;
+  public void selectMaster(GlobList categories) {
+    if (categories.isEmpty()) {
+      masterSelectedCategory = null;
     }
-    selectedCategory = categories.get(0);
-    if (Category.isReserved(selectedCategory) || Category.isSystem(selectedCategory)) {
-      selectedCategory = null;
+    else {
+      masterSelectedCategory = categories.get(0);
     }
-    setEnabled(selectedCategory != null);
+    if (!isMaster) {
+      setEnabled(masterSelectedCategory != null);
+    }
   }
 
-  public abstract JDialog getDialog(ActionEvent e);
+  public JDialog getDialog(ActionEvent e) {
+    return PicsouDialog.create(getParent(), "category.create.title");
+  }
+
+  protected abstract Window getParent();
 
   protected void validateName(GlobType type, StringField namingField, String name, GlobRepository repository) throws InvalidParameter {
     Set<String> existingNames = new HashSet<String>();
@@ -66,10 +71,10 @@ public abstract class CreateCategoryAction extends CreateGlobAction implements G
     return Lang.get("category.create.inputlabel");
   }
 
-  protected Glob doCreate(GlobType type, StringField namingField, String name, GlobRepository repository) {
-    return repository.create(Category.TYPE,
-                             value(Category.NAME, name),
-                             value(Category.MASTER, getMasterId()));
+  protected void doCreate(GlobType type, StringField namingField, String name, GlobRepository repository) {
+    repository.create(Category.TYPE,
+                      value(Category.NAME, name),
+                      value(Category.MASTER, getMasterId()));
   }
 
   protected String getOkLabel() {
@@ -81,10 +86,9 @@ public abstract class CreateCategoryAction extends CreateGlobAction implements G
   }
 
   private Integer getMasterId() {
-    Integer masterId = selectedCategory.get(Category.MASTER);
-    if (masterId != null) {
-      return masterId;
+    if (isMaster) {
+      return null;
     }
-    return selectedCategory.get(Category.ID);
+    return masterSelectedCategory.get(Category.ID);
   }
 }

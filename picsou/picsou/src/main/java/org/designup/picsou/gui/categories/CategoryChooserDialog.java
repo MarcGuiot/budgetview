@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.transactions.categorization;
+package org.designup.picsou.gui.categories;
 
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.CategoryComparator;
@@ -63,6 +63,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
   public void show() {
     setSelectedCategories();
+    dialog.pack();
     GuiUtils.showCentered(dialog);
   }
 
@@ -83,7 +84,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
   private void loadDialogContent() {
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categoryChooser.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categoryChooserDialog.splits",
                                                       repository, directory);
     builder.addRepeat("masterRepeat",
                       Category.TYPE,

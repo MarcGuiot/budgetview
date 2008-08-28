@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.client.AllocationLearningService;
+import org.designup.picsou.gui.categories.CategoryChooserCallback;
+import org.designup.picsou.gui.categories.CategoryChooserDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.transactions.categorization.CategoryChooserCallback;
-import org.designup.picsou.gui.transactions.categorization.CategoryChooserDialog;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
@@ -37,7 +37,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.*;
 
-public class SeriesCreationDialog {
+public class SeriesEditionDialog {
   private PicsouDialog dialog;
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
@@ -47,7 +47,7 @@ public class SeriesCreationDialog {
   private GlobStringifier stringifier;
   private GlobRepository repository;
 
-  public SeriesCreationDialog(Window parent, final GlobRepository repository, Directory directory) {
+  public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     stringifier = descriptionService.getStringifier(Series.TYPE);
@@ -60,8 +60,8 @@ public class SeriesCreationDialog {
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(selectionService);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesCreationDialog.class,
-                                                      "/layout/seriesCreationDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
+                                                      "/layout/seriesEditionDialog.splits",
                                                       localRepository, localDirectory);
 
     builder.addEditor("nameField", Series.LABEL);

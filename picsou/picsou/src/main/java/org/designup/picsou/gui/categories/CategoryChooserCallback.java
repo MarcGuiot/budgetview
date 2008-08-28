@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.transactions.categorization;
+package org.designup.picsou.gui.categories;
 
 import org.globsframework.model.GlobList;
 

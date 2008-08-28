@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.startup;
 
-import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.DialogOwner;
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
@@ -39,8 +39,10 @@ public class NewAccountAction extends AbstractAction {
 
     CreateAccountAction action = new CreateAccountAction(tempRepository);
     CancelAction cancelAction = new CancelAction();
-    PicsouDialog dialog = PicsouDialog.createWithButtons(owner.getOwner(), createEditionPanel(tempRepository), action,
-                                                         cancelAction);
+    PicsouDialog dialog =
+      PicsouDialog.createWithButtons(Lang.get("new.account"), owner.getOwner(), createEditionPanel(tempRepository),
+                                     action,
+                                     cancelAction);
     action.set(dialog);
     cancelAction.set(dialog);
     createdAccount = tempRepository.create(Account.TYPE);

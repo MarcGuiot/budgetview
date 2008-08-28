@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.utils;
 
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Category;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionToCategory;
+import org.designup.picsou.model.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -87,6 +84,12 @@ public class PicsouMatchers {
 
   public static GlobMatcher masterCategories() {
     return GlobMatchers.isNull(Category.MASTER);
+  }
+
+  public static GlobMatcher masterUserCategories() {
+    return GlobMatchers.and(GlobMatchers.isNull(Category.MASTER),
+                            GlobMatchers.not(
+                              GlobMatchers.fieldContained(Category.ID, MasterCategory.RESERVED_CATEGORY_IDS)));
   }
 
   public static GlobMatcher subCategories(Integer masterCategoryId) {

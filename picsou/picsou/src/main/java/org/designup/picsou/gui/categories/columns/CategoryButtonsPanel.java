@@ -45,12 +45,12 @@ public class CategoryButtonsPanel {
       configureButtonPanelEnabling(renameCategoryButton);
       holePanel.add(Box.createRigidArea(new Dimension(13, 5)));
     }
-    if (Category.isMaster(category) && (!Category.isReserved(category)) && (!Category.isSystem(category))) {
+    if (Category.isMaster(category) && (!Category.isReserved(category))) {
       buttonPanel.add(addCategoryButton);
       configureButtonPanelEnabling(addCategoryButton);
       holePanel.add(Box.createRigidArea(new Dimension(13, 5)));
     }
-    if (!Category.isMaster(category) && !Category.isSystem(category)) {
+    if (!Category.isMaster(category)) {
       buttonPanel.add(deleteCategoryButton);
       configureButtonPanelEnabling(deleteCategoryButton);
       holePanel.add(Box.createRigidArea(new Dimension(13, 5)));

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.series.SeriesCreationDialog;
+import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -75,7 +75,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
     });
   }
 
-  protected JToggleButton createSeriesToggle(final String toggleLabel, 
+  protected JToggleButton createSeriesToggle(final String toggleLabel,
                                              final Key seriesKey, final Key categoryKey,
                                              final PicsouDialog dialog) {
     return new JToggleButton(new AbstractAction(toggleLabel) {
@@ -89,9 +89,9 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
           Glob series = repository.get(seriesKey);
           if (series.get(Series.AMOUNT) == null &&
               !ProfileType.UNKNOWN.getId().equals(series.get(Series.PROFILE_TYPE))) {
-            SeriesCreationDialog seriesCreationDialog =
-              new SeriesCreationDialog(dialog, repository, directory);
-            seriesCreationDialog.show(series, currentTransactions);
+            SeriesEditionDialog seriesEditionDialog =
+              new SeriesEditionDialog(dialog, repository, directory);
+            seriesEditionDialog.show(series, currentTransactions);
           }
         }
         finally {

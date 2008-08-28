@@ -1,0 +1,12 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <column styleClass="dialog" preferredSize="(800,800)">
+    <textArea ref="warmText"/>
+    <row>
+      <label ref="categoryLabel"/>
+      <button action="categoryChooser" name="categoryChooser"/>
+    </row>
+  </column>
+</splits>

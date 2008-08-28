@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.CategoryEditionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -8,7 +9,6 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Files;
 import static org.globsframework.utils.Utils.remove;
 import org.uispec4j.*;
-import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -188,20 +188,11 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.assertCategoryNotFound("Charcuterie");
   }
 
-  public void testCannotCreateSubCategoryForCertainCategories() throws Exception {
-    categories.select(MasterCategory.ALL);
-    categories.assertCreationNotAvailable();
-
-    categories.select(MasterCategory.NONE);
-    categories.assertCreationNotAvailable();
-
-    categories.select(MasterCategory.INTERNAL);
-    categories.assertCreationNotAvailable();
-  }
 
   public void testCategoryNamesMustBeUnique() throws Exception {
     categories.select(MasterCategory.FOOD);
-    WindowInterceptor.init(categories.triggerCreate())
+    CategoryEditionChecker edition = categories.openEditionDialog();
+    WindowInterceptor.init(edition.getCreateSubCategoryTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox().setText(getCategoryName(MasterCategory.FOOD));
@@ -212,11 +203,13 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
         }
       })
       .run();
+    edition.cancel();
   }
 
   public void testCategoryNameMustNotBeEmpty() throws Exception {
     categories.select(MasterCategory.FOOD);
-    WindowInterceptor.init(categories.triggerCreate())
+    CategoryEditionChecker edition = categories.openEditionDialog();
+    WindowInterceptor.init(edition.getCreateSubCategoryTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox().setText("");
@@ -226,6 +219,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
         }
       })
       .run();
+    edition.cancel();
   }
 
   public void testDeleteSubcategory() throws Exception {
@@ -242,7 +236,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, "Apero")
       .check();
 
-    categories.deleteSelected();
+    categories.deleteSelected(MasterCategory.FOOD);
 
     categories.assertCategoryNotFound("Apero");
 
@@ -272,7 +266,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .check();
 
     categories.select("Apero");
-    categories.deleteSelected();
+    categories.deleteSelected(MasterCategory.FOOD);
 
     categories.assertCategoryNotFound("Apero");
     categories.assertSelectionEquals(MasterCategory.FOOD);
@@ -284,26 +278,11 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testDeletingMasterCategoriesIsForbidden() throws Exception {
-    categories.select(MasterCategory.ALL);
-    categories.assertDeletionNotAvailable();
-
-    categories.select(MasterCategory.NONE);
-    categories.assertDeletionNotAvailable();
-
-    categories.select(MasterCategory.FOOD);
-    categories.assertDeletionNotAvailable();
-
-    categories.createSubCategory(MasterCategory.FOOD, "Apero");
-
-    categories.select(MasterCategory.FOOD);
-    categories.assertDeletionNotAvailable();
-  }
-
   public void testRenameSubcategory() throws Exception {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
     categories.select("Apero");
-    WindowInterceptor.init(categories.triggerRename())
+    CategoryEditionChecker editor = categories.openEditionDialog();
+    WindowInterceptor.init(editor.renameSubCategoryTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           TextBox input = window.getInputTextBox();
@@ -313,6 +292,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
         }
       })
       .run();
+    editor.validate();
     categories.assertCategoryNotFound("Apero");
     categories.assertCategoryExists("Pastis");
   }
@@ -320,16 +300,18 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
   public void testCanReuseSameName() throws Exception {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
     categories.select("Apero");
-    WindowInterceptor.init(categories.triggerRename())
+    CategoryEditionChecker editor = categories.openEditionDialog();
+    WindowInterceptor.init(editor.renameSubCategoryTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           TextBox input = window.getInputTextBox();
           input.clear();
           input.appendText("Apero");
-          return window.getButton("Close").triggerClick();
+          return window.getButton("OK").triggerClick();
         }
       })
       .run();
+    editor.validate();
     categories.assertCategoryExists("Apero");
     categories.assertCategoryNotFound("Pastis");
   }
@@ -337,11 +319,13 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
   public void testCannotReuseAnExistingName() throws Exception {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
     categories.select("Apero");
-    WindowInterceptor.init(categories.triggerRename())
+    CategoryEditionChecker editor = categories.openEditionDialog();
+
+    WindowInterceptor.init(editor.renameSubCategoryTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           TextBox input = window.getInputTextBox();
-          input.setText(getCategoryName(MasterCategory.BANK));
+          input.setText("Restaurant");
           Button okButton = window.getButton("OK");
           assertFalse(okButton.isEnabled());
           assertTrue(window.containsLabel(Lang.get("category.name.already.used")));
@@ -349,6 +333,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
         }
       })
       .run();
+    editor.validate();
     categories.assertCategoryExists("Apero");
     categories.assertCategoryNotFound("Pastis");
   }
@@ -356,7 +341,8 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
   public void testRenameCancelled() throws Exception {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
     categories.select("Apero");
-    WindowInterceptor.init(categories.triggerRename())
+    CategoryEditionChecker editor = categories.openEditionDialog();
+    WindowInterceptor.init(editor.renameSubCategoryTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           TextBox input = window.getInputTextBox();
@@ -366,44 +352,9 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
         }
       })
       .run();
+    editor.validate();
     categories.assertCategoryExists("Apero");
     categories.assertCategoryNotFound("Pastis");
-  }
-
-  public void testRenamingMastersIsForbidden() throws Exception {
-    categories.select(MasterCategory.ALL);
-    categories.assertRenameNotAvailable();
-
-    categories.select(MasterCategory.NONE);
-    categories.assertRenameNotAvailable();
-
-    categories.select(MasterCategory.FOOD);
-    categories.assertRenameNotAvailable();
-  }
-
-  public void testPopupMenu() throws Exception {
-    WindowInterceptor.init(
-      PopupMenuInterceptor.run(categories.triggerPopup(MasterCategory.FOOD))
-        .getSubMenu("New")
-        .triggerClick())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          window.getInputTextBox().setText("Apero");
-          return window.getButton("OK").triggerClick();
-        }
-      })
-      .run();
-
-    categories.assertCategoryExists("Apero");
-
-    WindowInterceptor.init(
-      PopupMenuInterceptor.run(categories.triggerPopup("Apero"))
-        .getSubMenu("Delete")
-        .triggerClick())
-      .processWithButtonClick("Yes")
-      .run();
-
-    categories.assertCategoryNotFound("Apero");
   }
 
   public void testCategoryExpansion() throws Exception {
@@ -471,5 +422,9 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.select("Misc");
     categories.deleteSelected();
     categories.assertExpansionEnabled(MasterCategory.MISC_SPENDINGS, false);
+  }
+
+  public void testCanNotDeleteCategoryIfUsedInSeries() throws Exception {
+    fail();
   }
 }

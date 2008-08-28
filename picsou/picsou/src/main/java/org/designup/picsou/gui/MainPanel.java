@@ -7,6 +7,7 @@ import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.categories.CategoryView;
+import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.graphics.CategoriesChart;
@@ -75,6 +76,8 @@ public class MainPanel {
     exportFileAction = new ExportFileAction(repository, directory);
     registerAction = new RegisterLicenseAction(parent, repository, directory);
     exitAction = new ExitAction(directory);
+
+    builder.add("editCategories", new EditCategoriesAction(repository, directory));
 
     createPanel(
       new TitleView(repository, directory),

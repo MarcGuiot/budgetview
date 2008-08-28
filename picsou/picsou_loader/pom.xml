@@ -59,6 +59,11 @@
                             jvmversion="1.5+"
                             vmoptions="-Xmx128m">
 
+
+                  <!--<resourcefilelist dir=".." files="LICENSE.TXT"/>-->
+                  <!-- Contents/Resources/ -->
+                  <!--<javafilelist dir="./build" files="libHelpBookJNI.jnilib"/>-->
+
                   <documenttype name="Financial information"
                                 extensions="ofx qif"
                                 iconFile="dev/images/picsou_icon.icns"

@@ -1,34 +1,28 @@
 package org.designup.picsou.gui.categories;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.categories.columns.*;
 import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
-import org.designup.picsou.gui.categories.actions.CreateCategoryAction;
-import org.designup.picsou.gui.categories.actions.DeleteCategoryAction;
-import org.designup.picsou.gui.categories.actions.RenameCategoryAction;
-import org.designup.picsou.gui.categories.columns.*;
-import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.components.PicsouTableHeaderCustomizer;
-import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
-import org.designup.picsou.gui.utils.*;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
 import static org.globsframework.gui.views.utils.LabelCustomizers.alignRight;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -39,33 +33,15 @@ public class CategoryView extends View {
 
   private GlobTableView globTable;
   private JTable table;
-  private CreateCategoryAction createCategoryAction;
-  private RenameCategoryAction renameCategoryAction;
-  private DeleteCategoryAction deleteCategoryAction;
   protected CategoryExpansionModel expansionModel;
 
   public CategoryView(GlobRepository repository, final Directory directory) {
     super(repository, directory);
-    createCategoryAction = new CreateCategoryAction(repository, directory) {
-      public JDialog getDialog(ActionEvent e) {
-        return PicsouDialog.create(directory.get(JFrame.class));
-      }
-    };
-    renameCategoryAction = new RenameCategoryAction(repository, directory) {
-      public JDialog getDialog(ActionEvent e) {
-        return PicsouDialog.create(directory.get(JFrame.class));
-      }
-
-    };
-    deleteCategoryAction = new DeleteCategoryAction(repository, directory);
     createTable();
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
     builder.add(table);
-    builder.add("createCategory", createCategoryAction);
-    builder.add("renameCategory", renameCategoryAction);
-    builder.add("deleteCategory", deleteCategoryAction);
   }
 
   public void select(Integer categoryId) {
@@ -73,6 +49,9 @@ public class CategoryView extends View {
   }
 
   private void createTable() {
+    // attention CategoryExpansionModel doit etre enregistré comme listener de changetSet avant la table.
+    expansionModel = new CategoryExpansionModel(repository, this);
+
     GlobStringifier categoryStringifier = descriptionService.getStringifier(Category.TYPE);
     CategoryDataProvider provider = new CategoryDataProvider(repository, directory);
     GlobStringifier amountStringifier = new AmountStringifier(provider);
@@ -83,22 +62,19 @@ public class CategoryView extends View {
     CategoryLabelCustomizer customizer = new CategoryLabelCustomizer(directory);
     CategoryBackgroundPainter backgroundPainter = new CategoryBackgroundPainter(directory);
     CategoryExpansionColumn expandColumn = new CategoryExpansionColumn(backgroundPainter, selectionService);
-    CategoryColumn categoryColumn = new CategoryColumn(customizer, backgroundPainter, globTable,
-                                                       descriptionService, repository, directory);
 
     globTable.addColumn(" ", expandColumn, expandColumn, categoryStringifier.getComparator(repository))
-      .addColumn(Lang.get("category"), categoryColumn, categoryColumn, categoryComparator)
+      .addColumn(Lang.get("category"), categoryStringifier, customizer)
       .addColumn(Lang.get("amount"), amountStringifier, chain(alignRight(), customizer), backgroundPainter)
       .hideHeader()
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
-    globTable.setPopupFactory(new CategoryPopupMenuFactory());
 
     provider.setView(globTable);
 
     table = globTable.getComponent();
 
-    expansionModel = new CategoryExpansionModel(repository, this);
+    setFilter(expansionModel);
     expandColumn.init(this, expansionModel);
 
     setInitialColumnSizes(expandColumn);
@@ -106,6 +82,14 @@ public class CategoryView extends View {
     installDoubleClickExpansion();
     Gui.installRolloverOnButtons(table, new int[]{CATEGORY_COLUMN_INDEX});
     table.setDragEnabled(false);
+
+    repository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsCreationsOrDeletions(Category.TYPE)) {
+          setFilter(expansionModel);
+        }
+      }
+    });
   }
 
   private void installDoubleClickExpansion() {
@@ -163,23 +147,6 @@ public class CategoryView extends View {
       return "";
     }
     return PicsouDescriptionService.INTEGER_FORMAT.format(amount);
-  }
-
-  private class CategoryPopupMenuFactory implements PopupMenuFactory {
-    public JPopupMenu createPopup() {
-      JPopupMenu menu = new JPopupMenu();
-      add(createCategoryAction, "create.category.popup", menu);
-      add(renameCategoryAction, "rename.category.popup", menu);
-      add(deleteCategoryAction, "delete.category.popup", menu);
-      return menu;
-    }
-
-    private void add(Action action, String label, JPopupMenu menu) {
-      JCheckBoxMenuItem item = new JCheckBoxMenuItem(action);
-      item.setText(Lang.get(label));
-      item.setFont(Gui.DEFAULT_TABLE_FONT);
-      menu.add(item);
-    }
   }
 }
 

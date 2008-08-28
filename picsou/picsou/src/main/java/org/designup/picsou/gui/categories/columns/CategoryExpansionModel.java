@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.categories.columns;
 
 import org.designup.picsou.gui.categories.CategoryView;
+import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.Category;
-import org.designup.picsou.model.MasterCategory;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
@@ -22,16 +22,16 @@ public class CategoryExpansionModel implements GlobMatcher, ChangeSetListener {
     this.repository = repository;
     this.view = view;
     repository.addChangeListener(this);
-    for (MasterCategory master : MasterCategory.values()) {
-      expandedMap.put(master.getId(), false);
+    for (Glob master : repository.getAll(Category.TYPE, PicsouMatchers.masterCategories())) {
+      expandedMap.put(master.get(Category.ID), false);
     }
-    this.view.setFilter(this);
     updateExpandabilities();
   }
 
   private void updateExpandabilities() {
-    for (MasterCategory master : MasterCategory.values()) {
-      Integer categoryId = master.getId();
+    expandableMap.clear();
+    for (Glob master : repository.getAll(Category.TYPE, PicsouMatchers.masterCategories())) {
+      Integer categoryId = master.get(Category.ID);
       boolean expandable = Category.hasChildren(categoryId, repository);
       expandableMap.put(categoryId, expandable);
       if (!expandable) {
@@ -89,9 +89,15 @@ public class CategoryExpansionModel implements GlobMatcher, ChangeSetListener {
     Set<Key> createdList = changeSet.getCreated(Category.TYPE);
     for (Key key : createdList) {
       Glob created = repository.get(key);
-      expandedMap.put(created.get(Category.MASTER), true);
+      Integer master = created.get(Category.MASTER);
+      if (master != null) {
+        expandedMap.put(master, true);
+      }
     }
-    view.setFilter(this);
+    Set<Key> deletedList = changeSet.getDeleted(Category.TYPE);
+    for (Key key : deletedList) {
+      expandedMap.remove(key.get(Category.ID));
+    }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {

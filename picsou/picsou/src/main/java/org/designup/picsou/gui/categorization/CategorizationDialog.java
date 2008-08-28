@@ -6,7 +6,7 @@ import org.designup.picsou.gui.categorization.components.OccasionalCategoriesCom
 import org.designup.picsou.gui.categorization.components.SeriesComponentFactory;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.gui.series.SeriesCreationDialog;
+import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -228,8 +228,8 @@ public class CategorizationDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      SeriesCreationDialog creationDialog = new SeriesCreationDialog(dialog, localRepository, localDirectory);
-      creationDialog.show(currentTransactions, budgetArea);
+      SeriesEditionDialog editionDialog = new SeriesEditionDialog(dialog, localRepository, localDirectory);
+      editionDialog.show(currentTransactions, budgetArea);
     }
   }
 

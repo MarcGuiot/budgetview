@@ -4,7 +4,6 @@ import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
-import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -13,6 +12,7 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.exceptions.ItemAmbiguity;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -37,8 +37,7 @@ public class Category {
   public static final Integer NONE = MasterCategory.NONE.getId();
 
   static {
-    GlobTypeLoader loader = GlobTypeLoader.init(Category.class, "category");
-    loader.addConstants(MasterCategory.createGlobs());
+    GlobTypeLoader.init(Category.class, "category");
   }
 
   public static boolean isAll(Glob category) {
@@ -58,7 +57,12 @@ public class Category {
   }
 
   public static Glob find(String categoryName, ReadOnlyGlobRepository repository) {
-    return repository.findUnique(Category.TYPE, GlobMatchers.fieldEqualsIgnoreCase(Category.NAME, categoryName));
+    try {
+      return repository.findUnique(Category.TYPE, GlobMatchers.fieldEqualsIgnoreCase(Category.NAME, categoryName));
+    }
+    catch (ItemAmbiguity ambiguity) {
+      throw new ItemAmbiguity("For category '" + categoryName + "' ", ambiguity);
+    }
   }
 
   public static boolean isMaster(Glob category) {

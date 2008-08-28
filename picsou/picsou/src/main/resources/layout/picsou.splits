@@ -95,14 +95,15 @@
                            continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
             <panel styleClass="block" border="empty(0,0,0,5)">
 
-              <panel margin="10">
+              <column margin="10">
                 <scrollPane border="line(category.border)" viewportBackground="categories.bg"
                             background="categories.bg"
                             minimumSize="(180,400)" weightX="1">
                   <table ref="category" intercellSpacing="(0,0)" showGrid="false" opaque="false"
                          margin="10"/>
                 </scrollPane>
-              </panel>
+                <button action="editCategories"/>
+              </column>
 
             </panel>
 

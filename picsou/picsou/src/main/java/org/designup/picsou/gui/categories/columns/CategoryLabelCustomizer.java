@@ -30,6 +30,9 @@ public class CategoryLabelCustomizer implements LabelCustomizer, ColorChangeList
     boolean isMaster = Category.isMaster(glob);
     label.setFont(isMaster ? Gui.DEFAULT_TABLE_FONT_BOLD : Gui.DEFAULT_TABLE_FONT);
     label.setForeground(isSelected ? Color.WHITE : color);
+    if (!isMaster) {
+      label.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+    }
   }
 
   protected void finalize() throws Throwable {

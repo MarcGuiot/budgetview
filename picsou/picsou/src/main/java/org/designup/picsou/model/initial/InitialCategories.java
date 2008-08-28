@@ -7,6 +7,14 @@ import org.globsframework.model.GlobRepository;
 
 public class InitialCategories {
   public static void run(GlobRepository repository) {
+
+    MasterCategory[] masterCategories = MasterCategory.values();
+    for (MasterCategory master : masterCategories) {
+      repository.create(Category.TYPE,
+                        value(Category.NAME, master.getName()),
+                        value(Category.ID, master.getId()));
+    }
+
     create(repository, MasterCategory.FOOD,
            "Courant", "Restaurant", "Livraison / A emporter", "Réceptions");
 
