@@ -42,4 +42,28 @@ public class Java2DUtils {
     }
     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
   }
+
+  public static void drawShadow(Graphics2D g2d, Color topColor, float opacity, int shadowWidth, int cornerRadius,
+                                int x, int y, int width, int height) {
+    if (shadowWidth == 0) {
+      return;
+    }
+    g2d.setColor(new Color(topColor.getRed(), topColor.getGreen(), topColor.getBlue(), ((int)(opacity * 255)) & 0xFF));
+    float alpha = 0.1f;
+    float step = (float)(0.9 / shadowWidth);
+    for (int i = 1; i <= shadowWidth; i++) {
+      if (alpha >= 0.9f) {
+        alpha = 1f;
+      }
+      else {
+        alpha += step;
+      }
+      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+      RoundRectangle2D shadowShape = new RoundRectangle2D.Float(x + i, y + i, width - (i * 2),
+                                                                height - (i * 2), cornerRadius, cornerRadius);
+      g2d.draw(shadowShape);
+    }
+    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+  }
+
 }

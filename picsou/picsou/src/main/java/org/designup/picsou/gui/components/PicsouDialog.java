@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.utils.Gui;
+import org.globsframework.gui.splits.layout.Anchor;
+import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -48,18 +50,36 @@ public class PicsouDialog extends JDialog {
   public static PicsouDialog createWithButtons(String name, Window owner, JPanel panel, Action ok, Action cancel) {
     Insets noInsets = new Insets(0, 0, 0, 0);
     GridBagBuilder builder = GridBagBuilder.init()
-      .add(panel, 0, 0, 2 + 1, 1, noInsets)
-      .add(Box.createHorizontalGlue(), 0, 1, 1, 1, noInsets);
+      .add(panel, 0, 0, 2 + 1, 1, noInsets);
 
+    int index = 0;
+    builder.add(Box.createHorizontalGlue(), index++, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER);
     Insets buttonInsets = new Insets(10, 10, 10, 10);
-    int index = 1;
-    if (Gui.isMacOSX()) {
-      builder.add(new JButton(cancel), index++, 1, 1, 1, buttonInsets);
-      builder.add(new JButton(ok), index++, 1, 1, 1, buttonInsets);
+    JButton cancelButton = new JButton(cancel);
+    JButton okButton = new JButton(ok);
+    Dimension cancelSize = cancelButton.getPreferredSize();
+    Dimension okSize = okButton.getPreferredSize();
+    if (cancelSize.width > okSize.width) {
+      okButton.setPreferredSize(cancelSize);
     }
     else {
-      builder.add(new JButton(ok), index++, 1, 1, 1, buttonInsets);
-      builder.add(new JButton(cancel), index++, 1, 1, 1, buttonInsets);
+      cancelButton.setPreferredSize(okSize);
+    }
+    Dimension cancelMinSize = cancelButton.getMinimumSize();
+    Dimension okMinSize = okButton.getMinimumSize();
+    if (cancelMinSize.width > okMinSize.width) {
+      okButton.setMinimumSize(cancelMinSize);
+    }
+    else {
+      cancelButton.setMinimumSize(okMinSize);
+    }
+    if (Gui.isMacOSX()) {
+      builder.add(cancelButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+      builder.add(okButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+    }
+    else {
+      builder.add(okButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+      builder.add(cancelButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
     }
     PicsouDialog dialog = create(owner, name);
     dialog.setContentPane(builder.getPanel());

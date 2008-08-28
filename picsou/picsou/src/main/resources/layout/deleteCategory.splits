@@ -2,11 +2,15 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <column styleClass="dialog" preferredSize="(800,800)">
-    <textArea ref="warmText"/>
+  <column styleClass="dialog" preferredSize="(300,120)" margin="20">
+    <textArea ref="warmText" editable="false"/>
     <row>
+      <filler fill="horizontal"/>
+      <label text="$delete.category.label"/>
       <label ref="categoryLabel"/>
+      <filler fill="horizontal"/>
       <button action="categoryChooser" name="categoryChooser"/>
+      <filler fill="horizontal"/>
     </row>
   </column>
 </splits>

@@ -56,7 +56,7 @@ public class PicsouWindowsLookAndFeel extends Plastic3DLookAndFeel {
     super.initComponentDefaults(defaults);
 
     Object[] properties = {
-      "Button.margin", new InsetsUIResource(6, 12, 6, 12),
+      "Button.margin", new InsetsUIResource(2, 8, 2, 8),
     };
 
     defaults.putDefaults(properties);

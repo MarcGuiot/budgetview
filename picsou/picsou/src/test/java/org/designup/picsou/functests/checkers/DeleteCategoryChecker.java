@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import org.uispec4j.Button;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
@@ -32,6 +33,12 @@ public class DeleteCategoryChecker extends DataChecker {
   }
 
   public Trigger validate() {
-    return window.getButton("OK").triggerClick();
+    return getOkButton().triggerClick();
   }
+
+  public Button getOkButton() {
+    return window.getButton("OK");
+  }
+
+
 }

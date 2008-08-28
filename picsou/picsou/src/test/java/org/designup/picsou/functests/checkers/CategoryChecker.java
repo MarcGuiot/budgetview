@@ -157,17 +157,28 @@ public class CategoryChecker extends ViewChecker {
     Assert.assertTrue(getIndex(categoryName) >= 0);
   }
 
+  public void assertCategoryExists(String categoryName, int count) {
+    int actual = 0;
+    for (int tableRow = 0; tableRow < getTable().getRowCount(); tableRow++) {
+      String name = (String)getTable().getContentAt(tableRow, NAME_COLUMN_INDEX);
+      if (categoryName.equals(name)) {
+        actual++;
+      }
+    }
+    Assert.assertEquals(count, actual);
+  }
+
   public void assertCategoryNotFound(String categoryName) {
     Assert.assertTrue(getIndex(categoryName) < 0);
   }
 
   public void deleteSelected(MasterCategory replaceByCategory) {
     CategoryEditionChecker edition = openEditionDialog();
-    edition.deleteSubCategory(getCategoryName(replaceByCategory));
+    edition.deleteSubCategoryWithTransactionUpdate(getCategoryName(replaceByCategory));
     edition.validate();
   }
 
-  public void deleteSelected() {
+  public void deleteSubSelected() {
     CategoryEditionChecker edition = openEditionDialog();
     edition.deleteSubCategory();
     edition.validate();

@@ -25,17 +25,23 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.HashSet;
 import java.util.Set;
 
 public class CategoryEditionDialog {
   private JDialog dialog;
+  private GlobRepository repository;
+  private Directory directory;
   private LocalGlobRepository localRepository;
   private Directory masterDirectory;
   private Directory subDirectory;
   private CreateCategoryAction createSubCategory;
   private GlobListView masterList;
+  private Integer categoryToSelect;
 
   public CategoryEditionDialog(GlobRepository repository, Directory directory) {
+    this.repository = repository;
+    this.directory = directory;
     localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(Category.TYPE, Transaction.TYPE, Series.TYPE, SeriesToCategory.TYPE,
             TransactionToCategory.TYPE).get();
@@ -154,8 +160,9 @@ public class CategoryEditionDialog {
     }
     dialog.pack();
     GuiUtils.showCentered(dialog);
-
-
+    if (categoryToSelect != null) {
+      directory.get(SelectionService.class).select(repository.get(Key.create(Category.TYPE, categoryToSelect)));
+    }
   }
 
   private class ValidateAction extends AbstractAction {
@@ -164,8 +171,44 @@ public class CategoryEditionDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
+      final Set<Integer> categories = new HashSet<Integer>();
       localRepository.getCurrentChanges()
-        .safeVisit(new DefaultChangeSetVisitor());
+        .safeVisit(new DefaultChangeSetVisitor() {
+          public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+            if (key.getGlobType().equals(Transaction.TYPE)) {
+              if (values.contains(Transaction.CATEGORY)) {
+                categories.add(values.get(Transaction.CATEGORY));
+              }
+            }
+            if (key.getGlobType().equals(Series.TYPE)) {
+              if (values.contains(Series.DEFAULT_CATEGORY)) {
+                categories.add(values.get(Series.DEFAULT_CATEGORY));
+              }
+            }
+          }
+        });
+      if (categories.isEmpty()) {
+        final Set<Integer> deletedCategories = new HashSet<Integer>();
+        localRepository.getCurrentChanges()
+          .safeVisit(Category.TYPE, new DefaultChangeSetVisitor() {
+            public void visitDeletion(Key key, FieldValues values) throws Exception {
+              if (values.get(Category.MASTER) != null) {
+                deletedCategories.add(values.get(Category.MASTER));
+              }
+            }
+          });
+        if (deletedCategories.size() == 1) {
+          Integer categoryId = deletedCategories.iterator().next();
+          if (localRepository.find(Key.create(Category.TYPE, categoryId)) != null) {
+            categoryToSelect = categoryId;
+          }
+        }
+      }
+      else {
+        if (categories.size() == 1) {
+          categoryToSelect = categories.iterator().next();
+        }
+      }
       localRepository.commitChanges(true);
       dialog.setVisible(false);
     }

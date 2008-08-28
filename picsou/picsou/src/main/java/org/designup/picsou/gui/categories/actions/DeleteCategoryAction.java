@@ -8,6 +8,8 @@ import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -18,6 +20,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -35,6 +38,7 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
     super(Lang.get("delete"), repository, directory);
     this.directory = directory;
     learningService = directory.get(AllocationLearningService.class);
+    setEnabled(false);
   }
 
   public boolean appliesFor(GlobList categories) {
@@ -152,34 +156,41 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
 
 
   static class NewCategoryDialog {
-    private Directory directory;
     private GlobRepository repository;
     private PicsouDialog categoryChooserDialog;
     private Integer targetId;
     private boolean returnStatus;
+    private Directory localDirectory;
+    private SelectionService selectionService;
 
     NewCategoryDialog(Directory directory, GlobRepository repository) {
-      this.directory = directory;
       this.repository = repository;
+      localDirectory = new DefaultDirectory(directory);
+      selectionService = new SelectionService();
     }
 
     private boolean selectTargetCategory(Integer masterId, JDialog dialog) {
-      Directory localDirectory = new DefaultDirectory(directory);
-      SelectionService selectionService = new SelectionService();
       localDirectory.add(selectionService);
       GlobsPanelBuilder builder = new GlobsPanelBuilder(DeleteCategoryAction.class,
                                                         "/layout/deleteCategory.splits", repository, localDirectory);
 
-      GlobListStringifier categoryStringfier = directory.get(DescriptionService.class).getListStringifier(Category.TYPE);
       builder.add("warmText", new JTextArea(Lang.get("delete.category.warm.text")));
-      builder.addLabel("categoryLabel", Category.TYPE, categoryStringfier);
-      CategorieChooserAction chooserAction = new CategorieChooserAction(masterId, directory, repository);
+      GlobListStringifier categoryStringifier = GlobListStringifiers
+        .valueForEmpty(Lang.get("delete.category.empty"), localDirectory.get(DescriptionService.class).getListStringifier(Category.TYPE));
+      builder.addLabel("categoryLabel", Category.TYPE, categoryStringifier);
+      CategorieChooserAction chooserAction = new CategorieChooserAction(masterId, localDirectory, repository);
       builder.add("categoryChooser", chooserAction);
-      categoryChooserDialog = PicsouDialog.createWithButtons(Lang.get("delete.category.button.label"),
+      final NewCategoryDialog.OkAction okAction = new OkAction();
+      categoryChooserDialog = PicsouDialog.createWithButtons(Lang.get("delete.category.title.label"),
                                                              dialog,
                                                              builder.<JPanel>load(),
-                                                             new OkAction(),
+                                                             okAction,
                                                              new CancelAction());
+      selectionService.addListener(new GlobSelectionListener() {
+        public void selectionUpdated(GlobSelection selection) {
+          okAction.setEnabled(!selection.getAll(Category.TYPE).isEmpty());
+        }
+      }, Category.TYPE);
       if (masterId != null) {
         selectionService.select(repository.get(Key.create(Category.TYPE, masterId)));
       }
@@ -196,6 +207,7 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
     private class OkAction extends AbstractAction {
       private OkAction() {
         super(Lang.get("ok"));
+        setEnabled(false);
       }
 
       public void actionPerformed(ActionEvent e) {

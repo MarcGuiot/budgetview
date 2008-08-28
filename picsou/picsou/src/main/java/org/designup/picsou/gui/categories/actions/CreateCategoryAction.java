@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categories.actions;
 
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.actions.CreateGlobAction;
@@ -12,6 +13,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -54,8 +56,15 @@ public abstract class CreateCategoryAction extends CreateGlobAction {
   protected abstract Window getParent();
 
   protected void validateName(GlobType type, StringField namingField, String name, GlobRepository repository) throws InvalidParameter {
+    GlobMatcher matcher;
+    if (isMaster) {
+      matcher = PicsouMatchers.masterCategories();
+    }
+    else {
+      matcher = PicsouMatchers.subCategories(getMasterId());
+    }
     Set<String> existingNames = new HashSet<String>();
-    for (Glob category : repository.getAll(Category.TYPE)) {
+    for (Glob category : repository.getAll(Category.TYPE, matcher)) {
       existingNames.add(categoryStringifier.toString(category, repository));
     }
     if (existingNames.contains(name)) {
