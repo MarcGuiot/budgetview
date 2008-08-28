@@ -184,16 +184,16 @@ public class GlobList extends ArrayList<Glob> {
     return this;
   }
 
-  public GlobList apply(GlobFunctor functor) throws Exception {
+  public GlobList apply(GlobFunctor functor, GlobRepository repository) throws Exception {
     for (Glob glob : this) {
-      functor.run(glob);
+      functor.run(glob, repository);
     }
     return this;
   }
 
-  public GlobList safeApply(GlobFunctor functor) {
+  public GlobList safeApply(GlobFunctor functor, GlobRepository repository) {
     try {
-      apply(functor);
+      apply(functor, repository);
     }
     catch (Exception e) {
       throw new UnexpectedApplicationState(e);

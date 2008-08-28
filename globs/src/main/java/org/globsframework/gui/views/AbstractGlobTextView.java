@@ -24,7 +24,7 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   private Directory directory;
   private GlobListStringifier stringifier;
   private GlobMatcher filter = GlobMatchers.ALL;
-  private GlobList currentSelection = new GlobList();
+  protected GlobList currentSelection = new GlobList();
   private boolean autoHideIfEmpty;
   private GlobListMatcher autoHideMatcher = GlobListMatchers.ALL;
   private ChangeSetMatcher updateMatcher = ChangeSetMatchers.NONE;
