@@ -230,7 +230,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
   private GlobList getUncategorizedTransactions(Glob month, GlobRepository repository) {
     GlobMatcher matcher = and(
-      fieldEquals(Transaction.SERIES, Series.UNKNOWN_SERIES_ID),
+      fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
       not(fieldEquals(Transaction.PLANNED, true))
     );
     return repository.findByIndex(Transaction.MONTH_INDEX, month.get(Month.ID))

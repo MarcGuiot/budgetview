@@ -38,7 +38,7 @@ public abstract class CategorizationAction extends AbstractGlobSelectionAction {
       return lastSelection;
     }
     Glob transaction = lastSelection.get(0);
-    if ((!Series.UNKNOWN_SERIES_ID.equals(transaction.get(Transaction.SERIES))) ||
+    if ((!Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) ||
         (Strings.isNullOrEmpty(transaction.get(Transaction.LABEL_FOR_CATEGORISATION)))) {
       return new GlobList(transaction);
     }
@@ -46,7 +46,7 @@ public abstract class CategorizationAction extends AbstractGlobSelectionAction {
       return getAllGlobs()
         .filter(and(fieldEquals(Transaction.LABEL_FOR_CATEGORISATION,
                                 transaction.get(Transaction.LABEL_FOR_CATEGORISATION)),
-                    fieldEquals(Transaction.SERIES, Series.UNKNOWN_SERIES_ID)),
+                    fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)),
                 repository);
     }
   }

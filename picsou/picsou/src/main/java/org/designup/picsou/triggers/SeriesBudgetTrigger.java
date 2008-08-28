@@ -15,14 +15,14 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        if (values.get(Series.AMOUNT) != null) {
+        if (values.get(Series.INITIAL_AMOUNT) != null) {
           updateSeriesBudget(repository.get(key), repository);
         }
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         Glob series = repository.get(key);
-        if (series.get(Series.AMOUNT) != null) {
+        if (series.get(Series.INITIAL_AMOUNT) != null) {
           updateSeriesBudget(series, repository);
         }
       }
@@ -78,7 +78,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
       Boolean active = series.get(monthField);
       Glob seriesBudget = monthWithBudget.remove(monthId);
       FieldValue fieldValues[] = {value(SeriesBudget.SERIES, seriesId),
-                                  value(SeriesBudget.AMOUNT, series.get(Series.AMOUNT)),
+                                  value(SeriesBudget.AMOUNT, series.get(Series.INITIAL_AMOUNT)),
                                   value(SeriesBudget.MONTH, monthId),
                                   value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
                                   value(SeriesBudget.ACTIVE, active)};

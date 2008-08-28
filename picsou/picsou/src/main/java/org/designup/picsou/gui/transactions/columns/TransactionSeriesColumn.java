@@ -104,7 +104,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
       button.setUnderline(false);
       button.setText(seriesStringifier.toString(transaction, repository));
     }
-    else if (!Series.UNKNOWN_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
+    else if (!Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
       button.setEnabled(true);
       rendererColors.setForeground(button, isSelected, transaction);
       button.setFont(normalFont);
@@ -145,7 +145,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
         return selection;
       }
 
-      if ((!Series.UNKNOWN_SERIES_ID.equals(transaction.get(Transaction.SERIES))) ||
+      if ((!Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) ||
           (Strings.isNullOrEmpty(transaction.get(Transaction.LABEL_FOR_CATEGORISATION)))) {
         return new GlobList(transaction);
       }
@@ -154,7 +154,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
         .filter(and(CategorizationAction.getMatcher(),
                     fieldEquals(Transaction.LABEL_FOR_CATEGORISATION,
                                 transaction.get(Transaction.LABEL_FOR_CATEGORISATION)),
-                    fieldEquals(Transaction.SERIES, Series.UNKNOWN_SERIES_ID)),
+                    fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)),
                 repository);
     }
 

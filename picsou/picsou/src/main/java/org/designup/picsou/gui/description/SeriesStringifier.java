@@ -12,7 +12,7 @@ import java.util.Comparator;
 
 public class SeriesStringifier implements GlobStringifier {
   public String toString(Glob series, GlobRepository repository) {
-    if (series == null || series.get(Series.ID).equals(Series.UNKNOWN_SERIES_ID)) {
+    if (series == null || series.get(Series.ID).equals(Series.UNCATEGORIZED_SERIES_ID)) {
       return "";
     }
     final String label = series.get(Series.LABEL);

@@ -139,13 +139,13 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
       Glob budget = budgets.get(0);
       double multiplier = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome() ? -1 : 1;
-      Double overBurnAmount = budget.get(SeriesBudget.OVER_BURN_AMOUNT);
+      Double overBurnAmount = budget.get(SeriesBudget.OVERRUN_AMOUNT);
       Double amountToDeduce = overBurnAmount + amount;
       if (multiplier * amountToDeduce <= 0) {
-        repository.update(budget.getKey(), SeriesBudget.OVER_BURN_AMOUNT, amountToDeduce);
+        repository.update(budget.getKey(), SeriesBudget.OVERRUN_AMOUNT, amountToDeduce);
       }
       else {
-        repository.update(budget.getKey(), SeriesBudget.OVER_BURN_AMOUNT, 0.0);
+        repository.update(budget.getKey(), SeriesBudget.OVERRUN_AMOUNT, 0.0);
         SeriesBudgetUpdateTransactionTrigger
           .createPlannedTransaction(series, repository, monthId, budget.get(SeriesBudget.DAY),
                                     -amountToDeduce);
@@ -191,7 +191,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     if (budgets.isEmpty()) {
       throw new InvalidState("missing budgetSeries for series : " + seriesId + " at " + monthId);
     }
-    GlobUtils.add(budgets.get(0), SeriesBudget.OVER_BURN_AMOUNT, newAmount, repository);
+    GlobUtils.add(budgets.get(0), SeriesBudget.OVERRUN_AMOUNT, newAmount, repository);
   }
 
   private static GlobList getPlannedTransactions(GlobRepository repository, Integer series, Integer month) {

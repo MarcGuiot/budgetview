@@ -1,29 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
-  <column opaque="true" preferredSize="(400,400)">
-
-    <label text="$seriesCreation.title"/>
+  <column  styleClass="dialog" opaque="true" preferredSize="(550,400)" margin="15">
 
     <row>
-      <label text="$seriesCreation.name"/>
+      <label text="$seriesEdition.name"/>
       <textField ref="nameField"/>
     </row>
     <row>
-      <label text="$seriesCreation.category"/>
+      <label text="$seriesEdition.category"/>
       <label ref="singleCategoryLabel"/>
-      <button action="assignCategoryAction" text="$seriesCreation.categorize"/>
-    </row>
-
-    <row>
-      <label text="$seriesCreation.amount"/>
-      <textField ref="amountEditor"/>
-    </row>
-
-    <row>
-      <label text="$seriesCreation.begin"/>
-      <textField ref="beginSeriesDate"/>
-      <label text="$seriesCreation.end"/>
-      <textField ref="endSeriesDate"/>
+      <button action="assignCategoryAction" text="$seriesEdition.categorize"/>
     </row>
 
     <repeat ref="monthRepeat" styleClass="innerBlock" marginLeft="10" marginRight="10" layout="horizontalGrid">
@@ -36,19 +22,25 @@
       </column>
     </repeat>
 
-    <scrollPane weightY="1000">
+    <row>
       <column>
-        <repeat ref="budgetSeries" layout="verticalGrid">
-          <label ref="budgetMonth"/>
-          <textField ref="budgetAmount"/>
-        </repeat>
+        <filler fill="vertical"/>
+        <label text="$seriesEdition.begin"/>
+        <textField ref="beginSeriesDate"/>
+        <label text="$seriesEdition.end"/>
+        <textField ref="endSeriesDate"/>
         <filler fill="vertical"/>
       </column>
-    </scrollPane>
-
-    <row>
-      <button action="ok" text="$ok"/>
-      <button action="cancel" text="$cancel"/>
+      <scrollPane weightY="1000" marginLeft="10" marginRight="10">
+        <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>
+      </scrollPane>
+      <column>
+        <filler fill="vertical"/>
+        <label text="$seriesEdition.amount"/>
+        <textField ref="amountEditor"/>
+        <filler fill="vertical"/>
+      </column>
     </row>
+
   </column>
 </splits>

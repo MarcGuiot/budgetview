@@ -32,14 +32,14 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
     repository.create(Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID),
                       value(Series.PROFILE_TYPE, ProfileType.UNKNOWN.getId()),
                       value(Series.BUDGET_AREA, BudgetArea.OCCASIONAL_EXPENSES.getId()));
-    repository.create(Key.create(Series.TYPE, Series.UNKNOWN_SERIES_ID),
+    repository.create(Key.create(Series.TYPE, Series.UNCATEGORIZED_SERIES_ID),
                       value(Series.PROFILE_TYPE, ProfileType.UNKNOWN.getId()),
                       value(Series.BUDGET_AREA, BudgetArea.OCCASIONAL_EXPENSES.getId()));
   }
 
   protected void createSeries(int seriesId, double amount) {
     repository.create(Key.create(Series.TYPE, seriesId),
-                      value(Series.AMOUNT, amount),
+                      value(Series.INITIAL_AMOUNT, amount),
                       value(Series.PROFILE_TYPE, ProfileType.MONTHLY.getId()),
                       value(Series.BUDGET_AREA, BudgetArea.RECURRING_EXPENSES.getId()));
   }
@@ -67,7 +67,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
   protected void createIncomeSeries() {
     Key seriesKey = Key.create(Series.TYPE, INCOME_SERIES_ID);
     repository.create(seriesKey,
-                      value(Series.AMOUNT, 2000.),
+                      value(Series.INITIAL_AMOUNT, 2000.),
                       value(Series.DAY, 4),
                       value(Series.BUDGET_AREA, BudgetArea.INCOME.getId()),
                       value(Series.LABEL, "salaire"),
@@ -78,7 +78,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
   protected void createEnveloppeSeries() {
     Key key = Key.create(Series.TYPE, ENVELOPPE_SERIES_ID);
     repository.create(key,
-                      value(Series.AMOUNT, -1000.),
+                      value(Series.INITIAL_AMOUNT, -1000.),
                       value(Series.BUDGET_AREA, BudgetArea.EXPENSES_ENVELOPE.getId()),
                       value(Series.DAY, 25),
                       value(Series.LABEL, "course"),
@@ -89,7 +89,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
   protected void createFreeSeries() {
     Key seriesKey = Key.create(Series.TYPE, FREE_SERIES_ID);
     repository.create(seriesKey,
-                      value(Series.AMOUNT, -29.90),
+                      value(Series.INITIAL_AMOUNT, -29.90),
                       value(Series.DAY, 7),
                       value(Series.BUDGET_AREA, BudgetArea.RECURRING_EXPENSES.getId()),
                       value(Series.LABEL, "free telecom"),

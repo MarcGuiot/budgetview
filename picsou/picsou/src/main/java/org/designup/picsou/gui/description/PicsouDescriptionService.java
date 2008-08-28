@@ -88,7 +88,6 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     }
     if (globType.equals(Month.TYPE)) {
       return new AbstractGlobStringifier() {
-
         public String toString(Glob glob, GlobRepository repository) {
           return Month.getLabel(glob.get(Month.ID));
         }

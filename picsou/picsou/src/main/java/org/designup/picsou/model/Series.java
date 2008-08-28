@@ -47,11 +47,7 @@ public class Series {
 
   public static IntegerField DAY;
 
-  public static DoubleField AMOUNT;
-
-  public static DoubleField MIN_AMOUNT;
-
-  public static DoubleField MAX_AMOUNT;
+  public static DoubleField INITIAL_AMOUNT;
 
   @DefaultBoolean(true)
   public static BooleanField JANUARY;
@@ -90,7 +86,7 @@ public class Series {
   public static BooleanField DECEMBER;
 
   public static final Integer OCCASIONAL_SERIES_ID = 0;
-  public static final Integer UNKNOWN_SERIES_ID = 1;
+  public static final Integer UNCATEGORIZED_SERIES_ID = 1;
 
   static {
     GlobTypeLoader.init(Series.class, "series");
@@ -140,9 +136,7 @@ public class Series {
       output.writeInteger(fieldValues.get(Series.LAST_MONTH));
       output.writeInteger(fieldValues.get(Series.OCCURENCES_COUNT));
       output.writeInteger(fieldValues.get(Series.DAY));
-      output.writeDouble(fieldValues.get(Series.AMOUNT));
-      output.writeDouble(fieldValues.get(Series.MIN_AMOUNT));
-      output.writeDouble(fieldValues.get(Series.MAX_AMOUNT));
+      output.writeDouble(fieldValues.get(Series.INITIAL_AMOUNT));
       output.writeBoolean(fieldValues.get(Series.JANUARY));
       output.writeBoolean(fieldValues.get(Series.FEBRUARY));
       output.writeBoolean(fieldValues.get(Series.MARCH));
@@ -175,9 +169,7 @@ public class Series {
       fieldSetter.set(Series.LAST_MONTH, input.readInteger());
       fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
       fieldSetter.set(Series.DAY, input.readInteger());
-      fieldSetter.set(Series.AMOUNT, input.readDouble());
-      fieldSetter.set(Series.MIN_AMOUNT, input.readDouble());
-      fieldSetter.set(Series.MAX_AMOUNT, input.readDouble());
+      fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
       fieldSetter.set(Series.JANUARY, input.readBoolean());
       fieldSetter.set(Series.FEBRUARY, input.readBoolean());
       fieldSetter.set(Series.MARCH, input.readBoolean());

@@ -58,7 +58,7 @@ public class TitleView extends View implements GlobSelectionListener {
 
   private String getMonthDesc() {
     if (months.length == 1) {
-      return Month.getLabel(months[0]);
+      return Month.getLabel(months[0]).toLowerCase();
     }
     return "";
   }

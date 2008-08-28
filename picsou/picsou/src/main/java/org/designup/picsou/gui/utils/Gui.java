@@ -34,6 +34,8 @@ public class Gui {
   private static Font font;
   public static final int DEFAULT_COLUMN_CHAR_WIDTH = 7;
 
+  private static Color selectionBackground;
+
   static {
     Font labelFont = new JLabel().getFont();
 
@@ -48,6 +50,9 @@ public class Gui {
     }
 
     DEFAULT_TABLE_FONT_BOLD = DEFAULT_TABLE_FONT.deriveFont(Font.BOLD);
+
+    JTable table = new JTable();
+    selectionBackground = table.getSelectionBackground();
   }
 
   private Gui() {
@@ -67,6 +72,10 @@ public class Gui {
       font = label.getFont();
     }
     return font;
+  }
+
+  public static Color getDefaultTableSelectionBackground() {
+    return selectionBackground;
   }
 
   public static void configureIconButton(AbstractButton button, String name, Dimension dimension) {

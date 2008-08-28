@@ -1,10 +1,12 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.client.AllocationLearningService;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.categories.CategoryChooserCallback;
 import org.designup.picsou.gui.categories.CategoryChooserDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.designup.picsou.utils.Lang;
@@ -12,17 +14,18 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.editors.GlobNumericEditor;
+import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.views.GlobLabelView;
+import org.globsframework.gui.views.CellPainter;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
@@ -72,7 +75,7 @@ public class SeriesEditionDialog {
     builder.addEditor("beginSeriesDate", Series.FIRST_MONTH);
     builder.addEditor("endSeriesDate", Series.LAST_MONTH);
 
-    builder.addEditor("amountEditor", Series.AMOUNT);
+    builder.addEditor("amountEditor", SeriesBudget.AMOUNT);
 
     builder.addRepeat("monthRepeat", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
                       new RepeatComponentFactory<Integer>() {
@@ -97,36 +100,17 @@ public class SeriesEditionDialog {
                         }
                       });
 
-    builder.addRepeat("budgetSeries", SeriesBudget.TYPE, GlobMatchers.fieldEquals(SeriesBudget.ACTIVE, true),
-                      new GlobFieldComparator(SeriesBudget.MONTH), new RepeatComponentFactory<Glob>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, Glob item) {
-        cellBuilder.add("budgetMonth",
-                        GlobLabelView.init(SeriesBudget.MONTH, localRepository, localDirectory)
-                          .forceSelection(item)
-                          .getComponent());
-        cellBuilder.add("budgetAmount",
-                        GlobNumericEditor.init(SeriesBudget.AMOUNT, localRepository, localDirectory)
-                          .forceSelection(item)
-                          .getComponent());
-      }
-    });
-
-    builder.add("ok", new AbstractAction(Lang.get("ok")) {
-      public void actionPerformed(ActionEvent e) {
-        localRepository.commitChanges(false);
-        dialog.setVisible(false);
-      }
-    });
-
-    builder.add("cancel", new AbstractAction(Lang.get("cancel")) {
-      public void actionPerformed(ActionEvent e) {
-        dialog.setVisible(false);
-      }
-    });
+    builder.addTable("seriesBudget", SeriesBudget.TYPE, new GlobFieldComparator(SeriesBudget.MONTH))
+      .setFilter(GlobMatchers.fieldEquals(SeriesBudget.ACTIVE, true))
+      .setDefaultBackgroundPainter(new TableBackgroundPainter())
+      .addColumn(Lang.get("seriesEdition.year"), new YearStringifier())
+      .addColumn(Lang.get("seriesEdition.month"), new MonthStringifier())
+      .addColumn(SeriesBudget.AMOUNT);
 
     JPanel panel = builder.load();
-    dialog = PicsouDialog.create(parent, Lang.get("seriesCreation.title"));
-    dialog.setContentPane(panel);
+    dialog = PicsouDialog.createWithButtons(Lang.get("seriesEdition.title"), parent, panel,
+                                            new ValidateAction(),
+                                            new CancelAction());
   }
 
   public void show(Glob series) {
@@ -159,7 +143,7 @@ public class SeriesEditionDialog {
       budgetArea = BudgetArea.get(this.currentSeries.get(Series.BUDGET_AREA));
       String name = stringifier.toString(series, localRepository);
       localRepository.update(series.getKey(),
-                             value(Series.AMOUNT, min),
+                             value(Series.INITIAL_AMOUNT, min),
                              value(Series.DAY, days.last()),
                              value(Series.LABEL, name),
                              value(Series.JANUARY, true),
@@ -192,22 +176,22 @@ public class SeriesEditionDialog {
       Glob firstTransaction = transactions.get(0);
       String label = AllocationLearningService.anonymise(firstTransaction.get(Transaction.LABEL));
       currentSeries = localRepository.create(Series.TYPE,
-                                      value(Series.BUDGET_AREA, budgetArea.getId()),
-                                      value(Series.AMOUNT, min),
-                                      value(Series.LABEL, label),
-                                      value(Series.DAY, days.last()),
-                                      value(Series.JANUARY, true),
-                                      value(Series.FEBRUARY, true),
-                                      value(Series.MARCH, true),
-                                      value(Series.APRIL, true),
-                                      value(Series.MAY, true),
-                                      value(Series.JUNE, true),
-                                      value(Series.JULY, true),
-                                      value(Series.AUGUST, true),
-                                      value(Series.SEPTEMBER, true),
-                                      value(Series.OCTOBER, true),
-                                      value(Series.NOVEMBER, true),
-                                      value(Series.DECEMBER, true));
+                                             value(Series.BUDGET_AREA, budgetArea.getId()),
+                                             value(Series.INITIAL_AMOUNT, min),
+                                             value(Series.LABEL, label),
+                                             value(Series.DAY, days.last()),
+                                             value(Series.JANUARY, true),
+                                             value(Series.FEBRUARY, true),
+                                             value(Series.MARCH, true),
+                                             value(Series.APRIL, true),
+                                             value(Series.MAY, true),
+                                             value(Series.JUNE, true),
+                                             value(Series.JULY, true),
+                                             value(Series.AUGUST, true),
+                                             value(Series.SEPTEMBER, true),
+                                             value(Series.OCTOBER, true),
+                                             value(Series.NOVEMBER, true),
+                                             value(Series.DECEMBER, true));
     }
     finally {
       localRepository.completeBulkDispatchingMode();
@@ -264,6 +248,67 @@ public class SeriesEditionDialog {
       public Set<Integer> getPreselectedCategoryIds() {
         return Collections.emptySet();
       }
+    }
+  }
+
+  private class YearStringifier extends AbstractGlobStringifier {
+    public String toString(Glob seriesBudget, GlobRepository repository) {
+      return Integer.toString(Month.toYear(seriesBudget.get(SeriesBudget.MONTH)));
+    }
+  }
+
+  private class MonthStringifier extends AbstractGlobStringifier {
+    public String toString(Glob seriesBudget, GlobRepository repository) {
+      return Month.getMonthLabel(seriesBudget.get(SeriesBudget.MONTH));
+    }
+  }
+
+  private class TableBackgroundPainter implements CellPainter {
+    private TimeService timeService;
+
+    private TableBackgroundPainter() {
+      timeService = localDirectory.get(TimeService.class);
+    }
+
+    public void paint(Graphics g, Glob seriesBudget, int row, int column,
+                      boolean isSelected, boolean hasFocus, int width, int height) {
+      Color color;
+      if (isSelected) {
+        color = Gui.getDefaultTableSelectionBackground();
+      }
+      else {
+        Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
+        if (monthId == timeService.getCurrentMonthId()) {
+          color = Colors.toColor("EEEEFF");
+        }
+        else {
+          boolean even = Month.toYear(monthId) % 2 == 0;
+          color = even ? Color.WHITE : Colors.toColor("EEEEEE");
+        }
+      }
+      g.setColor(color);
+      g.fillRect(0, 0, width, height);
+    }
+  }
+
+  private class ValidateAction extends AbstractAction {
+    public ValidateAction() {
+      super(Lang.get("ok"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      localRepository.commitChanges(false);
+      dialog.setVisible(false);
+    }
+  }
+
+  private class CancelAction extends AbstractAction {
+    public CancelAction() {
+      super(Lang.get("cancel"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      dialog.setVisible(false);
     }
   }
 }

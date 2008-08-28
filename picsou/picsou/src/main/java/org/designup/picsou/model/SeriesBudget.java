@@ -34,7 +34,7 @@ public class SeriesBudget {
   public static DoubleField AMOUNT;
 
   @DefaultDouble(0.0)
-  public static DoubleField OVER_BURN_AMOUNT;
+  public static DoubleField OVERRUN_AMOUNT;
 
   public static IntegerField DAY;
 

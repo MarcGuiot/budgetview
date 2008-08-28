@@ -13,6 +13,7 @@ import org.designup.picsou.model.MasterCategory;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
@@ -39,7 +40,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected MonthSummaryChecker monthSummary;
   protected BudgetViewChecker budgetView;
   private PicsouApplication picsouApplication;
-  private Date currentDate = new Date();
+  private Date currentDate = Dates.parse("2008/08/31");
 
   protected void setUp() throws Exception {
     super.setUp();

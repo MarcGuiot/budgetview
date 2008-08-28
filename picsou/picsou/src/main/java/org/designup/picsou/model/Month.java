@@ -131,7 +131,12 @@ public class Month {
   public static String getLabel(Integer monthId) {
     int month = toMonth(monthId);
     int year = toYear(monthId);
-    return Lang.get("month." + toMonth(month) + ".long").toLowerCase() + " " + year;
+    return Lang.get("month." + toMonth(month) + ".long") + " " + year;
+  }
+
+  public static String getMonthLabel(Integer monthId) {
+    int month = toMonth(monthId);
+    return Lang.get("month." + toMonth(month) + ".long");    
   }
 
   public static String getMediumSizeLetterLabelFromMonth(Integer month) {

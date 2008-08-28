@@ -33,8 +33,8 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testUnassignedTransactionSeriesAndDeleteSeries() throws Exception {
     checker.parse(repository,
-                  "<series id='10' amount='-100.0' budgetAreaName='recurringExpenses' profileTypeName='monthly'/>" +
-                  "<series id='20' amount='-100.0' budgetAreaName='recurringExpenses' profileTypeName='monthly'/>" +
+                  "<series id='10' initialAmount='-100.0' budgetAreaName='recurringExpenses' profileTypeName='monthly'/>" +
+                  "<series id='20' initialAmount='-100.0' budgetAreaName='recurringExpenses' profileTypeName='monthly'/>" +
                   "<month id='200807'/>" +
                   "<transaction id='1' series='10' month='200807' bankMonth='200807' amount='-10.0'/>" +
                   "<transaction id='2' series='20' month='200807' bankMonth='200807' amount='-10.0'/>" +
@@ -54,7 +54,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                                     "");
 
     repository.enterBulkDispatchingMode();
-    repository.update(Key.create(Transaction.TYPE, 2), value(Transaction.SERIES, Series.UNKNOWN_SERIES_ID));
+    repository.update(Key.create(Transaction.TYPE, 2), value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID));
     repository.delete(Key.create(Transaction.TYPE, 3));
     repository.delete(Key.create(Series.TYPE, 20));
     repository.completeBulkDispatchingMode();
@@ -96,7 +96,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testChangingMonths() throws Exception {
     checker.parse(repository,
-                  "<series id='10' amount='100.0'  budgetAreaName='recurringExpenses' july='true' profileTypeName='monthly'/>" +
+                  "<series id='10' initialAmount='100.0'  budgetAreaName='recurringExpenses' july='true' profileTypeName='monthly'/>" +
                   "<month id='200807'/>" +
                   "<month id='200808'/>" +
                   "<transaction id='1' series='10' month='200807' bankMonth='200807' amount='10.0'/>" +
@@ -112,11 +112,11 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testUpdatingPlannedAmount() throws Exception {
     checker.parse(repository,
-                  "<series id='10' amount='100.0' budgetAreaName='recurringExpenses' profileTypeName='monthly'/>" +
+                  "<series id='10' initialAmount='100.0' budgetAreaName='recurringExpenses' profileTypeName='monthly'/>" +
                   "<month id='200807'/>" +
                   "<transaction id='1' series='10' month='200807' bankMonth='200807' amount='10.0'/>");
 
-    repository.update(Key.create(Series.TYPE, 10), value(Series.AMOUNT, 150.0));
+    repository.update(Key.create(Series.TYPE, 10), value(Series.INITIAL_AMOUNT, 150.0));
 
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     " <update type='seriesStat' series='10' month='200807'" +
@@ -128,9 +128,9 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testWithIncomeAndReccuring() throws Exception {
     checker.parse(repository,
-                  "<series id='10' amount='-100.0' budgetAreaName='recurringExpenses' profileTypeName='monthly'/>" +
-                  "<series id='20' amount='1000.0' budgetAreaName='income' profileTypeName='monthly'/>" +
-                  "<series id='30' amount='-500.0' budgetAreaName='expensesEnvelope' profileTypeName='monthly'/>" +
+                  "<series id='10' initialAmount='-100.0' budgetAreaName='recurringExpenses' profileTypeName='monthly'/>" +
+                  "<series id='20' initialAmount='1000.0' budgetAreaName='income' profileTypeName='monthly'/>" +
+                  "<series id='30' initialAmount='-500.0' budgetAreaName='expensesEnvelope' profileTypeName='monthly'/>" +
                   "<month id='200807'/>" +
                   "<transaction id='1' series='10' month='200807' bankMonth='200807' amount='-90.0'/>" +
                   "<transaction id='2' series='30' month='200807' bankMonth='200807' amount='200.0'/>" +

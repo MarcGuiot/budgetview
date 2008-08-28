@@ -125,22 +125,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.occasional.checkTotalAmounts(0, -3540 + 95 + 29);
   }
 
-//  public void testEditingASeriesWithNoTransactions() throws Exception {
-//    OfxBuilder.init(this)
-//      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
-//      .load();
-//
-//    timeline.selectMonth("2008/07");
-//    views.selectBudget();
-//
-//    SeriesEditionDialogChecker editionDialog = budgetView.recurring.editSeries("Internet");
-//    editionDialog.checkName("Internet");
-//    editionDialog.setName("Free");
-//    editionDialog.validate();
-//
-//    budgetView.recurring.checkSeries("Free", 0.00, 0.00);
-//  }
-
   public void testEditingASeriesWithTransactions() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")

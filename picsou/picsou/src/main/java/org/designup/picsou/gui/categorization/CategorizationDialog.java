@@ -266,7 +266,7 @@ public class CategorizationDialog {
 
   private void updateAutoHide() {
     if (autoHideCheckBox.isSelected()) {
-      transactionTable.setFilter(GlobMatchers.fieldEquals(Transaction.SERIES, Series.UNKNOWN_SERIES_ID));
+      transactionTable.setFilter(GlobMatchers.fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID));
     }
     else {
       transactionTable.setFilter(GlobMatchers.ALL);

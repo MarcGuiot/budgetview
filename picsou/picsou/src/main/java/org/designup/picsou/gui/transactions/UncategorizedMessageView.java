@@ -55,7 +55,7 @@ public class UncategorizedMessageView extends View implements ChangeSetListener 
 
   private void update() {
     uncategorizedTransactions =
-      repository.getAll(Transaction.TYPE, or(fieldEquals(Transaction.SERIES, Series.UNKNOWN_SERIES_ID),
+      repository.getAll(Transaction.TYPE, or(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
                                              isNull(Transaction.CATEGORY)));
     final int count = uncategorizedTransactions.size();
     textArea.setVisible(count > 0);

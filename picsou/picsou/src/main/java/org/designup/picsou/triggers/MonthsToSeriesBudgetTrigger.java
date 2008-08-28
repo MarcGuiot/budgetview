@@ -26,7 +26,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
                                           value(SeriesBudget.SERIES, series.get(Series.ID)),
                                           value(SeriesBudget.DAY, series.get(Series.DAY)),
                                           value(SeriesBudget.MONTH, monthId));
-          Double seriesAmount = series.get(Series.AMOUNT);
+          Double seriesAmount = series.get(Series.INITIAL_AMOUNT);
           if (seriesAmount != null) {
             repository.update(budget.getKey(), SeriesBudget.AMOUNT, seriesAmount);
           }
