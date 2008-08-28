@@ -4,7 +4,6 @@ import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.Table;
-import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -30,6 +29,19 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public void checkType(String expectedType) {
   }
 
+
+  public SeriesEditionDialogChecker checkAmount(String displayedValue) {
+    assertThat(dialog.getInputTextBox("amountEditor").textEquals(displayedValue));
+    return this;
+  }
+
+
+  public SeriesEditionDialogChecker setAmount(String value) {
+    dialog.getInputTextBox("amountEditor").setText(value);
+    return this;
+  }
+
+
   public SeriesEditionDialogChecker setCategory(MasterCategory category) {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
     CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
@@ -43,9 +55,13 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMonthSelected(String month) {
-    int index = table.getRowIndex(0, month);
+  public SeriesEditionDialogChecker checkMonthSelected(int index) {
     assertThat(table.rowIsSelected(index));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkMonthsSelected(int... rows) {
+    assertThat(table.rowsAreSelected(rows));
     return this;
   }
 

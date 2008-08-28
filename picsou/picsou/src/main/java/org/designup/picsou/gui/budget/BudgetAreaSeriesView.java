@@ -6,7 +6,10 @@ import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.views.GlobLabelView;
@@ -23,12 +26,15 @@ import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.Set;
+import java.util.Collections;
 
 public class BudgetAreaSeriesView extends View {
   private String name;
   private BudgetArea budgetArea;
   private GlobMatcher totalMatcher;
   private SeriesEditionDialog seriesEditionDialog;
+  private Set<Integer> selectedMonthIds = Collections.emptySet();
 
   protected BudgetAreaSeriesView(String name, BudgetArea budgetArea, GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -36,6 +42,11 @@ public class BudgetAreaSeriesView extends View {
     this.budgetArea = budgetArea;
     this.totalMatcher = GlobMatchers.linkTargetFieldEquals(SeriesStat.SERIES, Series.BUDGET_AREA, budgetArea.getId());
     seriesEditionDialog = new SeriesEditionDialog(directory.get(JFrame.class), repository, directory);
+    selectionService.addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
+      }
+    }, Month.TYPE);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -102,7 +113,7 @@ public class BudgetAreaSeriesView extends View {
 
   private class EditSeriesFunctor implements GlobListFunctor {
     public void run(GlobList list, GlobRepository repository) {
-      seriesEditionDialog.show(list.getFirst());
+      seriesEditionDialog.show(list.getFirst(), selectedMonthIds);
     }
   }
 }

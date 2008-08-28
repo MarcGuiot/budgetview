@@ -3,6 +3,7 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.SeriesBudget;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Key;
 
@@ -118,12 +119,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
     repository.update(Key.create(Series.TYPE, 10), value(Series.INITIAL_AMOUNT, 150.0));
 
-    listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    " <update type='seriesStat' series='10' month='200807'" +
-                                    "         plannedAmount='150.0' _plannedAmount='100.0'/>" +
-                                    " <update type='seriesStat' series='0' month='200807'" +
-                                    "         plannedAmount='-150.0' _plannedAmount='-100.0'/>" +
-                                    "");
+    listener.assertNoChanges(SeriesBudget.TYPE);
   }
 
   public void testWithIncomeAndReccuring() throws Exception {

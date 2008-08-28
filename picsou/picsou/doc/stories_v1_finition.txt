@@ -10,16 +10,14 @@ Import
 
 BalanceGraph : couleur si balance negative
 BudgetView : occasional en negatif ?
-dispo occasional = ??? - reverser les surplus ou depassements des autres budgetarea
-blocks budgetview : splitpane...
-notes dans categorisation
+blocks budgetview : splitpane invisibles
 
 
 CategorizationDialog
 --------------------
 - afficher le nombre de transactions restantes
 - split de transaction
-- saisie notes
+- saisie de notes
 
 
 TimeView
@@ -59,12 +57,6 @@ Misc
 * CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
 
 
-Bugs graphiques
----------------
-* CategoryView: desactiver tri
-* CategoryView: creation d'une sous-categorie ignoree au open suivant
-
-
 Details transactions
 --------------------
 * Min/Max/Moy sur une ligne
@@ -83,3 +75,8 @@ Misc
 Fenetre import
 --------------
 * En mode "dialog", revoir hyperlien "annuler" et bouton "ignorer fichier" => introduire bouton "cancel" ?
+
+
+Budget view
+-----------
+* Panneau pour montrer le detail du calcul du disponible en occasional
