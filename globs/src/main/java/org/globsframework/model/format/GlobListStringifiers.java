@@ -26,6 +26,17 @@ public class GlobListStringifiers {
     };
   }
 
+  public static GlobListStringifier valueForEmpty(final String text, final GlobListStringifier stringifier) {
+    return new GlobListStringifier() {
+      public String toString(GlobList list, GlobRepository repository) {
+        if (list.isEmpty()) {
+          return text;
+        }
+        return stringifier.toString(list, repository);
+      }
+    };
+  }
+
   public static GlobListStringifier sum(final DoubleField field, final DecimalFormat format, boolean invert) {
     final int multiplier = invert ? -1 : 1;
     return new GlobListStringifier() {
