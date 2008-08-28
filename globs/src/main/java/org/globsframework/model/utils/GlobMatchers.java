@@ -7,7 +7,6 @@ import org.globsframework.metamodel.links.FieldMappingFunctor;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.utils.Ref;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 
@@ -129,20 +128,42 @@ public class GlobMatchers {
     if (target == null) {
       return NONE;
     }
+    final List<Field> sourceFields = new ArrayList<Field>();
+    final List<Field> targetFields = new ArrayList<Field>();
+    link.apply(new FieldMappingFunctor() {
+      public void process(Field sourceField, Field targetField) {
+        sourceFields.add(sourceField);
+        targetFields.add(targetField);
+      }
+    });
+    final Object targetValue[] = new Object[sourceFields.size()];
+    int i = 0;
+    for (Field field : targetFields) {
+      targetValue[i] = target.getValue(field);
+      i++;
+    }
+    final Field sourceFielsArray[] = sourceFields.toArray(new Field[sourceFields.size()]);
     return new GlobMatcher() {
       public boolean matches(final Glob item, GlobRepository repository) {
-        final Ref<Boolean> result = new Ref<Boolean>(Boolean.TRUE);
-        link.apply(new FieldMappingFunctor() {
-          public void process(Field sourceField, Field targetField) {
-            if (!Utils.equal(item.getValue(sourceField), target.getValue(targetField))) {
-              result.set(Boolean.FALSE);
-            }
+        for (int j = 0; j < sourceFielsArray.length; j++) {
+          Field field = sourceFielsArray[j];
+          if (!Utils.equal(targetValue[j], item.getValue(field))) {
+            return false;
           }
-        });
-        return result.get();
+        }
+        return true;
       }
     };
   }
+
+  public static GlobMatcher linkedTo(Glob target, final LinkField link) {
+    if (target == null) {
+      return NONE;
+    }
+    final Integer targetvalue = target.get(link.getTargetKeyField());
+    return fieldEquals(link, targetvalue);
+  }
+
 
   public static GlobMatcher linkTargetFieldEquals(final Link link, final Field targetField,
                                                   final Object targetFieldValue) {
@@ -260,7 +281,8 @@ public class GlobMatchers {
   public static GlobMatcher fieldIn(final IntegerField field, final Set<Integer> values) {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
-        return values.contains(item.get(field));
+        Integer value = item.get(field);
+        return value != null && values.contains(value);
       }
     };
   }

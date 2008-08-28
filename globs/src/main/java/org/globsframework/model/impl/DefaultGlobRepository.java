@@ -506,18 +506,24 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   public void add(GlobList globs) {
     for (Glob glob : globs) {
-      Key key = glob.getKey();
-      checkKeyDoesNotExist(key);
-      this.globs.put(key.getGlobType(), key, glob);
-      IndexTables indexTables = indexManager.getAssociatedTable(key.getGlobType());
-      if (indexTables != null) {
-        indexTables.add(glob);
-      }
+      add(glob);
+    }
+  }
+
+  public void add(Glob glob) {
+    Key key = glob.getKey();
+    checkKeyDoesNotExist(key);
+    this.globs.put(key.getGlobType(), key, glob);
+    IndexTables indexTables = indexManager.getAssociatedTable(key.getGlobType());
+    if (indexTables != null) {
+      indexTables.add(glob);
     }
   }
 
   public void add(Glob... globs) {
-    add(new GlobList(globs));
+    for (Glob glob : globs) {
+      add(glob);
+    }
   }
 
   public void addChangeListener(ChangeSetListener listener) {

@@ -2,6 +2,8 @@ package org.globsframework.model.utils;
 
 import junit.framework.TestCase;
 import org.globsframework.metamodel.DummyObject;
+import org.globsframework.metamodel.DummyObjectWithCompositeKey;
+import org.globsframework.metamodel.DummyObjectWithLinks;
 import org.globsframework.model.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.TestUtils;
@@ -82,4 +84,48 @@ public class GlobMatchersTest extends TestCase {
   public void testGreaterOrEqual() throws Exception {
     check(GlobMatchers.fieldGreaterOrEqual(DummyObject.ID, 2), c, d);
   }
+
+  public void testLink() throws Exception {
+    GlobChecker checker = new GlobChecker();
+    repository = checker.parse(
+      "<dummyObjectWithLinks id='0' targetId1='1' targetId2='2'/>" +
+      "<dummyObjectWithLinks id='1' targetId1='1' targetId2='1'/>" +
+      "<dummyObjectWithLinks id='2' targetId1='1' targetId2='2'/>" +
+      "<dummyObjectWithCompositeKey id1='1' id2='1'/>" +
+      "<dummyObjectWithCompositeKey id1='1' id2='2'/>" +
+      ""
+    );
+    Glob a = repository.get(Key.create(DummyObjectWithLinks.TYPE, 0));
+    Glob b = repository.get(Key.create(DummyObjectWithLinks.TYPE, 1));
+    Glob c = repository.get(Key.create(DummyObjectWithLinks.TYPE, 2));
+    list.clear();
+    list.add(a);
+    list.add(b);
+    list.add(c);
+    check(GlobMatchers.linkedTo(repository.get(Key.create(DummyObjectWithCompositeKey.ID1, 1,
+                                                          DummyObjectWithCompositeKey.ID2, 2)),
+                                DummyObjectWithLinks.COMPOSITE_LINK), a, c);
+  }
+
+  public void testLinkField() throws Exception {
+    GlobChecker checker = new GlobChecker();
+    repository = checker.parse(
+      "<dummyObject id='0' link='0'/>" +
+      "<dummyObject id='1' link='0'/>" +
+      "<dummyObject id='2' link='0'/>" +
+      "<dummyObject id='3' link='2'/>" +
+      "<dummyObject id='4' link='2'/>" +
+      ""
+    );
+    a = repository.get(Key.create(DummyObject.TYPE, 0));
+    b = repository.get(Key.create(DummyObject.TYPE, 1));
+    c = repository.get(Key.create(DummyObject.TYPE, 2));
+    d = repository.get(Key.create(DummyObject.TYPE, 3));
+
+    Glob e = repository.get(Key.create(DummyObject.TYPE, 4));
+    list = new GlobList(a, b, c, d, e);
+    check(GlobMatchers.linkedTo(a, DummyObject.LINK), a, b, c);
+    check(GlobMatchers.linkedTo(c, DummyObject.LINK), d, e);
+  }
+
 }

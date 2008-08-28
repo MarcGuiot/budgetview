@@ -72,6 +72,10 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     return this;
   }
 
+  public int getSize() {
+    return model.getSize();
+  }
+
   public interface GlobSelectionHandler {
     void processSelection(GlobList selection);
   }

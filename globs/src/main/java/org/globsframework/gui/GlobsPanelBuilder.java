@@ -47,8 +47,8 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return store(GlobTableView.init(type, repository, comparator, directory).setName(name));
   }
 
-  public GlobListView addList(GlobType type) {
-    return store(GlobListView.init(type, repository, directory));
+  public GlobListView addList(String name, GlobType type) {
+    return store(GlobListView.init(type, repository, directory).setName(name));
   }
 
   public GlobComboView addCombo(GlobType type) {

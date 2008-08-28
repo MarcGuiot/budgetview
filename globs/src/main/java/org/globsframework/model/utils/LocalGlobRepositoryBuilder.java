@@ -51,7 +51,7 @@ public class LocalGlobRepositoryBuilder {
     return this;
   }
 
-  private final void doCopy(Glob glob) {
+  private void doCopy(Glob glob) {
     temporary.add(glob.duplicate());
   }
 

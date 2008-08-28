@@ -6,7 +6,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeUtils;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
@@ -60,8 +59,8 @@ public class CreateGlobAction extends AbstractAction {
   /**
    * Override this to change the way the object is created.
    */
-  protected Glob doCreate(GlobType type, StringField namingField, String name, GlobRepository repository) {
-    return repository.create(type, value(namingField, name));
+  protected void doCreate(GlobType type, StringField namingField, String name, GlobRepository repository) {
+    repository.create(type, value(namingField, name));
   }
 
   /**

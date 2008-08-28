@@ -123,4 +123,8 @@ public class RenameGlobAction extends AbstractAction implements GlobSelectionLis
   protected String getNameAlreadyExistsMessage(String name) {
     return "'" + name + "' already exists";
   }
+
+  public Glob getCurrentObject() {
+    return currentObject;
+  }
 }

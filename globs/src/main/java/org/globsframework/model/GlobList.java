@@ -218,10 +218,16 @@ public class GlobList extends ArrayList<Glob> {
   }
 
   public Glob getFirst() {
+    if (size() == 0) {
+      return null;
+    }
     return get(0);
   }
 
   public Glob getLast() {
+    if (size() == 0) {
+      return null;
+    }
     return get(size() - 1);
   }
 
