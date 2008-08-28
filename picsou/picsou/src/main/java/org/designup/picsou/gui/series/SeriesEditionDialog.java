@@ -41,11 +41,11 @@ public class SeriesEditionDialog {
   private PicsouDialog dialog;
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
-  private Glob series;
   private SelectionService selectionService;
   private BudgetArea budgetArea;
   private GlobStringifier stringifier;
   private GlobRepository repository;
+  private Glob currentSeries;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -91,7 +91,7 @@ public class SeriesEditionDialog {
                           cellBuilder.add("monthSelected", checkbox);
                           checkbox.addItemListener(new ItemListener() {
                             public void itemStateChanged(ItemEvent e) {
-                              localRepository.update(series.getKey(), Series.getField(item), e.getStateChange() == ItemEvent.SELECTED);
+                              localRepository.update(currentSeries.getKey(), Series.getField(item), e.getStateChange() == ItemEvent.SELECTED);
                             }
                           });
                         }
@@ -129,7 +129,7 @@ public class SeriesEditionDialog {
     dialog.setContentPane(panel);
   }
 
-  public void show(Glob series, GlobList transactions) {
+  public void show(Glob series) {
     try {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
@@ -137,10 +137,26 @@ public class SeriesEditionDialog {
                                               series.get(Series.ID)).getGlobs();
       globs.add(series);
       localRepository.reset(globs, SeriesBudget.TYPE, Series.TYPE);
-      this.series = localRepository.get(series.getKey());
+      this.currentSeries = localRepository.get(series.getKey());
+    }
+    finally {
+      localRepository.completeBulkDispatchingMode();
+    }
+    doShow();
+  }
+
+  public void showInit(Glob series, GlobList transactions) {
+    try {
+      localRepository.enterBulkDispatchingMode();
+      localRepository.rollback();
+      GlobList globs = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
+                                              series.get(Series.ID)).getGlobs();
+      globs.add(series);
+      localRepository.reset(globs, SeriesBudget.TYPE, Series.TYPE);
+      this.currentSeries = localRepository.get(series.getKey());
       Double min = computeMinAmountPerMonth(transactions);
       SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
-      budgetArea = BudgetArea.get(this.series.get(Series.BUDGET_AREA));
+      budgetArea = BudgetArea.get(this.currentSeries.get(Series.BUDGET_AREA));
       String name = stringifier.toString(series, localRepository);
       localRepository.update(series.getKey(),
                              value(Series.AMOUNT, min),
@@ -158,32 +174,15 @@ public class SeriesEditionDialog {
                              value(Series.OCTOBER, true),
                              value(Series.NOVEMBER, true),
                              value(Series.DECEMBER, true));
-      selectionService.select(localRepository.get(series.getKey()));
+      this.currentSeries = localRepository.get(series.getKey());
     }
     finally {
       localRepository.completeBulkDispatchingMode();
     }
-    dialog.pack();
-    GuiUtils.showCentered(dialog);
+    doShow();
   }
 
-  private Double computeMinAmountPerMonth(GlobList transactions) {
-    Map<Integer, Double> amounts = new HashMap<Integer, Double>();
-    Double min = 0.0;
-    for (Glob transaction : transactions) {
-      Integer month = transaction.get(Transaction.MONTH);
-      Double value = amounts.get(month);
-      Double amount = transaction.get(Transaction.AMOUNT);
-      min = (value == null ? 0.0 : value) + (amount == null ? 0.0 : amount);
-      amounts.put(month, min);
-    }
-    for (Double value : amounts.values()) {
-      min = Math.min(min, value);
-    }
-    return min;
-  }
-
-  public void show(GlobList transactions, BudgetArea budget) {
+  public void showNewSeries(GlobList transactions, BudgetArea budget) {
     try {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
@@ -192,7 +191,7 @@ public class SeriesEditionDialog {
       SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
       Glob firstTransaction = transactions.get(0);
       String label = AllocationLearningService.anonymise(firstTransaction.get(Transaction.LABEL));
-      series = localRepository.create(Series.TYPE,
+      currentSeries = localRepository.create(Series.TYPE,
                                       value(Series.BUDGET_AREA, budgetArea.getId()),
                                       value(Series.AMOUNT, min),
                                       value(Series.LABEL, label),
@@ -213,9 +212,29 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeBulkDispatchingMode();
     }
-    selectionService.select(series);
+    doShow();
+  }
+
+  private void doShow() {
+    selectionService.select(currentSeries);
     dialog.pack();
     GuiUtils.showCentered(dialog);
+  }
+
+  private Double computeMinAmountPerMonth(GlobList transactions) {
+    Map<Integer, Double> amounts = new HashMap<Integer, Double>();
+    Double min = 0.0;
+    for (Glob transaction : transactions) {
+      Integer month = transaction.get(Transaction.MONTH);
+      Double value = amounts.get(month);
+      Double amount = transaction.get(Transaction.AMOUNT);
+      min = (value == null ? 0.0 : value) + (amount == null ? 0.0 : amount);
+      amounts.put(month, min);
+    }
+    for (Double value : amounts.values()) {
+      min = Math.min(min, value);
+    }
+    return min;
   }
 
   private class AssignCategoryAction extends AbstractAction {
@@ -231,12 +250,12 @@ public class SeriesEditionDialog {
     private class SeriesCategoryChooserCallback implements CategoryChooserCallback {
       public void processSelection(GlobList categories) {
         for (Glob category : categories) {
-          localRepository.setTarget(series.getKey(), Series.DEFAULT_CATEGORY, category.getKey());
+          localRepository.setTarget(currentSeries.getKey(), Series.DEFAULT_CATEGORY, category.getKey());
           if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
             localRepository.delete(localRepository.getAll(SeriesToCategory.TYPE,
-                                                          GlobMatchers.linkedTo(series, SeriesToCategory.SERIES)));
+                                                          GlobMatchers.linkedTo(currentSeries, SeriesToCategory.SERIES)));
             localRepository.create(SeriesToCategory.TYPE,
-                                   value(SeriesToCategory.SERIES, series.get(Series.ID)),
+                                   value(SeriesToCategory.SERIES, currentSeries.get(Series.ID)),
                                    value(SeriesToCategory.CATEGORY, category.get(Category.ID)));
           }
         }

@@ -7,7 +7,6 @@ CategorizationDialog
 * Supprimer series initiales (xml) + afficher message creation
 * Message special quand il n'y a pas de series.
 
-
 SeriesCreationDialog (edition)
 * Afficher nom categorie
 * Forcer la selection d'une categorie au moins
@@ -38,3 +37,13 @@ TransactionView
 * Filtrage par serie
 * Filtrage par budgetArea
 * TransactionDetail : hyperlien pour editer la serie
+
+Import
+* Selectionner automatiquement la banque par defaut
+
+BalanceGraph : couleur si balance negative
+BudgetView : occasional en negatif ?
+BudgetView / occasional : "prevu" ==> "libre" ou "disponible"
+dispo occasional = ??? - reverser les surplus ou depassements des autres budgetarea
+blocks budgetview : splitpane...
+notes dans categorisation

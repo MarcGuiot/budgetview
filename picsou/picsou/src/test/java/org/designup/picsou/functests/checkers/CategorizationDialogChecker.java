@@ -96,7 +96,7 @@ public class CategorizationDialogChecker extends DataChecker {
         panel.getToggleButton(name).triggerClick())
         .process(new WindowHandler() {
           public Trigger process(Window window) throws Exception {
-            SeriesCreationDialogChecker dialogChecker = new SeriesCreationDialogChecker(window);
+            SeriesEditionDialogChecker dialogChecker = new SeriesEditionDialogChecker(window);
             return dialogChecker.doValidate();
           }
         }).run();
@@ -141,7 +141,7 @@ public class CategorizationDialogChecker extends DataChecker {
         panel.getToggleButton(name).triggerClick())
         .process(new WindowHandler() {
           public Trigger process(Window window) throws Exception {
-            SeriesCreationDialogChecker dialogChecker = new SeriesCreationDialogChecker(window);
+            SeriesEditionDialogChecker dialogChecker = new SeriesEditionDialogChecker(window);
             return dialogChecker.doValidate();
           }
         }).run();
@@ -198,7 +198,7 @@ public class CategorizationDialogChecker extends DataChecker {
         panel.getToggleButton(envelopeName + ":" + category.getName()).triggerClick())
         .process(new WindowHandler() {
           public Trigger process(Window window) throws Exception {
-            SeriesCreationDialogChecker dialogChecker = new SeriesCreationDialogChecker(window);
+            SeriesEditionDialogChecker dialogChecker = new SeriesEditionDialogChecker(window);
             return dialogChecker.doValidate();
           }
         }).run();
@@ -309,9 +309,9 @@ public class CategorizationDialogChecker extends DataChecker {
     Assert.assertNotNull(dialog.getTextBox(text));
   }
 
-  public SeriesCreationDialogChecker createSeries() {
+  public SeriesEditionDialogChecker createSeries() {
     final Window creationDialog = WindowInterceptor.getModalDialog(dialog.getButton("New series").triggerClick());
-    return new SeriesCreationDialogChecker(creationDialog);
+    return new SeriesEditionDialogChecker(creationDialog);
   }
 
   public CategorizationDialogChecker checkTable(Object[][] content) {

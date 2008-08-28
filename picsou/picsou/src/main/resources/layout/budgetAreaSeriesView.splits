@@ -8,6 +8,11 @@
     <style selector="#budgetAreaSeriesView .amount" font="-,plain,11" anchor="right"/>
     <style selector="#budgetAreaSeriesView .detailGauge" anchor="center" preferredSize="(40,30)"
            marginLeft="5" marginRight="5"/>
+
+    <ui name="seriesHyperlink" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="false"/>
+    <style selector="button.seriesLink" ui="seriesHyperlink" fill="none" anchor="left"
+           foreground="budgetArea.series.link"/>
   </styles>
 
   <column name="budgetAreaSeriesView">
@@ -27,7 +32,7 @@
         <scrollPane>
           <column>
             <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid" marginLeft="10" marginRight="10">
-              <label ref="seriesName" styleClass="item"/>
+              <button ref="seriesName" styleClass="seriesLink"/>
               <label ref="observedSeriesAmount" styleClass="amount" marginRight="6"/>
               <component ref="gauge" styleClass="detailGauge"/>
               <label ref="plannedSeriesAmount" styleClass="amount"/>

@@ -229,7 +229,7 @@ public class CategorizationDialog {
 
     public void actionPerformed(ActionEvent e) {
       SeriesEditionDialog editionDialog = new SeriesEditionDialog(dialog, localRepository, localDirectory);
-      editionDialog.show(currentTransactions, budgetArea);
+      editionDialog.showNewSeries(currentTransactions, budgetArea);
     }
   }
 

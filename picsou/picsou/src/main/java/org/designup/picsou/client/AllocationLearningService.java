@@ -100,7 +100,7 @@ public class AllocationLearningService {
     }
     GlobList all = repository.findByIndex(LabelToCategory.LABEL_INDEX, label);
     UpdateLabelToCategory toCategory = new UpdateLabelToCategory(label, categoryId, repository);
-    all.safeApply(toCategory);
+    all.safeApply(toCategory, repository);
     if (!toCategory.isManaged()) {
       repository.create(LabelToCategory.TYPE,
                         value(LabelToCategory.CATEGORY, categoryId),
@@ -200,9 +200,9 @@ public class AllocationLearningService {
       this.repository = repository;
     }
 
-    public void run(Glob glob) throws Exception {
+    public void run(Glob glob, GlobRepository repository) throws Exception {
       if (glob.get(LabelToCategory.LABEL).equals(label) && glob.get(LabelToCategory.CATEGORY).equals(categoryId)) {
-        repository.update(glob.getKey(), LabelToCategory.COUNT, glob.get(LabelToCategory.COUNT) + 1);
+        this.repository.update(glob.getKey(), LabelToCategory.COUNT, glob.get(LabelToCategory.COUNT) + 1);
         managed = true;
       }
     }

@@ -28,15 +28,15 @@
       <button ref="fileButton" text="$browse" anchor="west"/>
     </row>
 
+    <label ref="message" margin="5" horizontalAlignment="center" foreground="#FF0000"
+           fill="horizontal" anchor="center"/>
+
     <column styleClass="dialogBlock" marginTop="20">
       <htmlEditorPane text="$import.step1.header" margin="10"/>
       <comboBox ref="bankCombo" marginLeft="30" marginRight="30" marginBottom="10"/>
       <button name="downloadUrl" styleClass="hyperlink" action="downloadUrl"
               fill="none" anchor="center" margin="10" marginTop="0"/>
     </column>
-
-    <label ref="message" margin="5" horizontalAlignment="center" foreground="#FF0000"
-           fill="horizontal" anchor="center"/>
 
     <filler fill="vertical"/>
     

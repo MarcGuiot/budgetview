@@ -1,7 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
-import org.designup.picsou.functests.checkers.SeriesCreationDialogChecker;
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -25,7 +25,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkLabel("WorldCo/june");
     categorization.selectIncome();
 
-    SeriesCreationDialogChecker creationSeries = categorization.createSeries();
+    SeriesEditionDialogChecker creationSeries = categorization.createSeries();
     creationSeries.setName("Prime");
     creationSeries.checkType("Income");
     creationSeries.setCategory(MasterCategory.INCOME);
@@ -52,11 +52,11 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("Telefoot+");
 
     dialog.selectRecurring();
-    SeriesCreationDialogChecker creationDialog = dialog.createSeries();
-    creationDialog.setName("Culture");
-    creationDialog.checkType("Recurring");
-    creationDialog.setCategory(MasterCategory.EDUCATION);
-    creationDialog.validate();
+    SeriesEditionDialogChecker editionDialog = dialog.createSeries();
+    editionDialog.setName("Culture");
+    editionDialog.checkType("Recurring");
+    editionDialog.setCategory(MasterCategory.EDUCATION);
+    editionDialog.validate();
 
     dialog.checkContainsRecurringSeries("Internet", "Culture");
     dialog.validate();
@@ -75,11 +75,11 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("Forfait Kro");
 
     dialog.selectEnvelopes();
-    SeriesCreationDialogChecker creationDialog = dialog.createSeries();
-    creationDialog.setName("Regime");
-    creationDialog.checkType("Envelope");
-    creationDialog.setCategory(MasterCategory.FOOD);
-    creationDialog.validate();
+    SeriesEditionDialogChecker editionDialog = dialog.createSeries();
+    editionDialog.setName("Regime");
+    editionDialog.checkType("Envelope");
+    editionDialog.setCategory(MasterCategory.FOOD);
+    editionDialog.validate();
 
     dialog.checkContainsEnvelope("Regime");
     dialog.validate();
@@ -107,12 +107,12 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.checkSelectedTableRows(0,1,2);
 
     dialog.selectEnvelopes();
-    SeriesCreationDialogChecker creationDialog = dialog.createSeries();
-    creationDialog.setName("Regime");
-    creationDialog.checkType("Envelope");
-    creationDialog.setCategory(MasterCategory.FOOD);
+    SeriesEditionDialogChecker editionDialog = dialog.createSeries();
+    editionDialog.setName("Regime");
+    editionDialog.checkType("Envelope");
+    editionDialog.setCategory(MasterCategory.FOOD);
 
-    creationDialog.validate();
+    editionDialog.validate();
 
     dialog.checkTable(new Object[][]{
       {"28/06/2008", "Palette Leffe", -150.00},
@@ -148,11 +148,11 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("JaimeLeFoot.com");
 
     dialog.selectRecurring();
-    SeriesCreationDialogChecker creationDialog = dialog.createSeries();
-    creationDialog.setName("Culture");
-    creationDialog.checkType("Recurring");
-    creationDialog.setCategory(MasterCategory.EDUCATION);
-    creationDialog.validate();
+    SeriesEditionDialogChecker editionDialog = dialog.createSeries();
+    editionDialog.setName("Culture");
+    editionDialog.checkType("Recurring");
+    editionDialog.setCategory(MasterCategory.EDUCATION);
+    editionDialog.validate();
 
     callback.process(dialog);
 

@@ -6,11 +6,15 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class SeriesCreationDialogChecker extends DataChecker {
+public class SeriesEditionDialogChecker extends DataChecker {
   private Window dialog;
 
-  public SeriesCreationDialogChecker(Window dialog) {
+  public SeriesEditionDialogChecker(Window dialog) {
     this.dialog = dialog;
+  }
+
+  public void checkName(String seriesName) {
+    UISpecAssert.assertThat(dialog.getInputTextBox("nameField").textEquals(seriesName));
   }
 
   public void setName(String seriesName) {
@@ -33,5 +37,9 @@ public class SeriesCreationDialogChecker extends DataChecker {
 
   public Trigger doValidate() {
     return dialog.getButton("OK").triggerClick();
+  }
+
+  public void cancel() {
+    dialog.getButton("Cancel").click();
   }
 }

@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -69,7 +70,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("01/08/2008", TransactionType.PLANNED, "Salary", "", 3540.00, "Salary")
       .check();
 
-
     budgetView.recurring.checkTitle("Recurring expenses");
     budgetView.recurring.checkTotalAmounts(0.0, 84.0);
     budgetView.recurring.checkSeries("Internet", 0.0, 29.0);
@@ -84,7 +84,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 0.0, 3540.0);
     budgetView.income.checkSeries("Exceptional Income", 0.0, 0.0);
   }
-
 
   public void testImportWithUserDateAndBankDateAtNextMonth() throws Exception {
     OfxBuilder.init(this)
@@ -126,8 +125,42 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.occasional.checkTotalAmounts(0, -3540 + 95 + 29);
   }
 
-  public void testUnusedSeriesAreHidden() throws Exception {
-    System.out.println("BudgetViewTest.testUnusedSeriesAreHidden: TBD");
+//  public void testEditingASeriesWithNoTransactions() throws Exception {
+//    OfxBuilder.init(this)
+//      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
+//      .load();
+//
+//    timeline.selectMonth("2008/07");
+//    views.selectBudget();
+//
+//    SeriesEditionDialogChecker editionDialog = budgetView.recurring.editSeries("Internet");
+//    editionDialog.checkName("Internet");
+//    editionDialog.setName("Free");
+//    editionDialog.validate();
+//
+//    budgetView.recurring.checkSeries("Free", 0.00, 0.00);
+//  }
+
+  public void testEditingASeriesWithTransactions() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
+      .load();
+
+    timeline.selectMonth("2008/07");
+    views.selectData();
+    transactions.initContent()
+      .add("29/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
+      .check();
+    transactions.setRecurring("Free Telecom", "Internet", true);
+
+    views.selectBudget();
+
+    SeriesEditionDialogChecker editionDialog = budgetView.recurring.editSeries("Internet");
+    editionDialog.checkName("Internet");
+    editionDialog.setName("Free");
+    editionDialog.validate();
+
+    budgetView.recurring.checkSeries("Free", 29.00, 29.00);
   }
 
   public void testSeveralMonths() throws Exception {

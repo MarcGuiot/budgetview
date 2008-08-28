@@ -17,6 +17,7 @@ Propositions
 ------------
 
   Ant
+
   CashDrive
   CashPlanner
   CashTuning
@@ -24,12 +25,19 @@ Propositions
   CashPilot
   CashBoard
   iCash
-  Cockpit
-  MoneyBoard
-
   StashCash
   CashManager
+
+  Cockpit
+
+  Compass
+
   Finboard
+  MoneyBoard
+
+
+  MoneyGauge
+  Fingauge
 
 
 Retours
@@ -43,3 +51,15 @@ Retours
   Corinne    : CashDrive, CashPilot, Cashboard (pas Ant)
   Franck     : CashPilot, Cashboard, iCash
   Sandrine   : CashCash, iCash, Cashboard
+
+
+Concurrents
+-----------
+- Money
+- iBank
+- MoneyDance
+- Grisby
+- Quicken
+- Mint
+- Wesabe
+- KMyMoney
