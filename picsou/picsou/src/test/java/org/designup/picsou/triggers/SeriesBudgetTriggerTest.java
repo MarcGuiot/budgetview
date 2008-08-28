@@ -25,8 +25,8 @@ public class SeriesBudgetTriggerTest extends PicsouTriggerTestCase {
       SeriesBudget.TYPE,
       "<update _amount='0.0' amount='-50.0' id='" + occasional[0] + "' type='seriesBudget'/>" +
       "<create active='true' amount='-50.0' day='30' id='" + id20[0] + "'" +
-      "        month='200809' series='20' type='seriesBudget' overBurnAmount='0.0'/>" +
-      "<create active='true' amount='100.0' day='30' id='" + id10[0] + "' type='seriesBudget' overBurnAmount='0.0'" +
+      "        month='200809' series='20' type='seriesBudget' overrunAmount='0.0'/>" +
+      "<create active='true' amount='100.0' day='30' id='" + id10[0] + "' type='seriesBudget' overrunAmount='0.0'" +
       "        month='200809' series='10'/>");
   }
 
@@ -38,7 +38,7 @@ public class SeriesBudgetTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(SeriesBudget.TYPE,
                                     "<update _amount='-100.0' amount='0.0' id='" + occasional[0] + "' type='seriesBudget'/>" +
                                     "<create active='true' amount='-100.0' day='30' id='" + id20[0] + "'" +
-                                    "        month='200809' series='20' type='seriesBudget' overBurnAmount='0.0'/>");
+                                    "        month='200809' series='20' type='seriesBudget' overrunAmount='0.0'/>");
   }
 
   public void testDeleteChangeOccasionalBudget() throws Exception {
@@ -50,12 +50,12 @@ public class SeriesBudgetTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(SeriesBudget.TYPE,
                                     "<update _amount='0.0' amount='-100.0' id='" + id0[0] + "' type='seriesBudget'/>" +
                                     "<delete _amount='-100.0' _month='200809' _series='20' id='" + id20[0] + "'" +
-                                    "        type='seriesBudget' _active='true' _day='30' _overBurnAmount='0.0'/>");
+                                    "        type='seriesBudget' _active='true' _day='30' _overrunAmount='0.0'/>");
   }
 
   private void createSeries(int seriesId, BudgetArea budgetArea, double amount) {
     repository.create(Key.create(Series.TYPE, seriesId),
                       value(Series.BUDGET_AREA, budgetArea.getId()),
-                      value(Series.AMOUNT, amount));
+                      value(Series.INITIAL_AMOUNT, amount));
   }
 }

@@ -22,8 +22,7 @@ BudgetView
 * Ne plus creer de series par defaut
 * Ne pas montrer les series qui ne sont pas utilisees
 * Block "non classe" (avec bouton categorisation)
-* Hyperliens edition series
-* Hyperliens montants ==> transactionView 
+* Hyperliens montants ==> transactionView
 
 Licence
 * Activation licence : cas ou pas de connexion internet (test manuel)
@@ -33,17 +32,3 @@ CategoryChooserDialog
 * exclure "none" et "all"
 * titre "choisir une categorie"
 
-TransactionView
-* Filtrage par serie
-* Filtrage par budgetArea
-* TransactionDetail : hyperlien pour editer la serie
-
-Import
-* Selectionner automatiquement la banque par defaut
-
-BalanceGraph : couleur si balance negative
-BudgetView : occasional en negatif ?
-BudgetView / occasional : "prevu" ==> "libre" ou "disponible"
-dispo occasional = ??? - reverser les surplus ou depassements des autres budgetarea
-blocks budgetview : splitpane...
-notes dans categorisation

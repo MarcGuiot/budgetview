@@ -91,19 +91,7 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public CategorizationDialogChecker selectIncomeSeries(String name, boolean showSeriesInitialization) {
     Panel panel = getIncomeSeriesPanel();
-    if (showSeriesInitialization) {
-      WindowInterceptor.init(
-        panel.getToggleButton(name).triggerClick())
-        .process(new WindowHandler() {
-          public Trigger process(Window window) throws Exception {
-            SeriesEditionDialogChecker dialogChecker = new SeriesEditionDialogChecker(window);
-            return dialogChecker.doValidate();
-          }
-        }).run();
-    }
-    else {
-      panel.getToggleButton(name).click();
-    }
+    interceptSeriesDialog(showSeriesInitialization, panel, name);
     return this;
   }
 
@@ -136,19 +124,7 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void selectRecurringSeries(String name, boolean showSeriesInitialization) {
     Panel panel = getRecurringSeriesPanel();
-    if (showSeriesInitialization) {
-      WindowInterceptor.init(
-        panel.getToggleButton(name).triggerClick())
-        .process(new WindowHandler() {
-          public Trigger process(Window window) throws Exception {
-            SeriesEditionDialogChecker dialogChecker = new SeriesEditionDialogChecker(window);
-            return dialogChecker.doValidate();
-          }
-        }).run();
-    }
-    else {
-      panel.getToggleButton(name).click();
-    }
+    interceptSeriesDialog(showSeriesInitialization, panel, name);
   }
 
   private Panel getRecurringSeriesPanel() {
@@ -193,18 +169,23 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void selectEnvelopeSeries(String envelopeName, MasterCategory category, boolean showSeriesInitialization) {
     Panel panel = getEnvelopeSeriesPanel();
+    String name = envelopeName + ":" + category.getName();
+    interceptSeriesDialog(showSeriesInitialization, panel, name);
+  }
+
+  private void interceptSeriesDialog(boolean showSeriesInitialization, Panel panel, String name) {
     if (showSeriesInitialization) {
       WindowInterceptor.init(
-        panel.getToggleButton(envelopeName + ":" + category.getName()).triggerClick())
+        panel.getToggleButton(name).triggerClick())
         .process(new WindowHandler() {
           public Trigger process(Window window) throws Exception {
             SeriesEditionDialogChecker dialogChecker = new SeriesEditionDialogChecker(window);
-            return dialogChecker.doValidate();
+            return dialogChecker.triggerValidate();
           }
         }).run();
     }
     else {
-      panel.getToggleButton(envelopeName + ":" + category.getName()).click();
+      panel.getToggleButton(name).click();
     }
   }
 
