@@ -158,6 +158,20 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     }));
   }
 
+  public void testInitialFilter() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
+                    "<dummyObject id='2' name='name2' value='2.2'/>");
+    view = GlobTableView.init(DummyObject.TYPE, repository, new GlobFieldComparator(NAME), directory)
+      .setFilter(GlobMatchers.fieldEquals(DummyObject.NAME, "name1"))
+      .addColumn(DummyObject.NAME)
+      .addColumn(DummyObject.VALUE);
+    Table table = new Table(view.getComponent());
+    assertTrue(table.contentEquals(new String[][]{
+      {"name1", "1.1"},
+    }));
+  }
+
   public void testKeepsFilterWhenHandlingResetEvents() throws Exception {
     repository =
       checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
@@ -535,7 +549,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     repository.update(Key.create(DummyObject.TYPE, 2), DummyObject.NAME, "newName");
     repository.update(Key.create(DummyObject.TYPE, 3), DummyObject.NAME, "newName");
     repository.completeBulkDispatchingMode();
-    
+
     listener.assertEquals("<log>" +
                           "  <selection types='dummyObject'/>" +
                           "</log>");

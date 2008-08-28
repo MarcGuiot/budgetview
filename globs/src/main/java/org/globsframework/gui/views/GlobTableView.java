@@ -35,15 +35,17 @@ import java.util.List;
 public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> implements GlobSelectionListener {
   private List<GlobTableColumn> columns = new ArrayList<GlobTableColumn>();
   private Comparator<Glob> initialComparator;
+  private GlobMatcher initialFilter;
+  private JTable table;
   private GlobTableModel tableModel;
   private PopupMenuFactory popupMenuFactory;
   private LabelCustomizer headerLabelCustomizer = LabelCustomizer.NULL;
   private CellPainter headerBackgroundPainter = CellPainter.NULL;
-  private JTable table;
   private boolean selectionEnabled = true;
   private Font defaultFont = new JTable().getFont();
   private String name;
   private boolean hiddenHeader;
+  private CellPainter defaultBackgroundPainter = CellPainter.NULL;
 
   public static GlobTableView init(GlobType type, GlobRepository globRepository,
                                    Comparator<Glob> comparator, Directory directory) {
@@ -56,16 +58,16 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   public GlobTableView addColumn(Field field) {
-    return addColumn(field, LabelCustomizer.NULL, CellPainter.NULL);
+    return addColumn(field, LabelCustomizer.NULL, defaultBackgroundPainter);
   }
 
   public GlobTableView addColumn(Field field, TableCellEditor editor) {
-    return addColumn(field, LabelCustomizer.NULL, CellPainter.NULL, editor);
+    return addColumn(field, LabelCustomizer.NULL, defaultBackgroundPainter, editor);
   }
 
   public GlobTableView addColumn(Field field,
                                  LabelCustomizer customizer) {
-    return addColumn(field, customizer, CellPainter.NULL, null);
+    return addColumn(field, customizer, defaultBackgroundPainter, null);
   }
 
   public GlobTableView addColumn(Field field,
@@ -100,7 +102,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     GlobStringifier stringifier = descriptionService.getStringifier(link);
     return addColumn(descriptionService.getLabel(link),
                      new LabelTableCellRenderer(LabelCustomizers.stringifier(stringifier, repository),
-                                                CellPainter.NULL),
+                                                defaultBackgroundPainter),
                      stringifier.getComparator(repository));
   }
 
@@ -109,7 +111,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   public GlobTableView addColumn(String name, GlobStringifier stringifier, LabelCustomizer customizer) {
-    return addColumn(name, stringifier, customizer, CellPainter.NULL);
+    return addColumn(name, stringifier, customizer, defaultBackgroundPainter);
   }
 
   public GlobTableView addColumn(String name, GlobStringifier stringifier, LabelCustomizer customizer, CellPainter backgroundPainter) {
@@ -160,6 +162,10 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   public GlobTableView setFilter(GlobMatcher matcher) {
+    if (table == null) {
+      this.initialFilter = matcher;
+      return this;
+    }
     GlobList selection = getCurrentSelection();
     int initialSize = selection.size();
     selection.filterSelf(matcher, repository);
@@ -226,8 +232,16 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       initHeader();
       initPopupFactory();
       registerEditors();
+      if (initialFilter != null) {
+        setFilter(initialFilter);
+      }
     }
     return table;
+  }
+
+  public GlobTableView setDefaultBackgroundPainter(CellPainter painter) {
+    this.defaultBackgroundPainter = painter;
+    return this;
   }
 
   private class TableResetListener implements GlobTableModel.ResetListener {
