@@ -20,8 +20,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .load();
 
     CategorizerChecker checker = new CategorizerChecker(mainWindow);
-    checker.setRecurring("free telecom", "internet", true);
-    checker.setRecurring("Loyer", "rental", true);
+    checker.setRecurring("free telecom", "internet", MasterCategory.TELECOMS, true);
+    checker.setRecurring("Loyer", "rental", MasterCategory.HOUSE, true);
     checker.setEnvelope("Auchan", "groceries", MasterCategory.FOOD, true);
     checker.setEnvelope("ED", "groceries", MasterCategory.FOOD, false);
     checker.setOccasional("fnac", MasterCategory.MULTIMEDIA);
@@ -52,8 +52,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectData();
     CategorizerChecker.init(mainWindow)
-      .setRecurring("free telecom", "internet", true)
-      .setRecurring("Loyer", "rental", true)
+      .setRecurring("free telecom", "internet", MasterCategory.TELECOMS, true)
+      .setRecurring("Loyer", "rental", MasterCategory.HOUSE, true)
       .setEnvelope("Auchan", "groceries", MasterCategory.FOOD, true)
       .setEnvelope("ED", "groceries", MasterCategory.FOOD, false)
       .setOccasional("fnac", MasterCategory.MULTIMEDIA)
@@ -69,8 +69,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     views.selectData();
     CategorizerChecker.init(mainWindow)
-      .setRecurring("free telecom", "internet", false)
-      .setRecurring("Loyer", "rental", false);
+      .setRecurring("free telecom", "internet", MasterCategory.TELECOMS, false)
+      .setRecurring("Loyer", "rental", MasterCategory.HOUSE, false);
     views.selectHome();
     monthSummary.init()
       .total(0, (1500 + 29.90), false)

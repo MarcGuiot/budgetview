@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.MasterCategory;
 
 public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   public void testStandardEdition() throws Exception {
@@ -15,7 +16,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("29/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
       .check();
-    transactions.setRecurring("Free Telecom", "Internet", true);
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
 
@@ -43,7 +44,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectData();
     transactions.getTable().selectRowSpan(0, 3);
-    transactions.setRecurring("Free Telecom", "Internet", true);
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
     timeline.selectMonths("2008/08", "2008/06");
@@ -69,7 +70,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     views.selectData();
-    transactions.setRecurring("Free Telecom", "Internet", true);
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
     budgetView.recurring.editSeries("Internet")
@@ -112,7 +113,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectData();
     transactions.getTable().selectRowSpan(0, 3);
-    transactions.setRecurring("Free Telecom", "Internet", true);
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
     timeline.selectMonths("2008/08", "2008/06");

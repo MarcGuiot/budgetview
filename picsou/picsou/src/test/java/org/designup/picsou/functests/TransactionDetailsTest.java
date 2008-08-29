@@ -11,9 +11,9 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testLabel() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/18", 15.10, "Quick")
-      .addTransaction("2008/06/16", 27.50, "Quick")
-      .addTransaction("2008/06/15", 15.50, "McDo")
+      .addTransaction("2008/06/18", -15.10, "Quick")
+      .addTransaction("2008/06/16", -27.50, "Quick")
+      .addTransaction("2008/06/15", -15.50, "McDo")
       .load();
 
     transactions.getTable().selectRow(0);
@@ -31,9 +31,9 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testDate() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/18", 15.10, "Quick")
-      .addTransaction("2008/06/18", 27.50, "Quick")
-      .addTransaction("2008/06/15", 15.50, "McDo")
+      .addTransaction("2008/06/18", -15.10, "Quick")
+      .addTransaction("2008/06/18", -27.50, "Quick")
+      .addTransaction("2008/06/15", -15.50, "McDo")
       .load();
 
     transactions.getTable().selectRow(0);
@@ -51,18 +51,18 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testAmount() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/18", 10.00, "Quick")
-      .addTransaction("2008/06/18", 30.00, "Quick")
-      .addTransaction("2008/06/15", 20.00, "McDo")
+      .addTransaction("2008/06/18", -10.00, "Quick")
+      .addTransaction("2008/06/18", -30.00, "Quick")
+      .addTransaction("2008/06/15", -20.00, "McDo")
       .load();
 
     transactions.getTable().selectRow(0);
-    transactionDetails.checkAmount("Amount", "10.00");
+    transactionDetails.checkAmount("Amount", "-10.00");
     transactionDetails.checkNoAmountStatistics();
 
     transactions.getTable().selectRowSpan(0, 1);
-    transactionDetails.checkAmount("Total amount", "40.00");
-    transactionDetails.checkAmountStatistics("10.00", "30.00", "20.00");
+    transactionDetails.checkAmount("Total amount", "-40.00");
+    transactionDetails.checkAmountStatistics("-30.00", "-10.00", "-20.00");
 
     transactions.getTable().clearSelection();
     transactionDetails.checkNoAmount();
@@ -97,15 +97,15 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testCategoriesWithoutSelection() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/18", 10.00, "Quick")
+      .addTransaction("2008/06/18", -10.00, "Quick")
       .load();
     transactionDetails.checkCategoryNotVisible();
   }
 
   public void testDisplayedCategory() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/18", 10.00, "Quick")
-      .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
+      .addTransaction("2008/06/18", -10.00, "Quick")
+      .addTransaction("2008/06/15", -20.00, "McDo", MasterCategory.FOOD)
       .load();
 
     transactions.getTable().selectRow(0);
@@ -117,15 +117,15 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testCategorizationWithSingleSelection() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/18", 10.00, "Quick")
-      .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
+      .addTransaction("2008/06/18", -10.00, "Quick")
+      .addTransaction("2008/06/15", -20.00, "McDo", MasterCategory.FOOD)
       .load();
 
     transactions.getTable().selectRow(0);
     transactionDetails.checkNoCategory();
     CategorizationDialogChecker dialog = transactionDetails.categorize();
     dialog.checkTable(new Object[][]{
-      {"18/06/2008", "Quick", 10.0},
+      {"18/06/2008", "Quick", -10.0},
     });
     dialog.checkSelectedTableRows(0);
     dialog.selectOccasional();
@@ -137,19 +137,19 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testCategorizationWithMultipleSimilarTransactions() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/15", 20.00, "McDo 15/06")
-      .addTransaction("2008/06/14", 10.00, "McDo 14/06")
+      .addTransaction("2008/06/15", -20.00, "McDo 15/06")
+      .addTransaction("2008/06/14", -10.00, "McDo 14/06")
       .load();
     transactions.initContent()
-      .add("15/06/2008", TransactionType.VIREMENT, "McDo 15/06", "", 20.00)
-      .add("14/06/2008", TransactionType.VIREMENT, "McDo 14/06", "", 10.00)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "McDo 15/06", "", -20.00)
+      .add("14/06/2008", TransactionType.PRELEVEMENT, "McDo 14/06", "", -10.00)
       .check();
 
     transactions.getTable().selectRow(0);
     CategorizationDialogChecker dialog = transactionDetails.categorize();
     dialog.checkTable(new Object[][]{
-      {"14/06/2008", "McDo 14/06", 10.0},
-      {"15/06/2008", "McDo 15/06", 20.0},
+      {"14/06/2008", "McDo 14/06", -10.0},
+      {"15/06/2008", "McDo 15/06", -20.0},
     });
     dialog.checkSelectedTableRows(0, 1);
     dialog.selectOccasional();
@@ -157,23 +157,23 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     dialog.validate();
 
     transactions.initContent()
-      .add("15/06/2008", TransactionType.VIREMENT, "McDo 15/06", "", 20.00, MasterCategory.FOOD)
-      .add("14/06/2008", TransactionType.VIREMENT, "McDo 14/06", "", 10.00, MasterCategory.FOOD)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "McDo 15/06", "", -20.00, MasterCategory.FOOD)
+      .add("14/06/2008", TransactionType.PRELEVEMENT, "McDo 14/06", "", -10.00, MasterCategory.FOOD)
       .check();
   }
 
   public void testCategorizationWithMultipleDifferentTransactions() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
-      .addTransaction("2008/06/14", 10.00, "Fouquet's", MasterCategory.EDUCATION)
+      .addTransaction("2008/06/15", -20.00, "McDo", MasterCategory.FOOD)
+      .addTransaction("2008/06/14", -10.00, "Fouquet's", MasterCategory.EDUCATION)
       .load();
 
     transactions.getTable().selectRowSpan(0, 1);
 
     CategorizationDialogChecker dialog = transactionDetails.categorize();
     dialog.checkTable(new Object[][]{
-      {"14/06/2008", "Fouquet's", 10.0},
-      {"15/06/2008", "McDo", 20.0},
+      {"14/06/2008", "Fouquet's", -10.0},
+      {"15/06/2008", "McDo", -20.0},
     });
     dialog.checkSelectedTableRows(0, 1);
     dialog.selectOccasional();
@@ -181,15 +181,15 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     dialog.validate();
 
     transactions.initContent()
-      .add("15/06/2008", TransactionType.VIREMENT, "McDo", "", 20.00, MasterCategory.FOOD)
-      .add("14/06/2008", TransactionType.VIREMENT, "Fouquet's", "", 10.00, MasterCategory.FOOD)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "McDo", "", -20.00, MasterCategory.FOOD)
+      .add("14/06/2008", TransactionType.PRELEVEMENT, "Fouquet's", "", -10.00, MasterCategory.FOOD)
       .check();
   }
 
   public void testCategorizationNotAvailableForPlannedTransactions() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/07/15", 50.00, "FNAC", MasterCategory.LEISURES)
-      .addTransaction("2008/06/15", 20.00, "Auchan", MasterCategory.FOOD)
+      .addTransaction("2008/07/15", -50.00, "FNAC", MasterCategory.LEISURES)
+      .addTransaction("2008/06/15", -20.00, "Auchan", MasterCategory.FOOD)
       .load();
 
     timeline.selectMonth("2008/06");
@@ -197,7 +197,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker dialog = transactionDetails.categorize();
     dialog.checkTable(new Object[][]{
-      {"15/06/2008", "Auchan", 20.0},
+      {"15/06/2008", "Auchan", -20.0},
     });
     dialog.selectEnvelopes();
     dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
@@ -205,8 +205,8 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     transactions.initContent()
-      .add("15/07/2008", TransactionType.PLANNED, "Groceries", "", 20.00, "Groceries")
-      .add("15/07/2008", TransactionType.VIREMENT, "FNAC", "", 50.00, MasterCategory.LEISURES)
+      .add("15/07/2008", TransactionType.PLANNED, "Groceries", "", -20.00, "Groceries")
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -50.00, MasterCategory.LEISURES)
       .check();
 
     transactions.getTable().selectRow(0);
@@ -216,21 +216,21 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactions.getTable().selectRowSpan(0, 1);
     CategorizationDialogChecker reopenedDialog1 = transactionDetails.categorize();
     reopenedDialog1.checkTable(new Object[][]{
-      {"15/07/2008", "FNAC", 50.0},
+      {"15/07/2008", "FNAC", -50.0},
     });
     reopenedDialog1.cancel();
 
     transactions.checkCategorizationDisabled(0);
     CategorizationDialogChecker reopenedDialog2 = transactions.openCategorizationDialog(1);
     reopenedDialog2.checkTable(new Object[][]{
-      {"15/07/2008", "FNAC", 50.0},
+      {"15/07/2008", "FNAC", -50.0},
     });
     reopenedDialog2.cancel();
   }
 
   public void testSplitButtonInitiallyVisibleWithOneTransaction() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
+      .addTransaction("2008/06/15", -20.00, "McDo", MasterCategory.FOOD)
       .load();
     transactions.getTable().selectRow(0);
     transactionDetails.checkSplitVisible();
@@ -238,8 +238,8 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testSplitButtonInitiallyInvisibleWithTwoTransactions() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/15", 20.00, "McDo", MasterCategory.FOOD)
-      .addTransaction("2008/06/14", 10.00, "Fouquet's", MasterCategory.EDUCATION)
+      .addTransaction("2008/06/15", -20.00, "McDo", MasterCategory.FOOD)
+      .addTransaction("2008/06/14", -10.00, "Fouquet's", MasterCategory.EDUCATION)
       .load();
     transactionDetails.checkSplitNotVisible();
 
@@ -255,13 +255,13 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testSplitCallAction() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/15", 20.00, "Auchan", MasterCategory.FOOD)
+      .addTransaction("2008/06/15", -20.00, "Auchan", MasterCategory.FOOD)
       .load();
     transactions.getTable().selectRow(0);
     transactionDetails.split("10", "Auchan");
     transactions.initContent()
-      .add("15/06/2008", TransactionType.VIREMENT, "Auchan", "", 10.00, MasterCategory.FOOD)
-      .add("15/06/2008", TransactionType.VIREMENT, "Auchan", "Auchan", 10.00)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -10.00, MasterCategory.FOOD)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "Auchan", -10.00)
       .check();
   }
 
@@ -278,15 +278,15 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testDisplayOriginalLabelOnlyIfDifferentFromUserLabel() throws Exception {
     String fileName = QifBuilder.init(this)
-      .addTransaction("2008/06/15", 20.00, "PRELEVEMENT 123123 Auchan")
-      .addTransaction("2008/06/14", 100.00, "QUICK")
+      .addTransaction("2008/06/15", -20.00, "PRELEVEMENT 123123 Auchan")
+      .addTransaction("2008/06/14", -100.00, "QUICK")
       .save();
 
     operations.importQifFiles(10, "Societe generale", fileName);
 
     transactions.initContent()
-      .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", 20.00)
-      .add("14/06/2008", TransactionType.VIREMENT, "QUICK", "", 100.00)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -20.00)
+      .add("14/06/2008", TransactionType.PRELEVEMENT, "QUICK", "", -100.00)
       .check();
 
     transactions.getTable().selectRow(0);
@@ -298,9 +298,9 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testTransactionTypeDisplay() throws Exception {
     String fileName = QifBuilder.init(this)
-      .addTransaction("2008/06/15", 20.00, "PRELEVEMENT 123123 Auchan")
-      .addTransaction("2008/06/14", 10.00, "PRELEVEMENT 123123 Monop")
-      .addTransaction("2008/06/13", 40.00, "CHEQUE 123123")
+      .addTransaction("2008/06/15", -20.00, "PRELEVEMENT 123123 Auchan")
+      .addTransaction("2008/06/14", -10.00, "PRELEVEMENT 123123 Monop")
+      .addTransaction("2008/06/13", -40.00, "CHEQUE 123123")
       .save();
     operations.importQifFiles(10, "Societe generale", fileName);
     transactions.getTable().selectRow(0);
@@ -313,15 +313,15 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkTypeNotVisible();
     transactions
       .initContent()
-      .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", 20.00)
-      .add("14/06/2008", TransactionType.PRELEVEMENT, "MONOP", "", 10.00)
-      .add("13/06/2008", TransactionType.CHECK, "CHEQUE N. 123123", "", 40.00)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -20.00)
+      .add("14/06/2008", TransactionType.PRELEVEMENT, "MONOP", "", -10.00)
+      .add("13/06/2008", TransactionType.CHECK, "CHEQUE N. 123123", "", -40.00)
       .check();
   }
 
   public void testTransactionTypeIsNotVisible() throws Exception {
     String fileName = QifBuilder.init(this)
-      .addTransaction("2008/06/15", 20.00, "PRELEVEMENT 123123 Auchan")
+      .addTransaction("2008/06/15", -20.00, "PRELEVEMENT 123123 Auchan")
       .save();
     operations.importQifFiles(10, "Societe generale", fileName);
     transactionDetails.checkTypeNotVisible();
@@ -330,13 +330,13 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testBankDateIsVisibleOnlyIfDifferentFromUserDate() throws Exception {
     String fileName = QifBuilder.init(this)
-      .addTransaction("2008/06/15", 20.00, "CARTE 123123 12/06/08 AUCHAN1")
-      .addTransaction("2008/06/10", 10.00, "CARTE 123123 10/06/08 AUCHAN2")
+      .addTransaction("2008/06/15", -20.00, "CARTE 123123 12/06/08 AUCHAN1")
+      .addTransaction("2008/06/10", -10.00, "CARTE 123123 10/06/08 AUCHAN2")
       .save();
     operations.importQifFiles(10, "Societe generale", fileName);
     transactions.initContent()
-      .add("12/06/2008", TransactionType.CREDIT_CARD, "AUCHAN1", "", 20.00)
-      .add("10/06/2008", TransactionType.CREDIT_CARD, "AUCHAN2", "", 10.00)
+      .add("12/06/2008", TransactionType.CREDIT_CARD, "AUCHAN1", "", -20.00)
+      .add("10/06/2008", TransactionType.CREDIT_CARD, "AUCHAN2", "", -10.00)
       .check();
 
     transactionDetails.checkBankDateNotVisible();

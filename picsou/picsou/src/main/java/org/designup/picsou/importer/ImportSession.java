@@ -69,7 +69,8 @@ public class ImportSession {
   }
 
   private List<String> getImportedTransactionFormat() {
-    Set<String> valueSet = localRepository.getAll(ImportedTransaction.TYPE).getValueSet(ImportedTransaction.BANK_DATE);
+    Set<String> valueSet = localRepository.getAll(ImportedTransaction.TYPE)
+      .getValueSet(ImportedTransaction.BANK_DATE);
     DateFormatAnalyzer dateFormatAnalyzer = new DateFormatAnalyzer(new Date());
     return dateFormatAnalyzer.parse(valueSet);
   }

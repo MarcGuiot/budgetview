@@ -53,7 +53,8 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
         else if (values.contains(SeriesBudget.AMOUNT)) {
           Double diff = values.getPrevious(SeriesBudget.AMOUNT) - values.get(SeriesBudget.AMOUNT);
           TransactionPlannedTrigger.transfertAmount(
-            repository.get(Key.create(Series.TYPE, series.get(Series.ID))), diff, seriesBudget.get(SeriesBudget.MONTH),
+            repository.get(Key.create(Series.TYPE, series.get(Series.ID))), diff,
+            seriesBudget.get(SeriesBudget.MONTH),
             BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome(),
             timeService.getLastAvailableTransactionMonthId(), repository
           );
@@ -90,18 +91,18 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
   }
 
   public static void createPlannedTransaction(Glob series, GlobRepository repository, int monthId, Integer day, Double amount) {
-    repository.create(Transaction.TYPE,
-                      value(Transaction.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
-                      value(Transaction.AMOUNT, amount),
-                      value(Transaction.SERIES, series.get(Series.ID)),
-                      value(Transaction.BANK_MONTH, monthId),
-                      value(Transaction.BANK_DAY, day),
-                      value(Transaction.MONTH, monthId),
-                      value(Transaction.DAY, day),
-                      value(Transaction.LABEL, series.get(Series.LABEL)),
-                      value(Transaction.PLANNED, true),
-                      value(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId()),
-                      value(Transaction.CATEGORY, series.get(Series.DEFAULT_CATEGORY)));
+    Glob glob = repository.create(Transaction.TYPE,
+                                  value(Transaction.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
+                                  value(Transaction.AMOUNT, amount),
+                                  value(Transaction.SERIES, series.get(Series.ID)),
+                                  value(Transaction.BANK_MONTH, monthId),
+                                  value(Transaction.BANK_DAY, day),
+                                  value(Transaction.MONTH, monthId),
+                                  value(Transaction.DAY, day),
+                                  value(Transaction.LABEL, series.get(Series.LABEL)),
+                                  value(Transaction.PLANNED, true),
+                                  value(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId()),
+                                  value(Transaction.CATEGORY, series.get(Series.DEFAULT_CATEGORY)));
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {

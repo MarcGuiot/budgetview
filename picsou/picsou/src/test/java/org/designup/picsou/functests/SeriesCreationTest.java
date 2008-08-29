@@ -32,7 +32,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
     creationSeries.validate();
 
-    categorization.checkContainsIncomeSeries("Salary", "Prime");
+    categorization.checkContainsIncomeSeries("Prime");
     categorization.validate();
 
     transactionDetails.checkSeries("Prime");
@@ -58,7 +58,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     editionDialog.setCategory(MasterCategory.EDUCATION);
     editionDialog.validate();
 
-    dialog.checkContainsRecurringSeries("Internet", "Culture");
+    dialog.checkContainsRecurringSeries("Culture");
     dialog.validate();
 
     transactionDetails.checkSeries("Culture");
@@ -104,7 +104,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       {"10/06/2008", "Forfait Kro", -60.00},
       {"28/06/2008", "Palette Leffe", -150.00},
     });
-    dialog.checkSelectedTableRows(0,1,2);
+    dialog.checkSelectedTableRows(0, 1, 2);
 
     dialog.selectEnvelopes();
     SeriesEditionDialogChecker editionDialog = dialog.createSeries();

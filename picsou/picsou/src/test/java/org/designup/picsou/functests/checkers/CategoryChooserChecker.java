@@ -15,6 +15,15 @@ public class CategoryChooserChecker {
     return this;
   }
 
+  public CategoryChooserChecker addCategory(String categoryName) {
+    window.getToggleButton(categoryName).click();
+    return this;
+  }
+
+  public void validate() {
+    window.getButton("ok").click();
+  }
+
   public static void selectCategory(Window dialog, String categoryName) {
     dialog.getToggleButton(categoryName).click();
     dialog.getButton("ok").click();

@@ -175,9 +175,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   private Glob create(GlobType type, Key key, Object[] globValuesArray) {
     checkKeyDoesNotExist(key);
     final DefaultGlob glob = new DefaultGlob(type, globValuesArray);
-    globs.put(key.getGlobType(), key, glob);
 
     IndexTables indexTables = indexManager.getAssociatedTable(type);
+    globs.put(key.getGlobType(), key, glob);
+
     if (indexTables != null) {
       indexTables.add(glob);
     }
@@ -484,8 +485,8 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       Key key = glob.getKey();
       if (typesList.contains(key.getGlobType())) {
         Glob duplicatedGlob = glob.duplicate();
-        globs.put(key.getGlobType(), key, duplicatedGlob);
         IndexTables indexTables = indexManager.getAssociatedTable(key.getGlobType());
+        globs.put(key.getGlobType(), key, duplicatedGlob);
         if (indexTables != null) {
           indexTables.add(duplicatedGlob);
         }
@@ -513,8 +514,8 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   public void add(Glob glob) {
     Key key = glob.getKey();
     checkKeyDoesNotExist(key);
-    this.globs.put(key.getGlobType(), key, glob);
     IndexTables indexTables = indexManager.getAssociatedTable(key.getGlobType());
+    this.globs.put(key.getGlobType(), key, glob);
     if (indexTables != null) {
       indexTables.add(glob);
     }

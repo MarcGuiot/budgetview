@@ -37,9 +37,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
     transactions.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
-    transactions.setRecurring("Free Telecom", "Internet", true);
-    transactions.setRecurring("EDF", "Electricity", true);
-    transactions.setIncome("WorldCo - Bonus", "Exceptional Income", false);
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    transactions.setRecurring("EDF", "Electricity", MasterCategory.HOUSE, true);
+    transactions.setExceptionalIncome("WorldCo - Bonus", "Exceptional Income", true);
     transactions.setIncome("WorldCo", "Salary", true);
 
     views.selectBudget();
@@ -59,7 +59,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
 
     budgetView.occasional.checkTitle("Occasional expenses");
-    budgetView.occasional.checkTotalAmounts(0, -3540 + 95 + 84);
+    budgetView.occasional.checkTotalAmounts(0, 3540 - 95 - 84);
 
     timeline.selectMonths("2008/08");
 
@@ -103,7 +103,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
     transactions.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
-    transactions.setRecurring("Free Telecom", "Internet", true);
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
     transactions.setIncome("WorldCo", "Salary", true);
     timeline.selectMonth("2008/07");
     views.selectBudget();
@@ -119,10 +119,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkTitle("Income");
     budgetView.income.checkTotalAmounts(3540.0, 3540.00);
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
-    budgetView.income.checkSeries("Exceptional Income", 0.0, 0.0);
 
     budgetView.occasional.checkTitle("Occasional expenses");
-    budgetView.occasional.checkTotalAmounts(0, -3540 + 95 + 29);
+    budgetView.occasional.checkTotalAmounts(0, 3540 - 95 - 29);
   }
 
   public void testEditingASeriesWithTransactions() throws Exception {
@@ -135,7 +134,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("29/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
       .check();
-    transactions.setRecurring("Free Telecom", "Internet", true);
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
 
@@ -149,5 +148,48 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
   public void testSeveralMonths() throws Exception {
     System.out.println("BudgetViewTest.testSeveralMonths: TBD");
+  }
+
+
+  public void testAddMonth() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/31", -95.00, "Auchan")
+      .addTransaction("2008/07/30", -50.00, "Monoprix")
+      .addTransaction("2008/07/29", -29.00, "Free Telecom")
+      .addTransaction("2008/07/28", 3540.00, "WorldCo")
+      .load();
+
+    views.selectData();
+    transactions.initContent()
+      .add("31/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00)
+      .add("30/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00)
+      .add("29/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
+      .add("28/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
+      .check();
+
+    transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    transactions.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    transactions.setIncome("WorldCo", "Salary", true);
+    timeline.selectMonth("2008/07");
+    views.selectBudget();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/13", -50.00, "Auchan")
+      .load();
+    views.selectData();
+    transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, false);
+    views.selectBudget();
+
+    budgetView.recurring.checkTotalAmounts(0.0, 29.0);
+    budgetView.recurring.checkSeries("Internet", 0.0, 29.0);
+
+    budgetView.envelopes.checkTotalAmounts(50.0, 95);
+    budgetView.envelopes.checkSeries("Groceries", 50.0, 95.0);
+
+    budgetView.income.checkTotalAmounts(0.0, 3540.00);
+    budgetView.income.checkSeries("Salary", 0.0, 3540.0);
+
+    budgetView.occasional.checkTotalAmounts(0, 3540 - 95 - 29);
   }
 }

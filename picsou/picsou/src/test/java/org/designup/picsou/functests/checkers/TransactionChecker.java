@@ -152,28 +152,32 @@ public class TransactionChecker extends ViewChecker {
     return transactionDetails.categorize();
   }
 
-  public void setIncome(int rowIndex, String seriesName, boolean showSeriesInitialization) {
+  public void setExceptionalIncome(String label, String seriesName, boolean showSeriesInitialization) {
+    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
+    CategorizationDialogChecker categorization = categorize(rowIndex);
+    categorization.selectIncome();
+    categorization.selectExceptionalIncomeSeries(seriesName, showSeriesInitialization);
+    categorization.validate();
+  }
+
+  public void setIncome(String label, String seriesName, boolean showSeriesInitialization) {
+    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
     CategorizationDialogChecker categorization = categorize(rowIndex);
     categorization.selectIncome();
     categorization.selectIncomeSeries(seriesName, showSeriesInitialization);
     categorization.validate();
   }
 
-  public void setIncome(String label, String seriesName, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
-    setIncome(rowIndex, seriesName, showSeriesInitialization);
-  }
-
-  public void setRecurring(int rowIndex, String seriesName, boolean showSeriesInitialization) {
+  public void setRecurring(int rowIndex, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
     CategorizationDialogChecker categorization = categorize(rowIndex);
     categorization.selectRecurring();
-    categorization.selectRecurringSeries(seriesName, showSeriesInitialization);
+    categorization.selectRecurringSeries(seriesName, category, showSeriesInitialization);
     categorization.validate();
   }
 
-  public void setRecurring(String label, String seriesName, boolean showSeriesInitialization) {
+  public void setRecurring(String label, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
     int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
-    setRecurring(rowIndex, seriesName, showSeriesInitialization);
+    setRecurring(rowIndex, seriesName, category, showSeriesInitialization);
   }
 
   public void setEnvelope(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {

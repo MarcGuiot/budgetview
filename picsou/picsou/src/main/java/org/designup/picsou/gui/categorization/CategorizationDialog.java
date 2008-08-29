@@ -149,7 +149,7 @@ public class CategorizationDialog {
   private void init(GlobRepository repository, Directory directory) {
 
     localRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(BudgetArea.TYPE, Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE)
+      .copy(BudgetArea.TYPE, Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE, SeriesBudget.TYPE)
       .get();
 
     localDirectory = new DefaultDirectory(directory);

@@ -150,8 +150,12 @@ public class DefaultGlobType extends AnnotatedPropertyHolder<GlobType> implement
     multiFieldIndices.put(index.getName(), index);
   }
 
-  public Iterable<Index> getIndices() {
+  public Collection<Index> getIndices() {
     return indices.values();
+  }
+
+  public Collection<MultiFieldIndex> getMultiFieldIndices() {
+    return multiFieldIndices.values();
   }
 
   public Index getIndex(String name) {

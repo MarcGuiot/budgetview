@@ -95,14 +95,14 @@ public class SplitDialogChecker {
     return this;
   }
 
-  public SplitDialogChecker selectRecurring(String name, boolean showSeriesInitialization) {
+  public SplitDialogChecker selectRecurring(String name, MasterCategory category, boolean showSeriesInitialization) {
     CategorizationDialogChecker dialog = new CategorizationDialogChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         window.getButton("category").click();
       }
     }));
     dialog.selectRecurring();
-    dialog.selectRecurringSeries(name, showSeriesInitialization);
+    dialog.selectRecurringSeries(name, category, showSeriesInitialization);
     dialog.validate();
     return this;
   }
@@ -203,9 +203,9 @@ public class SplitDialogChecker {
     return this;
   }
 
-  public SplitDialogChecker addRecurring(String amount, String name, String note, boolean showSeriesInitialization) {
+  public SplitDialogChecker addRecurring(String amount, String name, MasterCategory category, String note, boolean showSeriesInitialization) {
     enterAmount(amount);
-    selectRecurring(name, showSeriesInitialization);
+    selectRecurring(name, category, showSeriesInitialization);
     enterNote(note);
     add();
     return this;

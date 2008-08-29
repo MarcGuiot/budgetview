@@ -4,6 +4,7 @@ import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Utils;
 
 import java.util.Set;
@@ -102,9 +103,18 @@ public class SeriesStatTrigger implements ChangeSetListener {
 
         Glob currentStat = repository.find(createKey(currentSeriesId, currentMonthId));
         if (currentStat == null) {
-          String name = repository.get(Key.create(Series.TYPE, currentSeriesId)).get(Series.NAME);
-          throw new RuntimeException("SeriesStatTrigger.visitUpdate series : " + name + " : " + currentSeriesId +
-                                     " month = " + currentMonthId);
+          GlobList seriesBudgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, currentSeriesId)
+            .findByIndex(SeriesBudget.MONTH, currentMonthId).getGlobs();
+          Glob series = repository.get(Key.create(Series.TYPE, currentSeriesId));
+          String name = series.get(Series.NAME);
+          Double defaultAmount = null;
+          if (seriesBudgets.isEmpty()) {
+            defaultAmount = series.get(Series.INITIAL_AMOUNT);
+          }
+          GlobPrinter.print(repository);
+          throw new RuntimeException("SeriesStatTrigger.visitUpdate series : " + name + ", (" + defaultAmount + ")" + currentSeriesId +
+                                     " month = " + currentMonthId + " series Budget :" +
+                                     (seriesBudgets.isEmpty() ? " <none> " : seriesBudgets.get(0).get(SeriesBudget.AMOUNT)));
         }
         updateStat(currentStat, currentAmount, repository);
       }

@@ -10,6 +10,7 @@ import org.globsframework.model.indexing.builders.NotUniqueLeafFieldIndexBuilder
 import org.globsframework.model.indexing.builders.UniqueLeafFieldIndexBuilder;
 import org.globsframework.model.indexing.indices.*;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +42,27 @@ public class IndexManager {
   }
 
   public IndexTables getAssociatedTable(GlobType type) {
-    return globTypeToIndex.get(type);
+    IndexTables tables = globTypeToIndex.get(type);
+    if (tables == null) {
+      Collection<Index> indexes = type.getIndices();
+      if (!indexes.isEmpty()) {
+        for (Index index : indexes) {
+          updateGlobTypeToIndexTables(type, getAssociatedTable(index));
+        }
+      }
+      Collection<MultiFieldIndex> multiFieldIndexes = type.getMultiFieldIndices();
+      if (!multiFieldIndexes.isEmpty()) {
+        for (MultiFieldIndex index : multiFieldIndexes) {
+          getAssociatedTable(index);
+        }
+      }
+      IndexTables createdTables = globTypeToIndex.get(type);
+      if (createdTables == null) {
+        globTypeToIndex.put(type, new NULLIndexTables());
+      }
+      return globTypeToIndex.get(type);
+    }
+    return tables;
   }
 
   public IndexedTable getAssociatedTable(Index index) {
@@ -191,4 +212,24 @@ public class IndexManager {
     }
   }
 
+  private static class NULLIndexTables implements IndexTables {
+    public void add(Object newValue, Glob glob, Field field, Object oldValue) {
+    }
+
+    public void add(Glob glob) {
+    }
+
+    public IndexTables add(IndexedTable indexedTable) {
+      return null;
+    }
+
+    public void remove(Glob glob) {
+    }
+
+    public void remove(Field field, Object oldValue, Glob glob) {
+    }
+
+    public void removeAll() {
+    }
+  }
 }

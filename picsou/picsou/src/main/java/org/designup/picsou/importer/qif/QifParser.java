@@ -8,6 +8,8 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobIdGenerator;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.exceptions.InvalidData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,6 +47,9 @@ public class QifParser {
           .set(Transaction.ID, globIdGenerator.getNextId(ImportedTransaction.ID, 1));
       boolean updated = false;
       StringBuilder description = new StringBuilder();
+      String mValue = null;
+      String nValue = null;
+      String pValue = null;
       while (true) {
         int start = reader.read();
         switch (start) {
@@ -62,32 +67,38 @@ public class QifParser {
             values.set(ImportedTransaction.AMOUNT, Double.parseDouble(reader.readLine().replaceAll(",", "")));
             break;
           case 'P':
-            reader.readLine();
+            pValue = reader.readLine();
             break;
           case 'M':
-            append(description);
+            mValue = reader.readLine();
             break;
           case 'N':
-            append(description);
+            nValue = reader.readLine();
             break;
           case '^':
-            String value = description.toString();
-            values.set(ImportedTransaction.ORIGINAL_LABEL, value);
-            values.set(ImportedTransaction.LABEL, value.trim());
-            return createTransaction(values);
+            String value = null;
+            if (!Strings.isNullOrEmpty(mValue)) {
+              value = mValue;
+            }
+            else if (!Strings.isNullOrEmpty(pValue)) {
+              value = pValue;
+            }
+            if (!Strings.isNullOrEmpty(nValue)) {
+              value = Strings.join(nValue, value);
+            }
+            if (value != null) {
+              values.set(ImportedTransaction.BANK_TRANSACTION_TYPE, nValue);
+              values.set(ImportedTransaction.ORIGINAL_LABEL, value);
+              values.set(ImportedTransaction.LABEL, value.trim());
+              return createTransaction(values);
+            }
+            throw new InvalidData("qif file not valide : No M nor P entry");
         }
       }
     }
     catch (IOException e) {
       return null;
     }
-  }
-
-  private void append(StringBuilder description) throws IOException {
-    if (description.length() > 0) {
-      description.append(" ");
-    }
-    description.append(reader.readLine());
   }
 
   private Glob createTransaction(FieldValuesBuilder values) {

@@ -4,6 +4,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,7 +71,7 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
     if (this.field == field) {
       Glob oldGlob = indexedGlob.remove(oldValue);
       if (oldGlob != null && oldGlob != glob) {
-        indexedGlob.put(oldValue, glob);
+        indexedGlob.put(oldValue, oldGlob);
       }
       indexedGlob.put(newValue, glob);
     }
@@ -94,6 +95,9 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
 
   public void add(Glob glob) {
     Object value = glob.getValue(this.field);
-    indexedGlob.put(value, glob);
+    Glob oldGlob = indexedGlob.put(value, glob);
+    if (oldGlob != null) {
+      throw new RuntimeException("Should be an unique index \n" + GlobPrinter.toString(glob) + "\n" + GlobPrinter.toString(oldGlob));
+    }
   }
 }

@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
 
@@ -20,7 +21,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/08", -29.9, "free telecom")
       .load();
     timeline.assertSpanEquals("2008/07", "2010/07");
-    transactions.setRecurring(0, "Internet", true);
+    transactions.setRecurring(0, "Internet", MasterCategory.TELECOMS, true);
     timeline.selectMonth("2008/07");
     transactions.initContent()
       .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, "Internet")

@@ -24,7 +24,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     CategorizationDialogChecker dialog = transactions.categorize(0);
     dialog.checkLabel("WorldCo/june");
     dialog.selectIncome();
-    dialog.checkContainsIncomeSeries("Salary", "Exceptional Income");
     dialog.selectIncomeSeries("Salary", true);
     dialog.validate();
 
@@ -33,6 +32,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
     reopenedDialog.checkIncomeSeriesIsSelected("Salary");
+    reopenedDialog.createSeries().setName("Exceptional Income")
+      .setCategory(MasterCategory.INCOME)
+      .setAmount("0.0")
+      .validate();
     reopenedDialog.selectIncomeSeries("Exceptional Income", false);
     reopenedDialog.checkIncomeSeriesIsNotSelected("Salary");
   }
@@ -46,8 +49,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     CategorizationDialogChecker dialog = transactions.categorize(0);
     dialog.checkLabel("Free Telecom");
     dialog.selectRecurring();
-    dialog.checkContainsRecurringSeries("Internet", "Rental", "Electricity");
-    dialog.selectRecurringSeries("Internet", true);
+    dialog.checkContainsRecurringSeries();
+    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
     dialog.validate();
 
     transactionDetails.checkSeries("Internet");
@@ -55,7 +58,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
     reopenedDialog.checkRecurringSeriesIsSelected("Internet");
-    reopenedDialog.selectRecurringSeries("Rental", true);
+    reopenedDialog.selectRecurringSeries("Rental", MasterCategory.HOUSE, true);
     reopenedDialog.checkRecurringSeriesIsNotSelected("Internet");
   }
 
@@ -68,18 +71,18 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     CategorizationDialogChecker dialog = transactions.categorize(0);
     dialog.checkLabel("AUCHAN C'EST BON");
     dialog.selectEnvelopes();
-    dialog.checkContainsEnvelope("Groceries", MasterCategory.FOOD, MasterCategory.HOUSE);
     dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
     dialog.validate();
 
     transactionDetails.checkSeries("Groceries");
     transactionDetails.checkCategory(MasterCategory.FOOD);
 
-    CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
-    reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
-    reopenedDialog.selectEnvelopeSeries("Groceries", MasterCategory.HOUSE, false);
-    reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.HOUSE);
-    reopenedDialog.checkEnveloppeSeriesIsNotSelected("Groceries", MasterCategory.FOOD);
+    //TODO avec l'ajout de plusieur category a une enveloppe
+//    CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
+//    reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
+//    reopenedDialog.selectEnvelopeSeries("Groceries", MasterCategory.HOUSE, true);
+//    reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.HOUSE);
+//    reopenedDialog.checkEnveloppeSeriesIsNotSelected("Groceries", MasterCategory.FOOD);
   }
 
   public void testStandardOccasionalTransaction() throws Exception {
@@ -131,7 +134,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.enableAutoHide();
 
     dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", true);
+    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
     dialog.checkTable(new Object[][]{
       {"30/06/2008", "Forfait Kro", -60.00},
     });
@@ -162,7 +165,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("Free Telecom");
     dialog.checkNoBudgetAreaSelected();
     dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", true);
+    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
     dialog.selectTableRows(0);
   }
@@ -190,8 +193,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("Free Telecom");
 
     dialog.selectRecurring();
-    dialog.checkContainsRecurringSeries("Internet", "Rental", "Electricity");
-    dialog.selectRecurringSeries("Internet", true);
+    dialog.checkContainsRecurringSeries();
+    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
     dialog.cancel();
 
     transactionDetails.checkNoSeries();
@@ -275,7 +278,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker dialog = transactions.categorize(0);
     dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", true);
+    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
     dialog.checkBudgetAreaIsSelected(BudgetArea.RECURRING_EXPENSES);
   }
 
@@ -288,7 +291,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     CategorizationDialogChecker dialog = transactions.categorize(0);
     dialog.assertVisible(true);
     dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", true);
+    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
     dialog.pressEscapeKey();
     dialog.assertVisible(false);
@@ -350,7 +353,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.enableAutoSelection();
     dialog.checkSelectedTableRows(2, 3, 4);
     dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", true);
+    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
     dialog.selectTableRows("Auchan 1111");
     dialog.checkSelectedTableRows(0, 1);
@@ -430,7 +433,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkBudgetAreasAreEnabled();
     dialog.checkSelectedTableRows(1, 2);
     dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", true);
+    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
     dialog.checkTable(new Object[][]{
       {"14/05/2008", "Carouf", -80.00},

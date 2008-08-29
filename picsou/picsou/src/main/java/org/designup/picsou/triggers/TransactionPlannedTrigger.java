@@ -76,7 +76,8 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           Glob series = repository.get(Key.create(Series.TYPE, newSeries));
           boolean isIncome = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome();
           double amount = newAmount - previousAmount;
-          transfertAmount(series, amount, newMonth, isIncome, timeService.getLastAvailableTransactionMonthId(), repository);
+          transfertAmount(series, amount, newMonth, isIncome,
+                          timeService.getLastAvailableTransactionMonthId(), repository);
         }
         else if (!Utils.equal(previousMonth, newMonth) ||
                  !Utils.equal(previousSeries, newSeries) ||
@@ -98,8 +99,8 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     });
   }
 
-  public static void transfertAmount(Glob series, double amount, Integer monthId, boolean isIncome, int availableTransactionMonthId, GlobRepository repository
-  ) {
+  public static void transfertAmount(Glob series, double amount, Integer monthId,
+                                     boolean isIncome, int availableTransactionMonthId, GlobRepository repository) {
     if (isIncome) {
       if (amount < 0) {
         transfertToPlanned(series, monthId, amount, availableTransactionMonthId, repository);
