@@ -140,11 +140,11 @@ public class Month {
   }
 
   public static String getMediumSizeLetterLabelFromMonth(Integer month) {
-    return Lang.get("month." + toMonth(month) + ".medium").toLowerCase();
+    return Lang.get("month." + toMonth(month) + ".medium");
   }
 
   public static String getOneLetterLabelFromMonth(Integer month) {
-    return Lang.get("month." + toMonth(month) + ".short").toLowerCase();
+    return Lang.get("month." + toMonth(month) + ".short").toUpperCase();
   }
 
   public static List<Integer> createMonths(int firstMonth, int lastMonth) {

@@ -3,12 +3,12 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <column styleClass="dialog" preferredSize="(800,800)">
-    <scrollPane margin="15" weightY="100">
+    <scrollPane margin="15" weightY="100" viewportBackground="dialog.block.top">
       <repeat ref="masterRepeat" margin="10">
         <column>
-          <component ref="masterLabel" marginTop="10"/>
+          <toggleButton ref="masterLabel" marginTop="10" styleClass="masterCategorySelector"/>
           <repeat ref="subcatRepeat" marginLeft="5">
-            <component ref="subcatLabel"/>
+            <toggleButton ref="subcatLabel" styleClass="subCategorySelector"/>
           </repeat>
         </column>
       </repeat>

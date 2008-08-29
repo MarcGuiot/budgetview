@@ -4,9 +4,6 @@
   <styles>
     <style selector="label.categorizationStep" font="-,bold,12" marginTop="5" marginBottom="5"/>
     <style selector="scrollPane" viewportBackground="dialog.block.top"/>
-
-    <ui name="seriesToggle" class="org.designup.picsou.gui.components.SeriesToggleUI"/>
-    <style selector="toggleButton" ui="seriesToggle" foreground="#000099"/>
   </styles>
 
   <column styleClass="dialog" opaque="true" preferredSize="(950,680)" margin="15">
@@ -34,7 +31,7 @@
         <toggleButton ref="invisibleBudgetAreaToggle" visible="false"/>
         <scrollPane minimumSize="(300,42)" weightY="0.1">
           <repeat ref="budgetAreas" layout="row" border="empty(0,10,0,10)">
-            <toggleButton ref="budgetAreaToggle"/>
+            <toggleButton ref="budgetAreaToggle" styleClass="selector"/>
           </repeat>
         </scrollPane>
 
@@ -51,7 +48,7 @@
               <toggleButton ref="invisibleIncomeToggle" visible="false"/>
               <scrollPane>
                 <repeat ref="incomeSeriesRepeat" layout="wrappedColumn" border="empty(5)">
-                  <toggleButton ref="seriesToggle"/>
+                  <toggleButton ref="seriesToggle" styleClass="selector"/>
                 </repeat>
               </scrollPane>
               <button action="createIncomeSeries" text="$categorization.newseries" styleClass="hyperlink"/>
@@ -63,7 +60,7 @@
               <toggleButton ref="invisibleRecurringToggle" visible="false"/>
               <scrollPane>
                 <repeat ref="recurringSeriesRepeat" layout="wrappedColumn" border="empty(5)">
-                  <toggleButton ref="seriesToggle" fill="none"/>
+                  <toggleButton ref="seriesToggle" styleClass="selector" fill="none"/>
                 </repeat>
               </scrollPane>
               <button action="createRecurringSeries" text="$categorization.newseries" styleClass="hyperlink"/>
@@ -78,7 +75,7 @@
                   <column>
                     <label ref="envelopeSeriesName" font="-,bold,14"/>
                     <repeat ref="envelopeCategoryRepeat">
-                      <toggleButton ref="envelopeCategoryToggle"/>
+                      <toggleButton ref="envelopeCategoryToggle" styleClass="selector"/>
                     </repeat>
                   </column>
                 </repeat>
@@ -93,9 +90,9 @@
                 <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
                 <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn" border="empty(5)">
                   <column>
-                    <toggleButton ref="occasionalCategoryToggle" fill="none" anchor="west" font="-,bold,14"/>
-                    <repeat ref="occasionalSubcatRepeat" marginLeft="10">
-                      <toggleButton ref="occasionalSubcatToggle" font="-,plain,11"/>
+                    <toggleButton ref="occasionalCategoryToggle" styleClass="masterCategorySelector"/>
+                    <repeat ref="occasionalSubcatRepeat" marginLeft="10" background="#FF0000">
+                      <toggleButton ref="occasionalSubcatToggle" styleClass="subCategorySelector"/>
                     </repeat>
                   </column>
                 </repeat>

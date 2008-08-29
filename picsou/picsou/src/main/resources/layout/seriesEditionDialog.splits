@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
-  <column  styleClass="dialog" opaque="true" preferredSize="(550,400)" margin="15">
 
-    <row>
-      <label text="$seriesEdition.name"/>
-      <textField ref="nameField"/>
-    </row>
-    <row>
-      <label text="$seriesEdition.category"/>
-      <label ref="singleCategoryLabel"/>
-      <button action="assignCategoryAction" text="$seriesEdition.categorize"/>
-    </row>
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="textField" fill="horizontal" anchor="left"/>
+    <style selector="label.month" foreground="#444444" font="-,plain,10"/>
+  </styles>
 
-    <repeat ref="monthRepeat" styleClass="innerBlock" marginLeft="10" marginRight="10" layout="horizontalGrid">
-      <column>
-        <label ref="monthLabel"/>
-        <row>
-          <checkBox ref="monthSelected"/>
-          <filler fill="horizontal"/>
-        </row>
-      </column>
-    </repeat>
+  <column styleClass="dialog" opaque="true" preferredSize="(550,400)" margin="15">
 
-    <row>
-      <column>
-        <filler fill="vertical"/>
-        <label text="$seriesEdition.begin"/>
-        <textField ref="beginSeriesDate"/>
-        <label text="$seriesEdition.end"/>
-        <textField ref="endSeriesDate"/>
-        <filler fill="vertical"/>
-      </column>
-      <scrollPane weightY="1000" marginLeft="10" marginRight="10">
-        <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>
-      </scrollPane>
-      <column>
-        <filler fill="vertical"/>
-        <label text="$seriesEdition.amount"/>
-        <textField ref="amountEditor"/>
-        <filler fill="vertical"/>
-      </column>
-    </row>
+    <grid>
+      <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel"/>
+      <textField gridPos="(1,0)" ref="nameField"/>
+      <label gridPos="(0,1)" text="$seriesEdition.category" styleClass="formLabel"/>
+      <row gridPos="(1,1)" marginTop="3">
+        <label ref="singleCategoryLabel"/>
+        <button action="assignCategoryAction" text="$seriesEdition.categorize" marginLeft="10"/>
+        <filler fill="horizontal"/>
+      </row>
+    </grid>
+
+    <column styleClass="dialogBlock" marginTop="10">
+      <row margin="15">
+        <column>
+          <label text="$seriesEdition.begin" styleClass="formLabelTop"/>
+          <textField ref="beginSeriesDate"/>
+          <label text="$seriesEdition.end" styleClass="formLabelTop"/>
+          <textField ref="endSeriesDate"/>
+          <filler fill="vertical"/>
+        </column>
+        <column marginLeft="10" marginRight="10">
+          <label text="$seriesEdition.entries" styleClass="formLabelTop"/>
+          <scrollPane weightY="1000" margin="5">
+            <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>
+          </scrollPane>
+        </column>
+        <column margin="5">
+          <filler fill="vertical"/>
+          <label text="$seriesEdition.amount" styleClass="formLabelTop"/>
+          <textField ref="amountEditor"/>
+        </column>
+      </row>
+      <repeat ref="monthRepeat" styleClass="innerBlock" margin="15" marginTop="10" layout="horizontalGrid">
+        <label ref="monthLabel" styleClass="month" fill="none" anchor="center"/>
+        <checkBox ref="monthSelected" fill="none" anchor="center"/>
+      </repeat>
+    </column>
 
   </column>
 </splits>

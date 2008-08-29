@@ -100,4 +100,33 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.recurring.checkSeries("Internet", 29.00, 30.00);
   }
+
+  public void testActivatingMonths() throws Exception {
+//    OfxBuilder.init(this)
+//      .addTransaction("2008/08/29", "2008/08/01", -29.00, "Free Telecom")
+//      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
+//      .addTransaction("2008/06/29", "2008/08/01", -29.00, "Free Telecom")
+//      .addTransaction("2008/05/29", "2008/08/01", -29.00, "Free Telecom")
+//      .load();
+//
+//    timeline.selectAll();
+//    views.selectData();
+//    transactions.getTable().selectRowSpan(0, 3);
+//    transactions.setRecurring("Free Telecom", "Internet", true);
+//
+//    views.selectBudget();
+//    timeline.selectMonths("2008/08", "2008/06");
+//    budgetView.recurring.editSeries("Internet")
+//      .checkName("Internet")
+//      .setName("Free")
+//      .checkTable(new Object[][]{
+//        {"2008", "May", "-29.00"},
+//        {"2008", "June", "-29.00"},
+//        {"2008", "July", "-29.00"},
+//        {"2008", "August", "-29.00"},
+//      })
+//      .validate();
+//
+//    budgetView.recurring.checkSeries("Free", 58.00, 58.00);
+  }
 }

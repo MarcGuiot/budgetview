@@ -26,6 +26,10 @@
            font="-,plain,12" foreground="import.form.label"
            anchor="east" marginRight="10"/>
 
+    <style selector="label.formLabelTop"
+           font="-,plain,12" foreground="import.form.label"
+           anchor="west"/>
+
     <style selector="row.buttons"
            fill="horizontal" anchor="center"
            marginTop="10" marginBottom="10" marginLeft="40" marginRight="40"/>
@@ -99,6 +103,14 @@
            triangleTopColor="gauge.detail.triangle.top" triangleBottomColor="gauge.detail.triangle.bottom"
            triangleBorderColor="gauge.detail.triangle.border" triangleShadowColor="gauge.detail.triangle.shadow"
            triangleSignColor="gauge.detail.triangle.sign"/>
+
+    <!-- Selection toggles -->
+    <ui name="selectionToggle" class="org.designup.picsou.gui.components.SeriesToggleUI"/>
+    <style selector="toggleButton.selector" ui="selectionToggle" foreground="#000099"/>
+    <style selector="toggleButton.masterCategorySelector" ui="selectionToggle" foreground="#000099"
+           fill="none" anchor="west" font="-,bold,14"/>
+    <style selector="toggleButton.subCategorySelector" ui="selectionToggle" foreground="#000099"
+           font="-,plain,11" fill="none" anchor="west"/>
 
   </styles>
 
