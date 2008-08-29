@@ -10,6 +10,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.gui.views.CellPainter;
 import static org.globsframework.gui.views.utils.LabelCustomizers.alignRight;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.model.ChangeSet;
@@ -63,9 +64,11 @@ public class CategoryView extends View {
     CategoryBackgroundPainter backgroundPainter = new CategoryBackgroundPainter(directory);
     CategoryExpansionColumn expandColumn = new CategoryExpansionColumn(backgroundPainter, selectionService);
 
-    globTable.addColumn(" ", expandColumn, expandColumn, categoryStringifier.getComparator(repository))
+    globTable
+      .setDefaultBackgroundPainter(backgroundPainter)
+      .addColumn(" ", expandColumn, expandColumn, categoryStringifier.getComparator(repository))
       .addColumn(Lang.get("category"), categoryStringifier, customizer)
-      .addColumn(Lang.get("amount"), amountStringifier, chain(alignRight(), customizer), backgroundPainter)
+      .addColumn(Lang.get("amount"), amountStringifier, chain(alignRight(), customizer))
       .hideHeader()
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 

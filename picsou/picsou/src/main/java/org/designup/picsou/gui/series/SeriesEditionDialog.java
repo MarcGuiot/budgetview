@@ -30,6 +30,7 @@ import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -113,7 +114,7 @@ public class SeriesEditionDialog {
                                             new CancelAction());
   }
 
-  public void show(Glob series) {
+  public void show(Glob series, Set<Integer> monthIds) {
     try {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
@@ -126,7 +127,7 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeBulkDispatchingMode();
     }
-    doShow();
+    doShow(monthIds);
   }
 
   public void showInit(Glob series, GlobList transactions) {
@@ -163,7 +164,7 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeBulkDispatchingMode();
     }
-    doShow();
+    doShow(getCurrentMonthId());
   }
 
   public void showNewSeries(GlobList transactions, BudgetArea budget) {
@@ -196,11 +197,17 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeBulkDispatchingMode();
     }
-    doShow();
+    doShow(getCurrentMonthId());
   }
 
-  private void doShow() {
+  private Set<Integer> getCurrentMonthId() {
+    return Collections.singleton(localDirectory.get(TimeService.class).getCurrentMonthId());
+  }
+
+  private void doShow(Set<Integer> monthIds) {
     selectionService.select(currentSeries);
+    selectionService.select(localRepository.getAll(SeriesBudget.TYPE,
+                                                   fieldIn(SeriesBudget.MONTH, monthIds)), SeriesBudget.TYPE);
     dialog.pack();
     GuiUtils.showCentered(dialog);
   }

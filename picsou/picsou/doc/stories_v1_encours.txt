@@ -1,20 +1,20 @@
 * Revoir tests F gestion series
 
-
 CategorizationDialog
 * Renommage de serie : mettre a jour le toggle
 * Liens "edition des series"
 * Supprimer series initiales (xml) + afficher message creation
-* Message special quand il n'y a pas de series.
+* Message special quand il n'y a pas de series
 
 SeriesCreationDialog (edition)
+* Creation de serie
+* Tester MAJ de la table des SeriesBudget en fonction des mois selectionnes (filtre/ACTIVE)
 * Afficher nom categorie
 * Forcer la selection d'une categorie au moins
 * Selection multi-categories pour les enveloppes, mono-categories pour les recurrences
 * Table de SeriesBudget + edition apres selection
 * Liste de series
-* Creation de serie
-* Suppression de serie (avec report des transactions ? proposer plutôt end date) 
+* Suppression de serie (avec report des transactions ? proposer plutôt end date)
 * Selection de profil : mensuel pur / personnalise / aleatoire
 * Joliesse
 

@@ -35,17 +35,17 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(Series.TYPE)) {
-      GlobList list = repository.getAll(Series.TYPE);
-      Set<Integer> seriesWithBudget = repository.getAll(SeriesBudget.TYPE).getValueSet(SeriesBudget.SERIES);
-      for (Glob series : list) {
-        updateSeriesBudget(series, repository);
-        seriesWithBudget.remove(series.get(Series.ID));
-      }
-      for (Integer seriesId : seriesWithBudget) {
-        repository.delete(Key.create(Series.TYPE, seriesId));
-      }
-    }
+//    if (changedTypes.contains(Series.TYPE)) {
+//      GlobList list = repository.getAll(Series.TYPE);
+//      Set<Integer> seriesWithBudget = repository.getAll(SeriesBudget.TYPE).getValueSet(SeriesBudget.SERIES);
+//      for (Glob series : list) {
+//        updateSeriesBudget(series, repository);
+//        seriesWithBudget.remove(series.get(Series.ID));
+//      }
+//      for (Integer seriesId : seriesWithBudget) {
+//        repository.delete(Key.create(Series.TYPE, seriesId));
+//      }
+//    }
   }
 
   void updateSeriesBudget(Glob series, GlobRepository repository) {
@@ -77,15 +77,17 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
       BooleanField monthField = Series.getField(monthId);
       Boolean active = series.get(monthField);
       Glob seriesBudget = monthWithBudget.remove(monthId);
-      FieldValue fieldValues[] = {value(SeriesBudget.SERIES, seriesId),
-                                  value(SeriesBudget.AMOUNT, series.get(Series.INITIAL_AMOUNT)),
-                                  value(SeriesBudget.MONTH, monthId),
-                                  value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
-                                  value(SeriesBudget.ACTIVE, active)};
       if (seriesBudget == null) {
+        FieldValue fieldValues[] = {value(SeriesBudget.SERIES, seriesId),
+                                    value(SeriesBudget.AMOUNT, series.get(Series.INITIAL_AMOUNT)),
+                                    value(SeriesBudget.MONTH, monthId),
+                                    value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
+                                    value(SeriesBudget.ACTIVE, active)};
         repository.create(SeriesBudget.TYPE, fieldValues);
       }
       else {
+        FieldValue fieldValues[] = {value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
+                                    value(SeriesBudget.ACTIVE, active)};
         repository.update(seriesBudget.getKey(), fieldValues);
       }
     }
