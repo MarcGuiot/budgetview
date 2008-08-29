@@ -339,6 +339,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     dialog.checkAutoSelectionEnabled(true);
+    dialog.checkLabel(2);
+
     dialog.checkSelectedTableRows(0, 1);
     dialog.selectTableRows(3);
     dialog.checkSelectedTableRows(2, 3, 4);

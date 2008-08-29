@@ -1,13 +1,14 @@
 package org.designup.picsou.server;
 
-import org.designup.picsou.functests.checkers.CategoryChooserChecker;
-import org.designup.picsou.functests.checkers.DataChecker;
 import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
+import org.designup.picsou.functests.checkers.DataChecker;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.globsframework.model.Glob;
+import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Table;
@@ -20,6 +21,10 @@ import org.uispec4j.interception.WindowInterceptor;
 import java.awt.*;
 
 public class ServerCategorizationTest extends ServerFuncTestCase {
+  protected void setUp() throws Exception {
+    TimeService.setCurrentDate(Dates.parse("2006/01/01"));
+    super.setUp();
+  }
 
   public void test() throws Exception {
     String fileName = TestUtils.getFileName(this, ".qif");

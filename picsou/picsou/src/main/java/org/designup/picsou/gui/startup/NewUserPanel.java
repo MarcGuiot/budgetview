@@ -28,11 +28,16 @@ public class NewUserPanel {
         return mainWindow.getFrame();
       }
     }, repository, directory) {
+      protected void contentChange() {
+        mainWindow.getFrame().validate();
+        mainWindow.getFrame().repaint();
+      }
+
       protected void complete() {
         MainPanel.show(repository, directory, mainWindow);
       }
     };
-    builder.add("content", importPanel.getBuilder());
+    builder.add("content", importPanel.getPanel());
 
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {

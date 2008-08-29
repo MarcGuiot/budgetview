@@ -13,9 +13,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.AbstractGlobSelectionAction;
-import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
@@ -78,7 +76,6 @@ public abstract class ImportPanel {
   private JPanel mainPanel;
   private JPanel panelStep1;
   private JPanel panelStep2;
-  private GlobsPanelBuilder mainBuilder;
 
   protected ImportPanel(String textForCloseButton, List<File> files, Glob defaultAccount,
                         final DialogOwner owner, final GlobRepository repository, Directory directory) {
@@ -105,15 +102,9 @@ public abstract class ImportPanel {
   }
 
   private void initMainPanel() {
-    mainBuilder = new GlobsPanelBuilder(getClass(), "/layout/importPanel.splits", localRepository, localDirectory);
     mainPanel = new JPanel();
-    mainBuilder.add("mainPanel", mainPanel);
-    mainBuilder.addLoader(new SplitsLoader() {
-      public void load(Component component) {
-        showStep(panelStep1);
-      }
-    });
-    mainBuilder.load();
+    mainPanel.setLayout(new GridBagBuilder.UniqueComponentLayoutManager(null));
+    mainPanel.add(panelStep1);
   }
 
   private void initStep1Panel(String textForCloseButton, Directory directory) {
@@ -242,14 +233,12 @@ public abstract class ImportPanel {
 
   private void showStep(JPanel step) {
     mainPanel.removeAll();
-    GridBagBuilder.setSingleCell(mainPanel, step);
-    mainPanel.validate();
-    JDialog dialog = GuiUtils.getEnclosingComponent(mainPanel.getParent(), JDialog.class);
-    if (dialog != null) {
-      dialog.pack();
-      GuiUtils.center(dialog);
-    }
+    mainPanel.add(step);
+//    mainPanel.validate();
+    contentChange();
   }
+
+  protected abstract void contentChange();
 
   private void loadLocalRepository(GlobRepository repository) {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE, Transaction.TYPE,
@@ -319,8 +308,8 @@ public abstract class ImportPanel {
     messageLabel.setText("<html><font color=red>" + Lang.get(key) + "</font></html>");
   }
 
-  public GlobsPanelBuilder getBuilder() {
-    return mainBuilder;
+  public JPanel getPanel() {
+    return mainPanel;
   }
 
   private class ImportAction extends AbstractAction {

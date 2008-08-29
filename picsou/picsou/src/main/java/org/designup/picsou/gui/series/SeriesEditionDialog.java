@@ -67,6 +67,7 @@ public class SeriesEditionDialog {
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(selectionService);
 
+    dialog = PicsouDialog.create(parent, Lang.get("seriesEdition.title"));
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/seriesEditionDialog.splits",
                                                       localRepository, localDirectory);
@@ -78,7 +79,7 @@ public class SeriesEditionDialog {
     builder.addEditor("nameField", Series.LABEL);
 
     builder.addLabel("singleCategoryLabel", Series.DEFAULT_CATEGORY);
-    builder.add("assignCategoryAction", new AssignCategoryAction());
+    builder.add("assignCategoryAction", new AssignCategoryAction(dialog));
 
     builder.addEditor("beginSeriesDate", Series.FIRST_MONTH);
     builder.addEditor("endSeriesDate", Series.LAST_MONTH);
@@ -131,9 +132,7 @@ public class SeriesEditionDialog {
     }, Series.TYPE);
 
     JPanel panel = builder.load();
-    dialog = PicsouDialog.createWithButtons(Lang.get("seriesEdition.title"), parent, panel,
-                                            new ValidateAction(),
-                                            new CancelAction());
+    dialog.addInPanelWithButton(panel, new ValidateAction(), new CancelAction());
   }
 
   public void show(BudgetArea budgetArea, Set<Integer> monthIds) {
@@ -281,9 +280,15 @@ public class SeriesEditionDialog {
   }
 
   private class AssignCategoryAction extends AbstractAction {
+    private Dialog parent;
+
+    private AssignCategoryAction(Dialog parent) {
+      this.parent = parent;
+    }
+
     public void actionPerformed(ActionEvent e) {
       CategoryChooserDialog chooser =
-        new CategoryChooserDialog(new SeriesCategoryChooserCallback(), true,
+        new CategoryChooserDialog(new SeriesCategoryChooserCallback(), parent, true,
                                   new TransactionRendererColors(localDirectory),
                                   localRepository, localDirectory);
 

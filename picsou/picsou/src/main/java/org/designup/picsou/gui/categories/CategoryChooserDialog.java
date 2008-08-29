@@ -8,7 +8,6 @@ import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.layout.WrappedColumnLayout;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -38,9 +37,13 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private SelectionService selectionService;
   private Map<Key, JToggleButton> categoryToButton = new HashMap<Key, JToggleButton>();
   private ButtonGroup buttonGroup;
+  private Directory localDirectory;
+  private Dialog parent;
 
-  public CategoryChooserDialog(CategoryChooserCallback callback, boolean monoSelection, TransactionRendererColors colors,
+  public CategoryChooserDialog(CategoryChooserCallback callback, Dialog parent, boolean monoSelection,
+                               TransactionRendererColors colors,
                                GlobRepository repository, Directory directory) {
+    this.parent = parent;
     if (monoSelection) {
       buttonGroup = new ButtonGroup();
     }
@@ -48,7 +51,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
     this.colors = colors;
     this.directory = directory;
 
-    Directory localDirectory = new DefaultDirectory(directory);
+    localDirectory = new DefaultDirectory(directory);
     selectionService = new SelectionService();
     localDirectory.add(selectionService);
 
@@ -57,7 +60,6 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
     this.categoryStringifier = localDirectory.get(DescriptionService.class).getStringifier(Category.TYPE);
     repository.addChangeListener(this);
-    dialog = PicsouDialog.create(localDirectory.get(JFrame.class), Lang.get("choose.category.title"));
     loadDialogContent();
   }
 
@@ -111,33 +113,15 @@ public class CategoryChooserDialog implements ChangeSetListener {
                         }
                       });
 
-    builder.add("close", new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        close();
-      }
-    });
-    builder.add("ok", new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        GlobList selectedCategories = new GlobList();
-        for (Map.Entry<Key, JToggleButton> entry : categoryToButton.entrySet()) {
-          if (entry.getValue().isSelected()) {
-            selectedCategories.add(repository.get(entry.getKey()));
-          }
-        }
-        callback.processSelection(selectedCategories);
-        close();
-      }
-    });
-    builder.addLoader(new SplitsLoader() {
-      public void load(Component component) {
-        dialog.setContentPane((Container)component);
-        dialog.pack();
-      }
-    });
-    builder.load();
+
+    dialog = PicsouDialog.createWithButtons(Lang.get("choose.category.title"), parent,
+                                            builder.<JPanel>load(),
+                                            new OkAction(), new CloseAction());
 
     JPanel panel = (JPanel)builder.getComponent("masterRepeat");
     panel.setLayout(new WrappedColumnLayout(4));
+
+    dialog.pack();
   }
 
   private JToggleButton createCategoryToggle(Glob category) {
@@ -179,6 +163,33 @@ public class CategoryChooserDialog implements ChangeSetListener {
       if (buttonGroup != null) {
         buttonGroup.remove(toggle);
       }
+    }
+  }
+
+  private class OkAction extends AbstractAction {
+    private OkAction() {
+      super(Lang.get("ok"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      GlobList selectedCategories = new GlobList();
+      for (Map.Entry<Key, JToggleButton> entry : categoryToButton.entrySet()) {
+        if (entry.getValue().isSelected()) {
+          selectedCategories.add(repository.get(entry.getKey()));
+        }
+      }
+      callback.processSelection(selectedCategories);
+      close();
+    }
+  }
+
+  private class CloseAction extends AbstractAction {
+    private CloseAction() {
+      super(Lang.get("close"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      close();
     }
   }
 }

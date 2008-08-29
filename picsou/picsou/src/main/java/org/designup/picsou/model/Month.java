@@ -136,7 +136,7 @@ public class Month {
 
   public static String getMonthLabel(Integer monthId) {
     int month = toMonth(monthId);
-    return Lang.get("month." + toMonth(month) + ".long");    
+    return Lang.get("month." + toMonth(month) + ".long");
   }
 
   public static String getMediumSizeLetterLabelFromMonth(Integer month) {
@@ -149,7 +149,9 @@ public class Month {
 
   public static List<Integer> createMonths(int firstMonth, int lastMonth) {
     if (firstMonth > lastMonth) {
-      return Collections.emptyList();
+      int tmp = lastMonth;
+      lastMonth = firstMonth;
+      firstMonth = tmp;
     }
     List<Integer> month = new ArrayList<Integer>();
     int currentMonth = firstMonth;
