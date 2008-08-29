@@ -22,6 +22,10 @@
 
 * Filtrage transactions par Type
 
+* Filtrage transactions par Compte
+
+* Filtrage transactions par BudgetArea
+
 * Decouverte des mois actifs pour les series a partir des transactions
 
 * Graphiques (camembert / histogramme)

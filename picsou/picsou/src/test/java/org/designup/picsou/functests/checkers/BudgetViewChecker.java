@@ -73,6 +73,12 @@ public class BudgetViewChecker extends DataChecker {
       return -1;
     }
 
+    public SeriesEditionDialogChecker editSeries() {
+      Panel budgetPanel = window.getPanel(panelName);
+      Window dialog = WindowInterceptor.getModalDialog(budgetPanel.getButton("Edit series").triggerClick());
+      return new SeriesEditionDialogChecker(dialog);
+    }
+
     public SeriesEditionDialogChecker editSeries(String seriesName) {
       Panel budgetPanel = window.getPanel(panelName);
       Window dialog = WindowInterceptor.getModalDialog(budgetPanel.getButton(seriesName).triggerClick());

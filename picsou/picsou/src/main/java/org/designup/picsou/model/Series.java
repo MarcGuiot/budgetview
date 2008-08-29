@@ -16,26 +16,20 @@ import org.globsframework.utils.serialization.SerializedOutput;
 public class Series {
   public static GlobType TYPE;
 
-  @NoObfuscation
   @Key
   public static IntegerField ID;
 
-  @NoObfuscation
   public static StringField LABEL;
 
-  @NoObfuscation
   @NamingField
   public static StringField NAME;
 
-  @NoObfuscation
   @Target(BudgetArea.class)
   public static LinkField BUDGET_AREA;
 
-  @NoObfuscation
   @Target(Category.class)
   public static LinkField DEFAULT_CATEGORY;
 
-  @NoObfuscation
   @Target(ProfileType.class)
   public static LinkField PROFILE_TYPE;
 

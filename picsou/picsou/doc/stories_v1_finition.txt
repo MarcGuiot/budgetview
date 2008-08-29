@@ -14,6 +14,11 @@ BalanceGraph : couleur si balance negative
 BudgetView : occasional en negatif ?
 blocks budgetview : splitpane invisibles
 
+Login
+-----
+- Revoir logo
+- Creation de compte : expliquer que la notion de compte / mot de passe est liee au cryptage local
+
 
 CategorizationDialog
 --------------------
@@ -82,3 +87,4 @@ Fenetre import
 Budget view
 -----------
 * Panneau pour montrer le detail du calcul du disponible en occasional
+* Hyperliens montants ==> transactionView

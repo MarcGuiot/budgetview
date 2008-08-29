@@ -23,6 +23,6 @@ public class SeriesStringifier implements GlobStringifier {
   }
 
   public Comparator<Glob> getComparator(GlobRepository repository) {
-    return new GlobFieldComparator(Series.ID);
+    return new GlobFieldComparator(Series.LABEL);
   }
 }

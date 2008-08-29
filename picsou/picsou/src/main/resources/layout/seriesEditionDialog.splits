@@ -7,45 +7,57 @@
     <style selector="label.month" foreground="#444444" font="-,plain,10"/>
   </styles>
 
-  <column styleClass="dialog" opaque="true" preferredSize="(550,400)" margin="15">
+  <column styleClass="dialog" opaque="true" preferredSize="(700,400)" margin="15">
 
-    <grid>
-      <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel"/>
-      <textField gridPos="(1,0)" ref="nameField"/>
-      <label gridPos="(0,1)" text="$seriesEdition.category" styleClass="formLabel"/>
-      <row gridPos="(1,1)" marginTop="3">
-        <label ref="singleCategoryLabel"/>
-        <button action="assignCategoryAction" text="$seriesEdition.categorize" marginLeft="10"/>
-        <filler fill="horizontal"/>
-      </row>
-    </grid>
+    <horizontalSplit dividerLocation="150">
+      <column>
+        <scrollPane>
+          <list ref="seriesList"/>
+        </scrollPane>
+        <row>
+          <button action="createSeries"/>
+        </row>
+      </column>
+      <column>
+        <grid>
+          <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel"/>
+          <textField gridPos="(1,0)" ref="nameField"/>
+          <label gridPos="(0,1)" text="$seriesEdition.category" styleClass="formLabel"/>
+          <row gridPos="(1,1)" marginTop="3">
+            <label ref="singleCategoryLabel"/>
+            <button action="assignCategoryAction" text="$seriesEdition.categorize" marginLeft="10"/>
+            <filler fill="horizontal"/>
+          </row>
+        </grid>
 
-    <column styleClass="dialogBlock" marginTop="10">
-      <row margin="15">
-        <column>
-          <label text="$seriesEdition.begin" styleClass="formLabelTop"/>
-          <textField ref="beginSeriesDate"/>
-          <label text="$seriesEdition.end" styleClass="formLabelTop"/>
-          <textField ref="endSeriesDate"/>
-          <filler fill="vertical"/>
+        <column styleClass="dialogBlock" marginTop="10">
+          <row margin="15">
+            <column>
+              <label text="$seriesEdition.begin" styleClass="formLabelTop" labelFor="beginSeriesDate"/>
+              <textField ref="beginSeriesDate"/>
+              <label text="$seriesEdition.end" styleClass="formLabelTop" labelFor="endSeriesDate"/>
+              <textField ref="endSeriesDate"/>
+              <filler fill="vertical"/>
+            </column>
+            <column marginLeft="10" marginRight="10">
+              <label text="$seriesEdition.entries" styleClass="formLabelTop"/>
+              <scrollPane weightY="1000" margin="5">
+                <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>
+              </scrollPane>
+            </column>
+            <column margin="5">
+              <filler fill="vertical"/>
+              <label text="$seriesEdition.amount" styleClass="formLabelTop"/>
+              <textField ref="amountEditor"/>
+            </column>
+          </row>
+          <repeat ref="monthRepeat" styleClass="innerBlock" margin="15" marginTop="10" layout="horizontalGrid">
+            <label ref="monthLabel" styleClass="month" fill="none" anchor="center" labelFor="monthSelector"/>
+            <checkBox ref="monthSelector" fill="none" anchor="center"/>
+          </repeat>
         </column>
-        <column marginLeft="10" marginRight="10">
-          <label text="$seriesEdition.entries" styleClass="formLabelTop"/>
-          <scrollPane weightY="1000" margin="5">
-            <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>
-          </scrollPane>
-        </column>
-        <column margin="5">
-          <filler fill="vertical"/>
-          <label text="$seriesEdition.amount" styleClass="formLabelTop"/>
-          <textField ref="amountEditor"/>
-        </column>
-      </row>
-      <repeat ref="monthRepeat" styleClass="innerBlock" margin="15" marginTop="10" layout="horizontalGrid">
-        <label ref="monthLabel" styleClass="month" fill="none" anchor="center" labelFor="monthSelector"/>
-        <checkBox ref="monthSelector" fill="none" anchor="center"/>
-      </repeat>
-    </column>
+      </column>
+    </horizontalSplit>
 
   </column>
 </splits>

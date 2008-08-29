@@ -151,4 +151,129 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       })
       .cancel();
   }
+
+  public void testEditingAllTheSeriesForABudgetArea() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .addTransaction("2008/07/10", -50.00, "Monoprix")
+      .addTransaction("2008/07/05", -29.00, "Free Telecom")
+      .addTransaction("2008/07/04", -55.00, "EDF")
+      .addTransaction("2008/07/03", -15.00, "McDo")
+      .addTransaction("2008/07/02", 200.00, "WorldCo - Bonus")
+      .addTransaction("2008/07/01", 3540.00, "WorldCo")
+      .load();
+
+    views.selectData();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00)
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00)
+      .add("05/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
+      .add("04/07/2008", TransactionType.PRELEVEMENT, "EDF", "", -55.00)
+      .add("03/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -15.00)
+      .add("02/07/2008", TransactionType.VIREMENT, "WorldCo - Bonus", "", 200.00)
+      .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
+      .check();
+
+    transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    transactions.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    transactions.setRecurring("EDF", "Electricity", MasterCategory.HOUSE, true);
+    transactions.setExceptionalIncome("WorldCo - Bonus", "Exceptional Income", true);
+    transactions.setIncome("WorldCo", "Salary", true);
+
+    views.selectBudget();
+
+    budgetView.recurring.editSeries()
+      .checkSeriesList("Electricity", "Internet")
+      .validate();
+
+    budgetView.envelopes.editSeries()
+      .checkSeriesList("Groceries")
+      .validate();
+
+    budgetView.income.editSeries()
+      .checkSeriesList("Exceptional Income", "Salary")
+      .validate();
+  }
+
+  public void testSwitchingBetweenSeries() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/15", -29.00, "Free Telecom")
+      .addTransaction("2008/07/15", -55.00, "EDF")
+      .load();
+
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("15/08/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "EDF", "", -55.00)
+      .check();
+
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    transactions.setRecurring("EDF", "Electricity", MasterCategory.HOUSE, true);
+
+    views.selectBudget();
+    budgetView.recurring.editSeries()
+      .checkSeriesList("Electricity", "Internet")
+      .checkSeriesSelected("Electricity")
+      .selectAllMonths()
+      .setAmount("-70")
+      .checkTable(new Object[][]{
+        {"2008", "July", "-70.00"},
+        {"2008", "August", "-70.00"},
+      })
+      .selectSeries("Internet")
+      .checkTable(new Object[][]{
+        {"2008", "July", "-29.00"},
+        {"2008", "August", "-29.00"},
+      })
+      .checkSeriesSelected("Electricity")
+      .checkTable(new Object[][]{
+        {"2008", "July", "-70.00"},
+        {"2008", "August", "-70.00"},
+      })
+      .validate();
+  }
+
+  public void testEmptySeriesList() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
+      .load();
+
+    timeline.selectMonth("2008/07");
+
+    views.selectBudget();
+
+    budgetView.recurring.editSeries()
+      .checkNoSeries()
+      .checkAllMonthsDisabled()
+      .checkAllFieldsDisabled()
+      .cancel();
+  }
+
+  public void testCreatingANewSeries() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
+      .load();
+
+    timeline.selectMonth("2008/07");
+
+    views.selectBudget();
+
+    budgetView.recurring.editSeries()
+      .checkNoSeries()
+      .createSeries()
+      .checkSeriesList("New series")
+      .checkSeriesSelected("New series")
+      .checkName("New series")
+      .setName("Free Telecom")
+      .checkSeriesList("Free Telecom")
+      .checkTable(new Object[][]{
+        {"2008", "July", "0.00"},
+        {"2008", "August", "0.00"}
+      })
+      .validate();
+
+    budgetView.recurring.checkSeries("Free Telecom", 0, 0);
+  }
 }

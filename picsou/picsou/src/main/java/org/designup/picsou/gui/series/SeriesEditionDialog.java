@@ -19,6 +19,8 @@ import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.CellPainter;
+import org.globsframework.gui.views.GlobListView;
+import org.globsframework.gui.views.GlobTableView;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -28,9 +30,9 @@ import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -50,6 +52,7 @@ public class SeriesEditionDialog {
   private GlobStringifier stringifier;
   private GlobRepository repository;
   private Glob currentSeries;
+  private GlobListView seriesList;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -68,6 +71,10 @@ public class SeriesEditionDialog {
                                                       "/layout/seriesEditionDialog.splits",
                                                       localRepository, localDirectory);
 
+    seriesList = builder.addList("seriesList", Series.TYPE);
+
+    builder.add("createSeries", new CreateSeriesAction());
+
     builder.addEditor("nameField", Series.LABEL);
 
     builder.addLabel("singleCategoryLabel", Series.DEFAULT_CATEGORY);
@@ -82,31 +89,46 @@ public class SeriesEditionDialog {
                       new RepeatComponentFactory<Integer>() {
                         public void registerComponents(RepeatCellBuilder cellBuilder, final Integer item) {
                           cellBuilder.add("monthLabel", new JLabel(Month.getMediumSizeLetterLabelFromMonth(item)));
-                          final JCheckBox checkbox = new JCheckBox();
+                          final JCheckBox checkBox = new JCheckBox();
                           selectionService.addListener(new GlobSelectionListener() {
                             public void selectionUpdated(GlobSelection selection) {
-                              GlobList series = selection.getAll(Series.TYPE);
-                              if (series.size() != 1) {
-                                return;
-                              }
-                              checkbox.setSelected(series.get(0).get(Series.getField(item)));
+                              GlobList seriesList = selection.getAll(Series.TYPE);
+                              Glob series = seriesList.size() == 1 ? seriesList.get(0) : null;
+                              checkBox.setEnabled(series != null);
+                              checkBox.setSelected((series != null) && series.get(Series.getField(item)));
                             }
                           }, Series.TYPE);
-                          cellBuilder.add("monthSelector", checkbox);
-                          checkbox.addItemListener(new ItemListener() {
+                          cellBuilder.add("monthSelector", checkBox);
+                          checkBox.addItemListener(new ItemListener() {
                             public void itemStateChanged(ItemEvent e) {
-                              localRepository.update(currentSeries.getKey(), Series.getField(item), e.getStateChange() == ItemEvent.SELECTED);
+                              if (currentSeries != null) {
+                                localRepository.update(currentSeries.getKey(), Series.getField(item),
+                                                       e.getStateChange() == ItemEvent.SELECTED);
+                              }
                             }
                           });
                         }
                       });
 
-    builder.addTable("seriesBudget", SeriesBudget.TYPE, new GlobFieldComparator(SeriesBudget.MONTH))
-      .setFilter(GlobMatchers.fieldEquals(SeriesBudget.ACTIVE, true))
+    final GlobTableView budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE, new GlobFieldComparator(SeriesBudget.MONTH))
+      .setFilter(fieldEquals(SeriesBudget.ACTIVE, true))
       .setDefaultBackgroundPainter(new TableBackgroundPainter())
       .addColumn(Lang.get("seriesEdition.year"), new YearStringifier())
       .addColumn(Lang.get("seriesEdition.month"), new MonthStringifier())
       .addColumn(SeriesBudget.AMOUNT);
+
+    selectionService.addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        currentSeries = selection.getAll(Series.TYPE).getFirst();
+        if (currentSeries != null) {
+          budgetTable.setFilter(GlobMatchers.and(fieldEquals(SeriesBudget.ACTIVE, true),
+                                                 fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID))));
+        }
+        else {
+          budgetTable.setFilter(GlobMatchers.NONE);
+        }
+      }
+    }, Series.TYPE);
 
     JPanel panel = builder.load();
     dialog = PicsouDialog.createWithButtons(Lang.get("seriesEdition.title"), parent, panel,
@@ -114,34 +136,38 @@ public class SeriesEditionDialog {
                                             new CancelAction());
   }
 
-  public void show(Glob series, Set<Integer> monthIds) {
+  public void show(BudgetArea budgetArea, Set<Integer> monthIds) {
     try {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
-      GlobList globs = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
-                                              series.get(Series.ID)).getGlobs();
-      globs.add(series);
-      localRepository.reset(globs, SeriesBudget.TYPE, Series.TYPE);
-      this.currentSeries = localRepository.get(series.getKey());
+      initBudgetAreaSeries(budgetArea);
     }
     finally {
       localRepository.completeBulkDispatchingMode();
     }
-    doShow(monthIds);
+    doShow(monthIds, null);
+
+  }
+
+  public void show(Glob series, Set<Integer> monthIds) {
+    try {
+      localRepository.enterBulkDispatchingMode();
+      localRepository.rollback();
+      initBudgetAreaSeries(BudgetArea.get(series.get(Series.BUDGET_AREA)));
+    }
+    finally {
+      localRepository.completeBulkDispatchingMode();
+    }
+    doShow(monthIds, localRepository.get(series.getKey()));
   }
 
   public void showInit(Glob series, GlobList transactions) {
     try {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
-      GlobList globs = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
-                                              series.get(Series.ID)).getGlobs();
-      globs.add(series);
-      localRepository.reset(globs, SeriesBudget.TYPE, Series.TYPE);
-      this.currentSeries = localRepository.get(series.getKey());
+      initBudgetAreaSeries(BudgetArea.get(series.get(Series.BUDGET_AREA)));
       Double min = computeMinAmountPerMonth(transactions);
       SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
-      budgetArea = BudgetArea.get(this.currentSeries.get(Series.BUDGET_AREA));
       String name = stringifier.toString(series, localRepository);
       localRepository.update(series.getKey(),
                              value(Series.INITIAL_AMOUNT, min),
@@ -159,53 +185,79 @@ public class SeriesEditionDialog {
                              value(Series.OCTOBER, true),
                              value(Series.NOVEMBER, true),
                              value(Series.DECEMBER, true));
-      this.currentSeries = localRepository.get(series.getKey());
     }
     finally {
       localRepository.completeBulkDispatchingMode();
     }
-    doShow(getCurrentMonthId());
+    doShow(getCurrentMonthId(), localRepository.get(series.getKey()));
   }
 
   public void showNewSeries(GlobList transactions, BudgetArea budget) {
+    Glob createdSeries;
     try {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
       budgetArea = BudgetArea.get(budget.getId());
-      Double min = computeMinAmountPerMonth(transactions);
+      Double initialAmount = computeMinAmountPerMonth(transactions);
       SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
       Glob firstTransaction = transactions.get(0);
       String label = AllocationLearningService.anonymise(firstTransaction.get(Transaction.LABEL));
-      currentSeries = localRepository.create(Series.TYPE,
-                                             value(Series.BUDGET_AREA, budgetArea.getId()),
-                                             value(Series.INITIAL_AMOUNT, min),
-                                             value(Series.LABEL, label),
-                                             value(Series.DAY, days.last()),
-                                             value(Series.JANUARY, true),
-                                             value(Series.FEBRUARY, true),
-                                             value(Series.MARCH, true),
-                                             value(Series.APRIL, true),
-                                             value(Series.MAY, true),
-                                             value(Series.JUNE, true),
-                                             value(Series.JULY, true),
-                                             value(Series.AUGUST, true),
-                                             value(Series.SEPTEMBER, true),
-                                             value(Series.OCTOBER, true),
-                                             value(Series.NOVEMBER, true),
-                                             value(Series.DECEMBER, true));
+      Integer day = days.last();
+      createdSeries = createSeries(label, initialAmount, day);
     }
     finally {
       localRepository.completeBulkDispatchingMode();
     }
-    doShow(getCurrentMonthId());
+    doShow(getCurrentMonthId(), createdSeries);
+  }
+
+  private Glob createSeries(String label, Double initialAmount, Integer day) {
+    return localRepository.create(Series.TYPE,
+                                  value(Series.BUDGET_AREA, budgetArea.getId()),
+                                  value(Series.INITIAL_AMOUNT, initialAmount),
+                                  value(Series.LABEL, label),
+                                  value(Series.DAY, day),
+                                  value(Series.JANUARY, true),
+                                  value(Series.FEBRUARY, true),
+                                  value(Series.MARCH, true),
+                                  value(Series.APRIL, true),
+                                  value(Series.MAY, true),
+                                  value(Series.JUNE, true),
+                                  value(Series.JULY, true),
+                                  value(Series.AUGUST, true),
+                                  value(Series.SEPTEMBER, true),
+                                  value(Series.OCTOBER, true),
+                                  value(Series.NOVEMBER, true),
+                                  value(Series.DECEMBER, true));
+  }
+
+  private void initBudgetAreaSeries(BudgetArea budgetArea) {
+    this.budgetArea = budgetArea;
+
+    GlobList seriesList =
+      repository.getAll(Series.TYPE, fieldEquals(Series.BUDGET_AREA, budgetArea.getId()));
+
+    GlobList globsToLoad = new GlobList();
+    for (Glob series : seriesList) {
+      globsToLoad.add(series);
+      globsToLoad.addAll(repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
+                                                series.get(Series.ID)).getGlobs());
+    }
+    localRepository.reset(globsToLoad, SeriesBudget.TYPE, Series.TYPE);
   }
 
   private Set<Integer> getCurrentMonthId() {
     return Collections.singleton(localDirectory.get(TimeService.class).getCurrentMonthId());
   }
 
-  private void doShow(Set<Integer> monthIds) {
-    selectionService.select(currentSeries);
+  private void doShow(Set<Integer> monthIds, Glob series) {
+    this.currentSeries = series;
+    if (series != null) {
+      selectionService.select(series);
+    }
+    else {
+      seriesList.selectFirst();
+    }
     selectionService.select(localRepository.getAll(SeriesBudget.TYPE,
                                                    fieldIn(SeriesBudget.MONTH, monthIds)), SeriesBudget.TYPE);
     dialog.pack();
@@ -316,6 +368,17 @@ public class SeriesEditionDialog {
 
     public void actionPerformed(ActionEvent e) {
       dialog.setVisible(false);
+    }
+  }
+
+  private class CreateSeriesAction extends AbstractAction {
+    public CreateSeriesAction() {
+      super(Lang.get("seriesEdition.create"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      Glob newSeries = createSeries(Lang.get("seriesEdition.newSeries"), 0.0, 1);
+      selectionService.select(newSeries);
     }
   }
 }

@@ -1,34 +1,32 @@
 * Revoir tests F gestion series
 
+CategoryChooserDialog
+* Afficher la/les categories en cours
+* Exclure "none" et "all"
+* Titre "choisir une categorie"
+* Edition des categories
+
 CategorizationDialog
-* Gerer les selections multiples pour les enveloppes
 * Renommage de serie : mettre a jour le toggle
 * Liens "edition des series"
-* Supprimer series initiales (xml) + afficher message creation
-* Message special quand il n'y a pas de series
+* Message d'aide quand il n'y a pas de serie pour une budgetArea
 
 SeriesCreationDialog (edition)
+* Tester dates debut/fin et effets sur la table des SeriesBudget
 * Creation de serie
-* Afficher nom categorie
 * Forcer la selection d'une categorie au moins
 * Selection multi-categories pour les enveloppes, mono-categories pour les recurrences
-* Table de SeriesBudget + edition apres selection
 * Liste de series
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
 * Selection de profil : mensuel pur / personnalise / aleatoire
-* Joliesse
+* Edition des dates debut/find : combo mois + spinbox annees
+* MAJ temps reel du nom de la serie pendant l'edition (propriete editor)
 
 BudgetView
-* Ne plus creer de series par defaut
 * Ne pas montrer les series qui ne sont pas utilisees
 * Block "non classe" (avec bouton categorisation)
-* Hyperliens montants ==> transactionView
 
 Licence
 * Activation licence : cas ou pas de connexion internet (test manuel)
 * Voir nb mois
-
-CategoryChooserDialog
-* exclure "none" et "all"
-* titre "choisir une categorie"
 

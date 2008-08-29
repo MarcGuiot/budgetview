@@ -95,7 +95,7 @@ public class CategorizationDialogChecker extends DataChecker {
       SeriesEditionDialogChecker createSerie = createSeries();
       createSerie.setName(name);
       createSerie.setCategory(MasterCategory.INCOME);
-      createSerie.selectAllMonth();
+      createSerie.selectAllMonths();
       createSerie.setAmount("0");
       createSerie.validate();
     }

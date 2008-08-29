@@ -7,6 +7,7 @@ import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobSelection;
@@ -28,6 +29,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.util.Set;
 import java.util.Collections;
+import java.awt.event.ActionEvent;
 
 public class BudgetAreaSeriesView extends View {
   private String name;
@@ -82,11 +84,16 @@ public class BudgetAreaSeriesView extends View {
                           cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
                             public void dispose() {
                               gaugeView.dispose();
-
                             }
                           });
                         }
                       });
+
+    builder.add("editAllSeries", new AbstractAction(Lang.get("budgetview.editAll")) {
+      public void actionPerformed(ActionEvent e) {
+        seriesEditionDialog.show(budgetArea, selectedMonthIds);
+      }
+    });
 
     parentBuilder.add(name, builder);
   }

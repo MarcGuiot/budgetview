@@ -1,13 +1,16 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.model.MasterCategory;
-import org.uispec4j.ItemNotFoundException;
-import org.uispec4j.Table;
-import org.uispec4j.Trigger;
+import org.designup.picsou.model.Month;
+import org.uispec4j.*;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class SeriesEditionDialogChecker extends DataChecker {
   private Window dialog;
@@ -50,8 +53,9 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public void selectAllMonth() {
+  public SeriesEditionDialogChecker selectAllMonths() {
     table.selectRowSpan(0, table.getRowCount() - 1);
+    return this;
   }
 
   public SeriesEditionDialogChecker checkTable(Object[][] content) {
@@ -89,5 +93,94 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   public void cancel() {
     dialog.getButton("Cancel").click();
+  }
+
+  public SeriesEditionDialogChecker checkNoSeries() {
+    assertThat(dialog.getListBox().isEmpty());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSeriesList(String... names) {
+    assertThat(dialog.getListBox().contentEquals(names));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker selectSeries(String name) {
+    dialog.getListBox().select(name);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSeriesSelected(String name) {
+    dialog.getListBox().select(name);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker createSeries() {
+    dialog.getButton("Create").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker deleteSeries() {
+    dialog.getButton("Delete").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker setStartDate(int monthId) {
+    setDate("Start date", monthId);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkNoStartDate() {
+    checkDate("Start date", "");
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkStartDate(int monthId) {
+    checkDate("Start date", monthId);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker setEndDate(int monthId) {
+    setDate("End date", monthId);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkNoEndDate() {
+    checkDate("End date", "");
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkEndDate(int monthId) {
+    checkDate("End date", monthId);
+    return this;
+  }
+
+  private void setDate(String labelName, int monthId) {
+    String text = Month.toMonth(monthId) + "/" + Month.toYear(monthId);
+    dialog.getTextBox(ComponentMatchers.componentLabelFor(labelName)).setText(text);
+  }
+
+  private void checkDate(String labelName, int monthId) {
+    String text = Month.toMonth(monthId) + "/" + Month.toYear(monthId);
+    checkDate(labelName, text);
+  }
+
+  private void checkDate(String labelName, String text) {
+    assertThat(dialog.getTextBox(ComponentMatchers.componentLabelFor(labelName)).textEquals(text));
+  }
+
+  public SeriesEditionDialogChecker checkAllMonthsDisabled() {
+    for (UIComponent checkBox : dialog.getUIComponents(CheckBox.class)) {
+      UISpecAssert.assertFalse(checkBox.isEnabled());
+    }
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkAllFieldsDisabled() {
+    for (Component component : dialog.getSwingComponents(JTextField.class)) {
+      TextBox textBox = new TextBox((JTextField)component);
+      UISpecAssert.assertFalse(textBox.isEnabled());
+    }
+    return this;
   }
 }
