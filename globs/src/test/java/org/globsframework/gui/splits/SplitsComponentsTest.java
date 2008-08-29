@@ -1,6 +1,7 @@
 package org.globsframework.gui.splits;
 
 import org.globsframework.gui.splits.components.ShadowedLabelUI;
+import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.font.Fonts;
 import org.globsframework.gui.splits.font.FontsTest;
 import org.globsframework.gui.splits.layout.CardHandler;
@@ -187,6 +188,26 @@ public class SplitsComponentsTest extends SplitsTestCase {
     assertSame(check, parse("<checkBox ref='check'/>"));
   }
 
+  public void testLabelFor() throws Exception {
+    JLabel label = builder.add("label", new JLabel());
+    JTextField textField = builder.add("editor", new JTextField());
+    parse("<row>" +
+          "  <label ref='label' labelFor='editor'/>" +
+          "  <textField ref='editor'/>" +
+          "</row>");
+    assertSame(textField, label.getLabelFor());
+  }
+
+  public void testLabelForError() throws Exception {
+    try {
+      parse("<label text='Title' labelFor='???'/>");
+      fail();
+    }
+    catch (SplitsException e) {
+      checkException(e, "Label 'Title' references an unknown component '???'");
+    }
+  }
+
   public void testLabelsAreNotOpaqueButThisCanBeOverriden() throws Exception {
     JLabel label1 = parse("<label text='foo'/>");
     assertFalse(label1.isOpaque());
@@ -197,8 +218,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
 
   public void testPanel() throws Exception {
     builder.add("btn", aButton);
-    MyPanel myPanel = new MyPanel();
-    builder.add("myPanel", myPanel);
+    builder.add("myPanel", new MyPanel());
     MyPanel panel = parse(
       "<panel ref='myPanel'>" +
       "  <button ref='btn'/>" +
@@ -207,14 +227,14 @@ public class SplitsComponentsTest extends SplitsTestCase {
   }
 
   public void testAPanelCanHaveOnlyOneChild() throws Exception {
-    MyPanel myPanel = new MyPanel();
-    builder.add("myPanel", myPanel);
+    builder.add("myPanel", new MyPanel());
     try {
       parse(
         "<panel ref='myPanel'>" +
         "  <button/>" +
         "  <button/>" +
         "</panel>");
+      fail();
     }
     catch (Exception e) {
       checkException(e, "panel components cannot have more than one subcomponent");

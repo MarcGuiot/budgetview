@@ -28,24 +28,23 @@ public class SplitsDemo {
       new String[]{"blah", "lkjml", "ojmlkj", "klhiuhyo"}
     );
 
-    SplitsBuilder builder =
-      SplitsBuilder.init(new DefaultDirectory())
-        .add("myTable", table)
-        .add("myList", list)
-        .add("button1", new JButton("button 1"))
-        .add("button2", new JButton("button 2"))
-        .add("button3", new JButton("button 3"));
+    SplitsBuilder builder = SplitsBuilder.init(new DefaultDirectory());
+    builder.add("myTable", table);
+    builder.add("myList", list);
+    builder.add("button1", new JButton("button 1"));
+    builder.add("button2", new JButton("button 2"));
+    builder.add("button3", new JButton("button 3"));
 
     show(builder, "editor.xml");
   }
 
   private static void loginPanel() {
     SplitsBuilder builder =
-      SplitsBuilder.init(new DefaultDirectory())
-        .add("userField", new JTextField())
-        .add("passwordField", new JPasswordField())
-        .add("createAccountCheckBox", new JCheckBox("Create account"))
-        .add("loginButton", new JButton("Login"));
+      SplitsBuilder.init(new DefaultDirectory());
+    builder.add("userField", new JTextField());
+    builder.add("passwordField", new JPasswordField());
+    builder.add("createAccountCheckBox", new JCheckBox("Create account"));
+    builder.add("loginButton", new JButton("Login"));
 
     show(builder, "login.xml");
   }

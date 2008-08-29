@@ -28,6 +28,8 @@ public interface SplitsContext {
 
   void addAutoHide(Component targetComponent, String sourceComponentName);
 
+  void addLabelFor(JLabel label, String componentName);
+
   void cleanUp();
 
   void dispose();

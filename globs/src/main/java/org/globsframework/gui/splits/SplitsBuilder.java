@@ -1,5 +1,6 @@
 package org.globsframework.gui.splits;
 
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
@@ -9,9 +10,8 @@ import org.globsframework.gui.splits.repeat.DefaultRepeat;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.splitters.DefaultSplitterFactory;
-import org.globsframework.gui.splits.xml.SplitsParser;
 import org.globsframework.gui.splits.styles.StyleService;
-import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.xml.SplitsParser;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -54,10 +54,10 @@ public class SplitsBuilder {
     return new SplitsBuilder(directory);
   }
 
-  public SplitsBuilder add(String name, Component component) {
+  public <T extends Component> T add(String name, T component) {
     component.setName(name);
     context.addComponent(name, component);
-    return this;
+    return component;
   }
 
   public SplitsBuilder add(Component... components) {

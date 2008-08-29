@@ -552,6 +552,7 @@
       <xs:attribute name="verticalAlignment" type="xs:string"/>
       <xs:attribute name="shadowColor" type="xs:string"/>
       <xs:attribute name="shadowDirection" type="xs:string"/>
+      <xs:attribute name="labelFor" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 

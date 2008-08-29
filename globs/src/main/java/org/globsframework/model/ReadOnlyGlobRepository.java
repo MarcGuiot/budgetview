@@ -42,6 +42,6 @@ public interface ReadOnlyGlobRepository {
 
     GlobList findByIndex(Object value);
 
-    GlobRepository.MultiFieldIndexed findByIndex(Field field, Object value);
+    MultiFieldIndexed findByIndex(Field field, Object value);
   }
 }

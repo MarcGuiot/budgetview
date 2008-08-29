@@ -20,6 +20,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
   private String resourceFile;
   private java.util.List<AutoHideListener> autoHideListeners = new ArrayList<AutoHideListener>();
   private Map<String, RepeatHandler> repeats = new HashMap<String, RepeatHandler>();
+  private Map<JLabel, String> labelForAssociations = new HashMap<JLabel, String>();
 
   public void addComponent(String id, Component component) {
     if (componentsByName.containsKey(id)) {
@@ -132,6 +133,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
       listener.dispose(this);
     }
     autoHideListeners.clear();
+    labelForAssociations.clear();
   }
 
   public void dispose() {
@@ -145,9 +147,22 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     autoHideListeners.add(new AutoHideListener(targetComponent, sourceComponentName));
   }
 
+  public void addLabelFor(JLabel label, String componentName) {
+    labelForAssociations.put(label, componentName);
+  }
+
   public void complete() {
     for (AutoHideListener listener : autoHideListeners) {
       listener.init(this);
+    }
+    for (Map.Entry<JLabel, String> association : labelForAssociations.entrySet()) {
+      JLabel label = association.getKey();
+      String ref = association.getValue();
+      Component targetComponent = componentsByName.get(ref);
+      if (targetComponent == null) {
+        throw new SplitsException("Label '"+ label.getText() + "' references an unknown component '" + ref + "'" + dump());
+      }
+      label.setLabelFor(targetComponent);
     }
   }
 

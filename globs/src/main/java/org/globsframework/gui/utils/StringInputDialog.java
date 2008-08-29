@@ -28,29 +28,29 @@ public abstract class StringInputDialog {
     okAction = new OkAction(okLabel);
     messageLabel.setVisible(false);
 
-    dialog.setContentPane((Container)SplitsBuilder.init(directory)
-      .add("inputLabel", new JLabel(inputLabel))
-      .add("input", textField)
-      .add("label", messageLabel)
-      .add("ok", okAction)
-      .add("cancel", new CancelAction(cancelLabel))
-      .setSource(
-        "<splits>" +
-        "  <column marginLeft='20' marginRight='20' margin='5'>" +
-        "    <row defaultMarginTop='5' defaultMarginBottom='5'>" +
-        "      <label ref='inputLabel' marginRight='10'/>" +
-        "      <textField ref='input' columns='15'/>" +
-        "    </row>" +
-        "    <label ref='label' foreground='red' marginTop='5' marginBottom='5'/>" +
-        "    <row>" +
-        "      <filler fill='horizontal'/>" +
-        "      <button action='ok'/>" +
-        "      <button action='cancel'/>" +
-        "    </row>" +
-        "  </column>" +
-        "</splits>"
-      )
-      .load());
+    SplitsBuilder builder = SplitsBuilder.init(directory);
+    builder.add("inputLabel", new JLabel(inputLabel));
+    builder.add("input", textField);
+    builder.add("label", messageLabel);
+    builder.add("ok", okAction);
+    builder.add("cancel", new CancelAction(cancelLabel));
+    builder.setSource(
+      "<splits>" +
+      "  <column marginLeft='20' marginRight='20' margin='5'>" +
+      "    <row defaultMarginTop='5' defaultMarginBottom='5'>" +
+      "      <label ref='inputLabel' marginRight='10'/>" +
+      "      <textField ref='input' columns='15'/>" +
+      "    </row>" +
+      "    <label ref='label' foreground='red' marginTop='5' marginBottom='5'/>" +
+      "    <row>" +
+      "      <filler fill='horizontal'/>" +
+      "      <button action='ok'/>" +
+      "      <button action='cancel'/>" +
+      "    </row>" +
+      "  </column>" +
+      "</splits>"
+    );
+    dialog.setContentPane((Container)builder.load());
     dialog.setSize(300, 150);
     installInputListener();
     if (initialValue != null) {
