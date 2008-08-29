@@ -8,6 +8,7 @@ import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.utils.Strings;
+import org.uispec4j.finder.ComponentMatchers;
 
 import javax.swing.*;
 import java.awt.*;
@@ -308,6 +309,51 @@ public class SplitsRepeatTest extends SplitsTestCase {
 
     assertEquals(WrappedColumnLayout.class, panel.getLayout().getClass());
   }
+
+  public void testLabelForInRepeat() throws Exception {
+    builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                      new RepeatComponentFactory<String>() {
+                        public void registerComponents(RepeatCellBuilder cellBuilder, String text) {
+                          cellBuilder.add("label", new JLabel(text));
+                          cellBuilder.add("btn", new JButton(text + "Button"));
+                        }
+                      });
+
+    JPanel jPanel = parse(
+      "<repeat ref='myRepeat'>" +
+      "  <row>" +
+      "    <label ref='label' labelFor='btn'/>" +
+      "    <button ref='btn'/>" +
+      "  </row>" +
+      "</repeat>");
+    
+    org.uispec4j.Panel panel = new org.uispec4j.Panel(jPanel);
+    assertThat(panel.getButton(ComponentMatchers.componentLabelFor("aa")).textEquals("aaButton"));
+    assertThat(panel.getButton(ComponentMatchers.componentLabelFor("bb")).textEquals("bbButton"));
+  }
+
+  public void testAutoHideInRepeat() throws Exception {
+    builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                      new RepeatComponentFactory<String>() {
+                        public void registerComponents(RepeatCellBuilder cellBuilder, String text) {
+                          cellBuilder.add("label", new JLabel(text));
+                          cellBuilder.add("btn", new JButton(text + "Button"));
+                        }
+                      });
+
+    JPanel jPanel = parse(
+      "<repeat ref='myRepeat'>" +
+      "  <row>" +
+      "    <label ref='label' autoHideSource='btn'/>" +
+      "    <button ref='btn'/>" +
+      "  </row>" +
+      "</repeat>");
+    
+    org.uispec4j.Panel panel = new org.uispec4j.Panel(jPanel);
+    panel.getButton("aaButton").getAwtComponent().setVisible(false);
+    assertFalse(panel.getTextBox("aa").isVisible());
+  }
+
 
   private void checkButton(JPanel panel, int componentIndex, String label, int x, int y) {
     JButton button = (JButton)panel.getComponent(componentIndex);

@@ -11,6 +11,7 @@ import org.globsframework.gui.splits.utils.DummyIconLocator;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
+import org.uispec4j.TextBox;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -191,11 +192,15 @@ public class SplitsComponentsTest extends SplitsTestCase {
   public void testLabelFor() throws Exception {
     JLabel label = builder.add("label", new JLabel());
     JTextField textField = builder.add("editor", new JTextField());
-    parse("<row>" +
-          "  <label ref='label' labelFor='editor'/>" +
+    JPanel jPanel = parse("<row>" +
+          "  <label ref='label' text='Title' labelFor='editor'/>" +
           "  <textField ref='editor'/>" +
           "</row>");
     assertSame(textField, label.getLabelFor());
+    
+    org.uispec4j.Panel panel = new org.uispec4j.Panel(jPanel);
+    TextBox editor = panel.getTextBox(ComponentMatchers.componentLabelFor("Title"));
+    assertSame(textField, editor.getAwtComponent());
   }
 
   public void testLabelForError() throws Exception {

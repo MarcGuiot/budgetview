@@ -160,7 +160,8 @@ public abstract class AbstractSplitsContext implements SplitsContext {
       String ref = association.getValue();
       Component targetComponent = componentsByName.get(ref);
       if (targetComponent == null) {
-        throw new SplitsException("Label '"+ label.getText() + "' references an unknown component '" + ref + "'" + dump());
+        throw new SplitsException("Label '" + label.getText() + "' references an unknown component '" + ref + "'" +
+                                  dump());
       }
       label.setLabelFor(targetComponent);
     }

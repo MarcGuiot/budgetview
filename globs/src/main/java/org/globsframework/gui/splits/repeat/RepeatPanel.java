@@ -68,6 +68,9 @@ public class RepeatPanel implements Repeat {
     for (int i = 0; i < splitterTemplates.length; i++) {
       stretches[i] = splitterTemplates[i].createComponentStretch(repeatContext, !layout.managesInsets());
     }
+
+    repeatContext.complete();
+
     return stretches;
   }
 
