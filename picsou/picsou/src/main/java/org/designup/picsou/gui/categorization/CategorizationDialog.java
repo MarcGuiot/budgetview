@@ -121,21 +121,8 @@ public class CategorizationDialog {
                                                                invisibleOccasionalToggle,
                                                                localRepository, localDirectory, dialog));
 
-    builder.add("ok", new AbstractAction(Lang.get("ok")) {
-      public void actionPerformed(ActionEvent e) {
-        localRepository.commitChanges(false);
-        dialog.setVisible(false);
-      }
-    });
 
-    builder.add("cancel", new AbstractAction(Lang.get("cancel")) {
-      public void actionPerformed(ActionEvent e) {
-        dialog.setVisible(false);
-      }
-    });
-
-    Container panel = builder.load();
-    dialog.setContentPane(panel);
+    dialog.addInPanelWithButton(builder.<JPanel>load(), new OkAction(), new CancelAction());
     dialog.pack();
   }
 
@@ -276,6 +263,27 @@ public class CategorizationDialog {
   private class AutoHideAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       updateAutoHide();
+    }
+  }
+
+  private class OkAction extends AbstractAction {
+    public OkAction() {
+      super(Lang.get("ok"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      localRepository.commitChanges(false);
+      dialog.setVisible(false);
+    }
+  }
+
+  private class CancelAction extends AbstractAction {
+    public CancelAction() {
+      super(Lang.get("cancel"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      dialog.setVisible(false);
     }
   }
 }

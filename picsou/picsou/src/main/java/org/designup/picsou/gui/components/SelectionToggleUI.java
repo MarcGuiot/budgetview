@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicToggleButtonUI;
 import java.awt.*;
 
-public class SeriesToggleUI extends BasicToggleButtonUI {
+public class SelectionToggleUI extends BasicToggleButtonUI {
   private int padding = 0;
   private int borderWidth = 1;
   private Color borderColor = Color.GRAY.brighter();
@@ -29,7 +29,7 @@ public class SeriesToggleUI extends BasicToggleButtonUI {
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     int width = button.getWidth();
-    int height = button.getHeight() - 4;
+    int height = button.getHeight();
 
     int x = 0;
     int y = 0;

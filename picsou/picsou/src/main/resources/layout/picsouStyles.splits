@@ -105,7 +105,7 @@
            triangleSignColor="gauge.detail.triangle.sign"/>
 
     <!-- Selection toggles -->
-    <ui name="selectionToggle" class="org.designup.picsou.gui.components.SeriesToggleUI"/>
+    <ui name="selectionToggle" class="org.designup.picsou.gui.components.SelectionToggleUI"/>
     <style selector="toggleButton.selector" ui="selectionToggle" foreground="#000099"/>
     <style selector="toggleButton.masterCategorySelector" ui="selectionToggle" foreground="#000099"
            fill="none" anchor="west" font="-,bold,14"/>

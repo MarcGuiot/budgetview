@@ -2,7 +2,7 @@ package org.designup.picsou.gui;
 
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
-import org.designup.picsou.gui.components.SeriesToggleUI;
+import org.designup.picsou.gui.components.SelectionToggleUI;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
@@ -72,7 +72,7 @@ public class PicsouApplication {
   private static final String STYLED_PANEL_UI = "org" + dot() + "globsframework.gui.splits.components.StyledPanelUI";
   private static final String SHADOWED_LABEL_UI = "org" + dot() + "globsframework.gui.splits.components.ShadowedLabelUI";
   private static final String SPLITPANE_UI = "org" + dot() + "designup.picsou.gui.plaf.PicsouSplitPaneUI";
-  private static final String SERIES_TOGGLE_UI = "org" + dot() + "designup.picsou.gui.components.SeriesToggleUI";
+  private static final String SERIES_TOGGLE_UI = "org" + dot() + "designup.picsou.gui.components.SelectionToggleUI";
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
@@ -260,7 +260,7 @@ public class PicsouApplication {
     uiService.registerClass(STYLED_PANEL_UI, StyledPanelUI.class);
     uiService.registerClass(SHADOWED_LABEL_UI, ShadowedLabelUI.class);
     uiService.registerClass(SPLITPANE_UI, PicsouSplitPaneUI.class);
-    uiService.registerClass(SERIES_TOGGLE_UI, SeriesToggleUI.class);
+    uiService.registerClass(SERIES_TOGGLE_UI, SelectionToggleUI.class);
     return uiService;
   }
 

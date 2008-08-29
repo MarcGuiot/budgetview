@@ -22,7 +22,7 @@
         </column>
       </column>
 
-      <column>
+      <column margin="5">
 
         <label ref="transactionLabel" anchor="left"/>
 
@@ -105,12 +105,6 @@
       </column>
 
     </horizontalSplit>
-
-    <row>
-      <filler fill="horizontal"/>
-      <button action="ok" text="$ok"/>
-      <button action="cancel" text="$cancel"/>
-    </row>
 
   </column>
 

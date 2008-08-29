@@ -48,6 +48,12 @@ public class PicsouDialog extends JDialog {
   }
 
   public static PicsouDialog createWithButtons(String name, Window owner, JPanel panel, Action ok, Action cancel) {
+    PicsouDialog dialog = create(owner, name);
+    dialog.addInPanelWithButton(panel, ok, cancel);
+    return dialog;
+  }
+
+  public void addInPanelWithButton(JPanel panel, Action ok, Action cancel) {
     Insets noInsets = new Insets(0, 0, 0, 0);
     GridBagBuilder builder = GridBagBuilder.init()
       .add(panel, 0, 0, 2 + 1, 1, noInsets);
@@ -81,9 +87,8 @@ public class PicsouDialog extends JDialog {
       builder.add(okButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
       builder.add(cancelButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
     }
-    PicsouDialog dialog = create(owner, name);
-    dialog.setContentPane(builder.getPanel());
-    return dialog;
+    JPanel contentPane = builder.getPanel();
+    setContentPane(contentPane);
   }
 
   private static PicsouDialog create(Window owner) {

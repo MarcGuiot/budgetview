@@ -28,9 +28,9 @@ import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -64,6 +64,7 @@ public class SeriesEditionDialog {
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(selectionService);
 
+    dialog = PicsouDialog.create(parent, Lang.get("seriesEdition.title"));
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/seriesEditionDialog.splits",
                                                       localRepository, localDirectory);
@@ -71,7 +72,7 @@ public class SeriesEditionDialog {
     builder.addEditor("nameField", Series.LABEL);
 
     builder.addLabel("singleCategoryLabel", Series.DEFAULT_CATEGORY);
-    builder.add("assignCategoryAction", new AssignCategoryAction());
+    builder.add("assignCategoryAction", new AssignCategoryAction(dialog));
 
     builder.addEditor("beginSeriesDate", Series.FIRST_MONTH);
     builder.addEditor("endSeriesDate", Series.LAST_MONTH);
@@ -109,9 +110,7 @@ public class SeriesEditionDialog {
       .addColumn(SeriesBudget.AMOUNT);
 
     JPanel panel = builder.load();
-    dialog = PicsouDialog.createWithButtons(Lang.get("seriesEdition.title"), parent, panel,
-                                            new ValidateAction(),
-                                            new CancelAction());
+    dialog.addInPanelWithButton(panel, new ValidateAction(), new CancelAction());
   }
 
   public void show(Glob series, Set<Integer> monthIds) {
@@ -229,9 +228,15 @@ public class SeriesEditionDialog {
   }
 
   private class AssignCategoryAction extends AbstractAction {
+    private Dialog parent;
+
+    private AssignCategoryAction(Dialog parent) {
+      this.parent = parent;
+    }
+
     public void actionPerformed(ActionEvent e) {
       CategoryChooserDialog chooser =
-        new CategoryChooserDialog(new SeriesCategoryChooserCallback(), true,
+        new CategoryChooserDialog(new SeriesCategoryChooserCallback(), parent, true,
                                   new TransactionRendererColors(localDirectory),
                                   localRepository, localDirectory);
 
