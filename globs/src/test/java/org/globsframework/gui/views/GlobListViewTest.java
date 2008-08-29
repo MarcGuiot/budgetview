@@ -269,8 +269,16 @@ public class GlobListViewTest extends GuiComponentTestCase {
     ListBox listBox = createList(repository);
     assertTrue(listBox.isEmpty());
     assertTrue(listBox.selectionIsEmpty());
+
+    DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
+
     view.selectFirst();
+    
     assertTrue(listBox.selectionIsEmpty());
+    listener.assertEquals("<log>" +
+                          "<selection types='dummyObject'>" +
+                          "</selection>" +
+                          "</log>");
   }
 
   public void testProgramSelectionWorksEvenWithDeletedGlobs() throws Exception {

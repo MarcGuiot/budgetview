@@ -151,6 +151,9 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     finally {
       jList.setValueIsAdjusting(false);
     }
+    if (jList.getModel().getSize() == 0) {
+      selectionService.clear(type);
+    }
   }
 
   public void select(Glob... globs) {
