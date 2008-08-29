@@ -92,7 +92,7 @@ public class SeriesEditionDialog {
                               checkbox.setSelected(series.get(0).get(Series.getField(item)));
                             }
                           }, Series.TYPE);
-                          cellBuilder.add("monthSelected", checkbox);
+                          cellBuilder.add("monthSelector", checkbox);
                           checkbox.addItemListener(new ItemListener() {
                             public void itemStateChanged(ItemEvent e) {
                               localRepository.update(currentSeries.getKey(), Series.getField(item), e.getStateChange() == ItemEvent.SELECTED);

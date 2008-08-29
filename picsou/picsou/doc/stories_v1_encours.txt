@@ -1,6 +1,7 @@
 * Revoir tests F gestion series
 
 CategorizationDialog
+* Gerer les selections multiples pour les enveloppes
 * Renommage de serie : mettre a jour le toggle
 * Liens "edition des series"
 * Supprimer series initiales (xml) + afficher message creation
@@ -8,7 +9,6 @@ CategorizationDialog
 
 SeriesCreationDialog (edition)
 * Creation de serie
-* Tester MAJ de la table des SeriesBudget en fonction des mois selectionnes (filtre/ACTIVE)
 * Afficher nom categorie
 * Forcer la selection d'une categorie au moins
 * Selection multi-categories pour les enveloppes, mono-categories pour les recurrences

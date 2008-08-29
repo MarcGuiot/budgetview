@@ -42,8 +42,8 @@
         </column>
       </row>
       <repeat ref="monthRepeat" styleClass="innerBlock" margin="15" marginTop="10" layout="horizontalGrid">
-        <label ref="monthLabel" styleClass="month" fill="none" anchor="center"/>
-        <checkBox ref="monthSelected" fill="none" anchor="center"/>
+        <label ref="monthLabel" styleClass="month" fill="none" anchor="center" labelFor="monthSelector"/>
+        <checkBox ref="monthSelector" fill="none" anchor="center"/>
       </repeat>
     </column>
 

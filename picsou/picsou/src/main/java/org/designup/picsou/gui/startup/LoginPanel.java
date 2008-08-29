@@ -81,21 +81,20 @@ public class LoginPanel {
 
     setVisible(creationComponents, false);
 
-    SplitsBuilder.init(directory)
-      .setSource(getClass(), "/layout/loginPanel.splits")
-      .add("name", userField)
-      .add("password", passwordField)
-      .add("confirmPassword", confirmPasswordField)
-      .add("confirmLabel", confirmPasswordLabel)
-      .add("createAccountCheckBox", creationCheckBox)
-      .add("message", messageLabel)
-      .add("login", loginButton)
-      .addLoader(new SplitsLoader() {
-        public void load(Component component) {
-          panel = (JPanel)component;
-          mainWindow.setPanel(panel);
-        }
-      })
+    SplitsBuilder builder = SplitsBuilder.init(directory).setSource(getClass(), "/layout/loginPanel.splits");
+    builder.add("name", userField);
+    builder.add("password", passwordField);
+    builder.add("confirmPassword", confirmPasswordField);
+    builder.add("confirmLabel", confirmPasswordLabel);
+    builder.add("createAccountCheckBox", creationCheckBox);
+    builder.add("message", messageLabel);
+    builder.add("login", loginButton);
+    builder.addLoader(new SplitsLoader() {
+      public void load(Component component) {
+        panel = (JPanel)component;
+        mainWindow.setPanel(panel);
+      }
+    })
       .load();
   }
 
