@@ -1,9 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.model.MasterCategory;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
-import org.uispec4j.Table;
+import org.uispec4j.*;
+import org.uispec4j.finder.ComponentMatchers;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -27,20 +26,18 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public void checkType(String expectedType) {
+    // TODO
   }
-
 
   public SeriesEditionDialogChecker checkAmount(String displayedValue) {
     assertThat(dialog.getInputTextBox("amountEditor").textEquals(displayedValue));
     return this;
   }
 
-
   public SeriesEditionDialogChecker setAmount(String value) {
     dialog.getInputTextBox("amountEditor").setText(value);
     return this;
   }
-
 
   public SeriesEditionDialogChecker setCategory(MasterCategory category) {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
@@ -62,6 +59,16 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker checkMonthsSelected(int... rows) {
     assertThat(table.rowsAreSelected(rows));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker toggleMonth(String monthLabel) {
+    try {
+      dialog.getCheckBox(ComponentMatchers.componentLabelFor(monthLabel)).click();
+    }
+    catch (ItemNotFoundException e) {
+      throw new RuntimeException("No component found for: " + monthLabel, e);
+    }
     return this;
   }
 
