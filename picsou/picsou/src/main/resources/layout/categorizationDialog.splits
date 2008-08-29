@@ -6,7 +6,7 @@
     <style selector="scrollPane" viewportBackground="dialog.block.top"/>
   </styles>
 
-  <column styleClass="dialog" opaque="true" preferredSize="(950,680)" margin="15">
+  <column styleClass="dialog" opaque="true" preferredSize="(890,650)" margin="15">
 
     <label text="$categorization.list.title"/>
 
