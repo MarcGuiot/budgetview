@@ -41,10 +41,6 @@ public class GlobListStringifiers {
     final int multiplier = invert ? -1 : 1;
     return new GlobListStringifier() {
       public String toString(GlobList list, GlobRepository repository) {
-        if (list.isEmpty()) {
-          return "";
-        }
-
         double total = 0;
         for (Glob glob : list) {
           final Double value = glob.get(field);

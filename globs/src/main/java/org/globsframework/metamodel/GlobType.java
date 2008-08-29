@@ -1,6 +1,7 @@
 package org.globsframework.metamodel;
 
 import org.globsframework.metamodel.index.Index;
+import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.metamodel.properties.PropertyHolder;
 import org.globsframework.metamodel.utils.Annotable;
 import org.globsframework.model.GlobList;
@@ -8,6 +9,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.util.Collection;
 import java.util.List;
 
 public interface GlobType extends PropertyHolder<GlobType>, Annotable, Serializable {
@@ -42,5 +44,7 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotable, Serializa
 
   GlobList getConstants();
 
-  Iterable<Index> getIndices();
+  Collection<Index> getIndices();
+
+  Collection<MultiFieldIndex> getMultiFieldIndices();
 }
