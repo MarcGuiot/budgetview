@@ -5,7 +5,6 @@ import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.startup.ImportPanel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -71,6 +70,11 @@ public class ImportFileAction extends AbstractAction {
           return dialog;
         }
       }, repository, directory) {
+        protected void contentChange() {
+          dialog.pack();
+          GuiUtils.center(dialog);
+        }
+
         protected void complete() {
           dialog.setVisible(false);
         }
@@ -79,14 +83,10 @@ public class ImportFileAction extends AbstractAction {
 
     public void run() {
       dialog = PicsouDialog.create(frame, Lang.get("import"));
-      panel.getBuilder()
-        .addLoader(new SplitsLoader() {
-          public void load(Component component) {
-            dialog.setContentPane((Container)component);
-            dialog.pack();
-          }
-        })
-        .load();
+      JPanel contentPane = panel.getPanel();
+      contentPane.setOpaque(true);
+      dialog.setContentPane(contentPane);
+      dialog.pack();
       GuiUtils.showCentered(dialog);
     }
   }

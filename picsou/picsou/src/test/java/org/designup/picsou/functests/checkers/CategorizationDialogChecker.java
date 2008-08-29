@@ -42,6 +42,10 @@ public class CategorizationDialogChecker extends DataChecker {
     assertTrue(transactionLabel.textEquals(expected));
   }
 
+  public void checkLabel(int count) {
+    assertTrue(transactionLabel.textEquals(count + " operations are selected."));
+  }
+
   public void checkBudgetAreasAreEnabled() {
     for (BudgetArea area : BudgetArea.values()) {
       if (area != BudgetArea.UNCATEGORIZED) {

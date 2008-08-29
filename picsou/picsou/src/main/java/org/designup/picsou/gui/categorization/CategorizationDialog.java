@@ -19,6 +19,7 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -67,7 +68,17 @@ public class CategorizationDialog {
     autoHideCheckBox.setSelected(true);
     builder.add("autoHide", autoHideCheckBox);
 
-    builder.addLabel("transactionLabel", Transaction.LABEL);
+    builder.addLabel("transactionLabel", Transaction.TYPE, new GlobListStringifier() {
+      public String toString(GlobList list, GlobRepository repository) {
+        if (list.isEmpty()) {
+          return null;
+        }
+        if (list.size() > 1) {
+          return Lang.get("categorization.many.transactions.label", Integer.toString(list.size()));
+        }
+        return list.get(0).get(Transaction.LABEL);
+      }
+    }).setAutoHideIfEmpty(true);
 
     final CardHandler cardHandler = builder.addCardHandler("cards");
 
