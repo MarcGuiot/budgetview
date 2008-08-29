@@ -61,7 +61,7 @@ public class SeriesBudgetUpdateOccasionnalTrigger implements ChangeSetListener {
                                                    Series.OCCASIONAL_SERIES_ID)
       .findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
     if (seriesBudget.isEmpty()) {
-      System.out.println("SeriesBudgetUpdateOccasionnalTrigger.update " + monthId);
+      throw new RuntimeException("SeriesBudgetUpdateOccasionnalTrigger.update " + monthId);
     }
     updateOccasional(series, amount, repository, monthId, seriesBudget.get(0));
   }

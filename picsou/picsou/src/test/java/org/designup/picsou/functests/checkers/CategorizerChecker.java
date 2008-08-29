@@ -16,14 +16,14 @@ public class CategorizerChecker extends DataChecker {
     transactions = new TransactionChecker(mainWindow);
   }
 
-  public CategorizerChecker setRecurring(String label, String name, boolean showSeriesInitialization) {
+  public CategorizerChecker setRecurring(String label, String name, MasterCategory category, boolean showSeriesInitialization) {
     int index = transactions.getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
     if (index < 0) {
       Assert.fail(label + " not found");
     }
     CategorizationDialogChecker categorizationChecker = transactions.categorize(index);
     categorizationChecker.selectRecurring();
-    categorizationChecker.selectRecurringSeries(name, showSeriesInitialization);
+    categorizationChecker.selectRecurringSeries(name, category, showSeriesInitialization);
     categorizationChecker.validate();
     return this;
   }

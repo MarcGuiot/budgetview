@@ -1,9 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.model.MasterCategory;
+import org.uispec4j.Table;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
-import org.uispec4j.Table;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -48,6 +48,10 @@ public class SeriesEditionDialogChecker extends DataChecker {
     categoryChooser.selectCategory(getCategoryName(category));
     assertThat(dialog.getTextBox("singleCategoryLabel").textEquals(getCategoryName(category)));
     return this;
+  }
+
+  public void selectAllMonth() {
+    table.selectRowSpan(0, table.getRowCount() - 1);
   }
 
   public SeriesEditionDialogChecker checkTable(Object[][] content) {

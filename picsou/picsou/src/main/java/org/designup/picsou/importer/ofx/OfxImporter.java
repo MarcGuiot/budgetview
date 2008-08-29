@@ -62,6 +62,7 @@ public class OfxImporter implements AccountFileImporter {
     private boolean fileCompleted;
     private String name;
     private String memo;
+    private String transactionType;
 
     public Functor(GlobRepository targetRepository, ReadOnlyGlobRepository initialRepository) {
       this.repository = targetRepository;
@@ -230,6 +231,10 @@ public class OfxImporter implements AccountFileImporter {
         updateMemo(content);
         return;
       }
+      if (tag.equalsIgnoreCase("TRNTYPE")) {
+        updateTransactionType(content);
+        return;
+      }
       if (tag.equalsIgnoreCase("ACCTID")) {
         updateAccount(content);
         return;
@@ -304,12 +309,18 @@ public class OfxImporter implements AccountFileImporter {
       }
     }
 
+    private void updateTransactionType(String value) {
+      this.transactionType = value;
+    }
+
     private void updateTransactionLabel() {
       String content = Strings.join(name, memo);
       repository.update(currentTransactionKey, ImportedTransaction.ORIGINAL_LABEL, content);
       repository.update(currentTransactionKey, ImportedTransaction.LABEL, content);
+      repository.update(currentTransactionKey, ImportedTransaction.BANK_TRANSACTION_TYPE, transactionType);
       name = null;
       memo = null;
+      transactionType = null;
     }
 
     private Date parseDate(String content) {

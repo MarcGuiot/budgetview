@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class SeriesEditionTest extends LoggedInFunctionalTestCase {
@@ -15,7 +16,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("29/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
       .check();
-    transactions.setRecurring("Free Telecom", "Internet", true);
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
 
@@ -43,7 +44,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectData();
     transactions.getTable().selectRowSpan(0, 3);
-    transactions.setRecurring("Free Telecom", "Internet", true);
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
     timeline.selectMonths("2008/08", "2008/06");
@@ -56,7 +57,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "July", "-29.00"},
         {"2008", "August", "-29.00"},
       })
-      .checkMonthsSelected(1,3)
+      .checkMonthsSelected(1, 3)
       .validate();
 
     budgetView.recurring.checkSeries("Free", 58.00, 58.00);
@@ -69,7 +70,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     views.selectData();
-    transactions.setRecurring("Free Telecom", "Internet", true);
+    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
     budgetView.recurring.editSeries("Internet")

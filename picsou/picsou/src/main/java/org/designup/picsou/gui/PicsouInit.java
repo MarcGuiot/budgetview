@@ -13,6 +13,7 @@ import org.designup.picsou.model.ServerInformation;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.model.initial.InitialCategories;
+import org.designup.picsou.model.initial.InitialSeries;
 import org.designup.picsou.triggers.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
@@ -100,7 +101,8 @@ public class PicsouInit {
                                            UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS));
 
         InitialCategories.run(repository);
-        loadGlobs("/series.xml");
+        InitialSeries.run(repository);
+//        loadGlobs("/series.xml");
       }
       finally {
         repository.completeBulkDispatchingMode();

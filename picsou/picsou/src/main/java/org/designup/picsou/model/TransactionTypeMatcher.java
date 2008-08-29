@@ -18,6 +18,9 @@ public class TransactionTypeMatcher {
   public static IntegerField ID;
 
   @NoObfuscation
+  public static StringField TYPE_NAME;
+
+  @NoObfuscation
   public static StringField REGEXP;
   @NoObfuscation
   public static StringField LABEL;

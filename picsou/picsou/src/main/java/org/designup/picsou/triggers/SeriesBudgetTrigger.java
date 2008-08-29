@@ -35,17 +35,6 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-//    if (changedTypes.contains(Series.TYPE)) {
-//      GlobList list = repository.getAll(Series.TYPE);
-//      Set<Integer> seriesWithBudget = repository.getAll(SeriesBudget.TYPE).getValueSet(SeriesBudget.SERIES);
-//      for (Glob series : list) {
-//        updateSeriesBudget(series, repository);
-//        seriesWithBudget.remove(series.get(Series.ID));
-//      }
-//      for (Integer seriesId : seriesWithBudget) {
-//        repository.delete(Key.create(Series.TYPE, seriesId));
-//      }
-//    }
   }
 
   void updateSeriesBudget(Glob series, GlobRepository repository) {

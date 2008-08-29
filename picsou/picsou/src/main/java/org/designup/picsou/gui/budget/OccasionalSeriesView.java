@@ -88,7 +88,7 @@ public class OccasionalSeriesView extends View {
 
   private void addTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
     builder.addLabel(name, SeriesStat.TYPE,
-                     GlobListStringifiers.sum(decimalFormat, field))
+                     GlobListStringifiers.sum(field, decimalFormat, true))
       .setFilter(totalMatcher);
   }
 
