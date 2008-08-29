@@ -100,7 +100,8 @@ public class CategorizationDialog {
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.INCOME.getGlob(), Series.BUDGET_AREA),
                       new SeriesComponentFactory(invisibleIncomeToggle, localRepository, localDirectory, dialog));
-    builder.add("createIncomeSeries", new SeriesCreationAction(BudgetArea.INCOME, localDirectory));
+    builder.add("createIncomeSeries",
+                new SeriesCreationAction(BudgetArea.INCOME, localDirectory));
 
     JToggleButton invisibleRecurringToggle = new JToggleButton();
     builder.add("invisibleRecurringToggle", invisibleRecurringToggle);
@@ -108,7 +109,8 @@ public class CategorizationDialog {
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.RECURRING_EXPENSES.getGlob(), Series.BUDGET_AREA),
                       new SeriesComponentFactory(invisibleRecurringToggle, localRepository, localDirectory, dialog));
-    builder.add("createRecurringSeries", new SeriesCreationAction(BudgetArea.RECURRING_EXPENSES, localDirectory));
+    builder.add("createRecurringSeries",
+                new SeriesCreationAction(BudgetArea.RECURRING_EXPENSES, localDirectory));
 
     final JToggleButton invisibleEnvelopeToggle = new JToggleButton();
     builder.add("invisibleEnvelopeToggle", invisibleEnvelopeToggle);
@@ -116,7 +118,8 @@ public class CategorizationDialog {
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.EXPENSES_ENVELOPE.getGlob(), Series.BUDGET_AREA),
                       new EnvelopeSeriesComponentFactory(invisibleEnvelopeToggle, localRepository, localDirectory, dialog));
-    builder.add("createEnvelopeSeries", new SeriesCreationAction(BudgetArea.EXPENSES_ENVELOPE, localDirectory));
+    builder.add("createEnvelopeSeries",
+                new SeriesCreationAction(BudgetArea.EXPENSES_ENVELOPE, localDirectory));
 
     JToggleButton invisibleOccasionalToggle = new JToggleButton();
     builder.add("invisibleOccasionalToggle", invisibleOccasionalToggle);
@@ -221,6 +224,7 @@ public class CategorizationDialog {
     private final Directory localDirectory;
 
     public SeriesCreationAction(BudgetArea budgetArea, Directory localDirectory) {
+      super(Lang.get("categorization.newseries"));
       this.budgetArea = budgetArea;
       this.localDirectory = localDirectory;
     }

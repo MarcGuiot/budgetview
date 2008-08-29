@@ -25,8 +25,8 @@
                 </grid>
                 <row>
                   <filler fill="horizontal"/>
-                  <button action="gotoWebsite" text="$account.goto.website" styleClass="hyperlink"/>
-                  <button action="importData" text="$account.import.data" styleClass="hyperlink"/>
+                  <button action="gotoWebsite" styleClass="hyperlink"/>
+                  <button action="importData" styleClass="hyperlink"/>
                 </row>
               </column>
             </panel>

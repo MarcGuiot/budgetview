@@ -23,10 +23,12 @@ public class UncategorizedMessageView extends View implements ChangeSetListener 
   private GlobList uncategorizedTransactions = GlobList.EMPTY;
   private String textAreaName;
   private String buttonName;
+  private String buttonText;
 
-  public UncategorizedMessageView(String textAreaName, String buttonName,
+  public UncategorizedMessageView(String textAreaName, String buttonName, String buttonText,
                                   GlobRepository repository, Directory directory) {
     super(repository, directory);
+    this.buttonText = buttonText;
     repository.addChangeListener(this);
     this.textAreaName = textAreaName;
     this.buttonName = buttonName;
@@ -35,7 +37,7 @@ public class UncategorizedMessageView extends View implements ChangeSetListener 
 
   public void registerComponents(GlobsPanelBuilder builder) {
     builder.add(textAreaName, textArea);
-    builder.add(buttonName, new AbstractAction() {
+    builder.add(buttonName, new AbstractAction(buttonText) {
       public void actionPerformed(ActionEvent e) {
         final CategorizationDialog dialog = directory.get(CategorizationDialog.class);
         dialog.show(uncategorizedTransactions, false, true);

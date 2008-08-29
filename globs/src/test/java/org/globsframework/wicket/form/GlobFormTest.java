@@ -16,7 +16,7 @@ import org.globsframework.wicket.WebTestCase;
 
 import java.util.List;
 
-public class GlobFormTest extends WebTestCase {
+public abstract class GlobFormTest extends WebTestCase {
   public void testStandardCase() throws Exception {
     HtmlForm form = (HtmlForm)renderComponent(new ComponentFactory() {
       public Component create(String componentId, GlobRepositoryLoader repositoryLoader) {

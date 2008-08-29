@@ -25,7 +25,7 @@
           <label gridPos="(0,1)" text="$seriesEdition.category" styleClass="formLabel"/>
           <row gridPos="(1,1)" marginTop="3">
             <label ref="singleCategoryLabel"/>
-            <button action="assignCategoryAction" text="$seriesEdition.categorize" marginLeft="10"/>
+            <button action="assignCategoryAction" marginLeft="10"/>
             <filler fill="horizontal"/>
           </row>
         </grid>

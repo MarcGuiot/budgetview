@@ -44,7 +44,7 @@
 
     <row>
       <filler fill="horizontal"/>
-      <button name="back" action="back" text="$import.step2.back" styleClass="hyperlink"/>
+      <button name="back" action="back" styleClass="hyperlink"/>
     </row>
 
   </column>

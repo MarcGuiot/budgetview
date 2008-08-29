@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components;
 
-import com.sun.java.swing.SwingUtilities2;
+import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicToggleButtonUI;
@@ -56,7 +56,7 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
   protected void paintText(Graphics g, JComponent component, Rectangle textRect, String text) {
     AbstractButton b = (AbstractButton)component;
     ButtonModel model = b.getModel();
-    FontMetrics fm = SwingUtilities2.getFontMetrics(component, g);
+    FontMetrics fm = g.getFontMetrics(g.getFont());
     int mnemonicIndex = b.getDisplayedMnemonicIndex();
     if (model.isRollover()) {
       g.setColor(rolloverTextColor);
@@ -68,8 +68,8 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
       g.setColor(component.getForeground());
     }
 
-    SwingUtilities2.drawStringUnderlineCharAt(component, g, text, mnemonicIndex,
-                                              textRect.x + getTextShiftOffset(),
-                                              textRect.y + fm.getAscent() + getTextShiftOffset());
+    GuiUtils.drawStringUnderlineCharAt(g, text, mnemonicIndex,
+                                       textRect.x + getTextShiftOffset(),
+                                       textRect.y + fm.getAscent() + getTextShiftOffset());
   }
 }

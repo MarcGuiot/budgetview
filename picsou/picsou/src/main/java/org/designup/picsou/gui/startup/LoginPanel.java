@@ -238,7 +238,7 @@ public class LoginPanel {
 
   private class LoginAction extends AbstractAction {
     public LoginAction() {
-      super("Login");
+      super(Lang.get("login.enter"));
     }
 
     public void actionPerformed(ActionEvent event) {

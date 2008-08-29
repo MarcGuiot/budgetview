@@ -72,7 +72,7 @@ public class MainPanel {
     CategoryView categoryView = new CategoryView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
 
-    importFileAction = ImportFileAction.initAndRegisterInOpenRequestManager(repository, directory);
+    importFileAction = ImportFileAction.initAndRegisterInOpenRequestManager(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
     registerAction = new RegisterLicenseAction(parent, repository, directory);
     exitAction = new ExitAction(directory);
@@ -82,8 +82,10 @@ public class MainPanel {
     createPanel(
       new TitleView(repository, directory),
       new UncategorizedMessageView("uncategorizedMessage", "categorizeRemainingTransactions",
+                                   Lang.get("transaction.allocation.action"),
                                    repository, directory),
       new UncategorizedMessageView("uncategorizedMessage_details", "categorizeRemainingTransactions_details",
+                                   Lang.get("transaction.allocation.action"),
                                    repository, directory),
       transactionView,
       transactionDetailsView,

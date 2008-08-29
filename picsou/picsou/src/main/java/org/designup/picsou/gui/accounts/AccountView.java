@@ -5,6 +5,7 @@ import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -49,7 +50,7 @@ public class AccountView extends View {
       add("accountUpdateDate", Account.UPDATE_DATE, account, cellBuilder);
 
       cellBuilder.add("gotoWebsite", new GotoWebsiteAction(account));
-      cellBuilder.add("importData", ImportFileAction.init(repository, directory, account));
+      cellBuilder.add("importData", ImportFileAction.init(Lang.get("account.import.data"), repository, directory, account));
     }
 
     private void add(String name, Field field, Glob account, RepeatCellBuilder cellBuilder) {
@@ -62,6 +63,7 @@ public class AccountView extends View {
       private String url;
 
       public GotoWebsiteAction(Glob account) {
+        super(Lang.get("account.goto.website"));
         url = Account.getBank(account, repository).get(Bank.DOWNLOAD_URL);
         setEnabled(Strings.isNotEmpty(url));
       }

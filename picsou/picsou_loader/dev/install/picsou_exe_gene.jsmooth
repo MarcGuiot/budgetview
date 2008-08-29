@@ -18,7 +18,7 @@
     <value>${EXECUTABLEPATH}</value>
   </javaProperties>
   <mainClassName>org.designup.picsou.start.Main</mainClassName>
-  <maximumMemoryHeap>268435456</maximumMemoryHeap>
+  <maximumMemoryHeap>134217728</maximumMemoryHeap>
   <maximumVersion></maximumVersion>
   <minimumVersion>1.5</minimumVersion>
   <skeletonName>Windowed Wrapper</skeletonName>
@@ -44,6 +44,6 @@
   </skeletonProperties>
   <skeletonProperties>
     <key>Debug</key>
-    <value>0</value>
+    <value>1</value>
   </skeletonProperties>
 </jsmoothproject>

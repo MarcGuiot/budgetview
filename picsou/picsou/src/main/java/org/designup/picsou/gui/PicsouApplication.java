@@ -181,6 +181,9 @@ public class PicsouApplication {
   }
 
   public static String getPicsouPath() {
+    if (Gui.isMacOSX() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
+      return System.getProperty("user.home") + "/Library/Application Support/" + PICSOU;
+    }
     return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.picsou");
   }
 

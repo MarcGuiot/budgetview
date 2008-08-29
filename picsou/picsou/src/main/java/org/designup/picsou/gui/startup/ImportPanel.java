@@ -196,7 +196,7 @@ public abstract class ImportPanel {
         complete();
       }
     });
-    builder2.add("back", new AbstractAction("back") {
+    builder2.add("back", new AbstractAction(Lang.get("import.step2.back")) {
       public void actionPerformed(ActionEvent e) {
         step1 = true;
         step2 = true;
@@ -550,6 +550,10 @@ public abstract class ImportPanel {
   }
 
   private class BrowseFilesAction extends AbstractAction {
+    private BrowseFilesAction() {
+      super(Lang.get("browse"));
+    }
+
     public void actionPerformed(ActionEvent e) {
       File[] files = queryFile(owner.getOwner());
       if (files != null) {

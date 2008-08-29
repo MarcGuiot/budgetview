@@ -8,7 +8,7 @@
       <filler fill="vertical" weightY="10"/>
 
       <panel ui="loginPanel" opaque="true" anchor="center" fill="none" weightY="20"
-                   maximumSize="(500,400)">
+             maximumSize="(500,400)">
 
         <column margin="20" anchor="center" fill="none" marginBottom="60">
 
@@ -33,7 +33,7 @@
           <label ref="message" margin="5" horizontalAlignment="center"/>
 
           <row styleClass="buttons">
-            <button ref="login" text="$login.enter"/>
+            <button ref="login"/>
           </row>
 
         </column>

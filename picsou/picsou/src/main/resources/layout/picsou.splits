@@ -70,7 +70,7 @@
                      autoHideSource="uncategorizedMessage" preferredSize="(50,90)" weightY="0">
                 <column>
                   <textArea ref="uncategorizedMessage"/>
-                  <button action="categorizeRemainingTransactions" text="$transaction.allocation.action"/>
+                  <button action="categorizeRemainingTransactions"/>
                 </column>
               </panel>
               <filler fill="vertical"/>
@@ -124,8 +124,7 @@
                              preferredSize="(50,90)" weightY="0">
                         <column>
                           <textArea ref="uncategorizedMessage_details"/>
-                          <button action="categorizeRemainingTransactions_details"
-                                  text="$transaction.allocation.action"/>
+                          <button action="categorizeRemainingTransactions_details"/>
                         </column>
                       </panel>
                     </column>

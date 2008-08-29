@@ -24,6 +24,19 @@ public class GuiUtils {
     rootPane.getActionMap().put(command, action);
   }
 
+  public static void drawStringUnderlineCharAt(Graphics g, String text, int underlinedIndex, int x, int y) {
+    g.drawString(text, x, y);
+    if (underlinedIndex >= 0 && underlinedIndex < text.length()) {
+      // PENDING: this needs to change.
+      FontMetrics fm = g.getFontMetrics();
+      int underlineRectX = x + fm.stringWidth(text.substring(0, underlinedIndex));
+      int underlineRectY = y;
+      int underlineRectWidth = fm.charWidth(text.charAt(underlinedIndex));
+      int underlineRectHeight = 1;
+      g.fillRect(underlineRectX, underlineRectY + 1, underlineRectWidth, underlineRectHeight);
+    }
+  }
+
   static {
     debugModeEnabled = "true".equalsIgnoreCase(System.getProperty("splits.debug.enabled"));
     if (debugModeEnabled) {

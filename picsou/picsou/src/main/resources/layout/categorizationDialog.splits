@@ -51,7 +51,7 @@
                   <toggleButton ref="seriesToggle" styleClass="selector"/>
                 </repeat>
               </scrollPane>
-              <button action="createIncomeSeries" text="$categorization.newseries" styleClass="hyperlink"/>
+              <button action="createIncomeSeries" styleClass="hyperlink"/>
             </column>
           </card>
 
@@ -63,7 +63,7 @@
                   <toggleButton ref="seriesToggle" styleClass="selector" fill="none"/>
                 </repeat>
               </scrollPane>
-              <button action="createRecurringSeries" text="$categorization.newseries" styleClass="hyperlink"/>
+              <button action="createRecurringSeries" styleClass="hyperlink"/>
             </column>
           </card>
 
@@ -80,7 +80,7 @@
                   </column>
                 </repeat>
               </scrollPane>
-              <button action="createEnvelopeSeries" text="$categorization.newseries" styleClass="hyperlink"/>
+              <button action="createEnvelopeSeries" styleClass="hyperlink"/>
             </column>
           </card>
 

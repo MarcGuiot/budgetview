@@ -97,7 +97,7 @@ public class Main {
   private File loadJar() {
     String path = System.getProperty("user.home") + "/." + PICSOU + JAR_DIRECTORY;
     if (isMacOSX()) {
-      path = "~/Library/Application Support/" + PICSOU;
+      path = System.getProperty("user.home") + "/Library/Application Support/" + PICSOU + JAR_DIRECTORY;
     }
     File jarFile = findLastJar(path);
     if (jarFile == null) {

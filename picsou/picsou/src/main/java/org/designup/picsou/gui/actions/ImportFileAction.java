@@ -24,16 +24,17 @@ public class ImportFileAction extends AbstractAction {
   private GlobRepository repository;
 
 
-  static public ImportFileAction initAndRegisterInOpenRequestManager(final GlobRepository repository, final Directory directory) {
-    return new ImportFileAction(repository, directory);
+  static public ImportFileAction initAndRegisterInOpenRequestManager(
+    String text, final GlobRepository repository, final Directory directory) {
+    return new ImportFileAction(text, repository, directory);
   }
 
-  static public ImportFileAction init(final GlobRepository repository, final Directory directory, Glob defaulAccount) {
-    return new ImportFileAction(repository, directory, defaulAccount);
+  static public ImportFileAction init(String text, final GlobRepository repository, final Directory directory, Glob defaulAccount) {
+    return new ImportFileAction(text, repository, directory, defaulAccount);
   }
 
-  private ImportFileAction(final GlobRepository repository, final Directory directory) {
-    super(Lang.get("import"));
+  private ImportFileAction(String text, final GlobRepository repository, final Directory directory) {
+    super(text);
     this.repository = repository;
     this.directory = directory;
     OpenRequestManager openRequestManager = directory.get(OpenRequestManager.class);
@@ -45,8 +46,8 @@ public class ImportFileAction extends AbstractAction {
     });
   }
 
-  private ImportFileAction(final GlobRepository repository, final Directory directory, Glob defaulAccount) {
-    super(Lang.get("import"));
+  private ImportFileAction(String text, final GlobRepository repository, final Directory directory, Glob defaulAccount) {
+    super(text);
     this.repository = repository;
     this.directory = directory;
     this.defaulAccount = defaulAccount;
