@@ -294,7 +294,7 @@ public class TransactionChecker extends ViewChecker {
           return "";
         }
         if (master != null) {
-          return "MasterCategory." + master.name().toUpperCase();
+          return "MasterCategory." + master.getName().toUpperCase();
         }
 
         org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);

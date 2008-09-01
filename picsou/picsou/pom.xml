@@ -90,7 +90,7 @@
                 <delete dir="ofuscated"/>
                 <java fork="yes" jar="dev/Zelix/ZKM.jar">
                   <jvmarg line="-Xmx512M"/>
-                  <arg line="dev/ant/zelix.txt"/>
+                  <arg line="-de dev/Zelix/defaultExclude.txt dev/ant/zelix.txt"/>
                 </java>
               </tasks>
             </configuration>

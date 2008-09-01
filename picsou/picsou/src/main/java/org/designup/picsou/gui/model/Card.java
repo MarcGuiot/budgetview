@@ -2,21 +2,21 @@ package org.designup.picsou.gui.model;
 
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
 import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.KeyBuilder;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
-import org.globsframework.model.KeyBuilder;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum Card implements GlobConstantContainer {
-  HOME(0, false),
-  BUDGET(1, false),
-  DATA(2, true),
-  REPARTITION(3, true),
-  EVOLUTION(4, true);
+  HOME("HOME", 0, false),
+  BUDGET("BUDGET", 1, false),
+  DATA("DATA", 2, true),
+  REPARTITION("REPARTITION", 3, true),
+  EVOLUTION("EVOLUTION", 4, true);
 
   public static GlobType TYPE;
 
@@ -24,19 +24,21 @@ public enum Card implements GlobConstantContainer {
   public static IntegerField ID;
 
   private int id;
+  private String name;
   public final boolean showCategoryCard;
 
   static {
     GlobTypeLoader.init(Card.class);
   }
-  
-  Card(int id, boolean showCategoryCard) {
+
+  Card(String name, int id, boolean showCategoryCard) {
+    this.name = name;
     this.id = id;
     this.showCategoryCard = showCategoryCard;
   }
 
   public String getName() {
-    return name().toLowerCase();
+    return name.toLowerCase();
   }
 
   public String getLabel() {

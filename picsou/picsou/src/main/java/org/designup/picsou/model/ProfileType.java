@@ -13,9 +13,9 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidData;
 
 public enum ProfileType implements GlobConstantContainer {
-  MONTHLY(0),
-  UNKNOWN(1),
-  CREDIT(2);
+  MONTHLY("MONTHLY", 0),
+  UNKNOWN("UNKNOWN", 1),
+  CREDIT("CREDIT", 2);
 
   public static GlobType TYPE;
 
@@ -26,8 +26,10 @@ public enum ProfileType implements GlobConstantContainer {
   public static StringField NAME;
 
   private int id;
+  private String name;
 
-  ProfileType(int id) {
+  ProfileType(String name, int id) {
+    this.name = name;
     this.id = id;
   }
 
@@ -38,7 +40,7 @@ public enum ProfileType implements GlobConstantContainer {
   public ReadOnlyGlob getGlob() {
     return new ReadOnlyGlob(ProfileType.TYPE,
                             value(ProfileType.ID, id),
-                            value(ProfileType.NAME, Strings.toNiceLowerCase(name())));
+                            value(ProfileType.NAME, Strings.toNiceLowerCase(name)));
   }
 
   public static ProfileType get(int id) {

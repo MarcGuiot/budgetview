@@ -1,6 +1,5 @@
 package org.designup.picsou.model;
 
-import static org.designup.picsou.model.TransactionTypeMatcher.TRANSACTION_TYPE;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
@@ -15,16 +14,16 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum TransactionType implements GlobConstantContainer {
-  VIREMENT(1),
-  CHECK(2),
-  WITHDRAWAL(3),
-  DEPOSIT(4),
-  PRELEVEMENT(5),
-  CREDIT(6),
-  CREDIT_CARD(7),
-  BANK_FEES(9),
-  INTERNAL_TRANSFER(10),
-  PLANNED(11);
+  VIREMENT("VIREMENT", 1),
+  CHECK("CHECK", 2),
+  WITHDRAWAL("WITHDRAWAL", 3),
+  DEPOSIT("DEPOSIT", 4),
+  PRELEVEMENT("PRELEVEMENT", 5),
+  CREDIT("CREDIT", 6),
+  CREDIT_CARD("CREDIT_CARD", 7),
+  BANK_FEES("BANK_FEES", 9),
+  INTERNAL_TRANSFER("INTERNAL_TRANSFER", 10),
+  PLANNED("PLANNED", 11);
 
   public static GlobType TYPE;
 
@@ -56,9 +55,11 @@ public enum TransactionType implements GlobConstantContainer {
 
   private ReadOnlyGlob glob;
   private final int id;
+  private String name;
 
-  TransactionType(int id) {
+  TransactionType(String name, int id) {
     this.id = id;
+    this.name = name;
   }
 
   public int getId() {
@@ -66,20 +67,20 @@ public enum TransactionType implements GlobConstantContainer {
   }
 
   public String getName() {
-    return name().toLowerCase();
+    return name.toLowerCase();
   }
 
   public ReadOnlyGlob getGlob() {
     if (glob == null) {
       glob = new ReadOnlyGlob(TYPE,
                               value(ID, id),
-                              value(NAME, name().toLowerCase()));
+                              value(NAME, getName()));
     }
     return glob;
   }
 
   public static TransactionType get(Glob transactionTypeMatcher) throws ItemNotFound {
-    Integer transactionTypeId = transactionTypeMatcher.get(TRANSACTION_TYPE);
+    Integer transactionTypeId = transactionTypeMatcher.get(TransactionTypeMatcher.TRANSACTION_TYPE);
     for (TransactionType transactionType : values()) {
       if (Utils.equal(transactionType.id, transactionTypeId)) {
         return transactionType;

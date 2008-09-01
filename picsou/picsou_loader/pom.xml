@@ -60,7 +60,7 @@
                             vmoptions="-Xmx128m">
 
 
-                  <!--<resourcefilelist dir=".." files="LICENSE.TXT"/>-->
+                  <resourcefilelist dir="../picsou/ofuscated" files="picsou00000000000001.jar"/>
                   <!-- Contents/Resources/ -->
                   <!--<javafilelist dir="./build" files="libHelpBookJNI.jnilib"/>-->
 
