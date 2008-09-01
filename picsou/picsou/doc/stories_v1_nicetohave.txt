@@ -1,12 +1,8 @@
 
-* Suppression de subcat : demander la subcat de destination (cas du pb d'import)
-
 * Types de comptes (courant / carte / epargne)
 
 * Filtrage de transactions par compte
 * Filtrage de transactions par import
-
-* Creer/supprimer des master categories
 
 * Enlever contrainte sur password => indicateur "password strength"
 * Mode demo (pas de connexions, fichier de donnees en dur, pas de stockage)

@@ -3,8 +3,6 @@
 Gauge : voir apparition warning alors que les chiffres affiches sont egaux (pb de precision)
 
 TransactionView
-* Filtrage par serie
-* Filtrage par budgetArea
 * TransactionDetail : hyperlien pour editer la serie
 
 Import
@@ -13,6 +11,8 @@ Import
 BalanceGraph : couleur si balance negative
 BudgetView : occasional en negatif ?
 blocks budgetview : splitpane invisibles
+
+WavePanelUI : degager JIDE / pb sous Tiger
 
 Login
 -----
@@ -72,6 +72,7 @@ Details transactions
 * Afficher propagation d'affectation
 * Cas de transaction deja splittee
 * Notes
+
 
 Misc
 ----

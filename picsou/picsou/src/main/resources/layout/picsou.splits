@@ -91,14 +91,14 @@
 
         <card name="withCategories">
 
-          <horizontalSplit ui="cleanSplitPane" dividerSize="2" dividerLocation="210"
+          <horizontalSplit ui="cleanSplitPane" dividerSize="2" dividerLocation="230"
                            continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
-            <panel styleClass="block" border="empty(0,0,0,5)">
+            <panel styleClass="block">
 
               <column margin="10">
                 <scrollPane border="line(category.border)" viewportBackground="categories.bg"
                             background="categories.bg"
-                            minimumSize="(180,400)" weightX="1">
+                            minimumSize="(200,400)" weightX="1">
                   <table ref="category" intercellSpacing="(0,0)" showGrid="false" opaque="false"
                          margin="10"/>
                 </scrollPane>

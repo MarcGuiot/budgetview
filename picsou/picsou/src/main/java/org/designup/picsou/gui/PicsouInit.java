@@ -102,7 +102,6 @@ public class PicsouInit {
 
         InitialCategories.run(repository);
         InitialSeries.run(repository);
-//        loadGlobs("/series.xml");
       }
       finally {
         repository.completeBulkDispatchingMode();

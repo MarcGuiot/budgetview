@@ -34,4 +34,33 @@ public interface ServerAccess {
   GlobList getUserData(MutableChangeSet upgradeChangeSetToApply, IdUpdate idUpdate);
 
   void disconnect();
+
+  static final ServerAccess NULL = new ServerAccess() {
+    public boolean createUser(String name, char[] password) throws UserAlreadyExists, IdentificationFailed, PasswordBasedEncryptor.EncryptFail {
+      return true;
+    }
+
+    public boolean initConnection(String name, char[] password, boolean privateComputer) throws BadPassword, UserNotRegistered {
+      return true;
+    }
+
+    public void localRegister(byte[] mail, byte[] signature, String activationCode) {
+    }
+
+    public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {
+    }
+
+    public void takeSnapshot() {
+    }
+
+    public void connect() {
+    }
+
+    public GlobList getUserData(MutableChangeSet upgradeChangeSetToApply, IdUpdate idUpdate) {
+      return GlobList.EMPTY;
+    }
+
+    public void disconnect() {
+    }
+  };
 }

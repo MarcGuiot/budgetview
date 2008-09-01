@@ -116,12 +116,12 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker createSeries() {
-    dialog.getButton("Create").click();
+    dialog.getButton("create").click();
     return this;
   }
 
   public SeriesEditionDialogChecker deleteSeries() {
-    dialog.getButton("Delete").click();
+    dialog.getButton("delete").click();
     return this;
   }
 

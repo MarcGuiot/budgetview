@@ -56,7 +56,7 @@ public class CategorizationDialog {
       builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
         .addColumn(Lang.get("date"), new TransactionDateStringifier(transactionComparator),
                    LabelCustomizers.fontSize(9))
-        .addColumn(Transaction.LABEL)
+        .addColumn(Transaction.LABEL, LabelCustomizers.bold())
         .addColumn(Transaction.AMOUNT);
     Gui.setColumnSizes(transactionTable.getComponent(), COLUMN_SIZES);
 

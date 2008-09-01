@@ -1,43 +1,39 @@
-* Graphique page accueil
-
-* Apprentissage series
-
-* Projets
-
-* Affichage synthèse des mois suivants (+/- MonthSummaryView en sequence horizontale, avec projets)
-
-* Edition des TransactionMatchers pour gerer de nouvelles banques
-
-* Undo (verifier + generaliser dans les boîtes de dialogue)
-
-* Mecanique de backup/restore pour les utilisateurs (crypte ou non?)
-
-* Changer date user des transactions
-
-* Creer des transactions utilisateur (soit achats effectues mais pas encore dans les releves, soit previsions plus vagues)
-
-* Pb d'affichage de mois futurs en version basique si transactions dans le futur
-
-* Filtrage transactions par Serie
-
-* Filtrage transactions par Type
-
-* Filtrage transactions par Compte
-
-* Filtrage transactions par BudgetArea
-
-* Decouverte des mois actifs pour les series a partir des transactions
-
-* Graphiques (camembert / histogramme)
-
-* SMS
-
-* Virements internes
-
-* Remboursements
-
-* Affiner version basique / pro
-
+Versions basique/pro
+--------------------
+* Masquer les vues
 * Bloc "vous utilisez la version basique"
 
+
+Stabilisation
+-------------
+* Graphique page accueil
+* Apprentissage series
+* Undo (verifier + generaliser dans les boîtes de dialogue)
+* Changer date user des transactions
+* Filtrage transactions par Serie
+* Filtrage transactions par TransactionType
+* Filtrage transactions par Compte
+* Filtrage transactions par BudgetArea
+* Graphiques (camembert / histogramme)
 * Afficher les infos de mise a dispo d'une nouvelle version
+
+
+I18N
+----
+* Edition des TransactionMatchers pour gerer de nouvelles banques
+* Pb d'affichage de mois futurs en version basique si transactions dans le futur
+
+
+Nouveau
+-------
+* Projets
+* Affichage synthèse des mois suivants (+/- MonthSummaryView en sequence horizontale, avec projets)
+* Mecanique de backup/restore pour les utilisateurs (crypte ou non?)
+* Creer des transactions utilisateur (soit achats effectues mais pas encore dans les releves, soit previsions plus vagues)
+* Decouverte des mois actifs pour les series a partir des transactions
+* SMS
+* Remboursements
+
+
+* Virements internes
+* Gerer la notion d'epargne (virements internes ?)

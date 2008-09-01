@@ -18,6 +18,7 @@ import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.GlobTableView;
@@ -75,7 +76,8 @@ public class SeriesEditionDialog {
 
     seriesList = builder.addList("seriesList", Series.TYPE);
 
-    builder.add("createSeries", new CreateSeriesAction());
+    builder.add("create", new CreateSeriesAction());
+    builder.add("delete", new DeleteSeriesAction());
 
     builder.addEditor("nameField", Series.LABEL);
 
@@ -137,6 +139,10 @@ public class SeriesEditionDialog {
   }
 
   public void show(BudgetArea budgetArea, Set<Integer> monthIds) {
+
+// TODO: remove this
+//    SplitsEditor.show(dialog, localDirectory);
+
     try {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
@@ -380,12 +386,22 @@ public class SeriesEditionDialog {
 
   private class CreateSeriesAction extends AbstractAction {
     public CreateSeriesAction() {
-      super(Lang.get("seriesEdition.create"));
+      super("create");
     }
 
     public void actionPerformed(ActionEvent e) {
       Glob newSeries = createSeries(Lang.get("seriesEdition.newSeries"), 0.0, 1);
       selectionService.select(newSeries);
+    }
+  }
+
+  private class DeleteSeriesAction extends AbstractAction {
+    public DeleteSeriesAction() {
+      super("delete");
+      setEnabled(false);
+    }
+
+    public void actionPerformed(ActionEvent e) {
     }
   }
 }

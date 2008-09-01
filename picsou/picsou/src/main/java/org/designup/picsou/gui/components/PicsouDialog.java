@@ -15,6 +15,8 @@ import java.awt.event.WindowEvent;
 
 public class PicsouDialog extends JDialog {
 
+  public static boolean MODAL = true;
+
   public static PicsouDialog create(JFrame owner) {
     return new PicsouDialog(owner);
   }
@@ -60,9 +62,26 @@ public class PicsouDialog extends JDialog {
 
     int index = 0;
     builder.add(Box.createHorizontalGlue(), index++, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER);
-    Insets buttonInsets = new Insets(10, 10, 10, 10);
+
     JButton cancelButton = new JButton(cancel);
     JButton okButton = new JButton(ok);
+    adjustSizes(cancelButton, okButton);
+
+    Insets buttonInsets = new Insets(0, 10, 10, 10);
+    if (Gui.isMacOSX()) {
+      builder.add(cancelButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+      builder.add(okButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+    }
+    else {
+      builder.add(okButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+      builder.add(cancelButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+    }
+
+    JPanel contentPane = builder.getPanel();
+    setContentPane(contentPane);
+  }
+
+  private void adjustSizes(JButton cancelButton, JButton okButton) {
     Dimension cancelSize = cancelButton.getPreferredSize();
     Dimension okSize = okButton.getPreferredSize();
     if (cancelSize.width > okSize.width) {
@@ -79,16 +98,6 @@ public class PicsouDialog extends JDialog {
     else {
       cancelButton.setMinimumSize(okMinSize);
     }
-    if (Gui.isMacOSX()) {
-      builder.add(cancelButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
-      builder.add(okButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
-    }
-    else {
-      builder.add(okButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
-      builder.add(cancelButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
-    }
-    JPanel contentPane = builder.getPanel();
-    setContentPane(contentPane);
   }
 
   private static PicsouDialog create(Window owner) {
@@ -110,11 +119,11 @@ public class PicsouDialog extends JDialog {
   }
 
   private PicsouDialog(JFrame parent) {
-    super(parent, true);
+    super(parent, MODAL);
   }
 
   private PicsouDialog(JDialog parent) {
-    super(parent, true);
+    super(parent, MODAL);
   }
 
   protected JRootPane createRootPane() {

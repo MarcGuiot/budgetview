@@ -39,12 +39,15 @@
     <!-- Dialog -->
 
     <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="dialog.bg" bottomColor="dialog.bg"/>
-    <style selector="dialog" ui="dialog"/>
+        topColor="dialog.bg.top" bottomColor="dialog.bg.bottom" borderColor="dialog.bg.border"
+        borderWidth="2" cornerRadius="20"/>
+    <style selector=".dialog" opaque="true"/>
+    <style selector=".innerDialog" margin="15" marginBottom="10"/>
+    <style selector=".innerDialogContent" margin="15"/>
 
     <ui name="dialogBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="dialog.block.top" bottomColor="dialog.block.bottom"
-        borderColor="dialog.block.border" borderWidth="1" cornerRadius="10"/>
+        borderColor="dialog.block.border" borderWidth="2" cornerRadius="10"/>
     <style selector=".dialogBlock" ui="dialogBlock"/>
 
     <!-- Hyperlinks -->
@@ -77,6 +80,11 @@
     <style selector=".innerBlock label.largeAmount" foreground="block.inner.amount" font="-,bold,13" anchor="top"/>
     <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink" font="-,plain,10"/>
 
+    <!-- Icon buttons -->
+    <ui name="iconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"/>
+    <style selector=".iconButtonGroup" marginTop="5"/>
+    <style selector=".iconButtonGroup button" ui='iconButton' fill='none' weightX='0'/>
+
     <!-- Gauge -->
     <style selector=".totalGauge"
            opaque="false"
@@ -107,9 +115,9 @@
     <!-- Selection toggles -->
     <ui name="selectionToggle" class="org.designup.picsou.gui.components.SelectionToggleUI"/>
     <style selector="toggleButton.selector" ui="selectionToggle" foreground="#000099"/>
-    <style selector="toggleButton.masterCategorySelector" ui="selectionToggle" foreground="#000099"
+    <style selector="toggleButton.masterCategorySelector" ui="selectionToggle" foreground="#0000CC"
            fill="none" anchor="west" font="-,bold,14"/>
-    <style selector="toggleButton.subCategorySelector" ui="selectionToggle" foreground="#000099"
+    <style selector="toggleButton.subCategorySelector" ui="selectionToggle" foreground="#0000CC"
            font="-,plain,11" fill="none" anchor="west"/>
 
   </styles>

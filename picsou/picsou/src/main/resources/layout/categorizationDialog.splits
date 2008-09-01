@@ -14,7 +14,7 @@
 
       <column>
         <scrollPane viewportBackground="#FFFFFF">
-          <table ref="transactionTable" showGrid="false" showVerticalLines="false"/>
+          <table ref="transactionTable"  intercellSpacing="(0,0)" showGrid="false"/>
         </scrollPane>
         <column>
           <checkBox ref="autoSelection" text="$categorization.autoselection" anchor="left"/>
@@ -90,7 +90,9 @@
                 <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
                 <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn" border="empty(5)">
                   <column>
-                    <toggleButton ref="occasionalCategoryToggle" styleClass="masterCategorySelector"/>
+                    <row>
+                      <toggleButton ref="occasionalCategoryToggle" styleClass="masterCategorySelector"/>
+                    </row>
                     <repeat ref="occasionalSubcatRepeat" marginLeft="10" background="#FF0000">
                       <toggleButton ref="occasionalSubcatToggle" styleClass="subCategorySelector"/>
                     </repeat>

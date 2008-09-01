@@ -2,26 +2,34 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <column styleClass="dialog" preferredSize="(550,400)" margin="20">
+  <column styleClass="dialog" preferredSize="(550,400)">
     <row>
       <column weightX="1" margin="10">
         <scrollPane>
           <list ref="masterCategoryList"/>
         </scrollPane>
-        <row>
-          <button action="createMasterCategory" name="createMasterCategory"/>
-          <button action="deleteMasterCategory" name="deleteMasterCategory"/>
-          <button action="renameMasterCategory" name="renameMasterCategory"/>
+        <row styleClass="iconButtonGroup">
+          <button action="createMasterCategory" name="createMasterCategory"
+                  icon="button_plus.png" disabledIcon="button_plus_disabled.png"/>
+          <button action="deleteMasterCategory" name="deleteMasterCategory"
+                  icon="button_minus.png" disabledIcon="button_minus_disabled.png"/>
+          <button action="renameMasterCategory" name="renameMasterCategory"
+                  icon="button_rename.png" disabledIcon="button_rename_disabled.png"/>
+          <filler fill="horizontal"/>
         </row>
       </column>
       <column weightX="1" margin="10">
         <scrollPane>
           <list ref="subCategoryList"/>
         </scrollPane>
-        <row>
-          <button action="createSubCategory" name="createSubCategory"/>
-          <button action="deleteSubCategory" name="deleteSubCategory"/>
-          <button action="renameSubCategory" name="renameSubCategory"/>
+        <row styleClass="iconButtonGroup">
+          <button action="createSubCategory" name="createSubCategory"
+                  icon="button_plus.png" disabledIcon="button_plus_disabled.png"/>
+          <button action="deleteSubCategory" name="deleteSubCategory"
+                  icon="button_minus.png" disabledIcon="button_minus_disabled.png"/>
+          <button action="renameSubCategory" name="renameSubCategory"
+                  icon="button_rename.png" disabledIcon="button_rename_disabled.png"/>
+          <filler fill="horizontal"/>
         </row>
       </column>
     </row>
