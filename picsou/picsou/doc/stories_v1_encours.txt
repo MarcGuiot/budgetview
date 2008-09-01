@@ -9,7 +9,8 @@ CategoryChooserDialog
 
 CategorizationDialog
 * Renommage de serie : mettre a jour le toggle
-* Liens "edition des series"
+* Boutons ajouter + edition pour les series hors occasional
+* Occasional : bouton edition categories
 * Message d'aide quand il n'y a pas de serie pour une budgetArea
 
 SeriesCreationDialog (edition)
@@ -20,7 +21,7 @@ SeriesCreationDialog (edition)
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
 * Selection de profil : mensuel pur / personnalise / aleatoire
 * Edition des dates debut/find (combo mois + spinbox annees) - voir updates table seriesBudget
-* MAJ temps reel du nom de la serie pendant l'edition (propriete editor)
+* MAJ temps reel du nom de la serie pendant l'edition (propriete editor?)
 
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees

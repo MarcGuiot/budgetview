@@ -87,5 +87,4 @@ Fenetre import
 
 Budget view
 -----------
-* Panneau pour montrer le detail du calcul du disponible en occasional
 * Hyperliens montants ==> transactionView

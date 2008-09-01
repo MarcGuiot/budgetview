@@ -2,6 +2,7 @@ Versions basique/pro
 --------------------
 * Masquer les vues
 * Bloc "vous utilisez la version basique"
+* Pb d'affichage de mois futurs en version basique si transactions dans le futur
 
 
 Stabilisation
@@ -16,12 +17,12 @@ Stabilisation
 * Filtrage transactions par BudgetArea
 * Graphiques (camembert / histogramme)
 * Afficher les infos de mise a dispo d'une nouvelle version
+* BudgeView : Panneau pour montrer le detail du calcul du disponible en occasional
 
 
 I18N
 ----
 * Edition des TransactionMatchers pour gerer de nouvelles banques
-* Pb d'affichage de mois futurs en version basique si transactions dans le futur
 
 
 Nouveau
