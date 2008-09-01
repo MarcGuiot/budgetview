@@ -8,7 +8,7 @@ public interface GlobIdGenerator {
 
   GlobIdGenerator NONE = new GlobIdGenerator() {
     public int getNextId(IntegerField keyField, int idCount) {
-      throw new UnexpectedApplicationState("No ID generator registered for type: " + keyField.getName());
+      throw new UnexpectedApplicationState("No ID generator registered for type: " + keyField.getGlobType().getName());
     }
   };
 
