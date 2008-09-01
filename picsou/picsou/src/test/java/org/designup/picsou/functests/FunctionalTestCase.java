@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import junit.framework.TestCase;
 import org.designup.picsou.server.ServerDirectory;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
@@ -27,7 +26,7 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
     Locale.setDefault(Locale.ENGLISH);
     Log.reset();
     Files.deleteSubtree(new File(createPrevaylerRepository()));
-    url = initServerEnvironment(this, inMemory);
+    url = initServerEnvironment(inMemory);
   }
 
   protected void setInMemory(boolean inMemory) {
@@ -36,14 +35,16 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
 
   protected void tearDown() throws Exception {
     super.tearDown();
-    serverDirectory.close();
-    serverDirectory = null;
+    if (serverDirectory != null) {
+      serverDirectory.close();
+      serverDirectory = null;
+    }
     directory = null;
     url = null;
     Files.deleteSubtree(new File(createPrevaylerRepository()));
   }
 
-  public String initServerEnvironment(TestCase testCase, boolean inMemory) throws Exception {
+  public String initServerEnvironment(boolean inMemory) throws Exception {
     String prevaylerPath = createPrevaylerRepository();
     serverDirectory = new ServerDirectory(prevaylerPath, inMemory);
     directory = serverDirectory.getServiceDirectory();

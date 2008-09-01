@@ -43,6 +43,17 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   private Date currentDate = Dates.parse("2008/08/31");
 
   protected void setUp() throws Exception {
+
+//    TimeService.setCurrentDate(currentDate);
+//    if (mainWindow != null) {
+//      repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
+//      ApplicationReset.run(repository);
+//      initCheckers();
+//      license.enterLicense("admin", "zz", 0);
+//      views.selectData();
+//      return;
+//    }
+
     super.setUp();
     TimeService.setCurrentDate(currentDate);
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, FunctionalTestCase.getUrl());
