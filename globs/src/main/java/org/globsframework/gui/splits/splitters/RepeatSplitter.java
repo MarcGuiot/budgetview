@@ -70,10 +70,10 @@ public class RepeatSplitter extends AbstractSplitter {
       };
     }
     else if ("verticalGrid".equalsIgnoreCase(layoutProperty)) {
-      return new GridRepeatLayout(GridRepeatLayout.Direction.VERTICAL);
+      return new GridRepeatLayout(GridRepeatLayout.Direction.VERTICAL, properties.getInt("gridWrapLimit"));
     }
     else if ("horizontalGrid".equalsIgnoreCase(layoutProperty)) {
-      return new GridRepeatLayout(GridRepeatLayout.Direction.HORIZONTAL);
+      return new GridRepeatLayout(GridRepeatLayout.Direction.HORIZONTAL, properties.getInt("gridWrapLimit"));
     }
     throw new SplitsException("Unknown layout type '" + layoutProperty + "' for repeat '" + ref +
                               "' - use one of [column|verticalGrid]");
@@ -84,6 +84,6 @@ public class RepeatSplitter extends AbstractSplitter {
   }
 
   protected String[] getExcludedParameters() {
-    return new String[]{"layout"};
+    return new String[]{"layout", "gridWrapLimit"};
   }
 }

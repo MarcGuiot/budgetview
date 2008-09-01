@@ -257,6 +257,52 @@ public class SplitsRepeatTest extends SplitsTestCase {
     checkButton(panel, 3, "bb", 1, 1);
   }
 
+  public void testForceWrapInHorizontalGridLayouts() throws Exception {
+    builder.addRepeat("repeat", Arrays.asList("a", "b", "c", "d"), new RepeatComponentFactory<String>() {
+      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+        cellBuilder.add("label", new JLabel(object));
+        cellBuilder.add("button", new JButton(object));
+      }
+    });
+    JPanel panel = parse(
+      "<repeat ref='repeat' layout='horizontalGrid' gridWrapLimit='3'>" +
+      "  <label ref='label' fill='horizontal' anchor='south' marginTop='10' marginBottom='5'/>" +
+      "  <button ref='button' marginLeft='5' marginRight='5'/>" +
+      "</repeat>");
+
+    checkLabel(panel, 0, "a", 0, 0);
+    checkButton(panel, 1, "a", 0, 1);
+    checkLabel(panel, 2, "b", 1, 0);
+    checkButton(panel, 3, "b", 1, 1);
+    checkLabel(panel, 4, "c", 2, 0);
+    checkButton(panel, 5, "c", 2, 1);
+    checkLabel(panel, 6, "d", 0, 2);
+    checkButton(panel, 7, "d", 0, 3);
+  }
+
+  public void testForceWrapInVerticalGridLayouts() throws Exception {
+    builder.addRepeat("repeat", Arrays.asList("a", "b", "c", "d"), new RepeatComponentFactory<String>() {
+      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+        cellBuilder.add("label", new JLabel(object));
+        cellBuilder.add("button", new JButton(object));
+      }
+    });
+    JPanel panel = parse(
+      "<repeat ref='repeat' layout='verticalGrid' gridWrapLimit='3'>" +
+      "  <label ref='label' fill='horizontal' anchor='south' marginTop='10' marginBottom='5'/>" +
+      "  <button ref='button' marginLeft='5' marginRight='5'/>" +
+      "</repeat>");
+
+    checkLabel(panel, 0, "a", 0, 0);
+    checkButton(panel, 1, "a", 1, 0);
+    checkLabel(panel, 2, "b", 0, 1);
+    checkButton(panel, 3, "b", 1, 1);
+    checkLabel(panel, 4, "c", 0, 2);
+    checkButton(panel, 5, "c", 1, 2);
+    checkLabel(panel, 6, "d", 2, 0);
+    checkButton(panel, 7, "d", 3, 0);
+  }
+
   public void testRowLayout() throws Exception {
     builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                       new RepeatComponentFactory<String>() {
@@ -287,7 +333,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
       "</repeat>");
 
     FlowLayout layout = (FlowLayout)panel.getLayout();
-    assertEquals(FlowLayout.LEFT,  layout.getAlignment());
+    assertEquals(FlowLayout.LEFT, layout.getAlignment());
   }
 
   public void testWrappedColumnLayout() throws Exception {
@@ -326,7 +372,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
       "    <button ref='btn'/>" +
       "  </row>" +
       "</repeat>");
-    
+
     org.uispec4j.Panel panel = new org.uispec4j.Panel(jPanel);
     assertThat(panel.getButton(ComponentMatchers.componentLabelFor("aa")).textEquals("aaButton"));
     assertThat(panel.getButton(ComponentMatchers.componentLabelFor("bb")).textEquals("bbButton"));
@@ -348,12 +394,11 @@ public class SplitsRepeatTest extends SplitsTestCase {
       "    <button ref='btn'/>" +
       "  </row>" +
       "</repeat>");
-    
+
     org.uispec4j.Panel panel = new org.uispec4j.Panel(jPanel);
     panel.getButton("aaButton").getAwtComponent().setVisible(false);
     assertFalse(panel.getTextBox("aa").isVisible());
   }
-
 
   private void checkButton(JPanel panel, int componentIndex, String label, int x, int y) {
     JButton button = (JButton)panel.getComponent(componentIndex);

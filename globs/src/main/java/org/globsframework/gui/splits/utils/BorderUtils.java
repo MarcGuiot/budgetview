@@ -31,6 +31,7 @@ public class BorderUtils {
                                                         "[ ]*([0-9]+)[ ]*," +
                                                         "[ ]*([A-z\\.#0-9]+)[ ]*" +
                                                         "\\)");
+
   private static Pattern LINE_FORMAT = Pattern.compile("line\\(" +
                                                        "[ ]*([A-z\\.#0-9]+)[ ]*" +
                                                        "\\)");

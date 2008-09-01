@@ -3,6 +3,7 @@ package org.globsframework.gui.splits;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorServiceEditor;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,5 +34,22 @@ public class SplitsEditor {
         .load();
 
     GuiUtils.showCentered(frame);
+  }
+
+  public static void show(JDialog dialog, Directory directory) {
+    ColorService colorService = directory.get(ColorService.class);
+    colorService.autoUpdate(dialog);
+
+    JFrame frame =
+      SplitsBuilder.init(directory)
+        .setSource(SplitsEditor.class, "/splits/splitsEditor.splits")
+        .add("reload", new AbstractAction("Reload") {
+          public void actionPerformed(ActionEvent e) {
+          }
+        })
+        .add("colorEditor", new ColorServiceEditor(colorService).getBuilder())
+        .load();
+
+    GuiUtils.showCentered(frame);    
   }
 }
