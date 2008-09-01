@@ -1,14 +1,8 @@
-- Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
-
-- Gauge : voir apparition warning alors que les chiffres affiches sont egaux (pb de precision)
-
 - TransactionDetail : hyperlien pour editer la serie
 
 - Import : Selectionner automatiquement la banque par defaut si une seule banque dans les comptes existants
 
 - BalanceGraph : couleur si balance negative
-
-- BudgetView : occasional en negatif ?
 
 - Blocks budgetview : splitpane invisibles (PIcsouSplitPaneUI dans PicsouStyles + dessiner un trait?)
 
@@ -20,20 +14,13 @@ Login
 - Creation de compte : expliquer que la notion de compte / mot de passe est liee au cryptage local
 
 
-CategorizationDialog
---------------------
-- afficher le nombre de transactions restantes
-- split de transaction
-- saisie de notes
-
-
 TimeView
 --------
 - Joliesse boutons/bords timeview
 
 
-Vue accueil
------------
+Gestion des comptes
+-------------------
 - creation de compte
 - edition comptes
 - masquer un compte (date de cloture)

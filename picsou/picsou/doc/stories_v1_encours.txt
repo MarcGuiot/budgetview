@@ -26,9 +26,22 @@ BudgetView
 * Block "non classe" (avec bouton categorisation)
 
 Licence
-* Activation licence : cas ou pas de connexion internet (test manuel)
 * Voir nb mois
 
 CategoryEditionDialog
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
 * Revoir nom par defaut lors d'un rename (cf internationalisation)
+
+- Traduction des titres de colonnes TransactionView / CategoryView
+
+- Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
+
+- Gauge : voir apparition warning alors que les chiffres affiches sont egaux (pb de precision)
+
+
+CategorizationDialog
+--------------------
+- afficher le nombre de transactions restantes
+- split de transaction
+- saisie de notes
+
