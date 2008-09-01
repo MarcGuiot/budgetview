@@ -1,7 +1,6 @@
 * Revoir tests F gestion series
 
 CategoryChooserDialog
-* Afficher la/les categories en cours
 * Exclure "none" et "all"
 * Titre "choisir une categorie"
 * Edition des categories
@@ -13,13 +12,12 @@ CategorizationDialog
 * Occasional : bouton edition categories
 * Message d'aide quand il n'y a pas de serie pour une budgetArea
 
-SeriesCreationDialog (edition)
-* Creation de serie
+SeriesEditionDialog
 * Forcer la selection d'une categorie au moins
+* Afficher la/les categories en cours
 * Selection multi-categories pour les enveloppes, mono-categories pour les recurrences
 * Liste de series
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
-* Selection de profil : mensuel pur / personnalise / aleatoire
 * Edition des dates debut/find (combo mois + spinbox annees) - voir updates table seriesBudget
 * MAJ temps reel du nom de la serie pendant l'edition (propriete editor?)
 
@@ -32,5 +30,5 @@ Licence
 * Voir nb mois
 
 CategoryEditionDialog
-* Selectionner la categorie suivante apres une suppression
+* Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
 * Revoir nom par defaut lors d'un rename (cf internationalisation)

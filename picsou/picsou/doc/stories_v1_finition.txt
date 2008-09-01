@@ -1,22 +1,22 @@
 - Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
 
-Gauge : voir apparition warning alors que les chiffres affiches sont egaux (pb de precision)
+- Gauge : voir apparition warning alors que les chiffres affiches sont egaux (pb de precision)
 
-TransactionView
-* TransactionDetail : hyperlien pour editer la serie
+- TransactionDetail : hyperlien pour editer la serie
 
-Import
-* Selectionner automatiquement la banque par defaut
+- Import : Selectionner automatiquement la banque par defaut si une seule banque dans les comptes existants
 
-BalanceGraph : couleur si balance negative
-BudgetView : occasional en negatif ?
-blocks budgetview : splitpane invisibles
+- BalanceGraph : couleur si balance negative
 
-WavePanelUI : degager JIDE / pb sous Tiger
+- BudgetView : occasional en negatif ?
+
+- Blocks budgetview : splitpane invisibles (PIcsouSplitPaneUI dans PicsouStyles + dessiner un trait?)
+
+- WavePanelUI : degager JIDE / pb sous Tiger
 
 Login
 -----
-- Revoir logo
+- Supprimer logo
 - Creation de compte : expliquer que la notion de compte / mot de passe est liee au cryptage local
 
 
@@ -36,7 +36,7 @@ Vue accueil
 -----------
 - creation de compte
 - edition comptes
-- masquer un compte
+- masquer un compte (date de cloture)
 
 
 TitleView
@@ -53,7 +53,7 @@ Import
 
 Packaging
 ---------
-* Packaging Mac (hdiutil?)
+* Packaging Mac (hdiutil ou zip ?)
 * Sous Mac: Sauvegarde dans ~/Library/Application Support/<application name>
 * Look installer
 * Afficher SLA au premier lancement (cas de repository vide ?)
@@ -64,8 +64,8 @@ Misc
 * CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
 
 
-Details transactions
---------------------
+TransactionDetails
+------------------
 * Min/Max/Moy sur une ligne
 * Categorie "..." en multi-selection ("<plusieurs categories>")
 * Voir position lien "split"
@@ -76,8 +76,8 @@ Details transactions
 
 Misc
 ----
-* Split transaction : supprimer "disposable"
 * Memoriser dernier repertoire pour le filechooser
+* Memorise taille et position appli dans les user prefs
 
 
 Fenetre import
