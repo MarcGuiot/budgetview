@@ -8,6 +8,7 @@ import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -113,7 +114,7 @@ public class Series {
       case 12:
         return DECEMBER;
     }
-    throw new InvalidData(Month.toString(monthId) + " not managed");
+    throw new ItemNotFound(Month.toString(monthId) + " is not a month number");
   }
 
   public static class Serializer implements PicsouGlobSerializer {

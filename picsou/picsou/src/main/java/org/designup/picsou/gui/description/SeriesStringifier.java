@@ -5,7 +5,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.utils.GlobFieldComparator;
+import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.utils.Strings;
 
 import java.util.Comparator;
@@ -23,6 +23,6 @@ public class SeriesStringifier implements GlobStringifier {
   }
 
   public Comparator<Glob> getComparator(GlobRepository repository) {
-    return new GlobFieldComparator(Series.LABEL);
+    return new GlobFieldsComparator(Series.LABEL, true, Series.ID, true);
   }
 }

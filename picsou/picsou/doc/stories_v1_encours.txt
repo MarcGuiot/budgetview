@@ -16,10 +16,10 @@ SeriesEditionDialog
 * Forcer la selection d'une categorie au moins
 * Afficher la/les categories en cours
 * Selection multi-categories pour les enveloppes, mono-categories pour les recurrences
-* Liste de series
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
 * Edition des dates debut/find (combo mois + spinbox annees) - voir updates table seriesBudget
 * MAJ temps reel du nom de la serie pendant l'edition (propriete editor?)
+* Griser les checkbox de mois en dehors de la plage startDate/endDate
 
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees
