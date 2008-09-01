@@ -9,7 +9,6 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.links.FieldMappingFunctor;
 import org.globsframework.metamodel.utils.GlobTypeUtils;
 import org.globsframework.model.*;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -185,7 +184,7 @@ public class XmlGlobParser {
           LinkField linkField = (LinkField)field;
           Field namingField = GlobTypeUtils.findNamingField(linkField.getTargetType());
           if (namingField != null) {
-            String targetName = linkField.getName() + Strings.capitalize(namingField.getName());
+            String targetName = linkField.getName() + "Name";
             if (xmlName.equals(targetName)) {
               return linkField;
             }
