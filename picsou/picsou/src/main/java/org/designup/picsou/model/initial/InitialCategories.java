@@ -11,52 +11,52 @@ public class InitialCategories {
     MasterCategory[] masterCategories = MasterCategory.values();
     for (MasterCategory master : masterCategories) {
       repository.create(Category.TYPE,
-                        value(Category.NAME, master.getName()),
+                        value(Category.INNER_NAME, master.getName()),
                         value(Category.ID, master.getId()));
     }
 
     create(repository, MasterCategory.FOOD,
-           "Courant", "Restaurant", "Livraison / A emporter", "Réceptions");
+           "courant", "restaurant", "livraison", "receptions");
 
     create(repository, MasterCategory.HOUSE,
-           "Crédit / Loyer", "Assurance multi-risques", "Electro-ménager", "Bricolage",
-           "Entretien", "Mobilier", "Equipements divers");
+           "credit_loyer", "assurance", "electro_menager", "bricolage",
+           "entretien", "mobilier", "equipements");
 
     create(repository, MasterCategory.TELECOMS,
-           "Téléphone fixe", "Téléphone mobile", "Internet");
+           "telephone_fixe", "telephone_mobile", "internet");
 
     create(repository, MasterCategory.TRANSPORTS,
-           "Assurance", "Achat véhicule", "Transports en commun", "Entretien/Réparations",
-           "Essence", "Péages", "Voyages", "Parking");
+           "assurance", "achat", "transports_en_commun", "entretien",
+           "essence", "peages", "voyages", "parking");
 
     create(repository, MasterCategory.INCOME,
-           "Salaires et revenus non salariés", "Revenus d'investissement", "Revenus immobiliers");
+           "salaires", "revenus_d_investissement");
 
     create(repository, MasterCategory.HEALTH,
-           "Médecin", "Pharmacie", "Mutuelle", "Remboursements", "Hopital");
+           "medecin", "pharmacie", "mutuelle", "remboursements", "hopital");
 
     create(repository, MasterCategory.EDUCATION,
-           "Ecole / Université", "Livres", "Visites / musées");
+           "ecole", "livres", "visites");
 
     create(repository, MasterCategory.LEISURES,
-           "Cinéma", "TV", "Musique", "Sorties", "Lecture", "Equipement sportif", "Activités sportives");
+           "cinema", "tv", "musique", "sorties", "lecture", "equipement", "activites");
 
     create(repository, MasterCategory.TAXES,
-           "Impôts sur le revenu", "Taxe d'habitation", "Taxe foncière");
+           "impots", "taxe_d_habitation", "taxe_fonciere");
 
     create(repository, MasterCategory.BEAUTY);
 
     create(repository, MasterCategory.CLOTHING);
 
     create(repository, MasterCategory.SAVINGS,
-           "Assurance vie", "Epargne", "Titres");
+           "assurance", "epargne", "titres");
   }
 
   private static void create(GlobRepository repository, MasterCategory master, String... subcats) {
     for (String subcat : subcats) {
       repository.create(Category.TYPE,
                         value(Category.MASTER, master.getId()),
-                        value(Category.NAME, subcat));
+                        value(Category.INNER_NAME, master.getName() + "." + subcat));
     }
   }
 }

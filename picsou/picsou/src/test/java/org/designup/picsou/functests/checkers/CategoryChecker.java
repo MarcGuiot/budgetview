@@ -249,7 +249,7 @@ public class CategoryChecker extends ViewChecker {
   }
 
   public class ContentChecker {
-    private Map<MasterCategory, Values> expectedValues = new EnumMap<MasterCategory, Values>(MasterCategory.class);
+    private Map<String, Values> expectedValues = new HashMap<String, Values>();
 
     private ContentChecker() {
     }
@@ -257,27 +257,24 @@ public class CategoryChecker extends ViewChecker {
     public ContentChecker add(MasterCategory category,
                               double income, double incomePart,
                               double expense, double expensePart) {
-      expectedValues.put(category, new Values(income, expense));
+      expectedValues.put(getCategoryName(category), new Values(income, expense));
       return this;
     }
 
     public void check() {
       String[][] expectedArray = computeExpectedArray();
-      assertTrue(getTable().contentEquals(expectedArray));
+      for (String[] values : expectedArray) {
+        assertTrue(getTable().containsRow(values));
+      }
     }
 
     private String[][] computeExpectedArray() {
-      List<MasterCategory> categories = getSortedCategories();
-      String[][] expectedArray = new String[MasterCategory.values().length][3];
+      String[][] expectedArray = new String[expectedValues.size()][3];
       int index = 0;
-      for (MasterCategory category : categories) {
-        Values values = expectedValues.get(category);
-        if (values == null) {
-          values = Values.NULL;
-        }
+      for (Map.Entry<String, Values> entry : expectedValues.entrySet()) {
         expectedArray[index][0] = "";
-        expectedArray[index][1] = getCategoryName(category);
-        expectedArray[index][2] = toString(values);
+        expectedArray[index][1] = entry.getKey();
+        expectedArray[index][2] = toString(entry.getValue());
         index++;
       }
       return expectedArray;

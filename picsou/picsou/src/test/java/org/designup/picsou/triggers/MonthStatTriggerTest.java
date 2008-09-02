@@ -95,9 +95,9 @@ public class MonthStatTriggerTest extends PicsouTestCase {
   public void testManagesSubCategories() throws Exception {
     String input =
       "<account id='" + Account.SUMMARY_ACCOUNT_ID + "'/>" +
-      "<category id='1000' name='doctor' masterName='health'/>" +
-      "<category id='1001' name='pharma' masterName='health'/>" +
-      "<category id='1002' name='reimbursements' masterName='health'/>" +
+      "<category id='1000' name='doctor' innerName='doctor' masterName='health'/>" +
+      "<category id='1001' name='pharma' innerName='pharma' masterName='health'/>" +
+      "<category id='1002' name='reimbursements' innerName='reimbursements' masterName='health'/>" +
       "<transaction month='200605' day='1' amount='-10.0' categoryName='health'/>" +
       "<transaction month='200605' day='2' amount='-60.0' categoryName='doctor'/>" +
       "<transaction month='200605' day='2' amount='-50.0' categoryName='doctor'/>" +
@@ -246,7 +246,7 @@ public class MonthStatTriggerTest extends PicsouTestCase {
   public void testDispensability() throws Exception {
     String input =
       "<account id='" + Account.SUMMARY_ACCOUNT_ID + "'/>" +
-      "<category id='1000' name='doctor' masterName='health'/>" +
+      "<category id='1000' name='doctor' innerName='doctor' masterName='health'/>" +
       "<transaction month='200605' day='1' amount='-20.0' categoryName='health' dispensable='true'/>" +
       "<transaction month='200605' day='2' amount='-40.0' categoryName='health'/>" +
       "<transaction month='200605' day='2' amount='-400.0' categoryName='house'/>" +

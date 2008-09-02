@@ -49,7 +49,7 @@ public class EnvelopeSeriesComponentFactory extends AbstractSeriesComponentFacto
       final Key seriesKey = seriesToCategory.getTargetKey(SeriesToCategory.SERIES);
 
       createUpdatableCategoryToggle(category, seriesKey, name, budgetArea, cellBuilder,
-                                    seriesName + ":" + category.get(Category.NAME), dialog);
+                                    seriesName + ":" + category.get(Category.INNER_NAME), dialog);
     }
   }
 }

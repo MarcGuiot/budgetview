@@ -25,8 +25,10 @@ public class Category {
   @Key
   public static IntegerField ID;
 
-  @NamingField
   public static StringField NAME;
+
+  @NamingField
+  public static StringField INNER_NAME;
 
   @Target(Category.class)
   public static LinkField MASTER;
@@ -51,7 +53,13 @@ public class Category {
   public static Integer findId(String categoryName, ReadOnlyGlobRepository repository) {
     Glob category = find(categoryName, repository);
     if (category == null) {
-      return null;
+      Glob existingCategory =
+        repository.findUnique(Category.TYPE,
+                              GlobMatchers.fieldEqualsIgnoreCase(Category.INNER_NAME, categoryName));
+      if (existingCategory == null) {
+        return null;
+      }
+      return existingCategory.get(Category.ID);
     }
     return category.get(Category.ID);
   }
@@ -115,6 +123,7 @@ public class Category {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeString(values.get(NAME));
+      outputStream.writeString(values.get(INNER_NAME));
       outputStream.writeInteger(values.get(MASTER));
       outputStream.writeBoolean(values.get(SYSTEM));
       return serializedByteArrayOutput.toByteArray();
@@ -129,6 +138,7 @@ public class Category {
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(NAME, input.readString());
+      fieldSetter.set(INNER_NAME, input.readString());
       fieldSetter.set(MASTER, input.readInteger());
       fieldSetter.set(SYSTEM, input.readBoolean());
 

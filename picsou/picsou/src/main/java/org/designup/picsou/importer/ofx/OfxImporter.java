@@ -3,9 +3,10 @@ package org.designup.picsou.importer.ofx;
 import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
+import static org.designup.picsou.model.Category.*;
 import org.designup.picsou.utils.PicsouUtils;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobIdGenerator;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Strings;
@@ -166,34 +167,41 @@ public class OfxImporter implements AccountFileImporter {
         if (Strings.isNullOrEmpty(masterName)) {
           continue;
         }
+        Integer masterId = null;
         try {
-          MasterCategory master = MasterCategory.valueOf(masterName.toUpperCase());
-          if (master == MasterCategory.NONE) {
-            continue;
-          }
-
-          List<String> subcategoryNames = entry.getValue();
-          for (String subcategoryName : subcategoryNames) {
-            if (Strings.isNullOrEmpty(subcategoryName)) {
-              categoryIds.add(master.getId());
-            }
-            else {
-              Glob subCategory = Category.find(subcategoryName, repository);
-              if (subCategory == null) {
-                subCategory = repository.create(Category.TYPE,
-                                                value(Category.MASTER, master.getId()),
-                                                value(Category.NAME, subcategoryName),
-                                                value(Category.SYSTEM, false));
-              }
-              categoryIds.add(subCategory.get(Category.ID));
-            }
-          }
-
+          masterId = Integer.parseInt(masterName);
         }
-        catch (IllegalArgumentException e) {
-          Integer categoryId = Category.findId(masterName, repository);
-          if (categoryId != null) {
-            categoryIds.add(categoryId);
+        catch (NumberFormatException e) {
+          Glob category = repository.findUnique(TYPE, FieldValue.value(Category.NAME, masterName));
+          if (category == null) {
+            category = repository.create(TYPE, FieldValue.value(Category.NAME, masterName));
+          }
+          masterId = category.get(Category.ID);
+        }
+        if (masterId.equals(MasterCategory.NONE.getId())) {
+          continue;
+        }
+        List<String> subcategoryNames = entry.getValue();
+        for (String subcategoryName : subcategoryNames) {
+          if (Strings.isNullOrEmpty(subcategoryName)) {
+            categoryIds.add(masterId);
+          }
+          else {
+            Integer subCategoryId;
+            try {
+              subCategoryId = Integer.parseInt(subcategoryName);
+            }
+            catch (NumberFormatException e) {
+              Glob subCategory = find(subcategoryName, repository);
+              if (subCategory == null) {
+                subCategory = repository.create(TYPE,
+                                                value(MASTER, masterId),
+                                                value(NAME, subcategoryName),
+                                                value(SYSTEM, false));
+              }
+              subCategoryId = subCategory.get(Category.ID);
+            }
+            categoryIds.add(subCategoryId);
           }
         }
       }

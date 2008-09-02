@@ -85,7 +85,7 @@ public enum MasterCategory {
       result.add(
         GlobBuilder.init(Category.TYPE)
           .set(Category.ID, master.id)
-          .set(Category.NAME, master.getName())
+          .set(Category.INNER_NAME, master.getName())
           .get());
     }
     return result;

@@ -41,6 +41,10 @@ public abstract class RenameCategoryAction extends RenameGlobAction implements G
 
   protected abstract Window getParent();
 
+  protected String getText() {
+    return categoryStringifier.toString(getCurrentObject(), repository);
+  }
+
   protected void validateName(GlobType type, StringField namingField, String name, GlobRepository repository) throws InvalidParameter {
     GlobMatcher matcher;
     if (Category.isMaster(getCurrentObject())) {

@@ -10,7 +10,7 @@ public class OfxExporterTest extends PicsouTestCase {
       repository,
       "<account id='-1'" +
       "         balance='12345' updateDate='2006/07/02'/>" +
-      "<category name='Dentifrice' masterName='health'/>" +
+      "<category name='Dentifrice' innerName='Dentifrice' masterName='health'/>" +
       "" +
       "<bankEntity id='30066'>" +
       "  <account number='00012312345' id='2' branchId='10674'" +
@@ -82,7 +82,7 @@ public class OfxExporterTest extends PicsouTestCase {
       "            <TRNAMT>-1.2\n" +
       "            <FITID>PICSOU2\n" +
       "            <NAME>label2\n" +
-      "            <CATEGORY>health\n" +
+      "            <CATEGORY>5\n" +
       "            <NOTE>my note\n" +
       "            <DISPENSABLE>true\n" +
       "          </STMTTRN>\n" +
@@ -120,8 +120,8 @@ public class OfxExporterTest extends PicsouTestCase {
       "            <TRNAMT>-1.3\n" +
       "            <FITID>PICSOU3\n" +
       "            <NAME>card3\n" +
-      "            <CATEGORY>health\n" +
-      "            <SUBCATEGORY>Dentifrice\n" +
+      "            <CATEGORY>5\n" +
+      "            <SUBCATEGORY>21\n" +
       "          </STMTTRN>\n" +
       "          <STMTTRN>\n" +
       "            <TRNTYPE>DEBIT\n" +
@@ -130,9 +130,9 @@ public class OfxExporterTest extends PicsouTestCase {
       "            <TRNAMT>-45.0\n" +
       "            <FITID>PICSOU4\n" +
       "            <NAME>card4\n" +
-      "            <CATEGORY>health\n" +
-      "            <SUBCATEGORY>Dentifrice\n" +
-      "            <CATEGORY>food\n" +
+      "            <CATEGORY>2\n" +
+      "            <CATEGORY>5\n" +
+      "            <SUBCATEGORY>21\n" +
       "          </STMTTRN>\n" +
       "     </BANKTRANLIST>\n" +
       "     <LEDGERBAL>\n" +

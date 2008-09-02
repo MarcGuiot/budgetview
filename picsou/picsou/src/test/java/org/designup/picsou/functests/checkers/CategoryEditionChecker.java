@@ -1,10 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.model.MasterCategory;
-import org.uispec4j.Button;
-import org.uispec4j.ListBox;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
@@ -153,13 +150,15 @@ public class CategoryEditionChecker extends DataChecker {
     UISpecAssert.assertThat(getSubList().selectionEquals(name));
   }
 
-  public void renameMaster(final String name) {
+  public void renameMaster(final String previousName, final String name) {
     WindowInterceptor.init(getEditMasterButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(final Window window) throws Exception {
           return new Trigger() {
             public void run() throws Exception {
-              window.getInputTextBox("input").setText(name);
+              TextBox box = window.getInputTextBox("input");
+              UISpecAssert.assertThat(box.textEquals(previousName));
+              box.setText(name);
             }
           };
         }

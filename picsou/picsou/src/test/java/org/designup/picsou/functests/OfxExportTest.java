@@ -44,7 +44,7 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
       "            <TRNAMT>-0.2\n" +
       "            <FITID>PICSOU0\n" +
       "            <NAME>Menu K\n" +
-      "            <CATEGORY>food\n" +
+      "            <CATEGORY>2\n" +
       "          </STMTTRN>\n" +
       "          <STMTTRN>\n" +
       "            <TRNTYPE>DEBIT\n" +
@@ -53,7 +53,7 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
       "            <TRNAMT>-1.0\n" +
       "            <FITID>PICSOU1\n" +
       "            <NAME>Menu K\n" +
-      "            <CATEGORY>food\n" +
+      "            <CATEGORY>2\n" +
       "            <NOTE>COCA\n" +
       "            <PARENT>PICSOU0\n" +
       "          </STMTTRN>\n" +
