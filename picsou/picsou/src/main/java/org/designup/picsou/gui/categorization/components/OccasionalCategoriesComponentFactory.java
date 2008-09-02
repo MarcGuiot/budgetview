@@ -36,8 +36,11 @@ public class OccasionalCategoriesComponentFactory extends AbstractSeriesComponen
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob master) {
     final Key seriesKey = KeyBuilder.newKey(Series.TYPE, Series.OCCASIONAL_SERIES_ID);
 
-    createUpdatableCategoryToggle(master, seriesKey, name, budgetArea, cellBuilder,
-                                  seriesName + ":" + master.get(Category.NAME), dialog);
+    String name = master.get(Category.INNER_NAME) != null ?
+                  master.get(Category.INNER_NAME) : master.get(Category.NAME);
+
+    createUpdatableCategoryToggle(master, seriesKey, this.name, budgetArea, cellBuilder,
+                                  seriesName + ":" + name, dialog);
 
     GlobsPanelBuilder.addRepeat("occasionalSubcatRepeat",
                                 Category.TYPE,
@@ -47,8 +50,12 @@ public class OccasionalCategoriesComponentFactory extends AbstractSeriesComponen
                                 cellBuilder,
                                 new RepeatComponentFactory<Glob>() {
                                   public void registerComponents(RepeatCellBuilder subcatCellBuilder, Glob subcat) {
+                                    String masterName = master.get(Category.INNER_NAME);
+
+                                    String subName = subcat.get(Category.INNER_NAME);
                                     final String toggleName =
-                                      seriesName + ":" + master.get(Category.NAME) + ":" + subcat.get(Category.NAME);
+                                      seriesName + ":" + (masterName != null ? masterName : master.get(Category.NAME)) + ":" +
+                                      (subName != null ? subName : subcat.get(Category.NAME));
                                     createUpdatableCategoryToggle(
                                       subcat, seriesKey, "occasionalSubcatToggle",
                                       budgetArea, subcatCellBuilder, toggleName,

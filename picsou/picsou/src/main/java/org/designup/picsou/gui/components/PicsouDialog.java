@@ -56,9 +56,16 @@ public class PicsouDialog extends JDialog {
   }
 
   public void addInPanelWithButton(JPanel panel, Action ok, Action cancel) {
+    int buttonCount = 0;
+    if (ok != null) {
+      buttonCount++;
+    }
+    if (cancel != null) {
+      buttonCount++;
+    }
     Insets noInsets = new Insets(0, 0, 0, 0);
     GridBagBuilder builder = GridBagBuilder.init()
-      .add(panel, 0, 0, 2 + 1, 1, noInsets);
+      .add(panel, 0, 0, buttonCount + 1, 1, noInsets);
 
     int index = 0;
     builder.add(Box.createHorizontalGlue(), index++, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER);

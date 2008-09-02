@@ -77,15 +77,14 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
   public void testRename() throws Exception {
     CategoryEditionChecker categoryEdition = categories.openEditionDialog();
     categoryEdition.selectMaster(MasterCategory.FOOD);
-    categoryEdition.renameMaster("Bouffe");
+    categoryEdition.renameMaster(getCategoryName(MasterCategory.FOOD), "Bouffe");
     UISpecAssert.assertThat(categoryEdition.getMasterList().contains("Bouffe"));
-    UISpecAssert.assertThat(categoryEdition.getSubList().isEmpty());
   }
 
   public void testDeleteWithTransaction() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.0, "Station BP", "Essence")
+      .addTransaction("2006/01/10", -1.0, "Station BP", "transports.essence")
       .load();
     CategoryEditionChecker categoryEdition = categories.openEditionDialog();
     categoryEdition.selectMaster(MasterCategory.TRANSPORTS);
@@ -112,7 +111,7 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
   public void testDeleteMasterWithTransactionInSub() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.0, "Station BP", "Essence")
+      .addTransaction("2006/01/10", -1.0, "Station BP", "transports.essence")
       .load();
     CategoryEditionChecker categoryEdition = categories.openEditionDialog();
     categoryEdition.selectMaster(MasterCategory.TRANSPORTS);

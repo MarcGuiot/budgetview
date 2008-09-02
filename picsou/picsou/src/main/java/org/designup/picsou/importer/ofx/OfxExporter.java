@@ -5,6 +5,7 @@ import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobUtils;
 
 import java.io.Writer;
@@ -82,12 +83,11 @@ public class OfxExporter {
     for (Glob category : categories) {
       if (category != null && !category.get(Category.ID).equals(MasterCategory.NONE.getId())) {
         if (Category.isMaster(category)) {
-          writer.add("category", category.get(Category.NAME).toLowerCase());
+          writeCategory("", writer, category);
         }
         else {
-          MasterCategory master = MasterCategory.getMaster(category.get(Category.MASTER));
-          writer.add("category", master.getName().toLowerCase());
-          writer.add("subcategory", category.get(Category.NAME));
+          writeCategory("", writer, repository.get(Key.create(Category.TYPE, category.get(Category.MASTER))));
+          writeCategory("sub", writer, category);
         }
       }
     }
@@ -101,6 +101,15 @@ public class OfxExporter {
       writer.add("DISPENSABLE", "true");
     }
     writer.end();
+  }
+
+  private void writeCategory(String prefix, OfxWriter.OfxTransactionWriter writer, Glob category) {
+    if (category.get(Category.INNER_NAME) == null) {
+      writer.add(prefix + "category", category.get(Category.NAME));
+    }
+    else {
+      writer.add(prefix + "category", Integer.toString(category.get(Category.ID)));
+    }
   }
 
   private String toString(Date updateDate) {

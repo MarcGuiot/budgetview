@@ -24,7 +24,7 @@ public class ApplicationReset {
         .get();
     generator.setRepository(temp);
 
-    PicsouInit.createDataForNewUser(temp);
+//    PicsouInit.createDataForNewUser(temp);
     temp.getAll();
 
     GlobType[] typesToDelete = getTypesToDelete(

@@ -12,28 +12,29 @@ import java.util.HashSet;
 import java.util.Set;
 
 public enum MasterCategory {
-  NONE(0),
-  ALL(1),
-  FOOD(2),
-  TAXES(3),
-  HOUSE(4),
-  HEALTH(5),
-  LEISURES(6),
-  PUERICULTURE(7),
-  TELECOMS(8),
-  BANK(9),
-  TRANSPORTS(10),
-  INTERNAL(11),
-  CLOTHING(12),
-  SAVINGS(13),
-  MULTIMEDIA(14),
-  BEAUTY(15),
-  EDUCATION(16),
-  MISC_SPENDINGS(18),
-  INCOME(19),
-  GIFTS(20);
+  NONE("NONE", 0),
+  ALL("ALL", 1),
+  FOOD("FOOD", 2),
+  TAXES("TAXES", 3),
+  HOUSE("HOUSE", 4),
+  HEALTH("HEALTH", 5),
+  LEISURES("LEISURES", 6),
+  PUERICULTURE("PUERICULTURE", 7),
+  TELECOMS("TELECOMS", 8),
+  BANK("BANK", 9),
+  TRANSPORTS("TRANSPORTS", 10),
+  INTERNAL("INTERNAL", 11),
+  CLOTHING("CLOTHING", 12),
+  SAVINGS("SAVINGS", 13),
+  MULTIMEDIA("MULTIMEDIA", 14),
+  BEAUTY("BEAUTY", 15),
+  EDUCATION("EDUCATION", 16),
+  MISC_SPENDINGS("MISC_SPENDINGS", 18),
+  INCOME("INCOME", 19),
+  GIFTS("GIFTS", 20);
 
   private Integer id;
+  private String name;
   public static final Set<Integer> RESERVED_CATEGORY_IDS;
 
   static {
@@ -41,12 +42,13 @@ public enum MasterCategory {
       new HashSet<Integer>(Arrays.asList(MasterCategory.ALL.getId(), MasterCategory.NONE.getId(), MasterCategory.INTERNAL.getId()));
   }
 
-  MasterCategory(Integer id) {
+  MasterCategory(String name, Integer id) {
+    this.name = name;
     this.id = id;
   }
 
   public String getName() {
-    return name().toLowerCase();
+    return name.toLowerCase();
   }
 
   public Integer getId() {
@@ -82,8 +84,8 @@ public enum MasterCategory {
     for (MasterCategory master : values()) {
       result.add(
         GlobBuilder.init(Category.TYPE)
-          .set(Category.ID, master.getId())
-          .set(Category.NAME, master.getName())
+          .set(Category.ID, master.id)
+          .set(Category.INNER_NAME, master.getName())
           .get());
     }
     return result;

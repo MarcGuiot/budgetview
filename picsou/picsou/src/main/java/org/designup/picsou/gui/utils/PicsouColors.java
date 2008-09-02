@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.utils;
 
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum PicsouColors {
+  @NoObfuscation
   BUTTON_BG_TOP,
   BUTTON_BG_BOTTOM,
   BUTTON_INNER_BORDER_TOP,

@@ -2,9 +2,6 @@ package org.globsframework.gui.splits.styles;
 
 import org.globsframework.gui.splits.SplitProperties;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
 public class Style {
   private Selector[] filterSelectors;
   private SplitProperties properties;
@@ -15,17 +12,19 @@ public class Style {
   }
 
   public boolean matches(SplitsPath path) {
-    Iterator<Selector> pathIterator = Arrays.asList(path.getSelectors()).iterator();
+    final Selector[] pathIterator = path.getSelectors();
+    int i = 0;
     for (Selector filterItem : filterSelectors) {
       boolean matched = false;
-      while (pathIterator.hasNext()) {
-        Selector pathItem = pathIterator.next();
+      while (i < pathIterator.length) {
+        Selector pathItem = pathIterator[i];
         if (filterItem.matches(pathItem)) {
           matched = true;
           break;
         }
+        i++;
       }
-      if (!matched && !pathIterator.hasNext()) {
+      if (!matched && i == pathIterator.length) {
         return false;
       }
     }

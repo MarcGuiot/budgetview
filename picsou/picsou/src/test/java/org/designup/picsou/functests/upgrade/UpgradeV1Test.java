@@ -16,7 +16,7 @@ public class UpgradeV1Test extends LoggedInFunctionalTestCase {
   public void createRepo() {
     OfxBuilder
       .init(this)
-//      .addCategory(MasterCategory.FOOD, "courant")
+      .addCategory(MasterCategory.FOOD, "courant")
       .addCategory(MasterCategory.FOOD, "resto")
       .addTransaction("2006/01/10", -1.2, "Menu K", "courant", "resto")
       .addTransaction("2006/01/11", -1.2, "Menu I", MasterCategory.FOOD)

@@ -220,7 +220,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     writer.writeHeader();
     writer.writeBankMsgHeader(30066, 12345, "1111");
     writer.startTransaction("20060524", "20060524", -99.0, 1, "blah")
-      .add("category", MasterCategory.FOOD.getName())
+      .add("category", MasterCategory.FOOD.getId().toString())
       .end();
     writer.writeBankMsgFooter(123.56, "20060525000000");
     writer.writeFooter();

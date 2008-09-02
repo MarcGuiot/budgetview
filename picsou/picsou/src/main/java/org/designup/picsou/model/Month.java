@@ -120,6 +120,10 @@ public class Month {
     return yyyymm * 100 + dd;
   }
 
+  public static int toMonthId(int yyyy, int mm){
+    return yyyy * 100 + mm;
+  }
+
   public static int intToMonthId(int yyyymmdd) {
     return yyyymmdd / 100;
   }
@@ -139,7 +143,7 @@ public class Month {
     return Lang.get("month." + toMonth(month) + ".long");
   }
 
-  public static String getMediumSizeLetterLabelFromMonth(Integer month) {
+  public static String getMediumSizeLetterLabel(Integer month) {
     return Lang.get("month." + toMonth(month) + ".medium");
   }
 

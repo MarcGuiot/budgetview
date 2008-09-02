@@ -158,6 +158,7 @@ public class TransactionChecker extends ViewChecker {
     categorization.selectIncome();
     categorization.selectExceptionalIncomeSeries(seriesName, showSeriesInitialization);
     categorization.validate();
+    categorization.checkClosed();
   }
 
   public void setIncome(String label, String seriesName, boolean showSeriesInitialization) {
@@ -166,6 +167,7 @@ public class TransactionChecker extends ViewChecker {
     categorization.selectIncome();
     categorization.selectIncomeSeries(seriesName, showSeriesInitialization);
     categorization.validate();
+    categorization.checkClosed();
   }
 
   public void setRecurring(int rowIndex, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
@@ -173,6 +175,7 @@ public class TransactionChecker extends ViewChecker {
     categorization.selectRecurring();
     categorization.selectRecurringSeries(seriesName, category, showSeriesInitialization);
     categorization.validate();
+    categorization.checkClosed();
   }
 
   public void setRecurring(String label, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
@@ -294,7 +297,7 @@ public class TransactionChecker extends ViewChecker {
           return "";
         }
         if (master != null) {
-          return "MasterCategory." + master.name().toUpperCase();
+          return "MasterCategory." + master.getName().toUpperCase();
         }
 
         org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);

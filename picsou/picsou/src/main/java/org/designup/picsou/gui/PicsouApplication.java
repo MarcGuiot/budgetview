@@ -6,6 +6,7 @@ import org.designup.picsou.gui.components.SelectionToggleUI;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
+import org.designup.picsou.gui.plaf.ButtonPanelItemUI;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.plaf.PicsouSplitPaneUI;
 import org.designup.picsou.gui.plaf.WavePanelUI;
@@ -73,6 +74,7 @@ public class PicsouApplication {
   private static final String SHADOWED_LABEL_UI = "org" + dot() + "globsframework.gui.splits.components.ShadowedLabelUI";
   private static final String SPLITPANE_UI = "org" + dot() + "designup.picsou.gui.plaf.PicsouSplitPaneUI";
   private static final String SERIES_TOGGLE_UI = "org" + dot() + "designup.picsou.gui.components.SelectionToggleUI";
+  private static final String BUTTON_PANEL_UI = "org" + dot() + "designup.picsou.gui.plaf.ButtonPanelItemUI";
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
@@ -264,6 +266,7 @@ public class PicsouApplication {
     uiService.registerClass(SHADOWED_LABEL_UI, ShadowedLabelUI.class);
     uiService.registerClass(SPLITPANE_UI, PicsouSplitPaneUI.class);
     uiService.registerClass(SERIES_TOGGLE_UI, SelectionToggleUI.class);
+    uiService.registerClass(BUTTON_PANEL_UI, ButtonPanelItemUI.class);
     return uiService;
   }
 

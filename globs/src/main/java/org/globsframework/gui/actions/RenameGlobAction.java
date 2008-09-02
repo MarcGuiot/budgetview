@@ -20,8 +20,8 @@ import java.awt.event.ActionEvent;
 public class RenameGlobAction extends AbstractAction implements GlobSelectionListener {
   private GlobType type;
   private StringField namingField;
-  private Directory directory;
-  private GlobRepository repository;
+  final protected Directory directory;
+  final protected GlobRepository repository;
   private Glob currentObject;
 
   public RenameGlobAction(String actionName, StringField namingField, GlobRepository repository, Directory directory) {
@@ -54,7 +54,7 @@ public class RenameGlobAction extends AbstractAction implements GlobSelectionLis
     JDialog dialog = getDialog(e);
     StringInputDialog stringInputDialog =
       new StringInputDialog(dialog,
-                            currentObject.get(namingField),
+                            getText(),
                             getTitle(), getInputLabel(), getOkLabel(), getCancelLabel(),
                             directory) {
         protected void validate(String name) {
@@ -69,6 +69,10 @@ public class RenameGlobAction extends AbstractAction implements GlobSelectionLis
     if (newName != null) {
       repository.update(currentObject.getKey(), namingField, newName);
     }
+  }
+
+  protected String getText() {
+    return currentObject.get(namingField);
   }
 
   public JDialog getDialog(ActionEvent e) {

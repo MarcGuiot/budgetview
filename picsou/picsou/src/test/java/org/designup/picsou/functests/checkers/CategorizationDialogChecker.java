@@ -208,7 +208,7 @@ public class CategorizationDialogChecker extends DataChecker {
     String name = envelopeName + ":" + category.getName();
     Component component = panel.findSwingComponent(ComponentMatchers.innerNameIdentity(name));
     if (component != null) {
-
+      // TODO avec la multi affectation de category a une enveloppe
     }
     if (showSeriesInitialization) {
       createEnvelopeSeries()
@@ -414,5 +414,9 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void disableAutoHide() {
     dialog.getCheckBox("hide").unselect();
+  }
+
+  public void checkClosed() {
+    assertFalse(dialog.isVisible());
   }
 }
