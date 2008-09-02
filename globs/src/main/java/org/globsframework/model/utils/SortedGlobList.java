@@ -103,4 +103,8 @@ public class SortedGlobList implements Iterable<Glob> {
   public GlobList asList() {
     return new GlobList(list);
   }
+
+  public Comparator<Glob> getComparator() {
+    return comparator;
+  }
 }

@@ -44,6 +44,11 @@ public class GlobRepeatView implements ComponentHolder {
         revalidate();
       }
 
+      public void globMoved(int previousIndex, int newIndex) {
+        globRemoved(previousIndex);
+        globInserted(newIndex);
+      }
+
       public void globRemoved(int index) {
         jPanel.remove(index);
         ComponentHolder panel = panels.remove(index);

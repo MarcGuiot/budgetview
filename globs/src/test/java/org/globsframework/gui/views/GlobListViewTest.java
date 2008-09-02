@@ -355,6 +355,44 @@ public class GlobListViewTest extends GuiComponentTestCase {
     assertEquals(ListSelectionModel.SINGLE_SELECTION, list.getSelectionMode());
   }
 
+  public void testSelectionIsPreservedWhenTheOrderOfItemsIsChanged() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject id='1' name='name1'/>" +
+                    "<dummyObject id='2' name='name2'/>");
+
+    ListBox listBox = createList(repository);
+    selectionService.select(repository.get(key1));
+    assertThat(listBox.selectionEquals("name1"));
+
+    DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
+
+    repository.enterBulkDispatchingMode();
+    repository.update(key1, DummyObject.NAME, "newName1");
+    repository.update(key2, DummyObject.NAME, "aNewName2");
+    repository.completeBulkDispatchingMode();
+    assertTrue(listBox.contentEquals("aNewName2", "newName1"));
+    assertTrue(listBox.selectionEquals("newName1"));
+    listener.assertEmpty();
+
+    System.out.println("GlobListViewTest.testSelectionIsPreservedWhenTheOrderOfItemsIsChanged: 1");
+    repository.update(key2, DummyObject.NAME, "zeNewName2");
+    assertTrue(listBox.contentEquals("newName1", "zeNewName2"));
+    assertTrue(listBox.selectionEquals("newName1"));
+    listener.assertEmpty();
+
+    System.out.println("GlobListViewTest.testSelectionIsPreservedWhenTheOrderOfItemsIsChanged: 2");
+    repository.update(key1, DummyObject.NAME, "zeRenamedName1");
+    assertTrue(listBox.contentEquals("zeNewName2","zeRenamedName1"));
+    assertTrue(listBox.selectionEquals("zeRenamedName1"));
+    listener.assertEmpty();
+
+    System.out.println("GlobListViewTest.testSelectionIsPreservedWhenTheOrderOfItemsIsChanged: 3");
+    repository.update(key1, DummyObject.NAME, "zeNewName1");
+    assertTrue(listBox.contentEquals("zeNewName1","zeNewName2"));
+    assertTrue(listBox.selectionEquals("zeNewName1"));
+    listener.assertEmpty();
+  }
+
   public void testFiltering() throws Exception {
     GlobRepository repository =
       checker.parse("<dummyObject name='name1'/>" +
@@ -456,7 +494,6 @@ public class GlobListViewTest extends GuiComponentTestCase {
 
   private ListBox createList(GlobRepository repository) {
     view = GlobListView.init(TYPE, repository, directory).setRenderer(NAME);
-    return new ListBox(view
-      .getComponent());
+    return new ListBox(view.getComponent());
   }
 }

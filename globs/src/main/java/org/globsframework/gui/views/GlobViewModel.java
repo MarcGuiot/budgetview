@@ -27,6 +27,8 @@ public class GlobViewModel implements ChangeSetListener {
 
     void globRemoved(int index);
 
+    void globMoved(int previousIndex, int newIndex);
+
     void globListPreReset();
 
     void globListReset();
@@ -170,8 +172,7 @@ public class GlobViewModel implements ChangeSetListener {
             listener.globUpdated(newIndex);
           }
           else {
-            listener.globRemoved(previousIndex);
-            listener.globInserted(newIndex);
+            listener.globMoved(previousIndex, newIndex);
           }
         }
         else {
@@ -223,7 +224,7 @@ public class GlobViewModel implements ChangeSetListener {
       if (toAdd.isEmpty() && toRemove.isEmpty()) {
         return;
       }
-      Set newList = new HashSet(globs.asList());
+      Set<Glob> newList = new HashSet<Glob>(globs.asList());
       newList.removeAll(toRemove);
 
       for (Glob glob : toAdd) {

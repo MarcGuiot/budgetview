@@ -4,8 +4,10 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.gui.utils.PopupMenuFactory;
+import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.impl.*;
 import org.globsframework.gui.views.utils.LabelCustomizers;
+import org.globsframework.gui.views.utils.GlobViewUtils;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -23,6 +25,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -221,8 +224,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     if (table == null) {
       table = new JTable();
       table.setAutoscrolls(true);
-      tableModel = new GlobTableModel(type, repository, columns, table,
-                                      new TableResetListener(), initialComparator);
+      tableModel = new GlobTableModel();
       table.setModel(tableModel);
       table.setFont(defaultFont);
       table.setName(name != null ? name : type.getName());
@@ -242,34 +244,6 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   public GlobTableView setDefaultBackgroundPainter(CellPainter painter) {
     this.defaultBackgroundPainter = painter;
     return this;
-  }
-
-  private class TableResetListener implements GlobTableModel.ResetListener {
-    private GlobList currentSelection = GlobList.EMPTY;
-
-    public void preReset() {
-      currentSelection = getCurrentSelection();
-      disableSelectionNotification();
-    }
-
-    public void reset() {
-      GlobList newSelection = new GlobList();
-      for (Glob glob : currentSelection) {
-        if (tableModel.indexOf(glob) >= 0) {
-          newSelection.add(glob);
-        }
-      }
-      select(newSelection, false);
-      if (newSelection.size() > 0) {
-        Glob first = newSelection.get(0);
-        int index = tableModel.indexOf(first);
-        scrollToRow(index);
-      }
-      enableSelectionNotification(false);
-      if (newSelection.size() != currentSelection.size()) {
-        selectionService.select(newSelection, type);
-      }
-    }
   }
 
   private void scrollToRow(int index) {
@@ -501,5 +475,151 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       TableCellRenderer renderer = columns.get(column).getRenderer();
       return renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
+  }
+
+  public class GlobTableModel extends AbstractTableModel implements SortableTableModel {
+    private int sortedColumnIndex = -1;
+    private boolean sortAscending = true;
+    private GlobViewModel model;
+    private GlobList currentSelection = GlobList.EMPTY;
+
+    public GlobTableModel() {
+      model = new GlobViewModel(type, repository, initialComparator, new GlobViewModel.Listener() {
+        public void globInserted(int index) {
+          TableUtils.stopEditing(table);
+          fireTableRowsInserted(index, index);
+        }
+
+        public void globUpdated(int index) {
+          TableUtils.stopEditing(table);
+          fireTableRowsUpdated(index, index);
+        }
+
+        public void globRemoved(int index) {
+          TableUtils.stopEditing(table);
+          fireTableRowsDeleted(index, index);
+        }
+
+        public void globMoved(int previousIndex, int newIndex) {
+          selectionEnabled = false;
+          GlobViewUtils.updateSelectionAfterItemMoved(table.getSelectionModel(),
+                                                      table.getSelectedRows(), 
+                                                      previousIndex, newIndex);
+          selectionEnabled = true;
+        }
+
+        public void globListPreReset() {
+          currentSelection = getCurrentSelection();
+          disableSelectionNotification();
+        }
+
+        public void globListReset() {
+          TableUtils.stopEditing(table);
+          fireTableDataChanged();
+
+          GlobList newSelection = new GlobList();
+          for (Glob glob : currentSelection) {
+            if (tableModel.indexOf(glob) >= 0) {
+              newSelection.add(glob);
+            }
+          }
+          select(newSelection, false);
+          if (newSelection.size() > 0) {
+            Glob first = newSelection.get(0);
+            int index = tableModel.indexOf(first);
+            scrollToRow(index);
+          }
+          enableSelectionNotification(false);
+          if (newSelection.size() != currentSelection.size()) {
+            selectionService.select(newSelection, type);
+          }
+        }
+      });
+    }
+
+    public void refresh() {
+      model.refresh();
+      fireTableDataChanged();
+    }
+
+    public void reset() {
+      model.globsReset(repository, Collections.singleton(type));
+    }
+
+    public int getRowCount() {
+      return model.size();
+    }
+
+    public String getColumnName(int columnIndex) {
+      return columns.get(columnIndex).getName();
+    }
+
+    public int getColumnCount() {
+      return columns.size();
+    }
+
+    public Class<?> getColumnClass(int i) {
+      return Glob.class;
+    }
+
+    public boolean isCellEditable(int row, int column) {
+      return columns.get(column).isEditable();
+    }
+
+    public Glob getValueAt(int row, int column) {
+      return model.get(row);
+    }
+
+    public void sortColumn(int modelIndex) {
+      if (sortedColumnIndex == modelIndex) {
+        if (sortAscending) {
+          sortAscending = false;
+        }
+        else {
+          sortAscending = true;
+          sortedColumnIndex = -1;
+        }
+      }
+      else {
+        sortAscending = true;
+        sortedColumnIndex = modelIndex;
+      }
+      if (sortedColumnIndex == -1) {
+        model.sort(initialComparator);
+      }
+      else {
+        Comparator<Glob> columnComparator = columns.get(modelIndex).getComparator();
+        model.sort(sortAscending ? columnComparator : Collections.reverseOrder(columnComparator));
+      }
+    }
+
+    public boolean isColumnSorted(int modelIndex) {
+      return modelIndex == sortedColumnIndex;
+    }
+
+    public boolean isSortAscending() {
+      return sortAscending;
+    }
+
+    public int indexOf(Glob glob) {
+      return model.indexOf(glob);
+    }
+
+    public void setFilter(GlobMatcher matcher) {
+      model.setFilter(matcher);
+    }
+
+    public Glob get(int index) {
+      return model.get(index);
+    }
+
+    public GlobList getAll() {
+      return model.getAll();
+    }
+
+    public void dispose() {
+      repository.removeChangeListener(model);
+    }
+
   }
 }

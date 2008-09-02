@@ -103,6 +103,18 @@ public class SplitsComponentsTest extends SplitsTestCase {
     assertTrue(action.wasClicked());
   }
 
+  public void testTheActionNameIsSetOnTheButton() throws Exception {
+    builder.add("action1", new DummyAction());
+    JButton btn = parse("<button text='blah' action='action1'/>");
+    assertEquals("action1", btn.getName());
+  }
+
+  public void testTheActionNameDoesNotOverrideTheButtonName() throws Exception {
+    builder.add("action1", new DummyAction());
+    JButton btn = parse("<button text='blah' action='action1' name='myname'/>");
+    assertEquals("myname", btn.getName());
+  }
+
   public void testCreatingAToggleButtonWithAnAction() throws Exception {
     DummyAction action = new DummyAction();
     builder.add("action1", action);

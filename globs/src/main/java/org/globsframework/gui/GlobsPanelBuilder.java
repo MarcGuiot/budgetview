@@ -209,6 +209,11 @@ public class GlobsPanelBuilder extends SplitsBuilder {
       repeat.remove(index);
     }
 
+    public void globMoved(int previousIndex, int newIndex) {
+      globRemoved(previousIndex);
+      globInserted(newIndex);
+    }
+
     public void globListPreReset() {
     }
 

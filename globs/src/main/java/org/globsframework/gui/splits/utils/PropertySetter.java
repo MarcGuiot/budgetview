@@ -9,13 +9,13 @@ import org.globsframework.gui.splits.exceptions.SplitsException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.ref.WeakReference;
 import java.util.Set;
 import java.util.TreeSet;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 public class PropertySetter {
   public static void process(Object component,
@@ -58,7 +58,7 @@ public class PropertySetter {
     });
   }
 
-  private static void invokeSetter(final Object object, final String property, String value, SplitsContext context) {
+  private static void invokeSetter(final Object object, final String property, final String value, SplitsContext context) {
     final Class objectClass = object.getClass();
     Method[] methods = objectClass.getMethods();
     final Method setter = findMethod(methods, property);
@@ -69,10 +69,10 @@ public class PropertySetter {
     Class<?> targetClass = setter.getParameterTypes()[0];
     if (targetClass == Color.class) {
       if (Colors.isHexaString(value)) {
-        invokeSetter(object, setter, Colors.toColor(value), property, objectClass);
+        invokeSetter(object, setter, Colors.toColor(value), property, value, objectClass);
       }
       else if (value.length() == 0) {
-        invokeSetter(object, setter, null, property, objectClass);
+        invokeSetter(object, setter, null, property, value, objectClass);
       }
       else {
         final WeakReference ref = new WeakReference<Object>(object);
@@ -84,18 +84,20 @@ public class PropertySetter {
               colorService.uninstall(this);
               return;
             }
-            invokeSetter(target, setter, color, property, objectClass);
+            invokeSetter(target, setter, color, property, value, objectClass);
           }
         });
       }
     }
     else {
       Object targetValue = TypeConverter.getValue(targetClass, property, value, objectClass, context);
-      invokeSetter(object, setter, targetValue, property, objectClass);
+      invokeSetter(object, setter, targetValue, property, value, objectClass);
     }
   }
 
-  private static void invokeSetter(Object object, Method setter, Object targetValue, String attribute, Class componentClass) {
+  private static void invokeSetter(Object object, Method setter, Object targetValue,
+                                   String attribute, String attributeValue,
+                                   Class componentClass) {
     try {
       setter.invoke(object, targetValue);
     }
@@ -107,6 +109,10 @@ public class PropertySetter {
       throw new SplitsException("Setter for property '" + attribute +
                                 "' in class " + componentClass.getSimpleName() + "' threw exception:", e);
     }
+
+    if (targetValue instanceof Action) {
+      processAction(object, attributeValue);
+    }
   }
 
   private static Method findMethod(Method[] methods, String attribute) {
@@ -117,5 +123,14 @@ public class PropertySetter {
       }
     }
     return null;
+  }
+
+  private static void processAction(Object object, String attributeValue) {
+    if (object instanceof JComponent) {
+      JComponent component = (JComponent)object;
+      if (component.getName() == null) {
+        component.setName(attributeValue);
+      }
+    }
   }
 }

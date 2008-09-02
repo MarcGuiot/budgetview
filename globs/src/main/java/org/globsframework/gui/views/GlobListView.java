@@ -4,6 +4,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.gui.views.impl.StringListCellRenderer;
+import org.globsframework.gui.views.utils.GlobViewUtils;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
@@ -37,6 +38,10 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
 
   public GlobListView(GlobType type, GlobRepository repository, Directory directory) {
     super(type, repository, directory);
+  }
+
+  public void setComparator(Comparator<Glob> comparator) {
+    this.comparator = comparator;
   }
 
   public GlobListView setSelectionHandler(GlobSelectionHandler selectionHandler) {
@@ -237,6 +242,15 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
           fireIntervalRemoved(this, index, index);
         }
 
+        public void globMoved(int previousIndex, int newIndex) {
+
+          selectionEnabled = false;
+          GlobViewUtils.updateSelectionAfterItemMoved(jList.getSelectionModel(),
+                                                      jList.getSelectedIndices(),
+                                                      previousIndex, newIndex);
+          selectionEnabled = true;
+        }
+
         public void globListPreReset() {
           lastSelection = GlobListView.this.getCurrentSelection().getKeys();
         }
@@ -252,6 +266,9 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
           }
           if (newSelection.size() != lastSelection.length) {
             select(newSelection);
+          }
+          else {
+            selectSilently(newSelection);
           }
         }
       });

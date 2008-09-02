@@ -558,8 +558,8 @@ public class GlobTableViewTest extends GuiComponentTestCase {
 
   public void testModelUpdatePreservesSelection() throws Exception {
     repository =
-      checker.parse("<dummyObject id='1' name='name1'/>" +
-                    "<dummyObject id='2' name='name2'/>");
+      checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
+                    "<dummyObject id='2' name='name2' value='2.2'/>");
     Glob glob1 = repository.get(key1);
     Glob glob2 = repository.get(key2);
 
@@ -570,10 +570,23 @@ public class GlobTableViewTest extends GuiComponentTestCase {
 
     repository.enterBulkDispatchingMode();
     repository.update(glob1.getKey(), DummyObject.NAME, "newName1");
-    repository.update(glob2.getKey(), DummyObject.NAME, "newName2");
+    repository.update(glob2.getKey(), DummyObject.NAME, "aNewName2");
     repository.completeBulkDispatchingMode();
 
     listener.assertEmpty();
+    assertTrue(table.contentEquals(new String[][]{
+      {"aNewName2", "2.2"},
+      {"newName1", "1.1"},
+    }));
+    table.rowIsSelected(0);
+    
+    repository.update(glob2.getKey(), DummyObject.NAME, "zeNewName2");
+
+    listener.assertEmpty();
+    assertTrue(table.contentEquals(new String[][]{
+      {"newName1", "1.1"},
+      {"zeNewName2", "2.2"},
+    }));
     table.rowIsSelected(0);
   }
 
