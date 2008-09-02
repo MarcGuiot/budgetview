@@ -98,11 +98,15 @@
               <column margin="10">
                 <scrollPane border="line(category.border)" viewportBackground="categories.bg"
                             background="categories.bg"
-                            minimumSize="(200,400)" weightX="1">
+                            minimumSize="(200,400)" weightX="1" marginBottom="0">
                   <table ref="category" intercellSpacing="(0,0)" showGrid="false" opaque="false"
                          margin="10"/>
                 </scrollPane>
-                <button action="editCategories"/>
+                <row styleClass="iconButtonGroupDark">
+                  <button action="editCategories" name="editCategories" styleClass="list"/>
+                  <filler fill="horizontal"/>
+                </row>
+
               </column>
 
             </panel>

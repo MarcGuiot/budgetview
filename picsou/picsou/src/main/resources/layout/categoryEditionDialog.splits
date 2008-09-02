@@ -9,12 +9,9 @@
           <list ref="masterCategoryList"/>
         </scrollPane>
         <row styleClass="iconButtonGroup">
-          <button action="createMasterCategory" name="createMasterCategory"
-                  icon="button_plus.png" disabledIcon="button_plus_disabled.png"/>
-          <button action="deleteMasterCategory" name="deleteMasterCategory"
-                  icon="button_minus.png" disabledIcon="button_minus_disabled.png"/>
-          <button action="renameMasterCategory" name="renameMasterCategory"
-                  icon="button_rename.png" disabledIcon="button_rename_disabled.png"/>
+          <button action="createMasterCategory" name="createMasterCategory" styleClass="create"/>
+          <button action="deleteMasterCategory" name="deleteMasterCategory" styleClass="delete"/>
+          <button action="renameMasterCategory" name="renameMasterCategory" styleClass="rename"/>
           <filler fill="horizontal"/>
         </row>
       </column>
@@ -23,12 +20,9 @@
           <list ref="subCategoryList"/>
         </scrollPane>
         <row styleClass="iconButtonGroup">
-          <button action="createSubCategory" name="createSubCategory"
-                  icon="button_plus.png" disabledIcon="button_plus_disabled.png"/>
-          <button action="deleteSubCategory" name="deleteSubCategory"
-                  icon="button_minus.png" disabledIcon="button_minus_disabled.png"/>
-          <button action="renameSubCategory" name="renameSubCategory"
-                  icon="button_rename.png" disabledIcon="button_rename_disabled.png"/>
+          <button action="createSubCategory" name="createSubCategory" styleClass="create"/>
+          <button action="deleteSubCategory" name="deleteSubCategory" styleClass="delete"/>
+          <button action="renameSubCategory" name="renameSubCategory" styleClass="rename"/>
           <filler fill="horizontal"/>
         </row>
       </column>

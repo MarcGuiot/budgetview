@@ -25,7 +25,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkLabel("WorldCo/june");
     categorization.selectIncome();
 
-    SeriesEditionDialogChecker creationSeries = categorization.createSeries();
+    SeriesEditionDialogChecker creationSeries = categorization.createIncomeSeries();
     creationSeries.setName("Prime");
     creationSeries.checkType("Income");
     creationSeries.setCategory(MasterCategory.INCOME);
@@ -52,7 +52,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("Telefoot+");
 
     dialog.selectRecurring();
-    SeriesEditionDialogChecker editionDialog = dialog.createSeries();
+    SeriesEditionDialogChecker editionDialog = dialog.createRecurringSeries();
     editionDialog.setName("Culture");
     editionDialog.checkType("Recurring");
     editionDialog.setCategory(MasterCategory.EDUCATION);
@@ -75,7 +75,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("Forfait Kro");
 
     dialog.selectEnvelopes();
-    SeriesEditionDialogChecker editionDialog = dialog.createSeries();
+    SeriesEditionDialogChecker editionDialog = dialog.createEnvelopeSeries();
     editionDialog.setName("Regime");
     editionDialog.checkType("Envelope");
     editionDialog.setCategory(MasterCategory.FOOD);
@@ -107,7 +107,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.checkSelectedTableRows(0, 1, 2);
 
     dialog.selectEnvelopes();
-    SeriesEditionDialogChecker editionDialog = dialog.createSeries();
+    SeriesEditionDialogChecker editionDialog = dialog.createEnvelopeSeries();
     editionDialog.setName("Regime");
     editionDialog.checkType("Envelope");
     editionDialog.setCategory(MasterCategory.FOOD);
@@ -148,7 +148,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.checkLabel("JaimeLeFoot.com");
 
     dialog.selectRecurring();
-    SeriesEditionDialogChecker editionDialog = dialog.createSeries();
+    SeriesEditionDialogChecker editionDialog = dialog.createRecurringSeries();
     editionDialog.setName("Culture");
     editionDialog.checkType("Recurring");
     editionDialog.setCategory(MasterCategory.EDUCATION);

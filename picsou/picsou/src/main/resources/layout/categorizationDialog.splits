@@ -14,7 +14,7 @@
 
       <column>
         <scrollPane viewportBackground="#FFFFFF">
-          <table ref="transactionTable"  intercellSpacing="(0,0)" showGrid="false"/>
+          <table ref="transactionTable" intercellSpacing="(0,0)" showGrid="false"/>
         </scrollPane>
         <column>
           <checkBox ref="autoSelection" text="$categorization.autoselection" anchor="left"/>
@@ -46,31 +46,39 @@
           <card name="income">
             <column>
               <toggleButton ref="invisibleIncomeToggle" visible="false"/>
-              <scrollPane>
+              <scrollPane marginBottom="0">
                 <repeat ref="incomeSeriesRepeat" layout="wrappedColumn" border="empty(5)">
                   <toggleButton ref="seriesToggle" styleClass="selector"/>
                 </repeat>
               </scrollPane>
-              <button action="createIncomeSeries" styleClass="hyperlink"/>
+              <row styleClass="iconButtonGroup">
+                <button action="createIncomeSeries" styleClass="create"/>
+                <button action="editIncomeSeries" styleClass="list"/>
+                <filler fill="horizontal"/>
+              </row>
             </column>
           </card>
 
           <card name="recurringExpenses">
             <column>
               <toggleButton ref="invisibleRecurringToggle" visible="false"/>
-              <scrollPane>
+              <scrollPane marginBottom="0">
                 <repeat ref="recurringSeriesRepeat" layout="wrappedColumn" border="empty(5)">
                   <toggleButton ref="seriesToggle" styleClass="selector" fill="none"/>
                 </repeat>
               </scrollPane>
-              <button action="createRecurringSeries" styleClass="hyperlink"/>
+              <row styleClass="iconButtonGroup">
+                <button action="createRecurringSeries" styleClass="create"/>
+                <button action="editRecurringSeries" styleClass="list"/>
+                <filler fill="horizontal"/>
+              </row>
             </column>
           </card>
 
           <card name="expensesEnvelope">
             <column>
               <toggleButton ref="invisibleEnvelopeToggle" visible="false"/>
-              <scrollPane>
+              <scrollPane marginBottom="0">
                 <repeat ref="envelopeSeriesRepeat" layout="wrappedColumn" border="empty(5)">
                   <column>
                     <label ref="envelopeSeriesName" font="-,bold,14"/>
@@ -80,26 +88,36 @@
                   </column>
                 </repeat>
               </scrollPane>
-              <button action="createEnvelopeSeries" styleClass="hyperlink"/>
+              <row styleClass="iconButtonGroup">
+                <button action="createEnvelopeSeries" styleClass="create"/>
+                <button action="editEnvelopeSeries" styleClass="list"/>
+                <filler fill="horizontal"/>
+              </row>
             </column>
           </card>
 
           <card name="occasionalExpenses">
-            <scrollPane>
-              <column>
-                <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
-                <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn" border="empty(5)">
-                  <column>
-                    <row>
-                      <toggleButton ref="occasionalCategoryToggle" styleClass="masterCategorySelector"/>
-                    </row>
-                    <repeat ref="occasionalSubcatRepeat" marginLeft="10" background="#FF0000">
-                      <toggleButton ref="occasionalSubcatToggle" styleClass="subCategorySelector"/>
-                    </repeat>
-                  </column>
-                </repeat>
-              </column>
-            </scrollPane>
+            <column>
+              <scrollPane marginBottom="0">
+                <column>
+                  <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
+                  <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn" border="empty(5)">
+                    <column>
+                      <row>
+                        <toggleButton ref="occasionalCategoryToggle" styleClass="masterCategorySelector"/>
+                      </row>
+                      <repeat ref="occasionalSubcatRepeat" marginLeft="10" background="#FF0000">
+                        <toggleButton ref="occasionalSubcatToggle" styleClass="subCategorySelector"/>
+                      </repeat>
+                    </column>
+                  </repeat>
+                </column>
+              </scrollPane>
+              <row styleClass="iconButtonGroup">
+                <button action="editCategories" styleClass="list"/>
+                <filler fill="horizontal"/>
+              </row>
+            </column>
           </card>
 
         </cards>

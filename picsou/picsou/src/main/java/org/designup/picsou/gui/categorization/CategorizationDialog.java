@@ -1,11 +1,13 @@
 package org.designup.picsou.gui.categorization;
 
+import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.BudgetAreaComponentFactory;
 import org.designup.picsou.gui.categorization.components.EnvelopeSeriesComponentFactory;
 import org.designup.picsou.gui.categorization.components.OccasionalCategoriesComponentFactory;
 import org.designup.picsou.gui.categorization.components.SeriesComponentFactory;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
+import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
@@ -42,11 +44,14 @@ public class CategorizationDialog {
 
   private static final int[] COLUMN_SIZES = {10, 28, 10};
   private Directory localDirectory;
+  private SeriesEditionDialog seriesEditionDialog;
 
   public CategorizationDialog(Window parent, final GlobRepository repository, Directory directory) {
     dialog = PicsouDialog.create(parent, Lang.get("categorization.title"));
 
     init(repository, directory);
+
+    seriesEditionDialog = new SeriesEditionDialog(dialog, localRepository, localDirectory);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationDialog.splits",
                                                       localRepository, localDirectory);
@@ -100,8 +105,8 @@ public class CategorizationDialog {
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.INCOME.getGlob(), Series.BUDGET_AREA),
                       new SeriesComponentFactory(invisibleIncomeToggle, localRepository, localDirectory, dialog));
-    builder.add("createIncomeSeries",
-                new SeriesCreationAction(BudgetArea.INCOME, localDirectory));
+    builder.add("createIncomeSeries", new CreateSeriesAction(BudgetArea.INCOME));
+    builder.add("editIncomeSeries", new EditAllSeriesAction(BudgetArea.INCOME));
 
     JToggleButton invisibleRecurringToggle = new JToggleButton();
     builder.add("invisibleRecurringToggle", invisibleRecurringToggle);
@@ -109,8 +114,8 @@ public class CategorizationDialog {
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.RECURRING_EXPENSES.getGlob(), Series.BUDGET_AREA),
                       new SeriesComponentFactory(invisibleRecurringToggle, localRepository, localDirectory, dialog));
-    builder.add("createRecurringSeries",
-                new SeriesCreationAction(BudgetArea.RECURRING_EXPENSES, localDirectory));
+    builder.add("createRecurringSeries", new CreateSeriesAction(BudgetArea.RECURRING_EXPENSES));
+    builder.add("editRecurringSeries", new EditAllSeriesAction(BudgetArea.RECURRING_EXPENSES));
 
     final JToggleButton invisibleEnvelopeToggle = new JToggleButton();
     builder.add("invisibleEnvelopeToggle", invisibleEnvelopeToggle);
@@ -118,8 +123,8 @@ public class CategorizationDialog {
                       Series.TYPE,
                       GlobMatchers.linkedTo(BudgetArea.EXPENSES_ENVELOPE.getGlob(), Series.BUDGET_AREA),
                       new EnvelopeSeriesComponentFactory(invisibleEnvelopeToggle, localRepository, localDirectory, dialog));
-    builder.add("createEnvelopeSeries",
-                new SeriesCreationAction(BudgetArea.EXPENSES_ENVELOPE, localDirectory));
+    builder.add("createEnvelopeSeries", new CreateSeriesAction(BudgetArea.EXPENSES_ENVELOPE));
+    builder.add("editEnvelopeSeries", new EditAllSeriesAction(BudgetArea.EXPENSES_ENVELOPE));
 
     JToggleButton invisibleOccasionalToggle = new JToggleButton();
     builder.add("invisibleOccasionalToggle", invisibleOccasionalToggle);
@@ -134,7 +139,7 @@ public class CategorizationDialog {
                                                                BudgetArea.OCCASIONAL_EXPENSES,
                                                                invisibleOccasionalToggle,
                                                                localRepository, localDirectory, dialog));
-
+    builder.add("editCategories", new EditCategoriesAction());
 
     dialog.addInPanelWithButton(builder.<JPanel>load(), new OkAction(), new CancelAction());
     dialog.pack();
@@ -219,19 +224,21 @@ public class CategorizationDialog {
     GuiUtils.showCentered(dialog);
   }
 
-  private class SeriesCreationAction extends AbstractAction {
+  private class CreateSeriesAction extends AbstractAction {
     private final BudgetArea budgetArea;
-    private final Directory localDirectory;
 
-    public SeriesCreationAction(BudgetArea budgetArea, Directory localDirectory) {
-      super(Lang.get("categorization.newseries"));
+    public CreateSeriesAction(BudgetArea budgetArea) {
       this.budgetArea = budgetArea;
-      this.localDirectory = localDirectory;
     }
 
     public void actionPerformed(ActionEvent e) {
-      SeriesEditionDialog editionDialog = new SeriesEditionDialog(dialog, localRepository, localDirectory);
-      editionDialog.showNewSeries(currentTransactions, budgetArea);
+      seriesEditionDialog.showNewSeries(currentTransactions, budgetArea);
+    }
+  }
+
+  private class EditAllSeriesAction extends EditSeriesAction {
+    private EditAllSeriesAction(BudgetArea budgetArea) {
+      super(localRepository, localDirectory, seriesEditionDialog, budgetArea);
     }
   }
 
@@ -299,6 +306,17 @@ public class CategorizationDialog {
 
     public void actionPerformed(ActionEvent e) {
       dialog.setVisible(false);
+    }
+  }
+
+  private class EditCategoriesAction extends AbstractAction {
+    private EditCategoriesAction() {
+      super(Lang.get("categorization.categories.edit"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      CategoryEditionDialog dialog = new CategoryEditionDialog(localRepository, localDirectory);
+      dialog.show(GlobList.EMPTY);
     }
   }
 }

@@ -5,12 +5,13 @@ import org.designup.picsou.model.Month;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class SeriesEditionDialogChecker extends DataChecker {
   private Window dialog;
@@ -28,6 +29,11 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker setName(String seriesName) {
     dialog.getInputTextBox("nameField").setText(seriesName);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker unselect() {
+    dialog.getListBox().clearSelection();
     return this;
   }
 
@@ -75,12 +81,26 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker toggleMonth(String monthLabel) {
     try {
-      dialog.getCheckBox(ComponentMatchers.componentLabelFor(monthLabel)).click();
+      getMonthCheckBox(monthLabel).click();
     }
     catch (ItemNotFoundException e) {
       throw new RuntimeException("No component found for: " + monthLabel, e);
     }
     return this;
+  }
+
+  public SeriesEditionDialogChecker checkMonthIsActive(String monthLabel) {
+    assertThat(monthLabel + " is not enabled", getMonthCheckBox(monthLabel).isSelected());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkMonthIsInactive(String monthLabel) {
+    assertFalse(monthLabel + " is not disabled", getMonthCheckBox(monthLabel).isSelected());
+    return this;
+  }
+
+  private CheckBox getMonthCheckBox(String monthLabel) {
+    return dialog.getCheckBox(ComponentMatchers.componentLabelFor(monthLabel));
   }
 
   public void validate() {
@@ -105,13 +125,30 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker selectSeries(final int index) {
+    try {
+      SwingUtilities.invokeAndWait(new Runnable() {
+        public void run() {
+          dialog.getListBox().selectIndex(index);
+        }
+      });
+    }
+    catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+    catch (InvocationTargetException e) {
+      throw new RuntimeException(e);
+    }
+    return this;
+  }
+
   public SeriesEditionDialogChecker selectSeries(String name) {
     dialog.getListBox().select(name);
     return this;
   }
 
   public SeriesEditionDialogChecker checkSeriesSelected(String name) {
-    dialog.getListBox().select(name);
+    assertThat(dialog.getListBox().selectionEquals(name));
     return this;
   }
 
@@ -171,7 +208,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker checkAllMonthsDisabled() {
     for (UIComponent checkBox : dialog.getUIComponents(CheckBox.class)) {
-      UISpecAssert.assertFalse(checkBox.isEnabled());
+      assertFalse(checkBox.isEnabled());
     }
     return this;
   }
@@ -179,7 +216,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesEditionDialogChecker checkAllFieldsDisabled() {
     for (Component component : dialog.getSwingComponents(JTextField.class)) {
       TextBox textBox = new TextBox((JTextField)component);
-      UISpecAssert.assertFalse(textBox.isEnabled());
+      assertFalse(textBox.isEnabled());
     }
     return this;
   }

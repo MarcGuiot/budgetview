@@ -18,6 +18,9 @@ Stabilisation
 * Graphiques (camembert / histogramme)
 * Afficher les infos de mise a dispo d'une nouvelle version
 * BudgeView : Panneau pour montrer le detail du calcul du disponible en occasional
+* Aide pour trouver les categories dans CategoriesChooserDialog (search)
+* Modifier l'ordre des categories
+* Modifier l'ordre des series
 
 
 I18N

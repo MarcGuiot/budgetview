@@ -1,11 +1,11 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.*;
-import org.uispec4j.Panel;
-import org.uispec4j.Window;
 import org.uispec4j.Button;
-import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.Panel;
+import org.uispec4j.TextBox;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,18 +21,20 @@ public class BudgetViewChecker extends DataChecker {
 
   public BudgetViewChecker(Window window) {
     this.window = window;
-    this.income = new BudgetAreaChecker("incomeBudgetView");
-    this.recurring = new BudgetAreaChecker("recurringBudgetView");
-    this.envelopes = new BudgetAreaChecker("envelopeBudgetView");
+    this.income = new BudgetAreaChecker("incomeBudgetView", "Income");
+    this.recurring = new BudgetAreaChecker("recurringBudgetView", "Recurring");
+    this.envelopes = new BudgetAreaChecker("envelopeBudgetView", "Envelope");
     this.occasional = new OccasionalAreaChecker();
   }
 
   public class BudgetAreaChecker {
 
     private String panelName;
+    private String type;
 
-    public BudgetAreaChecker(String panelName) {
+    public BudgetAreaChecker(String panelName, String type) {
       this.panelName = panelName;
+      this.type = type;
     }
 
     public void checkTitle(String title) {
@@ -73,13 +75,19 @@ public class BudgetViewChecker extends DataChecker {
       return -1;
     }
 
-    public SeriesEditionDialogChecker editSeries() {
-      Panel budgetPanel = window.getPanel(panelName);
-      Window dialog = WindowInterceptor.getModalDialog(budgetPanel.getButton("Edit series").triggerClick());
-      return new SeriesEditionDialogChecker(dialog);
+    public SeriesEditionDialogChecker editSeriesList() {
+      return openSeriesEditionDialog("editAllSeries");
     }
 
     public SeriesEditionDialogChecker editSeries(String seriesName) {
+      return openSeriesEditionDialog(seriesName);
+    }
+
+    public SeriesEditionDialogChecker createSeries() {
+      return openSeriesEditionDialog("createSeries");
+    }
+
+    private SeriesEditionDialogChecker openSeriesEditionDialog(String seriesName) {
       Panel budgetPanel = window.getPanel(panelName);
       Window dialog = WindowInterceptor.getModalDialog(budgetPanel.getButton(seriesName).triggerClick());
       return new SeriesEditionDialogChecker(dialog);

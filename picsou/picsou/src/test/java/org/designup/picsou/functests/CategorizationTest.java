@@ -32,7 +32,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
     reopenedDialog.checkIncomeSeriesIsSelected("Salary");
-    reopenedDialog.createSeries().setName("Exceptional Income")
+    reopenedDialog.createIncomeSeries()
+      .setName("Exceptional Income")
       .setCategory(MasterCategory.INCOME)
       .setAmount("0.0")
       .validate();
@@ -509,20 +510,25 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkNoTransactionSelected();
   }
 
-//  public void testSplitTransactionAndDispatchSplitedTransaction() throws Exception {
-//    fail();
-//  }
-//
-//  public void testChangeTransactionSeries() throws Exception {
-//    fail();
-//  }
-//
-//  public void testSplitAndChangeOfSeries() throws Exception {
-//    fail();
-//  }
-//
-//  public void testChangeMonthAndEtc() throws Exception {
-//    fail();
-//  }
+  public void testSeriesList() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
+      .load();
 
+    CategorizationDialogChecker dialog = informationPanel.categorize();
+    dialog.disableAutoHide();
+      
+    dialog.selectIncome()
+      .checkNoIncomeSeriesDisplayed()
+      .checkEditIncomeSeriesDisabled();
+
+    dialog
+      .createIncomeSeries()
+      .setName("Salary")
+      .setCategory(MasterCategory.INCOME)
+      .validate();
+    
+    dialog.checkContainsIncomeSeries("Salary");
+  }
 }

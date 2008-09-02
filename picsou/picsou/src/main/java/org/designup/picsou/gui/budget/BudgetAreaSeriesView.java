@@ -2,12 +2,12 @@ package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Month;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobSelection;
@@ -89,11 +89,10 @@ public class BudgetAreaSeriesView extends View {
                         }
                       });
 
-    builder.add("editAllSeries", new AbstractAction(Lang.get("budgetview.editAll")) {
-      public void actionPerformed(ActionEvent e) {
-        seriesEditionDialog.show(budgetArea, selectedMonthIds);
-      }
-    });
+    builder.add("createSeries", new CreateSeriesAction());
+
+    builder.add("editAllSeries",
+                new EditSeriesAction(repository, directory, seriesEditionDialog, budgetArea));
 
     parentBuilder.add(name, builder);
   }
@@ -123,4 +122,12 @@ public class BudgetAreaSeriesView extends View {
       seriesEditionDialog.show(list.getFirst(), selectedMonthIds);
     }
   }
+
+  private class CreateSeriesAction extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+      seriesEditionDialog.show(budgetArea, selectedMonthIds);
+    }
+  }
+
+
 }

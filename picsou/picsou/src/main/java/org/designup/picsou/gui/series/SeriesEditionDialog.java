@@ -18,7 +18,6 @@ import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.GlobTableView;
@@ -31,12 +30,12 @@ import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.metamodel.fields.BooleanField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,31 +88,6 @@ public class SeriesEditionDialog {
 
     builder.addEditor("amountEditor", SeriesBudget.AMOUNT);
 
-    builder.addRepeat("monthRepeat", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-                      new RepeatComponentFactory<Integer>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, final Integer item) {
-                          cellBuilder.add("monthLabel", new JLabel(Month.getMediumSizeLetterLabelFromMonth(item)));
-                          final JCheckBox checkBox = new JCheckBox();
-                          selectionService.addListener(new GlobSelectionListener() {
-                            public void selectionUpdated(GlobSelection selection) {
-                              GlobList seriesList = selection.getAll(Series.TYPE);
-                              Glob series = seriesList.size() == 1 ? seriesList.get(0) : null;
-                              checkBox.setEnabled(series != null);
-                              checkBox.setSelected((series != null) && series.get(Series.getField(item)));
-                            }
-                          }, Series.TYPE);
-                          cellBuilder.add("monthSelector", checkBox);
-                          checkBox.addItemListener(new ItemListener() {
-                            public void itemStateChanged(ItemEvent e) {
-                              if (currentSeries != null) {
-                                localRepository.update(currentSeries.getKey(), Series.getField(item),
-                                                       e.getStateChange() == ItemEvent.SELECTED);
-                              }
-                            }
-                          });
-                        }
-                      });
-
     final GlobTableView budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE, new GlobFieldComparator(SeriesBudget.MONTH))
       .setFilter(fieldEquals(SeriesBudget.ACTIVE, true))
       .setDefaultBackgroundPainter(new TableBackgroundPainter())
@@ -134,15 +108,20 @@ public class SeriesEditionDialog {
       }
     }, Series.TYPE);
 
+    builder.addRepeat("monthRepeat", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+                      new RepeatComponentFactory<Integer>() {
+                        public void registerComponents(RepeatCellBuilder cellBuilder, final Integer monthIndex) {
+                          cellBuilder.add("monthLabel", new JLabel(Month.getMediumSizeLetterLabelFromMonth(monthIndex)));
+                          MonthCheckBoxUpdater updater = new MonthCheckBoxUpdater(monthIndex);
+                          cellBuilder.add("monthSelector", updater.getCheckBox());
+                        }
+                      });
+
     JPanel panel = builder.load();
     dialog.addInPanelWithButton(panel, new ValidateAction(), new CancelAction());
   }
 
   public void show(BudgetArea budgetArea, Set<Integer> monthIds) {
-
-// TODO: remove this
-//    SplitsEditor.show(dialog, localDirectory);
-
     try {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
@@ -152,7 +131,6 @@ public class SeriesEditionDialog {
       localRepository.completeBulkDispatchingMode();
     }
     doShow(monthIds, null);
-
   }
 
   public void show(Glob series, Set<Integer> monthIds) {
@@ -402,6 +380,47 @@ public class SeriesEditionDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
+    }
+  }
+
+  private class MonthCheckBoxUpdater implements GlobSelectionListener, ItemListener {
+    private JCheckBox checkBox;
+    private Integer monthIndex;
+    private boolean updateInProgress;
+
+    private MonthCheckBoxUpdater(Integer monthIndex) {
+      this.checkBox = new JCheckBox();
+      this.monthIndex = monthIndex;
+      selectionService.addListener(this, Series.TYPE);
+      checkBox.addItemListener(this);
+    }
+
+    public JCheckBox getCheckBox() {
+      return checkBox;
+    }
+
+    public void selectionUpdated(GlobSelection selection) {
+      GlobList seriesList = selection.getAll(Series.TYPE);
+      Glob series = seriesList.size() == 1 ? seriesList.get(0) : null;
+      try {
+        updateInProgress = true;
+        checkBox.setEnabled(series != null);
+        checkBox.setSelected((series != null) && series.get(Series.getField(monthIndex)));
+      }
+      finally {
+        updateInProgress = false;
+      }
+    }
+
+    public void itemStateChanged(ItemEvent e) {
+      if (updateInProgress) {
+        return;
+      }
+      if (currentSeries != null) {
+        BooleanField field = Series.getField(monthIndex);
+        boolean newState = e.getStateChange() == ItemEvent.SELECTED;
+        localRepository.update(currentSeries.getKey(), field, newState);
+      }
     }
   }
 }

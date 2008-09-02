@@ -75,7 +75,6 @@ public class PicsouInit {
     repository.create(User.TYPE,
                       value(User.ID, User.SINGLETON_ID),
                       value(User.NAME, user));
-
     repository.create(ServerInformation.KEY,
                       value(ServerInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.CONFIG_VERSION));
     MutableChangeSet changeSet = new DefaultChangeSet();
@@ -96,12 +95,7 @@ public class PicsouInit {
     if (newUser) {
       repository.enterBulkDispatchingMode();
       try {
-        repository.create(UserPreferences.KEY,
-                          FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT,
-                                           UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS));
-
-        InitialCategories.run(repository);
-        InitialSeries.run(repository);
+        createDataForNewUser(repository);
       }
       finally {
         repository.completeBulkDispatchingMode();
@@ -116,6 +110,14 @@ public class PicsouInit {
     LicenseCheckerThread licenseCheckerThread = new LicenseCheckerThread(directory, repository);
     licenseCheckerThread.setDaemon(true);
     licenseCheckerThread.start();
+  }
+
+  public static void createDataForNewUser(GlobRepository repository) {
+    repository.create(UserPreferences.KEY,
+                          FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT,
+                                           UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS));
+    InitialCategories.run(repository);
+    InitialSeries.run(repository);
   }
 
   private void initDirectory(GlobRepository repository) {

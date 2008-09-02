@@ -183,15 +183,15 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
 
-    budgetView.recurring.editSeries()
+    budgetView.recurring.editSeriesList()
       .checkSeriesList("Electricity", "Internet")
       .validate();
 
-    budgetView.envelopes.editSeries()
+    budgetView.envelopes.editSeriesList()
       .checkSeriesList("Groceries")
       .validate();
 
-    budgetView.income.editSeries()
+    budgetView.income.editSeriesList()
       .checkSeriesList("Exceptional Income", "Salary")
       .validate();
   }
@@ -213,24 +213,29 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions.setRecurring("EDF", "Electricity", MasterCategory.HOUSE, true);
 
     views.selectBudget();
-    budgetView.recurring.editSeries()
+    budgetView.recurring.editSeriesList()
       .checkSeriesList("Electricity", "Internet")
       .checkSeriesSelected("Electricity")
       .selectAllMonths()
       .setAmount("-70")
+      .toggleMonth("Aug")
       .checkTable(new Object[][]{
         {"2008", "July", "-70.00"},
-        {"2008", "August", "-70.00"},
       })
+
       .selectSeries("Internet")
+      .checkMonthIsActive("Aug")
       .checkTable(new Object[][]{
         {"2008", "July", "-29.00"},
         {"2008", "August", "-29.00"},
       })
-      .checkSeriesSelected("Electricity")
+      .toggleMonth("Jul")
+
+      .selectSeries("Electricity")
+      .checkMonthIsActive("Jul")
+      .checkMonthIsInactive("Aug")
       .checkTable(new Object[][]{
         {"2008", "July", "-70.00"},
-        {"2008", "August", "-70.00"},
       })
       .validate();
   }
@@ -244,8 +249,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
 
-    budgetView.recurring.editSeries()
-      .checkNoSeries()
+    budgetView.recurring.createSeries()
+      .unselect()
       .checkAllMonthsDisabled()
       .checkAllFieldsDisabled()
       .cancel();
@@ -260,7 +265,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
 
-    budgetView.recurring.editSeries()
+    budgetView.recurring.editSeriesList()
       .checkNoSeries()
       .createSeries()
       .checkSeriesList("New series")
@@ -275,5 +280,42 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.checkSeries("Free Telecom", 0, 0);
+  }
+
+  public void testSwitchingBetweenTwoNewSeriesWithTheSameName() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/15", -29.00, "Free Telecom")
+      .addTransaction("2008/07/15", -55.00, "EDF")
+      .load();
+
+    views.selectBudget();
+    budgetView.recurring.editSeriesList()
+      .checkNoSeries()
+      .createSeries()
+      .createSeries()
+      .checkSeriesList("New series", "New series")
+
+      .selectSeries(0)
+      .selectAllMonths()
+      .setAmount("-70")
+      .toggleMonth("Aug")
+      .checkTable(new Object[][]{
+        {"2008", "July", "-70.00"},
+      })
+
+      .selectSeries(1)
+      .checkMonthIsActive("Aug")
+      .toggleMonth("Jul")
+      .checkTable(new Object[][]{
+        {"2008", "August", "0.00"},
+      })
+
+      .selectSeries(0)
+      .checkMonthIsActive("Jul")
+      .checkMonthIsInactive("Aug")
+      .checkTable(new Object[][]{
+        {"2008", "July", "-70.00"},
+      })
+      .validate();
   }
 }

@@ -305,6 +305,7 @@ public abstract class ImportPanel {
   }
 
   private void displayErrorMessage(String key) {
+    System.out.println("ImportPanel.displayErrorMessage: " + Lang.get(key));
     messageLabel.setText("<html><font color=red>" + Lang.get(key) + "</font></html>");
   }
 

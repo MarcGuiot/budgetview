@@ -6,6 +6,7 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;
+import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
@@ -81,6 +82,12 @@ public class CategorizationDialogChecker extends DataChecker {
     return this;
   }
 
+  public CategorizationDialogChecker checkNoIncomeSeriesDisplayed() {
+    Panel seriesPanel = getIncomeSeriesPanel();
+    Assert.assertEquals(0, seriesPanel.getUIComponents(ToggleButton.class).length);
+    return this;
+  }
+
   public void checkContainsIncomeSeries(String... seriesNames) {
     Panel seriesPanel = getIncomeSeriesPanel();
 
@@ -96,12 +103,12 @@ public class CategorizationDialogChecker extends DataChecker {
   public CategorizationDialogChecker selectExceptionalIncomeSeries(String name, boolean showSeriesInitialization) {
     Panel panel = getIncomeSeriesPanel();
     if (showSeriesInitialization) {
-      SeriesEditionDialogChecker createSerie = createSeries();
-      createSerie.setName(name);
-      createSerie.setCategory(MasterCategory.INCOME);
-      createSerie.selectAllMonths();
-      createSerie.setAmount("0");
-      createSerie.validate();
+      createIncomeSeries()
+        .setName(name)
+        .setCategory(MasterCategory.INCOME)
+        .selectAllMonths()
+        .setAmount("0")
+        .validate();
     }
     panel.getToggleButton(name).click();
     return this;
@@ -110,10 +117,9 @@ public class CategorizationDialogChecker extends DataChecker {
   public CategorizationDialogChecker selectIncomeSeries(String name, boolean showSeriesInitialization) {
     Panel panel = getIncomeSeriesPanel();
     if (showSeriesInitialization) {
-      SeriesEditionDialogChecker createSerie = createSeries();
-      createSerie.setName(name);
-      createSerie.setCategory(MasterCategory.INCOME);
-      createSerie.validate();
+      createIncomeSeries()
+        .setName(name)
+        .setCategory(MasterCategory.INCOME).validate();
     }
     panel.getToggleButton(name).click();
     return this;
@@ -149,10 +155,10 @@ public class CategorizationDialogChecker extends DataChecker {
   public void selectRecurringSeries(String name, MasterCategory category, boolean showSeriesInitialization) {
     Panel panel = getRecurringSeriesPanel();
     if (showSeriesInitialization) {
-      SeriesEditionDialogChecker createSerie = createSeries();
-      createSerie.setName(name);
-      createSerie.setCategory(category);
-      createSerie.validate();
+      createRecurringSeries()
+        .setName(name)
+        .setCategory(category)
+        .validate();
     }
     panel.getToggleButton(name).click();
   }
@@ -205,10 +211,10 @@ public class CategorizationDialogChecker extends DataChecker {
 
     }
     if (showSeriesInitialization) {
-      SeriesEditionDialogChecker createSerie = createSeries();
-      createSerie.setName(envelopeName);
-      createSerie.setCategory(category);
-      createSerie.validate();
+      createEnvelopeSeries()
+        .setName(envelopeName)
+        .setCategory(category)
+        .validate();
     }
     panel.getToggleButton(name).click();
   }
@@ -314,8 +320,31 @@ public class CategorizationDialogChecker extends DataChecker {
     Assert.assertNotNull(dialog.getTextBox(text));
   }
 
-  public SeriesEditionDialogChecker createSeries() {
-    final Window creationDialog = WindowInterceptor.getModalDialog(dialog.getButton("New series").triggerClick());
+  public SeriesEditionDialogChecker createIncomeSeries() {
+    return createSeries("Income");
+  }
+
+  public SeriesEditionDialogChecker createRecurringSeries() {
+    return createSeries("Recurring");
+  }
+
+  public SeriesEditionDialogChecker createEnvelopeSeries() {
+    return createSeries("Envelope");
+  }
+
+  public SeriesEditionDialogChecker createSeries(String type) {
+    Button button = dialog.getButton("create" + type + "Series");
+    final Window creationDialog = WindowInterceptor.getModalDialog(button.triggerClick());
+    return new SeriesEditionDialogChecker(creationDialog);
+  }
+
+  public CategorizationDialogChecker checkEditIncomeSeriesDisabled() {
+    assertFalse(dialog.getButton("editIncomeSeries").isEnabled());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker editSeries() {
+    final Window creationDialog = WindowInterceptor.getModalDialog(dialog.getButton("editSeries").triggerClick());
     return new SeriesEditionDialogChecker(creationDialog);
   }
 

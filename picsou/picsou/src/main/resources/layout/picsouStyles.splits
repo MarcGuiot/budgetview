@@ -82,8 +82,44 @@
 
     <!-- Icon buttons -->
     <ui name="iconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"/>
-    <style selector=".iconButtonGroup" marginTop="5"/>
+    <style selector=".iconButtonGroup" marginTop="5" weightY="0"/>
     <style selector=".iconButtonGroup button" ui='iconButton' fill='none' weightX='0'/>
+    <style selector=".iconButtonGroup button.create"
+           icon="button_plus.png" disabledIcon="button_plus_disabled.png"/>
+    <style selector=".iconButtonGroup button.delete"
+           icon="button_minus.png" disabledIcon="button_minus_disabled.png"/>
+    <style selector=".iconButtonGroup button.rename"
+           icon="button_rename.png" disabledIcon="button_rename_disabled.png"/>
+    <style selector=".iconButtonGroup button.list"
+           icon="button_list.png" disabledIcon="button_list_disabled.png"/>
+    <style selector=".iconButtonGroup button.up"
+           icon="button_up.png" disabledIcon="button_up_disabled.png"/>
+    <style selector=".iconButtonGroup button.down"
+           icon="button_down.png" disabledIcon="button_down_disabled.png"/>
+
+    <!-- Dark Icon buttons -->
+    <ui name="iconButtonDark" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"
+        border="iconbutton.dark.border"
+        borderTop="iconbutton.dark.border.top"
+        borderBottom="iconbutton.dark.border.bottom"
+        pressedTopColor="iconbutton.dark.pressed.top"
+        pressedBottomColor="iconbutton.dark.pressed.bottom"
+        normalTopColor="iconbutton.dark.normal.top"
+        normalBottomColor="iconbutton.dark.normal.bottom"/>
+    <style selector=".iconButtonGroupDark" marginTop="5" weightY="0"/>
+    <style selector=".iconButtonGroupDark button" ui='iconButtonDark' fill='none' weightX='0'/>
+    <style selector=".iconButtonGroupDark button.create"
+           icon="button_plus.png" disabledIcon="button_plus_disabled.png"/>
+    <style selector=".iconButtonGroupDark button.delete"
+           icon="button_minus.png" disabledIcon="button_minus_disabled.png"/>
+    <style selector=".iconButtonGroupDark button.rename"
+           icon="button_rename.png" disabledIcon="button_rename_disabled.png"/>
+    <style selector=".iconButtonGroupDark button.list"
+           icon="button_list.png" disabledIcon="button_list_disabled.png"/>
+    <style selector=".iconButtonGroupDark button.up"
+           icon="button_up.png" disabledIcon="button_up_disabled.png"/>
+    <style selector=".iconButtonGroupDark button.down"
+           icon="button_down.png" disabledIcon="button_down_disabled.png"/>
 
     <!-- Gauge -->
     <style selector=".totalGauge"
