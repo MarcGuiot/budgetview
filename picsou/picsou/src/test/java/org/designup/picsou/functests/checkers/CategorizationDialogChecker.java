@@ -386,4 +386,8 @@ public class CategorizationDialogChecker extends DataChecker {
   public void disableAutoHide() {
     dialog.getCheckBox("hide").unselect();
   }
+
+  public void checkClosed() {
+    assertFalse(dialog.isVisible());
+  }
 }

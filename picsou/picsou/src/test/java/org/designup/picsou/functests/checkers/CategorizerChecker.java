@@ -25,6 +25,7 @@ public class CategorizerChecker extends DataChecker {
     categorizationChecker.selectRecurring();
     categorizationChecker.selectRecurringSeries(name, category, showSeriesInitialization);
     categorizationChecker.validate();
+    categorizationChecker.checkClosed();
     return this;
   }
 
@@ -34,6 +35,7 @@ public class CategorizerChecker extends DataChecker {
     categorizationChecker.selectEnvelopes();
     categorizationChecker.selectEnvelopeSeries(envelopeName, category, showSeriesInitialization);
     categorizationChecker.validate();
+    categorizationChecker.checkClosed();
     return this;
   }
 
@@ -43,6 +45,7 @@ public class CategorizerChecker extends DataChecker {
     categorizationChecker.selectOccasional();
     categorizationChecker.selectOccasionalSeries(category);
     categorizationChecker.validate();
+    categorizationChecker.checkClosed();
     return this;
   }
 
@@ -52,6 +55,7 @@ public class CategorizerChecker extends DataChecker {
     categorizationChecker.selectIncome();
     categorizationChecker.selectIncomeSeries("salary", true);
     categorizationChecker.validate();
+    categorizationChecker.checkClosed();
     return this;
   }
 }

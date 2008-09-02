@@ -32,7 +32,7 @@ Nouveau
 * Mecanique de backup/restore pour les utilisateurs (crypte ou non?)
 * Creer des transactions utilisateur (soit achats effectues mais pas encore dans les releves, soit previsions plus vagues)
 * Decouverte des mois actifs pour les series a partir des transactions
-* SMS
+* SMS ==> previsions de soldes de fin de mois
 * Remboursements
 
 

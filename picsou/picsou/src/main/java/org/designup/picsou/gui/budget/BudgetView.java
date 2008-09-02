@@ -87,5 +87,6 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    currentSelectedMonth = GlobList.EMPTY;
   }
 }

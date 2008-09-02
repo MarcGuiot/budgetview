@@ -67,17 +67,17 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
       Boolean active = series.get(monthField);
       Glob seriesBudget = monthWithBudget.remove(monthId);
       if (seriesBudget == null) {
-        FieldValue fieldValues[] = {value(SeriesBudget.SERIES, seriesId),
-                                    value(SeriesBudget.AMOUNT, series.get(Series.INITIAL_AMOUNT)),
-                                    value(SeriesBudget.MONTH, monthId),
-                                    value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
-                                    value(SeriesBudget.ACTIVE, active)};
-        repository.create(SeriesBudget.TYPE, fieldValues);
+        repository.create(SeriesBudget.TYPE,
+                          value(SeriesBudget.SERIES, seriesId),
+                          value(SeriesBudget.AMOUNT, series.get(Series.INITIAL_AMOUNT)),
+                          value(SeriesBudget.MONTH, monthId),
+                          value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
+                          value(SeriesBudget.ACTIVE, active));
       }
       else {
-        FieldValue fieldValues[] = {value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
-                                    value(SeriesBudget.ACTIVE, active)};
-        repository.update(seriesBudget.getKey(), fieldValues);
+        repository.update(seriesBudget.getKey(),
+                          value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
+                          value(SeriesBudget.ACTIVE, active));
       }
     }
     for (Glob seriesBudget : monthWithBudget.values()) {

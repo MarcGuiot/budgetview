@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <column margin="10">
+  <column styleClass="dialog" opaque="true" margin="10">
     <filler fill="vertical" weightY="10"/>
     <grid>
       <label gridPos="(0,0)" text="$license.mail" styleClass="formLabel"/>

@@ -18,7 +18,6 @@ import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.GlobTableView;
@@ -92,7 +91,7 @@ public class SeriesEditionDialog {
     builder.addRepeat("monthRepeat", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
                       new RepeatComponentFactory<Integer>() {
                         public void registerComponents(RepeatCellBuilder cellBuilder, final Integer item) {
-                          cellBuilder.add("monthLabel", new JLabel(Month.getMediumSizeLetterLabelFromMonth(item)));
+                          cellBuilder.add("monthLabel", new JLabel(Month.getMediumSizeLetterLabel(item)));
                           final JCheckBox checkBox = new JCheckBox();
                           selectionService.addListener(new GlobSelectionListener() {
                             public void selectionUpdated(GlobSelection selection) {
