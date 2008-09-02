@@ -79,7 +79,6 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     categoryEdition.selectMaster(MasterCategory.FOOD);
     categoryEdition.renameMaster(getCategoryName(MasterCategory.FOOD), "Bouffe");
     UISpecAssert.assertThat(categoryEdition.getMasterList().contains("Bouffe"));
-    UISpecAssert.assertThat(categoryEdition.getSubList().isEmpty());
   }
 
   public void testDeleteWithTransaction() throws Exception {
