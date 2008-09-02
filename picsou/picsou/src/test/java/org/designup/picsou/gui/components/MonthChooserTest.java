@@ -2,9 +2,9 @@ package org.designup.picsou.gui.components;
 
 import org.designup.picsou.functests.checkers.MonthChooserChecker;
 import org.globsframework.gui.GuiTestCase;
-import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 
@@ -40,6 +40,17 @@ public class MonthChooserTest extends GuiTestCase {
     month.checkVisibleYears(2004, 2005, 2006);
     month.selectMonthInCurrent(1);
     assertEquals(200501, selectedMonth);
+  }
+
+  public void testWihoutSelectedMonth() throws Exception {
+    final MonthChooser monthChooser = new MonthChooser(directory);
+    Window window = WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        selectedMonth = monthChooser.show(new JFrame(), 2008, null);
+      }
+    });
+    MonthChooserChecker month = new MonthChooserChecker(window);
+    month.checkNoneSelected();
   }
 
   public void testCancel() throws Exception {
