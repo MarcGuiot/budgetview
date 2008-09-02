@@ -41,6 +41,8 @@ CategoryEditionDialog
 
 CategorizationDialog
 --------------------
+- Look
+- Aide a la premiere utilisation (messages)
 - afficher le nombre de transactions restantes
 - split de transaction
 - saisie de notes

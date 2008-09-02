@@ -8,6 +8,8 @@
 
 - WavePanelUI : degager JIDE / pb sous Tiger
 
+- Import : utiliser une PicsouDialog
+
 Login
 -----
 - Supprimer logo
