@@ -165,4 +165,7 @@ public class CategoryEditionChecker extends DataChecker {
       }).run();
   }
 
+  public void checkClosed() {
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
 }

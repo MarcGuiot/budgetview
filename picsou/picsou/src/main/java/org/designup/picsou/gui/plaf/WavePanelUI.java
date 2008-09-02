@@ -1,7 +1,5 @@
 package org.designup.picsou.gui.plaf;
 
-import org.designup.picsou.gui.components.jide.JideFastGradientPainter;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
@@ -45,17 +43,23 @@ public class WavePanelUI extends BasicPanelUI {
     Graphics2D g2 = (Graphics2D)g.create();
 
     Rectangle rect = new Rectangle(0, 0, w, h);
-    JideFastGradientPainter.drawGradient(g2, rect, topColor, bottomColor, true);
+    GradientPaint gradient = new GradientPaint(0, 0, topColor, 0, h, bottomColor);
+    drawGradient(g2, rect, gradient);
 
     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, WAVE_ALPHA));
 
     AffineTransform transform = new AffineTransform();
     transform.setToScale(w * 0.9, h * 0.3);
     Shape transformedShape = path.createTransformedShape(transform);
-    JideFastGradientPainter.drawGradient(g2, transformedShape, waveColor, bottomColor, true);
+    drawGradient(g2, transformedShape, new GradientPaint(0, 0, waveColor, 0, h * 0.3f, bottomColor));
 
     transform.setToScale(w * 0.3, h * 2.5);
     transformedShape = path.createTransformedShape(transform);
-    JideFastGradientPainter.drawGradient(g2, transformedShape, waveColor, bottomColor, true);
+    drawGradient(g2, transformedShape, new GradientPaint(0, 0, waveColor, 0, h * 2.5f, bottomColor));
+  }
+
+  private void drawGradient(Graphics2D g2d, Shape rect, GradientPaint gradient) {
+    g2d.setPaint(gradient);
+    g2d.fill(rect);
   }
 }

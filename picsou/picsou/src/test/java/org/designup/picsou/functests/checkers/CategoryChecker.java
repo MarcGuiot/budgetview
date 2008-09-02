@@ -143,6 +143,7 @@ public class CategoryChecker extends ViewChecker {
     CategoryEditionChecker edition = openEditionDialog();
     edition.createSubCategory(name);
     edition.validate();
+    edition.checkClosed();
   }
 
   public Trigger triggerRename() {
@@ -176,12 +177,14 @@ public class CategoryChecker extends ViewChecker {
     CategoryEditionChecker edition = openEditionDialog();
     edition.deleteSubCategoryWithTransactionUpdate(getCategoryName(replaceByCategory));
     edition.validate();
+    edition.checkClosed();
   }
 
   public void deleteSubSelected() {
     CategoryEditionChecker edition = openEditionDialog();
     edition.deleteSubCategory();
     edition.validate();
+    edition.checkClosed();
   }
 
   private int getIndex(MasterCategory master) {
