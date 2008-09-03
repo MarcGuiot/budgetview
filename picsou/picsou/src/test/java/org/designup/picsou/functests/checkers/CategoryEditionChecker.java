@@ -13,7 +13,7 @@ public class CategoryEditionChecker extends DataChecker {
     this.dialog = dialog;
   }
 
-  public void createMasterCategory(final String name) {
+  public CategoryEditionChecker createMasterCategory(final String name) {
     WindowInterceptor.init(getCreateMasterCategoryTrigger())
       .process(new WindowHandler() {
         public Trigger process(final Window window) throws Exception {
@@ -25,9 +25,10 @@ public class CategoryEditionChecker extends DataChecker {
         }
       })
       .run();
+    return this;
   }
 
-  public void createSubCategory(final String name) {
+  public CategoryEditionChecker createSubCategory(final String name) {
     WindowInterceptor.init(getCreateSubCategoryTrigger())
       .process(new WindowHandler() {
         public Trigger process(final Window window) throws Exception {
@@ -39,9 +40,10 @@ public class CategoryEditionChecker extends DataChecker {
         }
       })
       .run();
+    return this;
   }
 
-  public void deleteMasterCategory(final String name) {
+  public CategoryEditionChecker deleteMasterCategory(final String name) {
     WindowInterceptor.init(getDeleteMasterButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
@@ -50,10 +52,10 @@ public class CategoryEditionChecker extends DataChecker {
           return categoryChecker.validate();
         }
       }).run();
-
+    return this;
   }
 
-  public void deleteSubCategoryWithTransactionUpdate(final String newCategory) {
+  public CategoryEditionChecker deleteSubCategoryWithTransactionUpdate(final String newCategory) {
     WindowInterceptor.init(getDeleteMasterButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
@@ -62,27 +64,31 @@ public class CategoryEditionChecker extends DataChecker {
           return categoryChecker.validate();
         }
       }).run();
-
+    return this;
   }
 
-  public void deleteSubCategory() {
+  public CategoryEditionChecker deleteSubCategory() {
     getDeleteSubButton().click();
+    return this;
   }
 
 
-  public void selectMaster(MasterCategory master) {
+  public CategoryEditionChecker selectMaster(MasterCategory master) {
     dialog.getListBox("masterCategoryList")
       .select(getCategoryName(master));
+    return this;
   }
 
-  public void selectMaster(String master) {
+  public CategoryEditionChecker selectMaster(String master) {
     dialog.getListBox("masterCategoryList")
       .select(master);
+    return this;
   }
 
 
-  public void selectSub(String name) {
+  public CategoryEditionChecker selectSub(String name) {
     getSubList().select(name);
+    return this;
   }
 
   public void validate() {
