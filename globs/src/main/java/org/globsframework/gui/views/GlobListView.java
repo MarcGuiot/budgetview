@@ -40,8 +40,9 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     super(type, repository, directory);
   }
 
-  public void setComparator(Comparator<Glob> comparator) {
+  public GlobListView setComparator(Comparator<Glob> comparator) {
     this.comparator = comparator;
+    return this;
   }
 
   public GlobListView setSelectionHandler(GlobSelectionHandler selectionHandler) {
