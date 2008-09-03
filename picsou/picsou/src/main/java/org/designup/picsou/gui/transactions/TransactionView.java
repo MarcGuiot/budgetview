@@ -12,7 +12,7 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
-import static org.designup.picsou.model.Transaction.*;
+import static org.designup.picsou.model.Transaction.TYPE;
 import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
@@ -22,7 +22,6 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
-import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.GlobType;
@@ -151,13 +150,20 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
     FontLocator fontLocator = directory.get(FontLocator.class);
     Font dateFont = fontLocator.get("transactionView.date");
 
-    return view
+    view
       .addColumn(Lang.get("date"), new TransactionDateStringifier(comparator), LabelCustomizers.font(dateFont))
-      .addColumn(descriptionService.getLabel(Category.TYPE), seriesColumn, seriesColumn,
+      .addColumn(Lang.get("category"), seriesColumn, seriesColumn,
                  new TransactionCategoriesStringifier(categoryStringifier).getComparator(repository))
-      .addColumn(LABEL, LabelCustomizers.bold(), CellPainter.NULL)
-      .addColumn(Lang.get("amount"), amountColumn, amountStringifier.getComparator(repository))
-      .addColumn(NOTE, new TransactionNoteEditor(repository, directory));
+      .addColumn(Lang.get("label"),
+                 descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.bold())
+      .addColumn(Lang.get("amount"), amountColumn, amountStringifier.getComparator(repository));
+
+    view.startColumn()
+      .setName(Lang.get("note"))
+      .setField(Transaction.NOTE)
+      .setEditor(new TransactionNoteEditor(repository, directory));
+
+    return view;
   }
 
   public GlobTableView getView() {

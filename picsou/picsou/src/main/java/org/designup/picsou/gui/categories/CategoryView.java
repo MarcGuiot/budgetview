@@ -10,9 +10,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.gui.views.CellPainter;
-import static org.globsframework.gui.views.utils.LabelCustomizers.alignRight;
-import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -71,7 +69,6 @@ public class CategoryView extends View {
       .addColumn(Lang.get("amount"), amountStringifier, chain(alignRight(), customizer))
       .hideHeader()
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);
-
 
     provider.setView(globTable);
 
