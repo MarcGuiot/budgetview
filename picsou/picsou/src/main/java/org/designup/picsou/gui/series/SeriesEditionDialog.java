@@ -19,6 +19,7 @@ import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.CellPainter;
+import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.metamodel.fields.BooleanField;
@@ -26,12 +27,15 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -54,6 +58,9 @@ public class SeriesEditionDialog {
   private GlobRepository repository;
   private Glob currentSeries;
   private GlobListView seriesList;
+  private GlobListView categoryList;
+  private GlobLabelView singleCategoryLabel;
+  private SeriesEditionDialog.AssignCategoryAction assignCategoryAction;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -80,8 +87,47 @@ public class SeriesEditionDialog {
 
     builder.addEditor("nameField", Series.LABEL);
 
-    builder.addLabel("singleCategoryLabel", Series.DEFAULT_CATEGORY);
-    builder.add("assignCategoryAction", new AssignCategoryAction(dialog));
+    final GlobStringifier categoryStringifier = descriptionService.getStringifier(Category.TYPE);
+    GlobListStringifier labelStringifier = new GlobListStringifier() {
+      public String toString(GlobList list, GlobRepository repository) {
+        if (list.isEmpty()) {
+          if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
+            return null;
+          }
+          else {
+            return Lang.get("seriesEdition.category.label");
+          }
+        }
+        Integer category = list.get(0).get(Series.DEFAULT_CATEGORY);
+        if (category == null) {
+          return Lang.get("seriesEdition.missing.category.label");
+        }
+        else if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
+          return null;
+        }
+        else {
+          return Lang.get("seriesEdition.category.label") + categoryStringifier.toString(
+            repository.findLinkTarget(currentSeries, Series.DEFAULT_CATEGORY),
+            repository);
+        }
+      }
+    };
+    singleCategoryLabel =
+      GlobLabelView.init(Series.TYPE, localRepository, localDirectory, labelStringifier)
+        .setAutoHideIfEmpty(true);
+    builder.add("singleCategoryLabel", singleCategoryLabel.getComponent());
+
+    categoryList = GlobListView.init(SeriesToCategory.TYPE, localRepository, localDirectory)
+      .setRenderer(new AbstractGlobStringifier() {
+        public String toString(Glob glob, GlobRepository repository) {
+          Glob category = repository.get(Key.create(Category.TYPE, glob.get(SeriesToCategory.CATEGORY)));
+          return categoryStringifier.toString(category, repository);
+        }
+      });
+    builder.add("multipleCategoryList", categoryList);
+
+    assignCategoryAction = new AssignCategoryAction(dialog);
+    builder.add("assignCategory", assignCategoryAction);
 
     builder.addEditor("beginSeriesDate", Series.FIRST_MONTH);
     builder.addEditor("endSeriesDate", Series.LAST_MONTH);
@@ -101,9 +147,11 @@ public class SeriesEditionDialog {
         if (currentSeries != null) {
           budgetTable.setFilter(GlobMatchers.and(fieldEquals(SeriesBudget.ACTIVE, true),
                                                  fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID))));
+          assignCategoryAction.setEnabled(true);
         }
         else {
           budgetTable.setFilter(GlobMatchers.NONE);
+          assignCategoryAction.setEnabled(false);
         }
       }
     }, Series.TYPE);
@@ -182,6 +230,7 @@ public class SeriesEditionDialog {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
       this.budgetArea = BudgetArea.get(budgetArea.getId());
+      initCategorizeVisibility();
       Double initialAmount = computeMinAmountPerMonth(transactions);
       String label;
       if (!transactions.isEmpty()) {
@@ -223,7 +272,7 @@ public class SeriesEditionDialog {
 
   private void initBudgetAreaSeries(BudgetArea budgetArea) {
     this.budgetArea = budgetArea;
-
+    initCategorizeVisibility();
     GlobList seriesList =
       repository.getAll(Series.TYPE, fieldEquals(Series.BUDGET_AREA, budgetArea.getId()));
 
@@ -234,6 +283,10 @@ public class SeriesEditionDialog {
                                                 series.get(Series.ID)).getGlobs());
     }
     localRepository.reset(globsToLoad, SeriesBudget.TYPE, Series.TYPE);
+  }
+
+  private void initCategorizeVisibility() {
+    this.categoryList.setVisible(budgetArea == BudgetArea.EXPENSES_ENVELOPE);
   }
 
   private Set<Integer> getCurrentMonthId() {
@@ -278,22 +331,27 @@ public class SeriesEditionDialog {
       this.parent = parent;
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void show() {
       CategoryChooserDialog chooser =
-        new CategoryChooserDialog(new SeriesCategoryChooserCallback(), parent, true,
+        new CategoryChooserDialog(new SeriesCategoryChooserCallback(), parent,
+                                  !budgetArea.equals(BudgetArea.EXPENSES_ENVELOPE),
                                   new TransactionRendererColors(localDirectory),
                                   localRepository, localDirectory);
 
       chooser.show();
     }
 
+    public void actionPerformed(ActionEvent e) {
+      show();
+    }
+
     private class SeriesCategoryChooserCallback implements CategoryChooserCallback {
       public void processSelection(GlobList categories) {
+        localRepository.delete(localRepository.getAll(SeriesToCategory.TYPE,
+                                                      GlobMatchers.linkedTo(currentSeries, SeriesToCategory.SERIES)));
         for (Glob category : categories) {
           localRepository.setTarget(currentSeries.getKey(), Series.DEFAULT_CATEGORY, category.getKey());
           if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
-            localRepository.delete(localRepository.getAll(SeriesToCategory.TYPE,
-                                                          GlobMatchers.linkedTo(currentSeries, SeriesToCategory.SERIES)));
             localRepository.create(SeriesToCategory.TYPE,
                                    value(SeriesToCategory.SERIES, currentSeries.get(Series.ID)),
                                    value(SeriesToCategory.CATEGORY, category.get(Category.ID)));
@@ -302,7 +360,22 @@ public class SeriesEditionDialog {
       }
 
       public Set<Integer> getPreselectedCategoryIds() {
-        return Collections.emptySet();
+        Integer defaultCategory = currentSeries.get(Series.DEFAULT_CATEGORY);
+        if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
+          Set<Integer> valueSet = localRepository.getAll(SeriesToCategory.TYPE,
+                                                         GlobMatchers.fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)))
+            .getValueSet(SeriesToCategory.CATEGORY);
+          if (defaultCategory != null) {
+            valueSet.add(defaultCategory);
+          }
+          return valueSet;
+        }
+        else {
+          if (defaultCategory != null) {
+            return Collections.singleton(currentSeries.get(Series.DEFAULT_CATEGORY));
+          }
+          return Collections.emptySet();
+        }
       }
     }
   }

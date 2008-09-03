@@ -1,9 +1,10 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.TransactionType;
 
 public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   public void testStandardEdition() throws Exception {
@@ -57,7 +58,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "July", "-29.00"},
         {"2008", "August", "-29.00"},
       })
-      .checkMonthsSelected(1,3)
+      .checkMonthsSelected(1, 3)
       .validate();
 
     budgetView.recurring.checkSeries("Free", 58.00, 58.00);
@@ -314,6 +315,75 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkTable(new Object[][]{
         {"2008", "July", "-70.00"},
       })
+      .validate();
+  }
+
+  public void testCreateEnvelopeSeriesWithManyCategory() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .load();
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes
+      .createSeries()
+      .setName("courant")
+      .setCategory(MasterCategory.FOOD, MasterCategory.CLOTHING);
+    edition.openCategory()
+      .checkSelected(MasterCategory.FOOD, MasterCategory.CLOTHING)
+      .cancel();
+
+    edition.selectAllMonths()
+      .setAmount("-1000")
+      .checkSingleCategorizeIsVisible(false)
+      .checkMultiCategorizeIsVisible(true)
+      .validate();
+
+    budgetView.envelopes.checkSeries("courant", 0, 1000);
+    views.selectData();
+    transactions.categorize(0)
+      .disableAutoHide()
+      .selectEnvelopes()
+      .selectEnvelopeSeries("courant", MasterCategory.FOOD, false)
+      .selectEnvelopeSeries("courant", MasterCategory.CLOTHING, false)
+      .validate();
+    transactionDetails.checkCategory(MasterCategory.CLOTHING);
+    transactionDetails.checkSeries("courant");
+  }
+
+  public void testIncomCategorization() throws Exception {
+    views.selectBudget();
+    budgetView.income
+      .createSeries()
+      .checkCategorizeEnable(true)
+      .checkMultiCategorizeIsVisible(false)
+      .setCategory(MasterCategory.INCOME)
+      .validate();
+  }
+
+  public void testEmptySeriesListDisableCategorization() throws Exception {
+    views.selectBudget();
+    budgetView.envelopes
+      .createSeries().unselect()
+      .checkCategorizeEnable(false)
+      .checkCategoryListEnable(true)
+      .validate();
+
+    budgetView.income
+      .createSeries().unselect()
+      .checkCategorizeEnable(false)
+      .checkCategorizeLabel()
+      .checkMultiCategorizeIsVisible(false)
+      .validate();
+  }
+
+  public void testCancel() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .load();
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .cancel();
+    budgetView.envelopes.createSeries()
+      .checkSeriesList("New series")
       .validate();
   }
 }

@@ -39,11 +39,13 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private ButtonGroup buttonGroup;
   private Directory localDirectory;
   private Dialog parent;
+  private boolean monoSelection;
 
   public CategoryChooserDialog(CategoryChooserCallback callback, Dialog parent, boolean monoSelection,
                                TransactionRendererColors colors,
                                GlobRepository repository, Directory directory) {
     this.parent = parent;
+    this.monoSelection = monoSelection;
     if (monoSelection) {
       buttonGroup = new ButtonGroup();
     }
@@ -56,7 +58,6 @@ public class CategoryChooserDialog implements ChangeSetListener {
     localDirectory.add(selectionService);
 
     this.repository = repository;
-
 
     this.categoryStringifier = localDirectory.get(DescriptionService.class).getStringifier(Category.TYPE);
     repository.addChangeListener(this);
@@ -125,11 +126,15 @@ public class CategoryChooserDialog implements ChangeSetListener {
   }
 
   private JToggleButton createCategoryToggle(Glob category) {
-    JToggleButton button = new JToggleButton(categoryStringifier.toString(category, repository));
+    String name = categoryStringifier.toString(category, repository);
+    JToggleButton button = new JToggleButton(name);
     if (buttonGroup != null) {
       buttonGroup.add(button);
     }
     categoryToButton.put(category.getKey(), button);
+    if (monoSelection) {
+      button.setAction(new CategoryAction(category.getKey(), name));
+    }
     return button;
   }
 
@@ -185,10 +190,24 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
   private class CloseAction extends AbstractAction {
     private CloseAction() {
-      super(Lang.get("close"));
+      super(Lang.get("cancel"));
     }
 
     public void actionPerformed(ActionEvent e) {
+      close();
+    }
+  }
+
+  private class CategoryAction extends AbstractAction {
+    private Key key;
+
+    private CategoryAction(Key key, String name) {
+      super(name);
+      this.key = key;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      callback.processSelection(new GlobList(repository.get(key)));
       close();
     }
   }

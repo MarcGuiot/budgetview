@@ -119,7 +119,8 @@ public class CategorizationDialogChecker extends DataChecker {
     if (showSeriesInitialization) {
       createIncomeSeries()
         .setName(name)
-        .setCategory(MasterCategory.INCOME).validate();
+        .setCategory(MasterCategory.INCOME)
+        .validate();
     }
     panel.getToggleButton(name).click();
     return this;
@@ -191,8 +192,9 @@ public class CategorizationDialogChecker extends DataChecker {
     UISpecAssert.assertFalse(dialog.getPanel("incomeSeriesRepeat").getToggleButton(seriesName).isSelected());
   }
 
-  public void selectEnvelopes() {
+  public CategorizationDialogChecker selectEnvelopes() {
     dialog.getToggleButton("expensesEnvelope").click();
+    return this;
   }
 
   public void checkContainsEnvelope(String envelopeName, MasterCategory... categories) {
@@ -203,7 +205,7 @@ public class CategorizationDialogChecker extends DataChecker {
     }
   }
 
-  public void selectEnvelopeSeries(String envelopeName, MasterCategory category, boolean showSeriesInitialization) {
+  public CategorizationDialogChecker selectEnvelopeSeries(String envelopeName, MasterCategory category, boolean showSeriesInitialization) {
     Panel panel = getEnvelopeSeriesPanel();
     String name = envelopeName + ":" + category.getName();
     Component component = panel.findSwingComponent(ComponentMatchers.innerNameIdentity(name));
@@ -217,6 +219,7 @@ public class CategorizationDialogChecker extends DataChecker {
         .validate();
     }
     panel.getToggleButton(name).click();
+    return this;
   }
 
   private Panel getEnvelopeSeriesPanel() {
@@ -310,10 +313,12 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void validate() {
     dialog.getButton("ok").click();
+    checkClosed();
   }
 
   public void cancel() {
     dialog.getButton("cancel").click();
+    checkClosed();
   }
 
   public void checkTextVisible(String text) {
@@ -321,21 +326,21 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker createIncomeSeries() {
-    return createSeries("Income");
+    return createSeries("Income", true);
   }
 
   public SeriesEditionDialogChecker createRecurringSeries() {
-    return createSeries("Recurring");
+    return createSeries("Recurring", true);
   }
 
   public SeriesEditionDialogChecker createEnvelopeSeries() {
-    return createSeries("Envelope");
+    return createSeries("Envelope", false);
   }
 
-  public SeriesEditionDialogChecker createSeries(String type) {
+  public SeriesEditionDialogChecker createSeries(String type, boolean oneSelection) {
     Button button = dialog.getButton("create" + type + "Series");
     final Window creationDialog = WindowInterceptor.getModalDialog(button.triggerClick());
-    return new SeriesEditionDialogChecker(creationDialog);
+    return new SeriesEditionDialogChecker(creationDialog, oneSelection);
   }
 
   public CategorizationDialogChecker checkEditIncomeSeriesDisabled() {
@@ -345,7 +350,7 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker editSeries() {
     final Window creationDialog = WindowInterceptor.getModalDialog(dialog.getButton("editSeries").triggerClick());
-    return new SeriesEditionDialogChecker(creationDialog);
+    return new SeriesEditionDialogChecker(creationDialog, true);
   }
 
   public CategorizationDialogChecker checkTable(Object[][] content) {
@@ -412,8 +417,9 @@ public class CategorizationDialogChecker extends DataChecker {
     dialog.getCheckBox("hide").select();
   }
 
-  public void disableAutoHide() {
+  public CategorizationDialogChecker disableAutoHide() {
     dialog.getCheckBox("hide").unselect();
+    return this;
   }
 
   public void checkClosed() {

@@ -20,10 +20,20 @@
           <grid>
             <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel"/>
             <textField gridPos="(1,0)" ref="nameField"/>
-            <label gridPos="(0,1)" text="$seriesEdition.category" styleClass="formLabel"/>
-            <row gridPos="(1,1)" marginTop="3">
-              <label ref="singleCategoryLabel"/>
-              <button action="assignCategoryAction" marginLeft="10"/>
+            <row gridPos="(0,1,2,1)" marginTop="3">
+              <column>
+                <row autoHideSource="multipleCategoryList">
+                  <label name="multiCategoryLabel" text="$seriesEdition.category.label"
+                         autoHideSource="multipleCategoryList"/>
+                  <list ref="multipleCategoryList"/>
+                </row>
+                <row>
+                  <label ref="singleCategoryLabel"/>
+                </row>
+              </column>
+              <column>
+                <button action="assignCategory" marginLeft="10"/>
+              </column>
               <filler fill="horizontal"/>
             </row>
           </grid>

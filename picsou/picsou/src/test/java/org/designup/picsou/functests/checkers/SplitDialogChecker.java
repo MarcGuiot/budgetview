@@ -114,7 +114,7 @@ public class SplitDialogChecker {
         splitsTable.editCell(row, SplitTransactionDialog.CATEGORY_COLUMN_INDEX).getButton("Add").click();
       }
     }));
-    dialog.selectCategory(TransactionChecker.getCategoryName(category));
+    dialog.selectCategory(TransactionChecker.getCategoryName(category), true);
     return this;
   }
 
