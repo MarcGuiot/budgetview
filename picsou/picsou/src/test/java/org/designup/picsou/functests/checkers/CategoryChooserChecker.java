@@ -17,7 +17,7 @@ public class CategoryChooserChecker extends DataChecker {
     return this;
   }
 
-  public CategoryChooserChecker addCategory(String categoryName) {
+  public CategoryChooserChecker selectCategory(String categoryName) {
     window.getToggleButton(categoryName).click();
     return this;
   }
@@ -48,6 +48,14 @@ public class CategoryChooserChecker extends DataChecker {
     }
     return this;
   }
+
+  public CategoryChooserChecker checkUnSelected(MasterCategory... category) {
+    for (MasterCategory masterCategory : category) {
+      UISpecAssert.assertFalse(getCategoryName(masterCategory) + " not unselected.", window.getToggleButton(getCategoryName(masterCategory)).isSelected());
+    }
+    return this;
+  }
+
 
   public void cancel() {
     window.getButton("cancel").click();

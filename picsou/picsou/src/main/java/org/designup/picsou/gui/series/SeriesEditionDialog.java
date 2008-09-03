@@ -32,12 +32,9 @@ import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
-import org.globsframework.model.utils.GlobFieldComparator;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.*;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
-import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -59,7 +56,6 @@ public class SeriesEditionDialog {
   private Glob currentSeries;
   private GlobListView seriesList;
   private GlobListView categoryList;
-  private GlobLabelView singleCategoryLabel;
   private SeriesEditionDialog.AssignCategoryAction assignCategoryAction;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
@@ -112,12 +108,13 @@ public class SeriesEditionDialog {
         }
       }
     };
-    singleCategoryLabel =
-      GlobLabelView.init(Series.TYPE, localRepository, localDirectory, labelStringifier)
-        .setAutoHideIfEmpty(true);
+    GlobLabelView singleCategoryLabel = GlobLabelView.init(Series.TYPE, localRepository, localDirectory, labelStringifier)
+      .setAutoHideIfEmpty(true);
     builder.add("singleCategoryLabel", singleCategoryLabel.getComponent());
 
     categoryList = GlobListView.init(SeriesToCategory.TYPE, localRepository, localDirectory)
+      .setComparator(new GlobLinkComparator(SeriesToCategory.CATEGORY, localRepository,
+                                            categoryStringifier.getComparator(localRepository)))
       .setRenderer(new AbstractGlobStringifier() {
         public String toString(Glob glob, GlobRepository repository) {
           Glob category = repository.get(Key.create(Category.TYPE, glob.get(SeriesToCategory.CATEGORY)));
@@ -148,8 +145,10 @@ public class SeriesEditionDialog {
           budgetTable.setFilter(GlobMatchers.and(fieldEquals(SeriesBudget.ACTIVE, true),
                                                  fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID))));
           assignCategoryAction.setEnabled(true);
+          categoryList.setFilter(GlobMatchers.fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)));
         }
         else {
+          categoryList.setFilter(GlobMatchers.NONE);
           budgetTable.setFilter(GlobMatchers.NONE);
           assignCategoryAction.setEnabled(false);
         }
@@ -347,16 +346,24 @@ public class SeriesEditionDialog {
 
     private class SeriesCategoryChooserCallback implements CategoryChooserCallback {
       public void processSelection(GlobList categories) {
-        localRepository.delete(localRepository.getAll(SeriesToCategory.TYPE,
-                                                      GlobMatchers.linkedTo(currentSeries, SeriesToCategory.SERIES)));
-        for (Glob category : categories) {
-          localRepository.setTarget(currentSeries.getKey(), Series.DEFAULT_CATEGORY, category.getKey());
-          if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
-            localRepository.create(SeriesToCategory.TYPE,
-                                   value(SeriesToCategory.SERIES, currentSeries.get(Series.ID)),
-                                   value(SeriesToCategory.CATEGORY, category.get(Category.ID)));
+        localRepository.enterBulkDispatchingMode();
+        try {
+          localRepository.delete(localRepository.getAll(SeriesToCategory.TYPE,
+                                                        GlobMatchers.linkedTo(currentSeries, SeriesToCategory.SERIES)));
+          localRepository.setTarget(currentSeries.getKey(), Series.DEFAULT_CATEGORY, null);
+          for (Glob category : categories) {
+            localRepository.setTarget(currentSeries.getKey(), Series.DEFAULT_CATEGORY, category.getKey());
+            if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
+              localRepository.create(SeriesToCategory.TYPE,
+                                     value(SeriesToCategory.SERIES, currentSeries.get(Series.ID)),
+                                     value(SeriesToCategory.CATEGORY, category.get(Category.ID)));
+            }
           }
         }
+        finally {
+          localRepository.completeBulkDispatchingMode();
+        }
+
       }
 
       public Set<Integer> getPreselectedCategoryIds() {

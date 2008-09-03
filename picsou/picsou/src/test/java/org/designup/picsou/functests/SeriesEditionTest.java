@@ -326,15 +326,18 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker edition = budgetView.envelopes
       .createSeries()
       .setName("courant")
-      .setCategory(MasterCategory.FOOD, MasterCategory.CLOTHING);
+      .setCategory(MasterCategory.CLOTHING, MasterCategory.FOOD);
     edition.openCategory()
-      .checkSelected(MasterCategory.FOOD, MasterCategory.CLOTHING)
+      .checkSelected(MasterCategory.CLOTHING, MasterCategory.FOOD)
       .cancel();
 
     edition.selectAllMonths()
       .setAmount("-1000")
       .checkSingleCategorizeIsVisible(false)
-      .checkMultiCategorizeIsVisible(true)
+      .checkMultiCategorizeIsVisible(true);
+
+    edition.createSeries()
+      .checkCategory()
       .validate();
 
     budgetView.envelopes.checkSeries("courant", 0, 1000);
@@ -347,6 +350,25 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
     transactionDetails.checkCategory(MasterCategory.CLOTHING);
     transactionDetails.checkSeries("courant");
+  }
+
+  public void testUnselectAllCategory() throws Exception {
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
+    edition
+      .setName("courant")
+      .setCategory(MasterCategory.CLOTHING, MasterCategory.FOOD)
+      .unselectCategory(MasterCategory.FOOD, MasterCategory.CLOTHING)
+      .checkCategory()
+      .openCategory()
+      .checkUnSelected(MasterCategory.FOOD, MasterCategory.CLOTHING)
+      .validate();
+    edition.checkCategory();
+    edition
+      .setCategory(MasterCategory.CLOTHING, MasterCategory.FOOD)
+      .createSeries()
+      .checkCategory()
+      .validate();
   }
 
   public void testIncomCategorization() throws Exception {

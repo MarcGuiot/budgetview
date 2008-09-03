@@ -25,7 +25,9 @@
                 <row autoHideSource="multipleCategoryList">
                   <label name="multiCategoryLabel" text="$seriesEdition.category.label"
                          autoHideSource="multipleCategoryList"/>
-                  <list ref="multipleCategoryList"/>
+                  <scrollPane preferredSize="(250,50)">
+                    <list ref="multipleCategoryList"/>
+                  </scrollPane>
                 </row>
                 <row>
                   <label ref="singleCategoryLabel"/>
