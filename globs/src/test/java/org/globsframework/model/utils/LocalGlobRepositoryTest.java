@@ -150,4 +150,23 @@ public class LocalGlobRepositoryTest extends TestCase {
 
     assertTrue(local.getCurrentChanges().isEmpty());
   }
+
+  public void testRollbackRemoveLocalyCreated() throws Exception {
+    GlobRepository source = checker.parse(
+      "<dummyObject id='0' name='name'/>" +
+      "<dummyObject id='1' name='name' value='1.1'/>" +
+      "<dummyObject id='2' name='name' value='2.2'/>");
+
+    LocalGlobRepository local = LocalGlobRepositoryBuilder.init(source).copy(DummyObject.TYPE).get();
+
+    local.create(DummyObject2.TYPE,
+                 value(DummyObject2.ID, 3),
+                 value(DummyObject2.LABEL, "obj3"));
+
+    local.rollback();
+    checker.assertEquals(local,
+                         "<dummyObject id='0' name='name'/>" +
+                         "<dummyObject id='1' name='name' value='1.1'/>" +
+                         "<dummyObject id='2' name='name' value='2.2'/>");
+  }
 }

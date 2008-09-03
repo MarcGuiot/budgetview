@@ -145,6 +145,10 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     return selection;
   }
 
+  public void setVisible(boolean visible) {
+    jList.setVisible(visible);
+  }
+
   public void selectFirst() {
     jList.setValueIsAdjusting(true);
     try {
