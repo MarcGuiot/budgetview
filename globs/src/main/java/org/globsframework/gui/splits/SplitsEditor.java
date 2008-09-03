@@ -36,9 +36,9 @@ public class SplitsEditor {
     GuiUtils.showCentered(frame);
   }
 
-  public static void show(JDialog dialog, Directory directory) {
+  public static void show(Window window, Directory directory) {
     ColorService colorService = directory.get(ColorService.class);
-    colorService.autoUpdate(dialog);
+    colorService.autoUpdate(window);
 
     JFrame frame =
       SplitsBuilder.init(directory)

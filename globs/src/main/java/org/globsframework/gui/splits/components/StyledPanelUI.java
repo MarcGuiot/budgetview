@@ -110,13 +110,25 @@ public class StyledPanelUI extends BasicPanelUI {
 
     int innerWidth = rectWidth - 2 * borderWidth;
     int innerHeight = rectHeight - 2 * borderWidth;
-    int widthRadius = Math.max(0, cornerRadius  - borderWidth);
-    int heightRadius = Math.max(0, cornerRadius  - borderWidth);
 
-    GradientPaint gradient = new GradientPaint(x, y, topColor, x, height, bottomColor);
-    g2d.setPaint(gradient);
-    g2d.fillRoundRect(x + borderWidth, y + borderWidth,
-                      innerWidth, innerHeight,
-                      widthRadius, heightRadius);
+    if (topColor.equals(bottomColor)) {
+      g2d.setPaint(topColor);
+    }
+    else {
+      GradientPaint gradient = new GradientPaint(x, y, topColor, x, height, bottomColor);
+      g2d.setPaint(gradient);
+    }
+
+    if (cornerRadius > 0) {
+      int widthRadius = Math.max(0, cornerRadius - borderWidth);
+      int heightRadius = Math.max(0, cornerRadius - borderWidth);
+      g2d.fillRoundRect(x + borderWidth, y + borderWidth,
+                        innerWidth, innerHeight,
+                        widthRadius, heightRadius);
+    }
+    else {
+      g2d.fillRect(x + borderWidth, y + borderWidth,
+                   innerWidth, innerHeight);
+    }
   }
 }
