@@ -146,7 +146,8 @@ public class UISpecDisplay {
   }
 
   public void runInNewThread(Runnable runnable) {
-    ThreadManager.ThreadDelegate threadDelegate = ThreadManager.getInstance().addRunnable("", runnable);
+    ThreadManager.ThreadDelegate threadDelegate =
+      ThreadManager.getInstance().addRunnable("", runnable);
     threads.add(threadDelegate);
   }
 }
