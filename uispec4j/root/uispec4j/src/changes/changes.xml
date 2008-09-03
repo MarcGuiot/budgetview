@@ -5,6 +5,9 @@
 
   <body>
     <release version="2.0" date="???">
+      <action dev="rmedina" type="add">
+        TextBox does not allow editing text when the underlying component is disabled.
+      </action>
       <action dev="mguiot" type="add">
         Added table.getRowIndex(int columnIndex, Object value) and table.getRowIndices(int columnIndex, Object value);
       </action>

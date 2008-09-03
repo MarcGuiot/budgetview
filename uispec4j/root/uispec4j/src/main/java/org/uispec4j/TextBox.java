@@ -15,6 +15,7 @@ public class TextBox extends AbstractUIComponent {
   public static final Class[] SWING_CLASSES = {JTextComponent.class, JLabel.class};
 
   private Handler handler;
+  private static final String TEXT_DISABLED_ERROR = "The text component is not enabled - text cannot be entered";
 
   public TextBox(JTextComponent textComponent) {
     this.handler = TextBoxHandlerForHtmlTextComponent.init(textComponent);
@@ -47,6 +48,9 @@ public class TextBox extends AbstractUIComponent {
    * Replaces the text box contents and simulates pressing the Enter key.
    */
   public void setText(String text) {
+    if (!handler.getAwtComponent().isEnabled()) {
+      AssertAdapter.fail(TEXT_DISABLED_ERROR);
+    }
     handler.setText(text);
   }
 
@@ -54,6 +58,9 @@ public class TextBox extends AbstractUIComponent {
    * Inserts text at the given position without pressing Enter.
    */
   public void insertText(String text, int position) {
+    if (!handler.getAwtComponent().isEnabled()) {
+      AssertAdapter.fail(TEXT_DISABLED_ERROR);
+    }
     handler.insertText(text, position);
   }
 
@@ -61,6 +68,9 @@ public class TextBox extends AbstractUIComponent {
    * Inserts text at the given position without pressing Enter.
    */
   public void appendText(String text) {
+    if (!handler.getAwtComponent().isEnabled()) {
+      AssertAdapter.fail(TEXT_DISABLED_ERROR);
+    }
     handler.appendText(text);
   }
 
@@ -68,6 +78,9 @@ public class TextBox extends AbstractUIComponent {
    * Clears the text without validating. Use <code>setText("")</code> to achieve the same effect with validation.
    */
   public void clear() {
+    if (!handler.getAwtComponent().isEnabled()) {
+      AssertAdapter.fail(TEXT_DISABLED_ERROR);
+    }
     handler.clear();
   }
 
