@@ -16,6 +16,7 @@ import java.awt.event.WindowEvent;
 public class PicsouDialog extends JDialog {
 
   public static boolean MODAL = true;
+  private static final Insets BUTTON_INSETS = new Insets(0, 10, 10, 10);
 
   public static PicsouDialog create(JFrame owner) {
     return new PicsouDialog(owner);
@@ -49,6 +50,16 @@ public class PicsouDialog extends JDialog {
     return modalWindow;
   }
 
+  public static PicsouDialog createWithButton(String name, Window owner, JPanel panel, Action action) {
+    PicsouDialog dialog = create(owner, name);
+    dialog.setContentPane(GridBagBuilder.init()
+      .add(panel, 0, 0, 2, 1, Gui.NO_INSETS)
+      .add(Box.createHorizontalGlue(), 0, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER)
+      .add(new JButton(action), 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS)
+      .getPanel());
+    return dialog;
+  }
+
   public static PicsouDialog createWithButtons(String name, Window owner, JPanel panel, Action ok, Action cancel) {
     PicsouDialog dialog = create(owner, name);
     dialog.addInPanelWithButton(panel, ok, cancel);
@@ -63,7 +74,7 @@ public class PicsouDialog extends JDialog {
     if (cancel != null) {
       buttonCount++;
     }
-    Insets noInsets = new Insets(0, 0, 0, 0);
+    Insets noInsets = Gui.NO_INSETS;
     GridBagBuilder builder = GridBagBuilder.init()
       .add(panel, 0, 0, buttonCount + 1, 1, noInsets);
 

@@ -125,13 +125,13 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
         }
       }
       for (Glob glob : transactionToCategory) {
-        GlobList existingTransctionToCategory =
+        GlobList existingTransactionToCategory =
           repository.getAll(TransactionToCategory.TYPE,
                             GlobMatchers.and(
                               GlobMatchers.fieldEquals(TransactionToCategory.TRANSACTION,
                                                        glob.get(TransactionToCategory.TRANSACTION)),
                               GlobMatchers.fieldEquals(TransactionToCategory.CATEGORY, targetId)));
-        if (existingTransctionToCategory.isEmpty()) {
+        if (existingTransactionToCategory.isEmpty()) {
           repository.create(TransactionToCategory.TYPE,
                             value(TransactionToCategory.CATEGORY, targetId),
                             value(TransactionToCategory.TRANSACTION,
@@ -155,7 +155,6 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
 
   protected abstract JDialog getParent();
 
-
   static class NewCategoryDialog {
     private GlobRepository repository;
     private PicsouDialog categoryChooserDialog;
@@ -177,13 +176,14 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
       GlobsPanelBuilder builder = new GlobsPanelBuilder(DeleteCategoryAction.class,
                                                         "/layout/deleteCategory.splits", repository, localDirectory);
 
-      builder.add("warmText", new JTextArea(Lang.get("delete.category.warm.text")));
+      builder.add("warningText", new JTextArea(Lang.get("delete.category.warning.text")));
       GlobListStringifier categoryStringifier = GlobListStringifiers
         .valueForEmpty(Lang.get("delete.category.empty"), localDirectory.get(DescriptionService.class).getListStringifier(Category.TYPE));
       builder.addLabel("categoryLabel", Category.TYPE, categoryStringifier);
       CategorieChooserAction chooserAction =
         new CategorieChooserAction(masterId, categoryChooserDialog, localDirectory, repository);
       builder.add("categoryChooser", chooserAction);
+
       final NewCategoryDialog.OkAction okAction = new OkAction();
       categoryChooserDialog.addInPanelWithButton(builder.<JPanel>load(), okAction, new CancelAction());
       selectionService.addListener(new GlobSelectionListener() {

@@ -35,8 +35,12 @@ public class Gui {
   public static final int DEFAULT_COLUMN_CHAR_WIDTH = 7;
 
   private static Color selectionBackground;
+  private static final boolean IS_MACOSX = ((String)AccessController.doPrivileged(new GetPropertyAction("os.name"))).contains(MAC_PLATFORM_ID);
+  private static final boolean IS_LINUX = ((String)AccessController.doPrivileged(new GetPropertyAction("os.name"))).contains(LINUX_PLATFORM_ID);
+  public static final Insets NO_INSETS = new Insets(0, 0, 0, 0);
 
   static {
+
     Font labelFont = new JLabel().getFont();
 
     if (isMacOSX()) {
@@ -59,11 +63,11 @@ public class Gui {
   }
 
   public static boolean isMacOSX() {
-    return ((String)AccessController.doPrivileged(new GetPropertyAction("os.name"))).contains(MAC_PLATFORM_ID);
+    return IS_MACOSX;
   }
 
   public static boolean isLinux() {
-    return ((String)AccessController.doPrivileged(new GetPropertyAction("os.name"))).contains(LINUX_PLATFORM_ID);
+    return IS_LINUX;
   }
 
   public static Font getDefaultFont() {

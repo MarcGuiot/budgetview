@@ -150,7 +150,7 @@
 
     <!-- Selection toggles -->
     <ui name="selectionToggle" class="org.designup.picsou.gui.components.SelectionToggleUI"/>
-    <style selector="toggleButton.selector" ui="selectionToggle" foreground="#000099"/>
+    <style selector="toggleButton.selector" ui="selectionToggle" foreground="#0000BB"/>
     <style selector="toggleButton.masterCategorySelector" ui="selectionToggle" foreground="#0000CC"
            fill="none" anchor="west" font="-,bold,14"/>
     <style selector="toggleButton.subCategorySelector" ui="selectionToggle" foreground="#0000CC"

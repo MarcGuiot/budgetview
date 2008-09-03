@@ -20,6 +20,7 @@ SeriesEditionDialog
 * Edition des dates debut/find (combo mois + spinbox annees) - voir updates table seriesBudget
 * MAJ temps reel du nom de la serie pendant l'edition (propriete editor?)
 * Griser / masquer les checkbox de mois en dehors de la plage startDate/endDate
+* Creation de serie : selectionner automatiquement le texte du nom
 
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)

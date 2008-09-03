@@ -70,8 +70,7 @@ public class MonthChooser {
     selectedMonth = month == null ? -1 : month;
     selectedYear = year;
     currentYear = year;
-    dialog = PicsouDialog.create(parent, Lang.get("month.chooser.title"));
-    dialog.addInPanelWithButton(panel, null, new Cancel());
+    dialog = PicsouDialog.createWithButton(Lang.get("month.chooser.title"), parent, panel, new CancelAction());
     update();
     dialog.pack();
     dialog.setVisible(true);
@@ -132,15 +131,15 @@ public class MonthChooser {
       updateButton();
     }
 
-    public void updateButton(){
+    public void updateButton() {
       for (int i = 0; i < buttons.length; i++) {
         buttons[i].setSelected(currentYear == selectedYear && selectedMonth == i + 1);
       }
     }
   }
 
-  private class Cancel extends AbstractAction {
-    private Cancel() {
+  private class CancelAction extends AbstractAction {
+    private CancelAction() {
       super(Lang.get("cancel"));
     }
 

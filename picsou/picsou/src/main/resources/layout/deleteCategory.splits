@@ -3,7 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <column styleClass="dialog" preferredSize="(300,120)" margin="20">
-    <textArea ref="warmText" editable="false"/>
+    <textArea ref="warningText" editable="false"/>
     <row>
       <filler fill="horizontal"/>
       <label text="$delete.category.label"/>
