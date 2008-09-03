@@ -85,7 +85,7 @@ public class Gauge extends JPanel {
       overrunError = invertedSignIsAnError;
       warningShown = overrunError && showWarningForErrors;
     }
-    else if (absActual > absTarget) {
+    else if (absActual - absTarget >= 0.01) {
       fillPercent = absTarget / absActual;
       overrunPercent = 1 - fillPercent;
       emptyPercent = 0;
@@ -94,6 +94,9 @@ public class Gauge extends JPanel {
     }
     else {
       fillPercent = absActual / absTarget;
+      if (fillPercent > 1) {
+        fillPercent = 1;
+      }
       overrunPercent = 0;
       emptyPercent = 1 - fillPercent;
       overrunError = false;

@@ -105,6 +105,15 @@ public class GaugeTest extends TestCase {
       .checkWarningNotShown();
   }
 
+  public void testAmountsAreRoundedToTwoDecimals() throws Exception {
+    init(true, true, true)
+      .set(5.552, 5.551)
+      .checkFill(1.0)
+      .checkOverrun(0.0, false)
+      .checkEmpty(0)
+      .checkWarningNotShown();
+  }
+
   private GaugeChecker init() {
     return init(true, true, true);
   }
