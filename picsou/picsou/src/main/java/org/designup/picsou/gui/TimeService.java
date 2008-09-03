@@ -30,4 +30,8 @@ public class TimeService {
   public static void setCurrentDate(Date date) {
     today = Month.getMonthId(date);
   }
+
+  public static int getCurrentMonth() {
+    return today;
+  }
 }

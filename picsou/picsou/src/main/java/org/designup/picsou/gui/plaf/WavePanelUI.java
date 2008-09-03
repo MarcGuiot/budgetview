@@ -40,7 +40,7 @@ public class WavePanelUI extends BasicPanelUI {
     int w = d.width;
     int h = d.height;
 
-    Graphics2D g2 = (Graphics2D)g.create();
+    Graphics2D g2 = (Graphics2D)g;
 
     Rectangle rect = new Rectangle(0, 0, w, h);
     GradientPaint gradient = new GradientPaint(0, 0, topColor, 0, h, bottomColor);

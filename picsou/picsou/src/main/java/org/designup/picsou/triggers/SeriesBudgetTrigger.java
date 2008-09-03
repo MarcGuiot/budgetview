@@ -49,13 +49,15 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
     }
     int fromIndex = 0;
     Integer firstMonth = series.get(Series.FIRST_MONTH);
-    Integer fromDate = firstMonth == null ? monthIds[0] : Math.max(firstMonth, monthIds[0]);
+    Integer fromDate = firstMonth == null ? monthIds[0] :
+                       Math.min(Math.max(firstMonth, monthIds[0]), monthIds[monthIds.length - 1]);
     if (fromDate != null) {
       fromIndex = Arrays.binarySearch(monthIds, fromDate);
     }
     int toIndex = monthIds.length - 1;
     Integer lastMonth = series.get(Series.LAST_MONTH);
-    Integer toDate = lastMonth == null ? monthIds[monthIds.length - 1] : Math.min(lastMonth, monthIds[monthIds.length - 1]);
+    Integer toDate = lastMonth == null ? monthIds[monthIds.length - 1] :
+                     Math.max(Math.min(lastMonth, monthIds[monthIds.length - 1]), monthIds[0]);
     if (toDate == null) {
       toIndex = Arrays.binarySearch(monthIds, toDate);
     }

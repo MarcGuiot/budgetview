@@ -270,6 +270,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .createSeries()
       .checkSeriesList("New series")
       .checkSeriesSelected("New series")
+      .setCategory(MasterCategory.TELECOMS)
       .checkName("New series")
       .setName("Free Telecom")
       .checkSeriesList("Free Telecom")
@@ -315,7 +316,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkTable(new Object[][]{
         {"2008", "July", "-70.00"},
       })
-      .validate();
+      .cancel();
   }
 
   public void testCreateEnvelopeSeriesWithManyCategory() throws Exception {
@@ -338,6 +339,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     edition.createSeries()
       .checkCategory()
+      .setName("bank")
+      .setCategory(MasterCategory.BANK)
       .validate();
 
     budgetView.envelopes.checkSeries("courant", 0, 1000);
@@ -368,7 +371,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.CLOTHING, MasterCategory.FOOD)
       .createSeries()
       .checkCategory()
-      .validate();
+      .cancel();
   }
 
   public void testIncomCategorization() throws Exception {
@@ -377,7 +380,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .createSeries()
       .checkCategorizeEnable(true)
       .checkMultiCategorizeIsVisible(false)
+      .checkOk(false)
       .setCategory(MasterCategory.INCOME)
+      .checkOk(true)
       .validate();
   }
 
@@ -387,14 +392,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .createSeries().unselect()
       .checkCategorizeEnable(false)
       .checkCategoryListEnable(true)
-      .validate();
+      .cancel();
 
     budgetView.income
       .createSeries().unselect()
       .checkCategorizeEnable(false)
       .checkCategorizeLabel()
       .checkMultiCategorizeIsVisible(false)
-      .validate();
+      .cancel();
   }
 
   public void testCancel() throws Exception {
@@ -406,6 +411,20 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
     budgetView.envelopes.createSeries()
       .checkSeriesList("New series")
-      .validate();
+      .cancel();
+  }
+
+  public void testEditDate() throws Exception {
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setStartDate(200809)
+      .setEndDate(200810)
+      .checkStartDate("Sep 2008")
+      .checkEndDate("Oct 2008")
+      .removeBeginDate()
+      .removeEndDate()
+      .checkNoStartDate()
+      .checkNoEndDate()
+      .cancel();
   }
 }

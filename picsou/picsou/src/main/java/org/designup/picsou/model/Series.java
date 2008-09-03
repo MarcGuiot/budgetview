@@ -2,12 +2,14 @@ package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.*;
+import org.globsframework.metamodel.annotations.DefaultBoolean;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.NamingField;
+import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
-import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -34,8 +36,10 @@ public class Series {
   @Target(ProfileType.class)
   public static LinkField PROFILE_TYPE;
 
+  @Target(Month.class)
   public static IntegerField FIRST_MONTH;
 
+  @Target(Month.class)
   public static IntegerField LAST_MONTH;
 
   public static IntegerField OCCURENCES_COUNT;

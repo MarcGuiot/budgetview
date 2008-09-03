@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
 import org.uispec4j.Button;
@@ -224,38 +225,49 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker setStartDate(int monthId) {
-    setDate("Start date", monthId);
+    setDate("beginSeriesCalendar", monthId);
     return this;
   }
 
   public SeriesEditionDialogChecker checkNoStartDate() {
-    checkDate("Start date", "");
+    assertFalse(dialog.getTextBox("beginSeriesDate").isVisible());
+    assertFalse(dialog.getButton("deleteBeginSeriesDate").isVisible());
     return this;
   }
 
-  public SeriesEditionDialogChecker checkStartDate(int monthId) {
-    checkDate("Start date", monthId);
+  public SeriesEditionDialogChecker checkStartDate(String monthId) {
+    checkDate("beginSeriesDate", monthId);
     return this;
   }
 
   public SeriesEditionDialogChecker setEndDate(int monthId) {
-    setDate("End date", monthId);
+    setDate("endSeriesCalendar", monthId);
     return this;
   }
 
   public SeriesEditionDialogChecker checkNoEndDate() {
-    checkDate("End date", "");
+    assertFalse(dialog.getTextBox("endSeriesDate").isVisible());
+    assertFalse(dialog.getButton("deleteEndSeriesDate").isVisible());
     return this;
   }
 
-  public SeriesEditionDialogChecker checkEndDate(int monthId) {
-    checkDate("End date", monthId);
+  public SeriesEditionDialogChecker checkEndDate(String monthId) {
+    checkDate("endSeriesDate", monthId);
     return this;
   }
 
   private void setDate(String labelName, int monthId) {
-    String text = Month.toMonth(monthId) + "/" + Month.toYear(monthId);
-    dialog.getTextBox(ComponentMatchers.componentLabelFor(labelName)).setText(text);
+    MonthChooserChecker month = new MonthChooserChecker(
+      WindowInterceptor.getModalDialog(dialog.getButton(labelName).triggerClick()));
+    int currentYear = Month.toYear(TimeService.getCurrentMonth());
+    int year = Month.toYear(monthId);
+    for (; year < currentYear; year++) {
+      month.previousYear();
+    }
+    for (; currentYear < year; currentYear++) {
+      month.nextYear();
+    }
+    month.selectMonthInCurrent(Month.toMonth(monthId));
   }
 
   private void checkDate(String labelName, int monthId) {
@@ -264,7 +276,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   private void checkDate(String labelName, String text) {
-    assertThat(dialog.getTextBox(ComponentMatchers.componentLabelFor(labelName)).textEquals(text));
+    assertThat(dialog.getTextBox(labelName).textEquals(text));
   }
 
   public SeriesEditionDialogChecker checkAllMonthsDisabled() {
@@ -341,5 +353,21 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   private TextBox getMultiCategotyLabel() {
     return dialog.getTextBox("multiCategoryLabel");
+  }
+
+  public SeriesEditionDialogChecker checkOk(boolean isEnable) {
+    UISpecAssert.assertEquals(isEnable, dialog.getButton("ok").isEnabled());
+    return this;
+
+  }
+
+  public SeriesEditionDialogChecker removeBeginDate() {
+    dialog.getButton("deleteBeginSeriesDate").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker removeEndDate() {
+    dialog.getButton("deleteEndSeriesDate").click();
+    return this;
   }
 }
