@@ -56,6 +56,18 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker unselectCategory(MasterCategory... category) {
+    Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
+    CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
+    for (MasterCategory masterCategory : category) {
+      categoryChooser.selectCategory(getCategoryName(masterCategory));
+    }
+    categoryChooser.checkUnSelected(category);
+    categoryChooser.validate();
+    return this;
+  }
+
+
   public SeriesEditionDialogChecker setCategory(MasterCategory... category) {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
     CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
@@ -65,21 +77,37 @@ public class SeriesEditionDialogChecker extends DataChecker {
     }
     else {
       for (MasterCategory masterCategory : category) {
-        categoryChooser.addCategory(getCategoryName(masterCategory));
+        categoryChooser.selectCategory(getCategoryName(masterCategory));
       }
       categoryChooser.validate();
     }
+    checkCategory(category);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkCategory(MasterCategory... category) {
     if (oneSelection) {
-      assertThat(dialog.getTextBox("singleCategoryLabel").textEquals("Category:" + getCategoryName(category[0])));
+      if (category.length == 0) {
+        assertThat(dialog.getTextBox("singleCategoryLabel").textContains("Select a category"));
+      }
+      else {
+        assertThat(dialog.getTextBox("singleCategoryLabel").textEquals("Category:" + getCategoryName(category[0])));
+      }
     }
     else {
-      String[] categoryName = new String[category.length];
-      int i = 0;
-      for (MasterCategory masterCategory : category) {
-        categoryName[i] = getCategoryName(masterCategory);
-        i++;
+      if (category.length == 0) {
+        assertThat(dialog.getTextBox("singleCategoryLabel").textContains("Select a category"));
+        UISpecAssert.assertThat(dialog.getListBox("multipleCategoryList").isEmpty());
       }
-      UISpecAssert.assertThat(dialog.getListBox("multipleCategoryList").contains(categoryName));
+      else {
+        String[] categoryName = new String[category.length];
+        int i = 0;
+        for (MasterCategory masterCategory : category) {
+          categoryName[i] = getCategoryName(masterCategory);
+          i++;
+        }
+        UISpecAssert.assertThat(dialog.getListBox("multipleCategoryList").contentEquals(categoryName));
+      }
     }
     return this;
   }
