@@ -1,6 +1,7 @@
 package org.globsframework.gui;
 
 import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.utils.DummyIconLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.model.GlobChecker;
@@ -33,6 +34,6 @@ public abstract class GuiTestCase extends UISpecTestCase {
     directory.add(SelectionService.class, selectionService);
     directory.add(new ColorService());
     directory.add(new UIService());
-    directory.add(IconLocator.class, IconLocator.NULL);
+    directory.add(IconLocator.class, new DummyIconLocator());
   }
 }

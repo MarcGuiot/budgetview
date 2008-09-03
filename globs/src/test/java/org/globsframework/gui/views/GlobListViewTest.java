@@ -374,19 +374,16 @@ public class GlobListViewTest extends GuiComponentTestCase {
     assertTrue(listBox.selectionEquals("newName1"));
     listener.assertEmpty();
 
-    System.out.println("GlobListViewTest.testSelectionIsPreservedWhenTheOrderOfItemsIsChanged: 1");
     repository.update(key2, DummyObject.NAME, "zeNewName2");
     assertTrue(listBox.contentEquals("newName1", "zeNewName2"));
     assertTrue(listBox.selectionEquals("newName1"));
     listener.assertEmpty();
 
-    System.out.println("GlobListViewTest.testSelectionIsPreservedWhenTheOrderOfItemsIsChanged: 2");
     repository.update(key1, DummyObject.NAME, "zeRenamedName1");
     assertTrue(listBox.contentEquals("zeNewName2","zeRenamedName1"));
     assertTrue(listBox.selectionEquals("zeRenamedName1"));
     listener.assertEmpty();
 
-    System.out.println("GlobListViewTest.testSelectionIsPreservedWhenTheOrderOfItemsIsChanged: 3");
     repository.update(key1, DummyObject.NAME, "zeNewName1");
     assertTrue(listBox.contentEquals("zeNewName1","zeNewName2"));
     assertTrue(listBox.selectionEquals("zeNewName1"));

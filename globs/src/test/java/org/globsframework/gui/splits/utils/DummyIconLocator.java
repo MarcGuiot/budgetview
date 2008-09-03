@@ -25,6 +25,6 @@ public class DummyIconLocator implements IconLocator {
     if (ICON3_NAME.equals(name)) {
       return ICON3;
     }
-    throw new IconNotFound(name);
+    return new ImageIcon();
   }
 }
