@@ -3,19 +3,10 @@
 CategoryChooserDialog
 * Exclure "none" et "all"
 * Titre "choisir une categorie"
-* Edition des categories
-* Fermeture auto sur selection simple
-
-CategorizationDialog
-* Renommage de serie : mettre a jour le toggle
-* Boutons ajouter + edition pour les series hors occasional
-* Occasional : bouton edition categories
-* Message d'aide quand il n'y a pas de serie pour une budgetArea
+* Edition des categories a partir du chooser
 
 SeriesEditionDialog
 * Forcer la selection d'une categorie au moins
-* Afficher la/les categories en cours
-* Selection multi-categories pour les enveloppes, mono-categories pour les recurrences
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
 * Edition des dates debut/fin (MonthChooser) + voir updates table seriesBudget
 * MAJ temps reel du nom de la serie pendant l'edition (propriete editor?)
@@ -33,14 +24,17 @@ CategoryEditionDialog
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
 * Revoir nom par defaut lors d'un rename (cf internationalisation)
 
-- Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
+Serialisation
+* mettre en place des tests pour garantir l'upgrade data des utilisateurs
 
 
 CategorizationDialog
---------------------
-- Look
-- Aide a la premiere utilisation (messages)
-- afficher le nombre de transactions restantes
-- split de transaction
-- saisie de notes
+* Renommage de serie : mettre a jour le toggle
+* Occasional : bouton edition categories
+* Message d'aide quand il n'y a pas de serie pour une budgetArea
+* Look
+* Aide a la premiere utilisation (messages)
+* afficher le nombre de transactions restantes
+* split de transaction
+* saisie de notes
 
