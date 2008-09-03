@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class LocalGlobRepository extends GlobRepositoryDecorator {
 
-  private GlobRepository reference;
+  public GlobRepository reference;
   private List<GlobType> globTypes;
   private GlobList globs;
   private ChangeSetAggregator aggregator;
@@ -46,6 +46,7 @@ public class LocalGlobRepository extends GlobRepositoryDecorator {
     list.addAll(globs);
     Set<GlobType> globTypes = new HashSet<GlobType>(this.globTypes);
     globTypes.addAll(list.getTypes());
+    globTypes.addAll(getRepository().getTypes());
     getRepository().reset(list, globTypes.toArray(new GlobType[globTypes.size()]));
     aggregator = new ChangeSetAggregator(getRepository());
   }

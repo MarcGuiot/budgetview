@@ -21,9 +21,9 @@ public class BudgetViewChecker extends DataChecker {
 
   public BudgetViewChecker(Window window) {
     this.window = window;
-    this.income = new BudgetAreaChecker("incomeBudgetView", "Income");
-    this.recurring = new BudgetAreaChecker("recurringBudgetView", "Recurring");
-    this.envelopes = new BudgetAreaChecker("envelopeBudgetView", "Envelope");
+    this.income = new BudgetAreaChecker("incomeBudgetView", "Income", true);
+    this.recurring = new BudgetAreaChecker("recurringBudgetView", "Recurring", true);
+    this.envelopes = new BudgetAreaChecker("envelopeBudgetView", "Envelope", false);
     this.occasional = new OccasionalAreaChecker();
   }
 
@@ -31,10 +31,12 @@ public class BudgetViewChecker extends DataChecker {
 
     private String panelName;
     private String type;
+    private boolean oneSelection;
 
-    public BudgetAreaChecker(String panelName, String type) {
+    public BudgetAreaChecker(String panelName, String type, boolean oneSelection) {
       this.panelName = panelName;
       this.type = type;
+      this.oneSelection = oneSelection;
     }
 
     public void checkTitle(String title) {
@@ -90,7 +92,7 @@ public class BudgetViewChecker extends DataChecker {
     private SeriesEditionDialogChecker openSeriesEditionDialog(String seriesName) {
       Panel budgetPanel = window.getPanel(panelName);
       Window dialog = WindowInterceptor.getModalDialog(budgetPanel.getButton(seriesName).triggerClick());
-      return new SeriesEditionDialogChecker(dialog);
+      return new SeriesEditionDialogChecker(dialog, oneSelection);
     }
   }
 

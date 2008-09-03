@@ -25,7 +25,7 @@ public class DeleteCategoryChecker extends DataChecker {
           return new Trigger() {
             public void run() throws Exception {
               CategoryChooserChecker categoryChooser = new CategoryChooserChecker(window);
-              categoryChooser.selectCategory(name);
+              categoryChooser.selectCategory(name, true);
             }
           };
         }
