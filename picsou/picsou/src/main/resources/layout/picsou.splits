@@ -67,7 +67,8 @@
               <panel ref="accountView"/>
 
               <panel name="uncategorizedMessagePanel" styleClass="errorMessage"
-                     autoHideSource="uncategorizedMessage" preferredSize="(50,90)" weightY="0">
+                     autoHideSource="uncategorizedMessage" preferredSize="(50,90)"
+                     marginTop="20" weightY="0">
                 <column>
                   <textArea ref="uncategorizedMessage"/>
                   <button action="categorizeRemainingTransactions"/>

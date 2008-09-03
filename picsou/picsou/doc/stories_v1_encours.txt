@@ -19,10 +19,10 @@ SeriesEditionDialog
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
 * Edition des dates debut/find (combo mois + spinbox annees) - voir updates table seriesBudget
 * MAJ temps reel du nom de la serie pendant l'edition (propriete editor?)
-* Griser les checkbox de mois en dehors de la plage startDate/endDate
+* Griser / masquer les checkbox de mois en dehors de la plage startDate/endDate
 
 BudgetView
-* Ne pas montrer les series qui ne sont pas utilisees
+* Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)
 * Block "non classe" (avec bouton categorisation)
 
 Licence

@@ -21,6 +21,7 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.metamodel.fields.BooleanField;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -35,7 +36,6 @@ import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.metamodel.fields.BooleanField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -176,17 +176,23 @@ public class SeriesEditionDialog {
     doShow(getCurrentMonthId(), localRepository.get(series.getKey()));
   }
 
-  public void showNewSeries(GlobList transactions, BudgetArea budget) {
+  public void showNewSeries(GlobList transactions, BudgetArea budgetArea) {
     Glob createdSeries;
     try {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
-      budgetArea = BudgetArea.get(budget.getId());
+      this.budgetArea = BudgetArea.get(budgetArea.getId());
       Double initialAmount = computeMinAmountPerMonth(transactions);
+      String label;
+      if (!transactions.isEmpty()) {
+        Glob firstTransaction = transactions.get(0);
+        label = AllocationLearningService.anonymise(firstTransaction.get(Transaction.LABEL));
+      }
+      else {
+        label = Lang.get("seriesEdition.newSeries");
+      }
       SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
-      Glob firstTransaction = transactions.get(0);
-      String label = AllocationLearningService.anonymise(firstTransaction.get(Transaction.LABEL));
-      Integer day = days.last();
+      Integer day = days.isEmpty() ? 1 : days.last();
       createdSeries = createSeries(label, initialAmount, day);
     }
     finally {

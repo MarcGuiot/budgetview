@@ -265,8 +265,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
 
-    budgetView.recurring.editSeriesList()
-      .checkNoSeries()
+    budgetView.recurring
       .createSeries()
       .checkSeriesList("New series")
       .checkSeriesSelected("New series")
@@ -289,8 +288,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectBudget();
-    budgetView.recurring.editSeriesList()
-      .checkNoSeries()
+    budgetView.recurring
       .createSeries()
       .createSeries()
       .checkSeriesList("New series", "New series")

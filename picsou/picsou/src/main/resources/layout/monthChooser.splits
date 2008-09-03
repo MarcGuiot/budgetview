@@ -4,36 +4,30 @@
 
   <panel styleClass="dialog" opaque="true" margin="10">
     <row>
-    <column>
-      <label ref="previousYearLabel"/>
-      <repeat ref="previousYearMonths" gridWrapLimit="3">
-        <column>
+      <column>
+        <label ref="previousYearLabel"/>
+        <repeat ref="previousYearMonths" gridWrapLimit="3">
           <toggleButton ref="month"/>
-        </column>
-      </repeat>
-    </column>
-    <column>
-      <row>
-        <button action="previousPageAction" name="previousPageAction"/>
-        <button action="previousYearAction" name="previousYearAction"/>
-        <label ref="currentYearLabel"/>
-        <button action="nextYearAction" name="nextYearAction"/>
-        <button action="nextPageAction" name="nextPageAction"/>
-      </row>
-      <repeat ref="currentYearMonths" gridWrapLimit="3">
-        <column>
+        </repeat>
+      </column>
+      <column>
+        <row>
+          <button action="previousPageAction"/>
+          <button action="previousYearAction"/>
+          <label ref="currentYearLabel"/>
+          <button action="nextYearAction"/>
+          <button action="nextPageAction"/>
+        </row>
+        <repeat ref="currentYearMonths" gridWrapLimit="3">
           <toggleButton ref="month"/>
-        </column>
-      </repeat>
-    </column>
-    <column>
-      <label ref="nextYearLabel"/>
-      <repeat ref="nextYearMonths" gridWrapLimit="3">
-        <column>
+        </repeat>
+      </column>
+      <column>
+        <label ref="nextYearLabel"/>
+        <repeat ref="nextYearMonths" gridWrapLimit="3">
           <toggleButton ref="month"/>
-        </column>
-      </repeat>
-    </column>
+        </repeat>
+      </column>
     </row>
   </panel>
 </splits>
