@@ -171,7 +171,7 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
 
     private boolean selectTargetCategory(Integer masterId, JDialog dialog) {
       localDirectory.add(selectionService);
-      categoryChooserDialog = PicsouDialog.create(dialog, Lang.get("delete.category.title.label"));
+      categoryChooserDialog = PicsouDialog.create(dialog, Lang.get("delete.category.title.label"), localDirectory);
 
       GlobsPanelBuilder builder = new GlobsPanelBuilder(DeleteCategoryAction.class,
                                                         "/layout/deleteCategory.splits", repository, localDirectory);

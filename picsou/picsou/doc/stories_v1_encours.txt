@@ -3,7 +3,6 @@
 CategoryChooserDialog
 * Exclure "none" et "all"
 * Titre "choisir une categorie"
-* Edition des categories a partir du chooser
 
 SeriesEditionDialog
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
@@ -29,7 +28,6 @@ Serialisation
 
 CategorizationDialog
 * Renommage de serie : mettre a jour le toggle
-* Occasional : bouton edition categories
 * Message d'aide quand il n'y a pas de serie pour une budgetArea
 * Look
 * Aide a la premiere utilisation (messages)

@@ -61,6 +61,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     reopenedDialog.checkRecurringSeriesIsSelected("Internet");
     reopenedDialog.selectRecurringSeries("Rental", MasterCategory.HOUSE, true);
     reopenedDialog.checkRecurringSeriesIsNotSelected("Internet");
+    reopenedDialog.cancel();
   }
 
   public void testStandardEnvelopeTransaction() throws Exception {
@@ -162,6 +163,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
     dialog.selectTableRows(0);
+    dialog.cancel();
   }
 
   public void testUnassignedTransaction() throws Exception {
@@ -175,6 +177,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     dialog.checkNoBudgetAreaSelected();
     dialog.checkTextVisible("You must select the type first");
+    dialog.cancel();
   }
 
   public void testCancel() throws Exception {
@@ -225,6 +228,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     CategorizationDialogChecker reopenedDialog = transactions.categorize(1, 2);
     reopenedDialog.checkSelectedTableRows(0, 1);
     reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
+    reopenedDialog.cancel();
   }
 
   public void testMultiCategorizationFromErrorMessageBlock() throws Exception {
@@ -311,6 +315,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     dialog.selectTableRows(0);
     dialog.checkBudgetAreasAreEnabled();
+    dialog.cancel();
   }
 
   public void testAutomaticSelectionOfSimilarTransactions() throws Exception {
@@ -380,6 +385,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     CategorizationDialogChecker dialog = informationPanel.categorize();
     dialog.checkAutoSelectionEnabled(true);
     dialog.checkSelectedTableRows(0);
+    dialog.cancel();
   }
 
   public void testManualMultiSelectionOverridesTheAutomaticSelectionMechanism() throws Exception {
@@ -394,6 +400,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     dialog.checkAutoSelectionEnabled(true);
     dialog.selectTableRows(0, 2);
     dialog.checkSelectedTableRows(0, 2);
+    dialog.cancel();
   }
 
   public void testAutoHideCategorizedTransactions() throws Exception {
@@ -501,6 +508,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
     dialog.checkNoTransactionSelected();
+
+    dialog.cancel();
   }
 
   public void testSeriesList() throws Exception {
@@ -523,5 +532,32 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     dialog.checkContainsIncomeSeries("Salary");
+
+    dialog.cancel();
+  }
+
+  public void testEditingOccasionalCategories() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
+      .load();
+
+    CategorizationDialogChecker dialog = informationPanel.categorize();
+    dialog.editOccasionalCategories()
+      .selectMaster(MasterCategory.FOOD)
+      .createSubCategory("Apero")
+      .validate();
+
+    dialog.checkContainsOccasional(MasterCategory.FOOD, "Apero");
+
+    dialog.editOccasionalCategories()
+      .selectMaster(MasterCategory.FOOD)
+      .selectSub("Apero")
+      .deleteSubCategory()
+      .validate();
+
+    dialog.checkDoesNotContainOccasional(MasterCategory.FOOD, "Apero");
+
+    dialog.cancel();
   }
 }

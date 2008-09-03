@@ -72,7 +72,7 @@ public class SeriesEditionDialog {
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(selectionService);
 
-    dialog = PicsouDialog.create(parent, Lang.get("seriesEdition.title"));
+    dialog = PicsouDialog.create(parent, Lang.get("seriesEdition.title"), directory);
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/seriesEditionDialog.splits",
                                                       localRepository, localDirectory);

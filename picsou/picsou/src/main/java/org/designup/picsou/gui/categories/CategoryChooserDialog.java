@@ -117,7 +117,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
     dialog = PicsouDialog.createWithButtons(Lang.get("choose.category.title"), parent,
                                             builder.<JPanel>load(),
-                                            new OkAction(), new CloseAction());
+                                            new OkAction(), new CloseAction(), directory);
 
     JPanel panel = (JPanel)builder.getComponent("masterRepeat");
     panel.setLayout(new WrappedColumnLayout(4));

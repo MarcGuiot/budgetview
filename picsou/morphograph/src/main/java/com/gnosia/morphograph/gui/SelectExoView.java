@@ -2,7 +2,7 @@ package com.gnosia.morphograph.gui;
 
 import com.gnosia.morphograph.model.Select;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.color.ForegroundColorUpdater;
+import org.globsframework.gui.splits.color.ColorUpdaters;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -146,11 +146,11 @@ public class SelectExoView extends AbstractExoView {
 
     public void select() {
       if (isCorrectAnswer) {
-        colorService.install("select.answer.success", new ForegroundColorUpdater(button));
+        colorService.install("select.answer.success", ColorUpdaters.foreground(button));
         button.setIcon(okIcon);
       }
       else {
-        colorService.install("select.answer.failure", new ForegroundColorUpdater(button));
+        colorService.install("select.answer.failure", ColorUpdaters.foreground(button));
         button.setIcon(failedIcon);
       }
       completed = true;
@@ -161,7 +161,7 @@ public class SelectExoView extends AbstractExoView {
         return;
       }
       if (isCorrectAnswer) {
-        colorService.install("select.answer.success", new ForegroundColorUpdater(button));
+        colorService.install("select.answer.success", ColorUpdaters.foreground(button));
       }
       else {
         button.setEnabled(false);

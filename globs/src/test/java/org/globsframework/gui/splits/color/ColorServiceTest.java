@@ -49,8 +49,8 @@ public class ColorServiceTest extends UISpecTestCase {
     service.set("key2", Color.BLUE);
 
     JButton button = new JButton();
-    service.install("key1", new ForegroundColorUpdater(button));
-    service.install("key2", new BackgroundColorUpdater(button));
+    service.install("key1", ColorUpdaters.foreground(button));
+    service.install("key2", ColorUpdaters.background(button));
 
     assertEquals(Color.RED, button.getForeground());
     assertEquals(Color.BLUE, button.getBackground());

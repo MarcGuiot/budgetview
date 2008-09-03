@@ -6,10 +6,8 @@ import static org.designup.picsou.utils.generator.AmountGenerator.*;
 import static org.designup.picsou.utils.generator.CountGenerator.*;
 import static org.designup.picsou.utils.generator.DayGenerator.any;
 import static org.designup.picsou.utils.generator.DayGenerator.dayBetween;
-import org.globsframework.model.FieldValue;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.GlobPrinter;
 
 import java.io.File;
@@ -26,7 +24,6 @@ public class PicsouSampleGenerator {
 
   public static void main(String[] args) throws Exception {
     PicsouSampleGenerator generator = new PicsouSampleGenerator();
-    generator.init();
     generator.run(200612, 200807);
     generator.write("tmp/sample.ofx");
   }
@@ -34,11 +31,18 @@ public class PicsouSampleGenerator {
   private GlobRepository repository;
   private List<MonthGenerator> generators = new ArrayList<MonthGenerator>();
 
+  public PicsouSampleGenerator() {
+    this(GlobRepositoryBuilder.init().add(PicsouModel.get().getConstants()).get());
+  }
+
+  public PicsouSampleGenerator(GlobRepository repository) {
+    this.repository = repository;
+    init();
+  }
+
   private void init() {
 
-    repository = GlobRepositoryBuilder.init().add(PicsouModel.get().getConstants()).get();
-
-    repository.create(Bank.TYPE, FieldValue.value(Bank.ID, BANK_ID));
+    repository.create(Bank.TYPE, value(Bank.ID, BANK_ID));
 
     setAccount("23412342234", false);
 
@@ -50,21 +54,21 @@ public class PicsouSampleGenerator {
     add("RETRAIT DAB 1805 REF10674A01 CAR", upTo(6), anyOf(-20.0, -40.0, -60.0), any());
     add("RETRAIT DAB 1805 REF10674A01 CAR", upTo(6), anyOf(-20.0, -40.0, -60.0), any());
     add("TIP FRANCE TELECOM MASSY NOR 107", once(), between(-70.0, -100.0), dayBetween(1, 5));
-    add("PRLV FREE TELECOM FREE HAUTDEBIT", once(), value(-35.5), dayBetween(3, 10));
-    add("PRET IMMO 10674 131234 23", once(), value(-1742.34), any());
+    add("PRLV FREE TELECOM FREE HAUTDEBIT", once(), AmountGenerator.value(-35.5), dayBetween(3, 10));
+    add("PRET IMMO 10674 131234 23", once(), AmountGenerator.value(-1742.34), any());
     add("CHEQUE 123123", upTo(10), between(-30.0, -150.0), any());
     add("PRLV ORANGE FRANCE SA %s", several(2), between(-35.0, -70.0), dayBetween(11, 16));
     add("RETRAIT DAB 1805 REF10674A01 CAR", sometimes(), anyOf(-20.0, -40.0, -60.0), any());
     add("ABON FBQ ALERTES, ABON T", once(), between(-1.0, -12.0), dayBetween(6, 8));
-    add("PRLV ASS VIE 15515580008302", once(), value(-85.0), dayBetween(6, 8));
+    add("PRLV ASS VIE 15515580008302", once(), AmountGenerator.value(-85.0), dayBetween(6, 8));
     add("TIP EDF/GDF CENTRE 04 190225", once(), between(-55.0, -95.0), dayBetween(6, 10));
     add("TIP GAZ DE FRANCE CENTRE 04 1902", once(), between(-20.0, -50.0), dayBetween(6, 10));
-    add("PRLV C R P A SCOLARITE", once(), value(-217.0), dayBetween(12, 15));
-    add("ECH PRET CAP+IN 10674 101147 06", once(), value(-454.21), dayBetween(15, 20));
-    add("VROUMBOUM ASSURANCES", once(), value(-74.0), dayBetween(15, 20));
+    add("PRLV C R P A SCOLARITE", once(), AmountGenerator.value(-217.0), dayBetween(12, 15));
+    add("ECH PRET CAP+IN 10674 101147 06", once(), AmountGenerator.value(-454.21), dayBetween(15, 20));
+    add("VROUMBOUM ASSURANCES", once(), AmountGenerator.value(-74.0), dayBetween(15, 20));
     add("F COM INTERVENTION DECE 200", sometimes(), between(-4.0, -20.0), dayBetween(15, 20));
-    add("PRLV TRESOR PUBLIC 92 IMPOT MENM", once(), value(-334.7), dayBetween(15, 20));
-    add("ING DIRECT 2134 F324 GDE165", once(), value(-200.0), dayBetween(10, 13));
+    add("PRLV TRESOR PUBLIC 92 IMPOT MENM", once(), AmountGenerator.value(-334.7), dayBetween(15, 20));
+    add("ING DIRECT 2134 F324 GDE165", once(), AmountGenerator.value(-200.0), dayBetween(10, 13));
 
     setAccount("1234234534564567", true);
     add("PHARMADISCOUNT SAINT LOUIS", upTo(5), between(-8.0, -60.0), any());
@@ -96,15 +100,37 @@ public class PicsouSampleGenerator {
     add("FNAC VELIZY 234RF5", sometimes(), between(-19.0, -200.0), any());
   }
 
+  public void run(int min, int max) {
+    repository.enterBulkDispatchingMode();
+    for (Integer month : Month.range(min, max)) {
+      for (MonthGenerator generator : generators) {
+        generator.run(month);
+      }
+    }
+    repository.completeBulkDispatchingMode();
+  }
+
+  public void write(String fileName) throws IOException {
+    File file = new File(fileName);
+
+    GlobPrinter.print(repository, Account.TYPE);
+
+    System.out.println("Output: " + file.getAbsolutePath());
+
+    FileWriter writer = new FileWriter(file);
+    OfxExporter.write(repository, writer);
+    writer.close();
+  }
+
   private void setAccount(String accountNumber, boolean isCardAccount) {
     accountId = repository.create(Account.TYPE,
-                                  FieldValue.value(Account.NAME, accountNumber),
-                                  FieldValue.value(Account.BANK_ENTITY, BANK_ID),
-                                  FieldValue.value(Account.BRANCH_ID, BRANCH_ID),
-                                  FieldValue.value(Account.NUMBER, accountNumber),
-                                  FieldValue.value(Account.IS_CARD_ACCOUNT, isCardAccount),
-                                  FieldValue.value(Account.UPDATE_DATE, new Date()),
-                                  FieldValue.value(Account.BALANCE, -1050.12))
+                                  value(Account.NAME, accountNumber),
+                                  value(Account.BANK_ENTITY, BANK_ID),
+                                  value(Account.BRANCH_ID, BRANCH_ID),
+                                  value(Account.NUMBER, accountNumber),
+                                  value(Account.IS_CARD_ACCOUNT, isCardAccount),
+                                  value(Account.UPDATE_DATE, new Date()),
+                                  value(Account.BALANCE, -1050.12))
       .get(Account.ID);
   }
 
@@ -124,36 +150,16 @@ public class PicsouSampleGenerator {
 
   private Glob create(Integer month, int day, double amount, String label, int accountId) {
     return repository.create(Transaction.TYPE,
-                             FieldValue.value(Transaction.ACCOUNT, accountId),
-                             FieldValue.value(Transaction.AMOUNT, amount),
-                             FieldValue.value(Transaction.ORIGINAL_LABEL, label),
-                             FieldValue.value(Transaction.LABEL, label),
-                             FieldValue.value(Transaction.MONTH, month),
-                             FieldValue.value(Transaction.DAY, day),
-                             FieldValue.value(Transaction.BANK_MONTH, month),
-                             FieldValue.value(Transaction.BANK_DAY, day));
+                             value(Transaction.ACCOUNT, accountId),
+                             value(Transaction.AMOUNT, amount),
+                             value(Transaction.LABEL, label),
+                             value(Transaction.ORIGINAL_LABEL, label),
+                             value(Transaction.LABEL_FOR_CATEGORISATION, label),
+                             value(Transaction.MONTH, month),
+                             value(Transaction.DAY, day),
+                             value(Transaction.BANK_MONTH, month),
+                             value(Transaction.BANK_DAY, day),
+                             value(Transaction.TRANSACTION_TYPE, TransactionType.VIREMENT.getId()));
   }
 
-  private void run(int min, int max) {
-    repository.enterBulkDispatchingMode();
-    for (Integer month : Month.range(min, max)) {
-      for (MonthGenerator generator : generators) {
-        generator.run(month);
-      }
-    }
-    repository.completeBulkDispatchingMode();
-  }
-
-  private void write(String fileName) throws IOException {
-    File file = new File(fileName);
-
-    GlobPrinter.print(repository, Account.TYPE);
-
-    System.out.println("Output: " + file.getAbsolutePath());
-
-    FileWriter writer = new FileWriter(file);
-    OfxExporter.write(repository, writer);
-    writer.close();
-
-  }
 }

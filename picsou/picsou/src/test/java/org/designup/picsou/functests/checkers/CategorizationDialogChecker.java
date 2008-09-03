@@ -265,6 +265,12 @@ public class CategorizationDialogChecker extends DataChecker {
     assertTrue(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + master.getName() + ":" + subcat));
   }
 
+  public void checkDoesNotContainOccasional(MasterCategory master, String subcat) {
+    Panel panel = getOccasionalSeriesPanel();
+    assertTrue(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + master.getName()));
+    assertFalse(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + master.getName() + ":" + subcat));
+  }
+
   public void checkOccasionalSeries(MasterCategory category) {
     assertTrue(dialog.getToggleButton("occasionalExpenses").isSelected());
     assertTrue(getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).isSelected());
@@ -424,5 +430,11 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public void checkClosed() {
     assertFalse(dialog.isVisible());
+  }
+
+  public CategoryEditionChecker editOccasionalCategories() {
+    selectOccasional();
+    Window editionDialog = WindowInterceptor.getModalDialog(dialog.getButton("editCategories").triggerClick());
+    return new CategoryEditionChecker(editionDialog);
   }
 }

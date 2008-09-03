@@ -36,7 +36,7 @@ public abstract class RenameCategoryAction extends RenameGlobAction implements G
   }
 
   public JDialog getDialog(ActionEvent e) {
-    return PicsouDialog.create(getParent(), Lang.get("category.rename.title"));
+    return PicsouDialog.create(getParent(), Lang.get("category.rename.title"), directory);
   }
 
   protected abstract Window getParent();

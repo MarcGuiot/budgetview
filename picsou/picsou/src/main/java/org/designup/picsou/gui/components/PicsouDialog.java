@@ -1,10 +1,13 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.utils.Gui;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.ColorUpdaters;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
@@ -17,51 +20,33 @@ public class PicsouDialog extends JDialog {
 
   public static boolean MODAL = true;
   private static final Insets BUTTON_INSETS = new Insets(0, 10, 10, 10);
+  private ColorService colorService;
 
-  public static PicsouDialog create(JFrame owner) {
-    return new PicsouDialog(owner);
-  }
-
-  public static PicsouDialog create(JDialog owner) {
-    return new PicsouDialog(owner);
-  }
-
-  public static PicsouDialog create(Window owner, String title) {
-    PicsouDialog modalWindow = create(owner);
+  public static PicsouDialog create(Window owner, String title, Directory directory) {
+    PicsouDialog modalWindow = create(owner, directory);
     if (title != null) {
       modalWindow.setTitle(title);
     }
     return modalWindow;
   }
 
-  public static PicsouDialog create(JFrame owner, String title) {
-    PicsouDialog modalWindow = create(owner);
-    if (title != null) {
-      modalWindow.setTitle(title);
-    }
-    return modalWindow;
-  }
-
-  public static PicsouDialog create(JDialog owner, String title) {
-    PicsouDialog modalWindow = create(owner);
-    if (title != null) {
-      modalWindow.setTitle(title);
-    }
-    return modalWindow;
-  }
-
-  public static PicsouDialog createWithButton(String name, Window owner, JPanel panel, Action action) {
-    PicsouDialog dialog = create(owner, name);
-    dialog.setContentPane(GridBagBuilder.init()
-      .add(panel, 0, 0, 2, 1, Gui.NO_INSETS)
-      .add(Box.createHorizontalGlue(), 0, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER)
-      .add(new JButton(action), 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS)
-      .getPanel());
+  public static PicsouDialog createWithButton(String name, Window owner, JPanel panel, Action action, Directory directory) {
+    PicsouDialog dialog = create(owner, name, directory);
+    dialog.setPanelAndButton(panel, action);
     return dialog;
   }
 
-  public static PicsouDialog createWithButtons(String name, Window owner, JPanel panel, Action ok, Action cancel) {
-    PicsouDialog dialog = create(owner, name);
+  private void setPanelAndButton(JPanel panel, Action action) {
+    JPanel contentPane = GridBagBuilder.init()
+      .add(panel, 0, 0, 2, 1, Gui.NO_INSETS)
+      .add(Box.createHorizontalGlue(), 0, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER)
+      .add(new JButton(action), 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS)
+      .getPanel();
+    setContentPane(contentPane);
+  }
+
+  public static PicsouDialog createWithButtons(String name, Window owner, JPanel panel, Action ok, Action cancel, Directory directory) {
+    PicsouDialog dialog = create(owner, name, directory);
     dialog.addInPanelWithButton(panel, ok, cancel);
     return dialog;
   }
@@ -99,6 +84,11 @@ public class PicsouDialog extends JDialog {
     setContentPane(contentPane);
   }
 
+  public void setContentPane(Container contentPane) {
+    colorService.install("dialog.bg.bottom", ColorUpdaters.background(contentPane));
+    super.setContentPane(contentPane);
+  }
+
   private void adjustSizes(JButton cancelButton, JButton okButton) {
     Dimension cancelSize = cancelButton.getPreferredSize();
     Dimension okSize = okButton.getPreferredSize();
@@ -118,16 +108,6 @@ public class PicsouDialog extends JDialog {
     }
   }
 
-  private static PicsouDialog create(Window owner) {
-    if (owner instanceof JFrame) {
-      return create((JFrame)owner, "");
-    }
-    else if (owner instanceof JDialog) {
-      return create((JDialog)owner, "");
-    }
-    throw new InvalidParameter("unknown type " + owner.getClass());
-  }
-
   public void setWindowCloseCallback(final DisposeCallback disposeCallback) {
     addWindowListener(new WindowAdapter() {
       public void windowClosed(WindowEvent e) {
@@ -136,12 +116,29 @@ public class PicsouDialog extends JDialog {
     });
   }
 
-  private PicsouDialog(JFrame parent) {
-    super(parent, MODAL);
+  private static PicsouDialog create(Window owner, Directory directory) {
+    if (owner instanceof JFrame) {
+      return new PicsouDialog((JFrame)owner, "", directory);
+    }
+    else if (owner instanceof JDialog) {
+      return new PicsouDialog((JDialog)owner, "", directory);
+    }
+    throw new InvalidParameter("unknown type " + owner.getClass());
   }
 
-  private PicsouDialog(JDialog parent) {
+  private PicsouDialog(JFrame parent, String title, Directory directory) {
     super(parent, MODAL);
+    init(title, directory);
+  }
+
+  private PicsouDialog(JDialog parent, String title, Directory directory) {
+    super(parent, MODAL);
+    init(title, directory);
+  }
+
+  private void init(String title, Directory directory) {
+    setTitle(title);
+    colorService = directory.get(ColorService.class);
   }
 
   protected JRootPane createRootPane() {

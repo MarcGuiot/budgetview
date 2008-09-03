@@ -47,7 +47,7 @@ public class CategorizationDialog {
   private SeriesEditionDialog seriesEditionDialog;
 
   public CategorizationDialog(Window parent, final GlobRepository repository, Directory directory) {
-    dialog = PicsouDialog.create(parent, Lang.get("categorization.title"));
+    dialog = PicsouDialog.create(parent, Lang.get("categorization.title"), directory);
 
     init(repository, directory);
 
@@ -221,7 +221,12 @@ public class CategorizationDialog {
     else {
       transactionTable.selectFirst();
     }
+
     GuiUtils.showCentered(dialog);
+  }
+
+  public Dialog getDialog() {
+    return dialog;
   }
 
   private class CreateSeriesAction extends AbstractAction {

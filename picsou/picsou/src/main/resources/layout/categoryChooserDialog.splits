@@ -2,16 +2,18 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <column styleClass="dialog" opaque="true" preferredSize="(800,650)">
-    <scrollPane margin="15" weightY="100" viewportBackground="dialog.block.top">
-      <repeat ref="masterRepeat" margin="10">
-        <column>
-          <toggleButton ref="masterLabel" marginTop="10" styleClass="masterCategorySelector"/>
-          <repeat ref="subcatRepeat" marginLeft="5">
-            <toggleButton ref="subcatLabel" styleClass="subCategorySelector"/>
-          </repeat>
-        </column>
-      </repeat>
-    </scrollPane>
-  </column>
+  <panel styleClass="dialog" preferredSize="(800,650)">
+    <column styleClass="innerDialog">
+      <scrollPane margin="15" weightY="100" viewportBackground="dialog.block">
+        <repeat ref="masterRepeat" margin="10">
+          <column>
+            <toggleButton ref="masterLabel" marginTop="10" styleClass="masterCategorySelector"/>
+            <repeat ref="subcatRepeat" marginLeft="5">
+              <toggleButton ref="subcatLabel" styleClass="subCategorySelector"/>
+            </repeat>
+          </column>
+        </repeat>
+      </scrollPane>
+    </column>
+  </panel>
 </splits>

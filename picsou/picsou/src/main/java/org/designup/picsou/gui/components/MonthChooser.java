@@ -25,8 +25,10 @@ public class MonthChooser {
   private int selectedYear;
   private int selectedMonth = -1;
   private int currentYear;
+  private Directory directory;
 
   public MonthChooser(final Directory directory) {
+    this.directory = directory;
     SplitsBuilder builder = new SplitsBuilder(directory);
     builder.setSource(MonthChooser.class, "/layout/monthChooser.splits");
     builder.add("previousYearLabel", previousYearLabel);
@@ -71,7 +73,7 @@ public class MonthChooser {
     selectedMonth = month == null ? -1 : month;
     selectedYear = year;
     currentYear = year;
-    dialog = PicsouDialog.createWithButton(Lang.get("month.chooser.title"), parent, panel, new CancelAction());
+    dialog = PicsouDialog.createWithButton(Lang.get("month.chooser.title"), parent, panel, new CancelAction(), directory);
     update();
     dialog.pack();
     GuiUtils.showCentered(dialog);
