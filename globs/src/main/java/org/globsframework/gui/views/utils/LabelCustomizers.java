@@ -8,17 +8,29 @@ import org.globsframework.model.format.GlobStringifier;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class LabelCustomizers {
 
-  public static LabelCustomizer chain(final LabelCustomizer... customizers) {
+  public static LabelCustomizer chain(Iterable<LabelCustomizer> customizers) {
+    final java.util.List<LabelCustomizer> reducedList = new ArrayList<LabelCustomizer>();
+    for (LabelCustomizer customizer : customizers) {
+      if (customizer != LabelCustomizer.NULL)
+      reducedList.add(customizer);
+    }
     return new LabelCustomizer() {
       public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
-        for (LabelCustomizer customizer : customizers) {
+        for (LabelCustomizer customizer : reducedList) {
           customizer.process(label, glob, isSelected, hasFocus, row, column);
         }
       }
     };
+
+  }
+
+  public static LabelCustomizer chain(final LabelCustomizer... customizers) {
+    return chain(Arrays.asList(customizers));
   }
 
   public static LabelCustomizer alignLeft() {

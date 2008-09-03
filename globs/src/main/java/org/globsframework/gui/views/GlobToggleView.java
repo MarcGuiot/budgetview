@@ -1,7 +1,6 @@
 package org.globsframework.gui.views;
 
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
-import org.globsframework.gui.ComponentHolder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;

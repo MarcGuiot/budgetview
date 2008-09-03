@@ -6,8 +6,8 @@ import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.impl.*;
-import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.gui.views.utils.GlobViewUtils;
+import org.globsframework.gui.views.utils.LabelCustomizers;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -68,8 +68,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     return addColumn(field, LabelCustomizer.NULL, defaultBackgroundPainter, editor);
   }
 
-  public GlobTableView addColumn(Field field,
-                                 LabelCustomizer customizer) {
+  public GlobTableView addColumn(Field field, LabelCustomizer customizer) {
     return addColumn(field, customizer, defaultBackgroundPainter, null);
   }
 
@@ -134,13 +133,32 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   public GlobTableView addColumn(String name, TableCellRenderer renderer, Comparator<Glob> comparator) {
-    columns.add(new GlobTableColumn(name, renderer, new CompositeComparator<Glob>(comparator, initialComparator)));
+    startColumn()
+      .setName(name)
+      .setRenderer(renderer)
+      .setComparator(new CompositeComparator<Glob>(comparator, initialComparator));
     return this;
   }
 
   public GlobTableView addColumn(String name, TableCellRenderer renderer, TableCellEditor editor, Comparator<Glob> comparator) {
-    columns.add(new GlobTableColumn(name, renderer, editor, new CompositeComparator<Glob>(comparator, initialComparator)));
+    startColumn()
+      .setName(name)
+      .setRenderer(renderer)
+      .setEditor(editor)
+      .setComparator(new CompositeComparator<Glob>(comparator, initialComparator));
     return this;
+  }
+
+  public GlobTableView addColumn(GlobTableColumn column) {
+    columns.add(column);
+    return this;
+  }
+
+  public GlobTableColumnBuilder startColumn() {
+    GlobTableColumnBuilder builder = GlobTableColumnBuilder.init(repository, directory)
+      .setBackgroundPainter(defaultBackgroundPainter);
+    columns.add(builder.getColumn());
+    return builder;
   }
 
   public GlobTableView hideHeader() {
@@ -503,7 +521,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
         public void globMoved(int previousIndex, int newIndex) {
           selectionEnabled = false;
           GlobViewUtils.updateSelectionAfterItemMoved(table.getSelectionModel(),
-                                                      table.getSelectedRows(), 
+                                                      table.getSelectedRows(),
                                                       previousIndex, newIndex);
           selectionEnabled = true;
         }

@@ -6,40 +6,15 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.util.Comparator;
 
-public class GlobTableColumn {
-  private TableCellRenderer renderer;
-  private TableCellEditor editor;
-  private Comparator<Glob> comparator;
-  private String name;
+public interface GlobTableColumn {
 
-  public GlobTableColumn(String name, TableCellRenderer renderer, Comparator<Glob> comparator) {
-    this(name, renderer, null, comparator);
-  }
+  String getName();
 
-  public GlobTableColumn(String name, TableCellRenderer renderer, TableCellEditor editor, Comparator<Glob> comparator) {
-    this.name = name;
-    this.renderer = renderer;
-    this.editor = editor;
-    this.comparator = comparator;
-  }
+  TableCellRenderer getRenderer();
 
-  public String getName() {
-    return name;
-  }
+  TableCellEditor getEditor();
 
-  public TableCellRenderer getRenderer() {
-    return renderer;
-  }
+  Comparator<Glob> getComparator();
 
-  public TableCellEditor getEditor() {
-    return editor;
-  }
-
-  public Comparator<Glob> getComparator() {
-    return comparator;
-  }
-
-  public boolean isEditable() {
-    return editor != null;
-  }
+  boolean isEditable();
 }

@@ -13,7 +13,6 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;
 
 import javax.swing.text.JTextComponent;
-import javax.swing.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
@@ -21,7 +20,6 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   protected Field field;
   private GlobList lastSelectedGlobs;
   protected COMPONENT_TYPE textComponent;
-  private Directory directory;
   private Object valueForMultiSelection;
   private boolean forceNotEditable;
   private GlobList forcedSelection;
@@ -30,7 +28,6 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     super(field.getGlobType(), repository, directory);
     this.field = field;
     this.textComponent = component;
-    this.directory = directory;
     initTextComponent();
   }
 
