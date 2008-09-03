@@ -76,4 +76,24 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
                                        textRect.x + getTextShiftOffset(),
                                        textRect.y + fm.getAscent() + getTextShiftOffset());
   }
+
+  public void setBorderColor(Color borderColor) {
+    this.borderColor = borderColor;
+  }
+
+  public void setBottomColor(Color bottomColor) {
+    this.bottomColor = bottomColor;
+  }
+
+  public void setTopColor(Color topColor) {
+    this.topColor = topColor;
+  }
+
+  public void setPressedTextColor(Color pressedTextColor) {
+    this.pressedTextColor = pressedTextColor;
+  }
+
+  public void setRolloverTextColor(Color rolloverTextColor) {
+    this.rolloverTextColor = rolloverTextColor;
+  }
 }

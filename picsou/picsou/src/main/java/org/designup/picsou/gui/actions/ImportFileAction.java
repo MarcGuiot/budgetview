@@ -23,7 +23,6 @@ public class ImportFileAction extends AbstractAction {
   private Glob defaulAccount;
   private GlobRepository repository;
 
-
   static public ImportFileAction initAndRegisterInOpenRequestManager(
     String text, final GlobRepository repository, final Directory directory) {
     return new ImportFileAction(text, repository, directory);
@@ -63,8 +62,10 @@ public class ImportFileAction extends AbstractAction {
     private JFrame frame;
     private PicsouDialog dialog;
     private ImportPanel panel;
+    private Directory directory;
 
     public OpenRunnable(List<File> files, Directory directory, GlobRepository repository, Glob defaultAccount) {
+      this.directory = directory;
       frame = directory.get(JFrame.class);
       panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount, new DialogOwner() {
         public Window getOwner() {
@@ -83,7 +84,7 @@ public class ImportFileAction extends AbstractAction {
     }
 
     public void run() {
-      dialog = PicsouDialog.create(frame, Lang.get("import"));
+      dialog = PicsouDialog.create(frame, Lang.get("import"), directory);
       JPanel contentPane = panel.getPanel();
       contentPane.setOpaque(true);
       dialog.setContentPane(contentPane);

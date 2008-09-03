@@ -96,7 +96,7 @@ public class CategoryEditionDialog {
     dialog = PicsouDialog.createWithButtons(Lang.get("categorization.title"),
                                             directory.get(JFrame.class),
                                             builder.<JPanel>load(),
-                                            new ValidateAction(), new CancelAction());
+                                            new ValidateAction(), new CancelAction(), directory);
     //On ecoute les creation apres la mise a jour de la listView.
     initListenerForSelectionOnCreate();
   }

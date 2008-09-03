@@ -113,7 +113,7 @@ public class SplitTransactionDialog {
     colorService = localDirectory.get(ColorService.class);
     rendererColors = new TransactionRendererColors(localDirectory);
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), Lang.get("split.transaction.title"));
+    dialog = PicsouDialog.create(directory.get(JFrame.class), Lang.get("split.transaction.title"), directory);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/splitTransaction.splits",
                                                       localRepository, localDirectory);

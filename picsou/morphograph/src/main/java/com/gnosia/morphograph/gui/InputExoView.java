@@ -1,7 +1,7 @@
 package com.gnosia.morphograph.gui;
 
 import com.gnosia.morphograph.model.Input;
-import org.globsframework.gui.splits.color.BackgroundColorUpdater;
+import org.globsframework.gui.splits.color.ColorUpdaters;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
@@ -80,11 +80,11 @@ public class InputExoView extends AbstractExoView {
       textField.setEditable(false);
       setName("");
       if (text.equalsIgnoreCase(answer)) {
-        colorService.install("freetext.answer.success", new BackgroundColorUpdater(textField));
+        colorService.install("freetext.answer.success", ColorUpdaters.background(textField));
         setIcon(okIcon);
       }
       else {
-        colorService.install("freetext.answer.failure", new BackgroundColorUpdater(textField));
+        colorService.install("freetext.answer.failure", ColorUpdaters.background(textField));
         textField.setText(text + " (r\u00e9ponse: " + answer + ")");
         setIcon(failedIcon);
       }
