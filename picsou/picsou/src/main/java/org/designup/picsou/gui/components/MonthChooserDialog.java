@@ -1,8 +1,13 @@
 package org.designup.picsou.gui.components;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.SplitsEditor;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -15,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MonthChooserDialog {
+public class MonthChooserDialog implements ColorChangeListener {
   private JLabel nextYearLabel = new JLabel();
   private JLabel previousYearLabel = new JLabel();
   private JLabel currentYearLabel = new JLabel();
@@ -30,9 +35,13 @@ public class MonthChooserDialog {
   private int yearLimit;
   private int monthLimit;
   private int newMonth;
+  private Color todayColor;
+  private Color defaultForegroundColor;
 
   public MonthChooserDialog(final Directory directory) {
     this.directory = directory;
+    ColorService colorService = directory.get(ColorService.class);
+    colorService.addListener(this);
     SplitsBuilder builder = new SplitsBuilder(directory);
     builder.setSource(MonthChooserDialog.class, "/layout/monthChooserDialog.splits");
     builder.add("previousYearLabel", previousYearLabel);
@@ -69,6 +78,12 @@ public class MonthChooserDialog {
         update();
       }
     });
+    builder.add("homeYearAction", new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        currentYear = selectedYear;
+        update();
+      }
+    });
 
     panel = builder.load();
   }
@@ -94,7 +109,7 @@ public class MonthChooserDialog {
     currentYearLabel.setText(Integer.toString(currentYear));
     nextYearLabel.setText(Integer.toString(currentYear + 1));
     for (MonthsComponentFactory factory : monthsComponentFactories) {
-      factory.setCurrentYear(selectedYear, selectedMonth, currentYear, sens, yearLimit, monthLimit);
+      factory.setCurrentYear(currentYear);
     }
   }
 
@@ -111,14 +126,15 @@ public class MonthChooserDialog {
     monthsComponentFactories.add(monthsComponentFactory);
   }
 
-  private static class MonthsComponentFactory implements RepeatComponentFactory<Integer> {
+  public void colorsChanged(ColorLocator colorLocator) {
+    todayColor = colorLocator.get("month.chooser.today.color");
+    defaultForegroundColor = colorLocator.get("toggle.selector.normal");
+    update();
+  }
+
+  private class MonthsComponentFactory implements RepeatComponentFactory<Integer> {
     private MonthChooserDialog selection;
     private int index;
-    private int selectedYear;
-    private int selectedMonth;
-    private int sens;
-    private int yearLimit;
-    private int monthLimit;
     private int currentYear;
     JToggleButton[] buttons = new JToggleButton[12];
 
@@ -138,26 +154,28 @@ public class MonthChooserDialog {
       cellBuilder.add("month", buttons[item - 1]);
     }
 
-    public void setCurrentYear(int selectedYear, int selectedMonth, int currentYear,
-                               int sens, int yearLimit, int monthLimit) {
-      this.selectedYear = selectedYear;
-      this.selectedMonth = selectedMonth;
-      this.sens = sens;
-      this.yearLimit = yearLimit;
-      this.monthLimit = monthLimit;
+    public void setCurrentYear(int currentYear) {
       this.currentYear = currentYear + index;
       updateButton();
     }
 
     public void updateButton() {
+      int todayId = directory.get(TimeService.class).getCurrentMonthId();
       for (int i = 0; i < buttons.length; i++) {
         buttons[i].setSelected(currentYear == selectedYear && selectedMonth == i + 1);
+        int currentMonthId = Month.toMonthId(currentYear, i + 1);
         if (sens < 0) {
-          boolean b = Month.toMonthId(currentYear, i + 1) <= Month.toMonthId(yearLimit, monthLimit);
+          boolean b = currentMonthId <= Month.toMonthId(yearLimit, monthLimit);
           buttons[i].setEnabled(b);
         }
         else if (sens > 0) {
-          buttons[i].setEnabled(Month.toMonthId(currentYear, i + 1) >= Month.toMonthId(yearLimit, monthLimit));
+          buttons[i].setEnabled(currentMonthId >= Month.toMonthId(yearLimit, monthLimit));
+        }
+        if (todayId == currentMonthId) {
+          buttons[i].setForeground(todayColor);
+        }
+        else {
+          buttons[i].setForeground(defaultForegroundColor);
         }
       }
     }

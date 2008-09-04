@@ -152,6 +152,11 @@ public class MonthChooserChecker extends DataChecker {
     return this;
   }
 
+  public MonthChooserChecker gotoCenter() {
+    dialog.getButton("homeYearAction").click();
+    return this;
+  }
+
   public void pressEscapeKey() {
     final JDialog jDialog = (JDialog)dialog.getAwtComponent();
     KeyUtils.pressKey(jDialog.getRootPane(), Key.ESCAPE);
