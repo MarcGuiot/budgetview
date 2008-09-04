@@ -49,37 +49,38 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
     }
     int fromIndex = 0;
     Integer firstMonth = series.get(Series.FIRST_MONTH);
-    Integer fromDate = firstMonth == null ? monthIds[0] :
-                       Math.min(Math.max(firstMonth, monthIds[0]), monthIds[monthIds.length - 1]);
+    Integer fromDate = firstMonth == null ? monthIds[0] : Math.max(firstMonth, monthIds[0]);
     if (fromDate != null) {
       fromIndex = Arrays.binarySearch(monthIds, fromDate);
     }
     int toIndex = monthIds.length - 1;
     Integer lastMonth = series.get(Series.LAST_MONTH);
     Integer toDate = lastMonth == null ? monthIds[monthIds.length - 1] :
-                     Math.max(Math.min(lastMonth, monthIds[monthIds.length - 1]), monthIds[0]);
+                     Math.min(lastMonth, monthIds[monthIds.length - 1]);
     if (toDate == null) {
       toIndex = Arrays.binarySearch(monthIds, toDate);
     }
 
-    Calendar calendar = Calendar.getInstance();
-    for (int i = fromIndex; i <= toIndex; i++) {
-      int monthId = monthIds[i];
-      BooleanField monthField = Series.getField(monthId);
-      Boolean active = series.get(monthField);
-      Glob seriesBudget = monthWithBudget.remove(monthId);
-      if (seriesBudget == null) {
-        repository.create(SeriesBudget.TYPE,
-                          value(SeriesBudget.SERIES, seriesId),
-                          value(SeriesBudget.AMOUNT, series.get(Series.INITIAL_AMOUNT)),
-                          value(SeriesBudget.MONTH, monthId),
-                          value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
-                          value(SeriesBudget.ACTIVE, active));
-      }
-      else {
-        repository.update(seriesBudget.getKey(),
-                          value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
-                          value(SeriesBudget.ACTIVE, active));
+    if (fromIndex >= 0 && toIndex >= 0) {
+      Calendar calendar = Calendar.getInstance();
+      for (int i = fromIndex; i <= toIndex; i++) {
+        int monthId = monthIds[i];
+        BooleanField monthField = Series.getField(monthId);
+        Boolean active = series.get(monthField);
+        Glob seriesBudget = monthWithBudget.remove(monthId);
+        if (seriesBudget == null) {
+          repository.create(SeriesBudget.TYPE,
+                            value(SeriesBudget.SERIES, seriesId),
+                            value(SeriesBudget.AMOUNT, series.get(Series.INITIAL_AMOUNT)),
+                            value(SeriesBudget.MONTH, monthId),
+                            value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
+                            value(SeriesBudget.ACTIVE, active));
+        }
+        else {
+          repository.update(seriesBudget.getKey(),
+                            value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
+                            value(SeriesBudget.ACTIVE, active));
+        }
       }
     }
     for (Glob seriesBudget : monthWithBudget.values()) {

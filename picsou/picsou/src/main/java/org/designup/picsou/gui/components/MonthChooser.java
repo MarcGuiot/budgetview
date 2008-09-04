@@ -26,6 +26,9 @@ public class MonthChooser {
   private int selectedMonth = -1;
   private int currentYear;
   private Directory directory;
+  private int sens;
+  private int yearLimit;
+  private int monthLimit;
 
   public MonthChooser(final Directory directory) {
     this.directory = directory;
@@ -69,10 +72,13 @@ public class MonthChooser {
     panel = builder.load();
   }
 
-  public int show(Window parent, int year, Integer month) {
-    selectedMonth = month == null ? -1 : month;
-    selectedYear = year;
-    currentYear = year;
+  public int show(Window parent, int selectedMonthId, int sens, int limitMonthId) {
+    this.sens = sens;
+    this.yearLimit = Month.toYear(limitMonthId);
+    this.monthLimit = Month.toMonth(limitMonthId);
+    selectedMonth = Month.toMonth(selectedMonthId);
+    selectedYear = Month.toYear(selectedMonthId);
+    currentYear = sens == 0 ? selectedYear : sens == -1 ? yearLimit - 1 : yearLimit + 1;
     dialog = PicsouDialog.createWithButton(Lang.get("month.chooser.title"), parent, panel, new CancelAction(), directory);
     update();
     dialog.pack();
@@ -86,7 +92,7 @@ public class MonthChooser {
     currentYearLabel.setText(Integer.toString(currentYear));
     nextYearLabel.setText(Integer.toString(currentYear + 1));
     for (MonthsComponentFactory factory : monthsComponentFactories) {
-      factory.setCurrentYear(selectedYear, selectedMonth, currentYear);
+      factory.setCurrentYear(selectedYear, selectedMonth, currentYear, sens, yearLimit, monthLimit);
     }
   }
 
@@ -108,6 +114,9 @@ public class MonthChooser {
     private int index;
     private int selectedYear;
     private int selectedMonth;
+    private int sens;
+    private int yearLimit;
+    private int monthLimit;
     private int currentYear;
     JToggleButton[] buttons = new JToggleButton[12];
 
@@ -127,9 +136,13 @@ public class MonthChooser {
       cellBuilder.add("month", buttons[item - 1]);
     }
 
-    public void setCurrentYear(int selectedYear, int selectedMonth, int currentYear) {
+    public void setCurrentYear(int selectedYear, int selectedMonth, int currentYear,
+                               int sens, int yearLimit, int monthLimit) {
       this.selectedYear = selectedYear;
       this.selectedMonth = selectedMonth;
+      this.sens = sens;
+      this.yearLimit = yearLimit;
+      this.monthLimit = monthLimit;
       this.currentYear = currentYear + index;
       updateButton();
     }
@@ -137,6 +150,13 @@ public class MonthChooser {
     public void updateButton() {
       for (int i = 0; i < buttons.length; i++) {
         buttons[i].setSelected(currentYear == selectedYear && selectedMonth == i + 1);
+        if (sens < 0) {
+          boolean b = Month.toMonthId(currentYear, i + 1) <= Month.toMonthId(yearLimit, monthLimit);
+          buttons[i].setEnabled(b);
+        }
+        else if (sens > 0) {
+          buttons[i].setEnabled(Month.toMonthId(currentYear, i + 1) >= Month.toMonthId(yearLimit, monthLimit));
+        }
       }
     }
   }

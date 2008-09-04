@@ -6,7 +6,6 @@ CategoryChooserDialog
 
 SeriesEditionDialog
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
-* Edition des dates debut/fin (MonthChooser) + voir updates table seriesBudget
 * MAJ temps reel du nom de la serie pendant l'edition (propriete editor?)
 * Griser / masquer les checkbox de mois en dehors de la plage startDate/endDate
 * Creation de serie : selectionner automatiquement le texte du nom

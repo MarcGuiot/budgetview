@@ -158,7 +158,8 @@
         bottomColor="toggle.selector.bg.bottom"
         topColor="toggle.selector.bg.top"
         borderColor="toggle.selector.bg.border"
-        rolloverTextColor="toggle.selector.rollover"/>
+        rolloverTextColor="toggle.selector.rollover"
+        disabledTextColor="toggle.selector.disabled"/>
     <style selector="toggleButton.selector"
            ui="selectionToggle" foreground="toggle.selector.normal" font="-,plain,12"
            marginRight="2" fill="none" anchor="center" weightY="0"/>

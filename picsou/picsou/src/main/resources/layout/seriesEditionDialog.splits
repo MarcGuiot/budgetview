@@ -42,7 +42,7 @@
                 <row>
                   <label ref="beginSeriesDate" fill="horizontal"/>
                   <button action="deleteBeginSeriesDate" icon="button_delete.png" styleClass="icon"
-                          pressedIcon="button_delete_pressed.png" autoHideSource="beginSeriesDate"
+                          pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
                           marginRight="10" fill="none"/>
                 </row>
 
@@ -50,12 +50,13 @@
                   <label text="$seriesEdition.end" styleClass="formLabelTop" labelFor="endSeriesDate"
                          fill="horizontal"/>
                   <button action="endSeriesCalendar" icon="button_calendar.png" styleClass="icon"
-                          pressedIcon="button_calendar_pressed.png" marginRight="10" fill="none"/>
+                          pressedIcon="button_calendar_pressed.png"
+                          marginRight="10" fill="none"/>
                 </row>
                 <row>
                   <label ref="endSeriesDate" fill="horizontal"/>
                   <button action="deleteEndSeriesDate" icon="button_delete.png" styleClass="icon"
-                          pressedIcon="button_delete_pressed.png" autoHideSource="endSeriesDate"
+                          pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
                           marginRight="10" fill="none"/>
                 </row>
 

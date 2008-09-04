@@ -1,7 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
 import org.uispec4j.Button;
@@ -259,7 +258,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   private void setDate(String labelName, int monthId) {
     MonthChooserChecker month = new MonthChooserChecker(
       WindowInterceptor.getModalDialog(dialog.getButton(labelName).triggerClick()));
-    int currentYear = Month.toYear(TimeService.getCurrentMonth());
+    int currentYear = Integer.parseInt(month.getCurrentYear().getText());
     int year = Month.toYear(monthId);
     for (; year < currentYear; year++) {
       month.previousYear();
