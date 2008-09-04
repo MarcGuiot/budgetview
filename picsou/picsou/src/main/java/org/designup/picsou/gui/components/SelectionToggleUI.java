@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components;
 
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.designup.picsou.gui.utils.Gui;
+import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicToggleButtonUI;
@@ -16,6 +16,7 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
   private Color bottomColor = Color.WHITE;
   private Color rolloverTextColor = Color.RED;
   private Color pressedTextColor = Color.BLUE;
+  private Color disabledTextColor = Color.GRAY;
 
   protected void installDefaults(AbstractButton b) {
     super.installDefaults(b);
@@ -32,7 +33,7 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
     int width = button.getWidth();
     int height = button.getHeight();
     if (Gui.isMacOSX()) {
-      height -=2;
+      height -= 2;
     }
 
     int x = 0;
@@ -71,10 +72,19 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
     else {
       g.setColor(component.getForeground());
     }
+    if (!b.isEnabled()) {
+      g.setColor(disabledTextColor);
+    }
 
-    GuiUtils.drawStringUnderlineCharAt(g, text, mnemonicIndex,
-                                       textRect.x + getTextShiftOffset(),
-                                       textRect.y + fm.getAscent() + getTextShiftOffset());
+    if (mnemonicIndex > 0) {
+      GuiUtils.drawStringUnderlineCharAt(g, text, mnemonicIndex,
+                                         textRect.x + getTextShiftOffset(),
+                                         textRect.y + fm.getAscent() + getTextShiftOffset());
+    }
+    else {
+      g.drawString(text, textRect.x + getTextShiftOffset(),
+                   textRect.y + fm.getAscent() + getTextShiftOffset());
+    }
   }
 
   public void setBorderColor(Color borderColor) {
@@ -95,5 +105,9 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
 
   public void setRolloverTextColor(Color rolloverTextColor) {
     this.rolloverTextColor = rolloverTextColor;
+  }
+
+  public void setDisabledTextColor(Color disabledTextColor) {
+    this.disabledTextColor = disabledTextColor;
   }
 }

@@ -19,7 +19,6 @@ import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobListView;
@@ -34,8 +33,7 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -59,6 +57,10 @@ public class SeriesEditionDialog {
   private GlobListView categoryList;
   private SeriesEditionDialog.AssignCategoryAction assignCategoryAction;
   private SeriesEditionDialog.ValidateAction okAction;
+  private AbstractAction deleteBeginDateAction;
+  private SeriesEditionDialog.CalendarAction beginDateCalendar;
+  private AbstractAction deleteEndDateAction;
+  private SeriesEditionDialog.CalendarAction endDateCalendar;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -141,31 +143,34 @@ public class SeriesEditionDialog {
     assignCategoryAction = new AssignCategoryAction(dialog);
     builder.add("assignCategory", assignCategoryAction);
 
-
     builder.add("beginSeriesDate",
                 GlobLabelView.init(Series.TYPE, localRepository, localDirectory,
                                    new MonthYearStringifier(Series.FIRST_MONTH))
                   .setAutoHideIfEmpty(true).getComponent());
-    builder.add("deleteBeginSeriesDate", new AbstractAction() {
+    deleteBeginDateAction = new AbstractAction() {
 
       public void actionPerformed(ActionEvent e) {
         localRepository.update(currentSeries.getKey(), Series.FIRST_MONTH, null);
       }
-    });
+    };
+    builder.add("deleteBeginSeriesDate", deleteBeginDateAction);
 
-    builder.add("beginSeriesCalendar", new CalendarAction(Series.FIRST_MONTH));
+    beginDateCalendar = new CalendarAction(Series.FIRST_MONTH, Series.LAST_MONTH, -1);
+    builder.add("beginSeriesCalendar", beginDateCalendar);
 
     builder.add("endSeriesDate",
                 GlobLabelView.init(Series.TYPE, localRepository, localDirectory,
                                    new MonthYearStringifier(Series.LAST_MONTH))
                   .setAutoHideIfEmpty(true).getComponent());
-    builder.add("deleteEndSeriesDate", new AbstractAction() {
+    deleteEndDateAction = new AbstractAction() {
 
       public void actionPerformed(ActionEvent e) {
         localRepository.update(currentSeries.getKey(), Series.LAST_MONTH, null);
       }
-    });
-    builder.add("endSeriesCalendar", new CalendarAction(Series.LAST_MONTH));
+    };
+    builder.add("deleteEndSeriesDate", deleteEndDateAction);
+    endDateCalendar = new CalendarAction(Series.LAST_MONTH, Series.FIRST_MONTH, 1);
+    builder.add("endSeriesCalendar", endDateCalendar);
 
     builder.addEditor("amountEditor", SeriesBudget.AMOUNT);
 
@@ -186,12 +191,19 @@ public class SeriesEditionDialog {
           categoryList.setFilter(GlobMatchers.fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)));
         }
         else {
-          categoryList.setFilter(GlobMatchers.NONE);
           budgetTable.setFilter(GlobMatchers.NONE);
           assignCategoryAction.setEnabled(false);
+          categoryList.setFilter(GlobMatchers.NONE);
         }
+        updateDateState();
       }
     }, Series.TYPE);
+
+    localRepository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        updateDateState();
+      }
+    });
 
     builder.addRepeat("monthRepeat", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
                       new RepeatComponentFactory<Integer>() {
@@ -220,6 +232,14 @@ public class SeriesEditionDialog {
     JPanel panel = builder.load();
     okAction = new ValidateAction();
     dialog.addInPanelWithButton(panel, okAction, new CancelAction());
+  }
+
+  private void updateDateState() {
+    beginDateCalendar.setEnabled(currentSeries != null);
+    boolean b = currentSeries != null && currentSeries.get(Series.FIRST_MONTH) != null;
+    deleteBeginDateAction.setEnabled(b);
+    endDateCalendar.setEnabled(currentSeries != null);
+    deleteEndDateAction.setEnabled(currentSeries != null && currentSeries.get(Series.LAST_MONTH) != null);
   }
 
   public void show(BudgetArea budgetArea, Set<Integer> monthIds) {
@@ -570,20 +590,38 @@ public class SeriesEditionDialog {
 
   private class CalendarAction extends AbstractAction {
     private IntegerField date;
+    private IntegerField relativeDate;
+    private int sens;
 
-    private CalendarAction(IntegerField date) {
+    private CalendarAction(IntegerField date, IntegerField relativeDate, int sens) {
       this.date = date;
+      this.relativeDate = relativeDate;
+      this.sens = sens;
     }
 
     public void actionPerformed(ActionEvent e) {
+      int sens = this.sens;
       MonthChooser chooser = new MonthChooser(localDirectory);
       Integer monthId = currentSeries.get(date);
+      Integer limit = 0;
       if (monthId == null) {
-        monthId = localDirectory.get(TimeService.class).getCurrentMonthId();
+        monthId = currentSeries.get(relativeDate);
+        if (monthId == null) {
+          monthId = localDirectory.get(TimeService.class).getCurrentMonthId();
+          sens = 0;
+        }
+        else {
+          limit = monthId;
+        }
       }
-      int year = Month.toYear(monthId);
-      int month = Month.toMonth(monthId);
-      int result = chooser.show(dialog, year, month);
+      else {
+        limit = currentSeries.get(relativeDate);
+        if (limit == null) {
+          sens = 0;
+          limit = 0;
+        }
+      }
+      int result = chooser.show(dialog, monthId, sens, limit);
       if (result == -1) {
         return;
       }

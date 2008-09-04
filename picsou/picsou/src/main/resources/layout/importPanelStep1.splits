@@ -15,37 +15,37 @@
 
   <panel styleClass="dialog" preferredSize="(450,380)">
 
-  <column styleClass="innerDialog">
+    <column styleClass="innerDialog">
 
     <label text="$import.step1.title" styleClass="title"/>
 
-    <htmlEditorPane text="$login.initial.file"/>
+      <htmlEditorPane text="$login.initial.file"/>
 
-    <row marginTop="5" marginLeft="5" marginRight="5" defaultAnchor="center">
-      <textField ref="fileField" marginRight="10" anchor="center" weightX="100"/>
-      <button ref="fileButton" anchor="west"/>
-    </row>
+      <row marginTop="5" marginLeft="5" marginRight="5" defaultAnchor="center">
+        <textField ref="fileField" marginRight="10" anchor="center" weightX="100"/>
+        <button ref="fileButton" anchor="west"/>
+      </row>
 
-    <label ref="message" margin="5" horizontalAlignment="center" foreground="#FF0000"
-           fill="horizontal" anchor="center"/>
+      <label ref="message" margin="5" horizontalAlignment="center" foreground="#FF0000"
+             fill="horizontal" anchor="center"/>
 
-    <column styleClass="dialogBlock" marginTop="20">
-      <htmlEditorPane text="$import.step1.header" margin="10"/>
-      <comboBox ref="bankCombo" marginLeft="30" marginRight="30" marginBottom="10"/>
-      <button name="downloadUrl" styleClass="hyperlink" action="downloadUrl"
-              fill="none" anchor="center" margin="10" marginTop="0"/>
+      <column styleClass="dialogBlock" marginTop="20">
+        <htmlEditorPane text="$import.step1.header" margin="10"/>
+        <comboBox ref="bankCombo" marginLeft="30" marginRight="30" marginBottom="10"/>
+        <button name="downloadUrl" styleClass="hyperlink" action="downloadUrl"
+                fill="none" anchor="center" margin="10" marginTop="0"/>
+      </column>
+
+      <filler fill="vertical"/>
+
+      <row styleClass="buttons">
+        <button name="import" action="import" margin="5"/>
+        <button name="close" action="close" margin="5"/>
+      </row>
+
+      <filler fill="vertical"/>
+
     </column>
-
-    <filler fill="vertical"/>
-
-    <row styleClass="buttons">
-      <button name="import" action="import" margin="5"/>
-      <button name="close" action="close" margin="5"/>
-    </row>
-
-    <filler fill="vertical"/>
-
-  </column>
 
   </panel>
 

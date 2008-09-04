@@ -1,9 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.model.Month;
+import org.uispec4j.TextBox;
 import org.uispec4j.ToggleButton;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import junit.framework.Assert;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
 public class MonthChooserChecker extends DataChecker {
   private Window dialog;
@@ -12,64 +15,79 @@ public class MonthChooserChecker extends DataChecker {
     this.dialog = dialog;
   }
 
-  public void checkVisibleYears(int previous, int current, int next) {
-    dialog.getTextBox("previousYearLabel").textEquals(Integer.toString(previous));
-    dialog.getTextBox("currentYearLabel").textEquals(Integer.toString(current));
-    dialog.getTextBox("nextYearLabel").textEquals(Integer.toString(next));
+  public MonthChooserChecker checkVisibleYears(int previous, int current, int next) {
+    assertTrue(dialog.getTextBox("previousYearLabel").textEquals(Integer.toString(previous)));
+    assertTrue(getCurrentYear().textEquals(Integer.toString(current)));
+    assertTrue(dialog.getTextBox("nextYearLabel").textEquals(Integer.toString(next)));
+    return this;
   }
 
-  public void checkSelectedInPreviousMonth(int monthId) {
-    UISpecAssert.assertTrue(getButtonInPreviousYear(monthId).isSelected());
-    UISpecAssert.assertFalse(getButtonInCurrentYear(monthId).isSelected());
-    UISpecAssert.assertFalse(getButtonInNextYear(monthId).isSelected());
+  public TextBox getCurrentYear() {
+    return dialog.getTextBox("currentYearLabel");
   }
 
-  public void checkSelectedInCurrentMonth(int monthId) {
-    UISpecAssert.assertFalse(getButtonInPreviousYear(monthId).isSelected());
-    UISpecAssert.assertTrue(getButtonInCurrentYear(monthId).isSelected());
-    UISpecAssert.assertFalse(getButtonInNextYear(monthId).isSelected());
+  public MonthChooserChecker checkSelectedInPreviousMonth(int monthId) {
+    assertTrue(getButtonInPreviousYear(monthId).isSelected());
+    assertFalse(getButtonInCurrentYear(monthId).isSelected());
+    assertFalse(getButtonInNextYear(monthId).isSelected());
+    return this;
   }
 
-  public void checkSelectedInNextMonth(int monthId) {
-    UISpecAssert.assertFalse(getButtonInPreviousYear(monthId).isSelected());
-    UISpecAssert.assertFalse(getButtonInCurrentYear(monthId).isSelected());
-    UISpecAssert.assertTrue(getButtonInNextYear(monthId).isSelected());
+  public MonthChooserChecker checkSelectedInCurrentMonth(int monthId) {
+    assertFalse(getButtonInPreviousYear(monthId).isSelected());
+    assertTrue(getButtonInCurrentYear(monthId).isSelected());
+    assertFalse(getButtonInNextYear(monthId).isSelected());
+    return this;
   }
 
-  public void checkNoneSelected() {
-    for (int i = 1; i <= 12; i++){
-      UISpecAssert.assertFalse(getButtonInPreviousYear(i).isSelected());
-      UISpecAssert.assertFalse(getButtonInCurrentYear(i).isSelected());
-      UISpecAssert.assertFalse(getButtonInNextYear(i).isSelected());
+  public MonthChooserChecker checkSelectedInNextMonth(int monthId) {
+    assertFalse(getButtonInPreviousYear(monthId).isSelected());
+    assertFalse(getButtonInCurrentYear(monthId).isSelected());
+    assertTrue(getButtonInNextYear(monthId).isSelected());
+    return this;
+  }
+
+  public MonthChooserChecker checkNoneSelected() {
+    for (int i = 1; i <= 12; i++) {
+      assertFalse(getButtonInPreviousYear(i).isSelected());
+      assertFalse(getButtonInCurrentYear(i).isSelected());
+      assertFalse(getButtonInNextYear(i).isSelected());
     }
+    return this;
   }
 
-  public void nextYear() {
+  public MonthChooserChecker nextYear() {
     dialog.getButton("nextYearAction").click();
+    return this;
   }
 
-  public void previousYear() {
+  public MonthChooserChecker previousYear() {
     dialog.getButton("previousYearAction").click();
+    return this;
   }
 
-  public void nextPage() {
+  public MonthChooserChecker nextPage() {
     dialog.getButton("nextPageAction").click();
+    return this;
   }
 
-  public void previousPage() {
+  public MonthChooserChecker previousPage() {
     dialog.getButton("previousPageAction").click();
+    return this;
   }
 
-  public void selectMonthInCurrent(int month) {
+  public MonthChooserChecker selectMonthInCurrent(int month) {
     ToggleButton button = getButtonInCurrentYear(month);
     button.click();
-    UISpecAssert.assertFalse(dialog.isVisible());
+    assertFalse(dialog.isVisible());
+    return this;
   }
 
-  public void selectMonthInPrevious(int month) {
+  public MonthChooserChecker selectMonthInPrevious(int month) {
     ToggleButton button = getButtonInPreviousYear(month);
     button.click();
-    UISpecAssert.assertFalse(dialog.isVisible());
+    assertFalse(dialog.isVisible());
+    return this;
   }
 
   private ToggleButton getButtonInCurrentYear(int month) {
@@ -89,6 +107,44 @@ public class MonthChooserChecker extends DataChecker {
 
   public void cancel() {
     dialog.getButton("cancel").click();
-    UISpecAssert.assertFalse(dialog.isVisible());
+    assertFalse(dialog.isVisible());
+  }
+
+  public MonthChooserChecker checkEnabledInCurrentYear(int month) {
+    UISpecAssert.assertThat(getButtonInCurrentYear(month).isEnabled());
+    return this;
+  }
+
+  public MonthChooserChecker checkDisabledInCurrentYear(int month) {
+    assertFalse("month " + month + " not disabled", getButtonInCurrentYear(month).isEnabled());
+    return this;
+  }
+
+  public MonthChooserChecker checkIsEnabled(int... monthIds) {
+    for (int monthId : monthIds) {
+      centerTo(monthId);
+      assertTrue(getButtonInCurrentYear(Month.toMonth(monthId)).isEnabled());
+    }
+    return this;
+  }
+
+  public MonthChooserChecker checkIsDisabled(int... monthIds) {
+    for (int monthId : monthIds) {
+      centerTo(monthId);
+      assertFalse(getButtonInCurrentYear(Month.toMonth(monthId)).isEnabled());
+    }
+    return this;
+  }
+
+  public MonthChooserChecker centerTo(int monthId) {
+    int currentYear = Integer.parseInt(getCurrentYear().getText());
+    int year = Month.toYear(monthId);
+    for (; year < currentYear; year++) {
+      previousYear();
+    }
+    for (; currentYear < year; currentYear++) {
+      nextYear();
+    }
+    return this;
   }
 }
