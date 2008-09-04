@@ -23,6 +23,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   private Object valueForMultiSelection;
   private boolean forceNotEditable;
   private GlobList forcedSelection;
+  private boolean isInitialized = false;
 
   protected AbstractGlobTextEditor(Field field, COMPONENT_TYPE component, GlobRepository repository, Directory directory) {
     super(field.getGlobType(), repository, directory);
@@ -64,6 +65,10 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   protected abstract void registerChangeListener();
 
   public final COMPONENT_TYPE getComponent() {
+    if (isInitialized) {
+      return textComponent;
+    }
+    isInitialized = true;
     if (forcedSelection != null) {
       selectionUpdated(new DefaultGlobSelection(forcedSelection, forcedSelection.getTypes()));
     }

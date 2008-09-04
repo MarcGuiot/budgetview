@@ -22,7 +22,7 @@
       <row styleClass="buttonGroup" marginTop="5" marginBottom="10">
         <button action="previousPageAction" icon="button_prev2.png" styleClass="icon"/>
         <button action="previousYearAction" icon="button_prev.png" styleClass="icon"/>
-        <button action="homeYearAction" icon="button_prev.png" styleClass="icon"/>
+        <button action="homeYearAction" icon="button_today.png" styleClass="icon"/>
         <button action="nextYearAction" icon="button_next.png" styleClass="icon"/>
         <button action="nextPageAction" icon="button_next2.png" styleClass="icon"/>
       </row>

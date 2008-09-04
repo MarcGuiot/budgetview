@@ -86,13 +86,6 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
             repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
             repository.setTarget(transaction.getKey(), Transaction.CATEGORY, categoryKey);
           }
-          Glob series = repository.get(seriesKey);
-          if (series.get(Series.INITIAL_AMOUNT) == null &&
-              !ProfileType.UNKNOWN.getId().equals(series.get(Series.PROFILE_TYPE))) {
-            SeriesEditionDialog seriesEditionDialog =
-              new SeriesEditionDialog(dialog, repository, directory);
-            seriesEditionDialog.showInit(series, currentTransactions);
-          }
         }
         finally {
           repository.completeBulkDispatchingMode();

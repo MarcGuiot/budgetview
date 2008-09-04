@@ -150,13 +150,31 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMonthIsActive(String monthLabel) {
-    assertThat(monthLabel + " is not enabled", getMonthCheckBox(monthLabel).isSelected());
+  public SeriesEditionDialogChecker checkMonthIsChecked(String ...monthsLabel) {
+    for (String monthLabel : monthsLabel) {
+      assertThat(monthLabel + " is not checked", getMonthCheckBox(monthLabel).isSelected());
+    }
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMonthIsInactive(String monthLabel) {
-    assertFalse(monthLabel + " is not disabled", getMonthCheckBox(monthLabel).isSelected());
+  public SeriesEditionDialogChecker checkMonthIsNotChecked(String ...monthsLabel) {
+    for (String monthLabel : monthsLabel) {
+      assertFalse(monthLabel + " is checked", getMonthCheckBox(monthLabel).isSelected());
+    }
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkMonthIsEnabled(String ...monthsLabel) {
+    for (String monthLabel : monthsLabel) {
+      assertThat(monthLabel + " is disable", getMonthCheckBox(monthLabel).isEnabled());
+    }
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkMonthIsDisabled(String ...monthsLabel) {
+    for (String monthLabel : monthsLabel) {
+      assertFalse(monthLabel + " is enable", getMonthCheckBox(monthLabel).isEnabled());
+    }
     return this;
   }
 
@@ -376,6 +394,18 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesEditionDialogChecker checkCalendarsAreDisable() {
     assertFalse(dialog.getButton("beginSeriesCalendar").isEnabled());
     assertFalse(dialog.getButton("endSeriesCalendar").isEnabled());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkNameIsSelected() {
+    JTextField textEditor = (JTextField)dialog.getInputTextBox("nameField").getAwtComponent();
+    Assert.assertEquals(textEditor.getText(), textEditor.getSelectedText());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkAmountIsSelected() {
+    JTextField textEditor = (JTextField)dialog.getInputTextBox("amountEditor").getAwtComponent();
+    Assert.assertEquals(textEditor.getText(), textEditor.getSelectedText());
     return this;
   }
 }
