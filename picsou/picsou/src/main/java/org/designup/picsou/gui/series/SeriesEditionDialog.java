@@ -4,7 +4,7 @@ import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.categories.CategoryChooserCallback;
 import org.designup.picsou.gui.categories.CategoryChooserDialog;
-import org.designup.picsou.gui.components.MonthChooser;
+import org.designup.picsou.gui.components.MonthChooserDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.Gui;
@@ -601,7 +601,7 @@ public class SeriesEditionDialog {
 
     public void actionPerformed(ActionEvent e) {
       int sens = this.sens;
-      MonthChooser chooser = new MonthChooser(localDirectory);
+      MonthChooserDialog chooser = new MonthChooserDialog(localDirectory);
       Integer monthId = currentSeries.get(date);
       Integer limit = 0;
       if (monthId == null) {

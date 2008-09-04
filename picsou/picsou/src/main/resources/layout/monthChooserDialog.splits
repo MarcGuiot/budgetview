@@ -1,0 +1,54 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <styles>
+    <style selector="label" font="-,bold,16" fill="none" anchor="center" weightY="0.1"/>
+
+    <style selector="repeat" layout="horizontalGrid" gridWrapLimit="3" weightY="10"/>
+
+    <style selector="row .buttonGroup" fill="horizontal" anchor="center" weightY="0"
+           marginTop="10" marginBottom="5"/>
+
+    <style selector=".monthBlock"
+           background="dialog.block" opaque="true" border="etched"/>
+    <style selector=".monthBlock label" marginTop="10" marginBottom="5"/>
+    <style selector=".monthBlock repeat" margin="5"/>    
+  </styles>
+
+  <panel styleClass="dialog" opaque="true">
+    <column styleClass="innerDialog">
+
+      <row styleClass="buttonGroup" marginTop="5" marginBottom="10">
+        <button action="previousPageAction" icon="button_prev2.png" styleClass="icon"/>
+        <button action="previousYearAction" icon="button_prev.png" styleClass="icon"/>
+        <button action="nextYearAction" icon="button_next.png" styleClass="icon"/>
+        <button action="nextPageAction" icon="button_next2.png" styleClass="icon"/>
+      </row>
+
+      <row>
+        <column styleClass="monthBlock" marginLeft="0" marginRight="10">
+          <label ref="previousYearLabel"/>
+          <repeat ref="previousYearMonths">
+            <toggleButton ref="month" styleClass="selector"/>
+          </repeat>
+        </column>
+
+        <column styleClass="monthBlock" marginLeft="10" marginRight="10">
+          <label ref="currentYearLabel"/>
+          <repeat ref="currentYearMonths">
+            <toggleButton ref="month" styleClass="selector"/>
+          </repeat>
+        </column>
+
+        <column styleClass="monthBlock" marginLeft="10" marginRight="0">
+          <label ref="nextYearLabel"/>
+          <repeat ref="nextYearMonths">
+            <toggleButton ref="month" styleClass="selector"/>
+          </repeat>
+        </column>
+      </row>
+
+    </column>
+  </panel>
+</splits>

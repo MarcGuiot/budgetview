@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MonthChooser {
+public class MonthChooserDialog {
   private JLabel nextYearLabel = new JLabel();
   private JLabel previousYearLabel = new JLabel();
   private JLabel currentYearLabel = new JLabel();
@@ -30,10 +30,10 @@ public class MonthChooser {
   private int yearLimit;
   private int monthLimit;
 
-  public MonthChooser(final Directory directory) {
+  public MonthChooserDialog(final Directory directory) {
     this.directory = directory;
     SplitsBuilder builder = new SplitsBuilder(directory);
-    builder.setSource(MonthChooser.class, "/layout/monthChooser.splits");
+    builder.setSource(MonthChooserDialog.class, "/layout/monthChooserDialog.splits");
     builder.add("previousYearLabel", previousYearLabel);
     builder.add("currentYearLabel", currentYearLabel);
     builder.add("nextYearLabel", nextYearLabel);
@@ -101,7 +101,7 @@ public class MonthChooser {
     dialog.setVisible(false);
   }
 
-  private void addMonthsPanel(String name, SplitsBuilder builder, MonthChooser selection, int index) {
+  private void addMonthsPanel(String name, SplitsBuilder builder, MonthChooserDialog selection, int index) {
     MonthsComponentFactory monthsComponentFactory =
       new MonthsComponentFactory(selection, index);
     builder.addRepeat(name, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
@@ -110,7 +110,7 @@ public class MonthChooser {
   }
 
   private static class MonthsComponentFactory implements RepeatComponentFactory<Integer> {
-    private MonthChooser selection;
+    private MonthChooserDialog selection;
     private int index;
     private int selectedYear;
     private int selectedMonth;
@@ -120,7 +120,7 @@ public class MonthChooser {
     private int currentYear;
     JToggleButton[] buttons = new JToggleButton[12];
 
-    public MonthsComponentFactory(MonthChooser selection, int index) {
+    public MonthsComponentFactory(MonthChooserDialog selection, int index) {
       this.selection = selection;
       this.index = index;
     }

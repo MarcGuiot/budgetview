@@ -16,15 +16,6 @@ public class PicsouMacLookAndFeel extends AquaLookAndFeel {
     if (System.getProperty("mrj.version") != null) {
       System.setProperty("apple.laf.useScreenMenuBar", "true");
     }
-    try {
-//      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouButtonUI", "ButtonUI");
-//      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouOptionPaneUI", "OptionPaneUI");
-//      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouMacFileChooserUI", "FileChooserUI");
-//      LafUtils.initUI(defaults, "org.designup.picsou.gui.plaf.PicsouRootPaneUI", "RootPaneUI");
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 
   protected void initComponentDefaults(UIDefaults defaults) {

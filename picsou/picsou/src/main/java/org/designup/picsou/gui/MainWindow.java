@@ -17,9 +17,6 @@ public class MainWindow {
       if (Gui.isMacOSX()) {
         UIManager.setLookAndFeel(new PicsouMacLookAndFeel());
       }
-//      else if (Gui.isLinux()) {
-//        UIManager.addAuxiliaryLookAndFeel(new PicsouWindowsLookAndFeel());
-//      }
       else {
         Options.setUseSystemFonts(true);
         Options.setUseNarrowButtons(false);
@@ -29,9 +26,7 @@ public class MainWindow {
         PicsouWindowsLookAndFeel.setSelectTextOnKeyboardFocusGained(false);
 
         UIManager.put("FileChooser.useSystemIcons", Boolean.TRUE);
-//        UIManager.addAuxiliaryLookAndFeel(new PicsouWindowsLookAndFeel());
         UIManager.setLookAndFeel(new PicsouWindowsLookAndFeel());
-//        UIManager.getLookAndFeel();
       }
       JDialog.setDefaultLookAndFeelDecorated(false);
     }
