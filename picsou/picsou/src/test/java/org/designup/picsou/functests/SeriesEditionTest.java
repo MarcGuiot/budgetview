@@ -414,6 +414,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
+  public void testEsc() throws Exception {
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
+    edition.getStartCalendar().pressEscapeKey();
+    Thread.sleep(50);
+    edition.checkNoStartDate();
+  }
+
   public void testEditDate() throws Exception {
     views.selectBudget();
     budgetView.envelopes.createSeries()
@@ -461,5 +469,44 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition.getEndCalendar()
       .checkIsEnabled(200701, 200901)
       .cancel();
+  }
+
+  public void testDateAndBudgetSerie() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2007/02/10", -29.00, "Free Telecom")
+      .load();
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
+    edition.toggleMonth("Jan", "Mar", "Jul", "Sep", "Nov");
+
+    edition.setStartDate(200709)
+      .checkTable(new Object[][]{
+        {"2007", "October", "0.00"},
+        {"2007", "December", "0.00"},
+        {"2008", "February", "0.00"},
+        {"2008", "April", "0.00"},
+        {"2008", "May", "0.00"},
+        {"2008", "June", "0.00"},
+        {"2008", "August", "0.00"}
+      });
+
+    edition.setEndDate(200801)
+      .checkTable(new Object[][]{
+        {"2007", "October", "0.00"},
+        {"2007", "December", "0.00"},
+      });
+
+    edition.setEndDate(200802)
+      .checkTable(new Object[][]{
+        {"2007", "October", "0.00"},
+        {"2007", "December", "0.00"},
+        {"2008", "February", "0.00"}
+      });
+
+    edition.setStartDate(200712)
+      .checkTable(new Object[][]{
+        {"2007", "December", "0.00"},
+        {"2008", "February", "0.00"}
+      });
   }
 }

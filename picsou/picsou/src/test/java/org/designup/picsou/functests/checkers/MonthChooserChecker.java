@@ -1,12 +1,16 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.model.Month;
+import org.uispec4j.Key;
 import org.uispec4j.TextBox;
 import org.uispec4j.ToggleButton;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
+import org.uispec4j.utils.KeyUtils;
+
+import javax.swing.*;
 
 public class MonthChooserChecker extends DataChecker {
   private Window dialog;
@@ -146,5 +150,11 @@ public class MonthChooserChecker extends DataChecker {
       nextYear();
     }
     return this;
+  }
+
+  public void pressEscapeKey() {
+    final JDialog jDialog = (JDialog)dialog.getAwtComponent();
+    KeyUtils.pressKey(jDialog.getRootPane(), Key.ESCAPE);
+    assertFalse(dialog.isVisible());
   }
 }

@@ -138,12 +138,14 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker toggleMonth(String monthLabel) {
-    try {
-      getMonthCheckBox(monthLabel).click();
-    }
-    catch (ItemNotFoundException e) {
-      throw new RuntimeException("No component found for: " + monthLabel, e);
+  public SeriesEditionDialogChecker toggleMonth(String... monthsLabel) {
+    for (String monthLabel : monthsLabel) {
+      try {
+        getMonthCheckBox(monthLabel).click();
+      }
+      catch (ItemNotFoundException e) {
+        throw new RuntimeException("No component found for: " + monthLabel, e);
+      }
     }
     return this;
   }
@@ -262,11 +264,11 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
 
-  public MonthChooserChecker getStartCalendar(){
+  public MonthChooserChecker getStartCalendar() {
     return getMonthChooser("beginSeriesCalendar");
   }
 
-  public MonthChooserChecker getEndCalendar(){
+  public MonthChooserChecker getEndCalendar() {
     return getMonthChooser("endSeriesCalendar");
   }
 

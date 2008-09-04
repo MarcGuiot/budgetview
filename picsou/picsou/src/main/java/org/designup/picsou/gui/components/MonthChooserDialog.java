@@ -29,6 +29,7 @@ public class MonthChooserDialog {
   private int sens;
   private int yearLimit;
   private int monthLimit;
+  private int newMonth;
 
   public MonthChooserDialog(final Directory directory) {
     this.directory = directory;
@@ -73,6 +74,7 @@ public class MonthChooserDialog {
   }
 
   public int show(Window parent, int selectedMonthId, int sens, int limitMonthId) {
+    newMonth = -1;
     this.sens = sens;
     this.yearLimit = Month.toYear(limitMonthId);
     this.monthLimit = Month.toMonth(limitMonthId);
@@ -84,7 +86,7 @@ public class MonthChooserDialog {
     dialog.pack();
     GuiUtils.showCentered(dialog);
     dialog = null;
-    return selectedMonth;
+    return newMonth;
   }
 
   private void update() {
@@ -97,7 +99,7 @@ public class MonthChooserDialog {
   }
 
   private void set(int monthId) {
-    selectedMonth = monthId;
+    newMonth = monthId;
     dialog.setVisible(false);
   }
 

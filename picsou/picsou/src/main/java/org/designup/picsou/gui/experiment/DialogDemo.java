@@ -3,6 +3,7 @@ package org.designup.picsou.gui.experiment;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
@@ -23,6 +24,7 @@ import java.util.Collections;
 public class DialogDemo {
   public static void main(String[] args) throws Exception {
 
+    MainWindow window = new MainWindow();
     PicsouDialog.MODAL = false;
     Directory directory = PicsouApplication.createDirectory();
     GlobRepository repository = PicsouInit.init(ServerAccess.NULL, "user", true, directory).getRepository();
@@ -33,8 +35,9 @@ public class DialogDemo {
     PicsouSampleGenerator generator = new PicsouSampleGenerator(repository);
     generator.run(200710, 200809);
 
-    JFrame frame = new JFrame();
-    directory.add(frame);
+//    JFrame frame = new JFrame();
+    JFrame frame = window.getFrame();
+    directory.add(JFrame.class, frame);
 
 //    showCategorizationDialog(repository, directory, frame);
 //    showSeriesEditionDialog(repository, directory, frame);
@@ -55,7 +58,7 @@ public class DialogDemo {
 
   private static void showCategoriesEditionDialog(GlobRepository repository, Directory directory) {
     CategoryEditionDialog dialog = new CategoryEditionDialog(repository, directory);
-    SplitsEditor.show(dialog.getDialog(), directory);
+//    SplitsEditor.show(dialog.getDialog(), directory);
     dialog.show(GlobList.EMPTY);
   }
 }
