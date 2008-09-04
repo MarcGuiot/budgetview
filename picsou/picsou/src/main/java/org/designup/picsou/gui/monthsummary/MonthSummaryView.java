@@ -223,7 +223,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
         transactions.addAll(getUncategorizedTransactions(month, repository));
       }
 
-      CategorizationDialog dialog = new CategorizationDialog(directory.get(JFrame.class), repository, directory);
+      CategorizationDialog dialog = directory.get(CategorizationDialog.class);
       dialog.show(transactions, false, true);
     }
   }

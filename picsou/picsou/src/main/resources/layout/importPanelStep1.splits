@@ -13,7 +13,9 @@
 
   </styles>
 
-  <column margin="20" anchor="center" fill="none" opaque="false" preferredSize="(450,380)">
+  <panel styleClass="dialog" preferredSize="(450,380)">
+
+  <column styleClass="innerDialog">
 
     <filler fill="vertical"/>
 
@@ -48,5 +50,7 @@
     <filler fill="vertical"/>
 
   </column>
+
+  </panel>
 
 </splits>
