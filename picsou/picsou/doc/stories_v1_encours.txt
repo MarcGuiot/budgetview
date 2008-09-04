@@ -5,7 +5,6 @@ CategoryChooserDialog
 * Titre "choisir une categorie"
 
 SeriesEditionDialog
-* Forcer la selection d'une categorie au moins
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
 * Edition des dates debut/fin (MonthChooser) + voir updates table seriesBudget
 * MAJ temps reel du nom de la serie pendant l'edition (propriete editor?)

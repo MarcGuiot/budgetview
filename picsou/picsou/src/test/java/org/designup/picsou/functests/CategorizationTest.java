@@ -78,13 +78,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     transactionDetails.checkSeries("Groceries");
     transactionDetails.checkCategory(MasterCategory.FOOD);
-
-    //TODO avec l'ajout de plusieur category a une enveloppe
-//    CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
-//    reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
-//    reopenedDialog.selectEnvelopeSeries("Groceries", MasterCategory.HOUSE, true);
-//    reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.HOUSE);
-//    reopenedDialog.checkEnveloppeSeriesIsNotSelected("Groceries", MasterCategory.FOOD);
   }
 
   public void testStandardOccasionalTransaction() throws Exception {

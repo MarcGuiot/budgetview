@@ -96,6 +96,11 @@
     <style selector=".iconButtonGroup button.down"
            icon="button_down.png" disabledIcon="button_down_disabled.png"/>
 
+    <style selector="button.icon" text="" opaque="true" borderPainted="false"
+           minimumSize="(18,20)" preferredSize="(18,20)" maximumSize="(18,20)"
+           fill='none' weightX='0'/>
+
+
     <!-- Dark Icon buttons -->
     <ui name="iconButtonDark" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"
         border="iconbutton.dark.border"

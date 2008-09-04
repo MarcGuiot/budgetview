@@ -5,6 +5,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -75,7 +76,7 @@ public class MonthChooser {
     dialog = PicsouDialog.createWithButton(Lang.get("month.chooser.title"), parent, panel, new CancelAction(), directory);
     update();
     dialog.pack();
-    dialog.setVisible(true);
+    GuiUtils.showCentered(dialog);
     dialog = null;
     return selectedMonth;
   }

@@ -9,22 +9,19 @@
 
     <style selector="row .buttonGroup" fill="horizontal" anchor="center" weightY="0"
            marginTop="10" marginBottom="5"/>
-    <style selector="button" text="" opaque="true" borderPainted="false"
-           minimumSize="(23,23)" preferredSize="(23,23)" maximumSize="(23,23)"
-           fill='none' weightX='0'/>
   </styles>
 
   <panel styleClass="dialog" opaque="true">
     <grid styleClass="innerDialog">
       <row styleClass="buttonGroup" gridPos="(0,1,3,1)">
-        <button action="previousPageAction" icon="button_prev2.png"/>
-        <button action="previousYearAction" icon="button_prev.png"/>
-        <button action="nextYearAction" icon="button_next.png"/>
-        <button action="nextPageAction" icon="button_next2.png"/>
+        <button action="previousPageAction" icon="button_prev2.png" styleClass="icon"/>
+        <button action="previousYearAction" icon="button_prev.png" styleClass="icon"/>
+        <button action="nextYearAction" icon="button_next.png" styleClass="icon"/>
+        <button action="nextPageAction" icon="button_next2.png" styleClass="icon"/>
       </row>
 
       <label gridPos="(0,0)" ref="previousYearLabel"
-              marginLeft="0" marginRight="10"/>
+             marginLeft="0" marginRight="10"/>
       <repeat gridPos="(0,2)" ref="previousYearMonths"
               marginLeft="0" marginRight="10"
               border="matte(1,1,1,1,#DDDDDD)">
@@ -32,15 +29,15 @@
       </repeat>
 
       <label gridPos="(1,0)" ref="currentYearLabel"
-              marginLeft="10" marginRight="10"/>
+             marginLeft="10" marginRight="10"/>
       <repeat gridPos="(1,2)" ref="currentYearMonths"
               marginLeft="10" marginRight="10"
               border="matte(1,1,1,1,#DDDDDD)">
-      <toggleButton ref="month" styleClass="selector"/>
+        <toggleButton ref="month" styleClass="selector"/>
       </repeat>
 
       <label gridPos="(2,0)" ref="nextYearLabel"
-              marginLeft="10" marginRight="0"/>
+             marginLeft="10" marginRight="0"/>
       <repeat gridPos="(2,2)" ref="nextYearMonths"
               marginLeft="10" marginRight="0"
               border="matte(1,1,1,1,#DDDDDD)">
