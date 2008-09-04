@@ -9,6 +9,8 @@
   <panel styleClass="dialog" preferredSize="(900,650)">
     <column styleClass="innerDialog">
 
+      <label text="$categorization.title" styleClass="title"/>
+
       <label text="$categorization.list.title"/>
 
       <horizontalSplit dividerLocation="350" resizeWeight="0" opaque="false">

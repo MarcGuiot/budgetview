@@ -10,6 +10,8 @@
   <panel styleClass="dialog" preferredSize="(600,550)">
     <column styleClass="innerDialog">
 
+      <label text="$seriesEdition.title" styleClass="title"/>
+
       <horizontalSplit dividerLocation="150" dividerSize="10" opaque="false">
         <column>
           <scrollPane>

@@ -12,6 +12,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -163,6 +164,10 @@ public class CategoryEditionDialog {
     if (categoryToSelect != null) {
       directory.get(SelectionService.class).select(repository.get(Key.create(Category.TYPE, categoryToSelect)));
     }
+  }
+
+  public Window getDialog() {
+    return dialog;
   }
 
   private class ValidateAction extends AbstractAction {

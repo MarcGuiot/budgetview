@@ -19,6 +19,7 @@ import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobListView;
@@ -373,6 +374,10 @@ public class SeriesEditionDialog {
       min = Math.min(min, value);
     }
     return min;
+  }
+
+  public Window getDialog() {
+    return dialog;
   }
 
   private class AssignCategoryAction extends AbstractAction {

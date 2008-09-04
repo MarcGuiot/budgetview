@@ -3,14 +3,13 @@ package org.designup.picsou.gui.experiment;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
+import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.generator.PicsouSampleGenerator;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -37,8 +36,26 @@ public class DialogDemo {
     JFrame frame = new JFrame();
     directory.add(frame);
 
+//    showCategorizationDialog(repository, directory, frame);
+//    showSeriesEditionDialog(repository, directory, frame);
+    showCategoriesEditionDialog(repository, directory);
+  }
+
+  private static void showCategorizationDialog(GlobRepository repository, Directory directory, JFrame frame) {
     CategorizationDialog dialog = new CategorizationDialog(frame, repository, directory);
     SplitsEditor.show(dialog.getDialog(), directory);
     dialog.show(repository.getAll(Transaction.TYPE), false, false);
+  }
+
+  private static void showSeriesEditionDialog(GlobRepository repository, Directory directory, JFrame frame) {
+    SeriesEditionDialog dialog = new SeriesEditionDialog(frame, repository, directory);
+    SplitsEditor.show(dialog.getDialog(), directory);
+    dialog.show(BudgetArea.EXPENSES_ENVELOPE, Collections.singleton(200808));
+  }
+
+  private static void showCategoriesEditionDialog(GlobRepository repository, Directory directory) {
+    CategoryEditionDialog dialog = new CategoryEditionDialog(repository, directory);
+    SplitsEditor.show(dialog.getDialog(), directory);
+    dialog.show(GlobList.EMPTY);
   }
 }

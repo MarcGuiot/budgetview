@@ -21,6 +21,7 @@ public class PicsouDialog extends JDialog {
   public static boolean MODAL = true;
   private static final Insets BUTTON_INSETS = new Insets(0, 10, 10, 10);
   private ColorService colorService;
+  private static final int HORIZONTAL_BUTTON_MARGIN = Gui.isMacOSX() ? 10 : 0;
 
   public static PicsouDialog create(Window owner, String title, Directory directory) {
     PicsouDialog modalWindow = create(owner, directory);
@@ -63,8 +64,7 @@ public class PicsouDialog extends JDialog {
     GridBagBuilder builder = GridBagBuilder.init()
       .add(panel, 0, 0, buttonCount + 1, 1, noInsets);
 
-    int index = 0;
-    builder.add(Box.createHorizontalGlue(), index++, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER);
+    builder.add(Box.createHorizontalGlue(), 0, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER);
 
     JButton cancelButton = new JButton(cancel);
     JButton okButton = new JButton(ok);
@@ -72,12 +72,12 @@ public class PicsouDialog extends JDialog {
 
     Insets buttonInsets = new Insets(0, 10, 10, 10);
     if (Gui.isMacOSX()) {
-      builder.add(cancelButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
-      builder.add(okButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+      builder.add(cancelButton, 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+      builder.add(okButton, 2, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
     }
     else {
-      builder.add(okButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
-      builder.add(cancelButton, index++, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+      builder.add(okButton, 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+      builder.add(cancelButton, 2, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
     }
 
     JPanel contentPane = builder.getPanel();
@@ -90,21 +90,21 @@ public class PicsouDialog extends JDialog {
   }
 
   private void adjustSizes(JButton cancelButton, JButton okButton) {
-    Dimension cancelSize = cancelButton.getPreferredSize();
-    Dimension okSize = okButton.getPreferredSize();
-    if (cancelSize.width > okSize.width) {
-      okButton.setPreferredSize(cancelSize);
+    Dimension preferredSize = getWidest(okButton.getPreferredSize(), cancelButton.getPreferredSize());
+    okButton.setPreferredSize(preferredSize);
+    cancelButton.setPreferredSize(preferredSize);
+
+    Dimension minimumSize = getWidest(okButton.getMinimumSize(), cancelButton.getMinimumSize());
+    okButton.setMinimumSize(minimumSize);
+    cancelButton.setMinimumSize(minimumSize);
+  }
+
+  private Dimension getWidest(Dimension dimension1, Dimension dimension2) {
+    if (dimension1.width > dimension2.width) {
+      return new Dimension(dimension1.width + HORIZONTAL_BUTTON_MARGIN, dimension1.height);
     }
     else {
-      cancelButton.setPreferredSize(okSize);
-    }
-    Dimension cancelMinSize = cancelButton.getMinimumSize();
-    Dimension okMinSize = okButton.getMinimumSize();
-    if (cancelMinSize.width > okMinSize.width) {
-      okButton.setMinimumSize(cancelMinSize);
-    }
-    else {
-      cancelButton.setMinimumSize(okMinSize);
+      return new Dimension(dimension2.width + HORIZONTAL_BUTTON_MARGIN, dimension2.height);
     }
   }
 

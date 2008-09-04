@@ -13,11 +13,6 @@
 
     <style selector="textArea.readOnly" opaque="false" lineWrap="true" wrapStyleWord="true"/>
 
-    <style selector="label.title"
-           font="-,bold,16" foreground="import.title"
-           fill="none" anchor="center"
-           marginBottom="25"/>
-
     <style selector="label.header"
            font="-,plain,11" foreground="import.header.label"
            marginTop="5" marginBottom="3" fill="none" anchor="left"/>
@@ -43,6 +38,11 @@
     <style selector=".dialog" opaque="true" ui="dialog"/>
     <style selector=".innerDialog" opaque="false" margin="15" marginBottom="10"/>
     <style selector=".innerDialogContent" opaque="false" margin="15"/>
+
+    <style selector=".dialog label.title"
+           font="-,bold,18" foreground="dialog.title"
+           fill="none" anchor="center" marginTop="5" marginBottom="20"/>
+
 
     <ui name="dialogBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="dialog.block.top" bottomColor="dialog.block.bottom"
