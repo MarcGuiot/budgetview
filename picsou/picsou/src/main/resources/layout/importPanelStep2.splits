@@ -13,40 +13,44 @@
 
   </styles>
 
-  <column margin="20" anchor="center" fill="none" opaque="false">
+  <panel styleClass="dialog" preferredSize="(450,380)">
 
-    <label text="$import.step2.title" styleClass="title"/>
+    <column styleClass="innerDialog">
 
-    <label text="$import.file.to.import" styleClass="header"/>
-    <label ref="fileName"/>
+      <label text="$import.step2.title" styleClass="title"/>
 
-    <label text="$import.file.content" styleClass="header"/>
+      <label text="$import.file.to.import" styleClass="header"/>
+      <label ref="fileName"/>
 
-    <scrollPane maximumSize="(400,300)">
-      <table ref="table"/>
-    </scrollPane>
+      <label text="$import.file.content" styleClass="header"/>
 
-    <panel ref="dateSelectionPanel"/>
+      <scrollPane maximumSize="(400,300)">
+        <table ref="table"/>
+      </scrollPane>
 
-    <panel ref="bankEntityEditionPanel"/>
+      <panel ref="dateSelectionPanel"/>
 
-    <row>
-      <comboBox ref="accountCombo"/>
-      <button ref="newAccount"/>
-    </row>
-    <panel ref="accountEditionPanel"/>
-    <label ref="importMessage" foreground="#FF0000"/>
+      <panel ref="bankEntityEditionPanel"/>
 
-    <row styleClass="buttons">
-      <button action="finish"/>
-      <button action="skipFile"/>
-    </row>
+      <row>
+        <comboBox ref="accountCombo"/>
+        <button ref="newAccount"/>
+      </row>
+      <panel ref="accountEditionPanel"/>
+      <label ref="importMessage" foreground="#FF0000"/>
 
-    <row>
-      <filler fill="horizontal"/>
-      <button name="back" action="back" styleClass="hyperlink"/>
-    </row>
+      <row styleClass="buttons">
+        <button action="finish"/>
+        <button action="skipFile"/>
+      </row>
 
-  </column>
+      <row>
+        <filler fill="horizontal"/>
+        <button name="back" action="back" styleClass="hyperlink"/>
+      </row>
+
+    </column>
+
+  </panel>
 
 </splits>

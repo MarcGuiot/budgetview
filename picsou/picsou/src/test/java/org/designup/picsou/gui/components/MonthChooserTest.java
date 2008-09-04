@@ -51,12 +51,12 @@ public class MonthChooserTest extends GuiTestCase {
     });
     MonthChooserChecker month = new MonthChooserChecker(window);
     month.checkVisibleYears(2005, 2006, 2007)
-      .checkEnabled(4)
-      .checkEnabled(5)
+      .checkEnabledInCurrentYear(4)
+      .checkEnabledInCurrentYear(5)
       .nextYear()
-      .checkEnabled(4)
-      .checkEnabled(5)
-      .checkDisabled(6);
+      .checkEnabledInCurrentYear(4)
+      .checkEnabledInCurrentYear(5)
+      .checkDisabledInCurrentYear(6);
   }
 
   public void testWihoutSelectedMonth() throws Exception {

@@ -256,22 +256,23 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   private void setDate(String labelName, int monthId) {
-    MonthChooserChecker month = new MonthChooserChecker(
-      WindowInterceptor.getModalDialog(dialog.getButton(labelName).triggerClick()));
-    int currentYear = Integer.parseInt(month.getCurrentYear().getText());
-    int year = Month.toYear(monthId);
-    for (; year < currentYear; year++) {
-      month.previousYear();
-    }
-    for (; currentYear < year; currentYear++) {
-      month.nextYear();
-    }
-    month.selectMonthInCurrent(Month.toMonth(monthId));
+    MonthChooserChecker month = getMonthChooser(labelName);
+    month.centerTo(monthId)
+      .selectMonthInCurrent(Month.toMonth(monthId));
   }
 
-  private void checkDate(String labelName, int monthId) {
-    String text = Month.toMonth(monthId) + "/" + Month.toYear(monthId);
-    checkDate(labelName, text);
+
+  public MonthChooserChecker getStartCalendar(){
+    return getMonthChooser("beginSeriesCalendar");
+  }
+
+  public MonthChooserChecker getEndCalendar(){
+    return getMonthChooser("endSeriesCalendar");
+  }
+
+  private MonthChooserChecker getMonthChooser(String labelName) {
+    return new MonthChooserChecker(
+      WindowInterceptor.getModalDialog(dialog.getButton(labelName).triggerClick()));
   }
 
   private void checkDate(String labelName, String text) {
@@ -367,6 +368,12 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker removeEndDate() {
     dialog.getButton("deleteEndSeriesDate").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkCalendarsAreDisable() {
+    assertFalse(dialog.getButton("beginSeriesCalendar").isEnabled());
+    assertFalse(dialog.getButton("endSeriesCalendar").isEnabled());
     return this;
   }
 }

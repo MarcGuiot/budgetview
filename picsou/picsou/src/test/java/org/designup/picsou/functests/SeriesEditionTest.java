@@ -428,5 +428,38 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkNoStartDate()
       .checkNoEndDate()
       .cancel();
+    budgetView.envelopes.createSeries()
+      .unselect()
+      .checkCalendarsAreDisable()
+      .cancel();
+  }
+
+  public void testStartEndCalendar() throws Exception {
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries()
+      .setStartDate(200809);
+    edition
+      .getStartCalendar()
+      .checkIsEnabled(200806, 200810)
+      .cancel();
+    edition.getEndCalendar()
+      .checkIsEnabled(200809, 200810)
+      .checkIsDisabled(200808)
+      .cancel();
+    edition.setEndDate(200811);
+    edition.getStartCalendar()
+      .checkIsDisabled(200812)
+      .checkIsEnabled(200811, 200805)
+      .cancel();
+
+    edition.getEndCalendar()
+      .checkIsDisabled(200808)
+      .checkIsEnabled(200809, 200901)
+      .cancel();
+
+    edition.removeBeginDate();
+    edition.getEndCalendar()
+      .checkIsEnabled(200701, 200901)
+      .cancel();
   }
 }

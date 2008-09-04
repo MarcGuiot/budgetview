@@ -619,8 +619,6 @@ public class SeriesEditionDialog {
           limit = 0;
         }
       }
-      int year = Month.toYear(monthId);
-      int month = Month.toMonth(monthId);
       int result = chooser.show(dialog, monthId, sens, limit);
       if (result == -1) {
         return;
