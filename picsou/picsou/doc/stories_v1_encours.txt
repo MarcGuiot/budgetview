@@ -3,10 +3,16 @@
 CategoryChooserDialog
 * Exclure "none" et "all"
 * Titre "choisir une categorie"
+* Bouton pour appeler CategoryEditionDialog
 
 SeriesEditionDialog
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
-* MAJ temps reel du nom de la serie pendant l'edition (propriete editor?)
+* Pb text editor
+* Champ edition montant : pb affichage ".00" (passer le formatter "0.00")
+* Champ edition montant : signes positifs + label depense/recette
+* Afficher les mois futurs meme en version basique
+* Double click table => selection jusqu'a la fin
+* Echeancier : griser mois passes + bold mois courant
 
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)
@@ -22,13 +28,13 @@ CategoryEditionDialog
 Serialisation
 * mettre en place des tests pour garantir l'upgrade data des utilisateurs
 
-
 CategorizationDialog
-* Renommage de serie : mettre a jour le toggle
+* Mode autoselect ==> double click
+* Renommage de serie recurrente : mettre a jour le toggle
+* Renommage de serie envelope : mettre a jour le nom
 * Message d'aide quand il n'y a pas de serie pour une budgetArea
-* Look
 * Aide a la premiere utilisation (messages)
-* afficher le nombre de transactions restantes
 * split de transaction
 * saisie de notes
+* afficher le nombre de transactions restantes
 

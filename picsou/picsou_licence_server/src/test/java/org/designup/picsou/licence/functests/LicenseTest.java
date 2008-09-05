@@ -169,6 +169,19 @@ public class LicenseTest extends LicenseTestCase {
       .cancel();
   }
 
+  public void testEmptyActivationCode() throws Exception {
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
+    loginChecker.skipImport();
+    LicenseChecker license = LicenseChecker.open(window)
+      .enterLicense("titi@foo.org", "az", 24);
+    license.validate();
+    license.checkErrorMessage("Activation failed");
+    license.enterLicense("titi@foo.org", "", 24);
+    license.validate();
+    license.checkErrorMessage("Activation failed");
+  }
+
   private void restartPicsouToIncrementCount() {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
