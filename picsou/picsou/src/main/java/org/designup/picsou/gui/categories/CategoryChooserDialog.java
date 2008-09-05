@@ -2,7 +2,6 @@ package org.designup.picsou.gui.categories;
 
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.CategoryComparator;
-import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
@@ -29,12 +28,10 @@ import java.util.Set;
 
 public class CategoryChooserDialog implements ChangeSetListener {
   private CategoryChooserCallback callback;
-  private TransactionRendererColors colors;
   private Directory directory;
   private GlobRepository repository;
   private GlobStringifier categoryStringifier;
   private PicsouDialog dialog;
-  private SelectionService selectionService;
   private Map<Key, JToggleButton> categoryToButton = new HashMap<Key, JToggleButton>();
   private ButtonGroup buttonGroup;
   private Directory localDirectory;
@@ -42,7 +39,6 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private boolean monoSelection;
 
   public CategoryChooserDialog(CategoryChooserCallback callback, Dialog parent, boolean monoSelection,
-                               TransactionRendererColors colors,
                                GlobRepository repository, Directory directory) {
     this.parent = parent;
     this.monoSelection = monoSelection;
@@ -50,12 +46,10 @@ public class CategoryChooserDialog implements ChangeSetListener {
       buttonGroup = new ButtonGroup();
     }
     this.callback = callback;
-    this.colors = colors;
     this.directory = directory;
 
     localDirectory = new DefaultDirectory(directory);
-    selectionService = new SelectionService();
-    localDirectory.add(selectionService);
+    localDirectory.add(new SelectionService());
 
     this.repository = repository;
 
@@ -114,8 +108,11 @@ public class CategoryChooserDialog implements ChangeSetListener {
                         }
                       });
 
+    JLabel title = new JLabel();
+    title.setText(Lang.get(monoSelection ? "choose.category.title.single" : "choose.category.title.multiple"));
+    builder.add("title", title);
 
-    dialog = PicsouDialog.createWithButtons(Lang.get("choose.category.title"), parent,
+    dialog = PicsouDialog.createWithButtons("", parent,
                                             builder.<JPanel>load(),
                                             new OkAction(), new CloseAction(), directory);
 

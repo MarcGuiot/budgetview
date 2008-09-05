@@ -4,7 +4,6 @@ import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.gui.categories.CategoryChooserCallback;
 import org.designup.picsou.gui.categories.CategoryChooserDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -275,7 +274,6 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
     public void actionPerformed(ActionEvent e) {
       CategoryCallback callback = new CategoryCallback(masterId);
       CategoryChooserDialog dialog = new CategoryChooserDialog(callback, parent, true,
-                                                               new TransactionRendererColors(directory),
                                                                repository, directory);
       dialog.show();
       targetId = callback.getTargetId();

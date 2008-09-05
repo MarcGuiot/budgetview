@@ -4,12 +4,19 @@ import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class CategoryChooserChecker extends DataChecker {
   private Window window;
 
   public CategoryChooserChecker(Window window) {
     this.window = window;
+  }
+
+  public CategoryChooserChecker checkTitle(String title) {
+    assertThat(window.getTextBox("title").textEquals(title));
+    return this;
   }
 
   public CategoryChooserChecker selectCategory(String categoryName, boolean oneSelection) {
@@ -24,7 +31,7 @@ public class CategoryChooserChecker extends DataChecker {
 
   public void validate() {
     window.getButton("ok").click();
-    UISpecAssert.assertFalse(window.isVisible());
+    assertFalse(window.isVisible());
   }
 
   public static void selectCategory(Window dialog, String categoryName, boolean oneSelection) {
@@ -32,26 +39,26 @@ public class CategoryChooserChecker extends DataChecker {
     if (!oneSelection) {
       dialog.getButton("ok").click();
     }
-    UISpecAssert.assertFalse(dialog.isVisible());
+    assertFalse(dialog.isVisible());
   }
 
   public CategoryChooserChecker checkContains(String[] expectedCategories) {
-    for (int i = 0; i < expectedCategories.length; i++) {
-      Assert.assertNotNull(window.getTextBox(expectedCategories[i]));
+    for (String expectedCategory : expectedCategories) {
+      Assert.assertNotNull(window.getTextBox(expectedCategory));
     }
     return this;
   }
 
   public CategoryChooserChecker checkSelected(MasterCategory... category) {
     for (MasterCategory masterCategory : category) {
-      UISpecAssert.assertThat(getCategoryName(masterCategory) + " not selected.", window.getToggleButton(getCategoryName(masterCategory)).isSelected());
+      assertThat(getCategoryName(masterCategory) + " not selected.", window.getToggleButton(getCategoryName(masterCategory)).isSelected());
     }
     return this;
   }
 
   public CategoryChooserChecker checkUnSelected(MasterCategory... category) {
     for (MasterCategory masterCategory : category) {
-      UISpecAssert.assertFalse(getCategoryName(masterCategory) + " not unselected.", window.getToggleButton(getCategoryName(masterCategory)).isSelected());
+      assertFalse(getCategoryName(masterCategory) + " not unselected.", window.getToggleButton(getCategoryName(masterCategory)).isSelected());
     }
     return this;
   }

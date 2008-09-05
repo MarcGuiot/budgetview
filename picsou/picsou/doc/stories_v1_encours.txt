@@ -2,7 +2,6 @@
 
 CategoryChooserDialog
 * Exclure "none" et "all"
-* Titre "choisir une categorie"
 * Bouton pour appeler CategoryEditionDialog
 
 SeriesEditionDialog

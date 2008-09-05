@@ -73,9 +73,11 @@ public class SeriesEditionDialogChecker extends DataChecker {
     CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
     if (oneSelection) {
       Assert.assertEquals(1, category.length);
+      categoryChooser.checkTitle("Select a category");
       categoryChooser.selectCategory(getCategoryName(category[0]), oneSelection);
     }
     else {
+      categoryChooser.checkTitle("Select categories");
       for (MasterCategory masterCategory : category) {
         categoryChooser.selectCategory(getCategoryName(masterCategory));
       }

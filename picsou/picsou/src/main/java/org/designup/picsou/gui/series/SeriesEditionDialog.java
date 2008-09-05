@@ -6,7 +6,6 @@ import org.designup.picsou.gui.categories.CategoryChooserCallback;
 import org.designup.picsou.gui.categories.CategoryChooserDialog;
 import org.designup.picsou.gui.components.MonthChooserDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
@@ -402,7 +401,6 @@ public class SeriesEditionDialog {
       CategoryChooserDialog chooser =
         new CategoryChooserDialog(new SeriesCategoryChooserCallback(), parent,
                                   !budgetArea.isMultiCategories(),
-                                  new TransactionRendererColors(localDirectory),
                                   localRepository, localDirectory);
 
       chooser.show();

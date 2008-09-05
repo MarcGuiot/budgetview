@@ -4,6 +4,7 @@
 
   <panel styleClass="dialog" preferredSize="(800,650)">
     <column styleClass="innerDialog">
+      <label ref="title" styleClass="title"/>
       <scrollPane margin="15" weightY="100" viewportBackground="dialog.block">
         <repeat ref="masterRepeat" margin="10">
           <column>
