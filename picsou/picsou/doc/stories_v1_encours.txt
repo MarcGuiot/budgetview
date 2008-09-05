@@ -17,6 +17,7 @@ SeriesEditionDialog
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)
 * Block "non classe" (avec bouton categorisation)
+* Creation de serie : lister les series existantes + pb layout
 
 Licence
 * Voir nb mois

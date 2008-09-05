@@ -186,7 +186,7 @@ public class SplitTransactionDialog {
         public void actionPerformed(ActionEvent e) {
           CategorizationDialog categorizationDialog =
             new CategorizationDialog(dialog, repositoryForSplitPanel, directoryForSplitPanel);
-          categorizationDialog.show(new GlobList(splittedTransaction), false, true);
+          categorizationDialog.show(new GlobList(splittedTransaction), false);
         }
       };
 
@@ -250,7 +250,7 @@ public class SplitTransactionDialog {
         public void actionPerformed(ActionEvent e) {
           CategorizationDialog categorizationDialog =
             new CategorizationDialog(dialog, localRepository, directoryForSplitPanel);
-          categorizationDialog.show(new GlobList(splittedTransaction), false, true);
+          categorizationDialog.show(new GlobList(splittedTransaction), false);
         }
       };
 

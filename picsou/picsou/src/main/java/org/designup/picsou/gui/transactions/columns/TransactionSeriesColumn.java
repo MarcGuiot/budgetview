@@ -136,7 +136,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
         return;
       }
       CategorizationDialog dialog = directory.get(CategorizationDialog.class);
-      dialog.show(list, true, false);
+      dialog.show(list, true);
     }
 
     private GlobList getTransactionList(Glob transaction) {

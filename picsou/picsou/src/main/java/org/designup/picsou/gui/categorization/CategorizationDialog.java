@@ -16,9 +16,11 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
@@ -41,6 +43,7 @@ public class CategorizationDialog {
   private GlobTableView transactionTable;
   private JCheckBox autoSelectionCheckBox;
   private JCheckBox autoHideCheckBox;
+  private JCheckBox autoSelectNextCheckBox;
 
   private static final int[] COLUMN_SIZES = {10, 28, 10};
   private Directory localDirectory;
@@ -59,6 +62,7 @@ public class CategorizationDialog {
     Comparator<Glob> transactionComparator = getTransactionComparator();
     transactionTable =
       builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
+        .setDefaultLabelCustomizer(new TransactionLabelCustomizer())
         .addColumn(Lang.get("date"), new TransactionDateStringifier(transactionComparator),
                    LabelCustomizers.fontSize(9))
         .addColumn(Transaction.LABEL, LabelCustomizers.bold())
@@ -67,10 +71,14 @@ public class CategorizationDialog {
 
     autoSelectionCheckBox = new JCheckBox(new AutoSelectAction());
     autoSelectionCheckBox.setSelected(true);
-    builder.add("autoSelection", autoSelectionCheckBox);
+    builder.add("autoSelectSimilar", autoSelectionCheckBox);
+
+    autoSelectNextCheckBox = new JCheckBox(new AutoSelectAction());
+    autoSelectNextCheckBox.setSelected(true);
+    builder.add("autoSelectNext", autoSelectNextCheckBox);
 
     autoHideCheckBox = new JCheckBox(new AutoHideAction());
-    autoHideCheckBox.setSelected(true);
+    autoHideCheckBox.setSelected(false);
     builder.add("autoHide", autoHideCheckBox);
 
     builder.addLabel("transactionLabel", Transaction.TYPE, new GlobListStringifier() {
@@ -175,8 +183,43 @@ public class CategorizationDialog {
         if (created.size() == 1) {
           setSeries(created.iterator().next());
         }
+
+        Set<Key> updated = changeSet.getUpdated(Transaction.SERIES);
+        if ((updated.size() > 0) && (autoSelectNextCheckBox.isSelected())) {
+          selectNext(updated);
+        }
       }
     });
+  }
+
+  private void selectNext(Set<Key> updated) {
+    int minIndex = -1;
+    for (Key key : updated) {
+      int index = transactionTable.indexOf(localRepository.get(key));
+      if ((index >= 0) && ((minIndex == -1) || (index < minIndex))) {
+        minIndex = index;
+      }
+    }
+    Glob transaction = findNextUncategorizedTransaction(minIndex);
+    if (transaction != null) {
+      selectionService.select(transaction);
+    }
+  }
+
+  private Glob findNextUncategorizedTransaction(int minIndex) {
+    for (int index = minIndex + 1; index < transactionTable.getRowCount(); index++) {
+      Glob transaction = transactionTable.getGlobAt(index);
+      if (Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
+        return transaction;
+      }
+    }
+    for (int index = 0; index < minIndex; index++) {
+      Glob transaction = transactionTable.getGlobAt(index);
+      if (Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
+        return transaction;
+      }
+    }
+    return null;
   }
 
   private void setSeries(Key seriesKey) {
@@ -207,13 +250,12 @@ public class CategorizationDialog {
 
   }
 
-  public void show(GlobList transactions, boolean selectAll, boolean autoHideCategorized) {
+  public void show(GlobList transactions, boolean selectAll) {
     if (transactions.isEmpty()) {
       return;
     }
     localRepository.rollback();
     localRepository.reset(transactions, Transaction.TYPE);
-    autoHideCheckBox.setSelected(autoHideCategorized);
     updateAutoHide();
     if (selectAll) {
       transactionTable.select(localRepository.getAll(Transaction.TYPE), true);
@@ -322,6 +364,20 @@ public class CategorizationDialog {
     public void actionPerformed(ActionEvent e) {
       CategoryEditionDialog dialog = new CategoryEditionDialog(localRepository, localDirectory);
       dialog.show(GlobList.EMPTY);
+    }
+  }
+
+  private static class TransactionLabelCustomizer implements LabelCustomizer {
+    public void process(JLabel label, Glob transaction, boolean isSelected, boolean hasFocus, int row, int column) {
+      if (isSelected) {
+        label.setForeground(Color.WHITE);
+      }
+      else if (Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
+        label.setForeground(Colors.toColor("222222"));
+      }
+      else {
+        label.setForeground(Colors.toColor("AAAAAA"));
+      }
     }
   }
 }

@@ -21,7 +21,7 @@ public class PicsouDialog extends JDialog {
   public static boolean MODAL = true;
   private static final Insets BUTTON_INSETS = new Insets(0, 10, 10, 10);
   private ColorService colorService;
-  private static final int HORIZONTAL_BUTTON_MARGIN = Gui.isMacOSX() ? 10 : 0;
+  private static final int HORIZONTAL_BUTTON_MARGIN = Gui.isMacOSX() ? 20 : 0;
 
   public static PicsouDialog create(Window owner, String title, Directory directory) {
     PicsouDialog modalWindow = create(owner, directory);

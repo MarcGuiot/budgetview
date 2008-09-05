@@ -119,7 +119,7 @@ public class DummyServerAccess implements ServerAccess {
         "orange france",
         "internet",
         "sfr");
-    add(MasterCategory.MULTIMEDIA,
+    add(MasterCategory.EQUIPMENT,
         "grosbill");
     add(MasterCategory.LEISURES,
         "go sport",

@@ -14,11 +14,11 @@ import org.uispec4j.interception.WindowInterceptor;
 
 public class CategoryEditionTest extends LoggedInFunctionalTestCase {
 
-  public void testPreSelectSelectedCategory() throws Exception {
-    categories.select(MasterCategory.EDUCATION);
+  public void testPreselectsFirstSubCategory() throws Exception {
+    categories.select(MasterCategory.HOUSE);
     CategoryEditionChecker categoryEdition = categories.openEditionDialog();
-    categoryEdition.assertSubSelected("Ecole / Université");
-    categoryEdition.assertMasterSelected(getCategoryName(MasterCategory.EDUCATION));
+    categoryEdition.assertMasterSelected(MasterCategory.HOUSE);
+    categoryEdition.assertSubSelected("Energy");
   }
 
   public void testMasterFilterSystemCategoryIds() throws Exception {
@@ -46,17 +46,20 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
 
   public void testButtonStatus() throws Exception {
     CategoryEditionChecker categoryEdition = categories.openEditionDialog();
-    categoryEdition.selectMaster(MasterCategory.FOOD);
+
+    categoryEdition.selectMaster(MasterCategory.HOUSE);
     UISpecAssert.assertTrue(categoryEdition.getCreateMasterButton().isEnabled());
     UISpecAssert.assertTrue(categoryEdition.getDeleteMasterButton().isEnabled());
     UISpecAssert.assertTrue(categoryEdition.getEditMasterButton().isEnabled());
     UISpecAssert.assertTrue(categoryEdition.getEditSubButton().isEnabled());
     UISpecAssert.assertTrue(categoryEdition.getCreateSubButton().isEnabled());
     UISpecAssert.assertTrue(categoryEdition.getDeleteSubButton().isEnabled());
+
     categoryEdition.createMasterCategory("new Master");
     UISpecAssert.assertFalse(categoryEdition.getEditSubButton().isEnabled());
     UISpecAssert.assertTrue(categoryEdition.getCreateSubButton().isEnabled());
     UISpecAssert.assertFalse(categoryEdition.getDeleteSubButton().isEnabled());
+
     categoryEdition.createSubCategory("sub");
     UISpecAssert.assertTrue(categoryEdition.getEditSubButton().isEnabled());
     UISpecAssert.assertTrue(categoryEdition.getCreateSubButton().isEnabled());
@@ -86,22 +89,30 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -1.0, "Station BP", "transports.essence")
       .load();
+
+    categories.createSubCategory(MasterCategory.TELECOMS, "Téléphone fixe");
+
     CategoryEditionChecker categoryEdition = categories.openEditionDialog();
     categoryEdition.selectMaster(MasterCategory.TRANSPORTS);
-    categoryEdition.selectSub("Essence");
+    categoryEdition.selectSub("Fuel");
+
     WindowInterceptor.init(categoryEdition.getDeleteSubButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          DeleteCategoryChecker categoryChecker = new DeleteCategoryChecker(window);
-          categoryChecker.checkCategory(getCategoryName(MasterCategory.TRANSPORTS));
-          categoryChecker.selectCategory(getCategoryName(MasterCategory.HOUSE));
-          return categoryChecker.validate();
+          DeleteCategoryChecker confirmationDialog = new DeleteCategoryChecker(window);
+          confirmationDialog.checkCategory(getCategoryName(MasterCategory.TRANSPORTS));
+          confirmationDialog.selectCategory(getCategoryName(MasterCategory.HOUSE));
+          return confirmationDialog.validate();
         }
       }).run();
+
+    categoryEdition.assertMasterSelected(MasterCategory.TRANSPORTS);
+
     categoryEdition.selectMaster(MasterCategory.TELECOMS);
     categoryEdition.assertSubContains("Téléphone fixe");
     categoryEdition.validate();
-    categories.assertCategoryNotFound("Essence");
+
+    categories.assertCategoryNotFound("Fuel");
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Station BP", "", -1.0, MasterCategory.HOUSE)
@@ -128,6 +139,7 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
         }
       }).run();
     categoryEdition.validate();
+
     categories.assertCategoryNotFound("Essence");
     categories.assertCategoryNotFound(getCategoryName(MasterCategory.TRANSPORTS));
     transactions
@@ -157,11 +169,17 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCanReuseNameUseInOtherMaster() throws Exception {
-    CategoryEditionChecker categoryEdition = categories.openEditionDialog();
-    categoryEdition.selectMaster(MasterCategory.FOOD);
-    categoryEdition.createSubCategory("Internet");
-    categoryEdition.validate();
-    categories.toggleExpanded(MasterCategory.TELECOMS);
-    categories.assertCategoryExists("Internet", 2);
+    categories.openEditionDialog()
+      .selectMaster(MasterCategory.HOUSE)
+      .createSubCategory("Internet Access")
+      .validate();
+    categories.assertCategoryExists("Internet Access", 1);
+
+    categories.openEditionDialog()
+      .selectMaster(MasterCategory.TELECOMS)
+      .createSubCategory("Internet Access")
+      .validate();
+
+    categories.assertCategoryExists("Internet Access", 2);
   }
 }

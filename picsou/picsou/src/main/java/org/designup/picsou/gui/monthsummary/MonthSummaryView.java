@@ -224,7 +224,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       }
 
       CategorizationDialog dialog = directory.get(CategorizationDialog.class);
-      dialog.show(transactions, false, true);
+      dialog.show(transactions, false);
     }
   }
 

@@ -148,6 +148,10 @@ public class CategoryEditionChecker extends DataChecker {
   }
 
 
+  public void assertMasterSelected(MasterCategory master) {
+    assertMasterSelected(getCategoryName(master));
+  }
+
   public void assertMasterSelected(String name) {
     UISpecAssert.assertThat(getMasterList().selectionEquals(name));
   }

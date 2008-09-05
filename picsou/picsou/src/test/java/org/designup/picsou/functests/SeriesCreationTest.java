@@ -107,17 +107,19 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.checkSelectedTableRows(0, 1, 2);
 
     dialog.selectEnvelopes();
-    SeriesEditionDialogChecker editionDialog = dialog.createEnvelopeSeries();
-    editionDialog.setName("Regime");
-    editionDialog.checkType("Envelope");
-    editionDialog.setCategory(MasterCategory.FOOD);
-
-    editionDialog.validate();
+    dialog.createEnvelopeSeries()
+      .setName("Regime")
+      .checkType("Envelope")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
 
     dialog.checkTable(new Object[][]{
+      {"30/06/2008", "Forfait Kro", -60.00},
+      {"20/06/2008", "Forfait Kro", -60.00},
+      {"10/06/2008", "Forfait Kro", -60.00},
       {"28/06/2008", "Palette Leffe", -150.00},
     });
-    dialog.checkNoTransactionSelected();
+    dialog.checkSelectedTableRows(3);
     dialog.checkNoBudgetAreaSelected();
     dialog.validate();
   }

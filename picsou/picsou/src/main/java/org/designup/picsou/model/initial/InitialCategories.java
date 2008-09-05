@@ -15,41 +15,32 @@ public class InitialCategories {
                         value(Category.ID, master.getId()));
     }
 
-    create(repository, MasterCategory.FOOD,
-           "courant", "restaurant", "livraison", "receptions");
+    create(repository, MasterCategory.FOOD);
 
     create(repository, MasterCategory.HOUSE,
-           "credit_loyer", "assurance", "electro_menager", "bricolage",
-           "entretien", "mobilier", "equipements");
+           "credit", "loyer", "entretien", "mobilier", "energie");
 
-    create(repository, MasterCategory.TELECOMS,
-           "telephone_fixe", "telephone_mobile", "internet");
+    create(repository, MasterCategory.TELECOMS);
 
     create(repository, MasterCategory.TRANSPORTS,
-           "assurance", "achat", "transports_en_commun", "entretien",
-           "essence", "peages", "voyages", "parking");
+           "assurance", "achat", "transports_en_commun", "entretien", "essence");
 
-    create(repository, MasterCategory.INCOME,
-           "salaires", "revenus_d_investissement");
+    create(repository, MasterCategory.INCOME);
 
     create(repository, MasterCategory.HEALTH,
-           "medecin", "pharmacie", "mutuelle", "remboursements", "hopital");
+           "medecin", "pharmacie", "mutuelle", "remboursements");
 
-    create(repository, MasterCategory.EDUCATION,
-           "ecole", "livres", "visites");
+    create(repository, MasterCategory.EDUCATION);
 
-    create(repository, MasterCategory.LEISURES,
-           "cinema", "tv", "musique", "sorties", "lecture", "equipement", "activites");
+    create(repository, MasterCategory.LEISURES);
 
-    create(repository, MasterCategory.TAXES,
-           "impots", "taxe_d_habitation", "taxe_fonciere");
+    create(repository, MasterCategory.TAXES);
 
     create(repository, MasterCategory.BEAUTY);
 
     create(repository, MasterCategory.CLOTHING);
 
-    create(repository, MasterCategory.SAVINGS,
-           "assurance", "epargne", "titres");
+    create(repository, MasterCategory.SAVINGS);
   }
 
   private static void create(GlobRepository repository, MasterCategory master, String... subcats) {

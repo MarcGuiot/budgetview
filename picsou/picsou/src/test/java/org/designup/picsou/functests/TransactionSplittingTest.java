@@ -139,11 +139,11 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -7.50, ""},
         {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, ""},
       })
-      .addOccasional("2.50", MasterCategory.MULTIMEDIA, "")
+      .addOccasional("2.50", MasterCategory.EQUIPMENT, "")
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -5.00, ""},
         {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -12.50, ""},
-        {TransactionType.PRELEVEMENT, MasterCategory.MULTIMEDIA, "Auchan", -2.50, ""},
+        {TransactionType.PRELEVEMENT, MasterCategory.EQUIPMENT, "Auchan", -2.50, ""},
       })
       .ok();
 
@@ -151,7 +151,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -5.00, MasterCategory.FOOD)
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50, MasterCategory.LEISURES)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -2.50, MasterCategory.MULTIMEDIA)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -2.50, MasterCategory.EQUIPMENT)
       .check();
   }
 
@@ -313,12 +313,12 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
     openDialogWithSampleTransaction()
       .addOccasional("5", MasterCategory.LEISURES, "DVD")
       .addOccasional("8", MasterCategory.BEAUTY, "Youth Elixir")
-      .addOccasional("3", MasterCategory.MULTIMEDIA, "Cool Sticker")
+      .addOccasional("3", MasterCategory.EQUIPMENT, "Cool Sticker")
       .checkTable(new Object[][]{
         {TransactionType.PRELEVEMENT, MasterCategory.FOOD, "Auchan", -4.0, ""},
         {TransactionType.PRELEVEMENT, MasterCategory.LEISURES, "Auchan", -5.0, "DVD"},
         {TransactionType.PRELEVEMENT, MasterCategory.BEAUTY, "Auchan", -8.0, "Youth Elixir"},
-        {TransactionType.PRELEVEMENT, MasterCategory.MULTIMEDIA, "Auchan", -3.0, "Cool Sticker"},
+        {TransactionType.PRELEVEMENT, MasterCategory.EQUIPMENT, "Auchan", -3.0, "Cool Sticker"},
       })
 
       .deleteRow(1)

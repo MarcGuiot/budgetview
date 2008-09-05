@@ -138,35 +138,28 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       "Beauty",
       "Clothing",
       "Education",
+      "Equipement",
       "Gifts",
       "Groceries",
       "Apero",
-      "Courant",
-      "Livraison / A emporter",
       "Receptions",
-      "Restaurant",
-      "Réceptions",
       "Health",
       "Housing",
       "Income",
       "Internal transfers",
       "Leisures",
       "Miscellaneous",
-      "Multimedia",
       "Puericulture",
       "Savings",
       "Taxes",
       "Telecommunications",
       "Transports",
-      "Achat véhicule",
-      "Assurance",
       "Entretien/Réparations",
-      "Essence",
+      "Fuel",
+      "Insurance",
       "Moto",
-      "Parking",
-      "Péages",
       "Transports en commun",
-      "Voyages",
+      "Vehicle acquisition",
     };
 
     categories.assertCategoryNamesEqual(expectedCategories);
@@ -187,7 +180,6 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.toggleExpanded(MasterCategory.FOOD);
     categories.assertCategoryNotFound("Charcuterie");
   }
-
 
   public void testCategoryNamesMustBeUnique() throws Exception {
     categories.select(MasterCategory.FOOD);
@@ -315,18 +307,17 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.assertCategoryExists("Apero");
   }
 
-  public void testCannotReuseAnExistingName() throws Exception {
+  public void testCannotReuseAnExistingSubCategoryNameInTheSameMaster() throws Exception {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
+    categories.createSubCategory(MasterCategory.FOOD, "Restaurant");
     categories.select("Apero");
     CategoryEditionChecker editor = categories.openEditionDialog();
 
     WindowInterceptor.init(editor.renameSubCategoryTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          TextBox input = window.getInputTextBox();
-          input.setText("Restaurant");
-          Button okButton = window.getButton("OK");
-          assertFalse(okButton.isEnabled());
+          window.getInputTextBox().setText("Restaurant");
+          assertFalse(window.getButton("OK").isEnabled());
           assertTrue(window.containsLabel(Lang.get("category.name.already.used")));
           return window.getButton("Close").triggerClick();
         }
@@ -356,7 +347,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCategoryExpansion() throws Exception {
-    categories.assertExpanded(MasterCategory.FOOD, false);
+    categories.assertExpansionEnabled(MasterCategory.FOOD, false);
 
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
     categories.assertExpanded(MasterCategory.FOOD, true);

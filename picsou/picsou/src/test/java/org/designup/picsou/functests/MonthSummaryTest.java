@@ -24,7 +24,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     checker.setRecurring("Loyer", "rental", MasterCategory.HOUSE, true);
     checker.setEnvelope("Auchan", "groceries", MasterCategory.FOOD, true);
     checker.setEnvelope("ED", "groceries", MasterCategory.FOOD, false);
-    checker.setOccasional("fnac", MasterCategory.MULTIMEDIA);
+    checker.setOccasional("fnac", MasterCategory.EQUIPMENT);
     checker.setIncome("Salaire");
 
     views.selectHome();
@@ -56,7 +56,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .setRecurring("Loyer", "rental", MasterCategory.HOUSE, true)
       .setEnvelope("Auchan", "groceries", MasterCategory.FOOD, true)
       .setEnvelope("ED", "groceries", MasterCategory.FOOD, false)
-      .setOccasional("fnac", MasterCategory.MULTIMEDIA)
+      .setOccasional("fnac", MasterCategory.EQUIPMENT)
       .setIncome("Salaire");
     views.selectHome();
     monthSummary.init()
@@ -163,7 +163,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .selectTableRow(0)
       .selectIncome()
       .selectIncomeSeries("Salary", true)
-      .selectTableRow(0)
+      .selectTableRow(1)
       .selectOccasional()
       .selectOccasionalSeries(MasterCategory.LEISURES)
       .validate();

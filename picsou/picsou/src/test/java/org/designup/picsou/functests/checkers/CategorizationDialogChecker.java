@@ -39,12 +39,14 @@ public class CategorizationDialogChecker extends DataChecker {
     });
   }
 
-  public void checkLabel(String expected) {
+  public CategorizationDialogChecker checkLabel(String expected) {
     assertTrue(transactionLabel.textEquals(expected));
+    return this;
   }
 
-  public void checkLabel(int count) {
+  public CategorizationDialogChecker checkLabel(int count) {
     assertTrue(transactionLabel.textEquals(count + " operations are selected."));
+    return this;
   }
 
   public void checkBudgetAreasAreEnabled() {
@@ -109,6 +111,7 @@ public class CategorizationDialogChecker extends DataChecker {
         .selectAllMonths()
         .setAmount("0")
         .validate();
+      return this;
     }
     panel.getToggleButton(name).click();
     return this;
@@ -121,6 +124,7 @@ public class CategorizationDialogChecker extends DataChecker {
         .setName(name)
         .setCategory(MasterCategory.INCOME)
         .validate();
+      return this;
     }
     panel.getToggleButton(name).click();
     return this;
@@ -132,11 +136,12 @@ public class CategorizationDialogChecker extends DataChecker {
     return panel;
   }
 
-  public void selectRecurring() {
+  public CategorizationDialogChecker selectRecurring() {
     dialog.getToggleButton(BudgetArea.RECURRING_EXPENSES.getGlob().get(BudgetArea.NAME)).click();
+    return this;
   }
 
-  public void checkContainsRecurringSeries(String... seriesNames) {
+  public CategorizationDialogChecker checkContainsRecurringSeries(String... seriesNames) {
     Panel seriesPanel = getRecurringSeriesPanel();
 
     List<String> names = new ArrayList<String>();
@@ -146,22 +151,39 @@ public class CategorizationDialogChecker extends DataChecker {
     }
 
     org.globsframework.utils.TestUtils.assertContains(names, seriesNames);
+    return this;
   }
 
-  public void checkRecurringSeriesNotFound(String seriesName) {
+  public CategorizationDialogChecker checkRecurringSeriesNotFound(String seriesName) {
     Panel seriesPanel = getRecurringSeriesPanel();
     assertFalse(seriesPanel.containsUIComponent(ToggleButton.class, seriesName));
+    return this;
   }
 
-  public void selectRecurringSeries(String name, MasterCategory category, boolean showSeriesInitialization) {
+  public CategorizationDialogChecker selectNewRecurringSeries(String name, MasterCategory category,
+                                                              boolean transactionWasAlreadyCategorized) {
     Panel panel = getRecurringSeriesPanel();
-    if (showSeriesInitialization) {
+    createRecurringSeries()
+      .setName(name)
+      .setCategory(category)
+      .validate();
+    if (transactionWasAlreadyCategorized) {
+      panel.getToggleButton(name).click();
+    }
+    return this;
+  }
+
+  public CategorizationDialogChecker selectRecurringSeries(String name, MasterCategory category, boolean createSeries) {
+    Panel panel = getRecurringSeriesPanel();
+    if (createSeries) {
       createRecurringSeries()
         .setName(name)
         .setCategory(category)
         .validate();
+      return this;
     }
     panel.getToggleButton(name).click();
+    return this;
   }
 
   private Panel getRecurringSeriesPanel() {
@@ -205,18 +227,19 @@ public class CategorizationDialogChecker extends DataChecker {
     }
   }
 
-  public CategorizationDialogChecker selectEnvelopeSeries(String envelopeName, MasterCategory category, boolean showSeriesInitialization) {
+  public CategorizationDialogChecker selectEnvelopeSeries(String envelopeName, MasterCategory category, boolean createSeries) {
     Panel panel = getEnvelopeSeriesPanel();
     String name = envelopeName + ":" + category.getName();
     Component component = panel.findSwingComponent(ComponentMatchers.innerNameIdentity(name));
     if (component != null) {
       // TODO avec la multi affectation de category a une enveloppe
     }
-    if (showSeriesInitialization) {
+    if (createSeries) {
       createEnvelopeSeries()
         .setName(envelopeName)
         .setCategory(category)
         .validate();
+      return this;
     }
     panel.getToggleButton(name).click();
     return this;
@@ -425,6 +448,19 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public CategorizationDialogChecker disableAutoHide() {
     dialog.getCheckBox("hide").unselect();
+    return this;
+  }
+
+  public void checkAutoSelectNextEnabled(boolean enabled) {
+    assertEquals(enabled, dialog.getCheckBox("next").isSelected());
+  }
+
+  public void enableAutoSelectNext() {
+    dialog.getCheckBox("next").select();
+  }
+
+  public CategorizationDialogChecker disableAutoSelectNext() {
+    dialog.getCheckBox("next").unselect();
     return this;
   }
 

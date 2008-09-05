@@ -42,8 +42,9 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public void checkType(String expectedType) {
+  public SeriesEditionDialogChecker checkType(String expectedType) {
     // TODO
+    return this;
   }
 
   public SeriesEditionDialogChecker checkAmount(String displayedValue) {

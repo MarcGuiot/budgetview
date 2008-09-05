@@ -166,10 +166,10 @@
     <style selector="toggleButton.masterCategorySelector"
            ui="selectionToggle"
            foreground="toggle.selector.categories.master"
-           fill="none" anchor="west" font="-,bold,14"/>
+           fill="none" anchor="west" font="-,bold,12"/>
     <style selector="toggleButton.subCategorySelector"
            ui="selectionToggle" foreground="toggle.selector.categories.sub"
-           font="-,plain,11" fill="none" anchor="west"/>
+           font="-,plain,10" fill="none" anchor="west"/>
 
   </styles>
 

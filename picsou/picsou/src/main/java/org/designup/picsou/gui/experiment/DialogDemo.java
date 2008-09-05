@@ -39,15 +39,15 @@ public class DialogDemo {
     JFrame frame = window.getFrame();
     directory.add(JFrame.class, frame);
 
-//    showCategorizationDialog(repository, directory, frame);
+    showCategorizationDialog(repository, directory, frame);
 //    showSeriesEditionDialog(repository, directory, frame);
-    showCategoriesEditionDialog(repository, directory);
+//    showCategoriesEditionDialog(repository, directory);
   }
 
   private static void showCategorizationDialog(GlobRepository repository, Directory directory, JFrame frame) {
     CategorizationDialog dialog = new CategorizationDialog(frame, repository, directory);
     SplitsEditor.show(dialog.getDialog(), directory);
-    dialog.show(repository.getAll(Transaction.TYPE), false, false);
+    dialog.show(repository.getAll(Transaction.TYPE), false);
   }
 
   private static void showSeriesEditionDialog(GlobRepository repository, Directory directory, JFrame frame) {

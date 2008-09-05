@@ -6,6 +6,7 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.directory.Directory;
 import org.uispec4j.UISpecTestCase;
+import org.uispec4j.UISpec4J;
 
 import java.io.File;
 import java.util.Locale;
@@ -19,6 +20,7 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
   static {
     TestUtils.clearTmpDir();
     Locale.setDefault(Locale.ENGLISH);
+    UISpec4J.setAssertionTimeLimit(1000);
   }
 
   protected void setUp() throws Exception {

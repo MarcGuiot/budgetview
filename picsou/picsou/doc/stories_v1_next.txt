@@ -8,36 +8,10 @@ Versions basique/pro
 Stabilisation
 -------------
 * Graphique page accueil
-* Apprentissage series
-* Undo (verifier + generaliser dans les boîtes de dialogue)
 * Changer date user des transactions
-* Filtrage transactions par Serie
-* Filtrage transactions par TransactionType
-* Filtrage transactions par Compte
-* Filtrage transactions par BudgetArea
-* Graphiques (camembert / histogramme)
-* Afficher les infos de mise a dispo d'une nouvelle version
-* BudgeView : Panneau pour montrer le detail du calcul du disponible en occasional
-* Aide pour trouver les categories dans CategoriesChooserDialog (search)
+* Histogramme trop charge
 * Modifier l'ordre des categories
 * Modifier l'ordre des series
+* BudgetArea "Projets" et "Economies"
 
-
-I18N
-----
-* Edition des TransactionMatchers pour gerer de nouvelles banques
-
-
-Nouveau
--------
-* Projets
-* Affichage synthèse des mois suivants (+/- MonthSummaryView en sequence horizontale, avec projets)
-* Mecanique de backup/restore pour les utilisateurs (crypte ou non?)
 * Creer des transactions utilisateur (soit achats effectues mais pas encore dans les releves, soit previsions plus vagues)
-* Decouverte des mois actifs pour les series a partir des transactions
-* SMS ==> previsions de soldes de fin de mois
-* Remboursements
-
-
-* Virements internes
-* Gerer la notion d'epargne (virements internes ?)

@@ -4,6 +4,7 @@
   <styles>
     <style selector="label.categorizationStep" font="-,bold,12" marginTop="5" marginBottom="5"/>
     <style selector="scrollPane" viewportBackground="dialog.block"/>
+    <style selector="checkBox" font="-,plain,10"/>
   </styles>
 
   <panel styleClass="dialog" preferredSize="(900,650)">
@@ -20,7 +21,8 @@
             <table ref="transactionTable" intercellSpacing="(0,0)" showGrid="false"/>
           </scrollPane>
           <column>
-            <checkBox ref="autoSelection" text="$categorization.autoselection" anchor="left"/>
+            <checkBox ref="autoSelectSimilar" text="$categorization.autoselect.similar" anchor="left"/>
+            <checkBox ref="autoSelectNext" text="$categorization.autoselect.next" anchor="left"/>
             <checkBox ref="autoHide" text="$categorization.autohide" anchor="left"/>
           </column>
         </column>

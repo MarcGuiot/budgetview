@@ -43,7 +43,7 @@ public class WavePanelUI extends BasicPanelUI {
     Graphics2D g2 = (Graphics2D)g;
 
     Rectangle rect = new Rectangle(0, 0, w, h);
-    GradientPaint gradient = new GradientPaint(0, 0, topColor, 0, h, bottomColor);
+    GradientPaint gradient = new GradientPaint(0, 0, topColor, 0, h, bottomColor, true);
     drawGradient(g2, rect, gradient);
 
     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, WAVE_ALPHA));
@@ -51,11 +51,11 @@ public class WavePanelUI extends BasicPanelUI {
     AffineTransform transform = new AffineTransform();
     transform.setToScale(w * 0.9, h * 0.3);
     Shape transformedShape = path.createTransformedShape(transform);
-    drawGradient(g2, transformedShape, new GradientPaint(0, 0, waveColor, 0, h * 0.3f, bottomColor));
+    drawGradient(g2, transformedShape, new GradientPaint(0, 0, waveColor, 0, h * 0.3f, bottomColor, true));
 
     transform.setToScale(w * 0.3, h * 2.5);
     transformedShape = path.createTransformedShape(transform);
-    drawGradient(g2, transformedShape, new GradientPaint(0, 0, waveColor, 0, h * 2.5f, bottomColor));
+    drawGradient(g2, transformedShape, new GradientPaint(0, 0, waveColor, 0, h * 2.5f, bottomColor, true));
   }
 
   private void drawGradient(Graphics2D g2d, Shape rect, GradientPaint gradient) {

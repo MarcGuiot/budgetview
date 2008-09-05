@@ -1,4 +1,41 @@
 
+* Checkbox pour pointer les transactions
+
+Ameliorations
+-------------
+* Apprentissage series
+* Undo (verifier + generaliser dans les boîtes de dialogue)
+* Filtrage transactions par Serie
+* Filtrage transactions par TransactionType
+* Filtrage transactions par Compte
+* Filtrage transactions par BudgetArea
+* Graphiques (camembert / histogramme)
+* Afficher les infos de mise a dispo d'une nouvelle version
+* BudgeView : Panneau pour montrer le detail du calcul du disponible en occasional
+* Aide pour trouver les categories dans CategoriesChooserDialog (search)
+
+
+I18N
+----
+* Edition des TransactionMatchers pour gerer de nouvelles banques
+
+
+Nouveau
+-------
+
+* Affichage synthèse des mois suivants (+/- MonthSummaryView en sequence horizontale, avec projets)
+* Mecanique de backup/restore pour les utilisateurs (crypte ou non?)
+* Decouverte des mois actifs pour les series a partir des transactions
+* SMS ==> previsions de soldes de fin de mois
+* Remboursements
+
+
+* Virements internes
+* Gerer la notion d'epargne (virements internes ?)
+
+
+----
+
 * Types de comptes (courant / carte / epargne)
 
 * Filtrage de transactions par compte
