@@ -7,15 +7,12 @@ CategoryChooserDialog
 
 SeriesEditionDialog
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
-* MAJ temps reel du nom de la serie pendant l'edition (propriete editor?)
-* Creation de serie : selectionner automatiquement le texte du nom
+* Pb text editor
 * Champ edition montant : pb affichage ".00" (passer le formatter "0.00")
 * Champ edition montant : signes positifs + label depense/recette
-* Clicks accidentels sur supprimer
-* Pb MAJ liste mois en cas d'expansion
+* Afficher les mois futurs meme en version basique
 * Double click table => selection jusqu'a la fin
 * Echeancier : griser mois passes + bold mois courant
-
 
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)
