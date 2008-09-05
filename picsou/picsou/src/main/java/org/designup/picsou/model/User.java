@@ -38,6 +38,7 @@ public class User {
   // enregistré (donc le a priori le repo a ete modifié manuellement)
   // On n'a pas envoyé au serveur les mail, signature et code d'activation alors que c'est un utilisateur
   public static final int ACTIVATION_FAIL_MAIL_SEND = 8;
+  public static final int ACTIVATION_FAIL_BAD_ACTIVATION_CODE = 9;
 
 
   static {

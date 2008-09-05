@@ -72,6 +72,7 @@ public class LicenseChecker {
   }
 
   public LicenseChecker checkErrorMessage(String message) {
+    assertFalse(dialog.getProgressBar().isVisible());
     assertTrue(dialog.getTextBox("connectionMessage").textEquals(message));
     return this;
   }

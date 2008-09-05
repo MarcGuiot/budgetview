@@ -15,6 +15,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -73,12 +74,14 @@ public class LicenseDialog {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {
           Boolean isConnected = repository.get(User.KEY).get(User.CONNECTED);
+          if (!isConnected) {
+            connectMessageLabel.setText(Lang.get("license.connect"));
+          }
           connectMessageLabel.setVisible(!isConnected);
           if (isConnected) {
             selectionService.select(localRepository.get(User.KEY));
             selectionService.select(localRepository.get(UserPreferences.KEY));
           }
-
           activationState = repository.get(User.KEY).get(User.ACTIVATION_STATE);
           if (activationState != null) {
             if (activationState == User.ACTIVATION_OK) {
@@ -87,9 +90,9 @@ public class LicenseDialog {
               localRepository.dispose();
             }
             else if (activationState != User.ACTIVATION_IN_PROCESS) {
+              localRepository.rollback();
               connectMessageLabel.setText(Lang.get("license.activation.fail"));
               connectMessageLabel.setVisible(true);
-              progressBar.setIndeterminate(true);
               progressBar.setVisible(false);
               validateAction.setEnabled(true);
             }
@@ -125,13 +128,25 @@ public class LicenseDialog {
       if (user.get(User.MAIL).equals("admin")) {
         localRepository.update(UserPreferences.KEY, UserPreferences.REGISTRED_USER, true);
         localRepository.commitChanges(false);
+        localDirectory.get(UndoRedoService.class).cleanUndo();
         dialog.setVisible(false);
+        return;
       }
       Utils.endRemove();
       localRepository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_IN_PROCESS);
-      localRepository.commitChanges(false);
-      localDirectory.get(UndoRedoService.class).cleanUndo();
-      progressBar.setVisible(true);
+      if (checkContainsValidChange()) {
+        progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
+        localRepository.commitChanges(false);
+        localDirectory.get(UndoRedoService.class).cleanUndo();
+      }
+    }
+
+    private boolean checkContainsValidChange() {
+      return (localRepository.getCurrentChanges().containsUpdates(User.ACTIVATION_CODE)
+              || localRepository.getCurrentChanges().containsUpdates(User.MAIL))
+             && (Strings.isNotEmpty(localRepository.get(User.KEY).get(User.ACTIVATION_CODE)))
+             && (Strings.isNotEmpty(localRepository.get(User.KEY).get(User.MAIL)));
     }
   }
 
