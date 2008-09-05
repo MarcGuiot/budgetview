@@ -36,8 +36,7 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -107,8 +106,11 @@ public class SeriesEditionDialog {
     final GlobStringifier categoryStringifier = descriptionService.getStringifier(Category.TYPE);
     GlobListStringifier labelStringifier = new GlobListStringifier() {
       public String toString(GlobList list, GlobRepository repository) {
+        if (budgetArea == null) {
+          return "";
+        }
         if (list.isEmpty()) {
-          if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
+          if (budgetArea.isMultiCategories()) {
             return null;
           }
           else {
@@ -119,7 +121,7 @@ public class SeriesEditionDialog {
         if (category == null) {
           return Lang.get("seriesEdition.missing.category.label");
         }
-        else if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
+        else if (budgetArea.isMultiCategories()) {
           return null;
         }
         else {
@@ -272,11 +274,11 @@ public class SeriesEditionDialog {
   }
 
   public void showNewSeries(GlobList transactions, BudgetArea budgetArea) {
+    this.budgetArea = BudgetArea.get(budgetArea.getId());
     Glob createdSeries;
     try {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
-      this.budgetArea = BudgetArea.get(budgetArea.getId());
       initCategorizeVisibility();
       Double initialAmount = computeMinAmountPerMonth(transactions);
       String label;
@@ -333,7 +335,7 @@ public class SeriesEditionDialog {
   }
 
   private void initCategorizeVisibility() {
-    this.categoryList.setVisible(budgetArea == BudgetArea.EXPENSES_ENVELOPE);
+    this.categoryList.setVisible(budgetArea.isMultiCategories());
   }
 
   private Set<Integer> getCurrentMonthId() {
@@ -399,7 +401,7 @@ public class SeriesEditionDialog {
     public void show() {
       CategoryChooserDialog chooser =
         new CategoryChooserDialog(new SeriesCategoryChooserCallback(), parent,
-                                  !budgetArea.equals(BudgetArea.EXPENSES_ENVELOPE),
+                                  !budgetArea.isMultiCategories(),
                                   new TransactionRendererColors(localDirectory),
                                   localRepository, localDirectory);
 
@@ -419,7 +421,7 @@ public class SeriesEditionDialog {
           localRepository.setTarget(currentSeries.getKey(), Series.DEFAULT_CATEGORY, null);
           for (Glob category : categories) {
             localRepository.setTarget(currentSeries.getKey(), Series.DEFAULT_CATEGORY, category.getKey());
-            if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
+            if (budgetArea.isMultiCategories()) {
               localRepository.create(SeriesToCategory.TYPE,
                                      value(SeriesToCategory.SERIES, currentSeries.get(Series.ID)),
                                      value(SeriesToCategory.CATEGORY, category.get(Category.ID)));
@@ -434,7 +436,7 @@ public class SeriesEditionDialog {
 
       public Set<Integer> getPreselectedCategoryIds() {
         Integer defaultCategory = currentSeries.get(Series.DEFAULT_CATEGORY);
-        if (budgetArea == BudgetArea.EXPENSES_ENVELOPE) {
+        if (budgetArea.isMultiCategories()) {
           Set<Integer> valueSet = localRepository.getAll(SeriesToCategory.TYPE,
                                                          GlobMatchers.fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)))
             .getValueSet(SeriesToCategory.CATEGORY);
@@ -443,12 +445,10 @@ public class SeriesEditionDialog {
           }
           return valueSet;
         }
-        else {
-          if (defaultCategory != null) {
-            return Collections.singleton(currentSeries.get(Series.DEFAULT_CATEGORY));
-          }
-          return Collections.emptySet();
+        if (defaultCategory != null) {
+          return Collections.singleton(currentSeries.get(Series.DEFAULT_CATEGORY));
         }
+        return Collections.emptySet();
       }
     }
   }

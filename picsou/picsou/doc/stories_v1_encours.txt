@@ -6,10 +6,9 @@ CategoryChooserDialog
 * Bouton pour appeler CategoryEditionDialog
 
 SeriesEditionDialog
-* Suppression de serie (avec report des transactions ? proposer plutôt end date)
-* Pb text editor
-* Champ edition montant : pb affichage ".00" (passer le formatter "0.00")
 * Champ edition montant : signes positifs + label depense/recette
+* Champ edition montant : pb affichage ".00" (passer le formatter "0.00")
+* Suppression de serie (avec report des transactions ? proposer plutôt end date)
 * Afficher les mois futurs meme en version basique
 * Double click table => selection jusqu'a la fin
 * Echeancier : griser mois passes + bold mois courant
@@ -20,6 +19,7 @@ BudgetView
 * Creation de serie : lister les series existantes + pb layout
 
 Licence
+* Pb text editor
 * Voir nb mois
 
 CategoryEditionDialog

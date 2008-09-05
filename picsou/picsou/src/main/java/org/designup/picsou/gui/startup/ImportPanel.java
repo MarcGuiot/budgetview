@@ -305,7 +305,6 @@ public abstract class ImportPanel {
   }
 
   private void displayErrorMessage(String key) {
-    System.out.println("ImportPanel.displayErrorMessage: " + Lang.get(key));
     messageLabel.setText("<html><font color=red>" + Lang.get(key) + "</font></html>");
   }
 
@@ -315,7 +314,7 @@ public abstract class ImportPanel {
 
   private class ImportAction extends AbstractAction {
     public ImportAction() {
-      super("Import");
+      super("$import.ok");
     }
 
     public void actionPerformed(ActionEvent event) {

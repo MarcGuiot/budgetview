@@ -13,11 +13,11 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum BudgetArea implements GlobConstantContainer {
-  INCOME("INCOME", 0, true),
-  RECURRING_EXPENSES("RECURRING_EXPENSES", 1, false),
-  EXPENSES_ENVELOPE("EXPENSES_ENVELOPE", 2, false),
-  OCCASIONAL_EXPENSES("OCCASIONAL_EXPENSES", 3, false),
-  UNCATEGORIZED("UNCATEGORIZED", 4, false);
+  INCOME("INCOME", 0, true, false),
+  RECURRING_EXPENSES("RECURRING_EXPENSES", 1, false, false),
+  EXPENSES_ENVELOPE("EXPENSES_ENVELOPE", 2, false, true),
+  OCCASIONAL_EXPENSES("OCCASIONAL_EXPENSES", 3, false, true),
+  UNCATEGORIZED("UNCATEGORIZED", 4, false, true);
 
   public static GlobType TYPE;
 
@@ -30,15 +30,21 @@ public enum BudgetArea implements GlobConstantContainer {
   private String name;
   private int id;
   private boolean income;
+  private boolean multiCategories;
 
-  BudgetArea(String name, int id, boolean isIncome) {
+  BudgetArea(String name, int id, boolean isIncome, boolean multiCategories) {
     this.name = name;
     this.id = id;
     this.income = isIncome;
+    this.multiCategories = multiCategories;
   }
 
   public boolean isIncome() {
     return income;
+  }
+
+  public boolean isMultiCategories() {
+    return multiCategories;
   }
 
   static {
