@@ -43,7 +43,6 @@ Import
 Packaging
 ---------
 * Packaging Mac (hdiutil ou zip ?)
-* Sous Mac: Sauvegarde dans ~/Library/Application Support/<application name>
 * Look installer
 * Afficher SLA au premier lancement (cas de repository vide ?)
 
