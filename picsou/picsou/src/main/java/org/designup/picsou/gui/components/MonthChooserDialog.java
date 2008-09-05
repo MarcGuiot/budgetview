@@ -29,6 +29,7 @@ public class MonthChooserDialog implements ColorChangeListener {
   private PicsouDialog dialog;
   private int selectedYear;
   private int selectedMonth = -1;
+  private int returnMonth = -1;
   private int currentYear;
   private Directory directory;
   private int sens;

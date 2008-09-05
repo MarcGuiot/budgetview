@@ -76,7 +76,7 @@
                   <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>
                 </scrollPane>
                 <row marginTop="5">
-                  <label text="$seriesEdition.amount" styleClass="formLabelTop"/>
+                  <label ref="seriesEditionAmountLabel" styleClass="formLabelTop"/>
                   <textField ref="amountEditor"/>
                 </row>
               </column>

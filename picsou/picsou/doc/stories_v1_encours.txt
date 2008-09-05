@@ -5,8 +5,6 @@ CategoryChooserDialog
 * Bouton pour appeler CategoryEditionDialog
 
 SeriesEditionDialog
-* Champ edition montant : signes positifs + label depense/recette
-* Champ edition montant : pb affichage ".00" (passer le formatter "0.00")
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
 * Afficher les mois futurs meme en version basique
 * Double click table => selection jusqu'a la fin

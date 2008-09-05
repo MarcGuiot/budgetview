@@ -42,11 +42,6 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkType(String expectedType) {
-    // TODO
-    return this;
-  }
-
   public SeriesEditionDialogChecker checkAmount(String displayedValue) {
     assertThat(dialog.getInputTextBox("amountEditor").textEquals(displayedValue));
     return this;
@@ -151,28 +146,28 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMonthIsChecked(String ...monthsLabel) {
+  public SeriesEditionDialogChecker checkMonthIsChecked(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
       assertThat(monthLabel + " is not checked", getMonthCheckBox(monthLabel).isSelected());
     }
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMonthIsNotChecked(String ...monthsLabel) {
+  public SeriesEditionDialogChecker checkMonthIsNotChecked(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
       assertFalse(monthLabel + " is checked", getMonthCheckBox(monthLabel).isSelected());
     }
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMonthIsEnabled(String ...monthsLabel) {
+  public SeriesEditionDialogChecker checkMonthIsEnabled(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
       assertThat(monthLabel + " is disabled", getMonthCheckBox(monthLabel).isEnabled());
     }
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMonthIsDisabled(String ...monthsLabel) {
+  public SeriesEditionDialogChecker checkMonthIsDisabled(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
       assertFalse(monthLabel + " is enabled", getMonthCheckBox(monthLabel).isEnabled());
     }
@@ -407,6 +402,16 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesEditionDialogChecker checkAmountIsSelected() {
     JTextField textEditor = (JTextField)dialog.getInputTextBox("amountEditor").getAwtComponent();
     Assert.assertEquals(textEditor.getText(), textEditor.getSelectedText());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkLabelExpenseAmount() {
+    assertThat(dialog.getTextBox("seriesEditionAmountLabel").textEquals("Planned expense"));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkLabelIncomeAmount() {
+    assertThat(dialog.getTextBox("seriesEditionAmountLabel").textEquals("Planned income"));
     return this;
   }
 }

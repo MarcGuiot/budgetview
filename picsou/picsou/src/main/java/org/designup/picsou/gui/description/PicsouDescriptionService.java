@@ -22,7 +22,8 @@ import java.util.Locale;
 
 public class PicsouDescriptionService extends DefaultDescriptionService {
   public static final DecimalFormat INTEGER_FORMAT = new DecimalFormat("0");
-  public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
+  public static final DecimalFormat DECIMAL_FORMAT = 
+    new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
   private static SimpleDateFormat YEAR_MONTH_FORMAT = new SimpleDateFormat("MMMMMMMMMM yyyy", Locale.FRANCE);
 
@@ -30,7 +31,7 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     super(new Formats(DATE_FORMAT,
                       new SimpleDateFormat("dd/MM/yyyy hh:mm:ss"),
                       DECIMAL_FORMAT,
-                      "oui", "non"));
+                      Lang.get("yes"), Lang.get("no")));
   }
 
   public String getLabel(GlobType type) {

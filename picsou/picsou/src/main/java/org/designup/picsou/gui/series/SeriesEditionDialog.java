@@ -6,6 +6,7 @@ import org.designup.picsou.gui.categories.CategoryChooserCallback;
 import org.designup.picsou.gui.categories.CategoryChooserDialog;
 import org.designup.picsou.gui.components.MonthChooserDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
@@ -64,6 +65,7 @@ public class SeriesEditionDialog {
   private SeriesEditionDialog.CalendarAction endDateCalendar;
   private GlobTextEditor nameEditor;
   private GlobNumericEditor amountEditor;
+  private JLabel amountLabel;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -177,14 +179,15 @@ public class SeriesEditionDialog {
     endDateCalendar = new CalendarAction(Series.LAST_MONTH, Series.FIRST_MONTH, 1);
     builder.add("endSeriesCalendar", endDateCalendar);
 
-    amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT);
+    amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT)
+      .setMinusNotAllowed();
 
     final GlobTableView budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE, new GlobFieldComparator(SeriesBudget.MONTH))
       .setFilter(fieldEquals(SeriesBudget.ACTIVE, true))
       .setDefaultBackgroundPainter(new TableBackgroundPainter())
       .addColumn(Lang.get("seriesEdition.year"), new YearStringifier())
       .addColumn(Lang.get("seriesEdition.month"), new MonthStringifier())
-      .addColumn(SeriesBudget.AMOUNT);
+      .addColumn(Lang.get("seriesBudget.amount"), new AmountStringifier());
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -219,6 +222,9 @@ public class SeriesEditionDialog {
                           localRepository.addChangeListener(updater);
                         }
                       });
+
+    amountLabel = new JLabel();
+    builder.add("seriesEditionAmountLabel", amountLabel);
 
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -348,6 +354,14 @@ public class SeriesEditionDialog {
     }
     else {
       seriesList.selectFirst();
+    }
+    if (budgetArea.isIncome()) {
+      amountLabel.setText(Lang.get("seriesEdition.income.amount"));
+      amountEditor.setNoInvertValue();
+    }
+    else {
+      amountLabel.setText(Lang.get("seriesEdition.expense.amount"));
+      amountEditor.setInvertValue();
     }
     selectionService.select(localRepository.getAll(SeriesBudget.TYPE,
                                                    fieldIn(SeriesBudget.MONTH, monthIds)), SeriesBudget.TYPE);
@@ -661,6 +675,16 @@ public class SeriesEditionDialog {
         return null;
       }
       return Month.getMediumSizeLetterLabel(monthId) + " " + Month.toYearString(monthId);
+    }
+  }
+
+  private class AmountStringifier extends AbstractGlobStringifier {
+    public String toString(Glob glob, GlobRepository repository) {
+      Double value = glob.get(SeriesBudget.AMOUNT);
+      if (value == 0.0){
+        return "0";
+      }
+      return PicsouDescriptionService.DECIMAL_FORMAT.format((budgetArea.isIncome() ? 1 : -1) * value);
     }
   }
 }

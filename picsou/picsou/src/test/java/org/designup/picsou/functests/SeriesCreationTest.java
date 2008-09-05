@@ -27,7 +27,6 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
     SeriesEditionDialogChecker creationSeries = categorization.createIncomeSeries();
     creationSeries.setName("Prime");
-    creationSeries.checkType("Income");
     creationSeries.setCategory(MasterCategory.INCOME);
 
     creationSeries.validate();
@@ -54,7 +53,6 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.selectRecurring();
     SeriesEditionDialogChecker editionDialog = dialog.createRecurringSeries();
     editionDialog.setName("Culture");
-    editionDialog.checkType("Recurring");
     editionDialog.setCategory(MasterCategory.EDUCATION);
     editionDialog.validate();
 
@@ -77,7 +75,6 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.selectEnvelopes();
     SeriesEditionDialogChecker editionDialog = dialog.createEnvelopeSeries();
     editionDialog.setName("Regime");
-    editionDialog.checkType("Envelope");
     editionDialog.setCategory(MasterCategory.FOOD);
     editionDialog.validate();
 
@@ -109,7 +106,6 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.selectEnvelopes();
     dialog.createEnvelopeSeries()
       .setName("Regime")
-      .checkType("Envelope")
       .setCategory(MasterCategory.FOOD)
       .validate();
 
@@ -152,7 +148,6 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     dialog.selectRecurring();
     SeriesEditionDialogChecker editionDialog = dialog.createRecurringSeries();
     editionDialog.setName("Culture");
-    editionDialog.checkType("Recurring");
     editionDialog.setCategory(MasterCategory.EDUCATION);
     editionDialog.validate();
 

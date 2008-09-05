@@ -25,10 +25,11 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkName("Internet")
       .setName("Free")
       .checkTable(new Object[][]{
-        {"2008", "July", "-29.00"},
-        {"2008", "August", "-29.00"},
+        {"2008", "July", "29.00"},
+        {"2008", "August", "29.00"},
       })
       .checkMonthSelected(0)
+      .checkLabelExpenseAmount()
       .validate();
 
     budgetView.recurring.checkSeries("Free", 29.00, 29.00);
@@ -53,10 +54,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkName("Internet")
       .setName("Free")
       .checkTable(new Object[][]{
-        {"2008", "May", "-29.00"},
-        {"2008", "June", "-29.00"},
-        {"2008", "July", "-29.00"},
-        {"2008", "August", "-29.00"},
+        {"2008", "May", "29.00"},
+        {"2008", "June", "29.00"},
+        {"2008", "July", "29.00"},
+        {"2008", "August", "29.00"},
       })
       .checkMonthsSelected(1, 3)
       .validate();
@@ -76,15 +77,15 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.editSeries("Internet")
       .checkTable(new Object[][]{
-        {"2008", "July", "-29.00"},
-        {"2008", "August", "-29.00"},
+        {"2008", "July", "29.00"},
+        {"2008", "August", "29.00"},
       })
       .checkMonthSelected(0)
-      .checkAmount("-29.00")
-      .setAmount("-40.00")
+      .checkAmount("29.00")
+      .setAmount("40.00")
       .checkTable(new Object[][]{
-        {"2008", "July", "-40.00"},
-        {"2008", "August", "-29.00"},
+        {"2008", "July", "40.00"},
+        {"2008", "August", "29.00"},
       })
       .validate();
 
@@ -92,13 +93,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.recurring.editSeries("Internet")
       .checkTable(new Object[][]{
-        {"2008", "July", "-40.00"},
-        {"2008", "August", "-29.00"},
+        {"2008", "July", "40.00"},
+        {"2008", "August", "29.00"},
       })
       .checkAmountIsSelected()
       .checkMonthSelected(0)
-      .checkAmount("-40.00")
-      .setAmount("-30.00")
+      .checkAmount("40.00")
+      .setAmount("30.00")
       .validate();
 
     budgetView.recurring.checkSeries("Internet", 29.00, 30.00);
@@ -121,35 +122,35 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonths("2008/08", "2008/06");
     budgetView.recurring.editSeries("Internet")
       .checkTable(new Object[][]{
-        {"2008", "May", "-29.00"},
-        {"2008", "June", "-29.00"},
-        {"2008", "July", "-29.00"},
-        {"2008", "August", "-29.00"},
+        {"2008", "May", "29.00"},
+        {"2008", "June", "29.00"},
+        {"2008", "July", "29.00"},
+        {"2008", "August", "29.00"},
       })
       .toggleMonth("May")
       .checkTable(new Object[][]{
-        {"2008", "June", "-29.00"},
-        {"2008", "July", "-29.00"},
-        {"2008", "August", "-29.00"},
+        {"2008", "June", "29.00"},
+        {"2008", "July", "29.00"},
+        {"2008", "August", "29.00"},
       })
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
-        {"2008", "June", "-29.00"},
-        {"2008", "July", "-29.00"},
+        {"2008", "June", "29.00"},
+        {"2008", "July", "29.00"},
       })
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
-        {"2008", "June", "-29.00"},
-        {"2008", "July", "-29.00"},
-        {"2008", "August", "-29.00"},
+        {"2008", "June", "29.00"},
+        {"2008", "July", "29.00"},
+        {"2008", "August", "29.00"},
       })
       .validate();
 
     budgetView.recurring.editSeries("Internet")
       .checkTable(new Object[][]{
-        {"2008", "June", "-29.00"},
-        {"2008", "July", "-29.00"},
-        {"2008", "August", "-29.00"},
+        {"2008", "June", "29.00"},
+        {"2008", "July", "29.00"},
+        {"2008", "August", "29.00"},
       })
       .cancel();
   }
@@ -219,17 +220,17 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkSeriesList("Electricity", "Internet")
       .checkSeriesSelected("Electricity")
       .selectAllMonths()
-      .setAmount("-70")
+      .setAmount("70")
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
-        {"2008", "July", "-70.00"},
+        {"2008", "July", "70.00"},
       })
 
       .selectSeries("Internet")
       .checkMonthIsChecked("Aug")
       .checkTable(new Object[][]{
-        {"2008", "July", "-29.00"},
-        {"2008", "August", "-29.00"},
+        {"2008", "July", "29.00"},
+        {"2008", "August", "29.00"},
       })
       .toggleMonth("Jul")
 
@@ -237,7 +238,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked("Jul")
       .checkMonthIsNotChecked("Aug")
       .checkTable(new Object[][]{
-        {"2008", "July", "-70.00"},
+        {"2008", "July", "70.00"},
       })
       .validate();
   }
@@ -277,8 +278,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Free Telecom")
       .checkSeriesList("Free Telecom")
       .checkTable(new Object[][]{
-        {"2008", "July", "0.00"},
-        {"2008", "August", "0.00"}
+        {"2008", "July", "0"},
+        {"2008", "August", "0"}
       })
       .validate();
 
@@ -299,24 +300,24 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
       .selectSeries(0)
       .selectAllMonths()
-      .setAmount("-70")
+      .setAmount("70")
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
-        {"2008", "July", "-70.00"},
+        {"2008", "July", "70.00"},
       })
 
       .selectSeries(1)
       .checkMonthIsChecked("Aug")
       .toggleMonth("Jul")
       .checkTable(new Object[][]{
-        {"2008", "August", "0.00"},
+        {"2008", "August", "0"},
       })
 
       .selectSeries(0)
       .checkMonthIsChecked("Jul")
       .checkMonthIsNotChecked("Aug")
       .checkTable(new Object[][]{
-        {"2008", "July", "-70.00"},
+        {"2008", "July", "70.00"},
       })
       .cancel();
   }
@@ -335,7 +336,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     edition.selectAllMonths()
-      .setAmount("-1000")
+      .setAmount("1000")
       .checkSingleCategorizeIsVisible(false)
       .checkMultiCategorizeIsVisible(true);
 
@@ -389,6 +390,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkOk(false)
       .setCategory(MasterCategory.INCOME)
       .checkOk(true)
+      .checkLabelIncomeAmount()
       .validate();
   }
 
@@ -487,32 +489,32 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     edition.setStartDate(200709)
       .checkTable(new Object[][]{
-        {"2007", "October", "0.00"},
-        {"2007", "December", "0.00"},
-        {"2008", "February", "0.00"},
-        {"2008", "April", "0.00"},
-        {"2008", "May", "0.00"},
-        {"2008", "June", "0.00"},
-        {"2008", "August", "0.00"}
+        {"2007", "October", "0"},
+        {"2007", "December", "0"},
+        {"2008", "February", "0"},
+        {"2008", "April", "0"},
+        {"2008", "May", "0"},
+        {"2008", "June", "0"},
+        {"2008", "August", "0"}
       });
 
     edition.setEndDate(200801)
       .checkTable(new Object[][]{
-        {"2007", "October", "0.00"},
-        {"2007", "December", "0.00"},
+        {"2007", "October", "0"},
+        {"2007", "December", "0"},
       });
 
     edition.setEndDate(200802)
       .checkTable(new Object[][]{
-        {"2007", "October", "0.00"},
-        {"2007", "December", "0.00"},
-        {"2008", "February", "0.00"}
+        {"2007", "October", "0"},
+        {"2007", "December", "0"},
+        {"2008", "February", "0"}
       });
 
     edition.setStartDate(200712)
       .checkTable(new Object[][]{
-        {"2007", "December", "0.00"},
-        {"2008", "February", "0.00"}
+        {"2007", "December", "0"},
+        {"2008", "February", "0"}
       });
   }
 
