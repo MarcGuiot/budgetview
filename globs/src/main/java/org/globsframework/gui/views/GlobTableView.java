@@ -5,7 +5,10 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.utils.TableUtils;
-import org.globsframework.gui.views.impl.*;
+import org.globsframework.gui.views.impl.GlobTableColumnHeaderMouseListener;
+import org.globsframework.gui.views.impl.LabelTableCellRenderer;
+import org.globsframework.gui.views.impl.SortableTableModel;
+import org.globsframework.gui.views.impl.SortingIcon;
 import org.globsframework.gui.views.utils.GlobViewUtils;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
@@ -49,6 +52,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   private String name;
   private boolean hiddenHeader;
   private CellPainter defaultBackgroundPainter = CellPainter.NULL;
+  private LabelCustomizer defaultLabelCustomizer = LabelCustomizer.NULL;
 
   public static GlobTableView init(GlobType type, GlobRepository globRepository,
                                    Comparator<Glob> comparator, Directory directory) {
@@ -82,18 +86,12 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
                                  LabelCustomizer customizer,
                                  CellPainter backgroundPainter,
                                  TableCellEditor editor) {
-    GlobStringifier stringifier = descriptionService.getStringifier(field);
-
-    LabelCustomizer customizers =
-      chain(GlobLabelCustomizerFactory.create(field, stringifier, repository),
-            customizer);
-
-    LabelTableCellRenderer renderer =
-      new LabelTableCellRenderer(customizers, backgroundPainter);
-
-    return addColumn(descriptionService.getLabel(field),
-                     renderer, editor,
-                     stringifier.getComparator(repository));
+    startColumn()
+      .setField(field)
+      .addLabelCustomizer(customizer)
+      .setBackgroundPainter(backgroundPainter)
+      .setEditor(editor);
+    return this;
   }
 
   public GlobTableView addColumn(LinkField link) {
@@ -127,15 +125,19 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
                                  LabelCustomizer customizer,
                                  CellPainter backgroundPainter,
                                  Comparator<Glob> comparator) {
-    return addColumn(name,
-                     new LabelTableCellRenderer(customizer, backgroundPainter),
-                     comparator);
+    startColumn()
+      .setName(name)
+      .setBackgroundPainter(backgroundPainter)
+      .addLabelCustomizer(customizer)
+      .setComparator(new CompositeComparator<Glob>(comparator, initialComparator));
+    return this;
   }
 
   public GlobTableView addColumn(String name, TableCellRenderer renderer, Comparator<Glob> comparator) {
     startColumn()
       .setName(name)
       .setRenderer(renderer)
+      .setBackgroundPainter(defaultBackgroundPainter)
       .setComparator(new CompositeComparator<Glob>(comparator, initialComparator));
     return this;
   }
@@ -143,6 +145,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   public GlobTableView addColumn(String name, TableCellRenderer renderer, TableCellEditor editor, Comparator<Glob> comparator) {
     startColumn()
       .setName(name)
+      .setBackgroundPainter(defaultBackgroundPainter)
       .setRenderer(renderer)
       .setEditor(editor)
       .setComparator(new CompositeComparator<Glob>(comparator, initialComparator));
@@ -156,7 +159,8 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
 
   public GlobTableColumnBuilder startColumn() {
     GlobTableColumnBuilder builder = GlobTableColumnBuilder.init(repository, directory)
-      .setBackgroundPainter(defaultBackgroundPainter);
+      .setBackgroundPainter(defaultBackgroundPainter)
+      .addLabelCustomizer(defaultLabelCustomizer);
     columns.add(builder.getColumn());
     return builder;
   }
@@ -261,6 +265,11 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
 
   public GlobTableView setDefaultBackgroundPainter(CellPainter painter) {
     this.defaultBackgroundPainter = painter;
+    return this;
+  }
+
+  public GlobTableView setDefaultLabelCustomizer(LabelCustomizer labelCustomizer) {
+    this.defaultLabelCustomizer = labelCustomizer;
     return this;
   }
 

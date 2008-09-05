@@ -48,10 +48,14 @@ public class GlobTableColumnBuilder {
 
     GlobStringifier stringifier = descriptionService.getStringifier(field);
     column.labelCustomizers.add(GlobLabelCustomizerFactory.create(field, stringifier, repository));
+    column.comparator = stringifier.getComparator(repository);
     return this;
   }
 
   public GlobTableColumnBuilder addLabelCustomizer(LabelCustomizer customizer) {
+    if (customizer == LabelCustomizer.NULL) {
+      return this;
+    }
     if (column.renderer != null) {
       throw new InvalidState("LabelCustomizers cannot be set at the same time as a Renderer");
     }
@@ -87,7 +91,7 @@ public class GlobTableColumnBuilder {
     private Comparator<Glob> comparator;
     private TableCellRenderer renderer;
     private List<LabelCustomizer> labelCustomizers = new ArrayList<LabelCustomizer>();
-    private CellPainter backgroundPainter;
+    private CellPainter backgroundPainter = CellPainter.NULL;
     private TableCellEditor editor;
 
     public String getName() {

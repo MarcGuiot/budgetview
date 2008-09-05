@@ -27,6 +27,8 @@ public interface ChangeSet {
 
   Set<Key> getUpdated(GlobType type);
 
+  Set<Key> getUpdated(Field field);
+
   Set<Key> getDeleted(GlobType type);
 
   void visit(ChangeSetVisitor visitor) throws Exception;

@@ -159,6 +159,16 @@ public class DefaultChangeSet implements MutableChangeSet {
     return result;
   }
 
+  public Set<Key> getUpdated(Field field) {
+    Set<Key> result = new HashSet<Key>();
+    for (DefaultDeltaGlob delta : deltaGlobsByKey.get(field.getGlobType()).values()) {
+      if (delta.contains(field)) {
+        result.add(delta.getKey());
+      }
+    }
+    return result;
+  }
+
   public Set<Key> getDeleted(GlobType type) {
     Set<Key> result = new HashSet<Key>();
     for (DefaultDeltaGlob delta : deltaGlobsByKey.get(type).values()) {

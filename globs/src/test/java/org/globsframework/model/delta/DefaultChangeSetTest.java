@@ -73,7 +73,7 @@ public class DefaultChangeSetTest extends TestCase {
     TestUtils.assertEquals(changeSet.getChangedTypes(), DummyObject.TYPE);
   }
 
-  public void testChangesAnalysisForUpdate() throws Exception {
+  public void testChangeAnalysisForUpdate() throws Exception {
     assertFalse(changeSet.containsChanges(key1));
 
     changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
@@ -90,6 +90,9 @@ public class DefaultChangeSetTest extends TestCase {
     assertTrue(changeSet.getCreated(DummyObject.TYPE).isEmpty());
     assertTrue(changeSet.getDeleted(DummyObject.TYPE).isEmpty());
     assertTrue(changeSet.getUpdated(DummyObject2.TYPE).isEmpty());
+
+    TestUtils.assertEquals(changeSet.getUpdated(DummyObject.VALUE), key1);
+    TestUtils.assertEmpty(changeSet.getUpdated(DummyObject.NAME));
 
     TestUtils.assertEquals(changeSet.getChangedTypes(), DummyObject.TYPE);
   }

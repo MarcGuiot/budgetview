@@ -115,7 +115,7 @@ public class StyledPanelUI extends BasicPanelUI {
       g2d.setPaint(topColor);
     }
     else {
-      GradientPaint gradient = new GradientPaint(x, y, topColor, x, height, bottomColor);
+      GradientPaint gradient = new GradientPaint(x, y, topColor, x, height, bottomColor, true);
       g2d.setPaint(gradient);
     }
 
