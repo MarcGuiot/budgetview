@@ -86,7 +86,10 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public CategorizationDialogChecker checkNoIncomeSeriesDisplayed() {
     Panel seriesPanel = getIncomeSeriesPanel();
-    Assert.assertEquals(0, seriesPanel.getUIComponents(ToggleButton.class).length);
+    UIComponent[] toggles = seriesPanel.getUIComponents(ToggleButton.class);
+    Assert.assertEquals(1, toggles.length);
+    ToggleButton invisibleToggle = (ToggleButton)toggles[0];
+    assertFalse(invisibleToggle.isVisible());
     return this;
   }
 
@@ -131,7 +134,7 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   private Panel getIncomeSeriesPanel() {
-    Panel panel = dialog.getPanel("incomeSeriesRepeat");
+    Panel panel = dialog.getPanel("incomeSeriesChooser");
     assertTrue(panel.isVisible());
     return panel;
   }
@@ -187,7 +190,7 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   private Panel getRecurringSeriesPanel() {
-    Panel panel = dialog.getPanel("recurringSeriesRepeat");
+    Panel panel = dialog.getPanel("recurringSeriesChooser");
     assertTrue(panel.isVisible());
     return panel;
   }
@@ -200,7 +203,7 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void checkRecurringSeriesIsNotSelected(String seriesName) {
-    UISpecAssert.assertFalse(dialog.getPanel("recurringSeriesRepeat").getToggleButton(seriesName).isSelected());
+    UISpecAssert.assertFalse(dialog.getPanel("recurringSeriesChooser").getToggleButton(seriesName).isSelected());
   }
 
   public void checkIncomeSeriesIsSelected(String seriesName) {
@@ -211,7 +214,7 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void checkIncomeSeriesIsNotSelected(String seriesName) {
-    UISpecAssert.assertFalse(dialog.getPanel("incomeSeriesRepeat").getToggleButton(seriesName).isSelected());
+    UISpecAssert.assertFalse(dialog.getPanel("incomeSeriesChooser").getToggleButton(seriesName).isSelected());
   }
 
   public CategorizationDialogChecker selectEnvelopes() {
@@ -246,7 +249,7 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   private Panel getEnvelopeSeriesPanel() {
-    Panel panel = dialog.getPanel("envelopeSeriesRepeat");
+    Panel panel = dialog.getPanel("envelopeSeriesChooser");
     assertTrue(panel.isVisible());
     return panel;
   }
@@ -270,7 +273,7 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   private Panel getOccasionalSeriesPanel() {
-    Panel panel = dialog.getPanel("occasionalSeriesRepeat");
+    Panel panel = dialog.getPanel("occasionalSeriesChooser");
     assertTrue(panel.isVisible());
     return panel;
   }
@@ -355,25 +358,25 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker createIncomeSeries() {
-    return createSeries("Income", true);
+    return createSeries("income", true);
   }
 
   public SeriesEditionDialogChecker createRecurringSeries() {
-    return createSeries("Recurring", true);
+    return createSeries("recurring", true);
   }
 
   public SeriesEditionDialogChecker createEnvelopeSeries() {
-    return createSeries("Envelope", false);
+    return createSeries("envelope", false);
   }
 
   public SeriesEditionDialogChecker createSeries(String type, boolean oneSelection) {
-    Button button = dialog.getButton("create" + type + "Series");
+    Button button = dialog.getPanel(type + "SeriesChooser").getButton("createSeries");
     final Window creationDialog = WindowInterceptor.getModalDialog(button.triggerClick());
     return new SeriesEditionDialogChecker(creationDialog, oneSelection);
   }
 
   public CategorizationDialogChecker checkEditIncomeSeriesDisabled() {
-    assertFalse(dialog.getButton("editIncomeSeries").isEnabled());
+    assertFalse(getIncomeSeriesPanel().getButton("editSeries").isEnabled());
     return this;
   }
 

@@ -78,7 +78,7 @@
             </column>
 
             <column marginLeft="20">
-              <panel ref="monthSummaryView" preferredSize="(300,420)"/>
+              <panel ref="monthSummaryView" preferredSize="(300,550)"/>
               <filler fill="vertical"/>
             </column>
 

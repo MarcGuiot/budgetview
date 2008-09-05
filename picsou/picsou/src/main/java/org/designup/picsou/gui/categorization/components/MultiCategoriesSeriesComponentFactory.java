@@ -13,32 +13,34 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class EnvelopeSeriesComponentFactory extends AbstractSeriesComponentFactory {
+public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesComponentFactory {
+  private BudgetArea budgetArea;
 
-  public EnvelopeSeriesComponentFactory(JToggleButton invisibleToggle,
-                                        GlobRepository repository,
-                                        Directory directory, PicsouDialog dialog) {
+  public MultiCategoriesSeriesComponentFactory(BudgetArea budgetArea, JToggleButton invisibleToggle,
+                                               GlobRepository repository,
+                                               Directory directory, PicsouDialog dialog) {
     super(invisibleToggle, repository, directory, dialog);
+    this.budgetArea = budgetArea;
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
-    cellBuilder.add("envelopeSeriesName",
+    cellBuilder.add("seriesName",
                     new JLabel(seriesStringifier.toString(series, repository)));
 
-    cellBuilder.addRepeat("envelopeCategoryRepeat",
+    cellBuilder.addRepeat("categoryRepeat",
                           repository.findLinkedTo(series, SeriesToCategory.SERIES).sort(SeriesToCategory.ID),
-                          new EnvelopeCategoriesComponentFactory(seriesStringifier.toString(series, repository),
-                                                                 "envelopeCategoryToggle",
-                                                                 BudgetArea.EXPENSES_ENVELOPE)
+                          new CategoriesComponentFactory(seriesStringifier.toString(series, repository),
+                                                                 "categoryToggle",
+                                                                 budgetArea)
     );
   }
 
-  private class EnvelopeCategoriesComponentFactory implements RepeatComponentFactory<Glob> {
+  private class CategoriesComponentFactory implements RepeatComponentFactory<Glob> {
     private String seriesName;
     private String name;
     private BudgetArea budgetArea;
 
-    public EnvelopeCategoriesComponentFactory(String seriesName, String name, BudgetArea budgetArea) {
+    public CategoriesComponentFactory(String seriesName, String name, BudgetArea budgetArea) {
       this.seriesName = seriesName;
       this.name = name;
       this.budgetArea = budgetArea;

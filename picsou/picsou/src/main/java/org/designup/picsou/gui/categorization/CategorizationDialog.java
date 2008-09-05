@@ -2,9 +2,9 @@ package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.BudgetAreaComponentFactory;
-import org.designup.picsou.gui.categorization.components.EnvelopeSeriesComponentFactory;
 import org.designup.picsou.gui.categorization.components.OccasionalCategoriesComponentFactory;
 import org.designup.picsou.gui.categorization.components.SeriesComponentFactory;
+import org.designup.picsou.gui.categorization.components.MultiCategoriesSeriesComponentFactory;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.series.EditSeriesAction;
@@ -107,33 +107,57 @@ public class CategorizationDialog {
                       new BudgetAreaComponentFactory(cardHandler, invisibleBudgetAreaToggle,
                                                      localRepository, localDirectory, dialog));
 
+    addSingleCategorySeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
+    addSingleCategorySeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING_EXPENSES, builder);
+
+    addMultiCategoriesSeriesChooser("envelopeSeriesChooser", BudgetArea.EXPENSES_ENVELOPE, builder);
+    addMultiCategoriesSeriesChooser("projectSeriesChooser", BudgetArea.PROJECTS, builder);
+    addMultiCategoriesSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
+
+    addOccasionalSeriesChooser(builder);
+
+    dialog.addInPanelWithButton(builder.<JPanel>load(), new OkAction(), new CancelAction());
+    dialog.pack();
+  }
+
+  private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
+
+    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationDialog.class,
+                                                           "/layout/singleCategorySeriesChooserPanel.splits",
+                                                           localRepository, localDirectory);
+
     JToggleButton invisibleIncomeToggle = new JToggleButton();
-    builder.add("invisibleIncomeToggle", invisibleIncomeToggle);
-    builder.addRepeat("incomeSeriesRepeat",
-                      Series.TYPE,
-                      GlobMatchers.linkedTo(BudgetArea.INCOME.getGlob(), Series.BUDGET_AREA),
-                      new SeriesComponentFactory(invisibleIncomeToggle, localRepository, localDirectory, dialog));
-    builder.add("createIncomeSeries", new CreateSeriesAction(BudgetArea.INCOME));
-    builder.add("editIncomeSeries", new EditAllSeriesAction(BudgetArea.INCOME));
+    panelBuilder.add("invisibleToggle", invisibleIncomeToggle);
+    panelBuilder.addRepeat("seriesRepeat",
+                           Series.TYPE,
+                           GlobMatchers.linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
+                           new SeriesComponentFactory(invisibleIncomeToggle, localRepository, localDirectory, dialog));
+    panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
+    panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 
-    JToggleButton invisibleRecurringToggle = new JToggleButton();
-    builder.add("invisibleRecurringToggle", invisibleRecurringToggle);
-    builder.addRepeat("recurringSeriesRepeat",
-                      Series.TYPE,
-                      GlobMatchers.linkedTo(BudgetArea.RECURRING_EXPENSES.getGlob(), Series.BUDGET_AREA),
-                      new SeriesComponentFactory(invisibleRecurringToggle, localRepository, localDirectory, dialog));
-    builder.add("createRecurringSeries", new CreateSeriesAction(BudgetArea.RECURRING_EXPENSES));
-    builder.add("editRecurringSeries", new EditAllSeriesAction(BudgetArea.RECURRING_EXPENSES));
+    builder.add(name, panelBuilder);
+  }
 
-    final JToggleButton invisibleEnvelopeToggle = new JToggleButton();
-    builder.add("invisibleEnvelopeToggle", invisibleEnvelopeToggle);
-    builder.addRepeat("envelopeSeriesRepeat",
-                      Series.TYPE,
-                      GlobMatchers.linkedTo(BudgetArea.EXPENSES_ENVELOPE.getGlob(), Series.BUDGET_AREA),
-                      new EnvelopeSeriesComponentFactory(invisibleEnvelopeToggle, localRepository, localDirectory, dialog));
-    builder.add("createEnvelopeSeries", new CreateSeriesAction(BudgetArea.EXPENSES_ENVELOPE));
-    builder.add("editEnvelopeSeries", new EditAllSeriesAction(BudgetArea.EXPENSES_ENVELOPE));
+  private void addMultiCategoriesSeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
 
+    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationDialog.class,
+                                                           "/layout/multiCategoriesSeriesChooserPanel.splits",
+                                                           localRepository, localDirectory);
+
+    final JToggleButton invisibleToggle = new JToggleButton();
+    panelBuilder.add("invisibleToggle", invisibleToggle);
+    panelBuilder.addRepeat("seriesRepeat",
+                           Series.TYPE,
+                           GlobMatchers.linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
+                           new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleToggle,
+                                                                     localRepository, localDirectory, dialog));
+    panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
+    panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
+
+    builder.add(name, panelBuilder);
+  }
+
+  private void addOccasionalSeriesChooser(GlobsPanelBuilder builder) {
     JToggleButton invisibleOccasionalToggle = new JToggleButton();
     builder.add("invisibleOccasionalToggle", invisibleOccasionalToggle);
     builder.addRepeat("occasionalSeriesRepeat",
@@ -148,9 +172,6 @@ public class CategorizationDialog {
                                                                invisibleOccasionalToggle,
                                                                localRepository, localDirectory, dialog));
     builder.add("editCategories", new EditCategoriesAction());
-
-    dialog.addInPanelWithButton(builder.<JPanel>load(), new OkAction(), new CancelAction());
-    dialog.pack();
   }
 
   private Comparator<Glob> getTransactionComparator() {

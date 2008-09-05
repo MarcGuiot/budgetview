@@ -1,0 +1,19 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <column>
+    <toggleButton ref="invisibleToggle" visible="false"/>
+    <scrollPane marginBottom="0">
+      <repeat ref="seriesRepeat" layout="wrappedColumn" border="empty(5)">
+        <toggleButton ref="seriesToggle" styleClass="selector"/>
+      </repeat>
+    </scrollPane>
+    <row styleClass="iconButtonGroup">
+      <button action="createSeries" styleClass="create"/>
+      <button action="editSeries" styleClass="list"/>
+      <filler fill="horizontal"/>
+    </row>
+  </column>
+
+</splits>

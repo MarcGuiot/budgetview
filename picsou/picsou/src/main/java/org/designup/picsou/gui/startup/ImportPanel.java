@@ -314,7 +314,7 @@ public abstract class ImportPanel {
 
   private class ImportAction extends AbstractAction {
     public ImportAction() {
-      super("$import.ok");
+      super(Lang.get("import.ok"));
     }
 
     public void actionPerformed(ActionEvent event) {

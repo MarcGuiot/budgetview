@@ -3,21 +3,21 @@
 
   <row>
 
-    <filler fill="horizontal" weightX="1.0"/>
-
-    <verticalSplit dividerLocation="300" opaque="false" weightX="1.0">
+    <verticalSplit dividerLocation="250" opaque="false" weightX="1.0">
       <panel ref="incomeBudgetView"/>
-      <panel ref="recurringBudgetView"/>
+      <panel ref="savingsBudgetView"/>
     </verticalSplit>
 
-    <filler fill="horizontal" weightX="0.5"/>
-
-    <verticalSplit dividerLocation="300" opaque="false" weightX="1.0">
+    <verticalSplit dividerLocation="350" opaque="false" weightX="1.0"
+                   marginLeft="50" marginRight="20">
+      <panel ref="recurringBudgetView"/>
       <panel ref="envelopeBudgetView"/>
+    </verticalSplit>
+
+    <verticalSplit dividerLocation="250" opaque="false" weightX="1.0">
+      <panel ref="projectsBudgetView"/>
       <panel ref="occasionalBudgetView"/>
     </verticalSplit>
-
-    <filler fill="horizontal" weightX="1.0"/>
 
   </row>
 </splits>

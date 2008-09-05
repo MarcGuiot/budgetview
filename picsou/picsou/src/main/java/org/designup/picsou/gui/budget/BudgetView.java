@@ -45,6 +45,10 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
 
     addBudgetAreaView("occasionalBudgetView", BudgetArea.OCCASIONAL_EXPENSES, builder);
 
+    addBudgetAreaView("projectsBudgetView", BudgetArea.PROJECTS, builder);
+
+    addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder);
+
     parentBuilder.add("budgetView", builder);
 
     repository.addChangeListener(this);

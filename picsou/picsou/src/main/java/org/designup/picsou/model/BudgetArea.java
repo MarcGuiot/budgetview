@@ -17,7 +17,9 @@ public enum BudgetArea implements GlobConstantContainer {
   RECURRING_EXPENSES("RECURRING_EXPENSES", 1, false, false),
   EXPENSES_ENVELOPE("EXPENSES_ENVELOPE", 2, false, true),
   OCCASIONAL_EXPENSES("OCCASIONAL_EXPENSES", 3, false, true),
-  UNCATEGORIZED("UNCATEGORIZED", 4, false, true);
+  PROJECTS("PROJECTS", 4, false, true),
+  SAVINGS("SAVINGS", 5, false, false),
+  UNCATEGORIZED("UNCATEGORIZED", 6, false, true);
 
   public static GlobType TYPE;
 
@@ -72,7 +74,11 @@ public enum BudgetArea implements GlobConstantContainer {
       case 3:
         return OCCASIONAL_EXPENSES;
       case 4:
-        return OCCASIONAL_EXPENSES;
+        return PROJECTS;
+      case 5:
+        return SAVINGS;
+      case 6:
+        return UNCATEGORIZED;
     }
     throw new ItemNotFound(id + " not associated to any BugdetArea enum value");
   }

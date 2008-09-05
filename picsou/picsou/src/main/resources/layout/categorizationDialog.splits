@@ -34,13 +34,11 @@
           <label text="$categorization.step1" styleClass="categorizationStep"/>
 
           <toggleButton ref="invisibleBudgetAreaToggle" visible="false"/>
-          <scrollPane minimumSize="(300,42)" weightY="0.1" viewportBackground="dialog.block">
-            <panel opaque="false">
-              <repeat ref="budgetAreas" layout="row" margin="5">
-                <toggleButton ref="budgetAreaToggle" styleClass="selector"/>
-              </repeat>
-            </panel>
-          </scrollPane>
+          <panel minimumSize="(300,68)" weightY="0.1" border="etched" background="dialog.block" opaque="true">
+            <repeat ref="budgetAreas" layout="horizontalGrid" gridWrapLimit="3" margin="5">
+              <toggleButton ref="budgetAreaToggle" styleClass="selector"/>
+            </repeat>
+          </panel>
 
           <label text="$categorization.step2" styleClass="categorizationStep"/>
 
@@ -51,60 +49,19 @@
             </card>
 
             <card name="income">
-              <column>
-                <toggleButton ref="invisibleIncomeToggle" visible="false"/>
-                <scrollPane marginBottom="0">
-                  <repeat ref="incomeSeriesRepeat" layout="wrappedColumn" border="empty(5)">
-                    <toggleButton ref="seriesToggle" styleClass="selector"/>
-                  </repeat>
-                </scrollPane>
-                <row styleClass="iconButtonGroup">
-                  <button action="createIncomeSeries" styleClass="create"/>
-                  <button action="editIncomeSeries" styleClass="list"/>
-                  <filler fill="horizontal"/>
-                </row>
-              </column>
+              <panel ref="incomeSeriesChooser"/>
             </card>
 
             <card name="recurringExpenses">
-              <column>
-                <toggleButton ref="invisibleRecurringToggle" visible="false"/>
-                <scrollPane marginBottom="0">
-                  <repeat ref="recurringSeriesRepeat" layout="wrappedColumn" border="empty(5)">
-                    <toggleButton ref="seriesToggle" styleClass="selector" fill="none"/>
-                  </repeat>
-                </scrollPane>
-                <row styleClass="iconButtonGroup">
-                  <button action="createRecurringSeries" styleClass="create"/>
-                  <button action="editRecurringSeries" styleClass="list"/>
-                  <filler fill="horizontal"/>
-                </row>
-              </column>
+              <panel ref="recurringSeriesChooser"/>
             </card>
 
             <card name="expensesEnvelope">
-              <column>
-                <toggleButton ref="invisibleEnvelopeToggle" visible="false"/>
-                <scrollPane marginBottom="0">
-                  <repeat ref="envelopeSeriesRepeat" layout="wrappedColumn" border="empty(5)">
-                    <column>
-                      <label ref="envelopeSeriesName" font="-,bold,14"/>
-                      <repeat ref="envelopeCategoryRepeat">
-                        <toggleButton ref="envelopeCategoryToggle" styleClass="selector"/>
-                      </repeat>
-                    </column>
-                  </repeat>
-                </scrollPane>
-                <row styleClass="iconButtonGroup">
-                  <button action="createEnvelopeSeries" styleClass="create"/>
-                  <button action="editEnvelopeSeries" styleClass="list"/>
-                  <filler fill="horizontal"/>
-                </row>
-              </column>
+              <panel ref="envelopeSeriesChooser"/>
             </card>
 
             <card name="occasionalExpenses">
-              <column>
+              <column name="occasionalSeriesChooser">
                 <scrollPane marginBottom="0">
                   <column>
                     <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
@@ -127,6 +84,14 @@
               </column>
             </card>
 
+            <card name="projects">
+              <panel ref="projectSeriesChooser"/>
+            </card>
+
+            <card name="savings">
+              <panel ref="savingsSeriesChooser"/>
+            </card>
+            
           </cards>
 
         </column>

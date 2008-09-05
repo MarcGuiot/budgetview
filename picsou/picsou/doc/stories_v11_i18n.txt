@@ -4,6 +4,7 @@
 * I18N: sous-categories
 * Parsing transactions : internationaliser les regexp de transactionMatcher
 * Verifier formats de date (mode americain : mm/dd/yyyy)
+* Verifier formats de nombres (virgules, points)
 
 Gestion des devises
 -------------------
