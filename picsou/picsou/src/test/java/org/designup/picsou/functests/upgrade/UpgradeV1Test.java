@@ -33,6 +33,6 @@ public class UpgradeV1Test extends LoggedInFunctionalTestCase {
     String fileName = TestUtils.getFileName(this, ".ofx");
     operations.exportFile(fileName);
     String exportedContent = Files.loadFileToString(fileName);
-    System.out.println(exportedContent);
+//    System.out.println(exportedContent);
   }
 }

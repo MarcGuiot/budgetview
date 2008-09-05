@@ -7,6 +7,8 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.ReadOnlyGlobRepository;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
@@ -85,5 +87,13 @@ public enum BudgetArea implements GlobConstantContainer {
 
   public Integer getId() {
     return id;
+  }
+
+  public static GlobList getGlobs(ReadOnlyGlobRepository repository, BudgetArea... budgetAreas) {
+    GlobList result = new GlobList();
+    for (BudgetArea budgetArea : budgetAreas) {
+      result.add(repository.get(org.globsframework.model.Key.create(BudgetArea.TYPE, budgetArea.getId())));
+    }
+    return result;
   }
 }

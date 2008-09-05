@@ -68,7 +68,6 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-
   public SeriesEditionDialogChecker setCategory(MasterCategory... category) {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
     CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
@@ -118,7 +117,6 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return new CategoryChooserChecker(chooser);
   }
 
-
   public SeriesEditionDialogChecker selectAllMonths() {
     table.selectRowSpan(0, table.getRowCount() - 1);
     return this;
@@ -167,14 +165,14 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker checkMonthIsEnabled(String ...monthsLabel) {
     for (String monthLabel : monthsLabel) {
-      assertThat(monthLabel + " is disable", getMonthCheckBox(monthLabel).isEnabled());
+      assertThat(monthLabel + " is disabled", getMonthCheckBox(monthLabel).isEnabled());
     }
     return this;
   }
 
   public SeriesEditionDialogChecker checkMonthIsDisabled(String ...monthsLabel) {
     for (String monthLabel : monthsLabel) {
-      assertFalse(monthLabel + " is enable", getMonthCheckBox(monthLabel).isEnabled());
+      assertFalse(monthLabel + " is enabled", getMonthCheckBox(monthLabel).isEnabled());
     }
     return this;
   }

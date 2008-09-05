@@ -254,6 +254,80 @@ public class CategorizationDialogChecker extends DataChecker {
     return panel;
   }
 
+  public CategorizationDialogChecker selectProjects() {
+    dialog.getToggleButton("projects").click();
+    return this;
+  }
+
+  public void checkContainsProject(String projectName, MasterCategory... categories) {
+    Panel panel = getProjectSeriesPanel();
+    assertTrue(panel.containsLabel(projectName));
+    for (MasterCategory category : categories) {
+      assertTrue(panel.containsUIComponent(ToggleButton.class, projectName + ":" + category.getName()));
+    }
+  }
+
+  public CategorizationDialogChecker selectProjectSeries(String projectName, MasterCategory category, boolean createSeries) {
+    Panel panel = getProjectSeriesPanel();
+    String name = projectName + ":" + category.getName();
+    Component component = panel.findSwingComponent(ComponentMatchers.innerNameIdentity(name));
+    if (component != null) {
+      // TODO avec la multi affectation de category a une enveloppe
+    }
+    if (createSeries) {
+      createProjectSeries()
+        .setName(projectName)
+        .setCategory(category)
+        .validate();
+      return this;
+    }
+    panel.getToggleButton(name).click();
+    return this;
+  }
+
+  private Panel getProjectSeriesPanel() {
+    Panel panel = dialog.getPanel("projectSeriesChooser");
+    assertTrue(panel.isVisible());
+    return panel;
+  }
+
+  public CategorizationDialogChecker selectSavings() {
+    dialog.getToggleButton("savings").click();
+    return this;
+  }
+
+  public void checkContainsSavings(String savingsName, MasterCategory... categories) {
+    Panel panel = getSavingsSeriesPanel();
+    assertTrue(panel.containsLabel(savingsName));
+    for (MasterCategory category : categories) {
+      assertTrue(panel.containsUIComponent(ToggleButton.class, savingsName + ":" + category.getName()));
+    }
+  }
+
+  public CategorizationDialogChecker selectSavingsSeries(String savingsName, MasterCategory category, boolean createSeries) {
+    Panel panel = getSavingsSeriesPanel();
+    String name = savingsName + ":" + category.getName();
+    Component component = panel.findSwingComponent(ComponentMatchers.innerNameIdentity(name));
+    if (component != null) {
+      // TODO avec la multi affectation de category a une enveloppe
+    }
+    if (createSeries) {
+      createSavingsSeries()
+        .setName(savingsName)
+        .setCategory(category)
+        .validate();
+      return this;
+    }
+    panel.getToggleButton(name).click();
+    return this;
+  }
+
+  private Panel getSavingsSeriesPanel() {
+    Panel panel = dialog.getPanel("savingsSeriesChooser");
+    assertTrue(panel.isVisible());
+    return panel;
+  }
+
   public CategorizationDialogChecker selectOccasional() {
     dialog.getToggleButton("occasionalExpenses").click();
     return this;
@@ -367,6 +441,14 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker createEnvelopeSeries() {
     return createSeries("envelope", false);
+  }
+
+  public SeriesEditionDialogChecker createProjectSeries() {
+    return createSeries("project", false);
+  }
+
+  public SeriesEditionDialogChecker createSavingsSeries() {
+    return createSeries("savings", true);
   }
 
   public SeriesEditionDialogChecker createSeries(String type, boolean oneSelection) {

@@ -16,26 +16,28 @@ public class BudgetViewChecker extends DataChecker {
   public final BudgetAreaChecker recurring;
   public final BudgetAreaChecker envelopes;
   public final OccasionalAreaChecker occasional;
+  public final BudgetAreaChecker projects;
+  public final BudgetAreaChecker savings;
 
   private Window window;
 
   public BudgetViewChecker(Window window) {
     this.window = window;
-    this.income = new BudgetAreaChecker("incomeBudgetView", "Income", true);
-    this.recurring = new BudgetAreaChecker("recurringBudgetView", "Recurring", true);
-    this.envelopes = new BudgetAreaChecker("envelopeBudgetView", "Envelope", false);
+    this.income = new BudgetAreaChecker("incomeBudgetView", true);
+    this.recurring = new BudgetAreaChecker("recurringBudgetView", true);
+    this.envelopes = new BudgetAreaChecker("envelopeBudgetView", false);
     this.occasional = new OccasionalAreaChecker();
+    this.projects= new BudgetAreaChecker("projectsBudgetView", false);
+    this.savings = new BudgetAreaChecker("savingsBudgetView", false);
   }
 
   public class BudgetAreaChecker {
 
     private String panelName;
-    private String type;
     private boolean oneSelection;
 
-    public BudgetAreaChecker(String panelName, String type, boolean oneSelection) {
+    public BudgetAreaChecker(String panelName, boolean oneSelection) {
       this.panelName = panelName;
-      this.type = type;
       this.oneSelection = oneSelection;
     }
 

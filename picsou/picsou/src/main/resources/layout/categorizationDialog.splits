@@ -2,7 +2,9 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="label.categorizationStep" font="-,bold,12" marginTop="5" marginBottom="5"/>
+    <style selector="label.categorizationStep" font="-,bold,12" foreground="#333333"
+           fill="horizontal" horizontalAlignment="left"
+           marginTop="15" marginBottom="10" border="matte(0,0,1,0,#AAAAAA)"/>
     <style selector="scrollPane" viewportBackground="dialog.block"/>
     <style selector="checkBox" font="-,plain,10"/>
   </styles>
@@ -18,7 +20,7 @@
 
         <column>
           <scrollPane viewportBackground="#FFFFFF">
-            <table ref="transactionTable" intercellSpacing="(0,0)" showGrid="false"/>
+            <table ref="transactionTable" rowHeight="20"/>
           </scrollPane>
           <column>
             <checkBox ref="autoSelectSimilar" text="$categorization.autoselect.similar" anchor="left"/>
@@ -29,14 +31,14 @@
 
         <column margin="5">
 
-          <label ref="transactionLabel" anchor="left"/>
+          <label ref="transactionLabel" anchor="left" marginBottom="10"/>
 
           <label text="$categorization.step1" styleClass="categorizationStep"/>
 
           <toggleButton ref="invisibleBudgetAreaToggle" visible="false"/>
           <panel minimumSize="(300,68)" weightY="0.1" border="etched" background="dialog.block" opaque="true">
-            <repeat ref="budgetAreas" layout="horizontalGrid" gridWrapLimit="3" margin="5">
-              <toggleButton ref="budgetAreaToggle" styleClass="selector"/>
+            <repeat ref="budgetAreas" layout="verticalGrid" gridWrapLimit="2" margin="5">
+              <toggleButton ref="budgetAreaToggle" styleClass="selector" anchor="left"/>
             </repeat>
           </panel>
 

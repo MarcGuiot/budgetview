@@ -1,6 +1,9 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="scrollPane" viewportBackground="dialog.block"/>
+  </styles>
 
   <column>
     <toggleButton ref="invisibleToggle" visible="false"/>

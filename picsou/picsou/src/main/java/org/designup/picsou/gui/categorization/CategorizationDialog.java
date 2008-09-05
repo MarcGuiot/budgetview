@@ -2,9 +2,9 @@ package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.BudgetAreaComponentFactory;
+import org.designup.picsou.gui.categorization.components.MultiCategoriesSeriesComponentFactory;
 import org.designup.picsou.gui.categorization.components.OccasionalCategoriesComponentFactory;
 import org.designup.picsou.gui.categorization.components.SeriesComponentFactory;
-import org.designup.picsou.gui.categorization.components.MultiCategoriesSeriesComponentFactory;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.series.EditSeriesAction;
@@ -101,9 +101,10 @@ public class CategorizationDialog {
       }
     });
     builder.add("invisibleBudgetAreaToggle", invisibleBudgetAreaToggle);
-    GlobList constants = BudgetArea.TYPE.getConstants();
-    constants.removeAll(GlobMatchers.fieldEquals(BudgetArea.ID, BudgetArea.UNCATEGORIZED.getId()), repository);
-    builder.addRepeat("budgetAreas", constants,
+    builder.addRepeat("budgetAreas",
+                      BudgetArea.getGlobs(localRepository, BudgetArea.INCOME, BudgetArea.SAVINGS,
+                                          BudgetArea.RECURRING_EXPENSES, BudgetArea.EXPENSES_ENVELOPE,
+                                          BudgetArea.PROJECTS, BudgetArea.OCCASIONAL_EXPENSES),
                       new BudgetAreaComponentFactory(cardHandler, invisibleBudgetAreaToggle,
                                                      localRepository, localDirectory, dialog));
 

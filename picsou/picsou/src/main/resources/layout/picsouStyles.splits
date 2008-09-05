@@ -31,6 +31,8 @@
 
     <style selector="row.buttons button" fill="horizontal" weightX="10"/>
 
+    <style selector="table" intercellSpacing="(0,0)" showGrid="false"/>
+
     <!-- Dialog -->
 
     <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"

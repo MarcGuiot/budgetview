@@ -199,6 +199,30 @@ public class TransactionChecker extends ViewChecker {
     categorization.validate();
   }
 
+  public void setProject(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
+    setProject(rowIndex, seriesName, master, showSeriesInitialization);
+  }
+
+  public void setProject(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+    CategorizationDialogChecker categorization = categorize(rowIndex);
+    categorization.selectProjects();
+    categorization.selectProjectSeries(seriesName, master, showSeriesInitialization);
+    categorization.validate();
+  }
+
+  public void setSavings(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
+    setSavings(rowIndex, seriesName, master, showSeriesInitialization);
+  }
+
+  public void setSavings(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+    CategorizationDialogChecker categorization = categorize(rowIndex);
+    categorization.selectSavings();
+    categorization.selectSavingsSeries(seriesName, master, showSeriesInitialization);
+    categorization.validate();
+  }
+
   public void checkCategorizationDisabled(int clickedRow) {
     Button seriesButton = getTable().editCell(clickedRow, TransactionView.CATEGORY_COLUMN_INDEX).getButton();
     UISpecAssert.assertFalse(seriesButton.isEnabled());

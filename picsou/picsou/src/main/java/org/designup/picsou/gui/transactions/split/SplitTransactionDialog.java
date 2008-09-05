@@ -93,7 +93,7 @@ public class SplitTransactionDialog {
 
     localRepository =
       LocalGlobRepositoryBuilder.init(repository)
-        .copy(Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE, SeriesBudget.TYPE)
+        .copy(Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE, SeriesBudget.TYPE, BudgetArea.TYPE)
         .copy(initialTransaction)
         .copy(repository.findLinkedTo(initialTransaction, Transaction.SPLIT_SOURCE))
         .get();
@@ -101,7 +101,7 @@ public class SplitTransactionDialog {
     transactionToSplit = localRepository.get(initialTransaction.getKey());
 
     repositoryForSplitPanel = LocalGlobRepositoryBuilder.init(localRepository)
-      .copy(Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE, SeriesBudget.TYPE)
+      .copy(Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE, SeriesBudget.TYPE, BudgetArea.TYPE)
       .get();
     selectionServiceForSplitPanel = new SelectionService();
     directoryForSplitPanel = new DefaultDirectory(directory);

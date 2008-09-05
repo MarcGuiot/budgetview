@@ -85,6 +85,44 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Exceptional Income", 0.0, 0.0);
   }
 
+  public void testProjectSeries() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .load();
+
+    views.selectData();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00)
+      .check();
+
+    transactions.setProject("Auchan", "Anniversaire", MasterCategory.FOOD, true);
+
+    views.selectBudget();
+
+    budgetView.projects.checkTitle("Projects");
+    budgetView.projects.checkTotalAmounts(95.0, 95.0);
+    budgetView.projects.checkSeries("Anniversaire", 95.0, 95.0);
+  }
+
+  public void testSavingsSeries() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -25.00, "Virt Compte Epargne")
+      .load();
+
+    views.selectData();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.PRELEVEMENT, "Virt Compte Epargne", "", -25.00)
+      .check();
+
+    transactions.setSavings("Virt Compte Epargne", "Epargne", MasterCategory.SAVINGS, true);
+
+    views.selectBudget();
+
+    budgetView.savings.checkTitle("Savings");
+    budgetView.savings.checkTotalAmounts(25.0, 25.0);
+    budgetView.savings.checkSeries("Epargne", 25.0, 25.0);
+  }
+  
   public void testImportWithUserDateAndBankDateAtNextMonth() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/31", "2008/08/02", -95.00, "Auchan")
