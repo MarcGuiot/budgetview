@@ -30,7 +30,6 @@ Serialisation
 * mettre en place des tests pour garantir l'upgrade data des utilisateurs
 
 CategorizationDialog
-* Mode autoselect ==> double click
 * Renommage de serie recurrente : mettre a jour le toggle
 * Renommage de serie envelope : mettre a jour le nom
 * Message d'aide quand il n'y a pas de serie pour une budgetArea

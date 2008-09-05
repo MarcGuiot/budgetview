@@ -4,6 +4,7 @@ import org.designup.picsou.model.User;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Strings;
 
 import java.util.Set;
 
@@ -23,11 +24,11 @@ public class RegistrationTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(User.ACTIVATION_CODE)) {
+        if (values.contains(User.ACTIVATION_CODE) || values.contains(User.MAIL)) {
           Glob user = repository.get(User.KEY);
           final String mail = user.get(User.MAIL);
-          final String code = values.get(User.ACTIVATION_CODE);
-          if (mail != null && code != null) {
+          final String code = user.get(User.ACTIVATION_CODE);
+          if (Strings.isNotEmpty(mail) && Strings.isNotEmpty(code)) {
             Thread thread = new Thread() {
               public void run() {
                 directory.get(ConfigService.class).sendRegister(mail, code, repository);

@@ -19,7 +19,10 @@ public class SeriesStringifier implements GlobStringifier {
     if (Strings.isNotEmpty(label)) {
       return label;
     }
-    return Lang.get(Series.TYPE.getName() + "." + series.get(Series.NAME));
+    if (Series.OCCASIONAL_SERIES_ID.equals(series.get(Series.ID))){
+      return Lang.get(Series.TYPE.getName() + "." + series.get(Series.NAME));
+    }
+    return series.get(Series.NAME);
   }
 
   public Comparator<Glob> getComparator(GlobRepository repository) {

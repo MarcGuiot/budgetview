@@ -11,17 +11,23 @@ import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Timer;
+import java.util.logging.LogManager;
 
 public class LicenceServer {
   public static final String USE_SSHL = "picsou.server.useSsl";
   public static final String KEYSTORE = "picsou.server.keystore";
   public static final String HOST_PROPERTY = "picsou.server.host";
+  public static final String DATABASE_URL = "picsou.server.database.url";
+  public static final String DATABASE_USER = "picsou.server.database.user";
+  public static final String DATABASE_PASSWD = "picsou.server.database.passwd";
   private Server jetty;
   private boolean useSsl = true;
   private int port = 8443;
   private int mailPort;
-  private String dabaseUrl = "jdbc:hsqldb:.";
+  private String databaseUrl = "jdbc:hsqldb:.";
   private String databaseUser = "sa";
   private String databasePassword = "";
   private QueryVersionTask queryVersionTask;
@@ -40,16 +46,22 @@ public class LicenceServer {
   }
 
   public static void main(String[] args) throws Exception {
+    initLogger();
     LicenceServer server = new LicenceServer();
     server.start();
+  }
+
+  private static void initLogger() throws IOException {
+    InputStream stream = LicenceServer.class.getClassLoader().getResourceAsStream("logging.properties");
+    LogManager.getLogManager().readConfiguration(stream);
   }
 
   public void setMailPort(int mailPort) {
     this.mailPort = mailPort;
   }
 
-  public void setDabaseUrl(String dabaseUrl) {
-    this.dabaseUrl = dabaseUrl;
+  public void setDatabaseUrl(String databaseUrl) {
+    this.databaseUrl = databaseUrl;
   }
 
   public void init() {
@@ -65,7 +77,8 @@ public class LicenceServer {
         host = "localhost";
       }
       connector.setHost(host);
-      connector.setPassword("ninja600");
+//      connector.setPassword();
+      connector.setKeyPassword("ninja600");
       connector.setPort(port);
       jetty.addConnector(connector);
     }
@@ -74,6 +87,10 @@ public class LicenceServer {
       connector.setHost("localhost");
       connector.setPort(port);
       jetty.addConnector(connector);
+    }
+    String database = System.getProperty(DATABASE_URL);
+    if (database != null) {
+      databaseUrl = database;
     }
     Directory directory = createDirectory();
 
@@ -95,7 +112,7 @@ public class LicenceServer {
     Mailler mailler = new Mailler();
     directory.add(mailler);
     mailler.setPort(mailPort);
-    SqlService sqlService = new JdbcSqlService(dabaseUrl, databaseUser, databasePassword);
+    SqlService sqlService = new JdbcSqlService(databaseUrl, databaseUser, databasePassword);
     directory.add(SqlService.class, sqlService);
     directory.add(new VersionService());
     return directory;

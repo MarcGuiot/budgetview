@@ -1,4 +1,3 @@
-- TransactionDetail : hyperlien pour editer la serie
 
 - Import : Selectionner automatiquement la banque par defaut si une seule banque dans les comptes existants
 
@@ -6,9 +5,10 @@
 
 - Blocks budgetview : splitpane invisibles (PIcsouSplitPaneUI dans PicsouStyles + dessiner un trait?)
 
-- WavePanelUI : degager JIDE / pb sous Tiger
-
 - Import : utiliser une PicsouDialog
+
+- SeriesEditionDialog : Double click table => selection jusqu'a la fin
+
 
 Login
 -----
@@ -54,6 +54,7 @@ Misc
 
 TransactionDetails
 ------------------
+* TransactionDetail : hyperlien pour editer la serie
 * Min/Max/Moy sur une ligne
 * Categorie "..." en multi-selection ("<plusieurs categories>")
 * Voir position lien "split"
