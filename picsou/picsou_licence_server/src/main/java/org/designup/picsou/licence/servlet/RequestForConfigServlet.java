@@ -41,6 +41,7 @@ public class RequestForConfigServlet extends HttpServlet {
     repoIdQuery = db.getQueryBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoIdAccessor))
       .selectAll()
       .getNotAutoCloseQuery();
+    logger.info("RequestForConfigServlet started");
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

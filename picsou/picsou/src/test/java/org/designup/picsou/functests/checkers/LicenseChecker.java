@@ -8,13 +8,13 @@ import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class LicenseChecker {
-  private Window window;
+  private Window dialog;
 
-  public LicenseChecker(Window window) {
-    this.window = window;
+  public LicenseChecker(Window dialog) {
+    this.dialog = dialog;
   }
 
-  public void enterLicense(final String mail, final String code, final int monthCount) {
+  static public void enterLicense(Window window, final String mail, final String code, final int monthCount) {
     WindowInterceptor.init(window.getMenuBar().getMenu("File")
       .getSubMenu("Register").triggerClick())
       .process(new WindowHandler() {
@@ -27,7 +27,7 @@ public class LicenseChecker {
       }).run();
   }
 
-  public void enterBadLicense(final String mail, final String code, final int monthCount) {
+  static public void enterBadLicense(Window window, final String mail, final String code, final int monthCount) {
     WindowInterceptor.init(window.getMenuBar().getMenu("File")
       .getSubMenu("Register").triggerClick())
       .process(new WindowHandler() {
@@ -35,22 +35,54 @@ public class LicenseChecker {
           window.getInputTextBox("mail").setText(mail);
           window.getInputTextBox("code").setText(code);
           window.getInputTextBox("monthCount").setText(Integer.toString(monthCount));
-          window.getButton("OK").click();
-          return window.getButton("Cancel").triggerClick();
+          window.getButton("ok").click();
+          return window.getButton("cancel").triggerClick();
         }
       }).run();
   }
 
-
-  public static void checkConnectionNotAvailable(Window window) {
-    assertFalse(window.getInputTextBox("mail").isEnabled());
-    assertFalse(window.getInputTextBox("code").isEnabled());
-    assertTrue(window.getTextBox("connectionMessage").textEquals("You must be connected to Internet to register"));
+  public static LicenseChecker open(Window window) {
+    return new LicenseChecker(WindowInterceptor.getModalDialog(window.getMenuBar().getMenu("File")
+      .getSubMenu("Register").triggerClick()));
   }
 
-  public static void checkConnectionIsAvailable(Window window) {
-    assertTrue(window.getInputTextBox("mail").isEnabled());
-    assertTrue(window.getInputTextBox("code").isEnabled());
-    assertFalse(window.getTextBox("connectionMessage").isVisible());
+  public LicenseChecker enterLicenseAndValidate(final String mail, final String code, final int monthCount) {
+    enterLicense(mail, code, monthCount);
+    dialog.getButton("ok").click();
+    return this;
+  }
+
+  public LicenseChecker enterLicense(String mail, String code, int monthCount) {
+    dialog.getInputTextBox("mail").setText(mail);
+    dialog.getInputTextBox("code").setText(code);
+    dialog.getInputTextBox("monthCount").setText(Integer.toString(monthCount));
+    return this;
+  }
+
+  public void checkConnectionNotAvailable() {
+    assertFalse(dialog.getInputTextBox("mail").isEnabled());
+    assertFalse(dialog.getInputTextBox("code").isEnabled());
+    assertTrue(dialog.getTextBox("connectionMessage").textEquals("You must be connected to Internet to register"));
+  }
+
+  public void checkConnectionIsAvailable() {
+    assertTrue(dialog.getInputTextBox("mail").isEnabled());
+    assertTrue(dialog.getInputTextBox("code").isEnabled());
+    assertFalse(dialog.getTextBox("connectionMessage").isVisible());
+  }
+
+  public LicenseChecker checkErrorMessage(String message) {
+    assertTrue(dialog.getTextBox("connectionMessage").textEquals(message));
+    return this;
+  }
+
+  public void cancel() {
+    dialog.getButton("cancel").click();
+    assertFalse(dialog.isVisible());
+  }
+
+  public LicenseChecker validate() {
+    dialog.getButton("ok").click();
+    return this;
   }
 }

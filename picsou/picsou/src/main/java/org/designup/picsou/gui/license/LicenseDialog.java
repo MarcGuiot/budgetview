@@ -34,7 +34,6 @@ public class LicenseDialog {
   private Directory localDirectory;
   private Integer activationState;
   private JProgressBar progressBar;
-  private JLabel registrationMessageLabel;
   private ValidateAction validateAction;
 
   public LicenseDialog(Window parent, GlobRepository repository, Directory directory) {
@@ -53,9 +52,6 @@ public class LicenseDialog {
     builder.addEditor("monthCount", UserPreferences.FUTURE_MONTH_COUNT);
     connectMessageLabel = new JLabel(Lang.get("license.connect"));
     builder.add("connectionMessage", connectMessageLabel);
-    registrationMessageLabel = new JLabel(Lang.get("license.connect"));
-    builder.add("registrationMessage", registrationMessageLabel);
-    registrationMessageLabel.setVisible(false);
     progressBar = new JProgressBar();
     builder.add("connectionState", progressBar);
 
@@ -67,12 +63,12 @@ public class LicenseDialog {
     Boolean isConnected = localRepository.get(User.KEY).get(User.CONNECTED);
     connectMessageLabel.setVisible(!isConnected);
 
-    registerChangeListener();
+    initRegisterChangeListener();
     repository.addChangeListener(changeSetListener);
     dialog.pack();
   }
 
-  private void registerChangeListener() {
+  private void initRegisterChangeListener() {
     changeSetListener = new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {
@@ -82,19 +78,21 @@ public class LicenseDialog {
             selectionService.select(localRepository.get(User.KEY));
             selectionService.select(localRepository.get(UserPreferences.KEY));
           }
-        }
-        activationState = repository.get(User.KEY).get(User.ACTIVATION_STATE);
-        if (activationState != null) {
-          if (activationState == User.ACTIVATION_OK) {
-            dialog.setVisible(false);
-            repository.removeChangeListener(changeSetListener);
-            localRepository.dispose();
-          }
-          else if (activationState != User.ACTIVATION_IN_PROCESS) {
-            connectMessageLabel.setText(Lang.get("license.activation.fail"));
-            connectMessageLabel.setVisible(true);
-            progressBar.setVisible(false);
-            validateAction.setEnabled(true);
+
+          activationState = repository.get(User.KEY).get(User.ACTIVATION_STATE);
+          if (activationState != null) {
+            if (activationState == User.ACTIVATION_OK) {
+              dialog.setVisible(false);
+              repository.removeChangeListener(changeSetListener);
+              localRepository.dispose();
+            }
+            else if (activationState != User.ACTIVATION_IN_PROCESS) {
+              connectMessageLabel.setText(Lang.get("license.activation.fail"));
+              connectMessageLabel.setVisible(true);
+              progressBar.setIndeterminate(true);
+              progressBar.setVisible(false);
+              validateAction.setEnabled(true);
+            }
           }
         }
       }

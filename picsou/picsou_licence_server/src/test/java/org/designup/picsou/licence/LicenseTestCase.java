@@ -47,7 +47,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     server.useSsl(false);
     server.usePort(5000);
     server.setMailPort(2500);
-    server.setDabaseUrl(databaseUrl);
+    server.setDatabaseUrl(databaseUrl);
     Protocol http = new Protocol("http", new DefaultProtocolSocketFactory(), 5000);
     Protocol.registerProtocol("http", http);
     ftpServer = new StubFtpServer();

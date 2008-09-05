@@ -25,12 +25,11 @@ public class RegistrationTest extends LicenseTestCase {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
     loginChecker.skipImport();
-    Window dialog = WindowInterceptor.getModalDialog(window.getMenuBar().getMenu("File")
-      .getSubMenu("Register").triggerClick());
-    LicenseChecker.checkConnectionNotAvailable(dialog);
+    LicenseChecker license = LicenseChecker.open(window);
+    license.checkConnectionNotAvailable();
     start();
     Thread.sleep(2000);
-    LicenseChecker.checkConnectionIsAvailable(dialog);
+    license.checkConnectionIsAvailable();
   }
 
   private void startPicsou() {

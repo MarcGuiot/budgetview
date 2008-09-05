@@ -83,8 +83,7 @@ public class LicenseTest extends LicenseTestCase {
       .getRequest()
       .run();
     connection.commit();
-    LicenseChecker checker = new LicenseChecker(window);
-    checker.enterLicense(mail, "1234", 24);
+    LicenseChecker.enterLicense(window, mail, "1234", 24);
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 1L);
     assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
     assertTrue(license.get(License.SIGNATURE).length > 1);
@@ -117,8 +116,7 @@ public class LicenseTest extends LicenseTestCase {
     login.logNewUser("user", "passw@rd");
     login.skipImport();
     checkRepoIdIsUpdated(getSqlConnection(), 1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
-    LicenseChecker license = new LicenseChecker(window);
-    license.enterBadLicense(MAIL, "1234", 24);
+    LicenseChecker.enterBadLicense(window, MAIL, "1234", 24);
     String mailcontent = checkReceive(MAIL);
     assertTrue(mailcontent, mailcontent.contains(": "));
     int startCode = mailcontent.indexOf(": ") + 2;
@@ -140,13 +138,35 @@ public class LicenseTest extends LicenseTestCase {
 
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logUser("user", "passw@rd");
-    LicenseChecker checker = new LicenseChecker(window);
-    checker.enterBadLicense("titi@foo.org", "4321", 24);
+    LicenseChecker.enterBadLicense(window, "titi@foo.org", "4321", 24);
 
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
     MonthChecker monthChecker = new MonthChecker(window);
     monthChecker.assertSpanEquals("2008/07", "2010/07");
+  }
+
+  public void testRegistrationWithBadKey() throws Exception {
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
+    loginChecker.skipImport();
+    LicenseChecker.open(window)
+      .enterLicenseAndValidate("titi@foo.org", "az", 24)
+      .checkErrorMessage("Activation failed")
+      .cancel();
+  }
+
+  public void testStartRegistrationAndStopServer() throws Exception {
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
+    loginChecker.skipImport();
+    LicenseChecker license = LicenseChecker.open(window)
+      .enterLicense("titi@foo.org", "az", 24);
+
+    stop();
+    license.validate();
+    license.checkErrorMessage("Activation failed")
+      .cancel();
   }
 
   private void restartPicsouToIncrementCount() {
@@ -168,7 +188,7 @@ public class LicenseTest extends LicenseTestCase {
     MonthChecker monthChecker = new MonthChecker(window);
     monthChecker.assertDisplays("2008/07");
     LicenseChecker license = new LicenseChecker(window);
-    license.enterLicense(MAIL, code, 24);
+    license.enterLicense(window, MAIL, code, 24);
     monthChecker.assertSpanEquals("2008/07", "2010/07");
     window.dispose();
   }
@@ -202,7 +222,7 @@ public class LicenseTest extends LicenseTestCase {
       .run();
     connection.commit();
     LicenseChecker checker = new LicenseChecker(window);
-    checker.enterLicense(MAIL, "1234", 24);
+    checker.enterLicense(window, MAIL, "1234", 24);
     Glob license = getLicense(connection, MAIL, License.ACCESS_COUNT, 1L);
     assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
     connection.commitAndClose();
