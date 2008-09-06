@@ -64,7 +64,7 @@
         <card name="home">
           <row>
             <column>
-              <panel ref="accountView"/>
+              <panel ref="accountView" minimtumSize="(300,100)" preferredSize="(300,300)"/>
 
               <panel name="uncategorizedMessagePanel" styleClass="errorMessage"
                      autoHideSource="uncategorizedMessage" preferredSize="(50,90)"
@@ -78,8 +78,8 @@
             </column>
 
             <column marginLeft="20">
-              <panel ref="monthSummaryView" preferredSize="(300,580)"/>
-              <filler fill="vertical"/>
+              <panel ref="monthSummaryView" minimumSize="(400,100)" preferredSize="(300,300)"/>
+              <!--<filler fill="vertical"/>-->
             </column>
 
             <filler fill="horizontal" weightX="10"/>

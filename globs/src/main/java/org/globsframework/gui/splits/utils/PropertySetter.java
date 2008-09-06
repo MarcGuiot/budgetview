@@ -27,6 +27,11 @@ public class PropertySetter {
       excludeSet.add(string.toLowerCase());
     }
 
+    String actionProperty = properties.get("action");
+    if (actionProperty != null){
+      invokeSetter(component, "action", actionProperty, context);
+      excludeSet.add("action");
+    }
     for (String property : properties.getPropertyNames()) {
       if (excludeSet.contains(property.toLowerCase())) {
         continue;

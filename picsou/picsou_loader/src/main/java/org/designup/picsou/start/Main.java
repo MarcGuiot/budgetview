@@ -99,12 +99,7 @@ public class Main {
     if (isMacOSX()) {
       path = System.getProperty("user.home") + "/Library/Application Support/" + PICSOU + JAR_DIRECTORY;
     }
-    File jarFile = findLastJar(path);
-    if (jarFile == null) {
-      path = System.getProperty("user.home") + "/." + PICSOU + JAR_DIRECTORY;
-      jarFile = findLastJar(path);
-    }
-    return jarFile;
+    return findLastJar(path);
   }
 
   public static boolean isMacOSX() {
