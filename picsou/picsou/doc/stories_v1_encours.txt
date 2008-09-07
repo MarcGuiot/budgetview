@@ -9,12 +9,16 @@ SeriesEditionDialog
 * Afficher les mois futurs meme en version basique
 * Double click table => selection jusqu'a la fin
 * Echeancier : griser mois passes + bold mois courant
+* Creation de series INCOME ou SAVINGS : preselectionner les categories par defaut
+* Reouverture de la fenetre quand le bouton OK avait ete grise : il reste grise
+* Activation de licence : les nouveaux mois prennent Series.AMOUNT et pas la valeur du dernier
 
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)
 * Block "non classe" (avec bouton categorisation)
 * Creation de serie : lister les series existantes + pb layout
 * Bug: les boutons "liste" devraient etre desactives lorsqu'il n'y a pas de series
+* Afficher la difference releve/prevu sous la barre dans l'affichage des totaux
 
 Licence
 * Pb text editor
@@ -34,4 +38,5 @@ CategorizationDialog
 * split de transaction
 * saisie de notes
 * afficher le nombre de transactions restantes
+* Voir affectation auto apres creation d'une enveloppe
 

@@ -173,6 +173,17 @@
            ui="selectionToggle" foreground="toggle.selector.categories.sub"
            font="-,plain,10" fill="none" anchor="west"/>
 
+    <!-- Split panes -->
+    <ui name="mainSplitPane" class="org.designup.picsou.gui.plaf.PicsouSplitPaneUI"
+        handleColor="splitpane.main.handle" handleSize="30"/>
+    <style selector=".main horizontalSplit" ui="mainSplitPane" dividerSize="6"/>
+    <style selector=".main verticalSplit" ui="mainSplitPane" dividerSize="4"/>
+
+    <ui name="dialogSplitPane" class="org.designup.picsou.gui.plaf.PicsouSplitPaneUI"
+        handleColor="splitpane.dialog.handle" handleSize="30"/>
+    <style selector=".dialog horizontalSplit" ui="dialogSplitPane" dividerSize="6"/>
+    <style selector=".dialog verticalSplit" ui="dialogSplitPane" dividerSize="4"/>
+
   </styles>
 
 </splits>

@@ -15,9 +15,9 @@
            foreground="budgetArea.series.link"/>
   </styles>
 
-  <column name="budgetAreaSeriesView">
+  <column name="budgetAreaSeriesView" styleClass="main">
 
-    <label ref="budgetAreaTitle" styleClass="blockTitle"/>
+    <label ref="budgetAreaTitle" styleClass="blockTitle" marginTop="5"/>
 
     <panel styleClass="block" preferredSize="(300,400)">
       <column border="empty(10)">

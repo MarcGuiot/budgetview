@@ -1,12 +1,11 @@
 
-- Import : Selectionner automatiquement la banque par defaut si une seule banque dans les comptes existants
-
-- BalanceGraph : couleur si balance negative
-
 - Blocks budgetview : splitpane invisibles (PIcsouSplitPaneUI dans PicsouStyles + dessiner un trait?)
 
-- Import : utiliser une PicsouDialog
 
+- Import : Selectionner automatiquement la banque par defaut si une seule banque dans les comptes existants
+- BalanceGraph : couleur si balance negative
+
+- Import : utiliser une PicsouDialog
 - SeriesEditionDialog : Double click table => selection jusqu'a la fin
 
 
