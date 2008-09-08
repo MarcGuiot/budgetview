@@ -182,4 +182,15 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
 
     categories.assertCategoryExists("Internet Access", 2);
   }
+
+  public void testDeleteAndReopen() throws Exception {
+    categories.select(MasterCategory.HOUSE);
+    categories.openEditionDialog()
+      .deleteMasterCategory()
+      .validate();
+    CategoryEditionChecker categories = this.categories.openEditionDialog();
+    categories.getMasterList().contains();
+
+    categories.validate();
+  }
 }

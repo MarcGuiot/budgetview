@@ -25,8 +25,8 @@ import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.gui.views.impl.StringListCellRenderer;
+import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -37,7 +37,8 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -128,8 +129,7 @@ public class SeriesEditionDialog {
         }
         else {
           return Lang.get("seriesEdition.category.label") + categoryStringifier.toString(
-            repository.findLinkTarget(currentSeries, Series.DEFAULT_CATEGORY),
-            repository);
+            repository.find(Key.create(Category.TYPE, category)), repository);
         }
       }
     };
