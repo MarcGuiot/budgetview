@@ -114,7 +114,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           assertTrue(window.getComboBox("bankCombo")
-            .contentEquals("", "Autre", "BNP", "CIC", "Credit Agricole", "La Poste", "Societe Generale"));
+            .contentEquals("", "Autre", "BNP", "CIC", "Caisse d'épargne", "Credit Agricole", "La Poste",
+                           "Societe Generale"));
           return window.getButton("close").triggerClick();
         }
       }).run();

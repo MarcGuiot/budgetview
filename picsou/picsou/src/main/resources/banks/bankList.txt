@@ -1,4 +1,5 @@
 otherBank.xml
+caisseepargne.xml
 cic.xml
 sg.xml
 laposte.xml

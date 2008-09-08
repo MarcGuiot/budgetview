@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.CategoryChooserChecker;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -310,9 +311,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkSeriesList("My envelope", "New series")
       .checkSeriesSelected("New series")
       .setName("My new envelope")
-      .setCategory(MasterCategory.HOUSE)      
+      .setCategory(MasterCategory.HOUSE)
       .validate();
-    
+
     budgetView.envelopes.createSeries()
       .checkSeriesList("My envelope", "My new envelope", "New series")
       .cancel();
@@ -381,7 +382,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("bank")
       .setCategory(MasterCategory.BANK)
       .validate();
-    
+
     budgetView.envelopes.editSeries("courant")
       .checkCategory(MasterCategory.CLOTHING, MasterCategory.FOOD)
       .cancel();
@@ -576,13 +577,23 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.HOUSE)
       .checkOkEnabled(true)
       .validate();
-    
+
     budgetView.envelopes.createSeries()
       .checkOkEnabled(false)
       .cancel();
-    
+
     budgetView.envelopes.editSeriesList()
       .checkOkEnabled(true)
       .cancel();
+  }
+
+  public void testCreateNewCategory() throws Exception {
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
+    CategoryChooserChecker chooser = edition.openCategory();
+    chooser.openCategoryEdition()
+      .createMasterCategory("Assurance")
+      .validate();
+    chooser.checkContains("Assurance");
   }
 }
