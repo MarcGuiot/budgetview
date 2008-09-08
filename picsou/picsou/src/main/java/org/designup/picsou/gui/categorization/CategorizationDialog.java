@@ -68,7 +68,7 @@ public class CategorizationDialog {
         .addColumn(Lang.get("date"), new TransactionDateStringifier(transactionComparator),
                    LabelCustomizers.fontSize(9))
         .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.bold())
-        .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT));
+        .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), LabelCustomizers.alignRight());
     Gui.setColumnSizes(transactionTable.getComponent(), COLUMN_SIZES);
 
     autoSelectionCheckBox = new JCheckBox(new AutoSelectAction());

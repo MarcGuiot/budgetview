@@ -17,7 +17,7 @@ SeriesEditionDialog
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)
 * Bloc "non classe" (avec bouton categorisation)
-* Creation de serie : lister les series existantes + pb layout
+* Pb layout lors de la creation d'une seconde serie
 * Bug: les boutons "liste" devraient etre desactives lorsqu'il n'y a pas de series
 * Afficher la difference releve/prevu sous la barre dans l'affichage des totaux
 
@@ -43,10 +43,9 @@ CategorizationDialog
 * saisie de notes
 * afficher le nombre de transactions restantes
 * Voir affectation auto apres creation d'une enveloppe
-* Traduction colonnes libelle/montant
 * Transformer en tab ?
 * Mode selectNext disabled : creation de recurrence = la derniere reste selectionnee
 * Bouton liste : selectionner la serie courante
 
 
-Afficher le changeLog en cas de changement de version
+* Afficher le changeLog en cas de changement de version

@@ -288,6 +288,35 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Free Telecom", 0, 0);
   }
 
+  public void testExistingSeriesAreVisibleWhenCreatingANewSeries() throws Exception {
+    views.selectBudget();
+
+    budgetView.recurring.createSeries()
+      .setName("My recurrence")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+
+    budgetView.envelopes.createSeries()
+      .setName("My envelope")
+      .setCategory(MasterCategory.HOUSE)
+      .validate();
+
+    budgetView.envelopes.createSeries()
+      .checkSeriesList("My envelope", "New series")
+      .checkSeriesSelected("New series")
+      .setName("My new envelope")
+      .setCategory(MasterCategory.HOUSE)      
+      .validate();
+    
+    budgetView.envelopes.createSeries()
+      .checkSeriesList("My envelope", "My new envelope", "New series")
+      .cancel();
+
+    budgetView.recurring.createSeries()
+      .checkSeriesList("My recurrence", "New series")
+      .cancel();
+  }
+
   public void testSwitchingBetweenTwoNewSeriesWithTheSameName() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/15", -29.00, "Free Telecom")
@@ -364,7 +393,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkSeries("courant");
   }
 
-  public void testUnselectAllCategory() throws Exception {
+  public void testUnselectAllCategories() throws Exception {
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
     edition

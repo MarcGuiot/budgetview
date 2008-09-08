@@ -25,6 +25,7 @@ import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.gui.views.impl.StringListCellRenderer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.BooleanField;
@@ -187,7 +188,7 @@ public class SeriesEditionDialog {
       .setDefaultBackgroundPainter(new TableBackgroundPainter())
       .addColumn(Lang.get("seriesEdition.year"), new YearStringifier())
       .addColumn(Lang.get("seriesEdition.month"), new MonthStringifier())
-      .addColumn(Lang.get("seriesBudget.amount"), new AmountStringifier());
+      .addColumn(Lang.get("seriesBudget.amount"), new AmountStringifier(), LabelCustomizers.alignRight());
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -271,7 +272,8 @@ public class SeriesEditionDialog {
     try {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
-      initCategorizeVisibility();
+      initBudgetAreaSeries(budgetArea);
+
       Double initialAmount = computeMinAmountPerMonth(transactions);
       String label;
       if (!transactions.isEmpty()) {
