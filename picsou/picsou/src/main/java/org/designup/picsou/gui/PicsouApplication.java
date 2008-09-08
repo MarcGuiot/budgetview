@@ -60,8 +60,8 @@ public class PicsouApplication {
   public static String IS_DATA_IN_MEMORY = PICSOU + ".data.in.memory";
   public static String FORCE_DATE = PICSOU + ".today";
   private static String DEFAULT_ADDRESS = "https://startupxp.dynalias.org";
-  public static final String REGISTER_URL = "https://startupxp.dynalias.org";
-  public static final String FTP_URL = "ftp://startupxp.dynalias.org";
+  public static final String REGISTER_URL = "https://91.121.123.100:8443"; //startupxp.dynalias.org";
+  public static final String FTP_URL = "ftp://91.121.123.100"; //startupxp.dynalias.org";
 
   private OpenRequestManager openRequestManager = new OpenRequestManager();
   private SingleApplicationInstanceListener singleInstanceListener;
@@ -163,6 +163,10 @@ public class PicsouApplication {
         Locale.setDefault(Locale.FRANCE);
         Lang.setLocale(Locale.FRANCE);
       }
+      else if (args[1].equals("en")) {
+        Locale.setDefault(Locale.ENGLISH);
+        Lang.setLocale(Locale.ENGLISH);
+      }
       String[] strings = new String[args.length - 2];
       System.arraycopy(args, 2, strings, 0, args.length - 2);
       args = strings;
@@ -215,11 +219,12 @@ public class PicsouApplication {
   }
 
   private static String getSystemValue(String propertyName, String defaultPropertyValue) {
-    String value = null;
+    String value;
     try {
       value = System.getProperty(propertyName);
     }
     catch (Throwable e) {
+      value = null;
     }
     if (value == null) {
       return defaultPropertyValue;

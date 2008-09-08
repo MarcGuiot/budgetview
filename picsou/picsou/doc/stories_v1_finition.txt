@@ -8,6 +8,20 @@
 - Import : utiliser une PicsouDialog
 - SeriesEditionDialog : Double click table => selection jusqu'a la fin
 
+- Import : OK sans fichier = message, si selection il faut purger le message
+
+- Tooltips sur les boutons
+
+- CategoryEditionDialog
+* mettre en evidence les categories inutilisees
+* selectionner la categorie suivante apres suppression
+* suppression avec move : retirer la source de la liste des target
+
+- Creation de series : revoir estimation montant (moyenne 3 derniers mois ?)
+
+- CategoryView : boutons expand all / collapse all
+
+- TimeView : mettre en evidence les mois sans transactions
 
 Login
 -----

@@ -46,11 +46,13 @@
                 </manifest>
                 <jar update="true" jarfile="target/picsouloader-1.0.jar" manifest="target/classes/MANIFEST.MF"/>
 
+                <mkdir dir="${basedir}/app/"/>
+
                 <taskdef name="jarbundler"
                          classpath="dev/install/jarbundler-1.9.jar;dev/install/xercesImpl-2.4.0.jar"
                          classname="net.sourceforge.jarbundler.JarBundler"/>
 
-                <jarbundler dir="${basedir}"
+                <jarbundler dir="${basedir}/app/"
                             name="Picsou"
                             mainclass="org.designup.picsou.start.Main"
                             jar="target/picsouloader-1.0.jar"
@@ -73,6 +75,11 @@
                                 iconFile="dev/images/picsou_icon.icns"
                                 role="Editor"/>
                 </jarbundler>
+
+                <!--<exec executable="hdiutil">-->
+                  <!--<arg line="create -srcfolder ${basedir}/app/ Picsou.dmg"/>-->
+                <!--</exec>-->
+
               </tasks>
             </configuration>
             <goals>
@@ -108,27 +115,12 @@
   </build>
 
   <dependencies>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    <!--<dependency>-->
-    <!--<groupId>org.globsframework</groupId>-->
-    <!--<artifactId>picsou</artifactId>-->
-    <!--<version>1.0</version>-->
-    <!--</dependency>-->
   </dependencies>
-
-  <scm>
-    <connection>scm:</connection>
-    <developerConnection>
-      scm:
-    </developerConnection>
-    <tag/>
-    <url/>
-  </scm>
 
 </project>

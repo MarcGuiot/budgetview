@@ -2,8 +2,7 @@ package org.designup.picsou.start;
 
 import sun.security.action.GetPropertyAction;
 
-import java.io.File;
-import java.io.FilenameFilter;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -19,15 +18,22 @@ public class Main {
   private static final Pattern FILTER = Pattern.compile(PICSOU + "[0-9][0-9]*" + "\\.jar");
   private static final String JAR_DIRECTORY = "/jars";
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     new Main().go(args);
   }
 
-  private void go(String[] args) {
+  private void go(String[] args) throws Exception {
+
     String pathToInstallDir = System.getProperty("picsou.exe.dir");
     if (pathToInstallDir == null) {
-      pathToInstallDir = System.getProperty("user.dir");
+      if (isMacOSX()) {
+        pathToInstallDir = System.getProperty("user.dir") + "/Picsou.app/Contents/Resources/";
+      }
+      else {
+        pathToInstallDir = System.getProperty("user.dir");
+      }
     }
+
     File jarFile = null;
     Long installedVersion = null;
     if (pathToInstallDir != null) {
@@ -36,6 +42,7 @@ public class Main {
         installedVersion = extractVersion(jarFile.getName());
       }
     }
+
     File downloadedFileName = loadJar();
     Long downloadedVersion = null;
     if (downloadedFileName != null) {
@@ -51,8 +58,10 @@ public class Main {
       jarFile = downloadedFileName;
     }
     if (jarFile == null) {
-      throw new RuntimeException("missing jar file");
+      dumpLog("JAR file not found", null, pathToInstallDir, jarFile, installedVersion, downloadedVersion);
+      throw new RuntimeException();
     }
+
     URL url;
     try {
       url = new URL("file", "", jarFile.getAbsolutePath());
@@ -63,7 +72,8 @@ public class Main {
       method.invoke(null, new Object[]{args});
     }
     catch (Exception e) {
-      e.printStackTrace();
+      dumpLog(e.getMessage(), e, pathToInstallDir, jarFile, installedVersion, downloadedVersion);
+      throw new RuntimeException(e);
     }
   }
 
@@ -115,4 +125,51 @@ public class Main {
     return ((String)AccessController.doPrivileged(new GetPropertyAction("os.name"))).contains(LINUX_PLATFORM_ID);
   }
 
+  private void dumpLog(String message, Exception e,
+                       String pathToInstallDir, File jarFile,
+                       Long installedVersion, Long downloadedVersion) throws IOException {
+
+    Writer writer = new OutputStreamWriter(System.err);
+
+    dumpTitle(writer, "Variables");
+
+    dumpValue(writer, "errorMessage", message);
+    dumpValue(writer, "pathToInstallDir", pathToInstallDir);
+    dumpValue(writer, "jarFile", jarFile);
+    dumpValue(writer, "installedVersion", installedVersion);
+    dumpValue(writer, "downloadedVersion", downloadedVersion);
+
+    if (e != null) {
+      dumpTitle(writer, "Exception");
+      e.printStackTrace(new PrintWriter(writer));
+    }
+
+    dumpTitle(writer, "System properties");
+
+    dumpProperty(writer, "java.vm.vendor");
+    dumpProperty(writer, "java.version");
+    dumpProperty(writer, "java.vm.version");
+    dumpProperty(writer, "java.runtime.version");
+    dumpProperty(writer, "java.specification.version");
+    dumpProperty(writer, "os.name");
+    dumpProperty(writer, "os.version");
+    dumpProperty(writer, "os.arch");
+    dumpProperty(writer, "sun.arch.data.model");
+    dumpProperty(writer, "file.encoding");
+    dumpProperty(writer, "user.language");
+
+    writer.close();
+  }
+
+  private void dumpTitle(Writer writer, String title) throws IOException {
+    writer.write("\n\n==========  " + title + "  ==========\n\n");
+  }
+
+  private void dumpProperty(Writer writer, String key) throws IOException {
+    dumpValue(writer, key, System.getProperty(key));
+  }
+
+  private void dumpValue(Writer writer, String key, Object value) throws IOException {
+    writer.write(key + " => " + value + "\n");
+  }
 }
