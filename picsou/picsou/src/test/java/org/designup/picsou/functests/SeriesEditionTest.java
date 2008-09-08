@@ -389,9 +389,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .createSeries()
       .checkCategorizeEnable(true)
       .checkMultiCategorizeIsVisible(false)
-      .checkOk(false)
+      .checkOkEnabled(false)
       .setCategory(MasterCategory.INCOME)
-      .checkOk(true)
+      .checkOkEnabled(true)
       .checkLabelIncomeAmount()
       .validate();
   }
@@ -520,7 +520,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       });
   }
 
-  public void testMonthisHiddenIfLessThanOneMonthInDateRange() throws Exception {
+  public void testMonthIsHiddenIfLessThanOneMonthInDateRange() throws Exception {
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
     edition.setStartDate(200705)
@@ -531,6 +531,24 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsEnabled("Feb", "May", "Jun", "Jul", "Aug", "Sep")
       .checkMonthIsDisabled("Mar", "Apr")
       .cancel();
+  }
 
+  public void testOkButtonIsReenabledWhenTheDialogIsReopened() throws Exception {
+    views.selectBudget();
+
+    budgetView.envelopes.createSeries()
+      .setName("My Series")
+      .checkOkEnabled(false)
+      .setCategory(MasterCategory.HOUSE)
+      .checkOkEnabled(true)
+      .validate();
+    
+    budgetView.envelopes.createSeries()
+      .checkOkEnabled(false)
+      .cancel();
+    
+    budgetView.envelopes.editSeriesList()
+      .checkOkEnabled(true)
+      .cancel();
   }
 }

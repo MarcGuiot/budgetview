@@ -15,3 +15,5 @@ Stabilisation
 * BudgetArea "Projets" et "Economies"
 
 * Creer des transactions utilisateur (soit achats effectues mais pas encore dans les releves, soit previsions plus vagues)
+
+* Categorisation : tab "virements internes" avec selection du compte de destination

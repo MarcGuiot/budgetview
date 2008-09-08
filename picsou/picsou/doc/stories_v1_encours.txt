@@ -10,7 +10,6 @@ SeriesEditionDialog
 * Double click table => selection jusqu'a la fin
 * Echeancier : griser mois passes + bold mois courant
 * Creation de series INCOME ou SAVINGS : preselectionner les categories par defaut
-* Reouverture de la fenetre quand le bouton OK avait ete grise : il reste grise sur le prochain "list"
 * Activation de licence : les nouveaux mois prennent Series.AMOUNT et pas la valeur du dernier
 * Table : aligner les montants a droite
 * Look header
@@ -25,7 +24,6 @@ BudgetView
 Licence
 * Pb text editor
 * Voir nb mois
-* Activation : les nouveaux SeriesBudget ne doivent pas utiliser Series.DEFAULT_AMOUNT
 
 CategoryEditionDialog
 * Bug! select category + delete + ok + reopen => exception

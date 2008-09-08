@@ -371,8 +371,8 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return dialog.getTextBox("multiCategoryLabel");
   }
 
-  public SeriesEditionDialogChecker checkOk(boolean isEnable) {
-    UISpecAssert.assertEquals(isEnable, dialog.getButton("ok").isEnabled());
+  public SeriesEditionDialogChecker checkOkEnabled(boolean isEnabled) {
+    UISpecAssert.assertEquals(isEnabled, dialog.getButton("ok").isEnabled());
     return this;
 
   }

@@ -36,8 +36,7 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -227,20 +226,7 @@ public class SeriesEditionDialog {
     amountLabel = new JLabel();
     builder.add("seriesEditionAmountLabel", amountLabel);
 
-    localRepository.addChangeListener(new DefaultChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(Series.TYPE)) {
-          GlobList series = repository.getAll(Series.TYPE);
-          for (Glob glob : series) {
-            if (glob.get(Series.DEFAULT_CATEGORY) == null) {
-              okAction.setEnabled(false);
-              return;
-            }
-          }
-          okAction.setEnabled(true);
-        }
-      }
-    });
+    localRepository.addChangeListener(new OkButtonUpdater());
 
     JPanel panel = builder.load();
     okAction = new ValidateAction();
@@ -687,5 +673,29 @@ public class SeriesEditionDialog {
       }
       return PicsouDescriptionService.DECIMAL_FORMAT.format((budgetArea.isIncome() ? 1 : -1) * value);
     }
+  }
+
+  private class OkButtonUpdater extends DefaultChangeSetListener {
+    public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+      if (changeSet.containsChanges(Series.TYPE)) {
+        update(repository);
+      }
+    }
+
+    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      update(repository);
+    }
+
+    private void update(GlobRepository repository) {
+      GlobList series = repository.getAll(Series.TYPE);
+      for (Glob glob : series) {
+        if (glob.get(Series.DEFAULT_CATEGORY) == null) {
+          okAction.setEnabled(false);
+          return;
+        }
+      }
+      okAction.setEnabled(true);
+    }
+
   }
 }
