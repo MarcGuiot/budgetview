@@ -3,9 +3,9 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.Window;
-import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import org.uispec4j.interception.WindowInterceptor;
 
 public class CategoryChooserChecker extends DataChecker {
   private Window window;
@@ -42,9 +42,9 @@ public class CategoryChooserChecker extends DataChecker {
     assertFalse(dialog.isVisible());
   }
 
-  public CategoryChooserChecker checkContains(String[] expectedCategories) {
+  public CategoryChooserChecker checkContains(String... expectedCategories) {
     for (String expectedCategory : expectedCategories) {
-      Assert.assertNotNull(window.getTextBox(expectedCategory));
+      Assert.assertNotNull(window.getToggleButton(expectedCategory));
     }
     return this;
   }
@@ -66,5 +66,9 @@ public class CategoryChooserChecker extends DataChecker {
 
   public void cancel() {
     window.getButton("cancel").click();
+  }
+
+  public CategoryEditionChecker openCategoryEdition() {
+    return new CategoryEditionChecker(WindowInterceptor.getModalDialog(window.getButton("editCategories").triggerClick()));
   }
 }

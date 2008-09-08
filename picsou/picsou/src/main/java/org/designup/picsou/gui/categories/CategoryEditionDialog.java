@@ -12,7 +12,6 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -26,6 +25,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -140,18 +140,21 @@ public class CategoryEditionDialog {
     }, Category.TYPE);
   }
 
-  public void show(GlobList categories) {
-    categories.filterSelf(GlobMatchers.not(GlobMatchers.fieldIn(Category.ID,
-                                                                MasterCategory.RESERVED_CATEGORY_IDS)), localRepository);
+  public void show(Collection categories) {
+    for (Integer id : MasterCategory.RESERVED_CATEGORY_IDS) {
+      categories.remove(id);
+    }
     if (categories.size() == 1) {
-      Glob category = localRepository.get(categories.get(0).getKey());
-      if (Category.isMaster(category)) {
-        masterDirectory.get(SelectionService.class).select(category);
-      }
-      else {
-        Glob masterCategory = localRepository.get(Key.create(Category.TYPE, category.get(Category.ID)));
-        masterDirectory.get(SelectionService.class).select(masterCategory);
-        subDirectory.get(SelectionService.class).select(category);
+      Glob category = localRepository.find(Key.create(Category.TYPE, categories.iterator().next()));
+      if (category != null) {
+        if (Category.isMaster(category)) {
+          masterDirectory.get(SelectionService.class).select(category);
+        }
+        else {
+          Glob masterCategory = localRepository.get(Key.create(Category.TYPE, category.get(Category.ID)));
+          masterDirectory.get(SelectionService.class).select(masterCategory);
+          subDirectory.get(SelectionService.class).select(category);
+        }
       }
     }
     else {

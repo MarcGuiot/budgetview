@@ -43,15 +43,8 @@ public class CategoryEditionChecker extends DataChecker {
     return this;
   }
 
-  public CategoryEditionChecker deleteMasterCategory(final String name) {
-    WindowInterceptor.init(getDeleteMasterButton().triggerClick())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          DeleteCategoryChecker categoryChecker = new DeleteCategoryChecker(window);
-          categoryChecker.selectCategory(name);
-          return categoryChecker.validate();
-        }
-      }).run();
+  public CategoryEditionChecker deleteMasterCategory() {
+    getDeleteMasterButton().click();
     return this;
   }
 

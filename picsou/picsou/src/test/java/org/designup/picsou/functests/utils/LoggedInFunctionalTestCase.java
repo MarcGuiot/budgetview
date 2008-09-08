@@ -7,6 +7,7 @@ import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.LabelToCategory;
 import org.designup.picsou.model.MasterCategory;
@@ -61,6 +62,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "true");
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
+    System.setProperty(ConfigService.COM_PICSOU_LICENCE_URL, "");
+    System.setProperty(ConfigService.COM_PICSOU_LICENCE_FTP_URL, "");
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
         if (mainWindow == null) {
