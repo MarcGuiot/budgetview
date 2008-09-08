@@ -1,6 +1,7 @@
 open "picsou00000000000001.jar"
      -"picsou00000000000001.jar!apple/laf/*.class"
-     -"picsou00000000000001.jar!net/roydesign/mac/*.class";
+     -"picsou00000000000001.jar!net/roydesign/mac/*.class"
+     -"picsou00000000000001.jar!net/roydesign/event/*.class";
 
 exclude   picsou.^Main and
           picsou.Main main(*) and

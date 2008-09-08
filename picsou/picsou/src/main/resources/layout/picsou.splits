@@ -11,8 +11,6 @@
         topColor="viewselector.top" bottomColor="viewselector.bottom"
         borderColor="viewselector.border" borderWidth="1" cornerRadius="10"/>
 
-    <ui name="cleanSplitPane" class="org.designup.picsou.gui.plaf.PicsouSplitPaneUI"/>
-
     <style selector="toggleButton.viewSelector" ui="viewSelector" opaque="false"
            minimumSize="(40,40)" preferredSize="(40,40)" margin="0" marginLeft="5" weightX="0" fill="none"/>
     <style selector="toggleButton#homeCardToggle" icon="card_home.png"/>
@@ -30,7 +28,7 @@
 
   </styles>
 
-  <panel ui="wave">
+  <panel styleClass="main" ui="wave">
     <column marginTop="20" marginLeft="20" marginRight="20" marginBottom="10">
 
       <row weightY="1.0">
@@ -78,8 +76,7 @@
             </column>
 
             <column marginLeft="20">
-              <panel ref="monthSummaryView" minimumSize="(400,100)" preferredSize="(300,300)"/>
-              <!--<filler fill="vertical"/>-->
+              <panel ref="monthSummaryView" minimumSize="(300,100)" preferredSize="(300,300)"/>
             </column>
 
             <filler fill="horizontal" weightX="10"/>
@@ -92,7 +89,7 @@
 
         <card name="withCategories">
 
-          <horizontalSplit ui="cleanSplitPane" dividerSize="2" dividerLocation="230"
+          <horizontalSplit dividerLocation="230"
                            continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
             <panel styleClass="block">
 

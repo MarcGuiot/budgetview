@@ -12,7 +12,7 @@
 
       <label text="$seriesEdition.title" styleClass="title"/>
 
-      <horizontalSplit dividerLocation="150" dividerSize="10" opaque="false">
+      <horizontalSplit dividerLocation="150" opaque="false">
         <column>
           <scrollPane>
             <list ref="seriesList"/>

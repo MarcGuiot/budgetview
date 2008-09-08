@@ -1,7 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <row>
+  <row styleClass="main">
 
     <verticalSplit dividerLocation="250" opaque="false" weightX="1.0">
       <panel ref="incomeBudgetView"/>

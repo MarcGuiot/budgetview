@@ -35,12 +35,11 @@ public class DialogDemo {
     PicsouSampleGenerator generator = new PicsouSampleGenerator(repository);
     generator.run(200710, 200809);
 
-//    JFrame frame = new JFrame();
     JFrame frame = window.getFrame();
     directory.add(JFrame.class, frame);
 
-    showCategorizationDialog(repository, directory, frame);
-//    showSeriesEditionDialog(repository, directory, frame);
+//    showCategorizationDialog(repository, directory, frame);
+    showSeriesEditionDialog(repository, directory, frame);
 //    showCategoriesEditionDialog(repository, directory);
   }
 

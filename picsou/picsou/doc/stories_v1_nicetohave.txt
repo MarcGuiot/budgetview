@@ -29,6 +29,7 @@ Nouveau
 * SMS ==> previsions de soldes de fin de mois
 * Remboursements
 
+* Vue intra-mois
 
 * Virements internes
 * Gerer la notion d'epargne (virements internes ?)
