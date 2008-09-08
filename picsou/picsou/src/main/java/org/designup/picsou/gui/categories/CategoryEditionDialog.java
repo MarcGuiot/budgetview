@@ -151,7 +151,7 @@ public class CategoryEditionDialog {
           masterDirectory.get(SelectionService.class).select(category);
         }
         else {
-          Glob masterCategory = localRepository.get(Key.create(Category.TYPE, category.get(Category.ID)));
+          Glob masterCategory = localRepository.get(Key.create(Category.TYPE, category.get(Category.MASTER)));
           masterDirectory.get(SelectionService.class).select(masterCategory);
           subDirectory.get(SelectionService.class).select(category);
         }

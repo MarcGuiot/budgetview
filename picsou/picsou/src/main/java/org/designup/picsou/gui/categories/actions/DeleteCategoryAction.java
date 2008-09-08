@@ -112,12 +112,12 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
         repository.update(glob.getKey(), Series.DEFAULT_CATEGORY, targetId);
       }
       for (Glob glob : seriesToCategory) {
-        GlobList seriesToNewMasterCategory =
+        GlobList seriesToNewTargetCategory =
           repository.getAll(SeriesToCategory.TYPE,
-                            GlobMatchers.or(
+                            GlobMatchers.and(
                               GlobMatchers.fieldEquals(SeriesToCategory.SERIES, glob.get(SeriesToCategory.SERIES)),
                               GlobMatchers.fieldEquals(SeriesToCategory.CATEGORY, targetId)));
-        if (seriesToNewMasterCategory.isEmpty()) {
+        if (seriesToNewTargetCategory.isEmpty()) {
           repository.create(SeriesToCategory.TYPE,
                             value(SeriesToCategory.CATEGORY, targetId),
                             value(SeriesToCategory.SERIES, glob.get(SeriesToCategory.SERIES)));

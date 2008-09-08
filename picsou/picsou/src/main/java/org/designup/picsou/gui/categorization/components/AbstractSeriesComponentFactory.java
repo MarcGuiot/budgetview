@@ -1,8 +1,10 @@
 package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Category;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;

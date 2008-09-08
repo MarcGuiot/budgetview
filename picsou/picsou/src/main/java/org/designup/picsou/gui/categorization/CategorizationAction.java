@@ -13,6 +13,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public abstract class CategorizationAction extends AbstractGlobSelectionAction {
@@ -29,7 +30,8 @@ public abstract class CategorizationAction extends AbstractGlobSelectionAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-    CategorizationDialog dialog = directory.get(CategorizationDialog.class);
+    //CategorizationDialog dialog = directory.get(CategorizationDialog.class);
+    CategorizationDialog dialog = new CategorizationDialog(directory.get(JFrame.class), repository, directory);
     dialog.show(getTransactionList(), true);
   }
 

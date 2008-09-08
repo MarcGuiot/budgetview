@@ -65,7 +65,7 @@ public class AllocationLearningTest extends LoggedInFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, "Apero")
       .check();
 
-    categories.deleteSelected(MasterCategory.FOOD);
+    categories.deleteSubSelected(MasterCategory.FOOD);
 
     categories.assertCategoryNotFound("Apero");
 

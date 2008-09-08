@@ -173,9 +173,14 @@ public class CategoryChecker extends ViewChecker {
     Assert.assertTrue(getIndex(categoryName) < 0);
   }
 
-  public void deleteSelected(MasterCategory replaceByCategory) {
+  public void deleteSubSelected(MasterCategory replaceByCategory) {
+    String categoryName = getCategoryName(replaceByCategory);
+    deleteSubSelected(categoryName);
+  }
+
+  public void deleteSubSelected(String categoryName) {
     CategoryEditionChecker edition = openEditionDialog();
-    edition.deleteSubCategoryWithTransactionUpdate(getCategoryName(replaceByCategory));
+    edition.deleteSubCategoryWithTransactionUpdate(categoryName);
     edition.validate();
     edition.checkClosed();
   }
@@ -183,6 +188,24 @@ public class CategoryChecker extends ViewChecker {
   public void deleteSubSelected() {
     CategoryEditionChecker edition = openEditionDialog();
     edition.deleteSubCategory();
+    edition.validate();
+    edition.checkClosed();
+  }
+  public void deleteMAsterSelected(MasterCategory replaceByCategory) {
+    String categoryName = getCategoryName(replaceByCategory);
+    deleteMasterSelected(categoryName);
+  }
+
+  public void deleteMasterSelected(String categoryName) {
+    CategoryEditionChecker edition = openEditionDialog();
+    edition.deleteMasterCategoryWithTransactionUpdate(categoryName);
+    edition.validate();
+    edition.checkClosed();
+  }
+
+  public void deleteMAsterSelected() {
+    CategoryEditionChecker edition = openEditionDialog();
+    edition.deleteMasterCategory();
     edition.validate();
     edition.checkClosed();
   }

@@ -278,7 +278,7 @@ public class CategorizationDialog {
     if (transactions.isEmpty()) {
       return;
     }
-    localRepository.rollback();
+//    localRepository.rollback();
     localRepository.reset(transactions, Transaction.TYPE);
     updateAutoHide();
     if (selectAll) {

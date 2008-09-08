@@ -60,7 +60,7 @@ public class MainPanel {
     this.mainWindow = mainWindow;
     this.parent = mainWindow.getFrame();
     directory.add(JFrame.class, parent);
-    directory.add(new CategorizationDialog(parent, repository, directory));
+//    directory.add(new CategorizationDialog(parent, repository, directory));
     directory.add(new UndoRedoService(repository, directory));
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
