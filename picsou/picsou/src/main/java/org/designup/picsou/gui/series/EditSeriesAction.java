@@ -39,6 +39,7 @@ public class EditSeriesAction extends AbstractAction {
         update(repository);
       }
     });
+    update(repository);
   }
 
   private void update(GlobRepository repository) {

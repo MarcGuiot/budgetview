@@ -87,6 +87,11 @@ public class BudgetViewChecker extends DataChecker {
       return openSeriesEditionDialog(seriesName);
     }
 
+    public void checkEditAllSeriesIsEnabled(boolean enabled) {
+      Panel budgetPanel = window.getPanel(panelName);
+      UISpecAssert.assertEquals(enabled, budgetPanel.getButton("editAllSeries").isEnabled());
+    }
+
     public SeriesEditionDialogChecker createSeries() {
       return openSeriesEditionDialog("createSeries");
     }

@@ -155,6 +155,11 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
+  public void testEditAllSeriesIsInitiallyDisabled() throws Exception {
+    views.selectBudget();
+    budgetView.recurring.checkEditAllSeriesIsEnabled(false);
+  }
+
   public void testEditingAllTheSeriesForABudgetArea() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")

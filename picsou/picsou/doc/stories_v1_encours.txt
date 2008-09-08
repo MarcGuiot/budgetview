@@ -2,23 +2,21 @@
 
 CategoryChooserDialog
 * Exclure "none" et "all"
-* Bouton pour appeler CategoryEditionDialog
 
 SeriesEditionDialog
 * Suppression de serie (avec report des transactions ? proposer plutôt end date)
+* Activation de licence : les nouveaux mois prennent Series.AMOUNT et pas la valeur du dernier
 * Afficher les mois futurs meme en version basique
 * Double click table => selection jusqu'a la fin
 * Echeancier : griser mois passes + bold mois courant
 * Creation de series INCOME ou SAVINGS : preselectionner les categories par defaut
-* Activation de licence : les nouveaux mois prennent Series.AMOUNT et pas la valeur du dernier
-* Table : aligner les montants a droite
 * Look header
+
 
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)
 * Bloc "non classe" (avec bouton categorisation)
 * Pb layout lors de la creation d'une seconde serie
-* Bug: les boutons "liste" devraient etre desactives lorsqu'il n'y a pas de series
 * Afficher la difference releve/prevu sous la barre dans l'affichage des totaux
 
 Licence
@@ -26,7 +24,6 @@ Licence
 * Voir nb mois
 
 CategoryEditionDialog
-* Bug! select category + delete + ok + reopen => exception
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
 * Suppression avec move : verifier que l'on met a jour les SeriesToCategory + Series.DEFAULT_CATEGORY des enveloppes
 * Interdire suppression Revenus 

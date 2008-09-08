@@ -188,7 +188,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     System.out.println("BudgetViewTest.testSeveralMonths: TBD");
   }
 
-
   public void testAddMonth() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/31", -95.00, "Auchan")
