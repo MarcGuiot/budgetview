@@ -9,7 +9,7 @@
 
   <panel styleClass="dialog">
 
-    <column margin="20">
+    <column styleClass="innerDialog">
 
       <panel ref="initialAmountPanel" ui="dialogBlock"
              opaque="true" weightY="0" anchor="north" fill="both" marginTop="0" marginBottom="5">

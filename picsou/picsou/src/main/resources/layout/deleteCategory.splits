@@ -2,15 +2,17 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <column styleClass="dialog" preferredSize="(300,120)" margin="20">
-    <textArea ref="warningText" editable="false"/>
-    <row>
-      <filler fill="horizontal"/>
-      <label text="$delete.category.label"/>
-      <label ref="categoryLabel"/>
-      <filler fill="horizontal"/>
-      <button action="categoryChooser" name="categoryChooser"/>
-      <filler fill="horizontal"/>
-    </row>
-  </column>
+  <panel styleClass="dialog" preferredSize="(300,120)">
+    <column styleClass="innerDialog">
+      <textArea ref="warningText" editable="false"/>
+      <row>
+        <filler fill="horizontal"/>
+        <label text="$delete.category.label"/>
+        <label ref="categoryLabel"/>
+        <filler fill="horizontal"/>
+        <button action="categoryChooser" name="categoryChooser"/>
+        <filler fill="horizontal"/>
+      </row>
+    </column>
+  </panel>
 </splits>

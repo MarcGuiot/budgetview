@@ -12,6 +12,7 @@
     <!-- Default form elements -->
 
     <style selector="button" opaque="false"/>
+    <style selector="checkBox" opaque="false"/>
 
     <style selector="textArea.readOnly" opaque="false" lineWrap="true" wrapStyleWord="true"/>
 
@@ -178,13 +179,13 @@
     <!-- Split panes -->
     <ui name="mainSplitPane" class="org.designup.picsou.gui.plaf.PicsouSplitPaneUI"
         handleColor="splitpane.main.handle" handleSize="30"/>
-    <style selector=".main horizontalSplit" ui="mainSplitPane" dividerSize="6"/>
-    <style selector=".main verticalSplit" ui="mainSplitPane" dividerSize="4"/>
+    <style selector=".main horizontalSplit" ui="mainSplitPane" dividerSize="6" opaque="false"/>
+    <style selector=".main verticalSplit" ui="mainSplitPane" dividerSize="4" opaque="false"/>
 
     <ui name="dialogSplitPane" class="org.designup.picsou.gui.plaf.PicsouSplitPaneUI"
         handleColor="splitpane.dialog.handle" handleSize="30"/>
-    <style selector=".dialog horizontalSplit" ui="dialogSplitPane" dividerSize="6"/>
-    <style selector=".dialog verticalSplit" ui="dialogSplitPane" dividerSize="4"/>
+    <style selector=".dialog horizontalSplit" ui="dialogSplitPane" dividerSize="6" opaque="false"/>
+    <style selector=".dialog verticalSplit" ui="dialogSplitPane" dividerSize="4" opaque="false"/>
 
   </styles>
 
