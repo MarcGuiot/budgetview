@@ -3,6 +3,7 @@ package org.designup.picsou.gui.categories;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.utils.PicsouMatchers;
+import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -111,6 +112,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
     JLabel title = new JLabel();
     title.setText(Lang.get(monoSelection ? "choose.category.title.single" : "choose.category.title.multiple"));
     builder.add("title", title);
+    builder.add("editCategories", new EditCategoriesAction(repository, localDirectory));
 
     dialog = PicsouDialog.createWithButtons("", parent,
                                             builder.<JPanel>load(),

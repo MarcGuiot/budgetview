@@ -228,6 +228,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
       .selectSeries("Internet")
       .checkMonthIsChecked("Aug")
+      .checkCategory(MasterCategory.TELECOMS)
       .checkTable(new Object[][]{
         {"2008", "July", "29.00"},
         {"2008", "August", "29.00"},
@@ -236,6 +237,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
       .selectSeries("Electricity")
       .checkMonthIsChecked("Jul")
+      .checkCategory(MasterCategory.HOUSE)
       .checkMonthIsNotChecked("Aug")
       .checkTable(new Object[][]{
         {"2008", "July", "70.00"},

@@ -36,7 +36,8 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -681,7 +682,7 @@ public class SeriesEditionDialog {
   private class AmountStringifier extends AbstractGlobStringifier {
     public String toString(Glob glob, GlobRepository repository) {
       Double value = glob.get(SeriesBudget.AMOUNT);
-      if (value == 0.0){
+      if (value == 0.0) {
         return "0";
       }
       return PicsouDescriptionService.DECIMAL_FORMAT.format((budgetArea.isIncome() ? 1 : -1) * value);

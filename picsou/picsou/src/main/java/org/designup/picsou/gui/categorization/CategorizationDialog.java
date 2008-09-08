@@ -24,6 +24,7 @@ import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -60,13 +61,14 @@ public class CategorizationDialog {
                                                       localRepository, localDirectory);
 
     Comparator<Glob> transactionComparator = getTransactionComparator();
+    DescriptionService descriptionService = directory.get(DescriptionService.class);
     transactionTable =
       builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
         .setDefaultLabelCustomizer(new TransactionLabelCustomizer())
         .addColumn(Lang.get("date"), new TransactionDateStringifier(transactionComparator),
                    LabelCustomizers.fontSize(9))
-        .addColumn(Transaction.LABEL, LabelCustomizers.bold())
-        .addColumn(Transaction.AMOUNT);
+        .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.bold())
+        .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT));
     Gui.setColumnSizes(transactionTable.getComponent(), COLUMN_SIZES);
 
     autoSelectionCheckBox = new JCheckBox(new AutoSelectAction());

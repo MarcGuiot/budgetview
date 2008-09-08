@@ -13,6 +13,8 @@ import org.mortbay.jetty.servlet.ServletHolder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.logging.LogManager;
 
@@ -33,7 +35,14 @@ public class LicenceServer {
   private QueryVersionTask queryVersionTask;
   private Timer timer;
 
-  public LicenceServer() {
+  public LicenceServer() throws IOException {
+//    BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+//    System.out.print("database :");
+//    databaseUrl = input.readLine();
+//    System.out.print("user :");
+//    databaseUser = input.readLine();
+//    System.out.print("password :");
+//    databasePassword = input.readLine();
     jetty = new Server();
   }
 

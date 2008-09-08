@@ -15,6 +15,10 @@
           </column>
         </repeat>
       </scrollPane>
+      <row styleClass="iconButtonGroupDark">
+        <filler fill="horizontal"/>
+        <button action="editCategories" name="editCategories" styleClass="list"/>
+      </row>
     </column>
   </panel>
 </splits>
