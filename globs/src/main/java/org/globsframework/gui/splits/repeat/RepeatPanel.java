@@ -47,16 +47,19 @@ public class RepeatPanel implements Repeat {
     }
 
     layout.set(panel, stretches);
+    panel.revalidate();
   }
 
   public void insert(Object item, int index) {
     layout.insert(panel, createStretches(item, index), index);
+    panel.revalidate();
   }
 
   public void remove(int index) {
     layout.remove(panel, index);
     RepeatContext context = repeatContexts.remove(index);
     context.dispose();
+    panel.revalidate();
   }
 
   private ComponentStretch[] createStretches(Object item, int index) {
