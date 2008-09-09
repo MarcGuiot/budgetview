@@ -95,6 +95,15 @@ public class SqlCreateRequest implements SqlRequest {
     }
   }
 
+  public void close() {
+    try {
+      preparedStatement.close();
+    }
+    catch (SQLException e) {
+      throw new UnexpectedApplicationState("In close", e);
+    }
+  }
+
   private String getDebugRequest() {
     return prepareRequest(fields, globType, new DebugValue());
   }
