@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.functests.checkers.ViewSelectionChecker;
+import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
@@ -114,7 +115,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           assertTrue(window.getComboBox("bankCombo")
-            .contentEquals("", "Autre", "BNP", "CIC", "Credit Agricole", "La Poste", "Societe Generale"));
+            .contentEquals("", "Autre", "BNP", "CIC", "Caisse d'épargne", "Credit Agricole", "La Poste",
+                           "Societe Generale"));
           return window.getButton("close").triggerClick();
         }
       }).run();
@@ -249,6 +251,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     loginButton.click();
   }
 
+  // TODO CategorizationView
   public void testTransactionAndCategorisationWorkAfterReload() throws Exception {
     String path = OfxBuilder
       .init(this)
@@ -268,15 +271,15 @@ public class LoginTest extends StartUpFunctionalTestCase {
     loginButton.click();
     OfxBuilder
       .init(this, new OperationChecker(window))
-      .addTransaction("2006/01/12", -2, "Menu K")
+      .addTransaction("2006/01/12", -2, "Menu A")
       .load();
 
     getTransactionView().initContent()
-      .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2, MasterCategory.NONE)
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu A", "", -2, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
       .check();
 
-    getTransactionView().assignOccasionalSeries(MasterCategory.FOOD, 0);
+    getCategorizationView().setOccasional("Menu A", MasterCategory.FOOD);
 
     getTransactionView().initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2, MasterCategory.FOOD)
@@ -338,5 +341,11 @@ public class LoginTest extends StartUpFunctionalTestCase {
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectData();
     return new TransactionChecker(window);
+  }
+
+  private CategorizationDialogChecker getCategorizationView() {
+    ViewSelectionChecker views = new ViewSelectionChecker(window);
+    views.selectCategorization();
+    return new CategorizationDialogChecker(window);
   }
 }

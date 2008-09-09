@@ -105,8 +105,6 @@ public class TransactionDetailsView extends View {
                 addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true)
                   .setAutoHideMatcher(new BankDateVisibilityMatcher()));
 
-    builder.add("categorize", transactionView.getCategorizationAction());
-
     builder.add("transactionSeriesName",
                 addLabel(descriptionService.getListStringifier(Transaction.SERIES), true));
 

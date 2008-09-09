@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.CategoryChooserChecker;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -7,6 +8,7 @@ import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class SeriesEditionTest extends LoggedInFunctionalTestCase {
+  
   public void testStandardEdition() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
@@ -17,7 +19,12 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("29/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
       .check();
-    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+
+    views.selectCategorization();
+    categorization.checkTable(new Object[][] {
+      {"29/07/2008", "Free Telecom", -29.00}
+    });
+    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
 
@@ -35,6 +42,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Free", 29.00, 29.00);
   }
 
+  // TODO CategorizationView
   public void testCurrentMonthsInitiallySelectedInBudgetTable() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/29", "2008/08/01", -29.00, "Free Telecom")
@@ -44,9 +52,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectAll();
-    views.selectData();
-    transactions.getTable().selectRowSpan(0, 3);
-    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+
+    views.selectCategorization();
+    categorization.getTable().selectRowSpan(0, 3);
+    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
     timeline.selectMonths("2008/08", "2008/06");
@@ -71,8 +80,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectMonth("2008/07");
-    views.selectData();
-    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    views.selectCategorization();
+    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
     budgetView.recurring.editSeries("Internet")
@@ -114,9 +123,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectAll();
-    views.selectData();
-    transactions.getTable().selectRowSpan(0, 3);
-    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+
+    views.selectCategorization();
+    categorization.getTable().selectRowSpan(0, 3);
+    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
     timeline.selectMonths("2008/08", "2008/06");
@@ -182,12 +192,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
       .check();
 
-    transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
-    transactions.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
-    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
-    transactions.setRecurring("EDF", "Electricity", MasterCategory.HOUSE, true);
-    transactions.setExceptionalIncome("WorldCo - Bonus", "Exceptional Income", true);
-    transactions.setIncome("WorldCo", "Salary", true);
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
+    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    categorization.setRecurring("EDF", "Electricity", MasterCategory.HOUSE, true);
+    categorization.setExceptionalIncome("WorldCo - Bonus", "Exceptional Income", true);
+    categorization.setIncome("WorldCo", "Salary", true);
 
     views.selectBudget();
 
@@ -217,8 +228,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .add("15/07/2008", TransactionType.PRELEVEMENT, "EDF", "", -55.00)
       .check();
 
-    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
-    transactions.setRecurring("EDF", "Electricity", MasterCategory.HOUSE, true);
+    views.selectCategorization();
+    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    categorization.setRecurring("EDF", "Electricity", MasterCategory.HOUSE, true);
 
     views.selectBudget();
     budgetView.recurring.editSeriesList()
@@ -310,9 +322,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkSeriesList("My envelope", "New series")
       .checkSeriesSelected("New series")
       .setName("My new envelope")
-      .setCategory(MasterCategory.HOUSE)      
+      .setCategory(MasterCategory.HOUSE)
       .validate();
-    
+
     budgetView.envelopes.createSeries()
       .checkSeriesList("My envelope", "My new envelope", "New series")
       .cancel();
@@ -358,15 +370,18 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  public void testCreateEnvelopeSeriesWithManyCategory() throws Exception {
+  // TODO CategorizationView
+  public void testCreatingEnvelopeSeriesWithMultipleCategories() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
       .load();
+
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.envelopes
       .createSeries()
       .setName("courant")
       .setCategory(MasterCategory.CLOTHING, MasterCategory.FOOD);
+
     edition.openCategory()
       .checkSelected(MasterCategory.CLOTHING, MasterCategory.FOOD)
       .cancel();
@@ -381,19 +396,21 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("bank")
       .setCategory(MasterCategory.BANK)
       .validate();
-    
+
     budgetView.envelopes.editSeries("courant")
       .checkCategory(MasterCategory.CLOTHING, MasterCategory.FOOD)
       .cancel();
 
     budgetView.envelopes.checkSeries("courant", 0, 1000);
-    views.selectData();
-    transactions.categorize(0)
+
+    views.selectCategorization();
+    categorization
       .disableAutoHide()
       .selectEnvelopes()
       .selectEnvelopeSeries("courant", MasterCategory.FOOD, false)
-      .selectEnvelopeSeries("courant", MasterCategory.CLOTHING, false)
-      .validate();
+      .selectEnvelopeSeries("courant", MasterCategory.CLOTHING, false);
+    
+    views.selectData();
     transactionDetails.checkCategory(MasterCategory.CLOTHING);
     transactionDetails.checkSeries("courant");
   }
@@ -515,7 +532,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  public void testDateAndBudgetSerie() throws Exception {
+  public void testDateAndBudgetSeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2007/02/10", -29.00, "Free Telecom")
       .load();
@@ -576,13 +593,23 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.HOUSE)
       .checkOkEnabled(true)
       .validate();
-    
+
     budgetView.envelopes.createSeries()
       .checkOkEnabled(false)
       .cancel();
-    
+
     budgetView.envelopes.editSeriesList()
       .checkOkEnabled(true)
       .cancel();
+  }
+
+  public void testCreateNewCategory() throws Exception {
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
+    CategoryChooserChecker chooser = edition.openCategory();
+    chooser.openCategoryEdition()
+      .createMasterCategory("Assurance")
+      .validate();
+    chooser.checkContains("Assurance");
   }
 }

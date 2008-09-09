@@ -13,10 +13,11 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum Card implements GlobConstantContainer {
   HOME("HOME", 0, false),
-  BUDGET("BUDGET", 1, false),
-  DATA("DATA", 2, true),
-  REPARTITION("REPARTITION", 3, true),
-  EVOLUTION("EVOLUTION", 4, true);
+  CATEGORIZATION("CATEGORIZATION", 1, false),
+  BUDGET("BUDGET", 2, false),
+  DATA("DATA", 3, true),
+  REPARTITION("REPARTITION", 4, true),
+  EVOLUTION("EVOLUTION", 5, true);
 
   public static GlobType TYPE;
 
@@ -54,12 +55,14 @@ public enum Card implements GlobConstantContainer {
       case 0:
         return HOME;
       case 1:
-        return BUDGET;
+        return CATEGORIZATION;
       case 2:
-        return DATA;
+        return BUDGET;
       case 3:
-        return REPARTITION;
+        return DATA;
       case 4:
+        return REPARTITION;
+      case 5:
         return EVOLUTION;
     }
     throw new ItemNotFound(id + " is not associated to any Card enum value");

@@ -148,12 +148,16 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testCanNotDeleteCategoryIfUsedInSeries() throws Exception {
+  public void testCannotDeleteCategoryIfUsedInSeries() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/15", -2.0, "Auchan", MasterCategory.HOUSE)
       .load();
-    transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+
+    views.selectData();
     CategoryEditionChecker categoryEdition = categories.openEditionDialog();
     categoryEdition.selectMaster(MasterCategory.FOOD);
     WindowInterceptor.init(categoryEdition.getDeleteMasterButton().triggerClick())
@@ -165,10 +169,12 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
         }
       }).run();
     categoryEdition.validate();
+
+    transactions.getTable().selectRow(0);
     transactionDetails.checkSeries("Groceries");
   }
 
-  public void testCanReuseNameUseInOtherMaster() throws Exception {
+  public void testCanReuseNameUsedInOtherMaster() throws Exception {
     categories.openEditionDialog()
       .selectMaster(MasterCategory.HOUSE)
       .createSubCategory("Internet Access")

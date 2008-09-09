@@ -42,7 +42,6 @@ public class ServerCategorizationTest extends ServerFuncTestCase {
             public void run() throws Exception {
               CategorizationDialogChecker checker = new CategorizationDialogChecker(window);
               checker.selectOccasionalSeries(MasterCategory.FOOD);
-              checker.validate();
             }
           };
         }

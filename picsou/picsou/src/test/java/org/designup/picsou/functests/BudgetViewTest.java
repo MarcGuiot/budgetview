@@ -7,7 +7,7 @@ import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
 
-public class BudgetViewTest extends LoggedInFunctionalTestCase {
+public class  BudgetViewTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentDate(Dates.parseMonth("2008/08"));
     super.setUp();
@@ -35,12 +35,13 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
       .check();
 
-    transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
-    transactions.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
-    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
-    transactions.setRecurring("EDF", "Electricity", MasterCategory.HOUSE, true);
-    transactions.setExceptionalIncome("WorldCo - Bonus", "Exceptional Income", true);
-    transactions.setIncome("WorldCo", "Salary", true);
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
+    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    categorization.setRecurring("EDF", "Electricity", MasterCategory.HOUSE, true);
+    categorization.setExceptionalIncome("WorldCo - Bonus", "Exceptional Income", true);
+    categorization.setIncome("WorldCo", "Salary", true);
 
     views.selectBudget();
 
@@ -95,7 +96,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00)
       .check();
 
-    transactions.setProject("Auchan", "Anniversaire", MasterCategory.FOOD, true);
+    views.selectCategorization();
+    categorization.setProject("Auchan", "Anniversaire", MasterCategory.FOOD, true);
 
     views.selectBudget();
 
@@ -114,7 +116,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Virt Compte Epargne", "", -25.00)
       .check();
 
-    transactions.setSavings("Virt Compte Epargne", "Epargne", MasterCategory.SAVINGS, true);
+        views.selectCategorization();
+    categorization.setSavings("Virt Compte Epargne", "Epargne", MasterCategory.SAVINGS, true);
 
     views.selectBudget();
 
@@ -139,10 +142,11 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("28/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
       .check();
 
-    transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
-    transactions.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
-    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
-    transactions.setIncome("WorldCo", "Salary", true);
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
+    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    categorization.setIncome("WorldCo", "Salary", true);
     timeline.selectMonth("2008/07");
     views.selectBudget();
 
@@ -172,7 +176,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("29/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
       .check();
-    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+
+    views.selectCategorization();
+    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
 
@@ -204,18 +210,22 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("28/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
       .check();
 
-    transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
-    transactions.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
-    transactions.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
-    transactions.setIncome("WorldCo", "Salary", true);
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
+    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    categorization.setIncome("WorldCo", "Salary", true);
+
     timeline.selectMonth("2008/07");
     views.selectBudget();
 
     OfxBuilder.init(this)
       .addTransaction("2008/06/13", -50.00, "Auchan")
       .load();
-    views.selectData();
-    transactions.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, false);
+
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, false);
+
     views.selectBudget();
 
     budgetView.recurring.checkTotalAmounts(0.0, 29.0);

@@ -21,19 +21,20 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -1129.90, "WorldCo/june")
       .load();
 
-    CategorizationDialogChecker categorization = transactions.categorize(0);
+    views.selectCategorization();
+    categorization.selectTableRows(0);
     categorization.checkLabel("WorldCo/june");
     categorization.selectIncome();
 
-    SeriesEditionDialogChecker creationSeries = categorization.createIncomeSeries();
-    creationSeries.setName("Prime");
-    creationSeries.setCategory(MasterCategory.INCOME);
-
-    creationSeries.validate();
+    categorization.createIncomeSeries()
+      .setName("Prime")
+      .setCategory(MasterCategory.INCOME)
+      .validate();
 
     categorization.checkContainsIncomeSeries("Prime");
-    categorization.validate();
 
+    views.selectData();
+    transactions.getTable().selectRow(0);
     transactionDetails.checkSeries("Prime");
     transactionDetails.checkCategory(MasterCategory.INCOME);
     transactions.initContent()
@@ -47,18 +48,20 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -60, "Telefoot+")
       .load();
 
-    CategorizationDialogChecker dialog = transactions.categorize(0);
-    dialog.checkLabel("Telefoot+");
+    views.selectCategorization();
+    categorization.selectTableRows(0);
+    categorization.checkLabel("Telefoot+");
 
-    dialog.selectRecurring();
-    SeriesEditionDialogChecker editionDialog = dialog.createRecurringSeries();
-    editionDialog.setName("Culture");
-    editionDialog.setCategory(MasterCategory.EDUCATION);
-    editionDialog.validate();
+    categorization.selectRecurring();
+    categorization.createRecurringSeries()
+      .setName("Culture")
+      .setCategory(MasterCategory.EDUCATION)
+      .validate();
 
-    dialog.checkContainsRecurringSeries("Culture");
-    dialog.validate();
+    categorization.checkContainsRecurringSeries("Culture");
 
+    views.selectData();
+    transactions.getTable().selectRow(0);
     transactionDetails.checkSeries("Culture");
     transactionDetails.checkCategory(MasterCategory.EDUCATION);
   }
@@ -69,22 +72,26 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -60, "Forfait Kro")
       .load();
 
-    CategorizationDialogChecker dialog = transactions.categorize(0);
-    dialog.checkLabel("Forfait Kro");
+    views.selectCategorization();
+    categorization.selectTableRows(0);
+    categorization.checkLabel("Forfait Kro");
 
-    dialog.selectEnvelopes();
-    SeriesEditionDialogChecker editionDialog = dialog.createEnvelopeSeries();
-    editionDialog.setName("Regime");
-    editionDialog.setCategory(MasterCategory.FOOD);
-    editionDialog.validate();
+    categorization.selectEnvelopes();
 
-    dialog.checkContainsEnvelope("Regime");
-    dialog.validate();
+    categorization.createEnvelopeSeries()
+      .setName("Regime")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
 
+    categorization.checkContainsEnvelope("Regime");
+
+    views.selectData();
+    transactions.getTable().selectRow(0);
     transactionDetails.checkSeries("Regime");
     transactionDetails.checkCategory(MasterCategory.FOOD);
   }
 
+  // TODO CategorizationView
   public void testSeriesUnselectedAfterCategorization() throws Exception {
     OfxBuilder
       .init(this)
@@ -94,74 +101,28 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/28", -150, "Palette Leffe")
       .load();
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.checkTable(new Object[][]{
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
       {"30/06/2008", "Forfait Kro", -60.00},
       {"20/06/2008", "Forfait Kro", -60.00},
       {"10/06/2008", "Forfait Kro", -60.00},
       {"28/06/2008", "Palette Leffe", -150.00},
     });
-    dialog.checkSelectedTableRows(0, 1, 2);
+    categorization.checkSelectedTableRows(0, 1, 2);
 
-    dialog.selectEnvelopes();
-    dialog.createEnvelopeSeries()
+    categorization.selectEnvelopes();
+    categorization.createEnvelopeSeries()
       .setName("Regime")
       .setCategory(MasterCategory.FOOD)
       .validate();
 
-    dialog.checkTable(new Object[][]{
+    categorization.checkTable(new Object[][]{
       {"30/06/2008", "Forfait Kro", -60.00},
       {"20/06/2008", "Forfait Kro", -60.00},
       {"10/06/2008", "Forfait Kro", -60.00},
       {"28/06/2008", "Palette Leffe", -150.00},
     });
-    dialog.checkSelectedTableRows(3);
-    dialog.checkNoBudgetAreaSelected();
-    dialog.validate();
-  }
-
-  public void testCancel() throws Exception {
-    checkCancel(new Callback() {
-      public void process(CategorizationDialogChecker dialog) {
-        dialog.cancel();
-      }
-    });
-  }
-
-  public void testEscape() throws Exception {
-    checkCancel(new Callback() {
-      public void process(CategorizationDialogChecker dialog) {
-        dialog.pressEscapeKey();
-      }
-    });
-  }
-
-  private void checkCancel(Callback callback) {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/30", -60, "JaimeLeFoot.com")
-      .load();
-
-    CategorizationDialogChecker dialog = transactions.categorize(0);
-    dialog.checkLabel("JaimeLeFoot.com");
-
-    dialog.selectRecurring();
-    SeriesEditionDialogChecker editionDialog = dialog.createRecurringSeries();
-    editionDialog.setName("Culture");
-    editionDialog.setCategory(MasterCategory.EDUCATION);
-    editionDialog.validate();
-
-    callback.process(dialog);
-
-    transactionDetails.checkNoSeries();
-
-    CategorizationDialogChecker newDialog = transactions.categorize(0);
-    newDialog.checkLabel("JaimeLeFoot.com");
-    newDialog.selectRecurring();
-    newDialog.checkRecurringSeriesNotFound("Culture");
-  }
-
-  private interface Callback {
-    void process(CategorizationDialogChecker dialog);
+    categorization.checkSelectedTableRows(3);
+    categorization.checkNoBudgetAreaSelected();
   }
 }

@@ -113,6 +113,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  // TODO CategorizationView
   public void testCategorizeWithKeyboard() throws Exception {
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)
@@ -149,6 +150,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  // TODO : tester la navigation
   public void testMultiCategorization() throws Exception {
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)

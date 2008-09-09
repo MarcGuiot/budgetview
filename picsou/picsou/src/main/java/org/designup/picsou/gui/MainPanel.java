@@ -60,10 +60,12 @@ public class MainPanel {
     this.mainWindow = mainWindow;
     this.parent = mainWindow.getFrame();
     directory.add(JFrame.class, parent);
-    directory.add(new CategorizationDialog(parent, repository, directory));
+    directory.add(new CategorizationDialog(repository, directory));
     directory.add(new UndoRedoService(repository, directory));
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
+
+    CategorizationDialog categorizationDialog = new CategorizationDialog(repository, directory);
 
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
@@ -93,6 +95,7 @@ public class MainPanel {
       categoryView,
       new AccountView(repository, directory),
       new MonthSummaryView(repository, directory),
+      categorizationDialog,
       new CardView(repository, directory),
       new BudgetView(repository, directory),
       new HistoricalChart(repository, directory),

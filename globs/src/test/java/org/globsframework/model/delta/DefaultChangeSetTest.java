@@ -67,6 +67,7 @@ public class DefaultChangeSetTest extends TestCase {
 
     TestUtils.assertEquals(changeSet.getCreated(DummyObject.TYPE), key1);
     assertTrue(changeSet.getUpdated(DummyObject.TYPE).isEmpty());
+    assertTrue(changeSet.getUpdated(DummyObject.NAME).isEmpty());
     assertTrue(changeSet.getDeleted(DummyObject.TYPE).isEmpty());
     assertTrue(changeSet.getCreated(DummyObject2.TYPE).isEmpty());
 
@@ -87,6 +88,7 @@ public class DefaultChangeSetTest extends TestCase {
     assertEquals(1, changeSet.size());
 
     TestUtils.assertEquals(changeSet.getUpdated(DummyObject.TYPE), key1);
+    TestUtils.assertEquals(changeSet.getUpdated(DummyObject.VALUE), key1);
     assertTrue(changeSet.getCreated(DummyObject.TYPE).isEmpty());
     assertTrue(changeSet.getDeleted(DummyObject.TYPE).isEmpty());
     assertTrue(changeSet.getUpdated(DummyObject2.TYPE).isEmpty());

@@ -94,7 +94,10 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "misc", "", -10, MasterCategory.NONE)
       .check();
 
-    transactions.assignOccasionalSeries(MasterCategory.INTERNAL, 0);
+    views.selectCategorization();
+    categorization.setOccasional("internal", MasterCategory.INTERNAL);
+
+    views.selectData();
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "internal", "", -50, MasterCategory.INTERNAL)

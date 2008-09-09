@@ -66,6 +66,7 @@ public class TransactionChecker extends ViewChecker {
     return DataChecker.getCategoryName(category);
   }
 
+  /** @deprecated */
   public void assignOccasionalSeries(MasterCategory category, final int... rows) {
     getTable().selectRows(rows);
     chooseCategoryViaButtonClick(category, rows[0]);
@@ -85,6 +86,7 @@ public class TransactionChecker extends ViewChecker {
     chooseCategoryViaKeyboard(category, modifier);
   }
 
+  /** @deprecated  en cours de suppression */
   public CategorizationDialogChecker openCategorizationDialog(final int row) {
     Window dialog = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
@@ -94,18 +96,19 @@ public class TransactionChecker extends ViewChecker {
     return new CategorizationDialogChecker(dialog);
   }
 
+  /** @deprecated  en cours de suppression */
   private void chooseCategoryViaButtonClick(MasterCategory category, final int row) {
     CategorizationDialogChecker checker = openCategorizationDialog(row);
     checker.selectOccasionalSeries(category);
-    checker.validate();
   }
 
+  /** @deprecated  en cours de suppression */
   private void chooseCategoryViaButtonClick(MasterCategory category, String subcat, final int row) {
     CategorizationDialogChecker checker = openCategorizationDialog(row);
     checker.selectOccasionalSeries(category, subcat);
-    checker.validate();
   }
 
+  /** @deprecated  en cours de suppression */
   private void chooseCategoryViaKeyboard(MasterCategory category, final int modifier) {
     CategorizationDialogChecker checker = new CategorizationDialogChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
@@ -113,7 +116,6 @@ public class TransactionChecker extends ViewChecker {
       }
     }));
     checker.selectOccasionalSeries(category);
-    checker.validate();
   }
 
   static String stringifyCategoryNames(MasterCategory... categories) {
@@ -144,83 +146,6 @@ public class TransactionChecker extends ViewChecker {
       builder.append(category);
     }
     return builder.toString();
-  }
-
-  public CategorizationDialogChecker categorize(int... rows) {
-    getTable().selectRows(rows);
-    transactionDetails.checkCategorizationAvailable();
-    return transactionDetails.categorize();
-  }
-
-  public void setExceptionalIncome(String label, String seriesName, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
-    CategorizationDialogChecker categorization = categorize(rowIndex);
-    categorization.selectIncome();
-    categorization.selectExceptionalIncomeSeries(seriesName, showSeriesInitialization);
-    categorization.validate();
-  }
-
-  public void setIncome(String label, String seriesName, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
-    CategorizationDialogChecker categorization = categorize(rowIndex);
-    categorization.selectIncome();
-    categorization.selectIncomeSeries(seriesName, showSeriesInitialization);
-    categorization.validate();
-  }
-
-  public void setRecurring(int rowIndex, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
-    CategorizationDialogChecker categorization = categorize(rowIndex);
-    categorization.selectRecurring();
-    categorization.selectRecurringSeries(seriesName, category, showSeriesInitialization);
-    categorization.validate();
-  }
-
-  public void setRecurring(String label, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
-    setRecurring(rowIndex, seriesName, category, showSeriesInitialization);
-  }
-
-  public void setEnvelope(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    CategorizationDialogChecker categorization = categorize(rowIndex);
-    categorization.selectEnvelopes();
-    categorization.selectEnvelopeSeries(seriesName, master, showSeriesInitialization);
-    categorization.validate();
-  }
-
-  public void setEnvelope(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
-    setEnvelope(rowIndex, seriesName, master, showSeriesInitialization);
-  }
-
-  public void setOccasional(int rowIndex, MasterCategory category) {
-    CategorizationDialogChecker categorization = categorize(rowIndex);
-    categorization.selectOccasional();
-    categorization.selectOccasionalSeries(category);
-    categorization.validate();
-  }
-
-  public void setProject(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
-    setProject(rowIndex, seriesName, master, showSeriesInitialization);
-  }
-
-  public void setProject(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    CategorizationDialogChecker categorization = categorize(rowIndex);
-    categorization.selectProjects();
-    categorization.selectProjectSeries(seriesName, master, showSeriesInitialization);
-    categorization.validate();
-  }
-
-  public void setSavings(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, label);
-    setSavings(rowIndex, seriesName, master, showSeriesInitialization);
-  }
-
-  public void setSavings(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    CategorizationDialogChecker categorization = categorize(rowIndex);
-    categorization.selectSavings();
-    categorization.selectSavingsSeries(seriesName, master, showSeriesInitialization);
-    categorization.validate();
   }
 
   public void checkCategorizationDisabled(int clickedRow) {

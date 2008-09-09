@@ -17,20 +17,19 @@ public class UncategorizedMessageTest extends LoggedInFunctionalTestCase {
       .load();
   }
 
+  // TODO CategorizationView
   public void testCategorizationFromWarningMessage() throws Exception {
     views.selectHome();
 
     CategorizationDialogChecker categorizer1 = informationPanel.categorize();
     categorizer1.selectOccasional();
     categorizer1.selectOccasionalSeries(MasterCategory.FOOD);
-    categorizer1.validate();
 
     informationPanel.assertWarningIsDisplayed(1);
 
     CategorizationDialogChecker categorizer2 = informationPanel.categorize();
     categorizer2.selectOccasional();
     categorizer2.selectOccasionalSeries(MasterCategory.FOOD);
-    categorizer2.validate();
 
     informationPanel.assertNoWarningIsDisplayed();
   }
@@ -45,14 +44,14 @@ public class UncategorizedMessageTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     informationPanel.assertWarningIsDisplayed(2);
 
-    views.selectData();
-    transactions.setOccasional(0, MasterCategory.FOOD);
+    views.selectCategorization();
+    categorization.setOccasional(0, MasterCategory.FOOD);
 
     views.selectHome();
     informationPanel.assertWarningIsDisplayed(1);
 
-    views.selectData();
-    transactions.setOccasional(1, MasterCategory.FOOD);
+    views.selectCategorization();
+    categorization.setOccasional(1, MasterCategory.FOOD);
 
     views.selectHome();
     informationPanel.assertNoWarningIsDisplayed();

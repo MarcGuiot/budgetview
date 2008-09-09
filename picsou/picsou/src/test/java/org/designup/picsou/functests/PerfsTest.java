@@ -56,10 +56,10 @@ public abstract class PerfsTest extends LoggedInFunctionalTestCase {
     Chrono chrono = Chrono.start();
     for (int i = 0; i < 5; i++) {
       for (int row = 0; row < 5; row++) {
-        transactions.assignOccasionalSeries(MasterCategory.FOOD, row);
+//        transactions.assignOccasionalSeries(MasterCategory.FOOD, row);
       }
       for (int row = 0; row < 5; row++) {
-        transactions.assignOccasionalSeries(MasterCategory.NONE, row);
+//        transactions.assignOccasionalSeries(MasterCategory.NONE, row);
       }
       System.out.println("Round " + i + " done in " + chrono.getElapsedTime());
     }

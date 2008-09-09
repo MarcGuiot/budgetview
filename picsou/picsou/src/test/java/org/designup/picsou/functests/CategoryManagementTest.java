@@ -168,8 +168,10 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/15", -2.0, "MenuK", MasterCategory.FOOD)
       .load();
-    categories.select(MasterCategory.ALL);
-    transactions.openCategorizationDialog(0).checkContainsOccasionalCategories(remove(expectedCategories, "All categories", "Unassigned"));
+    
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.checkContainsOccasionalCategories(remove(expectedCategories, "All categories", "Unassigned"));
   }
 
   public void testCreatingASiblingSubCategory() throws Exception {

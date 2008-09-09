@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.SeriesToCategory;
@@ -16,10 +15,11 @@ import javax.swing.*;
 public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesComponentFactory {
   private BudgetArea budgetArea;
 
-  public MultiCategoriesSeriesComponentFactory(BudgetArea budgetArea, JToggleButton invisibleToggle,
+  public MultiCategoriesSeriesComponentFactory(BudgetArea budgetArea,
+                                               JToggleButton invisibleToggle,
                                                GlobRepository repository,
-                                               Directory directory, PicsouDialog dialog) {
-    super(invisibleToggle, repository, directory, dialog);
+                                               Directory directory) {
+    super(invisibleToggle, repository, directory);
     this.budgetArea = budgetArea;
   }
 
@@ -30,8 +30,8 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
     cellBuilder.addRepeat("categoryRepeat",
                           repository.findLinkedTo(series, SeriesToCategory.SERIES).sort(SeriesToCategory.ID),
                           new CategoriesComponentFactory(seriesStringifier.toString(series, repository),
-                                                                 "categoryToggle",
-                                                                 budgetArea)
+                                                         "categoryToggle",
+                                                         budgetArea)
     );
   }
 
@@ -51,7 +51,7 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
       final Key seriesKey = seriesToCategory.getTargetKey(SeriesToCategory.SERIES);
 
       createUpdatableCategoryToggle(category, seriesKey, name, budgetArea, cellBuilder,
-                                    seriesName + ":" + category.get(Category.INNER_NAME), dialog);
+                                    seriesName + ":" + category.get(Category.INNER_NAME));
     }
   }
 }

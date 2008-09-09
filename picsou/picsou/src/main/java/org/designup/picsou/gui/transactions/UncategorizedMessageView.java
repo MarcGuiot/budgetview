@@ -39,8 +39,10 @@ public class UncategorizedMessageView extends View implements ChangeSetListener 
     builder.add(textAreaName, textArea);
     builder.add(buttonName, new AbstractAction(buttonText) {
       public void actionPerformed(ActionEvent e) {
-        final CategorizationDialog dialog = directory.get(CategorizationDialog.class);
-        dialog.show(uncategorizedTransactions, false);
+        // TODO
+        System.out.println("UncategorizedMessageView.actionPerformed: ");
+//        final CategorizationDialog dialog = directory.get(CategorizationDialog.class);
+//        dialog.show(uncategorizedTransactions, false);
       }
     });
   }

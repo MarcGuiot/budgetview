@@ -29,8 +29,10 @@ public abstract class CategorizationAction extends AbstractGlobSelectionAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-    CategorizationDialog dialog = directory.get(CategorizationDialog.class);
-    dialog.show(getTransactionList(), true);
+    // TODO CategorizationDialog
+    System.out.println("CategorizationAction.actionPerformed: TODO");
+//    CategorizationDialog dialog = directory.get(CategorizationDialog.class);
+//    dialog.show(getTransactionList(), true);
   }
 
   private GlobList getTransactionList() {

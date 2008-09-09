@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Category;
@@ -21,16 +20,14 @@ public class OccasionalCategoriesComponentFactory extends AbstractSeriesComponen
   private String seriesName;
   private String name;
   private BudgetArea budgetArea;
-  private PicsouDialog dialog;
 
   public OccasionalCategoriesComponentFactory(String seriesName, String name, BudgetArea budgetArea,
                                               JToggleButton invisibleToggle, GlobRepository repository,
-                                              Directory directory, PicsouDialog dialog) {
-    super(invisibleToggle, repository, directory, dialog);
+                                              Directory directory) {
+    super(invisibleToggle, repository, directory);
     this.seriesName = seriesName;
     this.name = name;
     this.budgetArea = budgetArea;
-    this.dialog = dialog;
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob master) {
@@ -40,7 +37,7 @@ public class OccasionalCategoriesComponentFactory extends AbstractSeriesComponen
                   master.get(Category.INNER_NAME) : master.get(Category.NAME);
 
     createUpdatableCategoryToggle(master, seriesKey, this.name, budgetArea, cellBuilder,
-                                  seriesName + ":" + name, dialog);
+                                  seriesName + ":" + name);
 
     GlobsPanelBuilder.addRepeat("occasionalSubcatRepeat",
                                 Category.TYPE,
@@ -58,8 +55,8 @@ public class OccasionalCategoriesComponentFactory extends AbstractSeriesComponen
                                       (subName != null ? subName : subcat.get(Category.NAME));
                                     createUpdatableCategoryToggle(
                                       subcat, seriesKey, "occasionalSubcatToggle",
-                                      budgetArea, subcatCellBuilder, toggleName,
-                                      dialog);
+                                      budgetArea, subcatCellBuilder, toggleName
+                                    );
                                   }
                                 });
 

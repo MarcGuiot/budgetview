@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
@@ -21,24 +20,26 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -1129.90, "WorldCo/june")
       .load();
 
-    CategorizationDialogChecker dialog = transactions.categorize(0);
-    dialog.checkLabel("WorldCo/june");
-    dialog.selectIncome();
-    dialog.selectIncomeSeries("Salary", true);
-    dialog.validate();
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.checkLabel("WorldCo/june");
+    categorization.selectIncome();
+    categorization.selectIncomeSeries("Salary", true);
 
+    views.selectData();
+    transactions.getTable().selectRow(0);
     transactionDetails.checkSeries("Salary");
     transactionDetails.checkCategory(MasterCategory.INCOME);
 
-    CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
-    reopenedDialog.checkIncomeSeriesIsSelected("Salary");
-    reopenedDialog.createIncomeSeries()
+    views.selectCategorization();
+    categorization.checkIncomeSeriesIsSelected("Salary");
+    categorization.createIncomeSeries()
       .setName("Exceptional Income")
       .setCategory(MasterCategory.INCOME)
       .setAmount("0.0")
       .validate();
-    reopenedDialog.selectIncomeSeries("Exceptional Income", false);
-    reopenedDialog.checkIncomeSeriesIsNotSelected("Salary");
+    categorization.selectIncomeSeries("Exceptional Income", false);
+    categorization.checkIncomeSeriesIsNotSelected("Salary");
   }
 
   public void testStandardRecurringTransaction() throws Exception {
@@ -47,21 +48,24 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -29.90, "Free Telecom")
       .load();
 
-    transactions.categorize(0)
+    views.selectCategorization();
+    categorization
+      .selectTableRow(0)
       .checkLabel("Free Telecom")
       .selectRecurring()
       .checkContainsRecurringSeries()
-      .selectRecurringSeries("Internet", MasterCategory.TELECOMS, true)
-      .validate();
+      .selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
+    views.selectData();
+    transactions.getTable().selectRow(0);
     transactionDetails.checkSeries("Internet");
     transactionDetails.checkCategory(MasterCategory.TELECOMS);
 
-    CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
-    reopenedDialog.checkRecurringSeriesIsSelected("Internet");
-    reopenedDialog.selectNewRecurringSeries("Rental", MasterCategory.HOUSE, true);
-    reopenedDialog.checkRecurringSeriesIsNotSelected("Internet");
-    reopenedDialog.cancel();
+    views.selectCategorization();
+    categorization.selectTableRows(0);
+    categorization.checkRecurringSeriesIsSelected("Internet");
+    categorization.selectNewRecurringSeries("Rental", MasterCategory.HOUSE, true);
+    categorization.checkRecurringSeriesIsNotSelected("Internet");
   }
 
   public void testStandardEnvelopeTransaction() throws Exception {
@@ -70,12 +74,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -29.90, "AUCHAN C'EST BON")
       .load();
 
-    CategorizationDialogChecker dialog = transactions.categorize(0);
-    dialog.checkLabel("AUCHAN C'EST BON");
-    dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
-    dialog.validate();
+    views.selectCategorization();
+    categorization.selectTableRows(0);
+    categorization.checkLabel("AUCHAN C'EST BON");
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
+    views.selectData();
+    transactions.getTable().selectRow(0);
     transactionDetails.checkSeries("Groceries");
     transactionDetails.checkCategory(MasterCategory.FOOD);
   }
@@ -86,28 +92,33 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -199.90, "Fouquet's")
       .load();
 
+    views.selectData();
     categories.createSubCategory(MasterCategory.FOOD, "Saucisson");
     categories.select(MasterCategory.ALL);
 
-    CategorizationDialogChecker dialog = transactions.categorize(0);
-    dialog.checkLabel("Fouquet's");
-    dialog.selectOccasional();
-    dialog.checkContainsOccasional(MasterCategory.EQUIPMENT,
-                                   MasterCategory.CLOTHING,
-                                   MasterCategory.BEAUTY,
-                                   MasterCategory.EDUCATION);
-    dialog.checkContainsOccasional(MasterCategory.FOOD, "Saucisson");
-    dialog.selectOccasionalSeries(MasterCategory.FOOD);
-    dialog.validate();
+    views.selectCategorization();
+    categorization.selectTableRows(0);
+    categorization.checkLabel("Fouquet's");
+    categorization.selectOccasional();
+    categorization.checkContainsOccasional(MasterCategory.EQUIPMENT,
+                                           MasterCategory.CLOTHING,
+                                           MasterCategory.BEAUTY,
+                                           MasterCategory.EDUCATION);
+    categorization.checkContainsOccasional(MasterCategory.FOOD, "Saucisson");
+    categorization.selectOccasionalSeries(MasterCategory.FOOD);
 
+    views.selectData();
+    transactions.getTable().selectRow(0);
     transactionDetails.checkSeries("Occasional");
     transactionDetails.checkCategory(MasterCategory.FOOD);
 
-    CategorizationDialogChecker reopenedDialog = transactions.categorize(0);
-    reopenedDialog.checkOccasionalSeries(MasterCategory.FOOD);
-    reopenedDialog.selectOccasionalSeries(MasterCategory.FOOD, "Saucisson");
-    reopenedDialog.validate();
+    views.selectCategorization();
+    categorization.selectTableRows(0);
+    categorization.checkOccasionalSeries(MasterCategory.FOOD);
+    categorization.selectOccasionalSeries(MasterCategory.FOOD, "Saucisson");
 
+    views.selectData();
+    transactions.getTable().selectRow(0);
     transactionDetails.checkSeries("Occasional");
     transactionDetails.checkCategory("Saucisson");
   }
@@ -120,21 +131,21 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectAll();
-    CategorizationDialogChecker dialog = transactions.categorize(0, 1);
-    dialog.checkTable(new Object[][]{
+    views.selectCategorization();
+    categorization.selectTableRows(0, 1);
+    categorization.checkTable(new Object[][]{
       {"30/06/2008", "Forfait Kro", -60.00},
       {"28/06/2008", "France Telecom", -50.00},
     });
-    dialog.selectTableRows(1);
-    dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
-    dialog.checkTable(new Object[][]{
+    categorization.selectTableRows(1);
+    categorization.selectRecurring();
+    categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
+    categorization.checkTable(new Object[][]{
       {"30/06/2008", "Forfait Kro", -60.00},
       {"28/06/2008", "France Telecom", -50.00},
     });
-    dialog.checkSelectedTableRows(0);
-    dialog.checkNoBudgetAreaSelected();
-    dialog.validate();
+    categorization.checkSelectedTableRows(0);
+    categorization.checkNoBudgetAreaSelected();
   }
 
   public void testSwitchingFromTransactions() throws Exception {
@@ -144,25 +155,25 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", -40, "Auchan")
       .load();
 
-    CategorizationDialogChecker dialog = transactions.categorize(0, 1);
-    dialog.checkTable(new Object[][]{
+    views.selectCategorization();
+    categorization.selectTableRows(0, 1);
+    categorization.checkTable(new Object[][]{
       {"15/06/2008", "Auchan", -40.00},
       {"30/06/2008", "Free Telecom", -29.90},
     });
-    dialog.selectTableRows(0);
-    dialog.checkLabel("Auchan");
-    dialog.checkNoBudgetAreaSelected();
-    dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.selectTableRows(0);
+    categorization.checkLabel("Auchan");
+    categorization.checkNoBudgetAreaSelected();
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
-    dialog.selectTableRows(1);
-    dialog.checkLabel("Free Telecom");
-    dialog.checkNoBudgetAreaSelected();
-    dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
+    categorization.selectTableRows(1);
+    categorization.checkLabel("Free Telecom");
+    categorization.checkNoBudgetAreaSelected();
+    categorization.selectRecurring();
+    categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
-    dialog.selectTableRows(0);
-    dialog.cancel();
+    categorization.selectTableRows(0);
   }
 
   public void testUnassignedTransaction() throws Exception {
@@ -171,65 +182,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -199.90, "LDLC")
       .load();
 
-    CategorizationDialogChecker dialog = transactions.categorize(0);
-    dialog.checkLabel("LDLC");
-
-    dialog.checkNoBudgetAreaSelected();
-    dialog.checkTextVisible("You must select the type first");
-    dialog.cancel();
+    views.selectCategorization();
+    categorization.selectTableRows(0);
+    categorization.checkLabel("LDLC");
+    categorization.checkNoBudgetAreaSelected();
+    categorization.checkTextVisible("You must select the type first");
   }
 
-  public void testCancel() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/30", -29.90, "Free Telecom")
-      .load();
-
-    CategorizationDialogChecker dialog = transactions.categorize(0);
-    dialog.checkLabel("Free Telecom");
-
-    dialog.selectRecurring();
-    dialog.checkContainsRecurringSeries();
-    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
-    dialog.cancel();
-
-    transactionDetails.checkNoSeries();
-  }
-
-  public void testMultiCategorizationFromTransactionTable() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/30", -29.90, "Carouf")
-      .addTransaction("2008/06/15", -40.00, "Auchan")
-      .load();
-
-    CategorizationDialogChecker dialog = transactions.categorize(0, 1);
-    dialog.checkTable(new Object[][]{
-      {"15/06/2008", "Auchan", -40.00},
-      {"30/06/2008", "Carouf", -29.90},
-    });
-    dialog.checkSelectedTableRows(0, 1);
-    dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
-    dialog.validate();
-
-    transactions.initContent()
-      .add("30/06/2008", TransactionType.PLANNED, "Groceries", "", -0.0, MasterCategory.FOOD)
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "Carouf", "", -29.90, MasterCategory.FOOD)
-      .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, MasterCategory.FOOD)
-      .check();
-
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkSeries("Groceries");
-    transactions.getTable().selectRow(1);
-    transactionDetails.checkSeries("Groceries");
-
-    CategorizationDialogChecker reopenedDialog = transactions.categorize(1, 2);
-    reopenedDialog.checkSelectedTableRows(0, 1);
-    reopenedDialog.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
-    reopenedDialog.cancel();
-  }
-
+  // TODO: activation du mode filtrage "a classer" + selection des mois qu'il faut
   public void testMultiCategorizationFromErrorMessageBlock() throws Exception {
     OfxBuilder
       .init(this)
@@ -240,16 +200,15 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     informationPanel.assertWarningIsDisplayed(2);
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.checkTable(new Object[][]{
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
       {"15/06/2008", "Auchan", -40.00},
       {"30/06/2008", "Carouf", -29.90},
     });
-    dialog.checkSelectedTableRows(0);
-    dialog.selectTableRows(0, 1);
-    dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
-    dialog.validate();
+    categorization.checkSelectedTableRows(0);
+    categorization.selectTableRows(0, 1);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
     views.selectData();
     transactions.initContent()
@@ -257,7 +216,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Carouf", "", -29.90, MasterCategory.FOOD)
       .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, MasterCategory.FOOD)
       .check();
-
     transactions.getTable().selectRow(0);
     transactionDetails.checkSeries("Groceries");
     transactions.getTable().selectRow(1);
@@ -273,26 +231,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/28", -29.90, "Free Telecom")
       .load();
 
-    CategorizationDialogChecker dialog = transactions.categorize(0);
-    dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
-    dialog.checkBudgetAreaIsSelected(BudgetArea.RECURRING_EXPENSES);
-  }
-
-  public void testEscClosesTheDialogAndCancelsChanges() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/28", -29.90, "Free Telecom")
-      .load();
-
-    CategorizationDialogChecker dialog = transactions.categorize(0);
-    dialog.assertVisible(true);
-    dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
-
-    dialog.pressEscapeKey();
-    dialog.assertVisible(false);
-    transactionDetails.checkNoSeries();
+    views.selectCategorization();
+    categorization.selectTableRows(0);
+    categorization.selectRecurring();
+    categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
+    categorization.checkBudgetAreaIsSelected(BudgetArea.RECURRING_EXPENSES);
   }
 
   public void testNoSelection() throws Exception {
@@ -302,19 +245,17 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", -40.00, "Auchan")
       .load();
 
-    views.selectHome();
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.checkTable(new Object[][]{
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
       {"15/06/2008", "Auchan", -40.00},
       {"30/06/2008", "Carouf", -29.90},
     });
 
-    dialog.unselectAllTransactions();
-    dialog.checkBudgetAreasAreDisabled();
+    categorization.unselectAllTransactions();
+    categorization.checkBudgetAreasAreDisabled();
 
-    dialog.selectTableRows(0);
-    dialog.checkBudgetAreasAreEnabled();
-    dialog.cancel();
+    categorization.selectTableRows(0);
+    categorization.checkBudgetAreasAreEnabled();
   }
 
   public void testAutomaticSelectionOfSimilarTransactions() throws Exception {
@@ -327,8 +268,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/14", -80.0, "Auchan 2222")
       .load();
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.checkTable(new Object[][]{
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
       {"15/05/2008", "Auchan 1111", -90.00},
       {"14/05/2008", "Auchan 2222", -80.00},
       {"24/04/2008", "Free Telecom 21/04", -29.90},
@@ -336,31 +277,30 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
 
-    dialog.checkAutoSelectionEnabled(true);
-    dialog.checkLabel(2);
+    categorization.checkAutoSelectSimilarEnabled(true);
+    categorization.selectTableRows(0);
+    categorization.checkLabel(2);
 
-    dialog.checkSelectedTableRows(0, 1);
-    dialog.selectTableRows(3);
-    dialog.checkSelectedTableRows(2, 3, 4);
+    categorization.checkSelectedTableRows(0, 1);
+    categorization.selectTableRows(3);
+    categorization.checkSelectedTableRows(2, 3, 4);
 
-    dialog.disableAutoSelection();
-    dialog.checkSelectedTableRows(2, 3, 4);
-    dialog.selectTableRows(1);
-    dialog.checkSelectedTableRows(1);
-    dialog.selectTableRows(3);
-    dialog.checkSelectedTableRows(3);
+    categorization.disableAutoSelection();
+    categorization.checkSelectedTableRows(2, 3, 4);
+    categorization.selectTableRows(1);
+    categorization.checkSelectedTableRows(1);
+    categorization.selectTableRows(3);
+    categorization.checkSelectedTableRows(3);
 
-    dialog.enableAutoSelection();
-    dialog.checkSelectedTableRows(2, 3, 4);
-    dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
+    categorization.enableAutoSelection();
+    categorization.checkSelectedTableRows(2, 3, 4);
+    categorization.selectRecurring();
+    categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
-    dialog.selectTableRows("Auchan 1111");
-    dialog.checkSelectedTableRows(0, 1);
-    dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
-
-    dialog.validate();
+    categorization.selectTableRows("Auchan 1111");
+    categorization.checkSelectedTableRows(0, 1);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
     views.selectData();
     transactions.initContent()
@@ -381,10 +321,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/04/24", -56.90, "Cheque 34556")
       .load();
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.checkAutoSelectionEnabled(true);
-    dialog.checkSelectedTableRows(0);
-    dialog.cancel();
+    views.selectCategorization();
+    categorization.checkAutoSelectSimilarEnabled(true);
+    categorization.selectTableRow(0);
+    categorization.checkSelectedTableRows(0);
   }
 
   public void testManualMultiSelectionOverridesTheAutomaticSelectionMechanism() throws Exception {
@@ -395,11 +335,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/04/24", -29.90, "Free Telecom 21/04")
       .load();
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.checkAutoSelectionEnabled(true);
-    dialog.selectTableRows(0, 2);
-    dialog.checkSelectedTableRows(0, 2);
-    dialog.cancel();
+    views.selectCategorization();
+    categorization.checkAutoSelectSimilarEnabled(true);
+    categorization.selectTableRows(0, 2);
+    categorization.checkSelectedTableRows(0, 2);
   }
 
   public void testAutoHideCategorizedTransactions() throws Exception {
@@ -411,43 +350,42 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/14", -80.00, "Carouf")
       .load();
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.checkTable(new Object[][]{
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
       {"15/05/2008", "Auchan", -90.00},
       {"14/05/2008", "Carouf", -80.00},
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    dialog.checkAutoHideEnabled(false);
-    dialog.enableAutoHide();
-    dialog.checkSelectedTableRows(0);
-    dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.checkAutoHideEnabled(false);
+    categorization.enableAutoHide();
+    categorization.selectTableRow(0);
+    categorization.checkSelectedTableRows(0);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
-    dialog.checkTable(new Object[][]{
+    categorization.checkTable(new Object[][]{
       {"14/05/2008", "Carouf", -80.00},
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
 
-    dialog.selectTableRows(1);
-    dialog.checkSelectedTableRows(1, 2);
-    dialog.checkBudgetAreasAreEnabled();
-    dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
+    categorization.selectTableRows(1);
+    categorization.checkSelectedTableRows(1, 2);
+    categorization.checkBudgetAreasAreEnabled();
+    categorization.selectRecurring();
+    categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
-    dialog.checkTable(new Object[][]{
+    categorization.checkTable(new Object[][]{
       {"14/05/2008", "Carouf", -80.00},
     });
-    dialog.checkSelectedTableRows(0);
+    categorization.checkSelectedTableRows(0);
 
-    dialog.selectTableRows(0);
-    dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, false);
+    categorization.selectTableRows(0);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, false);
 
-    dialog.checkTableIsEmpty();
-
-    dialog.validate();
+    categorization.checkTableIsEmpty();
 
     views.selectData();
     transactions
@@ -469,45 +407,43 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/14", -80.00, "Carouf")
       .load();
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.checkTable(new Object[][]{
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
       {"15/05/2008", "Auchan", -90.00},
       {"14/05/2008", "Carouf", -80.00},
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
 
-    dialog.disableAutoHide();
-    dialog.selectTableRows(0, 1);
-    dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.disableAutoHide();
+    categorization.selectTableRows(0, 1);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
-    dialog.checkTable(new Object[][]{
+    categorization.checkTable(new Object[][]{
       {"15/05/2008", "Auchan", -90.00},
       {"14/05/2008", "Carouf", -80.00},
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    dialog.checkSelectedTableRows(2, 3);
-    dialog.checkBudgetAreasAreEnabled();
+    categorization.checkSelectedTableRows(2, 3);
+    categorization.checkBudgetAreasAreEnabled();
 
-    dialog.enableAutoHide();
-    dialog.checkTable(new Object[][]{
+    categorization.enableAutoHide();
+    categorization.checkTable(new Object[][]{
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    dialog.checkSelectedTableRows(0, 1);
+    categorization.checkSelectedTableRows(0, 1);
 
-    dialog.disableAutoHide();
-    dialog.checkTable(new Object[][]{
+    categorization.disableAutoHide();
+    categorization.checkTable(new Object[][]{
       {"15/05/2008", "Auchan", -90.00},
       {"14/05/2008", "Carouf", -80.00},
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    dialog.checkSelectedTableRows(2, 3);
-
-    dialog.cancel();
+    categorization.checkSelectedTableRows(2, 3);
   }
 
   public void testAutoSelectNext() throws Exception {
@@ -519,43 +455,41 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/14", -80.00, "Carouf")
       .load();
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.checkTable(new Object[][]{
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
       {"15/05/2008", "Auchan", -90.00},
       {"14/05/2008", "Carouf", -80.00},
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    dialog.checkAutoSelectNextEnabled(true);
-    dialog.checkSelectedTableRows(0);
-    dialog.selectEnvelopes();
+    categorization.checkAutoSelectNextEnabled(true);
+    categorization.selectTableRow(0);
+    categorization.selectEnvelopes();
 
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
-    dialog.checkTable(new Object[][]{
+    categorization.checkTable(new Object[][]{
       {"15/05/2008", "Auchan", -90.00},
       {"14/05/2008", "Carouf", -80.00},
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    dialog.checkSelectedTableRows(1);
+    categorization.checkSelectedTableRows(1);
 
-    dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, false);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, false);
 
-    dialog.checkSelectedTableRows(2, 3);
-    dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
+    categorization.checkSelectedTableRows(2, 3);
+    categorization.selectRecurring();
+    categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
-    dialog.checkTable(new Object[][]{
+    categorization.checkTable(new Object[][]{
       {"15/05/2008", "Auchan", -90.00},
       {"14/05/2008", "Carouf", -80.00},
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    dialog.checkSelectedTableRows(2, 3);
-
-    dialog.validate();
+    categorization.checkSelectedTableRows(2, 3);
 
     views.selectData();
     transactions
@@ -577,20 +511,18 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/14", -80.00, "Carouf")
       .load();
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.checkTable(new Object[][]{
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
       {"15/05/2008", "Auchan", -90.00},
       {"14/05/2008", "Carouf", -80.00},
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    dialog.disableAutoSelectNext();
-    dialog.checkSelectedTableRows(0);
-    dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
-    dialog.checkSelectedTableRows(0);
-
-    dialog.validate();
+    categorization.disableAutoSelectNext();
+    categorization.selectTableRow(0);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.checkSelectedTableRows(0);
   }
 
   public void testAutoSelectSkipsCategorizedItems() throws Exception {
@@ -602,28 +534,27 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/14", -80.00, "Carouf")
       .load();
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.checkAutoSelectNextEnabled(true);
-    dialog.checkTable(new Object[][]{
+    views.selectCategorization();
+    categorization.checkAutoSelectNextEnabled(true);
+    categorization.checkTable(new Object[][]{
       {"15/05/2008", "Auchan", -90.00},
       {"14/05/2008", "Carouf", -80.00},
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
 
-    dialog.selectTableRow(1);
-    dialog.selectEnvelopes();
-    dialog.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.selectTableRow(1);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
-    dialog.checkSelectedTableRows(2, 3);
+    categorization.checkSelectedTableRows(2, 3);
 
-    dialog.selectTableRow(0);
-    dialog.checkSelectedTableRows(0);
-    dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
+    categorization.selectTableRow(0);
+    categorization.checkSelectedTableRows(0);
+    categorization.selectRecurring();
+    categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
-    dialog.checkSelectedTableRows(2, 3);
-    dialog.validate();
+    categorization.checkSelectedTableRows(2, 3);
   }
 
   public void testAutoSelectWraps() throws Exception {
@@ -635,15 +566,15 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/14", -80.00, "Carouf")
       .load();
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.checkAutoSelectNextEnabled(true);
-    dialog.selectTableRow(2);
-    dialog.checkSelectedTableRows(2, 3);
-    dialog.selectRecurring();
-    dialog.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
+    views.selectCategorization();
+    categorization.checkAutoSelectNextEnabled(true);
+    categorization.checkAutoSelectSimilarEnabled(true);
+    categorization.selectTableRow(2);
+    categorization.checkSelectedTableRows(2, 3);
+    categorization.selectRecurring();
+    categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
-    dialog.checkSelectedTableRows(0);
-    dialog.validate();
+    categorization.checkSelectedTableRows(0);
   }
 
   public void testSeriesList() throws Exception {
@@ -652,22 +583,21 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
       .load();
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.disableAutoHide();
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.disableAutoHide();
 
-    dialog.selectIncome()
+    categorization.selectIncome()
       .checkNoIncomeSeriesDisplayed()
       .checkEditIncomeSeriesDisabled();
 
-    dialog
+    categorization
       .createIncomeSeries()
       .setName("Salary")
       .setCategory(MasterCategory.INCOME)
       .validate();
 
-    dialog.checkContainsIncomeSeries("Salary");
-
-    dialog.cancel();
+    categorization.checkContainsIncomeSeries("Salary");
   }
 
   public void testEditingOccasionalCategories() throws Exception {
@@ -676,22 +606,21 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
       .load();
 
-    CategorizationDialogChecker dialog = informationPanel.categorize();
-    dialog.editOccasionalCategories()
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.editOccasionalCategories()
       .selectMaster(MasterCategory.FOOD)
       .createSubCategory("Apero")
       .validate();
 
-    dialog.checkContainsOccasional(MasterCategory.FOOD, "Apero");
+    categorization.checkContainsOccasional(MasterCategory.FOOD, "Apero");
 
-    dialog.editOccasionalCategories()
+    categorization.editOccasionalCategories()
       .selectMaster(MasterCategory.FOOD)
       .selectSub("Apero")
       .deleteSubCategory()
       .validate();
 
-    dialog.checkDoesNotContainOccasional(MasterCategory.FOOD, "Apero");
-
-    dialog.cancel();
+    categorization.checkDoesNotContainOccasional(MasterCategory.FOOD, "Apero");
   }
 }
