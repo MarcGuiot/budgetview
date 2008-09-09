@@ -1,7 +1,6 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
-import org.designup.picsou.functests.checkers.CategorizerChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -19,13 +18,13 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/13", -23, "cheque")
       .load();
 
-    CategorizerChecker checker = new CategorizerChecker(mainWindow);
-    checker.setRecurring("free telecom", "internet", MasterCategory.TELECOMS, true);
-    checker.setRecurring("Loyer", "rental", MasterCategory.HOUSE, true);
-    checker.setEnvelope("Auchan", "groceries", MasterCategory.FOOD, true);
-    checker.setEnvelope("ED", "groceries", MasterCategory.FOOD, false);
-    checker.setOccasional("fnac", MasterCategory.EQUIPMENT);
-    checker.setIncome("Salaire");
+    views.selectCategorization();
+    categorization.setRecurring("free telecom", "internet", MasterCategory.TELECOMS, true);
+    categorization.setRecurring("Loyer", "rental", MasterCategory.HOUSE, true);
+    categorization.setEnvelope("Auchan", "groceries", MasterCategory.FOOD, true);
+    categorization.setEnvelope("ED", "groceries", MasterCategory.FOOD, false);
+    categorization.setOccasional("fnac", MasterCategory.EQUIPMENT);
+    categorization.setIncome("Salaire", "Salaire", true);
 
     views.selectHome();
     monthSummary.init()
@@ -50,15 +49,17 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectMonth("2008/07");
-    views.selectData();
-    CategorizerChecker.init(mainWindow)
-      .setRecurring("free telecom", "internet", MasterCategory.TELECOMS, true)
-      .setRecurring("Loyer", "rental", MasterCategory.HOUSE, true)
-      .setEnvelope("Auchan", "groceries", MasterCategory.FOOD, true)
-      .setEnvelope("ED", "groceries", MasterCategory.FOOD, false)
-      .setOccasional("fnac", MasterCategory.EQUIPMENT)
-      .setIncome("Salaire");
+
+    views.selectCategorization();
+    categorization.setRecurring("free telecom", "internet", MasterCategory.TELECOMS, true);
+    categorization.setRecurring("Loyer", "rental", MasterCategory.HOUSE, true);
+    categorization.setEnvelope("Auchan", "groceries", MasterCategory.FOOD, true);
+    categorization.setEnvelope("ED", "groceries", MasterCategory.FOOD, false);
+    categorization.setOccasional("fnac", MasterCategory.EQUIPMENT);
+    categorization.setIncome("Salaire", "Salaire", true);
+
     views.selectHome();
+
     monthSummary.init()
       .total(1500, (29.9 + 1500 + 60 + 20 + 10), false)
       .checkIncome(1500, 1500)
@@ -67,10 +68,12 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkOccasional(10);
 
     timeline.selectMonth("2008/08");
-    views.selectData();
-    CategorizerChecker.init(mainWindow)
+
+    views.selectCategorization();
+    categorization
       .setRecurring("free telecom", "internet", MasterCategory.TELECOMS, false)
       .setRecurring("Loyer", "rental", MasterCategory.HOUSE, false);
+
     views.selectHome();
     monthSummary.init()
       .total(0, (1500 + 29.90), false)
@@ -106,6 +109,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkOccasional(0)
       .checkUncategorized("1000.00 / -10.00");
 
+    // TODO: naviguer vers la vue Categorization
     CategorizationDialogChecker dialog = monthSummary.init().categorize();
     dialog.checkTable(new Object[][]{
       {"26/08/2008", "FNAC", -10.0},

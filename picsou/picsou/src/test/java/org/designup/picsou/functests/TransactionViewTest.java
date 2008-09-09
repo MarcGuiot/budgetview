@@ -9,8 +9,6 @@ import org.uispec4j.Table;
 import org.uispec4j.Trigger;
 import org.uispec4j.interception.PopupMenuInterceptor;
 
-import java.awt.event.InputEvent;
-
 public class TransactionViewTest extends LoggedInFunctionalTestCase {
   private Table table;
 
@@ -21,7 +19,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .addTransactionWithNote("2006/05/01", -70.00, "essence", "frais pro", MasterCategory.TRANSPORTS)
       .addTransactionWithNote("2006/05/03", -30.00, "peage", "", MasterCategory.TRANSPORTS)
       .addTransactionWithNote("2006/05/02", -200.00, "cic", "", MasterCategory.BANK)
-      .addTransactionWithNote("2006/05/06", -100.00, "nounou", "nourrice", MasterCategory.HOUSE, MasterCategory.EDUCATION)
+      .addTransactionWithNote("2006/05/06", -100.00, "nounou", "nourrice", MasterCategory.EDUCATION)
       .load();
     table = transactions.getTable();
   }
@@ -52,7 +50,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
   public void testEditingANoteBySelectingAValueInThePopup() throws Exception {
     transactions.initContent()
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
       .add("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
@@ -68,7 +66,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .click();
 
     transactions.initContent()
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
       .add("02/05/2006", TransactionType.PRELEVEMENT, "cic", "frais pro", -200.00, MasterCategory.BANK)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
@@ -80,7 +78,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     transactions.initContent()
       .add("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
       .check();
@@ -89,7 +87,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     transactions.initContent()
       .add("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "garagiste", -30.00, MasterCategory.TRANSPORTS)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
       .check();
@@ -98,7 +96,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     transactions.initContent()
       .add("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "garagiste", -30.00, MasterCategory.TRANSPORTS)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "essence", -70.00, MasterCategory.TRANSPORTS)
       .check();
@@ -107,7 +105,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     transactions.initContent()
       .add("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "travaux", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "travaux", -100.00, MasterCategory.EDUCATION)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "garagiste", -30.00, MasterCategory.TRANSPORTS)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "essence", -70.00, MasterCategory.TRANSPORTS)
       .check();
@@ -116,7 +114,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   // TODO : tester la navigation
   public void testMultiCategorization() throws Exception {
     transactions.initContent()
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
       .add("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
@@ -125,7 +123,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.assignOccasionalSeries(MasterCategory.BEAUTY, 1, 3);
 
     transactions.initContent()
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION, MasterCategory.HOUSE)
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.BEAUTY)
       .add("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.BEAUTY)

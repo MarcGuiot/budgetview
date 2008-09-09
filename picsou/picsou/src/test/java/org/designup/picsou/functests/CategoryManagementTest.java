@@ -15,48 +15,46 @@ import org.uispec4j.interception.WindowInterceptor;
 public class CategoryManagementTest extends LoggedInFunctionalTestCase {
 
   public void testFiltering() throws Exception {
-    learn("BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", MasterCategory.FOOD);
-    learn("STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", MasterCategory.TRANSPORTS);
-    learn("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", MasterCategory.TRANSPORTS);
-    learn("SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", MasterCategory.FOOD);
 
-    String fileName = org.globsframework.utils.TestUtils.getFileName(this, ".qif");
-
-    Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"), fileName);
-
-    operations.importQifFile(0.0, fileName, "Societe Generale");
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/04/20", -49.00, "Menu K", MasterCategory.FOOD)
+      .addTransaction("2006/04/20", -17.65, "BP", MasterCategory.TRANSPORTS)
+      .addTransaction("2006/04/19", -14.50, "Kalistea", MasterCategory.FOOD)
+      .addTransaction("2006/04/13", -18.70, "ELF", MasterCategory.TRANSPORTS)
+      .load();
 
     categories.select(MasterCategory.TRANSPORTS);
     transactions
       .initContent()
-      .add("20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65, MasterCategory.TRANSPORTS)
-      .add("13/04/2006", TransactionType.CREDIT_CARD, "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", "", -18.70, MasterCategory.TRANSPORTS)
+      .add("20/04/2006", TransactionType.PRELEVEMENT, "BP", "", -17.65, MasterCategory.TRANSPORTS)
+      .add("13/04/2006", TransactionType.PRELEVEMENT, "ELF", "", -18.70, MasterCategory.TRANSPORTS)
       .check();
 
     categories.select(MasterCategory.TRANSPORTS, MasterCategory.FOOD);
     transactions
       .initContent()
-      .add("20/04/2006", TransactionType.CREDIT_CARD, "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", "", -49.00, MasterCategory.FOOD)
-      .add("20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65, MasterCategory.TRANSPORTS)
-      .add("19/04/2006", TransactionType.CREDIT_CARD, "SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", "", -14.50, MasterCategory.FOOD)
-      .add("13/04/2006", TransactionType.CREDIT_CARD, "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", "", -18.70, MasterCategory.TRANSPORTS)
+      .add("20/04/2006", TransactionType.PRELEVEMENT, "Menu K", "", -49.00, MasterCategory.FOOD)
+      .add("20/04/2006", TransactionType.PRELEVEMENT, "BP", "", -17.65, MasterCategory.TRANSPORTS)
+      .add("19/04/2006", TransactionType.PRELEVEMENT, "Kalistea", "", -14.50, MasterCategory.FOOD)
+      .add("13/04/2006", TransactionType.PRELEVEMENT, "ELF", "", -18.70, MasterCategory.TRANSPORTS)
       .check();
 
     categories.select(MasterCategory.FOOD);
     transactions
       .initContent()
-      .add("20/04/2006", TransactionType.CREDIT_CARD, "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", "", -49.00, MasterCategory.FOOD)
-      .add("19/04/2006", TransactionType.CREDIT_CARD, "SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", "", -14.50, MasterCategory.FOOD)
+      .add("20/04/2006", TransactionType.CREDIT_CARD, "Menu K", "", -49.00, MasterCategory.FOOD)
+      .add("19/04/2006", TransactionType.CREDIT_CARD, "Kalistea", "", -14.50, MasterCategory.FOOD)
       .check();
 
     categories.select(MasterCategory.ALL);
     transactions
       .initContent()
       .add("22/04/2006", TransactionType.CREDIT_CARD, "SACLAY", "", -55.49)
-      .add("20/04/2006", TransactionType.CREDIT_CARD, "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", "", -49.00, MasterCategory.FOOD)
-      .add("20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65, MasterCategory.TRANSPORTS)
-      .add("19/04/2006", TransactionType.CREDIT_CARD, "SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", "", -14.50, MasterCategory.FOOD)
-      .add("13/04/2006", TransactionType.CREDIT_CARD, "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", "", -18.70, MasterCategory.TRANSPORTS)
+      .add("20/04/2006", TransactionType.CREDIT_CARD, "Menu K", "", -49.00, MasterCategory.FOOD)
+      .add("20/04/2006", TransactionType.CREDIT_CARD, "BP", "", -17.65, MasterCategory.TRANSPORTS)
+      .add("19/04/2006", TransactionType.CREDIT_CARD, "Kalistea", "", -14.50, MasterCategory.FOOD)
+      .add("13/04/2006", TransactionType.CREDIT_CARD, "ELF", "", -18.70, MasterCategory.TRANSPORTS)
       .check();
   }
 
@@ -66,12 +64,10 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.0, "Station BP", MasterCategory.TRANSPORTS)
       .addTransaction("2006/01/11", -2.0, "Menu K", MasterCategory.NONE)
       .addTransaction("2006/01/12", -3.0, "Dr Lecter", MasterCategory.NONE)
-      .addTransaction("2006/01/13", -12.0, "Mac do", MasterCategory.HOUSE, MasterCategory.BANK)
       .load();
 
     transactions
       .initContent()
-      .add("13/01/2006", TransactionType.PRELEVEMENT, "Mac do", "", -12.0, MasterCategory.BANK, MasterCategory.HOUSE)
       .add("12/01/2006", TransactionType.PRELEVEMENT, "Dr Lecter", "", -3.0, MasterCategory.NONE)
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2.0, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Station BP", "", -1.0, MasterCategory.TRANSPORTS)
@@ -80,7 +76,6 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.select(MasterCategory.NONE);
     transactions
       .initContent()
-      .add("13/01/2006", TransactionType.PRELEVEMENT, "Mac do", "", -12.0, MasterCategory.BANK, MasterCategory.HOUSE)
       .add("12/01/2006", TransactionType.PRELEVEMENT, "Dr Lecter", "", -3.0, MasterCategory.NONE)
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2.0, MasterCategory.NONE)
       .check();
@@ -239,36 +234,6 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, MasterCategory.FOOD)
-      .check();
-  }
-
-  public void testDeleteSubcategoryUpdatesTransactionsWithMultiAllocations() throws Exception {
-    categories.createSubCategory(MasterCategory.FOOD, "Apero");
-    categories.createSubCategory(MasterCategory.TRANSPORTS, "Oil");
-
-    OfxBuilder
-      .init(this)
-      .addCategory(MasterCategory.FOOD, "Apero")
-      .addCategory(MasterCategory.TRANSPORTS, "Oil")
-      .addTransaction("2006/01/10", -1.0, "Chez Lulu", "Apero", "Oil")
-      .load();
-
-    categories.select(MasterCategory.ALL);
-    transactions
-      .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, "Apero, Oil")
-      .check();
-
-    categories.select("Apero");
-    categories.deleteSubSelected(MasterCategory.FOOD);
-
-    categories.assertCategoryNotFound("Apero");
-    categories.assertSelectionEquals(MasterCategory.FOOD);
-
-    categories.select(MasterCategory.ALL);
-    transactions
-      .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, MasterCategory.FOOD, "Oil")
       .check();
   }
 

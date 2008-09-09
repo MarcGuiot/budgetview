@@ -242,7 +242,7 @@ public abstract class ImportPanel {
 
   private void loadLocalRepository(GlobRepository repository) {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE, Transaction.TYPE,
-                            TransactionToCategory.TYPE, TransactionTypeMatcher.TYPE, LabelToCategory.TYPE,
+                            TransactionTypeMatcher.TYPE, LabelToCategory.TYPE,
                             Month.TYPE};
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)

@@ -47,34 +47,14 @@ public class CategoryCellConverter implements TableCellValueConverter {
     builder.append(")");
 
     org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
-    UIComponent[] categoryLabels = panel.getUIComponents(Button.class);
-    if (categoryLabels.length == 1) {
-      Button hyperLink = (Button)categoryLabels[0];
-      String text = hyperLink.getLabel();
-      if (text.equals(TransactionChecker.TO_CATEGORIZE)) {
-        stringifyCategories(transaction, builder);
-      }
-      else {
-        builder.append(text);
-      }
+    Button hyperlink = panel.getButton();
+    String text = hyperlink.getLabel();
+    if (text.equals(TransactionChecker.TO_CATEGORIZE)) {
+      builder.append(TransactionChecker.TO_CATEGORIZE);
+    }
+    else {
+      builder.append(text);
     }
     return builder.toString().trim();
-  }
-
-  private void stringifyCategories(Glob transaction, StringBuilder builder) {
-    GlobList categories = TransactionToCategory.getCategories(transaction, repository);
-    if (categories.isEmpty()) {
-      builder.append(TransactionChecker.TO_CATEGORIZE);
-      return;
-    }
-
-    categories.sort(categoryComparator);
-    int index = 0;
-    for (Glob category : categories) {
-      if (index++ > 0) {
-        builder.append(", ");
-      }
-      builder.append(categoryStringifier.toString(category, repository));
-    }
   }
 }

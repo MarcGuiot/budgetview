@@ -55,7 +55,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addCategory(MasterCategory.FOOD, "Apero")
       .addCategory(MasterCategory.TRANSPORTS, "Oil")
-      .addTransaction("2006/01/10", -15.0, "Chez Lulu", "Apero", "Oil")
+      .addTransaction("2006/01/10", -15.0, "Chez Lulu", "Oil")
       .addTransaction("2006/01/05", -19.0, "Chez Marcel", "Apero")
       .load();
 
@@ -65,26 +65,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     categories.select(MasterCategory.ALL);
     transactions
       .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -15.0, "Apero, Oil")
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -15.0, "Oil")
       .add("05/01/2006", TransactionType.PRELEVEMENT, "Chez Marcel", "", -19.0, "Apero")
-      .check();
-  }
-
-  public void testManagesMultipleSubcategoriesInOfxFiles() throws Exception {
-    categories.createSubCategory(MasterCategory.FOOD, "Apero");
-    categories.createSubCategory(MasterCategory.TRANSPORTS, "Oil");
-
-    OfxBuilder
-      .init(this)
-      .addCategory(MasterCategory.FOOD, "Apero")
-      .addCategory(MasterCategory.TRANSPORTS, "Oil")
-      .addTransaction("2006/01/10", -1.0, "Chez Lulu", "Apero", "Oil")
-      .load();
-
-    categories.select(MasterCategory.ALL);
-    transactions
-      .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, "Apero, Oil")
       .check();
   }
 
@@ -350,36 +332,6 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info2", -1.5, MasterCategory.CLOTHING)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
       .check();
-  }
-
-  public void testImportWithTwoSubCategory() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addCategory(MasterCategory.FOOD, "sub1")
-      .addCategory(MasterCategory.FOOD, "sub2")
-      .addTransaction("2006/01/10", -1.1, "Tx 1", "sub1", "sub2")
-      .load();
-
-    transactions
-      .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, "sub1", "sub2")
-      .check();
-
-  }
-
-  public void testImportWithTwoSubCategoryAndOneCategory() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addCategory(MasterCategory.FOOD, "sub1")
-      .addCategory(MasterCategory.FOOD, "sub2")
-      .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.FOOD.getName(), "sub1", "sub2")
-      .load();
-
-    transactions
-      .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, "Groceries", "sub1", "sub2")
-      .check();
-
   }
 
   public void testTruncatedFile() throws Exception {

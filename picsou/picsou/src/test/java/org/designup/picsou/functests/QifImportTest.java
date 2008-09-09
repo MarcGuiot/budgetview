@@ -9,11 +9,6 @@ import org.globsframework.utils.TestUtils;
 public class QifImportTest extends LoggedInFunctionalTestCase {
 
   public void testImportsQifFilesFromSG() throws Exception {
-    learn("BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", MasterCategory.FOOD);
-    learn("STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", MasterCategory.TRANSPORTS);
-    learn("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", MasterCategory.TRANSPORTS);
-    learn("SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", MasterCategory.FOOD);
-
     String fileName = TestUtils.getFileName(this, ".qif");
 
     Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"),
@@ -23,20 +18,10 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     transactions
       .initContent()
       .add("22/04/2006", TransactionType.CREDIT_CARD, "SACLAY", "", -55.49)
-      .add("20/04/2006", TransactionType.CREDIT_CARD, "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", "", -49.00, MasterCategory.FOOD)
-      .add("20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65, MasterCategory.TRANSPORTS)
-      .add("19/04/2006", TransactionType.CREDIT_CARD, "SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", "", -14.50, MasterCategory.FOOD)
-      .add("13/04/2006", TransactionType.CREDIT_CARD, "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", "", -18.70, MasterCategory.TRANSPORTS)
-      .check();
-    double totalForAutomobile = -(18.70 + 17.65);
-    double totalForAlimentation = -(14.50 + 49.00);
-    double total = totalForAutomobile + totalForAlimentation - 55;
-    categories
-      .initContent()
-      .add(MasterCategory.ALL, 0.0, 0.0, total, 1.0)
-      .add(MasterCategory.NONE, 0.0, 0.0, 55, 55 / total)
-      .add(MasterCategory.FOOD, 0.0, 0.0, totalForAlimentation, totalForAlimentation / total)
-      .add(MasterCategory.TRANSPORTS, 0.0, 0.0, totalForAutomobile, totalForAutomobile / total)
+      .add("20/04/2006", TransactionType.CREDIT_CARD, "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", "", -49.00)
+      .add("20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
+      .add("19/04/2006", TransactionType.CREDIT_CARD, "SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", "", -14.50)
+      .add("13/04/2006", TransactionType.CREDIT_CARD, "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", "", -18.70)
       .check();
 
     categories.assertSelectionEquals(MasterCategory.ALL);

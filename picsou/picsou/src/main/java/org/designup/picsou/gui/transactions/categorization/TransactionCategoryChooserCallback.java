@@ -12,14 +12,15 @@ import java.util.Set;
 
 public abstract class TransactionCategoryChooserCallback implements CategoryChooserCallback {
   public Set<Integer> getPreselectedCategoryIds() {
+
     Set<Integer> categoryIds = new HashSet<Integer>();
     for (Glob transaction : getReferenceTransactions()) {
-      GlobList categories = Transaction.getCategories(transaction, getRepository());
-      if (categories.size() == 0) {
+      Integer categoryId = transaction.get(Category.ID);
+      if (categoryId == null) {
         categoryIds.add(Category.NONE);
       }
-      for (Glob category : categories) {
-        categoryIds.add(category.get(Category.ID));
+      else {
+        categoryIds.add(categoryId);
       }
     }
     return categoryIds;

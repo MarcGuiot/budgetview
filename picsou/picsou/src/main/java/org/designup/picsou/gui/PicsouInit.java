@@ -1,6 +1,5 @@
 package org.designup.picsou.gui;
 
-import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.config.ConfigService;
@@ -114,16 +113,14 @@ public class PicsouInit {
 
   public static void createDataForNewUser(GlobRepository repository) {
     repository.create(UserPreferences.KEY,
-                          FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT,
-                                           UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS));
+                      FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT,
+                                       UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS));
     InitialCategories.run(repository);
     InitialSeries.run(repository);
   }
 
   private void initDirectory(GlobRepository repository) {
     directory.add(BrowsingService.class, BrowsingService.createService());
-    AllocationLearningService learningService = new AllocationLearningService();
-    directory.add(AllocationLearningService.class, learningService);
 
     TransactionAnalyzerFactory factory = new TransactionAnalyzerFactory(PicsouGuiModel.get(), repository);
     directory.add(TransactionAnalyzerFactory.class, factory);

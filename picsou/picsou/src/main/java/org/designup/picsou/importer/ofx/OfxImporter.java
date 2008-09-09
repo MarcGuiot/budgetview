@@ -208,10 +208,6 @@ public class OfxImporter implements AccountFileImporter {
       if (categoryIds.size() == 1) {
         repository.update(currentTransactionKey, ImportedTransaction.CATEGORY, categoryIds.iterator().next());
       }
-      else {
-        TransactionToCategory.link(repository, currentTransactionKey.get(ImportedTransaction.ID),
-                                   categoryIds.toArray(new Integer[categoryIds.size()]));
-      }
     }
 
     public void processTag(String tag, String content) {

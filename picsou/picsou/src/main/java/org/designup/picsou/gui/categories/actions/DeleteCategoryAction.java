@@ -1,11 +1,13 @@
 package org.designup.picsou.gui.categories.actions;
 
-import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.gui.categories.CategoryChooserCallback;
 import org.designup.picsou.gui.categories.CategoryChooserDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Category;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesToCategory;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -31,13 +33,11 @@ import java.util.Collections;
 import java.util.Set;
 
 public abstract class DeleteCategoryAction extends AbstractCategoryAction {
-  protected AllocationLearningService learningService;
   private Directory directory;
 
   public DeleteCategoryAction(GlobRepository repository, Directory directory) {
     super(Lang.get("delete"), repository, directory);
     this.directory = directory;
-    learningService = directory.get(AllocationLearningService.class);
     setEnabled(false);
   }
 
@@ -82,15 +82,13 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
                                               GlobMatchers.fieldIn(Transaction.CATEGORY, categories));
     GlobList series = repository.getAll(Series.TYPE,
                                         GlobMatchers.fieldIn(Series.DEFAULT_CATEGORY, categories));
-    GlobList transactionToCategory = repository.getAll(TransactionToCategory.TYPE,
-                                                       GlobMatchers.fieldIn(TransactionToCategory.CATEGORY, categories));
     GlobList seriesToCategory = repository.getAll(SeriesToCategory.TYPE,
                                                   GlobMatchers.fieldIn(SeriesToCategory.CATEGORY, categories));
 
     repository.enterBulkDispatchingMode();
     Integer targetId;
     try {
-      if (series.isEmpty() && transactions.isEmpty() && transactionToCategory.isEmpty()) {
+      if (series.isEmpty() && transactions.isEmpty()) {
         delete(categories, seriesToCategory);
         return null;
       }
@@ -121,20 +119,6 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
           repository.create(SeriesToCategory.TYPE,
                             value(SeriesToCategory.CATEGORY, targetId),
                             value(SeriesToCategory.SERIES, glob.get(SeriesToCategory.SERIES)));
-        }
-      }
-      for (Glob glob : transactionToCategory) {
-        GlobList existingTransactionToCategory =
-          repository.getAll(TransactionToCategory.TYPE,
-                            GlobMatchers.and(
-                              GlobMatchers.fieldEquals(TransactionToCategory.TRANSACTION,
-                                                       glob.get(TransactionToCategory.TRANSACTION)),
-                              GlobMatchers.fieldEquals(TransactionToCategory.CATEGORY, targetId)));
-        if (existingTransactionToCategory.isEmpty()) {
-          repository.create(TransactionToCategory.TYPE,
-                            value(TransactionToCategory.CATEGORY, targetId),
-                            value(TransactionToCategory.TRANSACTION,
-                                  glob.get(TransactionToCategory.TRANSACTION)));
         }
       }
       delete(categories, seriesToCategory);

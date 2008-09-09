@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.series;
 
-import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.categories.CategoryChooserCallback;
 import org.designup.picsou.gui.categories.CategoryChooserDialog;
@@ -278,7 +277,7 @@ public class SeriesEditionDialog {
       String label;
       if (!transactions.isEmpty()) {
         Glob firstTransaction = transactions.get(0);
-        label = AllocationLearningService.anonymise(firstTransaction.get(Transaction.LABEL));
+        label = Transaction.anonymise(firstTransaction.get(Transaction.LABEL));
       }
       else {
         label = Lang.get("seriesEdition.newSeries");

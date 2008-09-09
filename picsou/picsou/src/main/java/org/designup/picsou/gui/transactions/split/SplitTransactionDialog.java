@@ -4,7 +4,6 @@ import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderCustomizer;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.BalanceStringifier;
-import org.designup.picsou.gui.description.TransactionCategoriesStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.categorization.TransactionCategoryChooserCallback;
 import org.designup.picsou.gui.transactions.columns.*;
@@ -239,8 +238,6 @@ public class SplitTransactionDialog {
                              new PicsouTableHeaderPainter(view, localDirectory));
 
     GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
-    GlobStringifier categoriesStringifier =
-      new TransactionCategoriesStringifier(descriptionService.getStringifier(Category.TYPE));
     AbstractGlobSelectionAction categorizationAction =
       new AbstractGlobSelectionAction(Transaction.TYPE, repositoryForSplitPanel, directoryForSplitPanel) {
 
@@ -266,8 +263,7 @@ public class SplitTransactionDialog {
                                        localRepository, localDirectory);
 
     view
-      .addColumn(descriptionService.getLabel(Category.TYPE), seriesColumn, seriesColumn,
-                 categoriesStringifier.getComparator(localRepository))
+      .addColumn(descriptionService.getLabel(Category.TYPE), seriesColumn, seriesColumn, seriesColumn.getComparator())
       .addColumn(LABEL)
       .addColumn(Lang.get("amount"),
                  amountStringifier,

@@ -281,7 +281,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     getCategorizationView().setOccasional("Menu A", MasterCategory.FOOD);
 
     getTransactionView().initContent()
-      .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2, MasterCategory.FOOD)
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu A", "", -2, MasterCategory.FOOD)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
       .check();
   }

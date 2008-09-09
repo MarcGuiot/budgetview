@@ -26,6 +26,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Comparator;
 
 public class TransactionSeriesColumn extends AbstractTransactionEditor implements ColorChangeListener {
   private GlobStringifier seriesStringifier;
@@ -69,6 +70,10 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
 
     colorService = directory.get(ColorService.class);
     colorService.addListener(this);
+  }
+
+  public Comparator<Glob> getComparator() {
+    return seriesStringifier.getComparator(repository);
   }
 
   public void colorsChanged(ColorLocator colorLocator) {

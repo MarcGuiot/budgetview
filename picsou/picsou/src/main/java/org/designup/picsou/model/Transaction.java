@@ -9,7 +9,6 @@ import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import static org.globsframework.model.Key.create;
-import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -84,36 +83,9 @@ public class Transaction {
     return transaction.get(BANK_MONTH) * 100 + transaction.get(BANK_DAY);
   }
 
-  public static String stringifyCategories(Glob transaction,
-                                           GlobRepository repository,
-                                           GlobStringifier categoryStringifier) {
-    GlobList categories = getCategories(transaction, repository).sort(Category.ID);
-    int index = 0;
-    StringBuilder builder = new StringBuilder();
-    for (Glob category : categories) {
-      if (index++ > 0) {
-        builder.append(", ");
-      }
-      builder.append(categoryStringifier.toString(category, repository));
-    }
-    return builder.toString();
-  }
-
-  public static boolean isCategorized(Glob transaction, GlobRepository repository) {
-    return !hasNoCategory(transaction) || TransactionToCategory.hasCategories(transaction, repository);
-  }
-
   public static boolean hasNoCategory(Glob transaction) {
     Integer categoryId = transaction.get(CATEGORY);
     return (categoryId == null) || Utils.equal(categoryId, Category.NONE);
-  }
-
-  public static GlobList getCategories(Glob transaction, GlobRepository repository) {
-    GlobList categories = TransactionToCategory.getCategories(transaction.get(Transaction.ID), repository);
-    if (!hasNoCategory(transaction)) {
-      categories.add(0, repository.get(create(Category.TYPE, transaction.get(CATEGORY))));
-    }
-    return categories;
   }
 
   public static void setCategory(Glob transaction, Integer categoryId, GlobRepository repository) {
@@ -122,9 +94,6 @@ public class Transaction {
     try {
       repository.setTarget(transaction.getKey(), CATEGORY, create(Category.TYPE, categoryId));
       repository.update(transaction.getKey(), Transaction.SERIES, Series.OCCASIONAL_SERIES_ID);
-      repository.delete(repository.findByIndex(TransactionToCategory.TRANSACTION_INDEX,
-                                               TransactionToCategory.TRANSACTION,
-                                               transaction.get(Transaction.ID)).getGlobs());
     }
     finally {
       repository.completeBulkDispatchingMode();
@@ -167,6 +136,43 @@ public class Transaction {
 
   public static boolean isPlanned(Glob transaction) {
     return Utils.equal(TransactionType.PLANNED.getId(), transaction.get(Transaction.TRANSACTION_TYPE));
+  }
+
+  public static String anonymise(String labelOrNote) {
+    String[] strings = labelOrNote.split(" ");
+    StringBuilder builder = new StringBuilder();
+    for (String string : strings) {
+      int i = string.length() - 1;
+      boolean ok = true;
+      while (i > 0) {
+        char c = string.charAt(i);
+        if (c >= '0' && c < '9') {
+          ok = false;
+          break;
+        }
+        i--;
+      }
+      if (ok) {
+        builder.append(" ").append(string);
+      }
+    }
+    return builder.toString().replaceAll("  *", " ").trim();
+  }
+
+  public static String anonymise(String node, String label, Integer transactionType) {
+    String labelOrNote;
+    if (TransactionType.getId(TransactionType.CHECK).equals(transactionType)
+        || TransactionType.getId(TransactionType.WITHDRAWAL).equals(transactionType)
+        || TransactionType.getId(TransactionType.DEPOSIT).equals(transactionType)) {
+      labelOrNote = node;
+    }
+    else {
+      labelOrNote = label;
+    }
+    if (labelOrNote == null || labelOrNote.length() == 0) {
+      return null;
+    }
+    return anonymise(labelOrNote);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

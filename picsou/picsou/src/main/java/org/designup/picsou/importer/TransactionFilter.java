@@ -1,7 +1,6 @@
 package org.designup.picsou.importer;
 
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.*;
@@ -11,7 +10,6 @@ import static org.globsframework.utils.Utils.equal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class TransactionFilter {
 
@@ -22,15 +20,6 @@ public class TransactionFilter {
 
     SummaryAccountCreationTrigger.updateSummary(targetRepository);
 
-    for (Glob transaction : createdTransactions) {
-      Set<Integer> categoryIds =
-        targetRepository.findByIndex(TransactionToCategory.TRANSACTION_INDEX, TransactionToCategory.TRANSACTION, transaction.get(Transaction.ID))
-          .getGlobs()
-          .getValueSet(TransactionToCategory.CATEGORY);
-      TransactionToCategory.link(targetRepository,
-                                 transaction.get(Transaction.ID),
-                                 categoryIds.toArray(new Integer[categoryIds.size()]));
-    }
     return createdTransactions;
   }
 

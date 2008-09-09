@@ -18,6 +18,7 @@ import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.Set;
 
+/** @deprecated */
 public class TransactionToCategory {
   public static GlobType TYPE;
 
@@ -33,8 +34,7 @@ public class TransactionToCategory {
   public static MultiFieldUniqueIndex TRANSACTION_INDEX;
 
   static {
-    GlobTypeLoader.init(TransactionToCategory.class, "transactionToCategory")
-      .defineMultiFieldUniqueIndex(TRANSACTION_INDEX, TRANSACTION, CATEGORY);
+    GlobTypeLoader.init(TransactionToCategory.class, "transactionToCategory");
   }
 
   public static void link(GlobRepository repository, Glob transaction, MasterCategory... categories) {

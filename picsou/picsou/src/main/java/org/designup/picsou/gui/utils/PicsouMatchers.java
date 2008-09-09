@@ -44,19 +44,7 @@ public class PicsouMatchers {
         if (categoryId != null) {
           return extendedIdSet.contains(categoryId);
         }
-
-        if (includeNonAffectedTransactions) {
-          return true;
-        }
-
-        Set<Integer> categoryIdsForTransaction =
-          TransactionToCategory.getCategories(transaction, repository).getValueSet(Category.ID);
-        for (Integer id : extendedIdSet) {
-          if (categoryIdsForTransaction.contains(id)) {
-            return true;
-          }
-        }
-        return false;
+        return includeNonAffectedTransactions;
       }
 
       public String toString() {

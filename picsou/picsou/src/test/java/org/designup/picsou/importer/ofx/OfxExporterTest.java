@@ -8,8 +8,7 @@ public class OfxExporterTest extends PicsouTestCase {
   public void test() throws Exception {
     checker.parse(
       repository,
-      "<account id='-1'" +
-      "         balance='12345' updateDate='2006/07/02'/>" +
+      "<account id='-1' balance='12345' updateDate='2006/07/02'/>" +
       "<category name='Dentifrice' innerName='Dentifrice' masterName='health'/>" +
       "" +
       "<bankEntity id='30066'>" +
@@ -27,10 +26,7 @@ public class OfxExporterTest extends PicsouTestCase {
       "<transaction id='3' month='200603' day='23' bankMonth='200603' bankDay='23' amount='-1.3' " +
       "             originalLabel='card3' transactionTypeName='credit_card' account='3' categoryName='Dentifrice'/>" +
       "<transaction id='4' month='200604' day='19' bankMonth='200604' bankDay='19' amount='-45' " +
-      "             originalLabel='card4' transactionTypeName='credit_card' account='3'>" +
-      "  <transactionToCategory transaction='4' categoryName='Dentifrice'/>" +
-      "  <transactionToCategory transaction='4' categoryName='food'/>" +
-      "</transaction>" +
+      "             originalLabel='card4' transactionTypeName='credit_card' account='3'/>" +
       "");
 
     StringWriter writer = new StringWriter();
