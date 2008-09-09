@@ -1,0 +1,13 @@
+C org.designup.picsou.licence.AddUser
+C org.designup.picsou.licence.DbCreateTable
+C org.designup.picsou.licence.servlet.LicenceServer
+C org.designup.picsou.licence.servlet.LicenceGenerator
+C org.mortbay.jetty.RetryRequest
+C javax.servlet.SingleThreadModel
+R logging.properties
+R javax/servlet/LocalStrings.properties
+R javax/servlet/http/LocalStrings.properties
+P com/mysql true
+P com/sun true
+P javax/mail true
+P org/gjt true

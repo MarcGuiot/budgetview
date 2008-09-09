@@ -51,7 +51,7 @@
                     <path refid="maven.runtime.classpath"/>
                   </classpath>
                   <arg
-                    line="picsouLicenseServer.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
+                    line="picsouLicenseServer.jar ${project.build.directory}/../dev/ant/input.txt ${project.build.directory}/../dev/ant/ignore.txt"/>
                 </java>
               </tasks>
             </configuration>
