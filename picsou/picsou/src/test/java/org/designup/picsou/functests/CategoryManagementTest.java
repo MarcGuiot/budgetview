@@ -313,7 +313,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(0, 1)
       .selectTableRow(0)
       .checkContainsEnvelope("Quotidien", "Courant")
-      .editSeries()
+      .editSeries(false)
       .selectSeries("Quotidien")
       .checkCategory("Courant")
       .validate();
@@ -329,7 +329,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .selectTableRow(0)
       .checkContainsEnvelope("Quotidien", MasterCategory.FOOD);
 
-    categorization.editSeries()
+    categorization.editSeries(false)
       .selectSeries("Quotidien")
       .checkCategory(MasterCategory.FOOD)
       .validate();

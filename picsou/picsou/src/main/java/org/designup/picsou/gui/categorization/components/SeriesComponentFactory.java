@@ -5,26 +5,36 @@ import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
 public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
   ButtonGroup seriesGroup = new ButtonGroup();
+  private DefaultChangeSetListener seriesUpdateListener;
 
   public SeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository localRepository, Directory directory) {
     super(invisibleToggle, localRepository, directory);
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
-    String toggleLabel = seriesStringifier.toString(series, repository);
+    String toggleLabel = seriesStringifier.toString(new GlobList(series), repository);
     final Key seriesKey = series.getKey();
     final Key categoryKey = series.getTargetKey(Series.DEFAULT_CATEGORY);
     final JToggleButton toggle = createSeriesToggle(toggleLabel, seriesKey, categoryKey);
+    seriesUpdateListener = new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(seriesKey)) {
+          Glob series = repository.find(seriesKey);
+          if (series != null) {
+            toggle.setText(seriesStringifier.toString(new GlobList(series), repository));
+          }
+        }
+      }
+    };
+    repository.addChangeListener(seriesUpdateListener);
     seriesGroup.add(toggle);
 
     final GlobSelectionListener listener = new GlobSelectionListener() {
@@ -47,6 +57,7 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
 
     cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
       public void dispose() {
+        repository.removeChangeListener(seriesUpdateListener);
         selectionService.removeListener(listener);
         seriesGroup.remove(toggle);
       }

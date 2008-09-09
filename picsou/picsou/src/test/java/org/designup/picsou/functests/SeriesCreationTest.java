@@ -123,4 +123,5 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRows(3);
     categorization.checkNoBudgetAreaSelected();
   }
+
 }

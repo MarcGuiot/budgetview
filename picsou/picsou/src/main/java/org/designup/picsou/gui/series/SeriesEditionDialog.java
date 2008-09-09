@@ -73,7 +73,7 @@ public class SeriesEditionDialog {
     this.repository = repository;
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     localRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(Category.TYPE, BudgetArea.TYPE, Month.TYPE, SeriesToCategory.TYPE)
+      .copy(Category.TYPE, BudgetArea.TYPE, Month.TYPE, SeriesToCategory.TYPE, Transaction.TYPE)
       .get();
 
     localRepository.addTrigger(new SeriesBudgetTrigger());
@@ -527,12 +527,39 @@ public class SeriesEditionDialog {
   }
 
   private class DeleteSeriesAction extends AbstractAction {
+    private GlobList seriesToDelete = GlobList.EMPTY;
+    private SeriesDeleteDialog seriesDeleteDialog;
+
     public DeleteSeriesAction() {
       super("delete");
-      setEnabled(false);
+      selectionService.addListener(new GlobSelectionListener() {
+        public void selectionUpdated(GlobSelection selection) {
+          seriesToDelete = selection.getAll(Series.TYPE);
+          setEnabled(!seriesToDelete.isEmpty());
+        }
+      }, Series.TYPE);
+      seriesDeleteDialog = new SeriesDeleteDialog(localRepository, localDirectory, dialog);
     }
 
     public void actionPerformed(ActionEvent e) {
+      if (seriesToDelete.isEmpty()) {
+        return;
+      }
+      Set<Integer> series = seriesToDelete.getValueSet(Series.ID);
+      GlobList transactionsForSeries = localRepository.getAll(Transaction.TYPE, fieldIn(Transaction.SERIES, series));
+      if (transactionsForSeries.isEmpty()) {
+        localRepository.delete(seriesToDelete);
+      }
+      else {
+        if (seriesDeleteDialog.show()) {
+          localRepository.delete(seriesToDelete);
+          for (Glob transaction : transactionsForSeries) {
+            localRepository.update(transaction.getKey(), Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
+          }
+          GlobList seriesToCategory = localRepository.getAll(SeriesToCategory.TYPE, fieldIn(SeriesToCategory.SERIES, series));
+          localRepository.delete(seriesToCategory);
+        }
+      }
     }
   }
 
