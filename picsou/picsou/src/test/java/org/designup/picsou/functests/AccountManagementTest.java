@@ -24,8 +24,6 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAccountsAreUpdatedDuringSubsequentImports() throws Exception {
-    learn("EDF", MasterCategory.HOUSE);
-    learn("GDF", MasterCategory.HOUSE);
     OfxBuilder
       .init(this)
       .addBankAccount(30003, 12345, "123123123", 0.20, "2006/01/30")

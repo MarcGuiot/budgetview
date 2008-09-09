@@ -9,31 +9,12 @@ import org.uispec4j.Button;
 import org.uispec4j.Panel;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     setCurrentDate(Dates.parse("2006/01/10"));
     super.setUp();
-  }
-
-  // TODO CategorizationView
-  public void testOccasionalCategoriesList() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -1.1, "Blah")
-      .load();
-
-    List<MasterCategory> proposedCategories = new ArrayList<MasterCategory>();
-    proposedCategories.addAll(Arrays.asList(MasterCategory.values()));
-    proposedCategories.remove(MasterCategory.ALL);
-    proposedCategories.remove(MasterCategory.NONE);
-    String[] names = categories.getSortedCategoryNames(proposedCategories);
-
-    transactions.openCategorizationDialog(0).checkContainsOccasionalCategories(names);
   }
 
   public void testAllocation() throws Exception {
@@ -53,7 +34,8 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .add(MasterCategory.NONE, 0.0, 0.0, 2.2, 1.0)
       .check();
 
-    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
+    assignCategory("MiamMiam", MasterCategory.FOOD);
+
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "MiamMiam", "", -1.1, MasterCategory.FOOD)
@@ -67,28 +49,11 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testUserAllocationErasesPreviousMultiAllocations() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -1.1, "Menu K", MasterCategory.FOOD, MasterCategory.LEISURES)
-      .load();
-    transactions
-      .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD, MasterCategory.LEISURES)
-      .check();
-
-    transactions.assignOccasionalSeries(MasterCategory.HEALTH, 0);
-    transactions
-      .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.HEALTH)
-      .check();
-  }
-
   public void testAllocationToInternalTransfer() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
-      .addTransaction("2006/01/11", -3.3, "MiamMiam")
+      .addTransaction("2006/01/11", -3.3, "Virt")
       .load();
     categories
       .initContent()
@@ -96,7 +61,8 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .add(MasterCategory.NONE, 0.0, 0.0, 4.4, 1.0)
       .check();
 
-    transactions.assignOccasionalSeries(MasterCategory.INTERNAL, 0);
+    assignCategory("Virt", MasterCategory.INTERNAL);
+
     categories
       .initContent()
       .add(MasterCategory.ALL, 0.0, 0.0, -1.1, 1.0)
@@ -105,7 +71,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testAllocatingInPreviousMonthsDoesNotChangeTheSelection() throws Exception {
+  public void testAllocatingInPreviousMonthsDoesNotChangeTheSelectedCategory() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.0, "Menu K")
@@ -121,7 +87,8 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .check();
     categories.assertSelectionEquals(MasterCategory.NONE);
 
-    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
+    assignCategory("Menu K", MasterCategory.FOOD);
+
     categories.assertSelectionEquals(MasterCategory.NONE);
     timeline.checkSelection("2006/01");
 
@@ -134,10 +101,11 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .load();
 
-    Button lintToClasified = new Panel((Container)transactions.getTable().getSwingRendererComponentAt(0, 1)).getButton();
-    assertTrue(lintToClasified.foregroundEquals("red"));
+    Button lintToCategorized = new Panel((Container)transactions.getTable().getSwingRendererComponentAt(0, 1)).getButton();
+    assertTrue(lintToCategorized.foregroundEquals("red"));
 
-    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
+    assignCategory("Menu K", MasterCategory.FOOD);
+
     transactions.getTable().clearSelection();
     Button categorizedLink = new Panel((Container)transactions.getTable().getSwingRendererComponentAt(0, 1)).getButton();
     assertTrue(categorizedLink.foregroundEquals("black"));
@@ -159,75 +127,9 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testAllocationOfCategoryIsPropagated() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/13", -1.0, "Menu K")
-      .addTransaction("2006/01/12", -1.0, "MacDo")
-      .addTransaction("2006/01/11", -1.0, "Menu K")
-      .addTransaction("2006/01/10", -1.0, "Quick")
-      .load();
-    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
-    transactions
-      .initContent()
-      .add("13/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.0, MasterCategory.FOOD)
-      .add("12/01/2006", TransactionType.PRELEVEMENT, "MacDo", "", -1.0, MasterCategory.NONE)
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.0, MasterCategory.FOOD)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Quick", "", -1.0, MasterCategory.NONE)
-      .check();
-  }
-
-  public void testPropagationIgnoresDigitsInLabels() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/11", -1.0, "Menu 14")
-      .addTransaction("2006/01/10", -1.0, "Menu 12321")
-      .load();
-    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
-    transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Menu 14", "", -1.0, MasterCategory.FOOD)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu 12321", "", -1.0, MasterCategory.FOOD)
-      .check();
-  }
-
-  public void testNoPropagationForChecks() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/11", -1.0, "Cheque 123")
-      .addTransaction("2006/01/10", -1.0, "Cheque 234")
-      .load();
-    transactions.assignOccasionalSeries(MasterCategory.FOOD, 0);
-    transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 123", "", -1.0, MasterCategory.FOOD)
-      .add("10/01/2006", TransactionType.CHECK, "CHEQUE N. 234", "", -1.0)
-      .check();
-  }
-
-  public void testAllocationOfNoteOnCheckWithdrawalAndDeposit() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/13", -1.0, "CHEQUE 1")
-      .addTransaction("2006/01/13", -2.0, "CHEQUE 1")
-      .addTransaction("2006/01/12", -1.0, "RETRAIT 12")
-      .addTransaction("2006/01/12", -2.0, "RETRAIT 12")
-      .addTransaction("2006/01/11", -1.0, "REM CHQ 4")
-      .addTransaction("2006/01/11", -2.0, "REM CHQ 4")
-      .addTransactionWithNote("2006/01/10", -1.0, "2", "note 1")
-      .load();
-    transactions.assignOccasionalSeries(MasterCategory.PUERICULTURE, 0, 2, 4);
-    categories.select(MasterCategory.ALL);
-    timeline.selectMonth("2006/01");
-    transactions
-      .initContent()
-      .add("13/01/2006", TransactionType.CHECK, "CHEQUE N. 1", "", -1.0, MasterCategory.PUERICULTURE)
-      .add("13/01/2006", TransactionType.CHECK, "CHEQUE N. 1", "", -2.0, MasterCategory.NONE)
-      .add("12/01/2006", TransactionType.WITHDRAWAL, "RETRAIT 12", "", -1.0, MasterCategory.PUERICULTURE)
-      .add("12/01/2006", TransactionType.WITHDRAWAL, "RETRAIT 12", "", -2.0, MasterCategory.NONE)
-      .add("11/01/2006", TransactionType.DEPOSIT, "REMISE CHEQUES 4", "", -1.0, MasterCategory.PUERICULTURE)
-      .add("11/01/2006", TransactionType.DEPOSIT, "REMISE CHEQUES 4", "", -2.0, MasterCategory.NONE)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "2", "note 1", -1.0, MasterCategory.NONE)
-      .check();
+  private void assignCategory(String label, MasterCategory category) {
+    views.selectCategorization();
+    categorization.setOccasional(label, category);
+    views.selectData();
   }
 }

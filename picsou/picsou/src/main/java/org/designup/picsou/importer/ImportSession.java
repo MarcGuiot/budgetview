@@ -1,6 +1,5 @@
 package org.designup.picsou.importer;
 
-import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
@@ -52,7 +51,7 @@ public class ImportSession {
 
   public List<String> loadFile(File file) throws IOException, TruncatedFile {
     localRepository.reset(GlobList.EMPTY,
-                          Transaction.TYPE, TransactionToCategory.TYPE, LabelToCategory.TYPE,
+                          Transaction.TYPE, LabelToCategory.TYPE,
                           ImportedTransaction.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
@@ -117,10 +116,6 @@ public class ImportSession {
       updateImportAggregator.dispose();
       referenceRepository.apply(importChangeSet);
       referenceRepository.apply(updateImportChangeSet);
-      AllocationLearningService learningService = directory.get(AllocationLearningService.class);
-      for (Map.Entry<Integer, List<Glob>> transactions : transactionByAccountId.values()) {
-        learningService.setCategories(transactions.getValue(), referenceRepository);
-      }
     }
     finally {
       referenceRepository.completeBulkDispatchingMode();

@@ -1,12 +1,14 @@
 package org.designup.picsou.importer.ofx;
 
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Category;
+import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobUtils;
 
 import java.io.Writer;
 import java.util.Collections;
@@ -73,22 +75,14 @@ public class OfxExporter {
                                    transaction.get(Transaction.ID),
                                    transaction.get(Transaction.ORIGINAL_LABEL));
 
-    GlobList categories =
-      GlobUtils.getTargets(
-        repository.findByIndex(TransactionToCategory.TRANSACTION_INDEX, TransactionToCategory.TRANSACTION,
-                               transaction.get(Transaction.ID)).getGlobs(),
-        TransactionToCategory.CATEGORY, repository)
-        .sort(Category.NAME);
-    categories.add(repository.findLinkTarget(transaction, Transaction.CATEGORY));
-    for (Glob category : categories) {
-      if (category != null && !category.get(Category.ID).equals(MasterCategory.NONE.getId())) {
-        if (Category.isMaster(category)) {
-          writeCategory("", writer, category);
-        }
-        else {
-          writeCategory("", writer, repository.get(Key.create(Category.TYPE, category.get(Category.MASTER))));
-          writeCategory("sub", writer, category);
-        }
+    Glob category = repository.findLinkTarget(transaction, Transaction.CATEGORY);
+    if (category != null && !category.get(Category.ID).equals(MasterCategory.NONE.getId())) {
+      if (Category.isMaster(category)) {
+        writeCategory("", writer, category);
+      }
+      else {
+        writeCategory("", writer, repository.get(Key.create(Category.TYPE, category.get(Category.MASTER))));
+        writeCategory("sub", writer, category);
       }
     }
 

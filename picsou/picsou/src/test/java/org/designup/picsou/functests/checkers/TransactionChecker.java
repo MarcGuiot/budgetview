@@ -27,11 +27,9 @@ public class TransactionChecker extends ViewChecker {
   public static final String TO_CATEGORIZE = "To categorize";
 
   private Table table;
-  private TransactionDetailsChecker transactionDetails;
 
   public TransactionChecker(Window window) {
     super(window);
-    this.transactionDetails = new TransactionDetailsChecker(window);
   }
 
   public void checkHeader(String... columnNames) {
@@ -72,15 +70,18 @@ public class TransactionChecker extends ViewChecker {
     chooseCategoryViaButtonClick(category, rows[0]);
   }
 
+  /** @deprecated */
   public void assignCategoryWithoutSelection(MasterCategory category, int row) {
     chooseCategoryViaButtonClick(category, row);
   }
 
+  /** @deprecated */
   public void assignCategory(MasterCategory master, String subCategory, int... rows) {
     getTable().selectRows(rows);
     chooseCategoryViaButtonClick(master, subCategory, rows[0]);
   }
 
+  /** @deprecated */
   public void assignCategoryViaKeyboard(MasterCategory category, int modifier, final int... rows) {
     getTable().selectRows(rows);
     chooseCategoryViaKeyboard(category, modifier);
@@ -118,19 +119,11 @@ public class TransactionChecker extends ViewChecker {
     checker.selectOccasionalSeries(category);
   }
 
-  static String stringifyCategoryNames(MasterCategory... categories) {
-    if ((categories.length == 0) || ((categories.length == 1) && categories[0].equals(MasterCategory.NONE))) {
+  static String stringifyCategoryNames(MasterCategory category) {
+    if ((category == null) || category.equals(MasterCategory.NONE)) {
       return TO_CATEGORIZE;
     }
-    int index = 0;
-    StringBuilder builder = new StringBuilder();
-    for (MasterCategory category : categories) {
-      if (index++ > 0) {
-        builder.append(", ");
-      }
-      builder.append(getCategoryName(category));
-    }
-    return builder.toString();
+    return getCategoryName(category);
   }
 
   private static String stringifySubCategoryNames(String... categories) {
@@ -176,17 +169,16 @@ public class TransactionChecker extends ViewChecker {
     }
 
     public ContentChecker add(String date, TransactionType type, String label,
-                              String note, double amount, MasterCategory category, MasterCategory... categories) {
-      add(date, type, label, note, amount, stringifyCategories(category, categories));
+                              String note, double amount, MasterCategory category) {
+      add(date, type, label, note, amount, stringifyCategory(category));
       return this;
     }
 
-    private String stringifyCategories(MasterCategory category, MasterCategory... categories) {
+    private String stringifyCategory(MasterCategory category) {
       if (MasterCategory.NONE.equals(category)) {
-        return stringifyCategoryNames(categories);
+        return TO_CATEGORIZE;
       }
-      return getCategoryName(category) +
-             (categories.length == 0 ? "" : ", " + stringifyCategoryNames(categories));
+      return getCategoryName(category);
     }
 
     public void dumpCode() {

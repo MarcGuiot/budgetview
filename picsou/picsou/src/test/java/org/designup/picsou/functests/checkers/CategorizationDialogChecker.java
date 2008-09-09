@@ -579,82 +579,81 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   public void setExceptionalIncome(String label, String seriesName, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
-    int[] rows = new int[]{rowIndex};
-    selectTableRows(rows);
+    selectTableRow(getRowIndex(label));
     selectIncome();
     selectExceptionalIncomeSeries(seriesName, showSeriesInitialization);
   }
 
-  public void setIncome(String label, String seriesName, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
-    int[] rows = new int[]{rowIndex};
-    selectTableRows(rows);
+  public CategorizationDialogChecker setIncome(String label, String seriesName, boolean showSeriesInitialization) {
+    selectTableRows(getRowIndex(label));
     selectIncome();
     selectIncomeSeries(seriesName, showSeriesInitialization);
+    return this;
   }
 
-  public void setRecurring(int rowIndex, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
-    if (rowIndex < 0) {
-      fail("Invalid row index " + rowIndex);
-    }
-
-    int[] rows = new int[]{rowIndex};
-    selectTableRows(rows);
+  public CategorizationDialogChecker setRecurring(int rowIndex, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
+    selectTableRow(rowIndex);
     selectRecurring();
     selectRecurringSeries(seriesName, category, showSeriesInitialization);
+    return this;
   }
 
-  public void setRecurring(String label, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
-    setRecurring(rowIndex, seriesName, category, showSeriesInitialization);
+  public CategorizationDialogChecker setRecurring(String label, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
+    setRecurring(getRowIndex(label), seriesName, category, showSeriesInitialization);
+    return this;
   }
 
-  public void setEnvelope(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    int[] rows = new int[]{rowIndex};
-    selectTableRows(rows);
+  private int getRowIndex(String label) {
+    return getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
+  }
+
+  public CategorizationDialogChecker setEnvelope(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+    selectTableRows(rowIndex);
     selectEnvelopes();
     selectEnvelopeSeries(seriesName, master, showSeriesInitialization);
+    return this;
   }
 
-  public void setEnvelope(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
-    setEnvelope(rowIndex, seriesName, master, showSeriesInitialization);
+  public CategorizationDialogChecker setEnvelope(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+    setEnvelope(getRowIndex(label), seriesName, master, showSeriesInitialization);
+    return this;
   }
 
-  public void setOccasional(String label, MasterCategory category) {
-    int rowIndex = getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
-    setOccasional(rowIndex, category);
+  public CategorizationDialogChecker setOccasional(String label, MasterCategory category) {
+    setOccasional(getRowIndex(label), category);
+    return this;
   }
 
-  public void setOccasional(int rowIndex, MasterCategory category) {
-    int[] rows = new int[]{rowIndex};
-    selectTableRows(rows);
+  public CategorizationDialogChecker setOccasional(int rowIndex, MasterCategory category) {
+    selectTableRow(rowIndex);
     selectOccasional();
     selectOccasionalSeries(category);
+    return this;
   }
 
-  public void setProject(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
-    setProject(rowIndex, seriesName, master, showSeriesInitialization);
+  public CategorizationDialogChecker setProject(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+    setProject(getRowIndex(label), seriesName, master, showSeriesInitialization);
+    return this;
   }
 
-  public void setProject(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationDialogChecker setProject(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
     int[] rows = new int[]{rowIndex};
     selectTableRows(rows);
     selectProjects();
     selectProjectSeries(seriesName, master, showSeriesInitialization);
+    return this;
   }
 
-  public void setSavings(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    int rowIndex = getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
-    setSavings(rowIndex, seriesName, master, showSeriesInitialization);
+  public CategorizationDialogChecker setSavings(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+    setSavings(getRowIndex(label), seriesName, master, showSeriesInitialization);
+    return this;
   }
 
-  public void setSavings(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationDialogChecker setSavings(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
     int[] rows = new int[]{rowIndex};
     selectTableRows(rows);
     selectSavings();
     selectSavingsSeries(seriesName, master, showSeriesInitialization);
+    return this;
   }
 }

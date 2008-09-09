@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.utils;
 
-import org.designup.picsou.client.AllocationLearningService;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
@@ -11,6 +10,7 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.LabelToCategory;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -136,15 +136,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public OperationChecker getOperations() {
     return operations;
-  }
-
-  public void learn(String label, MasterCategory category) {
-    String anonyme = AllocationLearningService.anonymise(label, label, null);
-    repository.create(Key.create(LabelToCategory.TYPE, repository.getIdGenerator()
-      .getNextId(LabelToCategory.ID, 1)),
-                      FieldValue.value(LabelToCategory.LABEL, anonyme),
-                      FieldValue.value(LabelToCategory.COUNT, 1),
-                      FieldValue.value(LabelToCategory.CATEGORY, category.getId()));
   }
 
   protected String getCategoryName(MasterCategory master) {

@@ -4,15 +4,12 @@ import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.PicsouTableHeaderCustomizer;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
-import org.designup.picsou.gui.description.TransactionCategoriesStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import static org.designup.picsou.model.Transaction.TYPE;
-import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobSelection;
@@ -23,9 +20,6 @@ import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
@@ -37,9 +31,8 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import java.awt.*;
-import java.util.Set;
 
-public class TransactionView extends View implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
+public class TransactionView extends View implements GlobSelectionListener, ColorChangeListener {
   public static final int DATE_COLUMN_INDEX = 0;
   public static final int CATEGORY_COLUMN_INDEX = 1;
   public static final int LABEL_COLUMN_INDEX = 2;
@@ -61,21 +54,10 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
     this.transactionSelection = transactionSelection;
     directory.get(ColorService.class).addListener(this);
     transactionSelection.addListener(this);
-    repository.addChangeListener(this);
   }
 
   public void selectionUpdated(GlobSelection selection) {
     updateFilter();
-  }
-
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(TransactionToCategory.TYPE)) {
-      view.refresh();
-    }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    view.reset();
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -128,7 +110,6 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
                                                    TransactionRendererColors rendererColors) {
     TransactionComparator comparator = TransactionComparator.DESCENDING;
 
-    GlobStringifier categoryStringifier = descriptionService.getStringifier(Category.TYPE);
     GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
 
     GlobTableView view = GlobTableView.init(TYPE, repository, comparator, directory);
@@ -145,7 +126,7 @@ public class TransactionView extends View implements GlobSelectionListener, Chan
     view
       .addColumn(Lang.get("date"), new TransactionDateStringifier(comparator), LabelCustomizers.font(dateFont))
       .addColumn(Lang.get("category"), seriesColumn, seriesColumn,
-                 new TransactionCategoriesStringifier(categoryStringifier).getComparator(repository))
+                 seriesColumn.getComparator())
       .addColumn(Lang.get("label"),
                  descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.bold())
       .addColumn(Lang.get("amount"), amountColumn, amountStringifier.getComparator(repository));

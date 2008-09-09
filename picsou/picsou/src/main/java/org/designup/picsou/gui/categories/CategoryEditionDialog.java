@@ -44,8 +44,7 @@ public class CategoryEditionDialog {
     this.repository = repository;
     this.directory = directory;
     localRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(Category.TYPE, Transaction.TYPE, Series.TYPE, SeriesToCategory.TYPE,
-            TransactionToCategory.TYPE).get();
+      .copy(Category.TYPE, Transaction.TYPE, Series.TYPE, SeriesToCategory.TYPE).get();
     masterDirectory = new DefaultDirectory(directory);
     masterDirectory.add(new SelectionService());
 

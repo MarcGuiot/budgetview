@@ -14,6 +14,10 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
+  public void runBare() throws Throwable {
+    System.out.println("=========  TransactionSplittingTest.runBare: test " + getName() + " DESACTIVE ============");
+  }
+
   public void testStandardUsage() throws Exception {
     OfxBuilder
       .init(this)
