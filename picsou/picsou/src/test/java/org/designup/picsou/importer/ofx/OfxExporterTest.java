@@ -126,9 +126,6 @@ public class OfxExporterTest extends PicsouTestCase {
       "            <TRNAMT>-45.0\n" +
       "            <FITID>PICSOU4\n" +
       "            <NAME>card4\n" +
-      "            <CATEGORY>2\n" +
-      "            <CATEGORY>5\n" +
-      "            <SUBCATEGORY>21\n" +
       "          </STMTTRN>\n" +
       "     </BANKTRANLIST>\n" +
       "     <LEDGERBAL>\n" +

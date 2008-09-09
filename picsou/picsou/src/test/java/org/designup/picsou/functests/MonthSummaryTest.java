@@ -150,12 +150,23 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/26", -10, "FNAC")
       .addTransaction("2008/08/26", -15, "Virgin")
       .load();
-    views.selectHome();
 
+    views.selectHome();
     monthSummary.init()
       .checkIncome(0, 0)
       .checkOccasional(0, 0);
 
+    views.selectCategorization();
+    categorization
+      .checkTable(new Object[][]{
+        {"26/08/2008", "Company", 1000.0},
+        {"26/08/2008", "FNAC", -10.0},
+        {"26/08/2008", "Virgin", -15.0},
+      });
+    categorization.setIncome("Company", "Salary", true);
+    categorization.setOccasional("FNAC", MasterCategory.LEISURES);
+    
+    views.selectHome();
     monthSummary.init()
       .checkIncome(1000, 1000)
       .checkOccasional(10, 1000);

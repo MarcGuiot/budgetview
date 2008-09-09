@@ -405,11 +405,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization
       .disableAutoHide()
+      .selectTableRow(0)
       .selectEnvelopes()
       .selectEnvelopeSeries("courant", MasterCategory.FOOD, false)
       .selectEnvelopeSeries("courant", MasterCategory.CLOTHING, false);
     
     views.selectData();
+    transactions.getTable().selectRow(0);
     transactionDetails.checkCategory(MasterCategory.CLOTHING);
     transactionDetails.checkSeries("courant");
   }

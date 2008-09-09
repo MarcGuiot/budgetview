@@ -184,9 +184,11 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   private Panel getRecurringSeriesPanel() {
-    Panel panel = this.getPanel().getPanel("recurringSeriesChooser");
-    assertTrue(panel.isVisible());
-    return panel;
+    Panel panel = getPanel();
+    assertTrue(panel.containsUIComponent(Panel.class, "recurringSeriesChooser"));
+    Panel recurringSeriesPanel = panel.getPanel("recurringSeriesChooser");
+    assertTrue(recurringSeriesPanel.isVisible());
+    return recurringSeriesPanel;
   }
 
   public CategorizationDialogChecker checkRecurringSeriesIsSelected(String seriesName) {
