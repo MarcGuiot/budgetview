@@ -5,7 +5,7 @@
 
   <panel ui="dialog">
 
-    <column margin="20">
+    <column styleClass="innerDialog">
 
       <panel weightY="0" anchor="north" fill="both" marginTop="0" marginBottom="5">
         <column margin="10">

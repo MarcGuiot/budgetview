@@ -23,6 +23,10 @@
 
 - TimeView : mettre en evidence les mois sans transactions
 
+Budgetview
+* Afficher la difference releve/prevu sous la barre dans l'affichage des totaux
+
+
 Login
 -----
 - Supprimer logo

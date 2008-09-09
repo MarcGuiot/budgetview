@@ -79,7 +79,6 @@ public class SplitDialogChecker {
     }));
     dialog.selectEnvelopes();
     dialog.selectEnvelopeSeries("groceries", category, showSeriesInitialization);
-    dialog.validate();
     return this;
   }
 
@@ -91,7 +90,6 @@ public class SplitDialogChecker {
     }));
     dialog.selectOccasional();
     dialog.selectOccasionalSeries(category);
-    dialog.validate();
     return this;
   }
 
@@ -103,7 +101,6 @@ public class SplitDialogChecker {
     }));
     dialog.selectRecurring();
     dialog.selectRecurringSeries(name, category, showSeriesInitialization);
-    dialog.validate();
     return this;
   }
 

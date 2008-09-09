@@ -11,6 +11,7 @@ import org.uispec4j.interception.WindowInterceptor;
 
 public class OfxExportTest extends LoggedInFunctionalTestCase {
 
+  // TODO CategorizationView
   public void testExport() throws Exception {
     OfxBuilder
       .init(this)

@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
 import org.designup.picsou.functests.checkers.CategoryEditionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -169,8 +168,10 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/15", -2.0, "MenuK", MasterCategory.FOOD)
       .load();
-    categories.select(MasterCategory.ALL);
-    transactions.openCategorizationDialog(0).checkContainsOccasionalCategories(remove(expectedCategories, "All categories", "Unassigned"));
+
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.checkContainsOccasionalCategories(remove(expectedCategories, "All categories", "Unassigned"));
   }
 
   public void testCreatingASiblingSubCategory() throws Exception {
@@ -283,36 +284,33 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
 
     categories.select(MasterCategory.ALL);
 
-    CategorizationDialogChecker categorisation = transactions.categorize(0, 1);
-    categorisation.selectEnvelopes();
-    categorisation.createEnvelopeSeries()
+    views.selectCategorization();
+    categorization.selectTableRows(0, 1);
+    categorization.selectEnvelopes();
+    categorization.createEnvelopeSeries()
       .setName("Quotidien")
       .setCategory("Apero", "Courant")
       .validate();
-    categorisation.selectTableRow(0);
-    categorisation.selectEnvelopes();
-    categorisation.selectEnvelopeSeries("Quotidien", "Courant");
-    categorisation.selectTableRow(1);
-    categorisation.selectEnvelopes();
-    categorisation.selectEnvelopeSeries("Quotidien", "Apero");
-    categorisation.validate();
+    categorization.selectTableRow(0);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Quotidien", "Courant");
+    categorization.selectTableRow(1);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Quotidien", "Apero");
 
+    views.selectData();
     categories.select("Apero");
     categories.deleteSubSelected("Courant");
-
     categories.assertSelectionEquals("Courant");
-
     categories.select(MasterCategory.ALL);
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -1.00, "Quotidien")
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.00, "Quotidien")
       .check();
-    views.selectData();
-//    categories.getTable()
-//      .containsRow(new Object[]{"Courant", "-2"}).check();
 
-    transactions.categorize(0, 1)
+    views.selectCategorization();
+    categorization.selectTableRows(0, 1)
       .selectTableRow(0)
       .checkContainsEnvelope("Quotidien", "Courant")
       .editSeries()
@@ -320,21 +318,22 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .checkCategory("Courant")
       .validate();
 
+    views.selectData();
     categories.select("Courant");
     categories.deleteSubSelected(MasterCategory.FOOD);
     categories.getTable()
       .containsRow(new Object[]{getCategoryName(MasterCategory.FOOD), "-34"});
 
-    transactions.categorize(0, 1).selectEnvelopes()
+    views.selectCategorization();
+    categorization.selectTableRows(0, 1)
       .selectTableRow(0)
-      .checkContainsEnvelope("Quotidien", MasterCategory.FOOD)
-      .editSeries()
+      .checkContainsEnvelope("Quotidien", MasterCategory.FOOD);
+
+    categorization.editSeries()
       .selectSeries("Quotidien")
       .checkCategory(MasterCategory.FOOD)
       .validate();
-
   }
-
 
   public void testRenameSubcategory() throws Exception {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");

@@ -14,26 +14,38 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
+  // TODO CategorizationView
   public void testFirstSeriesInitialization() throws Exception {
     LicenseChecker.enterLicense(mainWindow, "admin", "", 24);
     OfxBuilder.init(this)
       .addTransaction("2008/07/08", -29.9, "free telecom")
       .load();
     timeline.assertSpanEquals("2008/07", "2010/07");
-    transactions.setRecurring(0, "Internet", MasterCategory.TELECOMS, true);
+
+    views.selectCategorization();
+    categorization.setRecurring(0, "Internet", MasterCategory.TELECOMS, true);
+
     timeline.selectMonth("2008/07");
+
+    views.selectData();
     transactions.initContent()
       .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, "Internet")
       .check();
+
     views.selectHome();
+
     timeline.selectMonth("2008/07");
     monthSummary.init()
       .checkRecurring(29.9)
       .checkPlannedRecurring(29.9);
+
     timeline.selectMonth("2008/08");
+    views.selectData();
     transactions.initContent()
       .add("08/08/2008", TransactionType.PLANNED, "Internet", "", -29.90, "Internet")
       .check();
+
+    views.selectHome();
     monthSummary.init()
       .checkRecurring(0)
       .checkPlannedRecurring(29.9);

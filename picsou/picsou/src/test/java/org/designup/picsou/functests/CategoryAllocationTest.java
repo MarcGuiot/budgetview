@@ -20,6 +20,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
+  // TODO CategorizationView
   public void testOccasionalCategoriesList() throws Exception {
     OfxBuilder
       .init(this)

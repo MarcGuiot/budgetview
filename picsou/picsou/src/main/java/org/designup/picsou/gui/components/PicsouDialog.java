@@ -41,9 +41,15 @@ public class PicsouDialog extends JDialog {
     JPanel contentPane = GridBagBuilder.init()
       .add(panel, 0, 0, 2, 1, Gui.NO_INSETS)
       .add(Box.createHorizontalGlue(), 0, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER)
-      .add(new JButton(action), 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS)
+      .add(createButton(action), 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS)
       .getPanel();
     setContentPane(contentPane);
+  }
+
+  private JButton createButton(Action action) {
+    JButton button = new JButton(action);
+    button.setOpaque(false);
+    return button;
   }
 
   public static PicsouDialog createWithButtons(String name, Window owner, JPanel panel, Action ok, Action cancel, Directory directory) {
@@ -66,8 +72,8 @@ public class PicsouDialog extends JDialog {
 
     builder.add(Box.createHorizontalGlue(), 0, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER);
 
-    JButton cancelButton = new JButton(cancel);
-    JButton okButton = new JButton(ok);
+    JButton cancelButton = createButton(cancel);
+    JButton okButton = createButton(ok);
     adjustSizes(cancelButton, okButton);
 
     Insets buttonInsets = new Insets(0, 10, 10, 10);

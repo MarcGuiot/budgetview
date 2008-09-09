@@ -114,7 +114,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     dialog.selectTableRow(0);
     dialog.selectOccasional();
     dialog.selectOccasionalSeries(MasterCategory.LEISURES);
-    dialog.validate();
 
     monthSummary.init()
       .total(1000, 10, true)
@@ -131,7 +130,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     secondDialog.selectTableRow(0);
     secondDialog.selectIncome();
     secondDialog.selectIncomeSeries("Salary", true);
-    secondDialog.validate();
 
     monthSummary.init()
       .total(1000, 10, true)
@@ -153,20 +151,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary.init()
       .checkIncome(0, 0)
       .checkOccasional(0, 0);
-
-    monthSummary.init().categorize()
-      .checkTable(new Object[][]{
-        {"26/08/2008", "Company", 1000.0},
-        {"26/08/2008", "FNAC", -10.0},
-        {"26/08/2008", "Virgin", -15.0},
-      })
-      .selectTableRow(0)
-      .selectIncome()
-      .selectIncomeSeries("Salary", true)
-      .selectTableRow(1)
-      .selectOccasional()
-      .selectOccasionalSeries(MasterCategory.LEISURES)
-      .validate();
 
     monthSummary.init()
       .checkIncome(1000, 1000)

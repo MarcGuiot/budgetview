@@ -40,6 +40,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected LicenseChecker license;
   protected MonthSummaryChecker monthSummary;
   protected BudgetViewChecker budgetView;
+  protected CategorizationDialogChecker categorization;
   private PicsouApplication picsouApplication;
   private Date currentDate = Dates.parse("2008/08/31");
 
@@ -105,6 +106,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     title = new TitleChecker(mainWindow);
     monthSummary = new MonthSummaryChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
+    categorization = new CategorizationDialogChecker(mainWindow);
     license = new LicenseChecker(mainWindow);
   }
 
@@ -126,6 +128,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     repository = null;
     monthSummary = null;
     budgetView = null;
+    categorization = null;
     picsouApplication.shutdown();
     picsouApplication = null;
     license = null;

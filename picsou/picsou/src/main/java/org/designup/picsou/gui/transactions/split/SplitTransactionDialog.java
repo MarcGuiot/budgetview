@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.transactions.split;
 
-import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderCustomizer;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
@@ -184,9 +183,11 @@ public class SplitTransactionDialog {
         }
 
         public void actionPerformed(ActionEvent e) {
-          CategorizationDialog categorizationDialog =
-            new CategorizationDialog(dialog, repositoryForSplitPanel, directoryForSplitPanel);
-          categorizationDialog.show(new GlobList(splittedTransaction), false);
+          // TODO
+          System.out.println("SplitTransactionDialog.actionPerformed: TODO");
+//          CategorizationDialog categorizationDialog =
+//            new CategorizationDialog(repositoryForSplitPanel, directoryForSplitPanel);
+//          categorizationDialog.show(new GlobList(splittedTransaction), false);
         }
       };
 
@@ -248,9 +249,11 @@ public class SplitTransactionDialog {
         }
 
         public void actionPerformed(ActionEvent e) {
-          CategorizationDialog categorizationDialog =
-            new CategorizationDialog(dialog, localRepository, directoryForSplitPanel);
-          categorizationDialog.show(new GlobList(splittedTransaction), false);
+          // TODO CategorizationDialog
+          System.out.println("SplitTransactionDialog.actionPerformed: TODO");
+//          CategorizationDialog categorizationDialog =
+//            new CategorizationDialog(localRepository, directoryForSplitPanel);
+//          categorizationDialog.show(new GlobList(splittedTransaction), false);
         }
       };
 
@@ -278,7 +281,7 @@ public class SplitTransactionDialog {
                                                           rendererColors,
                                                           CATEGORY_COLUMN_INDEX));
 
-    TransactionViewUtils.installKeyboardCategorization(table, categorizationAction, NOTE_COLUMN_INDEX);
+    TransactionKeyListener.install(table, NOTE_COLUMN_INDEX);
     Gui.installRolloverOnButtons(table, new int[]{CATEGORY_COLUMN_INDEX, REMOVE_SPLIT_COLUMN_INDEX});
 
     adjustColumnsSize(table);

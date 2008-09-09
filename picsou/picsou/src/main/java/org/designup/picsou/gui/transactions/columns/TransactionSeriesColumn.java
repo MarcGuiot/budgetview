@@ -135,9 +135,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
       if (list.isEmpty()) {
         return;
       }
-//      CategorizationDialog dialog = directory.get(CategorizationDialog.class);
-      CategorizationDialog dialog = new CategorizationDialog(directory.get(JFrame.class), repository, directory);
-      dialog.show(list, true);
+      System.out.println("TransactionSeriesColumn$OpenChooserAction.actionPerformed: TODO");
     }
 
     private GlobList getTransactionList(Glob transaction) {

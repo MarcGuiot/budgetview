@@ -15,6 +15,10 @@ public class ViewSelectionChecker extends DataChecker {
     select("home");
   }
 
+  public void selectCategorization() {
+    select("categorization");
+  }
+
   public void selectBudget() {
     select("budget");
   }

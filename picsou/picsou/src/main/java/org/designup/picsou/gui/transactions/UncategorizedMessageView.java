@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -39,9 +38,8 @@ public class UncategorizedMessageView extends View implements ChangeSetListener 
     builder.add(textAreaName, textArea);
     builder.add(buttonName, new AbstractAction(buttonText) {
       public void actionPerformed(ActionEvent e) {
-//        final CategorizationDialog dialog = directory.get(CategorizationDialog.class);
-        CategorizationDialog dialog = new CategorizationDialog(directory.get(JFrame.class), repository, directory);
-        dialog.show(uncategorizedTransactions, false);
+        // TODO
+        System.out.println("UncategorizedMessageView.actionPerformed: ");
       }
     });
   }

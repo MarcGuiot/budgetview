@@ -19,6 +19,7 @@ import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public abstract class AbstractSeriesComponentFactory implements RepeatComponentFactory<Glob> {
@@ -31,16 +32,16 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
 
   protected GlobRepository repository;
   protected Directory directory;
-  protected PicsouDialog dialog;
+  protected Window parent;
   protected SelectionService selectionService;
 
   protected GlobList currentTransactions = GlobList.EMPTY;
 
-  public AbstractSeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository repository, Directory directory, PicsouDialog dialog) {
+  public AbstractSeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository repository, Directory directory) {
     this.invisibleToggle = invisibleToggle;
     this.repository = repository;
     this.directory = directory;
-    this.dialog = dialog;
+    this.parent = directory.get(JFrame.class);
 
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     seriesStringifier = descriptionService.getStringifier(Series.TYPE);
@@ -59,10 +60,10 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
 
   protected void createUpdatableCategoryToggle(final Glob category, final Key seriesKey,
                                                String repeatToggleName, BudgetArea budgetArea,
-                                               RepeatCellBuilder cellBuilder, String toggleName, PicsouDialog dialog) {
+                                               RepeatCellBuilder cellBuilder, String toggleName) {
 
     String toggleLabel = categoryStringifier.toString(category, repository);
-    final JToggleButton toggle = createSeriesToggle(toggleLabel, seriesKey, category.getKey(), dialog);
+    final JToggleButton toggle = createSeriesToggle(toggleLabel, seriesKey, category.getKey());
     toggle.setName(toggleName);
     cellBuilder.add(repeatToggleName, toggle);
     buttonGroup.add(toggle);
@@ -78,8 +79,8 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
   }
 
   protected JToggleButton createSeriesToggle(final String toggleLabel,
-                                             final Key seriesKey, final Key categoryKey,
-                                             final PicsouDialog dialog) {
+                                             final Key seriesKey,
+                                             final Key categoryKey) {
     return new JToggleButton(new AbstractAction(toggleLabel) {
       public void actionPerformed(ActionEvent e) {
         try {

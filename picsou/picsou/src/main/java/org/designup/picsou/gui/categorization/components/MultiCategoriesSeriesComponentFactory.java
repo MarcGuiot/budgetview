@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.SeriesToCategory;
@@ -16,10 +15,11 @@ import javax.swing.*;
 public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesComponentFactory {
   private BudgetArea budgetArea;
 
-  public MultiCategoriesSeriesComponentFactory(BudgetArea budgetArea, JToggleButton invisibleToggle,
+  public MultiCategoriesSeriesComponentFactory(BudgetArea budgetArea,
+                                               JToggleButton invisibleToggle,
                                                GlobRepository repository,
-                                               Directory directory, PicsouDialog dialog) {
-    super(invisibleToggle, repository, directory, dialog);
+                                               Directory directory) {
+    super(invisibleToggle, repository, directory);
     this.budgetArea = budgetArea;
   }
 
@@ -53,7 +53,7 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
         name = category.get(Category.NAME);
       }
       createUpdatableCategoryToggle(category, seriesKey, this.name, budgetArea, cellBuilder,
-                                    seriesName + ":" + name, dialog);
+                                    seriesName + ":" + name);
     }
   }
 }

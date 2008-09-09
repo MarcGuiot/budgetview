@@ -18,12 +18,12 @@ import java.lang.reflect.InvocationTargetException;
 
 public class SeriesEditionDialogChecker extends DataChecker {
   private Window dialog;
-  private boolean oneSelection;
+  private boolean singleSelection;
   private Table table;
 
-  public SeriesEditionDialogChecker(Window dialog, boolean oneSelection) {
+  public SeriesEditionDialogChecker(Window dialog, boolean singleSelection) {
     this.dialog = dialog;
-    this.oneSelection = oneSelection;
+    this.singleSelection = singleSelection;
     this.table = dialog.getTable();
   }
 
@@ -76,10 +76,10 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesEditionDialogChecker setCategory(String... categories) {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
     CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
-    if (oneSelection) {
+    if (singleSelection) {
       Assert.assertEquals(1, categories.length);
       categoryChooser.checkTitle("Select a category");
-      categoryChooser.selectCategory(categories[0], oneSelection);
+      categoryChooser.selectCategory(categories[0], singleSelection);
     }
     else {
       categoryChooser.checkTitle("Select categories");
@@ -106,7 +106,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkCategory(String... categories) {
-    if (oneSelection) {
+    if (singleSelection) {
       if (categories.length == 0) {
         assertThat(dialog.getTextBox("singleCategoryLabel").textContains("Select a category"));
       }

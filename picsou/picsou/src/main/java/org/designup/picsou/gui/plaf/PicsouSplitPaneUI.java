@@ -2,6 +2,7 @@ package org.designup.picsou.gui.plaf;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import java.awt.*;
 
 public class PicsouSplitPaneUI extends BasicSplitPaneUI {
@@ -21,6 +22,13 @@ public class PicsouSplitPaneUI extends BasicSplitPaneUI {
 
     JSplitPane splitPane = (JSplitPane)component;
     splitPane.setBorder(null);
+  }
+
+  public BasicSplitPaneDivider getDivider() {
+    return new BasicSplitPaneDivider(this) {
+      public void paint(Graphics g) {
+      }
+    };
   }
 
   public void paint(Graphics g, JComponent component) {

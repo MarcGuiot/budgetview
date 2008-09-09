@@ -94,7 +94,7 @@ public class CategoryEditionDialog {
     masterList.setFilter(PicsouMatchers.masterUserCategories());
     initListener(subList);
 
-    dialog = PicsouDialog.createWithButtons(Lang.get("categorization.title"),
+    dialog = PicsouDialog.createWithButtons("",
                                             directory.get(JFrame.class),
                                             builder.<JPanel>load(),
                                             new ValidateAction(), new CancelAction(), directory);
