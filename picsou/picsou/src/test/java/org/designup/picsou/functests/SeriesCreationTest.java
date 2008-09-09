@@ -89,7 +89,6 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkCategory(MasterCategory.FOOD);
   }
 
-  // TODO CategorizationView
   public void testSeriesUnselectedAfterCategorization() throws Exception {
     OfxBuilder
       .init(this)
@@ -106,6 +105,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       {"10/06/2008", "Forfait Kro", -60.00},
       {"28/06/2008", "Palette Leffe", -150.00},
     });
+    categorization.selectTableRow(0);
     categorization.checkSelectedTableRows(0, 1, 2);
 
     categorization.selectEnvelopes();

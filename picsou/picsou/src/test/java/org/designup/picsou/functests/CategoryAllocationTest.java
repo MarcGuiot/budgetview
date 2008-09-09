@@ -111,6 +111,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     assertTrue(categorizedLink.foregroundEquals("black"));
   }
 
+  // TODO navigation transactionView ==> Categorization
   public void testCategorisationLinkSelectsCorrespondingRow() throws Exception {
     OfxBuilder
       .init(this)

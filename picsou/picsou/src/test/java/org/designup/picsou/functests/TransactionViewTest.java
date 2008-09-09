@@ -111,7 +111,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  // TODO : tester la navigation
+  // TODO : tester la navigation transactionView => Categorization
   public void testMultiCategorization() throws Exception {
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)

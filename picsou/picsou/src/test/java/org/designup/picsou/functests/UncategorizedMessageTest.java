@@ -17,7 +17,7 @@ public class UncategorizedMessageTest extends LoggedInFunctionalTestCase {
       .load();
   }
 
-  // TODO CategorizationView
+  // TODO CategorizationView : filtrage sur les transactions a classer
   public void testCategorizationFromWarningMessage() throws Exception {
     views.selectHome();
 

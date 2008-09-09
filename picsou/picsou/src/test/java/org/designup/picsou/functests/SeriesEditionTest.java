@@ -42,7 +42,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Free", 29.00, 29.00);
   }
 
-  // TODO CategorizationView
   public void testCurrentMonthsInitiallySelectedInBudgetTable() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/29", "2008/08/01", -29.00, "Free Telecom")
