@@ -8,8 +8,11 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
+import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.streams.accessors.utils.ValueDateAccessor;
+import org.globsframework.streams.accessors.utils.ValueLongAccessor;
 import org.globsframework.streams.accessors.utils.ValueStringAccessor;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -28,20 +31,37 @@ public class RequestForConfigServlet extends HttpServlet {
   private SqlService sqlService;
   private Mailler mailler;
   private VersionService versionService;
-  private SelectQuery repoIdQuery;
-  private ValueStringAccessor repoIdAccessor;
   private SqlConnection db;
+  private CreateAnonymousRequest createAnonymousRequest;
+  private UpdateNewActivationCodeRequest updateNewActivationCodeRequest;
+  private LicenceRequest licenceRequest;
+  private UpdateAnonymousAccesCount updateAnonymousAccesCount;
+  private UpdateLastAccessRequest updateLastAccessRequest;
+  private RepoIdAnonymousRequest repoIdAnonymousRequest;
 
   public RequestForConfigServlet(Directory directory) {
     sqlService = directory.get(SqlService.class);
     mailler = directory.get(Mailler.class);
     versionService = directory.get(VersionService.class);
-    db = sqlService.getDb();
-    repoIdAccessor = new ValueStringAccessor();
-    repoIdQuery = db.getQueryBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoIdAccessor))
-      .selectAll()
-      .getNotAutoCloseQuery();
     logger.info("RequestForConfigServlet started");
+    initDb();
+  }
+
+  private void initDb() {
+    db = sqlService.getDb();
+    createAnonymousRequest = new CreateAnonymousRequest(db);
+    licenceRequest = new LicenceRequest(db);
+    updateNewActivationCodeRequest = new UpdateNewActivationCodeRequest(db);
+    updateLastAccessRequest = new UpdateLastAccessRequest(db);
+    updateAnonymousAccesCount = new UpdateAnonymousAccesCount(db);
+    repoIdAnonymousRequest = new RepoIdAnonymousRequest(db);
+    logger.info("RequestForConfigServlet.init");
+  }
+
+  public void destroy() {
+    super.destroy();
+    logger.info("RequestForConfigServlet.destroy");
+    closeDb();
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -63,34 +83,18 @@ public class RequestForConfigServlet extends HttpServlet {
 
   private void computeAnonymous(String id, HttpServletResponse resp) {
     try {
-      logger.info("computeAnonymous " + id);
-      repoIdAccessor.setValue(id);
-      GlobList globList = repoIdQuery.executeAsGlobs();
-      db.commit();
-      if (globList.size() == 0) {
-        db.getCreateBuilder(RepoInfo.TYPE)
-          .set(RepoInfo.REPO_ID, id)
-          .set(RepoInfo.LAST_ACCESS_DATE, new Date())
-          .set(RepoInfo.COUNT, 1L)
-          .getRequest()
-          .run();
-        db.commit();
-      }
-      else if (globList.size() > 1) {
-        logger.finest("many repo with the same id");
-      }
-      if (globList.size() >= 1) {
-        Long accessCount = globList.get(0).get(RepoInfo.COUNT) + 1;
-        logger.info(" accessCount = " + accessCount);
-        db.getUpdateBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, id))
-          .update(RepoInfo.LAST_ACCESS_DATE, new Date())
-          .update(RepoInfo.COUNT, accessCount)
-          .getRequest().run();
-        db.commit();
-      }
+      computeAnonymous(id);
     }
     catch (Exception e) {
       logger.log(Level.SEVERE, "RequestForConfigServlet : ", e);
+      closeDb();
+      initDb();
+      try {
+        computeAnonymous(id);
+      }
+      catch (Exception e1) {
+        logger.log(Level.SEVERE, "RequestForConfigServlet : Retry fail", e);
+      }
     }
     finally {
       if (db != null) {
@@ -100,70 +104,258 @@ public class RequestForConfigServlet extends HttpServlet {
     resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
   }
 
-  private void computeLicense(HttpServletResponse resp, String mail, String activationCode,
-                              Long count, String repoId) {
-    logger.info("compute licence : mail : '" + mail + "' count :'" + count + "' " + "repoId :'" + repoId + "'");
-    SqlConnection db = null;
+  private void closeDb() {
     try {
-      db = sqlService.getDb();
-      SelectQuery query = db.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
-        .selectAll()
-        .getQuery();
-      db.commit();
-      GlobList globList = query.executeAsGlobs();
-      if (globList.isEmpty()) {
-        resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
-        resp.addHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
-        logger.info("unknown mail : " + mail);
-      }
-      else {
-        Glob license = globList.get(0);
-        if (count < license.get(License.ACCESS_COUNT)) {
-          resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
-          if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
-            resp.addHeader(ConfigService.HEADER_MAIL_SENT, "true");
-            String code = LicenceGenerator.generateActivationCode();
-            db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
-              .update(License.ACTIVATION_CODE, code)
-              .getRequest()
-              .run();
-            db.commit();
-            mailler.sendNewLicense(mail, code);
-            logger.info("send new license to " + mail);
-          }
-        }
-        else {
-          if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
-            resp.addHeader(ConfigService.HEADER_IS_VALIDE, "true");
-            db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
-              .update(License.ACCESS_COUNT, count)
-              .update(License.LAST_ACCESS_DATE, new Date())
-              .getRequest()
-              .run();
-            db.commit();
-          }
-          else {
-            resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
-            resp.addHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
-            logger.info("Bad activation code for " + mail);
-          }
-        }
-      }
+      licenceRequest.close();
+      updateAnonymousAccesCount.close();
+      updateLastAccessRequest.close();
+      updateNewActivationCodeRequest.close();
+      repoIdAnonymousRequest.close();
+      db.commitAndClose();
     }
-    catch (Exception e) {
-      logger.throwing("RequestForConfigServlet", "computeLicense", e);
-      resp.addHeader(ConfigService.HEADER_IS_VALIDE, "true");
-    }
-    finally {
-      if (db != null) {
-        db.commit();
+    catch (Exception e1) {
+      try {
+        db.commitAndClose();
+      }
+      catch (Exception e2) {
       }
     }
   }
 
-  public void destroy() {
-    super.destroy();
-    repoIdQuery.close();
-    db.commitAndClose();
+  static class RepoIdAnonymousRequest {
+    private SelectQuery repoIdQuery;
+    private ValueStringAccessor repoIdAccessor;
+
+    RepoIdAnonymousRequest(SqlConnection db) {
+      repoIdAccessor = new ValueStringAccessor();
+      repoIdQuery = db.getQueryBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoIdAccessor))
+        .selectAll()
+        .getNotAutoCloseQuery();
+    }
+
+    public GlobList execute(String repoId) {
+      repoIdAccessor.setValue(repoId);
+      return repoIdQuery.executeAsGlobs();
+    }
+
+    public void close() {
+      try {
+        repoIdQuery.close();
+      }
+      catch (Exception e) {
+      }
+    }
+  }
+
+  static class CreateAnonymousRequest {
+    private SqlRequest createAnonymousRequest;
+    private ValueStringAccessor repoId;
+    private ValueDateAccessor date;
+
+    CreateAnonymousRequest(SqlConnection db) {
+      repoId = new ValueStringAccessor();
+      date = new ValueDateAccessor();
+      createAnonymousRequest = db.getCreateBuilder(RepoInfo.TYPE)
+        .set(RepoInfo.REPO_ID, repoId)
+        .set(RepoInfo.LAST_ACCESS_DATE, date)
+        .set(RepoInfo.COUNT, 1L)
+        .getRequest();
+    }
+
+    public void execute(String repoId, Date date) {
+      this.repoId.setValue(repoId);
+      this.date.setValue(date);
+      createAnonymousRequest.run();
+    }
+  }
+
+  static class UpdateAnonymousAccesCount {
+    private ValueStringAccessor repoId;
+    private ValueDateAccessor date;
+    private ValueLongAccessor count;
+    private SqlRequest request;
+
+    UpdateAnonymousAccesCount(SqlConnection db) {
+      repoId = new ValueStringAccessor();
+      date = new ValueDateAccessor();
+      count = new ValueLongAccessor();
+      request = db.getUpdateBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoId))
+        .update(RepoInfo.LAST_ACCESS_DATE, date)
+        .update(RepoInfo.COUNT, count)
+        .getRequest();
+    }
+
+    public void execute(String repoId, Date date, long count) {
+      this.repoId.setValue(repoId);
+      this.date.setValue(date);
+      this.count.setValue(count);
+      request.run();
+    }
+
+    public void close() {
+      request.close();
+    }
+  }
+
+  private void computeAnonymous(String id) {
+    logger.info("computeAnonymous " + id);
+    GlobList globList = repoIdAnonymousRequest.execute(id);
+    db.commit();
+    if (globList.size() == 0) {
+      createAnonymousRequest.execute(id, new Date());
+      db.commit();
+    }
+    else if (globList.size() > 1) {
+      logger.finest("many repo with the same id");
+    }
+    if (globList.size() >= 1) {
+      Long accessCount = globList.get(0).get(RepoInfo.COUNT) + 1;
+      logger.info(" accessCount = " + accessCount);
+      updateAnonymousAccesCount.execute(id, new Date(), accessCount);
+      db.commit();
+    }
+  }
+
+  private void computeLicense(HttpServletResponse resp, String mail, String activationCode,
+                              Long count, String repoId) {
+    logger.info("compute licence : mail : '" + mail + "' count :'" + count + "' " + "repoId :'" + repoId + "'");
+    try {
+      computeLicense(resp, mail, activationCode, count);
+    }
+    catch (Exception e) {
+      logger.throwing("RequestForConfigServlet", "computeLicense", e);
+      try {
+        closeDb();
+        initDb();
+        computeLicense(resp, mail, activationCode, count);
+      }
+      catch (Exception ex) {
+        logger.throwing("RequestForConfigServlet", "computeLicense retry", e);
+      }
+      resp.addHeader(ConfigService.HEADER_IS_VALIDE, "true");
+    }
+  }
+
+  private void computeLicense(HttpServletResponse resp, String mail, String activationCode, Long count) {
+    GlobList globList = licenceRequest.execute(mail);
+    db.commit();
+    if (globList.isEmpty()) {
+      resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
+      resp.addHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
+      logger.info("unknown mail : " + mail);
+    }
+    else {
+      Glob license = globList.get(0);
+      if (count < license.get(License.ACCESS_COUNT)) {
+        resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
+        if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
+          String code = LicenceGenerator.generateActivationCode();
+          updateNewActivationCodeRequest.execute(mail, code);
+          db.commit();
+          resp.addHeader(ConfigService.HEADER_MAIL_SENT, "true");
+          mailler.sendNewLicense(mail, code);
+          logger.info("send new license to " + mail);
+        }
+      }
+      else {
+        if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
+          updateLastAccessRequest.execute(mail, count, new Date());
+          db.commit();
+          resp.addHeader(ConfigService.HEADER_IS_VALIDE, "true");
+        }
+        else {
+          resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
+          resp.addHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
+          logger.info("Bad activation code for " + mail);
+        }
+      }
+    }
+  }
+
+  static class LicenceRequest {
+    private ValueStringAccessor mail;
+    private SelectQuery query;
+
+    LicenceRequest(SqlConnection db) {
+      mail = new ValueStringAccessor();
+      query = db.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+        .selectAll()
+        .getNotAutoCloseQuery();
+    }
+
+    public GlobList execute(String mail) {
+      this.mail.setValue(mail);
+      return query.executeAsGlobs();
+    }
+
+    public void close() {
+      try {
+        query.close();
+      }
+      catch (Exception e) {
+      }
+    }
+  }
+
+  static class UpdateNewActivationCodeRequest {
+    private ValueStringAccessor activationCode;
+    private ValueStringAccessor mail;
+    private SqlRequest request;
+
+    UpdateNewActivationCodeRequest(SqlConnection db) {
+      mail = new ValueStringAccessor();
+      activationCode = new ValueStringAccessor();
+      request = db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+        .update(License.ACTIVATION_CODE, activationCode)
+        .getRequest();
+    }
+
+    public void execute(String mail, String activationCode) {
+      this.mail.setValue(mail);
+      this.activationCode.setValue(activationCode);
+      request.run();
+    }
+
+    public void close() {
+      try {
+        request.close();
+      }
+      catch (Exception e) {
+      }
+    }
+  }
+
+  static class UpdateLastAccessRequest {
+
+    private ValueStringAccessor mail;
+
+    private SqlRequest request;
+    private ValueLongAccessor count;
+    private ValueDateAccessor date;
+
+    UpdateLastAccessRequest(SqlConnection db) {
+      mail = new ValueStringAccessor();
+      count = new ValueLongAccessor();
+      this.date = new ValueDateAccessor();
+      request = db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+        .update(License.ACCESS_COUNT, count)
+        .update(License.LAST_ACCESS_DATE, this.date)
+        .getRequest();
+    }
+
+    public void execute(String mail, long count, Date date) {
+      this.mail.setValue(mail);
+      this.count.setValue(count);
+      this.date.setValue(date);
+      request.run();
+    }
+
+    public void close() {
+      try {
+        request.close();
+      }
+      catch (Exception e) {
+      }
+    }
   }
 }

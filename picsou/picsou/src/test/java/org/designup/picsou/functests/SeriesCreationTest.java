@@ -1,7 +1,5 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
-import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -83,7 +81,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.FOOD)
       .validate();
 
-    categorization.checkContainsEnvelope("Regime");
+    categorization.checkContainsEnvelope("Regime", MasterCategory.FOOD);
 
     views.selectData();
     transactions.getTable().selectRow(0);

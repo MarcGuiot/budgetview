@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.Gauge;
@@ -225,8 +224,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
       // TODO
       System.out.println("MonthSummaryView$CategorizationAction.actionPerformed: TODO");
-//      CategorizationDialog dialog = directory.get(CategorizationDialog.class);
-//      dialog.show(transactions, false);
     }
   }
 

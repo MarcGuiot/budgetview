@@ -49,7 +49,18 @@ public class CategoryEditionChecker extends DataChecker {
   }
 
   public CategoryEditionChecker deleteSubCategoryWithTransactionUpdate(final String newCategory) {
-    WindowInterceptor.init(getDeleteMasterButton().triggerClick())
+    deleteCategory(newCategory, getDeleteSubButton().triggerClick());
+    return this;
+  }
+
+  public CategoryEditionChecker deleteMasterCategoryWithTransactionUpdate(final String newCategory) {
+    Trigger trigger = getDeleteSubButton().triggerClick();
+    deleteCategory(newCategory, trigger);
+    return this;
+  }
+
+  private void deleteCategory(final String newCategory, Trigger trigger) {
+    WindowInterceptor.init(trigger)
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           DeleteCategoryChecker categoryChecker = new DeleteCategoryChecker(window);
@@ -57,7 +68,6 @@ public class CategoryEditionChecker extends DataChecker {
           return categoryChecker.validate();
         }
       }).run();
-    return this;
   }
 
   public CategoryEditionChecker deleteSubCategory() {
@@ -141,16 +151,19 @@ public class CategoryEditionChecker extends DataChecker {
   }
 
 
-  public void assertMasterSelected(MasterCategory master) {
+  public CategoryEditionChecker assertMasterSelected(MasterCategory master) {
     assertMasterSelected(getCategoryName(master));
+    return this;
   }
 
-  public void assertMasterSelected(String name) {
+  public CategoryEditionChecker assertMasterSelected(String name) {
     UISpecAssert.assertThat(getMasterList().selectionEquals(name));
+    return this;
   }
 
-  public void assertSubSelected(String name) {
+  public CategoryEditionChecker assertSubSelected(String name) {
     UISpecAssert.assertThat(getSubList().selectionEquals(name));
+    return this;
   }
 
   public void renameMaster(final String previousName, final String name) {

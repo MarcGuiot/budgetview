@@ -263,8 +263,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
 
-    TransactionChecker checker = getTransactionView();
-    checker.assignOccasionalSeries(MasterCategory.FOOD, 0);
+    getCategorizationView().setOccasional("Menu K", MasterCategory.FOOD);
 
     openNewLoginWindow();
     enterUserPassword("toto", "p4ssw0rd", false);

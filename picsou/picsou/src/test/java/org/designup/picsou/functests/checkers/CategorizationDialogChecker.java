@@ -221,21 +221,27 @@ public class CategorizationDialogChecker extends DataChecker {
     return this;
   }
 
-  public void checkContainsEnvelope(String envelopeName, MasterCategory... categories) {
+  public CategorizationDialogChecker checkContainsEnvelope(String envelopeName, MasterCategory... categories) {
     Panel panel = getEnvelopeSeriesPanel();
     assertTrue(panel.containsLabel(envelopeName));
     for (MasterCategory category : categories) {
       assertTrue(panel.containsUIComponent(ToggleButton.class, envelopeName + ":" + category.getName()));
     }
+    return this;
+  }
+
+  public CategorizationDialogChecker checkContainsEnvelope(String envelopeName, String... categories) {
+    Panel panel = getEnvelopeSeriesPanel();
+    assertTrue(panel.containsLabel(envelopeName));
+    for (String category : categories) {
+      assertTrue(panel.containsUIComponent(ToggleButton.class, envelopeName + ":" + category));
+    }
+    return this;
   }
 
   public CategorizationDialogChecker selectEnvelopeSeries(String envelopeName, MasterCategory category, boolean createSeries) {
     Panel panel = getEnvelopeSeriesPanel();
     String name = envelopeName + ":" + category.getName();
-    Component component = panel.findSwingComponent(ComponentMatchers.innerNameIdentity(name));
-    if (component != null) {
-      // TODO avec la multi affectation de category a une enveloppe
-    }
     if (createSeries) {
       createEnvelopeSeries()
         .setName(envelopeName)
@@ -246,6 +252,14 @@ public class CategorizationDialogChecker extends DataChecker {
     panel.getToggleButton(name).click();
     return this;
   }
+
+  public CategorizationDialogChecker selectEnvelopeSeries(String envelopeName, String category) {
+    Panel panel = getEnvelopeSeriesPanel();
+    String name = envelopeName + ":" + category;
+    panel.getToggleButton(name).click();
+    return this;
+  }
+
 
   private Panel getEnvelopeSeriesPanel() {
     Panel panel = this.getPanel().getPanel("envelopeSeriesChooser");
@@ -453,7 +467,7 @@ public class CategorizationDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker editSeries() {
     final Window creationDialog = WindowInterceptor.getModalDialog(getPanel().getButton("editSeries").triggerClick());
-    return new SeriesEditionDialogChecker(creationDialog, true);
+    return new SeriesEditionDialogChecker(creationDialog, false);
   }
 
   public CategorizationDialogChecker checkTable(Object[][] content) {

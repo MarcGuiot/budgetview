@@ -24,14 +24,13 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
+    String categoryLabel = seriesStringifier.toString(series, repository);
     cellBuilder.add("seriesName",
-                    new JLabel(seriesStringifier.toString(series, repository)));
-
+                    new JLabel(categoryLabel));
     cellBuilder.addRepeat("categoryRepeat",
                           repository.findLinkedTo(series, SeriesToCategory.SERIES).sort(SeriesToCategory.ID),
-                          new CategoriesComponentFactory(seriesStringifier.toString(series, repository),
-                                                         "categoryToggle",
-                                                         budgetArea)
+                          new CategoriesComponentFactory(categoryLabel,
+                                                         "categoryToggle", budgetArea)
     );
   }
 
@@ -49,9 +48,12 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob seriesToCategory) {
       Glob category = repository.findLinkTarget(seriesToCategory, SeriesToCategory.CATEGORY);
       final Key seriesKey = seriesToCategory.getTargetKey(SeriesToCategory.SERIES);
-
-      createUpdatableCategoryToggle(category, seriesKey, name, budgetArea, cellBuilder,
-                                    seriesName + ":" + category.get(Category.INNER_NAME));
+      String name = category.get(Category.INNER_NAME);
+      if (name == null) {
+        name = category.get(Category.NAME);
+      }
+      createUpdatableCategoryToggle(category, seriesKey, this.name, budgetArea, cellBuilder,
+                                    seriesName + ":" + name);
     }
   }
 }

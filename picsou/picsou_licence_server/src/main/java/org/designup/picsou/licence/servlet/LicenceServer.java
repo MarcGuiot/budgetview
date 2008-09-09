@@ -11,9 +11,9 @@ import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.logging.LogManager;
@@ -36,14 +36,17 @@ public class LicenceServer {
   private Timer timer;
 
   public LicenceServer() throws IOException {
-//    BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-//    System.out.print("database :");
-//    databaseUrl = input.readLine();
-//    System.out.print("user :");
-//    databaseUser = input.readLine();
-//    System.out.print("password :");
-//    databasePassword = input.readLine();
     jetty = new Server();
+  }
+
+  public void getParams() throws IOException {
+    BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+    System.out.print("database :");
+    databaseUrl = input.readLine();
+    System.out.print("user :");
+    databaseUser = input.readLine();
+    System.out.print("password :");
+    databasePassword = input.readLine();
   }
 
   public void useSsl(boolean useSsl) {
@@ -57,6 +60,7 @@ public class LicenceServer {
   public static void main(String[] args) throws Exception {
     initLogger();
     LicenceServer server = new LicenceServer();
+    server.getParams();
     server.start();
   }
 

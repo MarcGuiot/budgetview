@@ -7,6 +7,9 @@ import java.util.Date;
 public class ValueDateAccessor implements DateAccessor {
   private Date value;
 
+  public ValueDateAccessor() {
+  }
+
   public ValueDateAccessor(Date value) {
     this.value = value;
   }

@@ -168,7 +168,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/15", -2.0, "MenuK", MasterCategory.FOOD)
       .load();
-    
+
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.checkContainsOccasionalCategories(remove(expectedCategories, "All categories", "Unassigned"));
@@ -230,7 +230,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, "Apero")
       .check();
 
-    categories.deleteSelected(MasterCategory.FOOD);
+    categories.deleteSubSelected(MasterCategory.FOOD);
 
     categories.assertCategoryNotFound("Apero");
 
@@ -260,7 +260,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .check();
 
     categories.select("Apero");
-    categories.deleteSelected(MasterCategory.FOOD);
+    categories.deleteSubSelected(MasterCategory.FOOD);
 
     categories.assertCategoryNotFound("Apero");
     categories.assertSelectionEquals(MasterCategory.FOOD);
@@ -270,6 +270,69 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, MasterCategory.FOOD, "Oil")
       .check();
+  }
+
+  public void testDeleteSubcategoryUpdatesSeriesToCategory() throws Exception {
+    categories.createSubCategory(MasterCategory.FOOD, "Apero");
+    categories.createSubCategory(MasterCategory.FOOD, "Courant");
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/11", -1.0, "Auchan")
+      .addTransaction("2006/01/10", -1.0, "Chez Lulu")
+      .load();
+
+    categories.select(MasterCategory.ALL);
+
+    views.selectCategorization();
+    categorization.selectTableRows(0, 1);
+    categorization.selectEnvelopes();
+    categorization.createEnvelopeSeries()
+      .setName("Quotidien")
+      .setCategory("Apero", "Courant")
+      .validate();
+    categorization.selectTableRow(0);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Quotidien", "Courant");
+    categorization.selectTableRow(1);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Quotidien", "Apero");
+
+    views.selectData();
+    categories.select("Apero");
+    categories.deleteSubSelected("Courant");
+    categories.assertSelectionEquals("Courant");
+    categories.select(MasterCategory.ALL);
+    transactions
+      .initContent()
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -1.00, "Quotidien")
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.00, "Quotidien")
+      .check();
+
+    views.selectCategorization();
+    categorization.selectTableRows(0, 1)
+      .selectTableRow(0)
+      .checkContainsEnvelope("Quotidien", "Courant")
+      .editSeries()
+      .selectSeries("Quotidien")
+      .checkCategory("Courant")
+      .validate();
+
+    views.selectData();
+    categories.select("Courant");
+    categories.deleteSubSelected(MasterCategory.FOOD);
+    categories.getTable()
+      .containsRow(new Object[]{getCategoryName(MasterCategory.FOOD), "-34"});
+
+    views.selectCategorization();
+    categorization.selectTableRows(0, 1)
+      .selectTableRow(0)
+      .checkContainsEnvelope("Quotidien", MasterCategory.FOOD);
+
+    categorization.editSeries()
+      .selectSeries("Quotidien")
+      .checkCategory(MasterCategory.FOOD)
+      .validate();
   }
 
   public void testRenameSubcategory() throws Exception {
@@ -435,5 +498,13 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.assertCategoryNotFound("3G++");
 
     categories.assertSelectionEquals(MasterCategory.EDUCATION);
+  }
+
+  public void testSelectSubSelectMasterAndSubInCategoryEdition() throws Exception {
+    categories.createSubCategory(MasterCategory.FOOD, "Apero");
+    categories.select("Apero");
+    categories.openEditionDialog()
+      .assertMasterSelected(MasterCategory.FOOD)
+      .assertSubSelected("Apero");
   }
 }

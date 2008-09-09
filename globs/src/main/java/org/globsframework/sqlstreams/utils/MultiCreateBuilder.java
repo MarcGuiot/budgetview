@@ -110,5 +110,11 @@ public class MultiCreateBuilder implements CreateBuilder {
         sqlRequest.run();
       }
     }
+
+    public void close() {
+      for (SqlRequest request : sqlRequests) {
+        request.close();
+      }
+    }
   }
 }

@@ -18,12 +18,12 @@ import java.lang.reflect.InvocationTargetException;
 
 public class SeriesEditionDialogChecker extends DataChecker {
   private Window dialog;
-  private boolean oneSelection;
+  private boolean singleSelection;
   private Table table;
 
-  public SeriesEditionDialogChecker(Window dialog, boolean oneSelection) {
+  public SeriesEditionDialogChecker(Window dialog, boolean singleSelection) {
     this.dialog = dialog;
-    this.oneSelection = oneSelection;
+    this.singleSelection = singleSelection;
     this.table = dialog.getTable();
   }
 
@@ -63,44 +63,67 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker setCategory(MasterCategory... category) {
+  public SeriesEditionDialogChecker setCategory(MasterCategory... masterCategories) {
+    String categories[] = new String[masterCategories.length];
+    int i = 0;
+    for (MasterCategory category : masterCategories) {
+      categories[i] = getCategoryName(category);
+      i++;
+    }
+    return setCategory(categories);
+  }
+
+  public SeriesEditionDialogChecker setCategory(String... categories) {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
     CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
-    if (oneSelection) {
-      Assert.assertEquals(1, category.length);
+    if (singleSelection) {
+      Assert.assertEquals(1, categories.length);
       categoryChooser.checkTitle("Select a category");
-      categoryChooser.selectCategory(getCategoryName(category[0]), oneSelection);
+      categoryChooser.selectCategory(categories[0], singleSelection);
     }
     else {
       categoryChooser.checkTitle("Select categories");
-      for (MasterCategory masterCategory : category) {
-        categoryChooser.selectCategory(getCategoryName(masterCategory));
+      for (String category : categories) {
+        categoryChooser.selectCategory(category);
       }
       categoryChooser.validate();
     }
-    checkCategory(category);
-    return this;
+    return checkCategory(categories);
   }
 
-  public SeriesEditionDialogChecker checkCategory(MasterCategory... category) {
-    if (oneSelection) {
-      if (category.length == 0) {
+  public SeriesEditionDialogChecker checkCategory(MasterCategory... masterCategories) {
+    String categories[] = new String[masterCategories.length];
+    int i =0;
+    for (MasterCategory category : masterCategories) {
+      categories[i] = getCategoryName(category);
+      i++;
+    }
+    return checkCategory(categories);
+  }
+
+  public SeriesEditionDialogChecker checkCategory() {
+    return checkCategory(new String[0]);
+  }
+
+  public SeriesEditionDialogChecker checkCategory(String... categories) {
+    if (singleSelection) {
+      if (categories.length == 0) {
         assertThat(dialog.getTextBox("singleCategoryLabel").textContains("Select a category"));
       }
       else {
-        assertThat(dialog.getTextBox("singleCategoryLabel").textEquals("Category:" + getCategoryName(category[0])));
+        assertThat(dialog.getTextBox("singleCategoryLabel").textEquals("Category:" + categories[0]));
       }
     }
     else {
-      if (category.length == 0) {
+      if (categories.length == 0) {
         assertThat(dialog.getTextBox("singleCategoryLabel").textContains("Select a category"));
         UISpecAssert.assertThat(dialog.getListBox("multipleCategoryList").isEmpty());
       }
       else {
-        String[] categoryName = new String[category.length];
+        String[] categoryName = new String[categories.length];
         int i = 0;
-        for (MasterCategory masterCategory : category) {
-          categoryName[i] = getCategoryName(masterCategory);
+        for (String category : categories) {
+          categoryName[i] = category;
           i++;
         }
         UISpecAssert.assertThat(dialog.getListBox("multipleCategoryList").contentEquals(categoryName));
@@ -108,6 +131,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
     }
     return this;
   }
+
 
   public CategoryChooserChecker openCategory() {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());

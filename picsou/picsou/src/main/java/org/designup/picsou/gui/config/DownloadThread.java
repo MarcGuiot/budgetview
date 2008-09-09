@@ -63,7 +63,9 @@ public class DownloadThread extends Thread {
     }
     catch (Exception e) {
       try {
-        client.disconnect();
+        if (client.isConnected()) {
+          client.disconnect();
+        }
       }
       catch (IOException e1) {
       }
