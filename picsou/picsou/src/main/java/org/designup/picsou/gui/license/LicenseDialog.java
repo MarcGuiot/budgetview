@@ -79,6 +79,7 @@ public class LicenseDialog {
           }
           connectMessageLabel.setVisible(!isConnected);
           if (isConnected) {
+            localRepository.update(UserPreferences.KEY, UserPreferences.FUTURE_MONTH_COUNT, 24);
             selectionService.select(localRepository.get(User.KEY));
             selectionService.select(localRepository.get(UserPreferences.KEY));
           }
@@ -108,6 +109,7 @@ public class LicenseDialog {
   public void show() {
     localRepository.rollback();
     if (repository.get(User.KEY).get(User.CONNECTED)) {
+      localRepository.update(UserPreferences.KEY, UserPreferences.FUTURE_MONTH_COUNT, 24);
       selectionService.select(localRepository.get(User.KEY));
       selectionService.select(localRepository.get(UserPreferences.KEY));
     }
