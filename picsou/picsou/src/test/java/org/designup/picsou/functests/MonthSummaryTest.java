@@ -1,6 +1,6 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
+import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -110,7 +110,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkUncategorized("1000.00 / -10.00");
 
     // TODO: naviguer vers la vue Categorization
-    CategorizationDialogChecker dialog = monthSummary.init().categorize();
+    CategorizationChecker dialog = monthSummary.init().categorize();
     dialog.checkTable(new Object[][]{
       {"26/08/2008", "FNAC", -10.0},
       {"26/08/2008", "MyCompany", 1000.0},
@@ -127,13 +127,13 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkOccasional(10)
       .checkUncategorized("1000.00");
 
-    CategorizationDialogChecker secondDialog = monthSummary.init().categorize();
-    secondDialog.checkTable(new Object[][]{
+    CategorizationChecker second = monthSummary.init().categorize();
+    second.checkTable(new Object[][]{
       {"26/08/2008", "MyCompany", 1000.0},
     });
-    secondDialog.selectTableRow(0);
-    secondDialog.selectIncome();
-    secondDialog.selectIncomeSeries("Salary", true);
+    second.selectTableRow(0);
+    second.selectIncome();
+    second.selectIncomeSeries("Salary", true);
 
     monthSummary.init()
       .total(1000, 10, true)

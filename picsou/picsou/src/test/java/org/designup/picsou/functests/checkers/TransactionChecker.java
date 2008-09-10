@@ -88,30 +88,30 @@ public class TransactionChecker extends ViewChecker {
   }
 
   /** @deprecated  en cours de suppression */
-  public CategorizationDialogChecker openCategorizationDialog(final int row) {
+  public CategorizationChecker openCategorizationDialog(final int row) {
     Window dialog = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         getTable().editCell(row, TransactionView.CATEGORY_COLUMN_INDEX).getButton().click();
       }
     });
-    return new CategorizationDialogChecker(dialog);
+    return new CategorizationChecker(dialog);
   }
 
   /** @deprecated  en cours de suppression */
   private void chooseCategoryViaButtonClick(MasterCategory category, final int row) {
-    CategorizationDialogChecker checker = openCategorizationDialog(row);
+    CategorizationChecker checker = openCategorizationDialog(row);
     checker.selectOccasionalSeries(category);
   }
 
   /** @deprecated  en cours de suppression */
   private void chooseCategoryViaButtonClick(MasterCategory category, String subcat, final int row) {
-    CategorizationDialogChecker checker = openCategorizationDialog(row);
+    CategorizationChecker checker = openCategorizationDialog(row);
     checker.selectOccasionalSeries(category, subcat);
   }
 
   /** @deprecated  en cours de suppression */
   private void chooseCategoryViaKeyboard(MasterCategory category, final int modifier) {
-    CategorizationDialogChecker checker = new CategorizationDialogChecker(WindowInterceptor.getModalDialog(new Trigger() {
+    CategorizationChecker checker = new CategorizationChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         GuiUtils.pressKey(getTable().getJTable(), KeyEvent.VK_SPACE, modifier);
       }

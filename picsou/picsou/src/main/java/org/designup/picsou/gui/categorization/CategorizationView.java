@@ -39,7 +39,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 
-public class CategorizationDialog extends View {
+public class CategorizationView extends View {
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
@@ -50,7 +50,7 @@ public class CategorizationDialog extends View {
   private static final int[] COLUMN_SIZES = {10, 28, 10};
   private SeriesEditionDialog seriesEditionDialog;
 
-  public CategorizationDialog(final GlobRepository repository, Directory parentDirectory) {
+  public CategorizationView(final GlobRepository repository, Directory parentDirectory) {
     super(repository, createLocalDirectory(parentDirectory));
     parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -75,7 +75,7 @@ public class CategorizationDialog extends View {
 
     seriesEditionDialog = new SeriesEditionDialog(parent, this.repository, directory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationView.splits",
                                                       this.repository, directory);
 
     Comparator<Glob> transactionComparator = getTransactionComparator();
@@ -173,7 +173,7 @@ public class CategorizationDialog extends View {
 
   private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
 
-    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationDialog.class,
+    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
                                                            "/layout/singleCategorySeriesChooserPanel.splits",
                                                            repository, directory);
 
@@ -191,7 +191,7 @@ public class CategorizationDialog extends View {
 
   private void addMultiCategoriesSeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
 
-    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationDialog.class,
+    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
                                                            "/layout/multiCategoriesSeriesChooserPanel.splits",
                                                            repository, directory);
 

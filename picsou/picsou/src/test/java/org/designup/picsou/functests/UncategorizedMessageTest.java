@@ -2,7 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
+import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
@@ -21,13 +21,13 @@ public class UncategorizedMessageTest extends LoggedInFunctionalTestCase {
   public void testCategorizationFromWarningMessage() throws Exception {
     views.selectHome();
 
-    CategorizationDialogChecker categorizer1 = informationPanel.categorize();
+    CategorizationChecker categorizer1 = informationPanel.categorize();
     categorizer1.selectOccasional();
     categorizer1.selectOccasionalSeries(MasterCategory.FOOD);
 
     informationPanel.assertWarningIsDisplayed(1);
 
-    CategorizationDialogChecker categorizer2 = informationPanel.categorize();
+    CategorizationChecker categorizer2 = informationPanel.categorize();
     categorizer2.selectOccasional();
     categorizer2.selectOccasionalSeries(MasterCategory.FOOD);
 
