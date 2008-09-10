@@ -11,7 +11,6 @@ import org.uispec4j.interception.WindowInterceptor;
 
 public class OfxExportTest extends LoggedInFunctionalTestCase {
 
-  // TODO CategorizationView
   public void testExport() throws Exception {
     OfxBuilder
       .init(this)
@@ -23,6 +22,8 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
       .check();
 
     transactions.getTable().selectRow(0);
+
+    // TODO En attente de refonte du split de transactions
     transactionDetails.openSplitDialog(0)
       .enterAmount("-1")
       .enterNote("COCA")

@@ -32,8 +32,11 @@ public abstract class AbstractRegexpTransactionTypeFinalizer implements Transact
       return true;
     }
 
-    String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
-    if (typeRegexp != null && bankType != null) {
+    if (typeRegexp != null) {
+      String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
+      if (bankType == null) {
+        return false;
+      }
       Matcher matcher = typeRegexp.matcher(bankType.toUpperCase());
       if (!matcher.matches()) {
         return false;
@@ -47,7 +50,6 @@ public abstract class AbstractRegexpTransactionTypeFinalizer implements Transact
       setTransactionType(transaction, repository, matcher);
       return true;
     }
-
     return false;
   }
 

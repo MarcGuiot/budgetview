@@ -59,7 +59,6 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
       protected void setTransactionType(Glob transaction, GlobRepository repository, Matcher matcher) {
         String date = matcher.group(matcherGroupForDate);
         String label = getLabel(matcher, labelRegexp);
-        System.out.println("DefaultTransactionAnalyzer.setTransactionType " + label);
         if (merge) {
           String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
           label = bankType + " " + label;
@@ -75,7 +74,6 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
     AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp, typeRegexp) {
       protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher) {
         String label = getLabel(matcher, labelRegexp);
-        System.out.println("DefaultTransactionAnalyzer.setTransactionType " + label);
         if (merge) {
           String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
           label = bankType + " " + label;
@@ -92,7 +90,6 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
     AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp, typeRegexp) {
       protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher) {
         String label = matcher.group();
-        System.out.println("DefaultTransactionAnalyzer.setTransactionType " + label);
         if (merge) {
           String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
           label = bankType + " " + label;

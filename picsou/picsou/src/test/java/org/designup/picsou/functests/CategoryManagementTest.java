@@ -6,7 +6,6 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.utils.Files;
 import static org.globsframework.utils.Utils.remove;
 import org.uispec4j.*;
 import org.uispec4j.interception.WindowHandler;
@@ -34,8 +33,8 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.select(MasterCategory.TRANSPORTS, MasterCategory.FOOD);
     transactions
       .initContent()
-      .add("20/04/2006", TransactionType.PRELEVEMENT, "Menu K", "", -49.00, MasterCategory.FOOD)
       .add("20/04/2006", TransactionType.PRELEVEMENT, "BP", "", -17.65, MasterCategory.TRANSPORTS)
+      .add("20/04/2006", TransactionType.PRELEVEMENT, "Menu K", "", -49.00, MasterCategory.FOOD)
       .add("19/04/2006", TransactionType.PRELEVEMENT, "Kalistea", "", -14.50, MasterCategory.FOOD)
       .add("13/04/2006", TransactionType.PRELEVEMENT, "ELF", "", -18.70, MasterCategory.TRANSPORTS)
       .check();
@@ -43,18 +42,17 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.select(MasterCategory.FOOD);
     transactions
       .initContent()
-      .add("20/04/2006", TransactionType.CREDIT_CARD, "Menu K", "", -49.00, MasterCategory.FOOD)
-      .add("19/04/2006", TransactionType.CREDIT_CARD, "Kalistea", "", -14.50, MasterCategory.FOOD)
+      .add("20/04/2006", TransactionType.PRELEVEMENT, "Menu K", "", -49.00, MasterCategory.FOOD)
+      .add("19/04/2006", TransactionType.PRELEVEMENT, "Kalistea", "", -14.50, MasterCategory.FOOD)
       .check();
 
     categories.select(MasterCategory.ALL);
     transactions
       .initContent()
-      .add("22/04/2006", TransactionType.CREDIT_CARD, "SACLAY", "", -55.49)
-      .add("20/04/2006", TransactionType.CREDIT_CARD, "Menu K", "", -49.00, MasterCategory.FOOD)
-      .add("20/04/2006", TransactionType.CREDIT_CARD, "BP", "", -17.65, MasterCategory.TRANSPORTS)
-      .add("19/04/2006", TransactionType.CREDIT_CARD, "Kalistea", "", -14.50, MasterCategory.FOOD)
-      .add("13/04/2006", TransactionType.CREDIT_CARD, "ELF", "", -18.70, MasterCategory.TRANSPORTS)
+      .add("20/04/2006", TransactionType.PRELEVEMENT, "BP", "", -17.65, MasterCategory.TRANSPORTS)
+      .add("20/04/2006", TransactionType.PRELEVEMENT, "Menu K", "", -49.00, MasterCategory.FOOD)
+      .add("19/04/2006", TransactionType.PRELEVEMENT, "Kalistea", "", -14.50, MasterCategory.FOOD)
+      .add("13/04/2006", TransactionType.PRELEVEMENT, "ELF", "", -18.70, MasterCategory.TRANSPORTS)
       .check();
   }
 
@@ -286,8 +284,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     views.selectData();
     categories.select("Courant");
     categories.deleteSubSelected(MasterCategory.FOOD);
-    categories.getTable()
-      .containsRow(new Object[]{getCategoryName(MasterCategory.FOOD), "-34"});
+    categories.checkValue(MasterCategory.FOOD, "-34");
 
     views.selectCategorization();
     categorization.selectTableRows(0, 1)

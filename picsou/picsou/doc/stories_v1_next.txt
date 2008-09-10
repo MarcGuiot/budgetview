@@ -7,12 +7,11 @@ Versions basique/pro
 
 Stabilisation
 -------------
-* Graphique page accueil
+* Finir page accueil (graphique, change log)
 * Changer date user des transactions
-* Histogramme trop charge
+* Corriger Histogramme
 * Modifier l'ordre des categories
 * Modifier l'ordre des series
-* BudgetArea "Projets" et "Economies"
 
 * Creer des transactions utilisateur (soit achats effectues mais pas encore dans les releves, soit previsions plus vagues)
 

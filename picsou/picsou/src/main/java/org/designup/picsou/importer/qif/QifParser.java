@@ -92,8 +92,9 @@ public class QifParser {
               }
             }
             if (value != null) {
-              System.out.println("QifParser.readNextTransaction " + value);
-              values.set(ImportedTransaction.BANK_TRANSACTION_TYPE, nValue.trim());
+              if (nValue != null) {
+                values.set(ImportedTransaction.BANK_TRANSACTION_TYPE, nValue.trim());
+              }
               values.set(ImportedTransaction.ORIGINAL_LABEL, value.trim());
               values.set(ImportedTransaction.LABEL, value.trim());
               return createTransaction(values);
