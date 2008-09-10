@@ -1,22 +1,23 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-public class LastTransactionToTimeServiceTrigger implements ChangeSetListener {
+public class CurrentMonthTrigger implements ChangeSetListener {
 
-  public LastTransactionToTimeServiceTrigger(Directory directory) {
+  public CurrentMonthTrigger(Directory directory) {
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    int lastMonthId = 0;
     if (changeSet.containsChanges(Transaction.TYPE)) {
       GlobList transactions = repository.getAll(Transaction.TYPE);
-      int lastMonthId = 0;
       for (Glob transaction : transactions) {
         Integer monthId = transaction.get(Transaction.BANK_MONTH);
         if (!transaction.get(Transaction.PLANNED) && monthId > lastMonthId) {
@@ -24,8 +25,15 @@ public class LastTransactionToTimeServiceTrigger implements ChangeSetListener {
         }
       }
       if (lastMonthId != 0) {
-        TimeService.setLastAvailableTransactionMonthId(lastMonthId);
+        repository.update(CurrentMonth.KEY, CurrentMonth.MONTH_ID, lastMonthId);
       }
+    }
+    if (changeSet.containsChanges(CurrentMonth.KEY) || lastMonthId != 0) {
+      Integer currentMonth = repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID);
+      GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.and(
+        GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+        GlobMatchers.fieldStrickyLesser(Transaction.MONTH, currentMonth)));
+      repository.delete(transactions);
     }
   }
 

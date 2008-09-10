@@ -3,6 +3,7 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.PicsouTestCase;
+import org.globsframework.model.FieldValue;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
@@ -19,16 +20,17 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
     TimeService.setLastAvailableTransactionMonthId(200808);
     super.setUp();
     directory.add(new TimeService());
-    repository.addTrigger(new LastTransactionToTimeServiceTrigger(directory));
+    repository.addTrigger(new CurrentMonthTrigger(directory));
     repository.addTrigger(new MonthsToSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetUpdateOccasionnalTrigger());
     repository.addTrigger(new SeriesBudgetUpdateTransactionTrigger(directory));
-    repository.addTrigger(new TransactionPlannedTrigger(directory));
+    repository.addTrigger(new TransactionPlannedTrigger());
     repository.addTrigger(new MonthStatTrigger(repository));
     final SeriesStatTrigger seriesStatTrigger = new SeriesStatTrigger();
     repository.addTrigger(seriesStatTrigger);
     repository.addTrigger(new OccasionalSeriesStatTrigger());
+    repository.create(CurrentMonth.KEY, FieldValue.value(CurrentMonth.MONTH_ID, 200808));
     repository.create(Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID),
                       value(Series.PROFILE_TYPE, ProfileType.UNKNOWN.getId()),
                       value(Series.BUDGET_AREA, BudgetArea.OCCASIONAL_EXPENSES.getId()));

@@ -25,6 +25,7 @@ import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.triggers.GlobStateChecker;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -34,12 +35,14 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.StringWriter;
 
 public class MainPanel {
   private PicsouFrame parent;
@@ -49,6 +52,7 @@ public class MainPanel {
   protected GlobsPanelBuilder builder;
   private MainWindow mainWindow;
   private RegisterLicenseAction registerAction;
+  private CheckRepoAction check;
 
   public static MainPanel show(GlobRepository repository, Directory directory, MainWindow mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -76,6 +80,7 @@ public class MainPanel {
     importFileAction = ImportFileAction.initAndRegisterInOpenRequestManager(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
     registerAction = new RegisterLicenseAction(parent, repository, directory);
+    check = new CheckRepoAction(parent, repository);
     exitAction = new ExitAction(directory);
 
     builder.add("editCategories", new EditCategoriesAction(repository, directory));
@@ -145,10 +150,13 @@ public class MainPanel {
     final RedoAction redoAction = new RedoAction(directory);
     editMenu.add(redoAction);
 
+    Utils.beginRemove();
+    editMenu.add(check);
+    Utils.endRemove();
+
     JMenuBar menuBar = new JMenuBar();
     menuBar.add(fileMenu);
     menuBar.add(editMenu);
-
     frame.setJMenuBar(menuBar);
 
     JRootPane rootPane = frame.getRootPane();
@@ -173,6 +181,29 @@ public class MainPanel {
     public void actionPerformed(ActionEvent e) {
       LicenseDialog dialog = new LicenseDialog(parent, repository, directory);
       dialog.show();
+    }
+  }
+
+  private static class CheckRepoAction extends AbstractAction {
+    private PicsouFrame parent;
+    private GlobRepository repository;
+
+    public CheckRepoAction(PicsouFrame parent, GlobRepository repository) {
+      super("check");
+      this.parent = parent;
+      this.repository = repository;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      GlobStateChecker globStateChecker = new GlobStateChecker(repository);
+      if (!globStateChecker.check()) {
+        java.util.List<GlobStateChecker.Correcteur> correcteurs = globStateChecker.getCorrecteurs();
+        StringWriter stringWriter = new StringWriter();
+        for (GlobStateChecker.Correcteur correcteur : correcteurs) {
+          stringWriter.append(correcteur.info()).append("\n-----------------------------------------\n");
+        }
+        throw new RuntimeException(stringWriter.toString());
+      }
     }
   }
 }

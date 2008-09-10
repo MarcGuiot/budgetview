@@ -82,7 +82,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, true);
+    categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, false);
     timeline.selectAll();
     transactions
       .initContent()
@@ -90,6 +90,5 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .add("04/08/2008", TransactionType.PRELEVEMENT, "ED", "", -50.00, "Courant")
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
       .check();
-
   }
 }

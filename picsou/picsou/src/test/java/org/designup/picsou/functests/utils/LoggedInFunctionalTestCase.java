@@ -8,12 +8,8 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
-import org.designup.picsou.model.LabelToCategory;
 import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.model.Transaction;
-import org.globsframework.model.FieldValue;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
@@ -111,6 +107,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void tearDown() throws Exception {
+    mainWindow.getMenuBar().getMenu("Edit").getSubMenu("check").click();
     super.tearDown();
     mainWindow.dispose();
     mainWindow = null;

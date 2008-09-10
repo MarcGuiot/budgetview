@@ -7,10 +7,7 @@ import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
-import org.designup.picsou.model.PicsouModel;
-import org.designup.picsou.model.ServerInformation;
-import org.designup.picsou.model.User;
-import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.model.*;
 import org.designup.picsou.model.initial.InitialCategories;
 import org.designup.picsou.model.initial.InitialSeries;
 import org.designup.picsou.triggers.*;
@@ -58,7 +55,7 @@ public class PicsouInit {
 
     repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
-    repository.addTrigger(new LastTransactionToTimeServiceTrigger(directory));
+    repository.addTrigger(new CurrentMonthTrigger(directory));
     repository.addTrigger(new RegistrationTrigger(directory));
     repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
     repository.addTrigger(new FutureMonthTrigger(directory));
@@ -66,16 +63,18 @@ public class PicsouInit {
     repository.addTrigger(new OccasionalSeriesBudgetCreationTrigger());
     repository.addTrigger(new SeriesBudgetUpdateOccasionnalTrigger());
     repository.addTrigger(new SeriesBudgetUpdateTransactionTrigger(directory));
-    repository.addTrigger(new TransactionPlannedTrigger(directory));
+    repository.addTrigger(new TransactionPlannedTrigger());
     repository.addTrigger(new MonthStatTrigger(repository));
     repository.addTrigger(new SeriesStatTrigger());
     repository.addTrigger(new OccasionalSeriesStatTrigger());
 
-    repository.create(User.TYPE,
-                      value(User.ID, User.SINGLETON_ID),
-                      value(User.NAME, user));
-    repository.create(ServerInformation.KEY,
-                      value(ServerInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.CONFIG_VERSION));
+    if (!newUser) {
+      repository.create(User.TYPE,
+                        value(User.ID, User.SINGLETON_ID),
+                        value(User.NAME, user));
+      repository.create(ServerInformation.KEY,
+                        value(ServerInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.CONFIG_VERSION));
+    }
     MutableChangeSet changeSet = new DefaultChangeSet();
     try {
       GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdate() {
@@ -92,9 +91,9 @@ public class PicsouInit {
     }
     serverAccess.applyChanges(changeSet, repository);
     if (newUser) {
-      repository.enterBulkDispatchingMode();
       try {
-        createDataForNewUser(repository);
+        repository.enterBulkDispatchingMode();
+        createDataForNewUser(user, repository);
       }
       finally {
         repository.completeBulkDispatchingMode();
@@ -111,10 +110,16 @@ public class PicsouInit {
     licenseCheckerThread.start();
   }
 
-  public static void createDataForNewUser(GlobRepository repository) {
+  public static void createDataForNewUser(String user, GlobRepository repository) {
+    repository.create(User.TYPE,
+                      value(User.ID, User.SINGLETON_ID),
+                      value(User.NAME, user));
+    repository.create(ServerInformation.KEY,
+                      value(ServerInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.CONFIG_VERSION));
     repository.create(UserPreferences.KEY,
                       FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT,
                                        UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS));
+    repository.create(CurrentMonth.KEY, FieldValue.value(CurrentMonth.MONTH_ID, 0));
     InitialCategories.run(repository);
     InitialSeries.run(repository);
   }

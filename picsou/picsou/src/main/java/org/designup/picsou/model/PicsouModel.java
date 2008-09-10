@@ -11,6 +11,7 @@ public class PicsouModel {
                           BankEntity.TYPE,
                           Category.TYPE,
                           Month.TYPE,
+                          CurrentMonth.TYPE,
                           Transaction.TYPE,
                           TransactionType.TYPE,
                           TransactionToCategory.TYPE,

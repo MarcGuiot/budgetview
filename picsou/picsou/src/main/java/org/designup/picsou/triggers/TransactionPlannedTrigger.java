@@ -1,23 +1,19 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Utils;
-import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
 import java.util.Iterator;
 import java.util.Set;
 
 public class TransactionPlannedTrigger implements ChangeSetListener {
-  private TimeService timeService;
 
-  public TransactionPlannedTrigger(Directory directory) {
-    timeService = directory.get(TimeService.class);
+  public TransactionPlannedTrigger() {
   }
 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -35,8 +31,8 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        Glob transaction = repository.get(key);
-        if (transaction.get(Transaction.PLANNED)) {
+        Glob transaction = repository.find(key);
+        if (transaction == null || transaction.get(Transaction.PLANNED)) {
           return;
         }
         Integer previousSeries;
@@ -77,7 +73,8 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           boolean isIncome = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome();
           double amount = newAmount - previousAmount;
           transfertAmount(series, amount, newMonth, isIncome,
-                          timeService.getLastAvailableTransactionMonthId(), repository);
+                          repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID),
+                          repository);
         }
         else if (!Utils.equal(previousMonth, newMonth) ||
                  !Utils.equal(previousSeries, newSeries) ||
@@ -85,7 +82,9 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           if (previousAmount != null && previousSeries != null) {
             Glob series = repository.find(Key.create(Series.TYPE, previousSeries));
             if (series != null) {
-              transfertToPlanned(series, previousMonth, -previousAmount, timeService.getLastAvailableTransactionMonthId(), repository);
+              transfertToPlanned(series, previousMonth, -previousAmount,
+                                 repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID),
+                                 repository);
             }
           }
           if (newAmount != null && newSeries != null) {

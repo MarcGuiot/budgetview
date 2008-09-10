@@ -136,6 +136,10 @@ public class SeriesStatTrigger implements ChangeSetListener {
       final Double transactionAmount = values.get(Transaction.AMOUNT);
       updateStat(stat, multiplier * transactionAmount, repository);
     }
+    else {
+      throw new RuntimeException("Missing stat for month " + values.get(Transaction.MONTH) + " on series : " +
+                                 GlobPrinter.toString(repository.get(Key.create(Series.TYPE, seriesId))));
+    }
   }
 
   private void updateStat(Glob stat, Double transactionAmount, GlobRepository repository) {
