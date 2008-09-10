@@ -1,9 +1,11 @@
 package org.designup.picsou.model;
 
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
@@ -19,6 +21,13 @@ public class TransactionTypeMatcher {
 
   @NoObfuscation
   public static StringField TYPE_NAME;
+
+  @NoObfuscation
+  public static StringField BANK_TYPE;
+
+  @NoObfuscation
+  @DefaultBoolean(false)
+  public static BooleanField MERGE;
 
   @NoObfuscation
   public static StringField REGEXP;

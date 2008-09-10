@@ -21,12 +21,20 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
                                                   GlobMatchers.fieldGreaterOrEqual(Series.LAST_MONTH, monthId)
                                                 ));
         for (Glob series : seriesList) {
+          GlobList existingSeriesBudget =
+            repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+              .getGlobs().sort(SeriesBudget.MONTH);
+
           Glob budget = repository.create(SeriesBudget.TYPE,
                                           value(SeriesBudget.ACTIVE, series.get(Series.getField(monthId))),
                                           value(SeriesBudget.SERIES, series.get(Series.ID)),
                                           value(SeriesBudget.DAY, series.get(Series.DAY)),
                                           value(SeriesBudget.MONTH, monthId));
+          Glob last = existingSeriesBudget.getLast();
           Double seriesAmount = series.get(Series.INITIAL_AMOUNT);
+          if (last != null) {
+            seriesAmount = last.get(SeriesBudget.AMOUNT);
+          }
           if (seriesAmount != null) {
             repository.update(budget.getKey(), SeriesBudget.AMOUNT, seriesAmount);
           }

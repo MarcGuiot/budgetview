@@ -35,4 +35,45 @@ public class SGTest extends SpecificBankTestCase {
       .add("24/04/2006", TransactionType.CREDIT_CARD, "SARL KALISTEA", "", -100.00)
       .check();
   }
+
+  public void testNewFormat() throws Exception {
+    operations.importQifFile(100.0, getFile("sg2008.qif"), "Societe Generale");
+    timeline.selectAll();
+    transactions
+      .initContent()
+      .add("28/08/2008", TransactionType.VIREMENT, "RECU    5945049317 DE: CPAM VAL D'OISE MOTIF: 082400010802 082400010802", "", 36.40)
+      .add("27/08/2008", TransactionType.CREDIT_CARD, "MONOPRIX    098", "", -25.72)
+      .add("26/08/2008", TransactionType.CREDIT_CARD, "ED HERBLAY 2", "", -153.35)
+      .add("26/08/2008", TransactionType.CREDIT_CARD, "LEROY MERLIN", "", -28.25)
+      .add("26/08/2008", TransactionType.VIREMENT, "REMISE CHEQUE       1000602 239 DE    1 CHQ 03281", "", 31.72)
+      .add("25/08/2008", TransactionType.WITHDRAWAL, "RETRAIT 08H50 PARIS CHARLES MICHELS  00904015", "", -40.00)
+      .add("25/08/2008", TransactionType.CHECK, "CHEQUE N. 626", "", -110.00)
+      .add("25/08/2008", TransactionType.CHECK, "CHEQUE N. 628", "", -730.53)
+      .add("25/08/2008", TransactionType.PRELEVEMENT, "EDF PR QE CLIO BRE *123631470383 21420*728 EDF PR", "", -72.00)
+      .add("24/08/2008", TransactionType.CREDIT_CARD, "MONOPRIX   1254", "", -13.59)
+      .add("22/08/2008", TransactionType.CREDIT_CARD, "APRR AUTOROUTE", "", -26.20)
+      .add("22/08/2008", TransactionType.CREDIT_CARD, "DAC SUPER U", "", -69.52)
+      .add("22/08/2008", TransactionType.CREDIT_CARD, "GEANT     CG807", "", -73.52)
+      .add("22/08/2008", TransactionType.WITHDRAWAL, "RETRAIT 08H50 LONS LE SAUNIER        01257261", "", -50.00)
+      .add("22/08/2008", TransactionType.CHECK, "CHEQUE N. 627", "", -65.00)
+      .add("22/08/2008", TransactionType.PRELEVEMENT, "COTISATION MENSUELLE JAZZ DONT CARTE M. GUIOT DU DOIGNON", "", -7.60)
+      .add("22/08/2008", TransactionType.PRELEVEMENT, "COTISATION MENSUELLE JAZZ DONT CARTE MME GUIOT DU DOIGNON", "", -3.80)
+      .add("22/08/2008", TransactionType.VIREMENT, "RECU    5342136428 DE: F. M. P. MOTIF: MUTUELLE MNPAF", "", 43.02)
+      .add("21/08/2008", TransactionType.CREDIT_CARD, "DAC SUPER U", "", -49.52)
+      .add("21/08/2008", TransactionType.CREDIT_CARD, "LA FOIR'FOUILLE", "", -14.45)
+      .add("21/08/2008", TransactionType.CREDIT_CARD, "CYBERCENTRALE COMMERCE ELECTRONIQUE", "", -29.99)
+      .add("20/08/2008", TransactionType.CREDIT_CARD, "MAG SUPER U", "", -36.87)
+      .add("20/08/2008", TransactionType.WITHDRAWAL, "RETRAIT 16H24 LONS LE SAUNIER        00902406", "", -30.00)
+      .add("19/08/2008", TransactionType.PRELEVEMENT, "GRAS SAVOYE ASS. CLUBS BOUYGUESDN0000429742 *000957        DN0000429742", "", -4.50)
+      .add("19/08/2008", TransactionType.PRELEVEMENT, "GAZ DE FRANCE DIRC 5000043251270004028*15780", "", -96.46)
+      .add("18/08/2008", TransactionType.CREDIT_CARD, "BAR LE TONNEAU", "", -23.80)
+      .add("18/08/2008", TransactionType.CREDIT_CARD, "MAG SUPER U", "", -18.28)
+      .add("18/08/2008", TransactionType.CHECK, "CHEQUE N. 624", "", -100.00)
+      .add("16/08/2008", TransactionType.CREDIT_CARD, "INTERMARCHE", "", -66.00)
+      .add("14/08/2008", TransactionType.CREDIT_CARD, "LIB DES ARCADES", "", -56.60)
+      .add("14/08/2008", TransactionType.CREDIT_CARD, "MAG SUPER U", "", -38.81)
+      .add("14/08/2008", TransactionType.CREDIT_CARD, "MAG SUPER U", "", -11.00)
+      .add("14/08/2008", TransactionType.CREDIT_CARD, "SNCF INTERNET COMMERCE ELECTRONIQUE", "", -21.60)
+      .check();
+  }
 }

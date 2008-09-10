@@ -93,7 +93,9 @@ public class TransactionAnalyzerFactory {
   private void registerMatchers(GlobRepository globRepository) {
     for (Glob matcher : globRepository.getAll(TransactionTypeMatcher.TYPE).sort(TransactionTypeMatcher.ID)) {
       String regexp = matcher.get(REGEXP);
+      String regexpForType = matcher.get(BANK_TYPE);
       TransactionType type = TransactionType.get(matcher);
+      Boolean merge = matcher.get(MERGE);
       String labelRegexp = matcher.get(LABEL);
       Integer groupForDate = matcher.get(GROUP_FOR_DATE);
       String dateFormat = matcher.get(DATE_FORMAT);
@@ -103,13 +105,13 @@ public class TransactionAnalyzerFactory {
 
       Glob bank = globRepository.findLinkTarget(matcher, BANK);
       if ((labelRegexp != null) && (groupForDate != null)) {
-        analyzer.addExclusive(regexp, type, labelRegexp, groupForDate, dateFormat, bank);
+        analyzer.addExclusive(regexp, type, regexpForType, merge, labelRegexp, groupForDate, dateFormat, bank);
       }
       else if (labelRegexp != null) {
-        analyzer.addExclusive(regexp, type, labelRegexp, bank);
+        analyzer.addExclusive(regexp, type, regexpForType, merge, labelRegexp, bank);
       }
       else {
-        analyzer.addExclusive(regexp, type, bank);
+        analyzer.addExclusive(regexp, type, regexpForType, merge, bank);
       }
     }
   }

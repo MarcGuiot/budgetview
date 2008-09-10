@@ -50,4 +50,46 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .checkRecurring(0)
       .checkPlannedRecurring(29.9);
   }
+
+  public void testCreationOfMonth() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -100., "Auchan")
+      .load();
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
+    LicenseChecker.enterLicense(mainWindow, "admin", "", 1);
+    timeline.assertSpanEquals("2008/06", "2008/08");
+    timeline.selectAll();
+    views.selectBudget();
+    budgetView.envelopes.editSeriesList().setName("Courant")
+      .checkTable(new Object[][]{
+        {"2008", "June", "100.00"},
+        {"2008", "July", "100.00"},
+        {"2008", "August", "100.00"}});
+
+    views.selectData();
+    transactions
+      .initContent()
+      .add("30/08/2008", TransactionType.PLANNED, "Courant", "", -100.00, "Courant")
+      .add("30/07/2008", TransactionType.PLANNED, "Courant", "", -100.00, "Courant")
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
+      .check();
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/08/4", -50., "ED")
+      .load();
+
+    views.selectCategorization();
+    categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, true);
+    timeline.selectAll();
+    transactions
+      .initContent()
+      .add("30/08/2008", TransactionType.PLANNED, "Courant", "", -50.00, "Courant")
+      .add("04/08/2008", TransactionType.PRELEVEMENT, "ED", "", -50.00, "Courant")
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
+      .check();
+
+  }
 }

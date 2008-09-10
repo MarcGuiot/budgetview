@@ -148,6 +148,7 @@ public class ImportSession {
         value(Transaction.LABEL_FOR_CATEGORISATION, importedTransaction.get(ImportedTransaction.LABEL_FOR_CATEGORISATION)),
         value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
         value(Transaction.ORIGINAL_LABEL, importedTransaction.get(ImportedTransaction.ORIGINAL_LABEL)),
+        value(Transaction.BANK_TRANSACTION_TYPE, importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE)),
         value(Transaction.SPLIT, importedTransaction.get(ImportedTransaction.SPLIT)),
         value(Transaction.SPLIT_SOURCE, importedTransaction.get(ImportedTransaction.SPLIT_SOURCE))
       );

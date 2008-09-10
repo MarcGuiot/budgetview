@@ -48,37 +48,56 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
     TransactionType type =
       amount < 0 ? PRELEVEMENT : VIREMENT;
     repository.setTarget(transaction.getKey(),
-                             Transaction.TRANSACTION_TYPE,
-                             type.getGlob().getKey());
+                         Transaction.TRANSACTION_TYPE,
+                         type.getGlob().getKey());
   }
 
-  public void addExclusive(String regexp, final TransactionType type,
+  public void addExclusive(String regexp, final TransactionType type, final String typeRegexp, final Boolean merge,
                            final String labelRegexp, final Integer matcherGroupForDate, final String dateFormat,
                            Glob bank) {
-    AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp) {
+    AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp, typeRegexp) {
       protected void setTransactionType(Glob transaction, GlobRepository repository, Matcher matcher) {
         String date = matcher.group(matcherGroupForDate);
         String label = getLabel(matcher, labelRegexp);
+        System.out.println("DefaultTransactionAnalyzer.setTransactionType " + label);
+        if (merge) {
+          String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
+          label = bankType + " " + label;
+        }
         setTransactionType(transaction, repository, type, label, date, new SimpleDateFormat(dateFormat));
       }
     };
     exclusiveFinalizers.put(bank.get(Bank.ID), finalizer);
   }
 
-  public void addExclusive(String regexp, final TransactionType type, final String labelRegexp, Glob bank) {
-    AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp) {
+  public void addExclusive(String regexp, final TransactionType type, final String typeRegexp, final Boolean merge,
+                           final String labelRegexp, Glob bank) {
+    AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp, typeRegexp) {
       protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher) {
-        setTransactionType(transaction, globRepository, type, getLabel(matcher, labelRegexp));
+        String label = getLabel(matcher, labelRegexp);
+        System.out.println("DefaultTransactionAnalyzer.setTransactionType " + label);
+        if (merge) {
+          String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
+          label = bankType + " " + label;
+        }
+        setTransactionType(transaction, globRepository, type, label);
       }
     };
     exclusiveFinalizers.put(bank.get(Bank.ID), finalizer);
   }
 
-  public void addExclusive(String regexp, final TransactionType type, Glob bank) {
+  public void addExclusive(String regexp, final TransactionType type, final String typeRegexp, final Boolean merge,
+                           Glob bank) {
 
-    AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp) {
+    AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp, typeRegexp) {
       protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher) {
-        setTransactionType(transaction, globRepository, type, matcher.group());
+        String label = matcher.group();
+        System.out.println("DefaultTransactionAnalyzer.setTransactionType " + label);
+        if (merge) {
+          String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
+          label = bankType + " " + label;
+        }
+        setTransactionType(transaction, globRepository, type, label);
       }
     };
     exclusiveFinalizers.put(bank.get(Bank.ID), finalizer);
@@ -89,7 +108,7 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
   }
 
   private String getLabel(Matcher matcher, String labelRegexp) {
-    return matcher.replaceAll(labelRegexp);
+    return matcher.replaceFirst(labelRegexp);
   }
 }
 

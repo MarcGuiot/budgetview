@@ -17,8 +17,12 @@ import java.util.regex.Pattern;
 public abstract class AbstractRegexpTransactionTypeFinalizer implements TransactionTypeFinalizer {
 
   private Pattern pattern;
+  private Pattern typeRegexp;
 
-  public AbstractRegexpTransactionTypeFinalizer(String regexp) {
+  public AbstractRegexpTransactionTypeFinalizer(String regexp, String typeRegexp) {
+    if (typeRegexp != null) {
+      this.typeRegexp = Pattern.compile(typeRegexp);
+    }
     this.pattern = Pattern.compile(regexp);
   }
 
@@ -26,6 +30,14 @@ public abstract class AbstractRegexpTransactionTypeFinalizer implements Transact
     String label = transaction.get(Transaction.LABEL);
     if (label == null) {
       return true;
+    }
+
+    String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
+    if (typeRegexp != null && bankType != null) {
+      Matcher matcher = typeRegexp.matcher(bankType.toUpperCase());
+      if (!matcher.matches()) {
+        return false;
+      }
     }
 
     String upperCaseLabel = label.toUpperCase().trim();

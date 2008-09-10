@@ -38,6 +38,7 @@ public class Transaction {
   public static StringField ORIGINAL_LABEL;
   public static BooleanField DISPENSABLE; // unused
   public static StringField LABEL_FOR_CATEGORISATION;
+  public static StringField BANK_TRANSACTION_TYPE;
 
   @Target(Category.class)
   @DefaultInteger(0)
@@ -183,6 +184,7 @@ public class Transaction {
       output.writeString(fieldValues.get(Transaction.ORIGINAL_LABEL));
       output.writeString(fieldValues.get(Transaction.LABEL));
       output.writeString(fieldValues.get(Transaction.LABEL_FOR_CATEGORISATION));
+      output.writeString(fieldValues.get(Transaction.BANK_TRANSACTION_TYPE));
       output.writeString(fieldValues.get(Transaction.NOTE));
       output.writeInteger(fieldValues.get(Transaction.MONTH));
       output.writeInteger(fieldValues.get(Transaction.DAY));
@@ -211,6 +213,7 @@ public class Transaction {
       fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readString());
       fieldSetter.set(Transaction.LABEL, input.readString());
       fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readString());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readString());
       fieldSetter.set(Transaction.NOTE, input.readString());
       fieldSetter.set(Transaction.MONTH, input.readInteger());
       fieldSetter.set(Transaction.DAY, input.readInteger());
