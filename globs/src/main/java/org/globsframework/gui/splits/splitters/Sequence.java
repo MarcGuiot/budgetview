@@ -3,11 +3,15 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
+import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.DoubleOperation;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class Sequence extends AbstractSplitter {
   private Direction direction;
@@ -33,11 +37,13 @@ public class Sequence extends AbstractSplitter {
   }
 
   public ComponentStretch createRawStretch(SplitsContext context) {
-    return createPanel(getSubSplitters(), direction, context);
+    return createPanel(getSubSplitters(), direction, context, properties.get("ref"));
   }
 
-  public static ComponentStretch createPanel(Splitter[] subSplitters, Direction direction, SplitsContext context) {
-    GridBagBuilder builder = GridBagBuilder.init().setOpaque(false);
+  public static ComponentStretch createPanel(Splitter[] subSplitters, Direction direction, SplitsContext context, String ref) {
+    JPanel panel = getPanel(ref, context);
+
+    GridBagBuilder builder = GridBagBuilder.init(panel).setOpaque(false);
 
     double weightX = 0.0;
     double weightY = 0.0;
@@ -56,6 +62,20 @@ public class Sequence extends AbstractSplitter {
       weightY = direction.weightYOperation.get(weightY, stretch.getWeightY());
     }
     return new ComponentStretch(builder.getPanel(), Fill.BOTH, Anchor.CENTER, weightX, weightY);
+  }
+
+  private static JPanel getPanel(String ref, SplitsContext context) {
+    if (ref == null) {
+      return new JPanel();
+    }
+    Component component = context.findComponent(ref);
+    if (component == null) {
+      throw new SplitsException("Referenced component '" + ref + "' not found");
+    }
+    if (!(component instanceof JPanel)) {
+      throw new SplitsException("Referenced component '" + ref + "' must be a JPanel");
+    }
+    return (JPanel)component;
   }
 
   protected String[] getExcludedParameters() {

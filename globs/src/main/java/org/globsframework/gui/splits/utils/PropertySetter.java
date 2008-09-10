@@ -108,11 +108,11 @@ public class PropertySetter {
     }
     catch (IllegalAccessException e) {
       throw new SplitsException("Could not invoke setter found for property '" + attribute +
-                                "' in class " + componentClass.getSimpleName(), e);
+                                "' in class " + componentClass.getName(), e);
     }
     catch (InvocationTargetException e) {
       throw new SplitsException("Setter for property '" + attribute +
-                                "' in class " + componentClass.getSimpleName() + "' threw exception:", e);
+                                "' in class " + componentClass.getName() + "' threw exception:", e);
     }
 
     if (targetValue instanceof Action) {

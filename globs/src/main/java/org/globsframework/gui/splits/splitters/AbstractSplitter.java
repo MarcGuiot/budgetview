@@ -82,7 +82,6 @@ public abstract class AbstractSplitter implements Splitter {
     builder.append("</b></p>");
     java.util.List<String> propertyNames = new ArrayList<String>();
     propertyNames.addAll(Arrays.asList(properties.getPropertyNames()));
-    propertyNames.remove("ref");
     Collections.sort(propertyNames);
     if (propertyNames.size() > 0) {
       builder.append("<hr><table border='0'>");
