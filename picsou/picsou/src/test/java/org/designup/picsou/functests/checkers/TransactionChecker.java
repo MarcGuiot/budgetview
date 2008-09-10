@@ -20,16 +20,16 @@ import org.uispec4j.interception.WindowInterceptor;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TransactionChecker extends ViewChecker {
   public static final String TO_CATEGORIZE = "To categorize";
 
   private Table table;
+  private Window mainWindow;
 
   public TransactionChecker(Window window) {
     super(window);
+    mainWindow = window;
   }
 
   public void checkHeader(String... columnNames) {
@@ -146,15 +146,51 @@ public class TransactionChecker extends ViewChecker {
     UISpecAssert.assertFalse(seriesButton.isEnabled());
   }
 
-  public class ContentChecker {
-    private List<Object[]> content = new ArrayList<Object[]>();
+  public void checkSeries(String transactionLabel, String seriesName) {
+    checkSeries(getIndexOf(transactionLabel), seriesName);
+  }
+
+  public void checkSeries(int row, String seriesName) {
+    Button seriesButton = getTable().editCell(row, TransactionView.CATEGORY_COLUMN_INDEX).getButton();
+    UISpecAssert.assertThat(seriesButton.textEquals(seriesName));
+  }
+
+  public void checkCategory(String label, MasterCategory category) {
+    checkCategory(getIndexOf(label), category);
+  }
+
+  // TODO
+  /** @deprecated A FAIRE MARCHER QUAND IL Y AURA LA COLONNE CATEGORIE ! */
+  public void checkCategory(int row, MasterCategory category) {
+    System.out.println("##########  TransactionChecker.checkCategory: TODO");
+  }
+
+  // TODO
+  /** @deprecated A FAIRE MARCHER QUAND IL Y AURA LA COLONNE CATEGORIE ! */
+  public void checkCategory(int row, String categoryName) {
+    System.out.println("##########  TransactionChecker.checkCategory: TODO");
+  }
+
+  private int getIndexOf(String transactionLabel) {
+    return getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, transactionLabel);
+  }
+
+  public TextBox getSearchField() {
+    return mainWindow.getInputTextBox("transactionSearchField");
+  }
+
+  public class ContentChecker extends TableChecker {
 
     private ContentChecker() {
     }
 
+    protected Table getTable() {
+      return TransactionChecker.this.getTable();
+    }
+
     public ContentChecker add(String date, TransactionType type, String label,
                               String note, double amount, String... category) {
-      content.add(new Object[]{date, "(" + type.getName() + ")" + stringifySubCategoryNames(category), label,
+      add(new Object[]{date, "(" + type.getName() + ")" + stringifySubCategoryNames(category), label,
                                TransactionChecker.this.toString(amount),
                                note});
       return this;
@@ -162,7 +198,7 @@ public class TransactionChecker extends ViewChecker {
 
     public ContentChecker add(String date, TransactionType type, String label,
                               String note, double amount, MasterCategory master, String category) {
-      content.add(new Object[]{date, "(" + type.getName() + ")" + stringifyCategoryNames(master) + ", " + category, label,
+      add(new Object[]{date, "(" + type.getName() + ")" + stringifyCategoryNames(master) + ", " + category, label,
                                TransactionChecker.this.toString(amount),
                                note});
       return this;
@@ -246,11 +282,6 @@ public class TransactionChecker extends ViewChecker {
         TextBox label = (TextBox)categoryLabels[0];
         return "\"" + label.getText() + "\"";
       }
-    }
-
-    public void check() {
-      Object[][] expectedContent = content.toArray(new Object[content.size()][]);
-      assertTrue(getTable().contentEquals(expectedContent));
     }
   }
 

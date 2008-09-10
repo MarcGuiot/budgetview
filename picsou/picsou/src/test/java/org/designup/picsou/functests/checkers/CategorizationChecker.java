@@ -5,6 +5,7 @@ import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.Glob;
 import org.uispec4j.Button;
 import org.uispec4j.*;
@@ -39,7 +40,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker checkLabel(int count) {
-    assertTrue(getTransactionLabel().textEquals(count + " operations are selected."));
+    assertTrue(getTransactionLabel().textEquals(count + " operations"));
     return this;
   }
 
@@ -209,7 +210,6 @@ public class CategorizationChecker extends DataChecker {
 
     Panel panel = getIncomeSeriesPanel();
     assertTrue(panel.getToggleButton(seriesName).isSelected());
-
     return this;
   }
 
@@ -484,6 +484,11 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
+  public CategorizationChecker checkNoSelectedTableRows() {
+    assertTrue(getTable().selectionIsEmpty());
+    return this;
+  }
+
   public CategorizationChecker checkSelectedTableRows(int... rows) {
     assertTrue(getTable().rowsAreSelected(rows));
     return this;
@@ -522,11 +527,11 @@ public class CategorizationChecker extends DataChecker {
     assertEquals(enabled, getPanel().getCheckBox("similar").isSelected());
   }
 
-  public void enableAutoSelection() {
+  public void enableAutoSelectSimilar() {
     getPanel().getCheckBox("similar").select();
   }
 
-  public void disableAutoSelection() {
+  public void disableAutoSelectSimilar() {
     getPanel().getCheckBox("similar").unselect();
   }
 
@@ -579,7 +584,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   private TextBox getTransactionLabel() {
-    return getPanel().getTextBox("transactionLabel");
+    return getPanel().getTextBox("userLabel");
   }
 
   public void setExceptionalIncome(String label, String seriesName, boolean showSeriesInitialization) {
@@ -659,5 +664,29 @@ public class CategorizationChecker extends DataChecker {
     selectSavings();
     selectSavingsSeries(seriesName, master, showSeriesInitialization);
     return this;
+  }
+
+  public CategorizationTableChecker initContent() {
+    return new CategorizationTableChecker();
+  }
+
+  public class CategorizationTableChecker extends TableChecker {
+
+    private CategorizationTableChecker() {
+    }
+
+    public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount, MasterCategory category) {
+      add(new Object[]{date, label, amount});
+      return this;
+    }
+    
+    public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount) {
+      add(new Object[]{date, label, amount});
+      return this;
+    }
+
+    protected Table getTable() {
+      return CategorizationChecker.this.getTable();
+    }
   }
 }

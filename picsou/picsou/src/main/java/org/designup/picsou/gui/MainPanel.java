@@ -19,6 +19,7 @@ import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.transactions.UncategorizedMessageView;
+import org.designup.picsou.gui.transactions.details.TransactionSearch;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
@@ -69,7 +70,6 @@ public class MainPanel {
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
-    TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory, transactionView);
     CategoryView categoryView = new CategoryView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
 
@@ -80,6 +80,9 @@ public class MainPanel {
 
     builder.add("editCategories", new EditCategoriesAction(repository, directory));
 
+    TransactionSearch search = new TransactionSearch(transactionView, directory);
+    builder.add("transactionSearchField", search.getTextField());
+
     createPanel(
       new TitleView(repository, directory),
       new UncategorizedMessageView("uncategorizedMessage", "categorizeRemainingTransactions",
@@ -89,7 +92,6 @@ public class MainPanel {
                                    Lang.get("transaction.allocation.action"),
                                    repository, directory),
       transactionView,
-      transactionDetailsView,
       timeView,
       categoryView,
       new AccountView(repository, directory),

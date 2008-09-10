@@ -15,8 +15,6 @@ import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -32,7 +30,7 @@ import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import java.awt.*;
 
-public class TransactionView extends View implements GlobSelectionListener, ColorChangeListener {
+public class TransactionView extends View implements GlobSelectionListener {
   public static final int DATE_COLUMN_INDEX = 0;
   public static final int CATEGORY_COLUMN_INDEX = 1;
   public static final int LABEL_COLUMN_INDEX = 2;
@@ -52,7 +50,6 @@ public class TransactionView extends View implements GlobSelectionListener, Colo
     rendererColors = new TransactionRendererColors(directory);
     createTable();
     this.transactionSelection = transactionSelection;
-    directory.get(ColorService.class).addListener(this);
     transactionSelection.addListener(this);
   }
 
@@ -141,10 +138,5 @@ public class TransactionView extends View implements GlobSelectionListener, Colo
 
   public GlobTableView getView() {
     return view;
-  }
-
-  protected void finalize() throws Throwable {
-    super.finalize();
-    colorService.removeListener(this);
   }
 }

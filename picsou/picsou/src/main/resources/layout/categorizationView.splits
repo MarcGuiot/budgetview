@@ -9,9 +9,9 @@
     <style selector="checkBox" font="-,plain,10"/>
   </styles>
 
-  <panel>
+  <panel styleClass="main">
 
-    <horizontalSplit dividerLocation="350" resizeWeight="0" opaque="false">
+    <horizontalSplit dividerLocation="500" resizeWeight="0" opaque="false">
 
       <column>
         <label text="$categorization.list.title" styleClass="blockTitle"/>
@@ -29,79 +29,89 @@
         </panel>
       </column>
 
-      <column>
-        <label text="$categorization.series.title" styleClass="blockTitle"/>
-        <panel styleClass="block">
-          <column styleClass="innerBlock">
+      <verticalSplit dividerLocation="170">
 
-            <label ref="transactionLabel" anchor="left" marginBottom="10"/>
+        <column>
+          <label text="$categorization.details.title" styleClass="blockTitle"/>
+          <panel styleClass="block">
+            <panel ref="transactionDetails" styleClass="innerBlock"/>
+          </panel>
+        </column>
 
-            <label text="$categorization.step1" styleClass="categorizationStep"/>
+        <column>
+          <label text="$categorization.series.title" styleClass="blockTitle"/>
+          <panel styleClass="block">
+            <column styleClass="innerBlock">
 
-            <toggleButton ref="invisibleBudgetAreaToggle" visible="false"/>
-            <panel minimumSize="(300,68)" weightY="0.1" border="etched" background="dialog.block" opaque="true">
-              <repeat ref="budgetAreas" layout="verticalGrid" gridWrapLimit="2" margin="5">
-                <toggleButton ref="budgetAreaToggle" styleClass="selector" anchor="left"/>
-              </repeat>
-            </panel>
+              <toggleButton ref="invisibleBudgetAreaToggle" visible="false"/>
+              <column minimumSize="(300,68)" weightY="0.1">
+                <panel border="matte(1,1,0,1,#999999)" background="categorization.budgetAreas.bg" opaque="true">
+                  <repeat ref="budgetAreas" layout="verticalGrid" gridWrapLimit="2" margin="5">
+                    <toggleButton ref="budgetAreaToggle" styleClass="selector" anchor="left"/>
+                  </repeat>
+                </panel>
 
-            <label text="$categorization.step2" styleClass="categorizationStep"/>
+                <cards ref="cards" weightY="100" opaque="false">
 
-            <cards ref="cards" weightY="100" opaque="false">
+                  <card name="noBudgetArea">
+                    <scrollPane border="etched">
+                      <htmlEditorPane text="$categorization.no.budget.area" editable="false" opaque="false"/>
+                    </scrollPane>
+                  </card>
 
-              <card name="noBudgetArea">
-                <htmlEditorPane text="$categorization.no.budget.area" editable="false" opaque="false"/>
-              </card>
+                  <card name="income">
+                    <panel ref="incomeSeriesChooser"/>
+                  </card>
 
-              <card name="income">
-                <panel ref="incomeSeriesChooser"/>
-              </card>
+                  <card name="recurringExpenses">
+                    <panel ref="recurringSeriesChooser"/>
+                  </card>
 
-              <card name="recurringExpenses">
-                <panel ref="recurringSeriesChooser"/>
-              </card>
+                  <card name="expensesEnvelope">
+                    <panel ref="envelopeSeriesChooser"/>
+                  </card>
 
-              <card name="expensesEnvelope">
-                <panel ref="envelopeSeriesChooser"/>
-              </card>
-
-              <card name="occasionalExpenses">
-                <column name="occasionalSeriesChooser">
-                  <scrollPane marginBottom="0">
-                    <column>
-                      <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
-                      <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn" border="empty(5)">
+                  <card name="occasionalExpenses">
+                    <column name="occasionalSeriesChooser">
+                      <scrollPane marginBottom="0" border="etched">
                         <column>
-                          <row>
-                            <toggleButton ref="occasionalCategoryToggle" styleClass="masterCategorySelector"/>
-                          </row>
-                          <repeat ref="occasionalSubcatRepeat" marginLeft="10" background="#FF0000">
-                            <toggleButton ref="occasionalSubcatToggle" styleClass="subCategorySelector"/>
+                          <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
+                          <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn" border="empty(5)">
+                            <column>
+                              <row>
+                                <toggleButton ref="occasionalCategoryToggle" styleClass="masterCategorySelector"/>
+                              </row>
+                              <repeat ref="occasionalSubcatRepeat" marginLeft="10" background="#FF0000">
+                                <toggleButton ref="occasionalSubcatToggle" styleClass="subCategorySelector"/>
+                              </repeat>
+                            </column>
                           </repeat>
                         </column>
-                      </repeat>
+                      </scrollPane>
+                      <row styleClass="iconButtonGroup">
+                        <button action="editCategories" styleClass="list"/>
+                        <filler fill="horizontal"/>
+                      </row>
                     </column>
-                  </scrollPane>
-                  <row styleClass="iconButtonGroup">
-                    <button action="editCategories" styleClass="list"/>
-                    <filler fill="horizontal"/>
-                  </row>
-                </column>
-              </card>
+                  </card>
 
-              <card name="projects">
-                <panel ref="projectSeriesChooser"/>
-              </card>
+                  <card name="projects">
+                    <panel ref="projectSeriesChooser"/>
+                  </card>
 
-              <card name="savings">
-                <panel ref="savingsSeriesChooser"/>
-              </card>
+                  <card name="savings">
+                    <panel ref="savingsSeriesChooser"/>
+                  </card>
 
-            </cards>
+                </cards>
 
-          </column>
-        </panel>
-      </column>
+              </column>
+
+            </column>
+          </panel>
+        </column>
+      </verticalSplit>
+
     </horizontalSplit>
   </panel>
 </splits>

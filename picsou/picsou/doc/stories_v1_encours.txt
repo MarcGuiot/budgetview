@@ -11,6 +11,7 @@ SeriesEditionDialog
 * Creation de series INCOME ou SAVINGS : preselectionner les categories par defaut
 * Look header
 * Titre : "creer une enveloppe ? editer les enveloppes ? editer les recurrences ?"
+* Colonne "montant observe"
 
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)

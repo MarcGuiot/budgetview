@@ -3,8 +3,8 @@ package org.designup.picsou.gui.transactions;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.gui.transactions.details.TransactionSearch;
 import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
+import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
@@ -30,16 +30,16 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
-import java.text.DecimalFormat;
 
 public class TransactionDetailsView extends View {
-  private TransactionView transactionView;
+  private TableView tableView;
 
-  public TransactionDetailsView(GlobRepository repository, Directory directory, TransactionView transactionView) {
+  public TransactionDetailsView(GlobRepository repository, Directory directory, TableView tableView) {
     super(repository, directory);
-    this.transactionView = transactionView;
+    this.tableView = tableView;
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -50,6 +50,7 @@ public class TransactionDetailsView extends View {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(TransactionDetailsView.class, "/layout/transactionDetails.splits",
                             repository, directory);
+
     builder.add("transactionType",
                 addLabel(new GlobListFieldStringifier(Transaction.TRANSACTION_TYPE, "", "") {
                   protected String stringify(Object value) {
@@ -86,18 +87,16 @@ public class TransactionDetailsView extends View {
     builder.add("averageAmount",
                 addLabel(GlobListStringifiers.average(Transaction.AMOUNT, PicsouDescriptionService.DECIMAL_FORMAT), true));
 
-    builder.add("categoryChooserPanel",
+    builder.add("splitPanel",
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_ONE,
                                              repository, directory));
 
-    builder.addLabel("categoryName", Transaction.CATEGORY).setAutoHideIfEmpty(true);
-
-    builder.addMultiLineTextView("splitMessage", Transaction.TYPE, new SplitStringifier()).setAutoHideIfEmpty(true);
+    builder.addLabel("splitMessage", Transaction.TYPE, new SplitStringifier()).setAutoHideIfEmpty(true);
 
     builder.add("splitLink", new SplitTransactionAction(repository, directory));
 
     builder.add("originalLabel",
-                GlobMultiLineTextView.init(Transaction.TYPE, repository, directory,
+                GlobLabelView.init(Transaction.TYPE, repository, directory,
                                            new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, "..."))
                   .setAutoHideMatcher(new OriginalLabelVisibilityMatcher()));
 
@@ -105,36 +104,30 @@ public class TransactionDetailsView extends View {
                 addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true)
                   .setAutoHideMatcher(new BankDateVisibilityMatcher()));
 
-    builder.add("transactionSeriesName",
-                addLabel(descriptionService.getListStringifier(Transaction.SERIES), true));
-
-    TransactionSearch search = new TransactionSearch(transactionView, directory);
-    builder.add("searchField", search.getTextField());
-
     return builder;
   }
 
   private void addNoSelectionPanel(GlobsPanelBuilder builder) {
 
-    builder.add("noSelectionPanel",
+    final JPanel noSelectionPanel =
+      builder.add("noSelectionPanel",
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.EMPTY,
                                              repository, directory));
+    noSelectionPanel.setVisible(true);
 
-    final JLabel label = new JLabel();
-    final JLabel spent = new JLabel();
-    final JLabel received = new JLabel();
-    final JLabel total = new JLabel();
-    builder.add("noSelectionLabel", label);
-    builder.add("noSelectionSpent", spent);
-    builder.add("noSelectionReceived", received);
-    builder.add("noSelectionTotal", total);
+    final JLabel label = builder.add("noSelectionLabel", new JLabel());
+    final JLabel spent = builder.add("noSelectionSpent", new JLabel());
+    final JLabel received = builder.add("noSelectionReceived", new JLabel());
+    final JLabel total = builder.add("noSelectionTotal", new JLabel());
 
-    transactionView.addTableListener(new TableModelListener() {
+    tableView.addTableListener(new TableModelListener() {
       public void tableChanged(TableModelEvent e) {
-        GlobList transactions = transactionView.getView().getGlobs();
+        GlobList transactions = tableView.getDisplayedGlobs();
+
+        noSelectionPanel.setVisible(!transactions.isEmpty());
+
         if (transactions.isEmpty()) {
           label.setText(Lang.get("transaction.details.noselection.label.none"));
-          total.setText("");
           received.setVisible(false);
           spent.setVisible(false);
           total.setVisible(false);

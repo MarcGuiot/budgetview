@@ -26,13 +26,18 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectIncome();
     categorization.selectIncomeSeries("Salary", true);
 
+    System.out.println("CategorizationTest.testStandardIncomeTransaction: DATA");
+
     views.selectData();
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkSeries("Salary");
-    transactionDetails.checkCategory(MasterCategory.INCOME);
+    transactions.checkSeries("WorldCo/june", "Salary");
+    transactions.checkCategory("WorldCo/june", MasterCategory.INCOME);
+
+    System.out.println("CategorizationTest.testStandardIncomeTransaction: CATEGORIZATION");
 
     views.selectCategorization();
+    categorization.checkSelectedTableRows(0);
     categorization.checkIncomeSeriesIsSelected("Salary");
+
     categorization.createIncomeSeries()
       .setName("Exceptional Income")
       .setCategory(MasterCategory.INCOME)
@@ -57,12 +62,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
     views.selectData();
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkSeries("Internet");
-    transactionDetails.checkCategory(MasterCategory.TELECOMS);
+    transactions.checkSeries(0, "Internet");
+    transactions.checkCategory(0, MasterCategory.TELECOMS);
 
     views.selectCategorization();
-    categorization.selectTableRows(0);
+    categorization.checkSelectedTableRows(0);
     categorization.checkRecurringSeriesIsSelected("Internet");
     categorization.selectNewRecurringSeries("Rental", MasterCategory.HOUSE, true);
     categorization.checkRecurringSeriesIsNotSelected("Internet");
@@ -81,9 +85,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
     views.selectData();
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkSeries("Groceries");
-    transactionDetails.checkCategory(MasterCategory.FOOD);
+    transactions.checkSeries(0, "Groceries");
+    transactions.checkCategory(0, MasterCategory.FOOD);
   }
 
   public void testStandardOccasionalTransaction() throws Exception {
@@ -108,9 +111,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectOccasionalSeries(MasterCategory.FOOD);
 
     views.selectData();
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkSeries("Occasional");
-    transactionDetails.checkCategory(MasterCategory.FOOD);
+    transactions.checkSeries(0, "Occasional");
+    transactions.checkCategory(0, MasterCategory.FOOD);
 
     views.selectCategorization();
     categorization.selectTableRows(0);
@@ -118,9 +120,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectOccasionalSeries(MasterCategory.FOOD, "Saucisson");
 
     views.selectData();
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkSeries("Occasional");
-    transactionDetails.checkCategory("Saucisson");
+    transactions.checkSeries(0, "Occasional");
+    transactions.checkCategory(0, "Saucisson");
   }
 
   public void testSeriesUnselectedAfterCategorization() throws Exception {
@@ -205,7 +206,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"15/06/2008", "Auchan", -40.00},
       {"30/06/2008", "Carouf", -29.90},
     });
-    categorization.checkSelectedTableRows(0);
     categorization.selectTableRows(0, 1);
     categorization.selectEnvelopes();
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
@@ -216,10 +216,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Carouf", "", -29.90, MasterCategory.FOOD)
       .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, MasterCategory.FOOD)
       .check();
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkSeries("Groceries");
-    transactions.getTable().selectRow(1);
-    transactionDetails.checkSeries("Groceries");
+    transactions.checkSeries(0, "Groceries");
+    transactions.checkSeries(1, "Groceries");
 
     views.selectHome();
     informationPanel.assertNoWarningIsDisplayed();
@@ -258,7 +256,37 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkBudgetAreasAreEnabled();
   }
 
-  public void testAutomaticSelectionOfSimilarTransactions() throws Exception {
+  public void testAutoSelectSimilarTransactionsByDoubleClick() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
+      .addTransaction("2008/06/25", -29.90, "Free Telecom 25/05")
+      .addTransaction("2008/06/24", -29.90, "Free Telecom 21/04")
+      .addTransaction("2008/06/15", -90.0, "Cheque 1111")
+      .addTransaction("2008/06/14", -80.0, "Cheque 2222")
+      .load();
+
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "CHEQUE N. 1111", -90.00},
+      {"14/06/2008", "CHEQUE N. 2222", -80.00},
+      {"24/06/2008", "Free Telecom 21/04", -29.90},
+      {"25/06/2008", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "Free Telecom 26/06", -29.90}
+    });
+
+    categorization.disableAutoSelectSimilar();
+    categorization.disableAutoHide();
+    categorization.disableAutoSelectNext();
+
+    categorization.getTable().doubleClick(0, 0);
+    categorization.checkSelectedTableRows(0);
+
+    categorization.getTable().doubleClick(2, 0);
+    categorization.checkSelectedTableRows(2, 3, 4);
+  }
+
+  public void testAutomaticSelectionOfSimilarTransactionsMode() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
@@ -277,7 +305,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
 
-    categorization.checkAutoSelectSimilarEnabled(true);
+    categorization.checkAutoSelectSimilarEnabled(false);
+    categorization.enableAutoSelectSimilar();
+    categorization.disableAutoHide();
+    categorization.disableAutoSelectNext();
+
     categorization.selectTableRows(0);
     categorization.checkLabel(2);
 
@@ -285,14 +317,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(3);
     categorization.checkSelectedTableRows(2, 3, 4);
 
-    categorization.disableAutoSelection();
+    categorization.disableAutoSelectSimilar();
     categorization.checkSelectedTableRows(2, 3, 4);
     categorization.selectTableRows(1);
     categorization.checkSelectedTableRows(1);
     categorization.selectTableRows(3);
     categorization.checkSelectedTableRows(3);
 
-    categorization.enableAutoSelection();
+    categorization.enableAutoSelectSimilar();
     categorization.checkSelectedTableRows(2, 3, 4);
     categorization.selectRecurring();
     categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
@@ -313,6 +345,36 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testAutomaticSelectionOfSimilarTransactionsAreOnlySelectedInTheVisibleScope() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
+      .addTransaction("2008/05/25", -29.90, "Free Telecom 25/05")
+      .addTransaction("2008/04/24", -29.90, "Free Telecom 21/04")
+      .load();
+
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
+      {"24/04/2008", "Free Telecom 21/04", -29.90},
+      {"25/05/2008", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "Free Telecom 26/06", -29.90}
+    });
+    categorization.enableAutoSelectSimilar();
+
+    timeline.selectMonth("2008/06");
+    categorization.selectTableRow(0);
+    transactionDetails.checkLabel("Free Telecom 26/06");
+    categorization.setRecurring(0, "Internet", MasterCategory.TELECOMS, true);
+
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet")
+      .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90)
+      .add("24/04/2008", TransactionType.PRELEVEMENT, "Free Telecom 21/04", "", -29.90)
+      .check();
+  }
+
   public void testAutomaticSelectionExcludesChecks() throws Exception {
     OfxBuilder
       .init(this)
@@ -322,7 +384,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.checkAutoSelectSimilarEnabled(true);
+    categorization.enableAutoSelectSimilar();
     categorization.selectTableRow(0);
     categorization.checkSelectedTableRows(0);
   }
@@ -336,7 +398,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.checkAutoSelectSimilarEnabled(true);
+    categorization.enableAutoSelectSimilar();
     categorization.selectTableRows(0, 2);
     categorization.checkSelectedTableRows(0, 2);
   }
@@ -359,6 +421,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
     categorization.checkAutoHideEnabled(false);
     categorization.enableAutoHide();
+    categorization.enableAutoSelectSimilar();
+    categorization.disableAutoHide();
+
     categorization.selectTableRow(0);
     categorization.checkSelectedTableRows(0);
     categorization.selectEnvelopes();
@@ -370,7 +435,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
 
-    categorization.selectTableRows(1);
+    categorization.selectTableRows(1, 2);
     categorization.checkSelectedTableRows(1, 2);
     categorization.checkBudgetAreasAreEnabled();
     categorization.selectRecurring();
@@ -416,6 +481,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.disableAutoHide();
+    categorization.disableAutoSelectSimilar();
+    categorization.disableAutoSelectNext();
+
     categorization.selectTableRows(0, 1);
     categorization.selectEnvelopes();
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
@@ -426,7 +494,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    categorization.checkSelectedTableRows(2, 3);
+    categorization.checkSelectedTableRows(0, 1);
     categorization.checkBudgetAreasAreEnabled();
 
     categorization.enableAutoHide();
@@ -434,7 +502,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    categorization.checkSelectedTableRows(0, 1);
+    categorization.checkNoSelectedTableRows();
 
     categorization.disableAutoHide();
     categorization.checkTable(new Object[][]{
@@ -443,7 +511,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    categorization.checkSelectedTableRows(2, 3);
+    categorization.checkNoSelectedTableRows();
   }
 
   public void testAutoSelectNext() throws Exception {
@@ -462,24 +530,21 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    categorization.checkAutoSelectNextEnabled(true);
+    categorization.checkAutoSelectNextEnabled(false);
+    categorization.enableAutoSelectNext();
+    categorization.disableAutoSelectSimilar();
+    categorization.disableAutoHide();
+
     categorization.selectTableRow(0);
     categorization.selectEnvelopes();
-
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
-    categorization.checkTable(new Object[][]{
-      {"15/05/2008", "Auchan", -90.00},
-      {"14/05/2008", "Carouf", -80.00},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
-    });
     categorization.checkSelectedTableRows(1);
-
     categorization.selectEnvelopes();
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, false);
 
-    categorization.checkSelectedTableRows(2, 3);
+    categorization.checkSelectedTableRows(2);
+    categorization.selectTableRows(2, 3);
     categorization.selectRecurring();
     categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
@@ -519,6 +584,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
     categorization.disableAutoSelectNext();
+    categorization.disableAutoSelectSimilar();
+    categorization.disableAutoHide();
+
     categorization.selectTableRow(0);
     categorization.selectEnvelopes();
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
@@ -535,7 +603,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.checkAutoSelectNextEnabled(true);
+    categorization.enableAutoSelectNext();
+    categorization.enableAutoSelectSimilar();
+    categorization.disableAutoHide();
+
     categorization.checkTable(new Object[][]{
       {"15/05/2008", "Auchan", -90.00},
       {"14/05/2008", "Carouf", -80.00},
@@ -560,15 +631,17 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   public void testAutoSelectWraps() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
-      .addTransaction("2008/05/25", -29.90, "Free Telecom 25/05")
       .addTransaction("2008/05/15", -90.00, "Auchan")
       .addTransaction("2008/05/14", -80.00, "Carouf")
+      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
+      .addTransaction("2008/05/25", -29.90, "Free Telecom 25/05")
       .load();
 
     views.selectCategorization();
-    categorization.checkAutoSelectNextEnabled(true);
-    categorization.checkAutoSelectSimilarEnabled(true);
+    categorization.enableAutoSelectNext();
+    categorization.enableAutoSelectSimilar();
+    categorization.disableAutoHide();
+
     categorization.selectTableRow(2);
     categorization.checkSelectedTableRows(2, 3);
     categorization.selectRecurring();

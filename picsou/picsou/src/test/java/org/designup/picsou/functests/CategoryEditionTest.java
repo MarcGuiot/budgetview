@@ -170,8 +170,7 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       }).run();
     categoryEdition.validate();
 
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkSeries("Groceries");
+    transactions.checkSeries(0, "Groceries");
   }
 
   public void testCanReuseNameUsedInOtherMaster() throws Exception {

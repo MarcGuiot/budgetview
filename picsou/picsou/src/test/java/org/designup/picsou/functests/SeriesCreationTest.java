@@ -32,9 +32,8 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkContainsIncomeSeries("Prime");
 
     views.selectData();
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkSeries("Prime");
-    transactionDetails.checkCategory(MasterCategory.INCOME);
+    transactions.checkSeries(0, "Prime");
+    transactions.checkCategory(0, MasterCategory.INCOME);
     transactions.initContent()
       .add("30/06/2008", TransactionType.PRELEVEMENT, "WorldCo/june", "", -1129.90, "Prime")
       .check();
@@ -59,9 +58,8 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkContainsRecurringSeries("Culture");
 
     views.selectData();
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkSeries("Culture");
-    transactionDetails.checkCategory(MasterCategory.EDUCATION);
+    transactions.checkSeries(0, "Culture");
+    transactions.checkCategory(0, MasterCategory.EDUCATION);
   }
 
   public void testNewEnvelopeSeries() throws Exception {
@@ -84,9 +82,8 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkContainsEnvelope("Regime", MasterCategory.FOOD);
 
     views.selectData();
-    transactions.getTable().selectRow(0);
-    transactionDetails.checkSeries("Regime");
-    transactionDetails.checkCategory(MasterCategory.FOOD);
+    transactions.checkSeries(0, "Regime");
+    transactions.checkCategory(0, MasterCategory.FOOD);
   }
 
   public void testSeriesUnselectedAfterCategorization() throws Exception {

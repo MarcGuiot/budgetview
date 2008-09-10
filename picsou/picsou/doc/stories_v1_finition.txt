@@ -1,8 +1,10 @@
 
 - Blocks budgetview : splitpane invisibles (PIcsouSplitPaneUI dans PicsouStyles + dessiner un trait?)
 
+- Mac: -Dapple.awt.graphics.UseQuartz=false
 
-- Import : Selectionner automatiquement la banque par defaut si une seule banque dans les comptes existants
+- Import : supprimer URL banque
+
 - BalanceGraph : couleur si balance negative
 
 - Import : utiliser une PicsouDialog
