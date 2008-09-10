@@ -93,7 +93,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker checkCategory(MasterCategory... masterCategories) {
     String categories[] = new String[masterCategories.length];
-    int i =0;
+    int i = 0;
     for (MasterCategory category : masterCategories) {
       categories[i] = getCategoryName(category);
       i++;
@@ -437,5 +437,9 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesEditionDialogChecker checkLabelIncomeAmount() {
     assertThat(dialog.getTextBox("seriesEditionAmountLabel").textEquals("Planned income"));
     return this;
+  }
+
+  public SeriesDeleteDialogChecker deleteSeriesWithAsk() {
+    return new SeriesDeleteDialogChecker(WindowInterceptor.getModalDialog(dialog.getButton("delete").triggerClick()));
   }
 }

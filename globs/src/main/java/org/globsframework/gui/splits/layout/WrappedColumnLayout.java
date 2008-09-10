@@ -23,7 +23,27 @@ public class WrappedColumnLayout implements LayoutManager {
   public void removeLayoutComponent(Component comp) {
   }
 
+  interface SizeAccesor {
+    Dimension getSize(Component component);
+  }
+
   public Dimension preferredLayoutSize(Container parent) {
+    return getAdjustedSize(parent, new SizeAccesor() {
+      public Dimension getSize(Component component) {
+        return component.getPreferredSize();
+      }
+    });
+  }
+
+  public Dimension minimumLayoutSize(Container parent) {
+    return getAdjustedSize(parent, new SizeAccesor() {
+      public Dimension getSize(Component component) {
+        return component.getMinimumSize();
+      }
+    });
+  }
+
+  private Dimension getAdjustedSize(Container parent, SizeAccesor sizeAccesor) {
     Component[] components = parent.getComponents();
     Rectangle[] positions = new Rectangle[components.length];
     for (int i = 0; i < positions.length; i++) {
@@ -31,7 +51,7 @@ public class WrappedColumnLayout implements LayoutManager {
     }
     double totalHeight = 0;
     for (Component component : components) {
-      Dimension dimension = component.getPreferredSize();
+      Dimension dimension = sizeAccesor.getSize(component);
       totalHeight += dimension.getHeight();
     }
     double height = totalHeight / maxColumnCount;
@@ -44,14 +64,12 @@ public class WrappedColumnLayout implements LayoutManager {
       int width = 0;
       int currentColumn = 0;
       int i = 0;
-      int previousI = 0;
       for (Component component : components) {
-        int componentHeight = component.getPreferredSize().height;
+        int componentHeight = sizeAccesor.getSize(component).height;
         if (y + componentHeight > height && atLeatOneComponentPerColumn(y) && notInLastColumn(currentColumn)) {
           x += maxWidth[currentColumn];
           y = 0;
           currentColumn++;
-          previousI = i;
         }
         Rectangle position = positions[i];
         position.x = x;
@@ -60,10 +78,8 @@ public class WrappedColumnLayout implements LayoutManager {
         position.height = componentHeight;
         y += componentHeight;
         maxheight[currentColumn] = y;
-        maxWidth[currentColumn] = Math.max(maxWidth[currentColumn], component.getPreferredSize().width);
-        for (int j = previousI; j < i; j++) {
-          positions[j].width = maxWidth[currentColumn];
-        }
+        maxWidth[currentColumn] = Math.max(maxWidth[currentColumn],
+                                           sizeAccesor.getSize(component).width);
         i++;
       }
       if (currentColumn == maxColumnCount - 1) {
@@ -80,17 +96,12 @@ public class WrappedColumnLayout implements LayoutManager {
         tryCount = MAX_COUNT;
       }
     }
-    int i = 0;
     Dimension preferredSize = new Dimension();
     for (int width : maxWidth) {
       preferredSize.width += width;
     }
     preferredSize.height = (int)height;
     return preferredSize;
-  }
-
-  public Dimension minimumLayoutSize(Container parent) {
-    return new Dimension(100, 100);
   }
 
   public void layoutContainer(Container parent) {
@@ -123,21 +134,27 @@ public class WrappedColumnLayout implements LayoutManager {
     while (tryCount < MAX_COUNT) {
       int x = 0;
       int y = 0;
-      int width = parent.getWidth() / columnCount;
+      int availableWidth = parent.getWidth() / columnCount;
+      int maxPreferedWitdth = 0;
       int currentColumn = 0;
       int i = 0;
       for (Component component : components) {
-        int componentHeight = component.getPreferredSize().height;
+        Dimension preferredSize = component.getPreferredSize();
+        Dimension minSize = component.getMinimumSize();
+        int componentHeight = preferredSize.height;
         if (y + componentHeight > height && atLeatOneComponentPerColumn(y) && notInLastColumn(currentColumn)) {
           currentColumn++;
-          x += width;
+          x += maxPreferedWitdth;
           y = 0;
+          maxPreferedWitdth = 0;
         }
         Rectangle position = positions[i];
         position.x = x;
         position.y = y;
-        position.width = width;
+        position.width = availableWidth > preferredSize.width ? preferredSize.width :
+                         (availableWidth < minSize.width ? minSize.width : availableWidth);
         position.height = componentHeight;
+        maxPreferedWitdth = Math.max(maxPreferedWitdth, position.width);
         y += componentHeight;
         maxheight[currentColumn] = y;
         i++;

@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Series;
@@ -10,12 +9,11 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -26,7 +24,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
   protected JToggleButton invisibleToggle;
   protected ButtonGroup buttonGroup = new ButtonGroup();
 
-  protected GlobStringifier seriesStringifier;
+  protected GlobListStringifier seriesStringifier;
   protected GlobStringifier categoryStringifier;
   protected GlobStringifier budgetAreaStringifier;
 
@@ -36,6 +34,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
   protected SelectionService selectionService;
 
   protected GlobList currentTransactions = GlobList.EMPTY;
+  private DefaultChangeSetListener categoryUpdateListener;
 
   public AbstractSeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository repository, Directory directory) {
     this.invisibleToggle = invisibleToggle;
@@ -44,7 +43,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
     this.parent = directory.get(JFrame.class);
 
     DescriptionService descriptionService = directory.get(DescriptionService.class);
-    seriesStringifier = descriptionService.getStringifier(Series.TYPE);
+    seriesStringifier = descriptionService.getListStringifier(Series.TYPE);
     categoryStringifier = descriptionService.getStringifier(Category.TYPE);
     budgetAreaStringifier = descriptionService.getStringifier(BudgetArea.TYPE);
 
@@ -61,9 +60,20 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
   protected void createUpdatableCategoryToggle(final Glob category, final Key seriesKey,
                                                String repeatToggleName, BudgetArea budgetArea,
                                                RepeatCellBuilder cellBuilder, String toggleName) {
-
     String toggleLabel = categoryStringifier.toString(category, repository);
     final JToggleButton toggle = createSeriesToggle(toggleLabel, seriesKey, category.getKey());
+    final Key key = category.getKey();
+    categoryUpdateListener = new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(key)) {
+          Glob category = repository.find(key);
+          if (category != null) {
+            toggle.setText(categoryStringifier.toString(category, repository));
+          }
+        }
+      }
+    };
+    repository.addChangeListener(categoryUpdateListener);
     toggle.setName(toggleName);
     cellBuilder.add(repeatToggleName, toggle);
     buttonGroup.add(toggle);
@@ -74,6 +84,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
       public void dispose() {
         updater.dispose();
         buttonGroup.remove(toggle);
+        repository.removeChangeListener(categoryUpdateListener);
       }
     });
   }

@@ -68,12 +68,6 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
       }
     }, Month.TYPE);
 
-    selectionService.addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        System.out.println("CategorizationView.selectionUpdated: " + selection.getAll(Transaction.TYPE));
-      }
-    }, Transaction.TYPE);
-
     colorService.addListener(this);
   }
 
@@ -358,7 +352,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
       return;
     }
 
-    final GlobList similarTransactions = getSimilarTransactions(currentTransactions.get(0), repository);
+    final GlobList similarTransactions = getSimilarTransactions(currentTransactions.get(0));
     if (similarTransactions.size() > 1) {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
@@ -368,7 +362,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     }
   }
 
-  public GlobList getSimilarTransactions(Glob reference, GlobRepository repository) {
+  public GlobList getSimilarTransactions(Glob reference) {
     final String referenceLabel = reference.get(Transaction.LABEL_FOR_CATEGORISATION);
     if (Strings.isNullOrEmpty(referenceLabel)) {
       return new GlobList(reference);

@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.categories;
 
+import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.utils.PicsouMatchers;
-import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -119,7 +119,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
                                             new OkAction(), new CloseAction(), directory);
 
     JPanel panel = (JPanel)builder.getComponent("masterRepeat");
-    panel.setLayout(new WrappedColumnLayout(4));
+    panel.setLayout(new WrappedColumnLayout(5));
 
     dialog.pack();
   }

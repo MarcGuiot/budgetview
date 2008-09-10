@@ -11,6 +11,7 @@ import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
@@ -192,6 +193,12 @@ public class CategorizationChecker extends DataChecker {
     return recurringSeriesPanel;
   }
 
+  public CategorizationChecker checkContainsButtonInReccuring(String label) {
+    Panel panel = getRecurringSeriesPanel();
+    assertTrue(panel.getToggleButton(label).isEnabled());
+    return this;
+  }
+
   public CategorizationChecker checkRecurringSeriesIsSelected(String seriesName) {
     assertTrue(getPanel().getToggleButton("RecurringExpenses").isSelected());
 
@@ -220,6 +227,15 @@ public class CategorizationChecker extends DataChecker {
 
   public CategorizationChecker selectEnvelopes() {
     getPanel().getToggleButton("expensesEnvelope").click();
+    return this;
+  }
+
+  public CategorizationChecker checkContainsLabelInEnvelope(String label) {
+    Panel panel = getEnvelopeSeriesPanel();
+    Assertion assertion = panel.containsLabel(label);
+    if (!assertion.isTrue()) {
+      assertTrue(panel.getToggleButton(label).isEnabled());
+    }
     return this;
   }
 
@@ -393,6 +409,11 @@ public class CategorizationChecker extends DataChecker {
     assertTrue(getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).isSelected());
   }
 
+  public void checkOccasionalContainLabel(String category) {
+    assertTrue(getPanel().getToggleButton("occasionalExpenses").isSelected());
+    assertTrue(getOccasionalSeriesPanel().getToggleButton(category).isEnabled());
+  }
+
   public void checkContainsOccasionalCategories(String[] names) {
     selectOccasional();
     Panel panel = getOccasionalSeriesPanel();
@@ -469,9 +490,9 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker editSeries() {
+  public SeriesEditionDialogChecker editSeries(boolean isSingleSelection) {
     final Window creationDialog = WindowInterceptor.getModalDialog(getPanel().getButton("editSeries").triggerClick());
-    return new SeriesEditionDialogChecker(creationDialog, false);
+    return new SeriesEditionDialogChecker(creationDialog, isSingleSelection);
   }
 
   public CategorizationChecker checkTable(Object[][] content) {

@@ -162,7 +162,22 @@ public class SeriesEditionDialog {
     };
     builder.add("deleteBeginSeriesDate", deleteBeginDateAction);
 
-    beginDateCalendar = new CalendarAction(Series.FIRST_MONTH, Series.LAST_MONTH, -1);
+    beginDateCalendar = new CalendarAction(Series.FIRST_MONTH, -1) {
+
+      protected Integer getMonthLimit() {
+        GlobList transactions = localRepository.findByIndex(Transaction.SERIES_INDEX, currentSeries.get(Series.ID))
+          .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, false), localRepository)
+          .sort(Transaction.MONTH);
+        Glob firstMonth = transactions.getFirst();
+        if (firstMonth == null) {
+          return currentSeries.get(Series.LAST_MONTH);
+        }
+        if (currentSeries.get(Series.LAST_MONTH) != null) {
+          return Math.min(firstMonth.get(Transaction.MONTH), currentSeries.get(Series.LAST_MONTH));
+        }
+        return firstMonth.get(Transaction.MONTH);
+      }
+    };
     builder.add("beginSeriesCalendar", beginDateCalendar);
 
     builder.add("endSeriesDate",
@@ -176,7 +191,21 @@ public class SeriesEditionDialog {
       }
     };
     builder.add("deleteEndSeriesDate", deleteEndDateAction);
-    endDateCalendar = new CalendarAction(Series.LAST_MONTH, Series.FIRST_MONTH, 1);
+    endDateCalendar = new CalendarAction(Series.LAST_MONTH, 1) {
+
+      protected Integer getMonthLimit() {
+        GlobList transactions = localRepository.findByIndex(Transaction.SERIES_INDEX, currentSeries.get(Series.ID))
+          .sort(Transaction.MONTH);
+        Glob lastMonth = transactions.getLast();
+        if (lastMonth == null) {
+          return currentSeries.get(Series.FIRST_MONTH);
+        }
+        if (currentSeries.get(Series.FIRST_MONTH) != null) {
+          return Math.max(lastMonth.get(Transaction.MONTH), currentSeries.get(Series.FIRST_MONTH));
+        }
+        return lastMonth.get(Transaction.MONTH);
+      }
+    };
     builder.add("endSeriesCalendar", endDateCalendar);
 
     amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT)
@@ -323,8 +352,10 @@ public class SeriesEditionDialog {
       globsToLoad.add(series);
       globsToLoad.addAll(repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
                                                 series.get(Series.ID)).getGlobs());
+      globsToLoad.addAll(repository.findByIndex(Transaction.SERIES_INDEX, series.get(Series.ID))
+        .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, false), repository));
     }
-    localRepository.reset(globsToLoad, SeriesBudget.TYPE, Series.TYPE);
+    localRepository.reset(globsToLoad, SeriesBudget.TYPE, Series.TYPE, Transaction.TYPE);
   }
 
   private void initCategorizeVisibility() {
@@ -500,6 +531,7 @@ public class SeriesEditionDialog {
 
     public void actionPerformed(ActionEvent e) {
       localRepository.commitChanges(false);
+      localRepository.rollback();
       dialog.setVisible(false);
     }
   }
@@ -510,6 +542,7 @@ public class SeriesEditionDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
+      localRepository.rollback();
       dialog.setVisible(false);
     }
   }
@@ -526,12 +559,39 @@ public class SeriesEditionDialog {
   }
 
   private class DeleteSeriesAction extends AbstractAction {
+    private GlobList seriesToDelete = GlobList.EMPTY;
+    private SeriesDeleteDialog seriesDeleteDialog;
+
     public DeleteSeriesAction() {
       super("delete");
-      setEnabled(false);
+      selectionService.addListener(new GlobSelectionListener() {
+        public void selectionUpdated(GlobSelection selection) {
+          seriesToDelete = selection.getAll(Series.TYPE);
+          setEnabled(!seriesToDelete.isEmpty());
+        }
+      }, Series.TYPE);
+      seriesDeleteDialog = new SeriesDeleteDialog(localRepository, localDirectory, dialog);
     }
 
     public void actionPerformed(ActionEvent e) {
+      if (seriesToDelete.isEmpty()) {
+        return;
+      }
+      Set<Integer> series = seriesToDelete.getValueSet(Series.ID);
+      GlobList transactionsForSeries = localRepository.getAll(Transaction.TYPE, fieldIn(Transaction.SERIES, series));
+      if (transactionsForSeries.isEmpty()) {
+        localRepository.delete(seriesToDelete);
+      }
+      else {
+        if (seriesDeleteDialog.show()) {
+          localRepository.delete(seriesToDelete);
+          for (Glob transaction : transactionsForSeries) {
+            localRepository.update(transaction.getKey(), Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
+          }
+          GlobList seriesToCategory = localRepository.getAll(SeriesToCategory.TYPE, fieldIn(SeriesToCategory.SERIES, series));
+          localRepository.delete(seriesToCategory);
+        }
+      }
     }
   }
 
@@ -606,38 +666,29 @@ public class SeriesEditionDialog {
     }
   }
 
-  private class CalendarAction extends AbstractAction {
+  private abstract class CalendarAction extends AbstractAction {
     private IntegerField date;
-    private IntegerField relativeDate;
     private int sens;
 
-    private CalendarAction(IntegerField date, IntegerField relativeDate, int sens) {
+    private CalendarAction(IntegerField date, int sens) {
       this.date = date;
-      this.relativeDate = relativeDate;
       this.sens = sens;
     }
+
+
+    protected abstract Integer getMonthLimit();
 
     public void actionPerformed(ActionEvent e) {
       int sens = this.sens;
       MonthChooserDialog chooser = new MonthChooserDialog(localDirectory);
       Integer monthId = currentSeries.get(date);
-      Integer limit = 0;
+      Integer limit = getMonthLimit();
       if (monthId == null) {
-        monthId = currentSeries.get(relativeDate);
-        if (monthId == null) {
-          monthId = localDirectory.get(TimeService.class).getCurrentMonthId();
-          sens = 0;
-        }
-        else {
-          limit = monthId;
-        }
+        monthId = limit == null ? localDirectory.get(TimeService.class).getCurrentMonthId() : limit;
       }
-      else {
-        limit = currentSeries.get(relativeDate);
-        if (limit == null) {
-          sens = 0;
-          limit = 0;
-        }
+      if (limit == null) {
+        limit = 0;
+        sens = 0;
       }
       int result = chooser.show(dialog, monthId, sens, limit);
       if (result == -1) {

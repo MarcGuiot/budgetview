@@ -8,7 +8,7 @@ import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class SeriesEditionTest extends LoggedInFunctionalTestCase {
-  
+
   public void testStandardEdition() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
@@ -21,7 +21,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.checkTable(new Object[][] {
+    categorization.checkTable(new Object[][]{
       {"29/07/2008", "Free Telecom", -29.00}
     });
     categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
@@ -409,7 +409,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectEnvelopes()
       .selectEnvelopeSeries("courant", MasterCategory.FOOD, false)
       .selectEnvelopeSeries("courant", MasterCategory.CLOTHING, false);
-    
+
     views.selectData();
     transactions.checkCategory(0, MasterCategory.CLOTHING);
     transactions.checkSeries(0, "courant");
@@ -532,6 +532,27 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
+  public void testStartEndDateWithTransaction() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
+    views.selectBudget();
+    SeriesEditionDialogChecker editSeries = budgetView.envelopes.editSeries("Courant");
+    editSeries.getStartCalendar()
+      .checkIsEnabled(200805, 200806, 200807)
+      .checkIsDisabled(200808, 200809)
+      .selectMonth(200806);
+
+    editSeries.getEndCalendar()
+      .checkIsDisabled(200805, 200806)
+      .checkIsEnabled(200807, 200808)
+      .selectMonth(200808);
+
+  }
+
   public void testDateAndBudgetSeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2007/02/10", -29.00, "Free Telecom")
@@ -603,7 +624,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  public void testCreateNewCategory() throws Exception {
+  public void testCreateNewCategoryFromCategoryChooser() throws Exception {
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
     CategoryChooserChecker chooser = edition.openCategory();
@@ -611,5 +632,90 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .createMasterCategory("Assurance")
       .validate();
     chooser.checkContains("Assurance");
+  }
+
+  public void testRenameSeriesAndCategory() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -60, "Forfait Kro")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.selectEnvelopes();
+    categorization.createEnvelopeSeries()
+      .setName("AA")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    SeriesEditionDialogChecker seriesEdition = categorization.editSeries(false)
+      .selectSeries("AA")
+      .setName("AA1");
+    CategoryChooserChecker categoryChooser = seriesEdition
+      .openCategory();
+    categoryChooser.openCategoryEdition()
+      .selectMaster(MasterCategory.FOOD)
+      .renameMaster(getCategoryName(MasterCategory.FOOD), "Boire")
+      .validate();
+    categoryChooser.checkContains("Boire");
+    categoryChooser.selectCategory("Boire");
+    categoryChooser.validate();
+    seriesEdition.checkCategory("Boire");
+    seriesEdition.validate();
+    categorization.checkContainsLabelInEnvelope("AA1");
+    categorization.checkContainsLabelInEnvelope("Boire");
+  }
+
+  public void testRenameReccurent() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -60, "Forfait Kro")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.selectRecurring();
+    categorization.createRecurringSeries()
+      .setName("AA")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    views.selectCategorization();
+    categorization.selectRecurring();
+    categorization.checkContainsButtonInReccuring("AA");
+    views.selectBudget();
+    budgetView.recurring.editSeries("AA").setName("AA2").validate();
+    views.selectCategorization();
+    categorization.checkContainsButtonInReccuring("AA2");
+  }
+
+  public void testDeleteJustCreatedSeries() throws Exception {
+    views.selectBudget();
+    budgetView.income.createSeries()
+      .setName("AA")
+      .deleteSeries()
+      .checkSeriesList();
+  }
+
+  public void testDeleteUsedSeries() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -60, "Forfait Kro")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.selectEnvelopes();
+    categorization.createEnvelopeSeries()
+      .setName("AA")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes
+      .editSeriesList();
+    edition
+      .selectSeries("AA")
+      .deleteSeriesWithAsk()
+      .checkMessage()
+      .validate();
+    edition.checkSeriesList();
   }
 }

@@ -135,7 +135,7 @@ public class MonthChooserChecker extends DataChecker {
   public MonthChooserChecker checkIsDisabled(int... monthIds) {
     for (int monthId : monthIds) {
       centerTo(monthId);
-      assertFalse(getButtonInCurrentYear(Month.toMonth(monthId)).isEnabled());
+      assertFalse(monthId + " is enable.", getButtonInCurrentYear(Month.toMonth(monthId)).isEnabled());
     }
     return this;
   }
@@ -161,5 +161,11 @@ public class MonthChooserChecker extends DataChecker {
     final JDialog jDialog = (JDialog)dialog.getAwtComponent();
     KeyUtils.pressKey(jDialog.getRootPane(), Key.ESCAPE);
     assertFalse(dialog.isVisible());
+  }
+
+  public MonthChooserChecker selectMonth(int monthId) {
+    centerTo(monthId);
+    selectMonthInCurrent(Month.toMonth(monthId));
+    return this;
   }
 }

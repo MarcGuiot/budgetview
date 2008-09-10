@@ -198,4 +198,22 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
 
     categories.validate();
   }
+
+  public void testRenameCategoryUpdateOccational() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/15", -2.0, "Auchan", MasterCategory.HOUSE)
+      .load();
+    views.selectData();
+    categories.openEditionDialog()
+      .selectMaster(MasterCategory.FOOD)
+      .renameMaster(getCategoryName(MasterCategory.FOOD), "Boire")
+      .validate();
+    views.selectCategorization();
+    categorization
+      .selectTableRow(0)
+      .selectOccasional()
+      .checkOccasionalContainLabel("Boire");
+  }
+
 }

@@ -38,6 +38,7 @@ public class Transaction {
   public static StringField ORIGINAL_LABEL;
   public static BooleanField DISPENSABLE; // unused
   public static StringField LABEL_FOR_CATEGORISATION;
+  public static StringField BANK_TRANSACTION_TYPE;
 
   @Target(Category.class)
   @DefaultInteger(0)
@@ -69,10 +70,13 @@ public class Transaction {
 
   public static NotUniqueIndex MONTH_INDEX;
 
+  public static NotUniqueIndex SERIES_INDEX;
+
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(Transaction.class, "transaction");
     loader.defineNonUniqueIndex(LABEL_FOR_CATEGORISATION_INDEX, LABEL_FOR_CATEGORISATION);
     loader.defineNonUniqueIndex(MONTH_INDEX, MONTH);
+    loader.defineNonUniqueIndex(SERIES_INDEX, SERIES);
   }
 
   public static int fullDate(Glob transaction) {
@@ -183,6 +187,7 @@ public class Transaction {
       output.writeString(fieldValues.get(Transaction.ORIGINAL_LABEL));
       output.writeString(fieldValues.get(Transaction.LABEL));
       output.writeString(fieldValues.get(Transaction.LABEL_FOR_CATEGORISATION));
+      output.writeString(fieldValues.get(Transaction.BANK_TRANSACTION_TYPE));
       output.writeString(fieldValues.get(Transaction.NOTE));
       output.writeInteger(fieldValues.get(Transaction.MONTH));
       output.writeInteger(fieldValues.get(Transaction.DAY));
@@ -211,6 +216,7 @@ public class Transaction {
       fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readString());
       fieldSetter.set(Transaction.LABEL, input.readString());
       fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readString());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readString());
       fieldSetter.set(Transaction.NOTE, input.readString());
       fieldSetter.set(Transaction.MONTH, input.readInteger());
       fieldSetter.set(Transaction.DAY, input.readInteger());

@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.interception.WindowHandler;
@@ -21,6 +22,7 @@ public class LicenseChecker {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox("mail").setText(mail);
           window.getInputTextBox("code").setText(code);
+          UISpecAssert.assertThat(window.getInputTextBox("monthCount").textEquals("24"));
           window.getInputTextBox("monthCount").setText(Integer.toString(monthCount));
           return window.getButton("OK").triggerClick();
         }

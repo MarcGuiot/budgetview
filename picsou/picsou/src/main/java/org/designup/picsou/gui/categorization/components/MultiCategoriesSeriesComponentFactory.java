@@ -2,10 +2,13 @@ package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Category;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesToCategory;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
@@ -24,14 +27,13 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
-    String categoryLabel = seriesStringifier.toString(series, repository);
-    cellBuilder.add("seriesName",
-                    new JLabel(categoryLabel));
+    JLabel seriesLabel = GlobLabelView.init(Series.TYPE, repository, directory, seriesStringifier)
+      .forceSelection(series).getComponent();
+    String label = seriesStringifier.toString(new GlobList(series), repository);
+    cellBuilder.add("seriesName", seriesLabel);
     cellBuilder.addRepeat("categoryRepeat",
                           repository.findLinkedTo(series, SeriesToCategory.SERIES).sort(SeriesToCategory.ID),
-                          new CategoriesComponentFactory(categoryLabel,
-                                                         "categoryToggle", budgetArea)
-    );
+                          new CategoriesComponentFactory(label, "categoryToggle", budgetArea));
   }
 
   private class CategoriesComponentFactory implements RepeatComponentFactory<Glob> {

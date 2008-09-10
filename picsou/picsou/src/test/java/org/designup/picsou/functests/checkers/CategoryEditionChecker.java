@@ -166,7 +166,7 @@ public class CategoryEditionChecker extends DataChecker {
     return this;
   }
 
-  public void renameMaster(final String previousName, final String name) {
+  public CategoryEditionChecker renameMaster(final String previousName, final String name) {
     WindowInterceptor.init(getEditMasterButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(final Window window) throws Exception {
@@ -179,6 +179,7 @@ public class CategoryEditionChecker extends DataChecker {
           };
         }
       }).run();
+    return this;
   }
 
   public void checkClosed() {

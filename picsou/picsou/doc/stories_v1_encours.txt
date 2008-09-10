@@ -2,7 +2,6 @@ CategoryChooserDialog
 * Exclure "none" et "all"
 
 SeriesEditionDialog
-* Suppression de serie (avec report des transactions ? proposer plutôt end date)
 * Activation de licence : les nouveaux mois prennent Series.AMOUNT et pas la valeur du dernier
 * Afficher les mois futurs meme en version basique
 * Echeancier : griser mois passes + bold mois courant
@@ -15,21 +14,16 @@ SeriesEditionDialog
 
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)
-* Pb layout lors de la creation d'une seconde serie
 * Bloc "non classe" (avec bouton categorisation)
 
 Licence
 * Pb text editor
-* Voir nb mois (au moins initialiser a 24)
 
 CategoryEditionDialog
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
-* Suppression avec move : verifier que l'on met a jour les SeriesToCategory + Series.DEFAULT_CATEGORY des enveloppes
-* Interdire suppression Revenus 
+* Interdire suppression Revenus
 
 CategorizationDialog
-* Renommage de serie recurrente : mettre a jour le toggle
-* Renommage de serie envelope : mettre a jour le nom
 * Message d'aide quand il n'y a pas de serie pour une budgetArea
 * Aide a la premiere utilisation (messages)
 * Split de transaction

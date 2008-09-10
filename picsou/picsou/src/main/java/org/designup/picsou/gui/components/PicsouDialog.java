@@ -22,6 +22,7 @@ public class PicsouDialog extends JDialog {
   private static final Insets BUTTON_INSETS = new Insets(0, 10, 10, 10);
   private ColorService colorService;
   private static final int HORIZONTAL_BUTTON_MARGIN = Gui.isMacOSX() ? 20 : 0;
+  private Action closeAction;
 
   public static PicsouDialog create(Window owner, String title, Directory directory) {
     PicsouDialog modalWindow = create(owner, directory);
@@ -31,17 +32,18 @@ public class PicsouDialog extends JDialog {
     return modalWindow;
   }
 
-  public static PicsouDialog createWithButton(String name, Window owner, JPanel panel, Action action, Directory directory) {
+  public static PicsouDialog createWithButton(String name, Window owner, JPanel panel, Action closeAction, Directory directory) {
     PicsouDialog dialog = create(owner, name, directory);
-    dialog.setPanelAndButton(panel, action);
+    dialog.setPanelAndButton(panel, closeAction);
     return dialog;
   }
 
-  private void setPanelAndButton(JPanel panel, Action action) {
+  private void setPanelAndButton(JPanel panel, Action closeAction) {
+    this.closeAction = closeAction;
     JPanel contentPane = GridBagBuilder.init()
       .add(panel, 0, 0, 2, 1, Gui.NO_INSETS)
       .add(Box.createHorizontalGlue(), 0, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER)
-      .add(createButton(action), 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS)
+      .add(createButton(closeAction), 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS)
       .getPanel();
     setContentPane(contentPane);
   }
@@ -59,6 +61,7 @@ public class PicsouDialog extends JDialog {
   }
 
   public void addInPanelWithButton(JPanel panel, Action ok, Action cancel) {
+    closeAction = cancel;
     int buttonCount = 0;
     if (ok != null) {
       buttonCount++;
@@ -155,11 +158,16 @@ public class PicsouDialog extends JDialog {
 
   private class CloseAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          setVisible(false);
-        }
-      });
+      if (closeAction != null) {
+        closeAction.actionPerformed(e);
+      }
+      else {
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            setVisible(false);
+          }
+        });
+      }
     }
   }
 }

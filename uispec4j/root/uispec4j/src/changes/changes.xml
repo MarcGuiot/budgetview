@@ -5,6 +5,9 @@
 
   <body>
     <release version="2.0" date="???">
+      <action dev="mguiot" type="add">
+        Check that the button is visible before calling doClick.
+      </action>
       <action dev="rmedina" type="add">
         TextBox does not allow editing text when the underlying component is disabled.
       </action>

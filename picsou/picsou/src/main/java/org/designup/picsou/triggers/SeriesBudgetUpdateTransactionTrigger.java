@@ -21,7 +21,8 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
     changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Glob series = repository.get(Key.create(Series.TYPE, values.get(SeriesBudget.SERIES)));
-        if (generatesPlannedTransactions(values, series)) {
+        if (generatesPlannedTransactions(values, series,
+                                         repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID))) {
           Integer monthId = values.get(SeriesBudget.MONTH);
           createPlannedTransaction(series, repository, monthId,
                                    values.get(SeriesBudget.DAY),
@@ -31,7 +32,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         Glob seriesBudget = repository.get(key);
-        if (seriesBudget.get(SeriesBudget.MONTH) < timeService.getLastAvailableTransactionMonthId()) {
+        if (seriesBudget.get(SeriesBudget.MONTH) < repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID)) {
           return;
         }
         Glob series = repository.get(Key.create(Series.TYPE, seriesBudget.get(SeriesBudget.SERIES)));
@@ -56,8 +57,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
             repository.get(Key.create(Series.TYPE, series.get(Series.ID))), diff,
             seriesBudget.get(SeriesBudget.MONTH),
             BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome(),
-            timeService.getLastAvailableTransactionMonthId(), repository
-          );
+            repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID), repository);
         }
       }
 
@@ -72,12 +72,12 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
     });
   }
 
-  private boolean generatesPlannedTransactions(FieldValues values, Glob series) {
+  private boolean generatesPlannedTransactions(FieldValues values, Glob series, int lastAvailableTransactionMonthId) {
     return values.get(SeriesBudget.ACTIVE) &&
            (values.get(SeriesBudget.AMOUNT) != null) &&
            (Math.abs(values.get(SeriesBudget.AMOUNT)) != 0.0) &&
            (values.get(SeriesBudget.DAY) != null) &&
-           values.get(SeriesBudget.MONTH) >= timeService.getLastAvailableTransactionMonthId() &&
+           values.get(SeriesBudget.MONTH) >= lastAvailableTransactionMonthId &&
            !ProfileType.UNKNOWN.getId().equals(series.get(Series.PROFILE_TYPE));
   }
 
