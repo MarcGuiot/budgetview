@@ -284,8 +284,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     views.selectData();
     categories.select("Courant");
     categories.deleteSubSelected(MasterCategory.FOOD);
-    categories.getTable()
-      .containsRow(new Object[]{getCategoryName(MasterCategory.FOOD), "-34"});
+    categories.checkValue(MasterCategory.FOOD, "-34");
 
     views.selectCategorization();
     categorization.selectTableRows(0, 1)

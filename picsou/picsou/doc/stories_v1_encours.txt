@@ -10,6 +10,7 @@ SeriesEditionDialog
 * Double click table => selection jusqu'a la fin
 * Creation de series INCOME ou SAVINGS : preselectionner les categories par defaut
 * Look header
+* Titre : "creer une enveloppe ? editer les enveloppes ? editer les recurrences ?"
 
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)
@@ -36,6 +37,7 @@ CategorizationDialog
 * Mode selectNext disabled : creation de recurrence = la derniere reste selectionnee
 * Bouton liste : selectionner la serie courante
 * Transformer en tab ?
+* Voir tri par date
 
 Misc
 * Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs

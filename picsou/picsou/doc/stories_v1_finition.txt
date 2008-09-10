@@ -13,7 +13,6 @@
 - Tooltips sur les boutons
 
 - CategoryEditionDialog
-* mettre en evidence les categories inutilisees
 * selectionner la categorie suivante apres suppression
 * suppression avec move : retirer la source de la liste des target
 
@@ -83,7 +82,7 @@ TransactionDetails
 Misc
 ----
 * Memoriser dernier repertoire pour le filechooser
-* Memorise taille et position appli dans les user prefs
+* Memoriser taille et position appli dans les user prefs
 
 
 Fenetre import
