@@ -533,6 +533,27 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
+  public void testStartEndDateWithTransaction() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
+    views.selectBudget();
+    SeriesEditionDialogChecker editSeries = budgetView.envelopes.editSeries("Courant");
+    editSeries.getStartCalendar()
+      .checkIsEnabled(200805, 200806, 200807)
+      .checkIsDisabled(200808, 200809)
+      .selectMonth(200806);
+
+    editSeries.getEndCalendar()
+      .checkIsDisabled(200805, 200806)
+      .checkIsEnabled(200807, 200808)
+      .selectMonth(200808);
+
+  }
+
   public void testDateAndBudgetSeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2007/02/10", -29.00, "Free Telecom")

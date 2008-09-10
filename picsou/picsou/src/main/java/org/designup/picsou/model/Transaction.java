@@ -70,10 +70,13 @@ public class Transaction {
 
   public static NotUniqueIndex MONTH_INDEX;
 
+  public static NotUniqueIndex SERIES_INDEX;
+
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(Transaction.class, "transaction");
     loader.defineNonUniqueIndex(LABEL_FOR_CATEGORISATION_INDEX, LABEL_FOR_CATEGORISATION);
     loader.defineNonUniqueIndex(MONTH_INDEX, MONTH);
+    loader.defineNonUniqueIndex(SERIES_INDEX, SERIES);
   }
 
   public static int fullDate(Glob transaction) {
