@@ -408,6 +408,7 @@ public abstract class ImportPanel {
       TimeService time = directory.get(TimeService.class);
       int currentMonth = time.getCurrentMonthId();
       List<Integer> futureMonth = Month.createMonths(firstMonth, currentMonth);
+      futureMonth.addAll(Month.createMonths(monthIds.last(), currentMonth));
       for (int month : futureMonth) {
         localRepository.findOrCreate(Key.create(Month.TYPE, month));
       }

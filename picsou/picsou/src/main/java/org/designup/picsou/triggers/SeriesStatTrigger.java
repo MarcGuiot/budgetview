@@ -49,7 +49,7 @@ public class SeriesStatTrigger implements ChangeSetListener {
   private void processTransactions(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        processTransaction(values, 1, repository);
+        processTransaction(values, 1, repository, true);
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -120,12 +120,12 @@ public class SeriesStatTrigger implements ChangeSetListener {
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        processTransaction(previousValues, -1, repository);
+        processTransaction(previousValues, -1, repository, false);
       }
     });
   }
 
-  private void processTransaction(FieldValues values, int multiplier, GlobRepository repository) {
+  private void processTransaction(FieldValues values, int multiplier, GlobRepository repository, boolean throwIfNull) {
     final Integer seriesId = values.get(Transaction.SERIES);
     if (seriesId == null || Utils.equal(TransactionType.PLANNED.getId(), values.get(Transaction.TRANSACTION_TYPE))) {
       return;
@@ -136,10 +136,12 @@ public class SeriesStatTrigger implements ChangeSetListener {
       final Double transactionAmount = values.get(Transaction.AMOUNT);
       updateStat(stat, multiplier * transactionAmount, repository);
     }
-//    else {
-//      throw new RuntimeException("Missing stat for month " + values.get(Transaction.MONTH) + " on series : " +
-//                                 GlobPrinter.toString(repository.get(Key.create(Series.TYPE, seriesId))));
-//    }
+    else {
+      if (throwIfNull) {
+        throw new RuntimeException("Missing stat for month " + values.get(Transaction.MONTH) + " on series : " +
+                                   GlobPrinter.toString(repository.get(Key.create(Series.TYPE, seriesId))));
+      }
+    }
   }
 
   private void updateStat(Glob stat, Double transactionAmount, GlobRepository repository) {
@@ -157,7 +159,7 @@ public class SeriesStatTrigger implements ChangeSetListener {
     }
 
     for (Glob transaction : repository.getAll(Transaction.TYPE)) {
-      processTransaction(transaction, 1, repository);
+      processTransaction(transaction, 1, repository, true);
     }
 
     GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE);

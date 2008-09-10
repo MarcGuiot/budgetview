@@ -2,7 +2,6 @@ CategoryChooserDialog
 * Exclure "none" et "all"
 
 SeriesEditionDialog
-* Activation de licence : les nouveaux mois prennent Series.AMOUNT et pas la valeur du dernier
 * Afficher les mois futurs meme en version basique
 * Echeancier : griser mois passes + bold mois courant
 * Raccourci pour selectionner tout
