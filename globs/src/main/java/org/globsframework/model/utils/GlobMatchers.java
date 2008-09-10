@@ -303,6 +303,14 @@ public class GlobMatchers {
     };
   }
 
+  public static GlobMatcher fieldStrickyLesser(final IntegerField field, final int value) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return item.get(field) < value;
+      }
+    };
+  }
+
   public static GlobMatcher fieldLesserOrEqual(final IntegerField field, final int value) {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {

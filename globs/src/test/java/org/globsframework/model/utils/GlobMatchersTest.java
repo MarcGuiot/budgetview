@@ -85,6 +85,10 @@ public class GlobMatchersTest extends TestCase {
     check(GlobMatchers.fieldGreaterOrEqual(DummyObject.ID, 2), c, d);
   }
 
+  public void testStricklyLesser() throws Exception {
+    check(GlobMatchers.fieldStrickyLesser(DummyObject.ID, 2), a, b);
+  }
+
   public void testLink() throws Exception {
     GlobChecker checker = new GlobChecker();
     repository = checker.parse(
