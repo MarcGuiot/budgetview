@@ -81,9 +81,7 @@ public class TransactionView extends View implements GlobSelectionListener {
     view = createGlobTableView(repository, descriptionService, directory, rendererColors);
     view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
-    headerPainter = new PicsouTableHeaderPainter(view, directory);
-    view.setHeaderCustomizer(new PicsouTableHeaderCustomizer(directory, PicsouColors.TRANSACTION_TABLE_HEADER_TITLE),
-                             headerPainter);
+    headerPainter = PicsouTableHeaderPainter.install(view, directory);
 
     JTable table = view.getComponent();
 

@@ -233,8 +233,7 @@ public class SplitTransactionDialog {
     GlobTableView view = builder.addTable("transaction", Transaction.TYPE, transactionComparator);
 
     view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
-    view.setHeaderCustomizer(new PicsouTableHeaderCustomizer(localDirectory, PicsouColors.TRANSACTION_TABLE_HEADER_TITLE),
-                             new PicsouTableHeaderPainter(view, localDirectory));
+    PicsouTableHeaderPainter.install(view, localDirectory);
 
     GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
     AbstractGlobSelectionAction categorizationAction =

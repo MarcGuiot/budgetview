@@ -6,6 +6,7 @@ import org.designup.picsou.gui.categories.CategoryChooserDialog;
 import org.designup.picsou.gui.components.MonthChooserDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
@@ -115,8 +116,7 @@ public class SeriesEditionDialog {
 
     registerDateComponents(builder);
 
-    amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT)
-      .setMinusNotAllowed();
+    amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT).setMinusAllowed(false);
 
     final GlobTableView budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE,
                                                        new ReverseGlobFieldComparator(SeriesBudget.MONTH))
@@ -126,6 +126,7 @@ public class SeriesEditionDialog {
       .addColumn(Lang.get("seriesEdition.year"), new YearStringifier())
       .addColumn(Lang.get("seriesEdition.month"), new MonthStringifier())
       .addColumn(Lang.get("seriesBudget.amount"), new AmountStringifier(), LabelCustomizers.ALIGN_RIGHT);
+    PicsouTableHeaderPainter.install(budgetTable, localDirectory);
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -370,11 +371,11 @@ public class SeriesEditionDialog {
     }
     if (budgetArea.isIncome()) {
       amountLabel.setText(Lang.get("seriesEdition.income.amount"));
-      amountEditor.setNoInvertValue();
+      amountEditor.setInvertValue(false);
     }
     else {
       amountLabel.setText(Lang.get("seriesEdition.expense.amount"));
-      amountEditor.setInvertValue();
+      amountEditor.setInvertValue(true);
     }
     selectionService.select(localRepository.getAll(SeriesBudget.TYPE,
                                                    fieldIn(SeriesBudget.MONTH, monthIds)), SeriesBudget.TYPE);
