@@ -16,7 +16,6 @@ import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
-import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.transactions.UncategorizedMessageView;
 import org.designup.picsou.gui.transactions.details.TransactionSearch;

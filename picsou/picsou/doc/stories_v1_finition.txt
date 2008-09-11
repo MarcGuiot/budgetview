@@ -1,97 +1,71 @@
-
-- Blocks budgetview : splitpane invisibles (PIcsouSplitPaneUI dans PicsouStyles + dessiner un trait?)
-
-- Mac: -Dapple.awt.graphics.UseQuartz=false
-
-- Import : supprimer URL banque
-
-- BalanceGraph : couleur si balance negative
-
-- Import : utiliser une PicsouDialog
-- SeriesEditionDialog : Double click table => selection jusqu'a la fin
-
-- Import : OK sans fichier = message, si selection il faut purger le message
-
-- Tooltips sur les boutons
-
-- CategoryEditionDialog
-* selectionner la categorie suivante apres suppression
-* suppression avec move : retirer la source de la liste des target
-
-- Creation de series : revoir estimation montant (moyenne 3 derniers mois ?)
-
-- CategoryView : boutons expand all / collapse all
-
-- TimeView : mettre en evidence les mois sans transactions
-
-Budgetview
-* Afficher la difference releve/prevu sous la barre dans l'affichage des totaux
-
-
-Login
------
-- Supprimer logo
-- Creation de compte : expliquer que la notion de compte / mot de passe est liee au cryptage local
-
-
-TimeView
---------
-- Joliesse boutons/bords timeview
-
-
-Gestion des comptes
--------------------
-- creation de compte
-- edition comptes
-- masquer un compte (date de cloture)
-
-
-TitleView
---------
-- afficher des noms pour les multi-selections de mois ("juillet 2006 à août 2007")
+Look general
+* Blocks budgetview : splitpane invisibles (PIcsouSplitPaneUI dans PicsouStyles + dessiner un trait?)
+* Mac: -Dapple.awt.graphics.UseQuartz=false
+* Tooltips sur les boutons
 
 
 Import
-------
-* LoginPanel: error login + "new user" => effacer message
-* LoginPanel: si aucun utilisateur, mode "accompagnement" pour la creation d'un compte
+* supprimer URL banque
+* utiliser une PicsouDialog (coherence ordre ok/cancel)
+* Import : OK sans fichier = message, si selection il faut purger le message
 * Bring to front sur Open With...
+* Memoriser dernier repertoire pour le filechooser
+* En mode "dialog", revoir hyperlien "annuler" et bouton "ignorer fichier" => introduire bouton "cancel" ?
+* Après l'import, basculer dans la CategorizationView
+
+
+SeriesEditionDialog
+* Double click table => selection jusqu'a la fin
+* Revoir estimation montant (moyenne 3 derniers mois ?)
+* Raccourci pour selectionner tout
+* Double click table => selection jusqu'a la fin
+* trim() sur les noms
+
+
+CategoryEditionDialog
+* selectionner la categorie suivante apres suppression
+* suppression avec move : retirer la source de la liste des target
+* Creation de series INCOME ou SAVINGS : preselectionner les categories par defaut
+* Look header
+* Titre
+* Label "renommer la categorie"
+
+
+BudgetView
+* Afficher la difference releve/prevu sous la barre dans l'affichage des totaux
+* Mettre total disponible en rouge s'il est negatif
+* Arrondir les montants pour les valeurs en gros (disponible = 1852.23 parait bizarre) ?
+
+
+Login
+* Creation de compte : expliquer que la notion de compte / mot de passe est liee au cryptage local
+* Error login + "new user" => effacer message
+* Si aucun utilisateur dans le repo, mode creation de compte
+* Revoir look panneau import
+
+
+TimeView
+* Integration des boutons next/prev et start/end dans la barre
+
+
+Gestion des comptes
+* creation de compte
+* edition comptes
+* masquer un compte (date de cloture)
+
+
+TitleView
+* afficher des textes clairs pour les multi-selections de mois ("juillet 2006 à août 2007")
 
 
 Packaging
----------
-* Packaging Mac (hdiutil ou zip ?)
 * Look installer
-* Afficher SLA au premier lancement (cas de repository vide ?)
+* Afficher SLA au premier lancement (repository vide)
 
 
 Misc
-----
 * CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
 
-
-TransactionDetails
-------------------
-* TransactionDetail : hyperlien pour editer la serie
-* Min/Max/Moy sur une ligne
-* Categorie "..." en multi-selection ("<plusieurs categories>")
-* Voir position lien "split"
-* Afficher propagation d'affectation
-* Cas de transaction deja splittee
-* Notes
-
-
-Misc
-----
-* Memoriser dernier repertoire pour le filechooser
-* Memoriser taille et position appli dans les user prefs
-
-
-Fenetre import
---------------
-* En mode "dialog", revoir hyperlien "annuler" et bouton "ignorer fichier" => introduire bouton "cancel" ?
-
-
-Budget view
------------
-* Hyperliens montants ==> transactionView
+Graphiques
+* Merger en un seul tab, avec deux toggles "repartition/evolution"
+* Limiter le nombre de mois affiches dans l'historique

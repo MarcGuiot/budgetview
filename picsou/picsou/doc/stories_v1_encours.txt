@@ -5,16 +5,17 @@ SeriesEditionDialog
 * Activation de licence : les nouveaux mois prennent Series.AMOUNT et pas la valeur du dernier
 * Afficher les mois futurs meme en version basique
 * Echeancier : griser mois passes + bold mois courant
-* Raccourci pour selectionner tout
-* Double click table => selection jusqu'a la fin
-* Creation de series INCOME ou SAVINGS : preselectionner les categories par defaut
-* Look header
-* Titre
 * Colonne "montant observe"
+* Si multicategories, label "categorieS" et "Vous devez selectionner LES categorIES"
+* Revoir label "amount" => dynamique pour montrer le lien avec la selection
+* Layout : bouton "Selectionner" rogne
+* Combo "Tous les mois" / "Certains mois"
 
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)
-* Bloc "non classe" (avec bouton categorisation)
+* Bloc "Montant releve non classe" (avec bouton categorisation)
+* Calcul disponible en occasionel : le calcul est-il intuitif ? (alignement avec les autres blocs)
+* Bug : affiche des subcats (ex.: pharmacie)
 
 Licence
 * Pb text editor
@@ -24,15 +25,19 @@ CategoryEditionDialog
 * Interdire suppression Revenus
 
 CategorizationView
+* Message de presentation des budgetAreas quand aucune n'est selectionnee
 * Message d'aide quand il n'y a pas de serie pour une budgetArea
-* Aide a la premiere utilisation (messages)
 * Split de transaction
-* Saisie de notes
 * Afficher le nombre de transactions non classees
 * Mode selectNext disabled : creation de recurrence = la derniere reste selectionnee
-* Bouton liste : selectionner la serie courante
+* Bouton "liste" : selectionner la serie courante
 * Voir tri des transactions par date
 * Masquer les series inactives pour les transactions selectionnees
+* Ajout d'une categorie a une enveloppe : pas affichee dans CategorizationView 
+* Bug sur budgetArea epargne : nom de serie uniquement, pas de toggle a selectionner
+* Ajouter colonne notes
+
+Edition de transactions
 
 Misc
 * Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs

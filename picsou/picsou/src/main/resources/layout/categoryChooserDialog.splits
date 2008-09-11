@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(800,650)">
+  <panel styleClass="dialog" preferredSize="(800,450)">
     <column styleClass="innerDialog">
       <label ref="title" styleClass="title"/>
       <scrollPane weightY="100" viewportBackground="dialog.block">

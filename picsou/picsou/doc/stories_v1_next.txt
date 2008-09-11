@@ -7,12 +7,13 @@ Versions basique/pro
 
 Stabilisation
 -------------
+* Apprentissage / series
 * Finir page accueil (graphique, change log)
 * Changer date user des transactions
-* Corriger Histogramme
 * Modifier l'ordre des categories
 * Modifier l'ordre des series
 
 * Creer des transactions utilisateur (soit achats effectues mais pas encore dans les releves, soit previsions plus vagues)
-
 * Categorisation : tab "virements internes" avec selection du compte de destination
+
+* Creation du compte de demo (pour essai par les utilisateurs + nos screencasts)
