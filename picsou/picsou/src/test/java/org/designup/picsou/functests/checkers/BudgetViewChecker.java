@@ -34,11 +34,11 @@ public class BudgetViewChecker extends DataChecker {
   public class BudgetAreaChecker {
 
     private String panelName;
-    private boolean oneSelection;
+    private boolean singleSelection;
 
-    public BudgetAreaChecker(String panelName, boolean oneSelection) {
+    public BudgetAreaChecker(String panelName, boolean singleSelection) {
       this.panelName = panelName;
-      this.oneSelection = oneSelection;
+      this.singleSelection = singleSelection;
     }
 
     public void checkTitle(String title) {
@@ -99,7 +99,7 @@ public class BudgetViewChecker extends DataChecker {
     private SeriesEditionDialogChecker openSeriesEditionDialog(String seriesName) {
       Panel budgetPanel = window.getPanel(panelName);
       Window dialog = WindowInterceptor.getModalDialog(budgetPanel.getButton(seriesName).triggerClick());
-      return new SeriesEditionDialogChecker(dialog, oneSelection);
+      return new SeriesEditionDialogChecker(dialog, singleSelection);
     }
   }
 

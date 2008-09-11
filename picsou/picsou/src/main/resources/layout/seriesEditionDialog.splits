@@ -20,16 +20,20 @@
         </column>
         <column border="empty(0,10,0,0)">
           <grid>
-            <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel"/>
-            <textField gridPos="(1,0,2,1)" ref="nameField"/>
-            <label gridPos="(0,1)" name="multiCategoryLabel" text="$seriesEdition.category.label"
-                   autoHideSource="multipleCategoryList" anchor="north"/>
+            <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
+            <textField gridPos="(1,0,2,1)" ref="nameField" marginBottom="4"/>
+
+            <label gridPos="(0,1)" ref="categoryLabel" styleClass="formLabel"/>
+
             <scrollPane gridPos="(1,1)" preferredSize="(200,50)" minimumSize="(250,50)"
                         autoHideSource="multipleCategoryList">
               <list ref="multipleCategoryList"/>
             </scrollPane>
-            <label gridPos="(1,2)" ref="singleCategoryLabel" fill="horizontal"/>
-            <button gridPos="(2,1,1,2)" action="assignCategory" marginLeft="10" anchor="northwest"/>
+
+            <textField gridPos="(1,1)" ref="singleCategoryField"/>
+
+            <button gridPos="(2,1)" action="assignCategory" marginLeft="10" anchor="northwest"/>
+            <label gridPos="(1,2,2,1)" ref="missingCategoryLabel" fill="horizontal"/>
           </grid>
 
           <column marginTop="20">

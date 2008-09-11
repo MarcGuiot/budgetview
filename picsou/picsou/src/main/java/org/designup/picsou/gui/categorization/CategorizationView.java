@@ -90,8 +90,8 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
         .setDefaultLabelCustomizer(new TransactionLabelCustomizer())
         .addColumn(Lang.get("date"), new TransactionDateStringifier(transactionComparator),
                    LabelCustomizers.fontSize(9))
-        .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.bold())
-        .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), LabelCustomizers.alignRight());
+        .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.BOLD)
+        .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), LabelCustomizers.ALIGN_RIGHT);
     Gui.setColumnSizes(transactionTable.getComponent(), COLUMN_SIZES);
     installDoubleClickHandler();
 

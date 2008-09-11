@@ -125,7 +125,7 @@ public class TransactionView extends View implements GlobSelectionListener {
       .addColumn(Lang.get("category"), seriesColumn, seriesColumn,
                  seriesColumn.getComparator())
       .addColumn(Lang.get("label"),
-                 descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.bold())
+                 descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.BOLD)
       .addColumn(Lang.get("amount"), amountColumn, amountStringifier.getComparator(repository));
 
     view.startColumn()

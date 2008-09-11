@@ -526,7 +526,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"25/05/2008", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
-    categorization.checkSelectedTableRows(2, 3);
+    categorization.checkNoTransactionSelected();
 
     views.selectData();
     transactions
