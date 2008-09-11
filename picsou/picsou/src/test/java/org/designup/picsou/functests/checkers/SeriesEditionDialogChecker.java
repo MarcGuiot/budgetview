@@ -271,7 +271,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkNoStartDate() {
-    assertFalse(dialog.getTextBox("beginSeriesDate").isVisible());
+    assertTrue(dialog.getTextBox("beginSeriesDate").isVisible());
     assertFalse(dialog.getButton("deleteBeginSeriesDate").isVisible());
     return this;
   }
@@ -287,7 +287,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkNoEndDate() {
-    assertFalse(dialog.getTextBox("endSeriesDate").isVisible());
+    assertTrue(dialog.getTextBox("endSeriesDate").isVisible());
     assertFalse(dialog.getButton("deleteEndSeriesDate").isVisible());
     return this;
   }

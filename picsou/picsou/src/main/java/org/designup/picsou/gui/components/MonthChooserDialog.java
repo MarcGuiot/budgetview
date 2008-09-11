@@ -4,7 +4,6 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -25,24 +24,27 @@ public class MonthChooserDialog implements ColorChangeListener {
   private JLabel previousYearLabel = new JLabel();
   private JLabel currentYearLabel = new JLabel();
   List<MonthsComponentFactory> monthsComponentFactories = new ArrayList<MonthsComponentFactory>();
-  private JPanel panel;
   private PicsouDialog dialog;
   private int selectedYear;
   private int selectedMonth = -1;
-  private int returnMonth = -1;
   private int currentYear;
   private Directory directory;
-  private int sens;
+  private int direction;
   private int yearLimit;
   private int monthLimit;
   private int newMonth;
   private Color todayColor;
   private Color defaultForegroundColor;
 
-  public MonthChooserDialog(final Directory directory) {
+  public MonthChooserDialog(Window parent, final Directory directory) {
     this.directory = directory;
-    ColorService colorService = directory.get(ColorService.class);
-    colorService.addListener(this);
+    this.directory.get(ColorService.class).addListener(this);
+    JPanel panel = createPanel();
+    this.dialog = PicsouDialog.createWithButton(Lang.get("month.chooser.title"), parent, panel,
+                                                new CancelAction(), directory);
+  }
+
+  private JPanel createPanel() {
     SplitsBuilder builder = new SplitsBuilder(directory);
     builder.setSource(MonthChooserDialog.class, "/layout/monthChooserDialog.splits");
     builder.add("previousYearLabel", previousYearLabel);
@@ -51,29 +53,26 @@ public class MonthChooserDialog implements ColorChangeListener {
     addMonthsPanel("previousYearMonths", builder, this, -1);
     addMonthsPanel("currentYearMonths", builder, this, 0);
     addMonthsPanel("nextYearMonths", builder, this, 1);
-    builder.add("previousYearAction", new AbstractAction() {
 
+    builder.add("previousYearAction", new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         currentYear--;
         update();
       }
     });
     builder.add("nextYearAction", new AbstractAction() {
-
       public void actionPerformed(ActionEvent e) {
         currentYear++;
         update();
       }
     });
     builder.add("previousPageAction", new AbstractAction() {
-
       public void actionPerformed(ActionEvent e) {
         currentYear -= 3;
         update();
       }
     });
     builder.add("nextPageAction", new AbstractAction() {
-
       public void actionPerformed(ActionEvent e) {
         currentYear += 3;
         update();
@@ -86,22 +85,24 @@ public class MonthChooserDialog implements ColorChangeListener {
       }
     });
 
-    panel = builder.load();
+    return builder.load();
   }
 
-  public int show(Window parent, int selectedMonthId, int sens, int limitMonthId) {
-    newMonth = -1;
-    this.sens = sens;
+  public int show(int selectedMonthId, int direction, int limitMonthId) {
+    this.newMonth = -1;
+    this.direction = direction;
     this.yearLimit = Month.toYear(limitMonthId);
     this.monthLimit = Month.toMonth(limitMonthId);
-    selectedMonth = Month.toMonth(selectedMonthId);
-    selectedYear = Month.toYear(selectedMonthId);
-    currentYear = sens == 0 ? selectedYear : sens == -1 ? yearLimit - 1 : yearLimit + 1;
-    dialog = PicsouDialog.createWithButton(Lang.get("month.chooser.title"), parent, panel, new CancelAction(), directory);
+    this.selectedMonth = Month.toMonth(selectedMonthId);
+    this.selectedYear = Month.toYear(selectedMonthId);
+    this.currentYear = direction == 0 ? selectedYear : direction == -1 ? yearLimit - 1 : yearLimit + 1;
+
     update();
+
     dialog.pack();
     GuiUtils.showCentered(dialog);
     dialog = null;
+
     return newMonth;
   }
 
@@ -165,11 +166,11 @@ public class MonthChooserDialog implements ColorChangeListener {
       for (int i = 0; i < buttons.length; i++) {
         buttons[i].setSelected(currentYear == selectedYear && selectedMonth == i + 1);
         int currentMonthId = Month.toMonthId(currentYear, i + 1);
-        if (sens < 0) {
+        if (direction < 0) {
           boolean b = currentMonthId <= Month.toMonthId(yearLimit, monthLimit);
           buttons[i].setEnabled(b);
         }
-        else if (sens > 0) {
+        else if (direction > 0) {
           buttons[i].setEnabled(currentMonthId >= Month.toMonthId(yearLimit, monthLimit));
         }
         if (todayId == currentMonthId) {

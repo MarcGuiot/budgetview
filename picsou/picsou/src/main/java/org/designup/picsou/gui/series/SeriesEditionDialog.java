@@ -193,16 +193,15 @@ public class SeriesEditionDialog {
 
     assignCategoryAction = new AssignCategoryAction(dialog);
     builder.add("assignCategory", assignCategoryAction);
-
-    builder.add("beginSeriesDate",
-                GlobLabelView.init(Series.TYPE, localRepository, localDirectory,
-                                   new MonthYearStringifier(Series.FIRST_MONTH))
-                  .setAutoHideIfEmpty(true).getComponent());
   }
 
   private void registerDateComponents(GlobsPanelBuilder builder) {
-    deleteBeginDateAction = new AbstractAction() {
 
+    builder.add("beginSeriesDate",
+                ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
+                                               new MonthYearStringifier(Series.FIRST_MONTH)));
+
+    deleteBeginDateAction = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         localRepository.update(currentSeries.getKey(), Series.FIRST_MONTH, null);
       }
@@ -210,7 +209,6 @@ public class SeriesEditionDialog {
     builder.add("deleteBeginSeriesDate", deleteBeginDateAction);
 
     beginDateCalendar = new CalendarAction(Series.FIRST_MONTH, -1) {
-
       protected Integer getMonthLimit() {
         GlobList transactions = localRepository.findByIndex(Transaction.SERIES_INDEX, currentSeries.get(Series.ID))
           .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, false), localRepository)
@@ -228,18 +226,17 @@ public class SeriesEditionDialog {
     builder.add("beginSeriesCalendar", beginDateCalendar);
 
     builder.add("endSeriesDate",
-                GlobLabelView.init(Series.TYPE, localRepository, localDirectory,
-                                   new MonthYearStringifier(Series.LAST_MONTH))
-                  .setAutoHideIfEmpty(true).getComponent());
-    deleteEndDateAction = new AbstractAction() {
+                ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
+                                               new MonthYearStringifier(Series.LAST_MONTH)));
 
+    deleteEndDateAction = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         localRepository.update(currentSeries.getKey(), Series.LAST_MONTH, null);
       }
     };
     builder.add("deleteEndSeriesDate", deleteEndDateAction);
-    endDateCalendar = new CalendarAction(Series.LAST_MONTH, 1) {
 
+    endDateCalendar = new CalendarAction(Series.LAST_MONTH, 1) {
       protected Integer getMonthLimit() {
         GlobList transactions = localRepository.findByIndex(Transaction.SERIES_INDEX, currentSeries.get(Series.ID))
           .sort(Transaction.MONTH);
@@ -648,7 +645,7 @@ public class SeriesEditionDialog {
 
     public void actionPerformed(ActionEvent e) {
       int sens = this.sens;
-      MonthChooserDialog chooser = new MonthChooserDialog(localDirectory);
+      MonthChooserDialog chooser = new MonthChooserDialog(dialog, localDirectory);
       Integer monthId = currentSeries.get(date);
       Integer limit = getMonthLimit();
       if (monthId == null) {
@@ -658,7 +655,7 @@ public class SeriesEditionDialog {
         limit = 0;
         sens = 0;
       }
-      int result = chooser.show(dialog, monthId, sens, limit);
+      int result = chooser.show(monthId, sens, limit);
       if (result == -1) {
         return;
       }

@@ -14,6 +14,10 @@ public class ReadOnlyGlobTextFieldView extends AbstractGlobTextView<ReadOnlyGlob
 
   private JTextField textField = new JTextField();
 
+  public static ReadOnlyGlobTextFieldView init(GlobType type, GlobRepository repository, Directory directory, GlobListStringifier stringifier) {
+    return new ReadOnlyGlobTextFieldView(type, repository, directory, stringifier);
+  }
+
   public static ReadOnlyGlobTextFieldView init(LinkField link, GlobRepository repository, Directory directory) {
     GlobListStringifier stringifier = directory.get(DescriptionService.class).getListStringifier(link);
     return new ReadOnlyGlobTextFieldView(link.getGlobType(), repository, directory, stringifier);
