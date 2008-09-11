@@ -3,6 +3,7 @@ package org.globsframework.gui;
 import org.globsframework.gui.utils.DefaultGlobSelection;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.utils.MultiMap;
 import static org.globsframework.utils.Utils.list;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -12,6 +13,7 @@ import java.util.*;
 public class SelectionService {
   private MultiMap<GlobType, GlobSelectionListener> listenersByType =
     new MultiMap<GlobType, GlobSelectionListener>();
+  private Map<GlobType, GlobList> currentSelections = new HashMap<GlobType, GlobList>();
 
   public void addListener(final GlobSelectionListener listener, GlobType... types) {
     if (types.length == 0) {
@@ -33,12 +35,23 @@ public class SelectionService {
     select(Collections.singletonList(glob), glob.getType());
   }
 
+  public GlobList getSelection(GlobType globType) {
+    GlobList globList = currentSelections.get(globType);
+    if (globList == null) {
+      return GlobList.EMPTY;
+    }
+    return globList;
+  }
+
   public void select(Collection<Glob> globs, GlobType type, GlobType... types) {
     List<GlobType> allTypes = list(type, types);
     Set<GlobSelectionListener> listeners = getListeners(allTypes);
     DefaultGlobSelection selection = new DefaultGlobSelection(globs, allTypes);
     for (GlobSelectionListener listener : listeners) {
       listener.selectionUpdated(selection);
+    }
+    for (GlobType globType : allTypes) {
+      currentSelections.put(globType, selection.getAll(globType));
     }
   }
 
@@ -53,5 +66,4 @@ public class SelectionService {
   public void clear(GlobType type) {
     select(Collections.<Glob>emptyList(), type);
   }
-
 }

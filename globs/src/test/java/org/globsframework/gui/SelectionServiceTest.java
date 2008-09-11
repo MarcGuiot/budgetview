@@ -5,8 +5,10 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.model.Glob;
 import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.utils.TestUtils;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class SelectionServiceTest extends TestCase {
   private DummySelectionListener listener;
@@ -28,7 +30,8 @@ public class SelectionServiceTest extends TestCase {
   }
 
   public void testMonoSelection() throws Exception {
-    service.select(Arrays.asList(obj_1, obj_2), DummyObject.TYPE);
+    List<Glob> currentSelection = Arrays.asList(obj_1, obj_2);
+    service.select(currentSelection, DummyObject.TYPE);
     listener.assertEquals("<log>" +
                           "<selection types='dummyObject'>" +
                           "  <item key='dummyObject[id=1]'/>" +
@@ -36,6 +39,7 @@ public class SelectionServiceTest extends TestCase {
                           "</selection>" +
                           "</log>");
     listener2.assertEmpty();
+    TestUtils.assertEquals(currentSelection, service.getSelection(DummyObject.TYPE));
   }
 
   public void testMultiSelection() throws Exception {
@@ -48,6 +52,8 @@ public class SelectionServiceTest extends TestCase {
                        "</log>";
     listener.assertEquals(selection);
     listener2.assertEquals(selection);
+    assertEquals(obj_1, service.getSelection(DummyObject.TYPE).get(0));
+    assertEquals(obj2_1, service.getSelection(DummyObject2.TYPE).get(0));
   }
 
   public void testRemoveListener() throws Exception {
