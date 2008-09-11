@@ -21,6 +21,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -41,9 +42,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Set;
+import java.util.*;
 
 public class CategorizationView extends View implements TableView, ColorChangeListener {
   private GlobList currentTransactions = GlobList.EMPTY;
@@ -52,6 +51,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
   private JCheckBox autoSelectionCheckBox;
   private JCheckBox autoHideCheckBox;
   private JCheckBox autoSelectNextCheckBox;
+  private java.util.List<SeriesFilter> seriesRepeat = new ArrayList<SeriesFilter>();
 
   private static final int[] COLUMN_SIZES = {10, 28, 10};
   private SeriesEditionDialog seriesEditionDialog;
@@ -176,6 +176,13 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
         if (autoSelectionCheckBox.isSelected()) {
           autoSelectSimilarTransactions();
         }
+        Set<Integer> months = new HashSet<Integer>();
+        for (Glob transaction : currentTransactions) {
+          months.add(transaction.get(Transaction.MONTH));
+          for (SeriesFilter filter : seriesRepeat) {
+            filter.filterDates(months);
+          }
+        }
       }
     }, Transaction.TYPE);
   }
@@ -196,6 +203,45 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     });
   }
 
+  static class SeriesFilter implements GlobMatcher {
+    private Integer budgetAreaId;
+    private GlobRepeat repeat;
+    private Set<Integer> monthIds;
+
+    public SeriesFilter(Integer budgetAreaId, GlobRepeat repeat) {
+      this.budgetAreaId = budgetAreaId;
+      this.repeat = repeat;
+    }
+
+    void filterDates(Set<Integer> monthIds) {
+      this.monthIds = monthIds;
+      repeat.setFilter(this);
+    }
+
+    public boolean matches(Glob series, GlobRepository repository) {
+      if (budgetAreaId.equals(series.get(Series.BUDGET_AREA))) {
+        Integer firstMonth = series.get(Series.FIRST_MONTH);
+        Integer lastMonth = series.get(Series.LAST_MONTH);
+        if (firstMonth == null && lastMonth == null) {
+          return true;
+        }
+        if (firstMonth == null) {
+          firstMonth = 0;
+        }
+        if (lastMonth == null) {
+          lastMonth = Integer.MAX_VALUE;
+        }
+        for (Integer id : monthIds) {
+          if (id < firstMonth || id > lastMonth) {
+            return false;
+          }
+        }
+        return true;
+      }
+      return false;
+    }
+  }
+
   private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
 
     GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
@@ -204,10 +250,12 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
     JToggleButton invisibleToggle = new JToggleButton();
     panelBuilder.add("invisibleToggle", invisibleToggle);
-    panelBuilder.addRepeat("seriesRepeat",
-                           Series.TYPE,
-                           linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                           new SeriesComponentFactory(invisibleToggle, repository, directory));
+    seriesRepeat.add(
+      new SeriesFilter(budgetArea.getId(),
+                       panelBuilder.addRepeat("seriesRepeat",
+                                              Series.TYPE,
+                                              linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
+                                              new SeriesComponentFactory(invisibleToggle, repository, directory))));
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 
@@ -222,11 +270,12 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
     final JToggleButton invisibleToggle = new JToggleButton();
     panelBuilder.add("invisibleToggle", invisibleToggle);
-    panelBuilder.addRepeat("seriesRepeat",
-                           Series.TYPE,
-                           linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                           new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleToggle,
-                                                                     repository, directory));
+    seriesRepeat.add(new SeriesFilter(budgetArea.getId(),
+                                      panelBuilder.addRepeat("seriesRepeat",
+                                                             Series.TYPE,
+                                                             linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
+                                                             new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleToggle,
+                                                                                                       repository, directory))));
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 

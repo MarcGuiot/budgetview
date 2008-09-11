@@ -695,4 +695,52 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.checkDoesNotContainOccasional(MasterCategory.FOOD, "Apero");
   }
+
+  public void testSeveralMonths() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/30", -50.00, "Monoprix")
+      .addTransaction("2008/06/31", -95.00, "Auchan")
+      .addTransaction("2008/05/29", -29.00, "ED")
+      .load();
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("courantED")
+      .setEndDate(200805)
+      .setCategory(MasterCategory.BEAUTY)
+      .selectAllMonths()
+      .setAmount("100")
+      .validate();
+    budgetView.envelopes.createSeries().setName("courantAuchan")
+      .setStartDate(200806)
+      .setEndDate(200806)
+      .selectAllMonths()
+      .setAmount("100")
+      .setCategory(MasterCategory.CLOTHING)
+      .validate();
+    budgetView.envelopes.createSeries().setName("courantMonoprix")
+      .setStartDate(200806)
+      .selectAllMonths()
+      .setAmount("100")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    views.selectCategorization();
+    categorization.selectTableRows("ED");
+    categorization.selectEnvelopes()
+      .checkContainsEnvelope("courantED", MasterCategory.BEAUTY)
+      .checkNotContainsEnvelope("courantAuchan")
+      .checkNotContainsEnvelope("courantMonoprix");
+
+    categorization.selectTableRows("Auchan", "Monoprix");
+    categorization.selectEnvelopes()
+      .checkContainsEnvelope("courantMonoprix", MasterCategory.FOOD)
+      .checkNotContainsEnvelope("courantED")
+      .checkNotContainsEnvelope("courantAuchan");
+
+    categorization.selectTableRows("Auchan", "ED");
+    categorization.selectEnvelopes()
+      .checkNotContainsEnvelope("courantED")
+      .checkNotContainsEnvelope("courantAuchan")
+      .checkNotContainsEnvelope("courantMonoprix");
+  }
+
 }

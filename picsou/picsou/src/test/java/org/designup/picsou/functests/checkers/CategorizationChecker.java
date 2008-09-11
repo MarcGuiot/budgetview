@@ -257,7 +257,13 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationChecker checkNotContainsEnvelope(String envelopeName, String... categories) {
+  public CategorizationChecker checkNotContainsEnvelope(String envelopeName) {
+    Panel panel = getEnvelopeSeriesPanel();
+    assertFalse(panel.containsLabel(envelopeName));
+    return this;
+  }
+
+  public CategorizationChecker checkNotContainsCategoryInEnvelope(String envelopeName, String... categories) {
     Panel panel = getEnvelopeSeriesPanel();
     assertTrue(panel.containsLabel(envelopeName));
     for (String category : categories) {

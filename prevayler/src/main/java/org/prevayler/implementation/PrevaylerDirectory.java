@@ -144,7 +144,6 @@ public class PrevaylerDirectory {
       return File.createTempFile(prefix, suffix, _directory);
     }
     catch (IOException e) {
-      System.out.println("PrevaylerDirectory.createTempFile " + prefix + " suff : " + suffix + " under " + _directory.getAbsolutePath());
       throw e;
     }
   }

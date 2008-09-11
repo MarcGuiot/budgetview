@@ -276,7 +276,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows("Auchan", "Chez Lulu")
       .selectTableRows("Auchan")
       .checkContainsEnvelope("Quotidien", "Courant")
-      .checkNotContainsEnvelope("Quotidien", "Apero")
+      .checkNotContainsCategoryInEnvelope("Quotidien", "Apero")
       .editSeries(false)
       .selectSeries("Quotidien")
       .checkCategory("Courant")

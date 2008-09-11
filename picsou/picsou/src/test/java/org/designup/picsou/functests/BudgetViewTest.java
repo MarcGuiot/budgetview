@@ -190,41 +190,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Free", 29.00, 29.00);
   }
 
-  public void testSeveralMonths() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/07/31", -95.00, "Auchan")
-      .addTransaction("2008/06/29", -29.00, "ED")
-      .addTransaction("2008/05/30", -50.00, "Monoprix")
-      .load();
-
-    views.selectBudget();
-    budgetView.envelopes.createSeries().setName("courantED")
-      .setEndDate(200805)
-      .setCategory(MasterCategory.BEAUTY)
-      .selectAllMonths()
-      .setAmount("100")
-      .validate();
-    budgetView.envelopes.createSeries().setName("courantAuchan")
-      .setStartDate(200806)
-      .setEndDate(200806)
-      .selectAllMonths()
-      .setAmount("100")
-      .setCategory(MasterCategory.CLOTHING)
-      .validate();
-    budgetView.envelopes.createSeries().setName("courantMonoprix")
-      .setStartDate(200806)
-      .selectAllMonths()
-      .setAmount("100")
-      .setCategory(MasterCategory.FOOD)
-      .validate();
-    views.selectCategorization();
-    categorization.selectTableRows("Auchan");
-//    categorization.selectEnvelopes()
-//      .checkContainsEnvelope("courantED", MasterCategory.BEAUTY)
-//      .checkNotContainsEnvelope("courantAuchan", getCategoryName(MasterCategory.CLOTHING))
-//      .checkNotContainsEnvelope("courantMonoprix", getCategoryName(MasterCategory.FOOD));
-  }
-
   public void testAddMonth() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/31", -95.00, "Auchan")
