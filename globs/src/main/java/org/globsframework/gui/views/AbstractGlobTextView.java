@@ -130,11 +130,17 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
 
   public void dispose() {
     repository.removeChangeListener(this);
+    if (forcedSelection == null) {
+      directory.get(SelectionService.class).removeListener(this);
+    }
   }
 
   protected void complete() {
     if (forcedSelection == null) {
-      directory.get(SelectionService.class).addListener(this, type);
+      SelectionService selectionService = directory.get(SelectionService.class);
+      selectionService.addListener(this, type);
+      currentSelection = selectionService.getSelection(type);
+      update();
     }
     else {
       selectionUpdated(new DefaultGlobSelection(forcedSelection, Collections.singletonList(type)));

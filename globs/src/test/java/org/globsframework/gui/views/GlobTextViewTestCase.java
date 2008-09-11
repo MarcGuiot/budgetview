@@ -13,7 +13,7 @@ import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobListMatcher;
 import org.globsframework.model.utils.GlobListMatchers;
 import org.globsframework.model.utils.GlobMatchers;
-import org.uispec4j.*;
+import org.uispec4j.TextBox;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 
@@ -176,7 +176,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     selectionService.select(glob1);
     assertFalse(textBox.isVisible());
   }
-  
+
   public void testForceSelection() throws Exception {
     textBox = init(repository, glob1);
     assertTrue(textBox.textEquals("[dummyObject[id=1]]"));
@@ -206,6 +206,12 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
 
     repository.create(DummyObject2.TYPE);
     assertTrue(textBox.textEquals("2"));
+  }
+
+  public void testUpdateAtCreationTakingLastSelection() throws Exception {
+    selectionService.select(glob1);
+    textBox = init(repository);
+    assertTrue(textBox.textEquals("[dummyObject[id=1]]"));
   }
 
   protected TextComponent init(final GlobRepository repository) {

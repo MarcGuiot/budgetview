@@ -40,18 +40,18 @@ public class SelectionService {
     if (globList == null) {
       return GlobList.EMPTY;
     }
-    return globList;
+    return new GlobList(globList);
   }
 
   public void select(Collection<Glob> globs, GlobType type, GlobType... types) {
     List<GlobType> allTypes = list(type, types);
-    Set<GlobSelectionListener> listeners = getListeners(allTypes);
     DefaultGlobSelection selection = new DefaultGlobSelection(globs, allTypes);
-    for (GlobSelectionListener listener : listeners) {
-      listener.selectionUpdated(selection);
-    }
     for (GlobType globType : allTypes) {
       currentSelections.put(globType, selection.getAll(globType));
+    }
+    Set<GlobSelectionListener> listeners = getListeners(allTypes);
+    for (GlobSelectionListener listener : listeners) {
+      listener.selectionUpdated(selection);
     }
   }
 
