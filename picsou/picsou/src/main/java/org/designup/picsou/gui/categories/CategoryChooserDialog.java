@@ -17,6 +17,7 @@ import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -86,7 +87,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
                                                       repository, directory);
     builder.addRepeat("masterRepeat",
                       Category.TYPE,
-                      PicsouMatchers.masterCategories(),
+                      getMasterMatcher(),
                       new RepeatComponentFactory<Glob>() {
                         public void registerComponents(RepeatCellBuilder masterCellBuilder, Glob master) {
                           JToggleButton masterToggle = createCategoryToggle(master);
@@ -122,6 +123,14 @@ public class CategoryChooserDialog implements ChangeSetListener {
     panel.setLayout(new WrappedColumnLayout(5));
 
     dialog.pack();
+  }
+
+  private GlobMatcher getMasterMatcher() {
+    return new GlobMatcher() {
+      public boolean matches(Glob category, GlobRepository repository) {
+        return Category.isMaster(category) && !Category.isAll(category) && !Category.isNone(category);
+      }
+    };
   }
 
   private JToggleButton createCategoryToggle(Glob category) {

@@ -1,6 +1,3 @@
-CategoryChooserDialog
-* Exclure "none" et "all"
-
 SeriesEditionDialog
 * Revoir label "amount" => dynamique pour montrer le lien avec la selection
 * Colonne "montant observe"

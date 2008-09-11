@@ -42,7 +42,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Free", 29.00, 29.00);
   }
 
-  public void testCurrentMonthsInitiallySelectedInBudgetTable() throws Exception {
+  public void testCurrentMonthsAreInitiallySelectedInBudgetTable() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/29", "2008/08/01", -29.00, "Free Telecom")
       .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
@@ -57,7 +57,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 
     views.selectBudget();
-    timeline.selectMonths("2008/08", "2008/06");
+    timeline.selectMonths("2008/06", "2008/08");
+    budgetView.recurring.checkSeries("Internet", 58.00, 58.00);
+
     budgetView.recurring.editSeries("Internet")
       .checkName("Internet")
       .setName("Free")
@@ -70,6 +72,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthsSelected(1, 3)
       .validate();
 
+    timeline.checkSelection("2008/06", "2008/08");
     budgetView.recurring.checkSeries("Free", 58.00, 58.00);
   }
 
@@ -632,6 +635,17 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .createMasterCategory("Assurance")
       .validate();
     chooser.checkContains("Assurance");
+  }
+
+  public void testCannotSelectCategoriesAllAndNone() throws Exception {
+    views.selectBudget();
+
+    CategoryChooserChecker chooser = 
+      budgetView.envelopes
+        .createSeries()
+        .openCategory();
+
+    chooser.checkNotFound(MasterCategory.ALL, MasterCategory.NONE);
   }
 
   public void testRenameSeriesAndCategory() throws Exception {
