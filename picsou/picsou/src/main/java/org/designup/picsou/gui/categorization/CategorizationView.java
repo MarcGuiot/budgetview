@@ -156,7 +156,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
   private void installDoubleClickHandler() {
     transactionTable.getComponent().addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent e) {
+      public void mouseReleased(MouseEvent e) {
         if (e.getClickCount() == 2) {
           autoSelectSimilarTransactions();
         }
@@ -275,6 +275,9 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     Glob transaction = findNextUncategorizedTransaction(minIndex);
     if (transaction != null) {
       selectionService.select(transaction);
+    }
+    else {
+      selectionService.clear(Transaction.TYPE);
     }
   }
 

@@ -72,7 +72,6 @@ public class CategorizationChecker extends DataChecker {
         assertFalse("Area '" + name + "' is selected", getPanel().getToggleButton(name).isSelected());
       }
     }
-    assertTrue(getPanel().getTextBox("Select the series type").isVisible());
   }
 
   public CategorizationChecker selectIncome() {
