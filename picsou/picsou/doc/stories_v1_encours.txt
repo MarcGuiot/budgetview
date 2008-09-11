@@ -2,9 +2,6 @@ SeriesEditionDialog
 * Revoir label "amount" => dynamique pour montrer le lien avec la selection
 * Colonne "montant observe"
 * Combo "Tous les mois" / "Certains mois"
-* Echeancier : griser mois passes + bold mois courant
-* Si multicategories, label "categorieS" et "Vous devez selectionner LES categorIES"
-* Layout : bouton "Selectionner" rogne + bloc date debut / fin
 
 BudgetView
 * Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)

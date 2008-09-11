@@ -64,9 +64,10 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.envelopes.editSeriesList().setName("Courant")
       .checkTable(new Object[][]{
+        {"2008", "August", "100.00"},
         {"2008", "June", "100.00"},
         {"2008", "July", "100.00"},
-        {"2008", "August", "100.00"}});
+      });
 
     views.selectData();
     transactions

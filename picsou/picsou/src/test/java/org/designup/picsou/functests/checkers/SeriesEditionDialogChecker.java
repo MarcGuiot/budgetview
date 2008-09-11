@@ -7,8 +7,7 @@ import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -101,37 +100,40 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return checkCategory(categories);
   }
 
-  public SeriesEditionDialogChecker checkCategory() {
-    return checkCategory(new String[0]);
-  }
-
-  public SeriesEditionDialogChecker checkCategory(String... categories) {
+  public SeriesEditionDialogChecker checkNoCategory() {
     if (singleSelection) {
-      if (categories.length == 0) {
-        assertThat(dialog.getTextBox("singleCategoryLabel").textContains("Select a category"));
-      }
-      else {
-        assertThat(dialog.getTextBox("singleCategoryLabel").textEquals("Category:" + categories[0]));
-      }
+      assertThat(dialog.getTextBox("singleCategoryField").textIsEmpty());
+      assertThat(dialog.getTextBox("missingCategoryLabel").textContains("You must select a category"));
     }
     else {
-      if (categories.length == 0) {
-        assertThat(dialog.getTextBox("singleCategoryLabel").textContains("Select a category"));
-        UISpecAssert.assertThat(dialog.getListBox("multipleCategoryList").isEmpty());
-      }
-      else {
-        String[] categoryName = new String[categories.length];
-        int i = 0;
-        for (String category : categories) {
-          categoryName[i] = category;
-          i++;
-        }
-        UISpecAssert.assertThat(dialog.getListBox("multipleCategoryList").contentEquals(categoryName));
-      }
+      UISpecAssert.assertThat(dialog.getListBox("multipleCategoryList").isEmpty());
+      assertThat(dialog.getTextBox("missingCategoryLabel").textContains("You must select at least one category"));
     }
     return this;
   }
 
+  public SeriesEditionDialogChecker checkCategory(String... categories) {
+    if (categories.length == 0) {
+      return checkNoCategory();
+    }
+
+    if (singleSelection) {
+      if (categories.length > 1) {
+        fail("Only one category should be expected for single category series");
+      }
+      assertThat(dialog.getTextBox("singleCategoryField").textEquals(categories[0]));
+    }
+    else {
+      String[] categoryName = new String[categories.length];
+      int i = 0;
+      for (String category : categories) {
+        categoryName[i] = category;
+        i++;
+      }
+      UISpecAssert.assertThat(dialog.getListBox("multipleCategoryList").contentEquals(categoryName));
+    }
+    return this;
+  }
 
   public CategoryChooserChecker openCategory() {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
@@ -269,7 +271,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkNoStartDate() {
-    assertFalse(dialog.getTextBox("beginSeriesDate").isVisible());
+    assertTrue(dialog.getTextBox("beginSeriesDate").isVisible());
     assertFalse(dialog.getButton("deleteBeginSeriesDate").isVisible());
     return this;
   }
@@ -285,7 +287,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkNoEndDate() {
-    assertFalse(dialog.getTextBox("endSeriesDate").isVisible());
+    assertTrue(dialog.getTextBox("endSeriesDate").isVisible());
     assertFalse(dialog.getButton("deleteEndSeriesDate").isVisible());
     return this;
   }
@@ -300,7 +302,6 @@ public class SeriesEditionDialogChecker extends DataChecker {
     month.centerTo(monthId)
       .selectMonthInCurrent(Month.toMonth(monthId));
   }
-
 
   public MonthChooserChecker getStartCalendar() {
     return getMonthChooser("beginSeriesCalendar");
@@ -338,10 +339,6 @@ public class SeriesEditionDialogChecker extends DataChecker {
     assertFalse(dialog.isVisible());
   }
 
-  private TextBox getSingleCategoryLabel() {
-    return dialog.getTextBox("singleCategoryLabel");
-  }
-
   public SeriesEditionDialogChecker checkCategorizeEnable(boolean enable) {
     Button categoryzeButton = getCategoryzeButton();
     if (enable) {
@@ -354,17 +351,16 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkSingleCategorizeIsVisible(boolean visible) {
-    TextBox label = getSingleCategoryLabel();
-    UISpecAssert.assertEquals(visible, label.isVisible());
+    TextBox textField = dialog.getTextBox("singleCategoryField");
+    UISpecAssert.assertEquals(visible, textField.isVisible());
     return this;
   }
 
-  public SeriesEditionDialogChecker checkCategorizeLabel() {
-    TextBox label = getSingleCategoryLabel();
-    UISpecAssert.assertThat(label.textEquals("Category:"));
+  public SeriesEditionDialogChecker checkCategorizeLabelIsEmpty() {
+    TextBox label = dialog.getTextBox("singleCategoryField");
+    UISpecAssert.assertThat(label.textIsEmpty());
     return this;
   }
-
 
   private Button getCategoryzeButton() {
     return dialog.getButton("assignCategory");
@@ -373,26 +369,18 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesEditionDialogChecker checkCategoryListEnable(boolean enable) {
     checkMultiCategorizeIsVisible(true);
     ListBox multiCategoryList = getMultiCategoryList();
-    TextBox label = getMultiCategotyLabel();
-    UISpecAssert.assertEquals(enable, label.isEnabled());
     UISpecAssert.assertEquals(enable, multiCategoryList.isEnabled());
     return this;
   }
 
   public SeriesEditionDialogChecker checkMultiCategorizeIsVisible(boolean visible) {
     ListBox multiCategoryList = getMultiCategoryList();
-    TextBox label = getMultiCategotyLabel();
-    UISpecAssert.assertEquals(visible, label.isVisible());
     UISpecAssert.assertEquals(visible, multiCategoryList.isVisible());
     return this;
   }
 
   private ListBox getMultiCategoryList() {
     return dialog.getListBox("multipleCategoryList");
-  }
-
-  private TextBox getMultiCategotyLabel() {
-    return dialog.getTextBox("multiCategoryLabel");
   }
 
   public SeriesEditionDialogChecker checkOkEnabled(boolean isEnabled) {

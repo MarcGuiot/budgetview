@@ -7,7 +7,7 @@
     <style selector="label.month" foreground="#444444" font="-,plain,10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(600,550)">
+  <panel styleClass="dialog" preferredSize="(700,550)">
     <column styleClass="innerDialog">
 
       <label text="$seriesEdition.title" styleClass="title"/>
@@ -20,46 +20,52 @@
         </column>
         <column border="empty(0,10,0,0)">
           <grid>
-            <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel"/>
-            <textField gridPos="(1,0,2,1)" ref="nameField"/>
-            <label gridPos="(0,1)" name="multiCategoryLabel" text="$seriesEdition.category.label"
-                   autoHideSource="multipleCategoryList" anchor="north"/>
+            <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
+            <textField gridPos="(1,0,2,1)" ref="nameField" marginBottom="4"/>
+
+            <label gridPos="(0,1)" ref="categoryLabel" styleClass="formLabel"/>
+
             <scrollPane gridPos="(1,1)" preferredSize="(200,50)" minimumSize="(250,50)"
                         autoHideSource="multipleCategoryList">
               <list ref="multipleCategoryList"/>
             </scrollPane>
-            <label gridPos="(1,2)" ref="singleCategoryLabel" fill="horizontal"/>
-            <button gridPos="(2,1,1,2)" action="assignCategory" marginLeft="10" anchor="northwest"/>
+
+            <textField gridPos="(1,1)" ref="singleCategoryField"/>
+
+            <button gridPos="(2,1)" action="assignCategory" marginLeft="10" anchor="northwest"/>
+            <label gridPos="(1,2,2,1)" ref="missingCategoryLabel" fill="horizontal"/>
           </grid>
 
           <column marginTop="20">
             <label text="Echeances" font="-,plain,10" foreground="#444444"/>
             <row marginTop="0" border="matte(1,0,0,0,#777777)">
-              <column marginTop="10">
+              <column marginTop="10" weightX="4">
+
+                <label text="$seriesEdition.begin" styleClass="formLabelTop" fill="horizontal"/>
                 <row>
-                  <label text="$seriesEdition.begin" styleClass="formLabelTop" fill="horizontal"/>
-                  <button action="beginSeriesCalendar" icon="button_calendar.png" styleClass="icon"
-                          pressedIcon="button_calendar_pressed.png" marginRight="10" fill="none"/>
-                </row>
-                <row>
-                  <label ref="beginSeriesDate" fill="horizontal"/>
+                  <textField ref="beginSeriesDate" fill="horizontal" columns="20"
+                             marginRight="5"/>
                   <button action="deleteBeginSeriesDate" icon="button_delete.png" styleClass="icon"
                           pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
-                          marginRight="10" fill="none"/>
+                          fill="none"/>
+                  <button action="beginSeriesCalendar" icon="button_calendar.png" styleClass="icon"
+                          pressedIcon="button_calendar_pressed.png"
+                          marginLeft="5" fill="none"/>
+                  <filler fill="horizontal" weightX="0.1"/>
                 </row>
 
+                <label text="$seriesEdition.end" styleClass="formLabelTop" labelFor="endSeriesDate"
+                       fill="horizontal" marginTop="10"/>
                 <row>
-                  <label text="$seriesEdition.end" styleClass="formLabelTop" labelFor="endSeriesDate"
-                         fill="horizontal"/>
-                  <button action="endSeriesCalendar" icon="button_calendar.png" styleClass="icon"
-                          pressedIcon="button_calendar_pressed.png"
-                          marginRight="10" fill="none"/>
-                </row>
-                <row>
-                  <label ref="endSeriesDate" fill="horizontal"/>
+                  <textField ref="endSeriesDate" fill="horizontal" columns="20"
+                             marginRight="5"/>
                   <button action="deleteEndSeriesDate" icon="button_delete.png" styleClass="icon"
                           pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
-                          marginRight="10" fill="none"/>
+                          fill="none"/>
+                  <button action="endSeriesCalendar" icon="button_calendar.png" styleClass="icon"
+                          pressedIcon="button_calendar_pressed.png"
+                          marginLeft="5" fill="none"/>
+                  <filler fill="horizontal" weightX="0.1"/>
                 </row>
 
                 <label text="$seriesEdition.months" styleClass="formLabelTop" marginTop="10"/>
@@ -70,7 +76,7 @@
                 </repeat>
                 <filler fill="vertical"/>
               </column>
-              <column margin="10" marginBottom="0">
+              <column margin="10" marginBottom="0" weightX="6">
                 <label text="$seriesEdition.entries" styleClass="formLabelTop"/>
                 <scrollPane weightY="1000" margin="5">
                   <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>

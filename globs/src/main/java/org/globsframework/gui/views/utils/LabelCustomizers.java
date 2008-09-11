@@ -12,6 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class LabelCustomizers {
+  public static final AligmentCustomizer ALIGN_LEFT = new AligmentCustomizer(JLabel.LEFT);
+  public static final AligmentCustomizer ALIGN_CENTER = new AligmentCustomizer(JLabel.CENTER);
+  public static final AligmentCustomizer ALIGN_RIGHT = new AligmentCustomizer(JLabel.RIGHT);
+  public static final LabelCustomizer BOLD = createCustomizer(Font.BOLD);
+  public static final LabelCustomizer PLAIN = createCustomizer(Font.PLAIN);
+  public static final LabelCustomizer ITALIC = createCustomizer(Font.ITALIC);
 
   public static LabelCustomizer chain(Iterable<LabelCustomizer> customizers) {
     final java.util.List<LabelCustomizer> reducedList = new ArrayList<LabelCustomizer>();
@@ -26,33 +32,20 @@ public class LabelCustomizers {
         }
       }
     };
-
   }
 
   public static LabelCustomizer chain(final LabelCustomizer... customizers) {
     return chain(Arrays.asList(customizers));
   }
 
-  public static LabelCustomizer alignLeft() {
-    return new AligmentCustomizer(JLabel.LEFT);
-  }
-
-  public static LabelCustomizer alignCenter() {
-    return new AligmentCustomizer(JLabel.CENTER);
-  }
-
-  public static LabelCustomizer alignRight() {
-    return new AligmentCustomizer(JLabel.RIGHT);
-  }
-
-  public static LabelCustomizer bold() {
+  private static LabelCustomizer createCustomizer(final int bold) {
     return new LabelCustomizer() {
       private Font boldFont;
 
       public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
         if (boldFont == null) {
           Font font = label.getFont();
-          boldFont = font.deriveFont(font.getStyle() ^ Font.BOLD);
+          boldFont = font.deriveFont(font.getStyle() ^ bold);
         }
         label.setFont(boldFont);
       }

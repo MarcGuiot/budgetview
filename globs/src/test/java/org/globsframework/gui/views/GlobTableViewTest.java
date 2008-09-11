@@ -238,7 +238,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                          return "[" + glob.get(NAME) + "]";
                        }
                      },
-                     LabelCustomizers.alignLeft()));
+                     LabelCustomizers.ALIGN_LEFT));
     assertTrue(table.contentEquals(new String[][]{
       {"[name1]"},
       {"[name2]"},
@@ -255,9 +255,9 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       createTable(
         GlobTableView
           .init(TYPE, repository, new GlobFieldComparator(NAME), directory)
-          .addColumn("leftAligned", new DummyStringifier(), LabelCustomizers.alignLeft())
-          .addColumn("centerAligned", new DummyStringifier(), LabelCustomizers.alignCenter())
-          .addColumn("rightAligned", new DummyStringifier(), LabelCustomizers.alignRight()));
+          .addColumn("leftAligned", new DummyStringifier(), LabelCustomizers.ALIGN_LEFT)
+          .addColumn("centerAligned", new DummyStringifier(), LabelCustomizers.ALIGN_CENTER)
+          .addColumn("rightAligned", new DummyStringifier(), LabelCustomizers.ALIGN_RIGHT));
 
     checkColumnAlignment(table, 0, JLabel.LEFT);
     checkColumnAlignment(table, 1, JLabel.CENTER);

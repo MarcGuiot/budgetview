@@ -51,10 +51,10 @@ public class MonthChooserTest extends GuiTestCase {
   }
 
   public void testEnable() throws Exception {
-    final MonthChooserDialog monthChooser = new MonthChooserDialog(directory);
+    final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
     Window window = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
-        selectedMonth = monthChooser.show(new JFrame(), 200805, -1, 200705);
+        selectedMonth = monthChooser.show(200805, -1, 200705);
       }
     });
     MonthChooserChecker month = new MonthChooserChecker(window);
@@ -68,10 +68,10 @@ public class MonthChooserTest extends GuiTestCase {
   }
 
   public void testWihoutSelectedMonth() throws Exception {
-    final MonthChooserDialog monthChooser = new MonthChooserDialog(directory);
+    final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
     Window window = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
-        selectedMonth = monthChooser.show(new JFrame(), 200800, 0, 200801);
+        selectedMonth = monthChooser.show(200800, 0, 200801);
       }
     });
     MonthChooserChecker month = new MonthChooserChecker(window);
@@ -92,10 +92,10 @@ public class MonthChooserTest extends GuiTestCase {
   }
 
   private MonthChooserChecker createChooser() {
-    final MonthChooserDialog monthChooser = new MonthChooserDialog(directory);
+    final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
     Window window = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
-        selectedMonth = monthChooser.show(new JFrame(), 200805, 0, 200805);
+        selectedMonth = monthChooser.show(200805, 0, 200805);
       }
     });
     return new MonthChooserChecker(window);

@@ -20,7 +20,7 @@ public class MonthChooserDemo {
     }
 
     PicsouDialog.MODAL = false;
-    MonthChooserDialog chooser = new MonthChooserDialog(directory);
-    chooser.show(new JFrame(), 200806, -1, 200904);
+    MonthChooserDialog chooser = new MonthChooserDialog(new JFrame(), directory);
+    chooser.show(200806, -1, 200904);
   }
 }

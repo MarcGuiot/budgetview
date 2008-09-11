@@ -26,7 +26,6 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.alignRight;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
@@ -267,7 +266,7 @@ public class SplitTransactionDialog {
       .addColumn(LABEL)
       .addColumn(Lang.get("amount"),
                  amountStringifier,
-                 chain(alignRight(), LabelCustomizers.stringifier(amountStringifier, localRepository)))
+                 chain(LabelCustomizers.ALIGN_RIGHT, LabelCustomizers.stringifier(amountStringifier, localRepository)))
       .addColumn(NOTE, new TransactionNoteEditor(localRepository, localDirectory))
       .addColumn(" ", deleteSplitColumn, deleteSplitColumn, transactionComparator);
 

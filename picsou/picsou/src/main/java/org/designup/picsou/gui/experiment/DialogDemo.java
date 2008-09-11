@@ -24,11 +24,14 @@ public class DialogDemo {
 
     MainWindow window = new MainWindow();
     PicsouDialog.MODAL = false;
+    PicsouApplication.parseLanguage("-l", "fr");
     Directory directory = PicsouApplication.createDirectory();
     GlobRepository repository = PicsouInit.init(ServerAccess.NULL, "user", true, directory).getRepository();
-    for (int monthId = 200701; monthId < 200809; monthId = Month.next(monthId)) {
+    repository.enterBulkDispatchingMode();
+    for (int monthId = 200701; monthId < 200812; monthId = Month.next(monthId)) {
       repository.findOrCreate(Key.create(Month.TYPE, monthId));
     }
+    repository.completeBulkDispatchingMode();
 
     PicsouSampleGenerator generator = new PicsouSampleGenerator(repository);
     generator.run(200710, 200809);
@@ -43,7 +46,8 @@ public class DialogDemo {
   private static void showSeriesEditionDialog(GlobRepository repository, Directory directory, JFrame frame) {
     SeriesEditionDialog dialog = new SeriesEditionDialog(frame, repository, directory);
     SplitsEditor.show(dialog.getDialog(), directory);
-    dialog.show(BudgetArea.EXPENSES_ENVELOPE, Collections.singleton(200808));
+//    dialog.show(BudgetArea.EXPENSES_ENVELOPE, Collections.singleton(200808));
+    dialog.show(BudgetArea.RECURRING_EXPENSES, Collections.singleton(200808));
   }
 
   private static void showCategoriesEditionDialog(GlobRepository repository, Directory directory) {
