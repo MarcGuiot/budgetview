@@ -94,10 +94,10 @@ public class OccasionalSeriesView extends View {
   private void updateFilterAndSelection(GlobRepeat repeat) {
     GlobList stats =
       repository.getAll(OccasionalSeriesStat.TYPE, GlobMatchers.contained(OccasionalSeriesStat.MONTH, currentMonths));
+    selectionService.select(stats, OccasionalSeriesStat.TYPE);
+
     Set<Integer> masterIds = stats.getValueSet(OccasionalSeriesStat.CATEGORY);
     repeat.setFilter(GlobMatchers.contained(Category.ID, masterIds));
-
-    selectionService.select(stats, OccasionalSeriesStat.TYPE);
   }
 
   private String stringify(BudgetArea budgetArea) {

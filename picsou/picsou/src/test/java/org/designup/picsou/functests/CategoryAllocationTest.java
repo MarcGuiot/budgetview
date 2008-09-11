@@ -44,8 +44,8 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     categories
       .initContent()
       .add(MasterCategory.ALL, 0.0, 0.0, -2.2, 1.0)
-      .add(MasterCategory.NONE, 0.0, 0.0, 1.1, 0.5)
       .add(MasterCategory.FOOD, 0.0, 0.0, -1.1, 0.5)
+      .add(MasterCategory.NONE, 0.0, 0.0, 1.1, 0.5)
       .check();
   }
 

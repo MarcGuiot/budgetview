@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components;
 
+import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
@@ -9,7 +10,6 @@ import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
-import org.designup.picsou.model.BudgetArea;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -35,6 +35,8 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
     this.matcher = matcher;
     repository.addChangeListener(this);
     selectionService.addListener(this, type);
+    currentSelection = selectionService.getSelection(type).filterSelf(matcher, repository).toKeyList();
+    update();
   }
 
   public Gauge getComponent() {

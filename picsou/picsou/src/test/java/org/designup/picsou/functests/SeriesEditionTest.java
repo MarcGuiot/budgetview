@@ -54,8 +54,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.getTable().selectRowSpan(0, 3);
-    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
-
+    categorization.setRecurring(0, "Internet", MasterCategory.TELECOMS, true);
+    categorization.setRecurring(1, "Internet", MasterCategory.TELECOMS, false);
+    categorization.setRecurring(2, "Internet", MasterCategory.TELECOMS, false);
+    categorization.setRecurring(3, "Internet", MasterCategory.TELECOMS, false);
     views.selectBudget();
     timeline.selectMonths("2008/06", "2008/08");
     budgetView.recurring.checkSeries("Internet", 58.00, 58.00);
@@ -380,7 +382,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
-    
+
     edition
       .checkSingleCategorizeIsVisible(false)
       .checkMultiCategorizeIsVisible(true);

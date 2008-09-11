@@ -308,16 +308,16 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/06");
     budgetView.envelopes
-      .checkSeries("courantMonoprix", 0, 0)
+      .checkSeries("courantMonoprix", 0, 100)
       .checkSeriesNotPresent("courantED");
 
     budgetView.projects
-      .checkSeries("courantAuchan", 0, 0);
+      .checkSeries("courantAuchan", 95, 100);
 
     timeline.selectMonth("2008/07");
 
     budgetView.envelopes
-      .checkSeries("courantMonoprix", 0, 0)
+      .checkSeries("courantMonoprix", 50, 100)
       .checkSeriesNotPresent("courantED");
 
     budgetView.projects

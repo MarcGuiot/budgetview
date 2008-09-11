@@ -107,7 +107,7 @@ public class OccasionalSeriesStatTriggerTest extends PicsouTestCase {
   }
 
   public void testTransactionAssignedToOccasionalButWithoutACategory() throws Exception {
-    Glob transaction = createTransaction(200808, Series.OCCASIONAL_SERIES_ID, (Integer)null, 10.0);
+    Glob transaction = createTransaction(200808, Series.OCCASIONAL_SERIES_ID, Category.NONE, 10.0);
     repository.update(transaction.getKey(), value(Transaction.SERIES, Series.OCCASIONAL_SERIES_ID));
     listener.assertLastChangesEqual(OccasionalSeriesStat.TYPE,
                                     "<create type='occasionalSeriesStat' month='200808' " +
@@ -116,7 +116,7 @@ public class OccasionalSeriesStatTriggerTest extends PicsouTestCase {
   }
 
   public void testUpdatingTransactionCategory() throws Exception {
-    Glob transaction = createTransaction(200808, Series.OCCASIONAL_SERIES_ID, (Integer)null, 10.0);
+    Glob transaction = createTransaction(200808, Series.OCCASIONAL_SERIES_ID, Category.NONE, 10.0);
     listener.assertLastChangesEqual(OccasionalSeriesStat.TYPE,
                                     "<create type='occasionalSeriesStat' month='200808' " +
                                     "        category='" + MasterCategory.NONE.getId() + "' " +

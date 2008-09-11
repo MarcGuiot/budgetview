@@ -5,7 +5,6 @@ import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 
@@ -119,9 +118,6 @@ public class PicsouMatchers {
         }
         for (Integer id : monthIds) {
           if ((id < firstMonth || id > lastMonth) == exclusive) {
-            if (!exclusive) {
-              System.out.println("PicsouMatchers$SeriesFilter.matches " + GlobPrinter.toString(series));
-            }
             return !exclusive;
           }
         }

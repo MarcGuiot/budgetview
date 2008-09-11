@@ -23,7 +23,6 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
@@ -76,9 +75,7 @@ public class BudgetAreaSeriesView extends View {
                           public void registerComponents(RepeatCellBuilder cellBuilder, Glob series) {
                             final GlobButtonView globButtonView = GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
                               .forceSelection(series);
-                            cellBuilder.add("seriesName",
-                                            globButtonView
-                                              .getComponent());
+                            cellBuilder.add("seriesName", globButtonView.getComponent());
                             addAmountLabel("observedSeriesAmount", SeriesStat.AMOUNT, series, cellBuilder);
                             addAmountLabel("plannedSeriesAmount", SeriesStat.PLANNED_AMOUNT, series, cellBuilder);
 
@@ -87,7 +84,6 @@ public class BudgetAreaSeriesView extends View {
                                                 GlobMatchers.fieldEquals(SeriesStat.SERIES, series.get(Series.ID)),
                                                 repository, directory);
                             cellBuilder.add("gauge", gaugeView.getComponent());
-
                             cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
                               public void dispose() {
                                 gaugeView.dispose();
@@ -128,14 +124,7 @@ public class BudgetAreaSeriesView extends View {
   }
 
   private GlobListStringifier getStringifier(final DoubleField field) {
-    final GlobListStringifier globListStringifier = GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome());
-    return new GlobListStringifier() {
-      public String toString(GlobList list, GlobRepository repository) {
-        String s = globListStringifier.toString(list, repository);
-        System.out.println("BudgetAreaSeriesView.toString " + field + " " + s + " " + GlobPrinter.init(list).toString());
-        return s;
-      }
-    };
+    return GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome());
   }
 
   private class EditSeriesFunctor implements GlobListFunctor {
