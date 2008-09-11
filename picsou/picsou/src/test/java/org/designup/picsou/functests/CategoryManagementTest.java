@@ -273,9 +273,10 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.selectTableRows(0, 1)
-      .selectTableRow(0)
+    categorization.selectTableRows("Auchan", "Chez Lulu")
+      .selectTableRows("Auchan")
       .checkContainsEnvelope("Quotidien", "Courant")
+      .checkNotContainsEnvelope("Quotidien", "Apero")
       .editSeries(false)
       .selectSeries("Quotidien")
       .checkCategory("Courant")
@@ -284,11 +285,11 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     views.selectData();
     categories.select("Courant");
     categories.deleteSubSelected(MasterCategory.FOOD);
-    categories.checkValue(MasterCategory.FOOD, "-34");
+    categories.checkValue(MasterCategory.FOOD, "-2");
 
     views.selectCategorization();
-    categorization.selectTableRows(0, 1)
-      .selectTableRow(0)
+    categorization.selectTableRows("Auchan", "Chez Lulu")
+      .selectTableRows("Auchan")
       .checkContainsEnvelope("Quotidien", MasterCategory.FOOD);
 
     categorization.editSeries(false)
@@ -314,6 +315,22 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     editor.validate();
     categories.assertCategoryNotFound("Apero");
     categories.assertCategoryExists("Pastis");
+  }
+
+  public void testRenameCategoryRenameInCategorization() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/11", -1.0, "Auchan")
+      .load();
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
+    views.selectData();
+    categories.select(MasterCategory.FOOD);
+    categories.openEditionDialog().renameMaster(getCategoryName(MasterCategory.FOOD), "Apero")
+      .validate();
+    views.selectCategorization();
+    categorization.selectEnvelopes();
+    categorization.checkContainsLabelInEnvelope("Apero");
   }
 
   public void testCanReuseSameName() throws Exception {

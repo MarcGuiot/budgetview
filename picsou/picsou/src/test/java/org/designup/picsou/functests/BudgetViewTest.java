@@ -7,7 +7,7 @@ import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
 
-public class  BudgetViewTest extends LoggedInFunctionalTestCase {
+public class BudgetViewTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentDate(Dates.parseMonth("2008/08"));
     super.setUp();
@@ -116,7 +116,7 @@ public class  BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Virt Compte Epargne", "", -25.00)
       .check();
 
-        views.selectCategorization();
+    views.selectCategorization();
     categorization.setSavings("Virt Compte Epargne", "Epargne", MasterCategory.SAVINGS, true);
 
     views.selectBudget();
@@ -125,7 +125,7 @@ public class  BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkTotalAmounts(25.0, 25.0);
     budgetView.savings.checkSeries("Epargne", 25.0, 25.0);
   }
-  
+
   public void testImportWithUserDateAndBankDateAtNextMonth() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/31", "2008/08/02", -95.00, "Auchan")
@@ -191,7 +191,38 @@ public class  BudgetViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSeveralMonths() throws Exception {
-    System.out.println("BudgetViewTest.testSeveralMonths: TBD");
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/31", -95.00, "Auchan")
+      .addTransaction("2008/06/29", -29.00, "ED")
+      .addTransaction("2008/05/30", -50.00, "Monoprix")
+      .load();
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("courantED")
+      .setEndDate(200805)
+      .setCategory(MasterCategory.BEAUTY)
+      .selectAllMonths()
+      .setAmount("100")
+      .validate();
+    budgetView.envelopes.createSeries().setName("courantAuchan")
+      .setStartDate(200806)
+      .setEndDate(200806)
+      .selectAllMonths()
+      .setAmount("100")
+      .setCategory(MasterCategory.CLOTHING)
+      .validate();
+    budgetView.envelopes.createSeries().setName("courantMonoprix")
+      .setStartDate(200806)
+      .selectAllMonths()
+      .setAmount("100")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    views.selectCategorization();
+    categorization.selectTableRows("Auchan");
+//    categorization.selectEnvelopes()
+//      .checkContainsEnvelope("courantED", MasterCategory.BEAUTY)
+//      .checkNotContainsEnvelope("courantAuchan", getCategoryName(MasterCategory.CLOTHING))
+//      .checkNotContainsEnvelope("courantMonoprix", getCategoryName(MasterCategory.FOOD));
   }
 
   public void testAddMonth() throws Exception {

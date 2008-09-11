@@ -3,15 +3,13 @@
 
 Ameliorations
 -------------
-* Apprentissage series
-* Undo (verifier + generaliser dans les boîtes de dialogue)
+* Undo dans les boîtes de dialogue
 * Filtrage transactions par Serie
 * Filtrage transactions par TransactionType
 * Filtrage transactions par Compte
 * Filtrage transactions par BudgetArea
 * Graphiques (camembert / histogramme)
-* Afficher les infos de mise a dispo d'une nouvelle version
-* BudgeView : Panneau pour montrer le detail du calcul du disponible en occasional
+* BudgetView : Panneau pour montrer le detail du calcul du disponible en occasional
 * Aide pour trouver les categories dans CategoriesChooserDialog (search)
 
 
@@ -43,7 +41,6 @@ Nouveau
 * Filtrage de transactions par import
 
 * Enlever contrainte sur password => indicateur "password strength"
-* Mode demo (pas de connexions, fichier de donnees en dur, pas de stockage)
 
 * messages “Vous avez dépense 150€ de trop dans la catégorie Alimentation”
 * messages “Vous avez économisé 54€ dans la catégorie Sport” (uniquement pour les mois terminés)
@@ -53,3 +50,5 @@ Nouveau
 * CategoryView : boutons expand all / collapse all
 * TimeView mettre en evidence les mois sans transactions
 * Memoriser taille et position appli dans les user prefs
+
+* Categorisation : tab "virements internes" avec selection du compte de destination

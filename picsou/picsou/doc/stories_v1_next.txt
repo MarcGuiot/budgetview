@@ -3,7 +3,7 @@ Versions basique/pro
 * Masquer les vues
 * Bloc "vous utilisez la version basique"
 * Pb d'affichage de mois futurs en version basique si transactions dans le futur
-
+* SeriesEditionDialog : Afficher les mois futurs meme en version basique
 
 Stabilisation
 -------------
@@ -14,6 +14,7 @@ Stabilisation
 * Modifier l'ordre des series
 
 * Creer des transactions utilisateur (soit achats effectues mais pas encore dans les releves, soit previsions plus vagues)
-* Categorisation : tab "virements internes" avec selection du compte de destination
 
 * Creation du compte de demo (pour essai par les utilisateurs + nos screencasts)
+
+* Revoir estimation montant (moyenne 3 derniers mois ?)

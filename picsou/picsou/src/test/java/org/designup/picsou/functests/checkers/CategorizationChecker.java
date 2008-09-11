@@ -160,7 +160,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker selectNewRecurringSeries(String name, MasterCategory category,
-                                                              boolean transactionWasAlreadyCategorized) {
+                                                        boolean transactionWasAlreadyCategorized) {
     Panel panel = getRecurringSeriesPanel();
     createRecurringSeries()
       .setName(name)
@@ -243,6 +243,7 @@ public class CategorizationChecker extends DataChecker {
     Panel panel = getEnvelopeSeriesPanel();
     assertTrue(panel.containsLabel(envelopeName));
     for (MasterCategory category : categories) {
+      panel.getToggleButton(envelopeName + ":" + category.getName());
       assertTrue(panel.containsUIComponent(ToggleButton.class, envelopeName + ":" + category.getName()));
     }
     return this;
@@ -253,6 +254,15 @@ public class CategorizationChecker extends DataChecker {
     assertTrue(panel.containsLabel(envelopeName));
     for (String category : categories) {
       assertTrue(panel.containsUIComponent(ToggleButton.class, envelopeName + ":" + category));
+    }
+    return this;
+  }
+
+  public CategorizationChecker checkNotContainsEnvelope(String envelopeName, String... categories) {
+    Panel panel = getEnvelopeSeriesPanel();
+    assertTrue(panel.containsLabel(envelopeName));
+    for (String category : categories) {
+      assertFalse(panel.containsUIComponent(ToggleButton.class, envelopeName + ":" + category));
     }
     return this;
   }
@@ -700,7 +710,7 @@ public class CategorizationChecker extends DataChecker {
       add(new Object[]{date, label, amount});
       return this;
     }
-    
+
     public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount) {
       add(new Object[]{date, label, amount});
       return this;

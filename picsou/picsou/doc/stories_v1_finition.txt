@@ -16,24 +16,20 @@ Import
 
 SeriesEditionDialog
 * Double click table => selection jusqu'a la fin
-* Revoir estimation montant (moyenne 3 derniers mois ?)
 * Raccourci pour selectionner tout
-* Double click table => selection jusqu'a la fin
 * trim() sur les noms
 
 
 CategoryEditionDialog
-* selectionner la categorie suivante apres suppression
 * suppression avec move : retirer la source de la liste des target
-* Creation de series INCOME ou SAVINGS : preselectionner les categories par defaut
-* Look header
+* Creation de series INCOME : preselectionner les categories par defaut
 * Titre
 * Label "renommer la categorie"
 
 
 BudgetView
 * Afficher la difference releve/prevu sous la barre dans l'affichage des totaux
-* Mettre total disponible en rouge s'il est negatif
+* Mettre total disponible (occasional) en rouge s'il est negatif
 * Arrondir les montants pour les valeurs en gros (disponible = 1852.23 parait bizarre) ?
 
 
@@ -41,7 +37,7 @@ Login
 * Creation de compte : expliquer que la notion de compte / mot de passe est liee au cryptage local
 * Error login + "new user" => effacer message
 * Si aucun utilisateur dans le repo, mode creation de compte
-* Revoir look panneau import
+* Revoir look panneau import (mode dialog)
 
 
 TimeView
@@ -64,8 +60,12 @@ Packaging
 
 
 Misc
+* Afficher les infos de mise a dispo d'une nouvelle version
 * CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
 
 Graphiques
 * Merger en un seul tab, avec deux toggles "repartition/evolution"
 * Limiter le nombre de mois affiches dans l'historique
+
+Undo
+* Verifier fonctionnement sur cas principaux (import, categorisation, edition serie, split)
