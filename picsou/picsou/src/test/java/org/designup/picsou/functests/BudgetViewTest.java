@@ -86,6 +86,24 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Exceptional Income", 0.0, 0.0);
   }
 
+  public void testOccasionalShowMasterCategory() throws Exception {
+    categories.createSubCategory(MasterCategory.FOOD, "Apero");
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .load();
+    timeline.selectAll();
+    views.selectCategorization();
+    categorization.setOccasional("Auchan", MasterCategory.FOOD, "Apero");
+    views.selectBudget();
+    budgetView.occasional.check(MasterCategory.FOOD, -95.);
+    budgetView.occasional.checkNotContains("Apero");
+    views.selectCategorization();
+    categorization.setOccasional("Auchan", MasterCategory.HEALTH, "health.medecin");
+    views.selectBudget();
+    budgetView.occasional.check(MasterCategory.HEALTH, -95.);
+    budgetView.occasional.checkNotContains("health.medecin");
+  }
+
   public void testProjectSeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
@@ -234,5 +252,75 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 0.0, 3540.0);
 
     budgetView.occasional.checkTotalAmounts(0, 3540 - 95 - 29);
+  }
+
+  public void testSeveralMonths() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/30", -50.00, "Monoprix")
+      .addTransaction("2008/06/14", -95.00, "Auchan")
+      .addTransaction("2008/05/29", -29.00, "ED2")
+      .addTransaction("2008/04/29", -50.00, "ED1")
+      .load();
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("courantED")
+      .setEndDate(200805)
+      .setCategory(MasterCategory.FOOD)
+      .selectAllMonths()
+      .setAmount("100")
+      .validate();
+    budgetView.projects.createSeries().setName("courantAuchan")
+      .setStartDate(200806)
+      .setEndDate(200806)
+      .selectAllMonths()
+      .setAmount("100")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    budgetView.envelopes.createSeries().setName("courantMonoprix")
+      .setStartDate(200806)
+      .selectAllMonths()
+      .setAmount("100")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    views.selectCategorization();
+    categorization.setEnvelope("Monoprix", "courantMonoprix", MasterCategory.FOOD, false);
+    categorization.setProject("Auchan", "courantAuchan", MasterCategory.FOOD, false);
+    categorization.setEnvelope("ED1", "courantED", MasterCategory.FOOD, false);
+    categorization.setEnvelope("ED2", "courantED", MasterCategory.FOOD, false);
+
+    views.selectBudget();
+    timeline.selectMonths("2008/04", "2008/05", "2008/06", "2008/07");
+
+    budgetView.envelopes
+      .checkSeries("courantMonoprix", 50, 200)
+      .checkSeries("courantED", 79, 200);
+
+    budgetView.projects
+      .checkSeries("courantAuchan", 95, 100);
+
+    timeline.selectMonth("2008/05");
+    budgetView.envelopes
+      .checkSeries("courantED", 29, 100)
+      .checkSeriesNotPresent("courantMonoprix");
+
+    budgetView.projects
+      .checkSeriesNotPresent("courantAuchan");
+
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes
+      .checkSeries("courantMonoprix", 0, 0)
+      .checkSeriesNotPresent("courantED");
+
+    budgetView.projects
+      .checkSeries("courantAuchan", 0, 0);
+
+    timeline.selectMonth("2008/07");
+
+    budgetView.envelopes
+      .checkSeries("courantMonoprix", 0, 0)
+      .checkSeriesNotPresent("courantED");
+
+    budgetView.projects
+      .checkSeriesNotPresent("courantAuchan");
   }
 }

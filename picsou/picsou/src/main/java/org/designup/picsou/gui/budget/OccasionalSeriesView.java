@@ -15,10 +15,9 @@ import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobLabelView;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobMatcher;
@@ -26,11 +25,13 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.Collections;
 import java.util.Set;
 
 public class OccasionalSeriesView extends View {
   private String name;
   private GlobMatcher totalMatcher;
+  private Set<Integer> currentMonths = Collections.emptySet();
 
   protected OccasionalSeriesView(String name, GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -58,28 +59,45 @@ public class OccasionalSeriesView extends View {
                         GlobMatchers.NONE,
                         new RepeatComponentFactory<Glob>() {
                           public void registerComponents(RepeatCellBuilder cellBuilder, Glob master) {
-                            cellBuilder.add("categoryName",
-                                            GlobLabelView.init(Category.TYPE, repository, directory)
-                                              .forceSelection(master)
-                                              .getComponent());
-                            addAmountLabel("observedCategoryAmount", master, cellBuilder);
+                            JLabel label = GlobLabelView.init(Category.TYPE, repository, directory)
+                              .forceSelection(master)
+                              .getComponent();
+                            cellBuilder.add("categoryName", label);
+                            String categoryName = descriptionService.getStringifier(Category.TYPE).toString(master, repository);
+                            label.setName("categoryName." + categoryName);
+                            addAmountLabel("observedCategoryAmount", master, cellBuilder, "amount." + categoryName);
                           }
                         });
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         GlobList months = selection.getAll(Month.TYPE);
-        Set<Integer> monthIds = months.getValueSet(Month.ID);
-        GlobList stats =
-          repository.getAll(OccasionalSeriesStat.TYPE, GlobMatchers.contained(OccasionalSeriesStat.MONTH, monthIds));
-        Set<Integer> masterIds = stats.getValueSet(OccasionalSeriesStat.CATEGORY);
-        repeat.setFilter(GlobMatchers.contained(Category.ID, masterIds));
-
-        selectionService.select(stats, OccasionalSeriesStat.TYPE);
+        currentMonths = months.getValueSet(Month.ID);
+        updateFilterAndSelection(repeat);
       }
     }, Month.TYPE);
 
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsCreationsOrDeletions(OccasionalSeriesStat.TYPE)) {
+          updateFilterAndSelection(repeat);
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      }
+    });
+
     parentBuilder.add(name, builder);
+  }
+
+  private void updateFilterAndSelection(GlobRepeat repeat) {
+    GlobList stats =
+      repository.getAll(OccasionalSeriesStat.TYPE, GlobMatchers.contained(OccasionalSeriesStat.MONTH, currentMonths));
+    Set<Integer> masterIds = stats.getValueSet(OccasionalSeriesStat.CATEGORY);
+    repeat.setFilter(GlobMatchers.contained(Category.ID, masterIds));
+
+    selectionService.select(stats, OccasionalSeriesStat.TYPE);
   }
 
   private String stringify(BudgetArea budgetArea) {
@@ -92,11 +110,12 @@ public class OccasionalSeriesView extends View {
       .setFilter(totalMatcher);
   }
 
-  private void addAmountLabel(String name, Glob master, RepeatCellBuilder cellBuilder) {
+  private void addAmountLabel(String name, Glob master, RepeatCellBuilder cellBuilder, String amountName) {
     GlobListStringifier stringifier = GlobListStringifiers.sum(decimalFormat, OccasionalSeriesStat.AMOUNT);
-    cellBuilder.add(name,
-                    GlobLabelView.init(OccasionalSeriesStat.TYPE, repository, directory, stringifier)
-                      .setFilter(GlobMatchers.linkedTo(master, OccasionalSeriesStat.CATEGORY))
-                      .getComponent());
+    JLabel label = GlobLabelView.init(OccasionalSeriesStat.TYPE, repository, directory, stringifier)
+      .setFilter(GlobMatchers.linkedTo(master, OccasionalSeriesStat.CATEGORY))
+      .getComponent();
+    cellBuilder.add(name, label);
+    label.setName(amountName);
   }
 }

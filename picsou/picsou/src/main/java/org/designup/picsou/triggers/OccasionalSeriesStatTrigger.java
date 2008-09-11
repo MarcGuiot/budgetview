@@ -18,9 +18,9 @@ import java.util.Set;
 
 public class OccasionalSeriesStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-    final Map<Integer, Integer> deletedCategoriesMasters = getDeletedCategoriesMasters(changeSet);
+    final Map<Integer, Integer> categoriesMasters = getCategoriesToMasters(changeSet, repository);
 
-    changeSet.safeVisit(Transaction.TYPE, new TransactionChangeVisitor(repository, deletedCategoriesMasters));
+    changeSet.safeVisit(Transaction.TYPE, new TransactionChangeVisitor(repository, categoriesMasters));
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
@@ -30,26 +30,31 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
 
     repository.deleteAll(OccasionalSeriesStat.TYPE);
 
+    final Map<Integer, Integer> categoriesMasters = getCategoriesToMasters(null, repository);
+
     for (Glob transaction : repository.getAll(Transaction.TYPE,
                                               and(fieldEquals(Transaction.SERIES, Series.OCCASIONAL_SERIES_ID),
                                                   fieldEquals(Transaction.PLANNED, false)))) {
+
+      Integer category = categoriesMasters.get(transaction.get(Transaction.CATEGORY));
+
       Glob stat =
-        repository.findOrCreate(getKey(transaction.get(Transaction.CATEGORY), transaction.get(Transaction.MONTH)));
+        repository.findOrCreate(getKey(category, transaction.get(Transaction.MONTH)));
       updateStat(stat, +1, transaction.get(Transaction.AMOUNT), repository);
     }
   }
 
   private class TransactionChangeVisitor implements ChangeSetVisitor {
     private final GlobRepository repository;
-    private Map<Integer, Integer> deletedCategoriesMasters;
+    private Map<Integer, Integer> categoriesToMasters;
 
-    public TransactionChangeVisitor(GlobRepository repository, Map<Integer, Integer> deletedCategoriesMasters) {
+    public TransactionChangeVisitor(GlobRepository repository, Map<Integer, Integer> categoriesToMasters) {
       this.repository = repository;
-      this.deletedCategoriesMasters = deletedCategoriesMasters;
+      this.categoriesToMasters = categoriesToMasters;
     }
 
     public void visitCreation(Key key, FieldValues values) throws Exception {
-      updateStat(values, +1, repository);
+      updateStat(values, categoriesToMasters.get(values.get(Transaction.CATEGORY)), +1, repository);
     }
 
     public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -108,20 +113,12 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
         previousCategoryId = transaction.get(Transaction.CATEGORY);
         currentCategoryId = transaction.get(Transaction.CATEGORY);
       }
-      if (deletedCategoriesMasters.containsKey(previousCategoryId)) {
-        previousCategoryId = deletedCategoriesMasters.get(previousCategoryId);
-      }
-      else {
-        previousCategoryId = Category.getMasterCategoryId(previousCategoryId, repository);
-      }
-      currentCategoryId = Category.getMasterCategoryId(currentCategoryId, repository);
-
-      Glob previousStat = getStat(repository, previousSeriesId, previousCategoryId, previousMonthId);
+      Glob previousStat = getStat(repository, previousSeriesId, categoriesToMasters.get(previousCategoryId), previousMonthId);
       if (previousStat != null) {
-        updateStat(previousStat, previousCategoryId, previousMonthId, -1, previousAmount, repository);
+        updateStat(previousStat, categoriesToMasters.get(previousCategoryId), previousMonthId, -1, previousAmount, repository);
       }
 
-      Glob currentStat = getOrCreateStat(repository, currentSeriesId, currentCategoryId, currentMonthId);
+      Glob currentStat = getOrCreateStat(repository, currentSeriesId, categoriesToMasters.get(currentCategoryId), currentMonthId);
       if (currentStat != null) {
         repository.update(currentStat.getKey(), OccasionalSeriesStat.AMOUNT,
                           currentStat.get(OccasionalSeriesStat.AMOUNT) + currentAmount);
@@ -129,11 +126,11 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
     }
 
     public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-      updateStat(previousValues, -1, repository);
+      updateStat(previousValues, categoriesToMasters.get(previousValues.get(Transaction.CATEGORY)), -1, repository);
     }
   }
 
-  private void updateStat(FieldValues values, int multiplier, GlobRepository repository) {
+  private void updateStat(FieldValues values, Integer categoryId, int multiplier, GlobRepository repository) {
     Integer seriesId = values.get(Transaction.SERIES);
     if (!Series.OCCASIONAL_SERIES_ID.equals(seriesId)) {
       return;
@@ -143,7 +140,6 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
       return;
     }
 
-    Integer categoryId = Category.getMasterCategoryId(values.get(Transaction.CATEGORY), repository);
     Integer monthId = values.get(Transaction.MONTH);
     Glob stat = repository.findOrCreate(getKey(categoryId, monthId));
     Double amount = values.get(Transaction.AMOUNT);
@@ -194,17 +190,31 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
     return repository.findOrCreate(getKey(categoryId, monthId));
   }
 
-  private Map<Integer, Integer> getDeletedCategoriesMasters(ChangeSet changeSet) {
-    final Map<Integer, Integer> deletedCategoriesMasters = new HashMap<Integer, Integer>();
+  private Map<Integer, Integer> getCategoriesToMasters(ChangeSet changeSet, GlobRepository repository) {
+    final Map<Integer, Integer> categoriesMasters = new HashMap<Integer, Integer>();
 
-    changeSet.safeVisit(
-      Category.TYPE,
-      new DefaultChangeSetVisitor() {
+    if (changeSet != null) {
+      changeSet.safeVisit(Category.TYPE, new DefaultChangeSetVisitor() {
         public void visitDeletion(Key key, FieldValues values) throws Exception {
-          deletedCategoriesMasters.put(key.get(Category.ID), values.get(Category.MASTER));
+          if (values.get(Category.MASTER) != null) {
+            categoriesMasters.put(key.get(Category.ID), values.get(Category.MASTER));
+          }
+          else {
+            categoriesMasters.put(values.get(Category.ID), values.get(Category.ID));
+          }
         }
       });
-    return deletedCategoriesMasters;
+    }
+    GlobList categories = repository.getAll(Category.TYPE);
+    for (Glob category : categories) {
+      if (category.get(Category.MASTER) != null) {
+        categoriesMasters.put(category.get(Category.ID), category.get(Category.MASTER));
+      }
+      else {
+        categoriesMasters.put(category.get(Category.ID), category.get(Category.ID));
+      }
+    }
+    return categoriesMasters;
   }
 
 }

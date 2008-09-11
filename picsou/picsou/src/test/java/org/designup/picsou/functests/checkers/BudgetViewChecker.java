@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
@@ -27,7 +28,7 @@ public class BudgetViewChecker extends DataChecker {
     this.recurring = new BudgetAreaChecker("recurringBudgetView", true);
     this.envelopes = new BudgetAreaChecker("envelopeBudgetView", false);
     this.occasional = new OccasionalAreaChecker();
-    this.projects= new BudgetAreaChecker("projectsBudgetView", false);
+    this.projects = new BudgetAreaChecker("projectsBudgetView", false);
     this.savings = new BudgetAreaChecker("savingsBudgetView", false);
   }
 
@@ -56,7 +57,7 @@ public class BudgetViewChecker extends DataChecker {
       UISpecAssert.assertTrue(totalPlanned.textEquals(BudgetViewChecker.this.toString(planned)));
     }
 
-    public void checkSeries(String seriesName, double observedAmount, double plannedAmount) {
+    public BudgetAreaChecker checkSeries(String seriesName, double observedAmount, double plannedAmount) {
       Panel budgetPanel = window.getPanel(panelName);
       Button nameButton = budgetPanel.getButton(seriesName);
 
@@ -64,10 +65,23 @@ public class BudgetViewChecker extends DataChecker {
       int nameIndex = getIndex(panel, nameButton.getAwtComponent());
 
       TextBox observedLabel = new TextBox((JLabel)panel.getComponent(nameIndex + 1));
-      UISpecAssert.assertTrue(observedLabel.textEquals(BudgetViewChecker.this.toString(observedAmount)));
+      UISpecAssert.assertTrue(seriesName + " observed : \nExpected  :" + observedAmount +
+                              "\nActual    :" + observedLabel.getText(),
+                              observedLabel.textEquals(BudgetViewChecker.this.toString(observedAmount)));
 
       TextBox plannedLabel = new TextBox((JLabel)panel.getComponent(nameIndex + 3));
-      UISpecAssert.assertTrue(plannedLabel.textEquals(BudgetViewChecker.this.toString(plannedAmount)));
+      UISpecAssert.assertTrue(seriesName + " planned : \nExpected  :" + plannedAmount +
+                              "\nActual    :" + plannedLabel.getText(),
+                              plannedLabel.textEquals(BudgetViewChecker.this.toString(plannedAmount)));
+      return this;
+    }
+
+    public BudgetAreaChecker checkSeriesNotPresent(String... seriesName) {
+      Panel budgetPanel = window.getPanel(panelName);
+      for (String name : seriesName) {
+        UISpecAssert.assertFalse(budgetPanel.containsUIComponent(Button.class, name));
+      }
+      return this;
     }
 
     private int getIndex(JPanel panel, Component component) {
@@ -120,5 +134,18 @@ public class BudgetViewChecker extends DataChecker {
       UISpecAssert.assertTrue(totalPlanned.textEquals(BudgetViewChecker.this.toString(free)));
     }
 
+    public OccasionalAreaChecker check(MasterCategory category, Double amount) {
+      Panel budgetPanel = window.getPanel("occasionalBudgetView");
+      UISpecAssert.assertTrue(budgetPanel.containsUIComponent(TextBox.class, "categoryName." + getCategoryName(category)));
+      UISpecAssert.assertTrue(budgetPanel.getTextBox("amount." + getCategoryName(category))
+        .textEquals(BudgetViewChecker.this.toString(amount)));
+      return this;
+    }
+
+    public OccasionalAreaChecker checkNotContains(String categoryName) {
+      Panel budgetPanel = window.getPanel("occasionalBudgetView");
+      UISpecAssert.assertFalse(budgetPanel.containsUIComponent(TextBox.class, "categoryName." + categoryName));
+      return this;
+    }
   }
 }

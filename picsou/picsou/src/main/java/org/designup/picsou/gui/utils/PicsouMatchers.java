@@ -1,13 +1,16 @@
 package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.model.*;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -82,5 +85,49 @@ public class PicsouMatchers {
 
   public static GlobMatcher subCategories(Integer masterCategoryId) {
     return GlobMatchers.fieldEquals(Category.MASTER, masterCategoryId);
+  }
+
+  static public class SeriesFilter implements GlobMatcher {
+    private Integer budgetAreaId;
+    private GlobRepeat repeat;
+    private boolean exclusive;
+    private Set<Integer> monthIds = Collections.emptySet();
+
+    public SeriesFilter(Integer budgetAreaId, GlobRepeat repeat, boolean isExclusive) {
+      this.budgetAreaId = budgetAreaId;
+      this.repeat = repeat;
+      exclusive = isExclusive;
+    }
+
+    public void filterDates(Set<Integer> monthIds) {
+      this.monthIds = monthIds;
+      repeat.setFilter(this);
+    }
+
+    public boolean matches(Glob series, GlobRepository repository) {
+      if (budgetAreaId.equals(series.get(Series.BUDGET_AREA))) {
+        Integer firstMonth = series.get(Series.FIRST_MONTH);
+        Integer lastMonth = series.get(Series.LAST_MONTH);
+        if (firstMonth == null && lastMonth == null) {
+          return true;
+        }
+        if (firstMonth == null) {
+          firstMonth = 0;
+        }
+        if (lastMonth == null) {
+          lastMonth = Integer.MAX_VALUE;
+        }
+        for (Integer id : monthIds) {
+          if ((id < firstMonth || id > lastMonth) == exclusive) {
+            if (!exclusive) {
+              System.out.println("PicsouMatchers$SeriesFilter.matches " + GlobPrinter.toString(series));
+            }
+            return !exclusive;
+          }
+        }
+        return exclusive;
+      }
+      return false;
+    }
   }
 }

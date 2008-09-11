@@ -699,14 +699,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   public void testSeveralMonths() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/30", -50.00, "Monoprix")
-      .addTransaction("2008/06/31", -95.00, "Auchan")
+      .addTransaction("2008/06/30", -95.00, "Auchan")
       .addTransaction("2008/05/29", -29.00, "ED")
       .load();
 
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("courantED")
       .setEndDate(200805)
-      .setCategory(MasterCategory.BEAUTY)
+      .setCategory(MasterCategory.FOOD)
       .selectAllMonths()
       .setAmount("100")
       .validate();
@@ -715,7 +715,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .setEndDate(200806)
       .selectAllMonths()
       .setAmount("100")
-      .setCategory(MasterCategory.CLOTHING)
+      .setCategory(MasterCategory.FOOD)
       .validate();
     budgetView.envelopes.createSeries().setName("courantMonoprix")
       .setStartDate(200806)
@@ -726,7 +726,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows("ED");
     categorization.selectEnvelopes()
-      .checkContainsEnvelope("courantED", MasterCategory.BEAUTY)
+      .checkContainsEnvelope("courantED", MasterCategory.FOOD)
       .checkNotContainsEnvelope("courantAuchan")
       .checkNotContainsEnvelope("courantMonoprix");
 
@@ -738,9 +738,18 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTableRows("Auchan", "ED");
     categorization.selectEnvelopes()
-      .checkNotContainsEnvelope("courantED")
-      .checkNotContainsEnvelope("courantAuchan")
-      .checkNotContainsEnvelope("courantMonoprix");
+      .checkNotContainsEnvelope("courantED", "courantAuchan", "courantMonoprix");
+
+    categorization.selectTableRows("Auchan");
+    categorization.selectEnvelopes()
+      .checkContainsEnvelope("courantAuchan", MasterCategory.FOOD)
+      .checkContainsEnvelope("courantMonoprix", MasterCategory.FOOD)
+      .checkNotContainsEnvelope("courantED");
+
+    categorization.setEnvelope("Monoprix", "courantMonoprix", MasterCategory.FOOD, false);
+    categorization.setEnvelope("Auchan", "courantAuchan", MasterCategory.FOOD, false);
+    categorization.setEnvelope("ED", "courantED", MasterCategory.FOOD, false);
+
   }
 
 }

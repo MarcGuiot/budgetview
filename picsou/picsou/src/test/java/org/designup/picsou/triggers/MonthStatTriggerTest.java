@@ -7,8 +7,6 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.PicsouTestCase;
 import org.globsframework.metamodel.Field;
 
-import java.util.Collections;
-
 public class MonthStatTriggerTest extends PicsouTestCase {
   public void testStandardCase() throws Exception {
     String input =
@@ -243,34 +241,10 @@ public class MonthStatTriggerTest extends PicsouTestCase {
       .check();
   }
 
-  public void testDispensability() throws Exception {
-    String input =
-      "<account id='" + Account.SUMMARY_ACCOUNT_ID + "'/>" +
-      "<category id='1000' name='doctor' innerName='doctor' masterName='health'/>" +
-      "<transaction month='200605' day='1' amount='-20.0' categoryName='health' dispensable='true'/>" +
-      "<transaction month='200605' day='2' amount='-40.0' categoryName='health'/>" +
-      "<transaction month='200605' day='2' amount='-400.0' categoryName='house'/>" +
-      "<transaction month='200605' day='3' amount='-600.0' categoryName='house'/>" +
-      "<transaction month='200605' day='4' amount='-100.0' categoryName='house' dispensable='true'/>" +
-      "<transaction month='200605' day='5' amount='-50.0' categoryName='house' dispensable='true'/>" +
-      "<transaction month='200606' day='25' amount='-30.0' categoryName='doctor' dispensable='true'/>";
-    checker.parse(repository, input);
-
-    updateStats();
-
-    init(MonthStat.DISPENSABLE)
-      .setMonths(200605, 200606)
-      .add(MasterCategory.HEALTH, 20.0, 30.0)
-      .add("doctor", 0.0, 30.0)
-      .add(MasterCategory.HOUSE, 150.0, 0.0)
-      .add(MasterCategory.ALL, 170.0, 30.0)
-      .check();
-  }
-
   private void updateStats() {
-    MonthStatTrigger trigger = new MonthStatTrigger(repository);
+    MonthStatTrigger trigger = new MonthStatTrigger();
     repository.enterBulkDispatchingMode();
-    trigger.run(Collections.<Integer>emptySet());
+    trigger.run(repository);
     repository.completeBulkDispatchingMode();
   }
 

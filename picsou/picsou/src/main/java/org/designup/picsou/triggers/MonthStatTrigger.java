@@ -6,154 +6,306 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.impl.ThreeFieldKey;
+import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Utils;
 
 import static java.lang.Math.abs;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
 public class MonthStatTrigger implements ChangeSetListener {
-  private GlobRepository repository;
 
-  public MonthStatTrigger(GlobRepository repository) {
-    this.repository = repository;
+  public MonthStatTrigger() {
   }
 
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsUpdates(Transaction.CATEGORY) ||
-        changeSet.containsUpdates(Transaction.DISPENSABLE) ||
-        changeSet.containsUpdates(Transaction.AMOUNT) ||
-        changeSet.containsUpdates(Transaction.MONTH) ||
-        changeSet.containsUpdates(Transaction.SERIES) ||
-        changeSet.containsCreationsOrDeletions(Transaction.TYPE) ||
-        changeSet.containsChanges(Category.TYPE) ||
-        changeSet.containsCreationsOrDeletions(Month.TYPE)) {
-      Set<Key> keySet = changeSet.getDeleted(Category.TYPE);
-      Set<Integer> categoryToDelete = new HashSet<Integer>();
-      for (Key key : keySet) {
-        categoryToDelete.add(key.get(Category.ID));
+  public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
+    final Map<Integer, Integer> categoryToMaster = new HashMap<Integer, Integer>();
+    changeSet.safeVisit(Category.TYPE, new DefaultChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        GlobList months = repository.getAll(Month.TYPE);
+        GlobList accounts = repository.getAll(Account.TYPE);
+        for (Glob month : months) {
+          for (Glob account : accounts) {
+            repository.findOrCreate(getKey(month.get(Month.ID), key.get(Category.ID), account.get(Account.ID)));
+          }
+        }
       }
-      run(categoryToDelete);
+
+      public void visitDeletion(Key key, FieldValues values) throws Exception {
+        if (values.get(Category.MASTER) != null) {
+          categoryToMaster.put(values.get(Category.ID), values.get(Category.MASTER));
+        }
+      }
+    });
+    updateMaster(repository, categoryToMaster);
+
+    changeSet.safeVisit(Month.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        GlobList categories = repository.getAll(Category.TYPE);
+        GlobList accounts = repository.getAll(Account.TYPE);
+        for (Glob category : categories) {
+          for (Glob account : accounts) {
+            repository.findOrCreate(getKey(key.get(Month.ID), category.get(Category.ID), account.get(Account.ID)));
+          }
+        }
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+        GlobList categories = repository.getAll(Category.TYPE);
+        GlobList accounts = repository.getAll(Account.TYPE);
+        for (Glob category : categories) {
+          for (Glob account : accounts) {
+            Key statKey = getKey(key.get(Month.ID), category.get(Category.ID), account.get(Account.ID));
+            if (repository.find(statKey) != null) {
+              repository.delete(statKey);
+            }
+          }
+        }
+      }
+    });
+
+    changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        if (values.get(Transaction.PLANNED, false)) {
+          updatePlannedMonthStat(values.get(Transaction.MONTH), values.get(Transaction.CATEGORY), Account.SUMMARY_ACCOUNT_ID, values.get(Transaction.AMOUNT), categoryToMaster, repository);
+          updatePlannedMonthStat(values.get(Transaction.MONTH), Category.ALL, Account.SUMMARY_ACCOUNT_ID, values.get(Transaction.AMOUNT), categoryToMaster, repository);
+          updatePlannedMonthStat(values.get(Transaction.MONTH), values.get(Transaction.CATEGORY), values.get(Transaction.ACCOUNT), values.get(Transaction.AMOUNT), categoryToMaster, repository);
+          updatePlannedMonthStat(values.get(Transaction.MONTH), Category.ALL, values.get(Transaction.ACCOUNT), values.get(Transaction.AMOUNT), categoryToMaster, repository);
+        }
+        else {
+          Integer amount = values.get(Transaction.MONTH);
+          updateMonthStat(amount, values.get(Transaction.CATEGORY), Account.SUMMARY_ACCOUNT_ID, values.get(Transaction.AMOUNT), categoryToMaster, repository);
+          updateMonthStat(amount, Category.ALL, Account.SUMMARY_ACCOUNT_ID, values.get(Transaction.AMOUNT), categoryToMaster, repository);
+          updateMonthStat(amount, values.get(Transaction.CATEGORY), values.get(Transaction.ACCOUNT),
+                          values.get(Transaction.AMOUNT), categoryToMaster, repository);
+          updateMonthStat(amount, Category.ALL, values.get(Transaction.ACCOUNT), values.get(Transaction.AMOUNT), categoryToMaster, repository);
+        }
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        Glob transaction = repository.get(key);
+        Boolean hasTransfert = false;
+        Integer oldCategoryId;
+        Integer newCategoryId;
+        if (values.contains(Transaction.CATEGORY)) {
+          oldCategoryId = values.getPrevious(Transaction.CATEGORY);
+          newCategoryId = values.get(Transaction.CATEGORY);
+          hasTransfert = true;
+        }
+        else {
+          oldCategoryId = newCategoryId = transaction.get(Transaction.CATEGORY);
+        }
+        Integer newMonth;
+        Integer oldMonth;
+        if (values.contains(Transaction.MONTH)) {
+          oldMonth = values.getPrevious(Transaction.MONTH);
+          newMonth = values.get(Transaction.MONTH);
+          hasTransfert = true;
+        }
+        else {
+          oldMonth = newMonth = transaction.get(Transaction.MONTH);
+        }
+        Double newAmount;
+        Double oldAmount;
+        if (values.contains(Transaction.AMOUNT)) {
+          oldAmount = values.getPrevious(Transaction.AMOUNT);
+          newAmount = values.get(Transaction.AMOUNT);
+        }
+        else {
+          oldAmount = newAmount = transaction.get(Transaction.AMOUNT);
+        }
+        if (hasTransfert) {
+          if (transaction.get(Transaction.PLANNED, false)) {
+            updatePlannedMonthStat(oldMonth, oldCategoryId, Account.SUMMARY_ACCOUNT_ID, -oldAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, newAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(oldMonth, oldCategoryId, transaction.get(Transaction.ACCOUNT), -oldAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(newMonth, newCategoryId, transaction.get(Transaction.ACCOUNT), newAmount, categoryToMaster, repository);
+          }
+          else {
+            updateMonthStat(oldMonth, oldCategoryId, Account.SUMMARY_ACCOUNT_ID, -oldAmount, categoryToMaster, repository);
+            updateMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, newAmount, categoryToMaster, repository);
+            updateMonthStat(oldMonth, oldCategoryId, transaction.get(Transaction.ACCOUNT), -oldAmount, categoryToMaster, repository);
+            updateMonthStat(newMonth, newCategoryId, transaction.get(Transaction.ACCOUNT), newAmount, categoryToMaster, repository);
+          }
+        }
+        else if (!newAmount.equals(oldAmount)) {
+          if (transaction.get(Transaction.PLANNED, false)) {
+            updatePlannedMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, newAmount - oldAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(newMonth, newCategoryId, transaction.get(Transaction.ACCOUNT), newAmount - oldAmount, categoryToMaster, repository);
+          }
+          else {
+            updateMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, newAmount - oldAmount, categoryToMaster, repository);
+            updateMonthStat(newMonth, newCategoryId, transaction.get(Transaction.ACCOUNT), newAmount - oldAmount, categoryToMaster, repository);
+          }
+        }
+
+        if (!newAmount.equals(oldAmount)) {
+          if (transaction.get(Transaction.PLANNED, false)) {
+            updatePlannedMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, newAmount - oldAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(newMonth, Category.ALL, transaction.get(Transaction.ACCOUNT), newAmount - oldAmount, categoryToMaster, repository);
+          }
+          else {
+            updateMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, newAmount - oldAmount, categoryToMaster, repository);
+            updateMonthStat(newMonth, Category.ALL, transaction.get(Transaction.ACCOUNT), newAmount - oldAmount, categoryToMaster, repository);
+          }
+        }
+      }
+
+      public void visitDeletion(Key key, FieldValues values) throws Exception {
+        int newMonth = values.get(Transaction.MONTH);
+        Integer newCategoryId = values.get(Transaction.ACCOUNT);
+        Integer accountId = values.get(Transaction.ACCOUNT);
+        Double newAmount = values.get(Transaction.AMOUNT);
+        if (values.get(Transaction.PLANNED, false)) {
+          updatePlannedMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, -newAmount, categoryToMaster, repository);
+          updatePlannedMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, -newAmount, categoryToMaster, repository);
+          updatePlannedMonthStat(newMonth, newCategoryId, accountId, -newAmount, categoryToMaster, repository);
+          updatePlannedMonthStat(newMonth, Category.ALL, accountId, -newAmount, categoryToMaster, repository);
+        }
+        else {
+          updateMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, -newAmount, categoryToMaster, repository);
+          updateMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, -newAmount, categoryToMaster, repository);
+          updateMonthStat(newMonth, newCategoryId, accountId, -newAmount, categoryToMaster, repository);
+          updateMonthStat(newMonth, Category.ALL, accountId, -newAmount, categoryToMaster, repository);
+        }
+      }
+    });
+
+    changeSet.safeVisit(Category.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+        GlobList months = repository.getAll(Month.TYPE);
+        GlobList accounts = repository.getAll(Account.TYPE);
+        for (Glob month : months) {
+          for (Glob account : accounts) {
+            Key statKey = getKey(month.get(Month.ID), key.get(Category.ID), account.get(Account.ID));
+            if (repository.find(statKey) != null) {
+              repository.delete(statKey);
+            }
+          }
+        }
+      }
+    });
+  }
+
+  private void updateMaster(GlobRepository repository, Map<Integer, Integer> categoryToMaster) {
+    GlobList categories = repository.getAll(Category.TYPE);
+    for (Glob category : categories) {
+      if (category.get(Category.MASTER) != null) {
+        categoryToMaster.put(category.get(Category.ID), category.get(Category.MASTER));
+      }
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     repository.deleteAll(MonthStat.TYPE);
-    run(Collections.<Integer>emptySet());
+    run(repository);
   }
 
-  public void run(Set<Integer> categoryToDelete) {
-    updateToZero(categoryToDelete);
+  public void run(GlobRepository repository) {
     SortedSet<Integer> months = repository.getAll(Month.TYPE).getSortedSet(Month.ID);
-    processTransactions(months);
+    Map<Integer, Integer> master = new HashMap<Integer, Integer>();
+    updateMaster(repository, master);
+    processTransactions(repository, months, master);
     if (months.isEmpty()) {
       return;
     }
 
     int[] monthRange = Month.range(months.first(), months.last());
 
-    createMonths(monthRange);
-    addMissingStats(monthRange);
-    computeStatsForAll(monthRange);
+    createMonths(monthRange, repository);
+    addMissingStats(monthRange, repository);
+    computeStatsForAll(monthRange, repository);
   }
 
-  private void updateToZero(Set<Integer> categoryToDelete) {
-    GlobList list = repository.getAll(MonthStat.TYPE);
-    Double ZERO = 0.0;
-    for (Glob glob : list) {
-      Key key = glob.getKey();
-      if (categoryToDelete.contains(key.get(MonthStat.CATEGORY))) {
-        repository.delete(key);
-      }
-      else {
-        repository.update(key,
-                          value(MonthStat.DISPENSABLE, ZERO),
-                          value(MonthStat.TOTAL_RECEIVED, ZERO),
-                          value(MonthStat.TOTAL_SPENT, ZERO));
-      }
-    }
-  }
 
-  private void processTransactions(SortedSet<Integer> months) {
+  private void processTransactions(GlobRepository repository, final SortedSet<Integer> months, final Map<Integer, Integer> master) {
     for (Glob transaction : repository.getAll(Transaction.TYPE)) {
       int month = transaction.get(Transaction.MONTH);
       months.add(month);
       Integer categoryId = transaction.get(Transaction.CATEGORY);
       double amount = transaction.get(Transaction.AMOUNT);
-      double dispensableAmount = Boolean.TRUE.equals(transaction.get(Transaction.DISPENSABLE)) ? abs(amount) : 0.0;
-      Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
-      Integer budgetArea = -1;
-      if (series != null) {
-        budgetArea = series.get(Series.BUDGET_AREA);
-      }
       if (transaction.get(Transaction.PLANNED, false)) {
-        updatePlannedMonthStat(month, categoryId, budgetArea, Account.SUMMARY_ACCOUNT_ID, amount);
+        updatePlannedMonthStat(month, categoryId, Account.SUMMARY_ACCOUNT_ID, amount, master, repository);
       }
       else {
-        updateMonthStat(month, categoryId, budgetArea, Account.SUMMARY_ACCOUNT_ID, amount, dispensableAmount);
+        updateMonthStat(month, categoryId, Account.SUMMARY_ACCOUNT_ID, amount, master, repository);
       }
 
       Integer accountId = transaction.get(Transaction.ACCOUNT);
       if (accountId != null && accountId != -1) {
         if (transaction.get(Transaction.PLANNED)) {
-          updatePlannedMonthStat(month, categoryId, budgetArea, accountId, amount);
+          updatePlannedMonthStat(month, categoryId, accountId, amount, master, repository);
         }
         else {
-          updateMonthStat(month, categoryId, budgetArea, accountId, amount, dispensableAmount);
+          updateMonthStat(month, categoryId, accountId, amount, master, repository);
         }
       }
     }
   }
 
-  private void updateMonthStat(int month, Integer categoryId, Integer budgetAreaId,
-                               Integer accountId, double amount, double dispensableAmount) {
+  private void updateMonthStat(int month, Integer categoryId, Integer accountId, double amount,
+                               Map<Integer, Integer> categoryToMaster, GlobRepository repository) {
+    if (accountId == null) {
+      return;
+    }
     Key key = getKey(month, categoryId, accountId);
-    Glob monthStat = initMonthStat(key);
+    Glob monthStat = initMonthStat(key, repository);
     GlobUtils.add(key, monthStat, MonthStat.TOTAL_RECEIVED, amount > 0 ? amount : 0, repository);
     GlobUtils.add(key, monthStat, MonthStat.TOTAL_SPENT, amount < 0 ? abs(amount) : 0, repository);
-    GlobUtils.add(key, monthStat, MonthStat.DISPENSABLE, dispensableAmount, repository);
 
-    Glob category = repository.get(Key.create(Category.TYPE, key.get(MonthStat.CATEGORY)));
-    if (!Category.isMaster(category)) {
-      updateMonthStat(month, category.get(Category.MASTER), budgetAreaId, accountId, amount, dispensableAmount);
+    Integer masterId = categoryToMaster.get(categoryId);
+    if (masterId != null) {
+      updateMonthStat(month, masterId, accountId, amount, categoryToMaster, repository);
     }
   }
 
-  private void updatePlannedMonthStat(int month, Integer categoryId, Integer budgetAreaId,
-                                      Integer accountId, double amount) {
+  private void updatePlannedMonthStat(int month, Integer categoryId, Integer accountId, double amount, Map<Integer, Integer> categoryToMaster, GlobRepository repository) {
+    if (accountId == null) {
+      return;
+    }
     Key key = getKey(month, categoryId, accountId);
-    Glob monthStat = initMonthStat(key);
+    Glob monthStat = initMonthStat(key, repository);
     GlobUtils.add(key, monthStat, MonthStat.PLANNED_TOTAL_RECEIVED, amount > 0 ? amount : 0, repository);
     GlobUtils.add(key, monthStat, MonthStat.PLANNED_TOTAL_SPENT, amount < 0 ? abs(amount) : 0, repository);
-    Glob category = repository.get(Key.create(Category.TYPE, key.get(MonthStat.CATEGORY)));
-    if (!Category.isMaster(category)) {
-      updatePlannedMonthStat(month, category.get(Category.MASTER), budgetAreaId, accountId, amount);
+
+    Integer masterId = categoryToMaster.get(categoryId);
+    if (masterId != null) {
+      updatePlannedMonthStat(month, masterId, accountId, amount, categoryToMaster, repository);
     }
   }
 
-  private void createMonths(int[] monthRange) {
+  private void createMonths(int[] monthRange, GlobRepository repository) {
     for (int month : monthRange) {
       repository.findOrCreate(Key.create(Month.TYPE, month));
     }
   }
 
-  private void addMissingStats(int[] months) {
+  private void addMissingStats(int[] months, GlobRepository repository) {
     for (int month : months) {
       for (Glob category : repository.getAll(Category.TYPE)) {
         for (Glob account : repository.getAll(Account.TYPE)) {
           Key key = getKey(month, category.get(Category.ID), account.get(Account.ID));
           if (repository.find(key) == null) {
-            initMonthStat(key);
+            initMonthStat(key, repository);
           }
         }
       }
     }
   }
 
-  private void computeStatsForAll(int[] months) {
+  private void computeStatsForAll(int[] months, GlobRepository repository) {
     for (Glob account : repository.getAll(Account.TYPE)) {
       int accountId = account.get(Account.ID);
 
@@ -205,7 +357,7 @@ public class MonthStatTrigger implements ChangeSetListener {
     }
   }
 
-  private Glob initMonthStat(Key monthStatKey) {
+  private Glob initMonthStat(Key monthStatKey, GlobRepository repository) {
     return repository.findOrCreate(monthStatKey);
   }
 

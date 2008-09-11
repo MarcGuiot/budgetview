@@ -257,9 +257,11 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationChecker checkNotContainsEnvelope(String envelopeName) {
+  public CategorizationChecker checkNotContainsEnvelope(String... envelopeName) {
     Panel panel = getEnvelopeSeriesPanel();
-    assertFalse(panel.containsLabel(envelopeName));
+    for (String name : envelopeName) {
+      assertFalse(name + " is present", panel.containsLabel(name));
+    }
     return this;
   }
 
@@ -669,10 +671,22 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
+  public CategorizationChecker setOccasional(String label, MasterCategory masterCategory, String category) {
+    setOccasional(getRowIndex(label), masterCategory, category);
+    return this;
+  }
+
   public CategorizationChecker setOccasional(int rowIndex, MasterCategory category) {
     selectTableRow(rowIndex);
     selectOccasional();
     selectOccasionalSeries(category);
+    return this;
+  }
+
+  public CategorizationChecker setOccasional(int rowIndex, MasterCategory masterCategory, String category) {
+    selectTableRow(rowIndex);
+    selectOccasional();
+    selectOccasionalSeries(masterCategory, category);
     return this;
   }
 

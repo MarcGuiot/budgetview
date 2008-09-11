@@ -11,6 +11,7 @@ import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -21,7 +22,6 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -51,7 +51,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
   private JCheckBox autoSelectionCheckBox;
   private JCheckBox autoHideCheckBox;
   private JCheckBox autoSelectNextCheckBox;
-  private java.util.List<SeriesFilter> seriesRepeat = new ArrayList<SeriesFilter>();
+  private java.util.List<PicsouMatchers.SeriesFilter> seriesRepeat = new ArrayList<PicsouMatchers.SeriesFilter>();
 
   private static final int[] COLUMN_SIZES = {10, 28, 10};
   private SeriesEditionDialog seriesEditionDialog;
@@ -179,7 +179,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
         Set<Integer> months = new HashSet<Integer>();
         for (Glob transaction : currentTransactions) {
           months.add(transaction.get(Transaction.MONTH));
-          for (SeriesFilter filter : seriesRepeat) {
+          for (PicsouMatchers.SeriesFilter filter : seriesRepeat) {
             filter.filterDates(months);
           }
         }
@@ -203,45 +203,6 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     });
   }
 
-  static class SeriesFilter implements GlobMatcher {
-    private Integer budgetAreaId;
-    private GlobRepeat repeat;
-    private Set<Integer> monthIds;
-
-    public SeriesFilter(Integer budgetAreaId, GlobRepeat repeat) {
-      this.budgetAreaId = budgetAreaId;
-      this.repeat = repeat;
-    }
-
-    void filterDates(Set<Integer> monthIds) {
-      this.monthIds = monthIds;
-      repeat.setFilter(this);
-    }
-
-    public boolean matches(Glob series, GlobRepository repository) {
-      if (budgetAreaId.equals(series.get(Series.BUDGET_AREA))) {
-        Integer firstMonth = series.get(Series.FIRST_MONTH);
-        Integer lastMonth = series.get(Series.LAST_MONTH);
-        if (firstMonth == null && lastMonth == null) {
-          return true;
-        }
-        if (firstMonth == null) {
-          firstMonth = 0;
-        }
-        if (lastMonth == null) {
-          lastMonth = Integer.MAX_VALUE;
-        }
-        for (Integer id : monthIds) {
-          if (id < firstMonth || id > lastMonth) {
-            return false;
-          }
-        }
-        return true;
-      }
-      return false;
-    }
-  }
-
   private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
 
     GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
@@ -251,11 +212,11 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     JToggleButton invisibleToggle = new JToggleButton();
     panelBuilder.add("invisibleToggle", invisibleToggle);
     seriesRepeat.add(
-      new SeriesFilter(budgetArea.getId(),
-                       panelBuilder.addRepeat("seriesRepeat",
-                                              Series.TYPE,
-                                              linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                                              new SeriesComponentFactory(invisibleToggle, repository, directory))));
+      new PicsouMatchers.SeriesFilter(budgetArea.getId(),
+                                      panelBuilder.addRepeat("seriesRepeat",
+                                                             Series.TYPE,
+                                                             linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
+                                                             new SeriesComponentFactory(invisibleToggle, repository, directory)), true));
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 
@@ -270,12 +231,12 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
     final JToggleButton invisibleToggle = new JToggleButton();
     panelBuilder.add("invisibleToggle", invisibleToggle);
-    seriesRepeat.add(new SeriesFilter(budgetArea.getId(),
-                                      panelBuilder.addRepeat("seriesRepeat",
-                                                             Series.TYPE,
-                                                             linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                                                             new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleToggle,
-                                                                                                       repository, directory))));
+    seriesRepeat.add(new PicsouMatchers.SeriesFilter(budgetArea.getId(),
+                                                     panelBuilder.addRepeat("seriesRepeat",
+                                                                            Series.TYPE,
+                                                                            linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
+                                                                            new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleToggle,
+                                                                                                                      repository, directory)), true));
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 
