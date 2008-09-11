@@ -117,14 +117,15 @@
             <cards ref="cardsWithCategoriesView" opaque="false" border="empty(0,5,0,0)">
               <card name="data">
                 <panel styleClass="block">
-                  <row margin="10">
+                  <column margin="10">
                     <scrollPane borderPos="center" viewportBackground="transactions.bg"
                                 border="line(transaction.border)" opaque="false"
                                 marginLeft="5">
                       <table ref="transaction" background="transactions.bg" rowHeight="20"/>
                     </scrollPane>
-                    <column marginLeft="15">
-                      <panel ref="transactionDetails"/>
+                    <row>
+                      <label text="$transaction.details.search" styleClass="formLabel"/>
+                      <textField ref="transactionSearchField"/>
                       <panel name="uncategorizedMessagePanel" styleClass="errorMessage"
                              autoHideSource="uncategorizedMessage_details" marginTop="20"
                              preferredSize="(50,90)" weightY="0">
@@ -133,8 +134,8 @@
                           <button action="categorizeRemainingTransactions_details"/>
                         </column>
                       </panel>
-                    </column>
-                  </row>
+                    </row>
+                  </column>
                 </panel>
               </card>
 

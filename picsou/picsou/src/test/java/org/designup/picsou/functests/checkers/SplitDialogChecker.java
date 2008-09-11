@@ -72,7 +72,7 @@ public class SplitDialogChecker {
   }
 
   public SplitDialogChecker selectEnvelope(MasterCategory category, boolean showSeriesInitialization) {
-    CategorizationDialogChecker dialog = new CategorizationDialogChecker(WindowInterceptor.getModalDialog(new Trigger() {
+    CategorizationChecker dialog = new CategorizationChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         window.getButton("category").click();
       }
@@ -83,7 +83,7 @@ public class SplitDialogChecker {
   }
 
   public SplitDialogChecker selectOccasional(MasterCategory category) {
-    CategorizationDialogChecker dialog = new CategorizationDialogChecker(WindowInterceptor.getModalDialog(new Trigger() {
+    CategorizationChecker dialog = new CategorizationChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         window.getButton("category").click();
       }
@@ -94,7 +94,7 @@ public class SplitDialogChecker {
   }
 
   public SplitDialogChecker selectRecurring(String name, MasterCategory category, boolean showSeriesInitialization) {
-    CategorizationDialogChecker dialog = new CategorizationDialogChecker(WindowInterceptor.getModalDialog(new Trigger() {
+    CategorizationChecker dialog = new CategorizationChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         window.getButton("category").click();
       }

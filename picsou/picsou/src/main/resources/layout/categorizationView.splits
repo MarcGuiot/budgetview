@@ -1,0 +1,117 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.categorizationStep" font="-,bold,12" foreground="#333333"
+           fill="horizontal" horizontalAlignment="left"
+           marginTop="15" marginBottom="10" border="matte(0,0,1,0,#AAAAAA)"/>
+    <style selector="scrollPane" viewportBackground="dialog.block"/>
+    <style selector="checkBox" font="-,plain,10"/>
+  </styles>
+
+  <panel styleClass="main">
+
+    <horizontalSplit dividerLocation="500" resizeWeight="0" opaque="false">
+
+      <column>
+        <label text="$categorization.list.title" styleClass="blockTitle"/>
+        <panel styleClass="block">
+          <column styleClass="innerBlock">
+            <scrollPane viewportBackground="#FFFFFF">
+              <table ref="transactionTable" rowHeight="20"/>
+            </scrollPane>
+            <column>
+              <checkBox ref="autoSelectSimilar" text="$categorization.autoselect.similar" anchor="left"/>
+              <checkBox ref="autoSelectNext" text="$categorization.autoselect.next" anchor="left"/>
+              <checkBox ref="autoHide" text="$categorization.autohide" anchor="left"/>
+            </column>
+          </column>
+        </panel>
+      </column>
+
+      <verticalSplit dividerLocation="170">
+
+        <column>
+          <label text="$categorization.details.title" styleClass="blockTitle"/>
+          <panel styleClass="block">
+            <panel ref="transactionDetails" styleClass="innerBlock"/>
+          </panel>
+        </column>
+
+        <column>
+          <label text="$categorization.series.title" styleClass="blockTitle"/>
+          <panel styleClass="block">
+            <column styleClass="innerBlock">
+
+              <toggleButton ref="invisibleBudgetAreaToggle" visible="false"/>
+              <column minimumSize="(300,68)" weightY="0.1">
+                <panel border="matte(1,1,0,1,#999999)" background="categorization.budgetAreas.bg" opaque="true">
+                  <repeat ref="budgetAreas" layout="verticalGrid" gridWrapLimit="2" margin="5">
+                    <toggleButton ref="budgetAreaToggle" styleClass="selector" anchor="left"/>
+                  </repeat>
+                </panel>
+
+                <cards ref="cards" weightY="100" opaque="false">
+
+                  <card name="noBudgetArea">
+                    <scrollPane border="etched">
+                      <htmlEditorPane text="$categorization.no.budget.area" editable="false" opaque="false"/>
+                    </scrollPane>
+                  </card>
+
+                  <card name="income">
+                    <panel ref="incomeSeriesChooser"/>
+                  </card>
+
+                  <card name="recurringExpenses">
+                    <panel ref="recurringSeriesChooser"/>
+                  </card>
+
+                  <card name="expensesEnvelope">
+                    <panel ref="envelopeSeriesChooser"/>
+                  </card>
+
+                  <card name="occasionalExpenses">
+                    <column name="occasionalSeriesChooser">
+                      <scrollPane marginBottom="0" border="etched">
+                        <column>
+                          <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
+                          <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn" border="empty(5)">
+                            <column>
+                              <row>
+                                <toggleButton ref="occasionalCategoryToggle" styleClass="masterCategorySelector"/>
+                              </row>
+                              <repeat ref="occasionalSubcatRepeat" marginLeft="10" background="#FF0000">
+                                <toggleButton ref="occasionalSubcatToggle" styleClass="subCategorySelector"/>
+                              </repeat>
+                            </column>
+                          </repeat>
+                        </column>
+                      </scrollPane>
+                      <row styleClass="iconButtonGroup">
+                        <button action="editCategories" styleClass="list"/>
+                        <filler fill="horizontal"/>
+                      </row>
+                    </column>
+                  </card>
+
+                  <card name="projects">
+                    <panel ref="projectSeriesChooser"/>
+                  </card>
+
+                  <card name="savings">
+                    <panel ref="savingsSeriesChooser"/>
+                  </card>
+
+                </cards>
+
+              </column>
+
+            </column>
+          </panel>
+        </column>
+      </verticalSplit>
+
+    </horizontalSplit>
+  </panel>
+</splits>

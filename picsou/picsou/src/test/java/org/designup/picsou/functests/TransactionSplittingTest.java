@@ -82,22 +82,21 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .load();
 
-    transactions.getTable().selectRow(0);
+    categorization.getTable().selectRow(0);
     SplitDialogChecker dialog = transactionDetails.openSplitDialog(0)
       .enterAmount("12.50")
       .enterNote("DVD")
       .selectOccasional(MasterCategory.LEISURES)
       .add();
 
-    transactions
+    categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0, MasterCategory.FOOD)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0)
       .check();
 
     dialog.ok();
 
-    transactions
-      .initContent()
+    categorization.initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.50, MasterCategory.FOOD)
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "DVD", -12.50, MasterCategory.LEISURES)
       .check();

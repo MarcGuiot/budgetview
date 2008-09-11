@@ -3,7 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.functests.checkers.ViewSelectionChecker;
-import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
+import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
@@ -342,9 +342,9 @@ public class LoginTest extends StartUpFunctionalTestCase {
     return new TransactionChecker(window);
   }
 
-  private CategorizationDialogChecker getCategorizationView() {
+  private CategorizationChecker getCategorizationView() {
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectCategorization();
-    return new CategorizationDialogChecker(window);
+    return new CategorizationChecker(window);
   }
 }

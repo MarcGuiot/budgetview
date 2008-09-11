@@ -323,6 +323,54 @@ public class SplitsBuilderTest extends SplitsTestCase {
     assertEquals(new Insets(10, 2, 10, 3), getInsets(rowComponents[2], aTable));
   }
 
+  public void testCanUseReferencedComponentsForColumnsAndRows() throws Exception {
+    JPanel panel1 = builder.add("panel1", new JPanel());
+    JPanel panel2 = builder.add("panel2", new JPanel());
+    JFrame frame = parse("<frame>" +
+                         "  <column ref='panel1' background='#00FF00'>" +
+                         "    <row ref='panel2' background='#0000FF'>" +
+                         "      <label text='hello'/>" +
+                         "    </row>" +
+                         "  </column>" +
+                         "</frame>");
+
+    JPanel column = (JPanel)frame.getContentPane().getComponent(0);
+    assertSame(panel1, column);
+    assertEquals(Color.GREEN,  column.getBackground());
+
+    JPanel row = (JPanel)column.getComponent(0);
+    assertSame(panel2, row);
+    assertEquals(Color.BLUE,  row.getBackground());
+    
+    JLabel label = (JLabel)panel2.getComponent(0);
+    assertEquals("hello", label.getText());
+  }
+
+  public void testReferencedColumnComponentNotFound() throws Exception {
+    try {
+      parse("<column ref='unknown'>" +
+            "  <label/>" +
+            "</column>");
+      fail();
+    }
+    catch (Exception e) {
+      checkException(e, "Referenced component 'unknown' not found");
+    }
+  }
+
+  public void testReferencedColumnComponentWithAnInvalidType() throws Exception {
+    try {
+      builder.add("panel", new JButton());
+      parse("<column ref='panel'>" +
+            "  <label/>" +
+            "</column>");
+      fail();
+    }
+    catch (Exception e) {
+      checkException(e, "Referenced component 'panel' must be a JPanel");
+    }
+  }
+
   public void testCreatingAComponentWithAName() throws Exception {
     JFrame frame = parse("<frame>" +
                          "  <button text='Click!'/>" +

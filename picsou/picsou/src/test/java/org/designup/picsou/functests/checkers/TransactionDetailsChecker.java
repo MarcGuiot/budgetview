@@ -68,37 +68,6 @@ public class TransactionDetailsChecker extends DataChecker {
     assertFalse(getPanel().getTextBox(name).isVisible());
   }
 
-  public void checkToCategorize() {
-    Button hyperlink = getPanel().getButton("categoryChooserLink");
-    assertThat(hyperlink.textEquals(Lang.get("category.assignement.required")));
-    assertTrue(hyperlink.isVisible());
-  }
-
-  public void checkManyCategories() {
-    Button hyperlink = getPanel().getButton("categoryChooserLink");
-    assertThat(hyperlink.textEquals(Lang.get("transaction.details.multicategories")));
-  }
-
-  public void checkCategory(MasterCategory category) {
-    TextBox label = getPanel().getTextBox("categoryName");
-    assertThat(label.textEquals(getCategoryName(category)));
-  }
-
-  public void checkCategory(String category) {
-    TextBox label = getPanel().getTextBox("categoryName");
-    assertThat(label.textEquals(category));
-  }
-
-  public void checkNoCategory() {
-    TextBox label = getPanel().getTextBox("categoryName");
-    assertThat(label.textEquals("Unassigned"));
-  }
-
-  public void checkCategoryNotVisible() {
-    assertFalse(getPanel().getTextBox("categoryName").isVisible());
-  }
-
-
   public void checkSplitNotVisible() {
     assertFalse(getPanel().getButton("splitLink").isVisible());
   }
@@ -151,16 +120,6 @@ public class TransactionDetailsChecker extends DataChecker {
       .getModalDialog(getPanel().getButton("splitLink").triggerClick()));
   }
 
-  public void checkSeries(String name) {
-    TextBox seriesName = getPanel().getTextBox("transactionSeriesName");
-    assertTrue(seriesName.textEquals(name));
-  }
-
-  public void checkNoSeries() {
-    TextBox seriesName = getPanel().getTextBox("transactionSeriesName");
-    assertFalse(seriesName.isVisible());
-  }
-
   public void checkSplitMessage(String expectedMessage) {
     TextBox splitMessage = getPanel().getTextBox("splitMessage");
     assertThat(splitMessage.isVisible());
@@ -170,10 +129,6 @@ public class TransactionDetailsChecker extends DataChecker {
   public void checkSplitMessageNotDisplayed() {
     TextBox splitMessage = getPanel().getTextBox("splitMessage");
     assertFalse(splitMessage.isVisible());
-  }
-
-  public TextBox getSearchField() {
-    return getPanel().getInputTextBox("searchField");
   }
 
   public void checkNoSelectionLabels(String label, String received, String spent, String total) {

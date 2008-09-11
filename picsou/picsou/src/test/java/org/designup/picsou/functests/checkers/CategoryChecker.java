@@ -191,6 +191,7 @@ public class CategoryChecker extends ViewChecker {
     edition.validate();
     edition.checkClosed();
   }
+
   public void deleteSelectedMaster(MasterCategory replaceByCategory) {
     String categoryName = getCategoryName(replaceByCategory);
     deleteSelectedMaster(categoryName);
@@ -275,7 +276,8 @@ public class CategoryChecker extends ViewChecker {
   }
 
   public void checkValue(MasterCategory category, String value) {
-    Assert.fail();
+    int index = getTable().getRowIndex(1, getCategoryName(category));
+    assertTrue(getTable().cellEquals(index, 2, value));
   }
 
   public class ContentChecker {

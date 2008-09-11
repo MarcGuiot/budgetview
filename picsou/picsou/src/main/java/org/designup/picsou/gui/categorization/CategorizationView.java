@@ -9,14 +9,17 @@ import org.designup.picsou.gui.categorization.components.SeriesComponentFactory;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
@@ -33,13 +36,16 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.event.TableModelListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 
-public class CategorizationDialog extends View {
+public class CategorizationView extends View implements TableView, ColorChangeListener {
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
@@ -50,20 +56,19 @@ public class CategorizationDialog extends View {
   private static final int[] COLUMN_SIZES = {10, 28, 10};
   private SeriesEditionDialog seriesEditionDialog;
 
-  public CategorizationDialog(final GlobRepository repository, Directory parentDirectory) {
-    super(repository, createLocalDirectory(parentDirectory));
-    parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        selectionService.select(selection.getAll(Transaction.TYPE), Transaction.TYPE);
-      }
-    }, Transaction.TYPE);
+  private Color transactionColorNormal;
+  private Color transactionColorError;
 
+  public CategorizationView(final GlobRepository repository, Directory parentDirectory) {
+    super(repository, createLocalDirectory(parentDirectory));
     parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
         updateTableFilter();
       }
     }, Month.TYPE);
+
+    colorService.addListener(this);
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -75,7 +80,7 @@ public class CategorizationDialog extends View {
 
     seriesEditionDialog = new SeriesEditionDialog(parent, this.repository, directory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationView.splits",
                                                       this.repository, directory);
 
     Comparator<Glob> transactionComparator = getTransactionComparator();
@@ -88,13 +93,15 @@ public class CategorizationDialog extends View {
         .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.bold())
         .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), LabelCustomizers.alignRight());
     Gui.setColumnSizes(transactionTable.getComponent(), COLUMN_SIZES);
+    installDoubleClickHandler();
+
 
     autoSelectionCheckBox = new JCheckBox(new AutoSelectAction());
-    autoSelectionCheckBox.setSelected(true);
+    autoSelectionCheckBox.setSelected(false);
     builder.add("autoSelectSimilar", autoSelectionCheckBox);
 
     autoSelectNextCheckBox = new JCheckBox(new AutoSelectAction());
-    autoSelectNextCheckBox.setSelected(true);
+    autoSelectNextCheckBox.setSelected(false);
     builder.add("autoSelectNext", autoSelectNextCheckBox);
 
     autoHideCheckBox = new JCheckBox(new AutoHideAction());
@@ -137,11 +144,29 @@ public class CategorizationDialog extends View {
 
     addOccasionalSeriesChooser(builder);
 
+    TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory, this);
+    transactionDetailsView.registerComponents(builder);
+
     initSelectionListener();
     initUpdateListener(repository);
     updateTableFilter();
 
     return builder;
+  }
+
+  private void installDoubleClickHandler() {
+    transactionTable.getComponent().addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent e) {
+        if (e.getClickCount() == 2) {
+          autoSelectSimilarTransactions();
+        }
+      }
+    });
+  }
+
+  public void colorsChanged(ColorLocator colorLocator) {
+    transactionColorNormal = colorLocator.get("categorization.transactions.normal");
+    transactionColorError = colorLocator.get("categorization.transactions.error");
   }
 
   private void initSelectionListener() {
@@ -173,16 +198,16 @@ public class CategorizationDialog extends View {
 
   private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
 
-    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationDialog.class,
+    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
                                                            "/layout/singleCategorySeriesChooserPanel.splits",
                                                            repository, directory);
 
-    JToggleButton invisibleIncomeToggle = new JToggleButton();
-    panelBuilder.add("invisibleToggle", invisibleIncomeToggle);
+    JToggleButton invisibleToggle = new JToggleButton();
+    panelBuilder.add("invisibleToggle", invisibleToggle);
     panelBuilder.addRepeat("seriesRepeat",
                            Series.TYPE,
                            linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                           new SeriesComponentFactory(invisibleIncomeToggle, repository, directory));
+                           new SeriesComponentFactory(invisibleToggle, repository, directory));
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 
@@ -191,7 +216,7 @@ public class CategorizationDialog extends View {
 
   private void addMultiCategoriesSeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
 
-    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationDialog.class,
+    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
                                                            "/layout/multiCategoriesSeriesChooserPanel.splits",
                                                            repository, directory);
 
@@ -327,7 +352,7 @@ public class CategorizationDialog extends View {
       return;
     }
 
-    final GlobList similarTransactions = getSimilarTransactions(currentTransactions.get(0), repository);
+    final GlobList similarTransactions = getSimilarTransactions(currentTransactions.get(0));
     if (similarTransactions.size() > 1) {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
@@ -337,12 +362,18 @@ public class CategorizationDialog extends View {
     }
   }
 
-  public static GlobList getSimilarTransactions(Glob transaction, GlobRepository repository) {
-    final String referenceLabel = transaction.get(Transaction.LABEL_FOR_CATEGORISATION);
+  public GlobList getSimilarTransactions(Glob reference) {
+    final String referenceLabel = reference.get(Transaction.LABEL_FOR_CATEGORISATION);
     if (Strings.isNullOrEmpty(referenceLabel)) {
-      return new GlobList(transaction);
+      return new GlobList(reference);
     }
-    return repository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX, referenceLabel);
+    GlobList result = new GlobList();
+    for (Glob transaction : transactionTable.getGlobs()) {
+      if (referenceLabel.equals(transaction.get(Transaction.LABEL_FOR_CATEGORISATION))) {
+        result.add(transaction);
+      }
+    }
+    return result;
   }
 
   private void updateTableFilter() {
@@ -377,17 +408,25 @@ public class CategorizationDialog extends View {
     }
   }
 
-  private static class TransactionLabelCustomizer implements LabelCustomizer {
+  private class TransactionLabelCustomizer implements LabelCustomizer {
     public void process(JLabel label, Glob transaction, boolean isSelected, boolean hasFocus, int row, int column) {
       if (isSelected) {
         label.setForeground(Color.WHITE);
       }
       else if (Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
-        label.setForeground(Colors.toColor("222222"));
+        label.setForeground(transactionColorError);
       }
       else {
-        label.setForeground(Colors.toColor("AAAAAA"));
+        label.setForeground(transactionColorNormal);
       }
     }
+  }
+
+  public void addTableListener(TableModelListener listener) {
+    this.transactionTable.getComponent().getModel().addTableModelListener(listener);
+  }
+
+  public GlobList getDisplayedGlobs() {
+    return transactionTable.getGlobs();
   }
 }

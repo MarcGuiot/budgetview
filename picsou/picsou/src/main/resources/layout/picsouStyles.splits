@@ -78,7 +78,6 @@
     <style selector=".block scrollPane" viewportBackground="block.inner.bg" border="line(block.inner.border)"
            marginBottom="10" weightY="100"/>
 
-    <style selector=".innerBlock" marginTop="5" marginBottom="5"/>
     <style selector=".innerBlock label.item" foreground="block.inner.item" font="-,bold,13" anchor="top"
            shadowDirection="northwest" shadowColor="block.inner.item.shadow"/>
     <style selector=".innerBlock label.subitem" foreground="block.inner.subitem" font="-,plain,10" anchor="top"/>

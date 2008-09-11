@@ -8,7 +8,7 @@ import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
-import org.designup.picsou.gui.categorization.CategorizationDialog;
+import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.graphics.CategoriesChart;
 import org.designup.picsou.gui.graphics.HistoricalChart;
@@ -19,6 +19,7 @@ import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.transactions.UncategorizedMessageView;
+import org.designup.picsou.gui.transactions.details.TransactionSearch;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
@@ -68,12 +69,11 @@ public class MainPanel {
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
-    CategorizationDialog categorizationDialog = new CategorizationDialog(repository, directory);
+    CategorizationView categorizationView = new CategorizationView(repository, directory);
 
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
-    TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory, transactionView);
     CategoryView categoryView = new CategoryView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
 
@@ -85,6 +85,9 @@ public class MainPanel {
 
     builder.add("editCategories", new EditCategoriesAction(repository, directory));
 
+    TransactionSearch search = new TransactionSearch(transactionView, directory);
+    builder.add("transactionSearchField", search.getTextField());
+
     createPanel(
       new TitleView(repository, directory),
       new UncategorizedMessageView("uncategorizedMessage", "categorizeRemainingTransactions",
@@ -94,12 +97,11 @@ public class MainPanel {
                                    Lang.get("transaction.allocation.action"),
                                    repository, directory),
       transactionView,
-      transactionDetailsView,
       timeView,
       categoryView,
       new AccountView(repository, directory),
       new MonthSummaryView(repository, directory),
-      categorizationDialog,
+      categorizationView,
       new CardView(repository, directory),
       new BudgetView(repository, directory),
       new HistoricalChart(repository, directory),

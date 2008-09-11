@@ -117,9 +117,9 @@ public class MonthSummaryChecker extends DataChecker {
       return this;
     }
 
-    public CategorizationDialogChecker categorize() {
+    public CategorizationChecker categorize() {
       Window dialog = WindowInterceptor.getModalDialog(panel.getButton("categorize").triggerClick());
-      return new CategorizationDialogChecker(dialog);
+      return new CategorizationChecker(dialog);
     }
 
   }

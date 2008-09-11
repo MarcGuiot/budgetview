@@ -2,7 +2,7 @@ package org.designup.picsou.server;
 
 import org.designup.picsou.PicsouServer;
 import org.designup.picsou.functests.checkers.ViewSelectionChecker;
-import org.designup.picsou.functests.checkers.CategorizationDialogChecker;
+import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.uispec4j.*;
@@ -89,9 +89,9 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     return window.getTable("transaction");
   }
 
-  protected CategorizationDialogChecker getCategorizationView() {
+  protected CategorizationChecker getCategorizationView() {
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectCategorization();
-    return new CategorizationDialogChecker(window);
+    return new CategorizationChecker(window);
   }
 }

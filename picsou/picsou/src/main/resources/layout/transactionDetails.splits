@@ -7,9 +7,12 @@
 
     <style selector="label.formLabel"
            fill="none" anchor="left"
-           foreground="transaction.detail.formLabel" font="-,plain,10"/>
+           foreground="transaction.detail.formLabel" font="-,plain,10"
+           marginRight="5"/>
 
-    <style selector=".formValue" fill="horizontal" anchor="right" horizontalAlignment="right" font="-,plain,11"/>
+    <style selector=".formValue"
+           fill="none" anchor="right" horizontalAlignment="right" font="-,plain,12"
+           marginRight="20"/>
 
     <style selector="hyperlink" foreground="#6666FF" opaque="false"/>
     <style selector="hyperlink#splitLink" font="-,plain,10"/>
@@ -17,95 +20,76 @@
 
     <style selector="textArea" foreground="transaction.detail.text" opaque="false" anchor="top"
            lineWrap="true" wrapStyleWord="true"/>
-    <style selector="textArea#userLabel" font="$transaction.label"/>
 
-    <style selector="label.mainAmount" font="-,bold,16" fill="horizontal" anchor="center" horizontalAlignment="right"/>
+    <style selector="textArea#userLabel" font="$transaction.label"/>
 
     <style selector="#transactionDetails .hyperlink" foreground="transaction.detail.hyperlink"/>
 
+    <style selector="row" marginTop="5"/>
+
   </styles>
 
-  <column name="transactionDetails" minimumSize="(200, 150)" preferredSize="(200, 150)">
+  <column name="transactionDetails" minimumSize="(200, 100)">
 
     <label ref="transactionType" styleClass="formLabel"/>
     <textArea ref="userLabel" styleClass="readonly"/>
 
-    <row>
+    <row autoHideSource="userLabel">
       <label ref="amountLabel" styleClass="formLabel"/>
-      <label ref="amountValue" styleClass="mainAmount"/>
-    </row>
-    <row>
+      <label ref="amountValue" styleClass="formValue"/>
+
       <label text="$transaction.detail.userDate" styleClass="formLabel" autoHideSource="userDate"/>
       <label ref="userDate" font="$transaction.date" styleClass="formValue"/>
-    </row>
-    <row>
+
       <label text="$transaction.detail.bankDate" styleClass="formLabel" autoHideSource="bankDate"/>
       <label ref="bankDate" font="$transaction.date" styleClass="formValue"/>
+
+      <filler fill="horizontal"/>
     </row>
 
-    <panel ref="noSelectionPanel" visible="true">
-      <column>
-        <label ref="noSelectionLabel" font="$transaction.label"/>
-        <grid>
-          <label gridPos="(0,0)" text="$transaction.details.noselection.received"
-                 autoHideSource="noSelectionReceived" styleClass="formLabel"/>
-          <label gridPos="(1,0)" ref="noSelectionReceived" styleClass="mainAmount"/>
+    <column ref="noSelectionPanel">
+      <label ref="noSelectionLabel" font="$transaction.label"/>
+      <row>
+        <label text="$transaction.details.noselection.received"
+               autoHideSource="noSelectionReceived" styleClass="formLabel"/>
+        <label ref="noSelectionReceived" styleClass="formValue"/>
 
-          <label gridPos="(0,1)" text="$transaction.details.noselection.spent"
-                 autoHideSource="noSelectionSpent" styleClass="formLabel"/>
-          <label gridPos="(1,1)" ref="noSelectionSpent" styleClass="mainAmount"/>
+        <label text="$transaction.details.noselection.spent"
+               autoHideSource="noSelectionSpent" styleClass="formLabel"/>
+        <label ref="noSelectionSpent" styleClass="formValue"/>
 
-          <label gridPos="(0,2)" text="$transaction.details.noselection.total"
-                 autoHideSource="noSelectionTotal" styleClass="formLabel"/>
-          <label gridPos="(1,2)" ref="noSelectionTotal" styleClass="mainAmount"/>
-        </grid>
-      </column>
-    </panel>
+        <label text="$transaction.details.noselection.total"
+               autoHideSource="noSelectionTotal" styleClass="formLabel"/>
+        <label ref="noSelectionTotal" styleClass="formValue"/>
 
-    <panel ref="multiSelectionPanel">
-      <column>
-        <row>
-          <label text="$transaction.details.amount.minimum" styleClass="formLabel"/>
-          <label ref="minimumAmount" styleClass="formValue"/>
-        </row>
-        <row>
-          <label text="$transaction.details.amount.maximum" styleClass="formLabel"/>
-          <label ref="maximumAmount" styleClass="formValue"/>
-        </row>
-        <row>
-          <label text="$transaction.details.amount.average" styleClass="formLabel"/>
-          <label ref="averageAmount" styleClass="formValue"/>
-        </row>
-      </column>
-    </panel>
-
-    <panel ref="categoryChooserPanel">
-      <column>
-        <row marginBottom="0" autoHideSource="categoryName">
-          <label text="$transaction.details.category" styleClass="formLabel"/>
-          <label ref="categoryName" styleClass="formValue"/>
-        </row>
-        <textArea ref="splitMessage"/>
-        <button name="splitLink" action="splitLink" marginTop="0" styleClass="hyperlink"/>
-      </column>
-    </panel>
-
-    <column>
-      <label text="$transaction.details.label.original" styleClass="formLabel" autoHideSource="originalLabel"/>
-      <textArea ref="originalLabel"/>
+        <filler fill="horizontal"/>
+      </row>
     </column>
 
-    <row>
-      <label text="$transaction.details.series" styleClass="formLabel" autoHideSource="transactionSeriesName"/>
-      <label ref="transactionSeriesName"/>
+    <row ref="multiSelectionPanel">
+      <label text="$transaction.details.amount.minimum" styleClass="formLabel"/>
+      <label ref="minimumAmount" styleClass="formValue"/>
+
+      <label text="$transaction.details.amount.maximum" styleClass="formLabel"/>
+      <label ref="maximumAmount" styleClass="formValue"/>
+
+      <label text="$transaction.details.amount.average" styleClass="formLabel"/>
+      <label ref="averageAmount" styleClass="formValue"/>
+
+      <filler fill="horizontal"/>
+    </row>
+
+    <row ref="splitPanel">
+      <label ref="splitMessage"/>
+      <button name="splitLink" action="splitLink" marginTop="0" styleClass="hyperlink"/>
+      <filler fill="horizontal"/>
+    </row>
+
+    <row autoHideSource="originalLabel">
+      <label text="$transaction.details.label.original" styleClass="formLabel" autoHideSource="originalLabel"/>
+      <label ref="originalLabel" fill="horizontal" horizontalAlignment="left"/>
     </row>
 
     <filler fill="vertical"/>
-
-    <row>
-      <label text="$transaction.details.search" styleClass="formLabel"/>
-      <textField ref="searchField"/>
-    </row>
-
   </column>
 </splits>

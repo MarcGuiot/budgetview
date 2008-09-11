@@ -5,6 +5,7 @@ import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.Glob;
 import org.uispec4j.Button;
 import org.uispec4j.*;
@@ -22,11 +23,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategorizationDialogChecker extends DataChecker {
+public class CategorizationChecker extends DataChecker {
   private Window mainWindow;
   private static final int LABEL_COLUMN_INDEX = 1;
 
-  public CategorizationDialogChecker(Window mainWindow) {
+  public CategorizationChecker(Window mainWindow) {
     this.mainWindow = mainWindow;
   }
 
@@ -34,13 +35,13 @@ public class CategorizationDialogChecker extends DataChecker {
     return mainWindow.getPanel("categorizationView");
   }
 
-  public CategorizationDialogChecker checkLabel(String expected) {
+  public CategorizationChecker checkLabel(String expected) {
     assertTrue(getTransactionLabel().textEquals(expected));
     return this;
   }
 
-  public CategorizationDialogChecker checkLabel(int count) {
-    assertTrue(getTransactionLabel().textEquals(count + " operations are selected."));
+  public CategorizationChecker checkLabel(int count) {
+    assertTrue(getTransactionLabel().textEquals(count + " operations"));
     return this;
   }
 
@@ -74,12 +75,12 @@ public class CategorizationDialogChecker extends DataChecker {
     assertTrue(getPanel().getTextBox("Select the series type").isVisible());
   }
 
-  public CategorizationDialogChecker selectIncome() {
+  public CategorizationChecker selectIncome() {
     getPanel().getPanel("budgetAreas").getToggleButton(BudgetArea.INCOME.getGlob().get(BudgetArea.NAME)).click();
     return this;
   }
 
-  public CategorizationDialogChecker checkNoIncomeSeriesDisplayed() {
+  public CategorizationChecker checkNoIncomeSeriesDisplayed() {
     Panel seriesPanel = getIncomeSeriesPanel();
     UIComponent[] toggles = seriesPanel.getUIComponents(ToggleButton.class);
     Assert.assertEquals(1, toggles.length);
@@ -100,7 +101,7 @@ public class CategorizationDialogChecker extends DataChecker {
     org.globsframework.utils.TestUtils.assertContains(names, seriesNames);
   }
 
-  public CategorizationDialogChecker selectExceptionalIncomeSeries(String name, boolean showSeriesInitialization) {
+  public CategorizationChecker selectExceptionalIncomeSeries(String name, boolean showSeriesInitialization) {
     Panel panel = getIncomeSeriesPanel();
     if (showSeriesInitialization) {
       createIncomeSeries()
@@ -115,7 +116,7 @@ public class CategorizationDialogChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationDialogChecker selectIncomeSeries(String name, boolean showSeriesInitialization) {
+  public CategorizationChecker selectIncomeSeries(String name, boolean showSeriesInitialization) {
     Panel panel = getIncomeSeriesPanel();
     if (showSeriesInitialization) {
       createIncomeSeries()
@@ -134,12 +135,12 @@ public class CategorizationDialogChecker extends DataChecker {
     return panel;
   }
 
-  public CategorizationDialogChecker selectRecurring() {
+  public CategorizationChecker selectRecurring() {
     getPanel().getToggleButton(BudgetArea.RECURRING_EXPENSES.getGlob().get(BudgetArea.NAME)).click();
     return this;
   }
 
-  public CategorizationDialogChecker checkContainsRecurringSeries(String... seriesNames) {
+  public CategorizationChecker checkContainsRecurringSeries(String... seriesNames) {
     Panel seriesPanel = getRecurringSeriesPanel();
 
     List<String> names = new ArrayList<String>();
@@ -152,14 +153,14 @@ public class CategorizationDialogChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationDialogChecker checkRecurringSeriesNotFound(String seriesName) {
+  public CategorizationChecker checkRecurringSeriesNotFound(String seriesName) {
     Panel seriesPanel = getRecurringSeriesPanel();
     assertFalse(seriesPanel.containsUIComponent(ToggleButton.class, seriesName));
     return this;
   }
 
-  public CategorizationDialogChecker selectNewRecurringSeries(String name, MasterCategory category,
-                                                              boolean transactionWasAlreadyCategorized) {
+  public CategorizationChecker selectNewRecurringSeries(String name, MasterCategory category,
+                                                        boolean transactionWasAlreadyCategorized) {
     Panel panel = getRecurringSeriesPanel();
     createRecurringSeries()
       .setName(name)
@@ -171,7 +172,7 @@ public class CategorizationDialogChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationDialogChecker selectRecurringSeries(String name, MasterCategory category, boolean createSeries) {
+  public CategorizationChecker selectRecurringSeries(String name, MasterCategory category, boolean createSeries) {
     Panel panel = getRecurringSeriesPanel();
     if (createSeries) {
       createRecurringSeries()
@@ -192,13 +193,13 @@ public class CategorizationDialogChecker extends DataChecker {
     return recurringSeriesPanel;
   }
 
-  public CategorizationDialogChecker checkContainsButtonInReccuring(String label) {
+  public CategorizationChecker checkContainsButtonInReccuring(String label) {
     Panel panel = getRecurringSeriesPanel();
     assertTrue(panel.getToggleButton(label).isEnabled());
     return this;
   }
 
-  public CategorizationDialogChecker checkRecurringSeriesIsSelected(String seriesName) {
+  public CategorizationChecker checkRecurringSeriesIsSelected(String seriesName) {
     assertTrue(getPanel().getToggleButton("RecurringExpenses").isSelected());
 
     Panel panel = getRecurringSeriesPanel();
@@ -206,31 +207,30 @@ public class CategorizationDialogChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationDialogChecker checkRecurringSeriesIsNotSelected(String seriesName) {
+  public CategorizationChecker checkRecurringSeriesIsNotSelected(String seriesName) {
     UISpecAssert.assertFalse(getPanel().getPanel("recurringSeriesChooser").getToggleButton(seriesName).isSelected());
     return this;
   }
 
-  public CategorizationDialogChecker checkIncomeSeriesIsSelected(String seriesName) {
+  public CategorizationChecker checkIncomeSeriesIsSelected(String seriesName) {
     assertTrue(getPanel().getToggleButton("Income").isSelected());
 
     Panel panel = getIncomeSeriesPanel();
     assertTrue(panel.getToggleButton(seriesName).isSelected());
-
     return this;
   }
 
-  public CategorizationDialogChecker checkIncomeSeriesIsNotSelected(String seriesName) {
+  public CategorizationChecker checkIncomeSeriesIsNotSelected(String seriesName) {
     UISpecAssert.assertFalse(getPanel().getPanel("incomeSeriesChooser").getToggleButton(seriesName).isSelected());
     return this;
   }
 
-  public CategorizationDialogChecker selectEnvelopes() {
+  public CategorizationChecker selectEnvelopes() {
     getPanel().getToggleButton("expensesEnvelope").click();
     return this;
   }
 
-  public CategorizationDialogChecker checkContainsLabelInEnvelope(String label) {
+  public CategorizationChecker checkContainsLabelInEnvelope(String label) {
     Panel panel = getEnvelopeSeriesPanel();
     Assertion assertion = panel.containsLabel(label);
     if (!assertion.isTrue()) {
@@ -239,16 +239,17 @@ public class CategorizationDialogChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationDialogChecker checkContainsEnvelope(String envelopeName, MasterCategory... categories) {
+  public CategorizationChecker checkContainsEnvelope(String envelopeName, MasterCategory... categories) {
     Panel panel = getEnvelopeSeriesPanel();
     assertTrue(panel.containsLabel(envelopeName));
     for (MasterCategory category : categories) {
+      panel.getToggleButton(envelopeName + ":" + category.getName());
       assertTrue(panel.containsUIComponent(ToggleButton.class, envelopeName + ":" + category.getName()));
     }
     return this;
   }
 
-  public CategorizationDialogChecker checkContainsEnvelope(String envelopeName, String... categories) {
+  public CategorizationChecker checkContainsEnvelope(String envelopeName, String... categories) {
     Panel panel = getEnvelopeSeriesPanel();
     assertTrue(panel.containsLabel(envelopeName));
     for (String category : categories) {
@@ -257,9 +258,17 @@ public class CategorizationDialogChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationDialogChecker selectEnvelopeSeries(String envelopeName, MasterCategory category, boolean createSeries) {
+  public CategorizationChecker checkNotContainsEnvelope(String envelopeName, String... categories) {
     Panel panel = getEnvelopeSeriesPanel();
-    String name = envelopeName + ":" + category.getName();
+    assertTrue(panel.containsLabel(envelopeName));
+    for (String category : categories) {
+      assertFalse(panel.containsUIComponent(ToggleButton.class, envelopeName + ":" + category));
+    }
+    return this;
+  }
+
+  public CategorizationChecker selectEnvelopeSeries(String envelopeName, MasterCategory category, boolean createSeries) {
+    Panel panel = getEnvelopeSeriesPanel();
     if (createSeries) {
       createEnvelopeSeries()
         .setName(envelopeName)
@@ -267,25 +276,28 @@ public class CategorizationDialogChecker extends DataChecker {
         .validate();
       return this;
     }
-    panel.getToggleButton(name).click();
+
+    String toggleName = envelopeName + ":" + category.getName();
+    panel.getToggleButton(toggleName).click();
     return this;
   }
 
-  public CategorizationDialogChecker selectEnvelopeSeries(String envelopeName, String category) {
+  public CategorizationChecker selectEnvelopeSeries(String envelopeName, String category) {
     Panel panel = getEnvelopeSeriesPanel();
-    String name = envelopeName + ":" + category;
-    panel.getToggleButton(name).click();
+    panel.getToggleButton(envelopeName + ":" + category).click();
     return this;
   }
 
 
   private Panel getEnvelopeSeriesPanel() {
-    Panel panel = this.getPanel().getPanel("envelopeSeriesChooser");
-    assertTrue(panel.isVisible());
-    return panel;
+    Panel panel = getPanel();
+    assertTrue(panel.containsUIComponent(Panel.class, "envelopeSeriesChooser"));
+    Panel envelopeSeriesPanel = this.getPanel().getPanel("envelopeSeriesChooser");
+    assertTrue(envelopeSeriesPanel.isVisible());
+    return envelopeSeriesPanel;
   }
 
-  public CategorizationDialogChecker selectProjects() {
+  public CategorizationChecker selectProjects() {
     getPanel().getToggleButton("projects").click();
     return this;
   }
@@ -298,7 +310,7 @@ public class CategorizationDialogChecker extends DataChecker {
     }
   }
 
-  public CategorizationDialogChecker selectProjectSeries(String projectName, MasterCategory category, boolean createSeries) {
+  public CategorizationChecker selectProjectSeries(String projectName, MasterCategory category, boolean createSeries) {
     Panel panel = getProjectSeriesPanel();
     String name = projectName + ":" + category.getName();
     Component component = panel.findSwingComponent(ComponentMatchers.innerNameIdentity(name));
@@ -322,7 +334,7 @@ public class CategorizationDialogChecker extends DataChecker {
     return panel;
   }
 
-  public CategorizationDialogChecker selectSavings() {
+  public CategorizationChecker selectSavings() {
     getPanel().getToggleButton("savings").click();
     return this;
   }
@@ -335,7 +347,7 @@ public class CategorizationDialogChecker extends DataChecker {
     }
   }
 
-  public CategorizationDialogChecker selectSavingsSeries(String savingsName, MasterCategory category, boolean createSeries) {
+  public CategorizationChecker selectSavingsSeries(String savingsName, MasterCategory category, boolean createSeries) {
     Panel panel = getSavingsSeriesPanel();
     String name = savingsName + ":" + category.getName();
     Component component = panel.findSwingComponent(ComponentMatchers.innerNameIdentity(name));
@@ -359,18 +371,18 @@ public class CategorizationDialogChecker extends DataChecker {
     return panel;
   }
 
-  public CategorizationDialogChecker selectOccasional() {
+  public CategorizationChecker selectOccasional() {
     getPanel().getToggleButton("occasionalExpenses").click();
     return this;
   }
 
-  public CategorizationDialogChecker selectOccasionalSeries(MasterCategory category) {
+  public CategorizationChecker selectOccasionalSeries(MasterCategory category) {
     selectOccasional();
     getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).click();
     return this;
   }
 
-  public CategorizationDialogChecker selectOccasionalSeries(MasterCategory masterCategory, String subcat) {
+  public CategorizationChecker selectOccasionalSeries(MasterCategory masterCategory, String subcat) {
     selectOccasional();
     final String toggleName = "occasionalSeries" + ":" + masterCategory.getName() + ":" + subcat;
     getOccasionalSeriesPanel().getToggleButton(toggleName).click();
@@ -483,7 +495,7 @@ public class CategorizationDialogChecker extends DataChecker {
     return new SeriesEditionDialogChecker(creationDialog, oneSelection);
   }
 
-  public CategorizationDialogChecker checkEditIncomeSeriesDisabled() {
+  public CategorizationChecker checkEditIncomeSeriesDisabled() {
     assertFalse(getIncomeSeriesPanel().getButton("editSeries").isEnabled());
     return this;
   }
@@ -493,37 +505,42 @@ public class CategorizationDialogChecker extends DataChecker {
     return new SeriesEditionDialogChecker(creationDialog, isSingleSelection);
   }
 
-  public CategorizationDialogChecker checkTable(Object[][] content) {
+  public CategorizationChecker checkTable(Object[][] content) {
     assertTrue(getTable().contentEquals(content));
     return this;
   }
 
-  public CategorizationDialogChecker checkTableIsEmpty() {
+  public CategorizationChecker checkTableIsEmpty() {
     assertTrue(getTable().isEmpty());
     return this;
   }
 
-  public CategorizationDialogChecker checkSelectedTableRows(int... rows) {
-    assertTrue(getTable().rowsAreSelected(rows));
-    return this;
-  }
-
-  public CategorizationDialogChecker checkNoTransactionSelected() {
+  public CategorizationChecker checkNoSelectedTableRows() {
     assertTrue(getTable().selectionIsEmpty());
     return this;
   }
 
-  public CategorizationDialogChecker selectTableRow(int row) {
+  public CategorizationChecker checkSelectedTableRows(int... rows) {
+    assertTrue(getTable().rowsAreSelected(rows));
+    return this;
+  }
+
+  public CategorizationChecker checkNoTransactionSelected() {
+    assertTrue(getTable().selectionIsEmpty());
+    return this;
+  }
+
+  public CategorizationChecker selectTableRow(int row) {
     selectTableRows(row);
     return this;
   }
 
-  public CategorizationDialogChecker selectTableRows(int... rows) {
+  public CategorizationChecker selectTableRows(int... rows) {
     getTable().selectRows(rows);
     return this;
   }
 
-  public CategorizationDialogChecker selectTableRows(String... labels) {
+  public CategorizationChecker selectTableRows(String... labels) {
     int rows[] = new int[labels.length];
     for (int i = 0; i < labels.length; i++) {
       rows[i] = getTable().getRowIndex(1, labels[i]);
@@ -532,7 +549,7 @@ public class CategorizationDialogChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationDialogChecker unselectAllTransactions() {
+  public CategorizationChecker unselectAllTransactions() {
     getTable().clearSelection();
     return this;
   }
@@ -541,11 +558,11 @@ public class CategorizationDialogChecker extends DataChecker {
     assertEquals(enabled, getPanel().getCheckBox("similar").isSelected());
   }
 
-  public void enableAutoSelection() {
+  public void enableAutoSelectSimilar() {
     getPanel().getCheckBox("similar").select();
   }
 
-  public void disableAutoSelection() {
+  public void disableAutoSelectSimilar() {
     getPanel().getCheckBox("similar").unselect();
   }
 
@@ -557,7 +574,7 @@ public class CategorizationDialogChecker extends DataChecker {
     getPanel().getCheckBox("hide").select();
   }
 
-  public CategorizationDialogChecker disableAutoHide() {
+  public CategorizationChecker disableAutoHide() {
     getPanel().getCheckBox("hide").unselect();
     return this;
   }
@@ -570,7 +587,7 @@ public class CategorizationDialogChecker extends DataChecker {
     getPanel().getCheckBox("next").select();
   }
 
-  public CategorizationDialogChecker disableAutoSelectNext() {
+  public CategorizationChecker disableAutoSelectNext() {
     getPanel().getCheckBox("next").unselect();
     return this;
   }
@@ -598,7 +615,7 @@ public class CategorizationDialogChecker extends DataChecker {
   }
 
   private TextBox getTransactionLabel() {
-    return getPanel().getTextBox("transactionLabel");
+    return getPanel().getTextBox("userLabel");
   }
 
   public void setExceptionalIncome(String label, String seriesName, boolean showSeriesInitialization) {
@@ -607,21 +624,21 @@ public class CategorizationDialogChecker extends DataChecker {
     selectExceptionalIncomeSeries(seriesName, showSeriesInitialization);
   }
 
-  public CategorizationDialogChecker setIncome(String label, String seriesName, boolean showSeriesInitialization) {
+  public CategorizationChecker setIncome(String label, String seriesName, boolean showSeriesInitialization) {
     selectTableRows(getRowIndex(label));
     selectIncome();
     selectIncomeSeries(seriesName, showSeriesInitialization);
     return this;
   }
 
-  public CategorizationDialogChecker setRecurring(int rowIndex, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
+  public CategorizationChecker setRecurring(int rowIndex, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
     selectTableRow(rowIndex);
     selectRecurring();
     selectRecurringSeries(seriesName, category, showSeriesInitialization);
     return this;
   }
 
-  public CategorizationDialogChecker setRecurring(String label, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
+  public CategorizationChecker setRecurring(String label, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
     setRecurring(getRowIndex(label), seriesName, category, showSeriesInitialization);
     return this;
   }
@@ -630,36 +647,36 @@ public class CategorizationDialogChecker extends DataChecker {
     return getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
   }
 
-  public CategorizationDialogChecker setEnvelope(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationChecker setEnvelope(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
     selectTableRows(rowIndex);
     selectEnvelopes();
     selectEnvelopeSeries(seriesName, master, showSeriesInitialization);
     return this;
   }
 
-  public CategorizationDialogChecker setEnvelope(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationChecker setEnvelope(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
     setEnvelope(getRowIndex(label), seriesName, master, showSeriesInitialization);
     return this;
   }
 
-  public CategorizationDialogChecker setOccasional(String label, MasterCategory category) {
+  public CategorizationChecker setOccasional(String label, MasterCategory category) {
     setOccasional(getRowIndex(label), category);
     return this;
   }
 
-  public CategorizationDialogChecker setOccasional(int rowIndex, MasterCategory category) {
+  public CategorizationChecker setOccasional(int rowIndex, MasterCategory category) {
     selectTableRow(rowIndex);
     selectOccasional();
     selectOccasionalSeries(category);
     return this;
   }
 
-  public CategorizationDialogChecker setProject(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationChecker setProject(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
     setProject(getRowIndex(label), seriesName, master, showSeriesInitialization);
     return this;
   }
 
-  public CategorizationDialogChecker setProject(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationChecker setProject(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
     int[] rows = new int[]{rowIndex};
     selectTableRows(rows);
     selectProjects();
@@ -667,16 +684,40 @@ public class CategorizationDialogChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationDialogChecker setSavings(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationChecker setSavings(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
     setSavings(getRowIndex(label), seriesName, master, showSeriesInitialization);
     return this;
   }
 
-  public CategorizationDialogChecker setSavings(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationChecker setSavings(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
     int[] rows = new int[]{rowIndex};
     selectTableRows(rows);
     selectSavings();
     selectSavingsSeries(seriesName, master, showSeriesInitialization);
     return this;
+  }
+
+  public CategorizationTableChecker initContent() {
+    return new CategorizationTableChecker();
+  }
+
+  public class CategorizationTableChecker extends TableChecker {
+
+    private CategorizationTableChecker() {
+    }
+
+    public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount, MasterCategory category) {
+      add(new Object[]{date, label, amount});
+      return this;
+    }
+
+    public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount) {
+      add(new Object[]{date, label, amount});
+      return this;
+    }
+
+    protected Table getTable() {
+      return CategorizationChecker.this.getTable();
+    }
   }
 }

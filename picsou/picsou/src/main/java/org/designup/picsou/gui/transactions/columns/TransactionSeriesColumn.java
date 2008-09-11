@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.gui.categorization.CategorizationAction;
-import org.designup.picsou.gui.categorization.CategorizationDialog;
 import org.designup.picsou.gui.description.TransactionSeriesStringifier;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Series;

@@ -19,7 +19,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .addTransactionWithNote("2008/07/16", -15, "Pizza Pino", "miam miam")
       .load();
 
-    TextBox searchField = transactionDetails.getSearchField();
+    TextBox searchField = transactions.getSearchField();
     searchField.setText("pizza");
     transactions.initContent()
       .add("18/07/2008", TransactionType.PRELEVEMENT, "Pizza Hut", "miam", -10.00)
@@ -72,7 +72,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", -500, "FNAC", MasterCategory.LEISURES)
       .load();
 
-    TextBox searchField = transactionDetails.getSearchField();
+    TextBox searchField = transactions.getSearchField();
     searchField.setText("vi");
 
     transactions.initContent()
