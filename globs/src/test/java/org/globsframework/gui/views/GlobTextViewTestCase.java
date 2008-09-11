@@ -168,6 +168,15 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     assertFalse(textBox.isVisible());
   }
 
+  public void testVisibilityIsPreservedIfNoAutoHideIsSet() throws Exception {
+    AbstractGlobTextView view = initView(repository, DummyObject.NAME);
+    textBox = createComponent(view);
+
+    view.getComponent().setVisible(false);
+    selectionService.select(glob1);
+    assertFalse(textBox.isVisible());
+  }
+  
   public void testForceSelection() throws Exception {
     textBox = init(repository, glob1);
     assertTrue(textBox.textEquals("[dummyObject[id=1]]"));

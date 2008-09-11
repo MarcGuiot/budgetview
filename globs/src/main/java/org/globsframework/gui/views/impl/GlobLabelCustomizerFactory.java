@@ -60,6 +60,6 @@ public class GlobLabelCustomizerFactory {
   }
 
   private static LabelCustomizer createNumberCellRenderer(GlobStringifier stringifier, GlobRepository repository) {
-    return chain(stringifier(stringifier, repository), alignRight());
+    return chain(stringifier(stringifier, repository), ALIGN_RIGHT);
   }
 }

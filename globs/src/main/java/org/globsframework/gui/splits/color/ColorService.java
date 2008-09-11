@@ -7,14 +7,16 @@ import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.awt.*;
 import java.io.PrintStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ColorService implements ColorLocator {
 
   public static final String DEFAULT_COLOR_SET = "DEFAULT_COLOR_SET";
 
-  private List<ColorChangeListener> listeners = new ArrayList<ColorChangeListener>();
+  private List<WeakReference<ColorChangeListener>> listeners = new ArrayList<WeakReference<ColorChangeListener>>();
   private ColorSet currentSet;
   private List<ColorSet> colorSets = new ArrayList<ColorSet>();
   private List<ColorCreationListener> colorCreationListeners = new ArrayList<ColorCreationListener>();
@@ -119,12 +121,17 @@ public class ColorService implements ColorLocator {
   }
 
   public void addListener(ColorChangeListener listener) {
-    listeners.add(listener);
+    listeners.add(new WeakReference<ColorChangeListener>(listener));
     listener.colorsChanged(this);
   }
 
   public void removeListener(ColorChangeListener listener) {
-    listeners.remove(listener);
+    for (Iterator<WeakReference<ColorChangeListener>> iterator = listeners.iterator(); iterator.hasNext();) {
+      WeakReference<ColorChangeListener> reference = iterator.next();
+      if ((reference.get() == null) || (reference.get() == listener)) {
+        iterator.remove();
+      }
+    }
   }
 
   public void addListener(ColorCreationListener listener) {
@@ -144,9 +151,12 @@ public class ColorService implements ColorLocator {
   }
 
   private void notifyListeners() {
-    List<ColorChangeListener> copy = new ArrayList<ColorChangeListener>(listeners);
-    for (ColorChangeListener listener : copy) {
-      listener.colorsChanged(this);
+    List<WeakReference<ColorChangeListener>> copy = new ArrayList<WeakReference<ColorChangeListener>>(listeners);
+    for (WeakReference<ColorChangeListener> ref : copy) {
+      ColorChangeListener listener = ref.get();
+      if (listener != null) {
+        listener.colorsChanged(this);
+      }
     }
   }
 

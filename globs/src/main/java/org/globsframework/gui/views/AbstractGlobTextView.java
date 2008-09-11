@@ -26,7 +26,7 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   private GlobMatcher filter = GlobMatchers.ALL;
   protected GlobList currentSelection = new GlobList();
   private boolean autoHideIfEmpty;
-  private GlobListMatcher autoHideMatcher = GlobListMatchers.ALL;
+  private GlobListMatcher autoHideMatcher = null;
   private ChangeSetMatcher updateMatcher = ChangeSetMatchers.NONE;
   protected boolean initCompleted = false;
   private GlobList forcedSelection;
@@ -80,10 +80,12 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
 
     GlobList filteredSelection = currentSelection.filter(filter, repository);
 
-    boolean matches = autoHideMatcher.matches(filteredSelection, repository);
-    component.setVisible(matches);
-    if (!component.isVisible()) {
-      return;
+    if (autoHideMatcher != null) {
+      boolean matches = autoHideMatcher.matches(filteredSelection, repository);
+      component.setVisible(matches);
+      if (!component.isVisible()) {
+        return;
+      }
     }
 
     String text = stringifier.toString(filteredSelection, repository);
