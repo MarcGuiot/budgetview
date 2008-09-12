@@ -6,14 +6,11 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.description.CategoryStringifier;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionToCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.uispec4j.Button;
 import org.uispec4j.TableCellValueConverter;
-import org.uispec4j.UIComponent;
 import org.uispec4j.Window;
 
 import javax.swing.*;

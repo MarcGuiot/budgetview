@@ -6,6 +6,7 @@ import org.designup.picsou.gui.categories.CategoryChooserDialog;
 import org.designup.picsou.gui.components.MonthChooserDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
@@ -115,8 +116,7 @@ public class SeriesEditionDialog {
 
     registerDateComponents(builder);
 
-    amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT)
-      .setMinusNotAllowed();
+    amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT).setMinusAllowed(false);
 
     final GlobTableView budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE,
                                                        new ReverseGlobFieldComparator(SeriesBudget.MONTH))
@@ -126,6 +126,7 @@ public class SeriesEditionDialog {
       .addColumn(Lang.get("seriesEdition.year"), new YearStringifier())
       .addColumn(Lang.get("seriesEdition.month"), new MonthStringifier())
       .addColumn(Lang.get("seriesBudget.amount"), new AmountStringifier(), LabelCustomizers.ALIGN_RIGHT);
+    PicsouTableHeaderPainter.install(budgetTable, localDirectory);
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -154,7 +155,7 @@ public class SeriesEditionDialog {
     builder.addRepeat("monthRepeat", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
                       new RepeatComponentFactory<Integer>() {
                         public void registerComponents(RepeatCellBuilder cellBuilder, final Integer monthIndex) {
-                          cellBuilder.add("monthLabel", new JLabel(Month.getMediumSizeLetterLabel(monthIndex)));
+                          cellBuilder.add("monthLabel", new JLabel(Month.getShortMonthLabel(monthIndex)));
                           MonthCheckBoxUpdater updater = new MonthCheckBoxUpdater(monthIndex);
                           cellBuilder.add("monthSelector", updater.getCheckBox());
                           localRepository.addChangeListener(updater);
@@ -370,11 +371,11 @@ public class SeriesEditionDialog {
     }
     if (budgetArea.isIncome()) {
       amountLabel.setText(Lang.get("seriesEdition.income.amount"));
-      amountEditor.setNoInvertValue();
+      amountEditor.setInvertValue(false);
     }
     else {
       amountLabel.setText(Lang.get("seriesEdition.expense.amount"));
-      amountEditor.setInvertValue();
+      amountEditor.setInvertValue(true);
     }
     selectionService.select(localRepository.getAll(SeriesBudget.TYPE,
                                                    fieldIn(SeriesBudget.MONTH, monthIds)), SeriesBudget.TYPE);
@@ -486,7 +487,7 @@ public class SeriesEditionDialog {
 
   private class MonthStringifier extends AbstractGlobStringifier {
     public String toString(Glob seriesBudget, GlobRepository repository) {
-      return Month.getMonthLabel(seriesBudget.get(SeriesBudget.MONTH));
+      return Month.getFullMonthLabel(seriesBudget.get(SeriesBudget.MONTH));
     }
   }
 
@@ -678,7 +679,7 @@ public class SeriesEditionDialog {
       if (monthId == null) {
         return null;
       }
-      return Month.getMediumSizeLetterLabel(monthId) + " " + Month.toYearString(monthId);
+      return Month.getShortMonthLabel(monthId) + " " + Month.toYearString(monthId);
     }
   }
 

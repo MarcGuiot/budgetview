@@ -3,7 +3,6 @@ package org.globsframework.gui.editors;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.Formats;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;
@@ -21,29 +20,17 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField> {
   private boolean isMinusAllowed = true;
   private boolean invertValue = false;
 
-  public static GlobNumericEditor init(Field field, GlobRepository globRepository, Directory directory) {
-    return new GlobNumericEditor(field, globRepository, directory, new JTextField());
+  public static GlobNumericEditor init(Field field, GlobRepository repository, Directory directory) {
+    return new GlobNumericEditor(field, repository, directory, new JTextField());
   }
 
-  public GlobNumericEditor setMinusNotAllowed() {
-    isMinusAllowed = false;
-    return this;
-  }
-
-  public GlobNumericEditor setInvertValue() {
-    invertValue = true;
-    return this;
-  }
-
-  public GlobNumericEditor setNoInvertValue() {
-    invertValue = false;
-    return this;
-  }
-
-
-  private GlobNumericEditor(Field field, GlobRepository globRepository,
+  private GlobNumericEditor(Field field, GlobRepository repository,
                             Directory directory, JTextField component) {
-    super(field, component, globRepository, directory);
+    super(field, component, repository, directory);
+    installDocumentFilter();
+  }
+
+  private void installDocumentFilter() {
     ((AbstractDocument)textComponent.getDocument()).setDocumentFilter(new DocumentFilter() {
       public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
         StringBuffer buffer = new StringBuffer();
@@ -76,6 +63,16 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField> {
     });
   }
 
+  public GlobNumericEditor setMinusAllowed(boolean minusAllowed) {
+    this.isMinusAllowed = minusAllowed;
+    return this;
+  }
+
+  public GlobNumericEditor setInvertValue(boolean value) {
+    this.invertValue = value;
+    return this;
+  }
+
   protected boolean checkValue(String str) {
     if ("-".equals(str)) {
       return isMinusAllowed;
@@ -98,19 +95,19 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField> {
     return convertValue(s).getValue();
   }
 
-  private String invertIfNeeded(String s) {
+  private String invertIfNeeded(String text) {
     if (invertValue) {
-      if (s == null) {
+      if (text == null) {
         return "";
       }
-      if (s.startsWith("-")) {
-        s = s.substring(1);
+      if (text.startsWith("-")) {
+        text = text.substring(1);
       }
       else {
-        s = "-" + s;
+        text = "-" + text;
       }
     }
-    return s;
+    return text;
   }
 
   private StringParserFieldVisitor convertValue(String s) {
@@ -125,9 +122,15 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField> {
   }
 
   protected void setValue(Object value) {
-    StringifierFieldValueVisitor stringifierFieldValueVisitor = new StringifierFieldValueVisitor(descriptionService);
-    field.safeVisit(stringifierFieldValueVisitor, value);
-    textComponent.setText(invertIfNeeded(stringifierFieldValueVisitor.getText()));
+    if (value == null) {
+      textComponent.setText("");
+      return;
+    }
+
+    StringifierFieldValueVisitor visitor = new StringifierFieldValueVisitor(descriptionService);
+    field.safeVisit(visitor, value);
+    String text = invertIfNeeded(visitor.getText());
+    textComponent.setText(text);
   }
 
   protected void registerChangeListener() {
@@ -158,9 +161,8 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField> {
 
     public void visitDouble(DoubleField field) throws Exception {
       value = null;
-      if (!"".equals(text.trim())) {        
+      if (!"".equals(text.trim())) {
         value = Double.parseDouble(text.replace(',', '.'));
-//        value = descriptionService.getFormats().getDecimalFormat().parse(text).doubleValue();
       }
     }
 
@@ -218,7 +220,7 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField> {
     }
 
     public void visitDouble(DoubleField field, Double value) throws Exception {
-      if (value != null) {        
+      if (value != null) {
         text = descriptionService.getFormats().getDecimalFormat().format(value);
       }
     }

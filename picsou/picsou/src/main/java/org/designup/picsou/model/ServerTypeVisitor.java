@@ -36,9 +36,6 @@ public interface ServerTypeVisitor {
         else if (key.getGlobType() == Account.TYPE) {
           visitor.visitAccount(key, values);
         }
-        else if (key.getGlobType() == TransactionToCategory.TYPE) {
-          visitor.visitTransactionToCategory(key, values);
-        }
         else if (key.getGlobType() == LabelToCategory.TYPE) {
           visitor.visitLabelToCategory(key, values);
         }

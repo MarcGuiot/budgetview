@@ -3,6 +3,7 @@ package org.globsframework.gui.editors;
 import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.Field;
+import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.uispec4j.TextBox;
 
@@ -25,6 +26,18 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
                     "<dummyObject2 id='0'/>");
     repository.addChangeListener(changeListener);
     glob = repository.get(key1);
+  }
+
+  public void testUpdateWithNullValue() throws Exception {
+    Glob glob1 = repository.create(DummyObject.TYPE, FieldValue.value(DummyObject.VALUE, 1.0));
+    Glob glob2 = repository.create(DummyObject.TYPE, FieldValue.value(DummyObject.VALUE, null));
+    TextBox textBox = init(DummyObject.VALUE);
+
+    selectionService.select(glob1);
+    assertThat(textBox.textEquals("1"));
+
+    selectionService.select(glob2);
+    assertThat(textBox.textIsEmpty());
   }
 
   public void testDate() throws Exception {
@@ -64,7 +77,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
       "<update type='dummyObject' id='1' value='8.4' _value='3.5'/>");
   }
 
-  public void testAcceptOnlyNumber() throws Exception {
+  public void testAcceptsOnlyNumbers() throws Exception {
     Locale.setDefault(Locale.FRANCE);
     TextBox textBox = init(DummyObject.VALUE);
     selectionService.select(glob);
@@ -77,7 +90,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     assertThat(textBox.textEquals("83,4"));
   }
 
-  public void testMinus() throws Exception {
+  public void testMinusAllowed() throws Exception {
     Locale.setDefault(Locale.FRANCE);
     TextBox textBox = init(DummyObject.VALUE);
     selectionService.select(glob);
@@ -87,15 +100,16 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     assertThat(textBox.textEquals("-83,4"));
   }
 
-  public void testMinuNotAllowed() throws Exception {
+  public void testMinusNotAllowed() throws Exception {
     JTextField textField =
-      GlobNumericEditor.init(DummyObject.LINK, repository, directory)
-        .setMinusNotAllowed().getComponent();
+      GlobNumericEditor.init(DummyObject.LINK, repository, directory).setMinusAllowed(false).getComponent();
     selectionService.select(glob);
     TextBox textBox = new TextBox(textField);
+
     textBox.setText("");
     textBox.insertText("-3", 0);
     assertThat(textBox.textEquals(""));
+
     textBox.insertText("4", 0);
     assertThat(textBox.textEquals("4"));
   }
@@ -103,7 +117,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
   public void testInvert() throws Exception {
     JTextField textField =
       GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
-        .setInvertValue().getComponent();
+        .setInvertValue(true).getComponent();
     TextBox textBox = new TextBox(textField);
     selectionService.select(glob);
     textBox.setText("8.8");
@@ -117,8 +131,8 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
   public void testInvertAndMinusNotAllowed() throws Exception {
     JTextField textField =
       GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
-        .setInvertValue()
-        .setMinusNotAllowed()
+        .setMinusAllowed(false)
+        .setInvertValue(true)
         .getComponent();
     TextBox textBox = new TextBox(textField);
     repository.update(glob.getKey(), DummyObject.VALUE, -8.8);

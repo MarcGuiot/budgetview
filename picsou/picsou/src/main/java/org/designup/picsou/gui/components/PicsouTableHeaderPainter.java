@@ -26,10 +26,18 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
   private GlobTableView tableView;
   private ColorService colorService;
 
-  public PicsouTableHeaderPainter(GlobTableView tableView, Directory directory) {
+  public static PicsouTableHeaderPainter install(GlobTableView tableView, Directory directory) {
+    PicsouTableHeaderPainter headerPainter = new PicsouTableHeaderPainter(tableView, directory);
+    tableView.setHeaderCustomizer(new PicsouTableHeaderCustomizer(directory, PicsouColors.TRANSACTION_TABLE_HEADER_TITLE),
+                                  headerPainter);
+    return headerPainter;
+  }
+
+  private PicsouTableHeaderPainter(GlobTableView tableView, Directory directory) {
     colorService = directory.get(ColorService.class);
     colorService.addListener(this);
     this.tableView = tableView;
+
   }
 
   public void setFiltered(boolean filtered) {

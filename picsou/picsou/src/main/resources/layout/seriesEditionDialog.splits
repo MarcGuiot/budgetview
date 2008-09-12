@@ -32,14 +32,14 @@
 
             <textField gridPos="(1,1)" ref="singleCategoryField"/>
 
-            <button gridPos="(2,1)" action="assignCategory" marginLeft="10" anchor="northwest"/>
-            <label gridPos="(1,2,2,1)" ref="missingCategoryLabel" fill="horizontal"/>
+            <button gridPos="(2,1)" action="assignCategory" anchor="northwest"/>
+            <label gridPos="(1,2,2,1)" ref="missingCategoryLabel" fill="horizontal" marginTop="4"/>
           </grid>
 
           <column marginTop="20">
             <label text="Echeances" font="-,plain,10" foreground="#444444"/>
             <row marginTop="0" border="matte(1,0,0,0,#777777)">
-              <column marginTop="10" weightX="4">
+              <column marginTop="10" weightX="3">
 
                 <label text="$seriesEdition.begin" styleClass="formLabelTop" fill="horizontal"/>
                 <row>
@@ -76,16 +76,16 @@
                 </repeat>
                 <filler fill="vertical"/>
               </column>
-              <column margin="10" marginBottom="0" weightX="6">
+
+              <column margin="10" marginBottom="0" weightX="7">
+                <label ref="seriesEditionAmountLabel" styleClass="formLabelTop"/>
+                <textField ref="amountEditor"/>
                 <label text="$seriesEdition.entries" styleClass="formLabelTop"/>
                 <scrollPane weightY="1000" margin="5">
                   <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>
                 </scrollPane>
-                <row marginTop="5">
-                  <label ref="seriesEditionAmountLabel" styleClass="formLabelTop"/>
-                  <textField ref="amountEditor"/>
-                </row>
               </column>
+
             </row>
           </column>
         </column>
