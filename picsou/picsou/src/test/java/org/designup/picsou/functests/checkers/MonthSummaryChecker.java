@@ -5,11 +5,10 @@ import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.Panel;
-import org.uispec4j.Window;
 import org.uispec4j.TextBox;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import org.uispec4j.interception.WindowInterceptor;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class MonthSummaryChecker extends DataChecker {
   private Window window;
@@ -117,10 +116,8 @@ public class MonthSummaryChecker extends DataChecker {
       return this;
     }
 
-    public CategorizationChecker categorize() {
-      Window dialog = WindowInterceptor.getModalDialog(panel.getButton("categorize").triggerClick());
-      return new CategorizationChecker(dialog);
+    public void categorize() {
+      panel.getButton("categorize").click();
     }
-
   }
 }

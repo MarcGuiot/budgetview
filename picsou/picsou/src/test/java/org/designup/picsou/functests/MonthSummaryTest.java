@@ -109,16 +109,17 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkOccasional(0)
       .checkUncategorized("1000.00 / -10.00");
 
-    // TODO: naviguer vers la vue Categorization
-    CategorizationChecker dialog = monthSummary.init().categorize();
-    dialog.checkTable(new Object[][]{
+    monthSummary.init().categorize();
+    views.checkCategorizationSelected();
+    categorization.checkTable(new Object[][]{
       {"26/08/2008", "FNAC", -10.0},
       {"26/08/2008", "MyCompany", 1000.0},
     });
-    dialog.selectTableRow(0);
-    dialog.selectOccasional();
-    dialog.selectOccasionalSeries(MasterCategory.LEISURES);
+    categorization.selectTableRow(0);
+    categorization.selectOccasional();
+    categorization.selectOccasionalSeries(MasterCategory.LEISURES);
 
+    views.selectHome();
     monthSummary.init()
       .total(1000, 10, true)
       .checkIncome(0)
@@ -127,14 +128,17 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkOccasional(10)
       .checkUncategorized("1000.00");
 
-    CategorizationChecker second = monthSummary.init().categorize();
-    second.checkTable(new Object[][]{
+    monthSummary.init().categorize();
+    views.checkCategorizationSelected();
+    categorization.checkTable(new Object[][]{
+      {"26/08/2008", "FNAC", -10.0},
       {"26/08/2008", "MyCompany", 1000.0},
     });
-    second.selectTableRow(0);
-    second.selectIncome();
-    second.selectIncomeSeries("Salary", true);
+    categorization.selectTableRow(1);
+    categorization.selectIncome();
+    categorization.selectIncomeSeries("Salary", true);
 
+    views.selectHome();
     monthSummary.init()
       .total(1000, 10, true)
       .checkIncome(1000)
