@@ -11,22 +11,22 @@
     <transactionTypeMatcher regexp="PRELEVEMENT[\s]+[\d]+[\s]+(.*)"
                             transactionTypeName="prelevement" label="$1"/>
 
-    <transactionTypeMatcher regexp="CARTE[ ]+[0-9]+[ ]+RETRAIT DAB[ ]*[\w]*[ ]+([0-9/]+)[ ]+(.*)"
+    <transactionTypeMatcher regexp="CARTE[ ]+[0-9]+[ ]+RETRAIT DAB[ ]*[\w]*[ ]+(\d{2,4}/\d{2}/\d{2,4})[ ]+(.*)"
                             transactionTypeName="withdrawal" label="RETRAIT $2" groupForDate="1" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="RET\. DAB[ ]+[\w]+[ ]+([0-9/]+)[ ]+(.*)"
+    <transactionTypeMatcher regexp="RET\. DAB[ ]+[\w]+[ ]+(\d{2,4}/\d{2}/\d{2,4})[ ]+(.*)"
                             transactionTypeName="withdrawal" label="RETRAIT $2" groupForDate="1" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="RET ECLAIR[ ]+[\w]+[ ]+([0-9/]+)[ ]+(.*)"
+    <transactionTypeMatcher regexp="RET ECLAIR[ ]+[\w]+[ ]+(\d{2,4}/\d{2}/\d{2,4})[ ]+(.*)"
                             transactionTypeName="withdrawal" label="RETRAIT $2" groupForDate="1" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="FAC\.FRANCE[ ]+[\w]+[ ]+([0-9/]+)[ ]+(.*)"
+    <transactionTypeMatcher regexp="FAC\.FRANCE[ ]+[\w]+[ ]+(\d{2,4}/\d{2}/\d{2,4})[ ]+(.*)"
                             transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="CARTE[\s]+[0-9]+[\s]+([0-9/]+)[\s]+REL\.[\s]+(.*)"
+    <transactionTypeMatcher regexp="CARTE[\s]+[0-9]+[\s]+(\d{2,4}/\d{2}/\d{2,4})[\s]+REL\.[\s]+(.*)"
                             transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="CARTE[\s]+[0-9]+[\s]+([0-9/]+)[\s]+(.*)"
+    <transactionTypeMatcher regexp="CARTE[\s]+[0-9]+[\s]+(\d{2,4}/\d{2}/\d{2,4})[\s]+(.*)"
                             transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM/yy"/>
 
     <transactionTypeMatcher regexp="VIREMENT[\s]+[\w]+[\s]+(.*)"

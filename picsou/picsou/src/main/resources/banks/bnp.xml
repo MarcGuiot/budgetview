@@ -29,11 +29,11 @@
     <transactionTypeMatcher regexp="COMMISS[\s]*(.*)"
                             transactionTypeName="bank_fees" label="COMMISSIONS PERCUES $1"/>
 
-    <transactionTypeMatcher regexp="RETRAIT DAB[\s]*([0-9/]+)[\s]*(.*)"
+    <transactionTypeMatcher regexp="RETRAIT DAB[\s]*(\d{2,4}/\d{2}/\d{2,4})[\s]*(.*)"
                             transactionTypeName="withdrawal" label="RETRAIT $2"
                             groupForDate="1" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="RETRAIT[\s]*([0-9/]+)[\s]* (.*)"
+    <transactionTypeMatcher regexp="RETRAIT[\s]*(\d{2,4}/\d{2}/\d{2,4})[\s]* (.*)"
                             transactionTypeName="withdrawal" label="RETRAIT $2"
                             groupForDate="1" dateFormat="dd/MM/yy"/>
 

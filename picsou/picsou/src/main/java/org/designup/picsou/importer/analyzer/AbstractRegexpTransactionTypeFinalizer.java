@@ -62,12 +62,19 @@ public abstract class AbstractRegexpTransactionTypeFinalizer implements Transact
                                     String date,
                                     SimpleDateFormat format) {
     Key key = transaction.getKey();
-    Date parsedDate = getDate(format, date);
-    repository.update(key,
-                      value(Transaction.TRANSACTION_TYPE, transactionType.getId()),
-                      value(Transaction.MONTH, Month.getMonthId(parsedDate)),
-                      value(Transaction.DAY, Month.getDay(parsedDate)),
-                      value(Transaction.LABEL, label.trim()));
+    try {
+      Date parsedDate = getDate(format, date);
+      repository.update(key,
+                        value(Transaction.TRANSACTION_TYPE, transactionType.getId()),
+                        value(Transaction.MONTH, Month.getMonthId(parsedDate)),
+                        value(Transaction.DAY, Month.getDay(parsedDate)),
+                        value(Transaction.LABEL, label.trim()));
+    }
+    catch (ParseException e) {
+      repository.update(key,
+                        value(Transaction.TRANSACTION_TYPE, transactionType.getId()),
+                        value(Transaction.LABEL, label.trim()));
+    }
   }
 
   protected void setTransactionType(Glob transaction, GlobRepository repository, TransactionType transactionType,
@@ -78,13 +85,8 @@ public abstract class AbstractRegexpTransactionTypeFinalizer implements Transact
                       value(Transaction.LABEL, label.trim()));
   }
 
-  private Date getDate(SimpleDateFormat format, String date) {
-    try {
-      return format.parse(date);
-    }
-    catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
+  private Date getDate(SimpleDateFormat format, String date) throws ParseException {
+    return format.parse(date);
   }
 
   public String toString() {
