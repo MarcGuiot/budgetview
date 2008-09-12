@@ -126,14 +126,6 @@
                     <row>
                       <label text="$transaction.details.search" styleClass="formLabel"/>
                       <textField ref="transactionSearchField"/>
-                      <panel name="uncategorizedMessagePanel" styleClass="errorMessage"
-                             autoHideSource="uncategorizedMessage_details" marginTop="20"
-                             preferredSize="(50,90)" weightY="0">
-                        <column>
-                          <textArea ref="uncategorizedMessage_details"/>
-                          <button action="categorizeRemainingTransactions_details"/>
-                        </column>
-                      </panel>
                     </row>
                   </column>
                 </panel>

@@ -3,10 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
-import org.uispec4j.Button;
-import org.uispec4j.interception.WindowInterceptor;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class UncategorizedMessagePanelChecker extends DataChecker {
   private Window window;
@@ -28,9 +25,7 @@ public class UncategorizedMessagePanelChecker extends DataChecker {
     return window.getTextBox("uncategorizedMessage");
   }
 
-  public CategorizationChecker categorize() {
-    final Button categorizationButton = window.getPanel("uncategorizedMessagePanel").getButton("Categorize");
-    final Window dialog = WindowInterceptor.getModalDialog(categorizationButton.triggerClick());
-    return new CategorizationChecker(dialog);
+  public void categorize() {
+    window.getPanel("uncategorizedMessagePanel").getButton("Categorize").click();
   }
 }

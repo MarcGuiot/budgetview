@@ -22,6 +22,7 @@ public class CardView extends View implements GlobSelectionListener {
   private CardHandler categoryCardHandler;
 
   private Card lastSelectedCard = Card.HOME;
+  private JToggleButton[] toggles = new JToggleButton[Card.values().length];
 
   public CardView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -33,39 +34,28 @@ public class CardView extends View implements GlobSelectionListener {
     masterCardHandler = builder.addCardHandler("cardView");
     categoryCardHandler = builder.addCardHandler("cardsWithCategoriesView");
 
-    showCard(lastSelectedCard);
-
     ButtonGroup group = new ButtonGroup();
-    JToggleButton[] toggles = new JToggleButton[Card.values().length];
-    for (int i = 0; i < Card.values().length; i++) {
-      Card card = Card.values()[i];
+    for (Card card : Card.values()) {
       JToggleButton toggle = new JToggleButton(new ToggleAction(card));
       String name = card.getName() + "CardToggle";
       Gui.configureIconButton(toggle, name, new Dimension(45, 45));
       builder.add(name, toggle);
       group.add(toggle);
-      toggles[i] = toggle;
+      toggles[card.getId()] = toggle;
     }
 
-    toggles[0].setSelected(true);
+    showCard(lastSelectedCard);
   }
 
   private void showCard(Card card) {
-    if (card.showCategoryCard) {
-      categoryCardHandler.show(card.getName());
-      masterCardHandler.show("withCategories");
-    }
-    else {
-      masterCardHandler.show(card.getName());
-    }
+    toggles[card.getId()].doClick(0);
   }
 
   public void selectionUpdated(GlobSelection selection) {
     if (selection.isRelevantForType(Card.TYPE)) {
       GlobList cards = selection.getAll(Card.TYPE);
       if (cards.size() == 1) {
-        lastSelectedCard = Card.get(cards.get(0).get(Card.ID));
-        showCard(lastSelectedCard);
+        showCard(Card.get(cards.get(0).get(Card.ID)));
       }
     }
     if (selection.isRelevantForType(Month.TYPE) || selection.isRelevantForType(Category.TYPE)) {
@@ -82,6 +72,20 @@ public class CardView extends View implements GlobSelectionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+      if (card == lastSelectedCard) {
+        return;
+      }
+
+      lastSelectedCard = card;
+
+      if (card.showCategoryCard) {
+        categoryCardHandler.show(card.getName());
+        masterCardHandler.show("withCategories");
+      }
+      else {
+        masterCardHandler.show(card.getName());
+      }
+
       selectionService.select(repository.get(card.getKey()));
     }
   }

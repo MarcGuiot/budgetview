@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.utils.Lang;
 import org.uispec4j.finder.ComponentMatchers;
 
 import javax.swing.*;
@@ -12,7 +11,7 @@ import java.awt.*;
 public class ViewsManagementTest extends LoggedInFunctionalTestCase {
   public void testHomePage() throws Exception {
     views.selectHome();
-    views.assertHomeSelected();
+    views.checkHomeSelected();
     transactions.assertVisible(false);
   }
 

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.Gauge;
@@ -204,26 +205,14 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     }
   }
 
-  private class CategorizationAction extends AbstractAction implements GlobSelectionListener {
-    private GlobList selectedMonthList;
+  private class CategorizationAction extends AbstractAction {
 
     private CategorizationAction() {
       super(Lang.get("budgetArea.uncategorized"));
-      directory.get(SelectionService.class).addListener(this, Month.TYPE);
-    }
-
-    public void selectionUpdated(GlobSelection selection) {
-      this.selectedMonthList = selection.getAll(Month.TYPE);
     }
 
     public void actionPerformed(ActionEvent e) {
-      GlobList transactions = new GlobList();
-      for (Glob month : selectedMonthList) {
-        transactions.addAll(getUncategorizedTransactions(month, repository));
-      }
-
-      // TODO
-      System.out.println("MonthSummaryView$CategorizationAction.actionPerformed: TODO");
+      directory.get(NavigationService.class).gotoCategorization();
     }
   }
 

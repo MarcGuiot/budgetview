@@ -6,7 +6,6 @@ SeriesEditionDialog
 BudgetView
 * Bloc "Montant releve non classe" (avec bouton categorisation)
 * Calcul disponible en occasionel : le calcul est-il intuitif ? (alignement avec les autres blocs)
-* Bug : bloc occasional affiche des subcats (ex.: pharmacie)
 
 Licence
 * Pb text editor
@@ -18,7 +17,6 @@ CategoryEditionDialog
 CategorizationView
 * Message de presentation des budgetAreas quand aucune n'est selectionnee
 * Message d'aide quand il n'y a pas de serie pour une budgetArea
-* Mode selectNext disabled : creation de recurrence = la derniere reste selectionnee
 * Voir tri des transactions par date
 * Bug sur budgetArea epargne : nom de serie uniquement, pas de toggle a selectionner
 * Bouton "liste" : selectionner la serie courante

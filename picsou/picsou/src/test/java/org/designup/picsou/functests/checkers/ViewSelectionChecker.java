@@ -35,19 +35,23 @@ public class ViewSelectionChecker extends DataChecker {
     select("repartition");
   }
 
-  public void assertHomeSelected() {
+  public void checkHomeSelected() {
     assertSelected("home");
   }
 
-  public void assertDataSelected() {
+  public void checkDataSelected() {
     assertSelected("data");
   }
 
-  public void assertEvolutionSelected() {
+  public void checkEvolutionSelected() {
     assertSelected("evolution");
   }
 
-  public void assertRepartitionSelected() {
+  public void checkCategorizationSelected() {
+    assertSelected("categorization");
+  }
+
+  public void checkRepartitionSelected() {
     assertSelected("repartition");
   }
 
