@@ -4,7 +4,6 @@ SeriesEditionDialog
 * Combo "Tous les mois" / "Certains mois"
 
 BudgetView
-* Ne pas montrer les series qui ne sont pas utilisees (par contre visibles via bouton editAllSeries)
 * Bloc "Montant releve non classe" (avec bouton categorisation)
 * Calcul disponible en occasionel : le calcul est-il intuitif ? (alignement avec les autres blocs)
 * Bug : bloc occasional affiche des subcats (ex.: pharmacie)
@@ -21,7 +20,6 @@ CategorizationView
 * Message d'aide quand il n'y a pas de serie pour une budgetArea
 * Mode selectNext disabled : creation de recurrence = la derniere reste selectionnee
 * Voir tri des transactions par date
-* Masquer les series inactives pour les transactions selectionnees
 * Bug sur budgetArea epargne : nom de serie uniquement, pas de toggle a selectionner
 * Bouton "liste" : selectionner la serie courante
 * Afficher le nombre de transactions non classees

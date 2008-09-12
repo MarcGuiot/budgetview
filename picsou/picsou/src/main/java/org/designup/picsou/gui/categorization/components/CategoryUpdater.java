@@ -7,12 +7,13 @@ import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
 import javax.swing.*;
 import java.util.Set;
 
-public class CategoryUpdater implements GlobSelectionListener {
+public class CategoryUpdater implements GlobSelectionListener, ChangeSetListener {
   private JToggleButton toggle;
   private JToggleButton invisibleButton;
   private Key seriesKey;
@@ -32,11 +33,15 @@ public class CategoryUpdater implements GlobSelectionListener {
     this.repository = repository;
     this.selectionService = selectionService;
     this.selectionService.addListener(this, Transaction.TYPE);
+    this.repository.addChangeListener(this);
   }
 
   public void selectionUpdated(GlobSelection selection) {
     GlobList selectedTransactions = selection.getAll(Transaction.TYPE);
+    updateToggle(selectedTransactions);
+  }
 
+  private void updateToggle(GlobList selectedTransactions) {
     Set<Integer> seriesIds = selectedTransactions.getValueSet(Transaction.SERIES);
     Integer seriesId = seriesIds.size() == 1 ? seriesIds.iterator().next() : Series.UNCATEGORIZED_SERIES_ID;
 
@@ -59,6 +64,17 @@ public class CategoryUpdater implements GlobSelectionListener {
 
   public void dispose() {
     selectionService.removeListener(this);
+    repository.removeChangeListener(this);
+  }
+
+  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    if (changeSet.containsChanges(Transaction.TYPE)) {
+      GlobList transactions = selectionService.getSelection(Transaction.TYPE);
+      updateToggle(transactions);
+    }
+  }
+
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }
 

@@ -231,12 +231,13 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
     final JToggleButton invisibleToggle = new JToggleButton();
     panelBuilder.add("invisibleToggle", invisibleToggle);
-    seriesRepeat.add(new PicsouMatchers.SeriesFilter(budgetArea.getId(),
-                                                     panelBuilder.addRepeat("seriesRepeat",
-                                                                            Series.TYPE,
-                                                                            linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                                                                            new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleToggle,
-                                                                                                                      repository, directory)), true));
+    seriesRepeat.add(
+      new PicsouMatchers.SeriesFilter(budgetArea.getId(),
+                                      panelBuilder.addRepeat("seriesRepeat",
+                                                             Series.TYPE,
+                                                             linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
+                                                             new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleToggle,
+                                                                                                       repository, directory)), true));
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 

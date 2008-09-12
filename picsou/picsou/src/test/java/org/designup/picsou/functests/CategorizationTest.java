@@ -83,6 +83,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkLabel("AUCHAN C'EST BON");
     categorization.selectEnvelopes();
     categorization.selectEnvelopeSeries("Courant", MasterCategory.FOOD, true);
+    categorization.checkEnvelopeSeriesIsSelected("Courant", MasterCategory.FOOD);
 
     views.selectData();
     transactions.checkSeries(0, "Courant");
@@ -111,7 +112,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectOccasionalSeries(MasterCategory.FOOD);
 
     views.selectData();
-    transactions.checkSeries(0, "Occasional");
+    transactions.checkSeries(0, getCategoryName(MasterCategory.FOOD));
     transactions.checkCategory(0, MasterCategory.FOOD);
 
     views.selectCategorization();
@@ -120,7 +121,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectOccasionalSeries(MasterCategory.FOOD, "Saucisson");
 
     views.selectData();
-    transactions.checkSeries(0, "Occasional");
+    transactions.checkSeries(0, "Saucisson");
     transactions.checkCategory(0, "Saucisson");
   }
 

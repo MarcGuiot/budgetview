@@ -32,6 +32,10 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
             toggle.setText(seriesStringifier.toString(new GlobList(series), repository));
           }
         }
+        if (changeSet.containsChanges(Transaction.TYPE)) {
+          GlobList transactions = selectionService.getSelection(Transaction.TYPE);
+          updateToggle(transactions, toggle, seriesKey);
+        }
       }
     };
     repository.addChangeListener(seriesUpdateListener);
@@ -40,17 +44,7 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
     final GlobSelectionListener listener = new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         GlobList transactions = selection.getAll(Transaction.TYPE);
-        if (transactions.size() != 1) {
-          return;
-        }
-        Glob transaction = transactions.get(0);
-        Glob transactionSeries = repository.findLinkTarget(transaction, Transaction.SERIES);
-        if (!Series.UNCATEGORIZED_SERIES_ID.equals(transactionSeries.get(Series.ID))) {
-          toggle.setSelected(transactionSeries.getKey().equals(seriesKey));
-        }
-        else {
-          invisibleToggle.setSelected(true);
-        }
+        updateToggle(transactions, toggle, seriesKey);
       }
     };
     selectionService.addListener(listener, Transaction.TYPE);
@@ -63,5 +57,19 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
       }
     });
     cellBuilder.add("seriesToggle", toggle);
+  }
+
+  private void updateToggle(GlobList transactions, JToggleButton toggle, Key seriesKey) {
+    if (transactions.size() != 1) {
+      return;
+    }
+    Glob transaction = transactions.get(0);
+    Glob transactionSeries = repository.findLinkTarget(transaction, Transaction.SERIES);
+    if (!Series.UNCATEGORIZED_SERIES_ID.equals(transactionSeries.get(Series.ID))) {
+      toggle.setSelected(transactionSeries.getKey().equals(seriesKey));
+    }
+    else {
+      invisibleToggle.setSelected(true);
+    }
   }
 }

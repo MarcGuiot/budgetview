@@ -439,10 +439,11 @@ public class CategorizationChecker extends DataChecker {
     }
   }
 
-  public void checkEnvelopeSeriesIsSelected(String seriesName, MasterCategory category) {
+  public CategorizationChecker checkEnvelopeSeriesIsSelected(String seriesName, MasterCategory category) {
     assertTrue(getPanel().getToggleButton("expensesEnvelope").isSelected());
     Panel panel = getEnvelopeSeriesPanel();
     assertTrue(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
+    return this;
   }
 
   public void checkEnveloppeSeriesIsNotSelected(String seriesName, MasterCategory category) {
