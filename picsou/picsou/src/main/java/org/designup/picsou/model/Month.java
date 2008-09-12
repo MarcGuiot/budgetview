@@ -133,7 +133,6 @@ public class Month {
   }
 
   public static String getFullLabel(Integer monthId) {
-    System.out.println("Month.getFullLabel: " + monthId);
     int month = toMonth(monthId);
     int year = toYear(monthId);
     return Lang.get("month." + toMonth(month) + ".long") + " " + year;
