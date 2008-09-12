@@ -652,7 +652,11 @@ public class CategorizationChecker extends DataChecker {
   }
 
   private int getRowIndex(String label) {
-    return getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
+    int index = getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
+    if (index < 0) {
+      Assert.fail("Label '" + label + "' not found");
+    }
+    return index;
   }
 
   public CategorizationChecker setEnvelope(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {

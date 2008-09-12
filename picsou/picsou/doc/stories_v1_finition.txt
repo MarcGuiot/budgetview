@@ -15,6 +15,7 @@ Import
 
 
 SeriesEditionDialog
+* Creation de projet => 
 * Double click table => selection jusqu'a la fin
 * Raccourci pour selectionner tout
 * trim() sur les noms

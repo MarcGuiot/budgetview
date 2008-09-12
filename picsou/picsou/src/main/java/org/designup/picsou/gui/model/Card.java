@@ -71,4 +71,8 @@ public enum Card implements GlobConstantContainer {
   public org.globsframework.model.Key getKey() {
     return KeyBuilder.newKey(Card.TYPE, id);
   }
+
+  public int getId() {
+    return id;
+  }
 }

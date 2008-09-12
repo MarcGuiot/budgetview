@@ -85,40 +85,4 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries(0, "Regime");
     transactions.checkCategory(0, MasterCategory.FOOD);
   }
-
-  public void testSeriesUnselectedAfterCategorization() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/30", -60, "Forfait Kro")
-      .addTransaction("2008/06/20", -60, "Forfait Kro")
-      .addTransaction("2008/06/10", -60, "Forfait Kro")
-      .addTransaction("2008/06/28", -150, "Palette Leffe")
-      .load();
-
-    views.selectCategorization();
-    categorization.checkTable(new Object[][]{
-      {"30/06/2008", "Forfait Kro", -60.00},
-      {"20/06/2008", "Forfait Kro", -60.00},
-      {"10/06/2008", "Forfait Kro", -60.00},
-      {"28/06/2008", "Palette Leffe", -150.00},
-    });
-    categorization.selectTableRow(0);
-    categorization.checkSelectedTableRows(0, 1, 2);
-
-    categorization.selectEnvelopes();
-    categorization.createEnvelopeSeries()
-      .setName("Regime")
-      .setCategory(MasterCategory.FOOD)
-      .validate();
-
-    categorization.checkTable(new Object[][]{
-      {"30/06/2008", "Forfait Kro", -60.00},
-      {"20/06/2008", "Forfait Kro", -60.00},
-      {"10/06/2008", "Forfait Kro", -60.00},
-      {"28/06/2008", "Palette Leffe", -150.00},
-    });
-    categorization.checkSelectedTableRows(3);
-    categorization.checkNoBudgetAreaSelected();
-  }
-
 }

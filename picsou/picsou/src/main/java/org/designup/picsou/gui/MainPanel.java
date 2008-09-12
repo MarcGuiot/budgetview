@@ -6,6 +6,7 @@ import org.designup.picsou.gui.actions.ExportFileAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
@@ -65,10 +66,9 @@ public class MainPanel {
     this.parent = mainWindow.getFrame();
     directory.add(JFrame.class, parent);
     directory.add(new UndoRedoService(repository, directory));
+    directory.add(new NavigationService(repository, directory));
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
-
-    CategorizationView categorizationView = new CategorizationView(repository, directory);
 
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
@@ -92,15 +92,12 @@ public class MainPanel {
       new UncategorizedMessageView("uncategorizedMessage", "categorizeRemainingTransactions",
                                    Lang.get("transaction.allocation.action"),
                                    repository, directory),
-      new UncategorizedMessageView("uncategorizedMessage_details", "categorizeRemainingTransactions_details",
-                                   Lang.get("transaction.allocation.action"),
-                                   repository, directory),
       transactionView,
       timeView,
       categoryView,
       new AccountView(repository, directory),
       new MonthSummaryView(repository, directory),
-      categorizationView,
+      new CategorizationView(repository, directory),
       new CardView(repository, directory),
       new BudgetView(repository, directory),
       new HistoricalChart(repository, directory),

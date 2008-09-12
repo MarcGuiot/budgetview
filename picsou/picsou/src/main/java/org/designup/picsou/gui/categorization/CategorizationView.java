@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.BudgetAreaComponentFactory;
 import org.designup.picsou.gui.categorization.components.MultiCategoriesSeriesComponentFactory;
@@ -92,6 +93,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
                    LabelCustomizers.fontSize(9))
         .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.BOLD)
         .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), LabelCustomizers.ALIGN_RIGHT);
+    PicsouTableHeaderPainter.install(transactionTable, directory);
     Gui.setColumnSizes(transactionTable.getComponent(), COLUMN_SIZES);
     installDoubleClickHandler();
 
