@@ -26,13 +26,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectIncome();
     categorization.selectIncomeSeries("Salary", true);
 
-    System.out.println("CategorizationTest.testStandardIncomeTransaction: DATA");
-
     views.selectData();
     transactions.checkSeries("WorldCo/june", "Salary");
     transactions.checkCategory("WorldCo/june", MasterCategory.INCOME);
-
-    System.out.println("CategorizationTest.testStandardIncomeTransaction: CATEGORIZATION");
 
     views.selectCategorization();
     categorization.checkSelectedTableRows(0);
@@ -143,14 +139,19 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkNoBudgetAreaSelected();
     categorization.selectEnvelopes();
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
 
     categorization.selectTableRows(1);
     categorization.checkLabel("Free Telecom");
     categorization.checkNoBudgetAreaSelected();
     categorization.selectRecurring();
     categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
+    categorization.checkRecurringSeriesIsSelected("Internet");
 
     categorization.selectTableRows(0);
+    categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
+    categorization.selectTableRow(1);
+    categorization.checkRecurringSeriesIsSelected("Internet");
   }
 
   public void testUnassignedTransaction() throws Exception {

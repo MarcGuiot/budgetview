@@ -75,8 +75,8 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
     };
     repository.addChangeListener(categoryUpdateListener);
     toggle.setName(toggleName);
-    cellBuilder.add(repeatToggleName, toggle);
     buttonGroup.add(toggle);
+    cellBuilder.add(repeatToggleName, toggle);
 
     final CategoryUpdater updater =
       new CategoryUpdater(toggle, invisibleToggle, seriesKey, category.getKey(), budgetArea, repository, selectionService);

@@ -34,6 +34,7 @@ public class CategoryUpdater implements GlobSelectionListener, ChangeSetListener
     this.selectionService = selectionService;
     this.selectionService.addListener(this, Transaction.TYPE);
     this.repository.addChangeListener(this);
+    updateToggle(selectionService.getSelection(Transaction.TYPE));
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -48,18 +49,21 @@ public class CategoryUpdater implements GlobSelectionListener, ChangeSetListener
     Set<Integer> categoryIds = selectedTransactions.getValueSet(Transaction.CATEGORY);
     Integer categoryId = categoryIds.size() == 1 ? categoryIds.iterator().next() : null;
 
-    if ((Series.UNCATEGORIZED_SERIES_ID.equals(seriesId)) || (categoryId == null)) {
+    Glob series = repository.get(KeyBuilder.newKey(Series.TYPE, seriesId));
+    boolean isGoodBudgetArea = series.get(Series.BUDGET_AREA).equals(budgetArea.getId());
+
+    if (categoryId == null || !isGoodBudgetArea) {
       invisibleButton.setSelected(true);
       return;
     }
 
-    Glob series = repository.get(KeyBuilder.newKey(Series.TYPE, seriesId));
     Glob category = repository.get(KeyBuilder.newKey(Category.TYPE, categoryId));
 
-    boolean isGoodBudgetArea = series.get(Series.BUDGET_AREA).equals(budgetArea.getId());
     boolean isGoodSeries = series.getKey().equals(seriesKey);
     boolean isGoodCategory = category.getKey().equals(categoryKey);
-    toggle.setSelected(isGoodBudgetArea && isGoodSeries && isGoodCategory);
+    if (isGoodSeries && isGoodCategory) {
+      toggle.setSelected(true);
+    }
   }
 
   public void dispose() {
