@@ -70,6 +70,8 @@ public class MainPanel {
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
+    TitleView titleView = new TitleView(repository, directory);
+
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
@@ -88,7 +90,7 @@ public class MainPanel {
     builder.add("transactionSearchField", search.getTextField());
 
     createPanel(
-      new TitleView(repository, directory),
+      titleView,
       new UncategorizedMessageView("uncategorizedMessage", "categorizeRemainingTransactions",
                                    Lang.get("transaction.allocation.action"),
                                    repository, directory),

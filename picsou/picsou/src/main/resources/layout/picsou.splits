@@ -33,7 +33,7 @@
     <column marginTop="20" marginLeft="20" marginRight="20" marginBottom="10">
 
       <row weightY="0.1">
-        <label ref="title" opaque="false" font="Arial,bold,24"
+        <label ref="title" opaque="false" font="Arial,bold,22"
                horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
         <filler fill="horizontal"/>
         <toggleButton ref="homeCardToggle" styleClass="viewSelector"/>
