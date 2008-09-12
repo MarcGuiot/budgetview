@@ -8,6 +8,7 @@ import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
@@ -41,6 +42,7 @@ import org.globsframework.model.utils.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,7 +70,6 @@ public class SeriesEditionDialog {
   private SeriesEditionDialog.CalendarAction endDateCalendar;
   private GlobTextEditor nameEditor;
   private GlobNumericEditor amountEditor;
-  private JLabel amountLabel;
   private TimeService timeService;
   private JLabel categoryLabel;
 
@@ -162,7 +163,7 @@ public class SeriesEditionDialog {
                         }
                       });
 
-    amountLabel = builder.add("seriesEditionAmountLabel", new JLabel());
+    builder.addLabel("seriesEditionAmountLabel", SeriesBudget.TYPE, new AmountLabelStringifier());
 
     localRepository.addChangeListener(new OkButtonUpdater());
 
@@ -370,11 +371,9 @@ public class SeriesEditionDialog {
       seriesList.selectFirst();
     }
     if (budgetArea.isIncome()) {
-      amountLabel.setText(Lang.get("seriesEdition.income.amount"));
       amountEditor.setInvertValue(false);
     }
     else {
-      amountLabel.setText(Lang.get("seriesEdition.expense.amount"));
       amountEditor.setInvertValue(true);
     }
     selectionService.select(localRepository.getAll(SeriesBudget.TYPE,
@@ -807,6 +806,19 @@ public class SeriesEditionDialog {
       }
       else {
         return Lang.get("seriesEdition.missing.category.label.single");
+      }
+    }
+  }
+
+  private class AmountLabelStringifier implements GlobListStringifier {
+    public String toString(GlobList list, GlobRepository repository) {
+      Set<Integer> monthIds = list.getValueSet(SeriesBudget.MONTH);
+      String monthDescription = MonthListStringifier.toString(monthIds);
+      if (Strings.isNullOrEmpty(monthDescription)) {
+        return Lang.get("seriesEdition.amount.label.short");
+      }
+      else {
+        return Lang.get("seriesEdition.amount.label.full", monthDescription.toLowerCase());
       }
     }
   }

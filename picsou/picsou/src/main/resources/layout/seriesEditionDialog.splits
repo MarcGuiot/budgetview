@@ -78,7 +78,7 @@
               </column>
 
               <column margin="10" marginBottom="0" weightX="7">
-                <label ref="seriesEditionAmountLabel" styleClass="formLabelTop"/>
+                <label ref="seriesEditionAmountLabel" styleClass="formLabelTop" fill="horizontal"/>
                 <textField ref="amountEditor"/>
                 <label text="$seriesEdition.entries" styleClass="formLabelTop"/>
                 <scrollPane weightY="1000" margin="5">

@@ -417,13 +417,8 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkLabelExpenseAmount() {
-    assertThat(dialog.getTextBox("seriesEditionAmountLabel").textEquals("Planned expense"));
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkLabelIncomeAmount() {
-    assertThat(dialog.getTextBox("seriesEditionAmountLabel").textEquals("Planned income"));
+  public SeriesEditionDialogChecker checkAmountLabel(final String text) {
+    assertThat(dialog.getTextBox("seriesEditionAmountLabel").textEquals(text));
     return this;
   }
 
