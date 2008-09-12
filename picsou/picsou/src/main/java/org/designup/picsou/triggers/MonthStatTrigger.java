@@ -10,7 +10,6 @@ import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Utils;
 
-import static java.lang.Math.abs;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -72,19 +71,35 @@ public class MonthStatTrigger implements ChangeSetListener {
 
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
+        Double amount = values.get(Transaction.AMOUNT);
+        boolean isReceived = amount > 0;
+        amount = Math.abs(amount);
+        Integer monthId = values.get(Transaction.MONTH);
+        Integer categoryId = values.get(Transaction.CATEGORY) == null ? Category.NONE : values.get(Transaction.CATEGORY);
         if (values.get(Transaction.PLANNED, false)) {
-          updatePlannedMonthStat(values.get(Transaction.MONTH), values.get(Transaction.CATEGORY), Account.SUMMARY_ACCOUNT_ID, 1, values.get(Transaction.AMOUNT), categoryToMaster, repository);
-          updatePlannedMonthStat(values.get(Transaction.MONTH), Category.ALL, Account.SUMMARY_ACCOUNT_ID, 1, values.get(Transaction.AMOUNT), categoryToMaster, repository);
-          updatePlannedMonthStat(values.get(Transaction.MONTH), values.get(Transaction.CATEGORY), values.get(Transaction.ACCOUNT), 1, values.get(Transaction.AMOUNT), categoryToMaster, repository);
-          updatePlannedMonthStat(values.get(Transaction.MONTH), Category.ALL, values.get(Transaction.ACCOUNT), 1, values.get(Transaction.AMOUNT), categoryToMaster, repository);
+          updatePlannedMonthStat(monthId, categoryId,
+                                 Account.SUMMARY_ACCOUNT_ID, isReceived, amount, categoryToMaster, repository);
+          updatePlannedMonthStat(monthId, categoryId,
+                                 values.get(Transaction.ACCOUNT), isReceived, amount, categoryToMaster, repository);
+          if (!MasterCategory.INTERNAL.getId().equals(categoryId)) {
+            updatePlannedMonthStat(monthId, Category.ALL, Account.SUMMARY_ACCOUNT_ID,
+                                   isReceived, amount, categoryToMaster, repository);
+//          updatePlannedMonthStat(monthId, Category.ALL, values.get(Transaction.ACCOUNT),
+//                                 isReceived, amount, categoryToMaster, repository);
+
+          }
         }
         else {
-          Integer amount = values.get(Transaction.MONTH);
-          updateMonthStat(amount, values.get(Transaction.CATEGORY), Account.SUMMARY_ACCOUNT_ID, 1, values.get(Transaction.AMOUNT), categoryToMaster, repository);
-          updateMonthStat(amount, Category.ALL, Account.SUMMARY_ACCOUNT_ID, 1, values.get(Transaction.AMOUNT), categoryToMaster, repository);
-          updateMonthStat(amount, values.get(Transaction.CATEGORY), values.get(Transaction.ACCOUNT),
-                          1, values.get(Transaction.AMOUNT), categoryToMaster, repository);
-          updateMonthStat(amount, Category.ALL, values.get(Transaction.ACCOUNT), 1, values.get(Transaction.AMOUNT), categoryToMaster, repository);
+          updateMonthStat(monthId, categoryId, Account.SUMMARY_ACCOUNT_ID, isReceived,
+                          amount, categoryToMaster, repository);
+          updateMonthStat(monthId, categoryId, values.get(Transaction.ACCOUNT),
+                          isReceived, amount, categoryToMaster, repository);
+          if (!MasterCategory.INTERNAL.getId().equals(categoryId)) {
+            updateMonthStat(monthId, Category.ALL, Account.SUMMARY_ACCOUNT_ID, isReceived,
+                            amount, categoryToMaster, repository);
+
+//          updateMonthStat(monthId, Category.ALL, values.get(Transaction.ACCOUNT), isReceived, amount, categoryToMaster, repository);
+          }
         }
       }
 
@@ -94,12 +109,16 @@ public class MonthStatTrigger implements ChangeSetListener {
         Integer oldCategoryId;
         Integer newCategoryId;
         if (values.contains(Transaction.CATEGORY)) {
-          oldCategoryId = values.getPrevious(Transaction.CATEGORY);
-          newCategoryId = values.get(Transaction.CATEGORY);
+          oldCategoryId = values.getPrevious(Transaction.CATEGORY) == null ? Category.NONE : values.getPrevious(Transaction.CATEGORY);
+          newCategoryId = values.get(Transaction.CATEGORY) == null ? Category.NONE : values.get(Transaction.CATEGORY);
           hasTransfert = true;
         }
         else {
-          oldCategoryId = newCategoryId = transaction.get(Transaction.CATEGORY);
+          oldCategoryId = newCategoryId = transaction.get(Transaction.CATEGORY) == null ?
+                                          Category.NONE : transaction.get(Transaction.CATEGORY);
+        }
+        if (oldCategoryId == null || newCategoryId == null) {
+          System.out.println("MonthStatTrigger.visitUpdate " + transaction.getKey());
         }
         Integer newMonth;
         Integer oldMonth;
@@ -120,63 +139,94 @@ public class MonthStatTrigger implements ChangeSetListener {
         else {
           oldAmount = newAmount = transaction.get(Transaction.AMOUNT);
         }
+        boolean isReceived = oldAmount > 0;
+        oldAmount = Math.abs(oldAmount);
+        newAmount = Math.abs(newAmount);
         if (hasTransfert) {
-          System.out.println("MonthStatTrigger.visitUpdate " + oldCategoryId + " " + oldAmount);
-          System.out.println("MonthStatTrigger.visitUpdate " + newCategoryId + " " + newAmount);
           if (transaction.get(Transaction.PLANNED, false)) {
-            updatePlannedMonthStat(oldMonth, oldCategoryId, Account.SUMMARY_ACCOUNT_ID, -1, oldAmount, categoryToMaster, repository);
-            updatePlannedMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, 1, newAmount, categoryToMaster, repository);
-            updatePlannedMonthStat(oldMonth, oldCategoryId, transaction.get(Transaction.ACCOUNT), -1, oldAmount, categoryToMaster, repository);
-            updatePlannedMonthStat(newMonth, newCategoryId, transaction.get(Transaction.ACCOUNT), 1, newAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(oldMonth, oldCategoryId, Account.SUMMARY_ACCOUNT_ID, isReceived, -oldAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, isReceived, newAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(oldMonth, oldCategoryId, transaction.get(Transaction.ACCOUNT), isReceived, -oldAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(newMonth, newCategoryId, transaction.get(Transaction.ACCOUNT), isReceived, newAmount, categoryToMaster, repository);
           }
           else {
-            updateMonthStat(oldMonth, oldCategoryId, Account.SUMMARY_ACCOUNT_ID, -1, oldAmount, categoryToMaster, repository);
-            updateMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, 1, newAmount, categoryToMaster, repository);
-            updateMonthStat(oldMonth, oldCategoryId, transaction.get(Transaction.ACCOUNT), -1, oldAmount, categoryToMaster, repository);
-            updateMonthStat(newMonth, newCategoryId, transaction.get(Transaction.ACCOUNT), 1, newAmount, categoryToMaster, repository);
+            updateMonthStat(oldMonth, oldCategoryId, Account.SUMMARY_ACCOUNT_ID, isReceived, -oldAmount, categoryToMaster, repository);
+            updateMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, isReceived, newAmount, categoryToMaster, repository);
+            updateMonthStat(oldMonth, oldCategoryId, transaction.get(Transaction.ACCOUNT), isReceived, -oldAmount, categoryToMaster, repository);
+            updateMonthStat(newMonth, newCategoryId, transaction.get(Transaction.ACCOUNT), isReceived, newAmount, categoryToMaster, repository);
           }
         }
         else if (!newAmount.equals(oldAmount)) {
           if (transaction.get(Transaction.PLANNED, false)) {
-            updatePlannedMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, (oldAmount > 0 ? 1 : -1), newAmount - oldAmount, categoryToMaster, repository);
-            updatePlannedMonthStat(newMonth, newCategoryId, transaction.get(Transaction.ACCOUNT), (oldAmount > 0 ? 1 : -1), newAmount - oldAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, isReceived, newAmount - oldAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(newMonth, newCategoryId, transaction.get(Transaction.ACCOUNT), isReceived, newAmount - oldAmount, categoryToMaster, repository);
           }
           else {
-            updateMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, (oldAmount > 0 ? 1 : -1), newAmount - oldAmount, categoryToMaster, repository);
-            updateMonthStat(newMonth, newCategoryId, transaction.get(Transaction.ACCOUNT), (oldAmount > 0 ? 1 : -1), newAmount - oldAmount, categoryToMaster, repository);
+            updateMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, isReceived, newAmount - oldAmount, categoryToMaster, repository);
+            updateMonthStat(newMonth, newCategoryId, transaction.get(Transaction.ACCOUNT), isReceived, newAmount - oldAmount, categoryToMaster, repository);
           }
         }
 
-        if (!newAmount.equals(oldAmount)) {
+        if (!newCategoryId.equals(oldCategoryId)) {
+          if (newCategoryId.equals(MasterCategory.INTERNAL.getId())) {
+            if (transaction.get(Transaction.PLANNED, false)) {
+              updatePlannedMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, isReceived, -oldAmount, categoryToMaster, repository);
+//              updatePlannedMonthStat(newMonth, Category.ALL, transaction.get(Transaction.ACCOUNT), isReceived, -oldAmount, categoryToMaster, repository);
+            }
+            else {
+              updateMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, isReceived, -oldAmount, categoryToMaster, repository);
+//              updateMonthStat(newMonth, Category.ALL, transaction.get(Transaction.ACCOUNT), isReceived, -oldAmount, categoryToMaster, repository);
+            }
+          }
+          else if (oldCategoryId.equals(MasterCategory.INTERNAL.getId())) {
+            if (transaction.get(Transaction.PLANNED, false)) {
+              updatePlannedMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, isReceived, newAmount, categoryToMaster, repository);
+//              updatePlannedMonthStat(newMonth, Category.ALL, transaction.get(Transaction.ACCOUNT), isReceived, newAmount, categoryToMaster, repository);
+            }
+            else {
+              updateMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, isReceived, newAmount, categoryToMaster, repository);
+//              updateMonthStat(newMonth, Category.ALL, transaction.get(Transaction.ACCOUNT), isReceived, newAmount, categoryToMaster, repository);
+            }
+          }
+        }
+        if (!newAmount.equals(oldAmount)
+            && !oldCategoryId.equals(MasterCategory.INTERNAL.getId())
+            && !newCategoryId.equals(MasterCategory.INTERNAL.getId())) {
           if (transaction.get(Transaction.PLANNED, false)) {
-            updatePlannedMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, (oldAmount > 0 ? 1 : -1), newAmount - oldAmount, categoryToMaster, repository);
-            updatePlannedMonthStat(newMonth, Category.ALL, transaction.get(Transaction.ACCOUNT), (oldAmount > 0 ? 1 : -1), newAmount - oldAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, isReceived, newAmount - oldAmount, categoryToMaster, repository);
+            updatePlannedMonthStat(newMonth, Category.ALL, transaction.get(Transaction.ACCOUNT), isReceived, newAmount - oldAmount, categoryToMaster, repository);
           }
           else {
-            updateMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID,
-                            (oldAmount > 0 ? 1 : -1),
+            updateMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, isReceived,
                             newAmount - oldAmount, categoryToMaster, repository);
-            updateMonthStat(newMonth, Category.ALL, transaction.get(Transaction.ACCOUNT), (oldAmount > 0 ? 1 : -1), newAmount - oldAmount, categoryToMaster, repository);
+            updateMonthStat(newMonth, Category.ALL, transaction.get(Transaction.ACCOUNT), isReceived, newAmount - oldAmount, categoryToMaster, repository);
           }
         }
       }
 
       public void visitDeletion(Key key, FieldValues values) throws Exception {
         int newMonth = values.get(Transaction.MONTH);
-        Integer newCategoryId = values.get(Transaction.ACCOUNT);
+        Integer categoryId = values.get(Transaction.CATEGORY) == null ? Category.NONE : values.get(Transaction.CATEGORY);
         Integer accountId = values.get(Transaction.ACCOUNT);
-        Double newAmount = values.get(Transaction.AMOUNT);
+        Double amount = values.get(Transaction.AMOUNT);
+        boolean isReceived = amount > 0;
+        amount = Math.abs(amount);
         if (values.get(Transaction.PLANNED, false)) {
-          updatePlannedMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, -1, newAmount, categoryToMaster, repository);
-          updatePlannedMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, -1, newAmount, categoryToMaster, repository);
-          updatePlannedMonthStat(newMonth, newCategoryId, accountId, -1, newAmount, categoryToMaster, repository);
-          updatePlannedMonthStat(newMonth, Category.ALL, accountId, -1, newAmount, categoryToMaster, repository);
+          updatePlannedMonthStat(newMonth, categoryId, Account.SUMMARY_ACCOUNT_ID, isReceived, -amount, categoryToMaster, repository);
+          updatePlannedMonthStat(newMonth, categoryId, accountId, isReceived, -amount, categoryToMaster, repository);
+          if (!MasterCategory.INTERNAL.getId().equals(categoryId)) {
+            updatePlannedMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, isReceived, -amount, categoryToMaster, repository);
+          }
+          updatePlannedMonthStat(newMonth, Category.ALL, accountId, isReceived, -amount, categoryToMaster, repository);
         }
         else {
-          updateMonthStat(newMonth, newCategoryId, Account.SUMMARY_ACCOUNT_ID, -1, newAmount, categoryToMaster, repository);
-          updateMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, -1, newAmount, categoryToMaster, repository);
-          updateMonthStat(newMonth, newCategoryId, accountId, -1, newAmount, categoryToMaster, repository);
-          updateMonthStat(newMonth, Category.ALL, accountId, -1, newAmount, categoryToMaster, repository);
+          updateMonthStat(newMonth, categoryId, Account.SUMMARY_ACCOUNT_ID, isReceived, -amount, categoryToMaster, repository);
+          updateMonthStat(newMonth, categoryId, accountId, isReceived, -amount, categoryToMaster, repository);
+
+          if (!MasterCategory.INTERNAL.getId().equals(categoryId)) {
+            updateMonthStat(newMonth, Category.ALL, Account.SUMMARY_ACCOUNT_ID, isReceived, -amount, categoryToMaster, repository);
+          }
+          updateMonthStat(newMonth, Category.ALL, accountId, isReceived, -amount, categoryToMaster, repository);
         }
       }
     });
@@ -227,8 +277,6 @@ public class MonthStatTrigger implements ChangeSetListener {
     }
 
     int[] monthRange = Month.range(months.first(), months.last());
-
-    createMonths(monthRange, repository);
     addMissingStats(monthRange, repository);
     computeStatsForAll(monthRange, repository);
   }
@@ -238,56 +286,66 @@ public class MonthStatTrigger implements ChangeSetListener {
     for (Glob transaction : repository.getAll(Transaction.TYPE)) {
       int month = transaction.get(Transaction.MONTH);
       months.add(month);
-      Integer categoryId = transaction.get(Transaction.CATEGORY);
+      Integer categoryId = transaction.get(Transaction.CATEGORY) == null ? Category.NONE : transaction.get(Transaction.CATEGORY);
       double amount = transaction.get(Transaction.AMOUNT);
+      boolean isReceived = amount > 0;
+      amount = Math.abs(amount);
       if (transaction.get(Transaction.PLANNED, false)) {
-        updatePlannedMonthStat(month, categoryId, Account.SUMMARY_ACCOUNT_ID, 1, amount, master, repository);
+        updatePlannedMonthStat(month, categoryId, Account.SUMMARY_ACCOUNT_ID, isReceived, amount, master, repository);
       }
       else {
-        updateMonthStat(month, categoryId, Account.SUMMARY_ACCOUNT_ID, 1, amount, master, repository);
+        updateMonthStat(month, categoryId, Account.SUMMARY_ACCOUNT_ID, isReceived, amount, master, repository);
       }
 
       Integer accountId = transaction.get(Transaction.ACCOUNT);
       if (accountId != null && accountId != -1) {
         if (transaction.get(Transaction.PLANNED)) {
-          updatePlannedMonthStat(month, categoryId, accountId, 1, amount, master, repository);
+          updatePlannedMonthStat(month, categoryId, accountId, isReceived, amount, master, repository);
         }
         else {
-          updateMonthStat(month, categoryId, accountId, 1, amount, master, repository);
+          updateMonthStat(month, categoryId, accountId, isReceived, amount, master, repository);
         }
       }
     }
   }
 
-  private void updateMonthStat(int month, Integer categoryId, Integer accountId, double multiple, double amount,
+  private void updateMonthStat(int month, Integer categoryId, Integer accountId, boolean isReceived, double amount,
                                Map<Integer, Integer> categoryToMaster, GlobRepository repository) {
     if (accountId == null) {
       return;
     }
     Key key = getKey(month, categoryId, accountId);
     Glob monthStat = initMonthStat(key, repository);
-    GlobUtils.add(key, monthStat, MonthStat.TOTAL_RECEIVED, multiple * (amount > 0 ? amount : 0), repository);
-    GlobUtils.add(key, monthStat, MonthStat.TOTAL_SPENT, multiple * (amount < 0 ? abs(amount) : 0), repository);
+    if (isReceived) {
+      GlobUtils.add(key, monthStat, MonthStat.TOTAL_RECEIVED, amount, repository);
+    }
+    else {
+      GlobUtils.add(key, monthStat, MonthStat.TOTAL_SPENT, amount, repository);
+    }
 
     Integer masterId = categoryToMaster.get(categoryId);
     if (masterId != null) {
-      updateMonthStat(month, masterId, accountId, multiple, amount, categoryToMaster, repository);
+      updateMonthStat(month, masterId, accountId, isReceived, amount, categoryToMaster, repository);
     }
   }
 
-  private void updatePlannedMonthStat(int month, Integer categoryId, Integer accountId, double multiple, double amount,
+  private void updatePlannedMonthStat(int month, Integer categoryId, Integer accountId, boolean isReceived, double amount,
                                       Map<Integer, Integer> categoryToMaster, GlobRepository repository) {
     if (accountId == null) {
       return;
     }
     Key key = getKey(month, categoryId, accountId);
     Glob monthStat = initMonthStat(key, repository);
-    GlobUtils.add(key, monthStat, MonthStat.PLANNED_TOTAL_RECEIVED, multiple * (amount > 0 ? amount : 0), repository);
-    GlobUtils.add(key, monthStat, MonthStat.PLANNED_TOTAL_SPENT, multiple * (amount < 0 ? abs(amount) : 0), repository);
+    if (isReceived) {
+      GlobUtils.add(key, monthStat, MonthStat.PLANNED_TOTAL_RECEIVED, amount, repository);
+    }
+    else {
+      GlobUtils.add(key, monthStat, MonthStat.PLANNED_TOTAL_SPENT, amount, repository);
+    }
 
     Integer masterId = categoryToMaster.get(categoryId);
     if (masterId != null) {
-      updatePlannedMonthStat(month, masterId, accountId, multiple, amount, categoryToMaster, repository);
+      updatePlannedMonthStat(month, masterId, accountId, isReceived, amount, categoryToMaster, repository);
     }
   }
 

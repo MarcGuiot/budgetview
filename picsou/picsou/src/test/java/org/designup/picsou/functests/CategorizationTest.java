@@ -82,10 +82,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(0);
     categorization.checkLabel("AUCHAN C'EST BON");
     categorization.selectEnvelopes();
-    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.selectEnvelopeSeries("Courant", MasterCategory.FOOD, true);
 
     views.selectData();
-    transactions.checkSeries(0, "Groceries");
+    transactions.checkSeries(0, "Courant");
     transactions.checkCategory(0, MasterCategory.FOOD);
   }
 

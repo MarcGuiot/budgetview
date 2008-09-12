@@ -1,9 +1,10 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.Transaction;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Key;
 
@@ -124,12 +125,15 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testWithIncomeAndReccuring() throws Exception {
     checker.parse(repository,
-                  "<series id='10' initialAmount='-100.0' budgetAreaName='recurringExpenses' profileTypeName='monthly'/>" +
-                  "<series id='20' initialAmount='1000.0' budgetAreaName='income' profileTypeName='monthly'/>" +
-                  "<series id='30' initialAmount='-500.0' budgetAreaName='expensesEnvelope' profileTypeName='monthly'/>" +
+                  "<series id='10' initialAmount='-100.0' budgetAreaName='recurringExpenses'" +
+                  "        profileTypeName='monthly' defaultCategoryName='none'/>" +
+                  "<series id='20' initialAmount='1000.0' budgetAreaName='income' profileTypeName='monthly'" +
+                  "         defaultCategoryName='none'/>" +
+                  "<series id='30' initialAmount='-500.0' budgetAreaName='expensesEnvelope' profileTypeName='monthly'" +
+                  "         defaultCategoryName='none'/>" +
                   "<month id='200807'/>" +
-                  "<transaction id='1' series='10' month='200807' bankMonth='200807' amount='-90.0'/>" +
-                  "<transaction id='2' series='30' month='200807' bankMonth='200807' amount='200.0'/>" +
+                  "<transaction id='1' series='10' month='200807' bankMonth='200807' amount='-90.0' categoryName='none'/>" +
+                  "<transaction id='2' series='30' month='200807' bankMonth='200807' amount='200.0' categoryName='none'/>" +
                   "");
     listener.assertLastChangesEqual(
       SeriesStat.TYPE,
@@ -158,6 +162,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.SERIES, seriesId),
                       value(Transaction.MONTH, monthId),
                       value(Transaction.BANK_MONTH, monthId),
-                      value(Transaction.AMOUNT, amount));
+                      value(Transaction.AMOUNT, amount),
+                      value(Transaction.CATEGORY, Category.NONE));
   }
 }

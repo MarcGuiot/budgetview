@@ -83,7 +83,8 @@ public class Category {
 
   public static String getName(Integer categoryId, GlobRepository repository) {
     Glob category = repository.get(org.globsframework.model.Key.create(TYPE, categoryId));
-    return category.get(NAME);
+    String name = category.get(NAME);
+    return name == null ? category.get(Category.INNER_NAME) : name;
   }
 
   public static boolean hasChildren(Integer categoryId, GlobRepository repository) {
