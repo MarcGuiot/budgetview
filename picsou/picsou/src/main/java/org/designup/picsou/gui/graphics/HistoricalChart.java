@@ -28,6 +28,7 @@ import java.awt.*;
 import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -125,7 +126,6 @@ public class HistoricalChart extends AbstractLineChart implements ColorChangeLis
         updateMonthMarkers();
       }
     });
-
 
     final NumberAxis domainAxis = (NumberAxis)plot.getDomainAxis();
     domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
@@ -239,9 +239,9 @@ public class HistoricalChart extends AbstractLineChart implements ColorChangeLis
 
       int monthId = getYyyymmMonth(number);
       toAppendTo.append(Month.getOneLetterMonthLabel(monthId));
+      DecimalFormat format = new DecimalFormat("00");
       if (Month.toMonth(monthId) == 1) {
-        toAppendTo.append('\n');
-        toAppendTo.append(Month.toYearString(monthId));
+        toAppendTo.append(format.format(Month.toYear(monthId)%100));
       }
       return toAppendTo;
     }
