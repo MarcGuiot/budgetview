@@ -121,7 +121,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     transactions.checkCategory(0, "Saucisson");
   }
 
-  public void testSwitchingFromTransactions() throws Exception {
+  public void testSwitchingTransactions() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -29.90, "Free Telecom")

@@ -1,12 +1,12 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
-import org.designup.picsou.gui.categorization.components.BudgetAreaComponentFactory;
+import org.designup.picsou.gui.categorization.components.BudgetAreaSelector;
 import org.designup.picsou.gui.categorization.components.MultiCategoriesSeriesComponentFactory;
 import org.designup.picsou.gui.categorization.components.OccasionalCategoriesComponentFactory;
 import org.designup.picsou.gui.categorization.components.SeriesComponentFactory;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
@@ -22,7 +22,6 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
-import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -97,7 +96,6 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     Gui.setColumnSizes(transactionTable.getComponent(), COLUMN_SIZES);
     installDoubleClickHandler();
 
-
     autoSelectionCheckBox = new JCheckBox(new AutoSelectAction());
     autoSelectionCheckBox.setSelected(false);
     builder.add("autoSelectSimilar", autoSelectionCheckBox);
@@ -122,20 +120,8 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
       }
     }).setAutoHideIfEmpty(true);
 
-    final CardHandler cardHandler = builder.addCardHandler("cards");
-
-    JToggleButton invisibleBudgetAreaToggle = new JToggleButton(new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        cardHandler.show("noBudgetArea");
-      }
-    });
-    builder.add("invisibleBudgetAreaToggle", invisibleBudgetAreaToggle);
-    builder.addRepeat("budgetAreas",
-                      BudgetArea.getGlobs(this.repository, BudgetArea.INCOME, BudgetArea.SAVINGS,
-                                          BudgetArea.RECURRING_EXPENSES, BudgetArea.EXPENSES_ENVELOPE,
-                                          BudgetArea.PROJECTS, BudgetArea.OCCASIONAL_EXPENSES),
-                      new BudgetAreaComponentFactory(cardHandler, invisibleBudgetAreaToggle,
-                                                     this.repository, directory, parent));
+    BudgetAreaSelector selector = new BudgetAreaSelector(repository, directory);
+    selector.registerComponents(builder);
 
     addSingleCategorySeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
     addSingleCategorySeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING_EXPENSES, builder);
