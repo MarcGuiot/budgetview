@@ -14,7 +14,6 @@ public class PicsouModel {
                           CurrentMonth.TYPE,
                           Transaction.TYPE,
                           TransactionType.TYPE,
-                          TransactionToCategory.TYPE,
                           LabelToCategory.TYPE,
                           TransactionTypeMatcher.TYPE,
                           TransactionImport.TYPE,

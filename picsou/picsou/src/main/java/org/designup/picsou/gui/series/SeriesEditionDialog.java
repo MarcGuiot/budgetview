@@ -155,7 +155,7 @@ public class SeriesEditionDialog {
     builder.addRepeat("monthRepeat", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
                       new RepeatComponentFactory<Integer>() {
                         public void registerComponents(RepeatCellBuilder cellBuilder, final Integer monthIndex) {
-                          cellBuilder.add("monthLabel", new JLabel(Month.getMediumSizeLetterLabel(monthIndex)));
+                          cellBuilder.add("monthLabel", new JLabel(Month.getShortMonthLabel(monthIndex)));
                           MonthCheckBoxUpdater updater = new MonthCheckBoxUpdater(monthIndex);
                           cellBuilder.add("monthSelector", updater.getCheckBox());
                           localRepository.addChangeListener(updater);
@@ -487,7 +487,7 @@ public class SeriesEditionDialog {
 
   private class MonthStringifier extends AbstractGlobStringifier {
     public String toString(Glob seriesBudget, GlobRepository repository) {
-      return Month.getMonthLabel(seriesBudget.get(SeriesBudget.MONTH));
+      return Month.getFullMonthLabel(seriesBudget.get(SeriesBudget.MONTH));
     }
   }
 
@@ -679,7 +679,7 @@ public class SeriesEditionDialog {
       if (monthId == null) {
         return null;
       }
-      return Month.getMediumSizeLetterLabel(monthId) + " " + Month.toYearString(monthId);
+      return Month.getShortMonthLabel(monthId) + " " + Month.toYearString(monthId);
     }
   }
 

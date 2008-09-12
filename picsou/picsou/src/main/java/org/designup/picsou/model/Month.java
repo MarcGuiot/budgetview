@@ -132,22 +132,23 @@ public class Month {
     return yyyymmdd % 100;
   }
 
-  public static String getLabel(Integer monthId) {
+  public static String getFullLabel(Integer monthId) {
+    System.out.println("Month.getFullLabel: " + monthId);
     int month = toMonth(monthId);
     int year = toYear(monthId);
     return Lang.get("month." + toMonth(month) + ".long") + " " + year;
   }
 
-  public static String getMonthLabel(Integer monthId) {
+  public static String getFullMonthLabel(Integer monthId) {
     int month = toMonth(monthId);
     return Lang.get("month." + toMonth(month) + ".long");
   }
 
-  public static String getMediumSizeLetterLabel(Integer month) {
+  public static String getShortMonthLabel(Integer month) {
     return Lang.get("month." + toMonth(month) + ".medium");
   }
 
-  public static String getOneLetterLabelFromMonth(Integer month) {
+  public static String getOneLetterMonthLabel(Integer month) {
     return Lang.get("month." + toMonth(month) + ".short").toUpperCase();
   }
 
@@ -183,6 +184,17 @@ public class Month {
       return lastDay;
     }
     return day;
+  }
+
+  public static boolean isContinuousSequence(int[] months) {
+    int previous = months[0];
+    for (int i = 1; i < months.length; i++) {
+      if (months[i] != next(previous)) {
+        return false;
+      }
+      previous = months[i];
+    }
+    return true;
   }
 
   private static class RangeIterator implements Iterator<Integer> {

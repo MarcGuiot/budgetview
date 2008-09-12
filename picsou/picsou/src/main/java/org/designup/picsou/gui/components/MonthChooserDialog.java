@@ -146,7 +146,7 @@ public class MonthChooserDialog implements ColorChangeListener {
     }
 
     public void registerComponents(RepeatCellBuilder cellBuilder, final Integer item) {
-      AbstractAction action = new AbstractAction(Month.getMediumSizeLetterLabel(item)) {
+      AbstractAction action = new AbstractAction(Month.getShortMonthLabel(item)) {
         public void actionPerformed(ActionEvent e) {
           selection.set(Month.toMonthId(currentYear, item));
         }
