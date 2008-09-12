@@ -209,7 +209,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
                                                            "/layout/singleCategorySeriesChooserPanel.splits",
                                                            repository, directory);
 
-    JToggleButton invisibleToggle = new JToggleButton();
+    JToggleButton invisibleToggle = new JToggleButton(name);
     panelBuilder.add("invisibleToggle", invisibleToggle);
     seriesRepeat.add(
       new PicsouMatchers.SeriesFilter(budgetArea.getId(),
@@ -229,7 +229,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
                                                            "/layout/multiCategoriesSeriesChooserPanel.splits",
                                                            repository, directory);
 
-    final JToggleButton invisibleToggle = new JToggleButton();
+    final JToggleButton invisibleToggle = new JToggleButton("name");
     panelBuilder.add("invisibleToggle", invisibleToggle);
     seriesRepeat.add(
       new PicsouMatchers.SeriesFilter(budgetArea.getId(),
@@ -245,7 +245,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
   }
 
   private void addOccasionalSeriesChooser(GlobsPanelBuilder builder) {
-    JToggleButton invisibleOccasionalToggle = new JToggleButton();
+    JToggleButton invisibleOccasionalToggle = new JToggleButton("occasional");
     builder.add("invisibleOccasionalToggle", invisibleOccasionalToggle);
     builder.addRepeat("occasionalSeriesRepeat",
                       Category.TYPE,

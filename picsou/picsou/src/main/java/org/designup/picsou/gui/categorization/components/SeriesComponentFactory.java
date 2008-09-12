@@ -57,6 +57,7 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
       }
     });
     cellBuilder.add("seriesToggle", toggle);
+    updateToggle(selectionService.getSelection(Transaction.TYPE), toggle, seriesKey);
   }
 
   private void updateToggle(GlobList transactions, JToggleButton toggle, Key seriesKey) {
