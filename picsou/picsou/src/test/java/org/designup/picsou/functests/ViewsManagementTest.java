@@ -3,10 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
-import org.uispec4j.finder.ComponentMatchers;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class ViewsManagementTest extends LoggedInFunctionalTestCase {
   public void testHomePage() throws Exception {
@@ -48,16 +44,4 @@ public class ViewsManagementTest extends LoggedInFunctionalTestCase {
     categories.assertVisible(true);
     transactions.assertVisible(true);
   }
-
-  private void checkMessage(String reference) {
-    Component component = mainWindow.getPanel("cardView").findSwingComponent(
-      ComponentMatchers.and(
-        ComponentMatchers.fromClass(JTextArea.class),
-        ComponentMatchers.displayedNameSubstring(reference)
-      )
-    );
-    assertTrue(component != null);
-    assertTrue(component.isVisible());
-  }
-
 }

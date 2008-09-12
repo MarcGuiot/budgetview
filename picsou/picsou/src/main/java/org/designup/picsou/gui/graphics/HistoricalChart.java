@@ -237,11 +237,11 @@ public class HistoricalChart extends AbstractLineChart implements ColorChangeLis
         return toAppendTo;
       }
 
-      int month = getYyyymmMonth(number);
-      toAppendTo.append(Lang.get("month." + Month.toMonth(month) + ".medium"));
-      if (Month.toMonth(month) == 1) {
-        toAppendTo.append('/');
-        toAppendTo.append(Month.toYearString(month));
+      int monthId = getYyyymmMonth(number);
+      toAppendTo.append(Month.getOneLetterMonthLabel(monthId));
+      if (Month.toMonth(monthId) == 1) {
+        toAppendTo.append('\n');
+        toAppendTo.append(Month.toYearString(monthId));
       }
       return toAppendTo;
     }

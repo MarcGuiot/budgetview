@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -169,7 +168,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       });
     categorization.setIncome("Company", "Salary", true);
     categorization.setOccasional("FNAC", MasterCategory.LEISURES);
-    
+
     views.selectHome();
     monthSummary.init()
       .checkIncome(1000, 1000)

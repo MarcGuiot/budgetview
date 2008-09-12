@@ -111,23 +111,6 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     assertTrue(categorizedLink.foregroundEquals("black"));
   }
 
-  // TODO navigation transactionView ==> Categorization
-  public void testCategorisationLinkSelectsCorrespondingRow() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/11", -1.0, "Something else")
-      .addTransaction("2006/01/10", -1.0, "Menu 14")
-      .load();
-    transactions.getTable().selectRow(0);
-    transactions.assignCategoryWithoutSelection(MasterCategory.FOOD, 1);
-    assertTrue(transactions.getTable().rowIsSelected(1));
-    transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Something else", "", -1.0)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu 14", "", -1.0, MasterCategory.FOOD)
-      .check();
-  }
-
   private void assignCategory(String label, MasterCategory category) {
     views.selectCategorization();
     categorization.setOccasional(label, category);

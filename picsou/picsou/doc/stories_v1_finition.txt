@@ -1,5 +1,4 @@
 Look general
-* Blocks budgetview : splitpane invisibles (PIcsouSplitPaneUI dans PicsouStyles + dessiner un trait?)
 * Mac: -Dapple.awt.graphics.UseQuartz=false
 * Tooltips sur les boutons
 
@@ -15,7 +14,7 @@ Import
 
 
 SeriesEditionDialog
-* Creation de projet => 
+* Creation de projet => selectionner les dates debut/fin sur la selection courante
 * Double click table => selection jusqu'a la fin
 * Raccourci pour selectionner tout
 * trim() sur les noms
@@ -63,10 +62,11 @@ Packaging
 Misc
 * Afficher les infos de mise a dispo d'une nouvelle version
 * CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
+* Copier les donnees des tables dans le clipboard
 
 Graphiques
 * Merger en un seul tab, avec deux toggles "repartition/evolution"
-* Limiter le nombre de mois affiches dans l'historique
+* Historique : afficher une lettre pour les mois
 
 Undo
 * Verifier fonctionnement sur cas principaux (import, categorisation, edition serie, split)
