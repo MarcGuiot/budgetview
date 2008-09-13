@@ -166,7 +166,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkBudgetAreaSelectionPanelDisplayed();
   }
 
-  // TODO: activation du mode filtrage "a classer" + selection des mois qu'il faut
   public void testMultiCategorizationFromErrorMessageBlock() throws Exception {
     OfxBuilder
       .init(this)

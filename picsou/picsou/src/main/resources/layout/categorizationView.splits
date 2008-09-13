@@ -7,6 +7,22 @@
            marginTop="15" marginBottom="10" border="matte(0,0,1,0,#AAAAAA)"/>
     <style selector="scrollPane" viewportBackground="dialog.block"/>
     <style selector="checkBox" font="-,plain,10"/>
+
+    <style selector="#budgetAreas label.title" font="-,bold,12"
+           fill="none" anchor="center" marginTop="10" marginBottom="20"/>
+    <ui name="budgetAreaSelector" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        borderWidth="1" cornerRadius="10"
+        topColor="categorization.budgetAreaSelector.top"
+        bottomColor="categorization.budgetAreaSelector.bottom"
+        borderColor="categorization.budgetAreaSelector.border"/>
+    <style selector="column.budgetAreaSelector" ui="budgetAreaSelector" margin="5" marginBottom="15"/>
+    <ui name="budgetAreaButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+      underline="false"/>
+    <style selector="column.budgetAreaSelector button" ui="budgetAreaButton"
+           margin="10" marginBottom="0" font="-,bold,12" />
+    <style selector="column.budgetAreaSelector textArea"
+           editable="false" lineWrap="true" wrapStyleWord="true" margin="10" font="-,plain,10"
+           foreground="categorization.budgetAreaSelector.description"/>
   </styles>
 
   <panel styleClass="main">
@@ -55,9 +71,14 @@
 
                 <card name="budgetAreas">
                   <column>
+                    <label ref="budgetAreaSelectorTitle" styleClass="title"/>
                     <repeat ref="budgetAreaButtons" layout="verticalGrid" gridWrapLimit="2" margin="5">
-                      <button ref="budgetAreaButton"/>
+                      <column styleClass="budgetAreaSelector" weightX="1">
+                        <button ref="budgetAreaButton"/>
+                        <textArea ref="budgetAreaDescription"/>
+                      </column>
                     </repeat>
+                    <filler fill="vertical"/>
                   </column>
                 </card>
 

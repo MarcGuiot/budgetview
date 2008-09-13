@@ -3,6 +3,7 @@ package org.designup.picsou.gui.categorization.components;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -34,6 +35,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   private GlobRepository repository;
   private CardHandler budgetAreaCard;
   private CardHandler seriesCard;
+  private JLabel title;
 
   private GlobStringifier budgetAreaStringifier;
 
@@ -53,6 +55,8 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   public void registerComponents(GlobsPanelBuilder builder) {
     budgetAreaCard = builder.addCardHandler("budgetAreaCard");
     seriesCard = builder.addCardHandler("seriesCard");
+
+    title = builder.add("budgetAreaSelectorTitle", new JLabel());
 
     invisibleBudgetAreaToggle = new JToggleButton(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
@@ -123,6 +127,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   }
 
   public class ButtonFactory implements RepeatComponentFactory<BudgetArea> {
+
     public void registerComponents(RepeatCellBuilder cellBuilder, final BudgetArea budgetArea) {
       String label = budgetAreaStringifier.toString(repository.get(budgetArea.getKey()), repository);
       final JButton button = new JButton(new AbstractAction(label) {
@@ -132,11 +137,17 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       });
       button.setName(budgetArea.getName());
       cellBuilder.add("budgetAreaButton", button);
+
+      cellBuilder.add("budgetAreaDescription",
+                      new JTextArea(Lang.get("budgetArea.description." + budgetArea.getName())));
     }
   }
 
   public void selectionUpdated(GlobSelection selection) {
     this.selectedTransactions = selection.getAll(Transaction.TYPE);
+    title.setText(Lang.get(selectedTransactions.size() == 1 ?
+      "categorization.budgetAreaSelection.title.singular" :
+      "categorization.budgetAreaSelection.title.plural"));
     updateSelection();
   }
 
