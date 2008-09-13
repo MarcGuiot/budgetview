@@ -16,7 +16,7 @@ public class ColorService implements ColorLocator {
 
   public static final String DEFAULT_COLOR_SET = "DEFAULT_COLOR_SET";
 
-  private List<WeakReference<ColorChangeListener>> listeners = new ArrayList<WeakReference<ColorChangeListener>>();
+  private List<ListenerRef> listeners = new ArrayList<ListenerRef>();
   private ColorSet currentSet;
   private List<ColorSet> colorSets = new ArrayList<ColorSet>();
   private List<ColorCreationListener> colorCreationListeners = new ArrayList<ColorCreationListener>();
@@ -73,11 +73,11 @@ public class ColorService implements ColorLocator {
   }
 
   public void install(final String key, final ColorUpdater updater) {
-    addListener(new ColorChangeListener() {
+    addListenerRef(new HardListenerRef(new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
         updater.updateColor(get(key));
       }
-    });
+    }));
   }
 
   public void uninstall(ColorUpdater updater) {
@@ -121,13 +121,17 @@ public class ColorService implements ColorLocator {
   }
 
   public void addListener(ColorChangeListener listener) {
-    listeners.add(new WeakReference<ColorChangeListener>(listener));
-    listener.colorsChanged(this);
+    addListenerRef(new WeakListenerRef(listener));
+  }
+
+  private void addListenerRef(ListenerRef ref) {
+    listeners.add(ref);
+    ref.get().colorsChanged(this);
   }
 
   public void removeListener(ColorChangeListener listener) {
-    for (Iterator<WeakReference<ColorChangeListener>> iterator = listeners.iterator(); iterator.hasNext();) {
-      WeakReference<ColorChangeListener> reference = iterator.next();
+    for (Iterator<ListenerRef> iterator = listeners.iterator(); iterator.hasNext();) {
+      ListenerRef reference = iterator.next();
       if ((reference.get() == null) || (reference.get() == listener)) {
         iterator.remove();
       }
@@ -143,20 +147,30 @@ public class ColorService implements ColorLocator {
   }
 
   public void autoUpdate(final Container container) {
-    addListener(new ColorChangeListener() {
+    addListenerRef(new HardListenerRef(new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
         container.repaint();
       }
-    });
+    }));
   }
 
   private void notifyListeners() {
-    List<WeakReference<ColorChangeListener>> copy = new ArrayList<WeakReference<ColorChangeListener>>(listeners);
-    for (WeakReference<ColorChangeListener> ref : copy) {
+    List<ListenerRef> copy = new ArrayList<ListenerRef>(listeners);
+    List<ListenerRef> toRemove = null;
+    for (ListenerRef ref : copy) {
       ColorChangeListener listener = ref.get();
       if (listener != null) {
         listener.colorsChanged(this);
       }
+      else {
+        if (toRemove == null) {
+          toRemove = new ArrayList<ListenerRef>();
+        }
+        toRemove.add(ref);
+      }
+    }
+    if (toRemove != null) {
+      listeners.removeAll(toRemove);
     }
   }
 
@@ -176,4 +190,33 @@ public class ColorService implements ColorLocator {
     colorCreationListeners.clear();
     colorSets.clear();
   }
+
+  private interface ListenerRef {
+    ColorChangeListener get();
+  }
+
+  private class WeakListenerRef implements ListenerRef {
+    private WeakReference<ColorChangeListener> ref;
+
+    private WeakListenerRef(ColorChangeListener listener) {
+      this.ref = new WeakReference<ColorChangeListener>(listener);
+    }
+
+    public ColorChangeListener get() {
+      return ref.get();
+    }
+  }
+
+  private class HardListenerRef implements ListenerRef {
+    private ColorChangeListener listener;
+
+    private HardListenerRef(ColorChangeListener listener) {
+      this.listener = listener;
+    }
+
+    public ColorChangeListener get() {
+      return listener;
+    }
+  }
+
 }
