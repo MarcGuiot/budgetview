@@ -1,14 +1,12 @@
 package org.globsframework.gui.splits.color;
 
 import org.uispec4j.*;
-import org.uispec4j.Panel;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.awt.*;
 
 public class ColorServiceEditorTest extends UISpecTestCase {
   private ColorService colorService;
@@ -74,6 +72,10 @@ public class ColorServiceEditorTest extends UISpecTestCase {
 
     colorSetCombo.select("set1.colors");
 
+    assertFalse(list.contains("color4"));
+
+    colorService.get("color4");
+    assertTrue(list.contains("color4"));
     list.select("color4");
     assertTrue(text.textEquals("FF0000"));
   }

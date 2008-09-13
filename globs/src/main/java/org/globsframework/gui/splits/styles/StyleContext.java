@@ -6,7 +6,7 @@ import org.globsframework.gui.splits.impl.DefaultSplitProperties;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StyleService {
+public class StyleContext {
   private List<Style> styles = new ArrayList<Style>();
 
   public void createStyle(Selector[] selectors, SplitProperties properties) {

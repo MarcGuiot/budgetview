@@ -5,7 +5,7 @@ import org.saxstack.utils.XmlUtils;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.styles.Selector;
-import org.globsframework.gui.splits.styles.StyleService;
+import org.globsframework.gui.splits.styles.StyleContext;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.xml.sax.Attributes;
@@ -20,7 +20,7 @@ public class StyleXmlNode extends DefaultXmlNode {
 
     SplitProperties properties = SplitsParser.createProperties(xmlAttrs, "selector");
 
-    StyleService styleService = context.getService(StyleService.class);
-    styleService.createStyle(Selector.parseSequence(selector), properties);
+    StyleContext styleContext = context.getStyles();
+    styleContext.createStyle(Selector.parseSequence(selector), properties);
   }
 }

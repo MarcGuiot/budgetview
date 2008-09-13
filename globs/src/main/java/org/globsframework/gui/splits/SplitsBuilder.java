@@ -10,7 +10,7 @@ import org.globsframework.gui.splits.repeat.DefaultRepeat;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.splitters.DefaultSplitterFactory;
-import org.globsframework.gui.splits.styles.StyleService;
+import org.globsframework.gui.splits.styles.StyleContext;
 import org.globsframework.gui.splits.xml.SplitsParser;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
@@ -41,7 +41,6 @@ public class SplitsBuilder {
     addIfMissing(directory, FontLocator.class, FontLocator.NULL);
     addIfMissing(directory, IconLocator.class, IconLocator.NULL);
     addIfMissing(directory, TextLocator.class, TextLocator.NULL);
-    addIfMissing(directory, StyleService.class, new StyleService());
   }
 
   private <T> void addIfMissing(Directory directory, Class<T> serviceClass, T service) {

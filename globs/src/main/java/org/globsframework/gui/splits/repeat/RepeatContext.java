@@ -1,6 +1,7 @@
 package org.globsframework.gui.splits.repeat;
 
 import org.globsframework.gui.splits.SplitsContext;
+import org.globsframework.gui.splits.styles.StyleContext;
 import org.globsframework.gui.splits.impl.AbstractSplitsContext;
 
 import java.util.ArrayList;
@@ -24,6 +25,10 @@ public class RepeatContext extends AbstractSplitsContext {
 
   public void addDisposeListener(RepeatCellBuilder.DisposeListener listener) {
     this.disposeListeners.add(listener);
+  }
+
+  public StyleContext getStyles() {
+    return innerContext.getStyles();
   }
 
   public void dispose() {

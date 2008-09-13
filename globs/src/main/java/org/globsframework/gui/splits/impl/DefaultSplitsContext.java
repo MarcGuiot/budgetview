@@ -1,11 +1,7 @@
 package org.globsframework.gui.splits.impl;
 
-import org.globsframework.gui.splits.IconLocator;
-import org.globsframework.gui.splits.TextLocator;
-import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.font.FontLocator;
-import org.globsframework.gui.splits.styles.StyleService;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.gui.splits.styles.StyleContext;
 
 import java.awt.*;
 import java.util.Collections;
@@ -13,6 +9,7 @@ import java.util.Collections;
 public class DefaultSplitsContext extends AbstractSplitsContext {
   private Directory directory;
   private Class referenceClass;
+  private StyleContext styleContext = new StyleContext();
 
   public DefaultSplitsContext(Directory directory) {
     this.directory = directory;
@@ -28,6 +25,10 @@ public class DefaultSplitsContext extends AbstractSplitsContext {
 
   public Class getReferenceClass() {
     return referenceClass;
+  }
+
+  public StyleContext getStyles() {
+    return styleContext;
   }
 
   public void cleanUp() {
