@@ -136,14 +136,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
     categorization.selectTableRows(0);
     categorization.checkLabel("Auchan");
-    categorization.checkNoBudgetAreaSelected();
+    categorization.checkBudgetAreaSelectionPanelDisplayed();
     categorization.selectEnvelopes();
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
     categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
 
     categorization.selectTableRows(1);
     categorization.checkLabel("Free Telecom");
-    categorization.checkNoBudgetAreaSelected();
+    categorization.checkBudgetAreaSelectionPanelDisplayed();
     categorization.selectRecurring();
     categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
     categorization.checkRecurringSeriesIsSelected("Internet");
@@ -163,8 +163,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows(0);
     categorization.checkLabel("LDLC");
-    categorization.checkNoBudgetAreaSelected();
-    categorization.checkTextVisible("You must select the type first");
+    categorization.checkBudgetAreaSelectionPanelDisplayed();
   }
 
   // TODO: activation du mode filtrage "a classer" + selection des mois qu'il faut
@@ -227,10 +226,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.unselectAllTransactions();
-    categorization.checkBudgetAreasAreDisabled();
+    categorization.checkNoSelectionPanelDisplayed();
 
     categorization.selectTableRows(0);
-    categorization.checkBudgetAreasAreEnabled();
+    categorization.checkBudgetAreaSelectionPanelDisplayed();
   }
 
   public void testAutoSelectSimilarTransactionsByDoubleClick() throws Exception {
@@ -412,7 +411,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.selectTableRows(1, 2);
-    categorization.checkBudgetAreasAreEnabled();
+    categorization.checkBudgetAreaSelectionPanelDisplayed();
     categorization.selectRecurring();
     categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
@@ -469,7 +468,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "Free Telecom 26/06", -29.90}
     });
     categorization.checkSelectedTableRows(0, 1);
-    categorization.checkBudgetAreasAreEnabled();
+    categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
 
     categorization.enableAutoHide();
     categorization.checkTable(new Object[][]{
@@ -626,7 +625,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
     categorization.checkNoSelectedTableRows();
-    categorization.checkNoBudgetAreaSelected();
+    categorization.checkNoSelectionPanelDisplayed();
   }
 
   public void testAutoSelectWraps() throws Exception {

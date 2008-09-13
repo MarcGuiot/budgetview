@@ -59,7 +59,7 @@
                             stubfile="dev/install/JavaApplicationStub"
                             icon="dev/images/picsou_icon.icns"
                             jvmversion="1.5+"
-                            vmoptions="-Xmx128m">
+                            vmoptions="-Xmx128m -Dapple.awt.graphics.UseQuartz=false">
 
 
                   <resourcefilelist dir="../picsou/ofuscated" files="picsou00000000000001.jar"/>

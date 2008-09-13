@@ -89,10 +89,14 @@ public enum BudgetArea implements GlobConstantContainer {
     return id;
   }
 
+  public org.globsframework.model.Key getKey() {
+    return org.globsframework.model.Key.create(BudgetArea.TYPE, id);
+  }
+
   public static GlobList getGlobs(ReadOnlyGlobRepository repository, BudgetArea... budgetAreas) {
     GlobList result = new GlobList();
     for (BudgetArea budgetArea : budgetAreas) {
-      result.add(repository.get(org.globsframework.model.Key.create(BudgetArea.TYPE, budgetArea.getId())));
+      result.add(repository.get(budgetArea.getKey()));
     }
     return result;
   }

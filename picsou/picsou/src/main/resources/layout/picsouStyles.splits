@@ -36,6 +36,10 @@
 
     <style selector="table" intercellSpacing="(0,0)" showGrid="false"/>
 
+    <!-- Main panel -->
+
+    <style selector="panel.main" opaque="false"/>
+
     <!-- Dialog -->
 
     <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"

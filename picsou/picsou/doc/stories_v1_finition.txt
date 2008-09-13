@@ -1,5 +1,4 @@
 Look general
-* Mac: -Dapple.awt.graphics.UseQuartz=false
 * Tooltips sur les boutons
 
 
