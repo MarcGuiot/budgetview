@@ -18,6 +18,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class PropertySetter {
+
+  private static PropertySetterCache setterCache = new PropertySetterCache();
+
   public static void process(Object component,
                              SplitProperties properties,
                              SplitsContext context,
@@ -65,8 +68,7 @@ public class PropertySetter {
 
   private static void invokeSetter(final Object object, final String property, final String value, SplitsContext context) {
     final Class objectClass = object.getClass();
-    Method[] methods = objectClass.getMethods();
-    final Method setter = findMethod(methods, property);
+    final Method setter = setterCache.findSetter(objectClass, property);
     if (setter == null) {
       throw new SplitsException("No property '" + property +
                                 "' found for class " + objectClass.getSimpleName());
@@ -118,16 +120,6 @@ public class PropertySetter {
     if (targetValue instanceof Action) {
       processAction(object, attributeValue);
     }
-  }
-
-  private static Method findMethod(Method[] methods, String attribute) {
-    String setter = "set" + attribute;
-    for (Method method : methods) {
-      if (method.getName().equalsIgnoreCase(setter) && method.getParameterTypes().length == 1) {
-        return method;
-      }
-    }
-    return null;
   }
 
   private static void processAction(Object object, String attributeValue) {
