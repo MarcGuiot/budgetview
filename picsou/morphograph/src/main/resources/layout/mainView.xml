@@ -8,6 +8,8 @@
         topColor="titlebar.top" bottomColor="titlebar.bottom" borderColor="titlebar.border"
         borderWidth="1"
         cornerRadius="10" distance="1"/>
+    <style selector="label" font="Arial,bold,14"/>
+    <style selector="button" font="Arial,bold,14"/>
   </styles>
 
   <frame title="Morphographe - v1.1" size="(800,600)" background="background.bottom">

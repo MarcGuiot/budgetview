@@ -1,7 +1,6 @@
 Look general
 * Tooltips sur les boutons
 
-
 Import
 * supprimer URL banque
 * utiliser une PicsouDialog (coherence ordre ok/cancel)
@@ -11,26 +10,22 @@ Import
 * En mode "dialog", revoir hyperlien "annuler" et bouton "ignorer fichier" => introduire bouton "cancel" ?
 * Après l'import, basculer dans la CategorizationView
 
-
 SeriesEditionDialog
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
 * Double click table => selection jusqu'a la fin
 * Raccourci pour selectionner tout
 * trim() sur les noms
 
-
 CategoryEditionDialog
 * suppression avec move : retirer la source de la liste des target
-* Creation de series INCOME : preselectionner les categories par defaut
+* Creation de series INCOME : preselectionner la categories par defaut
 * Titre
 * Label "renommer la categorie"
-
 
 BudgetView
 * Afficher la difference releve/prevu sous la barre dans l'affichage des totaux
 * Mettre total disponible (occasional) en rouge s'il est negatif
 * Arrondir les montants pour les valeurs en gros (disponible = 1852.23 parait bizarre) ?
-
 
 Login
 * Creation de compte : expliquer que la notion de compte / mot de passe est liee au cryptage local
@@ -38,25 +33,17 @@ Login
 * Si aucun utilisateur dans le repo, mode creation de compte
 * Revoir look panneau import (mode dialog)
 
-
 TimeView
 * Integration des boutons next/prev et start/end dans la barre
-
 
 Gestion des comptes
 * creation de compte
 * edition comptes
 * masquer un compte (date de cloture)
 
-
-TitleView
-* afficher des textes clairs pour les multi-selections de mois ("juillet 2006 à août 2007")
-
-
 Packaging
 * Look installer
 * Afficher SLA au premier lancement (repository vide)
-
 
 Misc
 * Afficher les infos de mise a dispo d'une nouvelle version

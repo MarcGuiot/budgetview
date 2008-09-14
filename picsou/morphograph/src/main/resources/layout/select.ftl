@@ -9,12 +9,14 @@
         borderWidth="1" borderColor="exo.border" cornerRadius="10"/>
     <style selector="label.exotitle" foreground="exo.title" marginBottom="5" marginTop="0"
            fill="none" anchor="center"/>
+    <style selector="label" font="Arial,plain,16"/>
+    <style selector="button" font="Arial,bold,16"/>
   </styles>
 
   <column opaque="false" margin="20">
 
     <label text="${exo.name}" styleClass="exotitle"/>
-    <label text="${exo.title}" styleClass="exotitle" font="Arial,bold,30"
+    <label text="${exo.title}" styleClass="exotitle" font="Arial,bold,36"
            shadowDirection="northwest" shadowColor="exo.title.shadow"/>
     <label text="${exo.description!}" styleClass="exotitle"/>
     [#if exo.example??]
@@ -27,7 +29,7 @@
           [#list exo.getQuestions() as question]
           [#assign y=question_index]
           <label text="${question.getTitle()}" anchor="east" marginLeft="10"
-                 gridPos="(0, ${y})" font="-,bold,14" foreground="exo.text"
+                 gridPos="(0, ${y})" font="-,bold,16" foreground="exo.text"
                  shadowDirection="southeast" shadowColor="exo.text.shadow"/>
           [#assign x=0]
           [#list question.getAnswers() as answer]

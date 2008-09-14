@@ -1,13 +1,13 @@
 SeriesEditionDialog
 * Colonne "montant observe"
-* Combo "Tous les mois" / "Certains mois"
+* Combo "Tous les mois" / "Certains mois" pour masquer le choix des mois
 
 BudgetView
 * Bloc "Montant releve non classe" (avec bouton categorisation)
 * Calcul disponible en occasionel : le calcul est-il intuitif ? (alignement avec les autres blocs)
 
 Licence
-* Pb text editor
+* Pb focus text editor
 
 CategoryEditionDialog
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
