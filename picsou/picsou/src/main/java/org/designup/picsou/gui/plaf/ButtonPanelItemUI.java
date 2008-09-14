@@ -42,7 +42,7 @@ public class ButtonPanelItemUI extends BasicButtonUI {
     g2.drawRect(0, 1, ICON_WIDTH + 2, ICON_HEIGHT + 2);
 
     AbstractButton button = (AbstractButton)component;
-    boolean isPressed = button.getModel().isArmed() || button.getModel().isPressed();
+    boolean isPressed = button.getModel().isArmed() || button.getModel().isPressed() || button.getModel().isSelected();
 
     g2.setColor(isPressed ? pressedTopColor : normalTopColor);
     g2.fillRect(1, 2, ICON_WIDTH + 1, ICON_HEIGHT / 2);

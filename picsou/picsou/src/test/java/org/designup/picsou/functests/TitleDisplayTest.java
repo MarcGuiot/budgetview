@@ -28,13 +28,22 @@ public class TitleDisplayTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     title.checkContent("Budget october 2008");
 
-    views.selectData();
+    views.selectAnalysis();
     title.checkContent("Operations october 2008");
 
     views.selectEvolution();
     title.checkContent("Evolution october 2008");
 
+    views.selectData();
+    title.checkContent("Operations october 2008");
+
     views.selectRepartition();
+    title.checkContent("Repartition october 2008");
+
+    views.selectBudget();
+    title.checkContent("Budget october 2008");
+
+    views.selectAnalysis();
     title.checkContent("Repartition october 2008");
   }
 

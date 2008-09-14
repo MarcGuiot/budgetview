@@ -12,12 +12,19 @@ import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum Card implements GlobConstantContainer {
-  HOME("HOME", 0, false),
-  CATEGORIZATION("CATEGORIZATION", 1, false),
-  BUDGET("BUDGET", 2, false),
-  DATA("DATA", 3, true),
-  REPARTITION("REPARTITION", 4, true),
-  EVOLUTION("EVOLUTION", 5, true);
+  HOME("home", 0),
+  CATEGORIZATION("categorization", 1),
+  BUDGET("budget", 2),
+  ANALYSIS("analysis", 3),
+  DATA("data", 4),
+  REPARTITION("repartition", 5),
+  EVOLUTION("evolution", 6);
+
+  static {
+    DATA.setMasterCard(ANALYSIS);
+    EVOLUTION.setMasterCard(EVOLUTION);
+    REPARTITION.setMasterCard(REPARTITION);
+  }
 
   public static GlobType TYPE;
 
@@ -26,20 +33,41 @@ public enum Card implements GlobConstantContainer {
 
   private int id;
   private String name;
-  public final boolean showCategoryCard;
+  private Card masterCard;
+  private boolean containsSubCards;
 
   static {
     GlobTypeLoader.init(Card.class);
   }
 
-  Card(String name, int id, boolean showCategoryCard) {
+  Card(String name, int id) {
     this.name = name;
     this.id = id;
-    this.showCategoryCard = showCategoryCard;
   }
 
   public String getName() {
-    return name.toLowerCase();
+    return name;
+  }
+
+  public boolean isMaster() {
+    return masterCard == null;
+  }
+
+  public Card getMasterCard() {
+    return masterCard;
+  }
+
+  private void setMasterCard(Card master) {
+    this.masterCard = master;
+    master.containsSubCards = true;
+  }
+
+  public boolean containsSubCards() {
+    return containsSubCards;
+  }
+
+  public void setContainsSubCards(boolean containsSubCards) {
+    this.containsSubCards = containsSubCards;
   }
 
   public String getLabel() {
@@ -59,10 +87,12 @@ public enum Card implements GlobConstantContainer {
       case 2:
         return BUDGET;
       case 3:
-        return DATA;
+        return ANALYSIS;
       case 4:
-        return REPARTITION;
+        return DATA;
       case 5:
+        return REPARTITION;
+      case 6:
         return EVOLUTION;
     }
     throw new ItemNotFound(id + " is not associated to any Card enum value");
