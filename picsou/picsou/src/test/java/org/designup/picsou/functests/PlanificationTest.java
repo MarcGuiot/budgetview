@@ -29,7 +29,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
-      .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, "Internet")
+      .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, "Internet", "Telecommunications")
       .check();
 
     views.selectHome();
@@ -42,7 +42,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     views.selectData();
     transactions.initContent()
-      .add("08/08/2008", TransactionType.PLANNED, "Internet", "", -29.90, "Internet")
+      .add("08/08/2008", TransactionType.PLANNED, "Internet", "", -29.90, "Internet", MasterCategory.TELECOMS)
       .check();
 
     views.selectHome();
@@ -72,9 +72,9 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("30/08/2008", TransactionType.PLANNED, "Courant", "", -100.00, "Courant")
-      .add("30/07/2008", TransactionType.PLANNED, "Courant", "", -100.00, "Courant")
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
+      .add("30/08/2008", TransactionType.PLANNED, "Courant", "", -100.00, "Courant", MasterCategory.FOOD)
+      .add("30/07/2008", TransactionType.PLANNED, "Courant", "", -100.00, "Courant", MasterCategory.FOOD)
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant", MasterCategory.FOOD)
       .check();
 
     OfxBuilder
@@ -87,9 +87,9 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions
       .initContent()
-      .add("30/08/2008", TransactionType.PLANNED, "Courant", "", -50.00, "Courant")
-      .add("04/08/2008", TransactionType.PRELEVEMENT, "ED", "", -50.00, "Courant")
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
+      .add("30/08/2008", TransactionType.PLANNED, "Courant", "", -50.00, "Courant", MasterCategory.FOOD)
+      .add("04/08/2008", TransactionType.PRELEVEMENT, "ED", "", -50.00, "Courant", MasterCategory.FOOD)
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant", MasterCategory.FOOD)
       .check();
   }
 }

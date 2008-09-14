@@ -76,27 +76,27 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
     searchField.setText("vi");
 
     transactions.initContent()
-      .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, MasterCategory.TRANSPORTS)
-      .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
-      .add("20/06/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, MasterCategory.TRANSPORTS)
-      .add("15/06/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
+      .addOccasional("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, MasterCategory.TRANSPORTS)
+      .addOccasional("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
+      .addOccasional("20/06/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, MasterCategory.TRANSPORTS)
+      .addOccasional("15/06/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
       .check();
 
     timeline.selectMonth("2008/07");
     transactions.initContent()
-      .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, MasterCategory.TRANSPORTS)
-      .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
+      .addOccasional("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, MasterCategory.TRANSPORTS)
+      .addOccasional("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
       .check();
 
     categories.select(MasterCategory.LEISURES);
     transactions.initContent()
-      .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
+      .addOccasional("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
       .check();
 
     searchField.clear();
     transactions.initContent()
-      .add("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, MasterCategory.LEISURES)
-      .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
+      .addOccasional("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, MasterCategory.LEISURES)
+      .addOccasional("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
       .check();
   }
 }

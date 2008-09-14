@@ -1,13 +1,18 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.functests.checkers.converters.CategoryCellConverter;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
+import org.designup.picsou.functests.checkers.converters.SeriesCellConverter;
+import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.description.CategoryStringifier;
 import org.designup.picsou.gui.transactions.TransactionView;
+import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
 import org.uispec4j.Button;
 import org.uispec4j.*;
@@ -48,7 +53,8 @@ public class TransactionChecker extends ViewChecker {
     if (table == null) {
       table = window.getTable(Transaction.TYPE.getName());
       table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
-      table.setCellValueConverter(TransactionView.CATEGORY_COLUMN_INDEX, new CategoryCellConverter(window));
+      table.setCellValueConverter(TransactionView.CATEGORY_COLUMN_INDEX, new CategoryCellValueConverter(window));
+      table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(window));
     }
     return table;
   }
@@ -64,52 +70,68 @@ public class TransactionChecker extends ViewChecker {
     return DataChecker.getCategoryName(category);
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   public void assignOccasionalSeries(MasterCategory category, final int... rows) {
     getTable().selectRows(rows);
     chooseCategoryViaButtonClick(category, rows[0]);
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   public void assignCategoryWithoutSelection(MasterCategory category, int row) {
     chooseCategoryViaButtonClick(category, row);
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   public void assignCategory(MasterCategory master, String subCategory, int... rows) {
     getTable().selectRows(rows);
     chooseCategoryViaButtonClick(master, subCategory, rows[0]);
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   public void assignCategoryViaKeyboard(MasterCategory category, int modifier, final int... rows) {
     getTable().selectRows(rows);
     chooseCategoryViaKeyboard(category, modifier);
   }
 
-  /** @deprecated  en cours de suppression */
+  /**
+   * @deprecated en cours de suppression
+   */
   public CategorizationChecker openCategorizationDialog(final int row) {
     Window dialog = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
-        getTable().editCell(row, TransactionView.CATEGORY_COLUMN_INDEX).getButton().click();
+        getTable().editCell(row, TransactionView.SERIES_COLUMN_INDEX).getButton().click();
       }
     });
     return new CategorizationChecker(dialog);
   }
 
-  /** @deprecated  en cours de suppression */
+  /**
+   * @deprecated en cours de suppression
+   */
   private void chooseCategoryViaButtonClick(MasterCategory category, final int row) {
     CategorizationChecker checker = openCategorizationDialog(row);
     checker.selectOccasionalSeries(category);
   }
 
-  /** @deprecated  en cours de suppression */
+  /**
+   * @deprecated en cours de suppression
+   */
   private void chooseCategoryViaButtonClick(MasterCategory category, String subcat, final int row) {
     CategorizationChecker checker = openCategorizationDialog(row);
     checker.selectOccasionalSeries(category, subcat);
   }
 
-  /** @deprecated  en cours de suppression */
+  /**
+   * @deprecated en cours de suppression
+   */
   private void chooseCategoryViaKeyboard(MasterCategory category, final int modifier) {
     CategorizationChecker checker = new CategorizationChecker(WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
@@ -142,7 +164,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void checkCategorizationDisabled(int clickedRow) {
-    Button seriesButton = getTable().editCell(clickedRow, TransactionView.CATEGORY_COLUMN_INDEX).getButton();
+    Button seriesButton = getTable().editCell(clickedRow, TransactionView.SERIES_COLUMN_INDEX).getButton();
     UISpecAssert.assertFalse(seriesButton.isEnabled());
   }
 
@@ -151,7 +173,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void checkSeries(int row, String seriesName) {
-    Button seriesButton = getTable().editCell(row, TransactionView.CATEGORY_COLUMN_INDEX).getButton();
+    Button seriesButton = getTable().editCell(row, TransactionView.SERIES_COLUMN_INDEX).getButton();
     UISpecAssert.assertThat(seriesButton.textEquals(seriesName));
   }
 
@@ -159,16 +181,12 @@ public class TransactionChecker extends ViewChecker {
     checkCategory(getIndexOf(label), category);
   }
 
-  // TODO
-  /** @deprecated A FAIRE MARCHER QUAND IL Y AURA LA COLONNE CATEGORIE ! */
   public void checkCategory(int row, MasterCategory category) {
-    System.out.println("##########  TransactionChecker.checkCategory: TODO");
+    UISpecAssert.assertThat(getTable().cellEquals(row, TransactionView.CATEGORY_COLUMN_INDEX, getCategoryName(category)));
   }
 
-  // TODO
-  /** @deprecated A FAIRE MARCHER QUAND IL Y AURA LA COLONNE CATEGORIE ! */
   public void checkCategory(int row, String categoryName) {
-    System.out.println("##########  TransactionChecker.checkCategory: TODO");
+    UISpecAssert.assertThat(getTable().cellEquals(row, TransactionView.CATEGORY_COLUMN_INDEX, categoryName));
   }
 
   private int getIndexOf(String transactionLabel) {
@@ -189,18 +207,33 @@ public class TransactionChecker extends ViewChecker {
     }
 
     public ContentChecker add(String date, TransactionType type, String label,
-                              String note, double amount, String... category) {
-      add(new Object[]{date, "(" + type.getName() + ")" + stringifySubCategoryNames(category), label,
-                               TransactionChecker.this.toString(amount),
-                               note});
-      return this;
+                              String note, double amount, String series, MasterCategory category) {
+      return add(date, type, label, note, amount, series, getCategoryName(category));
+    }
+
+    public ContentChecker addOccasional(String date, TransactionType type, String label,
+                                        String note, double amount, MasterCategory category) {
+      return add(date, type, label, note, amount, "Occasional", getCategoryName(category));
+    }
+
+    public ContentChecker addOccasional(String date, TransactionType type, String label,
+                                        String note, double amount, String category) {
+      return add(date, type, label, note, amount, "Occasional", category);
     }
 
     public ContentChecker add(String date, TransactionType type, String label,
-                              String note, double amount, MasterCategory master, String category) {
-      add(new Object[]{date, "(" + type.getName() + ")" + stringifyCategoryNames(master) + ", " + category, label,
-                               TransactionChecker.this.toString(amount),
-                               note});
+                              String note, double amount, String... seriesAndCategory) {
+      String category = "";
+      String series = TO_CATEGORIZE;
+      if (seriesAndCategory.length >= 1) {
+        series = seriesAndCategory[0];
+      }
+      if (seriesAndCategory.length > 1) {
+        category = seriesAndCategory[1];
+      }
+      add(new Object[]{date, date, "(" + type.getName() + ")" + series, category, label,
+                       TransactionChecker.this.toString(amount),
+                       note});
       return this;
     }
 
@@ -285,4 +318,30 @@ public class TransactionChecker extends ViewChecker {
     }
   }
 
+  private static class CategoryCellValueConverter implements TableCellValueConverter {
+    private GlobRepository repository;
+    private CategoryStringifier categoryStringifier;
+
+    private CategoryCellValueConverter(Window window) {
+      Container container = window.getAwtComponent();
+      if (container instanceof PicsouFrame) {
+        PicsouFrame frame = (PicsouFrame)container;
+        this.repository = frame.getRepository();
+      }
+      else if (container instanceof PicsouDialog) {
+        PicsouFrame frame = (PicsouFrame)container.getParent();
+        this.repository = frame.getRepository();
+      }
+      categoryStringifier = new CategoryStringifier();
+    }
+
+    public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
+      Glob transaction = (Glob)modelObject;
+      Glob category = repository.findLinkTarget(transaction, Transaction.CATEGORY);
+      if (category == null || category.get(Category.ID).equals(Category.NONE)) {
+        return "";
+      }
+      return categoryStringifier.toString(category, repository);
+    }
+  }
 }

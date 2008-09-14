@@ -65,10 +65,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonths("2008/08");
 
     transactions.initContent()
-      .add("12/08/2008", TransactionType.PLANNED, "Groceries", "", -95.00, MasterCategory.FOOD)
-      .add("05/08/2008", TransactionType.PLANNED, "Internet", "", -29.00, "Internet")
-      .add("04/08/2008", TransactionType.PLANNED, "Electricity", "", -55.00, "Electricity")
-      .add("01/08/2008", TransactionType.PLANNED, "Salary", "", 3540.00, "Salary")
+      .add("12/08/2008", TransactionType.PLANNED, "Groceries", "", -95.00, "Groceries", getCategoryName(MasterCategory.FOOD))
+      .add("05/08/2008", TransactionType.PLANNED, "Internet", "", -29.00, "Internet", getCategoryName(MasterCategory.TELECOMS))
+      .add("04/08/2008", TransactionType.PLANNED, "Electricity", "", -55.00, "Electricity", getCategoryName(MasterCategory.HOUSE))
+      .add("01/08/2008", TransactionType.PLANNED, "Salary", "", 3540.00, "Salary", getCategoryName(MasterCategory.INCOME))
       .check();
 
     budgetView.recurring.checkTitle("Recurring expenses");

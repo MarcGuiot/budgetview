@@ -17,7 +17,7 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
       .load();
 
     transactions.initContent()
-      .add("11/07/2008", TransactionType.VIREMENT, "Fouquet's", "", 95.00, MasterCategory.FOOD)
+      .addOccasional("11/07/2008", TransactionType.VIREMENT, "Fouquet's", "", 95.00, MasterCategory.FOOD)
       .check();
 
     operations.checkUndoAvailable();
@@ -31,8 +31,8 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     operations.checkRedoNotAvailable();
 
     transactions.initContent()
-      .add("12/07/2008", TransactionType.VIREMENT, "McDo", "", 15.00, MasterCategory.FOOD)
-      .add("11/07/2008", TransactionType.VIREMENT, "Fouquet's", "", 95.00, MasterCategory.FOOD)
+      .addOccasional("12/07/2008", TransactionType.VIREMENT, "McDo", "", 15.00, MasterCategory.FOOD)
+      .addOccasional("11/07/2008", TransactionType.VIREMENT, "Fouquet's", "", 95.00, MasterCategory.FOOD)
       .check();
 
     operations.undo();
@@ -41,7 +41,7 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     operations.checkRedoAvailable();
 
     transactions.initContent()
-      .add("11/07/2008", TransactionType.VIREMENT, "Fouquet's", "", 95.00, MasterCategory.FOOD)
+      .addOccasional("11/07/2008", TransactionType.VIREMENT, "Fouquet's", "", 95.00, MasterCategory.FOOD)
       .check();
 
     operations.redo();
@@ -50,8 +50,8 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     operations.checkRedoNotAvailable();
 
     transactions.initContent()
-      .add("12/07/2008", TransactionType.VIREMENT, "McDo", "", 15.00, MasterCategory.FOOD)
-      .add("11/07/2008", TransactionType.VIREMENT, "Fouquet's", "", 95.00, MasterCategory.FOOD)
+      .addOccasional("12/07/2008", TransactionType.VIREMENT, "McDo", "", 15.00, MasterCategory.FOOD)
+      .addOccasional("11/07/2008", TransactionType.VIREMENT, "Fouquet's", "", 95.00, MasterCategory.FOOD)
       .check();
 
     operations.checkUndoAvailable();

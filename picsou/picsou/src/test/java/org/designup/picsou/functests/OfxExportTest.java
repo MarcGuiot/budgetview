@@ -18,9 +18,8 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
       .load();
     transactions
       .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.2, MasterCategory.FOOD)
+      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.2, MasterCategory.FOOD)
       .check();
-
 
     // TODO En attente de refonte du split de transactions
     views.selectCategorization();

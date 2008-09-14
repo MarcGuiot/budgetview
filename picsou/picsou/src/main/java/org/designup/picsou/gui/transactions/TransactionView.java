@@ -6,6 +6,7 @@ import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import static org.designup.picsou.model.Transaction.TYPE;
 import org.designup.picsou.utils.Lang;
@@ -20,6 +21,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.utils.GlobLinkComparator;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -27,15 +29,18 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import java.awt.*;
+import java.util.Comparator;
 
 public class TransactionView extends View implements GlobSelectionListener {
   public static final int DATE_COLUMN_INDEX = 0;
-  public static final int CATEGORY_COLUMN_INDEX = 1;
-  public static final int LABEL_COLUMN_INDEX = 2;
-  public static final int AMOUNT_COLUMN_INDEX = 3;
-  public static final int NOTE_COLUMN_INDEX = 4;
+  public static final int BANK_DATE_COLUMN_INDEX = 1;
+  public static final int SERIES_COLUMN_INDEX = 2;
+  public static final int CATEGORY_COLUMN_INDEX = 3;
+  public static final int LABEL_COLUMN_INDEX = 4;
+  public static final int AMOUNT_COLUMN_INDEX = 5;
+  public static final int NOTE_COLUMN_INDEX = 6;
 
-  private static final int[] COLUMN_SIZES = {10, 16, 30, 9};
+  private static final int[] COLUMN_SIZES = {10, 10, 16, 16, 30, 9};
 
   private GlobTableView view;
   private TransactionRendererColors rendererColors;
@@ -86,10 +91,10 @@ public class TransactionView extends View implements GlobSelectionListener {
     table.setDefaultRenderer(Glob.class,
                              new TransactionTableRenderer(table.getDefaultRenderer(Glob.class),
                                                           rendererColors,
-                                                          CATEGORY_COLUMN_INDEX));
+                                                          SERIES_COLUMN_INDEX));
 
     TransactionKeyListener.install(table, NOTE_COLUMN_INDEX);
-    Gui.installRolloverOnButtons(table, new int[]{CATEGORY_COLUMN_INDEX, AMOUNT_COLUMN_INDEX});
+    Gui.installRolloverOnButtons(table, new int[]{SERIES_COLUMN_INDEX, AMOUNT_COLUMN_INDEX});
     table.setDragEnabled(false);
     table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     ToolTipManager.sharedInstance().unregisterComponent(table.getTableHeader());
@@ -99,7 +104,7 @@ public class TransactionView extends View implements GlobSelectionListener {
   }
 
   private static GlobTableView createGlobTableView(GlobRepository repository,
-                                                   DescriptionService descriptionService, Directory directory,
+                                                   final DescriptionService descriptionService, Directory directory,
                                                    TransactionRendererColors rendererColors) {
     TransactionComparator comparator = TransactionComparator.DESCENDING;
 
@@ -115,11 +120,17 @@ public class TransactionView extends View implements GlobSelectionListener {
 
     FontLocator fontLocator = directory.get(FontLocator.class);
     Font dateFont = fontLocator.get("transactionView.date");
+    Font categoryFont = fontLocator.get("transactionView.category");
 
     view
-      .addColumn(Lang.get("date"), new TransactionDateStringifier(comparator), LabelCustomizers.font(dateFont))
-      .addColumn(Lang.get("category"), seriesColumn, seriesColumn,
+      .addColumn(Lang.get("transactionView.date.user"),
+                 new TransactionDateStringifier(comparator, Transaction.BANK_MONTH,
+                                                Transaction.BANK_DAY), LabelCustomizers.font(dateFont))
+      .addColumn(Lang.get("transactionView.date.bank"),
+                 new TransactionDateStringifier(comparator), LabelCustomizers.font(dateFont))
+      .addColumn(Lang.get("series"), seriesColumn, seriesColumn,
                  seriesColumn.getComparator())
+      .addColumn(Lang.get("category"), new CategoryStringifier(descriptionService), LabelCustomizers.font(categoryFont))
       .addColumn(Lang.get("label"),
                  descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.BOLD)
       .addColumn(Lang.get("amount"), amountColumn, amountStringifier.getComparator(repository));
@@ -134,5 +145,24 @@ public class TransactionView extends View implements GlobSelectionListener {
 
   public GlobTableView getView() {
     return view;
+  }
+
+  private static class CategoryStringifier implements GlobStringifier {
+    private GlobStringifier stringifier;
+
+    public CategoryStringifier(DescriptionService descriptionService) {
+      stringifier = descriptionService.getStringifier(Category.TYPE);
+    }
+
+    public String toString(Glob glob, GlobRepository repository) {
+      if (glob.get(Transaction.CATEGORY).equals(Category.NONE)) {
+        return "";
+      }
+      return stringifier.toString(repository.findLinkTarget(glob, Transaction.CATEGORY), repository);
+    }
+
+    public Comparator<Glob> getComparator(GlobRepository repository) {
+      return new GlobLinkComparator(Transaction.CATEGORY, repository, stringifier.getComparator(repository));
+    }
   }
 }
