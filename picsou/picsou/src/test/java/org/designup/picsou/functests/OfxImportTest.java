@@ -59,8 +59,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/05", -19.0, "Chez Marcel", "Apero")
       .load();
 
-    categories.assertCategoryExists("Apero");
-    categories.assertCategoryExists("Oil");
+    categories.checkCategoryExists("Apero");
+    categories.checkCategoryExists("Oil");
 
     categories.select(MasterCategory.ALL);
     transactions

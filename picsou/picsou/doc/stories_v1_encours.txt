@@ -7,7 +7,6 @@ SeriesEditionDialog
 * Hyperlien "selectionner tout (Ctrl-A)"
 
 BudgetView
-*** Calcul du disponible en occasionel
 ** Masquer series lorsqu'elles sont desactivees pour le mois (observe et attendu = null)
 ** Remboursements : -54 => +54
 * Bloc "Montant releve non classe" (avec bouton categorisation)

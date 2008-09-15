@@ -138,7 +138,7 @@ public class CategoryEditionChecker extends DataChecker {
     return getEditSubButton().triggerClick();
   }
 
-  public void assertSubContains(String name) {
+  public void checkSubContains(String name) {
     UISpecAssert.assertThat(getSubList().contains(name));
   }
 
@@ -151,7 +151,7 @@ public class CategoryEditionChecker extends DataChecker {
   }
 
 
-  public CategoryEditionChecker assertMasterSelected(MasterCategory master) {
+  public CategoryEditionChecker checkMasterSelected(MasterCategory master) {
     assertMasterSelected(getCategoryName(master));
     return this;
   }
@@ -161,7 +161,7 @@ public class CategoryEditionChecker extends DataChecker {
     return this;
   }
 
-  public CategoryEditionChecker assertSubSelected(String name) {
+  public CategoryEditionChecker checkSubSelected(String name) {
     UISpecAssert.assertThat(getSubList().selectionEquals(name));
     return this;
   }
@@ -184,5 +184,47 @@ public class CategoryEditionChecker extends DataChecker {
 
   public void checkClosed() {
     UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
+  public CategoryEditionChecker checkCreateMasterEnabled(boolean enabled) {
+    UISpecAssert.assertEquals(enabled, getCreateMasterButton().isEnabled());
+    return this;
+  }
+
+  public CategoryEditionChecker checkCreateSubEnabled(boolean enabled) {
+    UISpecAssert.assertEquals(enabled, getCreateSubButton().isEnabled());
+    return this;
+  }
+
+  public CategoryEditionChecker checkEditMasterEnabled(boolean enabled) {
+    UISpecAssert.assertEquals(enabled, getEditMasterButton().isEnabled());
+    return this;
+  }
+
+  public CategoryEditionChecker checkEditSubEnabled(boolean enabled) {
+    UISpecAssert.assertEquals(enabled, getEditSubButton().isEnabled());
+    return this;
+  }
+
+  public CategoryEditionChecker checkDeleteMasterEnabled(boolean enabled) {
+    UISpecAssert.assertEquals(enabled, getDeleteMasterButton().isEnabled());
+    return this;
+  }
+
+  public CategoryEditionChecker checkDeleteSubEnabled(boolean enabled) {
+    UISpecAssert.assertEquals(enabled, getDeleteSubButton().isEnabled());
+    return this;
+  }
+
+  public CategoryEditionChecker checkMasterNotDisplayed(MasterCategory... masters) {
+    ListBox masterList = getMasterList();
+    for (MasterCategory master : masters) {
+      UISpecAssert.assertFalse(masterList.contains(getCategoryName(master)));
+    }
+    return this;
+  }
+
+  public void checkNoMasterSelected() {
+    UISpecAssert.assertTrue(getMasterList().selectionIsEmpty());
   }
 }
