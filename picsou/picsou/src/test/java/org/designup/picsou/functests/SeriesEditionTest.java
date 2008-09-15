@@ -376,7 +376,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  // TODO CategorizationView
   public void testCreatingEnvelopeSeriesWithMultipleCategories() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
@@ -458,7 +457,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testEmptySeriesListDisableCategorization() throws Exception {
+  public void testEmptySeriesListDisablesCategorization() throws Exception {
     views.selectBudget();
     budgetView.envelopes
       .createSeries().unselect()
@@ -687,7 +686,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.checkContainsLabelInEnvelope("Boire");
   }
 
-  public void testRenameReccurent() throws Exception {
+  public void testRenameRecurrent() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -60, "Forfait Kro")
@@ -709,7 +708,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.checkContainsButtonInReccuring("AA2");
   }
 
-  public void testDeleteJustCreatedSeries() throws Exception {
+  public void testDeleteNewlyCreatedSeries() throws Exception {
     views.selectBudget();
     budgetView.income.createSeries()
       .setName("AA")

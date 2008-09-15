@@ -25,14 +25,14 @@
 
             <label gridPos="(0,1)" ref="categoryLabel" styleClass="formLabel"/>
 
-            <scrollPane gridPos="(1,1)" preferredSize="(200,50)" minimumSize="(250,50)"
+            <scrollPane gridPos="(1,1)"
                         autoHideSource="multipleCategoryList">
               <list ref="multipleCategoryList"/>
             </scrollPane>
 
             <textField gridPos="(1,1)" ref="singleCategoryField"/>
 
-            <button gridPos="(2,1)" action="assignCategory" anchor="northwest"/>
+            <button gridPos="(2,1)" action="assignCategory" anchor="northwest" weightX="0.1"/>
             <label gridPos="(1,2,2,1)" ref="missingCategoryLabel" fill="horizontal" marginTop="4"/>
           </grid>
 

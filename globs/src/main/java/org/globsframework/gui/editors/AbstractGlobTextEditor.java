@@ -111,6 +111,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       return;
     }
     lastSelectedGlobs = selection.getAll(field.getGlobType());
+
     boolean selectionNotEmpty = !lastSelectedGlobs.isEmpty();
     textComponent.setEnabled(selectionNotEmpty);
     if (!forceNotEditable) {

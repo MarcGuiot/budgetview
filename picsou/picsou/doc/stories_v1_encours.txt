@@ -1,5 +1,4 @@
 SeriesEditionDialog
-*** Bug open/edit amount/ok => applique a toutes les series de la budgetArea
 * Colonne "montant observe"
 * Combo "Tous les mois" / "Certains mois" pour masquer le choix des mois
 * Separer lignes mois (checkbox)
@@ -24,6 +23,7 @@ CategoryEditionDialog
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
 * Interdire suppression Revenus
 *** Bug sur nombreuses editions (pb application ChangeSet)
+* Look dialog suppression categorie
 
 CategorizationView
 * Message d'aide quand il n'y a pas de serie pour une budgetArea
