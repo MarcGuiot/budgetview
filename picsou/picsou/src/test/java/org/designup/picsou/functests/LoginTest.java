@@ -102,22 +102,24 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .save();
 
     createUser("toto", "p4ssw0rd", filePath);
-    checkBankOnImport();
+    checkBankOnImport(filePath);
     openNewLoginWindow();
     login("toto", "p4ssw0rd");
-    checkBankOnImport();
+    checkBankOnImport(filePath);
   }
 
-  private void checkBankOnImport() {
+  private void checkBankOnImport(final String path) {
     OperationChecker operations = new OperationChecker(window);
     Trigger trigger = operations.getImportTrigger();
     WindowInterceptor.init(trigger)
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          assertTrue(window.getComboBox("bankCombo")
-            .contentEquals("", "Autre", "BNP", "CIC", "Caisse d'épargne", "Credit Agricole", "La Poste",
+          window.getInputTextBox("fileField").setText(path);
+          window.getButton("Import").click();
+          assertTrue(window.getComboBox("accountBank")
+            .contentEquals("Autre", "BNP", "CIC", "Caisse d'épargne", "Credit Agricole", "La Poste",
                            "Societe Generale"));
-          return window.getButton("close").triggerClick();
+          return window.getButton("Skip file").triggerClick();
         }
       }).run();
   }
@@ -186,11 +188,6 @@ public class LoginTest extends StartUpFunctionalTestCase {
   public void testDataFileMustBeSelectedWhenCreatingAnAccount() throws Exception {
     createNewUser();
 
-    ComboBox bankCombo = window.getComboBox("bankCombo");
-    bankCombo.select("CIC");
-
-    assertNotNull(window.getButton("http://www.cic.fr/telechargements.cgi"));
-
     TextBox fileField = window.getInputTextBox("fileField");
     Button importButton = window.getButton("Import");
 
@@ -204,6 +201,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
     assertTrue(fileField.textEquals(path));
     importButton.click();
+    ComboBox bankCombo = window.getComboBox("accountBank");
+    bankCombo.select("CIC");
 
     Table table = window.getTable();
     assertTrue(table.contentEquals(new Object[][]{

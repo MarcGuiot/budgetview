@@ -17,7 +17,6 @@ CategoryEditionDialog
 CategorizationView
 * Message de presentation des budgetAreas quand aucune n'est selectionnee
 * Message d'aide quand il n'y a pas de serie pour une budgetArea
-* Voir tri des transactions par date
 * Bug sur budgetArea epargne : nom de serie uniquement, pas de toggle a selectionner
 * Bouton "liste" : selectionner la serie courante
 * Afficher le nombre de transactions non classees

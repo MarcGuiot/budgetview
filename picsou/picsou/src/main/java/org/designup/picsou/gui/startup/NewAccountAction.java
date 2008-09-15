@@ -46,7 +46,7 @@ public class NewAccountAction extends AbstractAction {
     action.set(dialog);
     cancelAction.set(dialog);
     createdAccount = tempRepository.create(Account.TYPE);
-    accountEditionPanel.setAccount(createdAccount, null);
+    accountEditionPanel.setAccount(createdAccount);
     dialog.pack();
     GuiUtils.showCentered(dialog);
   }

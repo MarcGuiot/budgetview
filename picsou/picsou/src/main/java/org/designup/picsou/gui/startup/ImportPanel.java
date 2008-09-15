@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.DialogOwner;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.importer.BankFileType;
@@ -12,7 +11,6 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.actions.AbstractGlobSelectionAction;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobComboView;
@@ -57,7 +55,6 @@ public abstract class ImportPanel {
   private AccountEditionPanel accountEditionPanel;
   private BankEntityEditionPanel bankEntityEditionPanel;
   private DateFormatSelectionPanel dateFormatSelectionPanel;
-  private Glob bank;
   private JButton newAccountButton;
   private JComboBox accountComboBox;
   private JLabel importMessageLabel = new JLabel();
@@ -115,10 +112,6 @@ public abstract class ImportPanel {
     builder1.add("filePanel", filePanel);
     builder1.add("fileField", fileField);
     builder1.add("fileButton", fileButton);
-    builder1.add("bankCombo",
-                 GlobComboView.init(Bank.TYPE, localRepository, localDirectory).setShowEmptyOption(true).getComponent());
-    builder1.add("downloadUrl", new DownloadAction(directory));
-
     builder1.add("import", new ImportAction());
     builder1.add("close", new AbstractAction(textForCloseButton) {
       public void actionPerformed(ActionEvent e) {
@@ -131,13 +124,6 @@ public abstract class ImportPanel {
   }
 
   private void initStep2Panel(final String textForCloseButton, DialogOwner owner) {
-    localDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        GlobList banks = selection.getAll();
-        bank = banks.isEmpty() ? null : banks.get(0);
-      }
-    }, Bank.TYPE);
-
     GlobsPanelBuilder builder2 = new GlobsPanelBuilder(getClass(), "/layout/importPanelStep2.splits", localRepository, localDirectory);
     dateRenderer = new ImportedTransactionDateRenderer();
     dateFormatSelectionPanel = new DateFormatSelectionPanel(localRepository, localDirectory,
@@ -234,7 +220,6 @@ public abstract class ImportPanel {
   private void showStep(JPanel step) {
     mainPanel.removeAll();
     mainPanel.add(step);
-//    mainPanel.validate();
     contentChange();
   }
 
@@ -378,9 +363,6 @@ public abstract class ImportPanel {
       initBankEntityEditionPanel();
       initCreationAccountFields(file);
       initDateFormatSelectionPanel(dateFormat);
-      if (bank != null) {
-        sessionDirectory.get(SelectionService.class).select(sessionRepository.get(bank.getKey()));
-      }
       return true;
     }
     catch (Exception e) {
@@ -440,7 +422,7 @@ public abstract class ImportPanel {
       GlobList accounts = sessionRepository.getAll(Account.TYPE);
       if (accounts.size() == 1 && accounts.get(0).get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID)) {
         Glob createdAccount = importSession.createDefaultAccount();
-        accountEditionPanel.setAccount(createdAccount, bank == null ? null : sessionRepository.get(bank.getKey()));
+        accountEditionPanel.setAccount(createdAccount);
         accountComboBox.setVisible(false);
         newAccountButton.setVisible(false);
         sessionDirectory.get(SelectionService.class).select(createdAccount);
@@ -460,14 +442,14 @@ public abstract class ImportPanel {
         }
         accountComboBox.setVisible(true);
         newAccountButton.setVisible(true);
-        accountEditionPanel.setAccount(null, null);
+        accountEditionPanel.setAccount(null);
         if (account != null) {
           sessionDirectory.get(SelectionService.class).select(account);
         }
       }
     }
     else {
-      accountEditionPanel.setAccount(null, null);
+      accountEditionPanel.setAccount(null);
       accountComboBox.setVisible(false);
       newAccountButton.setVisible(false);
     }
@@ -625,26 +607,6 @@ public abstract class ImportPanel {
           }
         }
       };
-    }
-  }
-
-  private class DownloadAction extends AbstractGlobSelectionAction {
-    private Directory directory;
-
-    public DownloadAction(Directory directory) {
-      super(Bank.TYPE, repository, ImportPanel.this.localDirectory);
-      this.directory = directory;
-    }
-
-    public String toString(GlobList globs) {
-      if (globs.size() != 1) {
-        return null;
-      }
-      return globs.get(0).get(Bank.DOWNLOAD_URL);
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      directory.get(BrowsingService.class).launchBrowser(getName());
     }
   }
 }

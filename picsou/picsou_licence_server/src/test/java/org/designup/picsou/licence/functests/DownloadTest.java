@@ -1,6 +1,5 @@
 package org.designup.picsou.licence.functests;
 
-import org.designup.picsou.functests.checkers.ImportChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
@@ -68,8 +67,8 @@ public class DownloadTest extends LicenseTestCase {
     retr.assertOk();
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-    ImportChecker importer = new ImportChecker(window);
-    importer.selectBank("picsouBank");
+//    ImportChecker importer = new ImportChecker(window);
+//    importer.selectBank("picsouBank");
     String path = PicsouApplication.getPicsouPath();
     File pathToJar = new File(path + "/jars");
     String[] jars = pathToJar.list(new FilenameFilter() {

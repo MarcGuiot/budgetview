@@ -66,6 +66,7 @@ public class ConfigService {
   private JarReceive jarReceive;
   private File pathToconfigFileToLoad;
   private byte[] repoId;
+  public static int RETRY_PERIOD = 10000;
 
   public ConfigService(Long applicationVersion, Long jarVersion, Long localConfigVersion,
                        File pathToconfigFileToLoad) {
@@ -270,7 +271,7 @@ public class ConfigService {
             }
             if (!connectionEstablished) {
               try {
-                Thread.sleep(10000);
+                Thread.sleep(RETRY_PERIOD);
               }
               catch (InterruptedException e) {
               }

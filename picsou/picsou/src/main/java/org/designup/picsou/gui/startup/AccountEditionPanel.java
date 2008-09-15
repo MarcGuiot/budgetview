@@ -74,7 +74,7 @@ public class AccountEditionPanel {
     messageLabel.setText(Lang.get(key));
   }
 
-  public void setAccount(Glob account, Glob bank) {
+  public void setAccount(Glob account) {
     this.account = account;
     if (account != null) {
       selectionService.select(account);
@@ -82,14 +82,9 @@ public class AccountEditionPanel {
     else {
       selectionService.clear(Account.TYPE);
     }
-    if (bank == null) {
-      Glob entity = repository.findLinkTarget(account, Account.BANK_ENTITY);
-      if (entity != null) {
-        selectionService.select(repository.findLinkTarget(entity, BankEntity.BANK));
-      }
-    }
-    else {
-      selectionService.select(bank);
+    Glob entity = repository.findLinkTarget(account, Account.BANK_ENTITY);
+    if (entity != null) {
+      selectionService.select(repository.findLinkTarget(entity, BankEntity.BANK));
     }
     messageLabel.setText("");
     panel.setVisible(account != null);

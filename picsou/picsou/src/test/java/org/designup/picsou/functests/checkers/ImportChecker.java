@@ -6,19 +6,20 @@ import org.uispec4j.assertion.UISpecAssert;
 
 public class ImportChecker {
   private Panel panel;
-  private ComboBox bankCombo;
+  //  private ComboBox bankCombo;
   private TextBox fileField;
   private Button importButton;
 
   public ImportChecker(Panel panel) {
     this.panel = panel;
-    bankCombo = panel.getComboBox("bankCombo");
+//    bankCombo = panel.getComboBox("bankCombo");
     fileField = panel.getInputTextBox("fileField");
     importButton = panel.getButton("Import");
   }
 
   public void selectBank(String bank) {
-    bankCombo.select(bank);
+    ComboBox accountBankCombo = panel.getComboBox("accountBank");
+    accountBankCombo.select(bank);
   }
 
   public void selectFiles(String... path) {
@@ -83,7 +84,7 @@ public class ImportChecker {
   }
 
   public void checkbank(String bankName) {
-    UISpecAssert.assertThat(bankCombo.selectionEquals(bankName));
+//    UISpecAssert.assertThat(bankCombo.selectionEquals(bankName));
   }
 
   public void checkSelectedAccount(String accountNumber) {

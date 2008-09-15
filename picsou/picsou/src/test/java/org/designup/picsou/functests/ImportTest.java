@@ -19,7 +19,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   protected Window window;
   protected TextBox fileField;
   protected Button importButton;
-  protected ComboBox bankCombo;
+  //  protected ComboBox bankCombo;
   private static final String SOCIETE_GENERALE = "Societe Generale";
 
   protected void setUp() throws Exception {
@@ -31,7 +31,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     super.tearDown();
     window.getAwtComponent().setVisible(false);
     window.dispose();
-    bankCombo = null;
+//    bankCombo = null;
     importButton = null;
     fileField = null;
     window = null;
@@ -43,15 +43,15 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       window.dispose();
     }
     window = WindowInterceptor.getModalDialog(operations.getImportTrigger());
-    bankCombo = window.getComboBox("bankCombo");
+//    bankCombo = window.getComboBox("bankCombo");
     fileField = window.getInputTextBox("fileField");
     importButton = window.getButton("Import");
   }
 
   public void testStandardImport() throws Exception {
 
-    bankCombo.select("CIC");
-    assertNotNull(window.getButton("http://www.cic.fr/telechargements.cgi"));
+//    bankCombo.select("CIC");
+//    assertNotNull(window.getButton("http://www.cic.fr/telechargements.cgi"));
 
     checkLoginMessage("Select an OFX or QIF file to import");
 
@@ -130,7 +130,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    bankCombo.select(SOCIETE_GENERALE);
     fileField.setText(path1);
     importButton.click();
 
@@ -138,9 +137,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     assertTrue(table.contentEquals(new Object[][]{
       {"10/01/2006", "Menu K", "-1.10"}
     }));
-    ComboBox accountBankCombo = window.getComboBox("accountBank");
-    assertThat(accountBankCombo.selectionEquals(SOCIETE_GENERALE));
 
+    ComboBox accountBankCombo = window.getComboBox("accountBank");
+    accountBankCombo.select(SOCIETE_GENERALE);
     TextBox accountNameField = window.getInputTextBox("name");
     assertThat(accountNameField.textEquals("Main account"));
     accountNameField.setText("My SG account");
@@ -199,7 +198,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testImportQifFileWithExistingAccount() throws Exception {
-    bankCombo.select(SOCIETE_GENERALE);
+//    bankCombo.select(SOCIETE_GENERALE);
     String firstQif = QifBuilder.init(this)
       .addTransaction("2006/01/01", 10, "monop")
       .save();
@@ -214,7 +213,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .save();
 
     fileField.setText(qifFile);
-    bankCombo.select(SOCIETE_GENERALE);
+//    bankCombo.select(SOCIETE_GENERALE);
     importButton.click();
     ComboBox comboBox = window.getComboBox("accountCombo");
     assertTrue(comboBox.contentEquals("Main account"));
@@ -310,13 +309,13 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     ImportChecker importPanel = new ImportChecker(window);
 
-    importPanel.selectBank(SOCIETE_GENERALE);
     importPanel.selectFiles(path1);
     importPanel.startImport();
 
     importPanel.checkFileContent(new Object[][]{
       {"01/01/01", "Menu K", "-1.10"}
     });
+    importPanel.selectBank(SOCIETE_GENERALE);
 
     importPanel.checkDates("Year/Month/Day", "Month/Day/Year", "Day/Month/Year");
     importPanel.doImport();
@@ -343,9 +342,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     ImportChecker importPanel = new ImportChecker(window);
 
-    importPanel.selectBank(SOCIETE_GENERALE);
     importPanel.selectFiles(path1, path2);
     importPanel.startImport();
+    importPanel.selectBank(SOCIETE_GENERALE);
 
     importPanel.checkFileContent(new Object[][]{
       {"01/01/2001", "Menu K", "-1.10"}
@@ -373,6 +372,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     });
 
     importPanel.enterAccountNumber("0123546");
+    importPanel.selectBank(SOCIETE_GENERALE);
     importPanel.doImport();
     timeline.selectAll();
     transactions.initContent()
@@ -387,7 +387,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
                            "^sdfsf");
     ImportChecker importPanel = new ImportChecker(window);
 
-    importPanel.selectBank(SOCIETE_GENERALE);
     importPanel.selectFiles(path);
     importPanel.startImport();
     importPanel.checkErrorMessage("import.file.error", new File(path).getAbsolutePath());

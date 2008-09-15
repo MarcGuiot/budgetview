@@ -49,12 +49,10 @@ public class OperationChecker {
             .process(FileChooserHandler.init().select(fileNames))
             .run();
 
-          if (bank != null) {
-            importDialog.getComboBox("bank").select(bank);
-          }
           importDialog.getButton("Import").click();
           if (importDialog.getInputTextBox("number").isEditable().isTrue()) {
             importDialog.getInputTextBox("number").setText(DEFAULT_ACCOUNT_NUMBER);
+            importDialog.getComboBox("accountBank").select(bank);
           }
           Button okButton = importDialog.getButton("OK");
           for (int i = 0; i < fileNames.length - 1; i++) {
