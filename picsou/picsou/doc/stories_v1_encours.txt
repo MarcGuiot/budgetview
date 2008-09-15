@@ -10,8 +10,6 @@ SeriesEditionDialog
 BudgetView
 * Bloc "Montant releve non classe" (avec bouton categorisation)
 *** Calcul disponible en occasionel
-*** Ordre budgetArea
-*** Renommages budgetArea
 * Alignement categories dans Occasional (look)
 * Mettre en evidence les depassements
 * Afficher le delta mensuel

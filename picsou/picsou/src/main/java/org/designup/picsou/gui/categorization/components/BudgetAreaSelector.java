@@ -28,9 +28,8 @@ import java.util.*;
 public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListener {
 
   private BudgetArea[] budgetAreas =
-    {BudgetArea.INCOME, BudgetArea.SAVINGS,
-     BudgetArea.RECURRING_EXPENSES, BudgetArea.EXPENSES_ENVELOPE,
-     BudgetArea.PROJECTS, BudgetArea.OCCASIONAL_EXPENSES};
+    {BudgetArea.INCOME, BudgetArea.RECURRING_EXPENSES, BudgetArea.EXPENSES_ENVELOPE,
+     BudgetArea.OCCASIONAL_EXPENSES, BudgetArea.SAVINGS, BudgetArea.PROJECTS};
 
   private GlobRepository repository;
   private CardHandler budgetAreaCard;
