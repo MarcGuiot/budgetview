@@ -142,7 +142,6 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       "Internal transfers",
       "Leisures",
       "Miscellaneous",
-      "Puericulture",
       "Savings",
       "Taxes",
       "Telecommunications",
