@@ -23,6 +23,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -33,6 +34,7 @@ import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.utils.Pair;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -52,7 +54,8 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
   private JCheckBox autoSelectionCheckBox;
   private JCheckBox autoHideCheckBox;
   private JCheckBox autoSelectNextCheckBox;
-  private java.util.List<PicsouMatchers.SeriesFilter> seriesRepeat = new ArrayList<PicsouMatchers.SeriesFilter>();
+  private java.util.List<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>> seriesRepeat =
+    new ArrayList<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>>();
 
   private static final int[] COLUMN_SIZES = {10, 28, 10};
   private SeriesEditionDialog seriesEditionDialog;
@@ -168,8 +171,9 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
         Set<Integer> months = new HashSet<Integer>();
         for (Glob transaction : currentTransactions) {
           months.add(transaction.get(Transaction.MONTH));
-          for (PicsouMatchers.SeriesFilter filter : seriesRepeat) {
-            filter.filterDates(months);
+          for (Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat> filter : seriesRepeat) {
+            filter.getFirst().filterDates(months);
+            filter.getSecond().setFilter(filter.getFirst());
           }
         }
       }
@@ -200,12 +204,13 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
     JToggleButton invisibleToggle = new JToggleButton(name);
     panelBuilder.add("invisibleToggle", invisibleToggle);
+    GlobRepeat repeat = panelBuilder.addRepeat("seriesRepeat",
+                                               Series.TYPE,
+                                               linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
+                                               new SeriesComponentFactory(invisibleToggle, repository, directory));
     seriesRepeat.add(
-      new PicsouMatchers.SeriesFilter(budgetArea.getId(),
-                                      panelBuilder.addRepeat("seriesRepeat",
-                                                             Series.TYPE,
-                                                             linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                                                             new SeriesComponentFactory(invisibleToggle, repository, directory)), true));
+      new Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>(
+        PicsouMatchers.seriesDateFilter(budgetArea.getId(), true), repeat));
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 
@@ -220,13 +225,13 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
     final JToggleButton invisibleToggle = new JToggleButton("name");
     panelBuilder.add("invisibleToggle", invisibleToggle);
-    seriesRepeat.add(
-      new PicsouMatchers.SeriesFilter(budgetArea.getId(),
-                                      panelBuilder.addRepeat("seriesRepeat",
-                                                             Series.TYPE,
-                                                             linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                                                             new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleToggle,
-                                                                                                       repository, directory)), true));
+    GlobRepeat repeat = panelBuilder.addRepeat("seriesRepeat",
+                                               Series.TYPE,
+                                               linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
+                                               new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleToggle,
+                                                                                         repository, directory));
+    seriesRepeat.add(new Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>(
+      PicsouMatchers.seriesDateFilter(budgetArea.getId(), true), repeat));
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 

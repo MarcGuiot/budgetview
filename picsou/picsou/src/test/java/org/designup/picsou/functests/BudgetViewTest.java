@@ -83,7 +83,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkTitle("Income");
     budgetView.income.checkTotalAmounts(0.0, 3540.00);
     budgetView.income.checkSeries("Salary", 0.0, 3540.0);
-    budgetView.income.checkSeries("Exceptional Income", 0.0, 0.0);
+    budgetView.income.checkSeriesNotPresent("Exceptional Income");
   }
 
   public void testOccasionalShowMasterCategory() throws Exception {
@@ -254,7 +254,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.occasional.checkTotalAmounts(0, 3540 - 95 - 29);
   }
 
-  public void testSeveralMonths() throws Exception {
+  public void testSeveralMonthsShowOrNotSeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/30", -50.00, "Monoprix")
       .addTransaction("2008/06/14", -95.00, "Auchan")
@@ -280,6 +280,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setStartDate(200806)
       .selectAllMonths()
       .setAmount("100")
+      .selectMonth(200808)
+      .setAmount("0")
       .setCategory(MasterCategory.FOOD)
       .validate();
     views.selectCategorization();
@@ -322,6 +324,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.projects
       .checkSeriesNotPresent("courantAuchan");
+
+    timeline.selectMonth("2008/08");
+    budgetView.envelopes
+      .checkSeriesNotPresent("courantMonoprix");
   }
 
   public void testEditingASeriesAmountHasNoImpactOnOtherSeries() throws Exception {
@@ -342,14 +348,15 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.TRANSPORTS)
       .validate();
 
-    budgetView.recurring.checkSeries("Groceries", 0.00, 0.00);
-    budgetView.recurring.checkSeries("Fuel", 0.00, 0.00);
+    budgetView.recurring.checkSeriesNotPresent("Groceries");
+    budgetView.recurring.checkSeriesNotPresent("Fuel");
 
-    budgetView.recurring.editSeries("Groceries")
+    budgetView.recurring.editSeriesList().selectSeries("Groceries")
+      .selectMonth(200807)
       .setAmount("200")
       .validate();
 
     budgetView.recurring.checkSeries("Groceries", 0.00, 200.00);
-    budgetView.recurring.checkSeries("Fuel", 0.00, 0.00);
+    budgetView.recurring.checkSeriesNotPresent("Fuel");
   }
 }

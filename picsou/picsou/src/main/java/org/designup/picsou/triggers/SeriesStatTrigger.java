@@ -25,13 +25,12 @@ public class SeriesStatTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        Glob series = repository.get(key);
         if (values.contains(SeriesBudget.AMOUNT)) {
-          Key seriesStat = createKey(series.get(SeriesBudget.SERIES),
-                                     series.get(SeriesBudget.MONTH));
+          Glob seriesBudget = repository.get(key);
+          Key seriesStat = createKey(seriesBudget.get(SeriesBudget.SERIES),
+                                     seriesBudget.get(SeriesBudget.MONTH));
           repository.findOrCreate(seriesStat);
-          repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT,
-                            values.get(SeriesBudget.AMOUNT));
+          repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.AMOUNT));
         }
       }
 
@@ -111,7 +110,6 @@ public class SeriesStatTrigger implements ChangeSetListener {
           if (seriesBudgets.isEmpty()) {
             defaultAmount = series.get(Series.INITIAL_AMOUNT);
           }
-          GlobPrinter.print(repository);
           throw new RuntimeException("SeriesStatTrigger.visitUpdate series : " + name + ", (" + defaultAmount + ")" + currentSeriesId +
                                      " month = " + currentMonthId + " series Budget :" +
                                      (seriesBudgets.isEmpty() ? " <none> " : seriesBudgets.get(0).get(SeriesBudget.AMOUNT)));

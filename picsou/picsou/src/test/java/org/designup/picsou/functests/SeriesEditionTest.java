@@ -301,14 +301,16 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.TELECOMS)
       .checkName("New series")
       .setName("Free Telecom")
+      .selectAllMonths()
+      .setAmount("40")
       .checkSeriesList("Free Telecom")
       .checkTable(new Object[][]{
-        {"2008", "August", "0"},
-        {"2008", "July", "0"},
+        {"2008", "August", "40.00"},
+        {"2008", "July", "40.00"},
       })
       .validate();
 
-    budgetView.recurring.checkSeries("Free Telecom", 0, 0);
+    budgetView.recurring.checkSeries("Free Telecom", 0, 40);
   }
 
   public void testExistingSeriesAreVisibleWhenCreatingANewSeries() throws Exception {
