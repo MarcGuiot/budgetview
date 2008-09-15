@@ -54,9 +54,15 @@ public class AccountView extends View {
     }
 
     private void add(String name, Field field, Glob account, RepeatCellBuilder cellBuilder) {
-      cellBuilder.add(name, GlobLabelView.init(field, repository, directory)
+      final GlobLabelView globLabelView = GlobLabelView.init(field, repository, directory);
+      cellBuilder.add(name, globLabelView
         .forceSelection(account)
         .getComponent());
+      cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+        public void dispose() {
+          globLabelView.dispose();
+        }
+      });
     }
 
     private class GotoWebsiteAction extends AbstractAction {

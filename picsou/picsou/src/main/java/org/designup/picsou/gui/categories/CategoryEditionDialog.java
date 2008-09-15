@@ -195,17 +195,17 @@ public class CategoryEditionDialog {
           }
         });
       if (categories.isEmpty()) {
-        final Set<Integer> deletedCategories = new HashSet<Integer>();
+        final Set<Integer> masterIfDeletedCategories = new HashSet<Integer>();
         localRepository.getCurrentChanges()
           .safeVisit(Category.TYPE, new DefaultChangeSetVisitor() {
             public void visitDeletion(Key key, FieldValues values) throws Exception {
               if (values.get(Category.MASTER) != null) {
-                deletedCategories.add(values.get(Category.MASTER));
+                masterIfDeletedCategories.add(values.get(Category.MASTER));
               }
             }
           });
-        if (deletedCategories.size() == 1) {
-          Integer categoryId = deletedCategories.iterator().next();
+        if (masterIfDeletedCategories.size() == 1) {
+          Integer categoryId = masterIfDeletedCategories.iterator().next();
           if (localRepository.find(Key.create(Category.TYPE, categoryId)) != null) {
             categoryToSelect = categoryId;
           }

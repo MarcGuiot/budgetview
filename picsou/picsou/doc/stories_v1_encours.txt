@@ -43,7 +43,6 @@ Misc
 * Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
 * Afficher le changeLog en cas de changement de version
 * Supprimer puericulture
-*** Bug "Java Heap Space" : test perf/mem
 
 HistoricalChart
 * voir affichage avec ghosts

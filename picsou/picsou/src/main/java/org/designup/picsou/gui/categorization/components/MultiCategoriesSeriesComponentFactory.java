@@ -30,7 +30,8 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
-    JLabel seriesLabel = GlobLabelView.init(Series.TYPE, repository, directory, seriesStringifier)
+    final GlobLabelView globLabelView = GlobLabelView.init(Series.TYPE, repository, directory, seriesStringifier);
+    JLabel seriesLabel = globLabelView
       .forceSelection(series).getComponent();
     String label = seriesStringifier.toString(new GlobList(series), repository);
     cellBuilder.add("seriesName", seriesLabel);
@@ -38,6 +39,11 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
                                 GlobMatchers.fieldEquals(SeriesToCategory.SERIES, series.get(Series.ID)),
                                 new GlobFieldComparator(SeriesToCategory.ID), repository, cellBuilder,
                                 new CategoriesComponentFactory(label, "categoryToggle", budgetArea));
+    cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+      public void dispose() {
+        globLabelView.dispose();
+      }
+    });
   }
 
   private class CategoriesComponentFactory implements RepeatComponentFactory<Glob> {
