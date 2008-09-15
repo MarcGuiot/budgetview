@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.model.*;
-import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -86,21 +85,22 @@ public class PicsouMatchers {
     return GlobMatchers.fieldEquals(Category.MASTER, masterCategoryId);
   }
 
-  static public class SeriesFilter implements GlobMatcher {
+  public static SeriesFirstEndDateFilter seriesDateFilter(Integer budgetAreaId, boolean isExclusive) {
+    return new SeriesFirstEndDateFilter(budgetAreaId, isExclusive);
+  }
+
+  static public class SeriesFirstEndDateFilter implements GlobMatcher {
     private Integer budgetAreaId;
-    private GlobRepeat repeat;
     private boolean exclusive;
     private Set<Integer> monthIds = Collections.emptySet();
 
-    public SeriesFilter(Integer budgetAreaId, GlobRepeat repeat, boolean isExclusive) {
+    private SeriesFirstEndDateFilter(Integer budgetAreaId, boolean isExclusive) {
       this.budgetAreaId = budgetAreaId;
-      this.repeat = repeat;
       exclusive = isExclusive;
     }
 
     public void filterDates(Set<Integer> monthIds) {
       this.monthIds = monthIds;
-      repeat.setFilter(this);
     }
 
     public boolean matches(Glob series, GlobRepository repository) {

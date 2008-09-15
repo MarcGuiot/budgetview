@@ -41,7 +41,7 @@ public class SGTest extends SpecificBankTestCase {
     timeline.selectAll();
     transactions
       .initContent()
-      .add("28/08/2008", TransactionType.VIREMENT, "RECU    5945049317 DE: CPAM VAL D'OISE MOTIF: 082400010802 082400010802", "", 36.40)
+      .add("28/08/2008", TransactionType.VIREMENT, "CPAM VAL D'OISE MOTIF: 082400010802 082400010802", "", 36.40)
       .add("27/08/2008", TransactionType.CREDIT_CARD, "MONOPRIX    098", "", -25.72)
       .add("26/08/2008", TransactionType.CREDIT_CARD, "ED HERBLAY 2", "", -153.35)
       .add("26/08/2008", TransactionType.CREDIT_CARD, "LEROY MERLIN", "", -28.25)
@@ -58,7 +58,7 @@ public class SGTest extends SpecificBankTestCase {
       .add("22/08/2008", TransactionType.CHECK, "CHEQUE N. 627", "", -65.00)
       .add("22/08/2008", TransactionType.PRELEVEMENT, "COTISATION MENSUELLE JAZZ DONT CARTE M. GUIOT DU DOIGNON", "", -7.60)
       .add("22/08/2008", TransactionType.PRELEVEMENT, "COTISATION MENSUELLE JAZZ DONT CARTE MME GUIOT DU DOIGNON", "", -3.80)
-      .add("22/08/2008", TransactionType.VIREMENT, "RECU    5342136428 DE: F. M. P. MOTIF: MUTUELLE MNPAF", "", 43.02)
+      .add("22/08/2008", TransactionType.VIREMENT, "F. M. P. MOTIF: MUTUELLE MNPAF", "", 43.02)
       .add("21/08/2008", TransactionType.CREDIT_CARD, "DAC SUPER U", "", -49.52)
       .add("21/08/2008", TransactionType.CREDIT_CARD, "LA FOIR'FOUILLE", "", -14.45)
       .add("21/08/2008", TransactionType.CREDIT_CARD, "CYBERCENTRALE COMMERCE ELECTRONIQUE", "", -29.99)

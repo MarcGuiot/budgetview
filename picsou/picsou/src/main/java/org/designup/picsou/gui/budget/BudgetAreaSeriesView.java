@@ -17,10 +17,9 @@ import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobListFunctor;
@@ -39,7 +38,9 @@ public class BudgetAreaSeriesView extends View {
   private GlobMatcher totalMatcher;
   private SeriesEditionDialog seriesEditionDialog;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
-  private PicsouMatchers.SeriesFilter seriesFilter;
+  private PicsouMatchers.SeriesFirstEndDateFilter seriesDateFilter;
+  private GlobMatcher seriesFilter;
+  private GlobRepeat seriesRepeat;
 
   protected BudgetAreaSeriesView(String name, final BudgetArea budgetArea, GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -50,9 +51,20 @@ public class BudgetAreaSeriesView extends View {
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
-        seriesFilter.filterDates(selectedMonthIds);
+        seriesDateFilter.filterDates(selectedMonthIds);
+        seriesRepeat.setFilter(seriesFilter);
       }
     }, Month.TYPE);
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(SeriesStat.TYPE)) {
+          seriesRepeat.setFilter(seriesFilter);
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      }
+    });
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -67,7 +79,7 @@ public class BudgetAreaSeriesView extends View {
                                                       totalMatcher, repository, directory);
     builder.add("totalGauge", gaugeView.getComponent());
 
-    GlobRepeat seriesRepeat =
+    seriesRepeat =
       builder.addRepeat("seriesRepeat",
                         Series.TYPE,
                         GlobMatchers.fieldEquals(Series.BUDGET_AREA, budgetArea.getId()),
@@ -99,7 +111,23 @@ public class BudgetAreaSeriesView extends View {
                 new EditSeriesAction(repository, directory, seriesEditionDialog, budgetArea));
 
     parentBuilder.add(name, builder);
-    seriesFilter = new PicsouMatchers.SeriesFilter(budgetArea.getId(), seriesRepeat, false);
+    seriesDateFilter = PicsouMatchers.seriesDateFilter(budgetArea.getId(), false);
+    seriesFilter = new GlobMatcher() {
+      public boolean matches(Glob series, GlobRepository repository) {
+        if (!seriesDateFilter.matches(series, repository)) {
+          return false;
+        }
+        for (Integer id : selectedMonthIds) {
+          Glob seriesStat = repository.find(Key.create(SeriesStat.SERIES, series.get(Series.ID), SeriesStat.MONTH, id));
+          if (seriesStat != null) {
+            if (seriesStat.get(SeriesStat.AMOUNT) != 0.0 || seriesStat.get(SeriesStat.PLANNED_AMOUNT) != 0.0) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+    };
     seriesRepeat.setFilter(seriesFilter);
   }
 
@@ -120,7 +148,8 @@ public class BudgetAreaSeriesView extends View {
   }
 
   private GlobListStringifier getStringifier(final DoubleField field) {
-    return GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome());
+    return new ForcedPlusGlobListStringifier(budgetArea,
+                                             GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome()));
   }
 
   private class EditSeriesFunctor implements GlobListFunctor {
@@ -134,6 +163,4 @@ public class BudgetAreaSeriesView extends View {
       seriesEditionDialog.showNewSeries(GlobList.EMPTY, budgetArea);
     }
   }
-
-
 }

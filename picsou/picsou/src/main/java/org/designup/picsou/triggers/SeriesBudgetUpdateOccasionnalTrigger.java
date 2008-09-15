@@ -44,8 +44,7 @@ public class SeriesBudgetUpdateOccasionnalTrigger implements ChangeSetListener {
               .findByIndex(SeriesBudget.MONTH, monthId)
               .getGlobs();
           for (Glob seriesBudget : seriesBudgets) {
-            Double amount = seriesBudget.get(SeriesBudget.AMOUNT);
-            update(series, seriesBudget.get(SeriesBudget.ACTIVE) ? amount : 0.0, seriesBudget.get(SeriesBudget.MONTH),
+            update(series, seriesBudget.get(SeriesBudget.AMOUNT), seriesBudget.get(SeriesBudget.MONTH),
                    repository);
           }
         }
@@ -77,17 +76,5 @@ public class SeriesBudgetUpdateOccasionnalTrigger implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (!changedTypes.contains(Series.TYPE)) {
-      return;
-    }
-    GlobList seriesList = repository.getAll(Series.TYPE);
-    for (Glob series : seriesList) {
-      GlobList seriesBudgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID)).getGlobs();
-      for (Glob seriesBudget : seriesBudgets) {
-        Double amount = seriesBudget.get(SeriesBudget.AMOUNT);
-        update(series, seriesBudget.get(SeriesBudget.ACTIVE) ? amount : 0.0, seriesBudget.get(SeriesBudget.MONTH),
-               repository);
-      }
-    }
   }
 }

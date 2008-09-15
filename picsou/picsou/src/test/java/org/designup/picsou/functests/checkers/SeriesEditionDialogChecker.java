@@ -150,6 +150,18 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker selectMonth(Integer monthId) {
+    int[] indices = table.getRowIndices(0, Integer.toString(Month.toYear(monthId)));
+    for (int indice : indices) {
+      if (table.getContentAt(indice, 1).equals(Month.getFullMonthLabel(Month.toMonth(monthId)))) {
+        table.selectRow(indice);
+        return this;
+      }
+    }
+    assertThat(fail(monthId + " not found "));
+    return null;
+  }
+
   public SeriesEditionDialogChecker checkTable(Object[][] content) {
     assertThat(table.contentEquals(content));
     return this;

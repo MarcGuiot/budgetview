@@ -2,6 +2,9 @@
   <bank name="Societe Generale" id="4" downloadUrl="https://logitelnet.socgen.com/index.html">
     <bankEntity id="30003"/>
 
+    <transactionTypeMatcher regexp="VIR[\s]+RECU[\s]+[\d]+[\s]+DE[\s]*:[\s]*(.*)"
+                            transactionTypeName="virement" label="$1"/>
+
     <transactionTypeMatcher regexp="VIR.LOGITEL[ ]*"
                             transactionTypeName="virement" label="VIREMENT LOGITEL"/>
 

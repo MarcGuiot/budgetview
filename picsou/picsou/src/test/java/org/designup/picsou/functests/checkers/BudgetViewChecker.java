@@ -65,14 +65,18 @@ public class BudgetViewChecker extends DataChecker {
       int nameIndex = getIndex(panel, nameButton.getAwtComponent());
 
       TextBox observedLabel = new TextBox((JLabel)panel.getComponent(nameIndex + 1));
-      UISpecAssert.assertTrue(seriesName + " observed : \nExpected  :" + observedAmount +
+      String modifiedObservedAmount = (observedAmount < 0 ? "+" : "") +
+                                      BudgetViewChecker.this.toString(Math.abs(observedAmount));
+      UISpecAssert.assertTrue(seriesName + " observed : \nExpected  :" + modifiedObservedAmount +
                               "\nActual    :" + observedLabel.getText(),
-                              observedLabel.textEquals(BudgetViewChecker.this.toString(observedAmount)));
+                              observedLabel.textEquals(modifiedObservedAmount));
 
+      String modifiedPlannedAmount = (plannedAmount < 0 ? "+" : "") +
+                                     BudgetViewChecker.this.toString(Math.abs(plannedAmount));
       TextBox plannedLabel = new TextBox((JLabel)panel.getComponent(nameIndex + 3));
-      UISpecAssert.assertTrue(seriesName + " planned : \nExpected  :" + plannedAmount +
+      UISpecAssert.assertTrue(seriesName + " planned : \nExpected  :" + modifiedPlannedAmount +
                               "\nActual    :" + plannedLabel.getText(),
-                              plannedLabel.textEquals(BudgetViewChecker.this.toString(plannedAmount)));
+                              plannedLabel.textEquals(modifiedPlannedAmount));
       return this;
     }
 
@@ -128,10 +132,18 @@ public class BudgetViewChecker extends DataChecker {
     public void checkTotalAmounts(double spent, double free) {
       Panel budgetPanel = window.getPanel("occasionalBudgetView");
       TextBox totalObserved = budgetPanel.getTextBox("totalObservedAmount");
-      UISpecAssert.assertTrue(totalObserved.textEquals(BudgetViewChecker.this.toString(spent)));
+      String observedAmount = BudgetViewChecker.this.toString(spent);
+      if (spent < 0.0) {
+        observedAmount = observedAmount.replace("-", "+");
+      }
+      UISpecAssert.assertTrue(totalObserved.textEquals(observedAmount));
 
       TextBox totalPlanned = budgetPanel.getTextBox("totalPlannedAmount");
-      UISpecAssert.assertTrue(totalPlanned.textEquals(BudgetViewChecker.this.toString(free)));
+      String amount = BudgetViewChecker.this.toString(free);
+      if (free < 0.0) {
+        amount = "0";
+      }
+      UISpecAssert.assertTrue(totalPlanned.textEquals(amount));
     }
 
     public OccasionalAreaChecker check(MasterCategory category, Double amount) {
