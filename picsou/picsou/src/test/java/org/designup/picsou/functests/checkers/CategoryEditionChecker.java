@@ -54,7 +54,7 @@ public class CategoryEditionChecker extends DataChecker {
   }
 
   public CategoryEditionChecker deleteMasterCategoryWithTransactionUpdate(final String newCategory) {
-    Trigger trigger = getDeleteSubButton().triggerClick();
+    Trigger trigger = getDeleteMasterButton().triggerClick();
     deleteCategory(newCategory, trigger);
     return this;
   }

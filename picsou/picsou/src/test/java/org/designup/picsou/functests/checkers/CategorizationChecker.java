@@ -424,6 +424,11 @@ public class CategorizationChecker extends DataChecker {
     assertFalse(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + master.getName() + ":" + subcat));
   }
 
+  public void checkDoesNotContainOccasional(MasterCategory master) {
+    Panel panel = getOccasionalSeriesPanel();
+    assertFalse(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + master.getName()));
+  }
+
   public void checkOccasionalSeries(MasterCategory category) {
     assertTrue(getPanel().getToggleButton("occasionalExpenses").isSelected());
     assertTrue(getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).isSelected());
@@ -440,6 +445,14 @@ public class CategorizationChecker extends DataChecker {
     for (String name : names) {
       UISpecAssert.assertTrue(panel.getToggleButton(name).isVisible());
     }
+  }
+
+  public CategorizationChecker checkOccasionalSeriesIsSelected(MasterCategory category) {
+    assertTrue(getPanel().getToggleButton("occasionalExpenses").isSelected());
+    Panel panel = getOccasionalSeriesPanel();
+    assertFalse(panel.getToggleButton("invisibleOccasionalToggle").isSelected());
+    assertTrue(panel.getToggleButton("occasionalSeries" + ":" + category.getName()).isSelected());
+    return this;
   }
 
   public CategorizationChecker checkEnvelopeSeriesIsSelected(String seriesName, MasterCategory category) {

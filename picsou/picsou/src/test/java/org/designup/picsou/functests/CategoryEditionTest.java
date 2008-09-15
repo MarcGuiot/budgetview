@@ -155,7 +155,7 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.setEnvelope("Auchan", "course", MasterCategory.FOOD, true);
 
     views.selectData();
     CategoryEditionChecker categoryEdition = categories.openEditionDialog();
@@ -170,7 +170,26 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       }).run();
     categoryEdition.validate();
 
-    transactions.checkSeries(0, "Groceries");
+    transactions.checkSeries(0, "course");
+    views.selectCategorization();
+    categorization.checkEnvelopeSeriesIsSelected("course", MasterCategory.TELECOMS);
+  }
+
+  public void testDeleteMasterCategoryUpdateCategorizationOccasional() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/15", -2.0, "Auchan", MasterCategory.HOUSE)
+      .load();
+
+    views.selectCategorization();
+    categorization.setOccasional("Auchan", MasterCategory.FOOD);
+
+    views.selectData();
+    categories.select(MasterCategory.FOOD);
+    categories.deleteSelectedMaster(MasterCategory.TELECOMS);
+    views.selectCategorization();
+    categorization.checkDoesNotContainOccasional(MasterCategory.FOOD);
+    categorization.checkOccasionalSeriesIsSelected(MasterCategory.TELECOMS);
   }
 
   public void testCanReuseNameUsedInOtherMaster() throws Exception {
