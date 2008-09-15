@@ -13,6 +13,7 @@ import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.designup.picsou.utils.Lang;
 
 public enum BudgetArea implements GlobConstantContainer {
   INCOME("INCOME", 0, true, false),
@@ -99,5 +100,9 @@ public enum BudgetArea implements GlobConstantContainer {
       result.add(repository.get(budgetArea.getKey()));
     }
     return result;
+  }
+
+  public String getLabel() {
+    return Lang.get("budgetArea." + getName());
   }
 }

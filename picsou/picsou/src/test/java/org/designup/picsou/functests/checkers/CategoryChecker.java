@@ -154,7 +154,7 @@ public class CategoryChecker extends ViewChecker {
     Assert.assertNull(rolloverOnCategoryLabel().findUIComponent(Button.class, "Add"));
   }
 
-  public void assertCategoryExists(String categoryName) {
+  public void checkCategoryExists(String categoryName) {
     Assert.assertTrue(getIndex(categoryName) >= 0);
   }
 

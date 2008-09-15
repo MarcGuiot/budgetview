@@ -10,7 +10,7 @@
   <panel styleClass="dialog" preferredSize="(700,550)">
     <column styleClass="innerDialog">
 
-      <label text="$seriesEdition.title" styleClass="title"/>
+      <label ref="title" styleClass="title"/>
 
       <horizontalSplit dividerLocation="150" opaque="false">
         <column>
@@ -70,9 +70,11 @@
 
                 <label text="$seriesEdition.months" styleClass="formLabelTop" marginTop="10"/>
                 <repeat ref="monthRepeat" styleClass="innerBlock" margin="15" marginTop="2"
-                        layout="horizontalGrid" gridWrapLimit="3">
-                  <label ref="monthLabel" styleClass="month" fill="none" anchor="center" labelFor="monthSelector"/>
-                  <checkBox ref="monthSelector" fill="none" anchor="center"/>
+                        layout="horizontalGrid" gridWrapLimit="3" weightY="0.1">
+                  <label ref="monthLabel" styleClass="month" labelFor="monthSelector"
+                         fill="none" anchor="south" marginBottom="0"/>
+                  <checkBox ref="monthSelector"
+                            fill="none" anchor="north" marginTop="0" marginBottom="7"/>
                 </repeat>
                 <filler fill="vertical"/>
               </column>

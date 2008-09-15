@@ -38,7 +38,10 @@ public enum MasterCategory {
 
   static {
     RESERVED_CATEGORY_IDS =
-      new HashSet<Integer>(Arrays.asList(MasterCategory.ALL.getId(), MasterCategory.NONE.getId(), MasterCategory.INTERNAL.getId()));
+      new HashSet<Integer>(Arrays.asList(MasterCategory.ALL.getId(),
+                                         MasterCategory.NONE.getId(),
+                                         MasterCategory.INTERNAL.getId(),
+                                         MasterCategory.INCOME.getId()));
   }
 
   MasterCategory(String name, Integer id) {

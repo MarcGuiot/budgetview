@@ -7,15 +7,15 @@ import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class DeleteCategoryChecker extends DataChecker {
+public class CategoryDeletionChecker extends DataChecker {
   private Window window;
 
-  public DeleteCategoryChecker(Window window) {
+  public CategoryDeletionChecker(Window window) {
     this.window = window;
   }
 
   public void checkCategory(String name) {
-    UISpecAssert.assertThat(window.getTextBox("categoryLabel").textEquals(name));
+    UISpecAssert.assertThat(window.getTextBox("categoryField").textEquals(name));
   }
 
   public void selectCategory(final String name) {

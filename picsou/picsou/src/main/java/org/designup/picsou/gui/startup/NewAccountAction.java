@@ -40,7 +40,7 @@ public class NewAccountAction extends AbstractAction {
     CreateAccountAction action = new CreateAccountAction(tempRepository);
     CancelAction cancelAction = new CancelAction();
     PicsouDialog dialog =
-      PicsouDialog.createWithButtons(Lang.get("new.account"), owner.getOwner(), createEditionPanel(tempRepository),
+      PicsouDialog.createWithButtons(owner.getOwner(), createEditionPanel(tempRepository),
                                      action,
                                      cancelAction, directory);
     action.set(dialog);

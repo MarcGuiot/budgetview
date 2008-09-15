@@ -84,7 +84,7 @@ public class ImportFileAction extends AbstractAction {
     }
 
     public void run() {
-      dialog = PicsouDialog.create(frame, Lang.get("import"), directory);
+      dialog = PicsouDialog.create(frame, directory);
       JPanel contentPane = panel.getPanel();
       contentPane.setOpaque(true);
       dialog.setContentPane(contentPane);

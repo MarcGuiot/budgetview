@@ -57,7 +57,7 @@ public class LicenseDialog {
     builder.add("connectionState", progressBar);
 
     validateAction = new ValidateAction();
-    dialog = PicsouDialog.createWithButtons(Lang.get("license.title"), parent, builder.<JPanel>load(),
+    dialog = PicsouDialog.createWithButtons(parent, builder.<JPanel>load(),
                                             validateAction,
                                             new CancelAction(), directory);
     dialog.setTitle(Lang.get("license.title"));

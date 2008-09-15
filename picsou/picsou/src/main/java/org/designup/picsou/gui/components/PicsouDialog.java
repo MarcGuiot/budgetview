@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdaters;
 import org.globsframework.gui.splits.layout.Anchor;
@@ -24,16 +25,18 @@ public class PicsouDialog extends JDialog {
   private static final int HORIZONTAL_BUTTON_MARGIN = Gui.isMacOSX() ? 20 : 0;
   private Action closeAction;
 
-  public static PicsouDialog create(Window owner, String title, Directory directory) {
-    PicsouDialog modalWindow = create(owner, directory);
-    if (title != null) {
-      modalWindow.setTitle(title);
+  public static PicsouDialog create(Window owner, Directory directory) {
+    if (owner instanceof JFrame) {
+      return new PicsouDialog((JFrame)owner, directory);
     }
-    return modalWindow;
+    else if (owner instanceof JDialog) {
+      return new PicsouDialog((JDialog)owner, directory);
+    }
+    throw new InvalidParameter("unknown type " + owner.getClass());
   }
 
-  public static PicsouDialog createWithButton(String name, Window owner, JPanel panel, Action closeAction, Directory directory) {
-    PicsouDialog dialog = create(owner, name, directory);
+  public static PicsouDialog createWithButton(Window owner, JPanel panel, Action closeAction, Directory directory) {
+    PicsouDialog dialog = create(owner, directory);
     dialog.setPanelAndButton(panel, closeAction);
     return dialog;
   }
@@ -54,8 +57,8 @@ public class PicsouDialog extends JDialog {
     return button;
   }
 
-  public static PicsouDialog createWithButtons(String name, Window owner, JPanel panel, Action ok, Action cancel, Directory directory) {
-    PicsouDialog dialog = create(owner, name, directory);
+  public static PicsouDialog createWithButtons(Window owner, JPanel panel, Action ok, Action cancel, Directory directory) {
+    PicsouDialog dialog = create(owner, directory);
     dialog.addInPanelWithButton(panel, ok, cancel);
     return dialog;
   }
@@ -125,28 +128,18 @@ public class PicsouDialog extends JDialog {
     });
   }
 
-  private static PicsouDialog create(Window owner, Directory directory) {
-    if (owner instanceof JFrame) {
-      return new PicsouDialog((JFrame)owner, "", directory);
-    }
-    else if (owner instanceof JDialog) {
-      return new PicsouDialog((JDialog)owner, "", directory);
-    }
-    throw new InvalidParameter("unknown type " + owner.getClass());
-  }
-
-  private PicsouDialog(JFrame parent, String title, Directory directory) {
+  private PicsouDialog(JFrame parent, Directory directory) {
     super(parent, MODAL);
-    init(title, directory);
+    init(directory);
   }
 
-  private PicsouDialog(JDialog parent, String title, Directory directory) {
+  private PicsouDialog(JDialog parent, Directory directory) {
     super(parent, MODAL);
-    init(title, directory);
+    init(directory);
   }
 
-  private void init(String title, Directory directory) {
-    setTitle(title);
+  private void init(Directory directory) {
+    setTitle(Lang.get("application"));
     colorService = directory.get(ColorService.class);
   }
 

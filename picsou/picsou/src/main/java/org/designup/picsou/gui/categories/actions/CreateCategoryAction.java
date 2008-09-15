@@ -50,7 +50,7 @@ public abstract class CreateCategoryAction extends CreateGlobAction {
   }
 
   public JDialog getDialog(ActionEvent e) {
-    return PicsouDialog.create(getParent(), "category.create.title", directory);
+    return PicsouDialog.create(getParent(), directory);
   }
 
   protected abstract Window getParent();

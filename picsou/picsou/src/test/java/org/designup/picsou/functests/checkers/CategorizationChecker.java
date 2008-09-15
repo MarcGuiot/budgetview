@@ -718,10 +718,17 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker setProject(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    int[] rows = new int[]{rowIndex};
-    selectTableRows(rows);
+    selectTableRows(rowIndex);
     selectProjects();
     selectProjectSeries(seriesName, master, showSeriesInitialization);
+    return this;
+  }
+
+  public CategorizationChecker checkProjectSeriesIsSelected(String seriesName, MasterCategory category) {
+    assertTrue(getPanel().getToggleButton("project").isSelected());
+    Panel panel = getProjectSeriesPanel();
+    assertFalse(panel.getToggleButton("invisibleToggle").isSelected());
+    assertTrue(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
     return this;
   }
 
@@ -737,6 +744,14 @@ public class CategorizationChecker extends DataChecker {
     selectSavingsSeries(seriesName, master, showSeriesInitialization);
     return this;
   }
+
+  public CategorizationChecker checkSavingsSeriesIsSelected(String seriesName, MasterCategory category) {
+    assertTrue(getPanel().getToggleButton("savings").isSelected());
+    Panel panel = getSavingsSeriesPanel();
+    assertTrue(panel.getToggleButton(seriesName).isSelected());
+    return this;
+  }
+
 
   public CategorizationTableChecker initContent() {
     return new CategorizationTableChecker();

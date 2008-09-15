@@ -25,7 +25,7 @@
     <style selector="panel.errorMessage" ui="errorMessage"/>
     <style selector="panel.errorMessage column" margin="10"/>
     <style selector="panel.errorMessage textArea" marginBottom="10"
-           anchor="left" styleClass="readonly" foreground="errorpanel.text" font="-,bold,12" opaque="false"
+           anchor="left" styleClass="multiLineLabel" foreground="errorpanel.text" font="-,bold,12" opaque="false"
            lineWrap="true" wrapStyleWord="true"/>
     <style selector="#time button" size="(15,20)" fill="none"/>
 

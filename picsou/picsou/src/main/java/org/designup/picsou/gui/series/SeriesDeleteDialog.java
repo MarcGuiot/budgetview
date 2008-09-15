@@ -3,6 +3,7 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -16,9 +17,10 @@ public class SeriesDeleteDialog {
 
   public SeriesDeleteDialog(GlobRepository repository, Directory directory, Window parent) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
-                                                      "/layout/seriesDeleteDialog.splits",
+                                                      "/layout/seriesDeletionDialog.splits",
                                                       repository, directory);
-    dialog = PicsouDialog.createWithButtons(Lang.get("seriesEdition.title"), parent, builder.<JPanel>load(),
+
+    dialog = PicsouDialog.createWithButtons(parent, builder.<JPanel>load(),
                                             new AbstractAction(Lang.get("ok")) {
                                               public void actionPerformed(ActionEvent e) {
                                                 ok = true;
@@ -35,7 +37,8 @@ public class SeriesDeleteDialog {
 
   public boolean show() {
     ok = false;
-    dialog.setVisible(true);
+    dialog.pack();
+    GuiUtils.showCentered(dialog);
     return ok;
   }
 }

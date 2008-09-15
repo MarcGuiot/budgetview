@@ -26,6 +26,11 @@ public class SeriesEditionDialogChecker extends DataChecker {
     this.table = dialog.getTable();
   }
 
+  public SeriesEditionDialogChecker checkTitle(String text) {
+    assertThat(dialog.getTextBox("title").textEquals(text));
+    return this;
+  }
+
   public SeriesEditionDialogChecker checkName(String seriesName) {
     assertThat(dialog.getInputTextBox("nameField").textEquals(seriesName));
     return this;
@@ -434,15 +439,8 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesDeleteDialogChecker deleteSeriesWithAsk() {
+  public SeriesDeleteDialogChecker deleteSeriesWithConfirmation() {
     return new SeriesDeleteDialogChecker(WindowInterceptor.getModalDialog(dialog.getButton("delete").triggerClick()));
   }
 
-  public SeriesEditionDialogChecker checkLabelExpenseAmount() {
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkLabelIncomeAmount() {
-    return this;
-  }
 }

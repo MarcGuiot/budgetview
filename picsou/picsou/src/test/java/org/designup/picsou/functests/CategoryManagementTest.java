@@ -170,7 +170,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
     categories.select("Apero");
     categories.createSubCategory(MasterCategory.FOOD, "Charcuterie");
-    categories.assertCategoryExists("Charcuterie");
+    categories.checkCategoryExists("Charcuterie");
     categories.toggleExpanded(MasterCategory.FOOD);
     categories.assertCategoryNotFound("Charcuterie");
   }
@@ -313,7 +313,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .run();
     editor.validate();
     categories.assertCategoryNotFound("Apero");
-    categories.assertCategoryExists("Pastis");
+    categories.checkCategoryExists("Pastis");
   }
 
   public void testRenameCategoryRenameInCategorization() throws Exception {
@@ -347,7 +347,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       })
       .run();
     editor.validate();
-    categories.assertCategoryExists("Apero");
+    categories.checkCategoryExists("Apero");
   }
 
   public void testCannotReuseAnExistingSubCategoryNameInTheSameMaster() throws Exception {
@@ -367,7 +367,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       })
       .run();
     editor.validate();
-    categories.assertCategoryExists("Apero");
+    categories.checkCategoryExists("Apero");
   }
 
   public void testRenameCancelled() throws Exception {
@@ -385,7 +385,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       })
       .run();
     editor.validate();
-    categories.assertCategoryExists("Apero");
+    categories.checkCategoryExists("Apero");
     categories.assertCategoryNotFound("Pastis");
   }
 
@@ -461,8 +461,8 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
     categories.createSubCategory(MasterCategory.TELECOMS, "3G++");
     categories.select(MasterCategory.EDUCATION);
-    categories.assertCategoryExists("Apero");
-    categories.assertCategoryExists("3G++");
+    categories.checkCategoryExists("Apero");
+    categories.checkCategoryExists("3G++");
     CategoryEditionChecker edition = categories.openEditionDialog();
     edition.selectMaster(MasterCategory.FOOD);
     edition.selectSub("Apero");
@@ -482,7 +482,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
     categories.select("Apero");
     categories.openEditionDialog()
-      .assertMasterSelected(MasterCategory.FOOD)
-      .assertSubSelected("Apero");
+      .checkMasterSelected(MasterCategory.FOOD)
+      .checkSubSelected("Apero");
   }
 }

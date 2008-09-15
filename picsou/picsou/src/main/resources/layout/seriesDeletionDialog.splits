@@ -2,11 +2,11 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" minimumSize="(470,170)" preferredSize="(470,170)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(450, 230)" opaque="true">
     <column styleClass="innerDialog">
       <label text="$seriesEdition.delete.title" styleClass="title"/>
       <filler fill="vertical" weightY="10"/>
-      <label text="$seriesEdition.delete.message" name="message"/>
+      <htmlEditorPane text="$seriesEdition.delete.message" name="message"/>
       <filler fill="vertical" weightY="20"/>
     </column>
   </panel>

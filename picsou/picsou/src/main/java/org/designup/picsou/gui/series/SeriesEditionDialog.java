@@ -52,13 +52,16 @@ import java.awt.event.ItemListener;
 import java.util.*;
 
 public class SeriesEditionDialog {
-  private PicsouDialog dialog;
+  private BudgetArea budgetArea;
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
   private SelectionService selectionService;
-  private BudgetArea budgetArea;
   private GlobRepository repository;
+  private PicsouDialog dialog;
+
   private Glob currentSeries;
+
+  private JLabel titleLabel;
   private GlobListView seriesList;
   private JTextField singleCategoryField;
   private GlobListView multiCategoryList;
@@ -88,10 +91,13 @@ public class SeriesEditionDialog {
 
     this.timeService = localDirectory.get(TimeService.class);
 
-    dialog = PicsouDialog.create(parent, Lang.get("seriesEdition.title"), directory);
+    dialog = PicsouDialog.create(parent, directory);
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/seriesEditionDialog.splits",
                                                       localRepository, localDirectory);
+
+    titleLabel = builder.add("title", new JLabel());
+
 
     GlobStringifier seriesStringifier = descriptionService.getStringifier(Series.TYPE);
     seriesList = GlobListView.init(Series.TYPE, localRepository, localDirectory)
@@ -336,6 +342,9 @@ public class SeriesEditionDialog {
 
   private void initBudgetAreaSeries(BudgetArea budgetArea) {
     this.budgetArea = budgetArea;
+
+    this.titleLabel.setText(Lang.get("budgetArea." + budgetArea.getName()));
+    
     initCategorizeVisibility();
     GlobList seriesList =
       repository.getAll(Series.TYPE, fieldEquals(Series.BUDGET_AREA, budgetArea.getId()));

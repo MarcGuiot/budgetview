@@ -40,7 +40,7 @@ public class MonthChooserDialog implements ColorChangeListener {
     this.directory = directory;
     this.directory.get(ColorService.class).addListener(this);
     JPanel panel = createPanel();
-    this.dialog = PicsouDialog.createWithButton(Lang.get("month.chooser.title"), parent, panel,
+    this.dialog = PicsouDialog.createWithButton(parent, panel,
                                                 new CancelAction(), directory);
   }
 

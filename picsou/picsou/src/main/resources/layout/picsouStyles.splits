@@ -14,7 +14,7 @@
     <style selector="button" opaque="false"/>
     <style selector="checkBox" opaque="false"/>
 
-    <style selector="textArea.readOnly" opaque="false" lineWrap="true" wrapStyleWord="true"/>
+    <style selector="textArea.multiLineLabel" opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
 
     <style selector="label.header"
            font="-,plain,11" foreground="import.header.label"

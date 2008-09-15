@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -122,6 +121,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.projects.checkTitle("Projects");
     budgetView.projects.checkTotalAmounts(95.0, 95.0);
     budgetView.projects.checkSeries("Anniversaire", 95.0, 95.0);
+
+    views.selectCategorization();
+    categorization.checkProjectSeriesIsSelected("Anniversaire", MasterCategory.FOOD);
   }
 
   public void testSavingsSeries() throws Exception {
@@ -142,6 +144,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkTitle("Savings");
     budgetView.savings.checkTotalAmounts(25.0, 25.0);
     budgetView.savings.checkSeries("Epargne", 25.0, 25.0);
+
+    views.selectCategorization();
+    categorization.checkSavingsSeriesIsSelected("Epargne", MasterCategory.SAVINGS);
   }
 
   public void testImportWithUserDateAndBankDateAtNextMonth() throws Exception {
@@ -200,10 +205,11 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
 
-    SeriesEditionDialogChecker editionDialog = budgetView.recurring.editSeries("Internet");
-    editionDialog.checkName("Internet");
-    editionDialog.setName("Free");
-    editionDialog.validate();
+    budgetView.recurring.editSeries("Internet")
+      .checkTitle("Recurring expenses")
+      .checkName("Internet")
+      .setName("Free")
+      .validate();
 
     budgetView.recurring.checkSeries("Free", 29.00, 29.00);
   }

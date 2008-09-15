@@ -1,7 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategoryEditionChecker;
-import org.designup.picsou.functests.checkers.DeleteCategoryChecker;
+import org.designup.picsou.functests.checkers.CategoryDeletionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -14,18 +14,25 @@ import org.uispec4j.interception.WindowInterceptor;
 
 public class CategoryEditionTest extends LoggedInFunctionalTestCase {
 
+  public void testPreselectsFirstMaster() throws Exception {
+    categories.openEditionDialog()
+      .checkMasterSelected(MasterCategory.BANK)
+      .cancel();
+  }
+
   public void testPreselectsFirstSubCategory() throws Exception {
     categories.select(MasterCategory.HOUSE);
-    CategoryEditionChecker categoryEdition = categories.openEditionDialog();
-    categoryEdition.assertMasterSelected(MasterCategory.HOUSE);
-    categoryEdition.assertSubSelected("Energy");
+
+    categories.openEditionDialog()
+      .checkMasterSelected(MasterCategory.HOUSE)
+      .checkSubSelected("Energy")
+      .cancel();
   }
 
   public void testMasterFilterSystemCategoryIds() throws Exception {
-    CategoryEditionChecker categoryEdition = categories.openEditionDialog();
-    assertFalse(categoryEdition.getMasterList().contains(getCategoryName(MasterCategory.ALL)));
-    assertFalse(categoryEdition.getMasterList().contains(getCategoryName(MasterCategory.NONE)));
-    assertFalse(categoryEdition.getMasterList().selectionIsEmpty());
+    categories.openEditionDialog()
+      .checkMasterNotDisplayed(MasterCategory.ALL, MasterCategory.NONE, MasterCategory.INCOME)
+      .cancel();
   }
 
   public void testCreateMasterAndSub() throws Exception {
@@ -36,45 +43,52 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     String newSubName = "sub for new master";
     categoryEdition.createSubCategory(newSubName);
     categoryEdition.selectMaster(MasterCategory.HOUSE);
-    categoryEdition.assertSubContains("Entretien");
+    categoryEdition.checkSubContains("Entretien");
     categoryEdition.selectMaster(newMasterName);
-    categoryEdition.assertSubContains(newSubName);
+    categoryEdition.checkSubContains(newSubName);
     categoryEdition.validate();
-    categories.assertCategoryExists(newMasterName);
-    categories.assertCategoryExists(newSubName);
+
+    categories.checkCategoryExists(newMasterName);
+    categories.checkCategoryExists(newSubName);
   }
 
   public void testButtonStatus() throws Exception {
-    CategoryEditionChecker categoryEdition = categories.openEditionDialog();
+    CategoryEditionChecker dialog = categories.openEditionDialog();
 
-    categoryEdition.selectMaster(MasterCategory.HOUSE);
-    UISpecAssert.assertTrue(categoryEdition.getCreateMasterButton().isEnabled());
-    UISpecAssert.assertTrue(categoryEdition.getDeleteMasterButton().isEnabled());
-    UISpecAssert.assertTrue(categoryEdition.getEditMasterButton().isEnabled());
-    UISpecAssert.assertTrue(categoryEdition.getEditSubButton().isEnabled());
-    UISpecAssert.assertTrue(categoryEdition.getCreateSubButton().isEnabled());
-    UISpecAssert.assertTrue(categoryEdition.getDeleteSubButton().isEnabled());
+    dialog.selectMaster(MasterCategory.HOUSE)
+      .checkCreateMasterEnabled(true)
+      .checkCreateSubEnabled(true)
+      .checkEditMasterEnabled(true)
+      .checkEditSubEnabled(true)
+      .checkDeleteMasterEnabled(true)
+      .checkDeleteSubEnabled(true);
 
-    categoryEdition.createMasterCategory("new Master");
-    UISpecAssert.assertFalse(categoryEdition.getEditSubButton().isEnabled());
-    UISpecAssert.assertTrue(categoryEdition.getCreateSubButton().isEnabled());
-    UISpecAssert.assertFalse(categoryEdition.getDeleteSubButton().isEnabled());
+    dialog.createMasterCategory("new Master")
+      .checkCreateMasterEnabled(true)
+      .checkCreateSubEnabled(true)
+      .checkEditMasterEnabled(true)
+      .checkEditSubEnabled(false)
+      .checkDeleteMasterEnabled(true)
+      .checkDeleteSubEnabled(false);
 
-    categoryEdition.createSubCategory("sub");
-    UISpecAssert.assertTrue(categoryEdition.getEditSubButton().isEnabled());
-    UISpecAssert.assertTrue(categoryEdition.getCreateSubButton().isEnabled());
-    UISpecAssert.assertTrue(categoryEdition.getDeleteSubButton().isEnabled());
+    dialog.createSubCategory("sub")
+      .checkCreateMasterEnabled(true)
+      .checkCreateSubEnabled(true)
+      .checkEditMasterEnabled(true)
+      .checkEditSubEnabled(true)
+      .checkDeleteMasterEnabled(true)
+      .checkDeleteSubEnabled(true);
   }
 
   public void testButtonStatusWithEmptyMasterCategory() throws Exception {
     categories.select(MasterCategory.BANK);
-    CategoryEditionChecker categoryEdition = categories.openEditionDialog();
-    UISpecAssert.assertTrue(categoryEdition.getEditMasterButton().isEnabled());
-    UISpecAssert.assertTrue(categoryEdition.getDeleteMasterButton().isEnabled());
-    UISpecAssert.assertTrue(categoryEdition.getCreateMasterButton().isEnabled());
-    UISpecAssert.assertTrue(categoryEdition.getCreateSubButton().isEnabled());
-    UISpecAssert.assertFalse(categoryEdition.getDeleteSubButton().isEnabled());
-    UISpecAssert.assertFalse(categoryEdition.getEditSubButton().isEnabled());
+    categories.openEditionDialog()
+      .checkCreateMasterEnabled(true)
+      .checkCreateSubEnabled(true)
+      .checkEditMasterEnabled(true)
+      .checkEditSubEnabled(false)
+      .checkDeleteMasterEnabled(true)
+      .checkDeleteSubEnabled(false);
   }
 
   public void testRename() throws Exception {
@@ -99,17 +113,17 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     WindowInterceptor.init(categoryEdition.getDeleteSubButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          DeleteCategoryChecker confirmationDialog = new DeleteCategoryChecker(window);
+          CategoryDeletionChecker confirmationDialog = new CategoryDeletionChecker(window);
           confirmationDialog.checkCategory(getCategoryName(MasterCategory.TRANSPORTS));
           confirmationDialog.selectCategory(getCategoryName(MasterCategory.HOUSE));
           return confirmationDialog.validate();
         }
       }).run();
 
-    categoryEdition.assertMasterSelected(MasterCategory.TRANSPORTS);
+    categoryEdition.checkMasterSelected(MasterCategory.TRANSPORTS);
 
     categoryEdition.selectMaster(MasterCategory.TELECOMS);
-    categoryEdition.assertSubContains("Téléphone fixe");
+    categoryEdition.checkSubContains("Téléphone fixe");
     categoryEdition.validate();
 
     categories.assertCategoryNotFound("Fuel");
@@ -129,13 +143,13 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     WindowInterceptor.init(categoryEdition.getDeleteMasterButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          DeleteCategoryChecker categoryChecker = new DeleteCategoryChecker(window);
-          categoryChecker.checkCategory("None");
-          UISpecAssert.assertFalse(categoryChecker.getOkButton().isEnabled());
-          categoryChecker.selectCategory(getCategoryName(MasterCategory.HOUSE));
-          UISpecAssert.assertTrue(categoryChecker.getOkButton().isEnabled());
-          categoryChecker.checkCategory(getCategoryName(MasterCategory.HOUSE));
-          return categoryChecker.validate();
+          CategoryDeletionChecker categoryDeletionChecker = new CategoryDeletionChecker(window);
+          categoryDeletionChecker.checkCategory("None");
+          UISpecAssert.assertFalse(categoryDeletionChecker.getOkButton().isEnabled());
+          categoryDeletionChecker.selectCategory(getCategoryName(MasterCategory.HOUSE));
+          UISpecAssert.assertTrue(categoryDeletionChecker.getOkButton().isEnabled());
+          categoryDeletionChecker.checkCategory(getCategoryName(MasterCategory.HOUSE));
+          return categoryDeletionChecker.validate();
         }
       }).run();
     categoryEdition.validate();
@@ -163,9 +177,9 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     WindowInterceptor.init(categoryEdition.getDeleteMasterButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          DeleteCategoryChecker categoryChecker = new DeleteCategoryChecker(window);
-          categoryChecker.selectCategory(getCategoryName(MasterCategory.TELECOMS));
-          return categoryChecker.validate();
+          CategoryDeletionChecker categoryDeletionChecker = new CategoryDeletionChecker(window);
+          categoryDeletionChecker.selectCategory(getCategoryName(MasterCategory.TELECOMS));
+          return categoryDeletionChecker.validate();
         }
       }).run();
     categoryEdition.validate();
@@ -175,7 +189,7 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     categorization.checkEnvelopeSeriesIsSelected("course", MasterCategory.TELECOMS);
   }
 
-  public void testDeleteMasterCategoryUpdateCategorizationOccasional() throws Exception {
+  public void testDeleteMasterCategoryUpdatesCategorizationOccasional() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/15", -2.0, "Auchan", MasterCategory.HOUSE)

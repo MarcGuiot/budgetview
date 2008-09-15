@@ -71,7 +71,7 @@ public class BudgetAreaSeriesView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetAreaSeriesView.splits",
                                                       repository, directory);
 
-    builder.add("budgetAreaTitle", new JLabel(stringify(budgetArea)));
+    builder.add("budgetAreaTitle", new JLabel(budgetArea.getLabel()));
     addTotalLabel("totalObservedAmount", SeriesStat.AMOUNT, builder);
     addTotalLabel("totalPlannedAmount", SeriesStat.PLANNED_AMOUNT, builder);
 
@@ -129,10 +129,6 @@ public class BudgetAreaSeriesView extends View {
       }
     };
     seriesRepeat.setFilter(seriesFilter);
-  }
-
-  private String stringify(BudgetArea budgetArea) {
-    return descriptionService.getStringifier(BudgetArea.TYPE).toString(budgetArea.getGlob(), repository);
   }
 
   private void addTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {

@@ -115,7 +115,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
     builder.add("title", title);
     builder.add("editCategories", new EditCategoriesAction(repository, localDirectory));
 
-    dialog = PicsouDialog.createWithButtons("", parent,
+    dialog = PicsouDialog.createWithButtons(parent,
                                             builder.<JPanel>load(),
                                             new OkAction(), new CloseAction(), directory);
 
