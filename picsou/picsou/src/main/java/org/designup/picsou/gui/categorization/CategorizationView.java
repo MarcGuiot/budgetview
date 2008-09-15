@@ -2,10 +2,7 @@ package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
-import org.designup.picsou.gui.categorization.components.BudgetAreaSelector;
-import org.designup.picsou.gui.categorization.components.MultiCategoriesSeriesComponentFactory;
-import org.designup.picsou.gui.categorization.components.OccasionalCategoriesComponentFactory;
-import org.designup.picsou.gui.categorization.components.SeriesComponentFactory;
+import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.series.EditSeriesAction;
@@ -57,7 +54,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
   private java.util.List<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>> seriesRepeat =
     new ArrayList<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>>();
 
-  private static final int[] COLUMN_SIZES = {10, 28, 10};
+  private static final int[] COLUMN_SIZES = {10, 12, 28, 10};
   private SeriesEditionDialog seriesEditionDialog;
 
   private Color transactionColorNormal;
@@ -93,6 +90,8 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
       builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
         .setDefaultLabelCustomizer(new TransactionLabelCustomizer())
         .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING),
+                   LabelCustomizers.fontSize(9))
+        .addColumn(Lang.get("series"), new CompactSeriesStringifier(directory),
                    LabelCustomizers.fontSize(9))
         .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.BOLD)
         .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), LabelCustomizers.ALIGN_RIGHT);

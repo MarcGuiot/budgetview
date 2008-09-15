@@ -115,6 +115,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(0);
     categorization.checkOccasionalSeries(MasterCategory.FOOD);
     categorization.selectOccasionalSeries(MasterCategory.FOOD, "Saucisson");
+    categorization.checkTable(new Object[][]{
+      {"30/06/2008", "Saucisson", "Fouquet's", -199.90},
+    });
 
     views.selectData();
     transactions.checkSeries(0, "Occasional");
@@ -131,8 +134,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows(0, 1);
     categorization.checkTable(new Object[][]{
-      {"15/06/2008", "Auchan", -40.00},
-      {"30/06/2008", "Free Telecom", -29.90},
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"30/06/2008", "", "Free Telecom", -29.90},
     });
     categorization.selectTableRows(0);
     categorization.checkLabel("Auchan");
@@ -140,6 +143,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectEnvelopes();
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
     categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "Groceries", "Auchan", -40.00},
+      {"30/06/2008", "", "Free Telecom", -29.90},
+    });
 
     categorization.selectTableRows(1);
     categorization.checkLabel("Free Telecom");
@@ -147,6 +154,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectRecurring();
     categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
     categorization.checkRecurringSeriesIsSelected("Internet");
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "Groceries", "Auchan", -40.00},
+      {"30/06/2008", "Internet", "Free Telecom", -29.90},
+    });
 
     categorization.selectTableRows(0);
     categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
@@ -178,8 +189,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
-      {"15/06/2008", "Auchan", -40.00},
-      {"30/06/2008", "Carouf", -29.90},
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"30/06/2008", "", "Carouf", -29.90},
     });
     categorization.selectTableRows(0, 1);
     categorization.selectEnvelopes();
@@ -220,8 +231,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
-      {"15/06/2008", "Auchan", -40.00},
-      {"30/06/2008", "Carouf", -29.90},
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"30/06/2008", "", "Carouf", -29.90},
     });
 
     categorization.unselectAllTransactions();
@@ -243,11 +254,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
-      {"15/06/2008", "CHEQUE N. 1111", -90.00},
-      {"14/06/2008", "CHEQUE N. 2222", -80.00},
-      {"24/06/2008", "Free Telecom 21/04", -29.90},
-      {"25/06/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"15/06/2008", "", "CHEQUE N. 1111", -90.00},
+      {"14/06/2008", "", "CHEQUE N. 2222", -80.00},
+      {"24/06/2008", "", "Free Telecom 21/04", -29.90},
+      {"25/06/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
 
     categorization.disableAutoSelectSimilar();
@@ -274,27 +285,27 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.getTable().getHeader().click(0);
     categorization.checkTable(new Object[][]{
-      {"26/06/2008", "Free Telecom 26/06", -29.90},
-      {"27/05/2008", "Free Telecom 27/05", -29.90},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"15/05/2008", "Auchan 1111", -90.00},
-      {"14/05/2008", "Auchan 2222", -80.00},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90},
+      {"27/05/2008", "", "Free Telecom 27/05", -29.90},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"15/05/2008", "", "Auchan 1111", -90.00},
+      {"14/05/2008", "", "Auchan 2222", -80.00},
     });
     categorization.getTable().getHeader().click(0);
     categorization.checkTable(new Object[][]{
-      {"14/05/2008", "Auchan 2222", -80.00},
-      {"15/05/2008", "Auchan 1111", -90.00},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"27/05/2008", "Free Telecom 27/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90},
+      {"14/05/2008", "", "Auchan 2222", -80.00},
+      {"15/05/2008", "", "Auchan 1111", -90.00},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"27/05/2008", "", "Free Telecom 27/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90},
     });
     categorization.getTable().getHeader().click(0);
     categorization.checkTable(new Object[][]{
-      {"15/05/2008", "Auchan 1111", -90.00},
-      {"14/05/2008", "Auchan 2222", -80.00},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90},
-      {"27/05/2008", "Free Telecom 27/05", -29.90},
+      {"15/05/2008", "", "Auchan 1111", -90.00},
+      {"14/05/2008", "", "Auchan 2222", -80.00},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90},
+      {"27/05/2008", "", "Free Telecom 27/05", -29.90},
     });
   }
 
@@ -310,11 +321,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
-      {"15/05/2008", "Auchan 1111", -90.00},
-      {"14/05/2008", "Auchan 2222", -80.00},
-      {"24/04/2008", "Free Telecom 21/04", -29.90},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"15/05/2008", "", "Auchan 1111", -90.00},
+      {"14/05/2008", "", "Auchan 2222", -80.00},
+      {"24/04/2008", "", "Free Telecom 21/04", -29.90},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
 
     categorization.checkAutoSelectSimilarEnabled(false);
@@ -367,9 +378,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
-      {"24/04/2008", "Free Telecom 21/04", -29.90},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"24/04/2008", "", "Free Telecom 21/04", -29.90},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
     categorization.enableAutoSelectSimilar();
 
@@ -426,10 +437,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
-      {"15/05/2008", "Auchan", -90.00},
-      {"14/05/2008", "Carouf", -80.00},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"15/05/2008", "", "Auchan", -90.00},
+      {"14/05/2008", "", "Carouf", -80.00},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
     categorization.checkAutoHideEnabled(false);
     categorization.enableAutoHide();
@@ -441,9 +452,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
     categorization.checkTable(new Object[][]{
-      {"14/05/2008", "Carouf", -80.00},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"14/05/2008", "", "Carouf", -80.00},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
 
     categorization.selectTableRows(1, 2);
@@ -452,7 +463,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
     categorization.checkTable(new Object[][]{
-      {"14/05/2008", "Carouf", -80.00},
+      {"14/05/2008", "", "Carouf", -80.00},
     });
 
     categorization.selectTableRows(0);
@@ -483,10 +494,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
-      {"15/05/2008", "Auchan", -90.00},
-      {"14/05/2008", "Carouf", -80.00},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"15/05/2008", "", "Auchan", -90.00},
+      {"14/05/2008", "", "Carouf", -80.00},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
 
     categorization.disableAutoHide();
@@ -498,27 +509,27 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
     categorization.checkTable(new Object[][]{
-      {"15/05/2008", "Auchan", -90.00},
-      {"14/05/2008", "Carouf", -80.00},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"15/05/2008", "Groceries", "Auchan", -90.00},
+      {"14/05/2008", "Groceries", "Carouf", -80.00},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
     categorization.checkSelectedTableRows(0, 1);
     categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
 
     categorization.enableAutoHide();
     categorization.checkTable(new Object[][]{
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
     categorization.checkNoSelectedTableRows();
 
     categorization.disableAutoHide();
     categorization.checkTable(new Object[][]{
-      {"15/05/2008", "Auchan", -90.00},
-      {"14/05/2008", "Carouf", -80.00},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"15/05/2008", "Groceries", "Auchan", -90.00},
+      {"14/05/2008", "Groceries", "Carouf", -80.00},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
     categorization.checkNoSelectedTableRows();
   }
@@ -534,10 +545,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
-      {"15/05/2008", "Auchan", -90.00},
-      {"14/05/2008", "Carouf", -80.00},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"15/05/2008", "", "Auchan", -90.00},
+      {"14/05/2008", "", "Carouf", -80.00},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
     categorization.checkAutoSelectNextEnabled(false);
     categorization.enableAutoSelectNext();
@@ -558,10 +569,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
 
     categorization.checkTable(new Object[][]{
-      {"15/05/2008", "Auchan", -90.00},
-      {"14/05/2008", "Carouf", -80.00},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"15/05/2008", "Groceries", "Auchan", -90.00},
+      {"14/05/2008", "Groceries", "Carouf", -80.00},
+      {"25/05/2008", "Internet", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "Internet", "Free Telecom 26/06", -29.90}
     });
     categorization.checkNoTransactionSelected();
 
@@ -587,10 +598,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
-      {"15/05/2008", "Auchan", -90.00},
-      {"14/05/2008", "Carouf", -80.00},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"15/05/2008", "", "Auchan", -90.00},
+      {"14/05/2008", "", "Carouf", -80.00},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
     categorization.disableAutoSelectNext();
     categorization.disableAutoSelectSimilar();
@@ -617,10 +628,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.disableAutoHide();
 
     categorization.checkTable(new Object[][]{
-      {"15/05/2008", "Auchan", -90.00},
-      {"14/05/2008", "Carouf", -80.00},
-      {"25/05/2008", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "Free Telecom 26/06", -29.90}
+      {"15/05/2008", "", "Auchan", -90.00},
+      {"14/05/2008", "", "Carouf", -80.00},
+      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
 
     categorization.selectTableRow(1);
@@ -652,8 +663,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.disableAutoHide();
 
     categorization.checkTable(new Object[][]{
-      {"28/06/2008", "France Telecom", -50.00},
-      {"30/06/2008", "SFR 3G", -60.00},
+      {"28/06/2008", "", "France Telecom", -50.00},
+      {"30/06/2008", "", "SFR 3G", -60.00},
     });
 
     categorization.selectTableRows(0, 1);
@@ -786,7 +797,5 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("Monoprix", "courantMonoprix", MasterCategory.FOOD, false);
     categorization.setEnvelope("Auchan", "courantAuchan", MasterCategory.FOOD, false);
     categorization.setEnvelope("ED", "courantED", MasterCategory.FOOD, false);
-
   }
-
 }

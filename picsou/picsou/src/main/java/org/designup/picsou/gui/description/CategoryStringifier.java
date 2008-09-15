@@ -7,20 +7,20 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 
 public class CategoryStringifier extends AbstractGlobStringifier {
-  private static String prefix = Category.TYPE.getName() + ".";
+  private static final String PREFIX = Category.TYPE.getName() + ".";
 
   public CategoryStringifier() {
   }
 
-  public String toString(Glob glob, GlobRepository repository) {
-    if (glob == null) {
+  public String toString(Glob category, GlobRepository repository) {
+    if (category == null) {
       return "";
     }
-    String name = glob.get(Category.NAME);
+    String name = category.get(Category.NAME);
     if (name != null) {
       return name;
     }
-    String innerName = glob.get(Category.INNER_NAME);
-    return Lang.get(prefix + innerName);
+    String innerName = category.get(Category.INNER_NAME);
+    return Lang.get(PREFIX + innerName);
   }
 }

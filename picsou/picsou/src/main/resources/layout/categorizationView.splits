@@ -27,7 +27,7 @@
 
   <panel styleClass="main">
 
-    <horizontalSplit dividerLocation="400" resizeWeight="0" opaque="false">
+    <horizontalSplit dividerLocation="450" resizeWeight="0" opaque="false">
 
       <column marginRight="5">
         <label text="$categorization.list.title" styleClass="blockTitle"/>
@@ -84,7 +84,7 @@
 
                 <card name="series">
 
-                  <column minimumSize="(300,68)" weightY="0.1">
+                  <column weightY="0.1">
                     <panel border="matte(1,1,0,1,#999999)" background="categorization.budgetAreas.bg" opaque="true">
                       <repeat ref="budgetAreaToggles" layout="horizontalGrid" gridWrapLimit="3" margin="5">
                         <toggleButton ref="budgetAreaToggle" styleClass="selector" anchor="left"/>

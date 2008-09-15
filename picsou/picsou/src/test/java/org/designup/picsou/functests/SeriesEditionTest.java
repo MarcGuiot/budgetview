@@ -22,7 +22,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
-      {"29/07/2008", "Free Telecom", -29.00}
+      {"29/07/2008", "", "Free Telecom", -29.00}
     });
     categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
 

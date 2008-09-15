@@ -111,8 +111,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary.init().categorize();
     views.checkCategorizationSelected();
     categorization.checkTable(new Object[][]{
-      {"26/08/2008", "FNAC", -10.0},
-      {"26/08/2008", "MyCompany", 1000.0},
+      {"26/08/2008", "", "FNAC", -10.0},
+      {"26/08/2008", "", "MyCompany", 1000.0},
     });
     categorization.selectTableRow(0);
     categorization.selectOccasional();
@@ -130,8 +130,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary.init().categorize();
     views.checkCategorizationSelected();
     categorization.checkTable(new Object[][]{
-      {"26/08/2008", "FNAC", -10.0},
-      {"26/08/2008", "MyCompany", 1000.0},
+      {"26/08/2008", "Leisures", "FNAC", -10.0},
+      {"26/08/2008", "", "MyCompany", 1000.0},
     });
     categorization.selectTableRow(1);
     categorization.selectIncome();
@@ -162,9 +162,9 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization
       .checkTable(new Object[][]{
-        {"26/08/2008", "Company", 1000.0},
-        {"26/08/2008", "FNAC", -10.0},
-        {"26/08/2008", "Virgin", -15.0},
+        {"26/08/2008", "", "Company", 1000.0},
+        {"26/08/2008", "", "FNAC", -10.0},
+        {"26/08/2008", "", "Virgin", -15.0},
       });
     categorization.setIncome("Company", "Salary", true);
     categorization.setOccasional("FNAC", MasterCategory.LEISURES);

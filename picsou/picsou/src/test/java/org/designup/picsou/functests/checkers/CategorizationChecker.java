@@ -26,7 +26,7 @@ import java.util.List;
 
 public class CategorizationChecker extends DataChecker {
   private Window mainWindow;
-  private static final int LABEL_COLUMN_INDEX = 1;
+  private static final int LABEL_COLUMN_INDEX = 2;
 
   public CategorizationChecker(Window mainWindow) {
     this.mainWindow = mainWindow;
@@ -568,7 +568,7 @@ public class CategorizationChecker extends DataChecker {
   public CategorizationChecker selectTableRows(String... labels) {
     int rows[] = new int[labels.length];
     for (int i = 0; i < labels.length; i++) {
-      rows[i] = getTable().getRowIndex(1, labels[i]);
+      rows[i] = getTable().getRowIndex(LABEL_COLUMN_INDEX, labels[i]);
     }
     selectTableRows(rows);
     return this;
@@ -630,7 +630,7 @@ public class CategorizationChecker extends DataChecker {
   public Table getTable() {
     Table table = getPanel().getTable();
     table.setCellValueConverter(0, new DateCellConverter());
-    table.setCellValueConverter(2, new TableCellValueConverter() {
+    table.setCellValueConverter(3, new TableCellValueConverter() {
       public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
         Glob transaction = (Glob)modelObject;
         return transaction.get(Transaction.AMOUNT);
@@ -763,12 +763,12 @@ public class CategorizationChecker extends DataChecker {
     }
 
     public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount, MasterCategory category) {
-      add(new Object[]{date, label, amount});
+      add(new Object[]{date, "", label, amount});
       return this;
     }
 
     public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount) {
-      add(new Object[]{date, label, amount});
+      add(new Object[]{date, "", label, amount});
       return this;
     }
 
