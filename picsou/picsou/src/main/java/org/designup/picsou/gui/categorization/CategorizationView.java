@@ -16,6 +16,7 @@ import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -88,7 +89,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     transactionTable =
       builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
         .setDefaultLabelCustomizer(new TransactionLabelCustomizer())
-        .addColumn(Lang.get("date"), new TransactionDateStringifier(transactionComparator),
+        .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING),
                    LabelCustomizers.fontSize(9))
         .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.BOLD)
         .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), LabelCustomizers.ALIGN_RIGHT);

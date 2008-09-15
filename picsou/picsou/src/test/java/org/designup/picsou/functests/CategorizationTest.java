@@ -108,7 +108,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectOccasionalSeries(MasterCategory.FOOD);
 
     views.selectData();
-    transactions.checkSeries(0, getCategoryName(MasterCategory.FOOD));
+    transactions.checkSeries(0, "Occasional");
     transactions.checkCategory(0, MasterCategory.FOOD);
 
     views.selectCategorization();
@@ -117,7 +117,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectOccasionalSeries(MasterCategory.FOOD, "Saucisson");
 
     views.selectData();
-    transactions.checkSeries(0, "Saucisson");
+    transactions.checkSeries(0, "Occasional");
     transactions.checkCategory(0, "Saucisson");
   }
 
@@ -187,9 +187,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
-      .add("30/06/2008", TransactionType.PLANNED, "Groceries", "", -0.0, MasterCategory.FOOD)
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "Carouf", "", -29.90, MasterCategory.FOOD)
-      .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, MasterCategory.FOOD)
+      .add("30/06/2008", TransactionType.PLANNED, "Groceries", "", -0.0, "Groceries", MasterCategory.FOOD)
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "Carouf", "", -29.90, "Groceries", MasterCategory.FOOD)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, "Groceries", MasterCategory.FOOD)
       .check();
     transactions.checkSeries(0, "Groceries");
     transactions.checkSeries(1, "Groceries");
@@ -261,6 +261,43 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRows(2, 3, 4);
   }
 
+  public void testSort() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
+      .addTransaction("2008/05/25", -29.90, "Free Telecom 25/05")
+      .addTransaction("2008/05/27", -29.90, "Free Telecom 27/05")
+      .addTransaction("2008/05/15", -90.0, "Auchan 1111")
+      .addTransaction("2008/05/14", -80.0, "Auchan 2222")
+      .load();
+
+    views.selectCategorization();
+    categorization.getTable().getHeader().click(0);
+    categorization.checkTable(new Object[][]{
+      {"26/06/2008", "Free Telecom 26/06", -29.90},
+      {"27/05/2008", "Free Telecom 27/05", -29.90},
+      {"25/05/2008", "Free Telecom 25/05", -29.90},
+      {"15/05/2008", "Auchan 1111", -90.00},
+      {"14/05/2008", "Auchan 2222", -80.00},
+    });
+    categorization.getTable().getHeader().click(0);
+    categorization.checkTable(new Object[][]{
+      {"14/05/2008", "Auchan 2222", -80.00},
+      {"15/05/2008", "Auchan 1111", -90.00},
+      {"25/05/2008", "Free Telecom 25/05", -29.90},
+      {"27/05/2008", "Free Telecom 27/05", -29.90},
+      {"26/06/2008", "Free Telecom 26/06", -29.90},
+    });
+    categorization.getTable().getHeader().click(0);
+    categorization.checkTable(new Object[][]{
+      {"15/05/2008", "Auchan 1111", -90.00},
+      {"14/05/2008", "Auchan 2222", -80.00},
+      {"25/05/2008", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "Free Telecom 26/06", -29.90},
+      {"27/05/2008", "Free Telecom 27/05", -29.90},
+    });
+  }
+
   public void testAutomaticSelectionOfSimilarTransactionsMode() throws Exception {
     OfxBuilder
       .init(this)
@@ -311,12 +348,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
-      .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet")
-      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -170.00, "Groceries")
-      .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet")
-      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan 1111", "", -90.00, "Groceries")
-      .add("14/05/2008", TransactionType.PRELEVEMENT, "Auchan 2222", "", -80.00, "Groceries")
-      .add("24/04/2008", TransactionType.PRELEVEMENT, "Free Telecom 21/04", "", -29.90, "Internet")
+      .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet", MasterCategory.TELECOMS)
+      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -170.00, "Groceries", MasterCategory.FOOD)
+      .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet", MasterCategory.TELECOMS)
+      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan 1111", "", -90.00, "Groceries", MasterCategory.FOOD)
+      .add("14/05/2008", TransactionType.PRELEVEMENT, "Auchan 2222", "", -80.00, "Groceries", MasterCategory.FOOD)
+      .add("24/04/2008", TransactionType.PRELEVEMENT, "Free Telecom 21/04", "", -29.90, "Internet", MasterCategory.TELECOMS)
       .check();
   }
 
@@ -344,7 +381,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectData();
     transactions.initContent()
-      .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet")
+      .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet", MasterCategory.TELECOMS)
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90)
       .add("24/04/2008", TransactionType.PRELEVEMENT, "Free Telecom 21/04", "", -29.90)
       .check();
@@ -427,11 +464,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet")
-      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -90.00, "Groceries")
-      .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet")
-      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "Groceries")
-      .add("14/05/2008", TransactionType.PRELEVEMENT, "Carouf", "", -80.00, "Groceries")
+      .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet", MasterCategory.TELECOMS)
+      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -90.00, "Groceries", MasterCategory.FOOD)
+      .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet", MasterCategory.TELECOMS)
+      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "Groceries", MasterCategory.FOOD)
+      .add("14/05/2008", TransactionType.PRELEVEMENT, "Carouf", "", -80.00, "Groceries", MasterCategory.FOOD)
       .check();
   }
 
@@ -531,11 +568,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet")
-      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -90.00, "Groceries")
-      .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet")
-      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "Groceries")
-      .add("14/05/2008", TransactionType.PRELEVEMENT, "Carouf", "", -80.00, "Groceries")
+      .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet", MasterCategory.TELECOMS)
+      .add("15/06/2008", TransactionType.PLANNED, "Groceries", "", -90.00, "Groceries", MasterCategory.FOOD)
+      .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet", MasterCategory.TELECOMS)
+      .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "Groceries", MasterCategory.FOOD)
+      .add("14/05/2008", TransactionType.PRELEVEMENT, "Carouf", "", -80.00, "Groceries", MasterCategory.FOOD)
       .check();
   }
 

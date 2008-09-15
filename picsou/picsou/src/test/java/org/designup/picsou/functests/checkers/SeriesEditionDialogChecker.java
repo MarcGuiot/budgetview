@@ -425,4 +425,12 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesDeleteDialogChecker deleteSeriesWithAsk() {
     return new SeriesDeleteDialogChecker(WindowInterceptor.getModalDialog(dialog.getButton("delete").triggerClick()));
   }
+
+  public SeriesEditionDialogChecker checkLabelExpenseAmount() {
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkLabelIncomeAmount() {
+    return this;
+  }
 }

@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.description;
 
-import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;
@@ -19,10 +18,6 @@ public class TransactionSeriesStringifier extends AbstractGlobStringifier {
       return "";
     }
     Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-    if (BudgetArea.OCCASIONAL_EXPENSES.getId().equals(series.get(Series.BUDGET_AREA))) {
-      Glob category = repository.findLinkTarget(transaction, Transaction.CATEGORY);
-      return categoryStringifier.toString(category, repository);
-    }
     return seriesStringifier.toString(series, repository);
   }
 }

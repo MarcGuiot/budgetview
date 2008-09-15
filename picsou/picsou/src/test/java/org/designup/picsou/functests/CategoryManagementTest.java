@@ -26,33 +26,33 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.select(MasterCategory.TRANSPORTS);
     transactions
       .initContent()
-      .add("20/04/2006", TransactionType.PRELEVEMENT, "BP", "", -17.65, MasterCategory.TRANSPORTS)
-      .add("13/04/2006", TransactionType.PRELEVEMENT, "ELF", "", -18.70, MasterCategory.TRANSPORTS)
+      .addOccasional("20/04/2006", TransactionType.PRELEVEMENT, "BP", "", -17.65, MasterCategory.TRANSPORTS)
+      .addOccasional("13/04/2006", TransactionType.PRELEVEMENT, "ELF", "", -18.70, MasterCategory.TRANSPORTS)
       .check();
 
     categories.select(MasterCategory.TRANSPORTS, MasterCategory.FOOD);
     transactions
       .initContent()
-      .add("20/04/2006", TransactionType.PRELEVEMENT, "BP", "", -17.65, MasterCategory.TRANSPORTS)
-      .add("20/04/2006", TransactionType.PRELEVEMENT, "Menu K", "", -49.00, MasterCategory.FOOD)
-      .add("19/04/2006", TransactionType.PRELEVEMENT, "Kalistea", "", -14.50, MasterCategory.FOOD)
-      .add("13/04/2006", TransactionType.PRELEVEMENT, "ELF", "", -18.70, MasterCategory.TRANSPORTS)
+      .addOccasional("20/04/2006", TransactionType.PRELEVEMENT, "BP", "", -17.65, MasterCategory.TRANSPORTS)
+      .addOccasional("20/04/2006", TransactionType.PRELEVEMENT, "Menu K", "", -49.00, MasterCategory.FOOD)
+      .addOccasional("19/04/2006", TransactionType.PRELEVEMENT, "Kalistea", "", -14.50, MasterCategory.FOOD)
+      .addOccasional("13/04/2006", TransactionType.PRELEVEMENT, "ELF", "", -18.70, MasterCategory.TRANSPORTS)
       .check();
 
     categories.select(MasterCategory.FOOD);
     transactions
       .initContent()
-      .add("20/04/2006", TransactionType.PRELEVEMENT, "Menu K", "", -49.00, MasterCategory.FOOD)
-      .add("19/04/2006", TransactionType.PRELEVEMENT, "Kalistea", "", -14.50, MasterCategory.FOOD)
+      .addOccasional("20/04/2006", TransactionType.PRELEVEMENT, "Menu K", "", -49.00, MasterCategory.FOOD)
+      .addOccasional("19/04/2006", TransactionType.PRELEVEMENT, "Kalistea", "", -14.50, MasterCategory.FOOD)
       .check();
 
     categories.select(MasterCategory.ALL);
     transactions
       .initContent()
-      .add("20/04/2006", TransactionType.PRELEVEMENT, "BP", "", -17.65, MasterCategory.TRANSPORTS)
-      .add("20/04/2006", TransactionType.PRELEVEMENT, "Menu K", "", -49.00, MasterCategory.FOOD)
-      .add("19/04/2006", TransactionType.PRELEVEMENT, "Kalistea", "", -14.50, MasterCategory.FOOD)
-      .add("13/04/2006", TransactionType.PRELEVEMENT, "ELF", "", -18.70, MasterCategory.TRANSPORTS)
+      .addOccasional("20/04/2006", TransactionType.PRELEVEMENT, "BP", "", -17.65, MasterCategory.TRANSPORTS)
+      .addOccasional("20/04/2006", TransactionType.PRELEVEMENT, "Menu K", "", -49.00, MasterCategory.FOOD)
+      .addOccasional("19/04/2006", TransactionType.PRELEVEMENT, "Kalistea", "", -14.50, MasterCategory.FOOD)
+      .addOccasional("13/04/2006", TransactionType.PRELEVEMENT, "ELF", "", -18.70, MasterCategory.TRANSPORTS)
       .check();
   }
 
@@ -68,7 +68,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "Dr Lecter", "", -3.0, MasterCategory.NONE)
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2.0, MasterCategory.NONE)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Station BP", "", -1.0, MasterCategory.TRANSPORTS)
+      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Station BP", "", -1.0, MasterCategory.TRANSPORTS)
       .check();
 
     categories.select(MasterCategory.NONE);
@@ -108,14 +108,14 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.select("Apero");
     transactions
       .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, "Apero")
+      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, "Apero")
       .check();
 
     categories.select(MasterCategory.FOOD);
     transactions
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "MenuK", "", -2.0, MasterCategory.FOOD)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, "Apero")
+      .addOccasional("15/01/2006", TransactionType.PRELEVEMENT, "MenuK", "", -2.0, MasterCategory.FOOD)
+      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, "Apero")
       .check();
   }
 
@@ -220,7 +220,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.select("Apero");
     transactions
       .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, "Apero")
+      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, "Apero")
       .check();
 
     categories.deleteSubSelected(MasterCategory.FOOD);
@@ -231,7 +231,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, MasterCategory.FOOD)
+      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.0, MasterCategory.FOOD)
       .check();
   }
 
@@ -268,8 +268,8 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.select(MasterCategory.ALL);
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -1.00, "Quotidien")
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.00, "Quotidien")
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -1.00, "Quotidien", "Courant")
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -1.00, "Quotidien", "Courant")
       .check();
 
     views.selectCategorization();

@@ -115,7 +115,7 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     categories.assertCategoryNotFound("Fuel");
     transactions
       .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Station BP", "", -1.0, MasterCategory.HOUSE)
+      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Station BP", "", -1.0, MasterCategory.HOUSE)
       .check();
   }
 
@@ -144,7 +144,7 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     categories.assertCategoryNotFound(getCategoryName(MasterCategory.TRANSPORTS));
     transactions
       .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Station BP", "", -1.0, MasterCategory.HOUSE)
+      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Station BP", "", -1.0, MasterCategory.HOUSE)
       .check();
   }
 

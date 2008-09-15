@@ -1,9 +1,9 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.functests.checkers.ViewSelectionChecker;
-import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
@@ -275,14 +275,14 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
     getTransactionView().initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu A", "", -2, MasterCategory.NONE)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
+      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
       .check();
 
     getCategorizationView().setOccasional("Menu A", MasterCategory.FOOD);
 
     getTransactionView().initContent()
-      .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu A", "", -2, MasterCategory.FOOD)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
+      .addOccasional("12/01/2006", TransactionType.PRELEVEMENT, "Menu A", "", -2, MasterCategory.FOOD)
+      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
       .check();
   }
 

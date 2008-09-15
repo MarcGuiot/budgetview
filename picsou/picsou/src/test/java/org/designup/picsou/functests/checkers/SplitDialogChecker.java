@@ -1,6 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.functests.checkers.converters.CategoryCellConverter;
+import org.designup.picsou.functests.checkers.converters.SeriesCellConverter;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.transactions.split.SplitTransactionDialog;
 import org.designup.picsou.model.MasterCategory;
@@ -24,7 +24,7 @@ public class SplitDialogChecker {
   public SplitDialogChecker(Window window) {
     this.window = window;
     splitsTable = window.getTable();
-    splitsTable.setCellValueConverter(SplitTransactionDialog.CATEGORY_COLUMN_INDEX, new CategoryCellConverter(window));
+    splitsTable.setCellValueConverter(SplitTransactionDialog.CATEGORY_COLUMN_INDEX, new SeriesCellConverter(window));
     splitsTable.setCellValueConverter(SplitTransactionDialog.REMOVE_SPLIT_COLUMN_INDEX, new TableCellValueConverter() {
       public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
         return "";

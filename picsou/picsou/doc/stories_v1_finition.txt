@@ -21,6 +21,9 @@ CategoryEditionDialog
 * Creation de series INCOME : preselectionner la categories par defaut
 * Titre
 * Label "renommer la categorie"
+* Lorqu'on choisis une opération en mode 'selection des operation similaire'
+  - ne pas scroller la table
+  - afficher le lable anonymisé
 
 CategorizationView
 * Voir vitesse scrolling (evolution splits)

@@ -294,11 +294,11 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("14/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
-      .add("12/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
+      .addOccasional("14/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
+      .addOccasional("12/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
       .add("10/06/2008", TransactionType.VIREMENT, "McDo", "", 10.00)
       .add("10/06/2008", TransactionType.CREDIT_CARD, "Metro", "", 71.00)
-      .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
+      .addOccasional("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
       .check();
   }
 

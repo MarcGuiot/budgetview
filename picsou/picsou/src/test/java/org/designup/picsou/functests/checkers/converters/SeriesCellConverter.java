@@ -3,8 +3,6 @@ package org.designup.picsou.functests.checkers.converters;
 import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
-import org.designup.picsou.gui.description.CategoryComparator;
-import org.designup.picsou.gui.description.CategoryStringifier;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.Glob;
@@ -16,12 +14,10 @@ import org.uispec4j.Window;
 import javax.swing.*;
 import java.awt.*;
 
-public class CategoryCellConverter implements TableCellValueConverter {
+public class SeriesCellConverter implements TableCellValueConverter {
   private GlobRepository repository;
-  private CategoryStringifier categoryStringifier = new CategoryStringifier();
-  private CategoryComparator categoryComparator;
 
-  public CategoryCellConverter(Window window) {
+  public SeriesCellConverter(Window window) {
     Container container = window.getAwtComponent();
     if (container instanceof PicsouFrame) {
       PicsouFrame frame = (PicsouFrame)container;
@@ -31,7 +27,6 @@ public class CategoryCellConverter implements TableCellValueConverter {
       PicsouFrame frame = (PicsouFrame)container.getParent();
       this.repository = frame.getRepository();
     }
-    this.categoryComparator = new CategoryComparator(repository, categoryStringifier);
   }
 
   public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {

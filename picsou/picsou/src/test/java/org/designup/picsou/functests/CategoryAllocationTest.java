@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
@@ -38,7 +39,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "MiamMiam", "", -1.1, MasterCategory.FOOD)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "MiamMiam", "", -1.1, "Occasional", MasterCategory.FOOD)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
       .check();
     categories
@@ -101,13 +102,15 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .load();
 
-    Button lintToCategorized = new Panel((Container)transactions.getTable().getSwingRendererComponentAt(0, 1)).getButton();
+    Button lintToCategorized = new Panel((Container)transactions.getTable()
+      .getSwingRendererComponentAt(0, TransactionView.SERIES_COLUMN_INDEX)).getButton();
     assertTrue(lintToCategorized.foregroundEquals("red"));
 
     assignCategory("Menu K", MasterCategory.FOOD);
 
     transactions.getTable().clearSelection();
-    Button categorizedLink = new Panel((Container)transactions.getTable().getSwingRendererComponentAt(0, 1)).getButton();
+    Button categorizedLink = new Panel((Container)transactions.getTable()
+      .getSwingRendererComponentAt(0, TransactionView.SERIES_COLUMN_INDEX)).getButton();
     assertTrue(categorizedLink.foregroundEquals("black"));
   }
 
