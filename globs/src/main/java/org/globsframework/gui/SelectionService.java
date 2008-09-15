@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.Utils;
 import static org.globsframework.utils.Utils.list;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -25,7 +26,12 @@ public class SelectionService {
   }
 
   public void removeListener(GlobSelectionListener listener) {
-    listenersByType.removeValue(listener);
+    boolean removed = listenersByType.removeValue(listener);
+    Utils.beginRemove();
+    if (!removed) {
+      throw new RuntimeException("BUG");
+    }
+    Utils.endRemove();
   }
 
   public void select(Glob glob) {

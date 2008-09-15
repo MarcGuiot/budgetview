@@ -13,7 +13,6 @@ import javax.swing.*;
 
 public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
   ButtonGroup seriesGroup = new ButtonGroup();
-  private DefaultChangeSetListener seriesUpdateListener;
 
   public SeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository localRepository, Directory directory) {
     super(invisibleToggle, localRepository, directory);
@@ -24,7 +23,7 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
     final Key seriesKey = series.getKey();
     final Key categoryKey = series.getTargetKey(Series.DEFAULT_CATEGORY);
     final JToggleButton toggle = createSeriesToggle(toggleLabel, seriesKey, categoryKey);
-    seriesUpdateListener = new DefaultChangeSetListener() {
+    final DefaultChangeSetListener seriesUpdateListener = new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(seriesKey)) {
           Glob series = repository.find(seriesKey);
