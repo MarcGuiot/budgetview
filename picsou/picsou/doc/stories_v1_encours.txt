@@ -1,5 +1,4 @@
 SeriesEditionDialog
-** Colonne "montant observe"
 * Combo "Tous les mois" / "Certains mois" pour masquer le choix des mois
 * Hyperlien "selectionner tout (Ctrl-A)"
 

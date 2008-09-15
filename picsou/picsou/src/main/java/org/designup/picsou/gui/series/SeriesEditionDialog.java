@@ -9,6 +9,7 @@ import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
@@ -39,7 +40,8 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -49,6 +51,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class SeriesEditionDialog {
@@ -132,6 +135,9 @@ public class SeriesEditionDialog {
       .setDefaultLabelCustomizer(new SeriesBudgetLabelCustomizer())
       .addColumn(Lang.get("seriesEdition.year"), new YearStringifier())
       .addColumn(Lang.get("seriesEdition.month"), new MonthStringifier())
+      .addColumn(Lang.get("seriesEdition.observed.amount"),
+                 new ObservedAmountStringifier(repository, descriptionService),
+                 new ObservedLabelCustomizer(repository))
       .addColumn(Lang.get("seriesBudget.amount"), new AmountStringifier(), LabelCustomizers.ALIGN_RIGHT);
     PicsouTableHeaderPainter.install(budgetTable, localDirectory);
 
@@ -344,7 +350,7 @@ public class SeriesEditionDialog {
     this.budgetArea = budgetArea;
 
     this.titleLabel.setText(Lang.get("budgetArea." + budgetArea.getName()));
-    
+
     initCategorizeVisibility();
     GlobList seriesList =
       repository.getAll(Series.TYPE, fieldEquals(Series.BUDGET_AREA, budgetArea.getId()));
@@ -834,6 +840,68 @@ public class SeriesEditionDialog {
       else {
         return Lang.get("seriesEdition.amount.label.full", monthDescription.toLowerCase());
       }
+    }
+  }
+
+  private class ObservedAmountStringifier extends AbstractGlobStringifier {
+    private DecimalFormat format;
+    private GlobRepository repository;
+
+    private ObservedAmountStringifier(GlobRepository repository, DescriptionService descriptionService) {
+      this.repository = repository;
+      format = descriptionService.getFormats().getDecimalFormat();
+    }
+
+    public String toString(Glob glob, GlobRepository repository) {
+      Integer monthId = glob.get(SeriesBudget.MONTH);
+      Integer seriesId = glob.get(SeriesBudget.SERIES);
+      Glob seriesStat = this.repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
+      if (seriesStat != null) {
+        Double amount = seriesStat.get(SeriesStat.AMOUNT);
+        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome() && amount != 0.0) {
+          amount = -amount;
+        }
+        String str = format.format(amount);
+        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome()) {
+          if (amount < 0) {
+            return str.replace("-", "+");
+          }
+        }
+        return str;
+      }
+      return "";
+    }
+  }
+
+  private class ObservedLabelCustomizer implements LabelCustomizer, ColorChangeListener {
+    private GlobRepository repository;
+    private Color color;
+
+    private ObservedLabelCustomizer(GlobRepository repository) {
+      this.repository = repository;
+      localDirectory.get(ColorService.class).addListener(this);
+    }
+
+    public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
+      Integer monthId = glob.get(SeriesBudget.MONTH);
+      Integer seriesId = glob.get(SeriesBudget.SERIES);
+      Glob seriesStat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
+      if (seriesStat != null) {
+        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome()) {
+          if (seriesStat.get(SeriesStat.AMOUNT) < glob.get(SeriesBudget.AMOUNT)) {
+            label.setForeground(color);
+          }
+        }
+      }
+    }
+
+    public void colorsChanged(ColorLocator colorLocator) {
+      color = colorLocator.get("seriesEdition.table.amount.overrun");
+    }
+
+    protected void finalize() throws Throwable {
+      super.finalize();
+      localDirectory.get(ColorService.class).removeListener(this);
     }
   }
 }
