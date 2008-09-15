@@ -295,6 +295,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.recurring
       .createSeries()
+      .checkTitle("Recurring expenses")
       .checkNameIsSelected()
       .checkSeriesList("New series")
       .checkSeriesSelected("New series")
@@ -315,11 +316,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.createSeries()
+      .checkTitle("Recurring expenses")
       .setName("My recurrence")
       .setCategory(MasterCategory.FOOD)
       .validate();
 
     budgetView.envelopes.createSeries()
+      .checkTitle("Envelope expenses")
       .setName("My envelope")
       .setCategory(MasterCategory.HOUSE)
       .validate();
@@ -734,7 +737,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .editSeriesList();
     edition
       .selectSeries("AA")
-      .deleteSeriesWithAsk()
+      .deleteSeriesWithConfirmation()
       .checkMessage()
       .validate();
     edition.checkSeriesList();

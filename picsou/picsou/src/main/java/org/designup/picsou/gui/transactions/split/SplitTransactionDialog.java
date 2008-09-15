@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.transactions.split;
 
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.components.PicsouTableHeaderCustomizer;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.BalanceStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
@@ -9,7 +8,6 @@ import org.designup.picsou.gui.transactions.categorization.TransactionCategoryCh
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.transactions.details.CategorisationHyperlinkButton;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.LABEL;
 import static org.designup.picsou.model.Transaction.NOTE;
@@ -110,7 +108,7 @@ public class SplitTransactionDialog {
     colorService = localDirectory.get(ColorService.class);
     rendererColors = new TransactionRendererColors(localDirectory);
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), Lang.get("split.transaction.title"), directory);
+    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/splitTransaction.splits",
                                                       localRepository, localDirectory);

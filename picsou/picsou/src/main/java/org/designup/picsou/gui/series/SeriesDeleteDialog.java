@@ -18,7 +18,7 @@ public class SeriesDeleteDialog {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/seriesDeleteDialog.splits",
                                                       repository, directory);
-    dialog = PicsouDialog.createWithButtons(Lang.get("seriesEdition.title"), parent, builder.<JPanel>load(),
+    dialog = PicsouDialog.createWithButtons(parent, builder.<JPanel>load(),
                                             new AbstractAction(Lang.get("ok")) {
                                               public void actionPerformed(ActionEvent e) {
                                                 ok = true;

@@ -12,7 +12,7 @@
         <column>
           <label ref="seriesName" font="-,bold,14"/>
           <repeat ref="categoryRepeat">
-            <toggleButton ref="categoryToggle" styleClass="selector"/>
+            <toggleButton ref="categoryToggle" styleClass="selector" horizontalAlignment="left"/>
           </repeat>
         </column>
       </repeat>

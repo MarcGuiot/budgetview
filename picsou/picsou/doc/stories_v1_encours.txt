@@ -1,9 +1,7 @@
 SeriesEditionDialog
 ** Colonne "montant observe"
 * Combo "Tous les mois" / "Certains mois" pour masquer le choix des mois
-** Separer lignes mois (checkbox)
 ** Look panneau suppression serie
-** Titre = nom de la budgetArea
 * Hyperlien "selectionner tout (Ctrl-A)"
 
 BudgetView
@@ -19,7 +17,6 @@ Licence
 * Pb focus text editor
 
 CategoryEditionDialog
-** Interdire suppression Revenus
 ** Look dialog suppression categorie
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
 
