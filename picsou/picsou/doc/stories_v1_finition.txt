@@ -2,7 +2,6 @@ Look general
 * Tooltips sur les boutons
 
 Import
-* supprimer URL banque
 * utiliser une PicsouDialog (coherence ordre ok/cancel)
 * Import : OK sans fichier = message, si selection il faut purger le message
 * Bring to front sur Open With...

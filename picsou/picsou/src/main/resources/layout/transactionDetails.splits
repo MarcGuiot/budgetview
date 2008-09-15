@@ -29,7 +29,7 @@
 
   </styles>
 
-  <column name="transactionDetails" minimumSize="(200, 100)">
+  <column name="transactionDetails">
 
     <label ref="transactionType" styleClass="formLabel"/>
     <textArea ref="userLabel" styleClass="readonly"/>

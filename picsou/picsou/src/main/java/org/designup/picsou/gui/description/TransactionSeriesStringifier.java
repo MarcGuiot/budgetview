@@ -9,7 +9,6 @@ import org.globsframework.model.format.utils.AbstractGlobStringifier;
 
 public class TransactionSeriesStringifier extends AbstractGlobStringifier {
 
-  private CategoryStringifier categoryStringifier = new CategoryStringifier();
   private SeriesStringifier seriesStringifier = new SeriesStringifier();
 
   public String toString(Glob transaction, GlobRepository repository) {

@@ -1,6 +1,5 @@
 SeriesEditionDialog
 ** Colonne "montant observe"
-* Combo "Tous les mois" / "Certains mois" pour masquer le choix des mois
 * Hyperlien "selectionner tout (Ctrl-A)"
 
 BudgetView
@@ -19,7 +18,6 @@ CategoryEditionDialog
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
 
 CategorizationView
-** Colonne "serie/categorie"
 * Message d'aide quand il n'y a pas de serie pour une budgetArea
 * Bouton "liste" : selectionner la serie courante
 * Afficher le nombre de transactions non classees
