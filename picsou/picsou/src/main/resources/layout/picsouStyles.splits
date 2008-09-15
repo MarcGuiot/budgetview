@@ -36,6 +36,10 @@
 
     <style selector="table" intercellSpacing="(0,0)" showGrid="false"/>
 
+    <!-- Main panel -->
+
+    <style selector="panel.main" opaque="false"/>
+
     <!-- Dialog -->
 
     <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"
@@ -89,6 +93,7 @@
     <ui name="iconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"/>
     <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>
     <style selector=".iconButtonGroup button" ui='iconButton' fill='none' weightX='0'/>
+    <style selector=".iconButtonGroup toggleButton" ui='iconButton' fill='none' weightX='0'/>
     <style selector=".iconButtonGroup button.create"
            icon="button_plus.png" disabledIcon="button_plus_disabled.png"/>
     <style selector=".iconButtonGroup button.delete"

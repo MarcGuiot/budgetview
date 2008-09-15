@@ -6,7 +6,7 @@ import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
-import org.globsframework.gui.splits.styles.StyleService;
+import org.globsframework.gui.splits.styles.StyleContext;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.DummyIconLocator;
 import org.globsframework.gui.splits.utils.DummyTextLocator;
@@ -30,7 +30,6 @@ public abstract class SplitsTestCase extends UISpecTestCase {
   protected FontService fontService = new FontService();
   protected DummyIconLocator iconLocator = new DummyIconLocator();
   protected DummyTextLocator textLocator = new DummyTextLocator();
-  protected StyleService styleService = new StyleService();
   protected UIService uiService = new UIService();
 
   protected JTable aTable = new JTable();

@@ -49,6 +49,7 @@ public class SelectionService {
     for (GlobType globType : allTypes) {
       currentSelections.put(globType, selection.getAll(globType));
     }
+
     Set<GlobSelectionListener> listeners = getListeners(allTypes);
     for (GlobSelectionListener listener : listeners) {
       listener.selectionUpdated(selection);

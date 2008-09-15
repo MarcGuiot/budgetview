@@ -7,8 +7,8 @@ Versions basique/pro
 
 Stabilisation
 -------------
-* Apprentissage / series
 * Finir page accueil (graphique, change log)
+* Apprentissage / series
 * Changer date user des transactions
 * Modifier l'ordre des categories
 * Modifier l'ordre des series

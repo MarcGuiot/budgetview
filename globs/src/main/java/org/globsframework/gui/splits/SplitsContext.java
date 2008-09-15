@@ -1,6 +1,7 @@
 package org.globsframework.gui.splits;
 
 import org.globsframework.gui.splits.repeat.RepeatHandler;
+import org.globsframework.gui.splits.styles.StyleContext;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -29,6 +30,8 @@ public interface SplitsContext {
   void addAutoHide(Component targetComponent, String sourceComponentName);
 
   void addLabelFor(JLabel label, String componentName);
+
+  StyleContext getStyles();
 
   void cleanUp();
 

@@ -7,15 +7,17 @@
         topColor="errorpanel.top" bottomColor="errorpanel.bottom"
         borderColor="errorpanel.border" borderWidth="2" cornerRadius="20"/>
 
-    <ui name="viewSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
+    <ui name="masterViewSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
         topColor="viewselector.top" bottomColor="viewselector.bottom"
         borderColor="viewselector.border" borderWidth="1" cornerRadius="10"/>
 
-    <style selector="toggleButton.viewSelector" ui="viewSelector" opaque="false"
+    <style selector="toggleButton.masterViewSelector" ui="masterViewSelector" opaque="false"
            minimumSize="(40,40)" preferredSize="(40,40)" margin="0" marginLeft="5" weightX="0" fill="none"/>
     <style selector="toggleButton#homeCardToggle" icon="card_home.png"/>
     <style selector="toggleButton#categorizationCardToggle" icon="card_categorization.png"/>
     <style selector="toggleButton#budgetCardToggle" icon="card_budget.png"/>
+    <style selector="toggleButton#analysisCardToggle" icon="card_analysis.png"/>
+
     <style selector="toggleButton#dataCardToggle" icon="card_list.png"/>
     <style selector="toggleButton#repartitionCardToggle" icon="card_pie.png"/>
     <style selector="toggleButton#evolutionCardToggle" icon="card_line.png"/>
@@ -36,12 +38,10 @@
         <label ref="title" opaque="false" font="Arial,bold,22"
                horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
         <filler fill="horizontal"/>
-        <toggleButton ref="homeCardToggle" styleClass="viewSelector"/>
-        <toggleButton ref="categorizationCardToggle" styleClass="viewSelector"/>
-        <toggleButton ref="budgetCardToggle" styleClass="viewSelector"/>
-        <toggleButton ref="dataCardToggle" styleClass="viewSelector"/>
-        <toggleButton ref="repartitionCardToggle" styleClass="viewSelector"/>
-        <toggleButton ref="evolutionCardToggle" styleClass="viewSelector"/>
+        <toggleButton ref="homeCardToggle" styleClass="masterViewSelector"/>
+        <toggleButton ref="categorizationCardToggle" styleClass="masterViewSelector"/>
+        <toggleButton ref="budgetCardToggle" styleClass="masterViewSelector"/>
+        <toggleButton ref="analysisCardToggle" styleClass="masterViewSelector"/>
       </row>
 
       <row weightY="0.1">
@@ -59,7 +59,7 @@
         </grid>
       </row>
 
-      <cards ref="cardView" opaque="false" marginTop="20" weightY="10.0">
+      <cards ref="mainCards" opaque="false" marginTop="20" weightY="10.0">
 
         <card name="home">
           <row>
@@ -93,12 +93,11 @@
           <panel ref="budgetView"/>
         </card>
 
-        <card name="withCategories">
+        <card name="analysis">
 
           <horizontalSplit dividerLocation="230"
                            continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
             <panel styleClass="block">
-
               <column margin="10">
                 <scrollPane border="line(category.border)" viewportBackground="categories.bg"
                             background="categories.bg"
@@ -109,50 +108,55 @@
                   <button action="editCategories" name="editCategories" styleClass="list"/>
                   <filler fill="horizontal"/>
                 </row>
-
               </column>
 
             </panel>
 
-            <cards ref="cardsWithCategoriesView" opaque="false" border="empty(0,5,0,0)">
-              <card name="data">
-                <panel styleClass="block">
-                  <column margin="10">
-                    <scrollPane borderPos="center" viewportBackground="transactions.bg"
-                                border="line(transaction.border)" opaque="false"
-                                marginLeft="5">
-                      <table ref="transaction" background="transactions.bg" rowHeight="20"/>
-                    </scrollPane>
-                    <row>
-                      <label text="$transaction.details.search" styleClass="formLabel"/>
-                      <textField ref="transactionSearchField"/>
-                    </row>
-                  </column>
-                </panel>
-              </card>
+            <panel styleClass="block">
+              <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
 
-              <card name="repartition">
-                <column>
-                  <panel styleClass="block">
-                    <panel styleClass="innerBlock" border="empty(10,10,10,10)">
+                <row styleClass="iconButtonGroup" marginRight="5" marginBottom="10">
+                  <filler fill="horizontal"/>
+                  <toggleButton ref="dataCardToggle" icon="button_data.png"/>
+                  <toggleButton ref="repartitionCardToggle" icon="button_repartition.png"/>
+                  <toggleButton ref="evolutionCardToggle" icon="button_evolution.png"/>
+                </row>
+
+                <cards ref="analysisCards" opaque="false" marginRight="5">
+
+                  <card name="data">
+                    <column>
+                      <scrollPane borderPos="center" viewportBackground="transactions.bg"
+                                  border="line(transaction.border)" opaque="false"
+                                  marginLeft="5">
+                        <table ref="transaction" background="transactions.bg" rowHeight="20"/>
+                      </scrollPane>
+                      <row>
+                        <label text="$transaction.details.search" styleClass="formLabel"/>
+                        <textField ref="transactionSearchField"/>
+                      </row>
+                    </column>
+                  </card>
+
+                  <card name="repartition">
+                    <column>
                       <component ref="categoriesChart" opaque="false" fill="both" border="empty(15,10,15,10)"/>
-                    </panel>
-                  </panel>
-                  <filler fill="vertical" weightY="1.0"/>
-                </column>
-              </card>
+                      <filler fill="vertical" weightY="1.0"/>
+                    </column>
+                  </card>
 
-              <card name="evolution">
-                <column>
-                  <panel styleClass="block">
-                    <component ref="historicalChart" opaque="false" fill="both" anchor="center"
-                               marginLeft="30" marginRight="20" border="empty(10,10,10,10)"/>
-                  </panel>
-                  <filler fill="vertical" weightY="1.0"/>
-                </column>
-              </card>
+                  <card name="evolution">
+                    <column>
+                      <component ref="historicalChart" opaque="false" fill="both" anchor="center"
+                                 marginLeft="30" marginRight="20" border="empty(10,10,10,10)"/>
+                      <filler fill="vertical" weightY="1.0"/>
+                    </column>
+                  </card>
 
-            </cards>
+                </cards>
+
+              </column>
+            </panel>
           </horizontalSplit>
 
         </card>

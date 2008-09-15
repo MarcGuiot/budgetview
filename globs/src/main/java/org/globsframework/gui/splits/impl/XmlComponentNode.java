@@ -5,7 +5,6 @@ import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.SplitterFactory;
 import org.globsframework.gui.splits.styles.SplitsPath;
-import org.globsframework.gui.splits.styles.StyleService;
 import org.globsframework.gui.splits.xml.SplitsParser;
 import org.saxstack.parser.DefaultXmlNode;
 import org.saxstack.parser.XmlNode;
@@ -38,7 +37,7 @@ public class XmlComponentNode extends DefaultXmlNode {
 
   private SplitProperties getProperties(Attributes attributes, XmlComponentNode parent) {
     DefaultSplitProperties properties = new DefaultSplitProperties(parent != null ? parent.properties : null);
-    properties.add(context.getService(StyleService.class).getProperties(path));
+    properties.add(this.context.getStyles().getProperties(path));
     properties.add(SplitsParser.createProperties(attributes));
     return properties;
   }

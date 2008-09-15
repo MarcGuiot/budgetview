@@ -23,15 +23,22 @@ public class ViewSelectionChecker extends DataChecker {
     select("budget");
   }
 
+  public void selectAnalysis() {
+    select("analysis");
+  }
+
   public void selectData() {
+    select("analysis");
     select("data");
   }
 
   public void selectEvolution() {
+    select("analysis");
     select("evolution");
   }
 
   public void selectRepartition() {
+    select("analysis");
     select("repartition");
   }
 
@@ -40,10 +47,12 @@ public class ViewSelectionChecker extends DataChecker {
   }
 
   public void checkDataSelected() {
+    assertSelected("analysis");
     assertSelected("data");
   }
 
   public void checkEvolutionSelected() {
+    assertSelected("analysis");
     assertSelected("evolution");
   }
 
@@ -52,6 +61,7 @@ public class ViewSelectionChecker extends DataChecker {
   }
 
   public void checkRepartitionSelected() {
+    assertSelected("analysis");
     assertSelected("repartition");
   }
 

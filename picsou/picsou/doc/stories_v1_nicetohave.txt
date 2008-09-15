@@ -48,7 +48,7 @@ Nouveau
 
 * BalanceGraph : couleur si balance negative
 * CategoryView : boutons expand all / collapse all
-* TimeView mettre en evidence les mois sans transactions
+* TimeView : mettre en evidence les mois sans transactions
 * Memoriser taille et position appli dans les user prefs
 
 * Categorisation : tab "virements internes" avec selection du compte de destination

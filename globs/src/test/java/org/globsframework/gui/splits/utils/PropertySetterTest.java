@@ -6,7 +6,7 @@ import org.globsframework.gui.splits.impl.DefaultSplitProperties;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
 import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.font.FontLocator;
-import org.globsframework.gui.splits.styles.StyleService;
+import org.globsframework.gui.splits.styles.StyleContext;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.utils.directory.Directory;
@@ -29,7 +29,6 @@ public class PropertySetterTest extends UISpecTestCase {
     directory.add(IconLocator.class, new DummyIconLocator());
     directory.add(TextLocator.class, new DummyTextLocator());
     directory.add(FontLocator.class, new FontService());
-    directory.add(new StyleService());
     context = new DefaultSplitsContext(directory);
   }
 

@@ -19,6 +19,7 @@ import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
+import javax.swing.AbstractButton;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,14 @@ public class CategorizationChecker extends DataChecker {
     return mainWindow.getPanel("categorizationView");
   }
 
+  private void selectBudgetArea(BudgetArea area) {
+    AbstractButton button = getPanel().findSwingComponent(AbstractButton.class, area.getName());
+    if (button == null) {
+      Assert.fail("No button found for budget area " + area);
+    }
+    button.doClick(0);
+  }
+
   public CategorizationChecker checkLabel(String expected) {
     assertTrue(getTransactionLabel().textEquals(expected));
     return this;
@@ -45,37 +54,32 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public void checkBudgetAreasAreEnabled() {
+  public CategorizationChecker checkBudgetAreaSelectionPanelDisplayed() {
     for (BudgetArea area : BudgetArea.values()) {
       if (area != BudgetArea.UNCATEGORIZED) {
-        assertTrue(getPanel().getToggleButton(area.getName()).isEnabled());
+        assertTrue(getPanel().containsSwingComponent(AbstractButton.class, area.getName()));
       }
     }
+    return this;
   }
 
-  public void checkBudgetAreasAreDisabled() {
+  public void checkNoSelectionPanelDisplayed() {
+    Panel panel = getPanel();
     for (BudgetArea area : BudgetArea.values()) {
       if (area != BudgetArea.UNCATEGORIZED) {
-        assertFalse(getPanel().getToggleButton(area.getName()).isEnabled());
+        assertFalse(panel.containsUIComponent(Button.class, area.getName()));
+        assertFalse(panel.containsUIComponent(ToggleButton.class, area.getName()));
       }
     }
+    assertThat(panel.containsLabel("You must select an operation"));
   }
 
   public void checkBudgetAreaIsSelected(BudgetArea budgetArea) {
     assertTrue(getPanel().getToggleButton(budgetArea.getGlob().get(BudgetArea.NAME)).isSelected());
   }
 
-  public void checkNoBudgetAreaSelected() {
-    for (BudgetArea area : BudgetArea.values()) {
-      if (area != BudgetArea.UNCATEGORIZED) {
-        final String name = area.getGlob().get(BudgetArea.NAME);
-        assertFalse("Area '" + name + "' is selected", getPanel().getToggleButton(name).isSelected());
-      }
-    }
-  }
-
   public CategorizationChecker selectIncome() {
-    getPanel().getPanel("budgetAreas").getToggleButton(BudgetArea.INCOME.getGlob().get(BudgetArea.NAME)).click();
+    selectBudgetArea(BudgetArea.INCOME);
     return this;
   }
 
@@ -135,7 +139,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker selectRecurring() {
-    getPanel().getToggleButton(BudgetArea.RECURRING_EXPENSES.getGlob().get(BudgetArea.NAME)).click();
+    selectBudgetArea(BudgetArea.RECURRING_EXPENSES);
     return this;
   }
 
@@ -225,7 +229,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker selectEnvelopes() {
-    getPanel().getToggleButton("expensesEnvelope").click();
+    selectBudgetArea(BudgetArea.EXPENSES_ENVELOPE);
     return this;
   }
 
@@ -295,7 +299,6 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-
   private Panel getEnvelopeSeriesPanel() {
     Panel panel = getPanel();
     assertTrue(panel.containsUIComponent(Panel.class, "envelopeSeriesChooser"));
@@ -305,7 +308,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker selectProjects() {
-    getPanel().getToggleButton("projects").click();
+    selectBudgetArea(BudgetArea.PROJECTS);
     return this;
   }
 
@@ -342,7 +345,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker selectSavings() {
-    getPanel().getToggleButton("savings").click();
+    selectBudgetArea(BudgetArea.SAVINGS);
     return this;
   }
 
@@ -379,7 +382,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker selectOccasional() {
-    getPanel().getToggleButton("occasionalExpenses").click();
+    selectBudgetArea(BudgetArea.OCCASIONAL_EXPENSES);
     return this;
   }
 

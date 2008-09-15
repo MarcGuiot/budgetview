@@ -685,7 +685,7 @@ public class SeriesEditionDialog {
   private class AmountStringifier extends AbstractGlobStringifier {
     public String toString(Glob glob, GlobRepository repository) {
       Double value = glob.get(SeriesBudget.AMOUNT);
-      if (value == 0.0) {
+      if ((value == null) || (value == 0.0)) {
         return "0";
       }
       return PicsouDescriptionService.DECIMAL_FORMAT.format((budgetArea.isIncome() ? 1 : -1) * value);

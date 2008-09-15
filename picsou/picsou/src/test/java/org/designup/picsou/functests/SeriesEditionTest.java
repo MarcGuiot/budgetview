@@ -36,7 +36,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "July", "29.00"},
       })
       .checkMonthSelected(1)
-      .checkLabelExpenseAmount()
+      .checkAmountLabel("Planned amount for july 2008")
+      .selectAllMonths()
+      .checkAmountLabel("Planned amount for july - august 2008")
       .validate();
 
     budgetView.recurring.checkSeries("Free", 29.00, 29.00);
@@ -452,7 +454,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkOkEnabled(false)
       .setCategory(MasterCategory.INCOME)
       .checkOkEnabled(true)
-      .checkLabelIncomeAmount()
+      .checkAmountLabel("Planned amount for august 2008")
       .validate();
   }
 
