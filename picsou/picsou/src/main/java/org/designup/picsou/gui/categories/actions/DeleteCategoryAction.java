@@ -2,28 +2,19 @@ package org.designup.picsou.gui.categories.actions;
 
 import org.designup.picsou.gui.categories.CategoryChooserCallback;
 import org.designup.picsou.gui.categories.CategoryChooserDialog;
-import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesToCategory;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -93,12 +84,12 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
         return null;
       }
 
-      NewCategoryDialog categoryDialog = new NewCategoryDialog(directory, repository);
-      if (!categoryDialog.selectTargetCategory(masterId, getParent())) {
+      CategoryDeletionDialog categoryDeletionDialog = new CategoryDeletionDialog(directory, repository);
+      if (!categoryDeletionDialog.selectTargetCategory(masterId, getParent())) {
         return null;
       }
 
-      targetId = categoryDialog.getTargetId();
+      targetId = categoryDeletionDialog.getTargetId();
       if (targetId == null) {
         return null;
       }
@@ -138,79 +129,6 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
 
   protected abstract JDialog getParent();
 
-  static class NewCategoryDialog {
-    private GlobRepository repository;
-    private PicsouDialog categoryChooserDialog;
-    private Integer targetId;
-    private boolean returnStatus;
-    private Directory localDirectory;
-    private SelectionService selectionService;
-
-    NewCategoryDialog(Directory directory, GlobRepository repository) {
-      this.repository = repository;
-      localDirectory = new DefaultDirectory(directory);
-      selectionService = new SelectionService();
-    }
-
-    private boolean selectTargetCategory(Integer masterId, JDialog dialog) {
-      localDirectory.add(selectionService);
-      categoryChooserDialog = PicsouDialog.create(dialog, localDirectory);
-
-      GlobsPanelBuilder builder = new GlobsPanelBuilder(DeleteCategoryAction.class,
-                                                        "/layout/deleteCategory.splits", repository, localDirectory);
-
-      builder.add("warningText", new JTextArea(Lang.get("delete.category.warning.text")));
-      GlobListStringifier categoryStringifier = GlobListStringifiers
-        .valueForEmpty(Lang.get("delete.category.empty"), localDirectory.get(DescriptionService.class).getListStringifier(Category.TYPE));
-      builder.addLabel("categoryLabel", Category.TYPE, categoryStringifier);
-      CategorieChooserAction chooserAction =
-        new CategorieChooserAction(masterId, categoryChooserDialog, localDirectory, repository);
-      builder.add("categoryChooser", chooserAction);
-
-      final NewCategoryDialog.OkAction okAction = new OkAction();
-      categoryChooserDialog.addInPanelWithButton(builder.<JPanel>load(), okAction, new CancelAction());
-      selectionService.addListener(new GlobSelectionListener() {
-        public void selectionUpdated(GlobSelection selection) {
-          okAction.setEnabled(!selection.getAll(Category.TYPE).isEmpty());
-        }
-      }, Category.TYPE);
-      if (masterId != null) {
-        selectionService.select(repository.get(Key.create(Category.TYPE, masterId)));
-      }
-      categoryChooserDialog.pack();
-      GuiUtils.showCentered(categoryChooserDialog);
-      targetId = chooserAction.getTargetId();
-      return returnStatus;
-    }
-
-    public Integer getTargetId() {
-      return targetId;
-    }
-
-    private class OkAction extends AbstractAction {
-      private OkAction() {
-        super(Lang.get("ok"));
-        setEnabled(false);
-      }
-
-      public void actionPerformed(ActionEvent e) {
-        categoryChooserDialog.setVisible(false);
-        returnStatus = true;
-      }
-    }
-
-    private class CancelAction extends AbstractAction {
-      private CancelAction() {
-        super(Lang.get("cancel"));
-      }
-
-      public void actionPerformed(ActionEvent e) {
-        categoryChooserDialog.setVisible(false);
-        returnStatus = false;
-      }
-    }
-  }
-
   private static class CategoryCallback implements CategoryChooserCallback {
     private Integer targetId;
     private final Integer masterId;
@@ -240,14 +158,14 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
     }
   }
 
-  private static class CategorieChooserAction extends AbstractAction {
+  static class CategoryChooserAction extends AbstractAction {
     private Integer masterId;
     private Dialog parent;
     private Directory directory;
     private GlobRepository repository;
     private Integer targetId;
 
-    private CategorieChooserAction(Integer masterId, Dialog parent, Directory directory, GlobRepository repository) {
+    public CategoryChooserAction(Integer masterId, Dialog parent, Directory directory, GlobRepository repository) {
       super(Lang.get("delete.category.button.label"));
       this.masterId = masterId;
       this.parent = parent;

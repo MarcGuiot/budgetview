@@ -1,7 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategoryEditionChecker;
-import org.designup.picsou.functests.checkers.DeleteCategoryChecker;
+import org.designup.picsou.functests.checkers.CategoryDeletionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -113,7 +113,7 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     WindowInterceptor.init(categoryEdition.getDeleteSubButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          DeleteCategoryChecker confirmationDialog = new DeleteCategoryChecker(window);
+          CategoryDeletionChecker confirmationDialog = new CategoryDeletionChecker(window);
           confirmationDialog.checkCategory(getCategoryName(MasterCategory.TRANSPORTS));
           confirmationDialog.selectCategory(getCategoryName(MasterCategory.HOUSE));
           return confirmationDialog.validate();
@@ -143,13 +143,13 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     WindowInterceptor.init(categoryEdition.getDeleteMasterButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          DeleteCategoryChecker categoryChecker = new DeleteCategoryChecker(window);
-          categoryChecker.checkCategory("None");
-          UISpecAssert.assertFalse(categoryChecker.getOkButton().isEnabled());
-          categoryChecker.selectCategory(getCategoryName(MasterCategory.HOUSE));
-          UISpecAssert.assertTrue(categoryChecker.getOkButton().isEnabled());
-          categoryChecker.checkCategory(getCategoryName(MasterCategory.HOUSE));
-          return categoryChecker.validate();
+          CategoryDeletionChecker categoryDeletionChecker = new CategoryDeletionChecker(window);
+          categoryDeletionChecker.checkCategory("None");
+          UISpecAssert.assertFalse(categoryDeletionChecker.getOkButton().isEnabled());
+          categoryDeletionChecker.selectCategory(getCategoryName(MasterCategory.HOUSE));
+          UISpecAssert.assertTrue(categoryDeletionChecker.getOkButton().isEnabled());
+          categoryDeletionChecker.checkCategory(getCategoryName(MasterCategory.HOUSE));
+          return categoryDeletionChecker.validate();
         }
       }).run();
     categoryEdition.validate();
@@ -177,9 +177,9 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     WindowInterceptor.init(categoryEdition.getDeleteMasterButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          DeleteCategoryChecker categoryChecker = new DeleteCategoryChecker(window);
-          categoryChecker.selectCategory(getCategoryName(MasterCategory.TELECOMS));
-          return categoryChecker.validate();
+          CategoryDeletionChecker categoryDeletionChecker = new CategoryDeletionChecker(window);
+          categoryDeletionChecker.selectCategory(getCategoryName(MasterCategory.TELECOMS));
+          return categoryDeletionChecker.validate();
         }
       }).run();
     categoryEdition.validate();
