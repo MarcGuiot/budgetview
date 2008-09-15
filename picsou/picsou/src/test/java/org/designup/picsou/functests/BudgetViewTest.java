@@ -359,4 +359,69 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Groceries", 0.00, 200.00);
     budgetView.recurring.checkSeriesNotPresent("Fuel");
   }
+
+  public void testRemboursementShowAPlus() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", 25.00, "Secu")
+      .addTransaction("2008/06/29", -30.00, "medecin")
+      .load();
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("santé")
+      .setCategory(MasterCategory.HEALTH)
+      .validate();
+    views.selectCategorization();
+    timeline.selectAll();
+    categorization.selectTableRows(0, 1)
+      .selectEnvelopes()
+      .selectEnvelopeSeries("santé", MasterCategory.HEALTH, false);
+
+    views.selectBudget();
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("santé", -25, 0);
+
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("santé", 30, 0);
+
+    timeline.selectAll();
+    budgetView.envelopes.checkSeries("santé", 5, 0);
+  }
+
+
+  public void testOccasional() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/29", -5000.00, "moto")
+      .load();
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("Courant")
+      .selectAllMonths()
+      .setAmount("2500")
+      .setCategory(MasterCategory.HEALTH)
+      .validate();
+
+    budgetView.income.createSeries()
+      .setName("Salaire")
+      .selectAllMonths().setAmount("3000")
+      .setCategory(MasterCategory.INCOME)
+      .validate();
+    budgetView.recurring.createSeries()
+      .setName("EDF")
+      .selectAllMonths().setAmount("100")
+      .setCategory(MasterCategory.HOUSE)
+      .validate();
+    timeline.selectMonth("2008/08");
+    budgetView.occasional.checkTotalAmounts(0, 400);
+
+    budgetView.recurring.createSeries()
+      .setName("Loyer").setAmount("1000")
+      .setCategory(MasterCategory.HOUSE)
+      .validate();
+    views.selectCategorization();
+    categorization.setOccasional("moto", MasterCategory.LEISURES);
+    views.selectBudget();
+    budgetView.occasional.checkTotalAmounts(5000, -600);
+
+  }
 }

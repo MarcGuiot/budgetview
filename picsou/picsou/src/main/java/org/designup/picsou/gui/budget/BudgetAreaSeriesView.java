@@ -152,7 +152,8 @@ public class BudgetAreaSeriesView extends View {
   }
 
   private GlobListStringifier getStringifier(final DoubleField field) {
-    return GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome());
+    return new ForcedPlusGlobListStringifier(budgetArea,
+                                             GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome()));
   }
 
   private class EditSeriesFunctor implements GlobListFunctor {
@@ -166,6 +167,4 @@ public class BudgetAreaSeriesView extends View {
       seriesEditionDialog.showNewSeries(GlobList.EMPTY, budgetArea);
     }
   }
-
-
 }

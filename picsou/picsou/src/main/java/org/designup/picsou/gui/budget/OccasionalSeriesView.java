@@ -45,8 +45,8 @@ public class OccasionalSeriesView extends View {
                                                       repository, directory);
 
     builder.add("budgetAreaTitle", new JLabel(stringify(BudgetArea.OCCASIONAL_EXPENSES)));
-    addTotalLabel("totalObservedAmount", SeriesStat.AMOUNT, builder);
-    addTotalLabel("totalPlannedAmount", SeriesStat.PLANNED_AMOUNT, builder);
+    addObservedTotalLabel("totalObservedAmount", SeriesStat.AMOUNT, builder);
+    addPlannedTotalLabel("totalPlannedAmount", SeriesStat.PLANNED_AMOUNT, builder);
 
     final GlobGaugeView gaugeView = new GlobGaugeView(SeriesStat.TYPE, BudgetArea.OCCASIONAL_EXPENSES,
                                                       SeriesStat.AMOUNT, SeriesStat.PLANNED_AMOUNT,
@@ -110,9 +110,25 @@ public class OccasionalSeriesView extends View {
     return descriptionService.getStringifier(BudgetArea.TYPE).toString(budgetArea.getGlob(), repository);
   }
 
-  private void addTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
+  private void addObservedTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
     builder.addLabel(name, SeriesStat.TYPE,
-                     GlobListStringifiers.sum(field, decimalFormat, true))
+                     new ForcedPlusGlobListStringifier(BudgetArea.OCCASIONAL_EXPENSES,
+                                                       GlobListStringifiers.sum(field, decimalFormat, true)))
+      .setFilter(totalMatcher);
+  }
+
+  private void addPlannedTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
+    final GlobListStringifier globListStringifier = GlobListStringifiers.sum(field, decimalFormat, true);
+
+    builder.addLabel(name, SeriesStat.TYPE, new GlobListStringifier() {
+      public String toString(GlobList list, GlobRepository repository) {
+        String amount = globListStringifier.toString(list, repository);
+        if (amount.startsWith("-")) {
+          amount = "0";
+        }
+        return amount;
+      }
+    })
       .setFilter(totalMatcher);
   }
 

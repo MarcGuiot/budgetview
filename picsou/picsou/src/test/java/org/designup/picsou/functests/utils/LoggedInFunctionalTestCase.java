@@ -39,6 +39,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected CategorizationChecker categorization;
   private PicsouApplication picsouApplication;
   private Date currentDate = Dates.parse("2008/08/31");
+  private String isInMemory = "true";
+  private String deleteLocalPrevayler = "true";
 
   protected void setUp() throws Exception {
 
@@ -56,8 +58,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     TimeService.setCurrentDate(currentDate);
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, FunctionalTestCase.getUrl());
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
-    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "true");
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, deleteLocalPrevayler);
+    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, isInMemory);
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(ConfigService.COM_PICSOU_LICENCE_URL, "");
     System.setProperty(ConfigService.COM_PICSOU_LICENCE_FTP_URL, "");
@@ -89,7 +91,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     this.currentDate = currentDate;
   }
 
-  private void initCheckers() {
+  protected void initCheckers() {
     views = new ViewSelectionChecker(mainWindow);
     accounts = new AccountChecker(mainWindow);
     operations = new OperationChecker(mainWindow);
@@ -137,5 +139,13 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected String getCategoryName(MasterCategory master) {
     return DataChecker.getCategoryName(master);
+  }
+
+  public void setInMemory(String inMemory) {
+    isInMemory = inMemory;
+  }
+
+  public void setDeleteLocalPrevayler(String deleteLocalPrevayler) {
+    this.deleteLocalPrevayler = deleteLocalPrevayler;
   }
 }
