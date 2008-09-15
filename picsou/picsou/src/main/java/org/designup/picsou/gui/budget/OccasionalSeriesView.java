@@ -59,13 +59,19 @@ public class OccasionalSeriesView extends View {
                         GlobMatchers.NONE,
                         new RepeatComponentFactory<Glob>() {
                           public void registerComponents(RepeatCellBuilder cellBuilder, Glob master) {
-                            JLabel label = GlobLabelView.init(Category.TYPE, repository, directory)
-                              .forceSelection(master)
-                              .getComponent();
+                            final GlobLabelView category = GlobLabelView.init(Category.TYPE, repository, directory)
+                              .forceSelection(master);
+                            JLabel label = category.getComponent();
                             cellBuilder.add("categoryName", label);
                             String categoryName = descriptionService.getStringifier(Category.TYPE).toString(master, repository);
                             label.setName("categoryName." + categoryName);
-                            addAmountLabel("observedCategoryAmount", master, cellBuilder, "amount." + categoryName);
+                            final GlobLabelView amountLabel = addAmountLabel("observedCategoryAmount", master, cellBuilder, "amount." + categoryName);
+                            cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+                              public void dispose() {
+                                category.dispose();
+                                amountLabel.dispose();
+                              }
+                            });
                           }
                         });
 
@@ -110,12 +116,14 @@ public class OccasionalSeriesView extends View {
       .setFilter(totalMatcher);
   }
 
-  private void addAmountLabel(String name, Glob master, RepeatCellBuilder cellBuilder, String amountName) {
+  private GlobLabelView addAmountLabel(String name, Glob master, RepeatCellBuilder cellBuilder, String amountName) {
     GlobListStringifier stringifier = GlobListStringifiers.sum(decimalFormat, OccasionalSeriesStat.AMOUNT);
-    JLabel label = GlobLabelView.init(OccasionalSeriesStat.TYPE, repository, directory, stringifier)
+    GlobLabelView globLabelView = GlobLabelView.init(OccasionalSeriesStat.TYPE, repository, directory, stringifier);
+    JLabel label = globLabelView
       .setFilter(GlobMatchers.linkedTo(master, OccasionalSeriesStat.CATEGORY))
       .getComponent();
     cellBuilder.add(name, label);
     label.setName(amountName);
+    return globLabelView;
   }
 }
