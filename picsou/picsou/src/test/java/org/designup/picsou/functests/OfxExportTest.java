@@ -8,10 +8,14 @@ import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
+import junit.framework.Assert;
 
 public class OfxExportTest extends LoggedInFunctionalTestCase {
 
   public void testExport() throws Exception {
+
+    Assert.fail("TODO: a corriger avec le split de transactions");
+
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.2, "Menu K", MasterCategory.FOOD)
@@ -21,7 +25,6 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
       .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.2, MasterCategory.FOOD)
       .check();
 
-    // TODO En attente de refonte du split de transactions
     views.selectCategorization();
     categorization.selectTableRow(0);
     transactionDetails.openSplitDialog(0)

@@ -72,7 +72,7 @@
                 <card name="budgetAreas">
                   <column>
                     <label ref="budgetAreaSelectorTitle" styleClass="title"/>
-                    <repeat ref="budgetAreaButtons" layout="verticalGrid" gridWrapLimit="2" margin="5">
+                    <repeat ref="budgetAreaButtons" layout="horizontalGrid" gridWrapLimit="3" margin="5">
                       <column styleClass="budgetAreaSelector" weightX="1">
                         <button ref="budgetAreaButton"/>
                         <textArea ref="budgetAreaDescription"/>
@@ -86,7 +86,7 @@
 
                   <column minimumSize="(300,68)" weightY="0.1">
                     <panel border="matte(1,1,0,1,#999999)" background="categorization.budgetAreas.bg" opaque="true">
-                      <repeat ref="budgetAreaToggles" layout="verticalGrid" gridWrapLimit="2" margin="5">
+                      <repeat ref="budgetAreaToggles" layout="horizontalGrid" gridWrapLimit="3" margin="5">
                         <toggleButton ref="budgetAreaToggle" styleClass="selector" anchor="left"/>
                       </repeat>
                     </panel>

@@ -323,4 +323,33 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.projects
       .checkSeriesNotPresent("courantAuchan");
   }
+
+  public void testEditingASeriesAmountHasNoImpactOnOtherSeries() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Auchan")
+      .addTransaction("2008/06/29", "2008/08/01", -29.00, "Auchan")
+      .load();
+
+    timeline.selectMonth("2008/07");
+
+    views.selectBudget();
+    budgetView.recurring.createSeries()
+      .setName("Groceries")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    budgetView.recurring.createSeries()
+      .setName("Fuel")
+      .setCategory(MasterCategory.TRANSPORTS)
+      .validate();
+
+    budgetView.recurring.checkSeries("Groceries", 0.00, 0.00);
+    budgetView.recurring.checkSeries("Fuel", 0.00, 0.00);
+
+    budgetView.recurring.editSeries("Groceries")
+      .setAmount("200")
+      .validate();
+
+    budgetView.recurring.checkSeries("Groceries", 0.00, 200.00);
+    budgetView.recurring.checkSeries("Fuel", 0.00, 0.00);
+  }
 }

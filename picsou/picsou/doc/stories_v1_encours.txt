@@ -1,35 +1,34 @@
 SeriesEditionDialog
-*** Bug open/edit amount/ok => applique a toutes les series de la budgetArea
-* Colonne "montant observe"
+** Colonne "montant observe"
 * Combo "Tous les mois" / "Certains mois" pour masquer le choix des mois
-* Separer lignes mois (checkbox)
-* Look panneau suppression serie
-* Titre = nom de la budgetArea
+** Separer lignes mois (checkbox)
+** Look panneau suppression serie
+** Titre = nom de la budgetArea
 * Hyperlien "selectionner tout (Ctrl-A)"
 
 BudgetView
+*** Calcul du disponible en occasionel
+** Masquer series lorsqu'elles sont desactivees pour le mois (observe et attendu = null)
+** Remboursements : -54 => +54
 * Bloc "Montant releve non classe" (avec bouton categorisation)
-*** Calcul disponible en occasionel
-*** Ordre budgetArea
-*** Renommages budgetArea
 * Alignement categories dans Occasional (look)
 * Mettre en evidence les depassements
 * Afficher le delta mensuel
-* Masquer series lorsqu'elles sont desactivees pour le mois (observe et attendu = null)
-* Pas de scroll horizontal
-* Remboursements : -54 => +54
+** Pas de scroll horizontal
 
 Licence
 * Pb focus text editor
 
 CategoryEditionDialog
-* Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
-* Interdire suppression Revenus
 *** Bug sur nombreuses editions (pb application ChangeSet)
+* Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
+** Interdire suppression Revenus
+** Look dialog suppression categorie
 
 CategorizationView
-* Message d'aide quand il n'y a pas de serie pour une budgetArea
 *** Bug sur budgetArea epargne : nom de serie uniquement, pas de toggle a selectionner
+** Colonne "serie/categorie"
+* Message d'aide quand il n'y a pas de serie pour une budgetArea
 * Bouton "liste" : selectionner la serie courante
 * Afficher le nombre de transactions non classees
 * Creation de plusieurs series : ne pas affecter les operations selectionnees
@@ -42,7 +41,6 @@ Edition de transactions
 Misc
 * Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
 * Afficher le changeLog en cas de changement de version
-* Supprimer puericulture
 
 HistoricalChart
 * voir affichage avec ghosts
