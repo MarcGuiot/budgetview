@@ -129,7 +129,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
     addMultiCategoriesSeriesChooser("envelopeSeriesChooser", BudgetArea.EXPENSES_ENVELOPE, builder);
     addMultiCategoriesSeriesChooser("projectSeriesChooser", BudgetArea.PROJECTS, builder);
-    addMultiCategoriesSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
+    addSingleCategorySeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
 
     addOccasionalSeriesChooser(builder);
 

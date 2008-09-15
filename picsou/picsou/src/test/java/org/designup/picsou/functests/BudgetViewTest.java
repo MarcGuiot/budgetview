@@ -122,6 +122,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.projects.checkTitle("Projects");
     budgetView.projects.checkTotalAmounts(95.0, 95.0);
     budgetView.projects.checkSeries("Anniversaire", 95.0, 95.0);
+
+    views.selectCategorization();
+    categorization.checkProjectSeriesIsSelected("Anniversaire", MasterCategory.FOOD);
   }
 
   public void testSavingsSeries() throws Exception {
@@ -142,6 +145,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkTitle("Savings");
     budgetView.savings.checkTotalAmounts(25.0, 25.0);
     budgetView.savings.checkSeries("Epargne", 25.0, 25.0);
+
+    views.selectCategorization();
+    categorization.checkSavingsSeriesIsSelected("Epargne", MasterCategory.SAVINGS);
   }
 
   public void testImportWithUserDateAndBankDateAtNextMonth() throws Exception {
