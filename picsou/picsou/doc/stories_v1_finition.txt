@@ -22,6 +22,9 @@ CategoryEditionDialog
 * Titre
 * Label "renommer la categorie"
 
+CategorizationView
+* Voir vitesse scrolling (evolution splits)
+
 BudgetView
 * Afficher la difference releve/prevu sous la barre dans l'affichage des totaux
 * Mettre total disponible (occasional) en rouge s'il est negatif

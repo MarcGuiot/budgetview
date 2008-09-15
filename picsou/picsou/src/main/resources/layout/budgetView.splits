@@ -5,18 +5,18 @@
 
     <verticalSplit dividerLocation="250" opaque="false" weightX="1.0">
       <panel ref="incomeBudgetView"/>
-      <panel ref="savingsBudgetView"/>
+      <panel ref="occasionalBudgetView"/>
     </verticalSplit>
 
     <verticalSplit dividerLocation="350" opaque="false" weightX="1.0"
-                   marginLeft="50" marginRight="20">
+                   marginLeft="20" marginRight="20">
       <panel ref="recurringBudgetView"/>
-      <panel ref="envelopeBudgetView"/>
+      <panel ref="savingsBudgetView"/>
     </verticalSplit>
 
     <verticalSplit dividerLocation="250" opaque="false" weightX="1.0">
+      <panel ref="envelopeBudgetView"/>
       <panel ref="projectsBudgetView"/>
-      <panel ref="occasionalBudgetView"/>
     </verticalSplit>
 
   </row>
