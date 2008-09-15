@@ -127,7 +127,7 @@ public class TransactionView extends View implements GlobSelectionListener {
                  new TransactionDateStringifier(comparator, Transaction.BANK_MONTH,
                                                 Transaction.BANK_DAY), LabelCustomizers.font(dateFont))
       .addColumn(Lang.get("transactionView.date.bank"),
-                 new TransactionDateStringifier(comparator), LabelCustomizers.font(dateFont))
+                 new TransactionDateStringifier(TransactionComparator.DESCENDING_BANK), LabelCustomizers.font(dateFont))
       .addColumn(Lang.get("series"), seriesColumn, seriesColumn,
                  seriesColumn.getComparator())
       .addColumn(Lang.get("category"), new CategoryStringifier(descriptionService), LabelCustomizers.font(categoryFont))

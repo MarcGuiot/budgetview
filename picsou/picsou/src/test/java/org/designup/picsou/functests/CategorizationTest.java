@@ -263,6 +263,43 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRows(2, 3, 4);
   }
 
+  public void testSort() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
+      .addTransaction("2008/05/25", -29.90, "Free Telecom 25/05")
+      .addTransaction("2008/05/27", -29.90, "Free Telecom 27/05")
+      .addTransaction("2008/05/15", -90.0, "Auchan 1111")
+      .addTransaction("2008/05/14", -80.0, "Auchan 2222")
+      .load();
+
+    views.selectCategorization();
+    categorization.getTable().getHeader().click(0);
+    categorization.checkTable(new Object[][]{
+      {"26/06/2008", "Free Telecom 26/06", -29.90},
+      {"27/05/2008", "Free Telecom 27/05", -29.90},
+      {"25/05/2008", "Free Telecom 25/05", -29.90},
+      {"15/05/2008", "Auchan 1111", -90.00},
+      {"14/05/2008", "Auchan 2222", -80.00},
+    });
+    categorization.getTable().getHeader().click(0);
+    categorization.checkTable(new Object[][]{
+      {"14/05/2008", "Auchan 2222", -80.00},
+      {"15/05/2008", "Auchan 1111", -90.00},
+      {"25/05/2008", "Free Telecom 25/05", -29.90},
+      {"27/05/2008", "Free Telecom 27/05", -29.90},
+      {"26/06/2008", "Free Telecom 26/06", -29.90},
+    });
+    categorization.getTable().getHeader().click(0);
+    categorization.checkTable(new Object[][]{
+      {"15/05/2008", "Auchan 1111", -90.00},
+      {"14/05/2008", "Auchan 2222", -80.00},
+      {"25/05/2008", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "Free Telecom 26/06", -29.90},
+      {"27/05/2008", "Free Telecom 27/05", -29.90},
+    });
+  }
+
   public void testAutomaticSelectionOfSimilarTransactionsMode() throws Exception {
     OfxBuilder
       .init(this)
