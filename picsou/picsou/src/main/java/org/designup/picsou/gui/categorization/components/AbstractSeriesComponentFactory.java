@@ -34,7 +34,6 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
   protected SelectionService selectionService;
 
   protected GlobList currentTransactions = GlobList.EMPTY;
-  private DefaultChangeSetListener categoryUpdateListener;
 
   public AbstractSeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository repository, Directory directory) {
     this.invisibleToggle = invisibleToggle;
@@ -63,7 +62,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
     String toggleLabel = categoryStringifier.toString(category, repository);
     final JToggleButton toggle = createSeriesToggle(toggleLabel, seriesKey, category.getKey());
     final Key key = category.getKey();
-    categoryUpdateListener = new DefaultChangeSetListener() {
+    final DefaultChangeSetListener categoryUpdateListener = new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(key)) {
           Glob category = repository.find(key);

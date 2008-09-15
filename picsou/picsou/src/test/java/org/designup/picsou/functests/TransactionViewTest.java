@@ -9,6 +9,7 @@ import org.uispec4j.Table;
 import org.uispec4j.Trigger;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.PopupMenuInterceptor;
+import junit.framework.Assert;
 
 public class TransactionViewTest extends LoggedInFunctionalTestCase {
   private Table table;
@@ -123,9 +124,10 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
                                    "essence", "-70.00", "frais pro"}));
   }
 
-
-  // TODO : tester la navigation transactionView => Categorization
   public void testMultiCategorization() throws Exception {
+
+    Assert.fail("TODO : tester la navigation transactionView => Categorization");
+
     transactions.initContent()
       .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
@@ -143,8 +145,10 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  // TODO navigation transactionView ==> Categorization
   public void testNavigatingToCategorizationView() throws Exception {
+
+    Assert.fail("TODO navigation transactionView ==> Categorization");
+
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/11", -1.0, "Something else")

@@ -538,7 +538,12 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   public void removeChangeListener(ChangeSetListener listener) {
     changeListeners = new ArrayList<ChangeSetListener>(changeListeners);
-    changeListeners.remove(listener);
+    boolean isRemoved = changeListeners.remove(listener);
+    Utils.beginRemove();
+    if (!isRemoved) {
+      throw new RuntimeException("BUG");
+    }
+    Utils.endRemove();
   }
 
   private void notifyListeners(boolean applyTriggers) {
