@@ -120,13 +120,15 @@ public class SeriesEditionDialog {
     builder.add("create", new CreateSeriesAction());
     builder.add("delete", new DeleteSeriesAction());
 
-    nameEditor = builder.addEditor("nameField", Series.LABEL);
+    nameEditor = builder.addEditor("nameField", Series.LABEL).setNotifyAtKeyPressed(true);
 
     registerCategoryComponents(descriptionService, builder);
 
     registerDateComponents(builder);
 
-    amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT).setMinusAllowed(false);
+    amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT)
+      .setMinusAllowed(false)
+      .setNotifyAtKeyPressed(true);
 
     final GlobTableView budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE,
                                                        new ReverseGlobFieldComparator(SeriesBudget.MONTH))
