@@ -1,18 +1,19 @@
 Split de transaction
-* Action de split
-* Retrouver les transactions liees
-* Annuler un split
+*** Action de split
+*** Retrouver les transactions liees
+*** Annuler un split
 
 Edition de transactions
-* Note
-* Label
-* Date
-* Type
+*** Note
+*** Label
+*** Date
+*** Type
 
 SeriesEditionDialog
 * Hyperlien "selectionner tout (Ctrl-A)"
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
 * trim() sur les noms
+* Modifier l'ordre des series
 
 BudgetView
 * Bloc "Montant releve non classe" (avec bouton categorisation)
@@ -21,7 +22,7 @@ BudgetView
 * Pas de scroll horizontal
 
 CategorizationView
-* Message d'aide quand il n'y a pas de serie pour une budgetArea
+*** Message d'aide quand il n'y a pas de serie pour une budgetArea
 * Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 * Afficher le nombre de transactions non classees
 * Creation de plusieurs series : ne pas affecter les operations selectionnees
@@ -32,6 +33,9 @@ CategorizationView
   - afficher le label anonymisé
 * Apprentissage / series
 
+TransactionView
+*** Navigation vers Categorization view sur mono/multi-selection (tests en attente)
+
 Licence
 * Pb focus text editor
 
@@ -41,22 +45,22 @@ CategoryEditionDialog
 * Creation de series INCOME : preselectionner la categories par defaut
 * Titre
 * Label "renommer la categorie"
+* Modifier l'ordre des categories
 
 HistoricalChart
 * voir affichage avec ghosts
 
 Import
-*  (coherence ordre ok/cancel)
+*** Traduction des noms de colonnes
 * Import : OK sans fichier = message, si selection il faut purger le message
 * Bring to front sur Open With...
 * Memoriser dernier repertoire pour le filechooser
 * En mode "dialog", utiliser une PicsouDialog + revoir hyperlien "annuler" et bouton "ignorer fichier" => "cancel"
-* Traduction des noms de colonnes
 
 Login
 * Creation de compte : expliquer que la notion de compte / mot de passe est liee au cryptage local
 * Error login + "new user" => effacer message
-* Si aucun utilisateur dans le repo, mode creation de compte
+* Si aucun utilisateur dans le repo, passage direct en mode creation de compte
 * Revoir look panneau import (mode dialog)
 
 TimeView
@@ -68,27 +72,27 @@ Gestion des comptes
 * masquer un compte (date de cloture)
 
 Packaging
-* Look installer
 * Afficher SLA au premier lancement (repository vide)
+* Look installer (fond en blanc)
 
 Misc
 * Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
-* Afficher le changeLog en cas de changement de version
 * Tooltips sur les boutons
 * Afficher les infos de mise a dispo d'une nouvelle version
 * CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
 * Copier les donnees des tables dans le clipboard
 
-Undo
-* Verifier fonctionnement sur cas principaux (import, categorisation, edition serie, split)
-
+Undo : ajout de tests
+* Import
+* Creation/edition de serie
+* Split
+* Categorisation
 
 Versions basique/pro
 * Masquer les vues
 * Bloc "vous utilisez la version basique"
 * Pb d'affichage de mois futurs en version basique si transactions dans le futur
 * SeriesEditionDialog : Afficher les mois futurs meme en version basique
-
 
 Vue Analyse
 * Filtrage transactions par Serie
@@ -97,11 +101,11 @@ Vue Analyse
 * Filtrage transactions par BudgetArea
 
 Page accueil
-*
-
-* Changer date user des transactions
-* Modifier l'ordre des categories
-* Modifier l'ordre des series
+*** Message si pas de donnees
+*** Message pour tout premier classement
+*** Revoir monthSummaryView
+*** Graphiques evolution
+* Afficher le changeLog en cas de changement de version
 
 Creation de transactions
  (soit achats effectues mais pas encore dans les releves, soit previsions plus vagues)
