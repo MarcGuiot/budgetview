@@ -27,6 +27,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   private GlobList forcedSelection;
   private boolean isInitialized = false;
   private boolean notifyAtKeyPressed;
+  private DocumentListener keyPressedListener;
 
   protected AbstractGlobTextEditor(Field field, COMPONENT_TYPE component, GlobRepository repository, Directory directory) {
     super(field.getGlobType(), repository, directory);
@@ -56,19 +57,28 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
 
   private void registerKeyPressedListener() {
     if (isNotifyAtKeyPressed()) {
-      textComponent.getDocument().addDocumentListener(new DocumentListener() {
-        public void insertUpdate(DocumentEvent e) {
-          applyChanges();
-        }
+      if (keyPressedListener == null) {
+        keyPressedListener = new DocumentListener() {
+          public void insertUpdate(DocumentEvent e) {
+            applyChanges();
+          }
 
-        public void removeUpdate(DocumentEvent e) {
-          applyChanges();
-        }
+          public void removeUpdate(DocumentEvent e) {
+            applyChanges();
+          }
 
-        public void changedUpdate(DocumentEvent e) {
-          applyChanges();
-        }
-      });
+          public void changedUpdate(DocumentEvent e) {
+            applyChanges();
+          }
+        };
+        textComponent.getDocument().addDocumentListener(keyPressedListener);
+      }
+    }
+    else {
+      if (keyPressedListener != null) {
+        textComponent.getDocument().removeDocumentListener(keyPressedListener);
+        keyPressedListener = null;
+      }
     }
   }
 
@@ -156,6 +166,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
 
   public PARENT setNotifyAtKeyPressed(boolean notifyAtKeyPressed) {
     this.notifyAtKeyPressed = notifyAtKeyPressed;
+    registerKeyPressedListener();
     return (PARENT)this;
   }
 
