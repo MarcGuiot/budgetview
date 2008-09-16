@@ -4,12 +4,7 @@
 Ameliorations
 -------------
 * Undo dans les boîtes de dialogue
-* Filtrage transactions par Serie
-* Filtrage transactions par TransactionType
-* Filtrage transactions par Compte
-* Filtrage transactions par BudgetArea
 * Graphiques (camembert / histogramme)
-* BudgetView : Panneau pour montrer le detail du calcul du disponible en occasional
 * Aide pour trouver les categories dans CategoriesChooserDialog (search)
 
 
@@ -36,9 +31,6 @@ Nouveau
 ----
 
 * Types de comptes (courant / carte / epargne)
-
-* Filtrage de transactions par compte
-* Filtrage de transactions par import
 
 * Enlever contrainte sur password => indicateur "password strength"
 
