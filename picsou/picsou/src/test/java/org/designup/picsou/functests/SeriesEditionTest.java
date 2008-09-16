@@ -6,6 +6,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.uispec4j.Key;
 
 public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
@@ -743,5 +744,29 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMessage()
       .validate();
     edition.checkSeriesList();
+  }
+
+  public void testFillNameAndAmountWithKeyPressed() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", 10, "Auchan")
+      .load();
+
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
+    edition.setName(null);
+    edition.setAmount(null);
+    edition.getNameBox().pressKey(Key.A).pressKey(Key.A);
+    edition.selectAllMonths();
+    edition.getAmount().pressKey(Key.d1).pressKey(Key.d3);
+    edition.setCategory(MasterCategory.FOOD)
+      .checkName("AA")
+      .checkAmount("13")
+      .checkSeriesList("AA");
+    edition.checkTable(new Object[][]{
+      {"2008", "August", "", "13.00"},
+      {"2008", "July", "", "13.00"},
+      {"2008", "June", "", "13.00"}
+    });
   }
 }
