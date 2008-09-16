@@ -12,6 +12,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;
 
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -24,12 +26,12 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   private boolean forceNotEditable;
   private GlobList forcedSelection;
   private boolean isInitialized = false;
+  private boolean notifyAtKeyPressed;
 
   protected AbstractGlobTextEditor(Field field, COMPONENT_TYPE component, GlobRepository repository, Directory directory) {
     super(field.getGlobType(), repository, directory);
     this.field = field;
     this.textComponent = component;
-    initTextComponent();
   }
 
   public AbstractGlobTextEditor setMultiSelectionText(Object valueForMultiSelection) {
@@ -49,6 +51,25 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     textComponent.setText("");
     registerFocusLostListener();
     registerChangeListener();
+    registerKeyPressedListener();
+  }
+
+  private void registerKeyPressedListener() {
+    if (isNotifyAtKeyPressed()) {
+      textComponent.getDocument().addDocumentListener(new DocumentListener() {
+        public void insertUpdate(DocumentEvent e) {
+          applyChanges();
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+          applyChanges();
+        }
+
+        public void changedUpdate(DocumentEvent e) {
+          applyChanges();
+        }
+      });
+    }
   }
 
   private void registerFocusLostListener() {
@@ -57,7 +78,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       }
 
       public void focusLost(FocusEvent e) {
-        applyChanges();
+        if (!notifyAtKeyPressed) {
+          applyChanges();
+        }
       }
     });
   }
@@ -69,6 +92,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       return textComponent;
     }
     isInitialized = true;
+    initTextComponent();
     if (forcedSelection != null) {
       selectionUpdated(new DefaultGlobSelection(forcedSelection, forcedSelection.getTypes()));
     }
@@ -130,6 +154,11 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     setValue(value);
   }
 
+  public AbstractGlobTextEditor setNotifyAtKeyPressed(boolean notifyAtKeyPressed) {
+    this.notifyAtKeyPressed = notifyAtKeyPressed;
+    return this;
+  }
+
   protected Object getValue() throws InvalidFormat {
     return textComponent.getText();
   }
@@ -140,5 +169,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
 
   public void dispose() {
     selectionService.removeListener(this);
+  }
+
+  public boolean isNotifyAtKeyPressed() {
+    return notifyAtKeyPressed;
   }
 }

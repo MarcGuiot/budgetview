@@ -4,6 +4,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;
 
@@ -27,40 +28,6 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField> {
   private GlobNumericEditor(Field field, GlobRepository repository,
                             Directory directory, JTextField component) {
     super(field, component, repository, directory);
-    installDocumentFilter();
-  }
-
-  private void installDocumentFilter() {
-    ((AbstractDocument)textComponent.getDocument()).setDocumentFilter(new DocumentFilter() {
-      public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-        StringBuffer buffer = new StringBuffer();
-        String text = textComponent.getText();
-        buffer
-          .append(text, 0, offset)
-          .append(string);
-        if (text.length() - offset > 0) {
-          buffer.append(text, offset, text.length());
-        }
-
-        if (checkValue(buffer.toString())) {
-          super.insertString(fb, offset, string, attr);
-        }
-      }
-
-      public void replace(FilterBypass fb, int offset, int length, String replaceText, AttributeSet attrs) throws BadLocationException {
-        StringBuffer buffer = new StringBuffer();
-        String text = textComponent.getText();
-        buffer
-          .append(text, 0, offset)
-          .append(replaceText);
-        if (text.length() - offset > 0) {
-          buffer.append(text, offset + length, text.length());
-        }
-        if (checkValue(buffer.toString())) {
-          super.replace(fb, offset, length, replaceText, attrs);
-        }
-      }
-    });
   }
 
   public GlobNumericEditor setMinusAllowed(boolean minusAllowed) {
@@ -137,6 +104,40 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField> {
     textComponent.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         applyChanges();
+      }
+    });
+    ((AbstractDocument)textComponent.getDocument()).setDocumentFilter(new DocumentFilter() {
+      public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+        StringBuffer buffer = new StringBuffer();
+        String text = textComponent.getText();
+        buffer
+          .append(text, 0, offset)
+          .append(string);
+        if (text.length() - offset > 0) {
+          buffer.append(text, offset, text.length());
+        }
+
+        if (checkValue(buffer.toString())) {
+          super.insertString(fb, offset, string, attr);
+        }
+      }
+
+      public void replace(FilterBypass fb, int offset, int length, String replaceText, AttributeSet attrs) throws BadLocationException {
+        if (Strings.isNullOrEmpty(replaceText)) {
+          super.replace(fb, offset, length, replaceText, attrs);
+          return;
+        }
+        StringBuffer buffer = new StringBuffer();
+        String text = textComponent.getText();
+        buffer
+          .append(text, 0, offset)
+          .append(replaceText);
+        if (text.length() - offset > 0) {
+          buffer.append(text, offset + length, text.length());
+        }
+        if (checkValue(buffer.toString())) {
+          super.replace(fb, offset, length, replaceText, attrs);
+        }
       }
     });
   }

@@ -5,6 +5,7 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
+import org.uispec4j.Key;
 import org.uispec4j.TextBox;
 
 import javax.swing.*;
@@ -138,6 +139,31 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     repository.update(glob.getKey(), DummyObject.VALUE, -8.8);
     selectionService.select(glob);
     assertThat(textBox.textEquals("8.8"));
+  }
+
+  public void testSendUpdateAtKeyPressed() throws Exception {
+    JTextField textField =
+      (JTextField)GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
+        .setMinusAllowed(true)
+        .setNotifyAtKeyPressed(true)
+        .getComponent();
+    TextBox textBox = new TextBox(textField);
+    repository.update(glob.getKey(), DummyObject.VALUE, 0.);
+    selectionService.select(glob);
+    textBox.setText("-8.8");
+    assertThat(textBox.textEquals("-8.8"));
+    changeListener.assertLastChangesEqual(
+      "<update type='dummyObject' id='1' value='-8.8' _value='(null)'/>");
+    textBox.setText(null);
+    textBox.pressKey(Key.d5);
+    changeListener.assertLastChangesEqual(
+      "<update type='dummyObject' id='1' value='5.0' _value='(null)'/>");
+
+    textBox.setText(null);
+    textBox.pressKey(Key.MINUS);
+    textBox.pressKey(Key.d6);
+    changeListener.assertLastChangesEqual(
+      "<update type='dummyObject' id='1' value='-6.0' _value='(null)'/>");
   }
 
   protected void tearDown() throws Exception {
