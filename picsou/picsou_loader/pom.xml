@@ -40,7 +40,7 @@
             <id>install</id>
             <phase>install</phase>
             <configuration>
-              <tasks>
+              <tasks unless="${GenerateInstall}">
                 <manifest file="target/classes/MANIFEST.MF">
                   <attribute name="Main-Class" value="org.designup.picsou.start.Main"/>
                 </manifest>
@@ -77,9 +77,9 @@
                                 role="Editor"/>
                 </jarbundler>
 
-                <!--<exec executable="hdiutil">-->
-                  <!--<arg line="create -srcfolder ${basedir}/app/ Picsou.dmg"/>-->
-                <!--</exec>-->
+                <exec executable="hdiutil">
+                  <arg line="create -srcfolder ${basedir}/app/ Picsou.dmg"/>
+                </exec>
 
               </tasks>
             </configuration>
@@ -123,5 +123,20 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>mac</id>
+      <activation>
+        <os>
+          <family>unix</family>
+          <name>Mac OS X</name>
+        </os>
+      </activation>
+      <properties>
+        <GenerateInstall>true</GenerateInstall>
+      </properties>
+    </profile>
+  </profiles>
 
 </project>
