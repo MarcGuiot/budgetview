@@ -18,8 +18,8 @@ import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
 
-import javax.swing.*;
 import javax.swing.AbstractButton;
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -172,6 +172,12 @@ public class CategorizationChecker extends DataChecker {
     if (transactionWasAlreadyCategorized) {
       panel.getToggleButton(name).click();
     }
+    return this;
+  }
+
+  public CategorizationChecker categorizeInRecurringSeries(String name) {
+    Panel panel = getRecurringSeriesPanel();
+    panel.getToggleButton(name).click();
     return this;
   }
 

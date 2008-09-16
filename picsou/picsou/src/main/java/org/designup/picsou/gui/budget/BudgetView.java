@@ -74,7 +74,7 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     Set<Integer> monthIds = currentSelectedMonth.getValueSet(Month.ID);
     GlobList seriesStats = repository.getAll(SeriesStat.TYPE, GlobMatchers.fieldContained(SeriesStat.MONTH, monthIds));
 
-    GlobList localSelection = new GlobList();
+    final GlobList localSelection = new GlobList();
     localSelection.addAll(currentSelectedMonth);
     localSelection.addAll(seriesStats);
     SelectionService localSelectionService = directory.get(SelectionService.class);
@@ -82,10 +82,11 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsCreationsOrDeletions(SeriesStat.TYPE)) {
-      if (changeSet.containsCreationsOrDeletions(Month.TYPE)) {
-        currentSelectedMonth.removeAll(changeSet.getDeleted(Month.TYPE));
-      }
+    if (changeSet.containsCreationsOrDeletions(Month.TYPE)) {
+      currentSelectedMonth.removeAll(changeSet.getDeleted(Month.TYPE));
+      updateSelection();
+    }
+    else if (changeSet.containsCreationsOrDeletions(SeriesStat.TYPE)) {
       updateSelection();
     }
   }

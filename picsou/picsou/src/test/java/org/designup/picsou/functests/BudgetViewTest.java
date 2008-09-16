@@ -428,6 +428,45 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.setOccasional("moto", MasterCategory.LEISURES);
     views.selectBudget();
     budgetView.occasional.checkTotalAmounts(5000, -600);
+  }
 
+  public void testCreateAndDeleteManyCategory() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", -29.00, "Auchan")
+      .addTransaction("2008/06/29", -60.00, "ELF")
+      .load();
+
+    views.selectBudget();
+    budgetView.recurring.createSeries()
+      .setName("Groceries")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    budgetView.recurring.createSeries()
+      .setName("Fuel")
+      .setCategory(MasterCategory.TRANSPORTS)
+      .validate();
+
+    budgetView.recurring.checkSeriesNotPresent("Groceries");
+    budgetView.recurring.checkSeriesNotPresent("Fuel");
+
+    budgetView.recurring.editSeriesList().selectSeries("Groceries")
+      .selectMonth(200807)
+      .setAmount("200")
+      .validate();
+
+    budgetView.recurring.checkSeries("Groceries", 0.00, 200.00);
+    budgetView.recurring.checkSeriesNotPresent("Fuel");
+
+    views.selectCategorization();
+    categorization.selectTableRows("ELF")
+      .selectRecurring().categorizeInRecurringSeries("Fuel");
+    views.selectBudget();
+    budgetView.recurring.checkSeries("Fuel", 60, 0);
+
+    budgetView.recurring.editSeriesList()
+      .selectSeries("Groceries")
+      .deleteSeries()
+      .validate();
+    budgetView.recurring.checkSeriesNotPresent("Groceries");
   }
 }

@@ -63,6 +63,30 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     transactions.assertEmpty();
   }
 
+
+  public void testOnSeriesCreation() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/11", 95.00, "Auchan")
+      .load();
+    views.selectCategorization();
+    categorization.selectTableRows("Auchan");
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Courant", MasterCategory.FOOD, true);
+    categorization.checkEnvelopeSeriesIsSelected("Courant", MasterCategory.FOOD);
+    views.selectData();
+    transactions.checkSeries("Auchan", "Courant");
+    operations.undo();
+    transactions.checkCategory("Auchan", MasterCategory.NONE);
+    transactions.checkSeries("Auchan", "To categorize");
+    operations.redo();
+    transactions.checkSeries("Auchan", "Courant");
+    views.selectCategorization();
+    categorization.checkEnvelopeSeriesIsSelected("Courant", MasterCategory.FOOD);
+    operations.undo();
+    transactions.checkCategory("Auchan", MasterCategory.NONE);
+    transactions.checkSeries("Auchan", "To categorize");
+  }
+
   public void DISABLED_testUndoRedoMaintainsSelection() throws Exception {
 
     OfxBuilder.init(this)

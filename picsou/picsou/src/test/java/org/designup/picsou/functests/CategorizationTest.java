@@ -798,4 +798,30 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("Auchan", "courantAuchan", MasterCategory.FOOD, false);
     categorization.setEnvelope("ED", "courantED", MasterCategory.FOOD, false);
   }
+
+  public void testRemoveASeries() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/05/30", -50.00, "Monoprix")
+      .load();
+    views.selectCategorization();
+
+    categorization.selectTableRows("Monoprix");
+    categorization
+      .selectEnvelopes()
+      .createEnvelopeSeries()
+      .setName("series1")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    categorization
+      .selectOccasionalSeries(MasterCategory.TELECOMS);
+
+    views.selectData();
+    transactions.checkSeries("Monoprix", "Occasional");
+    views.selectCategorization();
+    categorization.selectEnvelopes()
+      .editSeries(false)
+      .selectSeries("series1")
+      .deleteSeries()
+      .validate();
+  }
 }
