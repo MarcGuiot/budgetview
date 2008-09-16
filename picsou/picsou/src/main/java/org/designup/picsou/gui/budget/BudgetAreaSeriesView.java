@@ -14,6 +14,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
@@ -96,7 +97,7 @@ public class BudgetAreaSeriesView extends View {
                                                 GlobMatchers.fieldEquals(SeriesStat.SERIES, series.get(Series.ID)),
                                                 repository, directory);
                             cellBuilder.add("gauge", gaugeView.getComponent());
-                            cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+                            cellBuilder.addDisposeListener(new Disposable() {
                               public void dispose() {
                                 gaugeView.dispose();
                                 globButtonView.dispose();
@@ -140,7 +141,7 @@ public class BudgetAreaSeriesView extends View {
     final GlobLabelView globLabelView = GlobLabelView.init(SeriesStat.TYPE, repository, directory, getStringifier(field))
       .setFilter(GlobMatchers.linkedTo(series, SeriesStat.SERIES));
     cellBuilder.add(name, globLabelView.getComponent());
-    cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+    cellBuilder.addDisposeListener(new Disposable() {
       public void dispose() {
         globLabelView.dispose();
       }

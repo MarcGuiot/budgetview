@@ -10,7 +10,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.color.ColorUpdater;
+import org.globsframework.gui.splits.color.utils.DefaultColorChangeListener;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobStringifier;
@@ -113,8 +113,8 @@ public class CategoriesChart extends View implements GlobSelectionListener, Chan
     plot = (PiePlot)chart.getPlot();
     for (final MasterCategory master : MasterCategory.values()) {
       if (!master.equals(MasterCategory.ALL)) {
-        colorService.install("category.pie.section." + master.getName(), new ColorUpdater() {
-          public void updateColor(Color color) {
+        colorService.addListener(new DefaultColorChangeListener("category.pie.section." + master.getName()) {
+          protected void updateColor(Color color) {
             plot.setSectionPaint(master.getId(), color);
           }
         });
@@ -150,16 +150,16 @@ public class CategoriesChart extends View implements GlobSelectionListener, Chan
 
     plot.setCircular(true);
 
-    colorService.install("category.pie.link", new ColorUpdater() {
-      public void updateColor(Color color) {
+    colorService.addListener(new DefaultColorChangeListener("category.pie.link") {
+      protected void updateColor(Color color) {
         if (color == null) {
           color = Color.BLACK;
         }
         plot.setLabelLinkPaint(color);
       }
     });
-    colorService.install("category.pie.label", new ColorUpdater() {
-      public void updateColor(Color color) {
+    colorService.addListener(new DefaultColorChangeListener("category.pie.label") {
+      protected void updateColor(Color color) {
         if (color == null) {
           color = Color.BLACK;
         }

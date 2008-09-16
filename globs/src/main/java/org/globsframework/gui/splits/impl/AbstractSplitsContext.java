@@ -1,6 +1,7 @@
 package org.globsframework.gui.splits.impl;
 
 import org.globsframework.gui.splits.SplitsContext;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -21,6 +22,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
   private java.util.List<AutoHideListener> autoHideListeners = new ArrayList<AutoHideListener>();
   private Map<String, RepeatHandler> repeats = new HashMap<String, RepeatHandler>();
   private Map<JLabel, String> labelForAssociations = new HashMap<JLabel, String>();
+  private java.util.List<Disposable> disposables = new ArrayList<Disposable>();
 
   public void addComponent(String id, Component component) {
     if (componentsByName.containsKey(id)) {
@@ -141,6 +143,9 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     for (RepeatHandler repeatHandler : repeats.values()) {
       repeatHandler.dispose();
     }
+    for (Disposable listener : disposables) {
+      listener.dispose();
+    }
   }
 
   public void addAutoHide(Component targetComponent, String sourceComponentName) {
@@ -173,6 +178,10 @@ public abstract class AbstractSplitsContext implements SplitsContext {
 
   public void addRepeat(String name, RepeatHandler repeatHandler) {
     repeats.put(name, repeatHandler);
+  }
+
+  public void addDisposable(Disposable listener) {
+    this.disposables.add(listener);
   }
 
   protected static class AutoHideListener {

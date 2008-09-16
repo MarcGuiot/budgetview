@@ -5,12 +5,14 @@ import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.Colors;
-import org.globsframework.gui.splits.color.ColorUpdaters;
+import org.globsframework.gui.splits.color.ColorUpdater;
+import org.globsframework.gui.splits.color.utils.BackgroundColorUpdater;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.utils.Strings;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class ScrollPaneComponent extends AbstractSplitter {
 
@@ -41,7 +43,9 @@ public class ScrollPaneComponent extends AbstractSplitter {
         scrollPane.getViewport().setBackground(Colors.toColor(bg));
       }
       else {
-        context.getService(ColorService.class).install(bg, ColorUpdaters.background(scrollPane.getViewport()));
+        ColorUpdater updater = new BackgroundColorUpdater(bg, scrollPane.getViewport());
+        updater.install(context.getService(ColorService.class));
+        context.addDisposable(updater);
       }
     }
 

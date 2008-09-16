@@ -11,7 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -31,7 +30,7 @@ public class PropertySetter {
     }
 
     String actionProperty = properties.get("action");
-    if (actionProperty != null){
+    if (actionProperty != null) {
       invokeSetter(component, "action", actionProperty, context);
       excludeSet.add("action");
     }
@@ -82,18 +81,10 @@ public class PropertySetter {
         invokeSetter(object, setter, null, property, value, objectClass);
       }
       else {
-        final WeakReference ref = new WeakReference<Object>(object);
-        final ColorService colorService = context.getService(ColorService.class);
-        colorService.install(value, new ColorUpdater() {
-          public void updateColor(Color color) {
-            Object target = ref.get();
-            if (target == null) {
-              colorService.uninstall(this);
-              return;
-            }
-            invokeSetter(target, setter, color, property, value, objectClass);
-          }
-        });
+        ComponentColorUpdater colorUpdater =
+          new ComponentColorUpdater(object, setter, property, value, objectClass);
+        colorUpdater.install(context.getService(ColorService.class));
+        context.addDisposable(colorUpdater);
       }
     }
     else {
@@ -128,6 +119,31 @@ public class PropertySetter {
       if (component.getName() == null) {
         component.setName(attributeValue);
       }
+    }
+  }
+
+  private static class ComponentColorUpdater extends ColorUpdater {
+    private final Method setter;
+    private final String property;
+    private final String value;
+    private final Class objectClass;
+    private Object object;
+
+    public ComponentColorUpdater(Object object, Method setter, String property, String value, Class objectClass) {
+      super(value);
+      this.object = object;
+      this.setter = setter;
+      this.property = property;
+      this.value = value;
+      this.objectClass = objectClass;
+    }
+
+    public void updateColor(Color color) {
+      invokeSetter(object, setter, color, property, value, objectClass);
+    }
+
+    public String toString() {
+      return "ComponentColorUpdater for " + objectClass + "." + setter.getName() + "(...)";
     }
   }
 }

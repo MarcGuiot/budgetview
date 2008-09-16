@@ -50,7 +50,7 @@ public class ColorServiceEditor implements ColorCreationListener {
     });
     keyList.setSelectedIndex(0);
     builder.setSource(getClass(), "/splits/coloreditor.splits");
-    colorService.addListener(this);
+    colorService.addCreationListener(this);
   }
 
   public void setOutputStream(PrintStream outputStream) {

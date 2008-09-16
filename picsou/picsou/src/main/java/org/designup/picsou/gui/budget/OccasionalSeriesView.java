@@ -13,6 +13,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
@@ -66,7 +67,7 @@ public class OccasionalSeriesView extends View {
                             String categoryName = descriptionService.getStringifier(Category.TYPE).toString(master, repository);
                             label.setName("categoryName." + categoryName);
                             final GlobLabelView amountLabel = addAmountLabel("observedCategoryAmount", master, cellBuilder, "amount." + categoryName);
-                            cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+                            cellBuilder.addDisposeListener(new Disposable() {
                               public void dispose() {
                                 category.dispose();
                                 amountLabel.dispose();

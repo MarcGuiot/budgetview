@@ -12,7 +12,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
-import org.globsframework.gui.splits.color.ColorUpdater;
+import org.globsframework.gui.splits.color.utils.DefaultColorChangeListener;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 import org.jfree.chart.ChartPanel;
@@ -25,10 +25,10 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.ui.Layer;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -137,8 +137,8 @@ public class HistoricalChart extends AbstractLineChart implements ColorChangeLis
     rangeAxis.setAutoRangeIncludesZero(true);
     rangeAxis.setTickLabelFont(fontLocator.get("chart.historical.label"));
 
-    colorService.install(PicsouColors.CHART_LABEL.toString(), new ColorUpdater() {
-      public void updateColor(Color labelColor) {
+    colorService.addListener(new DefaultColorChangeListener(PicsouColors.CHART_LABEL.toString()) {
+      protected void updateColor(Color labelColor) {
         domainAxis.setTickLabelPaint(labelColor);
         domainAxis.setTickMarkPaint(labelColor);
         rangeAxis.setTickLabelPaint(labelColor);
@@ -241,7 +241,7 @@ public class HistoricalChart extends AbstractLineChart implements ColorChangeLis
       toAppendTo.append(Month.getOneLetterMonthLabel(monthId));
       DecimalFormat format = new DecimalFormat("00");
       if (Month.toMonth(monthId) == 1) {
-        toAppendTo.append(format.format(Month.toYear(monthId)%100));
+        toAppendTo.append(format.format(Month.toYear(monthId) % 100));
       }
       return toAppendTo;
     }

@@ -9,6 +9,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
@@ -58,7 +59,7 @@ public class AccountView extends View {
       cellBuilder.add(name, globLabelView
         .forceSelection(account)
         .getComponent());
-      cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+      cellBuilder.addDisposeListener(new Disposable() {
         public void dispose() {
           globLabelView.dispose();
         }

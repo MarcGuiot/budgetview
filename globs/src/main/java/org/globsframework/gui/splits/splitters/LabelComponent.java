@@ -44,11 +44,13 @@ public class LabelComponent extends DefaultComponent<JLabel> {
         ui.setShadowColor(null);
       }
       else {
-        context.getService(ColorService.class).install(shadowColor, new ColorUpdater() {
+        ColorUpdater updater = new ColorUpdater(shadowColor) {
           public void updateColor(Color color) {
             ui.setShadowColor(color);
           }
-        });
+        };
+        updater.install(context.getService(ColorService.class));
+        context.addDisposable(updater);
       }
     }
 

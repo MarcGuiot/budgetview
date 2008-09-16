@@ -1,6 +1,8 @@
 package org.globsframework.gui.splits.color;
 
 import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.gui.splits.color.utils.BackgroundColorUpdater;
+import org.globsframework.gui.splits.color.utils.ForegroundColorUpdater;
 import org.uispec4j.UISpecTestCase;
 
 import javax.swing.*;
@@ -49,8 +51,10 @@ public class ColorServiceTest extends UISpecTestCase {
     service.set("key2", Color.BLUE);
 
     JButton button = new JButton();
-    service.install("key1", ColorUpdaters.foreground(button));
-    service.install("key2", ColorUpdaters.background(button));
+    ColorUpdater fgUpdater = new ForegroundColorUpdater("key1", button);
+    fgUpdater.install(service);
+    ColorUpdater bgUpdater = new BackgroundColorUpdater("key2", button);
+    bgUpdater.install(service);
 
     assertEquals(Color.RED, button.getForeground());
     assertEquals(Color.BLUE, button.getBackground());

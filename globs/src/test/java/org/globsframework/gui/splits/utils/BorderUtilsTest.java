@@ -1,6 +1,10 @@
 package org.globsframework.gui.splits.utils;
 
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.impl.DefaultSplitsContext;
+import org.globsframework.gui.splits.SplitsContext;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.directory.DefaultDirectory;
 import org.uispec4j.UISpecTestCase;
 
 import javax.swing.border.*;
@@ -8,45 +12,53 @@ import java.awt.*;
 
 public class BorderUtilsTest extends UISpecTestCase {
   private ColorService colorService = new ColorService();
+  private SplitsContext context;
+
+  protected void setUp() throws Exception {
+    Directory directory = new DefaultDirectory();
+    directory.add(colorService);
+    context = new DefaultSplitsContext(directory);
+  }
 
   public void testNoBorder() throws Exception {
-    assertNull(BorderUtils.parse("none", colorService));
+    assertNull(parse("none"));
   }
 
   public void testEmpty() throws Exception {
-    Border border = BorderUtils.parse("empty", colorService);
+    Border border = parse("empty");
     assertTrue(border instanceof EmptyBorder);
   }
 
   public void testEmptyWithGeneralInsets() throws Exception {
-    Border border = BorderUtils.parse("empty(8)", colorService);
+    Border border = parse("empty(8)");
     assertTrue(border instanceof EmptyBorder);
     EmptyBorder emptyBorder = (EmptyBorder)border;
     checkInsets(emptyBorder.getBorderInsets(), 8, 8, 8, 8);
   }
 
   public void testEmptyWithInsets() throws Exception {
-    Border border = BorderUtils.parse("empty(2,3,4,5)", colorService);
+    Border border = parse("empty(2,3,4,5)");
     assertTrue(border instanceof EmptyBorder);
     EmptyBorder emptyBorder = (EmptyBorder)border;
     checkInsets(emptyBorder.getBorderInsets(), 2, 3, 4, 5);
   }
 
   public void testEtched() throws Exception {
-    Border border = BorderUtils.parse("etched", colorService);
+    Border border = parse("etched");
     assertTrue(border instanceof EtchedBorder);
   }
 
   public void testBevel() throws Exception {
-    Border loweredBevel = BorderUtils.parse("bevel(lowered)", colorService);
+    String text = "bevel(lowered)";
+    Border loweredBevel = parse(text);
     assertTrue(loweredBevel instanceof BevelBorder);
 
-    Border raisedBevel = BorderUtils.parse("bevel(raised)", colorService);
+    Border raisedBevel = parse("bevel(raised)");
     assertTrue(raisedBevel instanceof BevelBorder);
   }
 
   public void testMatteBorderWithFixedColor() throws Exception {
-    Border border = BorderUtils.parse("matte(1,2,3,4,#00FF00)", colorService);
+    Border border = parse("matte(1,2,3,4,#00FF00)");
     assertTrue(border instanceof MatteBorder);
 
     MatteBorder matteBorder = (MatteBorder)border;
@@ -57,7 +69,7 @@ public class BorderUtilsTest extends UISpecTestCase {
   public void testMatteBorderWithNamedColor() throws Exception {
     colorService.set("my.color", Color.BLUE);
 
-    Border border = BorderUtils.parse("matte(1,2,3,4,my.color)", colorService);
+    Border border = parse("matte(1,2,3,4,my.color)");
     assertTrue(border instanceof MatteBorder);
 
     MatteBorder matteBorder = (MatteBorder)border;
@@ -68,7 +80,7 @@ public class BorderUtilsTest extends UISpecTestCase {
   }
 
   public void testLineBorderWithFixedColor() throws Exception {
-    Border border = BorderUtils.parse("line(#00FF00)", colorService);
+    Border border = parse("line(#00FF00)");
     assertTrue(border instanceof LineBorder);
     LineBorder lineBorder = (LineBorder)border;
     assertEquals(Color.GREEN, lineBorder.getLineColor());
@@ -77,7 +89,7 @@ public class BorderUtilsTest extends UISpecTestCase {
   public void testLineBorderWithNamedColor() throws Exception {
     colorService.set("my.color", Color.BLUE);
 
-    Border border = BorderUtils.parse("line(my.color)", colorService);
+    Border border = parse("line(my.color)");
     assertTrue(border instanceof LineBorder);
 
     LineBorder lineBorder = (LineBorder)border;
@@ -85,6 +97,10 @@ public class BorderUtilsTest extends UISpecTestCase {
 
     colorService.set("my.color", Color.GREEN);
     assertEquals(Color.GREEN, lineBorder.getLineColor());
+  }
+
+  private Border parse(String text) {
+    return BorderUtils.parse(text, colorService, context);
   }
 
   private void checkInsets(Insets insets, int top, int left, int bottom, int right) {

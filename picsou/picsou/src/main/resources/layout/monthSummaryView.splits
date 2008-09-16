@@ -8,39 +8,35 @@
 
     <panel styleClass="block">
       <column margin="10">
-        <grid weightY="0">
-          <label text="$monthsummary.received" styleClass="totalAmountTitle" gridPos="(0,0)"/>
-          <label ref="totalReceivedAmount" styleClass="totalAmount" gridPos="(0,1)"/>
-          <component ref="totalBalance" gridPos="(1,0,1,2)"
-                     receivedColorTop="balancegraph.received.top"
-                     receivedColorBottom="balancegraph.received.bottom"
-                     spentColorTop="balancegraph.spent.top"
-                     spentColorBottom="balancegraph.spent.bottom"
-                     borderColor="balancegraph.border"
-                     preferredSize="(70,50)"
-                     minimumSize="(70,50)"
-                     weightX="0.1" weightY="1.0"
-                     fill="none"/>
-          <label text="$monthsummary.spent" styleClass="totalAmountTitle" gridPos="(2,0)"/>
-          <label ref="totalSpentAmount" styleClass="totalAmount" gridPos="(2,1)"/>
-        </grid>
+        <row>
+          <filler fill="horizontal"/>
+          <grid weightY="0">
+            <label text="$monthsummary.received" styleClass="totalAmountTitle" gridPos="(0,0)"/>
+            <label ref="totalReceivedAmount" styleClass="totalAmount" gridPos="(0,1)"/>
+            <component ref="totalBalance" gridPos="(1,0,1,2)"
+                       receivedColorTop="balancegraph.received.top"
+                       receivedColorBottom="balancegraph.received.bottom"
+                       spentColorTop="balancegraph.spent.top"
+                       spentColorBottom="balancegraph.spent.bottom"
+                       borderColor="balancegraph.border"
+                       preferredSize="(70,50)"
+                       minimumSize="(70,50)"
+                       weightX="0.1" weightY="1.0"
+                       marginLeft="10" marginRight="10"
+                       fill="none"/>
+            <label text="$monthsummary.spent" styleClass="totalAmountTitle" gridPos="(2,0)"/>
+            <label ref="totalSpentAmount" styleClass="totalAmount" gridPos="(2,1)"/>
+          </grid>
+          <filler fill="horizontal"/>
+        </row>
 
         <scrollPane>
           <column styleClass="innerBlock">
-            <repeat ref="budgetAreaRepeat">
-              <column name="budgetAreaRow">
-                <row margin="10" marginBottom="2">
-                  <label ref="budgetAreaName" styleClass="item"/>
-                  <filler fill="horizontal"/>
-                </row>
-                <row margin="10" marginTop="0">
-                  <label ref="budgetAreaAmount" styleClass="amount" preferredSize="(75,28)"
-                         horizontalAlignment="right"/>
-                  <component ref="budgetAreaGauge" styleClass="totalGauge" preferredSize="(50,28)"/>
-                  <label ref="budgetAreaPlannedAmount" styleClass="amount" preferredSize="(75,28)"
-                         horizontalAlignment="left"/>
-                </row>
-              </column>
+            <repeat ref="budgetAreaRepeat" layout="verticalGrid">
+              <label ref="budgetAreaName" styleClass="item" anchor="center" />
+              <label ref="budgetAreaAmount" styleClass="amount" anchor="center" horizontalAlignment="right"/>
+              <component ref="budgetAreaGauge" styleClass="totalGauge" preferredSize="(50,28)"/>
+              <label ref="budgetAreaPlannedAmount" styleClass="amount" anchor="center" horizontalAlignment="left"/>
             </repeat>
             <row margin="10" autoHideSource="uncategorizedAmountLabel">
               <button action="categorize" autoHideSource="uncategorizedAmountLabel" anchor="left"

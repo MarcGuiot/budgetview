@@ -3,7 +3,8 @@ package org.designup.picsou.gui.components;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorUpdaters;
+import org.globsframework.gui.splits.color.utils.BackgroundColorUpdater;
+import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
@@ -97,7 +98,8 @@ public class PicsouDialog extends JDialog {
   }
 
   public void setContentPane(Container contentPane) {
-    colorService.install("dialog.bg.bottom", ColorUpdaters.background(contentPane));
+    ColorUpdater updater = new BackgroundColorUpdater("dialog.bg.bottom", contentPane);
+    updater.install(colorService);
     super.setContentPane(contentPane);
   }
 

@@ -1,5 +1,6 @@
 package org.globsframework.gui.splits.utils;
 
+import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.color.Colors;
@@ -36,7 +37,7 @@ public class BorderUtils {
                                                        "[ ]*([A-z\\.#0-9]+)[ ]*" +
                                                        "\\)");
 
-  public static Border parse(String desc, ColorService colorService) {
+  public static Border parse(String desc, ColorService colorService, SplitsContext context) {
 
     if (desc.equalsIgnoreCase("none")) {
       return null;
@@ -82,11 +83,13 @@ public class BorderUtils {
       else {
         Color initialColor = colorService.get(colorValue);
         final MutableMatteBorder border = new MutableMatteBorder(top, left, bottom, right, initialColor);
-        colorService.install(colorValue, new ColorUpdater() {
+        ColorUpdater updater = new ColorUpdater(colorValue) {
           public void updateColor(Color color) {
             border.setColor(color);
           }
-        });
+        };
+        updater.install(colorService);
+        context.addDisposable(updater);
         return border;
       }
     }
@@ -99,11 +102,13 @@ public class BorderUtils {
       }
       else {
         final MutableLineBorder border = new MutableLineBorder();
-        colorService.install(colorValue, new ColorUpdater() {
+        ColorUpdater updater = new ColorUpdater(colorValue) {
           public void updateColor(Color color) {
             border.setColor(color);
           }
-        });
+        };
+        updater.install(colorService);
+        context.addDisposable(updater);
         return border;
       }
     }

@@ -7,6 +7,7 @@ import org.globsframework.gui.splits.layout.WrappedColumnLayout;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.Strings;
 import org.uispec4j.finder.ComponentMatchers;
 
@@ -125,7 +126,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     final StringBuilder logger = new StringBuilder();
     Repeat<String> parentRepeat = builder.addRepeat("parentRepeat", Arrays.asList("aa", "bb", "cc"), new RepeatComponentFactory<String>() {
       public void registerComponents(RepeatCellBuilder cellBuilder, final String object) {
-        cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+        cellBuilder.addDisposeListener(new Disposable() {
           public void dispose() {
             logger.append(object).append('\n');
           }
@@ -134,7 +135,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
         cellBuilder.addRepeat("childRepeat", getItems(object), new RepeatComponentFactory<String>() {
           public void registerComponents(RepeatCellBuilder cellBuilder, final String item) {
             cellBuilder.add("button", new JButton(item));
-            cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+            cellBuilder.addDisposeListener(new Disposable() {
               public void dispose() {
                 logger.append(item).append('\n');
               }

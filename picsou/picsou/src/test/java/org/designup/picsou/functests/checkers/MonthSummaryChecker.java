@@ -71,23 +71,19 @@ public class MonthSummaryChecker extends DataChecker {
     }
 
     private void check(BudgetArea budgetArea, double amount) {
-      TextBox textBox = getContainer(budgetArea).getTextBox("budgetAreaAmount");
+      TextBox textBox = panel.getTextBox(budgetArea.getName() + ":budgetAreaAmount");
       assertThat(textBox.textEquals(MonthSummaryChecker.this.toString(amount)));
     }
 
     private void checkPlanned(BudgetArea budgetArea, double amount) {
-      TextBox textBox = getContainer(budgetArea).getTextBox("budgetAreaPlannedAmount");
+      TextBox textBox = panel.getTextBox(budgetArea.getName() + ":budgetAreaPlannedAmount");
       assertThat(textBox.textEquals(MonthSummaryChecker.this.toString(amount)));
     }
 
     private void checkGauge(BudgetArea budgetArea, double amount, double planned) {
-      Gauge gauge = getContainer(budgetArea).findSwingComponent(Gauge.class);
+      Gauge gauge = panel.findSwingComponent(Gauge.class, budgetArea.getName() + ":budgetAreaGauge");
       Assert.assertEquals(amount, gauge.getActualValue(), 0.01);
       Assert.assertEquals(planned, gauge.getTargetValue(), 0.01);
-    }
-
-    private Panel getContainer(BudgetArea budgetArea) {
-      return panel.getTextBox(budgetArea.getName()).getContainer("budgetAreaRow");
     }
 
     public Summary total(double received, double spent, boolean receivedGreaterThanExpenses) {

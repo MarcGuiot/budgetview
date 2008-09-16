@@ -7,6 +7,7 @@ import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobPasswordEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -172,7 +173,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     final GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
     model.setFilter(matcher);
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
-    builder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+    builder.addDisposeListener(new Disposable() {
       public void dispose() {
         model.dispose();
       }

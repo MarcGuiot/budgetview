@@ -1,5 +1,7 @@
 package org.globsframework.gui.splits.repeat;
 
+import org.globsframework.gui.splits.utils.Disposable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -27,7 +29,7 @@ public class ContextualRepeatCellBuilder implements RepeatCellBuilder {
     return repeat;
   }
 
-  public void addDisposeListener(DisposeListener listener) {
-    repeatContext.addDisposeListener(listener);
+  public void addDisposeListener(Disposable listener) {
+    repeatContext.addDisposable(listener);
   }
 }

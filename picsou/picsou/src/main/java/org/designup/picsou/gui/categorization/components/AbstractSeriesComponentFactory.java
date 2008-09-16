@@ -9,6 +9,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -79,7 +80,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
 
     final CategoryUpdater updater =
       new CategoryUpdater(toggle, invisibleToggle, seriesKey, category.getKey(), budgetArea, repository, selectionService);
-    cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+    cellBuilder.addDisposeListener(new Disposable() {
       public void dispose() {
         updater.dispose();
         buttonGroup.remove(toggle);

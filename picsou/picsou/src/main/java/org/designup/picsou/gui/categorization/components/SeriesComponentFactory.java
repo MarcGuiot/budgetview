@@ -5,6 +5,7 @@ import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.directory.Directory;
@@ -48,7 +49,7 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
     };
     selectionService.addListener(listener, Transaction.TYPE);
 
-    cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+    cellBuilder.addDisposeListener(new Disposable() {
       public void dispose() {
         repository.removeChangeListener(seriesUpdateListener);
         selectionService.removeListener(listener);

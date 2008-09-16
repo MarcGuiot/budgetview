@@ -72,9 +72,6 @@ public class ColorServiceEditorTest extends UISpecTestCase {
 
     colorSetCombo.select("set1.colors");
 
-    assertFalse(list.contains("color4"));
-
-    colorService.get("color4");
     assertTrue(list.contains("color4"));
     list.select("color4");
     assertTrue(text.textEquals("FF0000"));

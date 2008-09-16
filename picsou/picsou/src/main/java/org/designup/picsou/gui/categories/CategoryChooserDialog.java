@@ -11,6 +11,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.WrappedColumnLayout;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -162,7 +163,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
     }
   }
 
-  private class DisposeToggleListener implements RepeatCellBuilder.DisposeListener {
+  private class DisposeToggleListener implements Disposable {
     private final Glob subcat;
     private final JToggleButton toggle;
 

@@ -7,16 +7,14 @@ import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.awt.*;
 import java.io.PrintStream;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ColorService implements ColorLocator {
 
   public static final String DEFAULT_COLOR_SET = "DEFAULT_COLOR_SET";
 
-  private List<ListenerRef> listeners = new ArrayList<ListenerRef>();
+  private List<ColorChangeListener> listeners = new ArrayList<ColorChangeListener>();
   private ColorSet currentSet;
   private List<ColorSet> colorSets = new ArrayList<ColorSet>();
   private List<ColorCreationListener> colorCreationListeners = new ArrayList<ColorCreationListener>();
@@ -72,18 +70,6 @@ public class ColorService implements ColorLocator {
     return currentSet.getKeys();
   }
 
-  public void install(final String key, final ColorUpdater updater) {
-    addListenerRef(new HardListenerRef(new ColorChangeListener() {
-      public void colorsChanged(ColorLocator colorLocator) {
-        updater.updateColor(get(key));
-      }
-    }));
-  }
-
-  public void uninstall(ColorUpdater updater) {
-    listeners.remove(updater);
-  }
-
   public void set(String key, Color color) {
     currentSet.set(key, color);
     notifyListeners();
@@ -121,56 +107,34 @@ public class ColorService implements ColorLocator {
   }
 
   public void addListener(ColorChangeListener listener) {
-    addListenerRef(new WeakListenerRef(listener));
-  }
-
-  private void addListenerRef(ListenerRef ref) {
-    listeners.add(ref);
-    ref.get().colorsChanged(this);
+    listeners.add(listener);
+    listener.colorsChanged(this);
   }
 
   public void removeListener(ColorChangeListener listener) {
-    for (Iterator<ListenerRef> iterator = listeners.iterator(); iterator.hasNext();) {
-      ListenerRef reference = iterator.next();
-      if ((reference.get() == null) || (reference.get() == listener)) {
-        iterator.remove();
-      }
-    }
+    listeners.remove(listener);
   }
 
-  public void addListener(ColorCreationListener listener) {
+  public void addCreationListener(ColorCreationListener listener) {
     colorCreationListeners.add(listener);
   }
 
-  public void removeListener(ColorCreationListener listener) {
+  public void removeCreationListener(ColorCreationListener listener) {
     colorCreationListeners.remove(listener);
   }
 
   public void autoUpdate(final Container container) {
-    addListenerRef(new HardListenerRef(new ColorChangeListener() {
+    addListener(new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
         container.repaint();
       }
-    }));
+    });
   }
 
   private void notifyListeners() {
-    List<ListenerRef> copy = new ArrayList<ListenerRef>(listeners);
-    List<ListenerRef> toRemove = null;
-    for (ListenerRef ref : copy) {
-      ColorChangeListener listener = ref.get();
-      if (listener != null) {
-        listener.colorsChanged(this);
-      }
-      else {
-        if (toRemove == null) {
-          toRemove = new ArrayList<ListenerRef>();
-        }
-        toRemove.add(ref);
-      }
-    }
-    if (toRemove != null) {
-      listeners.removeAll(toRemove);
+    List<ColorChangeListener> copy = new ArrayList<ColorChangeListener>(listeners);
+    for (ColorChangeListener listener : copy) {
+      listener.colorsChanged(this);
     }
   }
 
@@ -190,33 +154,4 @@ public class ColorService implements ColorLocator {
     colorCreationListeners.clear();
     colorSets.clear();
   }
-
-  private interface ListenerRef {
-    ColorChangeListener get();
-  }
-
-  private class WeakListenerRef implements ListenerRef {
-    private WeakReference<ColorChangeListener> ref;
-
-    private WeakListenerRef(ColorChangeListener listener) {
-      this.ref = new WeakReference<ColorChangeListener>(listener);
-    }
-
-    public ColorChangeListener get() {
-      return ref.get();
-    }
-  }
-
-  private class HardListenerRef implements ListenerRef {
-    private ColorChangeListener listener;
-
-    private HardListenerRef(ColorChangeListener listener) {
-      this.listener = listener;
-    }
-
-    public ColorChangeListener get() {
-      return listener;
-    }
-  }
-
 }

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components;
 
-import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorUpdaters;
+import org.globsframework.gui.splits.color.*;
+import org.globsframework.gui.splits.color.utils.ForegroundColorUpdater;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
@@ -19,7 +19,8 @@ public class PicsouTableHeaderCustomizer implements LabelCustomizer {
   }
 
   public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
-    colorService.install(tableHeaderTitle.toString(), ColorUpdaters.foreground(label));
+    ColorUpdater updater = new ForegroundColorUpdater(tableHeaderTitle.toString(), label);
+    updater.install(colorService);
     label.setBorder(BorderFactory.createEmptyBorder());
   }
 }

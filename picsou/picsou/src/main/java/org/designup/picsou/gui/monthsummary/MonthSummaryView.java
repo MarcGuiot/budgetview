@@ -66,10 +66,17 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                           cellBuilder.add("budgetAreaName", nameLabel);
                           nameLabel.setName(budgetArea.getGlob().get(BudgetArea.NAME));
 
-                          JLabel amountLabel = cellBuilder.add("budgetAreaAmount", new JLabel());
+                          JLabel amountLabel =
+                            cellBuilder.add("budgetAreaAmount", new JLabel());
+                          amountLabel.setName(budgetArea.getName() + ":budgetAreaAmount");
+
                           JLabel plannedLabel = cellBuilder.add("budgetAreaPlannedAmount", new JLabel());
+                          plannedLabel.setName(budgetArea.getName() + ":budgetAreaPlannedAmount");
+
                           Gauge gauge = cellBuilder.add("budgetAreaGauge",
                                                         BudgetAreaGaugeFactory.createGauge(budgetArea));
+                          gauge.setName(budgetArea.getName() + ":budgetAreaGauge");
+
                           new BudgetAreaUpdater(budgetArea, amountLabel, plannedLabel, gauge);
                         }
                       });

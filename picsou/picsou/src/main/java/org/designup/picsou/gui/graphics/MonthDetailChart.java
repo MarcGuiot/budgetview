@@ -13,6 +13,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorUpdater;
+import org.globsframework.gui.splits.color.utils.DefaultColorChangeListener;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFieldMatcher;
@@ -193,8 +194,8 @@ public class MonthDetailChart extends View implements GlobSelectionListener, Cha
   private void setRowColor(String row, PicsouColors color, final XYBarRenderer renderer, XYDataset dataset) {
     final int rowIndex = dataset.indexOf(row);
     if (rowIndex >= 0) {
-      colorService.install(color.toString(), new ColorUpdater() {
-        public void updateColor(Color color) {
+      colorService.addListener(new DefaultColorChangeListener(color.toString()) {
+        protected void updateColor(Color color) {
           renderer.setSeriesPaint(rowIndex, color);
         }
       });
@@ -204,8 +205,8 @@ public class MonthDetailChart extends View implements GlobSelectionListener, Cha
   private void setShapeColor(String row, PicsouColors color, final XYBarRenderer renderer, XYDataset dataset) {
     final int rowIndex = dataset.indexOf(row);
     if (rowIndex >= 0) {
-      colorService.install(color.toString(), new ColorUpdater() {
-        public void updateColor(Color color) {
+      colorService.addListener(new DefaultColorChangeListener(color.toString()) {
+        protected void updateColor(Color color) {
           renderer.setSeriesFillPaint(rowIndex, color);
         }
       });

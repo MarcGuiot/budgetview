@@ -11,6 +11,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
@@ -116,7 +117,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       buttonGroup.add(toggle);
       toggles.put(budgetArea, toggle);
 
-      cellBuilder.addDisposeListener(new RepeatCellBuilder.DisposeListener() {
+      cellBuilder.addDisposeListener(new Disposable() {
         public void dispose() {
           buttonGroup.remove(toggle);
           toggles.remove(budgetArea);
