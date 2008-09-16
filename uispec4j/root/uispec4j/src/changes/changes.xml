@@ -6,6 +6,9 @@
   <body>
     <release version="2.0" date="???">
       <action dev="mguiot" type="add">
+        Add Key.MINUS and Key.ADD.
+      </action>
+      <action dev="mguiot" type="add">
         Check that the button is visible before calling doClick.
       </action>
       <action dev="rmedina" type="add">
