@@ -46,7 +46,13 @@ public class SelectionService {
     if (globList == null) {
       return GlobList.EMPTY;
     }
-    return new GlobList(globList);
+    GlobList list = new GlobList(globList.size());
+    for (Glob glob : globList) {
+      if (glob.exists()) {
+        list.add(glob);
+      }
+    }
+    return list;
   }
 
   public void select(Collection<Glob> globs, GlobType type, GlobType... types) {

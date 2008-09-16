@@ -30,7 +30,7 @@ public class GlobUtils {
   }
 
   public static String toString(Glob[] globs) {
-    List strings = new ArrayList();
+    List<String> strings = new ArrayList<String>();
     for (Glob glob : globs) {
       strings.add(glob.getKey().toString());
     }
@@ -64,5 +64,32 @@ public class GlobUtils {
       }
     }
     return result;
+  }
+
+  public interface DiffFunctor<T> {
+    void add(T glob, int index);
+
+    void remove(int index);
+  }
+
+  public static <T> void diff(List<T> from, List<T> to, DiffFunctor<T> functor) {
+    Iterator<T> fromGlobs = from.iterator();
+    int toPos = 0;
+    int added = 0;
+
+    T fromGlob = (T)(fromGlobs.hasNext() ? fromGlobs.next() : null);
+    for (T glob : to) {
+      if (glob != fromGlob) {
+        functor.add(glob, toPos);
+        added++;
+      }
+      else {
+        fromGlob = (T)(fromGlobs.hasNext() ? fromGlobs.next() : null);
+      }
+      toPos++;
+    }
+    for (int index = from.size() + added; index > to.size(); index--) {
+      functor.remove(index - 1);
+    }
   }
 }

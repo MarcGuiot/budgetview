@@ -76,7 +76,14 @@ public class StyledPanelUI extends BasicPanelUI {
   private void createImage(JComponent c) {
     height = c.getHeight();
     width = c.getWidth();
-    image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    int type;
+    if (cornerRadius != 0) {
+      type = BufferedImage.TYPE_INT_ARGB;
+    }
+    else {
+      type = BufferedImage.TYPE_INT_BGR;
+    }
+    image = new BufferedImage(width, height, type);
     Graphics2D g2d = image.createGraphics();
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 

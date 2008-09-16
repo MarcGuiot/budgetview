@@ -80,13 +80,16 @@ public class GlobList extends ArrayList<Glob> {
     }
   }
 
-  public void removeAll(Set<Key> keys) {
+  public boolean removeAll(Set<Key> keys) {
+    boolean asRemoved = false;
     for (Iterator it = this.iterator(); it.hasNext();) {
       Glob glob = (Glob)it.next();
       if (keys.contains(glob.getKey())) {
         it.remove();
+        asRemoved = true;
       }
     }
+    return asRemoved;
   }
 
   public GlobList subList(int fromIndex, int toIndex) {
