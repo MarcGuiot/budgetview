@@ -28,6 +28,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   private boolean isInitialized = false;
   private boolean notifyAtKeyPressed;
   private DocumentListener keyPressedListener;
+  private boolean notify = true;
 
   protected AbstractGlobTextEditor(Field field, COMPONENT_TYPE component, GlobRepository repository, Directory directory) {
     super(field.getGlobType(), repository, directory);
@@ -119,6 +120,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   }
 
   protected void applyChanges() {
+    if (!notify) {
+      return;
+    }
     if (forceNotEditable) {
       return;
     }
@@ -175,7 +179,13 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   }
 
   protected void setValue(Object value) {
-    textComponent.setText((String)(value == null ? "" : value));
+    notify = false;
+    try {
+      textComponent.setText((String)(value == null ? "" : value));
+    }
+    finally {
+      notify = true;
+    }
   }
 
   public void dispose() {

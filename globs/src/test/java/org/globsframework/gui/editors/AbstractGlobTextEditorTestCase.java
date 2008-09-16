@@ -123,6 +123,18 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
       "<update type='dummyObject' id='1' name='AAAB' _name='AAA'/>");
   }
 
+  public void testSelectionDoNotSendChanges() throws Exception {
+    TextBox textBox = init(DummyObject.NAME, null, true, true);
+    selectionService.select(glob1);
+    textBox.setText("");
+    textBox.insertText("AA", 0);
+    changeListener.assertLastChangesEqual(
+      "<update type='dummyObject' id='1' name='AA' _name=''/>");
+    changeListener.reset();
+    selectionService.select(glob2);
+    changeListener.assertNoChanges();
+  }
+
   protected abstract TextBox init(StringField field, String defaultValueForMultivalue, boolean isEditable, boolean sendAtKeyPressed);
 
   protected void enterTextAndValidate(TextBox textBox, String text) {
