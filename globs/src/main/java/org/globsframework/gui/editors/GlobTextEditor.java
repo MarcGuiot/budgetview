@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class GlobTextEditor extends AbstractGlobTextEditor<JTextField> {
+public class GlobTextEditor extends AbstractGlobTextEditor<JTextField, GlobTextEditor> {
   public static GlobTextEditor init(StringField field, GlobRepository repository, Directory directory) {
     return new GlobTextEditor(field, repository, directory, new JTextField());
   }

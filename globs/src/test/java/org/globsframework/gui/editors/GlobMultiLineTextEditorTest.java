@@ -8,7 +8,7 @@ import javax.swing.*;
 public class GlobMultiLineTextEditorTest extends AbstractGlobTextEditorTestCase {
   protected TextBox init(StringField name, String defaultValueForMultivalue, boolean isEditable, boolean sendAtKeyPressed) {
     JTextArea textField =
-      (JTextArea)GlobMultiLineTextEditor.init(name, repository, directory)
+      GlobMultiLineTextEditor.init(name, repository, directory)
         .setMultiSelectionText(defaultValueForMultivalue)
         .setNotifyAtKeyPressed(sendAtKeyPressed)
         .setEditable(isEditable).getComponent();

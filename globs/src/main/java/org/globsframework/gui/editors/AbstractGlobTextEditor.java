@@ -18,7 +18,7 @@ import javax.swing.text.JTextComponent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextComponent> extends AbstractGlobComponentHolder implements GlobSelectionListener {
+public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextComponent, PARENT extends AbstractGlobTextEditor> extends AbstractGlobComponentHolder implements GlobSelectionListener {
   protected Field field;
   private GlobList lastSelectedGlobs;
   protected COMPONENT_TYPE textComponent;
@@ -34,14 +34,14 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     this.textComponent = component;
   }
 
-  public AbstractGlobTextEditor setMultiSelectionText(Object valueForMultiSelection) {
+  public PARENT setMultiSelectionText(Object valueForMultiSelection) {
     this.valueForMultiSelection = valueForMultiSelection;
-    return this;
+    return (PARENT)this;
   }
 
-  public AbstractGlobTextEditor setEditable(boolean b) {
+  public PARENT setEditable(boolean b) {
     forceNotEditable = !b;
-    return this;
+    return (PARENT)this;
   }
 
   private void initTextComponent() {
@@ -103,9 +103,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     return textComponent;
   }
 
-  public AbstractGlobTextEditor forceSelection(Glob glob) {
+  public PARENT forceSelection(Glob glob) {
     this.forcedSelection = new GlobList(glob);
-    return this;
+    return (PARENT)this;
   }
 
   protected void applyChanges() {
@@ -154,9 +154,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     setValue(value);
   }
 
-  public AbstractGlobTextEditor setNotifyAtKeyPressed(boolean notifyAtKeyPressed) {
+  public PARENT setNotifyAtKeyPressed(boolean notifyAtKeyPressed) {
     this.notifyAtKeyPressed = notifyAtKeyPressed;
-    return this;
+    return (PARENT)this;
   }
 
   protected Object getValue() throws InvalidFormat {

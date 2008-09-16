@@ -8,7 +8,7 @@ import javax.swing.*;
 public class GlobPasswordEditorTest extends AbstractGlobTextEditorTestCase {
   protected TextBox init(StringField name, String defaultValueForMultivalue, boolean isEditable, boolean sendAtKeyPressed) {
     JPasswordField textField =
-      (JPasswordField)GlobPasswordEditor.init(name, repository, directory)
+      GlobPasswordEditor.init(name, repository, directory)
         .setMultiSelectionText(defaultValueForMultivalue)
         .setNotifyAtKeyPressed(sendAtKeyPressed)
         .setEditable(isEditable).getComponent();

@@ -17,7 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 
-public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField> {
+public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNumericEditor> {
   private boolean isMinusAllowed = true;
   private boolean invertValue = false;
 

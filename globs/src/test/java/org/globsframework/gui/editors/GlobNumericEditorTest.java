@@ -143,7 +143,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
 
   public void testSendUpdateAtKeyPressed() throws Exception {
     JTextField textField =
-      (JTextField)GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
+      GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
         .setMinusAllowed(true)
         .setNotifyAtKeyPressed(true)
         .getComponent();

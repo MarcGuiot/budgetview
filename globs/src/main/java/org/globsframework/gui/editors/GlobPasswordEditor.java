@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class GlobPasswordEditor extends AbstractGlobTextEditor<JPasswordField> {
+public class GlobPasswordEditor extends AbstractGlobTextEditor<JPasswordField, GlobPasswordEditor> {
   public static GlobPasswordEditor init(StringField field, GlobRepository repository, Directory directory) {
     return new GlobPasswordEditor(field, repository, directory, new JPasswordField());
   }
