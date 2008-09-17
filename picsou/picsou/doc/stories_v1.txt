@@ -75,7 +75,6 @@ HistoricalChart
 * voir affichage avec ghosts
 
 Import
-*** Traduction des noms de colonnes
 * Import : OK sans fichier = message, si selection il faut purger le message
 * Bring to front sur Open With...
 * Memoriser dernier repertoire pour le filechooser

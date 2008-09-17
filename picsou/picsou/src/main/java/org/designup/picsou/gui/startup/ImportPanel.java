@@ -143,13 +143,13 @@ public abstract class ImportPanel {
     importSession = new ImportSession(localRepository, sessionDirectory);
     sessionRepository = importSession.getTempRepository();
 
-    GlobTableView importedTransactionTableView = GlobTableView.init(ImportedTransaction.TYPE, sessionRepository,
+    GlobTableView tableView = GlobTableView.init(ImportedTransaction.TYPE, sessionRepository,
                                                                     dateRenderer.getComparator(), sessionDirectory)
-      .addColumn(ImportedTransaction.BANK_DATE, dateRenderer)
-      .addColumn(ImportedTransaction.LABEL)
-      .addColumn(ImportedTransaction.AMOUNT);
-    JTable transactionTable = importedTransactionTableView.getComponent();
-    dateRenderer.setTable(importedTransactionTableView);
+      .addColumn(Lang.get("import.bankDate"), ImportedTransaction.BANK_DATE, dateRenderer)
+      .addColumn(Lang.get("label"), ImportedTransaction.LABEL)
+      .addColumn(Lang.get("amount"), ImportedTransaction.AMOUNT);
+    JTable transactionTable = tableView.getComponent();
+    dateRenderer.setTable(tableView);
 
     builder2.add("table", transactionTable);
     builder2.add("fileName", fileNameLabel);
