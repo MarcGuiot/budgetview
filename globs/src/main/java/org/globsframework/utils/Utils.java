@@ -57,7 +57,7 @@ public class Utils {
     return list;
   }
 
-  public static double zeroIfNull(Double value) {
+  public static Double zeroIfNull(Double value) {
     return value != null ? value : 0;
   }
 

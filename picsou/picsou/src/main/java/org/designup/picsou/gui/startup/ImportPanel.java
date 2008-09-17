@@ -146,9 +146,9 @@ public abstract class ImportPanel {
 
     GlobTableView importedTransactionTableView = GlobTableView.init(ImportedTransaction.TYPE, sessionRepository,
                                                                     dateRenderer.getComparator(), sessionDirectory)
-      .addColumn(ImportedTransaction.BANK_DATE, dateRenderer, CellPainter.NULL)
-      .addColumn(ImportedTransaction.LABEL)
-      .addColumn(ImportedTransaction.AMOUNT);
+      .addColumn(Lang.get("date"), ImportedTransaction.BANK_DATE, dateRenderer)
+      .addColumn(Lang.get("label"), ImportedTransaction.LABEL)
+      .addColumn(Lang.get("amount"), ImportedTransaction.AMOUNT);
     JTable transactionTable = importedTransactionTableView.getComponent();
     dateRenderer.setTable(importedTransactionTableView);
 

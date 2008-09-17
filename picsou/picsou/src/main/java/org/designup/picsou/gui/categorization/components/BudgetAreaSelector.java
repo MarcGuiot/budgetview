@@ -13,10 +13,7 @@ import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobUtils;
@@ -146,14 +143,19 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   public void selectionUpdated(GlobSelection selection) {
     this.selectedTransactions = selection.getAll(Transaction.TYPE);
     title.setText(Lang.get(selectedTransactions.size() == 1 ?
-      "categorization.budgetAreaSelection.title.singular" :
-      "categorization.budgetAreaSelection.title.plural"));
+                           "categorization.budgetAreaSelection.title.singular" :
+                           "categorization.budgetAreaSelection.title.plural"));
     updateSelection();
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(Transaction.TYPE)) {
-      updateSelection();
+      for (Glob transaction : selectedTransactions) {
+        if (changeSet.containsChanges(transaction.getKey(), Transaction.SERIES)) {
+          updateSelection();
+          return;
+        }
+      }
     }
   }
 

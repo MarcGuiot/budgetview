@@ -8,6 +8,7 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
+import org.globsframework.utils.Utils;
 
 import java.util.*;
 
@@ -15,16 +16,12 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        if (values.get(Series.INITIAL_AMOUNT) != null) {
-          updateSeriesBudget(repository.get(key), repository);
-        }
+        updateSeriesBudget(repository.get(key), repository);
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         Glob series = repository.get(key);
-        if (series.get(Series.INITIAL_AMOUNT) != null) {
-          updateSeriesBudget(series, repository);
-        }
+        updateSeriesBudget(series, repository);
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
@@ -87,7 +84,8 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
         if (seriesBudget == null) {
           repository.create(SeriesBudget.TYPE,
                             value(SeriesBudget.SERIES, seriesId),
-                            value(SeriesBudget.AMOUNT, series.get(Series.INITIAL_AMOUNT)),
+                            value(SeriesBudget.AMOUNT,
+                                  active ? Utils.zeroIfNull(series.get(Series.INITIAL_AMOUNT)) : 0.0),
                             value(SeriesBudget.MONTH, monthId),
                             value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
                             value(SeriesBudget.ACTIVE, active));
@@ -96,6 +94,9 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
           repository.update(seriesBudget.getKey(),
                             value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
                             value(SeriesBudget.ACTIVE, active));
+          if (!active) {
+            repository.update(seriesBudget.getKey(), SeriesBudget.AMOUNT, 0.0);
+          }
         }
       }
     }

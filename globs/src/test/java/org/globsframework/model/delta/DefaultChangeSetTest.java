@@ -59,6 +59,7 @@ public class DefaultChangeSetTest extends TestCase {
 
     changeSet.processCreation(DummyObject.TYPE, creationValues);
     assertTrue(changeSet.containsChanges(key1));
+    assertTrue(changeSet.containsChanges(key1, DummyObject.ID));
     assertTrue(changeSet.containsChanges(DummyObject.TYPE));
     assertTrue(changeSet.containsCreationsOrDeletions(DummyObject.TYPE));
     assertFalse(changeSet.containsUpdates(DummyObject.NAME));
@@ -79,6 +80,8 @@ public class DefaultChangeSetTest extends TestCase {
 
     changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
     assertTrue(changeSet.containsChanges(key1));
+    assertTrue(changeSet.containsChanges(key1, DummyObject.VALUE));
+    assertFalse(changeSet.containsChanges(key1, DummyObject.NAME));
     TestUtils.assertEquals(changeSet.getUpdated(DummyObject.TYPE), key1);
     assertTrue(changeSet.containsChanges(DummyObject.TYPE));
     assertFalse(changeSet.containsCreationsOrDeletions(DummyObject.TYPE));
@@ -114,6 +117,7 @@ public class DefaultChangeSetTest extends TestCase {
     changeSet.processDeletion(key1, FieldValues.EMPTY);
     assertTrue(changeSet.containsChanges(key1));
     assertTrue(changeSet.containsChanges(DummyObject.TYPE));
+    assertTrue(changeSet.containsChanges(key1, DummyObject.NAME));
     assertTrue(changeSet.containsCreationsOrDeletions(DummyObject.TYPE));
     assertFalse(changeSet.containsUpdates(DummyObject.NAME));
     assertEquals(1, changeSet.size());

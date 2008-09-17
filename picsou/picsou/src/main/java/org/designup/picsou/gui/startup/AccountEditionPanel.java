@@ -49,8 +49,8 @@ public class AccountEditionPanel {
         }
       }
     });
-    builder.addEditor("name", Account.NAME);
-    builder.addEditor("number", Account.NUMBER);
+    builder.addEditor("name", Account.NAME).setNotifyAtKeyPressed(true);
+    builder.addEditor("number", Account.NUMBER).setNotifyAtKeyPressed(true);
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
         panel = (JPanel)component;

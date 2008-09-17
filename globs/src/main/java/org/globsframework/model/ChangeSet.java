@@ -15,6 +15,11 @@ public interface ChangeSet {
 
   boolean containsChanges(Key key);
 
+  /**
+   * return true if Glob for key is create, delete or update on Field field
+   */
+  boolean containsChanges(Key key, Field... fields);
+
   boolean isEmpty();
 
   GlobType[] getChangedTypes();

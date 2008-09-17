@@ -32,8 +32,13 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkName(String seriesName) {
-    assertThat(dialog.getInputTextBox("nameField").textEquals(seriesName));
+    TextBox getNameBox = getNameBox();
+    assertThat(getNameBox.textEquals(seriesName));
     return this;
+  }
+
+  public TextBox getNameBox() {
+    return dialog.getInputTextBox("nameField");
   }
 
   public SeriesEditionDialogChecker setName(String seriesName) {
@@ -47,8 +52,13 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkAmount(String displayedValue) {
-    assertThat(dialog.getInputTextBox("amountEditor").textEquals(displayedValue));
+    TextBox getAmount = getAmount();
+    assertThat(getAmount.textEquals(displayedValue));
     return this;
+  }
+
+  public TextBox getAmount() {
+    return dialog.getInputTextBox("amountEditor");
   }
 
   public SeriesEditionDialogChecker setAmount(String value) {

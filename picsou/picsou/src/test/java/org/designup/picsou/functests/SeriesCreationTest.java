@@ -30,7 +30,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     categorization.checkContainsIncomeSeries("Prime");
-
+    categorization.setIncome("WorldCo/june", "Prime", false);
     views.selectData();
     transactions.checkSeries(0, "Prime");
     transactions.checkCategory(0, MasterCategory.INCOME);

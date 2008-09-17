@@ -12,11 +12,13 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;
 
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextComponent> extends AbstractGlobComponentHolder implements GlobSelectionListener {
+public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextComponent, PARENT extends AbstractGlobTextEditor> extends AbstractGlobComponentHolder implements GlobSelectionListener {
   protected Field field;
   private GlobList lastSelectedGlobs;
   protected COMPONENT_TYPE textComponent;
@@ -24,22 +26,24 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   private boolean forceNotEditable;
   private GlobList forcedSelection;
   private boolean isInitialized = false;
+  private boolean notifyAtKeyPressed;
+  private DocumentListener keyPressedListener;
+  private boolean notify = true;
 
   protected AbstractGlobTextEditor(Field field, COMPONENT_TYPE component, GlobRepository repository, Directory directory) {
     super(field.getGlobType(), repository, directory);
     this.field = field;
     this.textComponent = component;
-    initTextComponent();
   }
 
-  public AbstractGlobTextEditor setMultiSelectionText(Object valueForMultiSelection) {
+  public PARENT setMultiSelectionText(Object valueForMultiSelection) {
     this.valueForMultiSelection = valueForMultiSelection;
-    return this;
+    return (PARENT)this;
   }
 
-  public AbstractGlobTextEditor setEditable(boolean b) {
+  public PARENT setEditable(boolean b) {
     forceNotEditable = !b;
-    return this;
+    return (PARENT)this;
   }
 
   private void initTextComponent() {
@@ -49,6 +53,34 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     textComponent.setText("");
     registerFocusLostListener();
     registerChangeListener();
+    registerKeyPressedListener();
+  }
+
+  private void registerKeyPressedListener() {
+    if (isNotifyAtKeyPressed()) {
+      if (keyPressedListener == null) {
+        keyPressedListener = new DocumentListener() {
+          public void insertUpdate(DocumentEvent e) {
+            applyChanges();
+          }
+
+          public void removeUpdate(DocumentEvent e) {
+            applyChanges();
+          }
+
+          public void changedUpdate(DocumentEvent e) {
+            applyChanges();
+          }
+        };
+        textComponent.getDocument().addDocumentListener(keyPressedListener);
+      }
+    }
+    else {
+      if (keyPressedListener != null) {
+        textComponent.getDocument().removeDocumentListener(keyPressedListener);
+        keyPressedListener = null;
+      }
+    }
   }
 
   private void registerFocusLostListener() {
@@ -57,7 +89,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       }
 
       public void focusLost(FocusEvent e) {
-        applyChanges();
+        if (!notifyAtKeyPressed) {
+          applyChanges();
+        }
       }
     });
   }
@@ -69,6 +103,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       return textComponent;
     }
     isInitialized = true;
+    initTextComponent();
     if (forcedSelection != null) {
       selectionUpdated(new DefaultGlobSelection(forcedSelection, forcedSelection.getTypes()));
     }
@@ -79,12 +114,15 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     return textComponent;
   }
 
-  public AbstractGlobTextEditor forceSelection(Glob glob) {
+  public PARENT forceSelection(Glob glob) {
     this.forcedSelection = new GlobList(glob);
-    return this;
+    return (PARENT)this;
   }
 
   protected void applyChanges() {
+    if (!notify) {
+      return;
+    }
     if (forceNotEditable) {
       return;
     }
@@ -130,15 +168,31 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     setValue(value);
   }
 
+  public PARENT setNotifyAtKeyPressed(boolean notifyAtKeyPressed) {
+    this.notifyAtKeyPressed = notifyAtKeyPressed;
+    registerKeyPressedListener();
+    return (PARENT)this;
+  }
+
   protected Object getValue() throws InvalidFormat {
     return textComponent.getText();
   }
 
   protected void setValue(Object value) {
-    textComponent.setText((String)(value == null ? "" : value));
+    notify = false;
+    try {
+      textComponent.setText((String)(value == null ? "" : value));
+    }
+    finally {
+      notify = true;
+    }
   }
 
   public void dispose() {
     selectionService.removeListener(this);
+  }
+
+  public boolean isNotifyAtKeyPressed() {
+    return notifyAtKeyPressed;
   }
 }

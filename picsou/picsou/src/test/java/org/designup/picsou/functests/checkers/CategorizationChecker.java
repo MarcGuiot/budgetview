@@ -113,7 +113,6 @@ public class CategorizationChecker extends DataChecker {
         .selectAllMonths()
         .setAmount("0")
         .validate();
-      return this;
     }
     panel.getToggleButton(name).click();
     return this;
@@ -126,7 +125,6 @@ public class CategorizationChecker extends DataChecker {
         .setName(name)
         .setCategory(MasterCategory.INCOME)
         .validate();
-      return this;
     }
     panel.getToggleButton(name).click();
     return this;
@@ -188,7 +186,6 @@ public class CategorizationChecker extends DataChecker {
         .setName(name)
         .setCategory(category)
         .validate();
-      return this;
     }
     panel.getToggleButton(name).click();
     return this;
@@ -291,7 +288,6 @@ public class CategorizationChecker extends DataChecker {
         .setName(envelopeName)
         .setCategory(category)
         .validate();
-      return this;
     }
 
     String toggleName = envelopeName + ":" + category.getName();
@@ -338,7 +334,6 @@ public class CategorizationChecker extends DataChecker {
         .setName(projectName)
         .setCategory(category)
         .validate();
-      return this;
     }
     panel.getToggleButton(name).click();
     return this;
@@ -365,19 +360,13 @@ public class CategorizationChecker extends DataChecker {
 
   public CategorizationChecker selectSavingsSeries(String savingsName, MasterCategory category, boolean createSeries) {
     Panel panel = getSavingsSeriesPanel();
-    String name = savingsName + ":" + category.getName();
-    Component component = panel.findSwingComponent(ComponentMatchers.innerNameIdentity(name));
-    if (component != null) {
-      // TODO avec la multi affectation de category a une enveloppe
-    }
     if (createSeries) {
       createSavingsSeries()
         .setName(savingsName)
         .setCategory(category)
         .validate();
-      return this;
     }
-    panel.getToggleButton(name).click();
+    panel.getToggleButton(savingsName).click();
     return this;
   }
 
@@ -650,13 +639,18 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public void setExceptionalIncome(String label, String seriesName, boolean showSeriesInitialization) {
-    selectTableRow(getRowIndex(label));
-    selectIncome();
-    selectExceptionalIncomeSeries(seriesName, showSeriesInitialization);
+    int[] indices = getRowIndices(label);
+    boolean first = showSeriesInitialization;
+    for (int indice : indices) {
+      selectTableRow(indice);
+      selectIncome();
+      selectExceptionalIncomeSeries(seriesName, first);
+      first = false;
+    }
   }
 
   public CategorizationChecker setIncome(String label, String seriesName, boolean showSeriesInitialization) {
-    selectTableRows(getRowIndex(label));
+    selectTableRows(getRowIndices(label));
     selectIncome();
     selectIncomeSeries(seriesName, showSeriesInitialization);
     return this;
@@ -670,13 +664,18 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker setRecurring(String label, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
-    setRecurring(getRowIndex(label), seriesName, category, showSeriesInitialization);
+    int[] indices = getRowIndices(label);
+    boolean first = showSeriesInitialization;
+    for (int indice : indices) {
+      setRecurring(indice, seriesName, category, first);
+      first = false;
+    }
     return this;
   }
 
-  private int getRowIndex(String label) {
-    int index = getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
-    if (index < 0) {
+  private int[] getRowIndices(String label) {
+    int[] index = getTable().getRowIndices(LABEL_COLUMN_INDEX, label);
+    if (index.length < 0) {
       Assert.fail("Label '" + label + "' not found");
     }
     return index;
@@ -690,17 +689,28 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker setEnvelope(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    setEnvelope(getRowIndex(label), seriesName, master, showSeriesInitialization);
+    int[] indices = getRowIndices(label);
+    boolean first = showSeriesInitialization;
+    for (int indice : indices) {
+      setEnvelope(indice, seriesName, master, first);
+      first = false;
+    }
     return this;
   }
 
   public CategorizationChecker setOccasional(String label, MasterCategory category) {
-    setOccasional(getRowIndex(label), category);
+    int[] indices = getRowIndices(label);
+    for (int indice : indices) {
+      setOccasional(indice, category);
+    }
     return this;
   }
 
   public CategorizationChecker setOccasional(String label, MasterCategory masterCategory, String category) {
-    setOccasional(getRowIndex(label), masterCategory, category);
+    int[] indices = getRowIndices(label);
+    for (int indice : indices) {
+      setOccasional(indice, masterCategory, category);
+    }
     return this;
   }
 
@@ -719,7 +729,12 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker setProject(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    setProject(getRowIndex(label), seriesName, master, showSeriesInitialization);
+    int[] indices = getRowIndices(label);
+    boolean first = showSeriesInitialization;
+    for (int indice : indices) {
+      setProject(indice, seriesName, master, first);
+      first = false;
+    }
     return this;
   }
 
@@ -739,7 +754,12 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker setSavings(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
-    setSavings(getRowIndex(label), seriesName, master, showSeriesInitialization);
+    int[] indices = getRowIndices(label);
+    boolean first = showSeriesInitialization;
+    for (int indice : indices) {
+      setSavings(indice, seriesName, master, first);
+      first = false;
+    }
     return this;
   }
 

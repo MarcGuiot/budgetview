@@ -40,8 +40,9 @@ public class TextBox extends AbstractUIComponent {
    * Simulates pressing a key while the focus is in the text box.<br>
    * Warning: the default cursor position is 0.
    */
-  public void pressKey(Key key) {
+  public TextBox pressKey(Key key) {
     handler.pressKey(key);
+    return this;
   }
 
   /**
@@ -116,11 +117,11 @@ public class TextBox extends AbstractUIComponent {
           if (index < 0) {
             if (actual.indexOf(text) < 0) {
               AssertAdapter.fail("The component text does not contain '" + text + "' " +
-                                  "- actual content is:" + actual);
+                                 "- actual content is:" + actual);
             }
             else {
               AssertAdapter.fail("The component text does not contain '" + text + "' at the expected position " +
-                                  "- actual content is:" + actual);
+                                 "- actual content is:" + actual);
             }
           }
           else {
