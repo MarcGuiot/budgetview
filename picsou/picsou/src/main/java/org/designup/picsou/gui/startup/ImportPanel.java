@@ -12,7 +12,6 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
-import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
@@ -146,9 +145,9 @@ public abstract class ImportPanel {
 
     GlobTableView importedTransactionTableView = GlobTableView.init(ImportedTransaction.TYPE, sessionRepository,
                                                                     dateRenderer.getComparator(), sessionDirectory)
-      .addColumn(Lang.get("date"), ImportedTransaction.BANK_DATE, dateRenderer)
-      .addColumn(Lang.get("label"), ImportedTransaction.LABEL)
-      .addColumn(Lang.get("amount"), ImportedTransaction.AMOUNT);
+      .addColumn(ImportedTransaction.BANK_DATE, dateRenderer)
+      .addColumn(ImportedTransaction.LABEL)
+      .addColumn(ImportedTransaction.AMOUNT);
     JTable transactionTable = importedTransactionTableView.getComponent();
     dateRenderer.setTable(importedTransactionTableView);
 
