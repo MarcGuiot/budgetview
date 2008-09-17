@@ -177,7 +177,7 @@ public abstract class GlobFormTest extends WebTestCase {
 
     checkMessages(newPage, "field 'name' is required", "field 'value' is required");
 
-    assertTrue(repository.getAll(DummyObjectWithRequiredFields.TYPE).isEmpty());
+    assertFalse(repository.contains(DummyObjectWithRequiredFields.TYPE));
   }
 
   public void testMissingRequiredLink() throws Exception {
@@ -193,7 +193,7 @@ public abstract class GlobFormTest extends WebTestCase {
 
     checkMessages(newPage, "field 'link' is required.");
 
-    assertTrue(repository.getAll(DummyObjectWithRequiredFields.TYPE).isEmpty());
+    assertFalse(repository.contains(DummyObjectWithRequiredFields.TYPE));
   }
 
   public void testMultiLineTextField() throws Exception {
@@ -271,7 +271,7 @@ public abstract class GlobFormTest extends WebTestCase {
     assertEquals("name 1", newForm.getInputByName("component_name").getValueAttribute());
     assertEquals("not a date!", newForm.getInputByName("component_date").getValueAttribute());
 
-    assertTrue(repository.getAll(DummyObject.TYPE).isEmpty());
+    assertFalse(repository.contains(DummyObject.TYPE));
 
     newForm.getInputByName("component_date").setValueAttribute("25/12/2007");
     HtmlPage lastPage = (HtmlPage)newForm.getInputByName("submit").click();
@@ -296,7 +296,7 @@ public abstract class GlobFormTest extends WebTestCase {
 
     checkMessages(newPage, errorMessage);
 
-    assertTrue(repository.getAll(field.getGlobType()).isEmpty());
+    assertFalse(repository.contains(field.getGlobType()));
   }
 
   private void checkDateFormat(String input, String expectedOutput) throws Exception {

@@ -135,6 +135,22 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     return result;
   }
 
+  public boolean contains(GlobType type) {
+    return !globs.values(type).isEmpty();
+  }
+
+  public boolean contains(GlobType type, GlobMatcher matcher) {
+    if (GlobMatchers.NONE.equals(matcher)) {
+      return false;
+    }
+    for (Glob glob : globs.values(type)) {
+      if (matcher.matches(glob, this)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public Glob findUnique(GlobType type, GlobMatcher matcher) throws ItemAmbiguity {
     Glob result = null;
     for (Glob glob : globs.values(type)) {

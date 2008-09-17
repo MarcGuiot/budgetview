@@ -18,9 +18,6 @@ public class HtmlEditorPane extends DefaultComponent<JEditorPane> {
   }
 
   protected void postCreateComponent(JEditorPane component, SplitsContext context) {
-    component.setContentType("text/html");
-    component.setEditable(false);
-    component.setOpaque(false);
-    GuiUtils.initHtmlComponent(component);
+    GuiUtils.initReadOnlyHtmlComponent(component);
   }
 }

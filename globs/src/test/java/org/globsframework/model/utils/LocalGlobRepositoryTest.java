@@ -60,7 +60,7 @@ public class LocalGlobRepositoryTest extends TestCase {
     GlobRepository source = checker.parse("<dummyObject id='0' name='name'/>");
 
     LocalGlobRepository local = LocalGlobRepositoryBuilder.init(source).copy(DummyObject.TYPE).get();
-    assertFalse(local.getAll(DummyObject.TYPE).isEmpty());
+    assertTrue(local.contains(DummyObject.TYPE));
 
     local.dispose();
     try {

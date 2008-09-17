@@ -155,7 +155,15 @@ public class GuiUtils {
     return ref.deriveFont(Font.PLAIN, ref.getSize());
   }
 
+  public static void initReadOnlyHtmlComponent(JEditorPane editorPane) {
+    editorPane.setEditable(false);
+    editorPane.setOpaque(false);
+    initHtmlComponent(editorPane);
+  }
+
   public static void initHtmlComponent(JEditorPane editorPane) {
+    editorPane.setContentType("text/html");
+
     HTMLEditorKit kit = (HTMLEditorKit)editorPane.getEditorKit();
     StyleSheet css = kit.getStyleSheet();
     css.addRule("H1 -");

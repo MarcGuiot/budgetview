@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.utils.GlobIdGenerator;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.exceptions.*;
 
 public interface GlobRepository extends ReadOnlyGlobRepository {
@@ -17,6 +18,10 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
 
   Glob findOrCreate(Key key, FieldValue... defaultValues)
     throws MissingInfo;
+
+  boolean contains(GlobType type);
+
+  boolean contains(GlobType type, GlobMatcher matcher);
 
   void update(Key key, Field field, Object newValue)
     throws ItemNotFound;

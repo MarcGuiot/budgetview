@@ -71,6 +71,21 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     GlobTestUtils.assertEquals(repository, xmlDescription);
   }
 
+  public void testContains() throws Exception {
+    String xmlDescription = "<dummyObject id='1' name='name' value='1.1'/>";
+    GlobRepository repository = checker.parse(xmlDescription);
+    assertTrue(repository.contains(DummyObject.TYPE, GlobMatchers.fieldEquals(DummyObject.NAME, "name")));
+    assertFalse(repository.contains(DummyObject.TYPE, GlobMatchers.fieldEquals(DummyObject.NAME, "other")));
+
+    assertTrue(repository.contains(DummyObject.TYPE, GlobMatchers.ALL));
+    assertFalse(repository.contains(DummyObject.TYPE, GlobMatchers.NONE));
+
+    assertFalse(repository.contains(DummyObject2.TYPE, GlobMatchers.ALL));
+
+    assertTrue(repository.contains(DummyObject.TYPE));
+    assertFalse(repository.contains(DummyObject2.TYPE));
+  }
+
   public void testFindTarget() throws Exception {
     init("<dummyObjectWithLinks id='0' targetId1='1' targetId2='2'/>" +
          "<dummyObjectWithCompositeKey id1='1' id2='2' name='targetName'/>");

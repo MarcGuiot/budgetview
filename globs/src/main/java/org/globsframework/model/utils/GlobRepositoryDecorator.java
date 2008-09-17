@@ -78,6 +78,14 @@ public class GlobRepositoryDecorator implements GlobRepository {
     return getRepository().findOrCreate(key, defaultValues);
   }
 
+  public boolean contains(GlobType type) {
+    return getRepository().contains(type);
+  }
+
+  public boolean contains(GlobType type, GlobMatcher matcher) {
+    return getRepository().contains(type, matcher);
+  }
+
   public void update(Key key, Field field, Object newValue) throws ItemNotFound {
     getRepository().update(key, field, newValue);
   }
