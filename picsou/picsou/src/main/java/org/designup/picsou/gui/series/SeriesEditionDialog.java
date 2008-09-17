@@ -448,7 +448,7 @@ public class SeriesEditionDialog {
 
     public void show() {
       CategoryChooserDialog chooser =
-        new CategoryChooserDialog(new SeriesCategoryChooserCallback(), parent,
+        new CategoryChooserDialog(new SeriesCategoryChooserCallback(), dialog,
                                   !budgetArea.isMultiCategories(),
                                   localRepository, localDirectory);
 

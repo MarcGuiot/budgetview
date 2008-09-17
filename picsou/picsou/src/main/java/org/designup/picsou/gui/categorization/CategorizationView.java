@@ -182,11 +182,6 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
   private void initUpdateListener(GlobRepository repository) {
     repository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        Set<Key> created = changeSet.getCreated(Series.TYPE);
-        if (created.size() == 1) {
-          setSeries(created.iterator().next());
-        }
-
         Set<Key> updated = changeSet.getUpdated(Transaction.SERIES);
         if ((updated.size() > 0) && (autoSelectNextCheckBox.isSelected())) {
           selectNext(updated);
@@ -301,32 +296,6 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     return null;
   }
 
-  private void setSeries(Key seriesKey) {
-    Glob series = repository.get(seriesKey);
-    GlobList seriesToCategories = repository.findLinkedTo(series, SeriesToCategory.SERIES);
-    if (seriesToCategories.size() > 1) {
-      return;
-    }
-
-    Key categoryKey;
-    if (seriesToCategories.isEmpty()) {
-      categoryKey = Key.create(Category.TYPE, series.get(Series.DEFAULT_CATEGORY));
-    }
-    else {
-      categoryKey = Key.create(Category.TYPE, seriesToCategories.iterator().next().get(SeriesToCategory.CATEGORY));
-    }
-
-    try {
-      repository.enterBulkDispatchingMode();
-      for (Glob transaction : currentTransactions) {
-        repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
-        repository.setTarget(transaction.getKey(), Transaction.CATEGORY, categoryKey);
-      }
-    }
-    finally {
-      repository.completeBulkDispatchingMode();
-    }
-  }
 
   private class CreateSeriesAction extends AbstractAction {
     private final BudgetArea budgetArea;

@@ -469,4 +469,27 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .validate();
     budgetView.recurring.checkSeriesNotPresent("Groceries");
   }
+
+  public void testDeactivateSeriesBudget() throws Exception {
+    views.selectBudget();
+    budgetView.income.createSeries()
+      .setName("salaire")
+      .selectAllMonths()
+      .setAmount("1000")
+      .setCategory(MasterCategory.INCOME)
+      .validate();
+    timeline.selectMonth("2008/08");
+    budgetView.income.checkSeries("salaire", 0, 1000);
+    views.selectData();
+    timeline.selectLast();
+    transactions.initContent()
+      .add("01/08/2008", TransactionType.PLANNED, "salaire", "", 1000, "salaire", MasterCategory.INCOME)
+      .check();
+    views.selectBudget();
+    budgetView.income.editSeriesList().setName("salaire").toggleMonth("Aug").validate();
+    budgetView.income.checkSeriesNotPresent("salaire");
+    views.selectData();
+    timeline.selectLast();
+    transactions.initContent().check();
+  }
 }

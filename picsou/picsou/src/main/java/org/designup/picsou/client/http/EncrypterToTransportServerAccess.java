@@ -193,7 +193,13 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     serializableGlobSerializer.deserialize(input, data);
     GlobList result = new GlobList(data.size());
     for (String globTypeName : data.keys()) {
-      GlobType globType = globModel.getType(globTypeName);
+      GlobType globType;
+      if (globTypeName.equals("currenMonth")) {
+        globType = globModel.getType("currentMonth");
+      }
+      else {
+        globType = globModel.getType(globTypeName);
+      }
       PicsouGlobSerializer globSerializer =
         globType.getProperty(SerializationManager.SERIALIZATION_PROPERTY);
       if (globSerializer == null) {
