@@ -201,6 +201,22 @@ public class DefaultChangeSet implements MutableChangeSet {
     return deltaGlobsByKey.containsKey(key.getGlobType(), key);
   }
 
+  public boolean containsChanges(Key key, Field... fields) {
+    DefaultDeltaGlob glob = deltaGlobsByKey.get(key.getGlobType(), key);
+    if (glob == null) {
+      return false;
+    }
+    if (glob.isCreated() || glob.isDeleted()) {
+      return true;
+    }
+    for (Field field : fields) {
+      if (glob.isUpdated(field)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public boolean isEmpty() {
     return deltaGlobsByKey.isEmpty();
   }
