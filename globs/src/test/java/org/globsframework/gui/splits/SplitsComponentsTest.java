@@ -9,9 +9,9 @@ import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.splits.utils.DummyIconLocator;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.uispec4j.TextBox;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
-import org.uispec4j.TextBox;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -205,11 +205,11 @@ public class SplitsComponentsTest extends SplitsTestCase {
     JLabel label = builder.add("label", new JLabel());
     JTextField textField = builder.add("editor", new JTextField());
     JPanel jPanel = parse("<row>" +
-          "  <label ref='label' text='Title' labelFor='editor'/>" +
-          "  <textField ref='editor'/>" +
-          "</row>");
+                          "  <label ref='label' text='Title' labelFor='editor'/>" +
+                          "  <textField ref='editor'/>" +
+                          "</row>");
     assertSame(textField, label.getLabelFor());
-    
+
     org.uispec4j.Panel panel = new org.uispec4j.Panel(jPanel);
     TextBox editor = panel.getTextBox(ComponentMatchers.componentLabelFor("Title"));
     assertSame(textField, editor.getAwtComponent());
@@ -557,6 +557,26 @@ public class SplitsComponentsTest extends SplitsTestCase {
     catch (Exception e) {
       assertTrue(e.getMessage().contains("Card items must have a 'name' attribute"));
     }
+  }
+
+  public void testCardContainedComponentsHaveTheNameOfTheCard() throws Exception {
+    CardHandler handler = builder.addCardHandler("myHandler");
+    JPanel jPanel = parse("<cards ref='myHandler'>" +
+                         "  <card name='a'>" +
+                         "    <button/>" +
+                         "  </card>" +
+                         "  <card name='b'>" +
+                         "    <label name='label'/>" +
+                         "  </card>" +
+                         "</cards>");
+
+    handler.show("a");
+    JButton button = (JButton)jPanel.getComponent(0);
+    assertEquals("a", button.getName());
+
+    handler.show("b");
+    JLabel label = (JLabel)jPanel.getComponent(1);
+    assertEquals("label", label.getName());
   }
 
   public void testShadowedLabel() throws Exception {
