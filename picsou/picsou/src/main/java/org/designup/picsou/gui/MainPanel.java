@@ -89,6 +89,7 @@ public class MainPanel {
     TransactionSearch search = new TransactionSearch(transactionView, directory);
     builder.add("transactionSearchField", search.getTextField());
 
+    MonthSummaryView monthSummary = new MonthSummaryView(repository, directory);
     createPanel(
       titleView,
       new UncategorizedMessageView("uncategorizedMessage", "categorizeRemainingTransactions",
@@ -98,12 +99,14 @@ public class MainPanel {
       timeView,
       categoryView,
       new AccountView(repository, directory),
-      new MonthSummaryView(repository, directory),
+      monthSummary,
       new CategorizationView(repository, directory),
       new CardView(repository, directory),
       new BudgetView(repository, directory),
       new HistoricalChart(repository, directory),
       new CategoriesChart(repository, directory, transactionSelection));
+
+    monthSummary.init();
 
     selectLastMonthWithATransaction(repository, directory);
     categoryView.select(Category.ALL);

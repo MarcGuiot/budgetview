@@ -5,12 +5,11 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.utils.Dates;
 
 public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    setCurrentDate(Dates.parseMonth("2006/01"));
+    setCurrentMonth("2006/01");
     super.setUp();
   }
 

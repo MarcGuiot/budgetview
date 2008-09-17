@@ -6,13 +6,11 @@ import org.uispec4j.assertion.UISpecAssert;
 
 public class ImportChecker {
   private Panel panel;
-  //  private ComboBox bankCombo;
   private TextBox fileField;
   private Button importButton;
 
   public ImportChecker(Panel panel) {
     this.panel = panel;
-//    bankCombo = panel.getComboBox("bankCombo");
     fileField = panel.getInputTextBox("fileField");
     importButton = panel.getButton("Import");
   }
@@ -22,7 +20,7 @@ public class ImportChecker {
     accountBankCombo.select(bank);
   }
 
-  public void selectFiles(String... path) {
+  public ImportChecker selectFiles(String... path) {
     StringBuilder builder = new StringBuilder();
     for (String file : path) {
       if (builder.length() != 0) {
@@ -31,10 +29,12 @@ public class ImportChecker {
       builder.append(file);
     }
     fileField.setText(builder.toString());
+    return this;
   }
 
-  public void startImport() {
+  public ImportChecker startImport() {
     importButton.click();
+    return this;
   }
 
   public void checkFileContent(Object[][] expected) {
@@ -81,10 +81,6 @@ public class ImportChecker {
 
   public void checkCloseButton(String text) {
     UISpecAssert.assertThat(panel.getButton("close").textEquals(text));
-  }
-
-  public void checkbank(String bankName) {
-//    UISpecAssert.assertThat(bankCombo.selectionEquals(bankName));
   }
 
   public void checkSelectedAccount(String accountNumber) {

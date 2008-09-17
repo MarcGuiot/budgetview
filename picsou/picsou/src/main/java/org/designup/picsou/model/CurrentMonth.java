@@ -24,7 +24,7 @@ public class CurrentMonth {
   public static org.globsframework.model.Key KEY;
 
   static {
-    GlobTypeLoader.init(CurrentMonth.class, "currenMonth");
+    GlobTypeLoader.init(CurrentMonth.class, "currentMonth");
     KEY = org.globsframework.model.Key.create(TYPE, 0);
   }
 

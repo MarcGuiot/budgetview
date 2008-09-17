@@ -53,7 +53,7 @@ public class ImportFileAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent event) {
-    OpenRunnable runnable = new OpenRunnable(Collections.EMPTY_LIST, directory, repository, defaulAccount);
+    OpenRunnable runnable = new OpenRunnable(Collections.<File>emptyList(), directory, repository, defaulAccount);
     runnable.run();
     defaulAccount = null;
   }

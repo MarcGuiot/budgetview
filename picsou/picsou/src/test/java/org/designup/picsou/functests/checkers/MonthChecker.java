@@ -8,6 +8,8 @@ import org.globsframework.model.GlobList;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Panel;
+import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.assertion.Assertion;
 
 import java.util.*;
 
@@ -48,16 +50,24 @@ public class MonthChecker extends DataChecker {
     TestUtils.assertSetEquals(ids, valueSet);
   }
 
-  public void checkSelection(String... dates) {
-    Set<Selectable> list = timeViewPanel.getCurrentlySelectedToUpdate();
-    GlobList selectedMonth = new GlobList();
-    for (Selectable selectable : list) {
-      selectable.getSelectedGlobs(selectedMonth);
-    }
+  public void checkSelection(final String... dates) {
+    UISpecAssert.assertThat(new Assertion() {
+      public void check() throws Exception {
+        Set<Selectable> list = timeViewPanel.getCurrentlySelectedToUpdate();
+        GlobList selectedMonths = new GlobList();
+        for (Selectable selectable : list) {
+          selectable.getSelectedGlobs(selectedMonths);
+        }
 
-    for (int i = 0; i < dates.length; i++) {
-      Assert.assertEquals(dates[i], Month.toString(selectedMonth.get(i).get(Month.ID)));
-    }
+        if (dates.length != selectedMonths.size()) {
+          Assert.assertEquals(Arrays.toString(dates), selectedMonths.getValueSet(Month.ID).toString());
+        }
+
+        for (int i = 0; i < dates.length; i++) {
+          Assert.assertEquals(dates[i], Month.toString(selectedMonths.get(i).get(Month.ID)));
+        }
+      }
+    });
   }
 
   /**

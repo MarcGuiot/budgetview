@@ -6,6 +6,56 @@ import org.designup.picsou.model.MasterCategory;
 
 public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
+  protected void setUp() throws Exception {
+    super.setUp();
+    setCurrentMonth("2008/08");
+  }
+
+  public void testNoData() throws Exception {
+    views.selectHome();
+    monthSummary.init()
+      .checkNoBudgetAreasDisplayed()
+      .checkNoDataMessage("You must import your financial operations");
+
+    String file = OfxBuilder.init(this)
+      .addTransaction("2008/08/26", 1000, "Company")
+      .save();
+
+    monthSummary.init().openImport()
+      .selectFiles(file)
+      .startImport()
+      .doImport();
+
+    monthSummary.init()
+      .checkNoBudgetAreasDisplayed()
+      .checkNoSeriesMessage("You must categorize your operations");
+  }
+
+  public void testNoSeries() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/15", 1000, "Company")
+      .load();
+
+    views.selectHome();
+    monthSummary.init()
+      .checkNoBudgetAreasDisplayed()
+      .checkNoSeriesMessage("You must categorize your operations")
+      .categorizeAll();
+
+    timeline.checkSelection("2008/06", "2008/07", "2008/08");
+
+    categorization
+      .checkTable(new Object[][]{
+        {"15/06/2008", "", "Company", 1000.0},
+      })
+      .setIncome("Company", "Salary", true);
+
+    views.selectHome();
+    monthSummary.init()
+      .checkNoHelpMessageDisplayed()
+      .checkIncome(1000.0, 3000.0);
+  }
+
   public void testOneMonth() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/07", -29.90, "free telecom")
@@ -97,9 +147,12 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/26", -10, "Another month")
       .load();
 
-    views.selectHome();
     timeline.selectMonth("2008/08");
 
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("Groceries").setCategory(MasterCategory.FOOD).validate();
+
+    views.selectHome();
     monthSummary.init()
       .total(1000, 10, true)
       .checkIncome(0, 0)
@@ -153,11 +206,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/26", -10, "FNAC")
       .addTransaction("2008/08/26", -15, "Virgin")
       .load();
-
-    views.selectHome();
-    monthSummary.init()
-      .checkIncome(0, 0)
-      .checkOccasional(0, 0);
 
     views.selectCategorization();
     categorization

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
@@ -14,6 +15,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.metamodel.GlobType;
@@ -35,9 +37,20 @@ import java.util.*;
 import java.util.List;
 
 public class MonthSummaryView extends View implements GlobSelectionListener {
+  private static final GlobMatcher USER_SERIES_MATCHER =
+    GlobMatchers.fieldIn(Series.BUDGET_AREA,
+                         BudgetArea.INCOME.getId(),
+                         BudgetArea.RECURRING_EXPENSES.getId(),
+                         BudgetArea.EXPENSES_ENVELOPE.getId(),
+                         BudgetArea.PROJECTS.getId(),
+                         BudgetArea.SAVINGS.getId());
+  private CardHandler cards;
+  private SelectionService parentSelectionService;
+
   public MonthSummaryView(GlobRepository repository, Directory parentDirectory) {
     super(repository, createDirectory(parentDirectory));
-    parentDirectory.get(SelectionService.class).addListener(this, Month.TYPE);
+    parentSelectionService = parentDirectory.get(SelectionService.class);
+    parentSelectionService.addListener(this, Month.TYPE);
   }
 
   private static Directory createDirectory(Directory parentDirectory) {
@@ -56,6 +69,10 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                      GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, MonthStat.TOTAL_SPENT));
     builder.add("totalBalance",
                 new BalanceGraph(MonthStat.TYPE, MonthStat.TOTAL_RECEIVED, MonthStat.TOTAL_SPENT, directory));
+
+    cards = builder.addCardHandler("cards");
+
+    builder.add("import", ImportFileAction.init(Lang.get("import"), repository, directory, null));
 
     builder.addRepeat("budgetAreaRepeat",
                       getBudgetAreas(),
@@ -85,9 +102,45 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       .setAutoHideIfEmpty(true)
       .setUpdateMatcher(ChangeSetMatchers.changesForType(Transaction.TYPE));
 
-    builder.add("categorize", new CategorizationAction());
+    builder.add("categorize", new CategorizationAction(Lang.get("budgetArea.uncategorized"), false));
+    builder.add("categorizeAll", new CategorizationAction(null, true));
 
     parentBuilder.add("monthSummaryView", builder);
+
+    registerCardUpdater();
+  }
+
+  private void registerCardUpdater() {
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsCreationsOrDeletions(Transaction.TYPE) ||
+            changeSet.containsCreationsOrDeletions(Series.TYPE)) {
+          updateCard();
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        if (changedTypes.contains(Transaction.TYPE) || changedTypes.contains(Series.TYPE)) {
+          updateCard();
+        }
+      }
+    });
+  }
+
+  public void init() {
+    updateCard();
+  }
+
+  private void updateCard() {
+    if (repository.getAll(Transaction.TYPE).isEmpty()) {
+      cards.show("noData");
+    }
+    else if (repository.getAll(Series.TYPE, USER_SERIES_MATCHER).isEmpty()) {
+      cards.show("noSeries");
+    }
+    else {
+      cards.show("standard");
+    }
   }
 
   private List<BudgetArea> getBudgetAreas() {
@@ -135,7 +188,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     }
 
     public void update() {
-
       Double observed = 0.0;
       Double planned = 0.0;
       Map<Integer, Integer> cache = new HashMap<Integer, Integer>();
@@ -213,12 +265,17 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   }
 
   private class CategorizationAction extends AbstractAction {
+    private boolean selectAll;
 
-    private CategorizationAction() {
-      super(Lang.get("budgetArea.uncategorized"));
+    private CategorizationAction(final String title, boolean all) {
+      super(title);
+      this.selectAll = all;
     }
 
     public void actionPerformed(ActionEvent e) {
+      if (selectAll) {
+        parentSelectionService.select(repository.getAll(Month.TYPE), Month.TYPE);
+      }
       directory.get(NavigationService.class).gotoCategorization();
     }
   }

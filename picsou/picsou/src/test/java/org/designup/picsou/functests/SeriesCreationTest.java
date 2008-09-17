@@ -9,7 +9,7 @@ import org.globsframework.utils.Dates;
 public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    setCurrentDate(Dates.parseMonth("2008/06"));
+    setCurrentMonth("2008/06");
     super.setUp();
   }
 

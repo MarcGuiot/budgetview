@@ -5,7 +5,6 @@ import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -74,20 +73,6 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     accounts.assertDisplayEquals("Main account");
   }
 
-  public void testImportFromViewInitializesTheBankURL() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addBankAccount(30003, 12345, "10101010", 12345.60, "2006/05/30")
-      .addTransaction("2006/05/01", -10, "Foo")
-      .load();
-
-    views.selectHome();
-    Window dialog = WindowInterceptor.getModalDialog(
-      accounts.getImportTrigger("10101010"));
-    ImportChecker importer = new ImportChecker(dialog);
-    importer.checkbank("Societe Generale");
-  }
-
   public void testImportFromViewInitializesTheDefaultBankAndAccountForQifFiles() throws Exception {
     String path = QifBuilder.init(this)
       .addTransaction("2006/01/01", 12.35, "foo")
@@ -106,7 +91,6 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     Window dialog = WindowInterceptor.getModalDialog(
       accounts.getImportTrigger(OperationChecker.DEFAULT_ACCOUNT_NUMBER));
     ImportChecker importer = new ImportChecker(dialog);
-    importer.checkbank("Societe Generale");
     importer.selectFiles(path);
     importer.startImport();
     importer.checkSelectedAccount("Main account(11111)");

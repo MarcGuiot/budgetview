@@ -8,7 +8,7 @@ import org.globsframework.utils.Dates;
 public class GraphicManagementTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    setCurrentDate(Dates.parse("2006/01/01"));
+    setCurrentMonth("2006/01/01");
     super.setUp();
     views.selectEvolution();
   }

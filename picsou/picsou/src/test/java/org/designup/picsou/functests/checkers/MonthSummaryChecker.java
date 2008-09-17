@@ -7,8 +7,12 @@ import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+
+import java.awt.*;
 
 public class MonthSummaryChecker extends DataChecker {
   private Window window;
@@ -27,6 +31,32 @@ public class MonthSummaryChecker extends DataChecker {
 
     public Summary(Panel panel) {
       this.panel = panel;
+    }
+
+    public Summary checkNoBudgetAreasDisplayed() {
+      Component[] components = panel.getSwingComponents(Gauge.class);
+      Assert.assertTrue(components.length == 0);
+      return this;
+    }
+
+    public Summary checkNoHelpMessageDisplayed() {
+      UISpecAssert.assertFalse(panel.containsComponent(ComponentMatchers.innerNameIdentity("noData")));
+      UISpecAssert.assertFalse(panel.containsComponent(ComponentMatchers.innerNameIdentity("noSeries")));
+      return this;
+    }
+
+    public Summary checkNoDataMessage(String text) {
+      return checkMessage(text, "noData");
+    }
+
+    public Summary checkNoSeriesMessage(String text) {
+      return checkMessage(text, "noSeries");
+    }
+
+    private Summary checkMessage(String text, final String panelName) {
+      TextBox textBox = window.getPanel(panelName).getTextBox();
+      UISpecAssert.assertThat(textBox.textEquals(text));
+      return this;
     }
 
     public Summary checkRecurring(double amount) {
@@ -114,6 +144,15 @@ public class MonthSummaryChecker extends DataChecker {
 
     public void categorize() {
       panel.getButton("categorize").click();
+    }
+
+    public void categorizeAll() {
+      panel.getButton("categorizeAll").click();
+    }
+
+    public ImportChecker openImport() {
+      Window dialog = WindowInterceptor.getModalDialog(panel.getButton("import").triggerClick());
+      return new ImportChecker(dialog);
     }
   }
 }

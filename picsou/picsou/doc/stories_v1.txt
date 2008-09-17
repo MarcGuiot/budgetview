@@ -48,13 +48,11 @@ TransactionView
 ** Filtrage transactions par Compte
 
 Summary
-*** Message si pas de donnees
-*** Message pour tout premier classement
 *** Bloc "estimation solde" (solde compte + revenus prevus - fixe prevu,  puis - enveloppes/projets/epargne)
 ** Afficher le changeLog en cas de changement de version
 
 AccountView
-* Selection des comptes integres dans le total
+*** Selection des comptes integres dans le total
 * Creation de compte
 * Edition comptes
 * Masquer un compte (date de cloture)

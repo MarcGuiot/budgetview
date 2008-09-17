@@ -8,7 +8,7 @@ import org.globsframework.utils.Dates;
 
 public class BudgetViewTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
-    setCurrentDate(Dates.parseMonth("2008/08"));
+    setCurrentMonth("2008/08");
     super.setUp();
   }
 

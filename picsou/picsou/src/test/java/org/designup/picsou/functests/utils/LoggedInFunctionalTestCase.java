@@ -46,11 +46,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
 //    TimeService.setCurrentDate(currentDate);
 //    if (mainWindow != null) {
-//      repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
-//      ApplicationReset.run(repository);
-//      initCheckers();
-//      license.enterLicense("admin", "zz", 0);
-//      views.selectData();
+//      reinitMainWindow();
 //      return;
 //    }
 
@@ -85,6 +81,18 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     initCheckers();
     LicenseChecker.enterLicense(mainWindow, "admin", "zz", 0);
     views.selectData();
+  }
+
+  private void reinitMainWindow() {
+    repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
+    ApplicationReset.run(repository);
+    initCheckers();
+    license.enterLicense("admin", "zz", 0);
+    views.selectData();
+  }
+
+  protected void setCurrentMonth(String monthId) {
+    setCurrentDate(Dates.parseMonth(monthId));
   }
 
   protected void setCurrentDate(Date currentDate) {

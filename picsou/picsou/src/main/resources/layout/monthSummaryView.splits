@@ -1,6 +1,16 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector=".message" border="line(block.inner.border)"/>
+    <style selector=".message htmlEditorPane" margin="15"/>
+    <style selector=".message button" fill="none" anchor="center"/>
+
+    <ui name="viewSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
+        topColor="viewselector.top" bottomColor="viewselector.bottom"
+        borderColor="viewselector.border" borderWidth="1" cornerRadius="10"/>
+
+  </styles>
 
   <column name="monthSummary">
 
@@ -11,7 +21,8 @@
         <row>
           <filler fill="horizontal"/>
           <grid weightY="0">
-            <label text="$monthsummary.received" styleClass="totalAmountTitle" gridPos="(0,0)"/>
+            <label text="$monthsummary.received" styleClass="totalAmountTitle" gridPos="(0,0)"
+                   autoHideSource="totalReceivedAmount"/>
             <label ref="totalReceivedAmount" styleClass="totalAmount" gridPos="(0,1)"/>
             <component ref="totalBalance" gridPos="(1,0,1,2)"
                        receivedColorTop="balancegraph.received.top"
@@ -24,28 +35,50 @@
                        weightX="0.1" weightY="1.0"
                        marginLeft="10" marginRight="10"
                        fill="none"/>
-            <label text="$monthsummary.spent" styleClass="totalAmountTitle" gridPos="(2,0)"/>
+            <label text="$monthsummary.spent" styleClass="totalAmountTitle" gridPos="(2,0)"
+                   autoHideSource="totalSpentAmount"/>
             <label ref="totalSpentAmount" styleClass="totalAmount" gridPos="(2,1)"/>
           </grid>
           <filler fill="horizontal"/>
         </row>
 
-        <scrollPane>
-          <column styleClass="innerBlock">
-            <repeat ref="budgetAreaRepeat" layout="verticalGrid">
-              <label ref="budgetAreaName" styleClass="item" anchor="center" />
-              <label ref="budgetAreaAmount" styleClass="amount" anchor="center" horizontalAlignment="right"/>
-              <component ref="budgetAreaGauge" styleClass="totalGauge" preferredSize="(50,28)"/>
-              <label ref="budgetAreaPlannedAmount" styleClass="amount" anchor="center" horizontalAlignment="left"/>
-            </repeat>
-            <row margin="10" autoHideSource="uncategorizedAmountLabel">
-              <button action="categorize" autoHideSource="uncategorizedAmountLabel" anchor="left"
-                      styleClass="hyperlink" font="-,bold,12"/>
-              <filler fill="horizontal"/>
-              <label ref="uncategorizedAmountLabel" styleClass="amount"/>
-            </row>
-          </column>
-        </scrollPane>
+        <cards ref="cards" styleClass="innerBlock" background="block.inner.bg">
+
+          <card name="noData">
+            <column styleClass="message">
+              <htmlEditorPane text="$monthsummary.noData.text"/>
+              <button action="import"/>
+              <filler fill="vertical"/>
+            </column>
+          </card>
+
+          <card name="noSeries">
+            <column styleClass="message">
+              <htmlEditorPane text="$monthsummary.noSeries.text"/>
+              <button action="categorizeAll" text="" icon="categorization.png" minimumSize="(40,40)"/>
+              <filler fill="vertical"/>
+            </column>
+          </card>
+
+          <card name="standard">
+            <scrollPane>
+              <column>
+                <repeat ref="budgetAreaRepeat" layout="verticalGrid">
+                  <label ref="budgetAreaName" styleClass="item" anchor="center"/>
+                  <label ref="budgetAreaAmount" styleClass="amount" anchor="center" horizontalAlignment="right"/>
+                  <component ref="budgetAreaGauge" styleClass="totalGauge" preferredSize="(50,28)"/>
+                  <label ref="budgetAreaPlannedAmount" styleClass="amount" anchor="center" horizontalAlignment="left"/>
+                </repeat>
+                <row margin="10" autoHideSource="uncategorizedAmountLabel">
+                  <button action="categorize" autoHideSource="uncategorizedAmountLabel" anchor="left"
+                          styleClass="hyperlink" font="-,bold,12"/>
+                  <filler fill="horizontal"/>
+                  <label ref="uncategorizedAmountLabel" styleClass="amount"/>
+                </row>
+              </column>
+            </scrollPane>
+          </card>
+        </cards>
       </column>
     </panel>
 
