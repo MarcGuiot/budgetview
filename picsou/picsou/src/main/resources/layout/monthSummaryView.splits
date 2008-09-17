@@ -2,8 +2,8 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector=".message" border="line(block.inner.border)"/>
-    <style selector=".message htmlEditorPane" margin="15"/>
+    <style selector=".message" opaque="true" margin="10" background="block.inner.bg" border="line(block.inner.border)"/>
+    <style selector=".message htmlEditorPane" margin="15" marginTop="30"/>
     <style selector=".message button" fill="none" anchor="center"/>
 
     <ui name="viewSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
@@ -17,50 +17,50 @@
     <label text="$monthsummary.title" styleClass="blockTitle"/>
 
     <panel styleClass="block">
-      <column margin="10">
-        <row>
-          <filler fill="horizontal"/>
-          <grid weightY="0">
-            <label text="$monthsummary.received" styleClass="totalAmountTitle" gridPos="(0,0)"
-                   autoHideSource="totalReceivedAmount"/>
-            <label ref="totalReceivedAmount" styleClass="totalAmount" gridPos="(0,1)"/>
-            <component ref="totalBalance" gridPos="(1,0,1,2)"
-                       receivedColorTop="balancegraph.received.top"
-                       receivedColorBottom="balancegraph.received.bottom"
-                       spentColorTop="balancegraph.spent.top"
-                       spentColorBottom="balancegraph.spent.bottom"
-                       borderColor="balancegraph.border"
-                       preferredSize="(70,50)"
-                       minimumSize="(70,50)"
-                       weightX="0.1" weightY="1.0"
-                       marginLeft="10" marginRight="10"
-                       fill="none"/>
-            <label text="$monthsummary.spent" styleClass="totalAmountTitle" gridPos="(2,0)"
-                   autoHideSource="totalSpentAmount"/>
-            <label ref="totalSpentAmount" styleClass="totalAmount" gridPos="(2,1)"/>
-          </grid>
-          <filler fill="horizontal"/>
-        </row>
+      <cards ref="cards" styleClass="innerBlock" opaque="false">
 
-        <cards ref="cards" styleClass="innerBlock" background="block.inner.bg">
+        <card name="noData">
+          <column styleClass="message">
+            <htmlEditorPane text="$monthsummary.noData.text"/>
+            <button action="import"/>
+            <filler fill="vertical"/>
+          </column>
+        </card>
 
-          <card name="noData">
-            <column styleClass="message">
-              <htmlEditorPane text="$monthsummary.noData.text"/>
-              <button action="import"/>
-              <filler fill="vertical"/>
-            </column>
-          </card>
+        <card name="noSeries">
+          <column styleClass="message">
+            <htmlEditorPane text="$monthsummary.noSeries.text"/>
+            <button action="categorizeAll" text="" icon="categorization.png" minimumSize="(40,40)"/>
+            <filler fill="vertical"/>
+          </column>
+        </card>
 
-          <card name="noSeries">
-            <column styleClass="message">
-              <htmlEditorPane text="$monthsummary.noSeries.text"/>
-              <button action="categorizeAll" text="" icon="categorization.png" minimumSize="(40,40)"/>
-              <filler fill="vertical"/>
-            </column>
-          </card>
+        <card name="standard">
+          <column>
+            <row>
+              <filler fill="horizontal"/>
+              <grid weightY="0">
+                <label text="$monthsummary.received" styleClass="totalAmountTitle" gridPos="(0,0)"
+                       autoHideSource="totalReceivedAmount"/>
+                <label ref="totalReceivedAmount" styleClass="totalAmount" gridPos="(0,1)"/>
+                <component ref="totalBalance" gridPos="(1,0,1,2)"
+                           receivedColorTop="balancegraph.received.top"
+                           receivedColorBottom="balancegraph.received.bottom"
+                           spentColorTop="balancegraph.spent.top"
+                           spentColorBottom="balancegraph.spent.bottom"
+                           borderColor="balancegraph.border"
+                           preferredSize="(70,50)"
+                           minimumSize="(70,50)"
+                           weightX="0.1" weightY="1.0"
+                           marginLeft="10" marginRight="10"
+                           fill="none"/>
+                <label text="$monthsummary.spent" styleClass="totalAmountTitle" gridPos="(2,0)"
+                       autoHideSource="totalSpentAmount"/>
+                <label ref="totalSpentAmount" styleClass="totalAmount" gridPos="(2,1)"/>
+              </grid>
+              <filler fill="horizontal"/>
+            </row>
 
-          <card name="standard">
             <scrollPane>
               <column>
                 <repeat ref="budgetAreaRepeat" layout="verticalGrid">
@@ -77,9 +77,9 @@
                 </row>
               </column>
             </scrollPane>
-          </card>
-        </cards>
-      </column>
+          </column>
+        </card>
+      </cards>
     </panel>
 
   </column>

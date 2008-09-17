@@ -17,9 +17,9 @@
         borderColor="categorization.budgetAreaSelector.border"/>
     <style selector="column.budgetAreaSelector" ui="budgetAreaSelector" margin="5" marginBottom="15"/>
     <ui name="budgetAreaButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
-      underline="false"/>
+        underline="false"/>
     <style selector="column.budgetAreaSelector button" ui="budgetAreaButton"
-           margin="10" marginBottom="0" font="-,bold,12" />
+           margin="10" marginBottom="0" font="-,bold,12"/>
     <style selector="column.budgetAreaSelector textArea"
            editable="false" lineWrap="true" wrapStyleWord="true" margin="10" font="-,plain,10"
            foreground="categorization.budgetAreaSelector.description"/>
@@ -64,9 +64,10 @@
               <cards ref="budgetAreaCard" opaque="false">
 
                 <card name="noSelection">
-                  <scrollPane border="etched">
-                    <label text="$categorization.no.selection" opaque="false" margin="10"/>
-                  </scrollPane>
+                  <column margin="10">
+                    <label text="$categorization.no.selection" styleClass="title"/>
+                    <filler fill="horizontal"/>
+                  </column>
                 </card>
 
                 <card name="budgetAreas">
