@@ -12,10 +12,10 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
+public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponentFactory {
   ButtonGroup seriesGroup = new ButtonGroup();
 
-  public SeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository localRepository, Directory directory) {
+  public SingleCategorySeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository localRepository, Directory directory) {
     super(invisibleToggle, localRepository, directory);
   }
 

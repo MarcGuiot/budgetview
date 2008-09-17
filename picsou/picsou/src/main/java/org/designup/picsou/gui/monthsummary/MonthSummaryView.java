@@ -132,10 +132,10 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   }
 
   private void updateCard() {
-    if (repository.getAll(Transaction.TYPE).isEmpty()) {
+    if (!repository.contains(Transaction.TYPE)) {
       cards.show("noData");
     }
-    else if (repository.getAll(Series.TYPE, USER_SERIES_MATCHER).isEmpty()) {
+    else if (repository.contains(Series.TYPE, USER_SERIES_MATCHER)) {
       cards.show("noSeries");
     }
     else {

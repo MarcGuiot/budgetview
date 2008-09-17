@@ -103,7 +103,7 @@ public class MonthStatTriggerTest extends PicsouTestCase {
 
   public void testDoesNothingWhenThereAreNoTransactions() throws Exception {
     updateStats();
-    assertTrue(repository.getAll(MonthStat.TYPE).isEmpty());
+    assertFalse(repository.contains(MonthStat.TYPE));
   }
 
   public void testTransactionsWithNoCategoryAreStoredWithCategoryNoneReset() throws Exception {

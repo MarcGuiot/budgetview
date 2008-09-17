@@ -141,6 +141,10 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
+  public CategorizationChecker checkContainsNoRecurringSeries() {
+    return checkContainsRecurringSeries();
+  }
+
   public CategorizationChecker checkContainsRecurringSeries(String... seriesNames) {
     Panel seriesPanel = getRecurringSeriesPanel();
 
@@ -778,6 +782,17 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
+  public CategorizationChecker checkNoSeriesMessage(String text) {
+    TextBox textBox = getPanel().getTextBox("noSeriesMessage");
+    assertTrue(textBox.isVisible());
+    assertThat(textBox.textContains(text));
+    return this;
+  }
+
+  public CategorizationChecker checkNoSeriesMessageHidden() {
+    assertFalse(getPanel().getTextBox("noSeriesMessage").isVisible());
+    return this;
+  }
 
   public CategorizationTableChecker initContent() {
     return new CategorizationTableChecker();

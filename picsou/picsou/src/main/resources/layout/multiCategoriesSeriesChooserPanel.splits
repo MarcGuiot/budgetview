@@ -6,17 +6,20 @@
   </styles>
 
   <column>
-    <toggleButton ref="invisibleToggle" visible="false"/>
-    <scrollPane marginBottom="0">
-      <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
-        <column>
-          <label ref="seriesName" font="-,bold,14"/>
-          <repeat ref="categoryRepeat">
-            <toggleButton ref="categoryToggle" styleClass="selector" horizontalAlignment="left"/>
-          </repeat>
-        </column>
-      </repeat>
-    </scrollPane>
+    <column opaque="true" background="block.inner.bg" border="line(block.inner.border.noscroll)">
+      <htmlEditorPane ref="noSeriesMessage" border="empty(10)"/>
+      <toggleButton ref="invisibleToggle" visible="false"/>
+      <scrollPane opaque="true" border="">
+        <repeat ref="seriesRepeat" layout="wrappedColumn">
+          <column>
+            <label ref="seriesName" font="-,bold,14"/>
+            <repeat ref="categoryRepeat">
+              <toggleButton ref="categoryToggle" styleClass="selector" horizontalAlignment="left"/>
+            </repeat>
+          </column>
+        </repeat>
+      </scrollPane>
+    </column>
     <row styleClass="iconButtonGroup">
       <button action="createSeries" styleClass="create"/>
       <button action="editSeries" styleClass="list"/>

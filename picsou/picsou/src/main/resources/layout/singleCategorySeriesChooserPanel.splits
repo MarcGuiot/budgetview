@@ -4,14 +4,17 @@
   <styles>
     <style selector="scrollPane" viewportBackground="dialog.block"/>
   </styles>
-  
+
   <column>
-    <toggleButton ref="invisibleToggle" visible="false"/>
-    <scrollPane marginBottom="0">
-      <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
-        <toggleButton ref="seriesToggle" styleClass="selector"/>
-      </repeat>
-    </scrollPane>
+    <column opaque="true" background="block.inner.bg" border="line(block.inner.border.noscroll)">
+      <htmlEditorPane ref="noSeriesMessage" border="empty(10)"/>
+      <toggleButton ref="invisibleToggle" visible="false"/>
+      <scrollPane opaque="true" border="">
+        <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
+          <toggleButton ref="seriesToggle" styleClass="selector"/>
+        </repeat>
+      </scrollPane>
+    </column>
     <row styleClass="iconButtonGroup">
       <button action="createSeries" styleClass="create"/>
       <button action="editSeries" styleClass="list"/>

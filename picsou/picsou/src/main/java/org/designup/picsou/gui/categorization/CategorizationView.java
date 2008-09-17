@@ -196,12 +196,15 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
                                                            "/layout/singleCategorySeriesChooserPanel.splits",
                                                            repository, directory);
 
+    NoSeriesMessage noSeriesMessage = new NoSeriesMessage(budgetArea, repository);
+    panelBuilder.add("noSeriesMessage", noSeriesMessage.getComponent());
+
     JToggleButton invisibleToggle = new JToggleButton(name);
     panelBuilder.add("invisibleToggle", invisibleToggle);
     GlobRepeat repeat = panelBuilder.addRepeat("seriesRepeat",
                                                Series.TYPE,
                                                linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                                               new SeriesComponentFactory(invisibleToggle, repository, directory));
+                                               new SingleCategorySeriesComponentFactory(invisibleToggle, repository, directory));
     seriesRepeat.add(
       new Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>(
         PicsouMatchers.seriesDateFilter(budgetArea.getId(), true), repeat));
@@ -216,6 +219,9 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
                                                            "/layout/multiCategoriesSeriesChooserPanel.splits",
                                                            repository, directory);
+
+    NoSeriesMessage noSeriesMessage = new NoSeriesMessage(budgetArea, repository);
+    panelBuilder.add("noSeriesMessage", noSeriesMessage.getComponent());
 
     final JToggleButton invisibleToggle = new JToggleButton("name");
     panelBuilder.add("invisibleToggle", invisibleToggle);

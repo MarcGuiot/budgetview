@@ -18,7 +18,7 @@ public class OccasionalSeriesStatTriggerTest extends PicsouTestCase {
   public void testCreatingAndDeletingTransactions() throws Exception {
     repository.create(Month.TYPE, value(Month.ID, 200808));
     listener.assertNoChanges(OccasionalSeriesStat.TYPE);
-    assertTrue(repository.getAll(OccasionalSeriesStat.TYPE).isEmpty());
+    assertFalse(repository.contains(OccasionalSeriesStat.TYPE));
 
     Glob transaction1 = createTransaction(200808, Series.OCCASIONAL_SERIES_ID, MasterCategory.FOOD, 10.0);
     listener.assertLastChangesEqual(OccasionalSeriesStat.TYPE,

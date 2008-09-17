@@ -5,7 +5,6 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.utils.Dates;
 
 public class CategorizationTest extends LoggedInFunctionalTestCase {
 
@@ -21,10 +20,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.selectTableRow(0);
-    categorization.checkLabel("WorldCo/june");
-    categorization.selectIncome();
-    categorization.selectIncomeSeries("Salary", true);
+    categorization.selectTableRow(0)
+      .checkLabel("WorldCo/june")
+      .selectIncome()
+      .checkNoSeriesMessage("You must create a series")
+      .selectIncomeSeries("Salary", true)
+      .checkNoSeriesMessageHidden();
 
     views.selectData();
     transactions.checkSeries("WorldCo/june", "Salary");
@@ -54,8 +55,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectTableRow(0)
       .checkLabel("Free Telecom")
       .selectRecurring()
-      .checkContainsRecurringSeries()
-      .selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
+      .checkContainsNoRecurringSeries()
+      .checkNoSeriesMessage("You must create a series")
+      .selectRecurringSeries("Internet", MasterCategory.TELECOMS, true)
+      .checkNoSeriesMessageHidden();
 
     views.selectData();
     transactions.checkSeries(0, "Internet");
@@ -75,11 +78,13 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.selectTableRows(0);
-    categorization.checkLabel("AUCHAN C'EST BON");
-    categorization.selectEnvelopes();
-    categorization.selectEnvelopeSeries("Courant", MasterCategory.FOOD, true);
-    categorization.checkEnvelopeSeriesIsSelected("Courant", MasterCategory.FOOD);
+    categorization.selectTableRows(0)
+      .checkLabel("AUCHAN C'EST BON")
+      .selectEnvelopes()
+      .checkNoSeriesMessage("You must create a series")
+      .selectEnvelopeSeries("Courant", MasterCategory.FOOD, true)
+      .checkEnvelopeSeriesIsSelected("Courant", MasterCategory.FOOD)
+      .checkNoSeriesMessageHidden();
 
     views.selectData();
     transactions.checkSeries(0, "Courant");
