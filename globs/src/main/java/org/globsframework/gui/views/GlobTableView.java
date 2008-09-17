@@ -68,8 +68,25 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     return addColumn(field, LabelCustomizer.NULL, defaultBackgroundPainter);
   }
 
+  public GlobTableView addColumn(String name, Field field) {
+    startColumn()
+      .setName(name)
+      .setField(field);
+    return this;
+  }
+
   public GlobTableView addColumn(Field field, TableCellEditor editor) {
     return addColumn(field, LabelCustomizer.NULL, defaultBackgroundPainter, editor);
+  }
+
+  public GlobTableView addColumn(String name, Field field, LabelCustomizer customizer) {
+    startColumn()
+      .setName(name)
+      .setField(field)
+      .addLabelCustomizer(customizer)
+      .setBackgroundPainter(defaultBackgroundPainter)
+      .setEditor(null);
+    return this;
   }
 
   public GlobTableView addColumn(Field field, LabelCustomizer customizer) {
