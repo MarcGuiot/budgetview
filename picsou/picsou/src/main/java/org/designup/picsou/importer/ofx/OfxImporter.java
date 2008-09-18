@@ -353,9 +353,10 @@ public class OfxImporter implements AccountFileImporter {
         return;
       }
       Date previousDate = currentAccount.get(Account.UPDATE_DATE);
-      if ((updateDate != null) && ((previousDate == null) || updateDate.after(previousDate))) {
+      if ((updateDate != null) && ((previousDate == null) || updateDate.equals(previousDate) || updateDate.after(previousDate))) {
         repository.update(currentAccount.getKey(), Account.UPDATE_DATE, updateDate);
         repository.update(currentAccount.getKey(), Account.BALANCE, balance);
+        repository.update(currentAccount.getKey(), Account.TRANSACTION_ID, null);
       }
 
       updateDate = null;

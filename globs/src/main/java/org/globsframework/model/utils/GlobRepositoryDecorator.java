@@ -9,7 +9,9 @@ import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.model.*;
 import org.globsframework.utils.exceptions.*;
 
+import java.util.Comparator;
 import java.util.Set;
+import java.util.SortedSet;
 
 public class GlobRepositoryDecorator implements GlobRepository {
   protected GlobRepository repository;
@@ -40,6 +42,10 @@ public class GlobRepositoryDecorator implements GlobRepository {
 
   public Glob findUnique(GlobType type, GlobMatcher matcher) throws ItemAmbiguity {
     return getRepository().findUnique(type, matcher);
+  }
+
+  public SortedSet<Glob> getSorted(GlobType globType, Comparator<Glob> comparator, GlobMatcher matcher) {
+    return getRepository().getSorted(globType, comparator, matcher);
   }
 
   public GlobList findByIndex(Index index, Object value) {

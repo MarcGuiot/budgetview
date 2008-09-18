@@ -1,13 +1,13 @@
 package org.designup.picsou.gui.utils;
 
+import org.designup.picsou.gui.components.DialogMovingListener;
+import org.designup.picsou.gui.components.PicsouDialogPainter;
 import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.JarIconLocator;
 import org.globsframework.gui.utils.TableUtils;
-import org.designup.picsou.gui.components.DialogMovingListener;
-import org.designup.picsou.gui.components.PicsouDialogPainter;
 import sun.security.action.GetPropertyAction;
 
 import javax.swing.*;

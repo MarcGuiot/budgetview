@@ -22,8 +22,8 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 public class GlobTypeLoaderTest extends TestCase {
 
@@ -306,8 +306,8 @@ public class GlobTypeLoaderTest extends TestCase {
   }
 
   public void testKeyFields() throws Exception {
-    List<Field> fields = AnObject.TYPE.getKeyFields();
-    ArrayTestUtils.assertContentEquals(fields, AnObject.ID);
+    Field[] fields = AnObject.TYPE.getKeyFields();
+    ArrayTestUtils.assertContentEquals(Arrays.asList(fields), AnObject.ID);
   }
 
   @Retention(RUNTIME)

@@ -11,8 +11,6 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.MissingInfo;
 
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 public class TwoFieldKey extends Key {
   private Field keyField1;
@@ -26,17 +24,16 @@ public class TwoFieldKey extends Key {
 
     SingleFieldKey.checkValue(keyField1, value1);
     SingleFieldKey.checkValue(keyField2, value2);
-    List<Field> keyFields = keyField1.getGlobType().getKeyFields();
-    if (keyFields.size() != 2) {
+    Field[] keyFields = keyField1.getGlobType().getKeyFields();
+    if (keyFields.length != 2) {
       throw new InvalidParameter("Cannot use a Three field key for type " + keyField1.getGlobType() + " - " +
                                  "key fields=" + keyFields);
     }
-    Iterator<Field> iterator = keyFields.iterator();
     Field field;
-    field = iterator.next();
+    field = keyFields[0];
     this.keyField1 = field;
     this.value1 = field == keyField1 ? value1 : value2;
-    field = iterator.next();
+    field = keyFields[1];
     this.keyField2 = field;
     this.value2 = field == keyField2 ? value2 : value1;
 

@@ -36,6 +36,8 @@ public interface ChangeSet {
 
   Set<Key> getDeleted(GlobType type);
 
+  FieldValues getPreviousValue(Key key);
+
   void visit(ChangeSetVisitor visitor) throws Exception;
 
   void safeVisit(ChangeSetVisitor visitor);

@@ -17,7 +17,7 @@ public class Constraints {
   }
 
   public static Constraint keyEquals(final KeyConstraint keyAccessor) {
-    List<Field> list = keyAccessor.getGlobType().getKeyFields();
+    Field[] list = keyAccessor.getGlobType().getKeyFields();
     Constraint constraint = null;
     for (final Field field : list) {
       constraint = Constraints.and(constraint, Constraints.equalsObject(field,

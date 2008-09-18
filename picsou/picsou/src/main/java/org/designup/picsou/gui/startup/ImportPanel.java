@@ -145,7 +145,7 @@ public abstract class ImportPanel {
     sessionRepository = importSession.getTempRepository();
 
     GlobTableView tableView = GlobTableView.init(ImportedTransaction.TYPE, sessionRepository,
-                                                                    dateRenderer.getComparator(), sessionDirectory)
+                                                 dateRenderer.getComparator(), sessionDirectory)
       .addColumn(Lang.get("import.bankDate"), ImportedTransaction.BANK_DATE, dateRenderer)
       .addColumn(Lang.get("label"), ImportedTransaction.LABEL)
       .addColumn(Lang.get("amount"), ImportedTransaction.AMOUNT);

@@ -7,8 +7,6 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemAlreadyExists;
 
-import java.util.List;
-
 public class GlobTypeBuilderTest extends TestCase {
   public void test() throws Exception {
     GlobType type = GlobTypeBuilder.init("aType")
@@ -25,9 +23,9 @@ public class GlobTypeBuilderTest extends TestCase {
 
     assertEquals("aType", type.getName());
 
-    List<Field> keyFields = type.getKeyFields();
-    assertEquals(1, keyFields.size());
-    Field key = keyFields.get(0);
+    Field[] keyFields = type.getKeyFields();
+    assertEquals(1, keyFields.length);
+    Field key = keyFields[0];
     assertTrue(key instanceof IntegerField);
     assertEquals("id", key.getName());
 

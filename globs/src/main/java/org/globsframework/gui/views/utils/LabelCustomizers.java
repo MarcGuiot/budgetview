@@ -22,8 +22,9 @@ public class LabelCustomizers {
   public static LabelCustomizer chain(Iterable<LabelCustomizer> customizers) {
     final java.util.List<LabelCustomizer> reducedList = new ArrayList<LabelCustomizer>();
     for (LabelCustomizer customizer : customizers) {
-      if (customizer != LabelCustomizer.NULL)
-      reducedList.add(customizer);
+      if (customizer != LabelCustomizer.NULL) {
+        reducedList.add(customizer);
+      }
     }
     return new LabelCustomizer() {
       public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {

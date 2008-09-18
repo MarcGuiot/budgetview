@@ -17,7 +17,6 @@ import org.saxstack.utils.XmlUtils;
 import org.xml.sax.Attributes;
 
 import java.io.Reader;
-import java.util.List;
 
 public class XmlGlobParser {
   private GlobModel model;
@@ -82,9 +81,9 @@ public class XmlGlobParser {
     }
 
     private boolean hasUnsetIntegerKey(GlobType type, FieldValuesBuilder builder) {
-      List<Field> keyFields = type.getKeyFields();
-      if (keyFields.size() == 1) {
-        Field keyField = keyFields.get(0);
+      Field[] keyFields = type.getKeyFields();
+      if (keyFields.length == 1) {
+        Field keyField = keyFields[0];
         if (IntegerField.class.isInstance(keyField)) {
           IntegerField integerField = (IntegerField)keyField;
           if (!builder.contains(integerField)) {

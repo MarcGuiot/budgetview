@@ -10,6 +10,7 @@ import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -25,6 +26,8 @@ import org.uispec4j.interception.WindowInterceptor;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TransactionChecker extends ViewChecker {
   public static final String TO_CATEGORIZE = "To categorize";
@@ -54,7 +57,7 @@ public class TransactionChecker extends ViewChecker {
       table = window.getTable(Transaction.TYPE.getName());
       table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
       table.setCellValueConverter(TransactionView.CATEGORY_COLUMN_INDEX, new CategoryCellValueConverter(window));
-      table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(window));
+      table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter());
     }
     return table;
   }
@@ -190,7 +193,57 @@ public class TransactionChecker extends ViewChecker {
     return mainWindow.getInputTextBox("transactionSearchField");
   }
 
-  public class ContentChecker extends TableChecker {
+  public TransactionAmountChecker initAmountContent() {
+    return new TransactionAmountChecker();
+  }
+
+  public class TransactionAmountChecker {
+    java.util.List<Object[]> expected = new ArrayList<Object[]>();
+
+    protected Table getTable() {
+      return TransactionChecker.this.getTable();
+    }
+
+    public TransactionAmountChecker add(String label, double amount, double accountSolde, double solde) {
+      expected.add(new Object[]{label,
+                                TransactionChecker.this.toString(amount),
+                                TransactionChecker.this.toString(accountSolde),
+                                TransactionChecker.this.toString(solde)});
+      return this;
+    }
+
+    public void check() {
+      UISpecAssert.assertThat(getTable().contentEquals(
+        new String[]{Lang.get("label"),
+                     Lang.get("amount"),
+                     Lang.get("transactionView.account.balance"),
+                     Lang.get("transactionView.balance")},
+        expected.toArray(new Object[expected.size()][])));
+    }
+
+    public void dump() {
+      String[] columnNames = getTable().getHeader().getColumnNames();
+      java.util.List list = Arrays.asList(columnNames);
+      int label = list.indexOf(Lang.get("label"));
+      int amount = list.indexOf(Lang.get("amount"));
+      int accountBalance = list.indexOf(Lang.get("transactionView.account.balance"));
+      int balance = list.indexOf(Lang.get("transactionView.balance"));
+      int rowCount = getTable().getRowCount();
+      StringBuffer buffer = new StringBuffer();
+      for (int i = 0; i < rowCount; i++) {
+        buffer.append(".add(\"").append(getTable().getContentAt(i, label)).append("\", ")
+          .append(getTable().getContentAt(i, amount)).append(", ")
+          .append(getTable().getContentAt(i, accountBalance)).append(", ")
+          .append(getTable().getContentAt(i, balance)).append(")\n");
+      }
+      buffer.append(".check();\n");
+      System.out.println(buffer.toString());
+    }
+  }
+
+  public class ContentChecker {
+
+    private java.util.List<Object[]> content = new ArrayList<Object[]>();
 
     private ContentChecker() {
     }
@@ -214,7 +267,7 @@ public class TransactionChecker extends ViewChecker {
       return add(date, type, label, note, amount, "Occasional", category);
     }
 
-    public ContentChecker add(String date, TransactionType type, String label,
+    public ContentChecker add(String userDate, String bankDate, TransactionType type, String label,
                               String note, double amount, String... seriesAndCategory) {
       String category = "";
       String series = TO_CATEGORIZE;
@@ -224,10 +277,15 @@ public class TransactionChecker extends ViewChecker {
       if (seriesAndCategory.length > 1) {
         category = seriesAndCategory[1];
       }
-      add(new Object[]{date, date, "(" + type.getName() + ")" + series, category, label,
+      add(new Object[]{userDate, bankDate, "(" + type.getName() + ")" + series, category, label,
                        TransactionChecker.this.toString(amount),
                        note});
       return this;
+    }
+
+    public ContentChecker add(String date, TransactionType type, String label,
+                              String note, double amount, String... seriesAndCategory) {
+      return add(date, date, type, label, note, amount, seriesAndCategory);
     }
 
     public ContentChecker add(String date, TransactionType type, String label,
@@ -309,6 +367,23 @@ public class TransactionChecker extends ViewChecker {
         return "\"" + label.getText() + "\"";
       }
     }
+
+    protected void add(Object[] row) {
+      content.add(row);
+    }
+
+    public void check() {
+      Object[][] expectedContent = content.toArray(new Object[content.size()][]);
+      UISpecAssert.assertTrue(getTable()
+        .contentEquals(new String[]{Lang.get("transactionView.date.user"),
+                                    Lang.get("transactionView.date.bank"),
+                                    Lang.get("series"),
+                                    Lang.get("category"),
+                                    Lang.get("label"),
+                                    Lang.get("amount"),
+                                    Lang.get("note")}, expectedContent));
+    }
+
   }
 
   private static class CategoryCellValueConverter implements TableCellValueConverter {

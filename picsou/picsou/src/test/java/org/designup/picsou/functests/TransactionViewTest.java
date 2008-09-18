@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import junit.framework.Assert;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -9,7 +10,6 @@ import org.uispec4j.Table;
 import org.uispec4j.Trigger;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.PopupMenuInterceptor;
-import junit.framework.Assert;
 
 public class TransactionViewTest extends LoggedInFunctionalTestCase {
   private Table table;
@@ -121,7 +121,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     UISpecAssert.assertTrue(
       table.rowEquals(table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, "essence"),
                       new String[]{"01/05/2006", "01/05/2006", "(prelevement)Voiture", "Transports",
-                                   "essence", "-70.00", "frais pro"}));
+                                   "essence", "-70.00", "frais pro", "330.00", "330.00"}));
   }
 
   public void testMultiCategorization() throws Exception {

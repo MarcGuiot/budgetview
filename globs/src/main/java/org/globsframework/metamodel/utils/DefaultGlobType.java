@@ -17,7 +17,7 @@ import java.util.*;
 public class DefaultGlobType extends AnnotatedPropertyHolder<GlobType> implements MutableGlobType {
   private Map<String, Field> fieldsByName = new TreeMap<String, Field>();
   private Field[] fields;
-  private List<Field> keyFields = new ArrayList<Field>();
+  private Field[] keyFields = new Field[0];
   private String name;
   private Map<String, Link> outboundLinksByName = new HashMap<String, Link>();
   private List<Link> inboundLinks = new ArrayList<Link>();
@@ -72,15 +72,23 @@ public class DefaultGlobType extends AnnotatedPropertyHolder<GlobType> implement
   }
 
   public void addKey(Field field) {
-    keyFields.add(field);
+    Field[] tmp = new Field[keyFields.length + 1];
+    System.arraycopy(keyFields, 0, tmp, 0, keyFields.length);
+    keyFields = tmp;
+    keyFields[keyFields.length - 1] = field;
   }
 
-  public List<Field> getKeyFields() {
+  public Field[] getKeyFields() {
     return keyFields;
   }
 
   public boolean isKeyField(Field field) {
-    return keyFields.contains(field);
+    for (Field currentField : keyFields) {
+      if (currentField == field) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public Field[] getFieldsWithAnnotation(Class<? extends Annotation> annotationClass) {
@@ -133,7 +141,7 @@ public class DefaultGlobType extends AnnotatedPropertyHolder<GlobType> implement
   }
 
   public void completeInit() {
-    if (keyFields.isEmpty()) {
+    if (keyFields.length == 0) {
       throw new InvalidParameter("GlobType " + name + " has no key field");
     }
     fields = new Field[fieldsByName.size()];
@@ -164,26 +172,5 @@ public class DefaultGlobType extends AnnotatedPropertyHolder<GlobType> implement
 
   public MultiFieldIndex getMultiFieldIndex(String name) {
     return multiFieldIndices.get(name);
-  }
-
-  private static class ArrayIterator implements Iterator<Field> {
-    private Field[] fields;
-    private int pos = -1;
-
-    public ArrayIterator(Field[] fields) {
-      this.fields = fields;
-    }
-
-    public boolean hasNext() {
-      return pos < fields.length - 1;
-    }
-
-    public Field next() {
-      return fields[++pos];
-    }
-
-    public void remove() {
-      throw new UnsupportedOperationException();
-    }
   }
 }

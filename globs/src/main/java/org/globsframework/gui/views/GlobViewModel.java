@@ -115,8 +115,8 @@ public class GlobViewModel implements ChangeSetListener {
         changeSet.safeVisit(type, new MinorChangesVisitor(repository));
       }
       else if (changeCount > 1) {
-        MajorChangesVisitor visitor = new MajorChangesVisitor(repository);
-        changeSet.safeVisit(type, visitor);
+        MajorChanges visitor = new MajorChanges(changeSet, repository);
+//        changeSet.safeVisit(type, visitor);
         visitor.complete();
       }
     }
@@ -194,19 +194,33 @@ public class GlobViewModel implements ChangeSetListener {
     }
   }
 
-  private class MajorChangesVisitor implements ChangeSetVisitor {
+  private class MajorChanges {
     private final GlobRepository repository;
     private GlobList toAdd = new GlobList();
     private GlobList toRemove = new GlobList();
 
-    public MajorChangesVisitor(GlobRepository repository) {
+    public MajorChanges(ChangeSet set, GlobRepository repository) {
       this.repository = repository;
-    }
-
-    public void visitCreation(Key key, FieldValues values) throws Exception {
-      Glob glob = repository.find(key);
-      if ((glob != null) && matcher.matches(glob, repository)) {
-        toAdd.add(glob);
+      Set<Key> updated = set.getUpdated(type);
+      Set<Key> deleted = set.getDeleted(type);
+      Set<Key> created = set.getCreated(type);
+      for (Key key : created) {
+        Glob glob = repository.find(key);
+        if ((glob != null) && matcher.matches(glob, repository)) {
+          toAdd.add(glob);
+        }
+      }
+      for (Glob glob : globs) {
+        if (updated.remove(glob.getKey())) {
+          toRemove.add(glob);
+          toAdd.add(repository.get(glob.getKey()));
+        }
+        else if (deleted.remove(glob.getKey())) {
+          toRemove.add(glob);
+        }
+        else if (deleted.size() == 0 && updated.size() == 0) {
+          return;
+        }
       }
     }
 
@@ -224,8 +238,13 @@ public class GlobViewModel implements ChangeSetListener {
       if (toAdd.isEmpty() && toRemove.isEmpty()) {
         return;
       }
-      Set<Glob> newList = new HashSet<Glob>(globs.asList());
-      newList.removeAll(toRemove);
+      Set<Glob> newList = new HashSet<Glob>(globs.size());
+      for (Glob glob : globs) {
+        newList.add(glob);
+      }
+      for (Glob glob : toRemove) {
+        newList.remove(glob);
+      }
 
       for (Glob glob : toAdd) {
         if (matcher.matches(glob, repository)) {

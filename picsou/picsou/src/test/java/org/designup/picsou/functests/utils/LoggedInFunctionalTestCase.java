@@ -117,7 +117,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void tearDown() throws Exception {
-    mainWindow.getMenuBar().getMenu("Edit").getSubMenu("check").click();
+//    mainWindow.getMenuBar().getMenu("Edit").getSubMenu("check").click();
     super.tearDown();
     mainWindow.dispose();
     mainWindow = null;

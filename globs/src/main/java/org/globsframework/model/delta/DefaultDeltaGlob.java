@@ -15,6 +15,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
   private Object[] values;
   private Object[] previousValues;
   private DeltaState state = DeltaState.UNCHANGED;
+  private DeltaFieldValuesFromArray previousFieldValue;
 
   public DefaultDeltaGlob(Key key) {
     this.key = key;
@@ -138,7 +139,10 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
   }
 
   public FieldValues getPreviousValues() {
-    return new DeltaFieldValuesFromArray(key.getGlobType(), previousValues);
+    if (previousFieldValue == null) {
+      previousFieldValue = new DeltaFieldValuesFromArray(key.getGlobType(), previousValues);
+    }
+    return previousFieldValue;
   }
 
   public boolean isModified() {
@@ -225,7 +229,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
   }
 
   public int size() {
-    int count = -key.getGlobType().getKeyFields().size();
+    int count = -key.getGlobType().getKeyFields().length;
     for (Object value : values) {
       if (value != Unset.VALUE) {
         count++;

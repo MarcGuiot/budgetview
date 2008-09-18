@@ -6,8 +6,8 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicToggleButtonUI;
 import java.awt.*;
-import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class SelectionToggleUI extends BasicToggleButtonUI {
   private int padding = 0;

@@ -23,7 +23,6 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Iterator;
 
 public abstract class JdbcConnection implements SqlConnection {
   private Connection connection;
@@ -113,13 +112,13 @@ public abstract class JdbcConnection implements SqlConnection {
       field.safeVisit(creationVisitor.appendComma(count != globType.getFieldCount()));
       count++;
     }
-    Iterator<Field> iterator = globType.getKeyFields().iterator();
-    if (iterator.hasNext()) {
+    Field[] keyFields = globType.getKeyFields();
+    Field last = keyFields[keyFields.length - 1];
+    if (keyFields.length != 0) {
       writer.append(", PRIMARY KEY (");
-      for (; iterator.hasNext();) {
-        Field field = iterator.next();
+      for (Field field : keyFields) {
         writer.append(sqlService.getColumnName(field))
-          .appendIf(", ", iterator.hasNext());
+          .appendIf(", ", last != field);
       }
       writer.append(") ");
     }

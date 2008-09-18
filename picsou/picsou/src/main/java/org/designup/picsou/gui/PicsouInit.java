@@ -51,7 +51,6 @@ public class PicsouInit {
         .get();
 
     generator.setRepository(repository);
-    repository.addTrigger(new SummaryAccountCreationTrigger());
 
     repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
@@ -64,6 +63,7 @@ public class PicsouInit {
     repository.addTrigger(new SeriesBudgetUpdateOccasionnalTrigger());
     repository.addTrigger(new SeriesBudgetUpdateTransactionTrigger(directory));
     repository.addTrigger(new TransactionPlannedTrigger());
+    repository.addTrigger(new BalanceTrigger());
     repository.addTrigger(new MonthStatTrigger());
     repository.addTrigger(new SeriesStatTrigger());
     repository.addTrigger(new OccasionalSeriesStatTrigger());
@@ -120,6 +120,7 @@ public class PicsouInit {
                       FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT,
                                        UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS));
     repository.create(CurrentMonth.KEY, FieldValue.value(CurrentMonth.MONTH_ID, 0));
+    repository.create(Account.SUMMARY_KEY);
     InitialCategories.run(repository);
     InitialSeries.run(repository);
   }

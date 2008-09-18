@@ -39,8 +39,10 @@ public class TransactionView extends View implements GlobSelectionListener {
   public static final int LABEL_COLUMN_INDEX = 4;
   public static final int AMOUNT_COLUMN_INDEX = 5;
   public static final int NOTE_COLUMN_INDEX = 6;
+  public static final int ACCOUNT_BALANCE__INDEX = 7;
+  public static final int BALANCE_INDEX = 8;
 
-  private static final int[] COLUMN_SIZES = {10, 10, 16, 16, 30, 9};
+  private static final int[] COLUMN_SIZES = {10, 10, 16, 16, 30, 9, 30, 30};
 
   private GlobTableView view;
   private TransactionRendererColors rendererColors;
@@ -115,7 +117,11 @@ public class TransactionView extends View implements GlobSelectionListener {
       new TransactionSeriesColumn(view, rendererColors, descriptionService, repository, directory);
 
     TransactionAmountColumn amountColumn =
-      new TransactionAmountColumn(view, rendererColors, descriptionService, repository, directory);
+      new TransactionAmountColumn(view, Transaction.AMOUNT, rendererColors, descriptionService, repository, directory);
+    TransactionAmountColumn accountBalanceColumn =
+      new TransactionAmountColumn(view, Transaction.ACCOUNT_BALANCE, rendererColors, descriptionService, repository, directory);
+    TransactionAmountColumn balanceColumn =
+      new TransactionAmountColumn(view, Transaction.BALANCE, rendererColors, descriptionService, repository, directory);
 
     FontLocator fontLocator = directory.get(FontLocator.class);
     Font dateFont = fontLocator.get("transactionView.date");
@@ -123,10 +129,11 @@ public class TransactionView extends View implements GlobSelectionListener {
 
     view
       .addColumn(Lang.get("transactionView.date.user"),
-                 new TransactionDateStringifier(comparator, Transaction.BANK_MONTH,
-                                                Transaction.BANK_DAY), LabelCustomizers.font(dateFont))
+                 new TransactionDateStringifier(comparator), LabelCustomizers.font(dateFont))
       .addColumn(Lang.get("transactionView.date.bank"),
-                 new TransactionDateStringifier(TransactionComparator.DESCENDING_BANK), LabelCustomizers.font(dateFont))
+                 new TransactionDateStringifier(TransactionComparator.DESCENDING_BANK,
+                                                Transaction.BANK_MONTH,
+                                                Transaction.BANK_DAY), LabelCustomizers.font(dateFont))
       .addColumn(Lang.get("series"), seriesColumn, seriesColumn,
                  seriesColumn.getComparator())
       .addColumn(Lang.get("category"), new CategoryStringifier(descriptionService), LabelCustomizers.font(categoryFont))
@@ -138,6 +145,9 @@ public class TransactionView extends View implements GlobSelectionListener {
       .setName(Lang.get("note"))
       .setField(Transaction.NOTE)
       .setEditor(new TransactionNoteEditor(repository, directory));
+    view
+      .addColumn(Lang.get("transactionView.account.balance"), accountBalanceColumn, amountStringifier.getComparator(repository))
+      .addColumn(Lang.get("transactionView.balance"), balanceColumn, amountStringifier.getComparator(repository));
 
     return view;
   }

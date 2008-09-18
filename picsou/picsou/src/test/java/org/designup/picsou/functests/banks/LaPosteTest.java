@@ -8,16 +8,16 @@ public class LaPosteTest extends SpecificBankTestCase {
     timeline.selectMonths("2006/07", "2006/08");
     transactions
       .initContent()
-      .add("08/08/2006", TransactionType.CREDIT_CARD, "SANEMA", "", -5.00)
-      .add("03/08/2006", TransactionType.CHECK, "CHEQUE N. 6557005", "", -56.14)
-      .add("02/08/2006", TransactionType.WITHDRAWAL, "RETRAIT MASTERCA 09H59", "", -60.00)
-      .add("02/08/2006", TransactionType.DEPOSIT, "REMISE CHEQUES", "", 292.82)
-      .add("01/08/2006", TransactionType.CHECK, "CHEQUE N. 6557002", "", -11.00)
-      .add("01/08/2006", TransactionType.CHECK, "CHEQUE N. 6557004", "", -60.00)
-      .add("30/07/2006", TransactionType.CREDIT_CARD, "ATAC MAG GAILL", "", -11.35)
-      .add("30/07/2006", TransactionType.CREDIT_CARD, "COINTIN ET CIE", "", -27.20)
-      .add("29/07/2006", TransactionType.CREDIT_CARD, "CENTRE E LECLE", "", -61.85)
-      .add("28/07/2006", TransactionType.CREDIT_CARD, "ST MARCEL DIST", "", -32.22)
+      .add("08/08/2006", "09/08/2006", TransactionType.CREDIT_CARD, "SANEMA", "", -5.00)
+      .add("03/08/2006", "03/08/2006", TransactionType.CHECK, "CHEQUE N. 6557005", "", -56.14)
+      .add("02/08/2006", "03/08/2006", TransactionType.WITHDRAWAL, "RETRAIT MASTERCA 09H59", "", -60.00)
+      .add("02/08/2006", "03/08/2006", TransactionType.DEPOSIT, "REMISE CHEQUES", "", 292.82)
+      .add("01/08/2006", "01/08/2006", TransactionType.CHECK, "CHEQUE N. 6557004", "", -60.00)
+      .add("01/08/2006", "01/08/2006", TransactionType.CHECK, "CHEQUE N. 6557002", "", -11.00)
+      .add("30/07/2006", "31/07/2006", TransactionType.CREDIT_CARD, "COINTIN ET CIE", "", -27.20)
+      .add("30/07/2006", "31/07/2006", TransactionType.CREDIT_CARD, "ATAC MAG GAILL", "", -11.35)
+      .add("29/07/2006", "31/07/2006", TransactionType.CREDIT_CARD, "CENTRE E LECLE", "", -61.85)
+      .add("28/07/2006", "31/07/2006", TransactionType.CREDIT_CARD, "ST MARCEL DIST", "", -32.22)
       .check();
   }
 }

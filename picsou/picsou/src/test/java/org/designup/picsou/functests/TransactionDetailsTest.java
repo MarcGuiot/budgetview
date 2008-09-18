@@ -113,6 +113,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", -20.00, "McDo", MasterCategory.FOOD)
       .addTransaction("2008/06/14", -10.00, "Fouquet's", MasterCategory.EDUCATION)
       .load();
+
     transactionDetails.checkSplitNotVisible();
 
     categorization.selectTableRows(0, 1);

@@ -84,9 +84,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .load();
 
     transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -2.2, MasterCategory.NONE)
-      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
+      .initAmountContent()
+      .add("Tx 2", -2.2, 0, 0)
+      .add("Tx 1", -1.1, 2.2, 2.2)
       .check();
   }
 
@@ -104,11 +104,11 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .load();
 
     transactions
-      .initContent()
-      .add("14/01/2006", TransactionType.PRELEVEMENT, "Tx 4", "", -4.4, MasterCategory.NONE)
-      .add("13/01/2006", TransactionType.PRELEVEMENT, "Tx 3", "", -3.3, MasterCategory.NONE)
-      .add("12/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -2.2, MasterCategory.NONE)
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.NONE)
+      .initAmountContent()
+      .add("Tx 4", -4.4, 0, 0)
+      .add("Tx 3", -3.3, 4.4, 4.4)
+      .add("Tx 2", -2.2, 7.7, 7.7)
+      .add("Tx 1", -1.1, 9.9, 9.9)
       .check();
   }
 
@@ -126,10 +126,10 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2005/12", "2006/01");
     transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -2.2, MasterCategory.NONE)
-      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
-      .addOccasional("25/12/2005", TransactionType.PRELEVEMENT, "Tx 0", "", -10.0, MasterCategory.HOUSE)
+      .initAmountContent()
+      .add("Tx 2", -2.2, 0, 0)
+      .add("Tx 1", -1.1, 2.2, 2.2)
+      .add("Tx 0", -10.0, 3.3, 3.3)
       .check();
   }
 
@@ -147,10 +147,10 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .load();
 
     transactions
-      .initContent()
-      .add("12/01/2006", TransactionType.PRELEVEMENT, "Tx 3", "", -3.3, MasterCategory.NONE)
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -2.2, MasterCategory.NONE)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.NONE)
+      .initAmountContent()
+      .add("Tx 3", -3.3, 0., 0.)
+      .add("Tx 2", -2.2, 3.3, 3.3)
+      .add("Tx 1", -1.1, 5.5, 5.5)
       .check();
   }
 
@@ -171,12 +171,12 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .load();
 
     transactions
-      .initContent()
-      .add("16/01/2006", TransactionType.PRELEVEMENT, "Tx 6", "", -6.6, MasterCategory.NONE)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Tx 5", "", -5.5, MasterCategory.NONE)
-      .add("14/01/2006", TransactionType.PRELEVEMENT, "Tx 4", "", -4.4, MasterCategory.NONE)
-      .add("13/01/2006", TransactionType.PRELEVEMENT, "Tx 3", "", -3.3, MasterCategory.NONE)
-      .add("12/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -2.2, MasterCategory.NONE)
+      .initAmountContent()
+      .add("Tx 6", -6.6, 0, 0)
+      .add("Tx 5", -5.5, 6.60, 6.60)
+      .add("Tx 4", -4.4, 12.10, 12.10)
+      .add("Tx 3", -3.3, 16.50, 16.50)
+      .add("Tx 2", -2.2, 19.80, 19.80)
       .check();
   }
 
@@ -192,7 +192,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Operation 1", "", -1.1, MasterCategory.NONE)
+      .add("15/01/2006", "10/01/2006", TransactionType.PRELEVEMENT, "Operation 1", "", -1.1)
       .check();
   }
 
@@ -223,8 +223,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .addOccasional("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "RAS", -10, MasterCategory.FOOD)
       .addOccasional("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "DVD", -10, MasterCategory.LEISURES)
+      .addOccasional("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "RAS", -10, MasterCategory.FOOD)
       .check();
 
     Glob parentTransaction = repository.getAll(Transaction.TYPE, new GlobFieldMatcher(Transaction.NOTE, "RAS")).get(0);
@@ -251,8 +251,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2, MasterCategory.NONE)
       .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.0, MasterCategory.BEAUTY)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2, MasterCategory.NONE)
       .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
       .check();
   }
@@ -275,8 +275,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2)
       .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.0, MasterCategory.BEAUTY)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2)
       .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
       .check();
   }
@@ -300,9 +300,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2, MasterCategory.NONE)
-      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.5, MasterCategory.BEAUTY)
       .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info2", -1.5, MasterCategory.CLOTHING)
+      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.5, MasterCategory.BEAUTY)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2, MasterCategory.NONE)
       .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
       .check();
   }
@@ -325,11 +325,11 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("14/01/2006", TransactionType.PRELEVEMENT, "Tx 3", "", -1.2, MasterCategory.NONE)
       .addOccasional("14/01/2006", TransactionType.PRELEVEMENT, "Tx 3", "info", -1.0, MasterCategory.BEAUTY)
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2, MasterCategory.NONE)
-      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.5, MasterCategory.BEAUTY)
+      .add("14/01/2006", TransactionType.PRELEVEMENT, "Tx 3", "", -1.2, MasterCategory.NONE)
       .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info2", -1.5, MasterCategory.CLOTHING)
+      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.5, MasterCategory.BEAUTY)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2, MasterCategory.NONE)
       .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
       .check();
   }

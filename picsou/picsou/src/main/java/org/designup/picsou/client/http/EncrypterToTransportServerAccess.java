@@ -205,7 +205,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       if (globSerializer == null) {
         throw new RuntimeException("missing serialializer for " + globTypeName);
       }
-      IntegerField field = (IntegerField)globType.getKeyFields().get(0);
+      IntegerField field = (IntegerField)globType.getKeyFields()[0];
       Integer id;
       Integer maxId = 0;
       for (Map.Entry<Integer, SerializableGlobType> globEntry : data.get(globTypeName).entrySet()) {

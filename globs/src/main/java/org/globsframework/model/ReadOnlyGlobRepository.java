@@ -9,7 +9,9 @@ import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.util.Comparator;
 import java.util.Set;
+import java.util.SortedSet;
 
 public interface ReadOnlyGlobRepository {
   Glob find(Key key);
@@ -26,6 +28,8 @@ public interface ReadOnlyGlobRepository {
 
   Glob findUnique(GlobType type, GlobMatcher matcher)
     throws ItemAmbiguity;
+
+  SortedSet<Glob> getSorted(GlobType globType, Comparator<Glob> comparator, GlobMatcher matcher);
 
   GlobList findByIndex(Index index, Object value);
 

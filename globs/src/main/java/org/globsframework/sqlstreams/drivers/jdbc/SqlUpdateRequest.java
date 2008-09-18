@@ -72,7 +72,7 @@ public class SqlUpdateRequest implements SqlRequest {
 
   public void execute(Key key) {
     GlobType globType = key.getGlobType();
-    List<Field> list = globType.getKeyFields();
+    Field[] list = globType.getKeyFields();
     Constraint constraint = null;
     for (Field field : list) {
       constraint = Constraints.and(constraint, Constraints.equalsObject(field, key.getValue(field)));

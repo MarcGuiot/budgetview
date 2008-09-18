@@ -6,8 +6,8 @@ import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class TransactionDetailsChecker extends DataChecker {
@@ -146,7 +146,9 @@ public class TransactionDetailsChecker extends DataChecker {
     return this;
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   public TransactionDetailsChecker checkNote(String text) {
 //    assertThat(getPanel().getTextBox("note").textEquals(text));
     System.out.println("############# TransactionDetailsChecker.checkNote: " +

@@ -97,7 +97,7 @@ public class TransactionDetailsView extends View {
 
     builder.add("originalLabel",
                 GlobLabelView.init(Transaction.TYPE, repository, directory,
-                                           new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, "..."))
+                                   new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, "..."))
                   .setAutoHideMatcher(new OriginalLabelVisibilityMatcher()));
 
     builder.add("bankDate",
@@ -111,8 +111,8 @@ public class TransactionDetailsView extends View {
 
     final JPanel noSelectionPanel =
       builder.add("noSelectionPanel",
-                new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.EMPTY,
-                                             repository, directory));
+                  new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.EMPTY,
+                                               repository, directory));
     noSelectionPanel.setVisible(true);
 
     final JLabel label = builder.add("noSelectionLabel", new JLabel());

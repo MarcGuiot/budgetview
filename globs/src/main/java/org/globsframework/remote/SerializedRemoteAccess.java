@@ -7,7 +7,6 @@ import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.Date;
-import java.util.List;
 
 public class SerializedRemoteAccess {
 
@@ -71,8 +70,8 @@ public class SerializedRemoteAccess {
     }
 
     private void writeKey(Key key) {
-      List<Field> list = key.getGlobType().getKeyFields();
-      output.write(list.size());
+      Field[] list = key.getGlobType().getKeyFields();
+      output.write(list.length);
       for (Field field : list) {
         output.write(field.getIndex());
         value = key.getValue(field);
