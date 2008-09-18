@@ -46,7 +46,7 @@ public class BalanceTrigger implements ChangeSetListener {
 
       if (account == null) {
         updatePlannedOnly = true;
-        account = repository.getAll(Account.TYPE);
+        account = GlobList.EMPTY;
       }
     }
     else if (changeSet.containsChanges(Account.TYPE)) {
@@ -82,7 +82,7 @@ public class BalanceTrigger implements ChangeSetListener {
       balanceComputed &= computeAccountBalance(repository, comparator, transactions, account);
     }
 
-    if (balanceComputed) {
+    if (balanceComputed || updatePlannedOnly) {
       computeTotalBalance(repository, transactions, updatePlannedOnly);
     }
   }

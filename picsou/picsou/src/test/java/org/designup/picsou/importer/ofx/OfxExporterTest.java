@@ -22,7 +22,7 @@ public class OfxExporterTest extends PicsouTestCase {
       "             originalLabel='label1' account='2'/>" +
       "<transaction id='2' month='200602' day='22' bankMonth='200602' bankDay='22' amount='-1.2' " +
       "             originalLabel='label2' account='2'" +
-      "             note='my note' categoryName='health' dispensable='true'/>" +
+      "             note='my note' categoryName='health'/>" +
       "<transaction id='3' month='200603' day='23' bankMonth='200603' bankDay='23' amount='-1.3' " +
       "             originalLabel='card3' transactionTypeName='credit_card' account='3' categoryName='Dentifrice'/>" +
       "<transaction id='4' month='200604' day='19' bankMonth='200604' bankDay='19' amount='-45' " +
@@ -80,7 +80,6 @@ public class OfxExporterTest extends PicsouTestCase {
       "            <NAME>label2\n" +
       "            <CATEGORY>5\n" +
       "            <NOTE>my note\n" +
-      "            <DISPENSABLE>true\n" +
       "          </STMTTRN>\n" +
       "        </BANKTRANLIST>\n" +
       "        <LEDGERBAL>\n" +

@@ -46,7 +46,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2006/04");
     transactions.initContent()
-      .add("19/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
+      .add("19/04/2006", "20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
       .check();
 
     transactions
@@ -72,7 +72,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       "^"};
     importBlocks(blocks);
     transactions.initContent()
-      .add("19/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
+      .add("19/04/2006", "20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
       .check();
   }
 

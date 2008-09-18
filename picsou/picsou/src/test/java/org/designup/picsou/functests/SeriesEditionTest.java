@@ -18,7 +18,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectData();
     transactions.initContent()
-      .add("29/07/2008", "2008/08/01", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
+      .add("29/07/2008", "01/08/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
       .check();
 
     views.selectCategorization();
