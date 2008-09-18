@@ -1,38 +1,33 @@
 package org.designup.picsou.gui.transactions.split;
 
+import org.designup.picsou.gui.categorization.components.CompactSeriesStringifier;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
-import org.designup.picsou.gui.description.BalanceStringifier;
-import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.gui.transactions.categorization.TransactionCategoryChooserCallback;
-import org.designup.picsou.gui.transactions.columns.*;
-import org.designup.picsou.gui.transactions.details.CategorisationHyperlinkButton;
+import org.designup.picsou.gui.transactions.columns.AbstractTransactionEditor;
+import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
+import org.designup.picsou.gui.transactions.columns.TransactionNoteEditor;
+import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.Icons;
 import org.designup.picsou.model.*;
-import static org.designup.picsou.model.Transaction.LABEL;
-import static org.designup.picsou.model.Transaction.NOTE;
+import static org.designup.picsou.model.Transaction.*;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.actions.AbstractGlobSelectionAction;
-import org.globsframework.gui.splits.SplitsLoader;
-import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorLocator;
-import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.*;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -41,125 +36,91 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.Set;
 
 public class SplitTransactionDialog {
   public static final int CATEGORY_COLUMN_INDEX = 0;
   public static final int LABEL_COLUMN_INDEX = 1;
   public static final int NOTE_COLUMN_INDEX = 3;
-  public static final int REMOVE_SPLIT_COLUMN_INDEX = 4;
-
-  public static Icon EXPANDED_ICON = Gui.ICON_LOCATOR.get("arrowdown.png");
-  public static Icon COLLAPSED_ICON = Gui.ICON_LOCATOR.get("arrowright.png");
-  public static Icon ROLLOVER_ICON = Gui.ICON_LOCATOR.get("arrowrightrollover.png");
-  public static Icon CHOOSER_ICON = Gui.ICON_LOCATOR.get("add.png");
-  public static Icon CHOOSER_ROLLOVER_ICON = Gui.ICON_LOCATOR.get("addrollover.png");
+  public static final int DELETE_SPLIT_COLUMN_INDEX = 4;
 
   private Glob transactionToSplit;
+  private Glob splittedTransaction;
+
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
   private DescriptionService descriptionService;
-  private ColorService colorService;
-  private TransactionRendererColors rendererColors;
+  private SelectionService parentSelectionService;
 
-  private JPanel initialAmountPanel = new JPanel();
-  private JLabel initialLabel = new JLabel();
-  private JLabel initialAmount = new JLabel();
-  private JLabel initialDate = new JLabel();
+  private TransactionRendererColors rendererColors;
   private JLabel messageLabel = new JLabel("");
   private JTextField amountField;
   private JTextField noteField;
-  private JCheckBox dispensableBox = new JCheckBox();
   private PicsouDialog dialog;
-  private AddAction addAction = new AddAction();
-  private JPanel addAmountPanel = new JPanel();
-  private JPanel subAmountPanel = new JPanel();
-  private JToggleButton toggleButton = new JToggleButton();
-  private BalanceColorChangeListener colorChangeListener;
-  private Glob splittedTransaction;
-  private SelectionService selectionServiceForSplitPanel;
-  private DefaultDirectory directoryForSplitPanel;
-  private LocalGlobRepository repositoryForSplitPanel;
+  private SplitTransactionDialog.OkAction okAction;
+  private GlobRepository parentRepository;
+  private GlobTableView tableView;
+  private SelectionService selectionService;
 
-  public SplitTransactionDialog(Glob initialTransaction, GlobRepository repository, Directory directory) {
-    if (Transaction.isSplitPart(initialTransaction)) {
-      initialTransaction = repository.findLinkTarget(initialTransaction, Transaction.SPLIT_SOURCE);
-    }
+  public SplitTransactionDialog(GlobRepository repository, Directory directory) {
+    this.parentRepository = repository;
 
     localRepository =
       LocalGlobRepositoryBuilder.init(repository)
-        .copy(Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE, SeriesBudget.TYPE, BudgetArea.TYPE)
-        .copy(initialTransaction)
-        .copy(repository.findLinkedTo(initialTransaction, Transaction.SPLIT_SOURCE))
+        .copy(Month.TYPE, Category.TYPE, Series.TYPE, SeriesToCategory.TYPE)
         .get();
 
-    transactionToSplit = localRepository.get(initialTransaction.getKey());
-
-    repositoryForSplitPanel = LocalGlobRepositoryBuilder.init(localRepository)
-      .copy(Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE, SeriesBudget.TYPE, BudgetArea.TYPE)
-      .get();
-    selectionServiceForSplitPanel = new SelectionService();
-    directoryForSplitPanel = new DefaultDirectory(directory);
-    directoryForSplitPanel.add(selectionServiceForSplitPanel);
-
     localDirectory = new DefaultDirectory(directory);
-    localDirectory.add(new SelectionService());
+    selectionService = new SelectionService();
+    localDirectory.add(selectionService);
     descriptionService = localDirectory.get(DescriptionService.class);
-    colorService = localDirectory.get(ColorService.class);
     rendererColors = new TransactionRendererColors(localDirectory);
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    parentSelectionService = directory.get(SelectionService.class);
 
+    createDialog(directory);
+  }
+
+  private void createDialog(Directory directory) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/splitTransaction.splits",
                                                       localRepository, localDirectory);
-    addInitialTransactionPanel(builder);
-    addSwitcher(builder);
     addAmountPanel(builder);
     addTable(builder);
-    builder.add("ok", new OkAction());
-    builder.add("cancel", new CancelAction());
-    builder.addLoader(new SplitsLoader() {
-      public void load(Component component) {
-        dialog.setContentPane((JPanel)component);
-      }
-    });
-    builder.load();
 
-    toggleButton.setSelected(true);
-    createSplittedTransaction();
-    showAddAmountPanel();
+    okAction = new OkAction();
+    dialog = PicsouDialog.createWithButtons(directory.get(JFrame.class),
+                                            builder.<JPanel>load(),
+                                            okAction, new CancelAction(),
+                                            directory);
+    dialog.pack();
   }
 
-  public void show() {
+  public void show(Glob initialTransaction) {
+
+    Glob sourceTransaction = initialTransaction;
+    if (Transaction.isSplitPart(initialTransaction)) {
+      sourceTransaction = parentRepository.findLinkTarget(initialTransaction, Transaction.SPLIT_SOURCE);
+    }
+
+    localRepository.rollback();
+
+    GlobList transactions = new GlobList();
+    transactions.add(sourceTransaction);
+    transactions.addAll(parentRepository.findLinkedTo(sourceTransaction, Transaction.SPLIT_SOURCE));
+    localRepository.reset(transactions, Transaction.TYPE);
+
+    transactionToSplit = localRepository.get(sourceTransaction.getKey());
+
+    localDirectory.get(SelectionService.class).select(localRepository.get(initialTransaction.getKey()));
+
+    splittedTransaction = createSplittedTransaction();
+
+    okAction.setEnabled(false);
     amountField.requestFocus();
-    Dimension defaultSize = new Dimension(500, 600);
-    dialog.setPreferredSize(defaultSize);
-    dialog.setSize(defaultSize);
     GuiUtils.showCentered(dialog);
-  }
-
-  private void addInitialTransactionPanel(GlobsPanelBuilder builder) {
-    TransactionComparator comparator = TransactionComparator.ASCENDING;
-
-    initialLabel.setText(transactionToSplit.get(Transaction.LABEL));
-    initialAmount.setText(descriptionService.getStringifier(Transaction.AMOUNT).toString(transactionToSplit, localRepository));
-
-    initialDate.setText("le " + new TransactionDateStringifier(comparator).toString(transactionToSplit, localRepository));
-    initialDate.setFont(Gui.getDefaultFont().deriveFont(Font.PLAIN, Gui.getDefaultFont().getSize() - 2));
-
-    final BalanceStringifier balanceStringifier = new BalanceStringifier(localRepository, localDirectory);
-    updateInitialAmount(balanceStringifier);
-    colorChangeListener = new BalanceColorChangeListener(balanceStringifier);
-    colorService.addListener(colorChangeListener);
-
-    builder.add("initialAmountPanel", initialAmountPanel);
-    builder.add("initialLabel", initialLabel);
-    builder.add("initialAmount", initialAmount);
-    builder.add("initialDate", initialDate);
-  }
-
-  private void updateInitialAmount(BalanceStringifier balanceStringifier) {
-    initialAmount.setText(balanceStringifier.toString(localRepository.getAll(Transaction.TYPE), localRepository));
   }
 
   private void addAmountPanel(GlobsPanelBuilder builder) {
@@ -170,182 +131,107 @@ public class SplitTransactionDialog {
     EnterKeyValidator validator = new EnterKeyValidator();
     amountField.addKeyListener(validator);
     noteField.addKeyListener(validator);
-    dispensableBox.addKeyListener(validator);
-    AbstractGlobSelectionAction categorizationAction =
-      new AbstractGlobSelectionAction(Transaction.TYPE, repositoryForSplitPanel, directoryForSplitPanel) {
 
-        public String toString(GlobList globs) {
-          return "categorization";
-        }
-
-        public void actionPerformed(ActionEvent e) {
-          // TODO
-          System.out.println("SplitTransactionDialog.actionPerformed: TODO");
-//          CategorizationDialog categorizationDialog =
-//            new CategorizationDialog(repositoryForSplitPanel, directoryForSplitPanel);
-//          categorizationDialog.show(new GlobList(splittedTransaction), false);
-        }
-      };
-
-    builder.add("addAmountPanel", addAmountPanel);
-    builder.add("category",
-                new CategorisationHyperlinkButton(categorizationAction, repositoryForSplitPanel, directoryForSplitPanel));
     builder.add("amount", amountField);
     builder.add("message", messageLabel);
     builder.add("note", noteField);
-    builder.add("dispensableBox", dispensableBox);
-    builder.add("add", addAction);
-  }
-
-  private void addSwitcher(GlobsPanelBuilder builder) {
-    Gui.configureIconButton(toggleButton, "switcher", new Dimension(13, 13));
-    toggleButton.setIcon(COLLAPSED_ICON);
-    toggleButton.setText(Lang.get("split.transaction.add.amount"));
-    toggleButton.setFont(Gui.getDefaultFont());
-    Gui.setRolloverIcon(toggleButton, ROLLOVER_ICON);
-    toggleButton.setSelectedIcon(EXPANDED_ICON);
-    builder.add("switchToAddAmountButton", toggleButton);
-
-    toggleButton.addItemListener(new ItemListener() {
-      public void itemStateChanged(ItemEvent e) {
-        showOrHideAddAmountPanel();
-      }
-    });
-
-    Gui.setRolloverColor(toggleButton, Color.GRAY);
-  }
-
-  private void showOrHideAddAmountPanel() {
-    if (addAmountPanel.isVisible()) {
-      showAddAmountSwitcher();
-    }
-    else {
-      showAddAmountPanel();
-    }
   }
 
   private void addTable(GlobsPanelBuilder builder) {
-    builder.add("subAmountPanel", subAmountPanel);
 
     TransactionComparator transactionComparator = TransactionComparator.ASCENDING;
-    GlobTableView view = builder.addTable("transaction", Transaction.TYPE, transactionComparator);
 
-    view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
-    PicsouTableHeaderPainter.install(view, localDirectory);
+    tableView = builder.addTable("transaction", Transaction.TYPE, transactionComparator);
 
-    GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
-    AbstractGlobSelectionAction categorizationAction =
-      new AbstractGlobSelectionAction(Transaction.TYPE, repositoryForSplitPanel, directoryForSplitPanel) {
+    tableView.setFilter(GlobMatchers.isNotNull(Transaction.AMOUNT));
 
-        public String toString(GlobList globs) {
-          return "categorization";
-        }
+    tableView.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
+    PicsouTableHeaderPainter.install(tableView, localDirectory);
 
-        public void actionPerformed(ActionEvent e) {
-          // TODO CategorizationDialog
-          System.out.println("SplitTransactionDialog.actionPerformed: TODO");
-//          CategorizationDialog categorizationDialog =
-//            new CategorizationDialog(localRepository, directoryForSplitPanel);
-//          categorizationDialog.show(new GlobList(splittedTransaction), false);
-        }
-      };
+    DeleteSplitTransactionColumn deleteSplitColumn = new DeleteSplitTransactionColumn();
 
-    TransactionSeriesColumn seriesColumn =
-      new TransactionSeriesColumn(view, rendererColors,
-                                  descriptionService, localRepository, localDirectory);
+    LabelCustomizer defaultCustomizer = new SplitLabelCustomizer();
 
-    DeleteSplitTransactionColumn deleteSplitColumn =
-      new DeleteSplitTransactionColumn(transactionToSplit, view, rendererColors, descriptionService,
-                                       localRepository, localDirectory);
-
-    view
-      .addColumn(descriptionService.getLabel(Category.TYPE), seriesColumn, seriesColumn, seriesColumn.getComparator())
-      .addColumn(LABEL)
-      .addColumn(Lang.get("amount"),
-                 amountStringifier,
-                 chain(LabelCustomizers.ALIGN_RIGHT, LabelCustomizers.stringifier(amountStringifier, localRepository)))
-      .addColumn(NOTE, new TransactionNoteEditor(localRepository, localDirectory))
+    tableView
+      .addColumn(Lang.get("category"),
+                 new CompactSeriesStringifier(localDirectory),
+                 chain(defaultCustomizer, LabelCustomizers.fontSize(9)))
+      .addColumn(Lang.get("label"), LABEL,
+                 chain(defaultCustomizer, LabelCustomizers.BOLD))
+      .addColumn(Lang.get("amount"), Transaction.AMOUNT, LabelCustomizers.ALIGN_RIGHT)
+      .addColumn(Lang.get("note"), NOTE, new TransactionNoteEditor(localRepository, localDirectory))
       .addColumn(" ", deleteSplitColumn, deleteSplitColumn, transactionComparator);
 
-    JTable table = view.getComponent();
-    table.setDefaultRenderer(Glob.class,
-                             new TransactionTableRenderer(table.getDefaultRenderer(Glob.class),
-                                                          rendererColors,
-                                                          CATEGORY_COLUMN_INDEX));
+    JTable table = tableView.getComponent();
 
     TransactionKeyListener.install(table, NOTE_COLUMN_INDEX);
-    Gui.installRolloverOnButtons(table, new int[]{CATEGORY_COLUMN_INDEX, REMOVE_SPLIT_COLUMN_INDEX});
+    Gui.installRolloverOnButtons(table, DELETE_SPLIT_COLUMN_INDEX);
 
-    adjustColumnsSize(table);
+    TableUtils.setSize(table, LABEL_COLUMN_INDEX, 30 * 7);
+    TableUtils.setSize(table, DELETE_SPLIT_COLUMN_INDEX, 18);
   }
 
-  private void adjustColumnsSize(JTable table) {
-    adjustColumnSize(table, LABEL_COLUMN_INDEX);
-    adjustColumnSize(table, REMOVE_SPLIT_COLUMN_INDEX);
-  }
-
-  private void adjustColumnSize(JTable table, int columnIndex) {
-    TableUtils.setSize(table, columnIndex,
-                       TableUtils.getPreferredWidth(
-                         TableUtils.getRenderedComponent(table, transactionToSplit, 0, columnIndex)));
-  }
-
-  private void doSplit() {
+  private void validate() {
     Double initialAmount = transactionToSplit.get(Transaction.AMOUNT);
 
-    double amount;
-    try {
-      amount = getEnteredAmount() * Math.signum(initialAmount);
-    }
-    catch (NumberFormatException e) {
-      messageLabel.setText(Lang.get("split.transaction.invalid.amount"));
-      return;
-    }
+    Double amount = null;
+    if (!Strings.isNullOrEmpty(amountField.getText())) {
+      try {
+        amount = getEnteredAmount() * Math.signum(initialAmount);
+      }
+      catch (NumberFormatException e) {
+        System.out.println("SplitTransactionDialog.validate: " + e.getMessage());
+        messageLabel.setText(Lang.get("split.transaction.invalid.amount"));
+        return;
+      }
 
-    if (Math.abs(amount) >= Math.abs(initialAmount)) {
-      messageLabel.setText(Lang.get("split.transaction.amount.too.large", Math.abs(initialAmount)));
-      return;
+      if (Math.abs(amount) >= Math.abs(initialAmount)) {
+        System.out.println("SplitTransactionDialog.validate: too large");
+        messageLabel.setText(Lang.get("split.transaction.amount.too.large", Math.abs(initialAmount)));
+        return;
+      }
     }
-
-    double remainder = subtract(initialAmount, amount);
-
-    String note = noteField.getText();
 
     try {
       localRepository.enterBulkDispatchingMode();
-      repositoryForSplitPanel.commitChanges(false);
-      localRepository.update(transactionToSplit.getKey(), Transaction.AMOUNT, remainder);
-      localRepository.update(transactionToSplit.getKey(), Transaction.SPLIT, Boolean.TRUE);
-
-      localRepository.update(splittedTransaction.getKey(),
-                             value(Transaction.AMOUNT, amount),
-                             value(Transaction.DISPENSABLE, dispensableBox.isSelected()),
-                             value(Transaction.NOTE, note));
-
-      createSplittedTransaction();
+      if (amount == null) {
+        localRepository.delete(splittedTransaction.getKey());
+        splittedTransaction = null;
+      }
+      else {
+        localRepository.update(splittedTransaction.getKey(),
+                               value(Transaction.AMOUNT, amount),
+                               value(Transaction.NOTE, noteField.getText()));
+        localRepository.update(transactionToSplit.getKey(), Transaction.AMOUNT, subtract(initialAmount, amount));
+        localRepository.update(transactionToSplit.getKey(), Transaction.SPLIT, Boolean.TRUE);
+      }
     }
     finally {
       localRepository.completeBulkDispatchingMode();
     }
+
+    localRepository.commitChanges(false);
     resetAddAmountFields();
+
+    if (splittedTransaction != null) {
+      parentSelectionService.select(parentRepository.get(splittedTransaction.getKey()));
+    }
   }
 
-  private void createSplittedTransaction() {
-    splittedTransaction = repositoryForSplitPanel.create(
+  private Glob createSplittedTransaction() {
+    return localRepository.create(
       Transaction.TYPE,
-//      value(Transaction.CATEGORY, transactionToSplit.get(Transaction.CATEGORY)),
-value(Transaction.ACCOUNT, transactionToSplit.get(Transaction.ACCOUNT)),
-value(Transaction.IMPORT, transactionToSplit.get(Transaction.IMPORT)),
-value(Transaction.LABEL, transactionToSplit.get(Transaction.LABEL)),
-value(Transaction.ORIGINAL_LABEL, transactionToSplit.get(Transaction.ORIGINAL_LABEL)),
-value(Transaction.MONTH, transactionToSplit.get(Transaction.MONTH)),
-value(Transaction.DAY, transactionToSplit.get(Transaction.DAY)),
-value(Transaction.BANK_MONTH, transactionToSplit.get(Transaction.BANK_MONTH)),
-value(Transaction.BANK_DAY, transactionToSplit.get(Transaction.BANK_DAY)),
-value(Transaction.TRANSACTION_TYPE, transactionToSplit.get(Transaction.TRANSACTION_TYPE)),
-value(Transaction.SPLIT_SOURCE, transactionToSplit.get(Transaction.ID))
+      value(Transaction.ACCOUNT, transactionToSplit.get(Transaction.ACCOUNT)),
+      value(Transaction.IMPORT, transactionToSplit.get(Transaction.IMPORT)),
+      value(Transaction.LABEL, transactionToSplit.get(Transaction.LABEL)),
+      value(Transaction.ORIGINAL_LABEL, transactionToSplit.get(Transaction.ORIGINAL_LABEL)),
+      value(Transaction.MONTH, transactionToSplit.get(Transaction.MONTH)),
+      value(Transaction.DAY, transactionToSplit.get(Transaction.DAY)),
+      value(Transaction.BANK_MONTH, transactionToSplit.get(Transaction.BANK_MONTH)),
+      value(Transaction.BANK_DAY, transactionToSplit.get(Transaction.BANK_DAY)),
+      value(Transaction.TRANSACTION_TYPE, transactionToSplit.get(Transaction.TRANSACTION_TYPE)),
+      value(Transaction.SPLIT_SOURCE, transactionToSplit.get(Transaction.ID))
     );
-    selectionServiceForSplitPanel.select(splittedTransaction);
   }
 
   private double getEnteredAmount() throws NumberFormatException {
@@ -359,10 +245,6 @@ value(Transaction.SPLIT_SOURCE, transactionToSplit.get(Transaction.ID))
     return result;
   }
 
-  private void amountUpdated() {
-    addAction.setEnabled(amountField.getText().trim().length() > 0);
-  }
-
   private String filterAmount(String string) {
     return string.replaceAll("[^0-9., ]", "").replace(',', '.');
   }
@@ -371,35 +253,12 @@ value(Transaction.SPLIT_SOURCE, transactionToSplit.get(Transaction.ID))
     return Transaction.subtract(initialValue, amount);
   }
 
-  private void showAddAmountPanel() {
-    addAmountPanel.setVisible(true);
-    amountField.requestFocus();
-  }
-
-  private void showAddAmountSwitcher() {
-    resetAddAmountFields();
-    addAmountPanel.setVisible(false);
-  }
-
   private void resetAddAmountFields() {
     amountField.setText("");
     noteField.setText("");
     messageLabel.setText("");
-    dispensableBox.setSelected(false);
     amountField.requestFocus();
   }
-
-  private class AddAction extends AbstractAction {
-    public AddAction() {
-      super(Lang.get("split.transaction.add"));
-      setEnabled(false);
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      doSplit();
-    }
-  }
-
 
   private class OkAction extends AbstractAction {
     public OkAction() {
@@ -407,9 +266,8 @@ value(Transaction.SPLIT_SOURCE, transactionToSplit.get(Transaction.ID))
     }
 
     public void actionPerformed(ActionEvent e) {
-      localRepository.commitChanges(true);
+      validate();
       dialog.setVisible(false);
-      colorService.removeListener(colorChangeListener);
     }
   }
 
@@ -421,7 +279,6 @@ value(Transaction.SPLIT_SOURCE, transactionToSplit.get(Transaction.ID))
     public void actionPerformed(ActionEvent e) {
       localRepository.dispose();
       dialog.setVisible(false);
-      colorService.removeListener(colorChangeListener);
     }
   }
 
@@ -429,15 +286,24 @@ value(Transaction.SPLIT_SOURCE, transactionToSplit.get(Transaction.ID))
     Document document = amountField.getDocument();
     document.addDocumentListener(new DocumentListener() {
       public void insertUpdate(DocumentEvent e) {
-        amountUpdated();
+        okAction.setEnabled(true);
       }
 
       public void changedUpdate(DocumentEvent e) {
-        amountUpdated();
+        okAction.setEnabled(true);
       }
 
       public void removeUpdate(DocumentEvent e) {
-        amountUpdated();
+        okAction.setEnabled(true);
+      }
+    });
+    localRepository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        okAction.setEnabled(true);
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        okAction.setEnabled(false);
       }
     });
     ((AbstractDocument)document).setDocumentFilter(new DocumentFilter() {
@@ -451,24 +317,12 @@ value(Transaction.SPLIT_SOURCE, transactionToSplit.get(Transaction.ID))
     });
   }
 
-  private class BalanceColorChangeListener implements ColorChangeListener {
-    private final BalanceStringifier balanceStringifier;
-
-    public BalanceColorChangeListener(BalanceStringifier balanceStringifier) {
-      this.balanceStringifier = balanceStringifier;
-    }
-
-    public void colorsChanged(ColorLocator colorLocator) {
-      updateInitialAmount(balanceStringifier);
-    }
-  }
-
   private class EnterKeyValidator extends KeyAdapter {
     public void keyPressed(KeyEvent e) {
       if (e.getKeyCode() == KeyEvent.VK_ENTER) {
         try {
-          if (addAction.isEnabled()) {
-            addAction.actionPerformed(null);
+          if (okAction.isEnabled()) {
+            okAction.actionPerformed(null);
           }
         }
         catch (Exception ex) {
@@ -479,25 +333,75 @@ value(Transaction.SPLIT_SOURCE, transactionToSplit.get(Transaction.ID))
     }
   }
 
-  private class MyCategoryChooserCallback extends TransactionCategoryChooserCallback {
+  private class DeleteSplitTransactionColumn extends AbstractTransactionEditor {
+    private DeleteSplitTransactionColumn() {
+      super(SplitTransactionDialog.this.tableView,
+            SplitTransactionDialog.this.rendererColors,
+            SplitTransactionDialog.this.descriptionService,
+            SplitTransactionDialog.this.localRepository,
+            SplitTransactionDialog.this.localDirectory);
 
-    private GlobList transactions;
-
-    private MyCategoryChooserCallback(Glob transaction) {
-      this.transactions = new GlobList(transaction);
+      repository.addTrigger(new DefaultChangeSetListener() {
+        public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
+          if (!changeSet.containsChanges(Transaction.TYPE)) {
+            return;
+          }
+          changeSet.safeVisit(new DefaultChangeSetVisitor() {
+            public void visitDeletion(Key key, FieldValues values) throws Exception {
+              Double amount = values.get(Transaction.AMOUNT);
+              if (amount != null) {
+                GlobUtils.add(transactionToSplit, Transaction.AMOUNT, amount, repository);
+              }
+            }
+          });
+        }
+      });
     }
 
-    public void processSelection(GlobList categories) {
-      amountField.requestFocusInWindow();
-      amountField.requestFocus();
+    protected Component getComponent(Glob transaction, boolean render) {
+      JPanel panel = new JPanel();
+      panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+      panel.add(Box.createRigidArea(new Dimension(3, 0)));
+      addDeleteButton(panel, transaction);
+      panel.add(Box.createRigidArea(new Dimension(3, 0)));
+      rendererColors.setBackground(panel, isSelected, row);
+      return panel;
     }
 
-    protected GlobRepository getRepository() {
-      return localRepository;
-    }
+    private void addDeleteButton(JPanel panel, final Glob transaction) {
+      final JButton deleteButton = new JButton();
+      deleteButton.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent event) {
+          tableView.getComponent().requestFocus();
+          selectionService.select(transaction);
+          Glob source = repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE);
+          repository.delete(transaction.getKey());
+          repository.update(source.getKey(), Transaction.SPLIT,
+                            repository.findLinkedTo(source, Transaction.SPLIT_SOURCE).isEmpty());
+        }
 
-    protected GlobList getReferenceTransactions() {
-      return transactions;
+        public boolean isEnabled() {
+          return Transaction.isSplitPart(transaction);
+        }
+      });
+      Gui.setIcons(deleteButton, Icons.DELETE_ICON, Icons.DELETE_ROLLOVER_ICON, Icons.DELETE_ROLLOVER_ICON);
+      deleteButton.setDisabledIcon(Icons.EMPTY_13_13);
+      Gui.configureIconButton(deleteButton, "Delete", new Dimension(13, 13));
+      panel.add(deleteButton);
+    }
+  }
+
+  private static class SplitLabelCustomizer implements LabelCustomizer {
+    private Color grey = Colors.toColor("888888");
+
+    public void process(JLabel label, Glob transaction, boolean isSelected, boolean hasFocus, int row, int column) {
+      if (isSelected) {
+        label.setForeground(Color.WHITE);
+      }
+      else {
+        boolean newTransaction = transaction.get(Transaction.AMOUNT) == null;
+        label.setForeground(newTransaction ? grey : Color.BLACK);
+      }
     }
   }
 }

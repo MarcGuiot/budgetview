@@ -27,12 +27,12 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTableRow(0);
-    transactionDetails.openSplitDialog(0)
+    transactionDetails.openSplitDialog()
       .enterAmount("-1")
       .enterNote("COCA")
       .selectEnvelope(MasterCategory.FOOD, true)
-      .add()
-      .ok();
+      .ok()
+      .close();
 
     String fileName = TestUtils.getFileName(this, ".ofx");
     operations.exportFile(fileName);

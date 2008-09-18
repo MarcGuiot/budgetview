@@ -125,21 +125,6 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkSplitNotVisible();
   }
 
-  public void testSplitCallAction() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/06/15", -20.00, "Auchan")
-      .load();
-
-    categorization.selectTableRow(0);
-    transactionDetails.split("10", "Auchan");
-
-    // TODO lie au split
-    categorization.initContent()
-      .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -10.00)
-      .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "Auchan", -10.00)
-      .check();
-  }
-
   public void testOriginalLabelNotVisible() throws Exception {
     String fileName = QifBuilder.init(this)
       .addTransaction("2008/06/15", 20.00, "PRELEVEMENT 123123 Auchan")

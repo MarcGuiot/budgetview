@@ -37,8 +37,8 @@
           </grid>
 
           <column marginTop="20">
-            <label text="Echeances" font="-,plain,10" foreground="#444444"/>
-            <row marginTop="0" border="matte(1,0,0,0,#777777)">
+            <label text="Echeances" styleClass="separatorTitle"/>
+            <row styleClass="separator">
               <column marginTop="10" weightX="3">
 
                 <label text="$seriesEdition.begin" styleClass="formLabelTop" fill="horizontal"/>

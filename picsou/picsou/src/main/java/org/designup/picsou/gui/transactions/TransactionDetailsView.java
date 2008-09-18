@@ -93,7 +93,7 @@ public class TransactionDetailsView extends View {
 
     builder.addLabel("splitMessage", Transaction.TYPE, new SplitStringifier()).setAutoHideIfEmpty(true);
 
-    builder.add("splitLink", new SplitTransactionAction(repository, directory));
+    builder.add("split", new SplitTransactionAction(repository, directory));
 
     builder.add("originalLabel",
                 GlobLabelView.init(Transaction.TYPE, repository, directory,

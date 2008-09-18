@@ -544,6 +544,11 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
+  public CategorizationChecker checkSelectedTableRow(int row) {
+    checkSelectedTableRows(row);
+    return this;
+  }
+
   public CategorizationChecker checkSelectedTableRows(int... rows) {
     assertTrue(getTable().rowsAreSelected(rows));
     return this;
@@ -803,8 +808,13 @@ public class CategorizationChecker extends DataChecker {
     private CategorizationTableChecker() {
     }
 
+    public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount, String series) {
+      add(new Object[]{date, series, label, amount});
+      return this;
+    }
+
     public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount, MasterCategory category) {
-      add(new Object[]{date, "", label, amount});
+      add(new Object[]{date, getCategoryName(category), label, amount});
       return this;
     }
 

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.DialogOwner;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.importer.ImportSession;
@@ -148,6 +149,9 @@ public abstract class ImportPanel {
       .addColumn(Lang.get("import.bankDate"), ImportedTransaction.BANK_DATE, dateRenderer)
       .addColumn(Lang.get("label"), ImportedTransaction.LABEL)
       .addColumn(Lang.get("amount"), ImportedTransaction.AMOUNT);
+
+    PicsouTableHeaderPainter.install(tableView, localDirectory);
+
     JTable transactionTable = tableView.getComponent();
     dateRenderer.setTable(tableView);
 

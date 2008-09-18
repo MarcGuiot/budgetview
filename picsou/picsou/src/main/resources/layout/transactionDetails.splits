@@ -81,7 +81,7 @@
 
     <row ref="splitPanel">
       <label ref="splitMessage"/>
-      <button name="splitLink" action="splitLink" marginTop="0" styleClass="hyperlink"/>
+      <button name="splitLink" action="split" marginTop="0"/>
       <filler fill="horizontal"/>
     </row>
 

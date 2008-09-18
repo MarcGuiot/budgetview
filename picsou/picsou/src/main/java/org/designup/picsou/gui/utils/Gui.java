@@ -118,7 +118,7 @@ public class Gui {
     component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
   }
 
-  public static void installRolloverOnButtons(final JTable table, final int[] editorColumns) {
+  public static void installRolloverOnButtons(final JTable table, final int... editorColumns) {
     final TableColumnModel columnModel = table.getColumnModel();
     table.addMouseMotionListener(new MouseMotionAdapter() {
       public void mouseMoved(MouseEvent e) {

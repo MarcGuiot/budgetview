@@ -141,13 +141,6 @@ public class TransactionChecker extends ViewChecker {
     checker.selectOccasionalSeries(category);
   }
 
-  static String stringifyCategoryNames(MasterCategory category) {
-    if ((category == null) || category.equals(MasterCategory.NONE)) {
-      return TO_CATEGORIZE;
-    }
-    return getCategoryName(category);
-  }
-
   private static String stringifySubCategoryNames(String... categories) {
     if (categories.length == 0) {
       return TO_CATEGORIZE;
