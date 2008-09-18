@@ -11,6 +11,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.MissingInfo;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class SingleFieldKey extends Key {
@@ -41,7 +42,7 @@ public class SingleFieldKey extends Key {
     Field[] keyFields = type.getKeyFields();
     if (keyFields.length != 1) {
       throw new InvalidParameter("Cannot use a single field key for type " + type + " - " +
-                                 "key fields=" + keyFields);
+                                 "key fields=" + Arrays.toString(keyFields));
     }
     return keyFields[0];
   }
