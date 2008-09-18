@@ -6,6 +6,8 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicToggleButtonUI;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class SelectionToggleUI extends BasicToggleButtonUI {
   private int padding = 0;
@@ -18,11 +20,20 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
   private Color pressedTextColor = Color.BLUE;
   private Color disabledTextColor = Color.GRAY;
 
-  protected void installDefaults(AbstractButton b) {
-    super.installDefaults(b);
-    b.setRolloverEnabled(true);
-    b.setOpaque(false);
-    b.setBorderPainted(false);
+  protected void installDefaults(final AbstractButton button) {
+    super.installDefaults(button);
+    button.setRolloverEnabled(true);
+    button.setOpaque(false);
+    button.setBorderPainted(false);
+
+    final Font defaultFont = button.getFont();
+    final Font boldFont = defaultFont.deriveFont(defaultFont.getStyle() ^ Font.BOLD);
+
+    button.getModel().addItemListener(new ItemListener() {
+      public void itemStateChanged(ItemEvent e) {
+        button.setFont(button.isSelected() ? boldFont : defaultFont);
+      }
+    });
   }
 
   protected void paintButtonPressed(Graphics g, AbstractButton button) {

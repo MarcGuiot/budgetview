@@ -274,12 +274,6 @@ public class OfxImporter implements AccountFileImporter {
         fIdToTransaction.put(content, currentTransactionKey);
         return;
       }
-      if (tag.equalsIgnoreCase("DISPENSABLE")) {
-        if ("true".equalsIgnoreCase(content)) {
-          repository.update(currentTransactionKey, ImportedTransaction.DISPENSABLE, true);
-        }
-        return;
-      }
       if (tag.equalsIgnoreCase("PARENT")) {
         updateParent(content);
         return;

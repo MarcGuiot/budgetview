@@ -40,7 +40,6 @@ public class Transaction {
 
   public static StringField NOTE;
   public static StringField ORIGINAL_LABEL;
-  public static BooleanField DISPENSABLE; // unused
   public static StringField LABEL_FOR_CATEGORISATION;
   public static StringField BANK_TRANSACTION_TYPE;
 
@@ -205,7 +204,6 @@ public class Transaction {
       output.writeInteger(fieldValues.get(Transaction.CATEGORY));
       output.writeBoolean(fieldValues.get(Transaction.SPLIT));
       output.writeInteger(fieldValues.get(Transaction.SPLIT_SOURCE));
-      output.writeBoolean(fieldValues.get(Transaction.DISPENSABLE));
       output.writeInteger(fieldValues.get(Transaction.SERIES));
       output.writeBoolean(fieldValues.get(Transaction.PLANNED));
       return serializedByteArrayOutput.toByteArray();
@@ -236,7 +234,6 @@ public class Transaction {
       fieldSetter.set(Transaction.CATEGORY, input.readInteger());
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
-      fieldSetter.set(Transaction.DISPENSABLE, input.readBoolean());
       fieldSetter.set(Transaction.SERIES, input.readInteger());
       fieldSetter.set(Transaction.PLANNED, input.readBoolean());
     }

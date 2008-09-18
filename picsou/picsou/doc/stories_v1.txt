@@ -25,7 +25,6 @@ BudgetView
 * Ouverture SED : masquer la liste des series ?
 
 CategorizationView
-*** Message d'aide quand il n'y a pas de serie pour une budgetArea
 *** "Reste a classer" + barre de progression au-dessus de la table
 ** Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 ** Recherche/filtrage table

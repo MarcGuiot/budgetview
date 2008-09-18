@@ -16,13 +16,11 @@ import java.awt.event.ActionEvent;
 public class SplitTransactionAction extends AbstractAction implements GlobSelectionListener {
 
   private Glob selectedTransaction;
-  private GlobRepository repository;
-  private Directory directory;
+  private SplitTransactionDialog dialog;
 
   public SplitTransactionAction(GlobRepository repository, Directory directory) {
     super(Lang.get("split.transaction"));
-    this.repository = repository;
-    this.directory = directory;
+    dialog = new SplitTransactionDialog(repository, directory);
     directory.get(SelectionService.class).addListener(this, Transaction.TYPE);
     setEnabled(false);
   }
@@ -37,7 +35,6 @@ public class SplitTransactionAction extends AbstractAction implements GlobSelect
   }
 
   public void actionPerformed(ActionEvent e) {
-    SplitTransactionDialog dialog = new SplitTransactionDialog(selectedTransaction, repository, directory);
-    dialog.show();
+    dialog.show(selectedTransaction);
   }
 }

@@ -10,7 +10,7 @@
       <htmlEditorPane ref="noSeriesMessage" border="empty(10)"/>
       <toggleButton ref="invisibleToggle" visible="false"/>
       <scrollPane opaque="true" border="">
-        <repeat ref="seriesRepeat" layout="wrappedColumn">
+        <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
           <column>
             <label ref="seriesName" font="-,bold,14"/>
             <repeat ref="categoryRepeat">

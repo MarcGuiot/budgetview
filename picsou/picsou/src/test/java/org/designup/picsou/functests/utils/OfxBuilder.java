@@ -159,8 +159,7 @@ public class OfxBuilder {
                         FieldValue.value(ORIGINAL_LABEL, label),
                         FieldValue.value(CATEGORY, categoryId),
                         FieldValue.value(ACCOUNT, currentAccount.get(Account.ID)),
-                        FieldValue.value(NOTE, note),
-                        FieldValue.value(DISPENSABLE, dispensable));
+                        FieldValue.value(NOTE, note));
     if (parentId != null) {
       repository.update(transaction.getKey(), Transaction.SPLIT_SOURCE, parentId);
     }

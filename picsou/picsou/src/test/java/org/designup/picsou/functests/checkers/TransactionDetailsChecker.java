@@ -1,12 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -69,20 +69,19 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkSplitNotVisible() {
-    assertFalse(getPanel().getButton("splitLink").isVisible());
+    assertFalse(getPanel().getButton("split").isVisible());
   }
 
   public void checkSplitVisible() {
-    assertTrue(getPanel().getButton("splitLink").isVisible());
+    assertTrue(getPanel().getButton("splitL").isVisible());
   }
 
-  public void split(String amount, String label) {
-    Button splitLink = getPanel().getButton("splitLink");
+  public void split(String amount, String note) {
+    Button splitLink = getPanel().getButton("split");
     SplitDialogChecker splitDialogChecker =
       new SplitDialogChecker(WindowInterceptor.getModalDialog(splitLink.triggerClick()));
     splitDialogChecker.enterAmount(amount);
-    splitDialogChecker.enterNote(label);
-    splitDialogChecker.add();
+    splitDialogChecker.enterNote(note);
     splitDialogChecker.ok();
   }
 
@@ -115,20 +114,14 @@ public class TransactionDetailsChecker extends DataChecker {
     assertFalse(bankDate.isVisible());
   }
 
-  public SplitDialogChecker openSplitDialog(int row) {
-    return new SplitDialogChecker(WindowInterceptor
-      .getModalDialog(getPanel().getButton("splitLink").triggerClick()));
+  public SplitDialogChecker openSplitDialog() {
+    Window dialog = WindowInterceptor.getModalDialog(getPanel().getButton("splitLink").triggerClick());
+    return new SplitDialogChecker(dialog);
   }
 
-  public void checkSplitMessage(String expectedMessage) {
-    TextBox splitMessage = getPanel().getTextBox("splitMessage");
-    assertThat(splitMessage.isVisible());
-    assertThat(splitMessage.textContains(expectedMessage));
-  }
-
-  public void checkSplitMessageNotDisplayed() {
-    TextBox splitMessage = getPanel().getTextBox("splitMessage");
-    assertFalse(splitMessage.isVisible());
+  public void checkSplitButtonAvailable() {
+    Button splitMessage = getPanel().getButton("splitLink");
+    assertTrue(UISpecAssert.and(splitMessage.isVisible(), splitMessage.isEnabled()));
   }
 
   public void checkNoSelectionLabels(String label, String received, String spent, String total) {
@@ -148,7 +141,19 @@ public class TransactionDetailsChecker extends DataChecker {
     }
   }
 
-  public void checkNoSelectionPanelHidden() {
+  public TransactionDetailsChecker checkNoSelectionPanelHidden() {
     assertFalse(getPanel().getPanel("noSelectionPanel").isVisible());
+    return this;
+  }
+
+  /**
+   * @deprecated
+   */
+  public TransactionDetailsChecker checkNote(String text) {
+//    assertThat(getPanel().getTextBox("note").textEquals(text));
+    System.out.println("############# TransactionDetailsChecker.checkNote: " +
+                       "A reintegrer quand il y aura les notes dans TransactionDetails " +
+                       "#############");
+    return this;
   }
 }

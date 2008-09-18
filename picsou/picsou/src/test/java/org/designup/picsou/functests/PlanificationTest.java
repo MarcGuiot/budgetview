@@ -14,7 +14,6 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
-  // TODO CategorizationView
   public void testFirstSeriesInitialization() throws Exception {
     LicenseChecker.enterLicense(mainWindow, "admin", "", 24);
     OfxBuilder.init(this)

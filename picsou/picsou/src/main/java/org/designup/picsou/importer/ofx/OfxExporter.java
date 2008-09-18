@@ -91,9 +91,6 @@ public class OfxExporter {
       writer.add("PARENT", "PICSOU" + transaction.get(Transaction.SPLIT_SOURCE));
     }
 
-    if (Boolean.TRUE.equals(transaction.get(Transaction.DISPENSABLE))) {
-      writer.add("DISPENSABLE", "true");
-    }
     writer.end();
   }
 
