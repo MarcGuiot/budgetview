@@ -67,7 +67,7 @@ public class RemoteExecutor {
         CreateRequest createCreateRequest = requestBuilder.getCreate(globType, fieldValues);
         Deserializer deserializer = new Deserializer(createCreateRequest, input);
         for (Field field : globType.getFields()) {
-          if (!globType.getKeyFields().contains(field)) {
+          if (!field.isKeyField()) {
             field.safeVisit(deserializer);
           }
         }

@@ -21,7 +21,6 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 class DefaultFieldFactory {
@@ -210,13 +209,13 @@ class DefaultFieldFactory {
                                    +
                                    "it does not define a Glob type");
       }
-      List<Field> keyFields = targetType.getKeyFields();
-      if (keyFields.size() != 1) {
+      Field[] keyFields = targetType.getKeyFields();
+      if (keyFields.length != 1) {
         throw new InvalidParameter("LinkField '" + name + "' in type '" + globType.getName() +
                                    "' cannot reference target type '" + targetType.getName() +
                                    "' because it uses a composite key");
       }
-      Field field = keyFields.get(0);
+      Field field = keyFields[0];
       if (!(field instanceof IntegerField)) {
         throw new InvalidParameter("LinkField '" + name + "' in type '" + globType.getName() +
                                    "' cannot reference target type '" + targetType.getName() +

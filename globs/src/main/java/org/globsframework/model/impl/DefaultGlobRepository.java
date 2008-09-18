@@ -165,6 +165,16 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     return result;
   }
 
+  public SortedSet<Glob> getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher) {
+    SortedSet<Glob> set = new TreeSet<Glob>(comparator);
+    for (Glob glob : globs.values(type)) {
+      if (matcher.matches(glob, this)) {
+        set.add(glob);
+      }
+    }
+    return set;
+  }
+
   public Set<GlobType> getTypes() {
     return globs.keys();
   }
@@ -226,11 +236,11 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   }
 
   private void addKeyValues(GlobType type, Object[] values) {
-    List<Field> keyFields = type.getKeyFields();
-    if (keyFields.size() != 1) {
+    Field[] keyFields = type.getKeyFields();
+    if (keyFields.length != 1) {
       return;
     }
-    Field field = keyFields.get(0);
+    Field field = keyFields[0];
     if ((values[field.getIndex()] != null) || !(field instanceof IntegerField)) {
       return;
     }
@@ -660,7 +670,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
           }
         });
         FieldValues targetValues = valuesBuilder.get();
-        if (targetValues.size() == link.getTargetType().getKeyFields().size()) {
+        if (targetValues.size() == link.getTargetType().getKeyFields().length) {
           Key key = KeyBuilder.createFromValues(link.getTargetType(), targetValues);
           Glob target = find(key);
           if (target == null) {

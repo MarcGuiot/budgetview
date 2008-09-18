@@ -86,8 +86,15 @@ public class MultiMap<K, V> {
   public void putUnique(K key, V value) {
     List<V> list = map.get(key);
     if (list != null) {
-      if (!list.contains(value)) {
+      boolean contains = false;
+      Utils.beginRemove();
+      contains = list.contains(value);
+      Utils.endRemove();
+      if (!contains) {
         list.add(value);
+      }
+      else {
+        throw new RuntimeException("putUnique fail for " + value);
       }
     }
     else {

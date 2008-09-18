@@ -11,7 +11,6 @@ import org.globsframework.utils.exceptions.MissingInfo;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 public class CompositeKey extends Key {
   private GlobType type;
@@ -20,8 +19,8 @@ public class CompositeKey extends Key {
 
   public CompositeKey(GlobType type, FieldValueGetter getter) {
     this.type = type;
-    List<Field> keyFields = type.getKeyFields();
-    this.values = new Object[keyFields.size()];
+    Field[] keyFields = type.getKeyFields();
+    this.values = new Object[keyFields.length];
     int index = 0;
     for (Field field : keyFields) {
       if (!getter.contains(field)) {
@@ -34,8 +33,8 @@ public class CompositeKey extends Key {
 
   CompositeKey(GlobType type, Object[] globValues) {
     this.type = type;
-    List<Field> keyFields = type.getKeyFields();
-    this.values = new Object[keyFields.size()];
+    Field[] keyFields = type.getKeyFields();
+    this.values = new Object[keyFields.length];
     int index = 0;
     for (Field field : keyFields) {
       values[index++] = globValues[field.getIndex()];
@@ -47,15 +46,21 @@ public class CompositeKey extends Key {
   }
 
   public boolean contains(Field field) {
-    return type.getKeyFields().contains(field);
+    Field[] keyFields = type.getKeyFields();
+    for (Field keyField : keyFields) {
+      if (keyField == field) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public int size() {
-    return type.getKeyFields().size();
+    return type.getKeyFields().length;
   }
 
   public void apply(Functor functor) throws Exception {
-    List<Field> fields = type.getKeyFields();
+    Field[] fields = type.getKeyFields();
     int index = 0;
     for (Field field : fields) {
       functor.process(field, values[index++]);
@@ -75,7 +80,7 @@ public class CompositeKey extends Key {
   }
 
   protected Object doGet(Field field) {
-    List<Field> fields = type.getKeyFields();
+    Field[] fields = type.getKeyFields();
     int index = 0;
     for (Field keyField : fields) {
       if (keyField.equals(field)) {
@@ -136,14 +141,14 @@ public class CompositeKey extends Key {
     StringBuilder builder = new StringBuilder();
     builder.append(type.getName());
     builder.append('[');
-    List<Field> fields = type.getKeyFields();
+    Field[] fields = type.getKeyFields();
     int i = 0;
     for (Field field : fields) {
       builder.append(field.getName());
       builder.append('=');
       builder.append(getValue(field));
       i++;
-      if (i < fields.size()) {
+      if (i < fields.length) {
         builder.append(',');
       }
     }
@@ -200,8 +205,8 @@ public class CompositeKey extends Key {
   }
 
   public FieldValue[] toArray() {
-    List<Field> keyFields = type.getKeyFields();
-    FieldValue[] array = new FieldValue[keyFields.size()];
+    Field[] keyFields = type.getKeyFields();
+    FieldValue[] array = new FieldValue[keyFields.length];
     int index = 0;
     for (Field field : keyFields) {
       array[index] = new FieldValue(field, values[index]);

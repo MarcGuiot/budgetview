@@ -6,10 +6,7 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
-import org.globsframework.model.utils.DefaultChangeSetListener;
-import org.globsframework.model.utils.DefaultChangeSetVisitor;
-import org.globsframework.model.utils.GlobBuilder;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.*;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.*;
 
@@ -69,6 +66,21 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                             "<dummyObject2 id='2' label='name2'/>";
     GlobRepository repository = checker.parse(xmlDescription);
     GlobTestUtils.assertEquals(repository, xmlDescription);
+  }
+
+  public void testgetSorted() throws Exception {
+    init("<dummyObject id='1' name='name'/>" +
+         "<dummyObject2 id='4' label='name2'/>" +
+         "<dummyObject2 id='2' label='other'/>" +
+         "<dummyObject2 id='1' label='name2'/>" +
+         "<dummyObject2 id='3' label='name2'/>" +
+         "");
+    SortedSet<Glob> result = repository.getSorted(DummyObject2.TYPE, new GlobFieldComparator(DummyObject2.ID),
+                                                  GlobMatchers.fieldEquals(DummyObject2.LABEL, "name2"));
+    Glob firstGlob = repository.get(getKey2(1));
+    assertEquals(firstGlob, result.first());
+    Glob lastGlob = repository.get(getKey2(4));
+    assertEquals(lastGlob, result.last());
   }
 
   public void testContains() throws Exception {

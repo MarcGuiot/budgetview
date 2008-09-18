@@ -12,7 +12,6 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.MissingInfo;
 
 import java.util.Date;
-import java.util.List;
 
 public class SingleFieldKey extends Key {
 
@@ -39,12 +38,12 @@ public class SingleFieldKey extends Key {
   }
 
   private static Field getKeyField(GlobType type) throws InvalidParameter {
-    List<Field> keyFields = type.getKeyFields();
-    if (keyFields.size() != 1) {
+    Field[] keyFields = type.getKeyFields();
+    if (keyFields.length != 1) {
       throw new InvalidParameter("Cannot use a single field key for type " + type + " - " +
                                  "key fields=" + keyFields);
     }
-    return keyFields.get(0);
+    return keyFields[0];
   }
 
   public GlobType getGlobType() {

@@ -12,7 +12,6 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.MissingInfo;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 public class KeyBuilder {
@@ -59,20 +58,20 @@ public class KeyBuilder {
   }
 
   public static Key createFromValues(GlobType type, final Map<Field, Object> values) throws MissingInfo {
-    List<Field> keyFields = type.getKeyFields();
-    if (keyFields.size() == 1) {
-      Field field = keyFields.get(0);
+    Field[] keyFields = type.getKeyFields();
+    if (keyFields.length == 1) {
+      Field field = keyFields[0];
       return createSingle(type, field, values.containsKey(field), values.get(field));
     }
-    if (keyFields.size() == 2) {
-      Field field1 = keyFields.get(0);
-      Field field2 = keyFields.get(1);
+    if (keyFields.length == 2) {
+      Field field1 = keyFields[0];
+      Field field2 = keyFields[1];
       return new TwoFieldKey(field1, values.get(field1), field2, values.get(field2));
     }
-    if (keyFields.size() == 3) {
-      Field field1 = keyFields.get(0);
-      Field field2 = keyFields.get(1);
-      Field field3 = keyFields.get(2);
+    if (keyFields.length == 3) {
+      Field field1 = keyFields[0];
+      Field field2 = keyFields[1];
+      Field field3 = keyFields[2];
       return new ThreeFieldKey(field1, values.get(field1),
                                field2, values.get(field2),
                                field3, values.get(field3));
@@ -89,20 +88,20 @@ public class KeyBuilder {
   }
 
   public static Key createFromValues(GlobType type, final FieldValues values) {
-    List<Field> keyFields = type.getKeyFields();
-    if (keyFields.size() == 1) {
-      Field field = keyFields.get(0);
+    Field[] keyFields = type.getKeyFields();
+    if (keyFields.length == 1) {
+      Field field = keyFields[0];
       return createSingle(type, field, values.contains(field), values.getValue(field));
     }
-    if (keyFields.size() == 2) {
-      Field field1 = keyFields.get(0);
-      Field field2 = keyFields.get(1);
+    if (keyFields.length == 2) {
+      Field field1 = keyFields[0];
+      Field field2 = keyFields[1];
       return new TwoFieldKey(field1, values.getValue(field1), field2, values.getValue(field2));
     }
-    if (keyFields.size() == 3) {
-      Field field1 = keyFields.get(0);
-      Field field2 = keyFields.get(1);
-      Field field3 = keyFields.get(2);
+    if (keyFields.length == 3) {
+      Field field1 = keyFields[0];
+      Field field2 = keyFields[1];
+      Field field3 = keyFields[2];
       return new ThreeFieldKey(field1, values.getValue(field1),
                                field2, values.getValue(field2),
                                field3, values.getValue(field3));
@@ -133,21 +132,21 @@ public class KeyBuilder {
                                  type.getName() + " - array content: " + Arrays.toString(values));
     }
 
-    List<Field> keyFields = type.getKeyFields();
-    if (keyFields.size() == 1) {
-      Field field = keyFields.get(0);
+    Field[] keyFields = type.getKeyFields();
+    if (keyFields.length == 1) {
+      Field field = keyFields[0];
       Object value = values[field.getIndex()];
       return createSingle(type, field, value != null, value);
     }
-    if (keyFields.size() == 2) {
-      Field field1 = keyFields.get(0);
-      Field field2 = keyFields.get(1);
+    if (keyFields.length == 2) {
+      Field field1 = keyFields[0];
+      Field field2 = keyFields[1];
       return new TwoFieldKey(field1, values[field1.getIndex()], field2, values[field2.getIndex()]);
     }
-    if (keyFields.size() == 3) {
-      Field field1 = keyFields.get(0);
-      Field field2 = keyFields.get(1);
-      Field field3 = keyFields.get(2);
+    if (keyFields.length == 3) {
+      Field field1 = keyFields[0];
+      Field field2 = keyFields[1];
+      Field field3 = keyFields[2];
       return new ThreeFieldKey(field1, values[field1.getIndex()],
                                field2, values[field2.getIndex()],
                                field3, values[field3.getIndex()]);

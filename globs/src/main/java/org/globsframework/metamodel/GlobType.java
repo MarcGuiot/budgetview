@@ -10,7 +10,6 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
-import java.util.List;
 
 public interface GlobType extends PropertyHolder<GlobType>, Annotable, Serializable {
 
@@ -28,7 +27,7 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotable, Serializa
 
   int getFieldCount();
 
-  List<Field> getKeyFields();
+  Field[] getKeyFields();
 
   boolean isKeyField(Field field);
 
