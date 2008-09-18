@@ -1,7 +1,6 @@
 package org.designup.picsou.importer;
 
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.triggers.SummaryAccountCreationTrigger;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.*;
 import org.globsframework.utils.MultiMap;
@@ -16,11 +15,8 @@ public class TransactionFilter {
   public GlobList loadTransactions(ReadOnlyGlobRepository referenceRepository,
                                    GlobRepository targetRepository,
                                    GlobList transactionToFilter) {
-    GlobList createdTransactions = loadTransactionsToCreate(targetRepository, referenceRepository, transactionToFilter);
 
-    SummaryAccountCreationTrigger.updateSummary(targetRepository);
-
-    return createdTransactions;
+    return loadTransactionsToCreate(targetRepository, referenceRepository, transactionToFilter);
   }
 
   private GlobList loadTransactionsToCreate(GlobRepository targetRepository,

@@ -24,7 +24,7 @@ public class SplitDialogChecker {
   public SplitDialogChecker(Window window) {
     this.window = window;
     splitsTable = window.getTable();
-    splitsTable.setCellValueConverter(SplitTransactionDialog.CATEGORY_COLUMN_INDEX, new SeriesCellConverter(window));
+    splitsTable.setCellValueConverter(SplitTransactionDialog.CATEGORY_COLUMN_INDEX, new SeriesCellConverter());
     splitsTable.setCellValueConverter(SplitTransactionDialog.REMOVE_SPLIT_COLUMN_INDEX, new TableCellValueConverter() {
       public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
         return "";

@@ -1,21 +1,21 @@
 package org.designup.picsou.gui.categories.actions;
 
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.format.GlobListStringifiers;
-import org.globsframework.model.format.DescriptionService;
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.directory.DefaultDirectory;
-import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
-import org.designup.picsou.utils.Lang;
 import org.designup.picsou.model.Category;
+import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.GlobListStringifiers;
+import org.globsframework.utils.directory.DefaultDirectory;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -56,7 +56,7 @@ public class CategoryDeletionDialog {
     categoryChooserDialog.addInPanelWithButton(builder.<JPanel>load(), okAction, new CancelAction());
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        okAction.setEnabled(selection.getAll(Category.TYPE).isEmpty());
+        okAction.setEnabled(!selection.getAll(Category.TYPE).isEmpty());
       }
     }, Category.TYPE);
     if (masterId != null) {

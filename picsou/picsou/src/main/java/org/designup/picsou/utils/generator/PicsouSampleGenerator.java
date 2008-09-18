@@ -2,12 +2,15 @@ package org.designup.picsou.utils.generator;
 
 import org.designup.picsou.importer.ofx.OfxExporter;
 import org.designup.picsou.model.*;
-import static org.designup.picsou.utils.generator.AmountGenerator.*;
+import static org.designup.picsou.utils.generator.AmountGenerator.anyOf;
+import static org.designup.picsou.utils.generator.AmountGenerator.between;
 import static org.designup.picsou.utils.generator.CountGenerator.*;
 import static org.designup.picsou.utils.generator.DayGenerator.any;
 import static org.designup.picsou.utils.generator.DayGenerator.dayBetween;
-import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.format.GlobPrinter;
 
 import java.io.File;
@@ -24,7 +27,7 @@ public class PicsouSampleGenerator {
 
   public static void main(String[] args) throws Exception {
     PicsouSampleGenerator generator = new PicsouSampleGenerator();
-    generator.run(200612, 200807);
+    generator.run(198001, 200808);
     generator.write("tmp/sample.ofx");
   }
 

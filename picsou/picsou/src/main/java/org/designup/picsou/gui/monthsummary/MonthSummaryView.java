@@ -135,7 +135,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     if (!repository.contains(Transaction.TYPE)) {
       cards.show("noData");
     }
-    else if (repository.contains(Series.TYPE, USER_SERIES_MATCHER)) {
+    else if (!repository.contains(Series.TYPE, USER_SERIES_MATCHER)) {
       cards.show("noSeries");
     }
     else {

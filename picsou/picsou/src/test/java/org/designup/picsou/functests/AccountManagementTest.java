@@ -20,29 +20,40 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     accounts.assertDisplayEquals("10101010", 1.23, "2006/01/30");
     accounts.checkSummary(1.23, "2006/01/30");
+    views.selectData();
+    transactions.initAmountContent()
+      .add("Blah", -1, 1.23, 1.23)
+      .check();
   }
 
   public void testAccountsAreUpdatedDuringSubsequentImports() throws Exception {
     OfxBuilder
       .init(this)
-      .addBankAccount(30003, 12345, "123123123", 0.20, "2006/01/30")
+      .addBankAccount(30003, 12345, "123123123", 10, "2006/01/30")
       .addTransaction("2006/01/10", -1, "EDF")
-      .addCardAccount("1000200030004000", 321.54, "2006/01/28")
+      .addCardAccount("1000200030004000", 300, "2006/01/28")
       .addTransaction("2006/01/17", -3, "Foo")
       .load();
 
     OfxBuilder
       .init(this)
-      .addBankAccount(30003, 12345, "123123123", 2.35, "2006/01/31")
+      .addBankAccount(30003, 12345, "123123123", 10, "2006/01/31")
       .addTransaction("2006/01/15", -10, "GDF")
-      .addCardAccount("1000200030004000", 7.65, "2006/01/29")
+      .addCardAccount("1000200030004000", 10, "2006/01/29")
       .addTransaction("2006/01/20", -6, "Bar")
       .load();
 
     views.selectHome();
-    accounts.checkSummary(10.0, "2006/01/29");
-    accounts.assertDisplayEquals("Compte 123123123", 2.35, "2006/01/31");
-    accounts.assertDisplayEquals("Carte 1000-2000-3000-4000", 7.65, "2006/01/29");
+    accounts.checkSummary(20.0, "2006/01/29");
+    accounts.assertDisplayEquals("Compte 123123123", 10, "2006/01/31");
+    accounts.assertDisplayEquals("Carte 1000-2000-3000-4000", 10, "2006/01/29");
+    views.selectData();
+    transactions.initAmountContent()
+      .add("Bar", -6.00, 10.00, 20.00)
+      .add("Foo", -3.00, 16.00, 26.00)
+      .add("GDF", -10.00, 10.00, 10.00)
+      .add("EDF", -1.00, 20.00, 20.00)
+      .check();
   }
 
   public void testOnlyTheLatestAccountBalanceIsTakenIntoAccount() throws Exception {

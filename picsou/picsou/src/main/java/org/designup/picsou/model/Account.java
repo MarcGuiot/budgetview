@@ -11,7 +11,6 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -21,6 +20,7 @@ import org.globsframework.utils.serialization.SerializedOutput;
 public class Account {
   public static final String SUMMARY_ACCOUNT_NUMBER = null;
   public static final int SUMMARY_ACCOUNT_ID = -1;
+  public static org.globsframework.model.Key SUMMARY_KEY;
 
   public static GlobType TYPE;
 
@@ -35,12 +35,20 @@ public class Account {
   public static IntegerField BRANCH_ID;
 
   public static StringField NAME;
+
   public static DoubleField BALANCE;
+
+  public static IntegerField TRANSACTION_ID;
+
   public static DateField UPDATE_DATE;
+
+  public static DateField CLOSED_DATE;
+
   public static BooleanField IS_CARD_ACCOUNT;
 
   static {
     GlobTypeLoader.init(Account.class, "account");
+    SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, SUMMARY_ACCOUNT_ID);
   }
 
   public static void createSummary(GlobRepository repository) {
@@ -67,6 +75,7 @@ public class Account {
       outputStream.writeInteger(values.get(BRANCH_ID));
       outputStream.writeString(values.get(NAME));
       outputStream.writeDouble(values.get(BALANCE));
+      outputStream.writeInteger(values.get(TRANSACTION_ID));
       outputStream.writeDate(values.get(UPDATE_DATE));
       outputStream.writeBoolean(values.get(IS_CARD_ACCOUNT));
       return serializedByteArrayOutput.toByteArray();
@@ -85,6 +94,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readString());
       fieldSetter.set(BALANCE, input.readDouble());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(UPDATE_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
     }

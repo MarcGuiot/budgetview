@@ -48,7 +48,6 @@ public class GlobStateChecker {
     return correcteurs.isEmpty();
   }
 
-
   private void checkPlannedTransaction(SortedSet<Integer> months) {
     MonthPlannedChecker monthPlannedChecker = new MonthPlannedChecker();
     Glob currentMonth = repository.get(CurrentMonth.KEY);

@@ -40,15 +40,10 @@ public class TransactionComparator implements Comparator<Glob> {
     if (dayDiff != 0) {
       return dayDiff;
     }
-    int labelDiff = Utils.compare(transaction1.get(Transaction.ORIGINAL_LABEL),
-                                  transaction2.get(Transaction.ORIGINAL_LABEL));
-    if (labelDiff != 0) {
-      return labelDiff;
-    }
-    int splitDiff = splitComparator.compare(transaction1, transaction2);
+    int splitDiff = splitComparator.compare(transaction1, transaction2) * dateMultiplier;
     if (splitDiff != 0) {
       return splitDiff;
     }
-    return Utils.compare(transaction1.get(Transaction.ID), transaction2.get(Transaction.ID));
+    return Utils.compare(transaction1.get(Transaction.ID), transaction2.get(Transaction.ID)) * dateMultiplier;
   }
 }

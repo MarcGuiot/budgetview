@@ -41,7 +41,7 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
 
   private void writeData(Key key, ServerState state, PicsouGlobSerializer serializer) {
     GlobType globType = key.getGlobType();
-    Field keyField = globType.getKeyFields().get(0);
+    Field keyField = globType.getKeyFields()[0];
     ServerDelta delta = new ServerDelta((Integer)key.getValue(keyField));
     delta.setState(state);
     deltaGlobMap.put(globType.getName(), delta);
@@ -56,7 +56,7 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
     if (serializer == null) {
       return;
     }
-    IntegerField keyField = (IntegerField)globType.getKeyFields().get(0);
+    IntegerField keyField = (IntegerField)globType.getKeyFields()[0];
     ServerDelta value = new ServerDelta(key.get(keyField));
     value.setState(ServerState.DELETED);
     deltaGlobMap.put(globType.getName(), value);

@@ -76,18 +76,24 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
     GlobList seriesToCategory = repository.getAll(SeriesToCategory.TYPE,
                                                   GlobMatchers.fieldIn(SeriesToCategory.CATEGORY, categories));
 
-    repository.enterBulkDispatchingMode();
     Integer targetId;
-    try {
-      if (series.isEmpty() && transactions.isEmpty()) {
+    if (series.isEmpty() && transactions.isEmpty()) {
+      try {
+        repository.enterBulkDispatchingMode();
         delete(categories, seriesToCategory);
-        return null;
       }
+      finally {
+        repository.completeBulkDispatchingMode();
+      }
+      return null;
+    }
 
-      CategoryDeletionDialog categoryDeletionDialog = new CategoryDeletionDialog(directory, repository);
-      if (!categoryDeletionDialog.selectTargetCategory(masterId, getParent())) {
-        return null;
-      }
+    CategoryDeletionDialog categoryDeletionDialog = new CategoryDeletionDialog(directory, repository);
+    if (!categoryDeletionDialog.selectTargetCategory(masterId, getParent())) {
+      return null;
+    }
+    repository.enterBulkDispatchingMode();
+    try {
 
       targetId = categoryDeletionDialog.getTargetId();
       if (targetId == null) {

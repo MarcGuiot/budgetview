@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.transactions.columns;
 
-import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
@@ -18,10 +18,11 @@ public class TransactionAmountColumn implements TableCellRenderer {
   private GlobRepository repository;
   private JLabel label = new JLabel();
 
-  public TransactionAmountColumn(GlobTableView view, TransactionRendererColors transactionRendererColors,
-                                 DescriptionService descriptionService, GlobRepository repository, Directory directory) {
+  public TransactionAmountColumn(GlobTableView view, DoubleField amountField, TransactionRendererColors transactionRendererColors,
+                                 DescriptionService descriptionService, GlobRepository repository, Directory directory
+  ) {
     this.repository = repository;
-    amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
+    amountStringifier = descriptionService.getStringifier(amountField);
     label.setName("amount");
     label.setOpaque(true);
     label.setHorizontalAlignment(SwingConstants.RIGHT);

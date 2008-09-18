@@ -31,6 +31,10 @@ public class Transaction {
 
   public static DoubleField AMOUNT;
 
+  public static DoubleField BALANCE;
+
+  public static DoubleField ACCOUNT_BALANCE;
+
   @NamingField
   public static StringField LABEL;
 
@@ -194,6 +198,8 @@ public class Transaction {
       output.writeInteger(fieldValues.get(Transaction.BANK_MONTH));
       output.writeInteger(fieldValues.get(Transaction.BANK_DAY));
       output.writeDouble(fieldValues.get(Transaction.AMOUNT));
+      output.writeDouble(fieldValues.get(Transaction.BALANCE));
+      output.writeDouble(fieldValues.get(Transaction.ACCOUNT_BALANCE));
       output.writeInteger(fieldValues.get(Transaction.ACCOUNT));
       output.writeInteger(fieldValues.get(Transaction.TRANSACTION_TYPE));
       output.writeInteger(fieldValues.get(Transaction.CATEGORY));
@@ -223,6 +229,8 @@ public class Transaction {
       fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
       fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
       fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      fieldSetter.set(Transaction.BALANCE, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT_BALANCE, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
       fieldSetter.set(Transaction.CATEGORY, input.readInteger());
