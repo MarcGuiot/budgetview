@@ -158,10 +158,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
-      .add("31/07/2008", "31/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00)
-      .add("30/07/2008", "01/082008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00)
-      .add("29/07/2008", "01/082008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
-      .add("28/07/2008", "01/082008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
+      .add("31/07/2008", "02/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00)
+      .add("30/07/2008", "01/08/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00)
+      .add("29/07/2008", "01/08/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
+      .add("28/07/2008", "01/08/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
       .check();
 
     views.selectCategorization();
@@ -196,7 +196,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectData();
     transactions.initContent()
-      .add("29/07/2008", "2008/08/01", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
+      .add("29/07/2008", "01/08/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
       .check();
 
     views.selectCategorization();
