@@ -80,8 +80,7 @@
     </row>
 
     <row ref="splitPanel">
-      <label ref="splitMessage"/>
-      <button name="splitLink" action="split" marginTop="0"/>
+      <button name="splitLink" action="split" marginTop="0" autoHideIfDisabled="true"/>
       <filler fill="horizontal"/>
     </row>
 

@@ -1,6 +1,3 @@
-Split de transaction
-*** Reorg panneau existant
-
 Edition de transactions
 *** Note
 *** Date (reporter / annuler report = on reprend la date banque si ok)

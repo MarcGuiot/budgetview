@@ -225,8 +225,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "Another DVD", -7.0)
       .check();
 
-    categorization
-      .checkSelectedTableRow(1);
+    categorization.checkSelectedTableRow(1);
   }
 
   public void testDeletingCategorizedSplitPartWithUncategorizedSource() throws Exception {
