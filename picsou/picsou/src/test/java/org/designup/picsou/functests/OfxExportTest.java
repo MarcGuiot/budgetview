@@ -30,9 +30,9 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
     transactionDetails.openSplitDialog()
       .enterAmount("-1")
       .enterNote("COCA")
-      .selectEnvelope(MasterCategory.FOOD, true)
-      .ok()
-      .close();
+      .ok();
+
+    categorization.setEnvelope("Menu K", "Groceries", MasterCategory.FOOD, true);
 
     String fileName = TestUtils.getFileName(this, ".ofx");
     operations.exportFile(fileName);

@@ -130,7 +130,7 @@
                       <scrollPane borderPos="center" viewportBackground="transactions.bg"
                                   border="line(transaction.border)" opaque="false"
                                   marginLeft="5">
-                        <table ref="transaction" background="transactions.bg" rowHeight="20"/>
+                        <table ref="transaction" background="transactions.bg" rowHeight="20" autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
                       </scrollPane>
                       <row>
                         <label text="$transaction.details.search" styleClass="formLabel"/>

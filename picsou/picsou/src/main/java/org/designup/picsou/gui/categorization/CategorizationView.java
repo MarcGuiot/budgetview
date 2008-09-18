@@ -8,6 +8,7 @@ import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
+import org.designup.picsou.gui.transactions.split.TransactionSplitComparator;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.gui.utils.TableView;
@@ -28,11 +29,11 @@ import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -256,10 +257,34 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
   }
 
   private Comparator<Glob> getTransactionComparator() {
-    return new GlobFieldsComparator(Transaction.LABEL, true,
-                                    Transaction.MONTH, false,
-                                    Transaction.DAY, false,
-                                    Transaction.AMOUNT, false);
+    return new Comparator<Glob>() {
+
+      TransactionSplitComparator splitComparator = new TransactionSplitComparator();
+
+      public int compare(Glob transaction1, Glob transaction2) {
+        int labelDiff = Utils.compare(transaction1.get(Transaction.LABEL),
+                                      transaction2.get(Transaction.LABEL));
+        if (labelDiff != 0) {
+          return labelDiff;
+        }
+
+        long dateDiff = transaction2.get(Transaction.MONTH) - transaction1.get(Transaction.MONTH);
+        if (dateDiff != 0) {
+          return (int)dateDiff;
+        }
+        int dayDiff = transaction2.get(Transaction.DAY) - transaction1.get(Transaction.DAY);
+        if (dayDiff != 0) {
+          return dayDiff;
+        }
+
+        int splitDiff = splitComparator.compare(transaction1, transaction2);
+        if (splitDiff != 0) {
+          return splitDiff;
+        }
+
+        return Utils.compare(transaction1.get(Transaction.ID), transaction2.get(Transaction.ID));
+      }
+    };
   }
 
   private static Directory createLocalDirectory(Directory directory) {
@@ -301,7 +326,6 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     }
     return null;
   }
-
 
   private class CreateSeriesAction extends AbstractAction {
     private final BudgetArea budgetArea;
