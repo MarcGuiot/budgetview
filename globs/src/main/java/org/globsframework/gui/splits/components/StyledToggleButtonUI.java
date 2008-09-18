@@ -3,6 +3,8 @@ package org.globsframework.gui.splits.components;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicToggleButtonUI;
 import java.awt.*;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class StyledToggleButtonUI extends BasicToggleButtonUI {
   private Color topColor = Color.WHITE;

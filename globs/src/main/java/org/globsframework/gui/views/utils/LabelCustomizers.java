@@ -38,14 +38,14 @@ public class LabelCustomizers {
     return chain(Arrays.asList(customizers));
   }
 
-  private static LabelCustomizer createCustomizer(final int bold) {
+  private static LabelCustomizer createCustomizer(final int style) {
     return new LabelCustomizer() {
       private Font boldFont;
 
       public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
         if (boldFont == null) {
           Font font = label.getFont();
-          boldFont = font.deriveFont(font.getStyle() ^ bold);
+          boldFont = font.deriveFont(font.getStyle() ^ style);
         }
         label.setFont(boldFont);
       }

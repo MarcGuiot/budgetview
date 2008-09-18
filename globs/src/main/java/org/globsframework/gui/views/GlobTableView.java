@@ -75,6 +75,14 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     return this;
   }
 
+  public GlobTableView addColumn(String name, Field field, TableCellEditor editor) {
+    startColumn()
+      .setName(name)
+      .setField(field)
+      .setEditor(editor);
+    return this;
+  }
+
   public GlobTableView addColumn(Field field, TableCellEditor editor) {
     return addColumn(field, LabelCustomizer.NULL, defaultBackgroundPainter, editor);
   }

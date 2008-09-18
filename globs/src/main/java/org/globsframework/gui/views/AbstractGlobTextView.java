@@ -78,7 +78,15 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   public void update() {
     JComponent component = getComponent();
 
-    GlobList filteredSelection = currentSelection.filter(filter, repository);
+    GlobList filteredSelection = null;
+    try {
+      filteredSelection = currentSelection.filter(filter, repository);
+    }
+    catch (Exception e) {
+      throw new RuntimeException("Exception for " + component.getName() +
+                                 " - type=" + type +
+                                 " - currentSelection=" + currentSelection, e);
+    }
 
     if (autoHideMatcher != null) {
       boolean matches = autoHideMatcher.matches(filteredSelection, repository);
