@@ -264,10 +264,12 @@ public class SplitsComponentsTest extends SplitsTestCase {
   public void testScrollPane() throws Exception {
     builder.add(aTable);
     JScrollPane scrollPane = parse(
-      "<scrollPane>" +
+      "<scrollPane verticalUnitIncrement='12' horizontalUnitIncrement='15'>" +
       "  <table ref='aTable'/>" +
       "</scrollPane>");
     assertSame(scrollPane, aTable.getParent().getParent());
+    assertEquals(12, scrollPane.getVerticalScrollBar().getUnitIncrement());
+    assertEquals(15, scrollPane.getHorizontalScrollBar().getUnitIncrement());
   }
 
   public void testScrollPaneAcceptsOnlyOneSubcomponent() throws Exception {
