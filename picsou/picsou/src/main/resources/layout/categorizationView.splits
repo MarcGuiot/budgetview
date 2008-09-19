@@ -109,7 +109,7 @@
 
                       <card name="occasionalExpenses">
                         <column name="occasionalSeriesChooser">
-                          <scrollPane marginBottom="0" border="etched" opaque="true">
+                          <scrollPane marginBottom="0" border="etched" opaque="true" verticalUnitIncrement="20">
                             <column margin="10">
                               <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
                               <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn" border="empty(5)"

@@ -24,7 +24,6 @@ BudgetView
 CategorizationView
 ** Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 ** Recherche/filtrage table
-** Voir vitesse scrolling pour le choix des categories (evolution splits)
 ** Selection d'operations similaires : ne pas scroller la table
 ** Selection d'operations similaires : afficher le label anonymisé dans TransactionDetails
 ** Ordre des transactions = labels anonymises + date
