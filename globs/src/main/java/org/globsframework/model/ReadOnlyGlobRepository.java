@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
+import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -22,6 +23,10 @@ public interface ReadOnlyGlobRepository {
   GlobList getAll(GlobType... type);
 
   GlobList getAll(GlobType type, GlobMatcher matcher);
+
+  void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception;
+
+  void saveApply(GlobType type, GlobMatcher matcher, GlobFunctor callback);
 
   Glob findUnique(GlobType type, FieldValue... values)
     throws ItemAmbiguity;

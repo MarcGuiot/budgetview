@@ -48,6 +48,6 @@ public class QifBuilder {
   }
 
   public void load(Double balance) {
-    operations.importQifFile(balance, fileName, "Societe Generale");
+    operations.importQifFile(fileName, "Societe Generale");
   }
 }

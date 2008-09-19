@@ -8,7 +8,6 @@ import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
-import org.designup.picsou.gui.transactions.split.TransactionSplitComparator;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.gui.utils.TableView;
@@ -96,7 +95,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     transactionTable =
       builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
         .setDefaultLabelCustomizer(new TransactionLabelCustomizer())
-        .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING),
+        .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER),
                    LabelCustomizers.fontSize(9))
         .addColumn(Lang.get("series"), new CompactSeriesStringifier(directory),
                    LabelCustomizers.fontSize(9))
@@ -264,31 +263,13 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
   private Comparator<Glob> getTransactionComparator() {
     return new Comparator<Glob>() {
-
-      TransactionSplitComparator splitComparator = new TransactionSplitComparator();
-
       public int compare(Glob transaction1, Glob transaction2) {
         int labelDiff = Utils.compare(transaction1.get(Transaction.LABEL),
                                       transaction2.get(Transaction.LABEL));
         if (labelDiff != 0) {
           return labelDiff;
         }
-
-        long dateDiff = transaction2.get(Transaction.MONTH) - transaction1.get(Transaction.MONTH);
-        if (dateDiff != 0) {
-          return (int)dateDiff;
-        }
-        int dayDiff = transaction2.get(Transaction.DAY) - transaction1.get(Transaction.DAY);
-        if (dayDiff != 0) {
-          return dayDiff;
-        }
-
-        int splitDiff = splitComparator.compare(transaction1, transaction2);
-        if (splitDiff != 0) {
-          return splitDiff;
-        }
-
-        return Utils.compare(transaction1.get(Transaction.ID), transaction2.get(Transaction.ID));
+        return TransactionComparator.ASCENDING_SPLIT_AFTER.compare(transaction1, transaction2);
       }
     };
   }

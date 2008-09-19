@@ -4,7 +4,7 @@ import org.designup.picsou.model.TransactionType;
 
 public class CaisseEpargneTest extends SpecificBankTestCase {
   public void test() throws Exception {
-    operations.importQifFile(10.0, getFile("caisse_epargne.qif"), "Caisse d'épargne");
+    operations.importQifFile(getFile("caisse_epargne.qif"), "Caisse d'épargne");
     timeline.selectMonths("2008/07", "2008/08", "2008/09");
     transactions
       .initContent()

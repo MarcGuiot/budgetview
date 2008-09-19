@@ -10,11 +10,15 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.utils.GlobListFunctor;
 import static org.globsframework.model.utils.GlobMatchers.contains;
 import static org.globsframework.model.utils.GlobMatchers.not;
 import org.globsframework.utils.Strings;
@@ -44,14 +48,40 @@ public class AccountView extends View {
   }
 
   private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {
-    public void registerComponents(RepeatCellBuilder cellBuilder, Glob account) {
+    public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
       add("accountName", Account.NAME, account, cellBuilder);
       add("accountNumber", Account.NUMBER, account, cellBuilder);
-      add("accountBalance", Account.BALANCE, account, cellBuilder);
       add("accountUpdateDate", Account.UPDATE_DATE, account, cellBuilder);
+      final GlobButtonView balance =
+        GlobButtonView.init(Account.TYPE, repository, directory,
+                            new GlobListStringifier() {
+                              public String toString(GlobList list, GlobRepository repository) {
+                                if (list.isEmpty()) {
+                                  return "";
+                                }
+                                Double balance = list.get(0).get(Account.BALANCE);
+                                if (balance == null) {
+                                  return "0.0";
+                                }
+                                return decimalFormat.format(balance);
+                              }
+                            },
+                            new GlobListFunctor() {
+                              public void run(GlobList list, GlobRepository repository) {
+                                BalanceEditionDialog balanceEditor =
+                                  new BalanceEditionDialog(directory.get(JFrame.class), repository, directory, account);
+                                balanceEditor.show();
+                              }
+                            }).forceSelection(account);
+      cellBuilder.add("accountBalance", balance.getComponent());
 
       cellBuilder.add("gotoWebsite", new GotoWebsiteAction(account));
       cellBuilder.add("importData", ImportFileAction.init(Lang.get("account.import.data"), repository, directory, account));
+      cellBuilder.addDisposeListener(new Disposable() {
+        public void dispose() {
+          balance.dispose();
+        }
+      });
     }
 
     private void add(String name, Field field, Glob account, RepeatCellBuilder cellBuilder) {

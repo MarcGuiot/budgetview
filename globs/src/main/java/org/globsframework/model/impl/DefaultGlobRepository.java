@@ -14,6 +14,7 @@ import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.indexing.IndexManager;
 import org.globsframework.model.indexing.IndexSource;
 import org.globsframework.model.indexing.IndexTables;
+import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobIdGenerator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
@@ -134,6 +135,31 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     }
     return result;
   }
+
+  public void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception {
+    if (GlobMatchers.ALL.equals(matcher)) {
+      for (Glob glob : globs.values(type)) {
+        callback.run(glob, this);
+      }
+    }
+    else {
+      for (Glob glob : globs.values(type)) {
+        if (matcher.matches(glob, this)) {
+          callback.run(glob, this);
+        }
+      }
+    }
+  }
+
+  public void saveApply(GlobType type, GlobMatcher matcher, GlobFunctor callback) {
+    try {
+      apply(type, matcher, callback);
+    }
+    catch (Exception e) {
+      throw new UnexpectedApplicationState(e);
+    }
+  }
+
 
   public boolean contains(GlobType type) {
     return !globs.values(type).isEmpty();

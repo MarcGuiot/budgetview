@@ -5,9 +5,12 @@ import org.globsframework.utils.Dates;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatcher;
 import org.uispec4j.finder.ComponentMatchers;
+import org.uispec4j.interception.WindowHandler;
+import org.uispec4j.interception.WindowInterceptor;
 
 import java.util.Date;
 
@@ -20,7 +23,7 @@ public class AccountChecker extends DataChecker {
 
   public void assertDisplayEquals(String accountNumber, double balance, String updateDate) {
     Panel parentPanel = getAccountPanel(accountNumber);
-    UISpecAssert.assertThat(parentPanel.getTextBox("accountBalance").textEquals(toString(balance)));
+    UISpecAssert.assertThat(parentPanel.getButton("accountBalance").textEquals(toString(balance)));
     Date date = Dates.parse(updateDate);
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(PicsouDescriptionService.toString(date)));
   }
@@ -33,7 +36,7 @@ public class AccountChecker extends DataChecker {
 
   public void assertDisplayEquals(String accountName) {
     Panel parentPanel = getAccountPanel(accountName);
-    UISpecAssert.assertTrue(parentPanel.getTextBox("accountBalance").textIsEmpty());
+    UISpecAssert.assertTrue(parentPanel.getButton("accountBalance").textEquals("0.0"));
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textIsEmpty());
   }
 
@@ -43,5 +46,17 @@ public class AccountChecker extends DataChecker {
 
   public Trigger getImportTrigger(String account) {
     return getAccountPanel(account).getButton("Import data").triggerClick();
+  }
+
+  public AccountChecker changeSolde(String accountName, final double balance) {
+    Panel parentPanel = getAccountPanel(accountName);
+    WindowInterceptor.init(parentPanel.getButton("accountBalance").triggerClick())
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          window.getInputTextBox().setText(Double.toString(balance));
+          return window.getButton("ok").triggerClick();
+        }
+      }).run();
+    return this;
   }
 }

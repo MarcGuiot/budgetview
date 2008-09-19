@@ -107,7 +107,7 @@ public class TransactionView extends View implements GlobSelectionListener {
   private static GlobTableView createGlobTableView(GlobRepository repository,
                                                    final DescriptionService descriptionService, Directory directory,
                                                    TransactionRendererColors rendererColors) {
-    TransactionComparator comparator = TransactionComparator.DESCENDING;
+    TransactionComparator comparator = TransactionComparator.DESCENDING_SPLIT_AFTER;
 
     GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
 
@@ -131,7 +131,7 @@ public class TransactionView extends View implements GlobSelectionListener {
       .addColumn(Lang.get("transactionView.date.user"),
                  new TransactionDateStringifier(comparator), LabelCustomizers.font(dateFont))
       .addColumn(Lang.get("transactionView.date.bank"),
-                 new TransactionDateStringifier(TransactionComparator.DESCENDING_BANK,
+                 new TransactionDateStringifier(TransactionComparator.DESCENDING_BANK_SPLIT_AFTER,
                                                 Transaction.BANK_MONTH,
                                                 Transaction.BANK_DAY), LabelCustomizers.font(dateFont))
       .addColumn(Lang.get("series"), seriesColumn, seriesColumn,

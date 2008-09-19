@@ -20,7 +20,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
     TimeService.setLastAvailableTransactionMonthId(200808);
     super.setUp();
     directory.add(new TimeService());
-    repository.addTrigger(new CurrentMonthTrigger(directory));
+    repository.addTrigger(new CurrentMonthTrigger());
     repository.addTrigger(new MonthsToSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetUpdateOccasionnalTrigger());
@@ -30,7 +30,10 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
     final SeriesStatTrigger seriesStatTrigger = new SeriesStatTrigger();
     repository.addTrigger(seriesStatTrigger);
     repository.addTrigger(new OccasionalSeriesStatTrigger());
-    repository.create(CurrentMonth.KEY, FieldValue.value(CurrentMonth.MONTH_ID, 200808));
+    repository.create(CurrentMonth.KEY,
+                      FieldValue.value(CurrentMonth.MONTH_ID, 200808),
+                      FieldValue.value(CurrentMonth.DAY, 1)
+    );
     repository.create(Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID),
                       value(Series.PROFILE_TYPE, ProfileType.UNKNOWN.getId()),
                       value(Series.BUDGET_AREA, BudgetArea.OCCASIONAL_EXPENSES.getId()));

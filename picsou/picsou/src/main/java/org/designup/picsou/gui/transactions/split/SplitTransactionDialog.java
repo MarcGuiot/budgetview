@@ -140,7 +140,7 @@ public class SplitTransactionDialog {
 
   private void addTable(GlobsPanelBuilder builder) {
 
-    TransactionComparator transactionComparator = TransactionComparator.ASCENDING;
+    TransactionComparator transactionComparator = TransactionComparator.ASCENDING_SPLIT_AFTER;
 
     tableView = builder.addTable("transaction", Transaction.TYPE, transactionComparator);
 

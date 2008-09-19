@@ -48,6 +48,7 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.SERIES, 100),
                       value(Transaction.MONTH, 200808),
                       value(Transaction.BANK_MONTH, 200808),
+                      value(Transaction.BANK_DAY, 1),
                       value(Transaction.AMOUNT, -40.));
     Integer[] ids = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true))
       .sort(Transaction.MONTH).getValues(Transaction.ID);

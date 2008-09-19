@@ -19,7 +19,7 @@ public class BNPTest extends SpecificBankTestCase {
   }
 
   public void test4() throws Exception {
-    operations.importQifFile(100.0, getFile("bnp_Herve.qif"), "BNP");
+    operations.importQifFile(getFile("bnp_Herve.qif"), "BNP");
     timeline.selectAll();
     transactions
       .initContent()
@@ -37,7 +37,7 @@ public class BNPTest extends SpecificBankTestCase {
   }
 
   private void checkFile(String path) throws IOException {
-    operations.importQifFile(100.0, getFile(path), "BNP");
+    operations.importQifFile(getFile(path), "BNP");
     timeline.selectAll();
     transactions
       .initContent()
