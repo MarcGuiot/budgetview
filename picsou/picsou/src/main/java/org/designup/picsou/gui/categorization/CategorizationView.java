@@ -55,6 +55,8 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
   private java.util.List<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>> seriesRepeat =
     new ArrayList<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>>();
 
+  private Directory parentDirectory;
+
   private static final int[] COLUMN_SIZES = {10, 12, 28, 10};
   private SeriesEditionDialog seriesEditionDialog;
 
@@ -63,6 +65,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
   public CategorizationView(final GlobRepository repository, Directory parentDirectory) {
     super(repository, createLocalDirectory(parentDirectory));
+    this.parentDirectory = parentDirectory;
     parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
@@ -84,6 +87,9 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationView.splits",
                                                       this.repository, directory);
+
+    CategorizationGaugePanel gauge = new CategorizationGaugePanel(repository, parentDirectory);
+    builder.add("gaugePanel", gauge.getPanel());
 
     Comparator<Glob> transactionComparator = getTransactionComparator();
     DescriptionService descriptionService = directory.get(DescriptionService.class);

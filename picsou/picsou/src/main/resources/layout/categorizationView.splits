@@ -33,6 +33,7 @@
         <label text="$categorization.list.title" styleClass="blockTitle"/>
         <panel styleClass="block">
           <column styleClass="innerBlock">
+            <panel ref="gaugePanel" opaque="false"/>
             <scrollPane viewportBackground="#FFFFFF">
               <table ref="transactionTable" rowHeight="20"/>
             </scrollPane>
@@ -108,10 +109,11 @@
 
                       <card name="occasionalExpenses">
                         <column name="occasionalSeriesChooser">
-                          <scrollPane marginBottom="0" border="etched">
+                          <scrollPane marginBottom="0" border="etched" opaque="true">
                             <column margin="10">
                               <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
-                              <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn" border="empty(5)">
+                              <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn" border="empty(5)"
+                                      opaque="true" background="block.inner.bg">
                                 <column>
                                   <row>
                                     <toggleButton ref="occasionalCategoryToggle" styleClass="masterCategorySelector"/>

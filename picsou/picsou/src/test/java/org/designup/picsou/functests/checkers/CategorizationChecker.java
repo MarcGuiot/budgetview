@@ -647,9 +647,9 @@ public class CategorizationChecker extends DataChecker {
     return getPanel().getTextBox("userLabel");
   }
 
-  public void setExceptionalIncome(String label, String seriesName, boolean showSeriesInitialization) {
+  public void setExceptionalIncome(String label, String seriesName, boolean createSeries) {
     int[] indices = getRowIndices(label);
-    boolean first = showSeriesInitialization;
+    boolean first = createSeries;
     for (int indice : indices) {
       selectTableRow(indice);
       selectIncome();
@@ -658,23 +658,23 @@ public class CategorizationChecker extends DataChecker {
     }
   }
 
-  public CategorizationChecker setIncome(String label, String seriesName, boolean showSeriesInitialization) {
+  public CategorizationChecker setIncome(String label, String seriesName, boolean createSeries) {
     selectTableRows(getRowIndices(label));
     selectIncome();
-    selectIncomeSeries(seriesName, showSeriesInitialization);
+    selectIncomeSeries(seriesName, createSeries);
     return this;
   }
 
-  public CategorizationChecker setRecurring(int rowIndex, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
+  public CategorizationChecker setRecurring(int rowIndex, String seriesName, MasterCategory category, boolean createSeries) {
     selectTableRow(rowIndex);
     selectRecurring();
-    selectRecurringSeries(seriesName, category, showSeriesInitialization);
+    selectRecurringSeries(seriesName, category, createSeries);
     return this;
   }
 
-  public CategorizationChecker setRecurring(String label, String seriesName, MasterCategory category, boolean showSeriesInitialization) {
+  public CategorizationChecker setRecurring(String label, String seriesName, MasterCategory category, boolean createSeries) {
     int[] indices = getRowIndices(label);
-    boolean first = showSeriesInitialization;
+    boolean first = createSeries;
     for (int indice : indices) {
       setRecurring(indice, seriesName, category, first);
       first = false;
@@ -690,16 +690,16 @@ public class CategorizationChecker extends DataChecker {
     return index;
   }
 
-  public CategorizationChecker setEnvelope(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationChecker setEnvelope(int rowIndex, String seriesName, MasterCategory master, boolean createSeries) {
     selectTableRows(rowIndex);
     selectEnvelopes();
-    selectEnvelopeSeries(seriesName, master, showSeriesInitialization);
+    selectEnvelopeSeries(seriesName, master, createSeries);
     return this;
   }
 
-  public CategorizationChecker setEnvelope(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationChecker setEnvelope(String label, String seriesName, MasterCategory master, boolean createSeries) {
     int[] indices = getRowIndices(label);
-    boolean first = showSeriesInitialization;
+    boolean first = createSeries;
     for (int indice : indices) {
       setEnvelope(indice, seriesName, master, first);
       first = false;
@@ -737,9 +737,9 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationChecker setProject(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationChecker setProject(String label, String seriesName, MasterCategory master, boolean createSeries) {
     int[] indices = getRowIndices(label);
-    boolean first = showSeriesInitialization;
+    boolean first = createSeries;
     for (int indice : indices) {
       setProject(indice, seriesName, master, first);
       first = false;
@@ -747,10 +747,10 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationChecker setProject(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationChecker setProject(int rowIndex, String seriesName, MasterCategory master, boolean createSeries) {
     selectTableRows(rowIndex);
     selectProjects();
-    selectProjectSeries(seriesName, master, showSeriesInitialization);
+    selectProjectSeries(seriesName, master, createSeries);
     return this;
   }
 
@@ -762,9 +762,9 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationChecker setSavings(String label, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationChecker setSavings(String label, String seriesName, MasterCategory master, boolean createSeries) {
     int[] indices = getRowIndices(label);
-    boolean first = showSeriesInitialization;
+    boolean first = createSeries;
     for (int indice : indices) {
       setSavings(indice, seriesName, master, first);
       first = false;
@@ -772,11 +772,11 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationChecker setSavings(int rowIndex, String seriesName, MasterCategory master, boolean showSeriesInitialization) {
+  public CategorizationChecker setSavings(int rowIndex, String seriesName, MasterCategory master, boolean createSeries) {
     int[] rows = new int[]{rowIndex};
     selectTableRows(rows);
     selectSavings();
-    selectSavingsSeries(seriesName, master, showSeriesInitialization);
+    selectSavingsSeries(seriesName, master, createSeries);
     return this;
   }
 
@@ -799,6 +799,10 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
+  public CategorizationGaugeChecker getGauge() {
+    return new CategorizationGaugeChecker(getPanel().getPanel("gaugePanel"));
+  }
+
   public CategorizationTableChecker initContent() {
     return new CategorizationTableChecker();
   }
@@ -819,6 +823,11 @@ public class CategorizationChecker extends DataChecker {
     }
 
     public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount) {
+      add(new Object[]{date, "", label, amount});
+      return this;
+    }
+
+    public CategorizationTableChecker add(String date, String label, double amount) {
       add(new Object[]{date, "", label, amount});
       return this;
     }
