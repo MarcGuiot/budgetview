@@ -98,6 +98,13 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
     );
   }
 
+  public void testForceSelectionAfterInit() throws Exception {
+    TextBox textBox = init(DummyObject.NAME, "...", false, false);
+    forceEdition(glob1);
+    selectionService.select(Arrays.asList(glob2), DummyObject.TYPE);
+    assertTrue(textBox.textEquals("name1"));
+  }
+
   public void testMultiSelectionWithDifferentValues() throws Exception {
     TextBox textBox = init(DummyObject.NAME, "...", false, false);
     selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
@@ -136,6 +143,8 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
   }
 
   protected abstract TextBox init(StringField field, String defaultValueForMultivalue, boolean isEditable, boolean sendAtKeyPressed);
+
+  abstract void forceEdition(Glob glob);
 
   protected void enterTextAndValidate(TextBox textBox, String text) {
     textBox.setText(text);

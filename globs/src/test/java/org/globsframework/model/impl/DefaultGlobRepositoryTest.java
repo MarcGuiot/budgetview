@@ -149,6 +149,23 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     TestUtils.assertSetEquals(repository.findLinkedTo(target, DummyObjectWithLinks.COMPOSITE_LINK), source0, source1);
   }
 
+  public void testApply() throws Exception {
+    init("<dummyObject id='1' name='name'/>" +
+         "<dummyObject2 id='4' label='name2'/>" +
+         "<dummyObject2 id='2' label='other'/>" +
+         "<dummyObject2 id='1' label='name2'/>" +
+         "<dummyObject2 id='3' label='name2'/>" +
+         "");
+    final GlobList actual = new GlobList();
+    GlobMatcher matcher = GlobMatchers.fieldEquals(DummyObject2.LABEL, "name2");
+    repository.apply(DummyObject2.TYPE, matcher, new GlobFunctor() {
+      public void run(Glob glob, GlobRepository repository) throws Exception {
+        actual.add(glob);
+      }
+    });
+    TestUtils.assertEquals(repository.getAll(DummyObject2.TYPE, matcher), actual);
+  }
+
   public void testCreateGlob() throws Exception {
     initRepository();
 

@@ -115,7 +115,14 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   }
 
   public PARENT forceSelection(Glob glob) {
+    if (isInitialized && forcedSelection == null) {
+      SelectionService service = directory.get(SelectionService.class);
+      service.removeListener(this);
+    }
     this.forcedSelection = new GlobList(glob);
+    if (isInitialized) {
+      selectionUpdated(new DefaultGlobSelection(forcedSelection, forcedSelection.getTypes()));
+    }
     return (PARENT)this;
   }
 

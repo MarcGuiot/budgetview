@@ -40,6 +40,14 @@ public class GlobRepositoryDecorator implements GlobRepository {
     return getRepository().getAll(type, matcher);
   }
 
+  public void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception {
+    getRepository().apply(type, matcher, callback);
+  }
+
+  public void saveApply(GlobType type, GlobMatcher matcher, GlobFunctor callback) {
+    getRepository().saveApply(type, matcher, callback);
+  }
+
   public Glob findUnique(GlobType type, GlobMatcher matcher) throws ItemAmbiguity {
     return getRepository().findUnique(type, matcher);
   }
