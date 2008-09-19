@@ -673,10 +673,10 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker setRecurring(String label, String seriesName, MasterCategory category, boolean createSeries) {
-    int[] indices = getRowIndices(label);
+    int[] rows = getRowIndices(label);
     boolean first = createSeries;
-    for (int indice : indices) {
-      setRecurring(indice, seriesName, category, first);
+    for (int row : rows) {
+      setRecurring(row, seriesName, category, first);
       first = false;
     }
     return this;

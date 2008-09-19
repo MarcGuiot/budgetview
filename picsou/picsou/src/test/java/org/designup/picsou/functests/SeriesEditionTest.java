@@ -45,6 +45,27 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Free", 29.00, 29.00);
   }
 
+  public void testSeriesNamesAreTrimmed() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Auchan")
+      .load();
+
+    timeline.selectMonth("2008/07");
+
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.selectEnvelopes();
+    categorization.createEnvelopeSeries()
+      .setName("    Groceries   ")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    
+    views.selectBudget();
+    budgetView.envelopes.checkSeries("Groceries", 29, 29);
+  }
+
   public void testCurrentMonthsAreInitiallySelectedInBudgetTable() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/29", "2008/08/01", -29.00, "Free Telecom")

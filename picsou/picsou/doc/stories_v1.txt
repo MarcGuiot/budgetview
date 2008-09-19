@@ -6,7 +6,6 @@ Edition de transactions
 
 SeriesEditionDialog
 ** Modifier l'ordre des series
-** trim() sur les noms
 ** Creation d'enveloppe : mettre les expected a 0
 * Hyperlien "selectionner tout (Ctrl-A)" (ou double-clic?)
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
