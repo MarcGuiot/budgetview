@@ -48,12 +48,13 @@ public class AccountChecker extends DataChecker {
     return getAccountPanel(account).getButton("Import data").triggerClick();
   }
 
-  public AccountChecker changeSolde(String accountName, final double balance) {
+  public AccountChecker changeSolde(String accountName, final double balance, final String label) {
     Panel parentPanel = getAccountPanel(accountName);
     WindowInterceptor.init(parentPanel.getButton("accountBalance").triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox().setText(Double.toString(balance));
+          UISpecAssert.assertThat(window.getTextBox("transactionInfo").textEquals(label));
           return window.getButton("ok").triggerClick();
         }
       }).run();

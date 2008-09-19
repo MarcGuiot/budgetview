@@ -51,10 +51,12 @@ public class BalanceEditionDialog {
     }
     String text = "";
     if (transaction != null) {
+      int month = Month.toMonth(transaction.get(Transaction.BANK_MONTH));
+      Integer day = transaction.get(Transaction.BANK_DAY);
       text = Lang.get("balance.edition.transaction.info", transaction.get(Transaction.LABEL),
-                      Month.toYear(transaction.get(Transaction.BANK_MONTH)),
-                      Month.toMonth(transaction.get(Transaction.BANK_MONTH)),
-                      transaction.get(Transaction.BANK_DAY));
+                      Integer.toString(Month.toYear(transaction.get(Transaction.BANK_MONTH))),
+                      (month < 10 ? "0" : "") + month,
+                      (day < 10 ? "0" : "") + day);
     }
     JLabel transactionInfo = new JLabel(text);
     builder.add("transactionInfo", transactionInfo);

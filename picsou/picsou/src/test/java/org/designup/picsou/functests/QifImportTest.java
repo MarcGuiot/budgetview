@@ -35,7 +35,9 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .add("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70)
       .check();
     views.selectHome();
-    accounts.changeSolde(OperationChecker.DEFAULT_ACCOUNT_NUMBER, 100);
+
+    accounts.changeSolde(OperationChecker.DEFAULT_ACCOUNT_NUMBER, 100,
+                         "Balance for operation of the 22/04/2006 (SACLAY)");
     views.selectData();
     transactions.initAmountContent()
       .add("SACLAY", -55.49, 100, 100)
@@ -63,7 +65,8 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .add("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, 236.64, 236.64)
       .check();
     views.selectHome();
-    accounts.changeSolde(OperationChecker.DEFAULT_ACCOUNT_NUMBER, 80);
+    accounts.changeSolde(OperationChecker.DEFAULT_ACCOUNT_NUMBER, 80,
+                         "Balance for operation of the 30/04/2006 (Auchan)");
   }
 
   public void testTakesUserAndBankDatesIntoAccountWhenDetectingDuplicates() throws Exception {
