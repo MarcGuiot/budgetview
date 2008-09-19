@@ -6,7 +6,6 @@ Edition de transactions
 
 SeriesEditionDialog
 ** Modifier l'ordre des series
-** trim() sur les noms
 ** Creation d'enveloppe : mettre les expected a 0
 * Hyperlien "selectionner tout (Ctrl-A)" (ou double-clic?)
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
@@ -22,10 +21,8 @@ BudgetView
 * Ouverture SED : masquer la liste des series ?
 
 CategorizationView
-*** "Reste a classer" + barre de progression au-dessus de la table
 ** Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 ** Recherche/filtrage table
-** Voir vitesse scrolling pour le choix des categories (evolution splits)
 ** Selection d'operations similaires : ne pas scroller la table
 ** Selection d'operations similaires : afficher le label anonymisé dans TransactionDetails
 ** Ordre des transactions = labels anonymises + date
@@ -52,7 +49,7 @@ AccountView
 
 Licence
 * Pb focus text editor
-* Pb d'access au serveur "vous devez être connecté" alors que
+* Pb d'access au serveur "vous devez être connecté" alors que la connexion internet marche
 * revoir look panneau
 * Voir selection nombre de mois
 
@@ -93,8 +90,8 @@ Misc
 * Afficher les infos de mise a dispo d'une nouvelle version
 * CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
 * Copier les donnees des tables dans le clipboard
-* Tester avec 20 ans de donnees
 * bug layout / screenshot joint
+* voir opacite/joliesse des fenetres Globs de creation/deletion
 
 Undo : ajout de tests
 * Import

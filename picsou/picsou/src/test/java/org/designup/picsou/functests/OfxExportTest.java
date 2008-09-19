@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import junit.framework.Assert;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -13,8 +12,6 @@ import org.uispec4j.interception.WindowInterceptor;
 public class OfxExportTest extends LoggedInFunctionalTestCase {
 
   public void testExport() throws Exception {
-
-    Assert.fail("TODO: a corriger avec le split de transactions");
 
     OfxBuilder
       .init(this)

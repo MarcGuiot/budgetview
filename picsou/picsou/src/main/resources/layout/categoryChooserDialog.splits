@@ -5,9 +5,9 @@
   <panel styleClass="dialog" preferredSize="(800,450)">
     <column styleClass="innerDialog">
       <label ref="title" styleClass="title"/>
-      <scrollPane weightY="100" viewportBackground="dialog.block">
+      <scrollPane weightY="100" viewportBackground="dialog.block" verticalUnitIncrement="20">
         <repeat ref="masterRepeat" margin="10">
-          <column>
+        <column>
             <toggleButton ref="masterLabel" marginTop="10" styleClass="masterCategorySelector"/>
             <repeat ref="subcatRepeat" layout="column" marginLeft="5">
               <toggleButton ref="subcatLabel" styleClass="subCategorySelector"/>

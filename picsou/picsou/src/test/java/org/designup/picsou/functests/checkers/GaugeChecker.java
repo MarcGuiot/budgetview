@@ -8,6 +8,7 @@ public class GaugeChecker extends DataChecker {
 
   public GaugeChecker(Gauge gauge) {
     this.gauge = gauge;
+    Assert.assertNotNull(gauge);
   }
 
   public GaugeChecker set(double actualValue, double targetValue) {

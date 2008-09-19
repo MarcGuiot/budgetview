@@ -40,8 +40,7 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -100,7 +99,6 @@ public class SeriesEditionDialog {
                                                       localRepository, localDirectory);
 
     titleLabel = builder.add("title", new JLabel());
-
 
     GlobStringifier seriesStringifier = descriptionService.getStringifier(Series.TYPE);
     seriesList = GlobListView.init(Series.TYPE, localRepository, localDirectory)
@@ -207,7 +205,7 @@ public class SeriesEditionDialog {
         .getComponent();
     builder.add("singleCategoryField", singleCategoryField);
 
-    assignCategoryAction = new AssignCategoryAction(dialog);
+    assignCategoryAction = new AssignCategoryAction();
     builder.add("assignCategory", assignCategoryAction);
   }
 
@@ -439,18 +437,15 @@ public class SeriesEditionDialog {
   }
 
   private class AssignCategoryAction extends AbstractAction {
-    private Dialog parent;
-
-    private AssignCategoryAction(Dialog parent) {
+    private AssignCategoryAction() {
       super(Lang.get("seriesEdition.categorize"));
-      this.parent = parent;
     }
 
     public void show() {
       CategoryChooserDialog chooser =
         new CategoryChooserDialog(new SeriesCategoryChooserCallback(), dialog,
-                                  !budgetArea.isMultiCategories(),
-                                  localRepository, localDirectory);
+                                            !budgetArea.isMultiCategories(),
+                                            localRepository, localDirectory);
 
       chooser.show();
     }
@@ -518,9 +513,20 @@ public class SeriesEditionDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
+      trimNames();
       localRepository.commitChanges(false);
       localRepository.rollback();
       dialog.setVisible(false);
+    }
+
+    private void trimNames() {
+      for (Glob series : localRepository.getAll(Series.TYPE)) {
+        String name = series.get(Series.NAME);
+        if (name == null) {
+          name = "";
+        }
+        localRepository.update(series.getKey(), Series.NAME, name.trim());
+      }
     }
   }
 

@@ -247,6 +247,8 @@
       <xs:attributeGroup ref="componentAttributes"/>
       <xs:attribute name="viewportBackground" type="xs:string"/>
       <xs:attribute name="viewportOpaque" type="xs:boolean"/>
+      <xs:attribute name="verticalUnitIncrement" type="xs:integer"/>
+      <xs:attribute name="horizontalUnitIncrement" type="xs:integer"/>
     </xs:complexType>
   </xs:element>
 
