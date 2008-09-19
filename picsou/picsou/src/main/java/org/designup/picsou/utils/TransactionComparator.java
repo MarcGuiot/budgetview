@@ -1,10 +1,8 @@
 package org.designup.picsou.utils;
 
-import org.designup.picsou.gui.transactions.split.TransactionSplitComparator;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
-import org.globsframework.utils.Utils;
 
 import java.util.Comparator;
 
@@ -21,7 +19,6 @@ public class TransactionComparator implements Comparator<Glob> {
     new TransactionComparator(false, Transaction.BANK_MONTH, Transaction.BANK_DAY);
 
   private int dateMultiplier = 1;
-  private TransactionSplitComparator splitComparator = new TransactionSplitComparator();
   protected IntegerField monthField;
   protected IntegerField dayField;
 
@@ -31,19 +28,48 @@ public class TransactionComparator implements Comparator<Glob> {
     this.dayField = dayField;
   }
 
-  public int compare(Glob transaction1, Glob transaction2) {
-    long dateDiff = (transaction1.get(monthField) - transaction2.get(monthField)) * dateMultiplier;
-    if (dateDiff != 0) {
-      return (int)dateDiff;
+  public int compare(Glob o1, Glob o2) {
+    int tmp;
+    tmp = o1.get(monthField).compareTo(o2.get(monthField));
+    if (tmp != 0) {
+      return dateMultiplier * tmp;
     }
-    int dayDiff = (transaction1.get(dayField) - transaction2.get(dayField)) * dateMultiplier;
-    if (dayDiff != 0) {
-      return dayDiff;
+    tmp = o1.get(dayField).compareTo(o2.get(dayField));
+    if (tmp != 0) {
+      return dateMultiplier * tmp;
     }
-    int splitDiff = splitComparator.compare(transaction1, transaction2) * dateMultiplier;
-    if (splitDiff != 0) {
-      return splitDiff;
+    Integer source1 = o1.get(Transaction.SPLIT_SOURCE);
+    Integer source2 = o2.get(Transaction.SPLIT_SOURCE);
+    if (source1 != null) {
+      if (source2 != null) {
+        if (source1.equals(source2)) {
+          return dateMultiplier * o1.get(Transaction.ID).compareTo(o2.get(Transaction.ID));
+        }
+        else {
+          return dateMultiplier * source1.compareTo(source2);
+        }
+      }
+      else {
+        if (source1.equals(o2.get(Transaction.ID))) {
+          return dateMultiplier;
+        }
+        return dateMultiplier * source1.compareTo(o2.get(Transaction.ID));
+      }
     }
-    return Utils.compare(transaction1.get(Transaction.ID), transaction2.get(Transaction.ID)) * dateMultiplier;
+    else if (source2 != null) {
+      if (source2.equals(o1.get(Transaction.ID))) {
+        return dateMultiplier * -1;
+      }
+      return dateMultiplier * o1.get(Transaction.ID).compareTo(source2);
+    }
+    if (o1.get(Transaction.PLANNED) != o2.get(Transaction.PLANNED)) {
+      if (o1.get(Transaction.PLANNED)) {
+        return dateMultiplier;
+      }
+      else {
+        return dateMultiplier * -1;
+      }
+    }
+    return dateMultiplier * o1.get(Transaction.ID).compareTo(o2.get(Transaction.ID));
   }
 }

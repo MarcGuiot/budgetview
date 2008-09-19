@@ -212,6 +212,14 @@ public class TransactionChecker extends ViewChecker {
       return this;
     }
 
+    public TransactionAmountChecker add(String label, double amount) {
+      expected.add(new Object[]{label,
+                                TransactionChecker.this.toString(amount),
+                                "",
+                                ""});
+      return this;
+    }
+
     public void check() {
       UISpecAssert.assertThat(getTable().contentEquals(
         new String[]{Lang.get("label"),
@@ -231,10 +239,17 @@ public class TransactionChecker extends ViewChecker {
       int rowCount = getTable().getRowCount();
       StringBuffer buffer = new StringBuffer();
       for (int i = 0; i < rowCount; i++) {
-        buffer.append(".add(\"").append(getTable().getContentAt(i, label)).append("\", ")
-          .append(getTable().getContentAt(i, amount)).append(", ")
-          .append(getTable().getContentAt(i, accountBalance)).append(", ")
-          .append(getTable().getContentAt(i, balance)).append(")\n");
+        buffer.append(".add(\"")
+          .append(getTable().getContentAt(i, label)).append("\", ")
+          .append(getTable().getContentAt(i, amount));
+        if (!getTable().getContentAt(i, accountBalance).equals("") &&
+            !getTable().getContentAt(i, balance).equals("")) {
+          buffer
+            .append(", ")
+            .append(getTable().getContentAt(i, accountBalance)).append(", ")
+            .append(getTable().getContentAt(i, balance));
+        }
+        buffer.append(")\n");
       }
       buffer.append(".check();\n");
       System.out.println(buffer.toString());

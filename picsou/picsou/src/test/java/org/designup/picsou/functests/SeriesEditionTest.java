@@ -425,8 +425,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectEnvelopeSeries("courant", MasterCategory.CLOTHING, false);
 
     views.selectData();
-    transactions.checkCategory(0, MasterCategory.CLOTHING);
-    transactions.checkSeries(0, "courant");
+    transactions.checkCategory(1, MasterCategory.CLOTHING);
+    transactions.checkSeries(1, "courant");
   }
 
   public void testUnselectAllCategories() throws Exception {

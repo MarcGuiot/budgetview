@@ -1,0 +1,18 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" minimumSize="(470,170)" preferredSize="(470,170)" opaque="true">
+    <column styleClass="innerDialog">
+      <label text="$balance.edition.title" styleClass="title"/>
+      <filler fill="vertical" weightY="10"/>
+      <grid>
+        <label gridPos="(0,0)" text="$balance.edition.label" styleClass="formLabel"/>
+        <textField gridPos="(1,0)" ref="amount"/>
+        <label gridPos="(0,1,1,2)" ref="transactionInfo" styleClass="formLabel"/>
+      </grid>
+      <filler fill="vertical" weightY="20"/>
+    </column>
+  </panel>
+
+</splits>

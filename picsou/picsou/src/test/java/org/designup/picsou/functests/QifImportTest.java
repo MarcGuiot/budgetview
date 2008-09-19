@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
@@ -14,7 +15,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"),
                            fileName);
 
-    operations.importQifFile(100.0, fileName, "Societe Generale");
+    operations.importQifFile(fileName, "Societe Generale");
     transactions
       .initContent()
       .add("22/04/2006", TransactionType.CREDIT_CARD, "SACLAY", "", -55.49)
@@ -26,9 +27,43 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
 
     categories.assertSelectionEquals(MasterCategory.ALL);
 
-    transactions
-      .initAmountContent()
-      .dump();
+    transactions.initAmountContent()
+      .add("SACLAY", -55.49)
+      .add("STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65)
+      .add("BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", -49.00)
+      .add("SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50)
+      .add("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70)
+      .check();
+    views.selectHome();
+    accounts.changeSolde(OperationChecker.DEFAULT_ACCOUNT_NUMBER, 100);
+    views.selectData();
+    transactions.initAmountContent()
+      .add("SACLAY", -55.49, 100, 100)
+      .add("STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65, 155.49, 155.49)
+      .add("BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", -49.00, 173.14, 173.14)
+      .add("SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50, 222.14, 222.14)
+      .add("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, 236.64, 236.64)
+      .check();
+
+    String file =
+      createQifFile("file",
+                    "!Type:Bank\n" +
+                    "D30/04/2006\n" +
+                    "T-20\n" +
+                    "N\n" +
+                    "MAuchan\n" +
+                    "^");
+    operations.importQifFile(file, "Societe Generale");
+    transactions.initAmountContent()
+      .add("Auchan", -20, 80, 80)
+      .add("SACLAY", -55.49, 100, 100)
+      .add("STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65, 155.49, 155.49)
+      .add("BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", -49.00, 173.14, 173.14)
+      .add("SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50, 222.14, 222.14)
+      .add("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, 236.64, 236.64)
+      .check();
+    views.selectHome();
+    accounts.changeSolde(OperationChecker.DEFAULT_ACCOUNT_NUMBER, 80);
   }
 
   public void testTakesUserAndBankDatesIntoAccountWhenDetectingDuplicates() throws Exception {
@@ -41,17 +76,13 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
                     "PFAC.FRANCE 4561409\n" +
                     "MFAC.FRANCE 4561409787231717 19/04/06 STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS\n" +
                     "^");
-    operations.importQifFile(12.50, file, "Societe Generale");
-    operations.importQifFile(12.50, file, "Societe Generale");
+    operations.importQifFile(file, "Societe Generale");
+    operations.importQifFile(file, "Societe Generale");
 
     timeline.selectMonth("2006/04");
     transactions.initContent()
       .add("19/04/2006", "20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
       .check();
-
-    transactions
-      .initAmountContent()
-      .dump();
   }
 
   public void testBankDateWithFrenchFormat() throws Exception {
@@ -105,7 +136,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       builder.append(block);
     }
     String file = createQifFile("file", builder.toString());
-    operations.importQifFile(12.50, file, "Societe Generale");
+    operations.importQifFile(file, "Societe Generale");
   }
 
   private String createQifFile(String discriminant) {
@@ -130,11 +161,5 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     String fileName = TestUtils.getFileName(this, discriminant + ".qif");
     Files.dumpStringToFile(fileName, content);
     return fileName;
-  }
-
-  public void testImportManyFileAndAskOnceForAmount() throws Exception {
-    String file1 = createQifFile("1");
-    String file2 = createQifFile("2");
-    operations.importQifFiles(12.50, "Societe Generale", file1, file2);
   }
 }

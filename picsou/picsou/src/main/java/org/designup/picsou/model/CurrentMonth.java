@@ -21,6 +21,8 @@ public class CurrentMonth {
 
   public static IntegerField MONTH_ID;
 
+  public static IntegerField DAY;
+
   public static org.globsframework.model.Key KEY;
 
   static {
@@ -35,6 +37,7 @@ public class CurrentMonth {
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeInteger(values.get(ID));
       outputStream.writeInteger(values.get(MONTH_ID));
+      outputStream.writeInteger(values.get(DAY));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -48,6 +51,7 @@ public class CurrentMonth {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(ID, input.readInteger());
       fieldSetter.set(MONTH_ID, input.readInteger());
+      fieldSetter.set(DAY, input.readInteger());
     }
 
     public int getWriteVersion() {

@@ -27,18 +27,18 @@ public class OperationChecker {
   }
 
   public void importOfxFile(String name) {
-    importFile(new String[]{name}, null, null);
+    importFile(new String[]{name}, null);
   }
 
-  public void importQifFile(Double balance, String file, String bank) {
-    importFile(new String[]{file}, balance, bank);
+  public void importQifFile(String file, String bank) {
+    importFile(new String[]{file}, bank);
   }
 
-  public void importQifFiles(double balance, String bank, String... files) {
-    importFile(files, balance, bank);
+  public void importQifFiles(String bank, String... files) {
+    importFile(files, bank);
   }
 
-  private void importFile(final String[] fileNames, final Double balance, final String bank) {
+  private void importFile(final String[] fileNames, final String bank) {
     WindowInterceptor
       .init(importMenu.triggerClick())
       .process(new WindowHandler() {

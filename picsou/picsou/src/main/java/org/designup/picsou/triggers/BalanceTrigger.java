@@ -3,9 +3,9 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 
@@ -68,7 +68,7 @@ public class BalanceTrigger implements ChangeSetListener {
 
   private void updateTransactionBalance(GlobRepository repository, GlobList updatedAccount,
                                         boolean updatePlannedOnly) {
-    TransactionBankDateComparator comparator = new TransactionBankDateComparator();
+    TransactionComparator comparator = TransactionComparator.ASCENDING_BANK;
     GlobMatcher globMatcher = GlobMatchers.ALL;
     if (updatePlannedOnly) {
       globMatcher = GlobMatchers.fieldEquals(Transaction.PLANNED, true);
@@ -87,7 +87,7 @@ public class BalanceTrigger implements ChangeSetListener {
     }
   }
 
-  private boolean computeAccountBalance(GlobRepository repository, TransactionBankDateComparator comparator,
+  private boolean computeAccountBalance(GlobRepository repository, TransactionComparator comparator,
                                         Glob[] transactions, Glob account) {
     Integer transactionId = account.get(Account.TRANSACTION_ID);
     int pivot;
@@ -181,11 +181,7 @@ public class BalanceTrigger implements ChangeSetListener {
       if (!transaction.get(Transaction.PLANNED)) {
         Integer accountId = transaction.get(Transaction.ACCOUNT);
         if (accountId != null) {
-          Double value = transaction.get(Transaction.ACCOUNT_BALANCE);
-          if (value == null) {
-            System.out.println("BalanceTrigger.computeTotalBalance " + GlobPrinter.toString(transaction));
-          }
-          balances.put(accountId, value);
+          balances.put(accountId, transaction.get(Transaction.ACCOUNT_BALANCE));
         }
         while (lastCloseIndex < closeMonth.length &&
                closeMonth[lastCloseIndex] <= transaction.get(Transaction.BANK_MONTH) &&
@@ -207,22 +203,6 @@ public class BalanceTrigger implements ChangeSetListener {
     }
     if (!updatePlannedOnly) {
       repository.update(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID), Account.BALANCE, realBalance);
-    }
-  }
-
-
-  private static class TransactionBankDateComparator implements Comparator<Glob> {
-    public int compare(Glob o1, Glob o2) {
-      int tmp;
-      tmp = o1.get(Transaction.BANK_MONTH).compareTo(o2.get(Transaction.BANK_MONTH));
-      if (tmp != 0) {
-        return tmp;
-      }
-      tmp = o1.get(Transaction.BANK_DAY).compareTo(o2.get(Transaction.BANK_DAY));
-      if (tmp != 0) {
-        return tmp;
-      }
-      return o1.get(Transaction.ID).compareTo(o2.get(Transaction.ID));
     }
   }
 }

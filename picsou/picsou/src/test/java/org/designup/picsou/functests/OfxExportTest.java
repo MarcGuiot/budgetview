@@ -106,7 +106,7 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
 
     String fileName = TestUtils.getFileName(this, ".qif");
     Files.dumpStringToFile(fileName, content);
-    operations.importQifFile(12.50, fileName, "Societe Generale");
+    operations.importQifFile(fileName, "Societe Generale");
 
     transactions.initContent()
       .add("28/03/2007", TransactionType.VIREMENT, "AVRIL", "", 12345.67)
