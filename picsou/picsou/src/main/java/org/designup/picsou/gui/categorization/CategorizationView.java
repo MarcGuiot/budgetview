@@ -28,11 +28,11 @@ import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -89,7 +89,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     transactionTable =
       builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
         .setDefaultLabelCustomizer(new TransactionLabelCustomizer())
-        .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING),
+        .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER),
                    LabelCustomizers.fontSize(9))
         .addColumn(Lang.get("series"), new CompactSeriesStringifier(directory),
                    LabelCustomizers.fontSize(9))
@@ -256,10 +256,16 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
   }
 
   private Comparator<Glob> getTransactionComparator() {
-    return new GlobFieldsComparator(Transaction.LABEL, true,
-                                    Transaction.MONTH, false,
-                                    Transaction.DAY, false,
-                                    Transaction.AMOUNT, false);
+    return new Comparator<Glob>() {
+      public int compare(Glob transaction1, Glob transaction2) {
+        int labelDiff = Utils.compare(transaction1.get(Transaction.LABEL),
+                                      transaction2.get(Transaction.LABEL));
+        if (labelDiff != 0) {
+          return labelDiff;
+        }
+        return TransactionComparator.ASCENDING_SPLIT_AFTER.compare(transaction1, transaction2);
+      }
+    };
   }
 
   private static Directory createLocalDirectory(Directory directory) {
@@ -301,7 +307,6 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     }
     return null;
   }
-
 
   private class CreateSeriesAction extends AbstractAction {
     private final BudgetArea budgetArea;

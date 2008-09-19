@@ -97,15 +97,19 @@ public class SplitDialogChecker {
     return this;
   }
 
-  public SplitDialogChecker assertAddDisabled() {
+  public SplitDialogChecker assertOkDisabled() {
     org.uispec4j.assertion.UISpecAssert.assertFalse(getOkButton().isEnabled());
     return this;
   }
 
-  public SplitDialogChecker checkErrorMessage(String expectedMessage) {
-    Button addButton = getOkButton();
-    addButton.click();
-    UISpecAssert.assertTrue(window.getTextBox("message").textEquals(expectedMessage));
+  public SplitDialogChecker checkOkFailure(String expectedMessage) {
+    getOkButton().click();
+
+    UISpecAssert.assertTrue(window.isVisible());
+
+    TextBox message = window.getTextBox("message");
+    UISpecAssert.assertTrue(message.isVisible());
+    UISpecAssert.assertTrue(message.textEquals(expectedMessage));
     return this;
   }
 
@@ -118,11 +122,13 @@ public class SplitDialogChecker {
     Button addButton = getOkButton();
     addButton.click();
     UISpecAssert.assertTrue(window.getTextBox("message").textIsEmpty());
+    UISpecAssert.assertFalse(window.isVisible());
     return this;
   }
 
   public void close() {
     closeButton.click();
+    UISpecAssert.assertFalse(window.isVisible());
   }
 
   public SplitDialogChecker checkTable(Object[][] objects) {
@@ -184,7 +190,7 @@ public class SplitDialogChecker {
     return this;
   }
 
-  public SplitDialogChecker checkDeleteEnabled(boolean enabled, int row) {
+  public SplitDialogChecker checkDeleteEnabled(int row, boolean enabled) {
     UISpecAssert.assertEquals(enabled, getDeleteButton(row).isEnabled());
     return this;
   }

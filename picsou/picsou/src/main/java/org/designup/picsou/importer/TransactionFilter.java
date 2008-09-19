@@ -21,11 +21,11 @@ public class TransactionFilter {
 
   private GlobList loadTransactionsToCreate(GlobRepository targetRepository,
                                             ReadOnlyGlobRepository referenceRepository, GlobList transactionToFilter) {
-    GlobList importedTransactions = transactionToFilter.sort(TransactionComparator.ASCENDING_BANK);
+    GlobList importedTransactions = transactionToFilter.sort(TransactionComparator.ASCENDING_BANK_SPLIT_AFTER);
     if (importedTransactions.isEmpty()) {
       return GlobList.EMPTY;
     }
-    GlobList actualTransactions = referenceRepository.getAll(Transaction.TYPE).sort(TransactionComparator.ASCENDING_BANK);
+    GlobList actualTransactions = referenceRepository.getAll(Transaction.TYPE).sort(TransactionComparator.ASCENDING_BANK_SPLIT_AFTER);
     if (actualTransactions.isEmpty()) {
       return importedTransactions;
     }

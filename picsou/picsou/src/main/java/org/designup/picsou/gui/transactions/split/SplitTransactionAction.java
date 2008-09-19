@@ -19,7 +19,7 @@ public class SplitTransactionAction extends AbstractAction implements GlobSelect
   private SplitTransactionDialog dialog;
 
   public SplitTransactionAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("split.transaction"));
+    super(Lang.get("split.transaction.new"));
     dialog = new SplitTransactionDialog(repository, directory);
     directory.get(SelectionService.class).addListener(this, Transaction.TYPE);
     setEnabled(false);
@@ -29,9 +29,21 @@ public class SplitTransactionAction extends AbstractAction implements GlobSelect
     if (!selection.isRelevantForType(Transaction.TYPE)) {
       return;
     }
+
     GlobList transactions = selection.getAll(Transaction.TYPE);
     selectedTransaction = transactions.size() == 1 ? transactions.get(0) : null;
     setEnabled(selectedTransaction != null);
+
+    this.putValue(Action.NAME, getLabel(selectedTransaction));
+  }
+
+  private String getLabel(Glob transaction) {
+    if (transaction != null &&
+        (Boolean.TRUE.equals(transaction.get(Transaction.SPLIT))
+         || (transaction.get(Transaction.SPLIT_SOURCE) != null))) {
+      return Lang.get("split.transaction.existing");
+    }
+    return Lang.get("split.transaction.new");
   }
 
   public void actionPerformed(ActionEvent e) {

@@ -108,11 +108,25 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkSplitVisible();
   }
 
+  public void testSplitButtonLabelChanges() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/15", -20.00, "McDo", MasterCategory.FOOD)
+      .load();
+    categorization.selectTableRow(0);
+    transactionDetails.checkSplitButtonLabel("Split...");
+
+    transactionDetails.openSplitDialog()
+      .enterAmount("5")
+      .ok();
+    transactionDetails.checkSplitButtonLabel("View split...");
+  }
+
   public void testSplitButtonInitiallyInvisibleWithTwoTransactions() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/15", -20.00, "McDo", MasterCategory.FOOD)
       .addTransaction("2008/06/14", -10.00, "Fouquet's", MasterCategory.EDUCATION)
       .load();
+
     transactionDetails.checkSplitNotVisible();
 
     categorization.selectTableRows(0, 1);

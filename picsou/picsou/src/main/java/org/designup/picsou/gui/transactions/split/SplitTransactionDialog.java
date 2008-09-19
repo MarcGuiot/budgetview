@@ -48,7 +48,7 @@ public class SplitTransactionDialog {
   public static final int NOTE_COLUMN_INDEX = 3;
   public static final int DELETE_SPLIT_COLUMN_INDEX = 4;
 
-  private Glob transactionToSplit;
+  private Glob sourceTransaction;
   private Glob splittedTransaction;
 
   private LocalGlobRepository localRepository;
@@ -101,19 +101,19 @@ public class SplitTransactionDialog {
 
   public void show(Glob initialTransaction) {
 
-    Glob sourceTransaction = initialTransaction;
+    Glob source = initialTransaction;
     if (Transaction.isSplitPart(initialTransaction)) {
-      sourceTransaction = parentRepository.findLinkTarget(initialTransaction, Transaction.SPLIT_SOURCE);
+      source = parentRepository.findLinkTarget(initialTransaction, Transaction.SPLIT_SOURCE);
     }
 
     localRepository.rollback();
 
     GlobList transactions = new GlobList();
-    transactions.add(sourceTransaction);
-    transactions.addAll(parentRepository.findLinkedTo(sourceTransaction, Transaction.SPLIT_SOURCE));
+    transactions.add(source);
+    transactions.addAll(parentRepository.findLinkedTo(source, Transaction.SPLIT_SOURCE));
     localRepository.reset(transactions, Transaction.TYPE);
 
-    transactionToSplit = localRepository.get(sourceTransaction.getKey());
+    sourceTransaction = localRepository.get(source.getKey());
 
     localDirectory.get(SelectionService.class).select(localRepository.get(initialTransaction.getKey()));
 
@@ -140,7 +140,7 @@ public class SplitTransactionDialog {
 
   private void addTable(GlobsPanelBuilder builder) {
 
-    TransactionComparator transactionComparator = TransactionComparator.ASCENDING;
+    TransactionComparator transactionComparator = TransactionComparator.ASCENDING_SPLIT_AFTER;
 
     tableView = builder.addTable("transaction", Transaction.TYPE, transactionComparator);
 
@@ -173,7 +173,7 @@ public class SplitTransactionDialog {
   }
 
   private void validate() {
-    Double initialAmount = transactionToSplit.get(Transaction.AMOUNT);
+    Double initialAmount = sourceTransaction.get(Transaction.AMOUNT);
 
     Double amount = null;
     if (!Strings.isNullOrEmpty(amountField.getText())) {
@@ -181,13 +181,11 @@ public class SplitTransactionDialog {
         amount = getEnteredAmount() * Math.signum(initialAmount);
       }
       catch (NumberFormatException e) {
-        System.out.println("SplitTransactionDialog.validate: " + e.getMessage());
         messageLabel.setText(Lang.get("split.transaction.invalid.amount"));
         return;
       }
 
       if (Math.abs(amount) >= Math.abs(initialAmount)) {
-        System.out.println("SplitTransactionDialog.validate: too large");
         messageLabel.setText(Lang.get("split.transaction.amount.too.large", Math.abs(initialAmount)));
         return;
       }
@@ -203,8 +201,8 @@ public class SplitTransactionDialog {
         localRepository.update(splittedTransaction.getKey(),
                                value(Transaction.AMOUNT, amount),
                                value(Transaction.NOTE, noteField.getText()));
-        localRepository.update(transactionToSplit.getKey(), Transaction.AMOUNT, subtract(initialAmount, amount));
-        localRepository.update(transactionToSplit.getKey(), Transaction.SPLIT, Boolean.TRUE);
+        localRepository.update(sourceTransaction.getKey(), Transaction.AMOUNT, subtract(initialAmount, amount));
+        localRepository.update(sourceTransaction.getKey(), Transaction.SPLIT, Boolean.TRUE);
       }
     }
     finally {
@@ -212,26 +210,31 @@ public class SplitTransactionDialog {
     }
 
     localRepository.commitChanges(false);
-    resetAddAmountFields();
 
     if (splittedTransaction != null) {
       parentSelectionService.select(parentRepository.get(splittedTransaction.getKey()));
     }
+    else {
+      parentSelectionService.select(parentRepository.get(sourceTransaction.getKey()));
+    }
+
+    dialog.setVisible(false);
+    resetAddAmountFields();
   }
 
   private Glob createSplittedTransaction() {
     return localRepository.create(
       Transaction.TYPE,
-      value(Transaction.ACCOUNT, transactionToSplit.get(Transaction.ACCOUNT)),
-      value(Transaction.IMPORT, transactionToSplit.get(Transaction.IMPORT)),
-      value(Transaction.LABEL, transactionToSplit.get(Transaction.LABEL)),
-      value(Transaction.ORIGINAL_LABEL, transactionToSplit.get(Transaction.ORIGINAL_LABEL)),
-      value(Transaction.MONTH, transactionToSplit.get(Transaction.MONTH)),
-      value(Transaction.DAY, transactionToSplit.get(Transaction.DAY)),
-      value(Transaction.BANK_MONTH, transactionToSplit.get(Transaction.BANK_MONTH)),
-      value(Transaction.BANK_DAY, transactionToSplit.get(Transaction.BANK_DAY)),
-      value(Transaction.TRANSACTION_TYPE, transactionToSplit.get(Transaction.TRANSACTION_TYPE)),
-      value(Transaction.SPLIT_SOURCE, transactionToSplit.get(Transaction.ID))
+      value(Transaction.ACCOUNT, sourceTransaction.get(Transaction.ACCOUNT)),
+      value(Transaction.IMPORT, sourceTransaction.get(Transaction.IMPORT)),
+      value(Transaction.LABEL, sourceTransaction.get(Transaction.LABEL)),
+      value(Transaction.ORIGINAL_LABEL, sourceTransaction.get(Transaction.ORIGINAL_LABEL)),
+      value(Transaction.MONTH, sourceTransaction.get(Transaction.MONTH)),
+      value(Transaction.DAY, sourceTransaction.get(Transaction.DAY)),
+      value(Transaction.BANK_MONTH, sourceTransaction.get(Transaction.BANK_MONTH)),
+      value(Transaction.BANK_DAY, sourceTransaction.get(Transaction.BANK_DAY)),
+      value(Transaction.TRANSACTION_TYPE, sourceTransaction.get(Transaction.TRANSACTION_TYPE)),
+      value(Transaction.SPLIT_SOURCE, sourceTransaction.get(Transaction.ID))
     );
   }
 
@@ -268,7 +271,6 @@ public class SplitTransactionDialog {
 
     public void actionPerformed(ActionEvent e) {
       validate();
-      dialog.setVisible(false);
     }
   }
 
@@ -351,7 +353,7 @@ public class SplitTransactionDialog {
             public void visitDeletion(Key key, FieldValues values) throws Exception {
               Double amount = values.get(Transaction.AMOUNT);
               if (amount != null) {
-                GlobUtils.add(transactionToSplit, Transaction.AMOUNT, amount, repository);
+                GlobUtils.add(sourceTransaction, Transaction.AMOUNT, amount, repository);
               }
             }
           });

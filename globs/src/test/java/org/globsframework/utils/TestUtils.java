@@ -40,7 +40,7 @@ public class TestUtils {
 
   public static <T> void assertEquals(T[] expected, T... actual) {
     if (!Arrays.equals(expected, actual)) {
-      Assert.fail("expected: " + Arrays.toString(expected) + " but was: " + Arrays.toString(actual));
+      Assert.fail("expected: \n" + Arrays.toString(expected) + "\n   but was: " + Arrays.toString(actual));
     }
   }
 

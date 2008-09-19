@@ -6,7 +6,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
-public abstract class TransactionSplittingTest extends LoggedInFunctionalTestCase {
+public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     setCurrentMonth("2006/01");
@@ -54,7 +54,7 @@ public abstract class TransactionSplittingTest extends LoggedInFunctionalTestCas
       .initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -5.00, MasterCategory.FOOD)
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "DVD", -12.50, MasterCategory.LEISURES)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "Youth Elixir", -2.50, MasterCategory.BEAUTY)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "Youth Elixir", -2.50)
       .check();
     categorization.checkSelectedTableRow(2);
     transactionDetails.checkNote("Youth Elixir");
@@ -68,33 +68,6 @@ public abstract class TransactionSplittingTest extends LoggedInFunctionalTestCas
       })
       .checkSelectedTableRow(2)
       .close();
-
-  }
-
-  public void testTransactionTableIsUpdatedOnlyWhenClickingOnOk() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
-      .load();
-
-    categorization.getTable().selectRow(0);
-    SplitDialogChecker dialog = transactionDetails.openSplitDialog()
-      .enterAmount("12.50")
-      .enterNote("DVD")
-      .selectOccasional(MasterCategory.LEISURES)
-      .ok();
-
-    categorization
-      .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0)
-      .check();
-
-    dialog.close();
-
-    categorization.initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.50, MasterCategory.FOOD)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "DVD", -12.50, MasterCategory.LEISURES)
-      .check();
   }
 
   public void testCancelReallyCancels() throws Exception {
@@ -106,154 +79,156 @@ public abstract class TransactionSplittingTest extends LoggedInFunctionalTestCas
     categorization.selectTableRow(0);
     transactionDetails.openSplitDialog()
       .enterAmount("12.50")
-      .selectOccasional(MasterCategory.LEISURES)
-      .ok()
-      .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -7.50, ""},
-        {MasterCategory.LEISURES, "Auchan", -12.50, ""},
-      })
       .close();
 
-    transactions
+    categorization
       .initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0, MasterCategory.FOOD)
       .check();
   }
 
   public void testSplittingASplitPart() throws Exception {
-    openDialogWithSampleTransaction()
-      .addOccasional("12.50", MasterCategory.LEISURES, "")
-      .close();
+    openDialogWith("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
+      .enterAmount("12.50")
+      .ok();
 
-    transactions
+    categorization
       .initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.50, MasterCategory.FOOD)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50, MasterCategory.LEISURES)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50)
       .check();
 
-    categorization.selectTableRow(1);
+    categorization.setOccasional(1, MasterCategory.LEISURES);
     transactionDetails.openSplitDialog()
       .checkTable(new Object[][]{
         {MasterCategory.FOOD, "Auchan", -7.50, ""},
         {MasterCategory.LEISURES, "Auchan", -12.50, ""},
       })
-      .addOccasional("2.50", MasterCategory.EQUIPMENT, "")
-      .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -5.00, ""},
-        {MasterCategory.LEISURES, "Auchan", -12.50, ""},
-        {MasterCategory.EQUIPMENT, "Auchan", -2.50, ""},
-      })
-      .close();
+      .enterAmount("2.50")
+      .ok();
 
-    transactions
+    categorization
       .initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -5.00, MasterCategory.FOOD)
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50, MasterCategory.LEISURES)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -2.50, MasterCategory.EQUIPMENT)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -2.50)
       .check();
   }
 
   public void testAddButtonUnavailableIfNoAmountIsEntered() throws Exception {
-    openDialogWithSampleTransaction()
-      .enterAmount("")
-      .assertAddDisabled();
-  }
-
-  public void testNoCategorySelected() throws Exception {
-    openDialogWithSampleTransaction()
-      .enterAmount("12.50")
-      .ok()
-      .close();
-
-    transactions
-      .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.50, MasterCategory.FOOD)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50, MasterCategory.NONE)
-      .check();
+    openDialogWith("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
+      .assertOkDisabled();
   }
 
   public void testAmountIsSubtractedWhateverTheSign() throws Exception {
-    openDialogWithSampleTransaction()
+    openDialogWith("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .enterAmount("12.50")
-      .ok()
-      .close();
+      .ok();
 
-    transactions
+    categorization
       .initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.50, MasterCategory.FOOD)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50, MasterCategory.NONE)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50)
       .check();
   }
 
   public void testEnteringSeveralAmounts() throws Exception {
-    openDialogWithSampleTransaction()
-      .enterAmount(" 2.50 1 4. 5.000 ")
-      .selectOccasional(MasterCategory.LEISURES)
-      .ok()
-      .close();
+    openDialogWith("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
+      .enterAmount("  2.50 1 4. 5.000 ")
+      .ok();
 
-    transactions
+    categorization
       .initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.50, MasterCategory.FOOD)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50, MasterCategory.LEISURES)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50)
       .check();
   }
 
   public void testCommasAreConvertedIntoDots() throws Exception {
-    openDialogWithSampleTransaction()
+    openDialogWith("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .enterAmount(" 12,50 ")
-      .selectOccasional(MasterCategory.LEISURES)
-      .ok()
-      .close();
+      .ok();
 
-    transactions
+    categorization
       .initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.50, MasterCategory.FOOD)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50, MasterCategory.LEISURES)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50)
       .check();
   }
 
   public void testAmountFieldFiltersChars() throws Exception {
-    openDialogWithSampleTransaction()
+    openDialogWith("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .enterAmount("- a 1à2$.+5-0= 3 ")
-      .checkAmount("  12.50 3 ");
+      .checkAmount("  12.50 3 ")
+      .close();
   }
 
   public void testInvalidValueInAmountField() throws Exception {
-    openDialogWithSampleTransaction()
+    openDialogWith("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .enterAmount(" . . ")
-      .checkErrorMessage("Invalid amount");
+      .checkOkFailure("Invalid amount")
+      .close();
   }
 
   public void testAmountGreaterThanInitialTransactionAmount() throws Exception {
-    openDialogWithSampleTransaction()
+    openDialogWith("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .enterAmount("100")
-      .checkErrorMessage("Amount must be less than 20")
+      .checkOkFailure("Amount must be less than 20")
       .close();
-    transactions
+
+    categorization
       .initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0, MasterCategory.FOOD)
       .check();
   }
 
-  public void testTotalAmountGreaterThanInitialTransactionAmount() throws Exception {
-    openDialogWithSampleTransaction()
-      .enterAmount("12")
-      .ok()
+  public void testRemovingSplitParts() throws Exception {
+    openDialogWith("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
+      .enterAmount("5")
+      .enterNote("DVD")
+      .ok();
+
+    transactionDetails.openSplitDialog()
+      .enterAmount("8")
+      .enterNote("Youth Elixir")
+      .ok();
+
+    transactionDetails.openSplitDialog()
+      .enterAmount("3")
+      .enterNote("Cool Sticker")
+      .ok();
+
+    transactionDetails.openSplitDialog()
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -8.0, ""},
-        {MasterCategory.NONE, "Auchan", -12.0, ""},
+        {MasterCategory.FOOD, "Auchan", -4.0, ""},
+        {MasterCategory.NONE, "Auchan", -5.0, "DVD"},
+        {MasterCategory.NONE, "Auchan", -8.0, "Youth Elixir"},
+        {MasterCategory.NONE, "Auchan", -3.0, "Cool Sticker"},
       })
-      .enterAmount("15")
-      .checkErrorMessage("Amount must be less than 8")
+      .deleteRow(1)
+      .deleteRow(2)
       .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -8.0, ""},
-        {MasterCategory.NONE, "Auchan", -12.0, ""},
+        {MasterCategory.FOOD, "Auchan", -12.0, ""},
+        {MasterCategory.NONE, "Auchan", -8.0, "Youth Elixir"},
       })
-      .close();
+      .deleteRow(1)
+      .checkTable(new Object[][]{
+        {MasterCategory.FOOD, "Auchan", -20.0, ""}
+      })
+      .enterAmount("7")
+      .enterNote("Another DVD")
+      .ok();
+
+    categorization
+      .initContent()
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -13.0, MasterCategory.FOOD)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "Another DVD", -7.0)
+      .check();
+
+    categorization.checkSelectedTableRow(1);
   }
 
-  public void testSplittingANonCategorizedTransaction() throws Exception {
+  public void testDeletingCategorizedSplitPartWithUncategorizedSource() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/15", -20.0, "Auchan")
@@ -261,100 +236,67 @@ public abstract class TransactionSplittingTest extends LoggedInFunctionalTestCas
 
     categorization.selectTableRow(0);
     transactionDetails.openSplitDialog()
-      .checkTable(new Object[][]{
-        {MasterCategory.NONE, "Auchan", -20.0, ""},
-      })
-      .addOccasional("12", MasterCategory.LEISURES, "DVD")
-      .checkTable(new Object[][]{
-        {MasterCategory.NONE, "Auchan", -8.0, ""},
-        {MasterCategory.LEISURES, "Auchan", -12.0, "DVD"},
-      })
-      .close();
+      .enterAmount("12.50")
+      .ok();
 
-    transactions
+    categorization.setOccasional(1, MasterCategory.FOOD);
+
+    transactionDetails.openSplitDialog()
+      .deleteRow(1)
+      .ok();
+    
+    categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -8.0, MasterCategory.NONE)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "DVD", -12.0, MasterCategory.LEISURES)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0)
       .check();
   }
 
-  public void testFieldsAreResetAndCreatedTransactionSelectedAfterAdd() throws Exception {
-    openDialogWithSampleTransaction()
-      .selectOccasional(MasterCategory.LEISURES)
-      .enterAmount("12.50")
-      .enterNote("DVD")
-      .ok()
-      .checkAmount("")
-      .checkNote("")
-      .close();
-  }
+  public void testSourceTransactionIsSelectedWhenRemovingAllSplits() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
+      .addTransaction("2006/01/10", -50.0, "Monoprix", MasterCategory.FOOD)
+      .load();
 
-  public void testFieldsAreResetWhenAddAmountPanelIsHidden() throws Exception {
-    openDialogWithSampleTransaction()
-      .selectOccasional(MasterCategory.LEISURES)
-      .enterAmount("12.50")
-      .enterNote("DVD")
-      .checkAmount("")
-      .checkNote("")
-      .close();
-  }
+    categorization.selectTableRow(1);
+    transactionDetails.openSplitDialog()
+      .enterAmount("10")
+      .enterNote("CD")
+      .ok();
 
-  public void testRemovingSplitParts() throws Exception {
-    openDialogWithSampleTransaction()
-      .addOccasional("5", MasterCategory.LEISURES, "DVD")
-      .addOccasional("8", MasterCategory.BEAUTY, "Youth Elixir")
-      .addOccasional("3", MasterCategory.EQUIPMENT, "Cool Sticker")
-      .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -4.0, ""},
-        {MasterCategory.LEISURES, "Auchan", -5.0, "DVD"},
-        {MasterCategory.BEAUTY, "Auchan", -8.0, "Youth Elixir"},
-        {MasterCategory.EQUIPMENT, "Auchan", -3.0, "Cool Sticker"},
-      })
-
-      .deleteRow(1)
-      .deleteRow(2)
-      .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -12.0, ""},
-        {MasterCategory.BEAUTY, "Auchan", -8.0, "Youth Elixir"},
-      })
-
-      .deleteRow(1)
-      .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -20.0, ""}
-      })
-
-      .addOccasional("7", MasterCategory.LEISURES, "Another DVD")
-      .close();
-
-    transactions
+    categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -13.0, MasterCategory.FOOD)
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "Another DVD", -7.0, MasterCategory.LEISURES)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0, MasterCategory.FOOD)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Monoprix", "", -40.0, MasterCategory.FOOD)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Monoprix", "CD", -10.0)
       .check();
+
+    transactionDetails.openSplitDialog()
+      .deleteRow(1)
+      .ok();
+
+    categorization
+      .initContent()
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0, MasterCategory.FOOD)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Monoprix", "", -50.0, MasterCategory.FOOD)
+      .check();
+    categorization.checkSelectedTableRow(1);
   }
 
   public void testCannotRemoveSplitSource() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
-      .load();
-
-    categorization.selectTableRow(0);
-    transactionDetails.openSplitDialog()
-      .checkDeleteEnabled(false, 0)
-      .addOccasional("12.50", MasterCategory.LEISURES, "DVD")
-      .checkTable(new Object[][]{
-        {MasterCategory.FOOD, "Auchan", -7.50, ""},
-        {MasterCategory.LEISURES, "Auchan", -12.50, "DVD"},
-      })
-      .checkDeleteEnabled(false, 0)
+    openDialogWith("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
+      .checkDeleteEnabled(0, false)
+      .enterAmount("12.50")
+      .enterNote("DVD")
+      .checkDeleteEnabled(0, false)
       .close();
   }
 
-  private SplitDialogChecker openDialogWithSampleTransaction() {
+  private SplitDialogChecker openDialogWith(final String date, final double amount,
+                                                             final String label, final MasterCategory category) {
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
+      .addTransaction(date, amount, label, category)
       .load();
 
     categorization.selectTableRow(0);

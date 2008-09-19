@@ -6,6 +6,7 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 
@@ -68,7 +69,7 @@ public class BalanceTrigger implements ChangeSetListener {
 
   private void updateTransactionBalance(GlobRepository repository, GlobList updatedAccount,
                                         boolean updatePlannedOnly) {
-    TransactionComparator comparator = TransactionComparator.ASCENDING_BANK;
+    TransactionComparator comparator = TransactionComparator.ASCENDING;
     GlobMatcher globMatcher = GlobMatchers.ALL;
     if (updatePlannedOnly) {
       globMatcher = GlobMatchers.fieldEquals(Transaction.PLANNED, true);

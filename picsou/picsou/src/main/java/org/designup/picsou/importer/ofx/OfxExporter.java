@@ -60,7 +60,7 @@ public class OfxExporter {
 
   private void writeTransactions(Glob account) {
     GlobList transactionsToWrite = new GlobList(repository.findLinkedTo(account, Transaction.ACCOUNT));
-    Collections.sort(transactionsToWrite, TransactionComparator.ASCENDING);
+    Collections.sort(transactionsToWrite, TransactionComparator.ASCENDING_SPLIT_AFTER);
     for (Glob transaction : transactionsToWrite) {
       writeTransaction(transaction);
     }

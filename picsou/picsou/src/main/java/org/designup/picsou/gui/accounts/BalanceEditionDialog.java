@@ -39,7 +39,7 @@ public class BalanceEditionDialog {
     Glob transaction = null;
     if (transactionId == null) {
       SortedSet<Glob> globSortedSet =
-        repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_BANK,
+        repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_BANK_SPLIT_AFTER,
                              GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
                                               GlobMatchers.fieldEquals(Transaction.PLANNED, false)));
       if (!globSortedSet.isEmpty()) {

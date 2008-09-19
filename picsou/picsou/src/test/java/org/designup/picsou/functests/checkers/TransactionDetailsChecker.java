@@ -73,7 +73,11 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkSplitVisible() {
-    assertTrue(getPanel().getButton("splitL").isVisible());
+    assertTrue(getPanel().getButton("split").isVisible());
+  }
+
+  public void checkSplitButtonLabel(String text) {
+    assertTrue(getPanel().getButton("split").textEquals(text));
   }
 
   public void split(String amount, String note) {
