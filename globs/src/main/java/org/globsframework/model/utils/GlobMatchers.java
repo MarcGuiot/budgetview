@@ -225,13 +225,11 @@ public class GlobMatchers {
   }
 
   public static GlobMatcher or(final GlobMatcher... matchers) {
+    List<GlobMatcher> significantMatchers = new ArrayList<GlobMatcher>();
     for (GlobMatcher matcher : matchers) {
       if ((matcher != null) && matcher.equals(ALL)) {
         return ALL;
       }
-    }
-    List<GlobMatcher> significantMatchers = new ArrayList<GlobMatcher>();
-    for (GlobMatcher matcher : matchers) {
       if ((matcher != null) && (matcher != NONE)) {
         significantMatchers.add(matcher);
       }
