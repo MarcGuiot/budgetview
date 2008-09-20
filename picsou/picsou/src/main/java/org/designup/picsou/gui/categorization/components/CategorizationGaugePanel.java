@@ -10,6 +10,8 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.not;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
@@ -56,7 +58,9 @@ public class CategorizationGaugePanel implements GlobSelectionListener, ChangeSe
 
   public void update() {
     GlobList transactionsForSelectedMonths =
-      repository.getAll(Transaction.TYPE, GlobMatchers.fieldIn(Transaction.MONTH, selectedMonthIds));
+      repository.getAll(Transaction.TYPE,
+                        and(not(fieldEquals(Transaction.PLANNED, true)),
+                            fieldIn(Transaction.MONTH, selectedMonthIds)));
     double total = 0;
     double uncategorized = 0;
     for (Glob transaction : transactionsForSelectedMonths) {

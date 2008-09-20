@@ -29,12 +29,8 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
 
     gauge.checkLevel(1, "100%");
 
-    System.out.println("\nCategorizationGaugeTest.test: WorldCo");
-
     categorization.setOccasional("WorldCo", MasterCategory.INCOME);
     gauge.checkLevel(0.5, "50%");
-
-    System.out.println("\nCategorizationGaugeTest.test: Auchan");
 
     categorization.setOccasional("Auchan", MasterCategory.FOOD);
     gauge.checkLevel(0.05, "5%");
@@ -56,5 +52,23 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     gauge.checkHidden();
+  }
+
+  public void testIgnoresPlannedTransactions() throws Exception {
+    CategorizationGaugeChecker gauge = categorization.getGauge();
+    gauge.checkHidden();
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/10", 1000.0, "WorldCo")
+      .addTransaction("2008/07/10", -1000.0, "FNAC")
+      .load();
+
+    timeline.selectAll();
+
+    gauge.checkLevel(1, "100%");
+
+    categorization.setIncome("WorldCo", "Salaire", true);
+    gauge.checkLevel(0.5, "50%");
   }
 }
