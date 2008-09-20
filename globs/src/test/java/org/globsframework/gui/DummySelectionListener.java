@@ -26,8 +26,10 @@ public class DummySelectionListener extends XmlTestLogger implements GlobSelecti
 
   public void selectionUpdated(GlobSelection selection) {
     List<String> keys = new ArrayList<String>();
-    for (Glob glob : selection.getAll()) {
-      keys.add(glob.getKey().toString());
+    for (GlobType type : selection.getRelevantTypes()) {
+      for (Glob glob : selection.getAll(type)) {
+        keys.add(glob.getKey().toString());
+      }
     }
     Collections.sort(keys);
     try {

@@ -6,57 +6,50 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 
 import java.util.Collection;
-import java.util.Arrays;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DefaultGlobSelection implements GlobSelection {
-  private Collection<Glob> globs;
-  private Collection<GlobType> relevantTypes;
+  private Map<GlobType, GlobList> globs = new HashMap<GlobType, GlobList>();
 
-  public DefaultGlobSelection(GlobSelection selection) {
-    globs = selection.getAll();
-    relevantTypes = new ArrayList<GlobType>(Arrays.asList(selection.getRelevantTypes()));
+
+  public DefaultGlobSelection() {
   }
 
-  public DefaultGlobSelection(Collection<Glob> globs, Collection<GlobType> types) {
-    this.globs = globs;
-    this.relevantTypes = types;
+  public DefaultGlobSelection(Glob selection) {
+    globs.put(selection.getType(), new GlobList(selection));
   }
 
-  public void add(GlobList globs, GlobType type) {
-    this.globs.addAll(globs);
-    relevantTypes.add(type);
+  public DefaultGlobSelection add(Collection<Glob> globs, GlobType type) {
+    GlobList globList = this.globs.get(type);
+    if (globList == null) {
+      globList = new GlobList();
+      this.globs.put(type, globList);
+    }
+    globList.addAll(globs);
+    return this;
   }
 
   public GlobType[] getRelevantTypes() {
-    return relevantTypes.toArray(new GlobType[relevantTypes.size()]);
+    return globs.keySet().toArray(new GlobType[globs.size()]);
   }
 
   public boolean isRelevantForType(GlobType type) {
-    return relevantTypes.contains(type);
-  }
-
-  public GlobList getAll() {
-    return new GlobList(globs);
+    return globs.containsKey(type);
   }
 
   public GlobList getAll(GlobType type) {
-    if (!relevantTypes.contains(type)) {
-      return new GlobList();
+    GlobList globList = globs.get(type);
+    if (globList == null) {
+      return GlobList.EMPTY;
     }
-    GlobList result = new GlobList();
-    for (Glob glob : globs) {
-      if (glob.getType().equals(type)) {
-        result.add(glob);
-      }
-    }
-    return result;
+    return new GlobList(globList);
   }
 
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("GlobSelection:");
-    for (GlobType type : relevantTypes) {
+    for (GlobType type : globs.keySet()) {
       builder.append(' ').append(type.getName());
       builder.append(getAll(type));
     }

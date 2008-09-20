@@ -1,19 +1,19 @@
 package org.globsframework.gui;
 
-import org.globsframework.gui.utils.DefaultGlobSelection;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.utils.CopyOnWriteMultiMap;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Utils;
-import static org.globsframework.utils.Utils.list;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.util.*;
 
 public class SelectionService {
   private MultiMap<GlobType, GlobSelectionListener> listenersByType =
-    new MultiMap<GlobType, GlobSelectionListener>();
+    new CopyOnWriteMultiMap<GlobType, GlobSelectionListener>();
   private Map<GlobType, GlobList> currentSelections = new HashMap<GlobType, GlobList>();
 
   public void addListener(final GlobSelectionListener listener, GlobType... types) {
@@ -55,25 +55,30 @@ public class SelectionService {
     return list;
   }
 
-  public void select(Collection<Glob> globs, GlobType type, GlobType... types) {
-    List<GlobType> allTypes = list(type, types);
-    DefaultGlobSelection selection = new DefaultGlobSelection(globs, allTypes);
-    for (GlobType globType : allTypes) {
-      currentSelections.put(globType, selection.getAll(globType));
-    }
+  public void select(Collection<Glob> globs, GlobType type) {
+    GlobSelection selection = GlobSelectionBuilder.create(globs, type);
+    currentSelections.put(type, selection.getAll(type));
 
-    Set<GlobSelectionListener> listeners = getListeners(allTypes);
+    List<GlobSelectionListener> listeners = listenersByType.get(type);
     for (GlobSelectionListener listener : listeners) {
       listener.selectionUpdated(selection);
     }
   }
 
-  private Set<GlobSelectionListener> getListeners(List<GlobType> types) {
-    Set<GlobSelectionListener> listeners = new HashSet<GlobSelectionListener>();
-    for (GlobType type : types) {
-      listeners.addAll(listenersByType.get(type));
+  public void select(GlobSelection selection) {
+    GlobType[] globTypes = selection.getRelevantTypes();
+    for (GlobType type : globTypes) {
+      currentSelections.put(type, selection.getAll(type));
     }
-    return listeners;
+    HashSet called = new HashSet();
+    for (GlobType type : globTypes) {
+      for (GlobSelectionListener listener : listenersByType.get(type)) {
+        if (!called.contains(listener)) {
+          listener.selectionUpdated(selection);
+          called.add(listener);
+        }
+      }
+    }
   }
 
   public void clear(GlobType type) {
