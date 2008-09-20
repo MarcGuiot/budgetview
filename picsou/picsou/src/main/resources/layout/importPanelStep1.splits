@@ -13,7 +13,7 @@
 
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(450,230)">
+  <panel styleClass="dialog" preferredSize="(450,260)">
 
     <column styleClass="innerDialog">
 
@@ -21,10 +21,13 @@
 
       <htmlEditorPane text="$login.initial.file"/>
 
-      <row marginTop="5" marginLeft="5" marginRight="5" defaultAnchor="center">
+      <row margin="5" defaultAnchor="center">
         <textField ref="fileField" marginRight="10" anchor="center" weightX="100"/>
         <button ref="fileButton" anchor="west"/>
       </row>
+
+      <textArea text="$import.step1.format.advice" marginTop="10"
+                styleClass="multiLineLabel" font="-,plain,11"/>
 
       <label ref="message" margin="5" horizontalAlignment="center" foreground="#FF0000"
              fill="horizontal" anchor="center"/>

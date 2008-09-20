@@ -749,7 +749,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkDoesNotContainOccasional(MasterCategory.FOOD, "Apero");
   }
 
-  public void testSeveralMonths() throws Exception {
+  public void testFiltersSeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/30", -50.00, "Monoprix")
       .addTransaction("2008/06/30", -95.00, "Auchan")

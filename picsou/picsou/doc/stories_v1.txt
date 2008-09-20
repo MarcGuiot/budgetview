@@ -28,6 +28,7 @@ CategorizationView
 ** Ordre des transactions = labels anonymises + date
 * Apprentissage / series
 * Remplacer mode autonext par bouton next
+** Bug repaint dans les zones d'affichage des series 
 
 TransactionView
 *** Navigation vers Categorization view sur mono/multi-selection (tests en attente)
@@ -90,14 +91,15 @@ Misc
 * Afficher les infos de mise a dispo d'une nouvelle version
 * CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
 * Copier les donnees des tables dans le clipboard
-* bug layout / screenshot joint
 * voir opacite/joliesse des fenetres Globs de creation/deletion
 
-Undo : ajout de tests
-* Import
-* Creation/edition de serie
-* Split
-* Categorisation
+Undo/redo
+* Utiliser cmd-z plutot que ctrl-z sous Mac
+* Test Import
+* Test Creation/edition de serie
+* Test Split
+* Test Categorisation
+* En cas de categorisation, reselectionner les transactions
 
 Versions basique/pro
 * Masquer les vues
