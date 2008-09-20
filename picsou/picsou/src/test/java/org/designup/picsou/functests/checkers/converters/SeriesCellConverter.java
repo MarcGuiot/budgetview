@@ -21,15 +21,19 @@ public class SeriesCellConverter implements TableCellValueConverter {
     builder.append(TransactionType.getType(transactionType).getName());
     builder.append(")");
 
+    builder.append(extractSeries(renderedComponent));
+    return builder.toString().trim();
+  }
+
+  public static String extractSeries(Component renderedComponent) {
     org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
     Button hyperlink = panel.getButton();
     String text = hyperlink.getLabel();
     if (text.equals(TransactionChecker.TO_CATEGORIZE)) {
-      builder.append(TransactionChecker.TO_CATEGORIZE);
+      return TransactionChecker.TO_CATEGORIZE;
     }
     else {
-      builder.append(text);
+      return text;
     }
-    return builder.toString().trim();
   }
 }

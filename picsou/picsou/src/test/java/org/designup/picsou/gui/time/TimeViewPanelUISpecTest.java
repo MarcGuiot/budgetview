@@ -178,7 +178,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
 
     public void selectionUpdated(GlobSelection selection) {
       synchronized (this) {
-        received = selection.getAll();
+        received = selection.getAll(Month.TYPE);
         notify();
       }
     }

@@ -24,8 +24,10 @@ import java.util.SortedSet;
 public class BalanceEditionDialog {
   private PicsouDialog dialog;
   private LocalGlobRepository localRepository;
+  private Glob account;
 
   public BalanceEditionDialog(Window parent, GlobRepository repository, Directory directory, Glob account) {
+    this.account = account;
 
     LocalGlobRepositoryBuilder localGlobRepositoryBuilder = LocalGlobRepositoryBuilder.init(repository)
       .copy(Account.TYPE);
@@ -82,6 +84,7 @@ public class BalanceEditionDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
+      localRepository.update(account.getKey(), Account.TRANSACTION_ID, null);
       localRepository.commitChanges(true);
       dialog.setVisible(false);
     }

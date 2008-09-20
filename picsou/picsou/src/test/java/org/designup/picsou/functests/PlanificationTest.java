@@ -141,6 +141,43 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .add("30/06/2008", TransactionType.PRELEVEMENT, "ED", "", -80.00, "Courant", MasterCategory.FOOD)
       .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant", MasterCategory.FOOD)
       .check();
+  }
 
+  public void testCreatePlannedTransactionInCurrentMonthAtLastDay() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/20", -100., "Auchan")
+      .load();
+    LicenseChecker.enterLicense(mainWindow, "admin", "", 1);
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
+    timeline.selectAll();
+    views.selectBudget();
+    budgetView.envelopes.editSeriesList()
+      .selectSeries("Courant")
+      .selectAllMonths()
+      .setAmount("200")
+      .validate();
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/10", -100., "EDF")
+      .load();
+    views.selectCategorization();
+    categorization.setRecurring("EDF", "EDF", MasterCategory.EQUIPMENT, true);
+    views.selectBudget();
+    budgetView.recurring.editSeriesList()
+      .selectSeries("EDF")
+      .selectAllMonths()
+      .setAmount("150")
+      .validate();
+
+    views.selectData();
+    transactions.initContent()
+      .add("20/06/2008", TransactionType.PLANNED, "EDF", "", -50.00, "EDF", MasterCategory.EQUIPMENT)
+      .add("20/06/2008", TransactionType.PLANNED, "Courant", "", -100.00, "Courant", MasterCategory.FOOD)
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant", MasterCategory.FOOD)
+      .add("10/06/2008", TransactionType.PRELEVEMENT, "EDF", "", -100.00, "EDF", MasterCategory.EQUIPMENT)
+      .check();
   }
 }

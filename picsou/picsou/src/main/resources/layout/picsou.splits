@@ -78,7 +78,7 @@
             </column>
 
             <column marginLeft="20">
-              <panel ref="monthSummaryView" minimumSize="(300,100)" preferredSize="(500,400)"/>
+              <panel ref="monthSummaryView" minimumSize="(400,100)" preferredSize="(600,400)"/>
               <filler fill="vertical"/>
             </column>
 
@@ -130,7 +130,8 @@
                       <scrollPane borderPos="center" viewportBackground="transactions.bg"
                                   border="line(transaction.border)" opaque="false"
                                   marginLeft="5">
-                        <table ref="transaction" background="transactions.bg" rowHeight="20" autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
+                        <table ref="transaction" background="transactions.bg" rowHeight="20"
+                               autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
                       </scrollPane>
                       <row>
                         <label text="$transaction.details.search" styleClass="formLabel"/>

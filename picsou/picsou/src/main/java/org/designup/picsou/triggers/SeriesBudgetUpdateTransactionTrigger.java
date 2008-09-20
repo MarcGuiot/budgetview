@@ -1,20 +1,16 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
 public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
-  private TimeService timeService;
 
-  public SeriesBudgetUpdateTransactionTrigger(Directory directory) {
-    timeService = directory.get(TimeService.class);
+  public SeriesBudgetUpdateTransactionTrigger() {
   }
 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -53,11 +49,13 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
         }
         else if (values.contains(SeriesBudget.AMOUNT)) {
           Double diff = values.getPrevious(SeriesBudget.AMOUNT) - values.get(SeriesBudget.AMOUNT);
+          Glob currentMonth = repository.get(CurrentMonth.KEY);
           TransactionPlannedTrigger.transfertAmount(
             repository.get(Key.create(Series.TYPE, series.get(Series.ID))), diff,
             seriesBudget.get(SeriesBudget.MONTH),
             BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome(),
-            repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID), repository);
+            currentMonth.get(CurrentMonth.MONTH_ID),
+            repository);
         }
       }
 
@@ -90,19 +88,24 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
                   repository).sort(Transaction.DAY);
   }
 
-  public static void createPlannedTransaction(Glob series, GlobRepository repository, int monthId, Integer day, Double amount) {
-    Glob glob = repository.create(Transaction.TYPE,
-                                  value(Transaction.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
-                                  value(Transaction.AMOUNT, amount),
-                                  value(Transaction.SERIES, series.get(Series.ID)),
-                                  value(Transaction.BANK_MONTH, monthId),
-                                  value(Transaction.BANK_DAY, day),
-                                  value(Transaction.MONTH, monthId),
-                                  value(Transaction.DAY, day),
-                                  value(Transaction.LABEL, series.get(Series.LABEL)),
-                                  value(Transaction.PLANNED, true),
-                                  value(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId()),
-                                  value(Transaction.CATEGORY, series.get(Series.DEFAULT_CATEGORY)));
+  public static void createPlannedTransaction(Glob series, GlobRepository repository, int monthId,
+                                              Integer day, Double amount) {
+    Glob month = repository.get(CurrentMonth.KEY);
+    if (month.get(CurrentMonth.MONTH_ID) == monthId && day < month.get(CurrentMonth.DAY)) {
+      day = month.get(CurrentMonth.DAY);
+    }
+    repository.create(Transaction.TYPE,
+                      value(Transaction.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
+                      value(Transaction.AMOUNT, amount),
+                      value(Transaction.SERIES, series.get(Series.ID)),
+                      value(Transaction.BANK_MONTH, monthId),
+                      value(Transaction.BANK_DAY, day),
+                      value(Transaction.MONTH, monthId),
+                      value(Transaction.DAY, day),
+                      value(Transaction.LABEL, series.get(Series.LABEL)),
+                      value(Transaction.PLANNED, true),
+                      value(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId()),
+                      value(Transaction.CATEGORY, series.get(Series.DEFAULT_CATEGORY)));
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {

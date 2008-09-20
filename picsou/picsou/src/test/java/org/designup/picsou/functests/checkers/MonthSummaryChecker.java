@@ -7,10 +7,10 @@ import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
-import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import org.uispec4j.finder.ComponentMatchers;
+import org.uispec4j.interception.WindowInterceptor;
 
 import java.awt.*;
 
@@ -24,6 +24,44 @@ public class MonthSummaryChecker extends DataChecker {
   public Summary init() {
     Panel panel = window.getPanel("monthSummaryView");
     return new Summary(panel);
+  }
+
+  public MonthDetail initDetails() {
+    return new MonthDetail(window);
+  }
+
+  public class MonthDetail {
+    private Window panel;
+
+    public MonthDetail(Window panel) {
+      this.panel = panel;
+    }
+
+    public MonthDetail balance(double amount) {
+      return check(amount, "detailBalance");
+    }
+
+    private MonthDetail check(double amount, String name) {
+      TextBox textBox = panel.getTextBox(name);
+      assertThat(textBox.textEquals(MonthSummaryChecker.this.toString(amount)));
+      return this;
+    }
+
+    public MonthDetail income(double amount) {
+      return check(amount, "detailIncome");
+    }
+
+    public MonthDetail fixe(double amount) {
+      return check(amount, "detailFixe");
+    }
+
+    public MonthDetail saving(double amount) {
+      return check(amount, "detailSaving");
+    }
+
+    public MonthDetail total(double amount) {
+      return check(amount, "detailTotal");
+    }
   }
 
   public class Summary {
