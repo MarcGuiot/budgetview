@@ -4,7 +4,7 @@ import org.globsframework.gui.ComponentHolder;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.utils.DefaultGlobSelection;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
@@ -13,7 +13,6 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.Collections;
 import java.util.Set;
 
 public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
@@ -151,7 +150,7 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
       update();
     }
     else {
-      selectionUpdated(new DefaultGlobSelection(forcedSelection, Collections.singletonList(type)));
+      selectionUpdated(GlobSelectionBuilder.init().add(forcedSelection, type).get());
     }
     getComponent().setName(name);
   }

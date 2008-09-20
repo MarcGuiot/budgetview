@@ -4,7 +4,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
-import org.globsframework.gui.utils.DefaultGlobSelection;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -105,7 +105,8 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     isInitialized = true;
     initTextComponent();
     if (forcedSelection != null) {
-      selectionUpdated(new DefaultGlobSelection(forcedSelection, forcedSelection.getTypes()));
+      selectionUpdated(GlobSelectionBuilder.init()
+        .add(forcedSelection, type).get());
     }
     else {
       SelectionService service = directory.get(SelectionService.class);
@@ -121,7 +122,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     }
     this.forcedSelection = new GlobList(glob);
     if (isInitialized) {
-      selectionUpdated(new DefaultGlobSelection(forcedSelection, forcedSelection.getTypes()));
+      selectionUpdated(GlobSelectionBuilder.init().add(forcedSelection, type).get());
     }
     return (PARENT)this;
   }

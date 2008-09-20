@@ -9,7 +9,5 @@ public interface GlobSelection {
 
   boolean isRelevantForType(GlobType type);
 
-  GlobList getAll();
-
   GlobList getAll(GlobType type);
 }

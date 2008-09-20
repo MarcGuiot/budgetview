@@ -18,9 +18,15 @@ public class MultiMap<K, V> {
   private List<V> getOrCreateList(K key) {
     List<V> values = map.get(key);
     if (values == null) {
-      values = new ArrayList<V>();
+      values = createNewList();
       map.put(key, values);
     }
+    return values;
+  }
+
+  protected List<V> createNewList() {
+    List<V> values;
+    values = new ArrayList<V>();
     return values;
   }
 
@@ -98,7 +104,7 @@ public class MultiMap<K, V> {
       }
     }
     else {
-      List<V> values = new ArrayList<V>();
+      List<V> values = createNewList();
       map.put(key, values);
       values.add(value);
     }

@@ -1,6 +1,7 @@
 package org.globsframework.gui;
 
 import junit.framework.TestCase;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.model.Glob;
@@ -26,7 +27,6 @@ public class SelectionServiceTest extends TestCase {
     service = new SelectionService();
     listener = DummySelectionListener.register(service, DummyObject.TYPE);
     listener2 = DummySelectionListener.register(service, DummyObject2.TYPE);
-    service.addListener(listener2, DummyObject2.TYPE);
   }
 
   public void testMonoSelection() throws Exception {
@@ -43,7 +43,7 @@ public class SelectionServiceTest extends TestCase {
   }
 
   public void testMultiSelection() throws Exception {
-    service.select(Arrays.asList(obj_1, obj2_1), DummyObject.TYPE, DummyObject2.TYPE);
+    service.select(GlobSelectionBuilder.init().add(obj_1).add(obj2_1).get());
     String selection = "<log>" +
                        "  <selection types='dummyObject,dummyObject2'>" +
                        "    <item key='dummyObject[id=1]'/>" +
