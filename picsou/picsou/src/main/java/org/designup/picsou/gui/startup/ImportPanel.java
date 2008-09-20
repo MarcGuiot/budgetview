@@ -137,7 +137,8 @@ public abstract class ImportPanel {
     sessionDirectory.add(new SelectionService());
     sessionDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        currentlySelectedAccount = selection.getAll().isEmpty() ? null : selection.getAll().get(0);
+        currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
+                                   selection.getAll(Account.TYPE).get(0);
       }
     }, Account.TYPE);
 

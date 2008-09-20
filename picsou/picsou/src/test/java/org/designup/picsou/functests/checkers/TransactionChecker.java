@@ -317,26 +317,37 @@ public class TransactionChecker extends ViewChecker {
     }
 
     public void dumpCode() {
-      TransactionTypeDumper transactionDumper = new TransactionTypeDumper();
+      TransactionTypeDumper transactionTypeDumper = new TransactionTypeDumper();
       CategoryDumper categoryDumper = new CategoryDumper();
 
-      StringBuilder builder = new StringBuilder();
+      final StringBuilder builder = new StringBuilder();
       builder.append(".initContent()\n");
       Table table = getTable();
       for (int row = 0; row < table.getRowCount(); row++) {
+        String type = table.getContentAt(row, 0, transactionTypeDumper).toString();
+        String category = table.getContentAt(row, 0, categoryDumper).toString();
         String date = table.getContentAt(row, 0).toString();
-        String type = table.getContentAt(row, 1, transactionDumper).toString();
-        String category = table.getContentAt(row, 1, categoryDumper).toString();
-        String label = table.getContentAt(row, 2).toString();
-        String amount = table.getContentAt(row, 3).toString();
-        String note = table.getContentAt(row, 4).toString();
+        String bankDate = table.getContentAt(row, 1).toString();
+        String series = table.getContentAt(row, 2, new TableCellValueConverter() {
+          public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
+            return SeriesCellConverter.extractSeries(renderedComponent);
+          }
+        }).toString();
+        String label = table.getContentAt(row, 4).toString();
+        String amount = table.getContentAt(row, 5).toString();
+        String note = table.getContentAt(row, 6).toString();
 
         builder.append(".add(\"")
-          .append(date).append("\", ")
+          .append(date).append("\", ");
+        if (!date.equals(bankDate)) {
+          builder.append("\"").append(bankDate).append("\", ");
+        }
+        builder
           .append(type).append(", \"")
           .append(label).append("\", \"")
           .append(note).append("\", ")
-          .append(amount);
+          .append(amount).append(", \"")
+          .append(series).append("\"");
         if (Strings.isNotEmpty(category)) {
           builder.append(", ").append(category);
         }

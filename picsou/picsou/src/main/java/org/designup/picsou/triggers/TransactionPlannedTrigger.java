@@ -27,7 +27,8 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         if (series == null) {
           return;
         }
-        transfertFromPlanned(repository.get(Key.create(Series.TYPE, series)), values.get(Transaction.MONTH), values.get(Transaction.AMOUNT), repository);
+        transfertFromPlanned(repository.get(Key.create(Series.TYPE, series)), values.get(Transaction.MONTH),
+                             values.get(Transaction.AMOUNT), repository);
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -65,6 +66,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           newMonth = transaction.get(Transaction.MONTH);
           previousMonth = newMonth;
         }
+        Glob currentMonth = repository.get(CurrentMonth.KEY);
         if (Utils.equal(previousMonth, newMonth) && Utils.equal(previousSeries, newSeries)) {
           if (Utils.equal(previousAmount, newAmount) || newSeries == null) {
             return;
@@ -73,7 +75,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           boolean isIncome = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome();
           double amount = newAmount - previousAmount;
           transfertAmount(series, amount, newMonth, isIncome,
-                          repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID),
+                          currentMonth.get(CurrentMonth.MONTH_ID),
                           repository);
         }
         else if (!Utils.equal(previousMonth, newMonth) ||
@@ -83,7 +85,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
             Glob series = repository.find(Key.create(Series.TYPE, previousSeries));
             if (series != null) {
               transfertToPlanned(series, previousMonth, -previousAmount,
-                                 repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID),
+                                 currentMonth.get(CurrentMonth.MONTH_ID),
                                  repository);
             }
           }
@@ -99,10 +101,12 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
   }
 
   public static void transfertAmount(Glob series, double amount, Integer monthId,
-                                     boolean isIncome, int availableTransactionMonthId, GlobRepository repository) {
+                                     boolean isIncome, int monthInCurrentMonth,
+                                     GlobRepository repository) {
     if (isIncome) {
       if (amount < 0) {
-        transfertToPlanned(series, monthId, amount, availableTransactionMonthId, repository);
+        transfertToPlanned(series, monthId, amount, monthInCurrentMonth,
+                           repository);
       }
       else if (amount > 0) {
         transfertFromPlanned(series, monthId, amount, repository);
@@ -110,7 +114,8 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     }
     else {
       if (amount > 0) {
-        transfertToPlanned(series, monthId, amount, availableTransactionMonthId, repository);
+        transfertToPlanned(series, monthId, amount, monthInCurrentMonth,
+                           repository);
       }
       else if (amount < 0) {
         transfertFromPlanned(series, monthId, amount, repository);
@@ -119,12 +124,12 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
   }
 
   private static void transfertToPlanned(Glob series, Integer monthId, Double amount,
-                                         int lastMonthIdForTransaction, GlobRepository repository) {
+                                         int lastMonthInCurrentMonth, GlobRepository repository) {
     if (ProfileType.UNKNOWN.getId().equals(series.get(Series.PROFILE_TYPE))) {
       return;
     }
     Integer seriesId = series.get(Series.ID);
-    if (monthId < lastMonthIdForTransaction) {
+    if (monthId < lastMonthInCurrentMonth) {
       return;
     }
     GlobList plannedTransaction = getPlannedTransactions(repository, seriesId, monthId);

@@ -8,6 +8,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
@@ -74,11 +75,10 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     Set<Integer> monthIds = currentSelectedMonth.getValueSet(Month.ID);
     GlobList seriesStats = repository.getAll(SeriesStat.TYPE, GlobMatchers.fieldContained(SeriesStat.MONTH, monthIds));
 
-    final GlobList localSelection = new GlobList();
-    localSelection.addAll(currentSelectedMonth);
-    localSelection.addAll(seriesStats);
     SelectionService localSelectionService = directory.get(SelectionService.class);
-    localSelectionService.select(localSelection, SeriesStat.TYPE, Month.TYPE);
+    localSelectionService.select(GlobSelectionBuilder.init()
+      .add(currentSelectedMonth, Month.TYPE)
+      .add(seriesStats, SeriesStat.TYPE).get());
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
