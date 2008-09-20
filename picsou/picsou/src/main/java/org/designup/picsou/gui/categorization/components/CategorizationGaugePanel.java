@@ -61,6 +61,7 @@ public class CategorizationGaugePanel implements GlobSelectionListener, ChangeSe
       repository.getAll(Transaction.TYPE,
                         and(not(fieldEquals(Transaction.PLANNED, true)),
                             fieldIn(Transaction.MONTH, selectedMonthIds)));
+
     double total = 0;
     double uncategorized = 0;
     for (Glob transaction : transactionsForSelectedMonths) {
@@ -76,7 +77,7 @@ public class CategorizationGaugePanel implements GlobSelectionListener, ChangeSe
       percentage = 0.01;
     }
 
-    if (Double.compare(percentage, 0) == 0) {
+    if ((total ==0) || (percentage == 0)) {
       panel.setVisible(false);
     }
     else {

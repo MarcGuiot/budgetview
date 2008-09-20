@@ -55,9 +55,6 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   }
 
   public void testIgnoresPlannedTransactions() throws Exception {
-    CategorizationGaugeChecker gauge = categorization.getGauge();
-    gauge.checkHidden();
-
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/10", 1000.0, "WorldCo")
@@ -66,9 +63,22 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
 
     timeline.selectAll();
 
+    CategorizationGaugeChecker gauge = categorization.getGauge();
     gauge.checkLevel(1, "100%");
 
     categorization.setIncome("WorldCo", "Salaire", true);
     gauge.checkLevel(0.5, "50%");
+  }
+
+  public void testNothingIsShownIfThereAreNoTransactionsToCategorize() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/10", 1000.0, "WorldCo")
+      .load();
+
+    timeline.selectMonth("2008/06");
+    categorization.checkTableIsEmpty();
+
+    categorization.getGauge().checkHidden();
   }
 }
