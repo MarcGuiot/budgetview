@@ -13,6 +13,8 @@ public class Log {
 
   public static void init(PrintStream stream) {
     Log.stream = stream;
+    System.setOut(stream);
+    System.setErr(stream);
   }
 
   public static void reset() {
