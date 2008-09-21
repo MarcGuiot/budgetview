@@ -34,6 +34,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected TitleChecker title;
   protected LicenseChecker license;
   protected MonthSummaryChecker monthSummary;
+  protected BalanceSummaryChecker balanceSummary;
   protected BudgetViewChecker budgetView;
   protected CategorizationChecker categorization;
   private PicsouApplication picsouApplication;
@@ -109,6 +110,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     graphics = new GraphicChecker(mainWindow);
     title = new TitleChecker(mainWindow);
     monthSummary = new MonthSummaryChecker(mainWindow);
+    balanceSummary = new BalanceSummaryChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
     categorization = new CategorizationChecker(mainWindow);
     license = new LicenseChecker(mainWindow);
@@ -131,6 +133,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     title = null;
     repository = null;
     monthSummary = null;
+    balanceSummary = null;
     budgetView = null;
     categorization = null;
     picsouApplication.shutdown();

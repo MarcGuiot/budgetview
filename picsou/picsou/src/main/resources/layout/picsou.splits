@@ -66,12 +66,17 @@
         <card name="home">
           <row>
             <column>
-              <panel ref="accountView" minimumSize="(300,100)" preferredSize="(300,300)"/>
+              <panel ref="accountView" minimumSize="(150,100)" preferredSize="(300,300)"/>
               <filler fill="vertical"/>
             </column>
 
-            <column marginLeft="20">
-              <panel ref="monthSummaryView" minimumSize="(400,100)" preferredSize="(600,400)"/>
+            <column marginLeft="20" marginRight="20">
+              <panel ref="monthSummaryView" minimumSize="(300,100)" preferredSize="(350,400)"/>
+              <filler fill="vertical"/>
+            </column>
+
+            <column>
+              <panel ref="balanceSummaryView" minimumSize="(150,100)" preferredSize="(300,300)"/>
               <filler fill="vertical"/>
             </column>
           </row>

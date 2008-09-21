@@ -75,7 +75,7 @@
         topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
         cornerRadius="20"/>
     <style selector=".block" ui="block" opaque="false" marginBottom="5"/>
-    <style selector=".block .innerBlock" margin="15"/>
+    <style selector=".block .innerBlock" margin="15" marginBottom="5"/>
 
     <style selector="label.blockTitle" anchor="center"
            foreground="#FFFFFF" marginBottom="5" font="-,bold,13" weightY="0"

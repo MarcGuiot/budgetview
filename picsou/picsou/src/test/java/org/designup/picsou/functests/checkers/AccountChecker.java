@@ -48,7 +48,7 @@ public class AccountChecker extends DataChecker {
     return getAccountPanel(account).getButton("Import data").triggerClick();
   }
 
-  public AccountChecker changeSolde(String accountName, final double balance, final String label) {
+  public AccountChecker changeBalance(String accountName, final double balance, final String label) {
     Panel parentPanel = getAccountPanel(accountName);
     WindowInterceptor.init(parentPanel.getButton("accountBalance").triggerClick())
       .process(new WindowHandler() {

@@ -26,44 +26,6 @@ public class MonthSummaryChecker extends DataChecker {
     return new Summary(panel);
   }
 
-  public MonthDetail initDetails() {
-    return new MonthDetail(window);
-  }
-
-  public class MonthDetail {
-    private Window panel;
-
-    public MonthDetail(Window panel) {
-      this.panel = panel;
-    }
-
-    public MonthDetail balance(double amount) {
-      return check(amount, "detailBalance");
-    }
-
-    private MonthDetail check(double amount, String name) {
-      TextBox textBox = panel.getTextBox(name);
-      assertThat(textBox.textEquals(MonthSummaryChecker.this.toString(amount)));
-      return this;
-    }
-
-    public MonthDetail income(double amount) {
-      return check(amount, "detailIncome");
-    }
-
-    public MonthDetail fixe(double amount) {
-      return check(amount, "detailFixe");
-    }
-
-    public MonthDetail saving(double amount) {
-      return check(amount, "detailSaving");
-    }
-
-    public MonthDetail total(double amount) {
-      return check(amount, "detailTotal");
-    }
-  }
-
   public class Summary {
     private Panel panel;
 
