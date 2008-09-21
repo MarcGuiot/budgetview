@@ -31,7 +31,7 @@ public class SingleApplicationInstanceListener {
   }
 
   public ReturnState findRemoteOrListen() {
-    if ("true".equalsIgnoreCase(System.getProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED))) {
+    if ("true" .equalsIgnoreCase(System.getProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED))) {
       return ReturnState.CONTINUE;
     }
     List<ServerSocket> serverSockets = new ArrayList<ServerSocket>();
@@ -107,7 +107,6 @@ public class SingleApplicationInstanceListener {
         String firstMessage = (String)inputStream.readObject();
         if (USER_MESSAGE_KEY.equals(firstMessage)) {
           String identity = (String)inputStream.readObject();
-          Log.write("SingleApplicationInstanceListener.readFromSocket user : " + identity);
           if (System.getProperty("user.name").equals(identity)) {
             outputStream.writeObject(RESPONSE_OK);
           }
@@ -119,13 +118,11 @@ public class SingleApplicationInstanceListener {
         outputStream.flush();
         String message = (String)inputStream.readObject();
         if (FILES_MESSAGE_KEY.equals(message)) {
-          Log.write("SingleApplicationInstanceListener.readFromSocket files");
           List<File> files = readFileName(inputStream);
           outputStream.writeObject(RESPONSE_OK);
           openRequestManager.openFiles(files);
         }
         else if (SHOW_MESSAGE_KEY.equals(message)) {
-          Log.write("SingleApplicationInstanceListener.readFromSocket show");
           readFileName(inputStream);
           outputStream.writeObject(RESPONSE_OK);
           bringToFront();
@@ -180,7 +177,6 @@ public class SingleApplicationInstanceListener {
       if (file.exists() && file.isFile()) {
         tryReadToEnsureWeHaveTheRightToReadThisFile(file);
         filesToOpen.add(file);
-        Log.write("Open file : " + fileName);
       }
     }
     return filesToOpen;

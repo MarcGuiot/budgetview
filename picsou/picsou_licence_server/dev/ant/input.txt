@@ -8,6 +8,4 @@ R logging.properties
 R javax/servlet/LocalStrings.properties
 R javax/servlet/http/LocalStrings.properties
 P com/mysql true
-P com/sun true
-P javax/mail true
 P org/gjt true

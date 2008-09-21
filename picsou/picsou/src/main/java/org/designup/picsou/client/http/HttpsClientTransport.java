@@ -85,7 +85,6 @@ public class HttpsClientTransport implements ClientTransport {
   private SerializedInput sendRequest(Long sessionId, String url, byte[] data) {
     boolean hasError = true;
     try {
-      Log.enter("send request " + url);
       PostMethod postMethod = new PostMethod(serverUrl + url);
       if (sessionId != null) {
         postMethod.setRequestHeader(SESSION_ID, sessionId.toString());
@@ -93,18 +92,12 @@ public class HttpsClientTransport implements ClientTransport {
       postMethod.setRequestEntity(new ByteArrayRequestEntity(data));
       SerializedInput serializedInput =
         SerializedInputOutputFactory.init(sendRequest(postMethod).getResponseBodyAsStream());
-      Log.leave("send Ok");
       hasError = false;
       return serializedInput;
     }
     catch (IOException e) {
       Log.write("ex : ", e);
       throw new BadConnection(e);
-    }
-    finally {
-      if (hasError) {
-        Log.leave("send with Error");
-      }
     }
   }
 

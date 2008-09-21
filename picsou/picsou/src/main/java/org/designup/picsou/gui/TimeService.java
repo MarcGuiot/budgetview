@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class TimeService {
   private static int today = Month.getMonthId(new Date());
-  private static int lastTransactionMonthId;
 
   public TimeService() {
   }
@@ -17,14 +16,6 @@ public class TimeService {
 
   public int getCurrentMonthId() {
     return today;
-  }
-
-  public int getLastAvailableTransactionMonthId() {
-    return lastTransactionMonthId;
-  }
-
-  public static void setLastAvailableTransactionMonthId(Integer monthId) {
-    lastTransactionMonthId = monthId;
   }
 
   public static void setCurrentDate(Date date) {

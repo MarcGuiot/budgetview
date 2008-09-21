@@ -17,7 +17,6 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
 
   protected void setUp() throws Exception {
     TimeService.setCurrentDate(Dates.parseMonth("2008/09"));
-    TimeService.setLastAvailableTransactionMonthId(200808);
     super.setUp();
     directory.add(new TimeService());
     repository.addTrigger(new CurrentMonthTrigger());

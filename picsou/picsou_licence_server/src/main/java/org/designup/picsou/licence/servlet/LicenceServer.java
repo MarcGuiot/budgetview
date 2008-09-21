@@ -28,7 +28,7 @@ public class LicenceServer {
   private Server jetty;
   private boolean useSsl = true;
   private int port = 8443;
-  private int mailPort;
+  private int mailPort = 25;
   private String databaseUrl = "jdbc:hsqldb:.";
   private String databaseUser = "sa";
   private String databasePassword = "";

@@ -36,8 +36,11 @@ public class DownloadThread extends Thread {
       client.setDefaultPort(Integer.parseInt(splitedUrl[2]));
     }
     try {
-      client.connect(splitedUrl[1].substring("//".length()));
+      client.connect(splitedUrl[1].substring("//" .length()));
       if (client.isConnected()) {
+        if (!client.login("anonymous", "none")) {
+          Log.write("Fail to log to ftp server " + (client.getReplyString()));
+        }
         client.setFileType(FTPClient.BINARY_FILE_TYPE);
         String fileSuffix = "picsouJar";
         tempFile = File.createTempFile(fileSuffix, ".tmp", pathToConfig);
@@ -71,6 +74,13 @@ public class DownloadThread extends Thread {
       }
       if (tempFile != null) {
         tempFile.delete();
+      }
+    }
+    finally {
+      try {
+        client.disconnect();
+      }
+      catch (IOException e) {
       }
     }
   }

@@ -85,10 +85,6 @@ public class PicsouApplication {
     changeDate();
     Utils.endRemove();
     initLogger();
-    Log.write("arg : ");
-    for (String arg : args) {
-      Log.write(arg);
-    }
     new PicsouApplication().run(args);
   }
 
@@ -102,7 +98,9 @@ public class PicsouApplication {
   private static void initLogger() {
     FileOutputStream stream;
     try {
-      stream = new FileOutputStream(File.createTempFile("picsoulog", ".txt"));
+      File logFilePath = new File(getPicsouPath() + "/" + "logs");
+      logFilePath.mkdirs();
+      stream = new FileOutputStream(File.createTempFile("picsoulog", ".txt", logFilePath));
       Log.init(new PrintStream(stream));
     }
     catch (IOException e) {
@@ -179,7 +177,7 @@ public class PicsouApplication {
   }
 
   public boolean isDataInMemory() {
-    return "true".equalsIgnoreCase(System.getProperty(IS_DATA_IN_MEMORY));
+    return "true" .equalsIgnoreCase(System.getProperty(IS_DATA_IN_MEMORY));
   }
 
   public static String getLocalPrevaylerPath() {
@@ -206,7 +204,7 @@ public class PicsouApplication {
   }
 
   public static void clearRepositoryIfNeeded() {
-    if ("true".equalsIgnoreCase(System.getProperty(DELETE_LOCAL_PREVAYLER_PROPERTY))) {
+    if ("true" .equalsIgnoreCase(System.getProperty(DELETE_LOCAL_PREVAYLER_PROPERTY))) {
       clearRepository();
     }
   }
