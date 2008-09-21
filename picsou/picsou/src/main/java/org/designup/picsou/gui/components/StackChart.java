@@ -10,14 +10,23 @@ public class StackChart extends JPanel {
   private double total = 0;
   private String longestLabel;
   private int[] blockHeights;
-  private Color[] colors;
+  private Color color1 = Color.RED;
+  private Color color2 = Color.BLUE;
+  private Color color3 = Color.BLACK;
+  private Color color4 = Color.YELLOW;
+  private Color color5 = Color.CYAN;
+  private Color color6 = Color.PINK;
+  private Color labelColor = Color.BLACK;
+  private Color percentLabelColor = Color.BLACK;
+  private Color remainderColor = Color.GRAY;
 
+  private static final int COLOR_COUNT = 6;
   private static final int LABEL_HORIZONTAL_MARGIN = 5;
   private static final int LABEL_VERTICAL_MARGIN = 2;
 
   public StackChart() {
-    colors = new Color[]{Color.blue, Color.red, Color.green};
-    setMinimumSize(new Dimension(150, 40));
+    setMinimumSize(new Dimension(200, 40));
+    setPreferredSize(new Dimension(200, 1000));
   }
 
   public void setValues(SortedSet<StackChartElement> elements) {
@@ -26,6 +35,7 @@ public class StackChart extends JPanel {
     this.longestLabel = "";
     for (StackChartElement element : this.elements) {
       total += element.getValue();
+
       if (element.getLabel().length() > longestLabel.length()) {
         longestLabel = element.getLabel();
       }
@@ -54,8 +64,8 @@ public class StackChart extends JPanel {
 
     int percentX = width - metrics.stringWidth("99%");
 
-    int blockX = metrics.stringWidth(longestLabel) + LABEL_HORIZONTAL_MARGIN;
-    int blockWidth = percentX - LABEL_HORIZONTAL_MARGIN - blockX;
+    int blockX = 0;
+    int blockWidth = percentX - LABEL_HORIZONTAL_MARGIN;
 
     int bottom = height;
     int colorIndex = 0;
@@ -66,24 +76,37 @@ public class StackChart extends JPanel {
       }
 
       int top = bottom - blockHeight;
-      g2.setColor(colors[colorIndex % colors.length]);
+      g2.setColor(getColor(colorIndex));
       g2.fillRect(blockX, top, blockWidth, blockHeight);
 
-      g2.setColor(Color.BLACK);
-      int textX = blockX - LABEL_HORIZONTAL_MARGIN - metrics.stringWidth(elements[i].getLabel());
+      g2.setColor(labelColor);
+      int textX = (blockWidth / 2) - (metrics.stringWidth(elements[i].getLabel()) / 2);
       int textY = bottom - (blockHeight / 2) + (metrics.getAscent() / 2) - metrics.getDescent();
       g2.drawString(elements[i].getLabel(), textX, textY);
 
       String percentLabel = (int)(100 * elements[i].getValue() / total) + "%";
+      g2.setColor(percentLabelColor);
       g2.drawString(percentLabel, percentX, textY);
       bottom = top;
-      colorIndex++;
+      colorIndex = (colorIndex + 1) % COLOR_COUNT;
     }
 
     if (bottom > 0) {
-      g2.setColor(Color.gray);
+      g2.setColor(remainderColor);
       g2.fillRect(blockX, 0, blockWidth, bottom);
     }
+  }
+
+  private Color getColor(int colorIndex) {
+    switch (colorIndex) {
+      case 0: return color1;
+      case 1: return color2;
+      case 2: return color3;
+      case 3: return color4;
+      case 4: return color5;
+      case 5: return color6;
+     }
+    return Color.RED;
   }
 
   private void clearSizes() {
@@ -118,4 +141,39 @@ public class StackChart extends JPanel {
     clearSizes();
   }
 
+  public void setLabelColor(Color labelColor) {
+    this.labelColor = labelColor;
+  }
+
+  public void setPercentLabelColor(Color percentLabelColor) {
+    this.percentLabelColor = percentLabelColor;
+  }
+
+  public void setColor1(Color color1) {
+    this.color1 = color1;
+  }
+
+  public void setColor2(Color color2) {
+    this.color2 = color2;
+  }
+
+  public void setColor3(Color color3) {
+    this.color3 = color3;
+  }
+
+  public void setColor4(Color color4) {
+    this.color4 = color4;
+  }
+
+  public void setColor5(Color color5) {
+    this.color5 = color5;
+  }
+
+  public void setColor6(Color color6) {
+    this.color6 = color6;
+  }
+
+  public void setRemainderColor(Color remainderColor) {
+    this.remainderColor = remainderColor;
+  }
 }

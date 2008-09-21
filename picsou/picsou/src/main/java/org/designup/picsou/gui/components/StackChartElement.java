@@ -5,9 +5,9 @@ public final class StackChartElement implements Comparable<StackChartElement> {
   private double value;
   private boolean selected;
 
-  public StackChartElement(String label, double value, boolean selected) {
+  public StackChartElement(String label, Double value, boolean selected) {
     this.label = label;
-    this.value = value;
+    this.value = value != null ? value : 0;
     this.selected = selected;
   }
 
