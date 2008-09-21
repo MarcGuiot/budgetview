@@ -18,7 +18,6 @@ import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
-import org.designup.picsou.gui.transactions.UncategorizedMessageView;
 import org.designup.picsou.gui.transactions.details.TransactionSearch;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
@@ -92,9 +91,6 @@ public class MainPanel {
     MonthSummaryView monthSummary = new MonthSummaryView(repository, directory);
     createPanel(
       titleView,
-      new UncategorizedMessageView("uncategorizedMessage", "categorizeRemainingTransactions",
-                                   Lang.get("transaction.allocation.action"),
-                                   repository, directory),
       transactionView,
       timeView,
       categoryView,
