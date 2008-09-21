@@ -100,11 +100,24 @@ public class Strings {
     return text;
   }
 
-  public static String repeat(String text, int count){
+  public static String repeat(String text, int count) {
     StringBuilder builder = new StringBuilder();
     for (int i = 0; i < count; i++) {
       builder.append(text);
     }
     return builder.toString();
+  }
+
+  public static String cut(String text, int maxLength) {
+    if (text == null) {
+      return null;
+    }
+    if (text.length() <= maxLength) {
+      return text;
+    }
+    if (maxLength > 6) {
+      return text.substring(0, maxLength - 3) + "...";
+    }
+    return text.substring(0, maxLength);
   }
 }

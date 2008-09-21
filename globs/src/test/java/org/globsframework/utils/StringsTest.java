@@ -52,4 +52,11 @@ public class StringsTest extends TestCase {
     assertEquals("", Strings.join("", null));
     assertEquals("a c", Strings.join("a", null, "", "c"));
   }
+
+  public void testCut() throws Exception {
+    assertEquals(null, Strings.cut(null, 1));
+    assertEquals("", Strings.cut("", 1));
+    assertEquals("12", Strings.cut("12345", 2));
+    assertEquals("1234567...", Strings.cut("12345678901234567890", 10));
+  }
 }
