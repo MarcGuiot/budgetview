@@ -65,10 +65,12 @@
               <cards ref="budgetAreaCard" opaque="false">
 
                 <card name="noSelection">
-                  <column margin="10">
+                  <panel styleClass="innerBlockBackground">
+                  <column margin="15">
                     <label text="$categorization.no.selection" styleClass="title"/>
-                    <filler fill="horizontal"/>
+                    <filler fill="vertical"/>
                   </column>
+                  </panel>
                 </card>
 
                 <card name="budgetAreas">

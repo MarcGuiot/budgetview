@@ -25,8 +25,7 @@
 
             <label gridPos="(0,1)" ref="categoryLabel" styleClass="formLabel"/>
 
-            <scrollPane gridPos="(1,1)"
-                        autoHideSource="multipleCategoryList">
+            <scrollPane gridPos="(1,1)" autoHideSource="multipleCategoryList">
               <list ref="multipleCategoryList"/>
             </scrollPane>
 
