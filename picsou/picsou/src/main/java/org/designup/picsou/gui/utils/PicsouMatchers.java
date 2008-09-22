@@ -101,7 +101,7 @@ public class PicsouMatchers {
 
     public void filterDates(Set<Integer> monthIds) {
       this.monthIds = monthIds;
-    }
+      }
 
     public boolean matches(Glob series, GlobRepository repository) {
       if (budgetAreaId.equals(series.get(Series.BUDGET_AREA))) {

@@ -182,38 +182,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkBudgetAreaSelectionPanelDisplayed();
   }
 
-  public void testMultiCategorizationFromErrorMessageBlock() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/30", -29.90, "Carouf")
-      .addTransaction("2008/06/15", -40.00, "Auchan")
-      .load();
-
-    views.selectHome();
-    informationPanel.assertWarningIsDisplayed(2);
-
-    views.selectCategorization();
-    categorization.checkTable(new Object[][]{
-      {"15/06/2008", "", "Auchan", -40.00},
-      {"30/06/2008", "", "Carouf", -29.90},
-    });
-    categorization.selectTableRows(0, 1);
-    categorization.selectEnvelopes();
-    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
-
-    views.selectData();
-    transactions.initContent()
-      .add("30/06/2008", TransactionType.PLANNED, "Groceries", "", -0.0, "Groceries", MasterCategory.FOOD)
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "Carouf", "", -29.90, "Groceries", MasterCategory.FOOD)
-      .add("15/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, "Groceries", MasterCategory.FOOD)
-      .check();
-    transactions.checkSeries(0, "Groceries");
-    transactions.checkSeries(1, "Groceries");
-
-    views.selectHome();
-    informationPanel.assertNoWarningIsDisplayed();
-  }
-
   public void testSelectingRecurringSelectsBudgetArea() throws Exception {
     OfxBuilder
       .init(this)
@@ -749,7 +717,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkDoesNotContainOccasional(MasterCategory.FOOD, "Apero");
   }
 
-  public void testSeveralMonths() throws Exception {
+  public void testFiltersSeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/30", -50.00, "Monoprix")
       .addTransaction("2008/06/30", -95.00, "Auchan")

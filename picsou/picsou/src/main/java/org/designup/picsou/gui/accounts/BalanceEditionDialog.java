@@ -69,7 +69,6 @@ public class BalanceEditionDialog {
     dialog = PicsouDialog.createWithButtons(parent, builder.<JPanel>load(),
                                             new ValidateAction(),
                                             new CancelAction(), directory);
-    dialog.setTitle(Lang.get("balance.edition.title"));
     dialog.pack();
   }
 

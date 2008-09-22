@@ -27,7 +27,7 @@ public class PicsouSampleGenerator {
 
   public static void main(String[] args) throws Exception {
     PicsouSampleGenerator generator = new PicsouSampleGenerator();
-    generator.run(198001, 200808);
+    generator.run(200606, 200809);
     generator.write("tmp/sample.ofx");
   }
 

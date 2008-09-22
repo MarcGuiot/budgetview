@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" minimumSize="(470,170)" preferredSize="(470,170)" opaque="true">
+  <panel styleClass="dialog" minimumSize="(400,120)" preferredSize="(400,120)" opaque="true">
     <column styleClass="innerDialog">
       <label text="$balance.edition.title" styleClass="title"/>
       <filler fill="vertical" weightY="10"/>

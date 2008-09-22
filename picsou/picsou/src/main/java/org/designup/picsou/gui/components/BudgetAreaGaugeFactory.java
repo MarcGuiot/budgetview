@@ -5,10 +5,10 @@ import org.designup.picsou.model.BudgetArea;
 public class BudgetAreaGaugeFactory {
   public static Gauge createGauge(BudgetArea budgetArea) {
     if (budgetArea.isIncome()) {
-      return new Gauge(false, true, true);
+      return new Gauge(false, false, true);
     }
     else {
-      return new Gauge(true, true, false);
+      return new Gauge(true, false, false);
     }
   }
 }

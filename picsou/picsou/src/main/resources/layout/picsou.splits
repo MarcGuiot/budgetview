@@ -3,10 +3,6 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <styles>
-    <ui name="errorMessage" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="errorpanel.top" bottomColor="errorpanel.bottom"
-        borderColor="errorpanel.border" borderWidth="2" cornerRadius="20"/>
-
     <ui name="masterViewSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
         topColor="viewselector.top" bottomColor="viewselector.bottom"
         borderColor="viewselector.border" borderWidth="1" cornerRadius="10"/>
@@ -22,13 +18,19 @@
     <style selector="toggleButton#repartitionCardToggle" icon="card_pie.png"/>
     <style selector="toggleButton#evolutionCardToggle" icon="card_line.png"/>
 
-    <style selector="panel.errorMessage" ui="errorMessage"/>
-    <style selector="panel.errorMessage column" margin="10"/>
-    <style selector="panel.errorMessage textArea" marginBottom="10"
-           anchor="left" styleClass="multiLineLabel" foreground="errorpanel.text" font="-,bold,12" opaque="false"
-           lineWrap="true" wrapStyleWord="true"/>
     <style selector="#time button" size="(15,20)" fill="none"/>
 
+    <style selector="component#categoriesChart"
+           color1="repartition.chart.color1"
+           color2="repartition.chart.color2"
+           color3="repartition.chart.color3"
+           color4="repartition.chart.color4"
+           color5="repartition.chart.color5"
+           color6="repartition.chart.color6"
+           remainderColor="repartition.chart.remainder"
+           labelColor="repartition.chart.label"
+           percentLabelColor="repartition.chart.percent"
+           fill="both"/>
   </styles>
 
   <panel styleClass="main" ui="wave">
@@ -64,25 +66,19 @@
         <card name="home">
           <row>
             <column>
-              <panel ref="accountView" minimumSize="(300,100)" preferredSize="(300,300)"/>
-
-              <panel name="uncategorizedMessagePanel" styleClass="errorMessage"
-                     autoHideSource="uncategorizedMessage" preferredSize="(50,90)"
-                     marginTop="20" weightY="0">
-                <column>
-                  <textArea ref="uncategorizedMessage"/>
-                  <button action="categorizeRemainingTransactions"/>
-                </column>
-              </panel>
+              <panel ref="accountView" minimumSize="(150,100)" preferredSize="(300,300)"/>
               <filler fill="vertical"/>
             </column>
 
-            <column marginLeft="20">
-              <panel ref="monthSummaryView" minimumSize="(400,100)" preferredSize="(600,400)"/>
+            <column marginLeft="20" marginRight="20">
+              <panel ref="monthSummaryView" minimumSize="(300,100)" preferredSize="(350,400)"/>
               <filler fill="vertical"/>
             </column>
 
-            <filler fill="horizontal" weightX="10"/>
+            <column>
+              <panel ref="balanceSummaryView" minimumSize="(150,100)" preferredSize="(300,300)"/>
+              <filler fill="vertical"/>
+            </column>
           </row>
         </card>
 
@@ -141,10 +137,11 @@
                   </card>
 
                   <card name="repartition">
-                    <column>
-                      <component ref="categoriesChart" opaque="false" fill="both" border="empty(15,10,15,10)"/>
-                      <filler fill="vertical" weightY="1.0"/>
-                    </column>
+                    <row background="#FFFFFF">
+                      <filler fill="horizontal"/>
+                      <component ref="categoriesChart" opaque="false" fill="both" margin="10"/>
+                      <filler fill="horizontal"/>
+                    </row>
                   </card>
 
                   <card name="evolution">

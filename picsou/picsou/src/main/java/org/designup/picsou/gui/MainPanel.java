@@ -15,10 +15,10 @@ import org.designup.picsou.gui.graphics.CategoriesChart;
 import org.designup.picsou.gui.graphics.HistoricalChart;
 import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
+import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
-import org.designup.picsou.gui.transactions.UncategorizedMessageView;
 import org.designup.picsou.gui.transactions.details.TransactionSearch;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
@@ -53,7 +53,7 @@ public class MainPanel {
   protected GlobsPanelBuilder builder;
   private MainWindow mainWindow;
   private RegisterLicenseAction registerAction;
-  private CheckRepoAction check;
+  private CheckRepositoryAction check;
 
   public static MainPanel show(GlobRepository repository, Directory directory, MainWindow mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -81,7 +81,7 @@ public class MainPanel {
     importFileAction = ImportFileAction.initAndRegisterInOpenRequestManager(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
     registerAction = new RegisterLicenseAction(parent, repository, directory);
-    check = new CheckRepoAction(parent, repository);
+    check = new CheckRepositoryAction(repository);
     exitAction = new ExitAction(directory);
 
     builder.add("editCategories", new EditCategoriesAction(repository, directory));
@@ -92,14 +92,12 @@ public class MainPanel {
     MonthSummaryView monthSummary = new MonthSummaryView(repository, directory);
     createPanel(
       titleView,
-      new UncategorizedMessageView("uncategorizedMessage", "categorizeRemainingTransactions",
-                                   Lang.get("transaction.allocation.action"),
-                                   repository, directory),
       transactionView,
       timeView,
       categoryView,
       new AccountView(repository, directory),
       monthSummary,
+      new BalanceSummaryView(repository, directory),
       new CategorizationView(repository, directory),
       new CardView(repository, directory),
       new BudgetView(repository, directory),
@@ -187,13 +185,11 @@ public class MainPanel {
     }
   }
 
-  private static class CheckRepoAction extends AbstractAction {
-    private PicsouFrame parent;
+  private static class CheckRepositoryAction extends AbstractAction {
     private GlobRepository repository;
 
-    public CheckRepoAction(PicsouFrame parent, GlobRepository repository) {
+    public CheckRepositoryAction(GlobRepository repository) {
       super("check");
-      this.parent = parent;
       this.repository = repository;
     }
 

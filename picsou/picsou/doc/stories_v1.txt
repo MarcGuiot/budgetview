@@ -1,3 +1,20 @@
+A faire : deplacer vers "nicetohave" ce qui peut l'etre.
+
+New:
+- arrivee dans l'outil : selectionner le dernier mois avec des donnees
+- supprimer les subcats par defaut (mode avance - apporte plus de confusion que de valeur pour les novices)
+- SED / enveloppes : "Nom" => "Nom de l'enveloppe", titre = "Enveloppes de frais courants"
+- Reactiver selection similar en double clic pour les cheques et les retraits
+- Supprimer mode "select similar"
+- Bug sur gestion du bold pour les toggles dans les occasional
+- supprimer les warnings sur les gauges (les mettre ailleurs ?)
+- Fonction "envoi de fichier anonymise"
+- SED: Bug layout en mode enveloppe
+- Apprentissage /  categorisation automatique
+
+
+=======
+
 Edition de transactions
 *** Note
 *** Date (reporter / annuler report = on reprend la date banque si ok)
@@ -7,7 +24,7 @@ Edition de transactions
 SeriesEditionDialog
 ** Modifier l'ordre des series
 ** Creation d'enveloppe : mettre les expected a 0
-* Hyperlien "selectionner tout (Ctrl-A)" (ou double-clic?)
+* Hyperlien "Selectionner tout (Ctrl-A)" (ou double-clic?)
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
 
 BudgetView
@@ -18,7 +35,6 @@ BudgetView
 * Pas de scroll horizontal
 * Collapse des blocs BudgetView
 ** Click sur montant prevu = ouverture SED avec focus sur montant
-* Ouverture SED : masquer la liste des series ?
 
 CategorizationView
 ** Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
@@ -28,6 +44,7 @@ CategorizationView
 ** Ordre des transactions = labels anonymises + date
 * Apprentissage / series
 * Remplacer mode autonext par bouton next
+** Bug repaint dans les zones d'affichage des series 
 
 TransactionView
 *** Navigation vers Categorization view sur mono/multi-selection (tests en attente)
@@ -90,14 +107,15 @@ Misc
 * Afficher les infos de mise a dispo d'une nouvelle version
 * CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
 * Copier les donnees des tables dans le clipboard
-* bug layout / screenshot joint
 * voir opacite/joliesse des fenetres Globs de creation/deletion
 
-Undo : ajout de tests
-* Import
-* Creation/edition de serie
-* Split
-* Categorisation
+Undo/redo
+* Utiliser cmd-z plutot que ctrl-z sous Mac
+* Test Import
+* Test Creation/edition de serie
+* Test Split
+* Test Categorisation
+* En cas de categorisation, reselectionner les transactions
 
 Versions basique/pro
 * Masquer les vues
@@ -115,4 +133,4 @@ Compte demo (pour essai par les utilisateurs + nos screencasts)
 Legal
 * Validation SLA par utilisateur a l'install ou a la creation de compte
 * Packaging : integrer les licences open-source
-* Declaration CNIL
+* Declaration CNIL ?

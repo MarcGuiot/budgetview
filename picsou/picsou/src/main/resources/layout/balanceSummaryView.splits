@@ -1,0 +1,49 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label#message" foreground="balanceSummary.message"
+           fill="horizontal" anchor="center" horizontalAlignment="left"
+           font="-,plain,10" marginBottom="5"/>
+    <style selector="label.amountLabel" foreground="balanceSummary.label"
+           fill="horizontal" anchor="center" horizontalAlignment="right"/>
+    <style selector="label.amount" foreground="balanceSummary.amount"
+           fill="horizontal" anchor="center" horizontalAlignment="right" marginLeft="15" marginRight="10"
+           border="empty(5,0,5,0)"/>
+  </styles>
+
+  <column name="balanceSummary">
+
+    <label text="$balancesummary.title" styleClass="blockTitle"/>
+
+    <panel styleClass="block">
+
+      <column styleClass="innerBlock">
+
+        <label text="$monthsummary.detail.total" styleClass="totalAmountTitle"/>
+        <label ref="detailTotal" styleClass="totalAmount"/>
+
+        <panel styleClass="innerBlockBackground">
+          <column margin="10">
+            <label name="message" text="$balancesummary.message"/>
+            <grid>
+              <label gridPos="(0,0)" text="$monthsummary.detail.balance" styleClass="amountLabel"/>
+              <label gridPos="(1,0)" ref="detailBalance" styleClass="amount"/>
+
+              <label gridPos="(0,1)" text="$monthsummary.detail.income" styleClass="amountLabel"/>
+              <label gridPos="(1,1)" ref="detailIncome" styleClass="amount"/>
+
+              <label gridPos="(0,2)" text="$monthsummary.detail.fixe" styleClass="amountLabel"/>
+              <label gridPos="(1,2)" ref="detailFixe" styleClass="amount"/>
+
+              <label gridPos="(0,3)" text="$monthsummary.detail.saving" styleClass="amountLabel"/>
+              <label gridPos="(1,3)" ref="detailSaving" styleClass="amount"/>
+            </grid>
+            <filler fill="vertical"/>
+          </column>
+        </panel>
+      </column>
+    </panel>
+
+  </column>
+</splits>
