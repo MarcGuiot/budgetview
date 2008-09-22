@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" minimumSize="(470,170)" preferredSize="(470,170)" opaque="true">
+  <panel styleClass="dialog" minimumSize="(470,180)" preferredSize="(470,180)" opaque="true">
     <column styleClass="innerDialog">
       <label text="$license.title" styleClass="title"/>
       <grid>

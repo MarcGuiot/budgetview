@@ -41,3 +41,4 @@ R regis.properties
 R seb.properties
 R whitecolors.properties
 R fonts.properties
+R logging.properties
