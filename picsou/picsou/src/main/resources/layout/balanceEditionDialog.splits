@@ -2,15 +2,26 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" minimumSize="(400,120)" preferredSize="(400,120)" opaque="true">
+
+  <panel styleClass="dialog" minimumSize="(400,160)" preferredSize="(400,160)" opaque="true">
     <column styleClass="innerDialog">
       <label text="$balance.edition.title" styleClass="title"/>
-      <filler fill="vertical" weightY="10"/>
-      <grid>
-        <label gridPos="(0,0)" text="$balance.edition.label" styleClass="formLabel"/>
-        <textField gridPos="(1,0)" ref="amount"/>
-        <label gridPos="(0,1,1,2)" ref="transactionInfo" styleClass="formLabel"/>
-      </grid>
+      <row marginBottom="10">
+        <label text="$balance.edition.label" styleClass="formLabel"/>
+        <textField ref="amount"/>
+      </row>
+      <label text="$balance.edition.operation" styleClass="separatorTitle"/>
+      <row styleClass="separator">
+        <grid>
+          <label gridPos="(0,0)" text="$balance.edition.transaction.date" styleClass="formLabel"/>
+          <label gridPos="(1,0)" ref="dateInfo" styleClass="formLabel" anchor="left"/>
+          <label gridPos="(0,1)" text="$balance.edition.transaction.label" styleClass="formLabel"/>
+          <label gridPos="(1,1)" ref="labelInfo" styleClass="formLabel" anchor="left"/>
+          <label gridPos="(0,2)" text="$balance.edition.transaction.amount" styleClass="formLabel"/>
+          <label gridPos="(1,2)" ref="amountInfo" styleClass="formLabel" anchor="left"/>
+        </grid>
+        <filler fill="horizontal"/>
+      </row>
       <filler fill="vertical" weightY="20"/>
     </column>
   </panel>

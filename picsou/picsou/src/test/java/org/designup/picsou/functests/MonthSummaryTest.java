@@ -84,8 +84,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkOccasional(10)
       .checkUncategorized("-23.00");
 
-    accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_ID, 1000,
-                           "Balance for operation of the 13/07/2008 (cheque)");
+    accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_ID, 1000, "cheque");
     timeline.selectAll();
     balanceSummary.initDetails()
       .balance(1000.)

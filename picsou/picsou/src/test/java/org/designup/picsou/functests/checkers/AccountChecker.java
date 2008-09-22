@@ -54,7 +54,8 @@ public class AccountChecker extends DataChecker {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox().setText(Double.toString(balance));
-          UISpecAssert.assertThat(window.getTextBox("transactionInfo").textEquals(label));
+          UISpecAssert.assertThat(window.getTextBox("labelInfo").textEquals(label));
+          UISpecAssert.assertThat(window.getTextBox("labelInfo").textEquals(label));
           return window.getButton("ok").triggerClick();
         }
       }).run();

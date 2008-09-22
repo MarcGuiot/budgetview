@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -51,19 +52,33 @@ public class BalanceEditionDialog {
     else {
       transaction = repository.get(Key.create(Transaction.TYPE, transactionId));
     }
-    String text = "";
+    String dateInfo = "";
+    String labelInfo = "";
+    String amountInfo = "";
     if (transaction != null) {
       int month = Month.toMonth(transaction.get(Transaction.BANK_MONTH));
       Integer day = transaction.get(Transaction.BANK_DAY);
-      text = Lang.get("balance.edition.transaction.info", transaction.get(Transaction.LABEL),
-                      Integer.toString(Month.toYear(transaction.get(Transaction.BANK_MONTH))),
-                      (month < 10 ? "0" : "") + month,
-                      (day < 10 ? "0" : "") + day);
+      dateInfo = Lang.get("transactionView.dateFormat",
+                          (day < 10 ? "0" : "") + day,
+                          (month < 10 ? "0" : "") + month,
+                          Integer.toString(Month.toYear(transaction.get(Transaction.BANK_MONTH)))
+      );
+      labelInfo = transaction.get(Transaction.LABEL);
+      amountInfo = PicsouDescriptionService.DECIMAL_FORMAT.format(transaction.get(Transaction.AMOUNT));
     }
-    JLabel transactionInfo = new JLabel(text);
-    builder.add("transactionInfo", transactionInfo);
+    JLabel date = new JLabel(dateInfo);
+    builder.add("dateInfo", date);
+
+    JLabel label = new JLabel(labelInfo);
+    builder.add("labelInfo", label);
+
+    JLabel amount = new JLabel(amountInfo);
+    builder.add("amountInfo", amount);
+
     if (transaction == null) {
-      transactionInfo.setVisible(false);
+      date.setVisible(false);
+      label.setVisible(false);
+      amount.setVisible(false);
     }
 
     dialog = PicsouDialog.createWithButtons(parent, builder.<JPanel>load(),

@@ -5,7 +5,6 @@
   <panel styleClass="dialog" minimumSize="(470,170)" preferredSize="(470,170)" opaque="true">
     <column styleClass="innerDialog">
       <label text="$license.title" styleClass="title"/>
-      <filler fill="vertical" weightY="10"/>
       <grid>
         <label gridPos="(0,0)" text="$license.mail" styleClass="formLabel"/>
         <textField gridPos="(1,0)" ref="mail"/>

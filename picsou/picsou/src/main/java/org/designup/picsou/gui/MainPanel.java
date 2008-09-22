@@ -14,8 +14,8 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.graphics.CategoriesChart;
 import org.designup.picsou.gui.graphics.HistoricalChart;
 import org.designup.picsou.gui.license.LicenseDialog;
-import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
+import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -36,6 +36,7 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -113,7 +114,8 @@ public class MainPanel {
   }
 
   private void selectLastMonthWithATransaction(GlobRepository repository, Directory directory) {
-    GlobList transactions = repository.getAll(Transaction.TYPE);
+    GlobList transactions = repository.getAll(Transaction.TYPE,
+                                              GlobMatchers.fieldEquals(Transaction.PLANNED, false));
     if (transactions.isEmpty()) {
       return;
     }
