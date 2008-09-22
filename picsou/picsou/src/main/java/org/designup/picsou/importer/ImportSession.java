@@ -50,9 +50,7 @@ public class ImportSession {
   }
 
   public List<String> loadFile(File file) throws IOException, TruncatedFile {
-    localRepository.reset(GlobList.EMPTY,
-                          Transaction.TYPE, LabelToCategory.TYPE,
-                          ImportedTransaction.TYPE);
+    localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
 

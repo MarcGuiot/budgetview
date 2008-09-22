@@ -15,7 +15,6 @@ public class SerializationManager {
     Bank.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Bank.Serializer());
     BankEntity.TYPE.updateProperty(SERIALIZATION_PROPERTY, new BankEntity.Serializer());
     Category.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Category.Serializer());
-    LabelToCategory.TYPE.updateProperty(SERIALIZATION_PROPERTY, new LabelToCategory.Serializer());
     Transaction.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Transaction.Serializer());
     TransactionImport.TYPE.updateProperty(SERIALIZATION_PROPERTY, new TransactionImport.Serializer());
     Month.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Month.Serializer());
