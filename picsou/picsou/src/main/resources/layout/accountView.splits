@@ -20,7 +20,7 @@
                 <grid>
                   <label ref="accountName" gridPos="(0,0)" anchor="west" styleClass="item"/>
                   <label ref="accountNumber" gridPos="(0,1)" anchor="west" styleClass="subitem"/>
-                  <button ref="accountBalance" gridPos="(1,0)" anchor="east" styleClass="hyperlink"/>
+                  <button ref="accountBalance" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
                   <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
                 </grid>
                 <row>

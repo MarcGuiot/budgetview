@@ -17,6 +17,8 @@
 
     <column styleClass="innerDialog">
 
+      <filler fill="vertical"/>
+
       <label text="$import.step1.title" styleClass="title"/>
 
       <htmlEditorPane text="$login.initial.file"/>
