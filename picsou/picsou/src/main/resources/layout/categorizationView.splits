@@ -72,7 +72,7 @@
                 <card name="noSelection">
                   <panel styleClass="innerBlockBackground">
                     <column margin="15">
-                      <htmlEditorPane text="$categorization.no.selection" editable="false"/>
+                      <htmlEditorPane name="noSelectionMessage" text="$categorization.no.selection" editable="false"/>
                       <filler fill="vertical"/>
                     </column>
                   </panel>

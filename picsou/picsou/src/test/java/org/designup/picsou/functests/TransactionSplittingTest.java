@@ -87,6 +87,32 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testDialogCanBeReusedAfterACancel() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
+      .load();
+
+    categorization.selectTableRow(0);
+
+    transactionDetails.openSplitDialog()
+      .close();
+
+    transactionDetails.openSplitDialog()
+      .checkTable(new Object[][]{
+        {MasterCategory.FOOD, "Auchan", -20.00, ""},
+      })
+      .enterAmount("12.50")
+      .enterNote("DVD")
+      .ok();
+
+    categorization
+      .initContent()
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.5, MasterCategory.FOOD)
+      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "DVD", -12.50)
+      .check();
+  }
+
   public void testSplittingASplitPart() throws Exception {
     openDialogWith("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
       .enterAmount("12.50")

@@ -69,7 +69,7 @@ public class CategorizationChecker extends DataChecker {
         assertFalse(panel.containsUIComponent(ToggleButton.class, area.getName()));
       }
     }
-    assertThat(panel.containsLabel("You must select an operation"));
+    assertThat(panel.getTextBox("noSelectionMessage").textContains("You must select an operation"));
   }
 
   public void checkBudgetAreaIsSelected(BudgetArea budgetArea) {

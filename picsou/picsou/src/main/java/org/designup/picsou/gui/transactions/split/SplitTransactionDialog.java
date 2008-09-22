@@ -280,7 +280,6 @@ public class SplitTransactionDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      localRepository.dispose();
       dialog.setVisible(false);
     }
   }

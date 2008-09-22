@@ -42,7 +42,6 @@ CategorizationView
 ** Bug sur gestion du bold pour les toggles dans les occasional
 
 TransactionView
-*** Navigation vers Categorization view sur mono/multi-selection (tests en attente)
 *** Filtrage transactions par BudgetArea
 *** Filtrage transactions par Serie
 * Afficher la somme (total ou multi-selection)
