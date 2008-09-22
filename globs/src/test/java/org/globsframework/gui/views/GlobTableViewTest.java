@@ -372,7 +372,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                           "</selection>" +
                           "</log>");
 
-    view.select();
+    view.clearSelection();
     listener.assertEquals("<log>" +
                           "<selection types='dummyObject'/>" +
                           "</log>");

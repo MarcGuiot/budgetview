@@ -251,11 +251,20 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     }
   }
 
+  public void clearSelection() {
+    select();
+
+  }
+
   public void select(Glob... globs) throws ItemNotFound {
     select(Arrays.asList(globs), true);
   }
 
-  public void select(Collection<Glob> globs, boolean sendPending) throws ItemNotFound {
+  public void select(Collection<Glob> globs) throws ItemNotFound {
+    select(globs, true);
+  }
+
+  void select(Collection<Glob> globs, boolean sendPending) throws ItemNotFound {
     ListSelectionModel selectionModel = table.getSelectionModel();
     try {
       disableSelectionNotification();
