@@ -1,10 +1,12 @@
-package org.designup.picsou.gui.transactions.details;
+package org.designup.picsou.gui.components.filtering;
 
-import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.utils.PicsouColors;
+import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -13,17 +15,21 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 
-public class TransactionSearch {
-  private TransactionView transactionView;
+public abstract class TextFilterPanel {
+  private FilterSet filterSet;
   private JTextField textField;
+  private JPanel panel;
   private Color backgroundColor;
   private ColorService colorService;
   private ColorChangeListener listener;
 
-  public TransactionSearch(TransactionView transactionView, Directory directory) {
-    this.transactionView = transactionView;
-    colorService = directory.get(ColorService.class);
-    listener = new ColorChangeListener() {
+  public TextFilterPanel(FilterSet filterSet, GlobRepository repository, Directory directory) {
+    this.filterSet = filterSet;
+
+    createPanel(repository, directory);
+
+    this.colorService = directory.get(ColorService.class);
+    this.listener = new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
         backgroundColor = colorLocator.get(PicsouColors.TRANSACTION_SEARCH_FIELD);
         if (textField != null) {
@@ -33,14 +39,21 @@ public class TransactionSearch {
         }
       }
     };
-    colorService.addListener(listener);
+    this.colorService.addListener(listener);
   }
 
-  public JTextField getTextField() {
-    if (textField == null) {
-      createTextField();
-    }
-    return textField;
+  private void createPanel(GlobRepository repository, Directory directory) {
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/textFilterPanel.splits",
+                                                      repository, directory);
+
+    createTextField();
+    builder.add("searchField", textField);
+
+    panel = builder.load();
+  }
+
+  public JPanel getPanel() {
+    return panel;
   }
 
   private void createTextField() {
@@ -63,9 +76,17 @@ public class TransactionSearch {
 
   private void updateSearch(JTextField textField) {
     String text = textField.getText();
-    transactionView.setSearchFilter(text);
-    textField.setBackground(Strings.isNullOrEmpty(text) ? Color.WHITE : backgroundColor);
+    if (Strings.isNullOrEmpty(text)) {
+      filterSet.remove("search");
+      textField.setBackground(Color.WHITE);
+    }
+    else {
+      filterSet.set("search", createMatcher(text));
+      textField.setBackground(backgroundColor);
+    }
   }
+
+  protected abstract GlobMatcher createMatcher(String searchFilter);
 
   protected void finalize() throws Throwable {
     super.finalize();

@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import junit.framework.Assert;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -20,7 +19,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransactionWithNote("2006/05/01", -70.00, "essence", "frais pro", MasterCategory.TRANSPORTS)
       .addTransactionWithNote("2006/05/03", -30.00, "peage", "", MasterCategory.TRANSPORTS)
-      .addTransactionWithNote("2006/05/02", -200.00, "cic", "", MasterCategory.BANK)
+      .addTransactionWithNote("2006/05/02", -200.00, "sg", "", MasterCategory.BANK)
       .addTransactionWithNote("2006/05/06", -100.00, "nounou", "nourrice", MasterCategory.EDUCATION)
       .load();
     table = transactions.getTable();
@@ -35,7 +34,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     categories.select(MasterCategory.BANK);
     enterNote(0, "interets");
     transactions.initContent()
-      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "cic", "interets", -200.00, MasterCategory.BANK)
+      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "interets", -200.00, MasterCategory.BANK)
       .check();
   }
 
@@ -54,7 +53,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
-      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
+      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00, MasterCategory.BANK)
       .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
       .check();
 
@@ -70,7 +69,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
-      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "cic", "frais pro", -200.00, MasterCategory.BANK)
+      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "frais pro", -200.00, MasterCategory.BANK)
       .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
       .check();
   }
@@ -81,7 +80,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
-      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
+      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00, MasterCategory.BANK)
       .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
       .check();
 
@@ -90,7 +89,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "garagiste", -30.00, MasterCategory.TRANSPORTS)
-      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
+      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00, MasterCategory.BANK)
       .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
       .check();
 
@@ -99,7 +98,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "garagiste", -30.00, MasterCategory.TRANSPORTS)
-      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
+      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00, MasterCategory.BANK)
       .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "essence", -70.00, MasterCategory.TRANSPORTS)
       .check();
 
@@ -108,7 +107,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "travaux", -100.00, MasterCategory.EDUCATION)
       .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "garagiste", -30.00, MasterCategory.TRANSPORTS)
-      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
+      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00, MasterCategory.BANK)
       .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "essence", -70.00, MasterCategory.TRANSPORTS)
       .check();
   }
@@ -116,6 +115,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   public void testFullLine() throws Exception {
     views.selectCategorization();
     categorization.setEnvelope("essence", "Voiture", MasterCategory.TRANSPORTS, true);
+
     views.selectData();
     Table table = transactions.getTable();
     UISpecAssert.assertTrue(
@@ -124,43 +124,61 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
                                    "essence", "-70.00", "frais pro", "330.00", "330.00"}));
   }
 
-  public void testMultiCategorization() throws Exception {
-
-    Assert.fail("TODO : tester la navigation transactionView => Categorization");
-
-    transactions.initContent()
-      .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
-      .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
-      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
-      .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
-      .check();
-
-    transactions.assignOccasionalSeries(MasterCategory.BEAUTY, 1, 3);
-
-    transactions.initContent()
-      .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
-      .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.BEAUTY)
-      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
-      .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.BEAUTY)
-      .check();
-  }
-
   public void testNavigatingToCategorizationView() throws Exception {
-
-    Assert.fail("TODO navigation transactionView ==> Categorization");
 
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/11", -1.0, "Something else")
       .addTransaction("2006/01/10", -1.0, "Menu 14")
       .load();
-    transactions.getTable().selectRow(0);
-    transactions.assignCategoryWithoutSelection(MasterCategory.FOOD, 1);
-    assertTrue(transactions.getTable().rowIsSelected(1));
-    transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Something else", "", -1.0)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu 14", "", -1.0, MasterCategory.FOOD)
+
+    timeline.selectMonth("2006/01");
+
+    transactions.categorize(0);
+    views.checkCategorizationSelected();
+    categorization.checkTable(new Object[][]{
+      {"10/01/2006", "", "Menu 14", -1.0},
+      {"11/01/2006", "", "Something else", -1.0}
+    });
+    categorization.checkSelectedTableRows(1);
+    categorization.checkCustomFilterVisible(false);
+  }
+
+  public void testMultiCategorization() throws Exception {
+
+    transactions.initContent()
+      .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
+      .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
+      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00, MasterCategory.BANK)
+      .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
+      .check();
+
+    transactions.categorize(1, 3);
+    views.checkCategorizationSelected();
+    categorization.initContent()
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
+      .check();
+    categorization.checkSelectedTableRows(0, 1);
+    categorization.checkCustomFilterVisible(true);
+    categorization.selectOccasional();
+    categorization.selectOccasionalSeries(MasterCategory.LEISURES);
+
+    categorization.clearCustomFilter();
+    categorization.initContent()
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.LEISURES)
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.LEISURES)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00, MasterCategory.BANK)
+      .check();
+    categorization.checkNoTransactionSelected();
+
+    views.selectData();
+    transactions.initContent()
+      .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
+      .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.LEISURES)
+      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00, MasterCategory.BANK)
+      .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.LEISURES)
       .check();
   }
 

@@ -8,18 +8,16 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.Glob;
 import org.uispec4j.Button;
-import org.uispec4j.*;
 import org.uispec4j.Panel;
+import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
-import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.AbstractButton;
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -155,12 +153,6 @@ public class CategorizationChecker extends DataChecker {
     }
 
     org.globsframework.utils.TestUtils.assertContains(names, seriesNames);
-    return this;
-  }
-
-  public CategorizationChecker checkRecurringSeriesNotFound(String seriesName) {
-    Panel seriesPanel = getRecurringSeriesPanel();
-    assertFalse(seriesPanel.containsUIComponent(ToggleButton.class, seriesName));
     return this;
   }
 
@@ -318,14 +310,6 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public void checkContainsProject(String projectName, MasterCategory... categories) {
-    Panel panel = getProjectSeriesPanel();
-    assertTrue(panel.containsLabel(projectName));
-    for (MasterCategory category : categories) {
-      assertTrue(panel.containsUIComponent(ToggleButton.class, projectName + ":" + category.getName()));
-    }
-  }
-
   public CategorizationChecker selectProjectSeries(String projectName, MasterCategory category, boolean createSeries) {
     Panel panel = getProjectSeriesPanel();
     String name = projectName + ":" + category.getName();
@@ -352,14 +336,6 @@ public class CategorizationChecker extends DataChecker {
   public CategorizationChecker selectSavings() {
     selectBudgetArea(BudgetArea.SAVINGS);
     return this;
-  }
-
-  public void checkContainsSavings(String savingsName, MasterCategory... categories) {
-    Panel panel = getSavingsSeriesPanel();
-    assertTrue(panel.containsLabel(savingsName));
-    for (MasterCategory category : categories) {
-      assertTrue(panel.containsUIComponent(ToggleButton.class, savingsName + ":" + category.getName()));
-    }
   }
 
   public CategorizationChecker selectSavingsSeries(String savingsName, MasterCategory category, boolean createSeries) {
@@ -460,37 +436,6 @@ public class CategorizationChecker extends DataChecker {
     assertFalse(panel.getToggleButton("invisibleToggle").isSelected());
     assertTrue(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
     return this;
-  }
-
-  public void checkEnveloppeSeriesIsNotSelected(String seriesName, MasterCategory category) {
-    assertTrue(getPanel().getToggleButton("expensesEnvelope").isSelected());
-    Panel panel = getEnvelopeSeriesPanel();
-    UISpecAssert.assertFalse(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
-  }
-
-  public void checkNextIsEnabled() {
-    UISpecAssert.assertTrue(getPanel().getButton("nextTransaction").isEnabled());
-  }
-
-  public void checkNextIsDisabled() {
-    UISpecAssert.assertFalse(getPanel().getButton("nextTransaction").isEnabled());
-  }
-
-  public void selectNext() {
-    getPanel().getButton("nextTransaction").click();
-  }
-
-  public void assertVisible(boolean visible) {
-    assertEquals(visible, getPanel().isVisible());
-  }
-
-  public void pressEscapeKey() {
-    final JDialog jDialog = (JDialog)getPanel().getAwtComponent();
-    KeyUtils.pressKey(jDialog.getRootPane(), Key.ESCAPE);
-  }
-
-  public void checkTextVisible(String text) {
-    Assert.assertNotNull(getPanel().getTextBox(text));
   }
 
   public SeriesEditionDialogChecker createIncomeSeries() {
@@ -619,10 +564,6 @@ public class CategorizationChecker extends DataChecker {
   public CategorizationChecker disableAutoSelectNext() {
     getPanel().getCheckBox("next").unselect();
     return this;
-  }
-
-  public void checkClosed() {
-    assertFalse(getPanel().isVisible());
   }
 
   public CategoryEditionChecker editOccasionalCategories() {
@@ -805,6 +746,15 @@ public class CategorizationChecker extends DataChecker {
 
   public CategorizationTableChecker initContent() {
     return new CategorizationTableChecker();
+  }
+
+  public CategorizationChecker checkCustomFilterVisible(boolean visible) {
+    assertEquals(visible, getPanel().getPanel("customFilter").isVisible());
+    return this;
+  }
+
+  public void clearCustomFilter() {
+    getPanel().getPanel("customFilter").getButton().click();
   }
 
   public class CategorizationTableChecker extends TableChecker {

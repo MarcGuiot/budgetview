@@ -69,6 +69,10 @@
     <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
     <style selector="button.hyperlink" ui="hyperlinkButton" fill="none" anchor="right"/>
 
+    <ui name="hyperlinkButtonWithoutUnderline" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="false"/>
+    <style selector="button.hyperlinkWithoutUnderline" ui="hyperlinkButtonWithoutUnderline" fill="none" anchor="right"/>
+
     <!-- Blocks and inner blocks -->
 
     <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
@@ -83,7 +87,7 @@
     <style selector=".block label.totalAmountTitle" foreground="block.total.title" font="-,plain,10"
            fill="vertical" anchor="bottom" weightY="0"/>
     <style selector=".block label.totalAmount" foreground="block.total" font="-,bold,20"
-           fill="vertical" anchor="top" weightY="1" marginBottom="5"/>
+           fill="vertical" anchor="top" weightY="1" border="empty(0,0,5,0)"/>
 
     <style selector=".block .innerBlockBackground"
            opaque="true" background="block.inner.bg" border="line(block.inner.border)"

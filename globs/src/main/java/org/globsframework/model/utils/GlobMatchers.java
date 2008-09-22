@@ -196,13 +196,13 @@ public class GlobMatchers {
 
   public static GlobMatcher and(final GlobMatcher... matchers) {
     for (GlobMatcher matcher : matchers) {
-      if ((matcher == null) || matcher.equals(NONE)) {
+      if (matcher.equals(NONE)) {
         return NONE;
       }
     }
     List<GlobMatcher> significantMatchers = new ArrayList<GlobMatcher>();
     for (GlobMatcher matcher : matchers) {
-      if (matcher != ALL) {
+      if ((matcher == null) || (matcher != ALL)) {
         significantMatchers.add(matcher);
       }
     }
