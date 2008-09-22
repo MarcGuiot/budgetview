@@ -99,7 +99,7 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
       .add("15/07/2008", TransactionType.VIREMENT, "Orange", "", 95.00)
       .check();
 
-    transactions.assignOccasionalSeries(MasterCategory.TELECOMS, 0);
+//    transactions.assignOccasionalSeries(MasterCategory.TELECOMS, 0);
 
     timeline.selectMonth("2008/08");
     transactions.initContent()

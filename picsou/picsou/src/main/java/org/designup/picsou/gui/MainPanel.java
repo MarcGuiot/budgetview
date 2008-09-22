@@ -36,6 +36,9 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import static org.globsframework.model.utils.GlobMatchers.or;
+import static org.globsframework.model.utils.GlobMatchers.fieldContainsIgnoreCase;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -86,7 +89,12 @@ public class MainPanel {
 
     builder.add("editCategories", new EditCategoriesAction(repository, directory));
 
-    TransactionSearch search = new TransactionSearch(transactionView, directory);
+    TransactionSearch search = new TransactionSearch(transactionView.getFilterSet(), directory) {
+      protected GlobMatcher createMatcher(String searchFilter) {
+        return or(fieldContainsIgnoreCase(Transaction.LABEL, searchFilter),
+                  fieldContainsIgnoreCase(Transaction.NOTE, searchFilter));
+      }
+    };
     builder.add("transactionSearchField", search.getTextField());
 
     MonthSummaryView monthSummary = new MonthSummaryView(repository, directory);

@@ -1,10 +1,11 @@
 package org.designup.picsou.gui.transactions.details;
 
-import org.designup.picsou.gui.transactions.TransactionView;
+import org.designup.picsou.gui.components.FilterSet;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -13,17 +14,17 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 
-public class TransactionSearch {
-  private TransactionView transactionView;
+public abstract class TransactionSearch {
+  private FilterSet filterSet;
   private JTextField textField;
   private Color backgroundColor;
   private ColorService colorService;
   private ColorChangeListener listener;
 
-  public TransactionSearch(TransactionView transactionView, Directory directory) {
-    this.transactionView = transactionView;
-    colorService = directory.get(ColorService.class);
-    listener = new ColorChangeListener() {
+  public TransactionSearch(FilterSet filterSet, Directory directory) {
+    this.filterSet = filterSet;
+    this.colorService = directory.get(ColorService.class);
+    this.listener = new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
         backgroundColor = colorLocator.get(PicsouColors.TRANSACTION_SEARCH_FIELD);
         if (textField != null) {
@@ -33,7 +34,7 @@ public class TransactionSearch {
         }
       }
     };
-    colorService.addListener(listener);
+    this.colorService.addListener(listener);
   }
 
   public JTextField getTextField() {
@@ -63,9 +64,17 @@ public class TransactionSearch {
 
   private void updateSearch(JTextField textField) {
     String text = textField.getText();
-    transactionView.setSearchFilter(text);
-    textField.setBackground(Strings.isNullOrEmpty(text) ? Color.WHITE : backgroundColor);
+    if (Strings.isNullOrEmpty(text)) {
+      filterSet.remove("search");
+      textField.setBackground(Color.WHITE);
+    }
+    else {
+      filterSet.set("search", createMatcher(text));
+      textField.setBackground(backgroundColor);
+    }
   }
+
+  protected abstract GlobMatcher createMatcher(String searchFilter);
 
   protected void finalize() throws Throwable {
     super.finalize();

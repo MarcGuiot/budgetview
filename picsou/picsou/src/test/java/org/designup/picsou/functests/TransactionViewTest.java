@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import junit.framework.Assert;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -10,6 +9,7 @@ import org.uispec4j.Table;
 import org.uispec4j.Trigger;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.PopupMenuInterceptor;
+import junit.framework.Assert;
 
 public class TransactionViewTest extends LoggedInFunctionalTestCase {
   private Table table;
@@ -124,9 +124,28 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
                                    "essence", "-70.00", "frais pro", "330.00", "330.00"}));
   }
 
+  public void testNavigatingToCategorizationView() throws Exception {
+
+    Assert.fail("en cours : navigation entre tables");
+    
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/11", -1.0, "Something else")
+      .addTransaction("2006/01/10", -1.0, "Menu 14")
+      .load();
+
+    transactions.categorize(0);
+    assertTrue(transactions.getTable().rowIsSelected(1));
+    transactions
+      .initContent()
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Something else", "", -1.0)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu 14", "", -1.0, MasterCategory.FOOD)
+      .check();
+  }
+
   public void testMultiCategorization() throws Exception {
 
-    Assert.fail("TODO : tester la navigation transactionView => Categorization");
+    Assert.fail("en cours : navigation entre tables");
 
     transactions.initContent()
       .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
@@ -135,32 +154,22 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
       .check();
 
-    transactions.assignOccasionalSeries(MasterCategory.BEAUTY, 1, 3);
+    transactions.categorize(1, 3);
 
+    views.checkCategorizationSelected();
+    categorization.checkTable(new Object[][]{
+    });
+    categorization.checkSelectedTableRows(0, 2);
+    categorization.checkCustomFilterIsSet();
+    categorization.selectOccasional();
+    categorization.selectOccasionalSeries(MasterCategory.BEAUTY);
+
+    views.selectData();
     transactions.initContent()
       .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
       .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.BEAUTY)
       .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "cic", "", -200.00, MasterCategory.BANK)
       .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.BEAUTY)
-      .check();
-  }
-
-  public void testNavigatingToCategorizationView() throws Exception {
-
-    Assert.fail("TODO navigation transactionView ==> Categorization");
-
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/11", -1.0, "Something else")
-      .addTransaction("2006/01/10", -1.0, "Menu 14")
-      .load();
-    transactions.getTable().selectRow(0);
-    transactions.assignCategoryWithoutSelection(MasterCategory.FOOD, 1);
-    assertTrue(transactions.getTable().rowIsSelected(1));
-    transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Something else", "", -1.0)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu 14", "", -1.0, MasterCategory.FOOD)
       .check();
   }
 

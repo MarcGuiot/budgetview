@@ -2,6 +2,8 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.FilterSet;
+import org.designup.picsou.gui.components.Filterable;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.columns.*;
@@ -22,8 +24,9 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobLinkComparator;
-import static org.globsframework.model.utils.GlobMatchers.*;
-import org.globsframework.utils.Strings;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.and;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -31,7 +34,7 @@ import javax.swing.event.TableModelListener;
 import java.awt.*;
 import java.util.Comparator;
 
-public class TransactionView extends View implements GlobSelectionListener {
+public class TransactionView extends View implements Filterable, GlobSelectionListener {
   public static final int DATE_COLUMN_INDEX = 0;
   public static final int BANK_DATE_COLUMN_INDEX = 1;
   public static final int SERIES_COLUMN_INDEX = 2;
@@ -47,8 +50,8 @@ public class TransactionView extends View implements GlobSelectionListener {
   private GlobTableView view;
   private TransactionRendererColors rendererColors;
   private TransactionSelection transactionSelection;
-  private String searchFilter;
-  private PicsouTableHeaderPainter headerPainter;
+  private GlobMatcher filter = GlobMatchers.ALL;
+  private FilterSet filterSet;
 
   public TransactionView(GlobRepository repository, Directory directory, TransactionSelection transactionSelection) {
     super(repository, directory);
@@ -66,8 +69,8 @@ public class TransactionView extends View implements GlobSelectionListener {
     builder.add(view.getComponent());
   }
 
-  public void setSearchFilter(String filter) {
-    this.searchFilter = filter;
+  public void setFilter(GlobMatcher matcher) {
+    this.filter = matcher;
     updateFilter();
   }
 
@@ -76,17 +79,15 @@ public class TransactionView extends View implements GlobSelectionListener {
   }
 
   private void updateFilter() {
-    view.setFilter(and(or(fieldContainsIgnoreCase(Transaction.LABEL, searchFilter),
-                          fieldContainsIgnoreCase(Transaction.NOTE, searchFilter)),
-                       transactionSelection.getCurrentMatcher()));
-    headerPainter.setFiltered(Strings.isNotEmpty(searchFilter));
+    view.setFilter(and(transactionSelection.getCurrentMatcher(), this.filter));
   }
 
   private JTable createTable() {
-    view = createGlobTableView(repository, descriptionService, directory, rendererColors);
-    view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
+    this.view = createGlobTableView(repository, descriptionService, directory, rendererColors);
+    this.view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
-    headerPainter = PicsouTableHeaderPainter.install(view, directory);
+    PicsouTableHeaderPainter headerPainter = PicsouTableHeaderPainter.install(view, directory);
+    this.filterSet = new FilterSet(this, headerPainter);
 
     JTable table = view.getComponent();
     table.setDefaultRenderer(Glob.class,
@@ -95,7 +96,7 @@ public class TransactionView extends View implements GlobSelectionListener {
                                                           SERIES_COLUMN_INDEX));
 
     TransactionKeyListener.install(table, NOTE_COLUMN_INDEX);
-    Gui.installRolloverOnButtons(table, new int[]{SERIES_COLUMN_INDEX, AMOUNT_COLUMN_INDEX});
+    Gui.installRolloverOnButtons(table, SERIES_COLUMN_INDEX, AMOUNT_COLUMN_INDEX);
     table.setDragEnabled(false);
     table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     ToolTipManager.sharedInstance().unregisterComponent(table.getTableHeader());
@@ -154,6 +155,10 @@ public class TransactionView extends View implements GlobSelectionListener {
 
   public GlobTableView getView() {
     return view;
+  }
+
+  public FilterSet getFilterSet() {
+    return filterSet;
   }
 
   private static class CategoryStringifier implements GlobStringifier {
