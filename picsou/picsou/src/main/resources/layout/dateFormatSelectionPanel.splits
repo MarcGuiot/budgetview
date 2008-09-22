@@ -3,5 +3,4 @@
     <label text="$import.select.date.format"/>
     <comboBox ref="dateFormatCombo"/>
   </row>
-
 </splits>

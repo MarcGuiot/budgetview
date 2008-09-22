@@ -38,6 +38,11 @@
               <table ref="transactionTable" rowHeight="20"/>
             </scrollPane>
             <column>
+              <row>
+                <filler fill="horizontal"/>
+                <component ref="customFilterMessage"/>
+                <filler fill="horizontal"/>
+              </row>
               <checkBox ref="autoSelectSimilar" text="$categorization.autoselect.similar" anchor="left"/>
               <checkBox ref="autoSelectNext" text="$categorization.autoselect.next" anchor="left"/>
               <checkBox ref="autoHide" text="$categorization.autohide" anchor="left"/>
@@ -66,10 +71,10 @@
 
                 <card name="noSelection">
                   <panel styleClass="innerBlockBackground">
-                  <column margin="15">
-                    <label text="$categorization.no.selection" styleClass="title"/>
-                    <filler fill="vertical"/>
-                  </column>
+                    <column margin="15">
+                      <label text="$categorization.no.selection" styleClass="title"/>
+                      <filler fill="vertical"/>
+                    </column>
                   </panel>
                 </card>
 

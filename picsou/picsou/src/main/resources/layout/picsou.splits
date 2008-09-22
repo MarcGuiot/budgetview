@@ -129,10 +129,7 @@
                         <table ref="transaction" background="transactions.bg" rowHeight="20"
                                autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
                       </scrollPane>
-                      <row>
-                        <label text="$transaction.details.search" styleClass="formLabel"/>
-                        <textField ref="transactionSearchField"/>
-                      </row>
+                      <component ref="transactionSearch"/>
                     </column>
                   </card>
 

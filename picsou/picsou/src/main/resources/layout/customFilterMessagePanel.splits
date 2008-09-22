@@ -1,0 +1,14 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <ui name="filterPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="filter.message.top" bottomColor="filter.message.bottom" borderColor="filter.message.border"
+        borderWidth="1" cornerRadius="30"/>
+  </styles>
+
+  <row ref="panel" ui="filterPanel" preferredSize="(150,20)">
+    <button action="cancel" 
+            styleClass="hyperlink" foreground="filter.message.text"
+            margin="2" anchor="center"/>
+  </row>
+</splits>

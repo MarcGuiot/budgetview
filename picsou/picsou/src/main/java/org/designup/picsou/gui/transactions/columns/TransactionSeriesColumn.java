@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.transactions.columns;
 
-import org.designup.picsou.gui.categorization.CategorizationAction;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.description.TransactionSeriesStringifier;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Series;
@@ -17,9 +17,6 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -28,18 +25,22 @@ import java.awt.event.ActionEvent;
 import java.util.Comparator;
 
 public class TransactionSeriesColumn extends AbstractTransactionEditor implements ColorChangeListener {
+
   private GlobStringifier seriesStringifier;
+  private Glob transaction;
+
   private HyperlinkButton rendererButton;
   private JPanel rendererPanel;
   private HyperlinkButton editorButton;
   private JPanel editorPanel;
   private GlobTableView tableView;
-  private Glob transaction;
+
+  private ColorService colorService;
+
   private Color selectedColor;
   private Color toCategorizeColor;
   private Font normalFont;
   private Font toCategorizeFont;
-  private ColorService colorService;
 
   public TransactionSeriesColumn(GlobTableView view,
                                  TransactionRendererColors transactionRendererColors,
@@ -135,30 +136,11 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
       tableView.getComponent().requestFocus();
       selectTransactionIfNeeded(transaction);
 
-      GlobList list = getTransactionList(transaction);
+      GlobList list = tableView.getCurrentSelection();
       if (list.isEmpty()) {
         return;
       }
-      System.out.println("TransactionSeriesColumn$OpenChooserAction.actionPerformed: TODO");
-    }
-
-    private GlobList getTransactionList(Glob transaction) {
-      GlobList selection = tableView.getCurrentSelection().filterSelf(CategorizationAction.getMatcher(), repository);
-      if (selection.size() > 1) {
-        return selection;
-      }
-
-      if ((!Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) ||
-          (Strings.isNullOrEmpty(transaction.get(Transaction.LABEL_FOR_CATEGORISATION)))) {
-        return new GlobList(transaction);
-      }
-
-      return tableView.getGlobs()
-        .filter(and(CategorizationAction.getMatcher(),
-                    fieldEquals(Transaction.LABEL_FOR_CATEGORISATION,
-                                transaction.get(Transaction.LABEL_FOR_CATEGORISATION)),
-                    fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)),
-                repository);
+      directory.get(NavigationService.class).gotoCategorization(list);
     }
 
     private void selectTransactionIfNeeded(Glob transaction) {

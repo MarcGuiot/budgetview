@@ -748,9 +748,13 @@ public class CategorizationChecker extends DataChecker {
     return new CategorizationTableChecker();
   }
 
-  public CategorizationChecker checkCustomFilterIsSet() {
-    assertThat(getPanel().getPanel("customFilter").isVisible());
+  public CategorizationChecker checkCustomFilterVisible(boolean visible) {
+    assertEquals(visible, getPanel().getPanel("customFilter").isVisible());
     return this;
+  }
+
+  public void clearCustomFilter() {
+    getPanel().getPanel("customFilter").getButton().click();
   }
 
   public class CategorizationTableChecker extends TableChecker {

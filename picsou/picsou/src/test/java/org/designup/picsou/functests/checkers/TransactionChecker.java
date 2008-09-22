@@ -70,7 +70,7 @@ public class TransactionChecker extends ViewChecker {
   public TransactionChecker categorize(final int... rows) {
     Assert.assertTrue("You must specify at least one row index", rows.length > 0);
     if (rows.length > 1) {
-      getTable().selectRows();
+      getTable().selectRows(rows);
     }
     getTable().editCell(rows[0], TransactionView.SERIES_COLUMN_INDEX).getButton().click();
     return this;
@@ -102,7 +102,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public TextBox getSearchField() {
-    return mainWindow.getInputTextBox("transactionSearchField");
+    return mainWindow.getInputTextBox("searchField");
   }
 
   public TransactionAmountChecker initAmountContent() {

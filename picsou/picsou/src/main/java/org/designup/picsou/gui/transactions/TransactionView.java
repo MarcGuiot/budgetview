@@ -2,8 +2,8 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.components.FilterSet;
-import org.designup.picsou.gui.components.Filterable;
+import org.designup.picsou.gui.components.filtering.FilterSet;
+import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.columns.*;
@@ -52,6 +52,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   private TransactionSelection transactionSelection;
   private GlobMatcher filter = GlobMatchers.ALL;
   private FilterSet filterSet;
+  private PicsouTableHeaderPainter headerPainter;
 
   public TransactionView(GlobRepository repository, Directory directory, TransactionSelection transactionSelection) {
     super(repository, directory);
@@ -80,14 +81,15 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
 
   private void updateFilter() {
     view.setFilter(and(transactionSelection.getCurrentMatcher(), this.filter));
+    headerPainter.setFiltered((this.filter != null) && (this.filter != GlobMatchers.ALL));
   }
 
   private JTable createTable() {
     this.view = createGlobTableView(repository, descriptionService, directory, rendererColors);
     this.view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
-    PicsouTableHeaderPainter headerPainter = PicsouTableHeaderPainter.install(view, directory);
-    this.filterSet = new FilterSet(this, headerPainter);
+    headerPainter = PicsouTableHeaderPainter.install(view, directory);
+    this.filterSet = new FilterSet(this);
 
     JTable table = view.getComponent();
     table.setDefaultRenderer(Glob.class,

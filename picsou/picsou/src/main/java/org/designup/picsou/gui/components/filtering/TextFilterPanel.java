@@ -1,10 +1,11 @@
-package org.designup.picsou.gui.transactions.details;
+package org.designup.picsou.gui.components.filtering;
 
-import org.designup.picsou.gui.components.FilterSet;
 import org.designup.picsou.gui.utils.PicsouColors;
+import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -14,15 +15,19 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 
-public abstract class TransactionSearch {
+public abstract class TextFilterPanel {
   private FilterSet filterSet;
   private JTextField textField;
+  private JPanel panel;
   private Color backgroundColor;
   private ColorService colorService;
   private ColorChangeListener listener;
 
-  public TransactionSearch(FilterSet filterSet, Directory directory) {
+  public TextFilterPanel(FilterSet filterSet, GlobRepository repository, Directory directory) {
     this.filterSet = filterSet;
+
+    createPanel(repository, directory);
+
     this.colorService = directory.get(ColorService.class);
     this.listener = new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
@@ -37,11 +42,18 @@ public abstract class TransactionSearch {
     this.colorService.addListener(listener);
   }
 
-  public JTextField getTextField() {
-    if (textField == null) {
-      createTextField();
-    }
-    return textField;
+  private void createPanel(GlobRepository repository, Directory directory) {
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/textFilterPanel.splits",
+                                                      repository, directory);
+
+    createTextField();
+    builder.add("searchField", textField);
+
+    panel = builder.load();
+  }
+
+  public JPanel getPanel() {
+    return panel;
   }
 
   private void createTextField() {

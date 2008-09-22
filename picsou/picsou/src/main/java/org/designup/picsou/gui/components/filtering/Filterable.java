@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.filtering;
 
 import org.globsframework.model.utils.GlobMatcher;
 

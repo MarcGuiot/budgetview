@@ -11,6 +11,7 @@ import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.components.filtering.TextFilterPanel;
 import org.designup.picsou.gui.graphics.CategoriesChart;
 import org.designup.picsou.gui.graphics.HistoricalChart;
 import org.designup.picsou.gui.license.LicenseDialog;
@@ -19,7 +20,6 @@ import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
-import org.designup.picsou.gui.transactions.details.TransactionSearch;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
@@ -69,7 +69,6 @@ public class MainPanel {
     this.parent = mainWindow.getFrame();
     directory.add(JFrame.class, parent);
     directory.add(new UndoRedoService(repository, directory));
-    directory.add(new NavigationService(repository, directory));
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
@@ -78,6 +77,11 @@ public class MainPanel {
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
+    CategorizationView categorizationView = new CategorizationView(repository, directory);
+    directory.add(new NavigationService(transactionView,
+                                        categorizationView,
+                                        repository, directory));
+
     CategoryView categoryView = new CategoryView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
 
@@ -89,15 +93,16 @@ public class MainPanel {
 
     builder.add("editCategories", new EditCategoriesAction(repository, directory));
 
-    TransactionSearch search = new TransactionSearch(transactionView.getFilterSet(), directory) {
+    TextFilterPanel search = new TextFilterPanel(transactionView.getFilterSet(), repository, directory) {
       protected GlobMatcher createMatcher(String searchFilter) {
         return or(fieldContainsIgnoreCase(Transaction.LABEL, searchFilter),
                   fieldContainsIgnoreCase(Transaction.NOTE, searchFilter));
       }
     };
-    builder.add("transactionSearchField", search.getTextField());
+    builder.add("transactionSearch", search.getPanel());
 
     MonthSummaryView monthSummary = new MonthSummaryView(repository, directory);
+
     createPanel(
       titleView,
       transactionView,
@@ -106,7 +111,7 @@ public class MainPanel {
       new AccountView(repository, directory),
       monthSummary,
       new BalanceSummaryView(repository, directory),
-      new CategorizationView(repository, directory),
+      categorizationView,
       new CardView(repository, directory),
       new BudgetView(repository, directory),
       new HistoricalChart(repository, directory),

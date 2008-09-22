@@ -4,6 +4,10 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.filtering.CustomFilterMessagePanel;
+import org.designup.picsou.gui.components.filtering.FilterSet;
+import org.designup.picsou.gui.components.filtering.Filterable;
+import org.designup.picsou.gui.components.filtering.FilterSetListener;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
@@ -29,6 +33,7 @@ import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Strings;
@@ -44,7 +49,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
 
-public class CategorizationView extends View implements TableView, ColorChangeListener {
+public class CategorizationView extends View implements TableView, Filterable, ColorChangeListener {
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
@@ -61,6 +66,9 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
   private Color transactionColorNormal;
   private Color transactionColorError;
+  private PicsouTableHeaderPainter headerPainter;
+  private FilterSet filterSet;
+  private GlobMatcher filter = GlobMatchers.ALL;
 
   public CategorizationView(final GlobRepository repository, Directory parentDirectory) {
     super(repository, createLocalDirectory(parentDirectory));
@@ -77,6 +85,12 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
   public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("categorizationView", createPanelBuilder());
+  }
+
+  public void setFilter(GlobMatcher matcher) {
+    this.filter = matcher;
+    updateTableFilter();
+    headerPainter.setFiltered(matcher != GlobMatchers.ALL);
   }
 
   private GlobsPanelBuilder createPanelBuilder() {
@@ -101,9 +115,21 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
                    LabelCustomizers.fontSize(9))
         .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.BOLD)
         .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), LabelCustomizers.ALIGN_RIGHT);
-    PicsouTableHeaderPainter.install(transactionTable, directory);
+    headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
+
     Gui.setColumnSizes(transactionTable.getComponent(), COLUMN_SIZES);
     installDoubleClickHandler();
+
+    this.filterSet = new FilterSet(this);
+    CustomFilterMessagePanel filterMessagePanel = new CustomFilterMessagePanel(filterSet, repository, directory);
+    builder.add("customFilterMessage", filterMessagePanel.getPanel());
+    filterSet.addListener(new FilterSetListener() {
+      public void filterUpdated(String name, boolean enabled) {
+        if (name.equals(CustomFilterMessagePanel.CUSTOM) && !enabled) {
+          transactionTable.clearSelection();
+        }
+      }
+    });
 
     autoSelectionCheckBox = new JCheckBox(new AutoSelectAction());
     autoSelectionCheckBox.setSelected(false);
@@ -314,6 +340,19 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
     return null;
   }
 
+  public void show(GlobList transactions) {
+    if (transactions.size() < 2) {
+      filterSet.clear();
+      updateTableFilter();
+    }
+    else {
+      filterSet.replaceAllWith(CustomFilterMessagePanel.CUSTOM,
+                               GlobMatchers.fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
+      updateTableFilter();
+    }
+    transactionTable.select(transactions);
+  }
+
   private class CreateSeriesAction extends AbstractAction {
     private final BudgetArea budgetArea;
 
@@ -376,6 +415,7 @@ public class CategorizationView extends View implements TableView, ColorChangeLi
 
     GlobMatcher matcher =
       and(
+        filter,
         fieldEquals(Transaction.PLANNED, false),
         autoHideCheckBox.isSelected() ? fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID) : ALL,
         fieldIn(Transaction.MONTH, selectedMonthIds)
