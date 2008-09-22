@@ -1,20 +1,3 @@
-A faire : deplacer vers "nicetohave" ce qui peut l'etre.
-
-New:
-- arrivee dans l'outil : selectionner le dernier mois avec des donnees
-- supprimer les subcats par defaut (mode avance - apporte plus de confusion que de valeur pour les novices)
-- SED / enveloppes : "Nom" => "Nom de l'enveloppe", titre = "Enveloppes de frais courants"
-- Reactiver selection similar en double clic pour les cheques et les retraits
-- Supprimer mode "select similar"
-- Bug sur gestion du bold pour les toggles dans les occasional
-- supprimer les warnings sur les gauges (les mettre ailleurs ?)
-- Fonction "envoi de fichier anonymise"
-- SED: Bug layout en mode enveloppe
-- Apprentissage /  categorisation automatique
-
-
-=======
-
 Edition de transactions
 *** Note
 *** Date (reporter / annuler report = on reprend la date banque si ok)
@@ -22,21 +5,30 @@ Edition de transactions
 * Type
 
 SeriesEditionDialog
+*** Bug layout en mode enveloppe
+*** Pb perfs dans les selections (trop de setFilter sur les repeat des series)
 ** Modifier l'ordre des series
 ** Creation d'enveloppe : mettre les expected a 0
-* Hyperlien "Selectionner tout (Ctrl-A)" (ou double-clic?)
+* Bouton "Selectionner tout (Ctrl-A)" (ou double-clic?)
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
+* Enveloppes : "Nom" => "Nom de l'enveloppe", titre = "Enveloppes de frais courants"
+* Afficher/modifier le jour de debit pour les recurrences
+* Revoir algo d'initialisation des SeriesBudget : prendre les 3 derniers mois seulement ?
+* Mode autopilote sur les series ?
 
 BudgetView
 *** Voir les transactions pour un montant releve (navigation vers TransactionView filtree)
 *** Infos de synthese :  delta recu/depense en observe et prevu (avec highlight de depassement) + non classe
 *** Afficher le diff sur les jauges total
-** Gauges : afficher le delta en tooltip
-* Pas de scroll horizontal
+** Gauges : afficher le delta en tooltip ("Depassement: 111.11", etc.)
 * Collapse des blocs BudgetView
-** Click sur montant prevu = ouverture SED avec focus sur montant
+** Click sur montant prevu = ouverture SED avec focus sur montant et liste de series masquee
+** Click sur nom serie = naviguer vers les transactions correspondantes
+* Mettre en rouge les depassements
+* Mettre en rouge un montant occasional prevu a zero
 
 CategorizationView
+*** Apprentissage /  categorisation automatique
 ** Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 ** Recherche/filtrage table
 ** Selection d'operations similaires : ne pas scroller la table
@@ -45,6 +37,9 @@ CategorizationView
 * Apprentissage / series
 * Remplacer mode autonext par bouton next
 ** Bug repaint dans les zones d'affichage des series 
+* Supprimer mode "select similar" + message pour introduire le double-click
+* Reactiver selection similar en double clic pour les cheques et les retraits ?
+** Bug sur gestion du bold pour les toggles dans les occasional
 
 TransactionView
 *** Navigation vers Categorization view sur mono/multi-selection (tests en attente)
@@ -53,22 +48,32 @@ TransactionView
 * Afficher la somme (total ou multi-selection)
 * Filtrage transactions par TransactionType
 ** Filtrage transactions par Compte
+* Suppression de transactions ghost pour cloturer une serie ? (= alignement prevu / depense)
+* Bouton pour vider rapidement le champ de recherche
 
-Summary
-*** Bloc "estimation solde" (solde compte + revenus prevus - fixe prevu,  puis - enveloppes/projets/epargne)
-** Afficher le changeLog en cas de changement de version
+BalanceSumary
+*** Ajouter les projets au calcul
+* Quid dans le passe ?
+* Hyperliens vers les transactions planned correspondantes
+
+MonthSummary
+* Hyperliens vers les transactions correspondantes
 
 AccountView
-*** Selection des comptes integres dans le total
+* Selection des comptes integres dans le total
 * Creation de compte
 * Edition comptes
 * Masquer un compte (date de cloture)
+
+Home page
+** Afficher le changeLog en cas de changement de version
 
 Licence
 * Pb focus text editor
 * Pb d'access au serveur "vous devez être connecté" alors que la connexion internet marche
 * revoir look panneau
 * Voir selection nombre de mois
+* Revoir messages d'erreur pour s'assurer qu'ils guident bien et ne sont pas inquietants
 
 CategoryEditionDialog
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
@@ -101,7 +106,9 @@ Packaging
 * Afficher SLA au premier lancement (repository vide)
 * Look installer (fond en blanc)
 
-Misc
+General
+* Supprimer les subcats par defaut (mode avance - apporte plus de confusion que de valeur pour les novices)
+* Arrivee dans l'outil : selectionner le dernier mois avec des donnees
 * Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
 * Tooltips sur les boutons
 * Afficher les infos de mise a dispo d'une nouvelle version
@@ -117,11 +124,13 @@ Undo/redo
 * Test Categorisation
 * En cas de categorisation, reselectionner les transactions
 
-Versions basique/pro
-* Masquer les vues
-* Bloc "vous utilisez la version basique"
-* Pb d'affichage de mois futurs en version basique si transactions dans le futur
-* SeriesEditionDialog : Afficher les mois futurs meme en version basique
+Version d'evaluation
+* Afficher le nombre de jours restants
+* Apres expiration : la fonction "import" fait apparaitre un message
+* Mettre une expiration sur detection de problemes de licence
+
+Gestion des banques
+* Fonction "envoi de fichier anonymise"
 
 Creation de transactions
  (soit achats effectues mais pas encore dans les releves, soit previsions plus vagues)

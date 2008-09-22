@@ -41,9 +41,9 @@
                horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
         <filler fill="horizontal"/>
         <toggleButton ref="homeCardToggle" styleClass="masterViewSelector"/>
-        <toggleButton ref="categorizationCardToggle" styleClass="masterViewSelector"/>
         <toggleButton ref="budgetCardToggle" styleClass="masterViewSelector"/>
         <toggleButton ref="analysisCardToggle" styleClass="masterViewSelector"/>
+        <toggleButton ref="categorizationCardToggle" styleClass="masterViewSelector"/>
       </row>
 
       <row weightY="0.1">
