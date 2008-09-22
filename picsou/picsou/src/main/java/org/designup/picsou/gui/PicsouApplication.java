@@ -30,7 +30,6 @@ import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -39,8 +38,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
+import java.util.logging.LogManager;
 import java.util.regex.Pattern;
 
 public class PicsouApplication {
@@ -96,14 +99,12 @@ public class PicsouApplication {
   }
 
   private static void initLogger() {
-    FileOutputStream stream;
+    InputStream stream = PicsouApplication.class.getClassLoader().getResourceAsStream("logging.properties");
     try {
-      File logFilePath = new File(getPicsouPath() + "/" + "logs");
-      logFilePath.mkdirs();
-      stream = new FileOutputStream(File.createTempFile("picsoulog", ".txt", logFilePath));
-      Log.init(new PrintStream(stream));
+      LogManager.getLogManager().readConfiguration(stream);
     }
     catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
