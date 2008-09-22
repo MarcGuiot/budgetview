@@ -21,10 +21,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -344,6 +341,7 @@ public abstract class ImportPanel {
       try {
         openRequestManager.popCallback();
         Set<Integer> month = createMonth();
+        learn();
         localRepository.commitChanges(true);
         selectImportedMonth(month);
         complete();
@@ -378,14 +376,16 @@ public abstract class ImportPanel {
 
   private Set<Integer> createMonth() {
     localRepository.enterBulkDispatchingMode();
-    SortedSet<Integer> monthIds = new TreeSet<Integer>();
+    final SortedSet<Integer> monthIds = new TreeSet<Integer>();
     try {
-      GlobList months = localRepository.getAll(Transaction.TYPE,
-                                               GlobMatchers.fieldIn(Transaction.IMPORT, importKeys));
-      for (Glob month : months) {
-        monthIds.add(month.get(Transaction.BANK_MONTH));
-        monthIds.add(month.get(Transaction.MONTH));
-      }
+      localRepository.saveApply(Transaction.TYPE,
+                                GlobMatchers.fieldIn(Transaction.IMPORT, importKeys),
+                                new GlobFunctor() {
+                                  public void run(Glob month, GlobRepository repository) throws Exception {
+                                    monthIds.add(month.get(Transaction.BANK_MONTH));
+                                    monthIds.add(month.get(Transaction.MONTH));
+                                  }
+                                });
       if (monthIds.isEmpty()) {
         return monthIds;
       }
@@ -402,6 +402,12 @@ public abstract class ImportPanel {
       localRepository.completeBulkDispatchingMode();
     }
     return monthIds;
+  }
+
+  private void learn() {
+    localRepository.saveApply(Transaction.TYPE,
+                              GlobMatchers.fieldIn(Transaction.IMPORT, importKeys),
+                              new LearningGlobFunctor(repository));
   }
 
   private void selectImportedMonth(Set<Integer> month) {
@@ -612,4 +618,5 @@ public abstract class ImportPanel {
       };
     }
   }
+
 }
