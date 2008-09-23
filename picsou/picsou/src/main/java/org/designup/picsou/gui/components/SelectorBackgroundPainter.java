@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.categories.columns;
+package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
@@ -10,14 +10,14 @@ import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 
-public class CategoryBackgroundPainter implements CellPainter, ColorChangeListener {
+public class SelectorBackgroundPainter implements CellPainter, ColorChangeListener {
   private Color selectionBorder;
   private Color background;
   private Color selectionTop;
   private Color selectionBottom;
   private ColorService colorService;
 
-  public CategoryBackgroundPainter(Directory directory) {
+  public SelectorBackgroundPainter(Directory directory) {
     colorService = directory.get(ColorService.class);
     colorService.addListener(this);
   }

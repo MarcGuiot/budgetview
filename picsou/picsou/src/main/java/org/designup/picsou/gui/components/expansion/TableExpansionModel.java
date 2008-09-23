@@ -3,6 +3,7 @@ package org.designup.picsou.gui.components.expansion;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
 
 import java.util.HashMap;
@@ -29,13 +30,23 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     updateExpandabilities();
   }
 
+  public void completeInit() {
+    repository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsCreationsOrDeletions(type)) {
+          table.setFilter(TableExpansionModel.this);
+        }
+      }
+    });
+  }
+
   protected abstract GlobMatcher getMasterMatcher();
 
   protected abstract boolean hasChildren(Integer id, GlobRepository repository);
 
   public abstract boolean isMaster(Glob glob);
 
-  protected abstract Integer getMaster(Glob glob);
+  protected abstract Integer getMasterId(Glob glob);
 
   public abstract boolean isExpansionDisabled(Glob glob);
 
@@ -85,7 +96,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     if (isMaster(glob)) {
       return true;
     }
-    Integer masterId = getMaster(glob);
+    Integer masterId = getMasterId(glob);
     if (masterId == null) {
       return true;
     }
@@ -100,7 +111,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     Set<Key> createdList = changeSet.getCreated(type);
     for (Key key : createdList) {
       Glob created = repository.get(key);
-      Integer master = getMaster(created);
+      Integer master = getMasterId(created);
       if (master != null) {
         expandedMap.put(master, true);
       }

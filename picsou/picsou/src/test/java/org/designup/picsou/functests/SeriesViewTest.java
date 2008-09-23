@@ -4,7 +4,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 
-public abstract class SeriesViewTest extends LoggedInFunctionalTestCase {
+public class SeriesViewTest extends LoggedInFunctionalTestCase {
   public void test() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
@@ -16,12 +16,15 @@ public abstract class SeriesViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/01", 3540.00, "WorldCo")
       .load();
 
-    series.checkContains("Income",
-                         "Recurring",
-                         "Envelopes",
-                         "Occasional",
-                         "Savings",
-                         "Projects");
+    views.selectData();
+    series.checkContains("All",
+                         "To categorize",
+                         "Income",
+                         "Recurring expenses",
+                         "Envelope expenses",
+                         "Occasional expenses",
+                         "Projects",
+                         "Savings");
 
     views.selectCategorization();
     categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
@@ -31,13 +34,22 @@ public abstract class SeriesViewTest extends LoggedInFunctionalTestCase {
     categorization.setExceptionalIncome("WorldCo - Bonus", "Exceptional Income", true);
     categorization.setIncome("WorldCo", "Salary", true);
 
-    series.checkContains("Income",
-                         "Recurring",
-                         "Internet",
-                         "Envelopes",
-                         "Groceries",
-                         "Occasional",
-                         "Savings",
-                         "Projects");
+    views.selectData();
+    series.checkContains("All",
+                         "To categorize",
+                         "Income","Exceptional Income","Salary",
+                         "Recurring expenses","Electricity","Internet",
+                         "Envelope expenses","Groceries",
+                         "Occasional expenses",
+                         "Projects",
+                         "Savings");
+  }
+
+  public void testCreatingAndDeletingSeries() throws Exception {
+
+  }
+
+  public void testExpandingAndCollapsingBudgetAreas() throws Exception {
+
   }
 }

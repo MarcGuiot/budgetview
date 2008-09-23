@@ -26,7 +26,7 @@ public class CategoryExpansionModel extends TableExpansionModel {
     return Category.isMaster(glob);
   }
 
-  protected Integer getMaster(Glob glob) {
+  protected Integer getMasterId(Glob glob) {
     return glob.get(Category.MASTER);
   }
 
