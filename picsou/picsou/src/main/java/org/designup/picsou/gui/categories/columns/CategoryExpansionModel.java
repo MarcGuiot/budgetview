@@ -1,108 +1,36 @@
 package org.designup.picsou.gui.categories.columns;
 
 import org.designup.picsou.gui.categories.CategoryView;
+import org.designup.picsou.gui.components.expansion.TableExpansionModel;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.Category;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-public class CategoryExpansionModel implements GlobMatcher, ChangeSetListener {
-
-  private Map<Integer, Boolean> expandedMap = new HashMap<Integer, Boolean>();
-  private Map<Integer, Boolean> expandableMap = new HashMap<Integer, Boolean>();
-  private GlobRepository repository;
-  private CategoryView view;
+public class CategoryExpansionModel extends TableExpansionModel {
 
   public CategoryExpansionModel(GlobRepository repository, CategoryView view) {
-    this.repository = repository;
-    this.view = view;
-    repository.addChangeListener(this);
-    for (Glob master : repository.getAll(Category.TYPE, PicsouMatchers.masterCategories())) {
-      expandedMap.put(master.get(Category.ID), false);
-    }
-    updateExpandabilities();
+    super(Category.TYPE, Category.ID, repository, view);
   }
 
-  private void updateExpandabilities() {
-    expandableMap.clear();
-    for (Glob master : repository.getAll(Category.TYPE, PicsouMatchers.masterCategories())) {
-      Integer categoryId = master.get(Category.ID);
-      boolean expandable = Category.hasChildren(categoryId, repository);
-      expandableMap.put(categoryId, expandable);
-      if (!expandable) {
-        expandedMap.put(categoryId, false);
-      }
-    }
+  protected GlobMatcher getMasterMatcher() {
+    return PicsouMatchers.masterCategories();
   }
 
-  public void toggleExpansion(Glob category) {
-    if (!isExpandable(category)) {
-      return;
-    }
-    Integer categoryId = category.get(Category.ID);
-    Boolean existingValue = expandedMap.get(categoryId);
-    expandedMap.put(categoryId, !existingValue.booleanValue());
-    view.setFilter(this);
-    view.select(category);
+  protected boolean hasChildren(Integer id, GlobRepository repository) {
+    return Category.hasChildren(id, repository);
   }
 
-  public boolean isExpanded(Glob category) {
-    if (!Category.isMaster(category)) {
-      return false;
-    }
-    Integer categoryId = category.get(Category.ID);
-    return expandedMap.get(categoryId);
+  public boolean isMaster(Glob glob) {
+    return Category.isMaster(glob);
   }
 
-  public boolean isExpandable(Glob category) {
-    if (category == null) {
-      return false;
-    }
-    Boolean status = expandableMap.get(category.get(Category.ID));
-    if (status == null) {
-      return false;
-    }
-    return status;
+  protected Integer getMaster(Glob glob) {
+    return glob.get(Category.MASTER);
   }
 
-  public boolean matches(Glob category, GlobRepository repository) {
-    if (Category.isMaster(category)) {
-      return true;
-    }
-    Integer masterId = category.get(Category.MASTER);
-    if (masterId == null) {
-      return true;
-    }
-    return expandedMap.get(masterId);
-  }
-
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (!changeSet.containsCreationsOrDeletions(Category.TYPE)) {
-      return;
-    }
-    updateExpandabilities();
-    Set<Key> createdList = changeSet.getCreated(Category.TYPE);
-    for (Key key : createdList) {
-      Glob created = repository.get(key);
-      Integer master = created.get(Category.MASTER);
-      if (master != null) {
-        expandedMap.put(master, true);
-      }
-    }
-    Set<Key> deletedList = changeSet.getDeleted(Category.TYPE);
-    for (Key key : deletedList) {
-      expandedMap.remove(key.get(Category.ID));
-    }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(Category.TYPE)) {
-      updateExpandabilities();
-    }
+  public boolean isExpansionDisabled(Glob category) {
+    return Category.isAll(category) || Category.isNone(category);
   }
 }

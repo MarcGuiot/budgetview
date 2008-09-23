@@ -2,7 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.gui.categories.CategoryView;
-import org.designup.picsou.gui.categories.columns.CategoryExpansionColumn;
+import org.designup.picsou.gui.components.expansion.TableExpansionColumn;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
@@ -85,7 +85,7 @@ public class CategoryChecker extends ViewChecker {
     return names.toArray(new String[names.size()]);
   }
 
-  public void assertSelectionEquals(MasterCategory... categories) {
+  public void checkSelectionEquals(MasterCategory... categories) {
     assertTrue(getTable().rowsAreSelected(getIndexes(categories)));
   }
 
@@ -169,7 +169,7 @@ public class CategoryChecker extends ViewChecker {
     Assert.assertEquals(count, actual);
   }
 
-  public void assertCategoryNotFound(String categoryName) {
+  public void checkCategoryNotFound(String categoryName) {
     Assert.assertTrue(getIndex(categoryName) < 0);
   }
 
@@ -215,24 +215,24 @@ public class CategoryChecker extends ViewChecker {
     return getIndexes(master)[0];
   }
 
-  public void assertExpansionEnabled(MasterCategory master, boolean enabled) {
+  public void checkExpansionEnabled(MasterCategory master, boolean enabled) {
     JButton button = (JButton)getTable().getSwingRendererComponentAt(getIndex(master), 0);
     Assert.assertEquals(enabled,
                         (button.getIcon() != null) &&
-                        (button.getIcon() != CategoryExpansionColumn.DISABLED_ICON));
+                        (button.getIcon() != TableExpansionColumn.DISABLED_ICON));
   }
 
-  public void assertExpanded(MasterCategory master, boolean expanded) {
+  public void checkExpanded(MasterCategory master, boolean expanded) {
     JButton button = (JButton)getTable().getSwingRendererComponentAt(getIndex(master), 0);
     if (expanded) {
-      Assert.assertSame(CategoryExpansionColumn.EXPANDED_ICON, button.getIcon());
+      Assert.assertSame(TableExpansionColumn.EXPANDED_ICON, button.getIcon());
     }
     else {
-      Assert.assertSame(CategoryExpansionColumn.COLLAPSED_ICON, button.getIcon());
+      Assert.assertSame(TableExpansionColumn.COLLAPSED_ICON, button.getIcon());
     }
   }
 
-  public void assertVisible(String categoryName, boolean visible) {
+  public void checkVisible(String categoryName, boolean visible) {
     Assert.assertEquals(visible, getIndex(categoryName) > -1);
   }
 

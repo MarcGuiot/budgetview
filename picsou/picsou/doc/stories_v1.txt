@@ -38,6 +38,9 @@ CategorizationView
 * Supprimer mode "select similar" + message pour introduire le double-click
 * Reactiver selection similar en double clic pour les cheques et les retraits ?
 
+TransactionDetails
+* Afficher les labels en multiligne
+
 TransactionView
 *** Filtrage transactions par BudgetArea & Serie
 ** Filtrage transactions par Compte

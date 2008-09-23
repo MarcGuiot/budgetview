@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.categories;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.expansion.ExpandableTable;
+import org.designup.picsou.gui.components.expansion.TableExpansionColumn;
 import org.designup.picsou.gui.categories.columns.*;
 import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
@@ -25,7 +27,7 @@ import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class CategoryView extends View {
+public class CategoryView extends View implements ExpandableTable {
   public static final int EXPANSION_COLUMN_INDEX = 0;
   public static final int CATEGORY_COLUMN_INDEX = 1;
   public static final int AMOUNT_COLUMN_INDEX = 2;
@@ -60,7 +62,7 @@ public class CategoryView extends View {
 
     CategoryLabelCustomizer customizer = new CategoryLabelCustomizer(directory);
     CategoryBackgroundPainter backgroundPainter = new CategoryBackgroundPainter(directory);
-    CategoryExpansionColumn expandColumn = new CategoryExpansionColumn(backgroundPainter, selectionService);
+    TableExpansionColumn expandColumn = new TableExpansionColumn(backgroundPainter);
 
     globTable
       .setDefaultBackgroundPainter(backgroundPainter)
@@ -98,13 +100,13 @@ public class CategoryView extends View {
         if (e.getClickCount() != 2) {
           return;
         }
-        Glob category = getSelectedCategory();
+        Glob category = getSelectedGlob();
         expansionModel.toggleExpansion(category);
       }
     });
   }
 
-  private void setInitialColumnSizes(CategoryExpansionColumn column) {
+  private void setInitialColumnSizes(TableExpansionColumn column) {
     TableUtils.setSize(table, EXPANSION_COLUMN_INDEX, column.getPreferredWidth());
 
     JLabel renderer = (JLabel)TableUtils.getRenderedComponentAt(table, 0, AMOUNT_COLUMN_INDEX);
@@ -114,7 +116,7 @@ public class CategoryView extends View {
     TableUtils.autosizeColumn(table, CATEGORY_COLUMN_INDEX);
   }
 
-  public Glob getSelectedCategory() {
+  public Glob getSelectedGlob() {
     return globTable.getGlobAt(table.getSelectedRow());
   }
 

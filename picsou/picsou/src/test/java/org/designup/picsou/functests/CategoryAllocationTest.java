@@ -5,7 +5,6 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.utils.Dates;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 
@@ -86,11 +85,11 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.0, MasterCategory.NONE)
       .check();
-    categories.assertSelectionEquals(MasterCategory.NONE);
+    categories.checkSelectionEquals(MasterCategory.NONE);
 
     assignCategory("Menu K", MasterCategory.FOOD);
 
-    categories.assertSelectionEquals(MasterCategory.NONE);
+    categories.checkSelectionEquals(MasterCategory.NONE);
     timeline.checkSelection("2006/01");
 
     transactions.assertEmpty();

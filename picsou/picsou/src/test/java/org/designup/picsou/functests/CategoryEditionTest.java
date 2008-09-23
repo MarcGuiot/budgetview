@@ -126,7 +126,7 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     categoryEdition.checkSubContains("Téléphone fixe");
     categoryEdition.validate();
 
-    categories.assertCategoryNotFound("Fuel");
+    categories.checkCategoryNotFound("Fuel");
     transactions
       .initContent()
       .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Station BP", "", -1.0, MasterCategory.HOUSE)
@@ -154,8 +154,8 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       }).run();
     categoryEdition.validate();
 
-    categories.assertCategoryNotFound("Essence");
-    categories.assertCategoryNotFound(getCategoryName(MasterCategory.TRANSPORTS));
+    categories.checkCategoryNotFound("Essence");
+    categories.checkCategoryNotFound(getCategoryName(MasterCategory.TRANSPORTS));
     transactions
       .initContent()
       .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Station BP", "", -1.0, MasterCategory.HOUSE)

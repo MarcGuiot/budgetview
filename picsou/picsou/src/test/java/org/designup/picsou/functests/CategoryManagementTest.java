@@ -91,12 +91,12 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2006/01");
 
-    categories.assertSelectionEquals(MasterCategory.FOOD, MasterCategory.TRANSPORTS);
+    categories.checkSelectionEquals(MasterCategory.FOOD, MasterCategory.TRANSPORTS);
   }
 
   public void testCreatingASubCategory() throws Exception {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
-    categories.assertSelectionEquals(MasterCategory.FOOD);
+    categories.checkSelectionEquals(MasterCategory.FOOD);
 
     OfxBuilder
       .init(this)
@@ -172,7 +172,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.createSubCategory(MasterCategory.FOOD, "Charcuterie");
     categories.checkCategoryExists("Charcuterie");
     categories.toggleExpanded(MasterCategory.FOOD);
-    categories.assertCategoryNotFound("Charcuterie");
+    categories.checkCategoryNotFound("Charcuterie");
   }
 
   public void testCategoryNamesMustBeUnique() throws Exception {
@@ -224,9 +224,9 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
 
     categories.deleteSubSelected(MasterCategory.FOOD);
 
-    categories.assertCategoryNotFound("Apero");
+    categories.checkCategoryNotFound("Apero");
 
-    categories.assertSelectionEquals(MasterCategory.FOOD);
+    categories.checkSelectionEquals(MasterCategory.FOOD);
 
     transactions
       .initContent()
@@ -312,7 +312,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       })
       .run();
     editor.validate();
-    categories.assertCategoryNotFound("Apero");
+    categories.checkCategoryNotFound("Apero");
     categories.checkCategoryExists("Pastis");
   }
 
@@ -386,47 +386,47 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .run();
     editor.validate();
     categories.checkCategoryExists("Apero");
-    categories.assertCategoryNotFound("Pastis");
+    categories.checkCategoryNotFound("Pastis");
   }
 
   public void testCategoryExpansion() throws Exception {
-    categories.assertExpansionEnabled(MasterCategory.FOOD, false);
+    categories.checkExpansionEnabled(MasterCategory.FOOD, false);
 
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
-    categories.assertExpanded(MasterCategory.FOOD, true);
-    categories.assertVisible("Apero", true);
+    categories.checkExpanded(MasterCategory.FOOD, true);
+    categories.checkVisible("Apero", true);
 
     categories.toggleExpanded(MasterCategory.FOOD);
-    categories.assertExpanded(MasterCategory.FOOD, false);
-    categories.assertVisible("Apero", false);
+    categories.checkExpanded(MasterCategory.FOOD, false);
+    categories.checkVisible("Apero", false);
 
     categories.toggleExpanded(MasterCategory.FOOD);
-    categories.assertExpanded(MasterCategory.FOOD, true);
-    categories.assertVisible("Apero", true);
+    categories.checkExpanded(MasterCategory.FOOD, true);
+    categories.checkVisible("Apero", true);
   }
 
   public void testExpansionWithDoubleClick() throws Exception {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
-    categories.assertExpanded(MasterCategory.FOOD, true);
+    categories.checkExpanded(MasterCategory.FOOD, true);
 
     categories.doubleClick(MasterCategory.FOOD);
-    categories.assertExpanded(MasterCategory.FOOD, false);
+    categories.checkExpanded(MasterCategory.FOOD, false);
 
     categories.doubleClick(MasterCategory.FOOD);
-    categories.assertExpanded(MasterCategory.FOOD, true);
+    categories.checkExpanded(MasterCategory.FOOD, true);
   }
 
   public void testDoubleClickOnSubcategoryDoesNothing() throws Exception {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
-    categories.assertExpanded(MasterCategory.FOOD, true);
+    categories.checkExpanded(MasterCategory.FOOD, true);
 
     categories.doubleClick("Apero");
-    categories.assertExpanded(MasterCategory.FOOD, true);
+    categories.checkExpanded(MasterCategory.FOOD, true);
   }
 
   public void testGenericCategoriesCannotBeExpanded() throws Exception {
-    categories.assertExpansionEnabled(MasterCategory.ALL, false);
-    categories.assertExpansionEnabled(MasterCategory.NONE, false);
+    categories.checkExpansionEnabled(MasterCategory.ALL, false);
+    categories.checkExpansionEnabled(MasterCategory.NONE, false);
   }
 
   public void testCanShiftSelectFromExpansionColumn() throws Exception {
@@ -446,15 +446,15 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeletingAllSubcategoriesDisablesExpansion() throws Exception {
-    categories.assertExpansionEnabled(MasterCategory.MISC_SPENDINGS, false);
+    categories.checkExpansionEnabled(MasterCategory.MISC_SPENDINGS, false);
 
     categories.createSubCategory(MasterCategory.MISC_SPENDINGS, "Misc");
-    categories.assertExpansionEnabled(MasterCategory.MISC_SPENDINGS, true);
+    categories.checkExpansionEnabled(MasterCategory.MISC_SPENDINGS, true);
 
     categories.select("Misc");
     categories.deleteSubSelected();
-    categories.assertExpansionEnabled(MasterCategory.MISC_SPENDINGS, false);
-    categories.assertSelectionEquals(MasterCategory.MISC_SPENDINGS);
+    categories.checkExpansionEnabled(MasterCategory.MISC_SPENDINGS, false);
+    categories.checkSelectionEquals(MasterCategory.MISC_SPENDINGS);
   }
 
   public void testDeleteDifferentSubcategory() throws Exception {
@@ -472,10 +472,10 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     edition.deleteSubCategory();
     edition.validate();
 
-    categories.assertCategoryNotFound("Apero");
-    categories.assertCategoryNotFound("3G++");
+    categories.checkCategoryNotFound("Apero");
+    categories.checkCategoryNotFound("3G++");
 
-    categories.assertSelectionEquals(MasterCategory.EDUCATION);
+    categories.checkSelectionEquals(MasterCategory.EDUCATION);
   }
 
   public void testSelectSubSelectMasterAndSubInCategoryEdition() throws Exception {
