@@ -30,6 +30,7 @@ import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -38,12 +39,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
-import java.util.logging.LogManager;
 import java.util.regex.Pattern;
 
 public class PicsouApplication {
@@ -57,6 +54,7 @@ public class PicsouApplication {
   private static final String CONFIG = "config";
   private static final Pattern CONFIG_FILTER = Pattern.compile(CONFIG + "[0-9][0-9]*" + "\\.jar");
 
+  private static final String COM_PICSOU_LOG_SOUT = PICSOU + ".log.sout";
   public static final String LOCAL_PREVAYLER_PATH_PROPERTY = PICSOU + ".prevayler.path";
   public static final String DEFAULT_ADDRESS_PROPERTY = PICSOU + ".server.url";
   public static String DELETE_LOCAL_PREVAYLER_PROPERTY = PICSOU + ".prevayler.delete";
@@ -99,9 +97,18 @@ public class PicsouApplication {
   }
 
   private static void initLogger() {
-    InputStream stream = PicsouApplication.class.getClassLoader().getResourceAsStream("logging.properties");
     try {
-      LogManager.getLogManager().readConfiguration(stream);
+      String sout = System.getProperty(COM_PICSOU_LOG_SOUT);
+      if (sout != null && sout.equalsIgnoreCase("true")) {
+        return;
+      }
+      File logFilePath = new File(getPicsouPath() + "/" + "logs");
+      logFilePath.mkdirs();
+      FileOutputStream stream = new FileOutputStream(File.createTempFile("picsoulog", ".txt", logFilePath));
+      PrintStream output = new PrintStream(stream);
+      Log.init(output);
+      System.setOut(output);
+      System.setErr(output);
     }
     catch (IOException e) {
       e.printStackTrace();
