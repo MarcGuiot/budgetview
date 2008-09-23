@@ -207,7 +207,7 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     selection.filterSelf(matcher, repository);
     boolean selectionChanged = (initialSize != selection.size());
 
-    model.model.setFilter(matcher);
+    model.model.setFilter(matcher, true);
 
     if (!selectionChanged) {
       selectSilently(selection);

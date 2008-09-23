@@ -156,7 +156,7 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
   }
 
   public void setFilter(GlobMatcher matcher) {
-    model.model.setFilter(matcher);
+    model.model.setFilter(matcher, true);
     if (model.model.size() != 0) {
       jComboBox.setSelectedIndex(0);
     }

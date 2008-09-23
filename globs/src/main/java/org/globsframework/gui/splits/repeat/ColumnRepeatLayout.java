@@ -5,8 +5,8 @@ import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 
 import javax.swing.*;
-import java.util.List;
 import java.awt.*;
+import java.util.List;
 
 public abstract class ColumnRepeatLayout implements RepeatLayout {
 
@@ -37,6 +37,13 @@ public abstract class ColumnRepeatLayout implements RepeatLayout {
 
   public void remove(JPanel panel, int index) {
     panel.remove(index);
+    panel.validate();
+  }
+
+  public void move(JPanel panel, int previousIndex, int newIndex) {
+    Component component = panel.getComponent(previousIndex);
+    panel.remove(previousIndex);
+    panel.add(component, newIndex);
     panel.validate();
   }
 

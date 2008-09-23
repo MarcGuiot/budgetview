@@ -233,6 +233,78 @@ public class SplitsRepeatTest extends SplitsTestCase {
     checkButton(panel, 3, "bb", 1, 1);
   }
 
+  public void testSwapInRepeat() throws Exception {
+    Repeat<String> repeat =
+      builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                        new RepeatComponentFactory<String>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                            cellBuilder.add("label", new JLabel(object));
+                            cellBuilder.add("btn", new JButton(object));
+                          }
+                        });
+
+    JPanel panel = parse(
+      "<repeat ref='myRepeat'>" +
+      "  <row>" +
+      "    <label ref='label'/>" +
+      "    <button ref='btn'/>" +
+      "  </row>" +
+      "</repeat>");
+
+    assertEquals("myRepeat", panel.getName());
+    assertSame(panel, builder.getComponent("myRepeat"));
+
+    checkPanel(panel,
+               "panel\n" +
+               "  label:aa\n" +
+               "  button:aa\n" +
+               "panel\n" +
+               "  label:bb\n" +
+               "  button:bb\n");
+
+    repeat.insert("cc", 1);
+    repeat.move(0, 1);
+    checkPanel(panel,
+               "panel\n" +
+               "  label:cc\n" +
+               "  button:cc\n" +
+               "panel\n" +
+               "  label:aa\n" +
+               "  button:aa\n" +
+               "panel\n" +
+               "  label:bb\n" +
+               "  button:bb\n");
+
+  }
+
+  public void testGridSwap() throws Exception {
+    Repeat<String> repeat = builder.addRepeat("repeat", Arrays.asList("aa", "bb"), new RepeatComponentFactory<String>() {
+      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+        cellBuilder.add("label", new JLabel(object));
+        cellBuilder.add("button", new JButton(object));
+      }
+    });
+    JPanel panel = parse(
+      "<repeat ref='repeat' layout='horizontalGrid'>" +
+      "  <label ref='label' fill='horizontal' anchor='south' marginTop='10' marginBottom='5'/>" +
+      "  <button ref='button' marginLeft='5' marginRight='5'/>" +
+      "</repeat>");
+
+    checkPanel(panel,
+               "label:aa\n" +
+               "button:aa\n" +
+               "label:bb\n" +
+               "button:bb\n");
+    repeat.move(0, 1);
+    checkPanel(panel,
+               "label:bb\n" +
+               "button:bb\n" +
+               "label:aa\n" +
+               "button:aa\n" +
+               "");
+
+  }
+
   public void testHorizontalGridLayout() throws Exception {
     builder.addRepeat("repeat", Arrays.asList("aa", "bb"), new RepeatComponentFactory<String>() {
       public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
@@ -450,10 +522,10 @@ public class SplitsRepeatTest extends SplitsTestCase {
   }
 
   private static java.util.List<String> getItems(String item) {
-    if ("aa".equals(item)) {
+    if ("aa" .equals(item)) {
       return Arrays.asList("a1", "a2");
     }
-    if ("cc".equals(item)) {
+    if ("cc" .equals(item)) {
       return Arrays.asList("c1");
     }
     return Collections.emptyList();

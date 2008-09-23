@@ -18,6 +18,7 @@ public interface RepeatLayout {
 
   void remove(JPanel panel, int index);
 
-  boolean managesInsets();
+  void move(JPanel panel, int index1, int index2);
 
+  boolean managesInsets();
 }

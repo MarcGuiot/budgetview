@@ -48,8 +48,11 @@ public class GlobsPanelBuilderTest extends UISpecTestCase {
     repository.delete(key1);
     SplitsRepeatTest.checkPanel(component, "label:b\n" +
                                            "label:c\n");
-    
+
     repeat.setFilter(GlobMatchers.fieldEquals(DummyObject.NAME, "b"));
     SplitsRepeatTest.checkPanel(component, "label:b\n");
+  }
+
+  public void test() throws Exception {
   }
 }

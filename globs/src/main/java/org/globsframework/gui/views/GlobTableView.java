@@ -667,7 +667,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     }
 
     public void setFilter(GlobMatcher matcher) {
-      model.setFilter(matcher);
+      model.setFilter(matcher, true);
     }
 
     public Glob get(int index) {

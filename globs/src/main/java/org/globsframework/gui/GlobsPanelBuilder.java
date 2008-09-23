@@ -7,10 +7,10 @@ import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobPasswordEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.*;
 import org.globsframework.metamodel.Field;
@@ -160,7 +160,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
                                      RepeatComponentFactory factory) {
     GlobRepeatListener listener = new GlobRepeatListener();
     GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
-    model.setFilter(matcher);
+    model.setFilter(matcher, true);
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
     listener.set(model, repeat);
     return listener;
@@ -171,7 +171,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
                                      RepeatComponentFactory factory) {
     GlobRepeatListener listener = new GlobRepeatListener();
     final GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
-    model.setFilter(matcher);
+    model.setFilter(matcher, true);
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
     builder.addDisposeListener(new Disposable() {
       public void dispose() {
@@ -211,8 +211,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     }
 
     public void globMoved(int previousIndex, int newIndex) {
-      globRemoved(previousIndex);
-      globInserted(newIndex);
+      repeat.move(previousIndex, newIndex);
     }
 
     public void globListPreReset() {
@@ -230,7 +229,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     }
 
     public void setFilter(GlobMatcher matcher) {
-      model.setFilter(matcher);
+      model.setFilter(matcher, false);
     }
   }
 }

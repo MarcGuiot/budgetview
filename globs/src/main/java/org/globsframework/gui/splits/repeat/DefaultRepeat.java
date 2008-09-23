@@ -34,6 +34,12 @@ public class DefaultRepeat<T> implements Repeat<T>, RepeatHandler<T> {
     }
   }
 
+  public void move(int index1, int index2) {
+    if (repeatPanel != null) {
+      repeatPanel.move(index1, index2);
+    }
+  }
+
   public RepeatComponentFactory getFactory() {
     return factory;
   }

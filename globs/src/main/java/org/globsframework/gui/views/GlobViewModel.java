@@ -2,10 +2,7 @@ package org.globsframework.gui.views;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobKeyMatcher;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.SortedGlobList;
+import org.globsframework.model.utils.*;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -52,15 +49,19 @@ public class GlobViewModel implements ChangeSetListener {
     if (notify) {
       listener.globListPreReset();
     }
+    reloadGlobList();
+    if (notify) {
+      listener.globListReset();
+    }
+  }
+
+  private void reloadGlobList() {
     globs.clear();
     if (showNullElement) {
       globs.add(null);
     }
     for (Glob glob : repository.getAll(type, matcher)) {
       globs.add(glob);
-    }
-    if (notify) {
-      listener.globListReset();
     }
   }
 
@@ -94,9 +95,30 @@ public class GlobViewModel implements ChangeSetListener {
     return globs.size();
   }
 
-  public void setFilter(GlobMatcher matcher) {
+  public void setFilter(GlobMatcher matcher, final boolean reInit) {
     this.matcher = matcher;
-    initList(true);
+    if (reInit) {
+      initList(true);
+    }
+    else {
+      GlobList from = getAll();
+      this.matcher = matcher;
+      reloadGlobList();
+      GlobList to = getAll();
+      GlobUtils.diff(from, to, new GlobUtils.DiffFunctor<Glob>() {
+        public void add(Glob glob, int index) {
+          listener.globInserted(index);
+        }
+
+        public void remove(int index) {
+          listener.globRemoved(index);
+        }
+
+        public void move(int previousIndex, int newIndex) {
+          listener.globMoved(previousIndex, newIndex);
+        }
+      });
+    }
   }
 
   public void sort(Comparator<Glob> comparator) {

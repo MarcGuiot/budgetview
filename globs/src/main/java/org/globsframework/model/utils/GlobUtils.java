@@ -70,26 +70,49 @@ public class GlobUtils {
     void add(T glob, int index);
 
     void remove(int index);
+
+    void move(int previousIndex, int newIndex);
   }
 
   public static <T> void diff(List<T> from, List<T> to, DiffFunctor<T> functor) {
-    Iterator<T> fromGlobs = from.iterator();
+    T[] fromArray = (T[])from.toArray(new Object[from.size() + to.size()]);
     int toPos = 0;
     int added = 0;
 
-    T fromGlob = (T)(fromGlobs.hasNext() ? fromGlobs.next() : null);
-    for (T glob : to) {
-      if (glob != fromGlob) {
-        functor.add(glob, toPos);
-        added++;
-      }
-      else {
-        fromGlob = (T)(fromGlobs.hasNext() ? fromGlobs.next() : null);
+    T fromT = fromArray.length == 0 ? null : fromArray[0];
+    for (T element : to) {
+      if (!element.equals(fromT)) {
+        boolean moved = false;
+        for (int i = toPos + 1; i < fromArray.length; i++) {
+          T t = fromArray[i];
+          if (t != null && t.equals(element)) {
+            functor.move(i, toPos);
+            System.arraycopy(fromArray, toPos, fromArray, toPos + 1, i - toPos);
+            fromArray[toPos] = t;
+            moved = true;
+            break;
+          }
+        }
+
+        if (!moved) {
+          functor.add(element, toPos);
+          System.arraycopy(fromArray, toPos, fromArray, toPos + 1, fromArray.length - toPos - 1);
+          fromArray[toPos] = element;
+          added++;
+        }
       }
       toPos++;
+      if (toPos < fromArray.length) {
+        fromT = fromArray[toPos];
+      }
+      else {
+        fromT = null;
+      }
     }
-    for (int index = from.size() + added; index > to.size(); index--) {
-      functor.remove(index - 1);
+    for (int index = fromArray.length; index > to.size(); index--) {
+      if (fromArray[index - 1] != null) {
+        functor.remove(index - 1);
+      }
     }
   }
 }

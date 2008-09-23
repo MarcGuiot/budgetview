@@ -9,4 +9,6 @@ public interface Repeat<T> {
 
   void remove(int index);
 
+  void move(int index1, int index2);
+
 }

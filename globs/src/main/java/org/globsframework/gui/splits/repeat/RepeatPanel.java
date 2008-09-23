@@ -62,6 +62,13 @@ public class RepeatPanel implements Repeat {
     panel.revalidate();
   }
 
+  public void move(int previousIndex, int newIndex) {
+    layout.move(panel, previousIndex, newIndex);
+    RepeatContext context = repeatContexts.remove(previousIndex);
+    repeatContexts.add(newIndex, context);
+    panel.revalidate();
+  }
+
   private ComponentStretch[] createStretches(Object item, int index) {
     RepeatContext repeatContext = new RepeatContext(context);
     repeatContexts.add(index, repeatContext);
