@@ -61,7 +61,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
-    
+
     views.selectBudget();
     budgetView.envelopes.checkSeries("Groceries", 29, 29);
   }
@@ -712,7 +712,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .renameMaster(getCategoryName(MasterCategory.FOOD), "Boire")
       .validate();
     categoryChooser.checkContains("Boire");
-    categoryChooser.selectCategory("Boire");
     categoryChooser.validate();
     seriesEdition.checkCategory("Boire");
     seriesEdition.validate();

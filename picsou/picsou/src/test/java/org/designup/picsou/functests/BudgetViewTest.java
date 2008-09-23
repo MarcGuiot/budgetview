@@ -290,6 +290,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.FOOD)
       .validate();
     views.selectCategorization();
+    System.out.println("BudgetViewTest.testSeveralMonthsShowOrNotSeries");
     categorization.setEnvelope("Monoprix", "courantMonoprix", MasterCategory.FOOD, false);
     categorization.setProject("Auchan", "courantAuchan", MasterCategory.FOOD, false);
     categorization.setEnvelope("ED1", "courantED", MasterCategory.FOOD, false);

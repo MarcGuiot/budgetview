@@ -6,8 +6,8 @@ import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.CustomFilterMessagePanel;
 import org.designup.picsou.gui.components.filtering.FilterSet;
-import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.filtering.FilterSetListener;
+import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
@@ -202,10 +202,10 @@ public class CategorizationView extends View implements TableView, Filterable, C
         Set<Integer> months = new HashSet<Integer>();
         for (Glob transaction : currentTransactions) {
           months.add(transaction.get(Transaction.MONTH));
-          for (Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat> filter : seriesRepeat) {
-            filter.getFirst().filterDates(months);
-            filter.getSecond().setFilter(filter.getFirst());
-          }
+        }
+        for (Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat> filter : seriesRepeat) {
+          filter.getFirst().filterDates(months);
+          filter.getSecond().setFilter(filter.getFirst());
         }
       }
     }, Transaction.TYPE);

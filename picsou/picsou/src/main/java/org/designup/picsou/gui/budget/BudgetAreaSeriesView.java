@@ -81,6 +81,10 @@ public class BudgetAreaSeriesView extends View {
       public void remove(int index) {
         seriesRepeat.remove(index);
       }
+
+      public void move(int previousIndex, int newIndex) {
+        seriesRepeat.move(previousIndex, newIndex);
+      }
     });
     currentSeries = newSeries;
   }
