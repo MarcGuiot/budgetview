@@ -8,51 +8,47 @@ SeriesEditionDialog
 *** Bug layout en mode enveloppe
 *** Pb perfs dans les selections (trop de setFilter sur les repeat des series)
 ** Modifier l'ordre des series
-** Creation d'enveloppe : mettre les expected a 0
-* Bouton "Selectionner tout (Ctrl-A)" (ou double-clic?)
+** Creation d'enveloppe : mettre les expected a 0, ou mode autopilote
+* Revoir algo d'initialisation des SeriesBudget : prendre les 3 derniers mois seulement ? Mode autopilote ?
+* Bouton ou double-clic pour selectionner tout
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
 * Enveloppes : "Nom" => "Nom de l'enveloppe", titre = "Enveloppes de frais courants"
 * Afficher/modifier le jour de debit pour les recurrences
-* Revoir algo d'initialisation des SeriesBudget : prendre les 3 derniers mois seulement ?
-* Mode autopilote sur les series ?
 
 BudgetView
 *** Voir les transactions pour un montant releve (navigation vers TransactionView filtree)
 *** Infos de synthese :  delta recu/depense en observe et prevu (avec highlight de depassement) + non classe
 *** Afficher le diff sur les jauges total
 ** Gauges : afficher le delta en tooltip ("Depassement: 111.11", etc.)
-* Collapse des blocs BudgetView
 ** Click sur montant prevu = ouverture SED avec focus sur montant et liste de series masquee
 ** Click sur nom serie = naviguer vers les transactions correspondantes
 * Mettre en rouge les depassements
 * Mettre en rouge un montant occasional prevu a zero
+* Renommer "Projets" en "Projets & Operations Speciales" ?
 
 CategorizationView
-*** Apprentissage /  categorisation automatique
+*** Bug sur gestion du bold pour les toggles dans les occasional
 ** Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 ** Recherche/filtrage table
 ** Selection d'operations similaires : ne pas scroller la table
 ** Selection d'operations similaires : afficher le label anonymisé dans TransactionDetails
 ** Ordre des transactions = labels anonymises + date
-* Apprentissage / series
 * Remplacer mode autonext par bouton next
 ** Bug repaint dans les zones d'affichage des series 
 * Supprimer mode "select similar" + message pour introduire le double-click
 * Reactiver selection similar en double clic pour les cheques et les retraits ?
-** Bug sur gestion du bold pour les toggles dans les occasional
 
 TransactionView
-*** Filtrage transactions par BudgetArea
-*** Filtrage transactions par Serie
+*** Filtrage transactions par BudgetArea & Serie
+** Filtrage transactions par Compte
 * Afficher la somme (total ou multi-selection)
 * Filtrage transactions par TransactionType
-** Filtrage transactions par Compte
-* Suppression de transactions ghost pour cloturer une serie ? (= alignement prevu / depense)
 * Bouton pour vider rapidement le champ de recherche
+* Suppression de transactions ghost pour cloturer une serie ? (= alignement prevu / depense)
 
 BalanceSumary
 *** Ajouter les projets au calcul
-* Quid dans le passe ?
+* Qu'affiche-t-on dans le passe ?
 * Hyperliens vers les transactions planned correspondantes
 
 MonthSummary
@@ -62,7 +58,7 @@ AccountView
 * Selection des comptes integres dans le total
 * Creation de compte
 * Edition comptes
-* Masquer un compte (date de cloture)
+* Cloturer un compte (date de cloture)
 
 Home page
 ** Afficher le changeLog en cas de changement de version
@@ -73,6 +69,7 @@ Licence
 * revoir look panneau
 * Voir selection nombre de mois
 * Revoir messages d'erreur pour s'assurer qu'ils guident bien et ne sont pas inquietants
+* Completer les messages pour les mails
 
 CategoryEditionDialog
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
@@ -83,7 +80,7 @@ CategoryEditionDialog
 * Modifier l'ordre des categories
 
 HistoricalChart
-* voir affichage avec ghosts
+** voir affichage avec ghosts
 
 Import
 * Import : OK sans fichier = message, si selection il faut purger le message

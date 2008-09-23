@@ -1,5 +1,6 @@
 
 * Checkbox pour pointer les transactions
+* Collapse des blocs BudgetView
 
 Ameliorations
 -------------
