@@ -1,7 +1,13 @@
 package org.designup.picsou.gui.categories;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.categories.columns.*;
+import org.designup.picsou.gui.categories.columns.CategoryDataProvider;
+import org.designup.picsou.gui.categories.columns.CategoryExpansionModel;
+import org.designup.picsou.gui.components.CustomBoldLabelCustomizer;
+import org.designup.picsou.gui.components.SelectorBackgroundPainter;
+import org.designup.picsou.gui.components.expansion.ExpandableTable;
+import org.designup.picsou.gui.components.expansion.TableExpansionColumn;
+import org.designup.picsou.gui.components.expansion.TableExpansionInstaller;
 import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.utils.Gui;
@@ -11,21 +17,17 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
 import static org.globsframework.gui.views.utils.LabelCustomizers.*;
-import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
-import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
-public class CategoryView extends View {
+public class CategoryView extends View implements ExpandableTable {
   public static final int EXPANSION_COLUMN_INDEX = 0;
   public static final int CATEGORY_COLUMN_INDEX = 1;
   public static final int AMOUNT_COLUMN_INDEX = 2;
@@ -43,6 +45,10 @@ public class CategoryView extends View {
     builder.add(table);
   }
 
+  public void selectAll() {
+    select(Category.ALL);
+  }
+
   public void select(Integer categoryId) {
     globTable.select(repository.get(Key.create(Category.TYPE, categoryId)));
   }
@@ -58,9 +64,14 @@ public class CategoryView extends View {
 
     globTable = GlobTableView.init(Category.TYPE, repository, categoryComparator, directory);
 
-    CategoryLabelCustomizer customizer = new CategoryLabelCustomizer(directory);
-    CategoryBackgroundPainter backgroundPainter = new CategoryBackgroundPainter(directory);
-    CategoryExpansionColumn expandColumn = new CategoryExpansionColumn(backgroundPainter, selectionService);
+    CustomBoldLabelCustomizer customizer = new CustomBoldLabelCustomizer(directory) {
+      protected boolean isBold(Glob glob) {
+        return Category.isMaster(glob);
+      }
+    };
+
+    SelectorBackgroundPainter backgroundPainter = new SelectorBackgroundPainter(directory);
+    TableExpansionColumn expandColumn = new TableExpansionColumn(backgroundPainter);
 
     globTable
       .setDefaultBackgroundPainter(backgroundPainter)
@@ -77,36 +88,14 @@ public class CategoryView extends View {
     setFilter(expansionModel);
     expandColumn.init(this, expansionModel);
 
-    setInitialColumnSizes(expandColumn);
+    TableExpansionInstaller.setUp(this, expansionModel, table, expandColumn, CATEGORY_COLUMN_INDEX);
 
-    installDoubleClickExpansion();
-    Gui.installRolloverOnButtons(table, new int[]{CATEGORY_COLUMN_INDEX});
-    table.setDragEnabled(false);
+    setInitialColumnSizes();
 
-    repository.addChangeListener(new DefaultChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsCreationsOrDeletions(Category.TYPE)) {
-          setFilter(expansionModel);
-        }
-      }
-    });
+    expansionModel.completeInit();
   }
 
-  private void installDoubleClickExpansion() {
-    table.addMouseListener(new MouseAdapter() {
-      public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() != 2) {
-          return;
-        }
-        Glob category = getSelectedCategory();
-        expansionModel.toggleExpansion(category);
-      }
-    });
-  }
-
-  private void setInitialColumnSizes(CategoryExpansionColumn column) {
-    TableUtils.setSize(table, EXPANSION_COLUMN_INDEX, column.getPreferredWidth());
-
+  private void setInitialColumnSizes() {
     JLabel renderer = (JLabel)TableUtils.getRenderedComponentAt(table, 0, AMOUNT_COLUMN_INDEX);
     renderer.setText(format(-10000));
     TableUtils.setSize(table, AMOUNT_COLUMN_INDEX, TableUtils.getPreferredWidth(renderer));
@@ -114,7 +103,7 @@ public class CategoryView extends View {
     TableUtils.autosizeColumn(table, CATEGORY_COLUMN_INDEX);
   }
 
-  public Glob getSelectedCategory() {
+  public Glob getSelectedGlob() {
     return globTable.getGlobAt(table.getSelectedRow());
   }
 

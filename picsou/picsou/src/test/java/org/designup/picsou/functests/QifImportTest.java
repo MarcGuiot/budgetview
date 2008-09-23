@@ -25,7 +25,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .add("13/04/2006", TransactionType.CREDIT_CARD, "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", "", -18.70)
       .check();
 
-    categories.assertSelectionEquals(MasterCategory.ALL);
+    categories.checkSelectionEquals(MasterCategory.ALL);
 
     transactions.initAmountContent()
       .add("SACLAY", -55.49)

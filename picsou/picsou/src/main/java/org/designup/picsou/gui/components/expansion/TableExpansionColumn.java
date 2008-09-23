@@ -1,9 +1,6 @@
-package org.designup.picsou.gui.categories.columns;
+package org.designup.picsou.gui.components.expansion;
 
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.categories.CategoryView;
-import org.designup.picsou.model.Category;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.TransparentIcon;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.model.Glob;
@@ -16,7 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CategoryExpansionColumn
+public class TableExpansionColumn
   extends AbstractCellEditor
   implements TableCellRenderer, TableCellEditor, ActionListener {
 
@@ -24,22 +21,20 @@ public class CategoryExpansionColumn
   public static Icon COLLAPSED_ICON = Gui.ICON_LOCATOR.get("arrow_right.png");
   public static Icon DISABLED_ICON = new TransparentIcon(EXPANDED_ICON.getIconHeight(), EXPANDED_ICON.getIconWidth());
 
-  private CategoryExpansionModel expansionModel;
+  private TableExpansionModel expansionModel;
+  private ExpandableTable tableView;
 
   private JButton renderButton;
   private JButton editButton;
-  private CategoryView view;
-  private CategoryBackgroundPainter backgroundPainter;
-  private SelectionService selectionService;
+  private CellPainter backgroundPainter;
 
-  public CategoryExpansionColumn(CategoryBackgroundPainter painter, SelectionService selectionService) {
+  public TableExpansionColumn(CellPainter painter) {
     this.backgroundPainter = painter;
-    this.selectionService = selectionService;
     initButtons();
   }
 
-  public void init(CategoryView view, CategoryExpansionModel model) {
-    this.view = view;
+  public void init(ExpandableTable tableView, TableExpansionModel model) {
+    this.tableView = tableView;
     this.expansionModel = model;
   }
 
@@ -55,7 +50,7 @@ public class CategoryExpansionColumn
   public Component getTableCellRendererComponent(JTable table, Object value,
                                                  boolean isSelected, boolean hasFocus,
                                                  int row, int column) {
-    Glob category = (Glob)value;
+    Glob glob = (Glob)value;
     if (hasFocus) {
       renderButton.setForeground(table.getForeground());
       renderButton.setBackground(UIManager.getColor("Button.background"));
@@ -68,7 +63,7 @@ public class CategoryExpansionColumn
       renderButton.setForeground(table.getForeground());
       renderButton.setBackground(UIManager.getColor("Button.background"));
     }
-    setIcon(renderButton, category);
+    setIcon(renderButton, glob);
     renderButton.setUI(new PainterUI(backgroundPainter, (Glob)value, row, column, isSelected, hasFocus));
     return renderButton;
   }
@@ -87,8 +82,8 @@ public class CategoryExpansionColumn
     if (Gui.hasModifiers(e)) {
       return;
     }
-    Glob category = view.getSelectedCategory();
-    expansionModel.toggleExpansion(category);
+    Glob glob = tableView.getSelectedGlob();
+    expansionModel.toggleExpansion(glob);
     stopCellEditing();
   }
 
@@ -96,15 +91,15 @@ public class CategoryExpansionColumn
     return EXPANDED_ICON.getIconWidth() + 6;
   }
 
-  private void setIcon(JButton button, Glob category) {
-    if (Category.isMaster(category)) {
-      if (Category.isAll(category) || Category.isNone(category)) {
+  private void setIcon(JButton button, Glob glob) {
+    if (expansionModel.isMaster(glob)) {
+      if (expansionModel.isExpansionDisabled(glob)) {
         button.setIcon(null);
       }
-      else if (expansionModel.isExpanded(category)) {
+      else if (expansionModel.isExpanded(glob)) {
         button.setIcon(EXPANDED_ICON);
       }
-      else if (expansionModel.isExpandable(category)) {
+      else if (expansionModel.isExpandable(glob)) {
         button.setIcon(COLLAPSED_ICON);
       }
       else {
@@ -124,15 +119,15 @@ public class CategoryExpansionColumn
 
   private class PainterUI extends BasicButtonUI {
     private CellPainter cellPainter;
-    private Glob category;
+    private Glob glob;
     private int row;
     private int column;
     private boolean selected;
     private boolean hasFocus;
 
-    public PainterUI(CellPainter cellPainter, Glob category, int row, int column, boolean selected, boolean hasFocus) {
+    public PainterUI(CellPainter cellPainter, Glob glob, int row, int column, boolean selected, boolean hasFocus) {
       this.cellPainter = cellPainter;
-      this.category = category;
+      this.glob = glob;
       this.row = row;
       this.column = column;
       this.selected = selected;
@@ -140,7 +135,7 @@ public class CategoryExpansionColumn
     }
 
     public void paint(Graphics g, JComponent c) {
-      cellPainter.paint(g, category, row, column, selected, hasFocus, c.getWidth(), c.getHeight());
+      cellPainter.paint(g, glob, row, column, selected, hasFocus, c.getWidth(), c.getHeight());
       super.paint(g, c);
     }
   }

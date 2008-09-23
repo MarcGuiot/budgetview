@@ -36,6 +36,7 @@ public class BudgetViewChecker extends DataChecker {
 
     private String panelName;
     private boolean singleSelection;
+    private static final int OBSERVED_LABEL_OFFSET = 1;
 
     public BudgetAreaChecker(String panelName, boolean singleSelection) {
       this.panelName = panelName;
@@ -64,11 +65,11 @@ public class BudgetViewChecker extends DataChecker {
       JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
       int nameIndex = getIndex(panel, nameButton.getAwtComponent());
 
-      TextBox observedLabel = new TextBox((JLabel)panel.getComponent(nameIndex + 1));
+      Button observedLabel = new Button((JButton)panel.getComponent(nameIndex + OBSERVED_LABEL_OFFSET));
       String modifiedObservedAmount = (observedAmount < 0 ? "+" : "") +
                                       BudgetViewChecker.this.toString(Math.abs(observedAmount));
       UISpecAssert.assertTrue(seriesName + " observed : \nExpected  :" + modifiedObservedAmount +
-                              "\nActual    :" + observedLabel.getText(),
+                              "\nActual    :" + observedLabel.getLabel(),
                               observedLabel.textEquals(modifiedObservedAmount));
 
       String modifiedPlannedAmount = (plannedAmount < 0 ? "+" : "") +
@@ -94,7 +95,7 @@ public class BudgetViewChecker extends DataChecker {
           return i;
         }
       }
-      return -1;
+      return -OBSERVED_LABEL_OFFSET;
     }
 
     public SeriesEditionDialogChecker editSeriesList() {
@@ -118,6 +119,15 @@ public class BudgetViewChecker extends DataChecker {
       Panel budgetPanel = window.getPanel(panelName);
       Window dialog = WindowInterceptor.getModalDialog(budgetPanel.getButton(seriesName).triggerClick());
       return new SeriesEditionDialogChecker(dialog, singleSelection);
+    }
+
+    public void gotoData(String seriesName) {
+      Panel budgetPanel = window.getPanel(panelName);
+      Button nameButton = budgetPanel.getButton(seriesName);
+      JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
+      int nameIndex = getIndex(panel, nameButton.getAwtComponent());
+      Button button = new Button((JButton)panel.getComponent(nameIndex + OBSERVED_LABEL_OFFSET));
+      button.click();
     }
   }
 

@@ -23,7 +23,7 @@ import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.model.Category;
+import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.triggers.GlobStateChecker;
@@ -79,12 +79,14 @@ public class MainPanel {
 
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
     CategorizationView categorizationView = new CategorizationView(repository, directory);
-    directory.add(new NavigationService(transactionView,
-                                        categorizationView,
-                                        repository, directory));
-
     CategoryView categoryView = new CategoryView(repository, directory);
+    SeriesView seriesView = new SeriesView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
+
+    directory.add(new NavigationService(
+      categorizationView,
+                                        seriesView,
+                                        repository, directory));
 
     importFileAction = ImportFileAction.initAndRegisterInOpenRequestManager(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
@@ -115,13 +117,15 @@ public class MainPanel {
       categorizationView,
       new CardView(repository, directory),
       new BudgetView(repository, directory),
+      seriesView,
       new HistoricalChart(repository, directory),
       new CategoriesChart(repository, directory, transactionSelection));
 
     monthSummary.init();
 
     selectLastMonthWithATransaction(repository, directory);
-    categoryView.select(Category.ALL);
+    categoryView.selectAll();
+    seriesView.selectAll();
 
     createMenuBar(parent, directory);
   }

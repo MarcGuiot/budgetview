@@ -37,6 +37,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected BalanceSummaryChecker balanceSummary;
   protected BudgetViewChecker budgetView;
   protected CategorizationChecker categorization;
+  protected SeriesViewChecker series;
   private PicsouApplication picsouApplication;
   private Date currentDate = Dates.parse("2008/08/31");
   private String isInMemory = "true";
@@ -113,6 +114,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     balanceSummary = new BalanceSummaryChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
     categorization = new CategorizationChecker(mainWindow);
+    series = new SeriesViewChecker(mainWindow);
     license = new LicenseChecker(mainWindow);
   }
 
@@ -136,6 +138,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     balanceSummary = null;
     budgetView = null;
     categorization = null;
+    series = null;
     picsouApplication.shutdown();
     picsouApplication = null;
     license = null;

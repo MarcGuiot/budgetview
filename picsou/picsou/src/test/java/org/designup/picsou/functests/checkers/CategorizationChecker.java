@@ -54,7 +54,7 @@ public class CategorizationChecker extends DataChecker {
 
   public CategorizationChecker checkBudgetAreaSelectionPanelDisplayed() {
     for (BudgetArea area : BudgetArea.values()) {
-      if (area != BudgetArea.UNCATEGORIZED) {
+      if ((area != BudgetArea.UNCATEGORIZED) && (area != BudgetArea.ALL)) {
         assertTrue(getPanel().containsSwingComponent(AbstractButton.class, area.getName()));
       }
     }
@@ -64,7 +64,7 @@ public class CategorizationChecker extends DataChecker {
   public void checkNoSelectionPanelDisplayed() {
     Panel panel = getPanel();
     for (BudgetArea area : BudgetArea.values()) {
-      if (area != BudgetArea.UNCATEGORIZED) {
+      if ((area != BudgetArea.UNCATEGORIZED) && (area != BudgetArea.ALL)) {
         assertFalse(panel.containsUIComponent(Button.class, area.getName()));
         assertFalse(panel.containsUIComponent(ToggleButton.class, area.getName()));
       }

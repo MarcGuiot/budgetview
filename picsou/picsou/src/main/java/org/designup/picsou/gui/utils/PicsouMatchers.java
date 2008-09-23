@@ -85,6 +85,31 @@ public class PicsouMatchers {
     return GlobMatchers.fieldEquals(Category.MASTER, masterCategoryId);
   }
 
+  public static GlobMatcher transactionsForSeries(final Set<Integer> targetBudgetAreas,
+                                                  Set<Integer> targetSeries,
+                                                  GlobRepository repository) {
+    if (targetBudgetAreas.contains(BudgetArea.ALL.getId())) {
+      return GlobMatchers.ALL;
+    }
+    final Set<Integer> reducedSeriesSet = new HashSet<Integer>();
+    for (Integer seriesId : targetSeries) {
+      Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+      if (!targetBudgetAreas.contains(series.get(Series.BUDGET_AREA))) {
+        reducedSeriesSet.add(seriesId);
+      }
+    }
+    return new GlobMatcher() {
+      public boolean matches(Glob transaction, GlobRepository repository) {
+        Integer seriesId = transaction.get(Transaction.SERIES);
+        if (reducedSeriesSet.contains(seriesId)) {
+          return true;
+        }
+        Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+        return targetBudgetAreas.contains(series.get(Series.BUDGET_AREA));
+      }
+    };
+  }
+
   public static SeriesFirstEndDateFilter seriesDateFilter(Integer budgetAreaId, boolean isExclusive) {
     return new SeriesFirstEndDateFilter(budgetAreaId, isExclusive);
   }

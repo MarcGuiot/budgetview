@@ -146,6 +146,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
   private List<BudgetArea> getBudgetAreas() {
     List<BudgetArea> result = new ArrayList<BudgetArea>(Arrays.asList(BudgetArea.values()));
+    result.remove(BudgetArea.ALL);
     result.remove(BudgetArea.UNCATEGORIZED);
     return result;
   }

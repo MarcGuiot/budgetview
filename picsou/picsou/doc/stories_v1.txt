@@ -6,7 +6,6 @@ Edition de transactions
 
 SeriesEditionDialog
 *** Bug layout en mode enveloppe
-*** Pb perfs dans les selections (trop de setFilter sur les repeat des series)
 ** Modifier l'ordre des series
 ** Creation d'enveloppe : mettre les expected a 0, ou mode autopilote
 * Revoir algo d'initialisation des SeriesBudget : prendre les 3 derniers mois seulement ? Mode autopilote ?
@@ -16,12 +15,10 @@ SeriesEditionDialog
 * Afficher/modifier le jour de debit pour les recurrences
 
 BudgetView
-*** Voir les transactions pour un montant releve (navigation vers TransactionView filtree)
 *** Infos de synthese :  delta recu/depense en observe et prevu (avec highlight de depassement) + non classe
 *** Afficher le diff sur les jauges total
 ** Gauges : afficher le delta en tooltip ("Depassement: 111.11", etc.)
-** Click sur montant prevu = ouverture SED avec focus sur montant et liste de series masquee
-** Click sur nom serie = naviguer vers les transactions correspondantes
+** Ouverture SED : focus sur montant et liste de series masquee
 * Mettre en rouge les depassements
 * Mettre en rouge un montant occasional prevu a zero
 * Renommer "Projets" en "Projets & Operations Speciales" ?
@@ -38,8 +35,10 @@ CategorizationView
 * Supprimer mode "select similar" + message pour introduire le double-click
 * Reactiver selection similar en double clic pour les cheques et les retraits ?
 
+TransactionDetails
+* Afficher les labels en multiligne
+
 TransactionView
-*** Filtrage transactions par BudgetArea & Serie
 ** Filtrage transactions par Compte
 * Afficher la somme (total ou multi-selection)
 * Filtrage transactions par TransactionType

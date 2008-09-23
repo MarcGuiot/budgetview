@@ -2,10 +2,8 @@ package org.designup.picsou.gui;
 
 import org.designup.picsou.gui.model.MonthStat;
 import static org.designup.picsou.gui.utils.PicsouMatchers.*;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Category;
-import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.model.Month;
+import org.designup.picsou.gui.utils.PicsouMatchers;
+import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -28,13 +26,16 @@ public class TransactionSelection implements GlobSelectionListener {
   private Set<Integer> currentAccounts = Collections.singleton(Account.SUMMARY_ACCOUNT_ID);
   private Set<Integer> currentMonths = Collections.emptySet();
   private Set<Integer> currentCategories = Collections.singleton(Category.ALL);
+  private Set<Integer> currentBudgetAreas = Collections.singleton(BudgetArea.ALL.getId());
+  private Set<Integer> currentSeries = Collections.emptySet();
   private List<GlobSelectionListener> listeners = new ArrayList<GlobSelectionListener>();
   private GlobRepository repository;
   private GlobMatcher currentMatcher = GlobMatchers.NONE;
 
   public TransactionSelection(GlobRepository repository, Directory directory) {
     this.repository = repository;
-    directory.get(SelectionService.class).addListener(this, Account.TYPE, Month.TYPE, Category.TYPE);
+    directory.get(SelectionService.class).addListener(this, Account.TYPE, Month.TYPE, Category.TYPE,
+                                                      BudgetArea.TYPE, Series.TYPE);
   }
 
   public void addListener(GlobSelectionListener listener) {
@@ -51,10 +52,15 @@ public class TransactionSelection implements GlobSelectionListener {
     if (selection.isRelevantForType(Category.TYPE)) {
       currentCategories = selection.getAll(Category.TYPE).getValueSet(Category.ID);
     }
+    if (selection.isRelevantForType(BudgetArea.TYPE) || selection.isRelevantForType(Series.TYPE)) {
+      currentBudgetAreas = selection.getAll(BudgetArea.TYPE).getValueSet(BudgetArea.ID);
+      currentSeries = selection.getAll(Series.TYPE).getValueSet(Series.ID);
+    }
 
     currentMatcher = and(transactionsForMonths(currentMonths),
                          transactionsForCategories(currentCategories, repository),
-                         transactionsForAccounts(currentAccounts));
+                         transactionsForAccounts(currentAccounts),
+                         PicsouMatchers.transactionsForSeries(currentBudgetAreas, currentSeries, repository));
 
     for (GlobSelectionListener listener : listeners) {
       listener.selectionUpdated(selection);
@@ -96,17 +102,5 @@ public class TransactionSelection implements GlobSelectionListener {
 
   public boolean isCategorySelected(Integer categoryId) {
     return currentCategories.contains(categoryId);
-  }
-
-  public Set<Integer> getCurrentAccounts() {
-    return Collections.unmodifiableSet(currentAccounts);
-  }
-
-  public Set<Integer> getCurrentMonths() {
-    return Collections.unmodifiableSet(currentMonths);
-  }
-
-  public Set<Integer> getCurrentCategories() {
-    return Collections.unmodifiableSet(currentCategories);
   }
 }

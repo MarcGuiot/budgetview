@@ -266,7 +266,7 @@ public class TransactionChecker extends ViewChecker {
         builder.append(")\n");
       }
       builder.append(".check();\n");
-      System.out.println(builder.toString());
+      Assert.fail("Use this code:\n" + builder.toString());
     }
 
     private class TransactionTypeDumper implements TableCellValueConverter {

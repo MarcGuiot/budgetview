@@ -16,6 +16,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.designup.picsou.utils.Lang;
 
 public enum BudgetArea implements GlobConstantContainer {
+  ALL("ALL", -1, false, false),
   INCOME("INCOME", 0, true, false),
   RECURRING_EXPENSES("RECURRING_EXPENSES", 1, false, false),
   EXPENSES_ENVELOPE("EXPENSES_ENVELOPE", 2, false, true),
@@ -68,6 +69,8 @@ public enum BudgetArea implements GlobConstantContainer {
 
   public static BudgetArea get(int id) {
     switch (id) {
+      case -1:
+        return ALL;
       case 0:
         return INCOME;
       case 1:
