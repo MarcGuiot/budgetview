@@ -36,6 +36,18 @@ public class SeriesViewChecker extends DataChecker {
                         (button.getIcon() != TableExpansionColumn.DISABLED_ICON));
   }
 
+  public void checkExpanded(String label, boolean expanded) {
+    Table table = getTable();
+    int row = table.getRowIndex(SeriesView.LABEL_COLUMN_INDEX, label);
+    JButton button = (JButton)table.getSwingRendererComponentAt(row, 0);
+    if (expanded) {
+      Assert.assertSame(TableExpansionColumn.EXPANDED_ICON, button.getIcon());
+    }
+    else {
+      Assert.assertSame(TableExpansionColumn.COLLAPSED_ICON, button.getIcon());
+    }
+  }
+
   public void toggle(String label) {
     Table table = getTable();
     int row = table.getRowIndex(SeriesView.LABEL_COLUMN_INDEX, label);

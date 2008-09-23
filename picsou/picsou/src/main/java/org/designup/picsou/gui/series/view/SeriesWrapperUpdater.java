@@ -39,15 +39,10 @@ class SeriesWrapperUpdater implements ChangeSetListener {
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         Integer seriesId = key.get(Series.ID);
-        Glob wrapper = findWrapper(false, seriesId);
+        Glob wrapper = SeriesWrapper.find(localRepository, false, seriesId);
         localRepository.delete(wrapper.getKey());
       }
     });
-  }
-
-  private Glob findWrapper(boolean isBudgetArea, Integer itemId) {
-    return localRepository.findUnique(SeriesWrapper.TYPE, FieldValue.value(SeriesWrapper.IS_BUDGET_AREA, isBudgetArea),
-                                      FieldValue.value(SeriesWrapper.ITEM_ID, itemId));
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {

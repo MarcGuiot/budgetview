@@ -392,7 +392,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkSeries("santé", 5, 0);
   }
 
-
   public void testOccasional() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/29", -5000.00, "moto")
@@ -469,7 +468,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeriesNotPresent("Groceries");
   }
 
-  public void testDeactivateSeriesBudget() throws Exception {
+  public void testDeactivatingSeriesBudgets() throws Exception {
     views.selectBudget();
     budgetView.income.createSeries()
       .setName("salaire")
@@ -490,5 +489,41 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectData();
     timeline.selectLast();
     transactions.initContent().check();
+  }
+
+  public void testNavigatingToTransactions() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .addTransaction("2008/07/10", -50.00, "Monoprix")
+      .addTransaction("2008/07/05", -29.00, "Free Telecom")
+      .addTransaction("2008/07/04", -55.00, "EDF")
+      .addTransaction("2008/07/03", -15.00, "McDo")
+      .addTransaction("2008/07/02", 200.00, "WorldCo - Bonus")
+      .addTransaction("2008/07/01", 3540.00, "WorldCo")
+      .load();
+
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
+    categorization.setOccasional("Free Telecom", MasterCategory.TELECOMS);
+    categorization.setOccasional("EDF", MasterCategory.HOUSE);
+    categorization.setOccasional("WorldCo - Bonus", MasterCategory.INCOME);
+    categorization.setOccasional("WorldCo", MasterCategory.INCOME);
+
+    views.selectData();
+    series.checkExpanded("Envelope expenses", true);
+    series.toggle("Envelope expenses");
+    series.checkExpanded("Envelope expenses", false);
+
+    views.selectBudget();
+    budgetView.envelopes.gotoData("Groceries");
+
+    views.checkDataSelected();
+    views.selectData();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries", MasterCategory.FOOD)
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries", MasterCategory.FOOD)
+      .check();
+    series.checkExpanded("Envelope expenses", true);
   }
 }

@@ -7,6 +7,9 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.FieldValue;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 
 public class SeriesWrapper {
   public static GlobType TYPE;
@@ -27,4 +30,11 @@ public class SeriesWrapper {
   static {
     GlobTypeLoader.init(SeriesWrapper.class);
   }
+
+  public static Glob find(GlobRepository repository, boolean isBudgetArea, Integer itemId) {
+    return repository.findUnique(SeriesWrapper.TYPE,
+                                 FieldValue.value(SeriesWrapper.IS_BUDGET_AREA, isBudgetArea),
+                                 FieldValue.value(SeriesWrapper.ITEM_ID, itemId));
+  }
+
 }

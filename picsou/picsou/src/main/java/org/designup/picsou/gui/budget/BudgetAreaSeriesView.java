@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.EditSeriesAction;
@@ -105,7 +106,7 @@ public class BudgetAreaSeriesView extends View {
                             final GlobButtonView globButtonView = GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
                               .forceSelection(series);
                             cellBuilder.add("seriesName", globButtonView.getComponent());
-                            addAmountLabel("observedSeriesAmount", SeriesStat.AMOUNT, series, cellBuilder);
+                            addAmountButton("observedSeriesAmount", SeriesStat.AMOUNT, series, cellBuilder);
                             addAmountLabel("plannedSeriesAmount", SeriesStat.PLANNED_AMOUNT, series, cellBuilder);
 
                             final GlobGaugeView gaugeView =
@@ -159,6 +160,21 @@ public class BudgetAreaSeriesView extends View {
     cellBuilder.addDisposeListener(new Disposable() {
       public void dispose() {
         globLabelView.dispose();
+      }
+    });
+  }
+
+  private void addAmountButton(String name, DoubleField field, final Glob series, RepeatCellBuilder cellBuilder) {
+    final GlobButtonView globButtonView = GlobButtonView.init(SeriesStat.TYPE, repository, directory, getStringifier(field), new GlobListFunctor() {
+      public void run(GlobList list, GlobRepository repository) {
+        directory.get(NavigationService.class).gotoDataForSeries(series);
+      }
+    })
+      .setFilter(GlobMatchers.linkedTo(series, SeriesStat.SERIES));
+    cellBuilder.add(name, globButtonView.getComponent());
+    cellBuilder.addDisposeListener(new Disposable() {
+      public void dispose() {
+        globButtonView.dispose();
       }
     });
   }

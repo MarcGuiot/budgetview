@@ -27,7 +27,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class SeriesView extends View implements ExpandableTable {
+public class SeriesView extends View {
   public static final int LABEL_COLUMN_INDEX = 1;
   private GlobRepository parentRepository;
   private SelectionService parentSelectionService;
@@ -61,8 +61,10 @@ public class SeriesView extends View implements ExpandableTable {
   public void registerComponents(GlobsPanelBuilder builder) {
     registerSelectionUpdater();
 
+    ExpandableTableAdapter tableAdapter = new ExpandableTableAdapter();
+
     // attention CategoryExpansionModel doit etre enregistré comme listener de changetSet avant la table.
-    expansionModel = new SeriesExpansionModel(repository, this);
+    expansionModel = new SeriesExpansionModel(repository, tableAdapter);
 
     SeriesWrapperStringifier stringifier = new SeriesWrapperStringifier(parentRepository, directory);
 
@@ -87,10 +89,10 @@ public class SeriesView extends View implements ExpandableTable {
 
     table = globTable.getComponent();
 
-    setFilter(expansionModel);
+    tableAdapter.setFilter(expansionModel);
 
-    expandColumn.init(this, expansionModel);
-    TableExpansionInstaller.setUp(this, expansionModel, table, expandColumn, LABEL_COLUMN_INDEX);
+    expandColumn.init(tableAdapter, expansionModel);
+    TableExpansionInstaller.setUp(tableAdapter, expansionModel, table, expandColumn, LABEL_COLUMN_INDEX);
     table.setDragEnabled(false);
 
     expansionModel.completeInit();
@@ -118,19 +120,31 @@ public class SeriesView extends View implements ExpandableTable {
     }, SeriesWrapper.TYPE);
   }
 
-  public Glob getSelectedGlob() {
-    return globTable.getGlobAt(table.getSelectedRow());
-  }
+  public void selectSeries(Glob series) {
+    Glob wrapper = SeriesWrapper.find(repository, false, series.get(Series.ID));
+    Glob master = repository.findLinkTarget(wrapper, SeriesWrapper.MASTER);
+    if (master != null) {
+      expansionModel.setExpanded(master);
+    }
 
-  public void select(Glob category) {
-    globTable.select(category);
-  }
-
-  public void setFilter(GlobMatcher matcher) {
-    globTable.setFilter(matcher);
+    globTable.select(wrapper);
   }
 
   public void selectAll() {
     globTable.selectFirst();
+  }
+
+  private class ExpandableTableAdapter implements ExpandableTable {
+    public Glob getSelectedGlob() {
+      return globTable.getGlobAt(table.getSelectedRow());
+    }
+
+    public void select(Glob seriesWrapper) {
+      globTable.select(seriesWrapper);
+    }
+
+    public void setFilter(GlobMatcher matcher) {
+      globTable.setFilter(matcher);
+    }
   }
 }

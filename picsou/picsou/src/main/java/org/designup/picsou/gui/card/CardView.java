@@ -57,7 +57,13 @@ public class CardView extends View implements GlobSelectionListener {
   }
 
   private void showCard(Card card) {
-    toggles[card.getId()].doClick(0);
+    if (card.isMaster()) {
+      toggles[card.getId()].doClick(0);
+    }
+    else {
+      toggles[card.getMasterCard().getId()].doClick(0);
+      toggles[card.getId()].doClick(0);
+    }
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -81,7 +87,7 @@ public class CardView extends View implements GlobSelectionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-      if ((card == lastSelectedMasterCard) || (card == lastSelectedSubCard)) {
+      if (card == lastSelectedMasterCard) {
         return;
       }
 
@@ -89,6 +95,9 @@ public class CardView extends View implements GlobSelectionListener {
         lastSelectedMasterCard = card;
       }
       else {
+        if ((card.getMasterCard() == lastSelectedMasterCard) && (card == lastSelectedSubCard)) {
+          return;
+        }
         lastSelectedMasterCard = card.getMasterCard();
         lastSelectedSubCard = card;
       }

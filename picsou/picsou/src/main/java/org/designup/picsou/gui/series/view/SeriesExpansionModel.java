@@ -32,4 +32,11 @@ public class SeriesExpansionModel extends TableExpansionModel {
     Integer id = glob.get(SeriesWrapper.ID);
     return (SeriesWrapper.ALL_ID.equals(id)) || (SeriesWrapper.UNCATEGORIZED_ID.equals(id));
   }
+
+  public void setExpanded(Glob master) {
+    if (isExpanded(master)) {
+      return;
+    }
+    toggleExpansion(master);
+  }
 }

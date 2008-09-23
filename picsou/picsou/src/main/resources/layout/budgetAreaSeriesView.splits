@@ -13,6 +13,8 @@
         underline="false"/>
     <style selector="button.seriesLink" ui="seriesHyperlink" fill="none" anchor="left"
            foreground="budgetArea.series.link"/>
+    <style selector="button.amountLink" ui="hyperlinkButtonWithoutUnderline" fill="none" anchor="left"
+           foreground="budgetArea.amount.link"/>
   </styles>
 
   <column name="budgetAreaSeriesView" styleClass="main">
@@ -33,7 +35,7 @@
           <column>
             <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid" marginLeft="10" marginRight="10">
               <button ref="seriesName" styleClass="seriesLink"/>
-              <label ref="observedSeriesAmount" styleClass="amount" marginRight="6"/>
+              <button ref="observedSeriesAmount" styleClass="amountLink" marginRight="6"/>
               <component ref="gauge" styleClass="detailGauge"/>
               <label ref="plannedSeriesAmount" styleClass="amount"/>
             </repeat>

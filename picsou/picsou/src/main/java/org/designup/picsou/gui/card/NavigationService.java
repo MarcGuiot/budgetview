@@ -1,22 +1,26 @@
 package org.designup.picsou.gui.card;
 
-import org.designup.picsou.gui.model.Card;
-import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.categorization.CategorizationView;
+import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.series.view.SeriesView;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 public class NavigationService {
   private SelectionService selectionService;
-  private TransactionView transactionView;
   private CategorizationView categorizationView;
+  private SeriesView seriesView;
   private GlobRepository repository;
 
-  public NavigationService(TransactionView transactionView, CategorizationView categorizationView, GlobRepository repository, Directory directory) {
-    this.transactionView = transactionView;
+  public NavigationService(CategorizationView categorizationView,
+                           SeriesView seriesView,
+                           GlobRepository repository,
+                           Directory directory) {
     this.categorizationView = categorizationView;
+    this.seriesView = seriesView;
     this.repository = repository;
     this.selectionService = directory.get(SelectionService.class);
   }
@@ -36,6 +40,11 @@ public class NavigationService {
 
   public void gotoData() {
     select(Card.DATA);
+  }
+
+  public void gotoDataForSeries(Glob series) {
+    seriesView.selectSeries(series);
+    gotoData();
   }
 
   private void select(final Card card) {
