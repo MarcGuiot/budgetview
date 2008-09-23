@@ -25,10 +25,6 @@ public class SeriesWrapperStringifier extends AbstractGlobStringifier {
   }
 
   public String toString(Glob wrapper, GlobRepository repository) {
-    if (SeriesWrapper.ALL_ID.equals(wrapper.get(SeriesWrapper.ID))) {
-      return Lang.get("budgetArea.all");
-    }
-    
     if (Boolean.TRUE.equals(wrapper.get(SeriesWrapper.IS_BUDGET_AREA))) {
       Glob budgetArea = parentRepository.find(Key.create(BudgetArea.TYPE, wrapper.get(SeriesWrapper.ITEM_ID)));
       if (budgetArea == null) return "";

@@ -10,12 +10,16 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -26,6 +30,7 @@ import javax.swing.*;
 public class SeriesView extends View implements ExpandableTable {
   public static final int LABEL_COLUMN_INDEX = 1;
   private GlobRepository parentRepository;
+  private SelectionService parentSelectionService;
 
   private GlobTableView globTable;
   private SeriesExpansionModel expansionModel;
@@ -34,11 +39,13 @@ public class SeriesView extends View implements ExpandableTable {
   public SeriesView(GlobRepository repository, Directory directory) {
     super(createLocalRepository(repository), createLocalDirectory(directory));
     this.parentRepository = repository;
+    this.parentSelectionService = directory.get(SelectionService.class);
   }
 
   private static Directory createLocalDirectory(Directory directory) {
     Directory localDirectory = new DefaultDirectory(directory);
-    localDirectory.add(SelectionService.class);
+    SelectionService localSelectionService = new SelectionService();
+    localDirectory.add(localSelectionService);
     return localDirectory;
   }
 
@@ -52,6 +59,8 @@ public class SeriesView extends View implements ExpandableTable {
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
+    registerSelectionUpdater();
+
     // attention CategoryExpansionModel doit etre enregistré comme listener de changetSet avant la table.
     expansionModel = new SeriesExpansionModel(repository, this);
 
@@ -87,6 +96,26 @@ public class SeriesView extends View implements ExpandableTable {
     expansionModel.completeInit();
 
     builder.add("seriesView", table);
+  }
+
+  private void registerSelectionUpdater() {
+    directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        GlobSelectionBuilder newSelection = new GlobSelectionBuilder();
+        for (Glob wrapper : selection.getAll(SeriesWrapper.TYPE)) {
+          Integer itemId = wrapper.get(SeriesWrapper.ITEM_ID);
+          if (Boolean.TRUE.equals(wrapper.get(SeriesWrapper.IS_BUDGET_AREA))) {
+            Glob budgetArea = parentRepository.get(Key.create(BudgetArea.TYPE, itemId));
+            newSelection.add(budgetArea);
+          }
+          else {
+            Glob series = parentRepository.get(Key.create(Series.TYPE, itemId));
+            newSelection.add(series);
+          }
+        }
+        parentSelectionService.select(newSelection.get());
+      }
+    }, SeriesWrapper.TYPE);
   }
 
   public Glob getSelectedGlob() {

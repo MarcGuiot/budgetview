@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.TransactionType;
 
 public class SeriesViewTest extends LoggedInFunctionalTestCase {
 
@@ -45,6 +46,38 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Projects",
                          "Savings");
 
+    series.select("Income");
+    transactions.initContent()
+      .add("02/07/2008", TransactionType.VIREMENT, "WorldCo - Bonus", "", 200.00, "Exceptional Income", MasterCategory.INCOME)
+      .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00, "Salary", MasterCategory.INCOME)
+      .check();
+
+    series.select("Salary");
+    transactions.initContent()
+      .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00, "Salary", MasterCategory.INCOME)
+      .check();
+
+    series.select("All");
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries", MasterCategory.FOOD)
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries", MasterCategory.FOOD)
+      .add("05/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00, "Internet", MasterCategory.TELECOMS)
+      .add("04/07/2008", TransactionType.PRELEVEMENT, "EDF", "", -55.00, "Electricity", MasterCategory.HOUSE)
+      .add("03/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -15.00, "To categorize")
+      .add("02/07/2008", TransactionType.VIREMENT, "WorldCo - Bonus", "", 200.00, "Exceptional Income", MasterCategory.INCOME)
+      .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00, "Salary", MasterCategory.INCOME)
+      .check();
+
+    series.select("Groceries");
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries", MasterCategory.FOOD)
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries", MasterCategory.FOOD)
+      .check();
+
+    series.select("To categorize");
+    transactions.initContent()
+      .add("03/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -15.00, "To categorize")
+      .check();
   }
 
   public void testCreatingAndDeletingSeries() throws Exception {

@@ -56,7 +56,8 @@ class SeriesWrapperUpdater implements ChangeSetListener {
       localRepository.deleteAll(SeriesWrapper.TYPE);
       localRepository.create(SeriesWrapper.TYPE,
                              value(SeriesWrapper.ID, SeriesWrapper.ALL_ID),
-                             value(SeriesWrapper.IS_BUDGET_AREA, true));
+                             value(SeriesWrapper.IS_BUDGET_AREA, true),
+                             value(SeriesWrapper.ITEM_ID, BudgetArea.ALL.getId()));
       localRepository.create(SeriesWrapper.TYPE,
                              value(SeriesWrapper.ID, SeriesWrapper.UNCATEGORIZED_ID),
                              value(SeriesWrapper.IS_BUDGET_AREA, true),
@@ -67,7 +68,10 @@ class SeriesWrapperUpdater implements ChangeSetListener {
       for (Glob budgetArea : repository.getAll(BudgetArea.TYPE)) {
         Integer budgetAreaId = budgetArea.get(BudgetArea.ID);
         Integer wrapperId;
-        if (budgetAreaId.equals(BudgetArea.UNCATEGORIZED.getId())) {
+        if (budgetAreaId.equals(BudgetArea.ALL.getId())) {
+          wrapperId = SeriesWrapper.ALL_ID;
+        }
+        else if (budgetAreaId.equals(BudgetArea.UNCATEGORIZED.getId())) {
           wrapperId = SeriesWrapper.UNCATEGORIZED_ID;
         }
         else {
