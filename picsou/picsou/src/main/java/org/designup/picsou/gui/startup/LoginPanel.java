@@ -19,6 +19,8 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 
 import javax.swing.*;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -37,7 +39,7 @@ public class LoginPanel {
   protected JLabel confirmPasswordLabel = new JLabel();
   private JButton loginButton = new JButton(new LoginAction());
   private JCheckBox creationCheckBox = new JCheckBox();
-  private JLabel messageLabel = new JLabel();
+  private JEditorPane messageLabel = new JEditorPane();
 
   private JComponent[] creationComponents = {confirmPasswordLabel, confirmPasswordField};
   private MainWindow mainWindow;
@@ -66,6 +68,7 @@ public class LoginPanel {
 
   private void initPanel() {
     initFocusChain(userField, passwordField, confirmPasswordField, loginButton, creationCheckBox);
+    initAutoClear(userField, passwordField, confirmPasswordField);
 
     passwordField.addActionListener(new LoginAction());
     confirmPasswordField.addActionListener(new LoginAction());
@@ -88,6 +91,7 @@ public class LoginPanel {
     builder.add("confirmLabel", confirmPasswordLabel);
     builder.add("createAccountCheckBox", creationCheckBox);
     builder.add("message", messageLabel);
+    GuiUtils.initHtmlComponent(messageLabel);
     builder.add("login", loginButton);
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
@@ -96,6 +100,24 @@ public class LoginPanel {
       }
     })
       .load();
+  }
+
+  private void initAutoClear(JTextField... textFields) {
+    for (JTextField textField : textFields) {
+      textField.getDocument().addDocumentListener(new DocumentListener() {
+        public void insertUpdate(DocumentEvent e) {
+          clearMessage();
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+          clearMessage();
+        }
+
+        public void changedUpdate(DocumentEvent e) {
+          clearMessage();
+        }
+      });
+    }
   }
 
   private void login() {

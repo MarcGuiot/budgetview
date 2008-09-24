@@ -36,18 +36,20 @@ public abstract class StringInputDialog {
     builder.add("cancel", new CancelAction(cancelLabel));
     builder.setSource(
       "<splits>" +
-      "  <column marginLeft='20' marginRight='20' margin='5'>" +
-      "    <row defaultMarginTop='5' defaultMarginBottom='5'>" +
-      "      <label ref='inputLabel' marginRight='10'/>" +
-      "      <textField ref='input' columns='15'/>" +
-      "    </row>" +
-      "    <label ref='label' foreground='red' marginTop='5' marginBottom='5'/>" +
-      "    <row>" +
-      "      <filler fill='horizontal'/>" +
-      "      <button action='ok'/>" +
-      "      <button action='cancel'/>" +
-      "    </row>" +
-      "  </column>" +
+      "  <panel  opaque='true'>" +
+      "    <column marginLeft='20' marginRight='20' margin='5'>" +
+      "      <row defaultMarginTop='5' defaultMarginBottom='5'>" +
+      "        <label ref='inputLabel' marginRight='10'/>" +
+      "        <textField ref='input' columns='15'/>" +
+      "      </row>" +
+      "      <label ref='label' foreground='red' marginTop='5' marginBottom='5'/>" +
+      "      <row>" +
+      "        <filler fill='horizontal'/>" +
+      "        <button action='ok'/>" +
+      "        <button action='cancel'/>" +
+      "      </row>" +
+      "    </column>" +
+      "  </panel>" +
       "</splits>"
     );
     dialog.setContentPane((Container)builder.load());

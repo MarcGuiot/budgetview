@@ -7,10 +7,10 @@
 
       <filler fill="vertical" weightY="10"/>
 
-      <panel ui="loginPanel" opaque="true" anchor="center" fill="none" weightY="20"
+      <panel ui="loginPanel" name="loginPanel" opaque="true" anchor="center" fill="none" weightY="20"
              maximumSize="(500,400)">
 
-        <column margin="20" anchor="center" fill="none" marginBottom="60">
+        <column margin="20" anchor="center" fill="none" marginBottom="20">
 
           <label icon="picsou_icon_128.png" fill="none" anchor="center" marginBottom="30"/>
 
@@ -30,7 +30,9 @@
                     margin="5" marginBottom="15" opaque="false"
                     fill="none" anchor="east"/>
 
-          <label ref="message" margin="5" horizontalAlignment="center"/>
+          <htmlEditorPane ref="message" margin="5" preferredSize="(200,30)"/>
+
+          <filler fill="vertical"/>
 
           <row styleClass="buttons">
             <button ref="login"/>

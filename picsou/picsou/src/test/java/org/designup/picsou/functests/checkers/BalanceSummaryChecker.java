@@ -1,7 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
+import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class BalanceSummaryChecker extends DataChecker {
@@ -11,41 +13,38 @@ public class BalanceSummaryChecker extends DataChecker {
     this.window = window;
   }
 
-  public MonthDetail initDetails() {
-    return new MonthDetail(window);
+  public void checkNothingShown() {
+    Panel panel = getPanel();
+    UISpecAssert.assertFalse(panel.getPanel("content").isVisible());
+    UISpecAssert.assertTrue(panel.getTextBox("totalLabel").textIsEmpty());
   }
 
-  public class MonthDetail {
-    private Window panel;
+  public BalanceSummaryChecker checkBalance(double amount) {
+    return check(amount, "balanceLabel");
+  }
 
-    public MonthDetail(Window panel) {
-      this.panel = panel;
-    }
+  public BalanceSummaryChecker checkIncome(double amount) {
+    return check(amount, "incomeLabel");
+  }
 
-    public MonthDetail balance(double amount) {
-      return check(amount, "detailBalance");
-    }
+  public BalanceSummaryChecker checkFixed(double amount) {
+    return check(amount, "fixedLabel");
+  }
 
-    private MonthDetail check(double amount, String name) {
-      TextBox textBox = panel.getTextBox(name);
-      assertThat(textBox.textEquals(BalanceSummaryChecker.this.toString(amount)));
-      return this;
-    }
+  public BalanceSummaryChecker checkSavings(double amount) {
+    return check(amount, "savingsLabel");
+  }
 
-    public MonthDetail income(double amount) {
-      return check(amount, "detailIncome");
-    }
+  public BalanceSummaryChecker checkTotal(double amount) {
+    return check(amount, "totalLabel");
+  }
+  private Panel getPanel() {
+    return window.getPanel("balanceSummary");
+  }
 
-    public MonthDetail fixe(double amount) {
-      return check(amount, "detailFixe");
-    }
-
-    public MonthDetail saving(double amount) {
-      return check(amount, "detailSaving");
-    }
-
-    public MonthDetail total(double amount) {
-      return check(amount, "detailTotal");
-    }
+  private BalanceSummaryChecker check(double amount, String name) {
+    TextBox textBox = getPanel().getTextBox(name);
+    assertThat(textBox.textEquals(BalanceSummaryChecker.this.toString(amount)));
+    return this;
   }
 }

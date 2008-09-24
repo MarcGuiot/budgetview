@@ -34,10 +34,5 @@ public class LoginChecker {
     userField.setText(user);
     passwordField.setPassword(password);
     loginButton.click();
-    TextBox message = panel.findUIComponent(TextBox.class, "message");
-    if (message != null) {
-      UISpecAssert.assertThat(message.textIsEmpty());
-    }
-
   }
 }

@@ -139,14 +139,17 @@ public class LoginTest extends StartUpFunctionalTestCase {
     checkErrorMessage("login.user.required");
 
     userField.setText("t");
+    checkNoErrorDisplayed();
     loginButton.click();
     checkErrorMessage("login.user.too.short");
 
     userField.setText("toto");
+    checkNoErrorDisplayed();
     loginButton.click();
     checkErrorMessage("login.password.required");
 
     passwordField.setPassword("pwd");
+    checkNoErrorDisplayed();
     loginButton.click();
     checkErrorMessage("login.password.too.short");
   }

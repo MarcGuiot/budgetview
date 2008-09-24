@@ -18,6 +18,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary
       .checkNoBudgetAreasDisplayed()
       .checkNoDataMessage("You must import your financial operations");
+    balanceSummary
+      .checkNothingShown();
 
     String file = OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
@@ -32,6 +34,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary
       .checkNoBudgetAreasDisplayed()
       .checkNoSeriesMessage("You must categorize your operations");
+    balanceSummary
+      .checkNothingShown();
   }
 
   public void testNoSeries() throws Exception {
@@ -89,12 +93,12 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_ID, 1000, "cheque");
     timeline.selectAll();
-    balanceSummary.initDetails()
-      .balance(1000.)
-      .income(1500.)
-      .fixe(-1529.90)
-      .saving(0.)
-      .total(970.10);
+    balanceSummary
+      .checkBalance(1000.)
+      .checkIncome(1500.)
+      .checkFixed(-1529.90)
+      .checkSavings(0.)
+      .checkTotal(970.10);
   }
 
   public void testTwoMonths() throws Exception {
