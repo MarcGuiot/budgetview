@@ -23,6 +23,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
+import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
@@ -47,11 +48,13 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                          BudgetArea.SAVINGS.getId());
   private CardHandler cards;
   private SelectionService parentSelectionService;
+  private GlobStringifier budgetAreaStringifier;
 
   public MonthSummaryView(GlobRepository repository, Directory parentDirectory) {
     super(repository, createDirectory(parentDirectory));
     parentSelectionService = parentDirectory.get(SelectionService.class);
     parentSelectionService.addListener(this, Month.TYPE);
+    budgetAreaStringifier = descriptionService.getStringifier(BudgetArea.TYPE);
   }
 
   private static Directory createDirectory(Directory parentDirectory) {
@@ -78,15 +81,24 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     builder.addRepeat("budgetAreaRepeat",
                       getBudgetAreas(),
                       new RepeatComponentFactory<BudgetArea>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, BudgetArea budgetArea) {
-                          JLabel nameLabel = new JLabel(descriptionService.getStringifier(BudgetArea.TYPE)
-                            .toString(budgetArea.getGlob(), repository));
-                          cellBuilder.add("budgetAreaName", nameLabel);
-                          nameLabel.setName(budgetArea.getGlob().get(BudgetArea.NAME));
+                        public void registerComponents(RepeatCellBuilder cellBuilder, final BudgetArea budgetArea) {
 
-                          JLabel amountLabel =
-                            cellBuilder.add("budgetAreaAmount", new JLabel());
-                          amountLabel.setName(budgetArea.getName() + ":budgetAreaAmount");
+                          String label = budgetAreaStringifier.toString(budgetArea.getGlob(), repository);
+                          JButton nameButton = new JButton(new AbstractAction(label) {
+                            public void actionPerformed(ActionEvent e) {
+                              directory.get(NavigationService.class).gotoBudget();
+                            }
+                          });
+                          cellBuilder.add("budgetAreaName", nameButton);
+                          nameButton.setName(budgetArea.getGlob().get(BudgetArea.NAME));
+
+                          JButton amountButton =
+                            cellBuilder.add("budgetAreaAmount", new JButton(new AbstractAction(){
+                              public void actionPerformed(ActionEvent e) {
+                                directory.get(NavigationService.class).gotoData(budgetArea);
+                              }
+                            }));
+                          amountButton.setName(budgetArea.getName() + ":budgetAreaAmount");
 
                           JLabel plannedLabel = cellBuilder.add("budgetAreaPlannedAmount", new JLabel());
                           plannedLabel.setName(budgetArea.getName() + ":budgetAreaPlannedAmount");
@@ -95,7 +107,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                                                         BudgetAreaGaugeFactory.createGauge(budgetArea));
                           gauge.setName(budgetArea.getName() + ":budgetAreaGauge");
 
-                          new BudgetAreaUpdater(budgetArea, amountLabel, plannedLabel, gauge);
+                          new BudgetAreaUpdater(budgetArea, amountButton, plannedLabel, gauge);
                         }
                       });
 
@@ -153,13 +165,13 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
   private class BudgetAreaUpdater implements ChangeSetListener, GlobSelectionListener {
     private BudgetArea budgetArea;
-    private JLabel amountLabel;
+    private JButton amountLabel;
     private JLabel plannedLabel;
     private Gauge gauge;
     private int multiplier;
     private SortedSet<Integer> selectedMonths = new TreeSet<Integer>();
 
-    public BudgetAreaUpdater(BudgetArea budgetArea, JLabel amountLabel, JLabel plannedLabel, Gauge gauge) {
+    public BudgetAreaUpdater(BudgetArea budgetArea, JButton amountLabel, JLabel plannedLabel, Gauge gauge) {
       this.budgetArea = budgetArea;
       this.amountLabel = amountLabel;
       this.plannedLabel = plannedLabel;

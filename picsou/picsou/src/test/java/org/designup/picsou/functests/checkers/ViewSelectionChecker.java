@@ -60,6 +60,10 @@ public class ViewSelectionChecker extends DataChecker {
     assertSelected("categorization");
   }
 
+  public void checkBudgetSelected() {
+    assertSelected("budget");
+  }
+
   public void checkRepartitionSelected() {
     assertSelected("analysis");
     assertSelected("repartition");

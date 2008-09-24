@@ -85,7 +85,7 @@ public class CategoryChecker extends ViewChecker {
     return names.toArray(new String[names.size()]);
   }
 
-  public void checkSelectionEquals(MasterCategory... categories) {
+  public void checkSelection(MasterCategory... categories) {
     assertTrue(getTable().rowsAreSelected(getIndexes(categories)));
   }
 

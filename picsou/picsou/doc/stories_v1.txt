@@ -51,9 +51,6 @@ BalanceSumary
 * Qu'affiche-t-on dans le passe ?
 * Hyperliens vers les transactions planned correspondantes
 
-MonthSummary
-* Hyperliens vers les transactions correspondantes
-
 AccountView
 * Selection des comptes integres dans le total (exclusion comptes epargne)
 * Edition compte

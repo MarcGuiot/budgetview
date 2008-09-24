@@ -531,7 +531,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.occasional.gotoData(MasterCategory.TELECOMS);
     views.checkDataSelected();
     series.checkSelection("Occasional expenses");
-    categories.checkSelectionEquals(MasterCategory.TELECOMS);
+    categories.checkSelection(MasterCategory.TELECOMS);
     transactions.initContent()
       .addOccasional("05/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00, MasterCategory.TELECOMS)
       .check();
@@ -540,7 +540,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.gotoData("Groceries");
     views.checkDataSelected();
     series.checkSelection("Groceries");
-    categories.checkSelectionEquals(MasterCategory.ALL);
+    categories.checkSelection(MasterCategory.ALL);
     series.checkExpanded("Envelope expenses", true);
   }
 }

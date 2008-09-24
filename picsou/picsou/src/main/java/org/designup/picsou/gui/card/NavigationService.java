@@ -35,6 +35,10 @@ public class NavigationService {
     select(Card.HOME);
   }
 
+  public void gotoBudget() {
+    select(Card.BUDGET);
+  }
+
   public void gotoCategorization() {
     select(Card.CATEGORIZATION);
   }
@@ -50,12 +54,17 @@ public class NavigationService {
     select(Card.DATA);
   }
 
+  public void gotoData(BudgetArea budgetArea) {
+    seriesView.selectBudgetArea(budgetArea);
+    categoryView.select(MasterCategory.ALL.getId());
+    select(Card.DATA);
+  }
+
   public void gotoData(BudgetArea budgetArea, Glob category) {
     seriesView.selectBudgetArea(budgetArea);
     categoryView.select(category);
     select(Card.DATA);
   }
-
 
   private void select(final Card card) {
     selectionService.select(repository.get(card.getKey()));

@@ -72,8 +72,6 @@
     <ui name="hyperlinkButtonWithoutUnderline" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false"/>
     <style selector="button.hyperlinkWithoutUnderline" ui="hyperlinkButtonWithoutUnderline" fill="none" anchor="right"/>
-    <style selector="button.amountLink" ui="hyperlinkButtonWithoutUnderline" fill="none" anchor="left"
-           foreground="budgetArea.amount.link"/>
 
     <!-- Blocks and inner blocks -->
 
@@ -103,6 +101,11 @@
     <style selector=".innerBlock label.largeAmount" foreground="block.inner.amount" font="-,bold,13" anchor="top"/>
     <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink" font="-,plain,10"/>
 
+    <style selector=".block button.amountLink" ui="hyperlinkButtonWithoutUnderline" fill="none" anchor="left"
+           foreground="block.amount.link" font="-,bold,11" horizontalAlignment="right"/>
+    <style selector=".block button.itemLink" ui="hyperlinkButtonWithoutUnderline" fill="none" anchor="left"
+           foreground="block.item.link" horizontalAlignment="right"/>
+    
     <!-- Icon buttons -->
     <ui name="iconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"/>
     <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>
