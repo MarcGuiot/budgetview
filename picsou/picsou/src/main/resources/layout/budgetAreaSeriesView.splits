@@ -3,11 +3,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="#budgetAreaSeriesView #seriesName" font="-,bold,13"
-           margin="0" marginRight="10" anchor="center" preferredSize="(150,13)"/>
     <style selector="#budgetAreaSeriesView .amount" font="-,plain,11" anchor="right"/>
-    <style selector="#budgetAreaSeriesView .detailGauge" anchor="center" preferredSize="(40,30)"
-           marginLeft="5" marginRight="5"/>
   </styles>
 
   <column name="budgetAreaSeriesView" styleClass="main">
@@ -26,7 +22,7 @@
 
         <scrollPane marginBottom="0">
           <column>
-            <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid" marginLeft="10" marginRight="10">
+            <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid" margin="10">
               <button ref="seriesName" styleClass="itemLink"/>
               <button ref="observedSeriesAmount" styleClass="amountLink" marginRight="6"/>
               <component ref="gauge" styleClass="detailGauge"/>

@@ -25,7 +25,7 @@
 
         <scrollPane>
           <column>
-            <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid" marginLeft="10" marginRight="10">
+            <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid" margin="10">
               <label ref="categoryName" styleClass="item" fill="horizontal" anchor="right" horizontalAlignment="right"
                      weightX="10.0" marginRight="10"/>
               <button ref="observedCategoryAmount" styleClass="amountLink"

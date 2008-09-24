@@ -101,10 +101,12 @@
     <style selector=".innerBlock label.largeAmount" foreground="block.inner.amount" font="-,bold,13" anchor="top"/>
     <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink" font="-,plain,10"/>
 
-    <style selector=".block button.amountLink" ui="hyperlinkButtonWithoutUnderline" fill="none" anchor="left"
-           foreground="block.amount.link" font="-,bold,11" horizontalAlignment="right"/>
-    <style selector=".block button.itemLink" ui="hyperlinkButtonWithoutUnderline" fill="none" anchor="left"
-           foreground="block.item.link" horizontalAlignment="right"/>
+    <style selector=".block button.amountLink" ui="hyperlinkButtonWithoutUnderline"
+           fill="none" anchor="right" horizontalAlignment="right"
+           foreground="block.amount.link" font="-,bold,11"/>
+    <style selector=".block button.itemLink" ui="hyperlinkButtonWithoutUnderline"
+           fill="none" anchor="right" horizontalAlignment="right"
+           foreground="block.item.link"/>
     
     <!-- Icon buttons -->
     <ui name="iconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"/>
@@ -169,7 +171,7 @@
 
     <style selector=".detailGauge"
            opaque="false" background="block.inner.bg"
-           fill="horizontal" weightX="100"
+           fill="horizontal" anchor="center" preferredSize="(40,30)" weightX="10"
            marginLeft="6" marginRight="6"
            borderColor="gauge.detail.border"
            emptyColorTop="gauge.detail.empty.top" emptyColorBottom="gauge.detail.empty.bottom"

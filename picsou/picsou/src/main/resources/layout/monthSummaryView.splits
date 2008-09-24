@@ -66,13 +66,11 @@
             <scrollPane>
               <column>
                 <repeat ref="budgetAreaRepeat" layout="verticalGrid">
-                  <button ref="budgetAreaName" styleClass="itemLink"
-                          fill="horizontal" anchor="center" horizontalAlignment="right" weightX="0"/>
-                  <button ref="budgetAreaAmount" styleClass="amountLink"
-                          fill="horizontal" anchor="center" horizontalAlignment="right" weightX="0"/>
-                  <component ref="budgetAreaGauge" styleClass="totalGauge" preferredSize="(40,30)"/>
+                  <button ref="budgetAreaName" styleClass="itemLink"/>
+                  <button ref="budgetAreaAmount" styleClass="amountLink"/>
+                  <component ref="budgetAreaGauge" styleClass="detailGauge"/>
                   <label ref="budgetAreaPlannedAmount" styleClass="amount"
-                         fill="horizontal" anchor="center" horizontalAlignment="right" weightX="0"/>
+                         anchor="right"/>
                 </repeat>
                 <filler fill="vertical"/>
                 <row margin="10" autoHideSource="uncategorizedAmountLabel">
