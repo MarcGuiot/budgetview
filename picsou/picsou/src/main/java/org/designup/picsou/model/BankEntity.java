@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.index.NotUniqueIndex;
@@ -13,7 +14,6 @@ import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -23,12 +23,10 @@ import org.globsframework.utils.serialization.SerializedOutput;
 public class BankEntity {
   public static GlobType TYPE;
 
-  @NoObfuscation
-  @Key
+  @Key @NoObfuscation
   public static IntegerField ID;
 
-  @NoObfuscation
-  @Target(Bank.class)
+  @Target(Bank.class) @NoObfuscation
   public static LinkField BANK;
 
   public static NotUniqueIndex BANK_INDEX;

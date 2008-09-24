@@ -17,26 +17,22 @@ import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
 public class Bank {
-  public static final int UNKNOWN_BANK_ID = -123456;
+  public static final int GENERIC_BANK_ID = -123456;
 
   public static GlobType TYPE;
 
-  @NoObfuscation
-  @Key
+  @Key @NoObfuscation
   public static IntegerField ID;
 
-  @NoObfuscation
-  @NamingField
+  @NamingField @NoObfuscation
   public static StringField NAME;
 
-  @NoObfuscation
-  @DefaultString("")
+  @DefaultString("") @NoObfuscation
   public static StringField DOWNLOAD_URL;
 
   static {
     GlobTypeLoader.init(Bank.class, "bank");
   }
-
 
   public static class Serializer implements PicsouGlobSerializer {
 

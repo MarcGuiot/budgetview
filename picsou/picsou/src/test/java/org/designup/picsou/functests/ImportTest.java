@@ -12,7 +12,6 @@ import org.uispec4j.*;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
-import javax.swing.*;
 import java.io.File;
 
 public class ImportTest extends LoggedInFunctionalTestCase {
@@ -41,15 +40,11 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       window.dispose();
     }
     window = WindowInterceptor.getModalDialog(operations.getImportTrigger());
-//    bankCombo = window.getComboBox("bankCombo");
     fileField = window.getInputTextBox("fileField");
     importButton = window.getButton("Import");
   }
 
   public void testStandardImport() throws Exception {
-
-//    bankCombo.select("CIC");
-//    assertNotNull(window.getButton("http://www.cic.fr/telechargements.cgi"));
 
     checkLoginMessage("Select an OFX or QIF file to import");
 
@@ -144,9 +139,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     window.getButton("OK").click();
     checkImportMessage("You must enter the account number");
     window.getInputTextBox("number").setText("0123546");
-
-//    window.getInputTextBox("balance").setText("66.50");
-
     window.getButton("OK").click();
 
     transactions
@@ -196,7 +188,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testImportQifFileWithExistingAccount() throws Exception {
-//    bankCombo.select(SOCIETE_GENERALE);
     String firstQif = QifBuilder.init(this)
       .addTransaction("2006/01/01", 10, "monop")
       .save();
@@ -211,7 +202,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .save();
 
     fileField.setText(qifFile);
-//    bankCombo.select(SOCIETE_GENERALE);
     importButton.click();
     ComboBox comboBox = window.getComboBox("accountCombo");
     assertTrue(comboBox.contentEquals("Main account"));
@@ -243,10 +233,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addBankAccount(666, 1024, "12345678a", 12.0, "2008/06/11")
       .addTransaction("2008/06/10", 1.0, "V'lib", MasterCategory.TRANSPORTS)
       .addBankAccount(666, 1024, "12345678b", 12.0, "2008/06/11")
-      .addTransaction("2008/06/12", 1.0, "V'lib", MasterCategory.TRANSPORTS)
-      .addBankAccount(777, 1027, "87654321", 21.0, "2008/06/12")
+      .addTransaction("2008/06/21", 1.0, "V'lib", MasterCategory.TRANSPORTS)
+      .addBankAccount(777, 1027, "87654321", 21.0, "2008/06/21")
       .addTransaction("2008/06/10", 10.0, "McDo")
-      .addCardAccount("1111222233334444", 7.5, "2008/06/12")
+      .addCardAccount("1111222233334444", 7.5, "2008/06/21")
       .addTransaction("2008/06/10", 71.0, "Metro")
       .save();
 
@@ -255,35 +245,22 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     Table table = window.getTable();
     assertTrue(table.contentEquals(new Object[][]{
-      {"12/06/2008", "V'lib", "1.00"},
+      {"21/06/2008", "V'lib", "1.00"},
       {"10/06/2008", "Metro", "71.00"},
       {"10/06/2008", "McDo", "10.00"},
       {"10/06/2008", "V'lib", "1.00"},
     }));
 
-    assertEquals(2, window.getSwingComponents(JTextArea.class).length);
-
-    TextBox accountNames0 = window.getTextBox("accountNames0");
-    assertTrue(accountNames0.textContains(new String[]{"12345678a", "12345678b"}));
-
-    TextBox accountNames1 = window.getTextBox("accountNames1");
-    assertTrue(accountNames1.textContains(new String[]{"1111222233334444", "87654321"}));
-
-    window.getButton("OK").click();
-    checkImportMessage("You must associate a bank to each account");
-
-    ComboBox combo0 = window.getComboBox("bankCombo0");
-    combo0.select("CIC");
-
-    ComboBox combo1 = window.getComboBox("bankCombo1");
-    combo1.select(SOCIETE_GENERALE);
-
+    assertTrue(window.getTextBox("accountNames:666").textContains(new String[]{"12345678a", "12345678b"}));
+    assertTrue(window.getTextBox("accountNames:777").textContains(new String[]{"1111222233334444", "87654321"}));
+    window.getComboBox("bankCombo:777").select(SOCIETE_GENERALE);
     window.getButton("OK").click();
 
     String secondFileName = OfxBuilder.init(this)
       .addBankAccount(666, 2048, "77777777", 77.0, "2008/06/11")
       .addTransaction("2008/06/14", 1.0, "V'lib", MasterCategory.TRANSPORTS)
       .save();
+
     openImportDialog();
     fileField.setText(secondFileName);
     importButton.click();
@@ -291,8 +268,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
+      .addOccasional("21/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
       .addOccasional("14/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
-      .addOccasional("12/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
       .add("10/06/2008", TransactionType.CREDIT_CARD, "Metro", "", 71.00)
       .add("10/06/2008", TransactionType.VIREMENT, "McDo", "", 10.00)
       .addOccasional("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)

@@ -103,9 +103,12 @@ public class ImportSession {
         Glob account = localRepository.get(Key.create(Account.TYPE, accountIdAndTransactions.getKey()));
         Glob bankEntity = localRepository.findLinkTarget(account, Account.BANK_ENTITY);
         Glob bank = localRepository.findLinkTarget(bankEntity, BankEntity.BANK);
-        Integer id = Bank.UNKNOWN_BANK_ID;
+        Integer id = Bank.GENERIC_BANK_ID;
         if (bank != null) {
           id = bank.get(Bank.ID);
+        }
+        else {
+          localRepository.update(bankEntity.getKey(), BankEntity.BANK, id);
         }
         transactionAnalyzer.processTransactions(id, accountIdAndTransactions.getValue(),
                                                 localRepository);

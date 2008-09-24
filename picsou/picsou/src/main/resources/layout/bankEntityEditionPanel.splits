@@ -1,0 +1,17 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <column ref="panel">
+    <repeat ref="repeat">
+      <column>
+        <label text="$import.select.entity.bank" styleClass="header"/>
+        <row>
+          <textArea ref="accounts" styleClass="multiLineLabel" marginLeft="30" marginRight="10"/>
+          <comboBox ref="banksCombo" anchor="north" marginRight="30"/>
+        </row>
+      </column>
+    </repeat>
+  </column>
+
+</splits>

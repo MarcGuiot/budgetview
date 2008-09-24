@@ -84,19 +84,12 @@ HistoricalChart
 
 Import
 * Ajouter Credit Mutuel (& co) à la liste des banques
-* Import Olivier : voir joliesse selection
 * Import : OK sans fichier = message, si selection il faut purger le message
 * Bring to front sur Open With...
 * Memoriser dernier repertoire pour le filechooser
 * En mode "dialog", utiliser une PicsouDialog + revoir bouton "ignorer fichier" => "cancel"
 * open with... ne marche qu'une seule fois (après cancel)
 * Apres import, aller vers CategorizationView
-
-Login
-* Creation de compte : expliquer que la notion de compte / mot de passe est liee au cryptage local
-* Error login + "new user" => effacer message
-* Si aucun utilisateur dans le repo, passage direct en mode creation de compte
-* Suppression de la phase d'import
 
 TimeView
 * Integration des boutons next/prev et start/end dans la barre

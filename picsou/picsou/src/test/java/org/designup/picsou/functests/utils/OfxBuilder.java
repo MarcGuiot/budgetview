@@ -47,7 +47,7 @@ public class OfxBuilder {
         .add(TransactionType.values())
         .get();
     InitialCategories.run(repository);
-    repository.create(Key.create(Bank.TYPE, Bank.UNKNOWN_BANK_ID));
+    repository.create(Key.create(Bank.TYPE, Bank.GENERIC_BANK_ID));
   }
 
   public OfxBuilder addCategory(MasterCategory master, String categoryName) {

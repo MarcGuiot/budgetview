@@ -4,7 +4,9 @@ import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -14,7 +16,6 @@ import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class BankEntityEditionPanel {
   private GlobRepository repository;
@@ -30,33 +31,30 @@ public class BankEntityEditionPanel {
   }
 
   public void init(GlobList bankEntities) {
-    this.bankEntities = bankEntities;
+    this.bankEntities = bankEntities.sort(BankEntity.ID);
+
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bankEntityEditionPanel.splits",
+                                                      repository, directory);
+
+    builder.add("panel", panel);
     panel.setVisible(!bankEntities.isEmpty());
-    panel.removeAll();
-    if (bankEntities.isEmpty()) {
-      return;
-    }
 
-    GridBagBuilder builder = GridBagBuilder.init(panel);
-    int row = 0;
+    builder.addRepeat("repeat",
+                      bankEntities,
+                      new RepeatComponentFactory<Glob>() {
+                        public void registerComponents(RepeatCellBuilder cellBuilder, Glob entity) {
+                          GlobList accounts = repository.findLinkedTo(entity, Account.BANK_ENTITY);
+                          accounts.sort(new GlobFieldComparator(Account.NUMBER));
+                          Integer entityId = entity.get(BankEntity.ID);
+                          cellBuilder.add("accounts", createTextArea(accounts, entityId));
+                          cellBuilder.add("banksCombo", createCombo(entity, entityId));
+                        }
+                      });
 
-    for (Glob entity : bankEntities.sort(BankEntity.ID)) {
-      GlobList accounts = repository.findLinkedTo(entity, Account.BANK_ENTITY);
-      accounts.sort(new GlobFieldComparator(Account.NUMBER));
-
-      builder.add(createTextArea(accounts, row), 0, row, 1, 1, new Insets(5, 0, 5, 10));
-      builder.add(createCombo(entity, row), 1, row, 1, 1, new Insets(5, 10, 5, 0));
-      row++;
-    }
+    builder.load();
   }
 
   public boolean check() {
-    for (Glob entity : bankEntities) {
-      if (entity.get(BankEntity.BANK) == null) {
-        messageLabel.setText(Lang.get("import.select.bank"));
-        return false;
-      }
-    }
     return true;
   }
 
@@ -64,9 +62,9 @@ public class BankEntityEditionPanel {
     return panel;
   }
 
-  private JTextArea createTextArea(GlobList accounts, int row) {
+  private JTextArea createTextArea(GlobList accounts, int entityId) {
     JTextArea textArea = new JTextArea();
-    textArea.setName("accountNames" + row);
+    textArea.setName("accountNames:" + entityId);
     int index = 0;
     for (Glob account : accounts) {
       if (index++ > 0) {
@@ -77,7 +75,7 @@ public class BankEntityEditionPanel {
     return textArea;
   }
 
-  private JComboBox createCombo(final Glob entity, int row) {
+  private JComboBox createCombo(final Glob entity, int entityId) {
     return GlobComboView.init(Bank.TYPE, repository, directory)
       .setSelectionHandler(new GlobComboView.GlobSelectionHandler() {
         public void processSelection(Glob bank) {
@@ -85,7 +83,7 @@ public class BankEntityEditionPanel {
           repository.setTarget(entity.getKey(), BankEntity.BANK, bankKey);
         }
       })
-      .setName("bankCombo" + row)
+      .setName("bankCombo:" + entityId)
       .getComponent();
   }
 }
