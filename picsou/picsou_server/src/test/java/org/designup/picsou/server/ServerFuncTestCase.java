@@ -1,13 +1,13 @@
 package org.designup.picsou.server;
 
 import org.designup.picsou.PicsouServer;
-import org.designup.picsou.functests.checkers.ViewSelectionChecker;
 import org.designup.picsou.functests.checkers.CategorizationChecker;
+import org.designup.picsou.functests.checkers.ImportChecker;
+import org.designup.picsou.functests.checkers.OperationChecker;
+import org.designup.picsou.functests.checkers.ViewSelectionChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.uispec4j.*;
-import org.uispec4j.finder.ComponentMatchers;
-import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 public abstract class ServerFuncTestCase extends UISpecTestCase {
@@ -28,6 +28,10 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     System.setProperty(PicsouServer.USE_SSHL, "false");
     picsouServer = new PicsouServer();
     picsouServer.start();
+    initWindow();
+  }
+
+  protected void initWindow() {
     window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
         picsouApplication = new PicsouApplication();
@@ -51,30 +55,24 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     TextBox textBox = window.getTextBox("name");
     textBox.setText(user);
 
-    PasswordField password = window.getPasswordField("password");
-    PasswordField confirmPassword = window.getPasswordField("confirmPassword");
-
-    CheckBox createAccount = window.getCheckBox("createAccountCheckBox");
-    password.setPassword(userPassword);
-    createAccount.click();
-    confirmPassword.setPassword(userPassword);
+    window.getPasswordField("password").setPassword(userPassword);
+    window.getCheckBox("createAccountCheckBox").click();
+    window.getPasswordField("confirmPassword").setPassword(userPassword);
     window.getButton("Enter").click();
 
-    WindowInterceptor.init(window.getButton("Browse").triggerClick())
-      .process(FileChooserHandler.init().select(new String[]{fileName}))
-      .run();
+    OperationChecker operations = new OperationChecker(window);
+    ImportChecker importDialog = operations.openImportDialog();
+    importDialog
+      .selectFiles(fileName)
+      .startImport()
+      .checkNoErrorMessage();
 
-    window.getButton("Import").click();
-    TextBox message = (TextBox)window.findUIComponent(ComponentMatchers.innerNameIdentity("message"));
-    if (message != null) {
-      assertTrue(message.textIsEmpty());
-    }
     if (fileName.endsWith(".qif")) {
-      window.getComboBox("accountBank").select("Societe Generale");
-      window.getInputTextBox("number").setText("333");
+      importDialog.selectBank("Societe Generale");
+      importDialog.enterAccountNumber("333");
     }
 
-    window.getButton("OK").click();
+    importDialog.doImport();
   }
 
   protected Table getCategoryTable() {

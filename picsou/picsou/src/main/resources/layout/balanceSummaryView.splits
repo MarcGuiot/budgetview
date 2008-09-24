@@ -5,10 +5,11 @@
     <style selector="label#message" foreground="balanceSummary.message"
            fill="horizontal" anchor="center" horizontalAlignment="left"
            font="-,plain,10" marginBottom="5"/>
+    
     <style selector="label.amountLabel" foreground="balanceSummary.label"
            fill="horizontal" anchor="center" horizontalAlignment="right"/>
     <style selector="label.amount" foreground="balanceSummary.amount"
-           fill="horizontal" anchor="center" horizontalAlignment="right" marginLeft="15" marginRight="10"
+           fill="none" anchor="right" marginLeft="15" marginRight="10"
            border="empty(5,0,5,0)"/>
   </styles>
 
@@ -20,7 +21,7 @@
 
       <column styleClass="innerBlock">
 
-        <label text="$monthsummary.detail.total" styleClass="totalAmountTitle"/>
+        <label text="$monthsummary.detail.total" styleClass="totalAmountTitle" autoHideSource="detailTotal"/>
         <label ref="detailTotal" styleClass="totalAmount"/>
 
         <panel styleClass="innerBlockBackground">

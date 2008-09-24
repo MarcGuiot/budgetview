@@ -77,7 +77,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     mainWindow = getMainWindow();
     LoginChecker loginChecker = new LoginChecker(mainWindow);
     loginChecker.logNewUser("anonymous", "p@ssword");
-    loginChecker.skipImport();
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
     LicenseChecker.enterLicense(mainWindow, "admin", "zz", 0);

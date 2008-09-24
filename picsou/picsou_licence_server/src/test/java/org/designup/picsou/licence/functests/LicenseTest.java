@@ -76,7 +76,6 @@ public class LicenseTest extends LicenseTestCase {
     checkRepoIdIsUpdated(connection, 1L, null);
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-    loginChecker.skipImport();
     connection.getCreateBuilder(License.TYPE)
       .set(License.MAIL, mail)
       .set(License.ACTIVATION_CODE, "1234")
@@ -96,7 +95,6 @@ public class LicenseTest extends LicenseTestCase {
     checkRepoIdIsUpdated(connection, 1L, null);
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-    loginChecker.skipImport();
     window.dispose();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
@@ -114,7 +112,6 @@ public class LicenseTest extends LicenseTestCase {
     startPicsou();
     LoginChecker login = new LoginChecker(window);
     login.logNewUser("user", "passw@rd");
-    login.skipImport();
     checkRepoIdIsUpdated(getSqlConnection(), 1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
     LicenseChecker.enterBadLicense(window, MAIL, "1234", 24);
     String mailcontent = checkReceive(MAIL);
@@ -149,7 +146,6 @@ public class LicenseTest extends LicenseTestCase {
   public void testRegistrationWithBadKey() throws Exception {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-    loginChecker.skipImport();
     LicenseChecker.open(window)
       .enterLicenseAndValidate("titi@foo.org", "az", 24)
       .checkErrorMessage("Activation failed")
@@ -159,7 +155,6 @@ public class LicenseTest extends LicenseTestCase {
   public void testStartRegistrationAndStopServer() throws Exception {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-    loginChecker.skipImport();
     LicenseChecker license = LicenseChecker.open(window)
       .enterLicense("titi@foo.org", "az", 24);
 
@@ -172,7 +167,6 @@ public class LicenseTest extends LicenseTestCase {
   public void testEmptyActivationCode() throws Exception {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-    loginChecker.skipImport();
     LicenseChecker license = LicenseChecker.open(window)
       .enterLicense("titi@foo.org", "az", 24);
     license.validate();
@@ -227,7 +221,6 @@ public class LicenseTest extends LicenseTestCase {
     String repoId = checkRepoIdIsUpdated(connection, 1L, null);
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-    loginChecker.skipImport();
     connection.getCreateBuilder(License.TYPE)
       .set(License.MAIL, MAIL)
       .set(License.ACTIVATION_CODE, "1234")

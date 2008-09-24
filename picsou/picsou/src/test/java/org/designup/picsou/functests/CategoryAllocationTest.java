@@ -85,11 +85,11 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.0, MasterCategory.NONE)
       .check();
-    categories.checkSelectionEquals(MasterCategory.NONE);
+    categories.checkSelection(MasterCategory.NONE);
 
     assignCategory("Menu K", MasterCategory.FOOD);
 
-    categories.checkSelectionEquals(MasterCategory.NONE);
+    categories.checkSelection(MasterCategory.NONE);
     timeline.checkSelection("2006/01");
 
     transactions.assertEmpty();

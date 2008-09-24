@@ -33,7 +33,6 @@ public class RegistrationTest extends LicenseTestCase {
     startPicsou();
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-    loginChecker.skipImport();
     LicenseChecker license = LicenseChecker.open(window);
     license.checkConnectionNotAvailable();
     start();

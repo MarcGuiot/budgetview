@@ -120,6 +120,11 @@ public class SeriesView extends View {
     }, SeriesWrapper.TYPE);
   }
 
+  public void selectBudgetArea(BudgetArea budgetArea) {
+    Glob wrapper = SeriesWrapper.find(repository, true, budgetArea.getId());
+    globTable.select(wrapper);
+  }
+
   public void selectSeries(Glob series) {
     Glob wrapper = SeriesWrapper.find(repository, false, series.get(Series.ID));
     Glob master = repository.findLinkTarget(wrapper, SeriesWrapper.MASTER);

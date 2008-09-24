@@ -32,6 +32,15 @@ public class BudgetViewChecker extends DataChecker {
     this.savings = new BudgetAreaChecker("savingsBudgetView", false);
   }
 
+  private int getIndex(JPanel panel, Component component) {
+    for (int i = 0; i < panel.getComponentCount(); i++) {
+      if (component == panel.getComponent(i)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   public class BudgetAreaChecker {
 
     private String panelName;
@@ -87,15 +96,6 @@ public class BudgetViewChecker extends DataChecker {
         UISpecAssert.assertFalse(budgetPanel.containsUIComponent(Button.class, name));
       }
       return this;
-    }
-
-    private int getIndex(JPanel panel, Component component) {
-      for (int i = 0; i < panel.getComponentCount(); i++) {
-        if (component == panel.getComponent(i)) {
-          return i;
-        }
-      }
-      return -OBSERVED_LABEL_OFFSET;
     }
 
     public SeriesEditionDialogChecker editSeriesList() {
@@ -159,7 +159,7 @@ public class BudgetViewChecker extends DataChecker {
     public OccasionalAreaChecker check(MasterCategory category, Double amount) {
       Panel budgetPanel = window.getPanel("occasionalBudgetView");
       UISpecAssert.assertTrue(budgetPanel.containsUIComponent(TextBox.class, "categoryName." + getCategoryName(category)));
-      UISpecAssert.assertTrue(budgetPanel.getTextBox("amount." + getCategoryName(category))
+      UISpecAssert.assertTrue(budgetPanel.getButton("amount." + getCategoryName(category))
         .textEquals(BudgetViewChecker.this.toString(amount)));
       return this;
     }
@@ -168,6 +168,12 @@ public class BudgetViewChecker extends DataChecker {
       Panel budgetPanel = window.getPanel("occasionalBudgetView");
       UISpecAssert.assertFalse(budgetPanel.containsUIComponent(TextBox.class, "categoryName." + categoryName));
       return this;
+    }
+
+    public void gotoData(MasterCategory master) {
+      Panel budgetPanel = window.getPanel("occasionalBudgetView");
+      UISpecAssert.assertTrue(budgetPanel.containsUIComponent(TextBox.class, "categoryName." + getCategoryName(master)));
+      budgetPanel.getButton("amount." + getCategoryName(master)).click();
     }
   }
 }

@@ -1,13 +1,13 @@
 Edition de transactions
 *** Note
-*** Date (reporter / annuler report = on reprend la date banque si ok)
+* Date (reporter / annuler report = on reprend la date banque si ok)
 * Label
 * Type
 
 SeriesEditionDialog
 *** Bug layout en mode enveloppe
-** Modifier l'ordre des series
-** Creation d'enveloppe : mettre les expected a 0, ou mode autopilote
+* Modifier l'ordre des series
+* Creation d'enveloppe : mettre les expected a 0, ou mode autopilote
 * Revoir algo d'initialisation des SeriesBudget : prendre les 3 derniers mois seulement ? Mode autopilote ?
 * Bouton ou double-clic pour selectionner tout
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
@@ -15,28 +15,26 @@ SeriesEditionDialog
 * Afficher/modifier le jour de debit pour les recurrences
 
 BudgetView
-*** Infos de synthese :  delta recu/depense en observe et prevu (avec highlight de depassement) + non classe
-*** Afficher le diff sur les jauges total
-** Gauges : afficher le delta en tooltip ("Depassement: 111.11", etc.)
-** Ouverture SED : focus sur montant et liste de series masquee
+* Infos de synthese :  delta recu/depense en observe et prevu (avec highlight de depassement) + non classe
+* Afficher le diff sur les jauges total
+* Gauges : afficher le delta en tooltip ("Depassement: 111.11", etc.)
 * Mettre en rouge les depassements
 * Mettre en rouge un montant occasional prevu a zero
 * Renommer "Projets" en "Projets & Operations Speciales" ?
 
 CategorizationView
 *** Bug sur gestion du bold pour les toggles dans les occasional
-** Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
-** Recherche/filtrage table
-** Selection d'operations similaires : ne pas scroller la table
-** Selection d'operations similaires : afficher le label anonymisé dans TransactionDetails
-** Ordre des transactions = labels anonymises + date
-* Remplacer mode autonext par bouton next
-** Bug repaint dans les zones d'affichage des series 
-* Supprimer mode "select similar" + message pour introduire le double-click
+* Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
+* Recherche/filtrage table
+* Selection d'operations similaires : ne pas scroller la table
+* Selection d'operations similaires : afficher le label anonymisé dans TransactionDetails
+* Ordre des transactions = labels anonymises + date
+* Supprimer modes "select similar" et "select next"
+* Bug repaint dans les zones d'affichage des series (a confirmer)
 * Reactiver selection similar en double clic pour les cheques et les retraits ?
 
 TransactionDetails
-* Afficher les labels en multiligne
+*** Bug layout: Afficher les labels en multiligne
 
 TransactionView
 ** Filtrage transactions par Compte
@@ -45,19 +43,22 @@ TransactionView
 * Bouton pour vider rapidement le champ de recherche
 * Suppression de transactions ghost pour cloturer une serie ? (= alignement prevu / depense)
 
+SeriesView
+* Ajouter bouton ouverture SED
+
 BalanceSumary
 *** Ajouter les projets au calcul
 * Qu'affiche-t-on dans le passe ?
 * Hyperliens vers les transactions planned correspondantes
 
-MonthSummary
-* Hyperliens vers les transactions correspondantes
-
 AccountView
-* Selection des comptes integres dans le total
+* Selection des comptes integres dans le total (exclusion comptes epargne)
+* Edition compte
 * Creation de compte
-* Edition comptes
 * Cloturer un compte (date de cloture)
+
+AccountEditionDialog
+* Enter pour valider le montant et fermer la fenetre
 
 Home page
 ** Afficher le changeLog en cas de changement de version
@@ -79,20 +80,23 @@ CategoryEditionDialog
 * Modifier l'ordre des categories
 
 HistoricalChart
-** voir affichage avec ghosts
+* voir affichage avec ghosts
 
 Import
+* Ajouter Credit Mutuel (& co) à la liste des banques
+* Import Olivier : voir joliesse selection
 * Import : OK sans fichier = message, si selection il faut purger le message
 * Bring to front sur Open With...
 * Memoriser dernier repertoire pour le filechooser
-* En mode "dialog", utiliser une PicsouDialog + revoir hyperlien "annuler" et bouton "ignorer fichier" => "cancel"
+* En mode "dialog", utiliser une PicsouDialog + revoir bouton "ignorer fichier" => "cancel"
 * open with... ne marche qu'une seule fois (après cancel)
+* Apres import, aller vers CategorizationView
 
 Login
 * Creation de compte : expliquer que la notion de compte / mot de passe est liee au cryptage local
 * Error login + "new user" => effacer message
 * Si aucun utilisateur dans le repo, passage direct en mode creation de compte
-* Revoir look panneau import (mode dialog)
+* Suppression de la phase d'import
 
 TimeView
 * Integration des boutons next/prev et start/end dans la barre
@@ -103,13 +107,13 @@ Packaging
 
 General
 * Supprimer les subcats par defaut (mode avance - apporte plus de confusion que de valeur pour les novices)
-* Arrivee dans l'outil : selectionner le dernier mois avec des donnees
 * Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
 * Tooltips sur les boutons
 * Afficher les infos de mise a dispo d'une nouvelle version
 * CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
 * Copier les donnees des tables dans le clipboard
 * voir opacite/joliesse des fenetres Globs de creation/deletion
+* Format des montants : mettre des espaces pour separer les milliers
 
 Undo/redo
 * Utiliser cmd-z plutot que ctrl-z sous Mac

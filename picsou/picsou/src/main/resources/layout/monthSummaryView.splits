@@ -3,7 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector=".message" opaque="true" margin="10" background="block.inner.bg" border="line(block.inner.border)"/>
-    <style selector=".message htmlEditorPane" margin="15" marginTop="30"/>
+    <style selector=".message htmlEditorPane" margin="15" marginTop="15"/>
     <style selector=".message button" fill="none" anchor="center"/>
 
     <style selector="label.amount" font="-,plain,10"/>
@@ -66,13 +66,11 @@
             <scrollPane>
               <column>
                 <repeat ref="budgetAreaRepeat" layout="verticalGrid">
-                  <label ref="budgetAreaName" styleClass="item"
-                         fill="horizontal" anchor="center" horizontalAlignment="right" weightX="0"/>
-                  <label ref="budgetAreaAmount" styleClass="amount"
-                         fill="horizontal" anchor="center" horizontalAlignment="right" weightX="0"/>
-                  <component ref="budgetAreaGauge" styleClass="totalGauge" preferredSize="(40,30)"/>
+                  <button ref="budgetAreaName" styleClass="itemLink"/>
+                  <button ref="budgetAreaAmount" styleClass="amountLink"/>
+                  <component ref="budgetAreaGauge" styleClass="detailGauge"/>
                   <label ref="budgetAreaPlannedAmount" styleClass="amount"
-                         fill="horizontal" anchor="center" horizontalAlignment="right" weightX="0"/>
+                         anchor="right"/>
                 </repeat>
                 <filler fill="vertical"/>
                 <row margin="10" autoHideSource="uncategorizedAmountLabel">

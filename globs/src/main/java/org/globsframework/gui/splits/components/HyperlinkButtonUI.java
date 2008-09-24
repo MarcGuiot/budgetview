@@ -5,13 +5,14 @@ import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class HyperlinkButtonUI extends BasicButtonUI {
   private int textWidth;
@@ -94,7 +95,7 @@ public class HyperlinkButtonUI extends BasicButtonUI {
       return;
     }
 
-    int x1 = (button.getWidth() - textWidth) / 2;
+    int x1 = getLabelX(button);
     int y1 = (button.getHeight() + fontHeight) / 2 - descent;
     if (button.getModel().isRollover() || button.getModel().isArmed()) {
       d.setColor(rolloverColor);
@@ -110,6 +111,19 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     if (underline || button.getModel().isRollover()) {
       d.drawLine(x1, y1 + 1, x1 + textWidth, y1 + 1);
     }
+  }
+
+  private int getLabelX(AbstractButton button) {
+    int alignment = button.getHorizontalAlignment();
+    switch (alignment) {
+      case SwingConstants.LEFT:
+        return 0;
+      case SwingConstants.CENTER:
+        return (button.getWidth() - textWidth) / 2;
+      case SwingConstants.RIGHT:
+        return (button.getWidth() - textWidth);
+    }
+    throw new InvalidParameter("Unsupported horizontalAlignement value: " + alignment);
   }
 
   private void initFontMetrics(AbstractButton button) {
@@ -136,14 +150,14 @@ public class HyperlinkButtonUI extends BasicButtonUI {
 
     JPanel panel =
       GridBagBuilder.init()
-      .add(button, 0, 0, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
+        .add(button, 0, 0, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
         .add(new JButton(new AbstractAction("disable") {
           public void actionPerformed(ActionEvent e) {
             final boolean newState = !button.isEnabled();
             action.setEnabled(newState);
             putValue(Action.NAME, newState ? "disable" : "enable");
           }
-        }),0, 1, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
+        }), 0, 1, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
         .getPanel();
     panel.setOpaque(true);
     panel.setBackground(Color.CYAN);

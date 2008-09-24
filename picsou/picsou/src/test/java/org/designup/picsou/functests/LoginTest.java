@@ -103,25 +103,10 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
     createUser("toto", "p4ssw0rd", filePath);
     checkBankOnImport(filePath);
+
     openNewLoginWindow();
     login("toto", "p4ssw0rd");
     checkBankOnImport(filePath);
-  }
-
-  private void checkBankOnImport(final String path) {
-    OperationChecker operations = new OperationChecker(window);
-    Trigger trigger = operations.getImportTrigger();
-    WindowInterceptor.init(trigger)
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          window.getInputTextBox("fileField").setText(path);
-          window.getButton("Import").click();
-          assertTrue(window.getComboBox("accountBank")
-            .contentEquals("Autre", "BNP", "CIC", "Caisse d'épargne", "Credit Agricole", "La Poste",
-                           "Societe Generale"));
-          return window.getButton("Skip file").triggerClick();
-        }
-      }).run();
   }
 
   public void testLoginFailsIfUserNotRegistered() throws Exception {
@@ -164,10 +149,6 @@ public class LoginTest extends StartUpFunctionalTestCase {
     passwordField.setPassword("pwd");
     loginButton.click();
     checkErrorMessage("login.password.too.short");
-
-    passwordField.setPassword("password");
-    loginButton.click();
-    checkErrorMessage("login.password.special.chars");
   }
 
   public void testPasswordMustBeConfirmedWhenCreatingAnAccount() throws Exception {
@@ -185,72 +166,12 @@ public class LoginTest extends StartUpFunctionalTestCase {
     checkErrorMessage("login.confirm.error");
   }
 
-  public void testDataFileMustBeSelectedWhenCreatingAnAccount() throws Exception {
-    createNewUser();
-
-    TextBox fileField = window.getInputTextBox("fileField");
-    Button importButton = window.getButton("Import");
-
-    final String path = OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -1.1, "Menu K")
-      .save();
-    WindowInterceptor.init(window.getButton("Browse").triggerClick())
-      .process(FileChooserHandler.init().select(new String[]{path}))
-      .run();
-
-    assertTrue(fileField.textEquals(path));
-    importButton.click();
-    ComboBox bankCombo = window.getComboBox("accountBank");
-    bankCombo.select("CIC");
-
-    Table table = window.getTable();
-    assertTrue(table.contentEquals(new Object[][]{
-      {"10/01/2006", "Menu K", "-1.10"}
-    }));
-
-    window.getButton("OK").click();
-
-    getTransactionView()
-      .initContent()
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
-      .check();
-  }
-
-  public void testImportSeveralFiles() throws Exception {
-    final String path1 = OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -1.1, "Menu K")
-      .save();
-    final String path2 = OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/20", -2.2, "Menu K")
-      .save();
-    createNewUser();
-    window.getInputTextBox("fileField").setText(path1 + ";" + path2);
-    window.getButton("Import").click();
-    window.getButton("OK").click();
-    window.getButton("OK").click();
-    getTransactionView()
-      .initContent()
-      .add("20/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2.2)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
-      .check();
-  }
-
-  public void testCreateNewUserAndSkipImport() throws Exception {
-    createNewUser();
-    Button button = window.getButton("Close");
-    assertThat(button.textEquals(Lang.get("login.skip")));
-  }
-
   private void createNewUser() {
     createUserCheckbox.select();
     enterUserPassword("toto", "p4ssw0rd", true);
     loginButton.click();
   }
 
-  // TODO CategorizationView
   public void testTransactionAndCategorisationWorkAfterReload() throws Exception {
     String path = OfxBuilder
       .init(this)
@@ -295,11 +216,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
     enterUserPassword(user, password, true);
     loginButton.click();
 
-    window.getInputTextBox("fileField").setText(filePath);
-    TextBox messageBox = window.getTextBox("message");
-    window.getButton("Import").click();
-    assertTrue(messageBox.textIsEmpty());
-    window.getButton("OK").click();
+    OperationChecker operations = new OperationChecker(window);
+    operations.importOfxFile(filePath);
   }
 
   private void enterUserPassword(String user, String password, boolean confirm) {
@@ -345,5 +263,21 @@ public class LoginTest extends StartUpFunctionalTestCase {
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectCategorization();
     return new CategorizationChecker(window);
+  }
+
+  private void checkBankOnImport(final String path) {
+    OperationChecker operations = new OperationChecker(window);
+    Trigger trigger = operations.getImportTrigger();
+    WindowInterceptor.init(trigger)
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          window.getInputTextBox("fileField").setText(path);
+          window.getButton("Import").click();
+          assertTrue(window.getComboBox("accountBank")
+            .contentEquals("Autre", "BNP", "CIC", "Caisse d'épargne", "Credit Agricole", "La Poste",
+                           "Societe Generale"));
+          return window.getButton("Skip file").triggerClick();
+        }
+      }).run();
   }
 }

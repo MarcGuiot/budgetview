@@ -15,8 +15,10 @@ public class OperationChecker {
   private MenuItem undoMenu;
   private MenuItem redoMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
+  private Window window;
 
   public OperationChecker(Window window) {
+    this.window = window;
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
     importMenu = fileMenu.getSubMenu("Import");
     exportMenu = fileMenu.getSubMenu("Export");
@@ -24,6 +26,11 @@ public class OperationChecker {
     MenuItem editMenu = window.getMenuBar().getMenu("Edit");
     undoMenu = editMenu.getSubMenu("Undo");
     redoMenu = editMenu.getSubMenu("Redo");
+  }
+
+  public ImportChecker openImportDialog() {
+    Window dialog = WindowInterceptor.getModalDialog(importMenu.triggerClick());
+    return new ImportChecker(dialog);
   }
 
   public void importOfxFile(String name) {
@@ -104,5 +111,7 @@ public class OperationChecker {
     UISpecAssert.assertFalse(redoMenu.isEnabled());
   }
 
-
+  public void exit() {
+    window.getMenuBar().getMenu("File").getSubMenu("Exit").click();
+  }
 }

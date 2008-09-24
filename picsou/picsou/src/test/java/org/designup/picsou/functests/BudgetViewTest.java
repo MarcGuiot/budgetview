@@ -290,7 +290,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.FOOD)
       .validate();
     views.selectCategorization();
-    System.out.println("BudgetViewTest.testSeveralMonthsShowOrNotSeries");
     categorization.setEnvelope("Monoprix", "courantMonoprix", MasterCategory.FOOD, false);
     categorization.setProject("Auchan", "courantAuchan", MasterCategory.FOOD, false);
     categorization.setEnvelope("ED1", "courantED", MasterCategory.FOOD, false);
@@ -521,10 +520,27 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.checkDataSelected();
     views.selectData();
+    series.checkSelection("Groceries");
     transactions.initContent()
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries", MasterCategory.FOOD)
       .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries", MasterCategory.FOOD)
       .check();
+    series.checkExpanded("Envelope expenses", true);
+
+    views.selectBudget();
+    budgetView.occasional.gotoData(MasterCategory.TELECOMS);
+    views.checkDataSelected();
+    series.checkSelection("Occasional expenses");
+    categories.checkSelection(MasterCategory.TELECOMS);
+    transactions.initContent()
+      .addOccasional("05/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00, MasterCategory.TELECOMS)
+      .check();
+
+    views.selectBudget();
+    budgetView.envelopes.gotoData("Groceries");
+    views.checkDataSelected();
+    series.checkSelection("Groceries");
+    categories.checkSelection(MasterCategory.ALL);
     series.checkExpanded("Envelope expenses", true);
   }
 }

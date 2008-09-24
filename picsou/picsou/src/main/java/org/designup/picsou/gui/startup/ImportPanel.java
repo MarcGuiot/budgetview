@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.components.DialogOwner;
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.importer.BankFileType;
@@ -13,6 +13,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
@@ -38,41 +39,46 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
-public abstract class ImportPanel {
+public class ImportPanel {
   private JLabel messageLabel = new JLabel();
   private JPanel filePanel = new JPanel();
   private final JTextField fileField = new JTextField();
   private JButton fileButton = new JButton();
   private JLabel fileNameLabel = new JLabel();
 
-  private ImportSession importSession;
-  private final List<File> files = new ArrayList<File>();
+  private GlobRepository repository;
+  private Directory directory;
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
+
+  private DefaultDirectory sessionDirectory;
+  private ImportSession importSession;
+  private final List<File> files = new ArrayList<File>();
+  private Glob currentlySelectedAccount;
+
   private AccountEditionPanel accountEditionPanel;
   private BankEntityEditionPanel bankEntityEditionPanel;
   private DateFormatSelectionPanel dateFormatSelectionPanel;
+
   private JButton newAccountButton;
   private JComboBox accountComboBox;
   private JLabel importMessageLabel = new JLabel();
-  private Glob currentlySelectedAccount;
-  private DefaultDirectory sessionDirectory;
   private GlobRepository sessionRepository;
   private ImportedTransactionDateRenderer dateRenderer;
   private boolean step1 = true;
   private boolean step2 = true;
   private OpenRequestManager openRequestManager;
   private Glob defaultAccount;
-  private DialogOwner owner;
-  private GlobRepository repository;
-  private Directory directory;
+  private Window owner;
   private Set<Integer> importKeys = new HashSet<Integer>();
   private JPanel mainPanel;
   private JPanel panelStep1;
   private JPanel panelStep2;
 
-  protected ImportPanel(String textForCloseButton, List<File> files, Glob defaultAccount,
-                        final DialogOwner owner, final GlobRepository repository, Directory directory) {
+  private PicsouDialog dialog;
+
+  public ImportPanel(String textForCloseButton, List<File> files, Glob defaultAccount,
+                     final Window owner, final GlobRepository repository, Directory directory) {
     this.defaultAccount = defaultAccount;
     this.owner = owner;
     this.repository = repository;
@@ -88,6 +94,9 @@ public abstract class ImportPanel {
     initStep1Panel(textForCloseButton, directory);
     initStep2Panel(textForCloseButton, owner);
     initMainPanel();
+
+    dialog = PicsouDialog.create(owner, directory);
+    dialog.setContentPane(mainPanel);
 
     if (defaultAccount != null) {
       Glob bank = Account.getBank(defaultAccount, localRepository);
@@ -120,8 +129,9 @@ public abstract class ImportPanel {
     panelStep1 = builder1.load();
   }
 
-  private void initStep2Panel(final String textForCloseButton, DialogOwner owner) {
-    GlobsPanelBuilder builder2 = new GlobsPanelBuilder(getClass(), "/layout/importPanelStep2.splits", localRepository, localDirectory);
+  private void initStep2Panel(final String textForCloseButton, Window owner) {
+    GlobsPanelBuilder builder2 = new GlobsPanelBuilder(getClass(), "/layout/importPanelStep2.splits",
+                                                       localRepository, localDirectory);
     dateRenderer = new ImportedTransactionDateRenderer();
     dateFormatSelectionPanel = new DateFormatSelectionPanel(localRepository, localDirectory,
                                                             new DateFormatSelectionPanel.Callback() {
@@ -178,23 +188,7 @@ public abstract class ImportPanel {
 
     builder2.add("skipFile", new SkipFileAction());
     builder2.add("finish", new FinishAction());
-    builder2.add("close", new AbstractAction(textForCloseButton) {
-      public void actionPerformed(ActionEvent e) {
-        complete();
-      }
-    });
-    builder2.add("back", new AbstractAction(Lang.get("import.step2.back")) {
-      public void actionPerformed(ActionEvent e) {
-        step1 = true;
-        step2 = true;
-        ImportPanel.this.files.clear();
-        ImportPanel.this.fileField.setText("");
-        importSession.discard();
-        loadLocalRepository(ImportPanel.this.repository);
-        showStep(panelStep1);
-      }
-    });
-
+    builder2.add("close", new CancelAction(textForCloseButton));
     this.panelStep2 = builder2.load();
   }
 
@@ -221,10 +215,13 @@ public abstract class ImportPanel {
   private void showStep(JPanel step) {
     mainPanel.removeAll();
     mainPanel.add(step);
-    contentChange();
+    contentChanged();
   }
 
-  protected abstract void contentChange();
+  protected void contentChanged() {
+    dialog.pack();
+    GuiUtils.center(dialog);
+  }
 
   private void loadLocalRepository(GlobRepository repository) {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE, Transaction.TYPE,
@@ -249,7 +246,9 @@ public abstract class ImportPanel {
     fileField.setText(builder.toString());
   }
 
-  protected abstract void complete();
+  protected void complete() {
+    dialog.setVisible(false);
+  }
 
   private File[] getInitialFiles() {
     synchronized (fileField) {
@@ -293,8 +292,9 @@ public abstract class ImportPanel {
     messageLabel.setText("<html><font color=red>" + Lang.get(key) + "</font></html>");
   }
 
-  public JPanel getPanel() {
-    return mainPanel;
+  public void show() {
+    dialog.pack();
+    GuiUtils.showCentered(dialog);
   }
 
   private class ImportAction extends AbstractAction {
@@ -532,7 +532,7 @@ public abstract class ImportPanel {
       else {
         for (File selectedFile : selectedFiles) {
           if (!selectedFile.exists()) {
-            System.out.println("erreur : file " + selectedFile.getName() + " not found");
+            System.out.println("Error: file " + selectedFile.getName() + " not found");
           }
         }
       }
@@ -619,4 +619,13 @@ public abstract class ImportPanel {
     }
   }
 
+  private class CancelAction extends AbstractAction {
+    public CancelAction(String textForCloseButton) {
+      super(textForCloseButton);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      complete();
+    }
+  }
 }

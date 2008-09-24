@@ -91,12 +91,12 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2006/01");
 
-    categories.checkSelectionEquals(MasterCategory.FOOD, MasterCategory.TRANSPORTS);
+    categories.checkSelection(MasterCategory.FOOD, MasterCategory.TRANSPORTS);
   }
 
   public void testCreatingASubCategory() throws Exception {
     categories.createSubCategory(MasterCategory.FOOD, "Apero");
-    categories.checkSelectionEquals(MasterCategory.FOOD);
+    categories.checkSelection(MasterCategory.FOOD);
 
     OfxBuilder
       .init(this)
@@ -226,7 +226,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
 
     categories.checkCategoryNotFound("Apero");
 
-    categories.checkSelectionEquals(MasterCategory.FOOD);
+    categories.checkSelection(MasterCategory.FOOD);
 
     transactions
       .initContent()
@@ -454,7 +454,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.select("Misc");
     categories.deleteSubSelected();
     categories.checkExpansionEnabled(MasterCategory.MISC_SPENDINGS, false);
-    categories.checkSelectionEquals(MasterCategory.MISC_SPENDINGS);
+    categories.checkSelection(MasterCategory.MISC_SPENDINGS);
   }
 
   public void testDeleteDifferentSubcategory() throws Exception {
@@ -475,7 +475,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.checkCategoryNotFound("Apero");
     categories.checkCategoryNotFound("3G++");
 
-    categories.checkSelectionEquals(MasterCategory.EDUCATION);
+    categories.checkSelection(MasterCategory.EDUCATION);
   }
 
   public void testSelectSubSelectMasterAndSubInCategoryEdition() throws Exception {

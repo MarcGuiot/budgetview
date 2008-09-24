@@ -6,9 +6,6 @@
     <style selector="label#fileName"
            fill="none" anchor="left" font="-,bold,12" marginBottom="5"/>
 
-    <style selector="hyperlink#back"
-           font="-,plain,10" marginTop="10" fill="none" weightX="0.001"/>
-
     <style selector="scrollPane" marginBottom="10"/>
 
   </styles>
@@ -42,11 +39,6 @@
       <row styleClass="buttons">
         <button action="finish"/>
         <button action="skipFile"/>
-      </row>
-
-      <row>
-        <filler fill="horizontal"/>
-        <button name="back" action="back" styleClass="hyperlink"/>
       </row>
 
     </column>

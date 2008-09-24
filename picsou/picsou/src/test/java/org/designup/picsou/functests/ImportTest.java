@@ -19,7 +19,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   protected Window window;
   protected TextBox fileField;
   protected Button importButton;
-  //  protected ComboBox bankCombo;
   private static final String SOCIETE_GENERALE = "Societe Generale";
 
   protected void setUp() throws Exception {
@@ -31,7 +30,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     super.tearDown();
     window.getAwtComponent().setVisible(false);
     window.dispose();
-//    bankCombo = null;
     importButton = null;
     fileField = null;
     window = null;
@@ -328,56 +326,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     importPanel.doImport();
     importPanel.enterAccountNumber("0123546");
-  }
-
-  public void testBackToStep2CancelsCurrentImport() throws Exception {
-    final String path1 = QifBuilder
-      .init(this)
-      .addTransaction("2001/01/01", -1.1, "Menu K")
-      .save();
-    final String path2 = QifBuilder
-      .init(this)
-      .addTransaction("2001/01/02", -10, "Royal cheese")
-      .save();
-
-    ImportChecker importPanel = new ImportChecker(window);
-
-    importPanel.selectFiles(path1, path2);
-    importPanel.startImport();
-    importPanel.selectBank(SOCIETE_GENERALE);
-
-    importPanel.checkFileContent(new Object[][]{
-      {"01/01/2001", "Menu K", "-1.10"}
-    });
-    importPanel.enterAccountNumber("0123546");
-    importPanel.doImport();
-    importPanel.checkFileContent(new Object[][]{
-      {"02/01/2001", "Royal cheese", "-10.00"}
-    });
-
-    importPanel.back();
-
-    final String path3 = QifBuilder
-      .init(this)
-      .addTransaction("2001/01/02", -2.0, "Big Mac")
-      .save();
-
-    importPanel.checkSelectedFiles();
-    importPanel.selectFiles(path3);
-    importPanel.checkSelectedFiles(path3);
-
-    importPanel.startImport();
-    importPanel.checkFileContent(new Object[][]{
-      {"02/01/2001", "Big Mac", "-2.00"}
-    });
-
-    importPanel.enterAccountNumber("0123546");
-    importPanel.selectBank(SOCIETE_GENERALE);
-    importPanel.doImport();
-    timeline.selectAll();
-    transactions.initContent()
-      .add("02/01/2001", TransactionType.PRELEVEMENT, "Big Mac", "", -2.00)
-      .check();
   }
 
   public void testImportQifBadFile() throws Exception {

@@ -34,7 +34,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     views.selectHome();
 
     timeline.selectMonth("2008/07");
-    monthSummary.init()
+    monthSummary
       .checkRecurring(29.9)
       .checkPlannedRecurring(29.9);
 
@@ -45,7 +45,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectHome();
-    monthSummary.init()
+    monthSummary
       .checkRecurring(0)
       .checkPlannedRecurring(29.9);
   }
