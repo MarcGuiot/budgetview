@@ -10,8 +10,10 @@ import java.awt.*;
 
 public class MonthViewColors implements ColorChangeListener {
 
-  public Color backgroundTop;
-  public Color backgroundBottom;
+  public Color yearBackgroundEvenTop;
+  public Color yearBackgroundEvenBottom;
+  public Color yearBackgroundOddTop;
+  public Color yearBackgroundOddBottom;
   public Color pastBackgroundTop;
   public Color pastBackgroundBottom;
   public Color currentBackgroundTop;
@@ -30,14 +32,20 @@ public class MonthViewColors implements ColorChangeListener {
   public Color text;
   public Color textShadow;
   public Color yearSeparator;
+  public Font monthFont;
+  public Font yearFont;
 
-  public MonthViewColors(Directory directory) {
+  public MonthViewColors(Directory directory, Font yearFont, Font monthFont) {
+    this.monthFont = monthFont;
+    this.yearFont = yearFont;
     directory.get(ColorService.class).addListener(this);
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    backgroundTop = colorLocator.get(PicsouColors.PERIOD_BG_TOP);
-    backgroundBottom = colorLocator.get(PicsouColors.PERIOD_BG_BOTTOM);
+    yearBackgroundEvenTop = colorLocator.get(PicsouColors.YEAR_PERIOD_BG_EVEN_TOP);
+    yearBackgroundEvenBottom = colorLocator.get(PicsouColors.YEAR_PERIOD_BG_EVEN_BOTTOM);
+    yearBackgroundOddTop = colorLocator.get(PicsouColors.YEAR_PERIOD_BG_ODD_TOP);
+    yearBackgroundOddBottom = colorLocator.get(PicsouColors.YEAR_PERIOD_BG_ODD_BOTTOM);
     pastBackgroundTop = colorLocator.get(PicsouColors.PERIOD_PAST_BG_TOP);
     pastBackgroundBottom = colorLocator.get(PicsouColors.PERIOD_PAST_BG_BOTTOM);
     currentBackgroundTop = colorLocator.get(PicsouColors.PERIOD_CURRENT_BG_TOP);
@@ -57,5 +65,13 @@ public class MonthViewColors implements ColorChangeListener {
 
     text = colorLocator.get(PicsouColors.PERIOD_TEXT);
     textShadow = colorLocator.get(PicsouColors.PERIOD_TEXT_SHADOW);
+  }
+
+  public Font getYearFont() {
+    return yearFont;
+  }
+
+  public Font getMonthFont() {
+    return monthFont;
   }
 }
