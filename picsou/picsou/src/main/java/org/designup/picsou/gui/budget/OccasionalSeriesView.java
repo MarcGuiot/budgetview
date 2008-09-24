@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.model.OccasionalSeriesStat;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -15,12 +16,14 @@ import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.GlobRepeat;
+import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
+import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
@@ -66,7 +69,9 @@ public class OccasionalSeriesView extends View {
                             cellBuilder.add("categoryName", label);
                             String categoryName = descriptionService.getStringifier(Category.TYPE).toString(master, repository);
                             label.setName("categoryName." + categoryName);
-                            final GlobLabelView amountLabel = addAmountLabel("observedCategoryAmount", master, cellBuilder, "amount." + categoryName);
+
+                            final GlobButtonView amountLabel = addAmountButton("observedCategoryAmount", master, cellBuilder, "amount." + categoryName);
+
                             cellBuilder.addDisposeListener(new Disposable() {
                               public void dispose() {
                                 category.dispose();
@@ -133,14 +138,26 @@ public class OccasionalSeriesView extends View {
       .setFilter(totalMatcher);
   }
 
-  private GlobLabelView addAmountLabel(String name, Glob master, RepeatCellBuilder cellBuilder, String amountName) {
+  private GlobButtonView addAmountButton(String name, Glob master, RepeatCellBuilder cellBuilder, String amountName) {
     GlobListStringifier stringifier = GlobListStringifiers.sum(decimalFormat, OccasionalSeriesStat.AMOUNT);
-    GlobLabelView globLabelView = GlobLabelView.init(OccasionalSeriesStat.TYPE, repository, directory, stringifier);
-    JLabel label = globLabelView
-      .setFilter(GlobMatchers.linkedTo(master, OccasionalSeriesStat.CATEGORY))
-      .getComponent();
+    GlobButtonView view = GlobButtonView.init(OccasionalSeriesStat.TYPE, repository, directory, stringifier,
+                                              new NavigateToTransactions(master));
+    JButton label = view.setFilter(GlobMatchers.linkedTo(master, OccasionalSeriesStat.CATEGORY)).getComponent();
     cellBuilder.add(name, label);
     label.setName(amountName);
-    return globLabelView;
+    return view;
+  }
+
+  private class NavigateToTransactions implements GlobListFunctor {
+    private Glob masterCategory;
+
+    public NavigateToTransactions(Glob masterCategory) {
+      this.masterCategory = masterCategory;
+    }
+
+    public void run(GlobList occasionalSeriesStatList, GlobRepository repository) {
+      NavigationService navigationService = directory.get(NavigationService.class);
+      navigationService.gotoData(BudgetArea.OCCASIONAL_EXPENSES, masterCategory);
+    }
   }
 }

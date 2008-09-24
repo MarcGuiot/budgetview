@@ -72,6 +72,8 @@
     <ui name="hyperlinkButtonWithoutUnderline" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false"/>
     <style selector="button.hyperlinkWithoutUnderline" ui="hyperlinkButtonWithoutUnderline" fill="none" anchor="right"/>
+    <style selector="button.amountLink" ui="hyperlinkButtonWithoutUnderline" fill="none" anchor="left"
+           foreground="budgetArea.amount.link"/>
 
     <!-- Blocks and inner blocks -->
 

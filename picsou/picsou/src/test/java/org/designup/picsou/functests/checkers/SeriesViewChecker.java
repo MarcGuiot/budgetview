@@ -6,7 +6,7 @@ import org.designup.picsou.gui.series.view.SeriesView;
 import org.uispec4j.Button;
 import org.uispec4j.Table;
 import org.uispec4j.Window;
-import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 import javax.swing.*;
 
@@ -18,7 +18,7 @@ public class SeriesViewChecker extends DataChecker {
   }
 
   public void checkContains(String... items) {
-    UISpecAssert.assertThat(getTable().columnEquals(SeriesView.LABEL_COLUMN_INDEX, items));
+    assertThat(getTable().columnEquals(SeriesView.LABEL_COLUMN_INDEX, items));
   }
 
   public void select(String label) {
@@ -58,5 +58,11 @@ public class SeriesViewChecker extends DataChecker {
 
   private Table getTable() {
     return mainWindow.getTable("seriesView");
+  }
+
+  public void checkSelection(String label) {
+    Table table = getTable();
+    int row = table.getRowIndex(SeriesView.LABEL_COLUMN_INDEX, label);
+    assertThat(table.rowIsSelected(row));
   }
 }

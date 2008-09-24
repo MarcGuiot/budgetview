@@ -17,13 +17,13 @@ import org.designup.picsou.gui.graphics.HistoricalChart;
 import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
+import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.triggers.GlobStateChecker;
@@ -38,8 +38,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.fieldContainsIgnoreCase;
-import static org.globsframework.model.utils.GlobMatchers.or;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -83,8 +82,8 @@ public class MainPanel {
     SeriesView seriesView = new SeriesView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
 
-    directory.add(new NavigationService(
-      categorizationView,
+    directory.add(new NavigationService(categorizationView,
+                                        categoryView,
                                         seriesView,
                                         repository, directory));
 

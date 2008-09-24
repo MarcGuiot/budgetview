@@ -13,8 +13,6 @@
         underline="false"/>
     <style selector="button.seriesLink" ui="seriesHyperlink" fill="none" anchor="left"
            foreground="budgetArea.series.link"/>
-    <style selector="button.amountLink" ui="hyperlinkButtonWithoutUnderline" fill="none" anchor="left"
-           foreground="budgetArea.amount.link"/>
   </styles>
 
   <column name="budgetAreaSeriesView" styleClass="main">
