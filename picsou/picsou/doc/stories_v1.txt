@@ -36,7 +36,7 @@ CategorizationView
 * Reactiver selection similar en double clic pour les cheques et les retraits ?
 
 TransactionDetails
-* Afficher les labels en multiligne
+*** Bug layout: Afficher les labels en multiligne
 
 TransactionView
 ** Filtrage transactions par Compte
@@ -44,6 +44,9 @@ TransactionView
 * Filtrage transactions par TransactionType
 * Bouton pour vider rapidement le champ de recherche
 * Suppression de transactions ghost pour cloturer une serie ? (= alignement prevu / depense)
+
+SeriesView
+* Ajouter bouton ouverture SED
 
 BalanceSumary
 *** Ajouter les projets au calcul
@@ -55,8 +58,8 @@ MonthSummary
 
 AccountView
 * Selection des comptes integres dans le total
+* Edition compte
 * Creation de compte
-* Edition comptes
 * Cloturer un compte (date de cloture)
 
 Home page
@@ -82,6 +85,9 @@ HistoricalChart
 ** voir affichage avec ghosts
 
 Import
+* Supprimer contrainte sur password
+* Ajouter Credit Mutuel (& co) à la liste des banques
+* Import Olivier : voir joliesse selection
 * Import : OK sans fichier = message, si selection il faut purger le message
 * Bring to front sur Open With...
 * Memoriser dernier repertoire pour le filechooser
@@ -110,6 +116,7 @@ General
 * CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
 * Copier les donnees des tables dans le clipboard
 * voir opacite/joliesse des fenetres Globs de creation/deletion
+* Format des montants : mettre des espaces pour separer les milliers
 
 Undo/redo
 * Utiliser cmd-z plutot que ctrl-z sous Mac
