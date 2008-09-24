@@ -1,13 +1,15 @@
 package org.designup.picsou.server;
 
+import org.designup.picsou.functests.checkers.ImportChecker;
+import org.designup.picsou.functests.checkers.OperationChecker;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
-import org.uispec4j.*;
-import org.uispec4j.interception.FileChooserHandler;
-import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.Button;
+import org.uispec4j.CheckBox;
+import org.uispec4j.PasswordField;
+import org.uispec4j.TextBox;
 
 import javax.swing.*;
-import java.io.File;
 
 public class LoginFuncTest extends ServerFuncTestCase {
 
@@ -39,17 +41,13 @@ public class LoginFuncTest extends ServerFuncTestCase {
 
     window.getButton("login").click();
 
-    Button find = window.getButton("Browse");
-    File file = new File(fileName);
-    WindowInterceptor
-      .init(find.triggerClick())
-      .process(FileChooserHandler.init().select(new File[]{file}))
-      .run();
-
-    window.getButton("Import").click();
-    window.getInputTextBox("number").setText("1111");
-    window.getComboBox("accountBank").select("Societe Generale");
-    window.getButton("OK").click();
+    OperationChecker operations = new OperationChecker(window);
+    ImportChecker checker = operations.openImportDialog();
+    checker.selectFiles(fileName);
+    checker.startImport();
+    checker.selectBank("Societe Generale");
+    checker.enterAccountNumber("1111");
+    checker.doImport();
 
     assertTrue(getCategoryTable().cellEquals(0, 2, "-155"));
   }

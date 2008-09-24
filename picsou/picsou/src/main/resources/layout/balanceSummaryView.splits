@@ -21,7 +21,7 @@
 
       <column styleClass="innerBlock">
 
-        <label text="$monthsummary.detail.total" styleClass="totalAmountTitle"/>
+        <label text="$monthsummary.detail.total" styleClass="totalAmountTitle" autoHideSource="detailTotal"/>
         <label ref="detailTotal" styleClass="totalAmount"/>
 
         <panel styleClass="innerBlockBackground">

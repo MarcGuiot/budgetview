@@ -1,6 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.*;
+import org.uispec4j.assertion.UISpecAssert;
+import org.designup.picsou.utils.Lang;
 
 public class LoginChecker {
   private Panel panel;
@@ -32,9 +34,10 @@ public class LoginChecker {
     userField.setText(user);
     passwordField.setPassword(password);
     loginButton.click();
-  }
+    TextBox message = panel.findUIComponent(TextBox.class, "message");
+    if (message != null) {
+      UISpecAssert.assertThat(message.textIsEmpty());
+    }
 
-  public void skipImport() {
-    panel.getButton("Close").click();
   }
 }

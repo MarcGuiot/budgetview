@@ -108,14 +108,12 @@ public class LoginPanel {
           return;
         }
         serverAccess.createUser(user, password);
-        PicsouInit init = PicsouInit.init(serverAccess, user, creationCheckBox.isSelected(), directory);
-        NewUserPanel.show(init.getRepository(), init.getDirectory(), mainWindow);
       }
       else {
         serverAccess.initConnection(user, password, false);
-        PicsouInit init = PicsouInit.init(serverAccess, user, creationCheckBox.isSelected(), directory);
-        MainPanel.show(init.getRepository(), init.getDirectory(), mainWindow);
       }
+      PicsouInit init = PicsouInit.init(serverAccess, user, creationCheckBox.isSelected(), directory);
+      MainPanel.show(init.getRepository(), init.getDirectory(), mainWindow);
     }
     catch (UserAlreadyExists e) {
       displayErrorMessageFromKey("login.user.exists");
@@ -166,12 +164,8 @@ public class LoginPanel {
       displayErrorMessageFromKey("login.password.required");
       return false;
     }
-    if (pwd.length < 6) {
+    if (pwd.length < 4) {
       displayErrorMessageFromKey("login.password.too.short");
-      return false;
-    }
-    if (!containsSpecialChar(pwd)) {
-      displayErrorMessageFromKey("login.password.special.chars");
       return false;
     }
     char[] confirm = confirmPasswordField.getPassword();

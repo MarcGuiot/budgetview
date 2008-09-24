@@ -1,17 +1,14 @@
 package org.designup.picsou.gui.actions;
 
-import org.designup.picsou.gui.components.DialogOwner;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.startup.ImportPanel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Collections;
@@ -67,29 +64,11 @@ public class ImportFileAction extends AbstractAction {
     public OpenRunnable(List<File> files, Directory directory, GlobRepository repository, Glob defaultAccount) {
       this.directory = directory;
       frame = directory.get(JFrame.class);
-      panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount, new DialogOwner() {
-        public Window getOwner() {
-          return dialog;
-        }
-      }, repository, directory) {
-        protected void contentChange() {
-          dialog.pack();
-          GuiUtils.center(dialog);
-        }
-
-        protected void complete() {
-          dialog.setVisible(false);
-        }
-      };
+      panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount, frame, repository, directory);
     }
 
     public void run() {
-      dialog = PicsouDialog.create(frame, directory);
-      JPanel contentPane = panel.getPanel();
-      contentPane.setOpaque(true);
-      dialog.setContentPane(contentPane);
-      dialog.pack();
-      GuiUtils.showCentered(dialog);
+      panel.show();
     }
   }
 }

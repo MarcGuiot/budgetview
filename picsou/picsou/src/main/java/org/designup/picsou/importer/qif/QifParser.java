@@ -99,7 +99,7 @@ public class QifParser {
               values.set(ImportedTransaction.LABEL, value.trim());
               return createTransaction(values);
             }
-            throw new InvalidData("qif file not valide : No M nor P entry");
+            throw new InvalidData("Invalid QIF file : No M or P entry");
         }
       }
     }

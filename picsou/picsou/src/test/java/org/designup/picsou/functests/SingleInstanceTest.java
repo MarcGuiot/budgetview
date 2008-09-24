@@ -51,10 +51,14 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     }
     assertEquals(0, errorCount);
 
-    LoginChecker login = new LoginChecker(window);
-    login.logNewUser("calimero", "C@limero2");
+    final LoginChecker login = new LoginChecker(window);
+    Window importDialog = WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        login.logNewUser("calimero", "C@limero2");
+      }
+    });
 
-    ImportChecker importer = new ImportChecker(window);
+    ImportChecker importer = new ImportChecker(importDialog);
     importer.checkSelectedFiles(files);
     importer.startImport();
 
@@ -91,7 +95,6 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("calimero", "C@limero2");
-    loginChecker.skipImport();
 
     final String initialFile = OfxBuilder.init(this)
       .addTransaction("2000/01/03", 1.2, "menu K")
@@ -138,7 +141,6 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("calimero", "C@limero2");
-    loginChecker.skipImport();
 
     final String initialFile = OfxBuilder.init(this)
       .addTransaction("2000/01/03", 1.2, "menu K")

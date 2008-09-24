@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.startup;
 
-import org.designup.picsou.gui.components.DialogOwner;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
@@ -22,11 +21,11 @@ import java.awt.event.ActionEvent;
 public class NewAccountAction extends AbstractAction {
   private GlobRepository repository;
   private Directory directory;
-  private final DialogOwner owner;
+  private final Window owner;
   private Glob createdAccount;
   private AccountEditionPanel accountEditionPanel;
 
-  public NewAccountAction(GlobRepository repository, Directory directory, DialogOwner owner) {
+  public NewAccountAction(GlobRepository repository, Directory directory, Window owner) {
     super(Lang.get("new.account"));
     this.repository = repository;
     this.directory = directory;
@@ -75,7 +74,6 @@ public class NewAccountAction extends AbstractAction {
       this.dialog = dialog;
     }
   }
-
 
   private class CreateAccountAction extends AbstractAction {
     private final LocalGlobRepository tempRespository;
