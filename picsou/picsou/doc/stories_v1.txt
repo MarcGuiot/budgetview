@@ -1,13 +1,13 @@
 Edition de transactions
 *** Note
-*** Date (reporter / annuler report = on reprend la date banque si ok)
+* Date (reporter / annuler report = on reprend la date banque si ok)
 * Label
 * Type
 
 SeriesEditionDialog
 *** Bug layout en mode enveloppe
-** Modifier l'ordre des series
-** Creation d'enveloppe : mettre les expected a 0, ou mode autopilote
+* Modifier l'ordre des series
+* Creation d'enveloppe : mettre les expected a 0, ou mode autopilote
 * Revoir algo d'initialisation des SeriesBudget : prendre les 3 derniers mois seulement ? Mode autopilote ?
 * Bouton ou double-clic pour selectionner tout
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
@@ -15,24 +15,22 @@ SeriesEditionDialog
 * Afficher/modifier le jour de debit pour les recurrences
 
 BudgetView
-*** Infos de synthese :  delta recu/depense en observe et prevu (avec highlight de depassement) + non classe
-*** Afficher le diff sur les jauges total
-** Gauges : afficher le delta en tooltip ("Depassement: 111.11", etc.)
-** Ouverture SED : focus sur montant et liste de series masquee
+* Infos de synthese :  delta recu/depense en observe et prevu (avec highlight de depassement) + non classe
+* Afficher le diff sur les jauges total
+* Gauges : afficher le delta en tooltip ("Depassement: 111.11", etc.)
 * Mettre en rouge les depassements
 * Mettre en rouge un montant occasional prevu a zero
 * Renommer "Projets" en "Projets & Operations Speciales" ?
 
 CategorizationView
 *** Bug sur gestion du bold pour les toggles dans les occasional
-** Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
-** Recherche/filtrage table
-** Selection d'operations similaires : ne pas scroller la table
-** Selection d'operations similaires : afficher le label anonymisé dans TransactionDetails
-** Ordre des transactions = labels anonymises + date
-* Remplacer mode autonext par bouton next
-** Bug repaint dans les zones d'affichage des series 
-* Supprimer mode "select similar" + message pour introduire le double-click
+* Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
+* Recherche/filtrage table
+* Selection d'operations similaires : ne pas scroller la table
+* Selection d'operations similaires : afficher le label anonymisé dans TransactionDetails
+* Ordre des transactions = labels anonymises + date
+* Supprimer modes "select similar" et "select next"
+* Bug repaint dans les zones d'affichage des series (a confirmer)
 * Reactiver selection similar en double clic pour les cheques et les retraits ?
 
 TransactionDetails
@@ -57,10 +55,13 @@ MonthSummary
 * Hyperliens vers les transactions correspondantes
 
 AccountView
-* Selection des comptes integres dans le total
+* Selection des comptes integres dans le total (exclusion comptes epargne)
 * Edition compte
 * Creation de compte
 * Cloturer un compte (date de cloture)
+
+AccountEditionDialog
+* Enter pour valider le montant et fermer la fenetre
 
 Home page
 ** Afficher le changeLog en cas de changement de version
@@ -82,7 +83,7 @@ CategoryEditionDialog
 * Modifier l'ordre des categories
 
 HistoricalChart
-** voir affichage avec ghosts
+* voir affichage avec ghosts
 
 Import
 * Supprimer contrainte sur password
@@ -93,12 +94,13 @@ Import
 * Memoriser dernier repertoire pour le filechooser
 * En mode "dialog", utiliser une PicsouDialog + revoir hyperlien "annuler" et bouton "ignorer fichier" => "cancel"
 * open with... ne marche qu'une seule fois (après cancel)
+* Apres import, aller vers CategorizationView
 
 Login
 * Creation de compte : expliquer que la notion de compte / mot de passe est liee au cryptage local
 * Error login + "new user" => effacer message
 * Si aucun utilisateur dans le repo, passage direct en mode creation de compte
-* Revoir look panneau import (mode dialog)
+* Suppression de la phase d'import
 
 TimeView
 * Integration des boutons next/prev et start/end dans la barre
@@ -109,7 +111,6 @@ Packaging
 
 General
 * Supprimer les subcats par defaut (mode avance - apporte plus de confusion que de valeur pour les novices)
-* Arrivee dans l'outil : selectionner le dernier mois avec des donnees
 * Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
 * Tooltips sur les boutons
 * Afficher les infos de mise a dispo d'une nouvelle version
