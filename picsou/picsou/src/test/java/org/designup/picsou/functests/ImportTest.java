@@ -52,6 +52,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     checkErrorMessage("login.data.file.required");
 
     fileField.setText("blah.ofx");
+    checkNoErrorMessage();
+
     importButton.click();
     checkErrorMessage("login.data.file.not.found");
 
@@ -64,6 +66,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .run();
 
     assertTrue(fileField.textEquals(path));
+    checkNoErrorMessage();
     importButton.click();
 
     Table table = window.getTable();
@@ -342,5 +345,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
   private void checkErrorMessage(String message) {
     assertTrue(window.getTextBox("message").textContains(Lang.get(message)));
+  }
+
+  private void checkNoErrorMessage() {
+    assertTrue(window.getTextBox("message").textIsEmpty());
   }
 }

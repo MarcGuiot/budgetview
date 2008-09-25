@@ -19,6 +19,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.TableUtils;
+import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -286,16 +287,8 @@ public class SplitTransactionDialog {
 
   private void registerAmountListener() {
     Document document = amountField.getDocument();
-    document.addDocumentListener(new DocumentListener() {
-      public void insertUpdate(DocumentEvent e) {
-        okAction.setEnabled(true);
-      }
-
-      public void changedUpdate(DocumentEvent e) {
-        okAction.setEnabled(true);
-      }
-
-      public void removeUpdate(DocumentEvent e) {
+    document.addDocumentListener(new AbstractDocumentListener() {
+      protected void documentChanged(DocumentEvent e) {
         okAction.setEnabled(true);
       }
     });

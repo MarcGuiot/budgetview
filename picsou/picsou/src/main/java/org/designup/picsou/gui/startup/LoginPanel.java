@@ -14,6 +14,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -104,16 +105,8 @@ public class LoginPanel {
 
   private void initAutoClear(JTextField... textFields) {
     for (JTextField textField : textFields) {
-      textField.getDocument().addDocumentListener(new DocumentListener() {
-        public void insertUpdate(DocumentEvent e) {
-          clearMessage();
-        }
-
-        public void removeUpdate(DocumentEvent e) {
-          clearMessage();
-        }
-
-        public void changedUpdate(DocumentEvent e) {
+      textField.getDocument().addDocumentListener(new AbstractDocumentListener() {
+        protected void documentChanged(DocumentEvent e) {
           clearMessage();
         }
       });
