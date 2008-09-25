@@ -177,6 +177,19 @@
            triangleSignColor="gauge.detail.triangle.sign"/>
 
     <!-- Selection toggles -->
+    <ui name="budgetAreaSelectionToggle"
+        class="org.designup.picsou.gui.components.SelectionToggleUI"
+        useBold="true"
+        bottomColor="toggle.selector.bg.bottom"
+        topColor="toggle.selector.bg.top"
+        borderColor="toggle.selector.bg.border"
+        rolloverTextColor="toggle.selector.rollover"
+        disabledTextColor="toggle.selector.disabled"/>
+    <style selector="toggleButton.budgetAreaSelector"
+           ui="budgetAreaSelectionToggle" foreground="toggle.selector.normal" font="-,plain,12"
+           marginRight="2" fill="none" anchor="center" weightY="0"/>
+
+
     <ui name="selectionToggle"
         class="org.designup.picsou.gui.components.SelectionToggleUI"
         bottomColor="toggle.selector.bg.bottom"

@@ -6,9 +6,9 @@ TransactionDetails
 *** Bug layout: Afficher les labels en multiligne
 
 SeriesEditionDialog
+*** Mode autopilote
 *** Bug layout en mode enveloppe
 * Modifier l'ordre des series
-* Mode autopilote
 * Bouton ou double-clic pour selectionner tout
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
 * Enveloppes : "Nom" => "Nom de l'enveloppe", titre = "Enveloppes de frais courants"
@@ -24,7 +24,6 @@ BudgetView
 * Renommer "Projets" en "Projets & Operations Speciales" ?
 
 CategorizationView
-*** Bug sur gestion du bold pour les toggles dans les occasional (a desactiver)
 * Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 * Recherche/filtrage table
 * Selection d'operations similaires : ne pas scroller la table

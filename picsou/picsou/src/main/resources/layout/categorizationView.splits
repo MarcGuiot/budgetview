@@ -96,7 +96,7 @@
                   <column weightY="0.1">
                     <panel border="matte(1,1,0,1,#999999)" background="categorization.budgetAreas.bg" opaque="true">
                       <repeat ref="budgetAreaToggles" layout="horizontalGrid" gridWrapLimit="3" margin="5">
-                        <toggleButton ref="budgetAreaToggle" styleClass="selector" anchor="left"/>
+                        <toggleButton ref="budgetAreaToggle" styleClass="budgetAreaSelector" anchor="left"/>
                       </repeat>
                     </panel>
 
