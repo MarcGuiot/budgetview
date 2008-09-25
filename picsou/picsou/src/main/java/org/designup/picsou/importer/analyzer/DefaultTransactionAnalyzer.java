@@ -8,6 +8,7 @@ import static org.designup.picsou.model.TransactionType.VIREMENT;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.Strings;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,7 +64,8 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
           String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
           label = bankType + " " + label;
         }
-        setTransactionType(transaction, repository, type, label, date, new SimpleDateFormat(dateFormat));
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+        setTransactionType(transaction, repository, type, label, date, format);
       }
     };
     exclusiveFinalizers.put(bank.get(Bank.ID), finalizer);

@@ -258,10 +258,20 @@ public class TransactionChecker extends ViewChecker {
           .append(type).append(", \"")
           .append(label).append("\", \"")
           .append(note).append("\", ")
-          .append(amount).append(", \"")
-          .append(series).append("\"");
-        if (Strings.isNotEmpty(category)) {
-          builder.append(", ").append(category);
+          .append(amount);
+
+        boolean hasSeries = !TO_CATEGORIZE.equals(series) && Strings.isNotEmpty(series);
+        boolean hasCategory = Strings.isNotEmpty(category);
+        if (hasSeries || hasCategory) {
+          if (hasSeries) {
+            builder
+              .append(", \"")
+              .append(series)
+              .append("\"");
+          }
+          if (hasCategory) {
+            builder.append(", ").append(category);
+          }
         }
         builder.append(")\n");
       }

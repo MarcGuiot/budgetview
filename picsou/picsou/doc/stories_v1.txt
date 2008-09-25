@@ -13,6 +13,7 @@ SeriesEditionDialog
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
 * Enveloppes : "Nom" => "Nom de l'enveloppe", titre = "Enveloppes de frais courants"
 * Afficher/modifier le jour de debit pour les recurrences
+* Pb de serie avec un nom vide (ligne toute fine) => corriger dans renderer GlobListView
 
 BudgetView
 * Infos de synthese :  delta recu/depense en observe et prevu (avec highlight de depassement) + non classe
@@ -23,7 +24,7 @@ BudgetView
 * Renommer "Projets" en "Projets & Operations Speciales" ?
 
 CategorizationView
-*** Bug sur gestion du bold pour les toggles dans les occasional
+*** Bug sur gestion du bold pour les toggles dans les occasional (a desactiver)
 * Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 * Recherche/filtrage table
 * Selection d'operations similaires : ne pas scroller la table
@@ -64,6 +65,7 @@ Home page
 ** Afficher le changeLog en cas de changement de version
 
 Licence
+*** Pb perte licence + reemission quotidienne de mails (severine)
 * Pb focus text editor
 * Pb d'access au serveur "vous devez être connecté" alors que la connexion internet marche
 * revoir look panneau
@@ -83,13 +85,13 @@ HistoricalChart
 * voir affichage avec ghosts
 
 Import
-* Ajouter Credit Mutuel (& co) à la liste des banques
 * Import : OK sans fichier = message, si selection il faut purger le message
 * Bring to front sur Open With...
 * Memoriser dernier repertoire pour le filechooser
-* En mode "dialog", utiliser une PicsouDialog + revoir bouton "ignorer fichier" => "cancel"
+* Utiliser une PicsouDialog
+* Revoir bouton "ignorer fichier" => "cancel"
 * open with... ne marche qu'une seule fois (après cancel)
-* Apres import, aller vers CategorizationView
+* Apres import, aller vers CategorizationView et filtrer sur les donnes de l'import (pas la premiere fois)
 
 TimeView
 * Integration des boutons next/prev et start/end dans la barre
@@ -97,6 +99,7 @@ TimeView
 Packaging
 * Afficher SLA au premier lancement (repository vide)
 * Look installer (fond en blanc)
+* Desactiver choix langue dans l'installer, forcer en français
 
 General
 * Supprimer les subcats par defaut (mode avance - apporte plus de confusion que de valeur pour les novices)
