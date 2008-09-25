@@ -107,7 +107,6 @@ General
 * Format des montants : mettre des espaces pour separer les milliers
 
 Undo/redo
-* Utiliser cmd-z plutot que ctrl-z sous Mac
 * Test Import
 * Test Creation/edition de serie
 * Test Split

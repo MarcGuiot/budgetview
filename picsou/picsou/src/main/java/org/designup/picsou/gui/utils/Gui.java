@@ -206,6 +206,10 @@ public class Gui {
     }
   }
 
+  public static int getCtrlModifier() {
+    return isMacOSX() ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
+  }
+
   public static class RolloverColorListener extends MouseAdapter {
     private final JComponent component;
     private final Color rolloverColor;
