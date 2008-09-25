@@ -37,13 +37,12 @@
             <scrollPane viewportBackground="#FFFFFF">
               <table ref="transactionTable" rowHeight="20"/>
             </scrollPane>
-            <column>
+            <column marginBottom="5">
               <row>
                 <filler fill="horizontal"/>
                 <component ref="customFilterMessage"/>
                 <filler fill="horizontal"/>
               </row>
-              <checkBox ref="autoSelectSimilar" text="$categorization.autoselect.similar" anchor="left"/>
               <checkBox ref="autoSelectNext" text="$categorization.autoselect.next" anchor="left"/>
               <checkBox ref="autoHide" text="$categorization.autohide" anchor="left"/>
             </column>

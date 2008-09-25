@@ -53,7 +53,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
-  private JCheckBox autoSelectionCheckBox;
   private JCheckBox autoHideCheckBox;
   private JCheckBox autoSelectNextCheckBox;
   private java.util.List<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>> seriesRepeat =
@@ -131,11 +130,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
       }
     });
 
-    autoSelectionCheckBox = new JCheckBox(new AutoSelectAction());
-    autoSelectionCheckBox.setSelected(false);
-    builder.add("autoSelectSimilar", autoSelectionCheckBox);
-
-    autoSelectNextCheckBox = new JCheckBox(new AutoSelectAction());
+    autoSelectNextCheckBox = new JCheckBox();
     autoSelectNextCheckBox.setSelected(false);
     builder.add("autoSelectNext", autoSelectNextCheckBox);
 
@@ -196,9 +191,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         currentTransactions = selection.getAll(Transaction.TYPE);
-        if (autoSelectionCheckBox.isSelected()) {
-          autoSelectSimilarTransactions();
-        }
         Set<Integer> months = new HashSet<Integer>();
         for (Glob transaction : currentTransactions) {
           months.add(transaction.get(Transaction.MONTH));
@@ -371,14 +363,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
     }
   }
 
-  private class AutoSelectAction extends AbstractAction {
-    public void actionPerformed(ActionEvent e) {
-      if (autoSelectionCheckBox.isSelected()) {
-        autoSelectSimilarTransactions();
-      }
-    }
-  }
-
   private void autoSelectSimilarTransactions() {
     if (currentTransactions.size() != 1) {
       return;
@@ -395,18 +379,18 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   public GlobList getSimilarTransactions(Glob reference) {
-    final String referenceLabel = reference.get(Transaction.LABEL_FOR_CATEGORISATION);
-    if (Strings.isNullOrEmpty(referenceLabel)) {
-      return new GlobList(reference);
-    }
-    GlobList result = new GlobList();
-    for (Glob transaction : transactionTable.getGlobs()) {
-      if (referenceLabel.equals(transaction.get(Transaction.LABEL_FOR_CATEGORISATION))) {
-        result.add(transaction);
-      }
-    }
-    return result;
-  }
+     final String referenceLabel = reference.get(Transaction.LABEL_FOR_CATEGORISATION);
+     if (Strings.isNullOrEmpty(referenceLabel)) {
+       return new GlobList(reference);
+     }
+     GlobList result = new GlobList();
+     for (Glob transaction : transactionTable.getGlobs()) {
+       if (referenceLabel.equals(transaction.get(Transaction.LABEL_FOR_CATEGORISATION))) {
+         result.add(transaction);
+       }
+     }
+     return result;
+   }
 
   private void updateTableFilter() {
     if (transactionTable == null) {

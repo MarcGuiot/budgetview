@@ -29,7 +29,6 @@ CategorizationView
 * Selection d'operations similaires : ne pas scroller la table
 * Selection d'operations similaires : afficher le label anonymisé dans TransactionDetails
 * Ordre des transactions = labels anonymises + date
-* Supprimer modes "select similar" et "select next"
 * Bug repaint dans les zones d'affichage des series (a confirmer)
 * Reactiver selection similar en double clic pour les cheques et les retraits ?
 
