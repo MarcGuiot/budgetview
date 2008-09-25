@@ -23,7 +23,6 @@ BudgetView
 * Renommer "Projets" en "Projets & Operations Speciales" ?
 
 CategorizationView
-*** Selection apres une categorization : le toggle precedent reste selectionne
 * Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 * Recherche/filtrage table
 * Selection d'operations similaires : ne pas scroller la table

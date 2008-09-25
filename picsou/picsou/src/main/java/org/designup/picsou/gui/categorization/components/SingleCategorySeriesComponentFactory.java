@@ -17,6 +17,7 @@ public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponen
 
   public SingleCategorySeriesComponentFactory(JToggleButton invisibleToggle, GlobRepository localRepository, Directory directory) {
     super(invisibleToggle, localRepository, directory);
+    seriesGroup.add(invisibleToggle);
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {

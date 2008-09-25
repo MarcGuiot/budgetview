@@ -132,7 +132,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   public void testSwitchingTransactions() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2008/06/30", -29.90, "Free Telecom")
+      .addTransaction("2008/06/30", -29.90, "Free")
+      .addTransaction("2008/06/25", -59.90, "France Telecom")
       .addTransaction("2008/06/15", -40, "Auchan")
       .load();
 
@@ -140,7 +141,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(0, 1);
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "", "Auchan", -40.00},
-      {"30/06/2008", "", "Free Telecom", -29.90},
+      {"25/06/2008", "", "France Telecom", -59.90},
+      {"30/06/2008", "", "Free", -29.90},
     });
     categorization.selectTableRows(0);
     categorization.checkLabel("Auchan");
@@ -150,20 +152,35 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "Groceries", "Auchan", -40.00},
-      {"30/06/2008", "", "Free Telecom", -29.90},
+      {"25/06/2008", "", "France Telecom", -59.90},
+      {"30/06/2008", "", "Free", -29.90},
     });
 
-    categorization.selectTableRows(1);
-    categorization.checkLabel("Free Telecom");
+    categorization.selectTableRows(2);
+    categorization.checkLabel("Free");
     categorization.checkBudgetAreaSelectionPanelDisplayed();
     categorization.selectRecurring();
     categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
     categorization.checkRecurringSeriesIsSelected("Internet");
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "Groceries", "Auchan", -40.00},
-      {"30/06/2008", "Internet", "Free Telecom", -29.90},
+      {"25/06/2008", "", "France Telecom", -59.90},
+      {"30/06/2008", "Internet", "Free", -29.90},
     });
 
+    categorization.selectTableRows(1);
+    categorization.checkLabel("France Telecom");
+    categorization.checkBudgetAreaSelectionPanelDisplayed();
+    categorization.selectRecurring();
+    categorization.checkNoRecurringSeriesSelected();
+    categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, false);
+    categorization.checkRecurringSeriesIsSelected("Internet");
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "Groceries", "Auchan", -40.00},
+      {"25/06/2008", "Internet", "France Telecom", -59.90},
+      {"30/06/2008", "Internet", "Free", -29.90},
+    });
+    
     categorization.selectTableRows(0);
     categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
     categorization.selectTableRow(1);

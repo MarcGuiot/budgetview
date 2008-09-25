@@ -156,6 +156,17 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
+  public CategorizationChecker checkNoRecurringSeriesSelected() {
+    Panel seriesPanel = getRecurringSeriesPanel();
+    UIComponent[] toggles = seriesPanel.getUIComponents(ToggleButton.class);
+    for (UIComponent toggle : toggles) {
+      if (toggle.getAwtComponent().isVisible()) {
+        assertFalse(toggle.getLabel() + " selected", ((ToggleButton)toggle).isSelected());
+      }
+    }
+    return this;
+  }
+
   public CategorizationChecker selectNewRecurringSeries(String name, MasterCategory category,
                                                         boolean transactionWasAlreadyCategorized) {
     Panel panel = getRecurringSeriesPanel();
