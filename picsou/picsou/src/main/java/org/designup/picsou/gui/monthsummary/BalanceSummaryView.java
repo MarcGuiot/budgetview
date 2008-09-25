@@ -29,7 +29,8 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
   private JLabel income;
   private JLabel fixe;
   private JLabel total;
-  private JLabel saving;
+  private JLabel savings;
+  private JLabel projects;
   private JPanel contentPanel;
 
   public BalanceSummaryView(GlobRepository repository, Directory parentDirectory) {
@@ -62,7 +63,8 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     balance = builder.add("balanceLabel", new JLabel());
     income = builder.add("incomeLabel", new JLabel());
     fixe = builder.add("fixedLabel", new JLabel());
-    saving = builder.add("savingsLabel", new JLabel());
+    savings = builder.add("savingsLabel", new JLabel());
+    projects = builder.add("projectsLabel", new JLabel());
     contentPanel = builder.add("content", new JPanel());
     contentPanel.setVisible(false);
 
@@ -98,25 +100,30 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     }
     String label = PicsouDescriptionService.toString(balanceAmount);
     balance.setText(label);
-    GlobList series = repository.getAll(Series.TYPE);
+    GlobList allSeries = repository.getAll(Series.TYPE);
     Set<Integer> incomeSeries = new HashSet<Integer>();
     Set<Integer> fixeSeries = new HashSet<Integer>();
-    Set<Integer> savingSeries = new HashSet<Integer>();
+    Set<Integer> savingsSeries = new HashSet<Integer>();
+    Set<Integer> projectsSeries = new HashSet<Integer>();
 
-    for (Glob oneSeries : series) {
-      if (BudgetArea.INCOME.getId().equals(oneSeries.get(Series.BUDGET_AREA))) {
-        incomeSeries.add(oneSeries.get(Series.ID));
+    for (Glob series : allSeries) {
+      if (BudgetArea.INCOME.getId().equals(series.get(Series.BUDGET_AREA))) {
+        incomeSeries.add(series.get(Series.ID));
       }
-      else if (BudgetArea.RECURRING_EXPENSES.getId().equals(oneSeries.get(Series.BUDGET_AREA))) {
-        fixeSeries.add(oneSeries.get(Series.ID));
+      else if (BudgetArea.RECURRING_EXPENSES.getId().equals(series.get(Series.BUDGET_AREA))) {
+        fixeSeries.add(series.get(Series.ID));
       }
-      else if (BudgetArea.SAVINGS.getId().equals(oneSeries.get(Series.BUDGET_AREA))) {
-        savingSeries.add(oneSeries.get(Series.ID));
+      else if (BudgetArea.SAVINGS.getId().equals(series.get(Series.BUDGET_AREA))) {
+        savingsSeries.add(series.get(Series.ID));
+      }
+      else if (BudgetArea.PROJECTS.getId().equals(series.get(Series.BUDGET_AREA))) {
+        projectsSeries.add(series.get(Series.ID));
       }
     }
     double incomeAmount = 0;
     double fixedAmount = 0;
     double savingsAmount = 0;
+    double projectsAmount = 0;
     for (; i < transactions.length; i++) {
       Glob transaction = transactions[i];
       if (transaction.get(Transaction.PLANNED)) {
@@ -127,16 +134,22 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
         if (fixeSeries.contains(transactionSeries)) {
           fixedAmount += transaction.get(Transaction.AMOUNT);
         }
-        if (savingSeries.contains(transactionSeries)) {
+        if (savingsSeries.contains(transactionSeries)) {
           savingsAmount += transaction.get(Transaction.AMOUNT);
+        }
+        if (projectsSeries.contains(transactionSeries)) {
+          projectsAmount += transaction.get(Transaction.AMOUNT);
         }
       }
     }
 
+    double totalAmount = balanceAmount + incomeAmount + fixedAmount + savingsAmount + projectsAmount;
+    
     income.setText(PicsouDescriptionService.toString(incomeAmount));
     fixe.setText(PicsouDescriptionService.toString(fixedAmount));
-    saving.setText(PicsouDescriptionService.toString(savingsAmount));
-    total.setText(PicsouDescriptionService.toString(balanceAmount + incomeAmount + fixedAmount + savingsAmount));
+    savings.setText(PicsouDescriptionService.toString(savingsAmount));
+    projects.setText(PicsouDescriptionService.toString(projectsAmount));
+    total.setText(PicsouDescriptionService.toString(totalAmount));
     contentPanel.setVisible(true);
   }
 

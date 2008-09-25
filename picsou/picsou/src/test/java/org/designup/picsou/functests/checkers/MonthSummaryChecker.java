@@ -87,6 +87,11 @@ public class MonthSummaryChecker extends DataChecker {
     return this;
   }
 
+  public MonthSummaryChecker checkProjects(double amount) {
+    check(BudgetArea.PROJECTS, amount);
+    return this;
+  }
+
   private void checkBudgetArea(BudgetArea budgetArea, double amount, double planned) {
     check(budgetArea, amount);
     checkPlanned(budgetArea, planned);

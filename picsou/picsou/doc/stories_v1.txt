@@ -45,7 +45,6 @@ SeriesView
 * Ajouter bouton ouverture SED
 
 BalanceSumary
-*** Ajouter les projets au calcul
 * Qu'affiche-t-on dans le passe ?
 * Hyperliens vers les transactions planned correspondantes
 
