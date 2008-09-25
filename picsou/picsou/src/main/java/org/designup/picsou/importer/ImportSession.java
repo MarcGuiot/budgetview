@@ -145,7 +145,6 @@ public class ImportSession {
         value(Transaction.ACCOUNT, importedTransaction.get(ImportedTransaction.ACCOUNT)),
         value(Transaction.AMOUNT, importedTransaction.get(ImportedTransaction.AMOUNT)),
         value(Transaction.CATEGORY, importedTransaction.get(ImportedTransaction.CATEGORY)),
-        value(Transaction.LABEL_FOR_CATEGORISATION, importedTransaction.get(ImportedTransaction.LABEL_FOR_CATEGORISATION)),
         value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
         value(Transaction.ORIGINAL_LABEL, importedTransaction.get(ImportedTransaction.ORIGINAL_LABEL)),
         value(Transaction.BANK_TRANSACTION_TYPE, importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE)),

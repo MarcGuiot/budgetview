@@ -1,9 +1,9 @@
 TransactionDetails
 *** Note
+*** Bug layout: Afficher les labels en multiligne
 * Date (reporter / annuler report = on reprend la date banque si ok)
 * Label
 * Type
-*** Bug layout: Afficher les labels en multiligne
 
 SeriesEditionDialog
 *** Mode autopilote
@@ -13,7 +13,6 @@ SeriesEditionDialog
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
 * Enveloppes : "Nom" => "Nom de l'enveloppe", titre = "Enveloppes de frais courants"
 * Afficher/modifier le jour de debit pour les recurrences
-* Pb de serie avec un nom vide (ligne toute fine) => corriger dans renderer GlobListView
 
 BudgetView
 * Infos de synthese :  delta recu/depense en observe et prevu (avec highlight de depassement) + non classe
@@ -24,6 +23,7 @@ BudgetView
 * Renommer "Projets" en "Projets & Operations Speciales" ?
 
 CategorizationView
+*** Selection apres une categorization : le toggle precedent reste selectionne
 * Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 * Recherche/filtrage table
 * Selection d'operations similaires : ne pas scroller la table
@@ -36,7 +36,6 @@ TransactionView
 ** Filtrage transactions par Compte
 * Afficher la somme (total ou multi-selection)
 * Filtrage transactions par TransactionType
-* Bouton pour vider rapidement le champ de recherche
 * Suppression de transactions ghost pour cloturer une serie ? (= alignement prevu / depense)
 
 SeriesView

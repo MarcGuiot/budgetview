@@ -150,28 +150,28 @@ public class Transaction {
     StringBuilder builder = new StringBuilder();
     for (String string : strings) {
       int i = string.length() - 1;
-      boolean ok = true;
-      while (i > 0) {
+      boolean noDigits = true;
+      while (i >= 0) {
         char c = string.charAt(i);
-        if (c >= '0' && c < '9') {
-          ok = false;
+        if (c >= '0' && c <= '9') {
+          noDigits = false;
           break;
         }
         i--;
       }
-      if (ok) {
+      if (noDigits) {
         builder.append(" ").append(string);
       }
     }
     return builder.toString().replaceAll("  *", " ").trim();
   }
 
-  public static String anonymise(String node, String label, Integer transactionType) {
+  public static String anonymise(String note, String label, Integer transactionType) {
     String labelOrNote;
     if (TransactionType.getId(TransactionType.CHECK).equals(transactionType)
         || TransactionType.getId(TransactionType.WITHDRAWAL).equals(transactionType)
         || TransactionType.getId(TransactionType.DEPOSIT).equals(transactionType)) {
-      labelOrNote = node;
+      labelOrNote = note;
     }
     else {
       labelOrNote = label;

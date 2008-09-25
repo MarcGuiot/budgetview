@@ -22,7 +22,6 @@ public class ImportedTransaction {
   public static StringField LABEL;
   public static StringField NOTE;
   public static StringField ORIGINAL_LABEL;
-  public static StringField LABEL_FOR_CATEGORISATION;
 
   @Target(Category.class)
   @DefaultInteger(0)

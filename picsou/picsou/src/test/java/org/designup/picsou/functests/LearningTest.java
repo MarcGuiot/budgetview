@@ -3,15 +3,44 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.TransactionType;
 
 public class LearningTest extends LoggedInFunctionalTestCase {
 
   public void testLearning() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.1, "Menu K")
-      .addTransaction("2006/01/11", -1.1, "MiamMiam")
+      .addTransaction("2006/01/10", -1.1, "Menu K 1")
+      .addTransaction("2006/01/11", -1.1, "Fouquet's")
       .load();
+
+    views.selectCategorization();
+    categorization.setEnvelope("Menu K 1", "dej", MasterCategory.FOOD, true);
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/12", -1.3, "Menu K 2")
+      .load();
+    views.selectData();
+    transactions.checkSeries(0, "dej");
+    transactions.checkSeries(2, "dej");
+  }
+
+  public void testLearningWithCardTransactions() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addBankAccount(30066, 10674, "000123", 0, "2006/01/11")
+      .addCardAccount("000111", 0, "2006/01/11")
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .addTransaction("2006/01/11", -1.1, "Fouquet's")
+      .load();
+
+    views.selectData();
+    transactions.initContent()
+      .add("11/01/2006", TransactionType.CREDIT_CARD, "Fouquet's", "", -1.10)
+      .add("10/01/2006", TransactionType.CREDIT_CARD, "Menu K", "", -1.10)
+      .check();
+
     views.selectCategorization();
     categorization.setEnvelope("Menu K", "dej", MasterCategory.FOOD, true);
     OfxBuilder
@@ -23,7 +52,7 @@ public class LearningTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries(2, "dej");
   }
 
-  public void testTakeThreeLastTransaction() throws Exception {
+  public void testTakesThreeLastTransactions() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
@@ -52,7 +81,7 @@ public class LearningTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries(0, "To categorize");
   }
 
-  public void testIgnoreCheck() throws Exception {
+  public void testIgnoresChecks() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Cheque 1")

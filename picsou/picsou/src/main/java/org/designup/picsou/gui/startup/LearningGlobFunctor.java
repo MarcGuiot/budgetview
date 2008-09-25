@@ -28,7 +28,7 @@ public class LearningGlobFunctor implements GlobFunctor {
     ListIterator<Glob> iterator = index.listIterator(index.size());
     Integer transactionType = transaction.get(Transaction.TRANSACTION_TYPE);
     if (transactionType.equals(TransactionType.CHECK.getId()) ||
-        transactionType.equals(TransactionType.CREDIT_CARD.getId()) ||
+        transactionType.equals(TransactionType.WITHDRAWAL.getId()) ||
         transactionType.equals(TransactionType.DEPOSIT.getId()) ||
         !transaction.get(Transaction.SERIES).equals(Series.UNCATEGORIZED_SERIES_ID)) {
       return;

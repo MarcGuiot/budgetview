@@ -27,8 +27,8 @@ public class PicsouSampleGenerator {
 
   public static void main(String[] args) throws Exception {
     PicsouSampleGenerator generator = new PicsouSampleGenerator();
-    generator.run(200606, 200809);
-    generator.write("tmp/sample.ofx");
+    generator.run(200807, 200809);
+    generator.write("tmp/sample_3months.ofx");
   }
 
   private GlobRepository repository;
@@ -82,7 +82,8 @@ public class PicsouSampleGenerator {
     add("MARC SAVIER BALLAINVILLIE", upTo(4), between(-20.0, -100.0), any());
     add("NESPRESSO FRANC PARIS 17", sometimes(), between(-50.0, -100.0), any());
     add("SOMEWHERE VAD WASQUEHAL", upTo(4), between(-50.0, -150.0), any());
-    add("ATAC MAG SCEAUX", upTo(4), between(-30.0, -100.0), any());
+    add("ATAC MAG 123 SCEAUX", upTo(2), between(-30.0, -100.0), any());
+    add("ATAC MAG 321 SCEAUX", upTo(2), between(-30.0, -100.0), any());
     add("VERT BAUDET VAD TOURCOING", upTo(4), between(-30.0, -100.0), any());
     add("BIO ANTONY", upTo(6), between(-40.0, -100.0), any());
     add("ALAPAGE.COM VILLIERS VPC", sometimes(), between(-15.0, -60.0), any());
@@ -157,7 +158,6 @@ public class PicsouSampleGenerator {
                              value(Transaction.AMOUNT, amount),
                              value(Transaction.LABEL, label),
                              value(Transaction.ORIGINAL_LABEL, label),
-                             value(Transaction.LABEL_FOR_CATEGORISATION, label),
                              value(Transaction.MONTH, month),
                              value(Transaction.DAY, day),
                              value(Transaction.BANK_MONTH, month),
