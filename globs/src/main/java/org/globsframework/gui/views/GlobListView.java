@@ -97,8 +97,7 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
   }
 
   public GlobListView setRenderer(GlobStringifier stringifier) {
-    return setRenderer(new StringListCellRenderer(stringifier, repository),
-                       stringifier.getComparator(repository));
+    return setRenderer(getDefaultRenderer(stringifier), stringifier.getComparator(repository));
   }
 
   public GlobListView setRenderer(ListCellRenderer renderer, Comparator<Glob> comparator) {
@@ -189,7 +188,8 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
   private void complete() {
     if (renderer == null) {
       GlobStringifier stringifier = descriptionService.getStringifier(type);
-      setRenderer(new StringListCellRenderer(stringifier, repository), stringifier.getComparator(repository));
+      setRenderer(getDefaultRenderer(stringifier),
+                  stringifier.getComparator(repository));
     }
     if (model == null) {
       model = new Model();
@@ -197,6 +197,10 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     if (jList == null) {
       jList = new JList();
     }
+  }
+
+  private StringListCellRenderer getDefaultRenderer(GlobStringifier stringifier) {
+    return new StringListCellRenderer(stringifier, repository).setUseWhiteSpaceForEmptyStrings(true);
   }
 
   public void setFilter(GlobMatcher matcher) {
