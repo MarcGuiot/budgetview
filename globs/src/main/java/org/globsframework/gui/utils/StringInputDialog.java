@@ -110,19 +110,10 @@ public abstract class StringInputDialog {
 
   private void installInputListener() {
     PlainDocument document = new PlainDocument();
-    document.addDocumentListener(new DocumentListener() {
-      public void insertUpdate(DocumentEvent e) {
+    document.addDocumentListener(new AbstractDocumentListener() {
+      protected void documentChanged(DocumentEvent e) {
         updateOkAction();
       }
-
-      public void removeUpdate(DocumentEvent e) {
-        updateOkAction();
-      }
-
-      public void changedUpdate(DocumentEvent e) {
-        updateOkAction();
-      }
-
     });
     textField.setDocument(document);
   }
