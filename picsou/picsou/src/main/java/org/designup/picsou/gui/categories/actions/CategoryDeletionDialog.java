@@ -34,7 +34,7 @@ public class CategoryDeletionDialog {
     selectionService = new SelectionService();
   }
 
-  public boolean selectTargetCategory(Integer masterId, JDialog dialog) {
+  public boolean selectTargetCategory(Integer categoryIdToDelete, Integer masterId, JDialog dialog) {
     localDirectory.add(selectionService);
     categoryChooserDialog = PicsouDialog.create(dialog, localDirectory);
 
@@ -49,7 +49,7 @@ public class CategoryDeletionDialog {
     builder.add("categoryField", ReadOnlyGlobTextFieldView.init(Category.TYPE, repository, localDirectory, categoryStringifier));
 
     DeleteCategoryAction.CategoryChooserAction chooserAction =
-      new DeleteCategoryAction.CategoryChooserAction(masterId, categoryChooserDialog, localDirectory, repository);
+      new DeleteCategoryAction.CategoryChooserAction(categoryIdToDelete, masterId, categoryChooserDialog, localDirectory, repository);
     builder.add("categoryChooser", chooserAction);
 
     final OkAction okAction = new OkAction();

@@ -68,7 +68,6 @@ Licence
 
 CategoryEditionDialog
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
-* suppression avec move : retirer la source de la liste des target
 * Creation de series INCOME : preselectionner la categories par defaut
 * Titre
 * Label "renommer la categorie"

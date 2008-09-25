@@ -115,7 +115,7 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
         public Trigger process(Window window) throws Exception {
           CategoryDeletionChecker confirmationDialog = new CategoryDeletionChecker(window);
           confirmationDialog.checkCategory(getCategoryName(MasterCategory.TRANSPORTS));
-          confirmationDialog.selectCategory(getCategoryName(MasterCategory.HOUSE));
+          confirmationDialog.selectCategory(getCategoryName(MasterCategory.HOUSE), "Fuel");
           return confirmationDialog.validate();
         }
       }).run();
@@ -140,16 +140,20 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       .load();
     CategoryEditionChecker categoryEdition = categories.openEditionDialog();
     categoryEdition.selectMaster(MasterCategory.TRANSPORTS);
+
     WindowInterceptor.init(categoryEdition.getDeleteMasterButton().triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          CategoryDeletionChecker categoryDeletionChecker = new CategoryDeletionChecker(window);
-          categoryDeletionChecker.checkCategory("None");
-          UISpecAssert.assertFalse(categoryDeletionChecker.getOkButton().isEnabled());
-          categoryDeletionChecker.selectCategory(getCategoryName(MasterCategory.HOUSE));
-          UISpecAssert.assertTrue(categoryDeletionChecker.getOkButton().isEnabled());
-          categoryDeletionChecker.checkCategory(getCategoryName(MasterCategory.HOUSE));
-          return categoryDeletionChecker.validate();
+          CategoryDeletionChecker dialog = new CategoryDeletionChecker(window);
+          dialog.checkCategory("None");
+
+          dialog.checkOkEnabled(false);
+          dialog.selectCategory(getCategoryName(MasterCategory.HOUSE),
+                                getCategoryName(MasterCategory.TRANSPORTS));
+
+          dialog.checkOkEnabled(true);
+          dialog.checkCategory(getCategoryName(MasterCategory.HOUSE));
+          return dialog.validate();
         }
       }).run();
     categoryEdition.validate();
@@ -178,7 +182,8 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           CategoryDeletionChecker categoryDeletionChecker = new CategoryDeletionChecker(window);
-          categoryDeletionChecker.selectCategory(getCategoryName(MasterCategory.TELECOMS));
+          categoryDeletionChecker.selectCategory(getCategoryName(MasterCategory.TELECOMS),
+                                                 getCategoryName(MasterCategory.FOOD));
           return categoryDeletionChecker.validate();
         }
       }).run();
@@ -232,7 +237,7 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     categories.validate();
   }
 
-  public void testRenameCategoryUpdateOccational() throws Exception {
+  public void testRenameCategoryUpdateOccasional() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/15", -2.0, "Auchan", MasterCategory.HOUSE)

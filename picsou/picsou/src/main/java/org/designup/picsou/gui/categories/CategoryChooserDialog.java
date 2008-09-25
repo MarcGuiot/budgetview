@@ -19,6 +19,7 @@ import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobMatcher;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -40,11 +41,13 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private Directory localDirectory;
   private Dialog parent;
   private boolean monoSelection;
+  private Integer categoryIdToExclude;
 
   public CategoryChooserDialog(CategoryChooserCallback callback, Dialog parent, boolean monoSelection,
-                               GlobRepository repository, Directory directory) {
+                               Integer categoryIdToExclude, GlobRepository repository, Directory directory) {
     this.parent = parent;
     this.monoSelection = monoSelection;
+    this.categoryIdToExclude = categoryIdToExclude;
     if (monoSelection) {
       buttonGroup = new ButtonGroup();
     }
@@ -96,7 +99,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
                           GlobsPanelBuilder.addRepeat(
                             "subcatRepeat",
                             Category.TYPE,
-                            PicsouMatchers.subCategories(master.get(Category.ID)),
+                            getSubMatcher(master),
                             new CategoryComparator(repository, directory),
                             repository,
                             masterCellBuilder,
@@ -129,9 +132,15 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private GlobMatcher getMasterMatcher() {
     return new GlobMatcher() {
       public boolean matches(Glob category, GlobRepository repository) {
-        return Category.isMaster(category) && !Category.isAll(category) && !Category.isNone(category);
+        return Category.isMaster(category) && !Category.isAll(category) && !Category.isNone(category) &&
+               !category.get(Category.ID).equals(categoryIdToExclude);
       }
     };
+  }
+
+  private GlobMatcher getSubMatcher(Glob master) {
+    return and(not(fieldEquals(Category.ID, categoryIdToExclude)),
+               PicsouMatchers.subCategories(master.get(Category.ID)));
   }
 
   private JToggleButton createCategoryToggle(Glob category) {

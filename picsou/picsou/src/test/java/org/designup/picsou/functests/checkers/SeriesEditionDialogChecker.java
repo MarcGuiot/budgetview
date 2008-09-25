@@ -72,7 +72,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
     for (MasterCategory masterCategory : category) {
       categoryChooser.selectCategory(getCategoryName(masterCategory));
     }
-    categoryChooser.checkUnSelected(category);
+    categoryChooser.checkUnselected(category);
     categoryChooser.validate();
     return this;
   }

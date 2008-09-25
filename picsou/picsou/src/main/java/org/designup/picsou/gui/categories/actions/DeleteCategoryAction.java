@@ -60,14 +60,16 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
   }
 
   private Integer migrateTransactionAndSeriesInCategory(Glob category, final Integer masterId) {
+    Integer categoryId = category.get(Category.ID);
+
     Set<Integer> categories;
     if (Category.isMaster(category)) {
-      categories = repository.getAll(Category.TYPE, PicsouMatchers.subCategories(category.get(Category.ID)))
+      categories = repository.getAll(Category.TYPE, PicsouMatchers.subCategories(categoryId))
         .getSortedSet(Category.ID);
-      categories.add(category.get(Category.ID));
+      categories.add(categoryId);
     }
     else {
-      categories = Collections.singleton(category.get(Category.ID));
+      categories = Collections.singleton(categoryId);
     }
     GlobList transactions = repository.getAll(Transaction.TYPE,
                                               GlobMatchers.fieldIn(Transaction.CATEGORY, categories));
@@ -89,7 +91,7 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
     }
 
     CategoryDeletionDialog categoryDeletionDialog = new CategoryDeletionDialog(directory, repository);
-    if (!categoryDeletionDialog.selectTargetCategory(masterId, getParent())) {
+    if (!categoryDeletionDialog.selectTargetCategory(categoryId, masterId, getParent())) {
       return null;
     }
     repository.enterBulkDispatchingMode();
@@ -165,14 +167,17 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
   }
 
   static class CategoryChooserAction extends AbstractAction {
+    private Integer categoryIdToDelete;
     private Integer masterId;
     private Dialog parent;
     private Directory directory;
     private GlobRepository repository;
     private Integer targetId;
 
-    public CategoryChooserAction(Integer masterId, Dialog parent, Directory directory, GlobRepository repository) {
+    public CategoryChooserAction(Integer categoryIdToDelete, Integer masterId,
+                                 Dialog parent, Directory directory, GlobRepository repository) {
       super(Lang.get("delete.category.button.label"));
+      this.categoryIdToDelete = categoryIdToDelete;
       this.masterId = masterId;
       this.parent = parent;
       this.directory = directory;
@@ -181,7 +186,7 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
 
     public void actionPerformed(ActionEvent e) {
       CategoryCallback callback = new CategoryCallback(masterId);
-      CategoryChooserDialog dialog = new CategoryChooserDialog(callback, parent, true,
+      CategoryChooserDialog dialog = new CategoryChooserDialog(callback, parent, true, categoryIdToDelete,
                                                                repository, directory);
       dialog.show();
       targetId = callback.getTargetId();
