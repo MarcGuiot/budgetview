@@ -3,8 +3,7 @@ package org.designup.picsou.importer.analyzer;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
-import static org.designup.picsou.model.TransactionType.PRELEVEMENT;
-import static org.designup.picsou.model.TransactionType.VIREMENT;
+import static org.designup.picsou.model.TransactionType.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.MultiMap;
@@ -53,17 +52,13 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
                          type.getGlob().getKey());
   }
 
-  public void addExclusive(String regexp, final TransactionType type, final String typeRegexp, final Boolean merge,
+  public void addExclusive(String regexp, final TransactionType type, final String typeRegexp,
                            final String labelRegexp, final Integer matcherGroupForDate, final String dateFormat,
                            Glob bank) {
     AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp, typeRegexp) {
       protected void setTransactionType(Glob transaction, GlobRepository repository, Matcher matcher) {
         String date = matcher.group(matcherGroupForDate);
-        String label = getLabel(matcher, labelRegexp);
-        if (merge) {
-          String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
-          label = bankType + " " + label;
-        }
+        String label = getLabel(matcher, replaceBankType(labelRegexp, transaction));
         SimpleDateFormat format = new SimpleDateFormat(dateFormat);
         setTransactionType(transaction, repository, type, label, date, format);
       }
@@ -71,35 +66,35 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
     exclusiveFinalizers.put(bank.get(Bank.ID), finalizer);
   }
 
-  public void addExclusive(String regexp, final TransactionType type, final String typeRegexp, final Boolean merge,
+  public void addExclusive(String regexp, final TransactionType type, final String typeRegexp,
                            final String labelRegexp, Glob bank) {
     AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp, typeRegexp) {
       protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher) {
-        String label = getLabel(matcher, labelRegexp);
-        if (merge) {
-          String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
-          label = bankType + " " + label;
-        }
+        String label = getLabel(matcher, replaceBankType(labelRegexp, transaction));
         setTransactionType(transaction, globRepository, type, label);
       }
     };
     exclusiveFinalizers.put(bank.get(Bank.ID), finalizer);
   }
 
-  public void addExclusive(String regexp, final TransactionType type, final String typeRegexp, final Boolean merge,
-                           Glob bank) {
+  public void addExclusive(String regexp, final TransactionType type, final String typeRegexp, Glob bank) {
 
     AbstractRegexpTransactionTypeFinalizer finalizer = new AbstractRegexpTransactionTypeFinalizer(regexp, typeRegexp) {
       protected void setTransactionType(Glob transaction, GlobRepository globRepository, Matcher matcher) {
         String label = matcher.group();
-        if (merge) {
-          String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
-          label = bankType + " " + label;
-        }
+        label = replaceBankType(label, transaction);
         setTransactionType(transaction, globRepository, type, label);
       }
     };
     exclusiveFinalizers.put(bank.get(Bank.ID), finalizer);
+  }
+
+  private String replaceBankType(String text, Glob transaction) {
+    String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
+    if (Strings.isNotEmpty(bankType)) {
+      return text.replace("$bankType", bankType);
+    }
+    return text;
   }
 
   public void add(TransactionTypeFinalizer finalizer) {

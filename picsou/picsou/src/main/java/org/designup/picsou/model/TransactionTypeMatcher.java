@@ -15,8 +15,7 @@ public class TransactionTypeMatcher {
 
   public static GlobType TYPE;
 
-  @NoObfuscation
-  @Key
+  @Key @NoObfuscation
   public static IntegerField ID;
 
   @NoObfuscation
@@ -26,24 +25,21 @@ public class TransactionTypeMatcher {
   public static StringField BANK_TYPE;
 
   @NoObfuscation
-  @DefaultBoolean(false)
-  public static BooleanField MERGE;
+  public static StringField REGEXP;
 
   @NoObfuscation
-  public static StringField REGEXP;
-  @NoObfuscation
   public static StringField LABEL;
+
   @NoObfuscation
   public static IntegerField GROUP_FOR_DATE;
+
   @NoObfuscation
   public static StringField DATE_FORMAT;
 
-  @NoObfuscation
-  @Target(TransactionType.class)
+  @Target(TransactionType.class) @NoObfuscation
   public static LinkField TRANSACTION_TYPE;
 
-  @NoObfuscation
-  @Target(Bank.class)
+  @Target(Bank.class) @NoObfuscation
   public static LinkField BANK;
 
   static {

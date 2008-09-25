@@ -1,14 +1,14 @@
-Edition de transactions
+TransactionDetails
 *** Note
 * Date (reporter / annuler report = on reprend la date banque si ok)
 * Label
 * Type
+*** Bug layout: Afficher les labels en multiligne
 
 SeriesEditionDialog
 *** Bug layout en mode enveloppe
 * Modifier l'ordre des series
-* Creation d'enveloppe : mettre les expected a 0, ou mode autopilote
-* Revoir algo d'initialisation des SeriesBudget : prendre les 3 derniers mois seulement ? Mode autopilote ?
+* Mode autopilote
 * Bouton ou double-clic pour selectionner tout
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
 * Enveloppes : "Nom" => "Nom de l'enveloppe", titre = "Enveloppes de frais courants"
@@ -33,9 +33,6 @@ CategorizationView
 * Supprimer modes "select similar" et "select next"
 * Bug repaint dans les zones d'affichage des series (a confirmer)
 * Reactiver selection similar en double clic pour les cheques et les retraits ?
-
-TransactionDetails
-*** Bug layout: Afficher les labels en multiligne
 
 TransactionView
 ** Filtrage transactions par Compte

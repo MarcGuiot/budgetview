@@ -2,25 +2,25 @@
   <bank name="BNP" downloadUrl="" id='5'>
     <bankEntity id="30004"/>
 
-    <transactionTypeMatcher merge="false" bankType="COMMISS" regexp="(.*)"
+    <transactionTypeMatcher bankType="COMMISS" regexp="(.*)"
                             transactionTypeName="bank_fees" label="COMMISSIONS PERCUES $1"/>
 
-    <transactionTypeMatcher merge="false" bankType="CHQ N.*" regexp="N. (.*)"
+    <transactionTypeMatcher bankType="CHQ N.*" regexp="N. (.*)"
                             transactionTypeName="check" label="CHEQUE N. $1"/>
 
-    <transactionTypeMatcher merge="false" bankType="VI.RECU" regexp="(.*)"
+    <transactionTypeMatcher bankType="VI.RECU" regexp="(.*)"
                             transactionTypeName="internal_transfer" label="VIR. $1"/>
 
-    <transactionTypeMatcher merge="false" bankType="ECH.PR" regexp="(.*)"
+    <transactionTypeMatcher bankType="ECH.PR" regexp="(.*)"
                             transactionTypeName="credit" label="PRET $1"/>
 
-    <transactionTypeMatcher merge="false" bankType="VI.TIER" regexp="(.*)"
+    <transactionTypeMatcher bankType="VI.TIER" regexp="(.*)"
                             transactionTypeName="virement" label="$1"/>
 
-    <transactionTypeMatcher merge="false" bankType="PRLV." regexp="(.*)"
+    <transactionTypeMatcher bankType="PRLV." regexp="(.*)"
                             transactionTypeName="prelevement" label="$1"/>
 
-    <transactionTypeMatcher merge="false" bankType="VI.EMIS" regexp="(.*)"
+    <transactionTypeMatcher bankType="VI.EMIS" regexp="(.*)"
                             transactionTypeName="internal_transfer" label="VIR. $1"/>
 
     <transactionTypeMatcher regexp="COMMISSIONS PERCUES[\s]*(.*)"

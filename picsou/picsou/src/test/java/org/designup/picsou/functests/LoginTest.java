@@ -11,7 +11,6 @@ import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
-import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -277,7 +276,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
           window.getInputTextBox("fileField").setText(path);
           window.getButton("Import").click();
           assertTrue(window.getComboBox("accountBank")
-            .contentEquals("Autre", "BNP", "CIC", "Caisse d'épargne", "Credit Agricole", "La Poste",
+            .contentEquals("Autre", "BNP", "CIC", "Caisse d'épargne", "Credit Agricole", "Credit Mutuel", "LCL", "La Poste",
                            "Societe Generale"));
           return window.getButton("Skip file").triggerClick();
         }

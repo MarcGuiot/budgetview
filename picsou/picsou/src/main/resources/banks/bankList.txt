@@ -6,3 +6,4 @@ laposte.xml
 ca.xml
 bnp.xml
 creditMutuel.xml
+lcl.xml

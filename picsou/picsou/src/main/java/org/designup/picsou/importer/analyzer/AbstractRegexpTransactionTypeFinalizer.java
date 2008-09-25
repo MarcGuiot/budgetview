@@ -31,11 +31,6 @@ public abstract class AbstractRegexpTransactionTypeFinalizer implements Transact
   }
 
   public boolean processTransaction(Glob transaction, GlobRepository repository) {
-    String label = transaction.get(Transaction.LABEL);
-    if (label == null) {
-      return true;
-    }
-
     if (typeRegexp != null) {
       String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
       if (bankType == null) {
@@ -47,8 +42,12 @@ public abstract class AbstractRegexpTransactionTypeFinalizer implements Transact
       }
     }
 
-    String upperCaseLabel = label.toUpperCase().trim();
+    String label = transaction.get(Transaction.LABEL);
+    if (label == null) {
+      label = "";
+    }
 
+    String upperCaseLabel = label.toUpperCase().trim();
     Matcher matcher = pattern.matcher(upperCaseLabel);
     if (matcher.matches()) {
       setTransactionType(transaction, repository, matcher);

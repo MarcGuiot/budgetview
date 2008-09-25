@@ -1,0 +1,32 @@
+<globs>
+  <bank name="LCL" id='8'>
+    <bankEntity id="30002"/>
+
+    <transactionTypeMatcher bankType="CHECK" regexp="(\d+)"
+                            transactionTypeName="check" label="CHEQUE N. $1"/>
+
+    <transactionTypeMatcher bankType="8" regexp="(\d+)"
+                            transactionTypeName="check" label="CHEQUE N. $1"/>
+
+    <transactionTypeMatcher bankType="[0-9]+" regexp=""
+                            transactionTypeName="check" label="CHEQUE N. $bankType"/>
+
+    <transactionTypeMatcher regexp="CB[\s]+(.*)[\s]+(\d{2,4}/\d{2}/\d{2,4})"
+                            transactionTypeName="credit_card" label="$1" groupForDate="2" dateFormat="dd/MM/yy"/>
+
+    <transactionTypeMatcher regexp="CB[\s]+RETRAIT[\s]+DU[\s]+(\d{2}/\d{2})"
+                            transactionTypeName="withdrawal" label="RETRAIT" groupForDate="1" dateFormat="dd/MM"/>
+
+    <transactionTypeMatcher regexp="ECH PRET (.*)"
+                            transactionTypeName="credit" label="PRET $1"/>
+
+    <transactionTypeMatcher regexp="VIR (.*)"
+                            transactionTypeName="virement" label="$1"/>
+
+    <transactionTypeMatcher regexp="REM CHQ (.*)"
+                            transactionTypeName="deposit" label="REMISE CHEQUES $1"/>
+
+    <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
+                            transactionTypeName="check" label="CHEQUE N. $1"/>
+  </bank>
+</globs>

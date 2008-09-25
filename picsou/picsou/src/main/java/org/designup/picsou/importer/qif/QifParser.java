@@ -9,7 +9,6 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobIdGenerator;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.exceptions.InvalidData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -91,15 +90,10 @@ public class QifParser {
                 value = Strings.join(pValue, mValue);
               }
             }
-            if (value != null) {
-              if (nValue != null) {
-                values.set(ImportedTransaction.BANK_TRANSACTION_TYPE, nValue.trim());
-              }
-              values.set(ImportedTransaction.ORIGINAL_LABEL, value.trim());
-              values.set(ImportedTransaction.LABEL, value.trim());
-              return createTransaction(values);
-            }
-            throw new InvalidData("Invalid QIF file : No M or P entry");
+            values.set(ImportedTransaction.BANK_TRANSACTION_TYPE, nValue != null ? nValue.trim() : null);
+            values.set(ImportedTransaction.ORIGINAL_LABEL, value != null ? value.trim() : null);
+            values.set(ImportedTransaction.LABEL, value != null ? value.trim() : null);
+            return createTransaction(values);
         }
       }
     }
