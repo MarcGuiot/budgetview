@@ -31,7 +31,7 @@
 
         <card name="noSeries">
           <column styleClass="message">
-            <htmlEditorPane text="$monthsummary.noSeries.text"/>
+            <htmlEditorPane text="$monthsummary.noSeries.text" foreground="#FF0000"/>
             <button action="categorizeAll" text="" icon="categorization.png" minimumSize="(40,40)"/>
             <filler fill="vertical"/>
           </column>

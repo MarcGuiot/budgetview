@@ -20,7 +20,6 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 
 import javax.swing.*;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -64,7 +63,15 @@ public class LoginPanel {
   }
 
   public void initFocus() {
-    userField.requestFocusInWindow();
+    if (Strings.isNullOrEmpty(userField.getText())) {
+      userField.requestFocusInWindow();
+    }
+    else if (passwordField.getPassword().length == 0) {
+      passwordField.requestFocusInWindow();
+    }
+    else if (confirmPasswordField.isVisible() && confirmPasswordField.getPassword().length == 0) {
+      confirmPasswordField.requestFocusInWindow();
+    }
   }
 
   private void initPanel() {

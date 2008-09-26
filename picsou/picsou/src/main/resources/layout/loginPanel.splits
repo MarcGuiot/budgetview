@@ -8,35 +8,41 @@
       <filler fill="vertical" weightY="10"/>
 
       <panel ui="loginPanel" name="loginPanel" opaque="true" anchor="center" fill="none" weightY="20"
-             maximumSize="(500,400)">
+             preferredSize="(350,480)">
 
         <column margin="20" anchor="center" fill="none" marginBottom="20">
 
-          <label icon="picsou_icon_128.png" fill="none" anchor="center" marginBottom="30"/>
+          <label icon="picsou_icon_128.png" fill="none" anchor="center" marginBottom="20"/>
 
-          <grid background="#00FF00" defaultMarginBottom="5">
+          <textArea styleClass="multiLineLabel" text="$login.intro"
+                    marginBottom="15"/>
+
+          <grid defaultMarginBottom="5">
             <label text="$login.id" gridPos="(0,0)" styleClass="formLabel"/>
             <component ref="name" gridPos="(1, 0)"/>
 
             <label text="$login.password" gridPos="(0,1)" styleClass="formLabel"/>
             <component ref="password" gridPos="(1,1)"/>
 
-            <label text="$login.confirmation" gridPos="(0,2)"
-                   ref="confirmLabel" styleClass="formLabel"/>
-            <component ref="confirmPassword" gridPos="(1,2)"/>
           </grid>
 
-          <checkBox ref="createAccountCheckBox" text="$login.create.user.checkbox"
-                    margin="5" marginBottom="15" opaque="false"
+          <checkBox ref="createAccountCheckBox" gridPos="(0,2,2,1)"
+                    text="$login.create.user.checkbox"
+                    margin="5" marginBottom="10" opaque="false"
                     fill="none" anchor="east"/>
 
-          <htmlEditorPane ref="message" margin="5" preferredSize="(200,30)"/>
+          <row>
+            <label text="$login.confirmation" ref="confirmLabel" styleClass="formLabel"/>
+            <component ref="confirmPassword"/>
+          </row>
 
-          <filler fill="vertical"/>
+          <htmlEditorPane ref="message" margin="5" preferredSize="(200,30)"/>
 
           <row styleClass="buttons">
             <button ref="login"/>
           </row>
+
+          <filler fill="vertical"/>
 
         </column>
 

@@ -3,7 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
 
-  <panel styleClass="dialog" minimumSize="(380,200)" preferredSize="(400,160)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(340,230)" opaque="true">
     <column styleClass="innerDialog">
       <label text="$balance.edition.title" styleClass="title"/>
       <row marginBottom="10">
