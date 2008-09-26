@@ -21,18 +21,18 @@ public class GlobLinkListEditorTest extends GuiComponentTestCase {
     GlobLinkListEditor editor = new GlobLinkListEditor(DummyObject.LINK, repository, directory);
     ListBox combo = new ListBox(editor.getComponent());
 
-    assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
+    assertTrue(combo.contentEquals(" ", "name1", "name2", "name3"));
     assertTrue(combo.selectionIsEmpty());
     assertFalse(combo.isEnabled());
 
     selectionService.select(glob1);
 
     assertTrue(combo.isEnabled());
-    assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
+    assertTrue(combo.contentEquals(" ", "name1", "name2", "name3"));
     assertTrue(combo.selectionEquals("name2"));
 
     combo.select("name3");
-    assertEquals(true, combo.contentEquals("", "name1", "name2", "name3"));
+    assertEquals(true, combo.contentEquals(" ", "name1", "name2", "name3"));
     assertEquals(3, glob1.get(DummyObject.LINK).intValue());
 
     selectionService.clear(DummyObject.TYPE);
@@ -41,7 +41,7 @@ public class GlobLinkListEditorTest extends GuiComponentTestCase {
     selectionService.select(glob2);
 
     assertTrue(combo.isEnabled());
-    assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
+    assertTrue(combo.contentEquals(" ", "name1", "name2", "name3"));
     assertTrue(combo.selectionEquals("name1"));
   }
 
@@ -59,7 +59,7 @@ public class GlobLinkListEditorTest extends GuiComponentTestCase {
 
     selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
 
-    assertTrue(list.contentEquals("", "name1", "name2", "name3"));
+    assertTrue(list.contentEquals(" ", "name1", "name2", "name3"));
     assertFalse(list.isEnabled());
     assertTrue(list.selectionIsEmpty());
   }
