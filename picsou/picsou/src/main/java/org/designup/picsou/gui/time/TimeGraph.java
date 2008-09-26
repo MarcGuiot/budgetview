@@ -93,8 +93,6 @@ public class TimeGraph {
       }
       init(preferredWidth);
 
-      int y = preferredHeight - totalHeight;
-      transformationAdapter.translate(0, y < 0 ? 0 : y);
       for (YearGraph yearGraph : yearGraphs) {
         int actualMonthPos =
           yearGraph.draw(graphics2D, transformationAdapter, totalHeight, monthWidth, monthRank, visibleRectangle);

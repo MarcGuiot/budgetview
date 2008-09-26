@@ -112,6 +112,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00)
       .check();
 
+    timeline.checkSelection("2008/07");
     views.selectCategorization();
     categorization.setProject("Auchan", "Anniversaire", MasterCategory.FOOD, true);
 
@@ -286,7 +287,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.projects.createSeries().setName("courantAuchan")
       .setStartDate(200806)
       .setEndDate(200806)
-      .setManual()
       .selectAllMonths()
       .setAmount("100")
       .setCategory(MasterCategory.FOOD)

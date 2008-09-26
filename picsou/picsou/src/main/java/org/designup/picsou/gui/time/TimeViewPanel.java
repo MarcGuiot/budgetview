@@ -101,8 +101,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
         pendingOperation.run();
         pendingOperation = null;
       }
-//      d.setPaint(new GradientPaint(0, 0, colors.pastBackgroundTop, 0,
-//                                   timeGraph.getMonthHeight(), colors.pastBackgroundBottom));
       TransformationAdapter transformationAdapter = new TransformationAdapter(d);
       transformationAdapter.translate(translation, 0);
       timeGraph.draw(d, transformationAdapter, getWidth(), getHeight());

@@ -85,4 +85,30 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries(0, "Regime");
     transactions.checkCategory(0, MasterCategory.FOOD);
   }
+
+  public void testNewProject() throws Exception {
+    views.selectBudget();
+    budgetView.projects.createSeries()
+      .setName("Machine a laver")
+      .setCategory(MasterCategory.HOUSE)
+      .checkStartDate("June 2008")
+      .checkEndDate("June 2008")
+      .checkTable(new Object[][]{{"2008", "June", "", "0"}})
+      .cancel();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/08/30", -10, "mac")
+      .load();
+    timeline.selectMonths("2008/06", "2008/07");
+    budgetView.projects.createSeries()
+      .setName("Machine a laver")
+      .setCategory(MasterCategory.HOUSE)
+      .checkStartDate("June 2008")
+      .checkEndDate("Jul 2008")
+      .checkTable(new Object[][]{
+        {"2008", "July", "", "0"},
+        {"2008", "June", "", "0"}
+      })
+      .cancel();
+  }
 }

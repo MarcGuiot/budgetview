@@ -63,6 +63,7 @@ public class SeriesEditionDialog {
   private Directory localDirectory;
   private SelectionService selectionService;
   private GlobRepository repository;
+  private Directory directory;
   private PicsouDialog dialog;
 
   private Glob currentSeries;
@@ -85,6 +86,7 @@ public class SeriesEditionDialog {
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
+    this.directory = directory;
 
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     localRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -343,23 +345,38 @@ public class SeriesEditionDialog {
   }
 
   private Glob createSeries(String label, Double initialAmount, Integer day) {
-    return localRepository.create(Series.TYPE,
-                                  value(Series.BUDGET_AREA, budgetArea.getId()),
-                                  value(Series.INITIAL_AMOUNT, initialAmount),
-                                  value(Series.LABEL, label),
-                                  value(Series.DAY, day),
-                                  value(Series.JANUARY, true),
-                                  value(Series.FEBRUARY, true),
-                                  value(Series.MARCH, true),
-                                  value(Series.APRIL, true),
-                                  value(Series.MAY, true),
-                                  value(Series.JUNE, true),
-                                  value(Series.JULY, true),
-                                  value(Series.AUGUST, true),
-                                  value(Series.SEPTEMBER, true),
-                                  value(Series.OCTOBER, true),
-                                  value(Series.NOVEMBER, true),
-                                  value(Series.DECEMBER, true));
+    java.util.List<FieldValue> values =
+      new ArrayList<FieldValue>(Arrays.asList(value(Series.BUDGET_AREA, budgetArea.getId()),
+                                              value(Series.INITIAL_AMOUNT, initialAmount),
+                                              value(Series.LABEL, label),
+                                              value(Series.DAY, day),
+                                              value(Series.JANUARY, true),
+                                              value(Series.FEBRUARY, true),
+                                              value(Series.MARCH, true),
+                                              value(Series.APRIL, true),
+                                              value(Series.MAY, true),
+                                              value(Series.JUNE, true),
+                                              value(Series.JULY, true),
+                                              value(Series.AUGUST, true),
+                                              value(Series.SEPTEMBER, true),
+                                              value(Series.OCTOBER, true),
+                                              value(Series.NOVEMBER, true),
+                                              value(Series.DECEMBER, true)));
+    if (budgetArea == BudgetArea.PROJECTS) {
+      SelectionService selectionService = directory.get(SelectionService.class);
+      GlobList list = selectionService.getSelection(Month.TYPE).sort(Month.ID);
+      values.add(value(Series.IS_AUTOMATIC, false));
+      if (!list.isEmpty()) {
+        values.add(value(Series.FIRST_MONTH, list.getFirst().get(Month.ID)));
+        values.add(value(Series.LAST_MONTH, list.getLast().get(Month.ID)));
+      }
+      else {
+        int monthId = localDirectory.get(TimeService.class).getCurrentMonthId();
+        values.add(value(Series.FIRST_MONTH, monthId));
+        values.add(value(Series.LAST_MONTH, monthId));
+      }
+    }
+    return localRepository.create(Series.TYPE, values.toArray(new FieldValue[values.size()]));
   }
 
   private void initBudgetAreaSeries(BudgetArea budgetArea) {

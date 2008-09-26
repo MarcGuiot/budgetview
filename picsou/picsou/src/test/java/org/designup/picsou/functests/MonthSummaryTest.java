@@ -95,15 +95,15 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkUncategorized("-23.00");
 
     accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_ID, 1000, "Air France");
-    
+
     timeline.selectAll();
     balanceSummary
       .checkBalance(1000.00)
       .checkIncome(1500.00)
       .checkFixed(-1529.90)
       .checkSavings(0.00)
-      .checkProjects(-200.00)
-      .checkTotal(770.10);
+      .checkProjects(0.00)
+      .checkTotal(970.10);
   }
 
   public void testTwoMonths() throws Exception {

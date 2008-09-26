@@ -74,8 +74,10 @@ public class CategorizationView extends View implements TableView, Filterable, C
     this.parentDirectory = parentDirectory;
     parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
+        GlobList selectedMonth = selection.getAll(Month.TYPE);
+        selectedMonthIds = selectedMonth.getValueSet(Month.ID);
         updateTableFilter();
+        selectionService.select(selectedMonth, Month.TYPE);
       }
     }, Month.TYPE);
 
@@ -379,18 +381,18 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   public GlobList getSimilarTransactions(Glob reference) {
-     final String referenceLabel = reference.get(Transaction.LABEL_FOR_CATEGORISATION);
-     if (Strings.isNullOrEmpty(referenceLabel)) {
-       return new GlobList(reference);
-     }
-     GlobList result = new GlobList();
-     for (Glob transaction : transactionTable.getGlobs()) {
-       if (referenceLabel.equals(transaction.get(Transaction.LABEL_FOR_CATEGORISATION))) {
-         result.add(transaction);
-       }
-     }
-     return result;
-   }
+    final String referenceLabel = reference.get(Transaction.LABEL_FOR_CATEGORISATION);
+    if (Strings.isNullOrEmpty(referenceLabel)) {
+      return new GlobList(reference);
+    }
+    GlobList result = new GlobList();
+    for (Glob transaction : transactionTable.getGlobs()) {
+      if (referenceLabel.equals(transaction.get(Transaction.LABEL_FOR_CATEGORISATION))) {
+        result.add(transaction);
+      }
+    }
+    return result;
+  }
 
   private void updateTableFilter() {
     if (transactionTable == null) {
