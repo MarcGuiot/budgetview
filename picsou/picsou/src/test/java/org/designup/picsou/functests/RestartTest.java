@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.MasterCategory;
-import org.globsframework.utils.Dates;
 
 public class RestartTest extends LoggedInFunctionalTestCase {
 
@@ -18,6 +17,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.envelopes.createSeries()
       .setName("Courant")
+      .setManual()
       .selectAllMonths()
       .setAmount("2500")
       .setCategory(MasterCategory.HEALTH)
@@ -25,11 +25,13 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     budgetView.income.createSeries()
       .setName("Salaire")
+      .setManual()
       .selectAllMonths().setAmount("3000")
       .setCategory(MasterCategory.INCOME)
       .validate();
     budgetView.recurring.createSeries()
       .setName("EDF")
+      .setManual()
       .selectAllMonths().setAmount("100")
       .setCategory(MasterCategory.HOUSE)
       .validate();
@@ -37,7 +39,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     budgetView.occasional.checkTotalAmounts(0, 400);
 
     budgetView.recurring.createSeries()
-      .setName("Loyer").setAmount("1000")
+      .setName("Loyer")
+      .setManual()
+      .setAmount("1000")
       .setCategory(MasterCategory.HOUSE)
       .validate();
     budgetView.occasional.checkTotalAmounts(0, -600);

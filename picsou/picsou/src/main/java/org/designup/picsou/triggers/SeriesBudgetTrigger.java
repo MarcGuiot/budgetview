@@ -40,6 +40,14 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
             repository.update(key, SeriesBudget.AMOUNT, 0.0);
           }
         }
+        Glob seriesBudget = repository.get(key);
+        Glob series = repository.findLinkTarget(seriesBudget, SeriesBudget.SERIES);
+        if (series == null) {
+          return;
+        }
+        if (series.get(Series.IS_AUTOMATIC)) {
+          AutomaticSeriesBudgetTrigger.updateSeriesBudget(series.getKey(), repository);
+        }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
@@ -102,6 +110,10 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
     }
     for (Glob seriesBudget : monthWithBudget.values()) {
       repository.delete(seriesBudget.getKey());
+    }
+
+    if (series.get(Series.IS_AUTOMATIC)) {
+      AutomaticSeriesBudgetTrigger.updateSeriesBudget(series.getKey(), repository);
     }
   }
 

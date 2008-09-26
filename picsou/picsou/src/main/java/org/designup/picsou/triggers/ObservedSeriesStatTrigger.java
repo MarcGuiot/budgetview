@@ -9,40 +9,9 @@ import org.globsframework.utils.Utils;
 
 import java.util.Set;
 
-public class SeriesStatTrigger implements ChangeSetListener {
+public class ObservedSeriesStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-    processSeriesBudget(changeSet, repository);
     processTransactions(changeSet, repository);
-  }
-
-  private void processSeriesBudget(ChangeSet changeSet, final GlobRepository repository) {
-    changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
-      public void visitCreation(Key key, FieldValues values) throws Exception {
-        Key seriesStat = createKey(values.get(SeriesBudget.SERIES),
-                                   values.get(SeriesBudget.MONTH));
-        repository.findOrCreate(seriesStat);
-        repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT, values.get(SeriesBudget.AMOUNT));
-      }
-
-      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(SeriesBudget.AMOUNT)) {
-          Glob seriesBudget = repository.get(key);
-          Key seriesStat = createKey(seriesBudget.get(SeriesBudget.SERIES),
-                                     seriesBudget.get(SeriesBudget.MONTH));
-          repository.findOrCreate(seriesStat);
-          repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.AMOUNT));
-        }
-      }
-
-      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        Key seriesStat = createKey(previousValues.get(SeriesBudget.SERIES),
-                                   previousValues.get(SeriesBudget.MONTH));
-        Glob glob = repository.find(seriesStat);
-        if (glob != null) {
-          repository.delete(seriesStat);
-        }
-      }
-    });
   }
 
   private void processTransactions(ChangeSet changeSet, final GlobRepository repository) {
@@ -110,7 +79,7 @@ public class SeriesStatTrigger implements ChangeSetListener {
           if (seriesBudgets.isEmpty()) {
             defaultAmount = series.get(Series.INITIAL_AMOUNT);
           }
-          throw new RuntimeException("SeriesStatTrigger.visitUpdate series : " + name + ", (" + defaultAmount + ")" + currentSeriesId +
+          throw new RuntimeException("PlannedSeriesStatTrigger.visitUpdate series : " + name + ", (" + defaultAmount + ")" + currentSeriesId +
                                      " month = " + currentMonthId + " series Budget :" +
                                      (seriesBudgets.isEmpty() ? " <none> " : seriesBudgets.get(0).get(SeriesBudget.AMOUNT)));
         }
@@ -129,7 +98,7 @@ public class SeriesStatTrigger implements ChangeSetListener {
       return;
     }
 
-    Glob stat = repository.find(createKey(seriesId, values.get(Transaction.MONTH)));
+    Glob stat = repository.findOrCreate(createKey(seriesId, values.get(Transaction.MONTH)));
     if (stat != null) {
       final Double transactionAmount = values.get(Transaction.AMOUNT);
       updateStat(stat, multiplier * transactionAmount, repository);
@@ -158,14 +127,6 @@ public class SeriesStatTrigger implements ChangeSetListener {
 
     for (Glob transaction : repository.getAll(Transaction.TYPE)) {
       processTransaction(transaction, 1, repository, true);
-    }
-
-    GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE);
-    for (Glob seriesBudget : seriesBudgets) {
-      Key seriesStat = Key.create(SeriesStat.SERIES, seriesBudget.get(SeriesBudget.SERIES),
-                                  SeriesStat.MONTH, seriesBudget.get(SeriesBudget.MONTH));
-      repository.findOrCreate(seriesStat);
-      repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.AMOUNT));
     }
   }
 

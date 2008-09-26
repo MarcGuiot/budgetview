@@ -108,6 +108,7 @@ public class CategorizationChecker extends DataChecker {
       createIncomeSeries()
         .setName(name)
         .setCategory(MasterCategory.INCOME)
+        .setManual()
         .selectAllMonths()
         .setAmount("0")
         .validate();
@@ -627,7 +628,8 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker setIncome(String label, String seriesName, boolean createSeries) {
-    selectTableRows(getRowIndices(label));
+    int[] rows = getRowIndices(label);
+    selectTableRows(rows);
     selectIncome();
     selectIncomeSeries(seriesName, createSeries);
     return this;
@@ -652,7 +654,7 @@ public class CategorizationChecker extends DataChecker {
 
   private int[] getRowIndices(String label) {
     int[] index = getTable().getRowIndices(LABEL_COLUMN_INDEX, label);
-    if (index.length < 0) {
+    if (index.length <= 0) {
       Assert.fail("Label '" + label + "' not found");
     }
     return index;

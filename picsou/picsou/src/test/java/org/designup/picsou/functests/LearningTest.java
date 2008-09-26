@@ -48,8 +48,11 @@ public class LearningTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/12", -1.3, "Menu K")
       .load();
     views.selectData();
-    transactions.checkSeries(0, "dej");
-    transactions.checkSeries(2, "dej");
+    transactions.initContent()
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.30, "dej", MasterCategory.FOOD)
+      .add("11/01/2006", TransactionType.CREDIT_CARD, "Fouquet's", "", -1.10)
+      .add("10/01/2006", TransactionType.CREDIT_CARD, "Menu K", "", -1.10, "dej", MasterCategory.FOOD)
+      .check();
   }
 
   public void testTakesThreeLastTransactions() throws Exception {
@@ -87,12 +90,15 @@ public class LearningTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Cheque 1")
       .load();
     views.selectCategorization();
-    categorization.setEnvelope("Cheque 1", "dej", MasterCategory.FOOD, true);
+    categorization.setEnvelope("CHEQUE N. 1", "dej", MasterCategory.FOOD, true);
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/11", -1.1, "Cheque 2")
       .load();
     views.selectData();
-    transactions.checkSeries(1, "To categorize");
+    transactions.initContent()
+    .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 2", "", -1.10)
+    .add("10/01/2006", TransactionType.CHECK, "CHEQUE N. 1", "", -1.10, "dej", MasterCategory.FOOD)
+    .check();
   }
 }

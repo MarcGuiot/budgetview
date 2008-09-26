@@ -8,8 +8,8 @@ import org.globsframework.model.GlobList;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Panel;
-import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 
 import java.util.*;
 
@@ -101,7 +101,7 @@ public class MonthChecker extends DataChecker {
     timeViewPanel.selectAll();
   }
 
-  public void assertSpanEquals(String fromMmYyyy, String toMmYyyy) {
+  public void assertSpanEquals(String fromYyyyMm, String toYyyyMm) {
     long end = System.currentTimeMillis() + 1000;
     GlobList list = new GlobList();
     timeViewPanel.getAllSelectableMonth(list);
@@ -115,7 +115,7 @@ public class MonthChecker extends DataChecker {
       timeViewPanel.getAllSelectableMonth(list);
     }
     Assert.assertTrue(list.size() >= 2);
-    Assert.assertEquals(fromMmYyyy, Month.toString(list.get(0).get(Month.ID)));
-    Assert.assertEquals(toMmYyyy, Month.toString(list.get(list.size() - 1).get(Month.ID)));
+    Assert.assertEquals(fromYyyyMm, Month.toString(list.get(0).get(Month.ID)));
+    Assert.assertEquals(toYyyyMm, Month.toString(list.get(list.size() - 1).get(Month.ID)));
   }
 }

@@ -243,4 +243,12 @@ public class GlobList extends ArrayList<Glob> {
     }
     return result;
   }
+
+  public Map<Integer, Glob> toMap(IntegerField field) {
+    Map<Integer, Glob> map = new HashMap<Integer, Glob>();
+    for (Glob glob : this) {
+      map.put(glob.get(field), glob);
+    }
+    return map;
+  }
 }

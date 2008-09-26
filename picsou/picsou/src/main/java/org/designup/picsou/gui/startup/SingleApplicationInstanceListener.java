@@ -31,7 +31,7 @@ public class SingleApplicationInstanceListener {
   }
 
   public ReturnState findRemoteOrListen() {
-    if ("true" .equalsIgnoreCase(System.getProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED))) {
+    if ("true".equalsIgnoreCase(System.getProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED))) {
       return ReturnState.CONTINUE;
     }
     List<ServerSocket> serverSockets = new ArrayList<ServerSocket>();
@@ -160,7 +160,9 @@ public class SingleApplicationInstanceListener {
     if (threadReader != null) {
       try {
         threadReader.requestShutdown();
+        threadReader.interrupt();
         threadReader.join();
+        System.out.println("SingleApplicationInstanceListener.shutdown");
         threadReader = null;
       }
       catch (Exception e) {
@@ -269,6 +271,7 @@ public class SingleApplicationInstanceListener {
 
     public ThreadReader(ServerSocket serverSocket) {
       this.serverSocket = serverSocket;
+      setDaemon(true);
     }
 
     public void run() {
@@ -295,6 +298,11 @@ public class SingleApplicationInstanceListener {
           thread.start();
         }
         catch (IOException e) {
+          synchronized (this) {
+            if (shutdownRequested) {
+              return;
+            }
+          }
           Log.write("accept failed");
           if (System.currentTimeMillis() - lastFail < 200) {
             Log.write("wait");

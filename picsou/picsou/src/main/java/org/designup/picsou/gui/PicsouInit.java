@@ -60,12 +60,14 @@ public class PicsouInit {
     repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new MonthsToSeriesBudgetTrigger());
     repository.addTrigger(new OccasionalSeriesBudgetCreationTrigger());
+    repository.addTrigger(new ObservedSeriesStatTrigger());
+    repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetUpdateOccasionnalTrigger());
     repository.addTrigger(new SeriesBudgetUpdateTransactionTrigger());
     repository.addTrigger(new TransactionPlannedTrigger());
     repository.addTrigger(new BalanceTrigger());
     repository.addTrigger(new MonthStatTrigger());
-    repository.addTrigger(new SeriesStatTrigger());
+    repository.addTrigger(new PlannedSeriesStatTrigger());
     repository.addTrigger(new OccasionalSeriesStatTrigger());
 
     if (!newUser) {

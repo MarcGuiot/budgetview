@@ -32,6 +32,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editSeries("Internet")
       .checkName("Internet")
       .setName("Free")
+      .setManual()
       .checkTable(new Object[][]{
         {"2008", "August", "0.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
@@ -89,6 +90,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editSeries("Internet")
       .checkName("Internet")
       .setName("Free")
+      .setManual()
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
@@ -113,6 +115,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.recurring.editSeries("Internet")
+      .setManual()
       .checkTable(new Object[][]{
         {"2008", "August", "0.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
@@ -158,28 +161,29 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     timeline.selectMonths("2008/08", "2008/06");
     budgetView.recurring.editSeries("Internet")
+      .setManual()
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
-        {"2008", "June", "29.00", "29.00"},
-        {"2008", "May", "0.00", "29.00"},
+        {"2008", "June", "29.00", "0"},
+        {"2008", "May", "0.00", "0"},
       })
       .toggleMonth("May")
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
-        {"2008", "June", "29.00", "29.00"},
+        {"2008", "June", "29.00", "0"},
       })
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
         {"2008", "July", "29.00", "29.00"},
-        {"2008", "June", "29.00", "29.00"},
+        {"2008", "June", "29.00", "0"},
       })
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "0"},
         {"2008", "July", "29.00", "29.00"},
-        {"2008", "June", "29.00", "29.00"},
+        {"2008", "June", "29.00", "0"},
       })
       .validate();
 
@@ -187,7 +191,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "0"},
         {"2008", "July", "29.00", "29.00"},
-        {"2008", "June", "29.00", "29.00"},
+        {"2008", "June", "29.00", "0"},
       })
       .cancel();
   }
@@ -263,6 +267,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editSeriesList()
       .checkSeriesList("Electricity", "Internet")
       .checkSeriesSelected("Electricity")
+      .setManual()
       .selectAllMonths()
       .setAmount("70")
       .toggleMonth("Aug")
@@ -274,8 +279,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked("Aug")
       .checkCategory(MasterCategory.TELECOMS)
       .checkTable(new Object[][]{
-        {"2008", "August", "29.00", "29.00"},
-        {"2008", "July", "0.00", "29.00"},
+        {"2008", "August", "29.00", "0"},
+        {"2008", "July", "0.00", "0"},
       })
       .toggleMonth("Jul")
 
@@ -316,6 +321,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.recurring
       .createSeries()
+      .setManual()
       .checkTitle("Recurring expenses")
       .checkNameIsSelected()
       .checkSeriesList("New series")
@@ -375,7 +381,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring
       .createSeries()
+      .setManual()
       .createSeries()
+      .setManual()
       .checkSeriesList("New series", "New series")
 
       .selectSeries(0)
@@ -416,6 +424,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     edition
       .setName("courant")
+      .setManual()
       .setCategory(MasterCategory.CLOTHING, MasterCategory.FOOD);
 
     edition.openCategory()
@@ -479,6 +488,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkOkEnabled(false)
       .setCategory(MasterCategory.INCOME)
       .checkOkEnabled(true)
+      .setManual()
       .checkAmountLabel("Planned amount for august 2008")
       .validate();
   }
@@ -522,6 +532,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   public void testEditDate() throws Exception {
     views.selectBudget();
     budgetView.envelopes.createSeries()
+      .setManual()
       .setStartDate(200809)
       .setEndDate(200810)
       .checkStartDate("Sep 2008")
@@ -595,6 +606,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
+    edition.setManual();
     edition.toggleMonth("Jan", "Mar", "Jul", "Sep", "Nov");
 
     edition.selectAllMonths()
@@ -736,7 +748,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectRecurring();
     categorization.checkContainsButtonInReccuring("AA");
     views.selectBudget();
-    budgetView.recurring.editSeries("AA").setName("AA2").validate();
+    budgetView.recurring.editSeriesList().selectSeries("AA").setName("AA2").validate();
     views.selectCategorization();
     categorization.checkContainsButtonInReccuring("AA2");
   }
@@ -782,11 +794,12 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
-    edition.setName(null);
-    edition.setAmount(null);
-    edition.getNameBox().pressKey(Key.A).pressKey(Key.A);
-    edition.selectAllMonths();
-    edition.getAmount().pressKey(Key.d1).pressKey(Key.d3);
+    edition.setName(null)
+      .setManual()
+      .setAmount(null)
+      .getNameBox().pressKey(Key.A).pressKey(Key.A);
+    edition.selectAllMonths()
+      .getAmount().pressKey(Key.d1).pressKey(Key.d3);
     edition.setCategory(MasterCategory.FOOD)
       .checkName("AA")
       .checkAmount("13")
@@ -796,5 +809,43 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       {"2008", "July", "", "13.00"},
       {"2008", "June", "", "13.00"}
     });
+  }
+
+  public void testAutomatique() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -20., "Auchan")
+      .addTransaction("2008/07/04", -30., "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRows("Auchan");
+    SeriesEditionDialogChecker edition =
+      categorization.selectEnvelopes().createEnvelopeSeries();
+    edition.setManual()
+      .setName("Courant")
+      .setCategory(MasterCategory.FOOD)
+      .checkTable(new Object[][]{
+        {"2008", "August", "", "0"},
+        {"2008", "July", "", "0"},
+        {"2008", "June", "", "0"}
+      })
+      .selectAllMonths()
+      .setAmount("40")
+      .validate();
+    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, false);
+    categorization.selectEnvelopes().editSeries(false)
+      .checkTable(new Object[][]{
+        {"2008", "August", "0.00", "40.00"},
+        {"2008", "July", "30.00", "40.00"},
+        {"2008", "June", "20.00", "40.00"}
+      })
+      .setAutomatic()
+      .setManual()
+      .checkTable(new Object[][]{
+        {"2008", "August", "0.00", "30.00"},
+        {"2008", "July", "30.00", "20.00"},
+        {"2008", "June", "20.00", "20.00"}
+      });
   }
 }

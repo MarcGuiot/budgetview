@@ -9,6 +9,7 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
+import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
@@ -23,7 +24,6 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesEditionDialogChecker(Window dialog, boolean singleSelection) {
     this.dialog = dialog;
     this.singleSelection = singleSelection;
-    this.table = dialog.getTable();
   }
 
   public SeriesEditionDialogChecker checkTitle(String text) {
@@ -156,15 +156,15 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker selectAllMonths() {
-    table.selectRowSpan(0, table.getRowCount() - 1);
+    getTable().selectRowSpan(0, getTable().getRowCount() - 1);
     return this;
   }
 
   public SeriesEditionDialogChecker selectMonth(Integer monthId) {
-    int[] indices = table.getRowIndices(0, Integer.toString(Month.toYear(monthId)));
+    int[] indices = getTable().getRowIndices(0, Integer.toString(Month.toYear(monthId)));
     for (int indice : indices) {
-      if (table.getContentAt(indice, 1).equals(Month.getFullMonthLabel(Month.toMonth(monthId)))) {
-        table.selectRow(indice);
+      if (getTable().getContentAt(indice, 1).equals(Month.getFullMonthLabel(Month.toMonth(monthId)))) {
+        getTable().selectRow(indice);
         return this;
       }
     }
@@ -173,18 +173,86 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkTable(Object[][] content) {
-    assertThat(table.contentEquals(content));
+    assertThat(getTable().contentEquals(content));
+    return this;
+  }
+
+  private Table getTable() {
+    if (table == null) {
+      this.table = dialog.getTable();
+    }
+    return table;
+  }
+
+  public SeriesEditionDialogChecker setManual() {
+    dialog.getButton("manual").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker setAutomatic() {
+    WindowInterceptor.init(dialog.getButton("automatic").triggerClick())
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          return window.getButton("ok").triggerClick();
+        }
+      }).run();
+    table = null;
     return this;
   }
 
   public SeriesEditionDialogChecker checkMonthSelected(int index) {
-    assertThat(table.rowIsSelected(index));
+    assertThat(getTable().rowIsSelected(index));
     return this;
   }
 
   public SeriesEditionDialogChecker checkMonthsSelected(int... rows) {
-    assertThat(table.rowsAreSelected(rows));
+    assertThat(getTable().rowsAreSelected(rows));
     return this;
+  }
+
+  public SeriesEditionDialogChecker toggleMonth(int... months) {
+    String labels[] = new String[months.length];
+    for (int i = 0; i < months.length; i++) {
+      int month = months[i];
+      switch (month) {
+        case 1:
+          labels[i] = "Jan";
+          break;
+        case 2:
+          labels[i] = "Feb";
+          break;
+        case 3:
+          labels[i] = "Mar";
+          break;
+        case 4:
+          labels[i] = "Apr";
+          break;
+        case 5:
+          labels[i] = "May";
+          break;
+        case 6:
+          labels[i] = "Jun";
+          break;
+        case 7:
+          labels[i] = "Jul";
+          break;
+        case 8:
+          labels[i] = "Aou";
+          break;
+        case 9:
+          labels[i] = "Sep";
+          break;
+        case 10:
+          labels[i] = "Oct";
+          break;
+        case 11:
+          labels[i] = "Nov";
+          break;
+        case 12:
+          labels[i] = "Dec";
+      }
+    }
+    return toggleMonth(labels);
   }
 
   public SeriesEditionDialogChecker toggleMonth(String... monthsLabel) {
@@ -452,5 +520,4 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesDeleteDialogChecker deleteSeriesWithConfirmation() {
     return new SeriesDeleteDialogChecker(WindowInterceptor.getModalDialog(dialog.getButton("delete").triggerClick()));
   }
-
 }

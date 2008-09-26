@@ -35,12 +35,14 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testUnassignedTransactionSeriesAndDeleteSeries() throws Exception {
     checker.parse(repository,
-                  "<series id='10' initialAmount='-100.0' budgetAreaName='recurringExpenses' profileTypeName='monthly'/>" +
-                  "<series id='20' initialAmount='-100.0' budgetAreaName='recurringExpenses' profileTypeName='monthly'/>" +
+                  "<series id='10' initialAmount='-100.0' budgetAreaName='recurringExpenses' " +
+                  "        profileTypeName='monthly' isAutomatic='false' />" +
+                  "<series id='20' initialAmount='-100.0' budgetAreaName='recurringExpenses' " +
+                  "        profileTypeName='monthly' isAutomatic='false' />" +
                   "<month id='200807'/>" +
-                  "<transaction id='1' series='10' month='200807' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
-                  "<transaction id='2' series='20' month='200807' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
-                  "<transaction id='3' series='20' month='200807' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
+                  "<transaction id='1' series='10' month='200807' day='1' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
+                  "<transaction id='2' series='20' month='200807' day='1' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
+                  "<transaction id='3' series='20' month='200807' day='1' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
                   "<transaction id='4' month='200807' bankMonth='200807' bankDay='1' amount='-50.0'/>" +
                   "");
 
@@ -98,7 +100,8 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testChangingMonths() throws Exception {
     checker.parse(repository,
-                  "<series id='10' initialAmount='100.0'  budgetAreaName='recurringExpenses' july='true' profileTypeName='monthly'/>" +
+                  "<series id='10' initialAmount='100.0'  budgetAreaName='recurringExpenses' isAutomatic='false' " +
+                  "        july='true' profileTypeName='monthly'/>" +
                   "<month id='200807'/>" +
                   "<month id='200808'/>" +
                   "<transaction id='1' series='10' month='200807' bankMonth='200807' bankDay='1' amount='10.0'/>" +
@@ -114,7 +117,8 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testUpdatingPlannedAmount() throws Exception {
     checker.parse(repository,
-                  "<series id='10' initialAmount='100.0' budgetAreaName='recurringExpenses' profileTypeName='monthly'/>" +
+                  "<series id='10' initialAmount='100.0' budgetAreaName='recurringExpenses' isAutomatic='false' " +
+                  "        profileTypeName='monthly'/>" +
                   "<month id='200807'/>" +
                   "<transaction id='1' series='10' month='200807' bankMonth='200807' bankDay='1'  amount='10.0'/>");
 
@@ -126,11 +130,11 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
   public void testWithIncomeAndReccuring() throws Exception {
     checker.parse(repository,
                   "<series id='10' initialAmount='-100.0' budgetAreaName='recurringExpenses'" +
-                  "        profileTypeName='monthly' defaultCategoryName='none'/>" +
+                  "        profileTypeName='monthly' defaultCategoryName='none' isAutomatic='false' />" +
                   "<series id='20' initialAmount='1000.0' budgetAreaName='income' profileTypeName='monthly'" +
-                  "         defaultCategoryName='none'/>" +
+                  "         defaultCategoryName='none' isAutomatic='false' />" +
                   "<series id='30' initialAmount='-500.0' budgetAreaName='expensesEnvelope' profileTypeName='monthly'" +
-                  "         defaultCategoryName='none'/>" +
+                  "         defaultCategoryName='none' isAutomatic='false' />" +
                   "<month id='200807'/>" +
                   "<transaction id='1' series='10' month='200807' bankMonth='200807' bankDay='1' amount='-90.0' categoryName='none'/>" +
                   "<transaction id='2' series='30' month='200807' bankMonth='200807' bankDay='1' amount='200.0' categoryName='none'/>" +

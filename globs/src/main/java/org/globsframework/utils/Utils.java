@@ -61,6 +61,10 @@ public class Utils {
     return value != null ? value : 0;
   }
 
+  public static Integer defaultIfNull(Integer value, int def) {
+    return value != null ? value : def;
+  }
+
   public static <T extends Comparable> T min(T... values) {
     return minOrMax(-1, values);
   }

@@ -12,12 +12,14 @@ public class InitialSeries {
                       value(Series.ID, Series.OCCASIONAL_SERIES_ID),
                       value(Series.BUDGET_AREA, BudgetArea.OCCASIONAL_EXPENSES.getId()),
                       value(Series.PROFILE_TYPE, ProfileType.UNKNOWN.getId()),
+                      value(Series.IS_AUTOMATIC, false),
                       value(Series.NAME, "occasional"));
 
     repository.create(Series.TYPE,
                       value(Series.ID, Series.UNCATEGORIZED_SERIES_ID),
                       value(Series.BUDGET_AREA, BudgetArea.UNCATEGORIZED.getId()),
                       value(Series.PROFILE_TYPE, ProfileType.UNKNOWN.getId()),
+                      value(Series.IS_AUTOMATIC, false),
                       value(Series.NAME, "uncategorized"));
   }
 }

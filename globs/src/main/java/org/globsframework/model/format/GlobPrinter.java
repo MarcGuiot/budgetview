@@ -138,7 +138,11 @@ public class GlobPrinter {
       if (namingField != null) {
         Glob target = repository != null ? repository.findLinkTarget(glob, link) : null;
         if (target != null) {
-          return Strings.toString(target.get(namingField));
+          String s = Strings.toString(target.get(namingField));
+          if (Strings.isNullOrEmpty(s)) {
+            return Strings.toString(value);
+          }
+          return s;
         }
       }
     }

@@ -78,14 +78,25 @@
                 <filler fill="vertical"/>
               </column>
 
-              <column margin="10" marginBottom="0" weightX="7">
-                <label ref="seriesEditionAmountLabel" styleClass="formLabelTop" fill="horizontal"/>
-                <textField ref="amountEditor"/>
-                <label text="$seriesEdition.entries" styleClass="formLabelTop"/>
-                <scrollPane weightY="1000" margin="5">
-                  <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>
-                </scrollPane>
-              </column>
+              <cards ref="modeCard">
+                <card name="manual">
+                  <column margin="10" marginBottom="0" weightX="7">
+                    <label ref="seriesEditionAmountLabel" styleClass="formLabelTop" fill="horizontal"/>
+                    <textField ref="amountEditor"/>
+                    <label text="$seriesEdition.entries" styleClass="formLabelTop"/>
+                    <scrollPane weightY="1000" margin="5">
+                      <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>
+                    </scrollPane>
+                    <button action="automatic" styleClass="hyperlinkButton"/>
+                  </column>
+                </card>
+                <card name="automatic">
+                  <column>
+                    <htmlEditorPane text="$seriesEdition.automatic.explain"/>
+                    <button action="manual"/>
+                  </column>
+                </card>
+              </cards>
 
             </row>
           </column>
