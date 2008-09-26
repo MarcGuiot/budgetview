@@ -1,6 +1,5 @@
 TransactionDetails
-*** Note
-*** Bug layout: Afficher les labels en multiligne
+*** Notes
 * Date (reporter / annuler report = on reprend la date banque si ok)
 * Label
 * Type
@@ -13,56 +12,56 @@ SeriesEditionDialog
 * Afficher/modifier le jour de debit pour les recurrences
 
 BudgetView
+** Mettre en rouge les depassements
+** Mettre en rouge un montant occasional prevu a zero
+** Renommer "Projets" en "Projets & Operations Speciales" ?
 * Infos de synthese :  delta recu/depense en observe et prevu (avec highlight de depassement) + non classe
 * Afficher le diff sur les jauges total
 * Gauges : afficher le delta en tooltip ("Depassement: 111.11", etc.)
-* Mettre en rouge les depassements
-* Mettre en rouge un montant occasional prevu a zero
-* Renommer "Projets" en "Projets & Operations Speciales" ?
 
 CategorizationView
-* Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
+*** Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 * Recherche/filtrage table
 * Selection d'operations similaires : ne pas scroller la table
 * Selection d'operations similaires : afficher le label anonymisé dans TransactionDetails
 * Ordre des transactions = labels anonymises + date
-* Bug repaint dans les zones d'affichage des series (a confirmer)
-* Reactiver selection similar en double clic pour les cheques et les retraits ?
 
 TransactionView
-* Revoir libelle des transactions planned ("Prevision 'xxx'")
+*** Revoir libelle des transactions planned ("Prevision 'xxx'")
+*** Afficher la somme (total ou multi-selection)
 ** Filtrage transactions par Compte
-* Afficher la somme (total ou multi-selection)
 * Filtrage transactions par TransactionType
 * Suppression de transactions ghost pour cloturer une serie ? (= alignement prevu / depense)
 
 SeriesView
-* Ajouter bouton ouverture SED
+** Ajouter bouton ouverture SED
 
 BalanceSumary
-* Qu'affiche-t-on dans le passe ? Label à changer ?
+** Qu'affiche-t-on dans le passe ? Label à changer ?
 * Hyperliens vers les transactions planned correspondantes
 
 AccountView
+*** Edition compte
+** Creation de compte
 * Selection des comptes integres dans le total (exclusion comptes epargne)
-* Edition compte
-* Creation de compte
 * Cloturer un compte (date de cloture)
 
 AccountEditionDialog
 * Enter pour valider le montant et fermer la fenetre
 
 Home page
-** Afficher le changeLog en cas de changement de version
+** Afficher un message avec une URL vers la page de changeLog en cas de changement de version
 
 Licence
 *** Pb perte licence + reemission quotidienne de mails (severine)
+*** Apres expiration : la fonction "import" est bloquee (dialog avec message)
+** Afficher le nombre de jours restants
+** Completer les messages pour les mails
+* Mettre une expiration sur detection de problemes de licence
 * Pb focus text editor
 * Pb d'access au serveur "vous devez être connecté" alors que la connexion internet marche
 * revoir look panneau
-* Voir selection nombre de mois
 * Revoir messages d'erreur pour s'assurer qu'ils guident bien et ne sont pas inquietants
-* Completer les messages pour les mails
 
 CategoryEditionDialog
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
@@ -72,7 +71,10 @@ CategoryEditionDialog
 * Modifier l'ordre des categories
 
 HistoricalChart
-* voir affichage avec ghosts
+*** voir affichage avec ghosts
+
+RepartitionChart
+*** a completer
 
 Import
 * Bring to front sur Open With...
@@ -91,14 +93,12 @@ Packaging
 * Desactiver choix langue dans l'installer, forcer en français
 
 General
+** Format des montants : mettre des espaces pour separer les milliers
 * Supprimer les subcats par defaut (mode avance - apporte plus de confusion que de valeur pour les novices)
 * Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
 * Tooltips sur les boutons
-* Afficher les infos de mise a dispo d'une nouvelle version
-* CF org.globsframework.gui.editors.AbstractGlobTextEditorTestCase#simulateFocusLost ???
 * Copier les donnees des tables dans le clipboard
 * voir opacite/joliesse des fenetres Globs de creation/deletion
-* Format des montants : mettre des espaces pour separer les milliers
 
 Undo/redo
 * Test Import
@@ -106,11 +106,6 @@ Undo/redo
 * Test Split
 * Test Categorisation
 * En cas de categorisation, reselectionner les transactions
-
-Version d'evaluation
-* Afficher le nombre de jours restants
-* Apres expiration : la fonction "import" fait apparaitre un message
-* Mettre une expiration sur detection de problemes de licence
 
 Gestion des banques
 * Fonction "envoi de fichier anonymise"
