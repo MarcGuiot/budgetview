@@ -31,64 +31,51 @@
 
   <column name="transactionDetails">
 
-    <label ref="transactionType" styleClass="formLabel"/>
-    <textArea ref="userLabel" styleClass="readonly"/>
+    <cards ref="cards" opaque="false">
 
-    <row autoHideSource="userLabel">
-      <label ref="amountLabel" styleClass="formLabel"/>
-      <label ref="amountValue" styleClass="formValue"/>
+      <card name="noData">
+        <column>
+          <htmlEditorPane text="$transaction.details.nodata"/>
+          <filler fill="vertical"/>
+        </column>
+      </card>
 
-      <label text="$transaction.detail.userDate" styleClass="formLabel" autoHideSource="userDate"/>
-      <label ref="userDate" font="$transaction.date" styleClass="formValue"/>
+      <card name="noSelection">
+        <column>
+          <htmlEditorPane text="$transaction.details.noselection"/>
+          <filler fill="vertical"/>
+        </column>
+      </card>
 
-      <label text="$transaction.detail.bankDate" styleClass="formLabel" autoHideSource="bankDate"/>
-      <label ref="bankDate" font="$transaction.date" styleClass="formValue"/>
+      <card name="selection">
+        <row>
+          <column>
+            <label ref="transactionType" styleClass="formLabel"/>
+            <textArea ref="userLabel" styleClass="readonly"/>
+            <row autoHideSource="bankDate">
 
-      <filler fill="horizontal"/>
-    </row>
+              <label text="$transaction.detail.userDate" styleClass="formLabel" autoHideSource="userDate"/>
+              <label ref="userDate" font="$transaction.date" styleClass="formValue"/>
 
-    <column ref="noSelectionPanel">
-      <label ref="noSelectionLabel" font="$transaction.label"/>
-      <row>
-        <label text="$transaction.details.noselection.received"
-               autoHideSource="noSelectionReceived" styleClass="formLabel"/>
-        <label ref="noSelectionReceived" styleClass="formValue"/>
+              <label text="$transaction.detail.bankDate" styleClass="formLabel" autoHideSource="bankDate"/>
+              <label ref="bankDate" font="$transaction.date" styleClass="formValue"/>
 
-        <label text="$transaction.details.noselection.spent"
-               autoHideSource="noSelectionSpent" styleClass="formLabel"/>
-        <label ref="noSelectionSpent" styleClass="formValue"/>
+              <row autoHideSource="originalLabel">
+                <label text="$transaction.details.label.original" styleClass="formLabel"
+                       autoHideSource="originalLabel"/>
+                <label ref="originalLabel" fill="horizontal" horizontalAlignment="left"/>
+              </row>
 
-        <label text="$transaction.details.noselection.total"
-               autoHideSource="noSelectionTotal" styleClass="formLabel"/>
-        <label ref="noSelectionTotal" styleClass="formValue"/>
+              <filler fill="horizontal"/>
+            </row>
+          </column>
+          <column>
+            <filler fill="vertical"/>
+            <button name="splitLink" action="split" marginTop="0" autoHideIfDisabled="true"/>
+          </column>
+        </row>
+      </card>
 
-        <filler fill="horizontal"/>
-      </row>
-    </column>
-
-    <row ref="multiSelectionPanel">
-      <label text="$transaction.details.amount.minimum" styleClass="formLabel"/>
-      <label ref="minimumAmount" styleClass="formValue"/>
-
-      <label text="$transaction.details.amount.maximum" styleClass="formLabel"/>
-      <label ref="maximumAmount" styleClass="formValue"/>
-
-      <label text="$transaction.details.amount.average" styleClass="formLabel"/>
-      <label ref="averageAmount" styleClass="formValue"/>
-
-      <filler fill="horizontal"/>
-    </row>
-
-    <row ref="splitPanel">
-      <button name="splitLink" action="split" marginTop="0" autoHideIfDisabled="true"/>
-      <filler fill="horizontal"/>
-    </row>
-
-    <row autoHideSource="originalLabel">
-      <label text="$transaction.details.label.original" styleClass="formLabel" autoHideSource="originalLabel"/>
-      <label ref="originalLabel" fill="horizontal" horizontalAlignment="left"/>
-    </row>
-
-    <filler fill="vertical"/>
+    </cards>
   </column>
 </splits>

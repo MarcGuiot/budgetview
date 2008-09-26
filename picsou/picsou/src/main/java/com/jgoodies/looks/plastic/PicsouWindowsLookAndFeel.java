@@ -14,7 +14,6 @@ public class PicsouWindowsLookAndFeel extends Plastic3DLookAndFeel {
     try {
       LafUtils.initUI(defaults, PicsouButtonUI.class, "ButtonUI");
       LafUtils.initUI(defaults, PicsouWindowsLabelUI.class, "LabelUI");
-//      LafUtils.initUI(defaults, com.jgoodies.looks.plastic.PlasticButtonUI.class, "ButtonUI");
       LafUtils.initUI(defaults, com.jgoodies.looks.plastic.PlasticToggleButtonUI.class, "ToggleButtonUI");
       LafUtils.initUI(defaults, com.jgoodies.looks.plastic.PlasticComboBoxUI.class, "ComboBoxUI");
       LafUtils.initUI(defaults, com.jgoodies.looks.plastic.PlasticScrollBarUI.class, "ScrollBarUI");

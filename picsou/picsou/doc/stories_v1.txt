@@ -6,11 +6,9 @@ TransactionDetails
 * Type
 
 SeriesEditionDialog
-*** Mode autopilote
 *** Bug layout en mode enveloppe
 * Modifier l'ordre des series
 * Bouton ou double-clic pour selectionner tout
-* Creation de projet => selectionner les dates debut/fin sur la selection courante
 * Enveloppes : "Nom" => "Nom de l'enveloppe", titre = "Enveloppes de frais courants"
 * Afficher/modifier le jour de debit pour les recurrences
 
@@ -32,6 +30,7 @@ CategorizationView
 * Reactiver selection similar en double clic pour les cheques et les retraits ?
 
 TransactionView
+* Revoir libelle des transactions planned ("Prevision 'xxx'")
 ** Filtrage transactions par Compte
 * Afficher la somme (total ou multi-selection)
 * Filtrage transactions par TransactionType
@@ -41,7 +40,7 @@ SeriesView
 * Ajouter bouton ouverture SED
 
 BalanceSumary
-* Qu'affiche-t-on dans le passe ?
+* Qu'affiche-t-on dans le passe ? Label à changer ?
 * Hyperliens vers les transactions planned correspondantes
 
 AccountView
@@ -76,7 +75,6 @@ HistoricalChart
 * voir affichage avec ghosts
 
 Import
-* Import : OK sans fichier = message, si selection il faut purger le message
 * Bring to front sur Open With...
 * Memoriser dernier repertoire pour le filechooser
 * Utiliser une PicsouDialog

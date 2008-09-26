@@ -53,32 +53,6 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkNoDate();
   }
 
-  public void testAmount() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/06/18", -10.00, "Burger King")
-      .addTransaction("2008/06/18", -30.00, "Burger King")
-      .addTransaction("2008/06/15", -20.00, "McDo")
-      .load();
-
-    categorization.initContent()
-      .add("18/06/2008", TransactionType.PRELEVEMENT, "Burger King", "", -10.00)
-      .add("18/06/2008", TransactionType.PRELEVEMENT, "Burger King", "", -30.00)
-      .add("15/06/2008", TransactionType.PRELEVEMENT, "McDo", "", -20.00)
-      .check();
-
-    categorization.selectTableRow(2);
-    transactionDetails.checkAmount("Amount", "-20.00");
-    transactionDetails.checkNoAmountStatistics();
-
-    categorization.selectTableRows(0, 1);
-    transactionDetails.checkAmount("Total amount", "-40.00");
-    transactionDetails.checkAmountStatistics("-30.00", "-10.00", "-20.00");
-
-    transactions.getTable().clearSelection();
-    transactionDetails.checkNoAmount();
-    transactionDetails.checkNoAmountStatistics();
-  }
-
   public void testDisplayWithNoSelection() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/18", -10.00, "Burger King")
@@ -88,16 +62,17 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectAll();
     categorization.checkNoSelectedTableRows();
-    transactionDetails.checkNoSelectionLabels("3 operations", "1000.00", "-30.00", "970.00");
+    fail();
+//    transactionDetails.checkNoSelectionLabels("3 operations", "1000.00", "-30.00", "970.00");
 
     timeline.selectMonth("2008/08");
-    transactionDetails.checkNoSelectionLabels("1 operation", null, "-10.00", null);
+//    transactionDetails.checkNoSelectionLabels("1 operation", null, "-10.00", null);
 
     timeline.selectMonth("2008/07");
-    transactionDetails.checkNoSelectionPanelHidden();
+//    transactionDetails.checkNoSelectionPanelHidden();
 
     timeline.selectAll();
-    transactionDetails.checkNoSelectionLabels("3 operations", "1000.00", "-30.00", "970.00");
+//    transactionDetails.checkNoSelectionLabels("3 operations", "1000.00", "-30.00", "970.00");
   }
 
   public void testSplitButtonInitiallyVisibleWithOneTransaction() throws Exception {

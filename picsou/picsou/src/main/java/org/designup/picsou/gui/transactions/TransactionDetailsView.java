@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
 import org.designup.picsou.gui.utils.TableView;
@@ -10,6 +9,9 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobMultiLineTextView;
@@ -18,7 +20,6 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.utils.GlobListFieldStringifier;
 import org.globsframework.model.format.utils.GlobListStringFieldStringifier;
 import org.globsframework.model.utils.GlobListMatcher;
@@ -27,15 +28,14 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
 
 public class TransactionDetailsView extends View {
   private TableView tableView;
+  private CardHandler cards;
 
   public TransactionDetailsView(GlobRepository repository, Directory directory, TableView tableView) {
     super(repository, directory);
@@ -51,6 +51,20 @@ public class TransactionDetailsView extends View {
       new GlobsPanelBuilder(TransactionDetailsView.class, "/layout/transactionDetails.splits",
                             repository, directory);
 
+    cards = builder.addCardHandler("cards");
+
+    selectionService.addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        updateCard();
+      }
+    }, Transaction.TYPE);
+
+    tableView.addTableListener(new TableModelListener() {
+      public void tableChanged(TableModelEvent e) {
+        updateCard();
+      }
+    });
+
     builder.add("transactionType",
                 addLabel(new GlobListFieldStringifier(Transaction.TRANSACTION_TYPE, "", "") {
                   protected String stringify(Object value) {
@@ -65,27 +79,9 @@ public class TransactionDetailsView extends View {
     builder.add("userDate",
                 addLabel(new TransactionDateListStringifier(Transaction.MONTH, Transaction.DAY), true));
 
-    builder.add("amountLabel",
-                addLabel(GlobListStringifiers.singularOrPlural(Lang.get("transaction.details.amount.none"),
-                                                               Lang.get("transaction.details.amount.singular"),
-                                                               Lang.get("transaction.details.amount.plural")), true));
-    builder.add("amountValue",
-                addLabel(GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, Transaction.AMOUNT), true));
-
-    addNoSelectionPanel(builder);
-
     builder.add("multiSelectionPanel",
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_TWO,
                                              repository, directory));
-
-    builder.add("minimumAmount",
-                addLabel(GlobListStringifiers.minimum(Transaction.AMOUNT, PicsouDescriptionService.DECIMAL_FORMAT), true));
-
-    builder.add("maximumAmount",
-                addLabel(GlobListStringifiers.maximum(Transaction.AMOUNT, PicsouDescriptionService.DECIMAL_FORMAT), true));
-
-    builder.add("averageAmount",
-                addLabel(GlobListStringifiers.average(Transaction.AMOUNT, PicsouDescriptionService.DECIMAL_FORMAT), true));
 
     builder.add("splitPanel",
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_ONE,
@@ -105,62 +101,20 @@ public class TransactionDetailsView extends View {
     return builder;
   }
 
-  private void addNoSelectionPanel(GlobsPanelBuilder builder) {
-
-    final JPanel noSelectionPanel =
-      builder.add("noSelectionPanel",
-                  new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.EMPTY,
-                                               repository, directory));
-    noSelectionPanel.setVisible(true);
-
-    final JLabel label = builder.add("noSelectionLabel", new JLabel());
-    final JLabel spent = builder.add("noSelectionSpent", new JLabel());
-    final JLabel received = builder.add("noSelectionReceived", new JLabel());
-    final JLabel total = builder.add("noSelectionTotal", new JLabel());
-
-    tableView.addTableListener(new TableModelListener() {
-      public void tableChanged(TableModelEvent e) {
-        GlobList transactions = tableView.getDisplayedGlobs();
-
-        noSelectionPanel.setVisible(!transactions.isEmpty());
-
-        if (transactions.isEmpty()) {
-          label.setText(Lang.get("transaction.details.noselection.label.none"));
-          received.setVisible(false);
-          spent.setVisible(false);
-          total.setVisible(false);
-          return;
-        }
-
-        if (transactions.size() == 1) {
-          label.setText(Lang.get("transaction.details.noselection.label.single"));
-        }
-        else {
-          label.setText(Lang.get("transaction.details.noselection.label.multi", transactions.size()));
-        }
-
-        double receivedAmount = 0;
-        double spentAmount = 0;
-        for (Glob transaction : transactions) {
-          double transactionAmount = transaction.get(Transaction.AMOUNT);
-          if (transactionAmount > 0) {
-            receivedAmount += transactionAmount;
-          }
-          else {
-            spentAmount += transactionAmount;
-          }
-        }
-
-        DecimalFormat format = PicsouDescriptionService.DECIMAL_FORMAT;
-        received.setText(format.format(receivedAmount));
-        spent.setText(format.format(spentAmount));
-        total.setText(format.format(receivedAmount + spentAmount));
-
-        received.setVisible(Math.abs(receivedAmount) > 0.001);
-        spent.setVisible(Math.abs(spentAmount) > 0.001);
-        total.setVisible((Math.abs(receivedAmount) > 0.001) && (Math.abs(spentAmount) > 0.001));
+  private void updateCard() {
+    GlobList transactions = selectionService.getSelection(Transaction.TYPE);
+    if (transactions.isEmpty()) {
+      if (tableView.getDisplayedGlobs().isEmpty()) {
+        cards.show("noData");
       }
-    });
+      else {
+        cards.show("noSelection");
+      }
+    }
+    else {
+      cards.show("selection");
+    }
+
   }
 
   private GlobLabelView addLabel(GlobListStringifier stringifier, boolean autoHide) {
