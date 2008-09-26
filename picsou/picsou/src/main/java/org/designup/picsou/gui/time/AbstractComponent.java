@@ -16,7 +16,7 @@ public abstract class AbstractComponent implements Selectable {
   }
 
   public Selectable getSelectable(int x, int y) {
-    if (clickableArea.contains(x, y)) {
+    if (clickableArea.contains(x - 1, y - 1)) {
       return this;
     }
     return null;

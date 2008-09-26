@@ -162,7 +162,6 @@ public class SingleApplicationInstanceListener {
         threadReader.requestShutdown();
         threadReader.interrupt();
         threadReader.join();
-        System.out.println("SingleApplicationInstanceListener.shutdown");
         threadReader = null;
       }
       catch (Exception e) {

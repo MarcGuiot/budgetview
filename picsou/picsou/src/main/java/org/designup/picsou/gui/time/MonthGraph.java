@@ -75,11 +75,11 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
     int month = Month.toMonth(this.month.get(Month.ID));
     if (month == 1) {
       graphics2D.setPaint(colors.yearSeparator);
-      graphics2D.drawLine(0, 0, 0, height);
+      graphics2D.drawLine(0, 0, 0, height - 1);
     }
     if (month == 12) {
       graphics2D.setPaint(colors.yearSeparator);
-      graphics2D.drawLine(width - 1, 0, width - 1, height);
+      graphics2D.drawLine(width - 1, 0, width - 1, height - 1);
     }
 
     MonthFontMetricInfo.Size nearest = monthSize.getSize(monthRank);

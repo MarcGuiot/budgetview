@@ -21,6 +21,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
+import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -62,6 +63,7 @@ public class SeriesEditionDialog {
   private Directory localDirectory;
   private SelectionService selectionService;
   private GlobRepository repository;
+  private Directory directory;
   private PicsouDialog dialog;
 
   private Glob currentSeries;
@@ -84,6 +86,7 @@ public class SeriesEditionDialog {
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
+    this.directory = directory;
 
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     localRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -342,23 +345,38 @@ public class SeriesEditionDialog {
   }
 
   private Glob createSeries(String label, Double initialAmount, Integer day) {
-    return localRepository.create(Series.TYPE,
-                                  value(Series.BUDGET_AREA, budgetArea.getId()),
-                                  value(Series.INITIAL_AMOUNT, initialAmount),
-                                  value(Series.LABEL, label),
-                                  value(Series.DAY, day),
-                                  value(Series.JANUARY, true),
-                                  value(Series.FEBRUARY, true),
-                                  value(Series.MARCH, true),
-                                  value(Series.APRIL, true),
-                                  value(Series.MAY, true),
-                                  value(Series.JUNE, true),
-                                  value(Series.JULY, true),
-                                  value(Series.AUGUST, true),
-                                  value(Series.SEPTEMBER, true),
-                                  value(Series.OCTOBER, true),
-                                  value(Series.NOVEMBER, true),
-                                  value(Series.DECEMBER, true));
+    java.util.List<FieldValue> values =
+      new ArrayList<FieldValue>(Arrays.asList(value(Series.BUDGET_AREA, budgetArea.getId()),
+                                              value(Series.INITIAL_AMOUNT, initialAmount),
+                                              value(Series.LABEL, label),
+                                              value(Series.DAY, day),
+                                              value(Series.JANUARY, true),
+                                              value(Series.FEBRUARY, true),
+                                              value(Series.MARCH, true),
+                                              value(Series.APRIL, true),
+                                              value(Series.MAY, true),
+                                              value(Series.JUNE, true),
+                                              value(Series.JULY, true),
+                                              value(Series.AUGUST, true),
+                                              value(Series.SEPTEMBER, true),
+                                              value(Series.OCTOBER, true),
+                                              value(Series.NOVEMBER, true),
+                                              value(Series.DECEMBER, true)));
+    if (budgetArea == BudgetArea.PROJECTS) {
+      SelectionService selectionService = directory.get(SelectionService.class);
+      GlobList list = selectionService.getSelection(Month.TYPE).sort(Month.ID);
+      values.add(value(Series.IS_AUTOMATIC, false));
+      if (!list.isEmpty()) {
+        values.add(value(Series.FIRST_MONTH, list.getFirst().get(Month.ID)));
+        values.add(value(Series.LAST_MONTH, list.getLast().get(Month.ID)));
+      }
+      else {
+        int monthId = localDirectory.get(TimeService.class).getCurrentMonthId();
+        values.add(value(Series.FIRST_MONTH, monthId));
+        values.add(value(Series.LAST_MONTH, monthId));
+      }
+    }
+    return localRepository.create(Series.TYPE, values.toArray(new FieldValue[values.size()]));
   }
 
   private void initBudgetAreaSeries(BudgetArea budgetArea) {
@@ -422,8 +440,10 @@ public class SeriesEditionDialog {
             nameEditor.getComponent().selectAll();
           }
           else {
-            amountEditor.getComponent().requestFocusInWindow();
-            amountEditor.getComponent().selectAll();
+            if (amountEditor.getComponent().isVisible()) {
+              amountEditor.getComponent().requestFocusInWindow();
+              amountEditor.getComponent().selectAll();
+            }
           }
         }
       }
@@ -564,6 +584,12 @@ public class SeriesEditionDialog {
     public void actionPerformed(ActionEvent e) {
       Glob newSeries = createSeries(Lang.get("seriesEdition.newSeries"), 0.0, 1);
       selectionService.select(newSeries);
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          nameEditor.getComponent().requestFocusInWindow();
+          nameEditor.getComponent().selectAll();
+        }
+      });
     }
   }
 
@@ -938,8 +964,8 @@ public class SeriesEditionDialog {
 
     public void actionPerformed(ActionEvent e) {
       ok = false;
-      JPanel panel = new JPanel();
-      panel.add(new JEditorPane("", Lang.get("seriesEdition.manual.warning")));
+      JPanel panel = SplitsBuilder.init(localDirectory)
+        .setSource(SeriesEditionDialog.class, "/layout/automaticWarningDialog.splits").load();
       warningDialog = PicsouDialog.createWithButtons(dialog, panel,
                                                      new AbstractAction(Lang.get("ok")) {
                                                        public void actionPerformed(ActionEvent e) {
