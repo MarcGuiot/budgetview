@@ -31,11 +31,18 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .startImport()
       .doImport();
 
+    timeline.checkSelection("2008/08");
+    
     monthSummary
       .checkNoBudgetAreasDisplayed()
       .checkNoSeriesMessage("You must categorize your operations");
     balanceSummary
-      .checkNothingShown();
+        .checkBalance(00.00)
+        .checkIncome(0.00)
+        .checkFixed(0.00)
+        .checkSavings(0.00)
+        .checkProjects(0.00)
+        .checkTotal(0.00);
   }
 
   public void testNoSeries() throws Exception {

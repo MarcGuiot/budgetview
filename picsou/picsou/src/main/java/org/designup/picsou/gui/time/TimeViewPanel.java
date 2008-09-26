@@ -69,7 +69,9 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     setName("MonthSelector");
     globRepository.addChangeListener(this);
     enableEvents(AWTEvent.KEY_EVENT_MASK);
+
     selectionService.addListener(this, Month.TYPE, UserPreferences.TYPE);
+
     setFocusable(true);
     addMouseListener(this);
     addMouseMotionListener(this);

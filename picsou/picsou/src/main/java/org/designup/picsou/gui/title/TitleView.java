@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -24,8 +25,8 @@ public class TitleView extends View implements GlobSelectionListener {
   private Set<Integer> months = Collections.emptySet();
   private Card card = Card.HOME;
 
-  public TitleView(GlobRepository globRepository, Directory directory) {
-    super(globRepository, directory);
+  public TitleView(GlobRepository repository, Directory directory) {
+    super(repository, directory);
     directory.get(SelectionService.class).addListener(this, Card.TYPE, Month.TYPE);
   }
 
@@ -47,6 +48,10 @@ public class TitleView extends View implements GlobSelectionListener {
   }
 
   private void updateLabel() {
+    if (!repository.contains(Transaction.TYPE)) {
+      label.setText(Lang.get("title.nodata"));
+      return;
+    }
     if (card == null) {
       label.setText(Lang.get("title.nocard"));
       return;

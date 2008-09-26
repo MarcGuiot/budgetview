@@ -1,6 +1,6 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
   <row>
     <label text="$transaction.details.search" styleClass="formLabel"/>
-    <textField ref="searchField"/>
+    <textField ref="searchField" columns="20"/>
   </row>
 </splits>

@@ -32,7 +32,7 @@
                     fill="none" anchor="east"/>
 
           <row>
-            <label text="$login.confirmation" ref="confirmLabel" styleClass="formLabel"/>
+            <label text="$login.confirmation" ref="confirmLabel" styleClass="formLabel" horizontalAlignment="left"/>
             <component ref="confirmPassword"/>
           </row>
 
