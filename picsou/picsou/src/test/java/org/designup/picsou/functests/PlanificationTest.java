@@ -62,11 +62,12 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectBudget();
     budgetView.envelopes.editSeriesList().selectSeries("Courant")
+      .setManual()
       .checkTable(new Object[][]{
         {"2008", "August", "0.00", "100.00"},
         {"2008", "July", "0.00", "100.00"},
         {"2008", "June", "100.00", "100.00"},
-      });
+      }).validate();
 
     views.selectData();
     transactions
@@ -104,6 +105,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.envelopes.editSeriesList()
       .selectSeries("Courant")
+      .setManual()
       .selectAllMonths()
       .setAmount("200")
       .validate();
@@ -155,6 +157,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.envelopes.editSeriesList()
       .selectSeries("Courant")
+      .setManual()
       .selectAllMonths()
       .setAmount("200")
       .validate();
@@ -168,6 +171,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.editSeriesList()
       .selectSeries("EDF")
+      .setManual()
       .selectAllMonths()
       .setAmount("150")
       .validate();

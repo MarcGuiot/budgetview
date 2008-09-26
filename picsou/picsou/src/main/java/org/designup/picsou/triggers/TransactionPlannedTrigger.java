@@ -146,7 +146,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       double multiplier = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome() ? -1 : 1;
       Double overBurnAmount = budget.get(SeriesBudget.OVERRUN_AMOUNT);
       Double amountToDeduce = overBurnAmount + amount;
-      if (multiplier * amountToDeduce <= 0) {
+      if (multiplier * amountToDeduce <= 10E-6) {
         repository.update(budget.getKey(), SeriesBudget.OVERRUN_AMOUNT, amountToDeduce);
       }
       else {
@@ -178,7 +178,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       Glob transaction = (Glob)it.next();
       Double available = transaction.get(Transaction.AMOUNT);
       newAmount = available - newAmount;
-      if (multiplier * newAmount < 0.) {
+      if (multiplier * newAmount < -10E-6) {
         repository.update(transaction.getKey(), FieldValue.value(Transaction.AMOUNT, newAmount));
         return;
       }
@@ -186,7 +186,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         repository.delete(transaction.getKey());
         it.remove();
       }
-      if (newAmount == 0.) {
+      if (newAmount > -10E-6 && newAmount < 10E-6) {
         return;
       }
       newAmount *= -1;

@@ -56,6 +56,7 @@ public class SeriesBudgetTriggerTest extends PicsouTriggerTestCase {
   private void createSeries(int seriesId, BudgetArea budgetArea, double amount) {
     repository.create(Key.create(Series.TYPE, seriesId),
                       value(Series.BUDGET_AREA, budgetArea.getId()),
+                      value(Series.IS_AUTOMATIC, false),
                       value(Series.INITIAL_AMOUNT, amount));
   }
 }

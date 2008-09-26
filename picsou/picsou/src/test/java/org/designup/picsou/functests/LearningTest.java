@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.TransactionType;
 
 public class LearningTest extends LoggedInFunctionalTestCase {
 
@@ -19,8 +20,11 @@ public class LearningTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/12", -1.3, "Menu K")
       .load();
     views.selectData();
-    transactions.checkSeries(0, "dej");
-    transactions.checkSeries(2, "dej");
+    transactions.initContent()
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.30, "dej", MasterCategory.FOOD)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "MiamMiam", "", -1.10, "To categorize")
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.10, "dej", MasterCategory.FOOD)
+      .check();
   }
 
   public void testTakeThreeLastTransaction() throws Exception {
@@ -58,6 +62,7 @@ public class LearningTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Cheque 1")
       .load();
     views.selectCategorization();
+    categorization.checkTable(new Object[][]{});
     categorization.setEnvelope("Cheque 1", "dej", MasterCategory.FOOD, true);
     OfxBuilder
       .init(this)

@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
@@ -37,6 +38,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.createIncomeSeries()
       .setName("Exceptional Income")
+      .setManual()
       .setCategory(MasterCategory.INCOME)
       .setAmount("0.0")
       .validate();
@@ -448,7 +450,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("26/06/2008", TransactionType.PLANNED, "Groceries", "", -90.00, "Groceries", MasterCategory.FOOD)
+      .add("26/06/2008", TransactionType.PLANNED, "Groceries", "", -170.00, "Groceries", MasterCategory.FOOD)
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet", MasterCategory.TELECOMS)
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet", MasterCategory.TELECOMS)
       .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "Groceries", MasterCategory.FOOD)
@@ -552,7 +554,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("26/06/2008", TransactionType.PLANNED, "Groceries", "", -90.00, "Groceries", MasterCategory.FOOD)
+      .add("26/06/2008", TransactionType.PLANNED, "Groceries", "", -170.00, "Groceries", MasterCategory.FOOD)
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet", MasterCategory.TELECOMS)
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet", MasterCategory.TELECOMS)
       .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "Groceries", MasterCategory.FOOD)
@@ -728,18 +730,21 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.createSeries().setName("courantED")
       .setEndDate(200805)
       .setCategory(MasterCategory.FOOD)
+      .setManual()
       .selectAllMonths()
       .setAmount("100")
       .validate();
     budgetView.envelopes.createSeries().setName("courantAuchan")
       .setStartDate(200806)
       .setEndDate(200806)
+      .setManual()
       .selectAllMonths()
       .setAmount("100")
       .setCategory(MasterCategory.FOOD)
       .validate();
     budgetView.envelopes.createSeries().setName("courantMonoprix")
       .setStartDate(200806)
+      .setManual()
       .selectAllMonths()
       .setAmount("100")
       .setCategory(MasterCategory.FOOD)
@@ -796,5 +801,196 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectSeries("series1")
       .deleteSeries()
       .validate();
+  }
+
+  public void testAutomaticBudget() throws Exception {
+    LicenseChecker.enterLicense(mainWindow, "admin", "zz", 2);
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("Courant")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/20", -20, "Auchan")
+      .addTransaction("2008/06/10", -10, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, false);
+    views.selectBudget();
+    timeline.selectMonth("2008/05");
+    budgetView.envelopes.checkSeries("Courant", 20, 20);
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 10, 20);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("Courant", 0, 20);
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/04/10", -100, "ATAC")
+      .addTransaction("2008/05/10", -10, "ED")
+      .load();
+
+    views.selectCategorization();
+    categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, false);
+    categorization.setEnvelope("ATAC", "Courant", MasterCategory.FOOD, false);
+
+    views.selectBudget();
+    timeline.selectMonth("2008/04");
+    budgetView.envelopes.checkSeries("Courant", 100, 100);
+    timeline.selectMonth("2008/05");
+    budgetView.envelopes.checkSeries("Courant", 30, 100);
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 10, 30);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("Courant", 0, 30);
+
+    views.selectCategorization();
+    timeline.selectMonth("2008/05");
+    categorization.setOccasional("ED", MasterCategory.FOOD);
+
+    views.selectBudget();
+    timeline.selectMonth("2008/05");
+    budgetView.envelopes.checkSeries("Courant", 20, 100);
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 10, 20);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("Courant", 0, 20);
+    views.selectData();
+    timeline.selectAll();
+    transactions.initContent()
+      .add("01/08/2008", TransactionType.PLANNED, "Courant", "", -20.00, "Courant", MasterCategory.FOOD)
+      .add("01/07/2008", TransactionType.PLANNED, "Courant", "", -20.00, "Courant", MasterCategory.FOOD)
+      .add("10/06/2008", TransactionType.PLANNED, "Courant", "", -10.00, "Courant", MasterCategory.FOOD)
+      .add("10/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -10.00, "Courant", MasterCategory.FOOD)
+      .add("20/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -20.00, "Courant", MasterCategory.FOOD)
+      .add("10/05/2008", TransactionType.PRELEVEMENT, "ED", "", -10.00, "Occasional", MasterCategory.FOOD)
+      .add("10/04/2008", TransactionType.PRELEVEMENT, "ATAC", "", -100.00, "Courant", MasterCategory.FOOD)
+      .check();
+  }
+
+  public void testAutomaticInCurrentMonth() throws Exception {
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("Courant")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/10", -10, "Auchan")
+      .addTransaction("2008/06/20", -20, "ED")
+      .load();
+    views.selectCategorization();
+    categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, false);
+    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, false);
+
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 30, 30);
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/10", -10, "ATAC")
+      .load();
+    views.selectCategorization();
+    categorization.setEnvelope("ATAC", "Courant", MasterCategory.FOOD, false);
+    views.selectBudget();
+    timeline.selectMonth("2008/05");
+    budgetView.envelopes.checkSeries("Courant", 10, 10);
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 30, 10);
+  }
+
+  public void testAutomaticWithInactiveMonth() throws Exception {
+    views.selectBudget();
+    budgetView.recurring.createSeries().setName("Tel")
+      .toggleMonth(1, 3, 5, 7, 9, 11)
+      .setCategory(MasterCategory.TELECOMS)
+      .validate();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/04/20", -10, "FT")
+      .load();
+    views.selectCategorization();
+    categorization.setRecurring("FT", "Tel", MasterCategory.TELECOMS, false);
+    views.selectBudget();
+    timeline.selectMonth("2008/05");
+    budgetView.recurring.checkSeriesNotPresent("Tel");
+    timeline.selectMonth("2008/06");
+    budgetView.recurring.checkSeries("Tel", 0, 10);
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/20", -10, "FT")
+      .load();
+    budgetView.recurring.checkSeries("Tel", 10, 10);
+  }
+
+  public void testInAutomaticBudgetOverrunInCurrentUpdateFuture() throws Exception {
+    LicenseChecker.enterLicense(mainWindow, "admin", "zz", 2);
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("Courant")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/10", -10, "Auchan")
+      .addTransaction("2008/06/20", -20, "ED")
+      .load();
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, false);
+    views.selectBudget();
+    timeline.selectMonth("2008/05");
+    budgetView.envelopes.checkSeries("Courant", 10, 10);
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    timeline.selectMonth("2008/08");
+    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    views.selectCategorization();
+    timeline.selectMonth("2008/06");
+    categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, false);
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 20, 10);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("Courant", 0, 20);
+    timeline.selectMonth("2008/08");
+    budgetView.envelopes.checkSeries("Courant", 0, 20);
+  }
+
+  public void testInAutomaticNewMonthUpdateFuture() throws Exception {
+    LicenseChecker.enterLicense(mainWindow, "admin", "zz", 2);
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("Courant")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/04/10", -10, "Auchan")
+      .addTransaction("2008/05/10", -5, "ATAC")
+      .load();
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, false);
+    categorization.setEnvelope("ATAC", "Courant", MasterCategory.FOOD, false);
+    views.selectBudget();
+    timeline.selectMonth("2008/04");
+    budgetView.envelopes.checkSeries("Courant", 10, 10);
+    timeline.selectMonth("2008/05");
+    budgetView.envelopes.checkSeries("Courant", 5, 10);
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/20", -20, "Auchan")
+      .load();
+    timeline.selectMonth("2008/05");
+    budgetView.envelopes.checkSeries("Courant", 5, 10);
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 20, 5);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("Courant", 0, 20);
+    timeline.selectMonth("2008/08");
+    budgetView.envelopes.checkSeries("Courant", 0, 20);
+
   }
 }

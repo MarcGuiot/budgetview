@@ -4,7 +4,6 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.utils.Dates;
 
 public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
@@ -55,6 +54,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.EDUCATION)
       .validate();
 
+    categorization.selectRecurringSeries("Culture", MasterCategory.EDUCATION, false);
     categorization.checkContainsRecurringSeries("Culture");
 
     views.selectData();
@@ -78,7 +78,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .setName("Regime")
       .setCategory(MasterCategory.FOOD)
       .validate();
-
+    categorization.selectEnvelopeSeries("Regime", MasterCategory.FOOD, false);
     categorization.checkContainsEnvelope("Regime", MasterCategory.FOOD);
 
     views.selectData();

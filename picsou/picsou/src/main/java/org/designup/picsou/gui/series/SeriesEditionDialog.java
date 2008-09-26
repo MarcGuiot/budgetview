@@ -12,6 +12,7 @@ import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
+import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -24,6 +25,7 @@ import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -40,7 +42,8 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -77,15 +80,17 @@ public class SeriesEditionDialog {
   private GlobNumericEditor amountEditor;
   private TimeService timeService;
   private JLabel categoryLabel;
+  private CardHandler modeCard;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
 
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     localRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(Category.TYPE, BudgetArea.TYPE, Month.TYPE, SeriesToCategory.TYPE)
+      .copy(Category.TYPE, BudgetArea.TYPE, Month.TYPE, SeriesToCategory.TYPE, CurrentMonth.TYPE)
       .get();
 
+    localRepository.addTrigger(new AutomaticSeriesBudgetTrigger());
     localRepository.addTrigger(new SeriesBudgetTrigger());
     selectionService = new SelectionService();
     localDirectory = new DefaultDirectory(directory);
@@ -124,6 +129,10 @@ public class SeriesEditionDialog {
 
     registerDateComponents(builder);
 
+    modeCard = builder.addCardHandler("modeCard");
+    builder.add("manual", new GotoManualAction());
+    builder.add("automatic", new GotoAutomaticAction());
+
     amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT)
       .setMinusAllowed(false)
       .setNotifyAtKeyPressed(true);
@@ -145,6 +154,12 @@ public class SeriesEditionDialog {
       public void selectionUpdated(GlobSelection selection) {
         currentSeries = selection.getAll(Series.TYPE).getFirst();
         if (currentSeries != null) {
+          if (currentSeries.get(Series.IS_AUTOMATIC)) {
+            modeCard.show("automatic");
+          }
+          else {
+            modeCard.show("manual");
+          }
           budgetTable.setFilter(GlobMatchers.and(fieldEquals(SeriesBudget.ACTIVE, true),
                                                  fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID))));
           assignCategoryAction.setEnabled(true);
@@ -444,8 +459,8 @@ public class SeriesEditionDialog {
     public void show() {
       CategoryChooserDialog chooser =
         new CategoryChooserDialog(new SeriesCategoryChooserCallback(), dialog,
-                                            !budgetArea.isMultiCategories(),
-                                            localRepository, localDirectory);
+                                  !budgetArea.isMultiCategories(),
+                                  localRepository, localDirectory);
 
       chooser.show();
     }
@@ -910,6 +925,50 @@ public class SeriesEditionDialog {
     protected void finalize() throws Throwable {
       super.finalize();
       localDirectory.get(ColorService.class).removeListener(this);
+    }
+  }
+
+  private class GotoAutomaticAction extends AbstractAction {
+    public boolean ok;
+    private PicsouDialog warningDialog;
+
+    public GotoAutomaticAction() {
+      super(Lang.get("seriesEdition.goto.automatic"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      ok = false;
+      JPanel panel = new JPanel();
+      panel.add(new JEditorPane("", Lang.get("seriesEdition.manual.warning")));
+      warningDialog = PicsouDialog.createWithButtons(dialog, panel,
+                                                     new AbstractAction(Lang.get("ok")) {
+                                                       public void actionPerformed(ActionEvent e) {
+                                                         ok = true;
+                                                         warningDialog.setVisible(false);
+                                                       }
+                                                     }, new AbstractAction(Lang.get("cancel")) {
+        public void actionPerformed(ActionEvent e) {
+          warningDialog.setVisible(false);
+        }
+      }, localDirectory);
+      warningDialog.pack();
+      GuiUtils.showCentered(warningDialog);
+      if (ok) {
+        localRepository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, true);
+        modeCard.show("automatic");
+      }
+      warningDialog = null;
+    }
+  }
+
+  private class GotoManualAction extends AbstractAction {
+    private GotoManualAction() {
+      super(Lang.get("seriesEdition.goto.manual"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      localRepository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, false);
+      modeCard.show("manual");
     }
   }
 }

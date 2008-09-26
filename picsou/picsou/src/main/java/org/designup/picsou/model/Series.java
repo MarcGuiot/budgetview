@@ -49,6 +49,9 @@ public class Series {
   public static DoubleField INITIAL_AMOUNT;
 
   @DefaultBoolean(true)
+  public static BooleanField IS_AUTOMATIC;
+
+  @DefaultBoolean(true)
   public static BooleanField JANUARY;
 
   @DefaultBoolean(true)
@@ -136,6 +139,7 @@ public class Series {
       output.writeInteger(fieldValues.get(Series.OCCURENCES_COUNT));
       output.writeInteger(fieldValues.get(Series.DAY));
       output.writeDouble(fieldValues.get(Series.INITIAL_AMOUNT));
+      output.writeBoolean(fieldValues.get(Series.IS_AUTOMATIC));
       output.writeBoolean(fieldValues.get(Series.JANUARY));
       output.writeBoolean(fieldValues.get(Series.FEBRUARY));
       output.writeBoolean(fieldValues.get(Series.MARCH));
@@ -154,6 +158,9 @@ public class Series {
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
+      }
+      if (version == 2) {
+        deserializeDataV2(fieldSetter, data);
       }
     }
 
@@ -183,8 +190,35 @@ public class Series {
       fieldSetter.set(Series.DECEMBER, input.readBoolean());
     }
 
+    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Series.LABEL, input.readString());
+      fieldSetter.set(Series.NAME, input.readString());
+      fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
+      fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
+      fieldSetter.set(Series.PROFILE_TYPE, input.readInteger());
+      fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
+      fieldSetter.set(Series.LAST_MONTH, input.readInteger());
+      fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
+      fieldSetter.set(Series.DAY, input.readInteger());
+      fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
+      fieldSetter.set(Series.IS_AUTOMATIC, input.readBoolean());
+      fieldSetter.set(Series.JANUARY, input.readBoolean());
+      fieldSetter.set(Series.FEBRUARY, input.readBoolean());
+      fieldSetter.set(Series.MARCH, input.readBoolean());
+      fieldSetter.set(Series.APRIL, input.readBoolean());
+      fieldSetter.set(Series.MAY, input.readBoolean());
+      fieldSetter.set(Series.JUNE, input.readBoolean());
+      fieldSetter.set(Series.JULY, input.readBoolean());
+      fieldSetter.set(Series.AUGUST, input.readBoolean());
+      fieldSetter.set(Series.SEPTEMBER, input.readBoolean());
+      fieldSetter.set(Series.OCTOBER, input.readBoolean());
+      fieldSetter.set(Series.NOVEMBER, input.readBoolean());
+      fieldSetter.set(Series.DECEMBER, input.readBoolean());
+    }
+
     public int getWriteVersion() {
-      return 1;
+      return 2;
     }
   }
 }
