@@ -1,6 +1,45 @@
 <globs>
   <bank name="Credit Agricole" id='1'>
     <bankEntity id="13006"/>
+    <bankEntity id="10206"/>
+    <bankEntity id="11206"/>
+    <bankEntity id="11306"/>
+    <bankEntity id="11706"/>
+    <bankEntity id="12006"/>
+    <bankEntity id="12206"/>
+    <bankEntity id="12406"/>
+    <bankEntity id="12506"/>
+    <bankEntity id="12906"/>
+    <bankEntity id="13106"/>
+    <bankEntity id="13306"/>
+    <bankEntity id="13506"/>
+    <bankEntity id="13606"/>
+    <bankEntity id="13906"/>
+    <bankEntity id="14406"/>
+    <bankEntity id="14506"/>
+    <bankEntity id="14706"/>
+    <bankEntity id="14806"/>
+    <bankEntity id="16006"/>
+    <bankEntity id="16106"/>
+    <bankEntity id="16506"/>
+    <bankEntity id="16606"/>
+    <bankEntity id="16706"/>
+    <bankEntity id="16806"/>
+    <bankEntity id="16906"/>
+    <bankEntity id="17106"/>
+    <bankEntity id="17206"/>
+    <bankEntity id="17806"/>
+    <bankEntity id="17906"/>
+    <bankEntity id="18106"/>
+    <bankEntity id="18206"/>
+    <bankEntity id="18306"/>
+    <bankEntity id="18706"/>
+    <bankEntity id="19106"/>
+    <bankEntity id="19406"/>
+    <bankEntity id="19506"/>
+    <bankEntity id="19806"/>
+    <bankEntity id="14006"/>
+    <bankEntity id="19906"/>
 
     <transactionTypeMatcher regexp="REGLEM ECHEANCE PRET (.*)"
                             transactionTypeName="credit" label="PRET $1"/>

@@ -76,6 +76,9 @@
     <transactionTypeMatcher regexp="CHQ NO[\s]+N.[\s]+(.*)"
                             transactionTypeName="check" label="CHEQUE N. $1"/>
 
+    <transactionTypeMatcher regexp="FACTURE CARTE[\s]+DU[\s]+(\d{6})[\s]+(.*)"
+                            transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="ddMMyy"/>
+
     <transactionTypeMatcher regexp="FACTURE CARTE[\s]*(.*)"
                             transactionTypeName="credit_card" label="$1"/>
 
