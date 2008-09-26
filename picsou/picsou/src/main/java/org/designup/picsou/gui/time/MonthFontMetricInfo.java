@@ -11,10 +11,10 @@ import java.util.Map;
 public class MonthFontMetricInfo {
   private Map<Integer, MonthSizes> monthInfos = new HashMap<Integer, MonthSizes>();
 
-  public MonthFontMetricInfo(Graphics graphics) {
+  public MonthFontMetricInfo(final FontMetrics fontMetrics) {
     for (int i = 1; i <= 12; i++) {
-      monthInfos.put(i, new MonthSizes(new Size(".long", i, Lang.getKeys(), graphics),
-                                       new Size(".medium", i, Lang.getKeys(), graphics)));
+      monthInfos.put(i, new MonthSizes(new Size(".long", i, Lang.getKeys(), fontMetrics),
+                                       new Size(".medium", i, Lang.getKeys(), fontMetrics)));
     }
   }
 
@@ -55,9 +55,9 @@ public class MonthFontMetricInfo {
     }
 
     public int getHeight() {
-      int height = orderedSize[0].getHeigth();
+      int height = orderedSize[0].getHeight();
       for (Size size : orderedSize) {
-        height = Math.max(height, size.getHeigth());
+        height = Math.max(height, size.getHeight());
       }
       return height;
     }
@@ -68,7 +68,7 @@ public class MonthFontMetricInfo {
     private int width;
     private int height;
 
-    public Size(String type, int month, Enumeration<String> keys, Graphics graphics) {
+    public Size(String type, int month, Enumeration<String> keys, final FontMetrics fontMetrics) {
       while (keys.hasMoreElements()) {
         String element = keys.nextElement();
         if (element.equals("month." + month + type)) {
@@ -78,8 +78,6 @@ public class MonthFontMetricInfo {
       if (name == null) {
         throw new ResourceAccessFailed("for month " + month + " type : " + type);
       }
-      Graphics2D d = ((Graphics2D)graphics);
-      FontMetrics fontMetrics = d.getFontMetrics();
       width = fontMetrics.stringWidth(name);
       height = fontMetrics.getHeight();
     }
@@ -92,7 +90,7 @@ public class MonthFontMetricInfo {
       return width;
     }
 
-    public int getHeigth() {
+    public int getHeight() {
       return height;
     }
   }

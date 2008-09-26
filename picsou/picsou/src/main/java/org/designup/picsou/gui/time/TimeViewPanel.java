@@ -23,8 +23,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
                                                      SelectableContainer,
                                                      ChangeSetListener, GlobSelectionListener {
 
-  private static final Dimension DIMENSION = new Dimension(100, 42);
-
   private TimeGraph timeGraph;
   private Set<Selectable> currentlySelected = new TreeSet<Selectable>(new Comparator<Selectable>() {
     public int compare(Selectable o1, Selectable o2) {
@@ -60,11 +58,13 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
     this.repository = globRepository;
     timeService = directory.get(TimeService.class);
-    colors = new MonthViewColors(directory);
+    Font monthFont = getFont();
+    Font yearFont = monthFont.deriveFont((float)monthFont.getSize() - 2);
+    colors = new MonthViewColors(directory, yearFont, monthFont);
     isRegisteredUser = repository.get(UserPreferences.KEY).get(UserPreferences.REGISTRED_USER);
     GlobList list = globRepository.getAll(Month.TYPE).sort(Month.ID);
     filterMonth(list);
-    timeGraph = new TimeGraph(list, colors, timeService);
+    timeGraph = new TimeGraph(list, colors, timeService, getFontMetrics(yearFont), getFontMetrics(monthFont));
     selectionService = directory.get(SelectionService.class);
     setName("MonthSelector");
     globRepository.addChangeListener(this);
@@ -74,9 +74,11 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     addMouseListener(this);
     addMouseMotionListener(this);
     addKeyListener(this);
-    setPreferredSize(DIMENSION);
-    setMinimumSize(DIMENSION);
+    Dimension dimension = new Dimension(50, timeGraph.getTotalHeight());
+    setMinimumSize(dimension);
+    setPreferredSize(dimension);
     addFocusListener(this);
+    setOpaque(false);
   }
 
   public void paintComponent(Graphics g) {
@@ -94,16 +96,16 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     Graphics2D d = (Graphics2D)g.create();
     d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     try {
-      timeGraph.init(d, getWidth());
+      timeGraph.init(getWidth());
       if (pendingOperation != null) {
         pendingOperation.run();
         pendingOperation = null;
       }
-      d.setPaint(new GradientPaint(0, 0, colors.backgroundTop, 0, getHeight(), colors.backgroundBottom));
-      d.fillRect(0, 0, getWidth(), getHeight());
+//      d.setPaint(new GradientPaint(0, 0, colors.pastBackgroundTop, 0,
+//                                   timeGraph.getMonthHeight(), colors.pastBackgroundBottom));
       TransformationAdapter transformationAdapter = new TransformationAdapter(d);
       transformationAdapter.translate(translation, 0);
-      timeGraph.draw(d, transformationAdapter, getHeight(), getWidth());
+      timeGraph.draw(d, transformationAdapter, getWidth(), getHeight());
     }
     finally {
       d.dispose();
@@ -263,7 +265,8 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private void reloadMonth() {
     GlobList list = repository.getAll(Month.TYPE).sort(Month.ID);
     filterMonth(list);
-    timeGraph = new TimeGraph(list, colors, timeService);
+    timeGraph = new TimeGraph(list, colors, timeService, getFontMetrics(colors.getYearFont()),
+                              getFontMetrics(colors.getMonthFont()));
   }
 
   private void filterMonth(GlobList list) {
@@ -405,7 +408,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public synchronized void waitRepaint() {
-    long mili = System.currentTimeMillis() + 150;
+    long mili = System.currentTimeMillis() + 100;
     while (currentPaintCount == paintCount) {
       try {
         long duration = mili - System.currentTimeMillis();

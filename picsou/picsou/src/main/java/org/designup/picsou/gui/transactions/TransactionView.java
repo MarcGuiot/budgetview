@@ -2,9 +2,9 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.components.filtering.Filterable;
-import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
@@ -45,7 +45,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   public static final int ACCOUNT_BALANCE__INDEX = 7;
   public static final int BALANCE_INDEX = 8;
 
-  private static final int[] COLUMN_SIZES = {10, 10, 16, 16, 30, 9, 30, 30};
+  private static final int[] COLUMN_SIZES = {10, 10, 10, 10, 30, 9, 15, 10, 10};
 
   private GlobTableView view;
   private TransactionRendererColors rendererColors;

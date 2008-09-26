@@ -24,7 +24,7 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
     this.timeService = timeService;
   }
 
-  public void init(Graphics2D graphics2D, MonthFontMetricInfo monthFontMetricInfo) {
+  public void init(MonthFontMetricInfo monthFontMetricInfo) {
     monthSize = monthFontMetricInfo.getMonthInfo(Month.toMonth(month.get(Month.ID)));
   }
 
@@ -70,26 +70,33 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
         graphics2D.setPaint(new GradientPaint(0, 0, colors.currentBackgroundTop, 0, height, colors.currentBackgroundBottom));
       }
     }
-    graphics2D.fillRect(1, 1, width - 1, height - 1);
+    graphics2D.fillRect(0, 0, width, height);
 
-    graphics2D.setPaint(colors.grid);
-    graphics2D.drawRect(0, 0, width, height);
+    int month = Month.toMonth(this.month.get(Month.ID));
+    if (month == 1) {
+      graphics2D.setPaint(colors.yearSeparator);
+      graphics2D.drawLine(0, 0, 0, height);
+    }
+    if (month == 12) {
+      graphics2D.setPaint(colors.yearSeparator);
+      graphics2D.drawLine(width - 1, 0, width - 1, height);
+    }
 
     MonthFontMetricInfo.Size nearest = monthSize.getSize(monthRank);
-
-    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, nearest.getHeigth() + 2,
+    graphics2D.setFont(colors.getMonthFont());
+    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, getHeight() - 1,
                            nearest.getName(), colors);
   }
 
-  public int getPreferredHeight(Graphics2D graphics2D) {
-    return monthSize.getHeight() + 4;
+  public int getHeight() {
+    return monthSize.getHeight() + 0;
   }
 
-  public int getMaxWidth(Graphics2D graphics2D) {
+  public int getMaxWidth() {
     return monthSize.getMaxWidth() + 4;
   }
 
-  public int getMinWidth(Graphics2D graphics2D) {
+  public int getMinWidth() {
     return monthSize.getMinWidth() + 4;
   }
 

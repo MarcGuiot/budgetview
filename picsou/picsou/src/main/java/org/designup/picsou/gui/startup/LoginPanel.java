@@ -4,7 +4,10 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadPassword;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
-import org.designup.picsou.client.http.*;
+import org.designup.picsou.client.http.ConnectionRetryServerAccess;
+import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
+import org.designup.picsou.client.http.HttpsClientTransport;
+import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.MainPanel;
 import org.designup.picsou.gui.MainWindow;
@@ -51,9 +54,15 @@ public class LoginPanel {
     initServerAccess(remoteAdress, prevaylerPath, dataInMemory);
     mainWindow.getFrame().addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
-        serverAccess.takeSnapshot();
-        serverAccess.disconnect();
-        serverDirectory.close();
+        try {
+          serverAccess.takeSnapshot();
+          serverAccess.disconnect();
+          if (serverDirectory != null) {
+            serverDirectory.close();
+          }
+        }
+        catch (Exception ex) {
+        }
       }
     });
     this.loginButton.setOpaque(false);
@@ -213,16 +222,16 @@ public class LoginPanel {
     components[components.length - 1].setNextFocusableComponent(components[0]);
   }
 
+
   private void initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
-    serverDirectory = new ServerDirectory(prevaylerPath, dataInMemory);
-    EncrypterToTransportServerAccess localServerAccess =
-      new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()), directory);
-    ServerAccess remoteAccess = null;
-    if (remoteAdress.startsWith("http")) {
-      remoteAccess = new ConnectionRetryServerAccess(
+    if (!remoteAdress.startsWith("http")) {
+      serverDirectory = new ServerDirectory(prevaylerPath, dataInMemory);
+      serverAccess = new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()), directory);
+    }
+    else {
+      serverAccess = new ConnectionRetryServerAccess(
         new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
     }
-    serverAccess = new DispatcherServerAccess(localServerAccess, remoteAccess);
     serverAccess.connect();
   }
 
@@ -244,9 +253,5 @@ public class LoginPanel {
     for (Component component : components) {
       component.setVisible(visible);
     }
-  }
-
-  public ServerDirectory getServerDirectory() {
-    return serverDirectory;
   }
 }
