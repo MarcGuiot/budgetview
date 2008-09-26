@@ -18,6 +18,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary
       .checkNoBudgetAreasDisplayed()
       .checkNoDataMessage("You must import your financial operations");
+    balanceSummary
+      .checkNothingShown();
 
     String file = OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
@@ -32,6 +34,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary
       .checkNoBudgetAreasDisplayed()
       .checkNoSeriesMessage("You must categorize your operations");
+    balanceSummary
+      .checkNothingShown();
   }
 
   public void testNoSeries() throws Exception {
@@ -68,6 +72,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/11", -10, "fnac")
       .addTransaction("2008/07/12", 1500, "Salaire")
       .addTransaction("2008/07/13", -23, "cheque")
+      .addTransaction("2008/07/13", -200, "Air France")
       .load();
 
     views.selectCategorization();
@@ -77,24 +82,28 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("ED", "groceries", MasterCategory.FOOD, false);
     categorization.setOccasional("fnac", MasterCategory.EQUIPMENT);
     categorization.setIncome("Salaire", "Salaire", true);
+    categorization.setProject("Air France", "voyage", MasterCategory.LEISURES, true);
 
     views.selectHome();
     monthSummary
-      .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 23), false)
+      .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 23 + 200), false)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(80)
       .checkOccasional(10)
+      .checkProjects(200)
       .checkUncategorized("-23.00");
 
-    accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_ID, 1000, "cheque");
+    accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_ID, 1000, "Air France");
+    
     timeline.selectAll();
-    balanceSummary.initDetails()
-      .balance(1000.)
-      .income(1500.)
-      .fixe(-1529.90)
-      .saving(0.)
-      .total(970.10);
+    balanceSummary
+      .checkBalance(1000.00)
+      .checkIncome(1500.00)
+      .checkFixed(-1529.90)
+      .checkSavings(0.00)
+      .checkProjects(-200.00)
+      .checkTotal(770.10);
   }
 
   public void testTwoMonths() throws Exception {

@@ -24,6 +24,7 @@ import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.triggers.GlobStateChecker;
@@ -180,9 +181,9 @@ public class MainPanel {
 
     JRootPane rootPane = frame.getRootPane();
     GuiUtils.addShortcut(rootPane, "UNDO", undoAction,
-                         KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK));
+                         KeyStroke.getKeyStroke(KeyEvent.VK_Z, Gui.getCtrlModifier()));
     GuiUtils.addShortcut(rootPane, "REDO", redoAction,
-                         KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK));
+                         KeyStroke.getKeyStroke(KeyEvent.VK_Y, Gui.getCtrlModifier()));
   }
 
   private static class RegisterLicenseAction extends AbstractAction {

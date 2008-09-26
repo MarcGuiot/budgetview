@@ -12,6 +12,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobComboView;
@@ -30,6 +31,8 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -113,6 +116,8 @@ public class ImportPanel {
   private void initStep1Panel(String textForCloseButton, Directory directory) {
     fileButton.setAction(new BrowseFilesAction());
 
+    initFileField();
+
     GlobsPanelBuilder builder1 = new GlobsPanelBuilder(getClass(), "/layout/importPanelStep1.splits", localRepository, localDirectory);
     builder1.add("message", messageLabel);
     builder1.add("filePanel", filePanel);
@@ -127,6 +132,14 @@ public class ImportPanel {
     });
 
     panelStep1 = builder1.load();
+  }
+
+  private void initFileField() {
+    fileField.getDocument().addDocumentListener(new AbstractDocumentListener() {
+      protected void documentChanged(DocumentEvent e) {
+        clearErrorMessage();
+      }
+    });
   }
 
   private void initStep2Panel(final String textForCloseButton, Window owner) {
@@ -290,6 +303,10 @@ public class ImportPanel {
 
   private void displayErrorMessage(String key) {
     messageLabel.setText("<html><font color=red>" + Lang.get(key) + "</font></html>");
+  }
+
+  private void clearErrorMessage() {
+    messageLabel.setText("");
   }
 
   public void show() {

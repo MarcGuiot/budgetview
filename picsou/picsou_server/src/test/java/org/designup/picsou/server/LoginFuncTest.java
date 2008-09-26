@@ -8,8 +8,7 @@ import org.uispec4j.Button;
 import org.uispec4j.CheckBox;
 import org.uispec4j.PasswordField;
 import org.uispec4j.TextBox;
-
-import javax.swing.*;
+import org.uispec4j.assertion.UISpecAssert;
 
 public class LoginFuncTest extends ServerFuncTestCase {
 
@@ -19,8 +18,8 @@ public class LoginFuncTest extends ServerFuncTestCase {
     Button loginButton = window.getButton("login");
     loginButton.click();
 
-    JLabel label = window.findSwingComponent(JLabel.class, "message");
-    assertFalse(label.getText().equals(""));
+    TextBox label = window.findUIComponent(TextBox.class, "message");
+    UISpecAssert.assertFalse(label.textIsEmpty());
   }
 
   public void testCreateAccount() throws Exception {

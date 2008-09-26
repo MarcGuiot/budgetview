@@ -6,7 +6,7 @@
         topColor="wave.panel.top" bottomColor="wave.panel.bottom" waveColor="wave.panel.wave"/>
 
     <ui name="loginPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="dialog.bg" bottomColor="dialog.bg" borderColor="login.block.border"
+        topColor="dialog.bg.top" bottomColor="dialog.bg.top" borderColor="login.block.border"
         borderWidth="2" cornerRadius="10"/>
 
     <!-- Default form elements -->
@@ -57,12 +57,6 @@
     <style selector=".dialog label.title"
            font="-,bold,18" foreground="dialog.title"
            fill="none" anchor="center" marginTop="5" marginBottom="20"/>
-
-
-    <ui name="dialogBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="dialog.block.top" bottomColor="dialog.block.bottom"
-        borderColor="dialog.block.border" borderWidth="2" cornerRadius="10"/>
-    <style selector=".dialogBlock" ui="dialogBlock"/>
 
     <!-- Hyperlinks -->
 
@@ -183,6 +177,19 @@
            triangleSignColor="gauge.detail.triangle.sign"/>
 
     <!-- Selection toggles -->
+    <ui name="budgetAreaSelectionToggle"
+        class="org.designup.picsou.gui.components.SelectionToggleUI"
+        useBold="true"
+        bottomColor="toggle.selector.bg.bottom"
+        topColor="toggle.selector.bg.top"
+        borderColor="toggle.selector.bg.border"
+        rolloverTextColor="toggle.selector.rollover"
+        disabledTextColor="toggle.selector.disabled"/>
+    <style selector="toggleButton.budgetAreaSelector"
+           ui="budgetAreaSelectionToggle" foreground="toggle.selector.normal" font="-,plain,12"
+           marginRight="2" fill="none" anchor="center" weightY="0"/>
+
+
     <ui name="selectionToggle"
         class="org.designup.picsou.gui.components.SelectionToggleUI"
         bottomColor="toggle.selector.bg.bottom"

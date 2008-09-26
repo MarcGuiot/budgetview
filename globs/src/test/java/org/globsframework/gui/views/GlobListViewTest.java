@@ -7,6 +7,7 @@ import static org.globsframework.metamodel.DummyObject.*;
 import org.globsframework.metamodel.DummyObject2;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.*;
+import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
@@ -83,7 +84,7 @@ public class GlobListViewTest extends GuiComponentTestCase {
     repository.delete(key1);
     repository.delete(key2);
     repository.completeBulkDispatchingMode();
-    
+
     assertTrue(list.selectionIsEmpty());
     listener.assertEquals("<log>" +
                           "<selection types='dummyObject'>" +
@@ -169,6 +170,20 @@ public class GlobListViewTest extends GuiComponentTestCase {
                     "<dummyObject2 id='2' label='name2'/>");
     ListBox list = new ListBox(GlobListView.init(DummyObject2.TYPE, repository, directory).getComponent());
     assertTrue(list.contentEquals("dummyObject2[id=1]", "dummyObject2[id=2]"));
+  }
+
+  public void testDefaultRendererUsesSpaceForEmptyStringsToAvoidCollapsedRows() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject2 id='1' label='name1'/>" +
+                    "<dummyObject2 id='2' label='name2'/>");
+    ListBox list = new ListBox(GlobListView.init(DummyObject2.TYPE, repository, directory)
+      .setRenderer(new AbstractGlobStringifier() {
+        public String toString(Glob glob, GlobRepository repository) {
+          return "";
+        }
+      })
+      .getComponent());
+    assertTrue(list.contentEquals(" ", " "));
   }
 
   public void testUserSelection() throws Exception {
@@ -273,7 +288,7 @@ public class GlobListViewTest extends GuiComponentTestCase {
     DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
 
     view.selectFirst();
-    
+
     assertTrue(listBox.selectionIsEmpty());
     listener.assertEquals("<log>" +
                           "<selection types='dummyObject'>" +
@@ -380,12 +395,12 @@ public class GlobListViewTest extends GuiComponentTestCase {
     listener.assertEmpty();
 
     repository.update(key1, DummyObject.NAME, "zeRenamedName1");
-    assertTrue(listBox.contentEquals("zeNewName2","zeRenamedName1"));
+    assertTrue(listBox.contentEquals("zeNewName2", "zeRenamedName1"));
     assertTrue(listBox.selectionEquals("zeRenamedName1"));
     listener.assertEmpty();
 
     repository.update(key1, DummyObject.NAME, "zeNewName1");
-    assertTrue(listBox.contentEquals("zeNewName1","zeNewName2"));
+    assertTrue(listBox.contentEquals("zeNewName1", "zeNewName2"));
     assertTrue(listBox.selectionEquals("zeNewName1"));
     listener.assertEmpty();
   }

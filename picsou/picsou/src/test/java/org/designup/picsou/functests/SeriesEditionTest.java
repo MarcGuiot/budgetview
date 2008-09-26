@@ -468,7 +468,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .unselectCategory(MasterCategory.FOOD, MasterCategory.CLOTHING)
       .checkNoCategory()
       .openCategory()
-      .checkUnSelected(MasterCategory.FOOD, MasterCategory.CLOTHING)
+      .checkUnselected(MasterCategory.FOOD, MasterCategory.CLOTHING)
       .validate();
     edition
       .checkNoCategory();

@@ -1,0 +1,40 @@
+<globs>
+  <bank name="Credit Mutuel" id='7'>
+    
+    <bankEntity id="16306"/>
+    <bankEntity id="10278"/>
+    <bankEntity id="15589"/>
+    <bankEntity id="18829"/>
+    <bankEntity id="15459"/>
+    <bankEntity id="15489"/>
+    <bankEntity id="15629"/>
+    <bankEntity id="15519"/>
+    <bankEntity id="15749"/>
+    <bankEntity id="15889"/>
+    <bankEntity id="15959"/>
+    <bankEntity id="15969"/>
+    <bankEntity id="15999"/>
+    <bankEntity id="16159"/>
+
+    <transactionTypeMatcher regexp="CARTE[\s]+(\d{2}/\d{2})[\s]+(.*)"
+                            transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM"/>
+
+    <transactionTypeMatcher regexp="RETRAIT DAB [0-9]* (.*)"
+                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+
+    <transactionTypeMatcher regexp="RETRAIT (.*)"
+                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+
+    <transactionTypeMatcher regexp="VIR (.*)"
+                            transactionTypeName="virement" label="$1"/>
+
+    <transactionTypeMatcher regexp="PRLV (.*)"
+                            transactionTypeName="prelevement" label="$1"/>
+
+    <transactionTypeMatcher regexp="REM CHQ (.*)"
+                            transactionTypeName="deposit" label="REMISE CHEQUE $1"/>
+
+    <transactionTypeMatcher regexp="CHQ[ ]+(.*)"
+                            transactionTypeName="check" label="CHEQUE N. $1"/>
+  </bank>
+</globs>

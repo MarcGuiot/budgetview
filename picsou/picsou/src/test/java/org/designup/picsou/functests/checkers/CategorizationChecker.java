@@ -157,6 +157,17 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
+  public CategorizationChecker checkNoRecurringSeriesSelected() {
+    Panel seriesPanel = getRecurringSeriesPanel();
+    UIComponent[] toggles = seriesPanel.getUIComponents(ToggleButton.class);
+    for (UIComponent toggle : toggles) {
+      if (toggle.getAwtComponent().isVisible()) {
+        assertFalse(toggle.getLabel() + " selected", ((ToggleButton)toggle).isSelected());
+      }
+    }
+    return this;
+  }
+
   public CategorizationChecker selectNewRecurringSeries(String name, MasterCategory category,
                                                         boolean transactionWasAlreadyCategorized) {
     Panel panel = getRecurringSeriesPanel();
@@ -505,6 +516,19 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
+  public CategorizationChecker doubleClickTableRow(String label) {
+    return doubleClickTableRow(getRowIndex(label));
+  }
+
+  private int getRowIndex(String label) {
+    return getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
+  }
+
+  public CategorizationChecker doubleClickTableRow(int row) {
+    getTable().doubleClick(row, 0);
+    return this;
+  }
+
   public CategorizationChecker selectTableRow(int row) {
     selectTableRows(row);
     return this;
@@ -529,14 +553,17 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
+  /** @deprecated */
   public void checkAutoSelectSimilarEnabled(boolean enabled) {
     assertEquals(enabled, getPanel().getCheckBox("similar").isSelected());
   }
 
+  /** @deprecated */
   public void enableAutoSelectSimilar() {
     getPanel().getCheckBox("similar").select();
   }
 
+  /** @deprecated */
   public void disableAutoSelectSimilar() {
     getPanel().getCheckBox("similar").unselect();
   }

@@ -10,6 +10,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class SelectionToggleUI extends BasicToggleButtonUI {
+  private boolean useBold = false;
   private int padding = 0;
   private int borderWidth = 1;
   private Color borderColor = Color.GRAY.brighter();
@@ -26,14 +27,16 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
     button.setOpaque(false);
     button.setBorderPainted(false);
 
-    final Font defaultFont = button.getFont();
-    final Font boldFont = defaultFont.deriveFont(defaultFont.getStyle() ^ Font.BOLD);
+    if (useBold) {
+      final Font defaultFont = button.getFont();
+      final Font boldFont = defaultFont.deriveFont(defaultFont.getStyle() ^ Font.BOLD);
 
-    button.getModel().addItemListener(new ItemListener() {
-      public void itemStateChanged(ItemEvent e) {
-        button.setFont(button.isSelected() ? boldFont : defaultFont);
-      }
-    });
+      button.getModel().addItemListener(new ItemListener() {
+        public void itemStateChanged(ItemEvent e) {
+          button.setFont(button.isSelected() ? boldFont : defaultFont);
+        }
+      });
+    }
   }
 
   protected void paintButtonPressed(Graphics g, AbstractButton button) {
@@ -98,6 +101,10 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
     }
   }
 
+  public void setUseBold(boolean useBold) {
+    this.useBold = useBold;
+  }
+
   public void setBorderColor(Color borderColor) {
     this.borderColor = borderColor;
   }
@@ -120,5 +127,17 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
 
   public void setDisabledTextColor(Color disabledTextColor) {
     this.disabledTextColor = disabledTextColor;
+  }
+
+  public void setBorderWidth(int borderWidth) {
+    this.borderWidth = borderWidth;
+  }
+
+  public void setCornerRadius(int cornerRadius) {
+    this.cornerRadius = cornerRadius;
+  }
+
+  public void setPadding(int padding) {
+    this.padding = padding;
   }
 }

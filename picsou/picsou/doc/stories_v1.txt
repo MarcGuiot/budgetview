@@ -1,14 +1,14 @@
-Edition de transactions
+TransactionDetails
 *** Note
+*** Bug layout: Afficher les labels en multiligne
 * Date (reporter / annuler report = on reprend la date banque si ok)
 * Label
 * Type
 
 SeriesEditionDialog
+*** Mode autopilote
 *** Bug layout en mode enveloppe
 * Modifier l'ordre des series
-* Creation d'enveloppe : mettre les expected a 0, ou mode autopilote
-* Revoir algo d'initialisation des SeriesBudget : prendre les 3 derniers mois seulement ? Mode autopilote ?
 * Bouton ou double-clic pour selectionner tout
 * Creation de projet => selectionner les dates debut/fin sur la selection courante
 * Enveloppes : "Nom" => "Nom de l'enveloppe", titre = "Enveloppes de frais courants"
@@ -23,31 +23,24 @@ BudgetView
 * Renommer "Projets" en "Projets & Operations Speciales" ?
 
 CategorizationView
-*** Bug sur gestion du bold pour les toggles dans les occasional
 * Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 * Recherche/filtrage table
 * Selection d'operations similaires : ne pas scroller la table
 * Selection d'operations similaires : afficher le label anonymisé dans TransactionDetails
 * Ordre des transactions = labels anonymises + date
-* Supprimer modes "select similar" et "select next"
 * Bug repaint dans les zones d'affichage des series (a confirmer)
 * Reactiver selection similar en double clic pour les cheques et les retraits ?
-
-TransactionDetails
-*** Bug layout: Afficher les labels en multiligne
 
 TransactionView
 ** Filtrage transactions par Compte
 * Afficher la somme (total ou multi-selection)
 * Filtrage transactions par TransactionType
-* Bouton pour vider rapidement le champ de recherche
 * Suppression de transactions ghost pour cloturer une serie ? (= alignement prevu / depense)
 
 SeriesView
 * Ajouter bouton ouverture SED
 
 BalanceSumary
-*** Ajouter les projets au calcul
 * Qu'affiche-t-on dans le passe ?
 * Hyperliens vers les transactions planned correspondantes
 
@@ -64,6 +57,7 @@ Home page
 ** Afficher le changeLog en cas de changement de version
 
 Licence
+*** Pb perte licence + reemission quotidienne de mails (severine)
 * Pb focus text editor
 * Pb d'access au serveur "vous devez être connecté" alors que la connexion internet marche
 * revoir look panneau
@@ -73,7 +67,6 @@ Licence
 
 CategoryEditionDialog
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
-* suppression avec move : retirer la source de la liste des target
 * Creation de series INCOME : preselectionner la categories par defaut
 * Titre
 * Label "renommer la categorie"
@@ -83,20 +76,13 @@ HistoricalChart
 * voir affichage avec ghosts
 
 Import
-* Ajouter Credit Mutuel (& co) à la liste des banques
-* Import Olivier : voir joliesse selection
 * Import : OK sans fichier = message, si selection il faut purger le message
 * Bring to front sur Open With...
 * Memoriser dernier repertoire pour le filechooser
-* En mode "dialog", utiliser une PicsouDialog + revoir bouton "ignorer fichier" => "cancel"
+* Utiliser une PicsouDialog
+* Revoir bouton "ignorer fichier" => "cancel"
 * open with... ne marche qu'une seule fois (après cancel)
-* Apres import, aller vers CategorizationView
-
-Login
-* Creation de compte : expliquer que la notion de compte / mot de passe est liee au cryptage local
-* Error login + "new user" => effacer message
-* Si aucun utilisateur dans le repo, passage direct en mode creation de compte
-* Suppression de la phase d'import
+* Apres import, aller vers CategorizationView et filtrer sur les donnes de l'import (pas la premiere fois)
 
 TimeView
 * Integration des boutons next/prev et start/end dans la barre
@@ -104,6 +90,7 @@ TimeView
 Packaging
 * Afficher SLA au premier lancement (repository vide)
 * Look installer (fond en blanc)
+* Desactiver choix langue dans l'installer, forcer en français
 
 General
 * Supprimer les subcats par defaut (mode avance - apporte plus de confusion que de valeur pour les novices)
@@ -116,7 +103,6 @@ General
 * Format des montants : mettre des espaces pour separer les milliers
 
 Undo/redo
-* Utiliser cmd-z plutot que ctrl-z sous Mac
 * Test Import
 * Test Creation/edition de serie
 * Test Split

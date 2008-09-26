@@ -2,6 +2,7 @@ package org.designup.picsou.gui.components.filtering;
 
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -59,16 +60,8 @@ public abstract class TextFilterPanel {
   private void createTextField() {
     textField = new JTextField();
     textField.setOpaque(true);
-    textField.getDocument().addDocumentListener(new DocumentListener() {
-      public void insertUpdate(DocumentEvent e) {
-        updateSearch(textField);
-      }
-
-      public void removeUpdate(DocumentEvent e) {
-        updateSearch(textField);
-      }
-
-      public void changedUpdate(DocumentEvent e) {
+    textField.getDocument().addDocumentListener(new AbstractDocumentListener() {
+      protected void documentChanged(DocumentEvent e) {
         updateSearch(textField);
       }
     });

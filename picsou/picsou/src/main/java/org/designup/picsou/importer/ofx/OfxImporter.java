@@ -10,6 +10,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobIdGenerator;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.TruncatedFile;
 
@@ -64,6 +65,7 @@ public class OfxImporter implements AccountFileImporter {
     private String name;
     private String memo;
     private String transactionType;
+    private String checkNum;
 
     public Functor(GlobRepository targetRepository, ReadOnlyGlobRepository initialRepository) {
       this.repository = targetRepository;
@@ -77,7 +79,7 @@ public class OfxImporter implements AccountFileImporter {
     }
 
     public void enterTag(String tag) {
-      if (tag.equals("OFX")) {
+      if (tag.equals("OFX") || tag.equals("OFC")) {
         if (ofxTagFound) {
           throw new InvalidFormat("Found <OFX> tag twice");
         }
@@ -137,7 +139,7 @@ public class OfxImporter implements AccountFileImporter {
         processCategories();
         checkTransaction();
       }
-      if (tag.equals("OFX")) {
+      if (tag.equals("OFX") || tag.equals("OFC")) {
         fileCompleted = true;
       }
 
@@ -231,6 +233,10 @@ public class OfxImporter implements AccountFileImporter {
         updateName(content);
         return;
       }
+      if (tag.equalsIgnoreCase("CHKNUM") || tag.equalsIgnoreCase("CHECKNUM")) {
+        checkNum = content;
+        return;
+      }
       if (tag.equalsIgnoreCase("MEMO")) {
         updateMemo(content);
         return;
@@ -312,7 +318,16 @@ public class OfxImporter implements AccountFileImporter {
     }
 
     private void updateTransactionLabel() {
-      String content = Strings.join(name, memo);
+      String content;
+      if (name == null && checkNum != null) {
+        name = checkNum;
+      }
+      if (Utils.equal(name, memo)) {
+        content = name;
+      }
+      else {
+        content = Strings.join(name, memo);
+      }
       repository.update(currentTransactionKey, ImportedTransaction.ORIGINAL_LABEL, content);
       repository.update(currentTransactionKey, ImportedTransaction.LABEL, content);
       repository.update(currentTransactionKey, ImportedTransaction.BANK_TRANSACTION_TYPE, transactionType);

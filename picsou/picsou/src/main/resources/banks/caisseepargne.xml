@@ -1,8 +1,33 @@
 <globs>
   <bank name="Caisse d'épargne" downloadUrl="" id='6'>
-    <bankEntity id="11425"/>
+    <bankEntity id="18645"/>
+    <bankEntity id="13335"/>
+    <bankEntity id="12225"/>
+    <bankEntity id="17515"/>
+    <bankEntity id="14265"/>
+    <bankEntity id="13825"/>
+    <bankEntity id="16945"/>
     <bankEntity id="17865"/>
+    <bankEntity id="13135"/>
+    <bankEntity id="14445"/>
+    <bankEntity id="14505"/>
+    <bankEntity id="19525"/>
+    <bankEntity id="15965"/>
     <bankEntity id="17695"/>
+    <bankEntity id="15455"/>
+    <bankEntity id="11315"/>
+    <bankEntity id="13705"/>
+    <bankEntity id="11425"/>
 
+    <transactionTypeMatcher regexp="CARTE[\s]+(.*)[\s]+(\d{6})"
+                            transactionTypeName="credit_card" label="$1" groupForDate="2" dateFormat="ddMMyy"/>
+
+    <transactionTypeMatcher regexp="CHEQUE[\s]+N\?(.*)"
+                            transactionTypeName="check" label="CHEQUE N. $1"/>
+
+    <transactionTypeMatcher regexp="RETRAIT DAB[\s]+(.*)"
+                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+
+    
   </bank>
 </globs>

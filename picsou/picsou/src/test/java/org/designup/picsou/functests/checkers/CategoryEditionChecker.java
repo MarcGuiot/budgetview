@@ -64,7 +64,7 @@ public class CategoryEditionChecker extends DataChecker {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           CategoryDeletionChecker categoryDeletionChecker = new CategoryDeletionChecker(window);
-          categoryDeletionChecker.selectCategory(newCategory);
+          categoryDeletionChecker.selectCategory(newCategory, null);
           return categoryDeletionChecker.validate();
         }
       }).run();

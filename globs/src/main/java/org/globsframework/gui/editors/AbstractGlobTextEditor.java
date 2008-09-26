@@ -5,6 +5,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
+import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -59,16 +60,8 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   private void registerKeyPressedListener() {
     if (isNotifyAtKeyPressed()) {
       if (keyPressedListener == null) {
-        keyPressedListener = new DocumentListener() {
-          public void insertUpdate(DocumentEvent e) {
-            applyChanges();
-          }
-
-          public void removeUpdate(DocumentEvent e) {
-            applyChanges();
-          }
-
-          public void changedUpdate(DocumentEvent e) {
+        keyPressedListener = new AbstractDocumentListener() {
+          protected void documentChanged(DocumentEvent e) {
             applyChanges();
           }
         };

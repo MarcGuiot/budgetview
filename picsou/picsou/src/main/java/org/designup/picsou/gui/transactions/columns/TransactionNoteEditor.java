@@ -2,6 +2,7 @@ package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -11,7 +12,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -105,16 +105,8 @@ public class TransactionNoteEditor extends DefaultCellEditor {
     popup.setSelected(menuItem);
   }
 
-  private class TextChangeDocumentListener implements DocumentListener {
-    public void insertUpdate(DocumentEvent e) {
-      showPopupIfNeeded();
-    }
-
-    public void removeUpdate(DocumentEvent e) {
-      showPopupIfNeeded();
-    }
-
-    public void changedUpdate(DocumentEvent e) {
+  private class TextChangeDocumentListener extends AbstractDocumentListener {
+    protected void documentChanged(DocumentEvent e) {
       showPopupIfNeeded();
     }
 
@@ -162,6 +154,7 @@ public class TransactionNoteEditor extends DefaultCellEditor {
   }
 
   private class PopupNavigationKeyListener extends KeyAdapter {
+
     public void keyPressed(KeyEvent e) {
       if (!popup.isVisible()) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
