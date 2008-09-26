@@ -116,4 +116,8 @@ public class TransactionDetailsChecker extends DataChecker {
                        "#############");
     return this;
   }
+
+  public void checkMessage(String message) {
+    UISpecAssert.assertThat(getPanel().getTextBox().textContains(message));
+  }
 }

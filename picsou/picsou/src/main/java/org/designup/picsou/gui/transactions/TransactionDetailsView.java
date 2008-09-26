@@ -8,9 +8,9 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
 import org.globsframework.gui.views.GlobLabelView;
@@ -184,10 +184,24 @@ public class TransactionDetailsView extends View {
 
       Set<String> names = list.getValueSet(Transaction.LABEL);
       if (names.size() > 1) {
+
+        Set<String> anonymizedNames = list.getValueSet(Transaction.LABEL_FOR_CATEGORISATION);
+        if (anonymizedNames.size() == 1) {
+          String firstName = anonymizedNames.iterator().next();
+          if (!Strings.isNullOrEmpty(firstName)) {
+            return Lang.get("transaction.details.multilabel.similar", firstName, list.size());
+          }
+          else {
+            return Lang.get("transaction.details.multilabel.different", list.size());
+
+          }
+        }
+
         return Lang.get("transaction.details.multilabel.different", list.size());
       }
 
-      return Lang.get("transaction.details.multilabel.similar", names.iterator().next(), list.size());
+      String firstName = names.iterator().next();
+      return Lang.get("transaction.details.multilabel.similar", firstName, list.size());
     }
   }
 }

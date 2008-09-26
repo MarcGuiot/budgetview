@@ -9,7 +9,7 @@ import javax.swing.plaf.InsetsUIResource;
 public class PicsouMacLookAndFeel extends AquaLookAndFeel {
 
   public static void initApplicationName() {
-    System.setProperty("com.apple.mrj.application.apple.menu.about.name", Lang.get("application"));
+    System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Picsou");
   }
 
   protected void initClassDefaults(UIDefaults defaults) {

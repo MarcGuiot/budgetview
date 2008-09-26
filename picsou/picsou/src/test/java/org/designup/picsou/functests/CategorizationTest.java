@@ -322,7 +322,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.disableAutoSelectNext();
 
     categorization.doubleClickTableRow(0);
-    categorization.checkLabel(2);
+    categorization.checkLabel("Auchan [2 operations]");
 
     categorization.checkSelectedTableRows(0, 1);
     categorization.doubleClickTableRow(3);
