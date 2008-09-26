@@ -1,0 +1,12 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+
+  <panel styleClass="dialog" preferredSize="(250,100)" opaque="true">
+    <column styleClass="innerDialog">
+      <htmlEditorPane text="$seriesEdition.manual.warning" opaque="false" editable="false"/>
+    </column>
+  </panel>
+
+</splits>

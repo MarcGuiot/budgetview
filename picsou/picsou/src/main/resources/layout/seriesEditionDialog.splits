@@ -38,7 +38,7 @@
           <column marginTop="20">
             <label text="Echeances" styleClass="separatorTitle"/>
             <row styleClass="separator">
-              <column marginTop="10" weightX="3">
+              <column marginTop="10" weightX="3" minimumSize="(150,300)">
 
                 <label text="$seriesEdition.begin" styleClass="formLabelTop" fill="horizontal"/>
                 <row>
@@ -78,7 +78,7 @@
                 <filler fill="vertical"/>
               </column>
 
-              <cards ref="modeCard">
+              <cards ref="modeCard" opaque="false">
                 <card name="manual">
                   <column margin="10" marginBottom="0" weightX="7">
                     <label ref="seriesEditionAmountLabel" styleClass="formLabelTop" fill="horizontal"/>
@@ -87,13 +87,23 @@
                     <scrollPane weightY="1000" margin="5">
                       <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>
                     </scrollPane>
-                    <button action="automatic" styleClass="hyperlinkButton"/>
+                    <row>
+                      <filler fill="horizontal"/>
+                      <button action="automatic" styleClass="hyperlink"/>
+                      <filler fill="horizontal"/>
+                    </row>
                   </column>
                 </card>
                 <card name="automatic">
                   <column>
-                    <htmlEditorPane text="$seriesEdition.automatic.explain"/>
-                    <button action="manual"/>
+                    <htmlEditorPane text="$seriesEdition.automatic.explain" marginTop="20" marginLeft="20"
+                                    marginRight="20"/>
+                    <row>
+                      <filler fill="horizontal"/>
+                      <button action="manual"/>
+                      <filler fill="horizontal"/>
+                    </row>
+                    <filler fill="vertical"/>
                   </column>
                 </card>
               </cards>

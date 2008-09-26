@@ -83,7 +83,7 @@
                     <repeat ref="budgetAreaButtons" layout="horizontalGrid" gridWrapLimit="3" margin="5">
                       <column styleClass="budgetAreaSelector" weightX="1">
                         <button ref="budgetAreaButton"/>
-                        <textArea ref="budgetAreaDescription"/>
+                        <textArea ref="budgetAreaDescription" opaque="false"/>
                       </column>
                     </repeat>
                     <filler fill="vertical"/>

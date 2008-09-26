@@ -21,6 +21,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
+import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -422,8 +423,10 @@ public class SeriesEditionDialog {
             nameEditor.getComponent().selectAll();
           }
           else {
-            amountEditor.getComponent().requestFocusInWindow();
-            amountEditor.getComponent().selectAll();
+            if (amountEditor.getComponent().isVisible()) {
+              amountEditor.getComponent().requestFocusInWindow();
+              amountEditor.getComponent().selectAll();
+            }
           }
         }
       }
@@ -564,6 +567,12 @@ public class SeriesEditionDialog {
     public void actionPerformed(ActionEvent e) {
       Glob newSeries = createSeries(Lang.get("seriesEdition.newSeries"), 0.0, 1);
       selectionService.select(newSeries);
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          nameEditor.getComponent().requestFocusInWindow();
+          nameEditor.getComponent().selectAll();
+        }
+      });
     }
   }
 
@@ -938,8 +947,8 @@ public class SeriesEditionDialog {
 
     public void actionPerformed(ActionEvent e) {
       ok = false;
-      JPanel panel = new JPanel();
-      panel.add(new JEditorPane("", Lang.get("seriesEdition.manual.warning")));
+      JPanel panel = SplitsBuilder.init(localDirectory)
+        .setSource(SeriesEditionDialog.class, "/layout/automaticWarningDialog.splits").load();
       warningDialog = PicsouDialog.createWithButtons(dialog, panel,
                                                      new AbstractAction(Lang.get("ok")) {
                                                        public void actionPerformed(ActionEvent e) {
