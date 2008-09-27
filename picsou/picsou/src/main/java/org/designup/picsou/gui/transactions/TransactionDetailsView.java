@@ -79,9 +79,11 @@ public class TransactionDetailsView extends View {
     builder.add("userDate",
                 addLabel(new TransactionDateListStringifier(Transaction.MONTH, Transaction.DAY), true));
 
-    builder.add("multiSelectionPanel",
-                new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_TWO,
-                                             repository, directory));
+    builder.add("bankDate",
+                addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true)
+                  .setAutoHideMatcher(new BankDateVisibilityMatcher()));
+
+    builder.addEditor("noteField", Transaction.NOTE);
 
     builder.add("splitPanel",
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_ONE,
@@ -93,10 +95,6 @@ public class TransactionDetailsView extends View {
                 GlobLabelView.init(Transaction.TYPE, repository, directory,
                                    new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, "..."))
                   .setAutoHideMatcher(new OriginalLabelVisibilityMatcher()));
-
-    builder.add("bankDate",
-                addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true)
-                  .setAutoHideMatcher(new BankDateVisibilityMatcher()));
 
     return builder;
   }
