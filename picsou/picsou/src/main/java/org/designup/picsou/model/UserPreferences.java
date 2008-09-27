@@ -34,8 +34,6 @@ public class UserPreferences {
   @DefaultBoolean(false)
   public static BooleanField REGISTRED_USER;
 
-  public static final Integer VISIBLE_MONTH_COUNT_FOR_ANONYMOUS = 0;
-
   static {
     GlobTypeLoader.init(UserPreferences.class, "userPreferences");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);

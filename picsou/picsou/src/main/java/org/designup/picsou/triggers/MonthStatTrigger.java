@@ -28,7 +28,7 @@ public class MonthStatTrigger implements ChangeSetListener {
         GlobList accounts = repository.getAll(Account.TYPE);
         for (Glob month : months) {
           for (Glob account : accounts) {
-            repository.findOrCreate(getKey(month.get(Month.ID), key.get(Category.ID), account.get(Account.ID)));
+            initMonthStat(getKey(month.get(Month.ID), key.get(Category.ID), account.get(Account.ID)), repository);
           }
         }
       }
@@ -47,7 +47,8 @@ public class MonthStatTrigger implements ChangeSetListener {
         GlobList accounts = repository.getAll(Account.TYPE);
         for (Glob category : categories) {
           for (Glob account : accounts) {
-            repository.findOrCreate(getKey(key.get(Month.ID), category.get(Category.ID), account.get(Account.ID)));
+            initMonthStat(getKey(key.get(Month.ID), category.get(Category.ID), account.get(Account.ID)),
+                          repository);
           }
         }
       }
@@ -116,9 +117,6 @@ public class MonthStatTrigger implements ChangeSetListener {
         else {
           oldCategoryId = newCategoryId = transaction.get(Transaction.CATEGORY) == null ?
                                           Category.NONE : transaction.get(Transaction.CATEGORY);
-        }
-        if (oldCategoryId == null || newCategoryId == null) {
-          System.out.println("MonthStatTrigger.visitUpdate " + transaction.getKey());
         }
         Integer newMonth;
         Integer oldMonth;
@@ -206,6 +204,9 @@ public class MonthStatTrigger implements ChangeSetListener {
 
       public void visitDeletion(Key key, FieldValues values) throws Exception {
         int newMonth = values.get(Transaction.MONTH);
+        if (repository.find(Key.create(Month.TYPE, newMonth)) == null) {
+          return;
+        }
         Integer categoryId = values.get(Transaction.CATEGORY) == null ? Category.NONE : values.get(Transaction.CATEGORY);
         Integer accountId = values.get(Transaction.ACCOUNT);
         Double amount = values.get(Transaction.AMOUNT);
@@ -346,12 +347,6 @@ public class MonthStatTrigger implements ChangeSetListener {
     Integer masterId = categoryToMaster.get(categoryId);
     if (masterId != null) {
       updatePlannedMonthStat(month, masterId, accountId, isReceived, amount, categoryToMaster, repository);
-    }
-  }
-
-  private void createMonths(int[] monthRange, GlobRepository repository) {
-    for (int month : monthRange) {
-      repository.findOrCreate(Key.create(Month.TYPE, month));
     }
   }
 
