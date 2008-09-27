@@ -12,6 +12,7 @@ import org.uispec4j.interception.WindowInterceptor;
 public class OperationChecker {
   private MenuItem importMenu;
   private MenuItem exportMenu;
+  private MenuItem preferencesMenu;
   private MenuItem undoMenu;
   private MenuItem redoMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
@@ -22,6 +23,7 @@ public class OperationChecker {
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
     importMenu = fileMenu.getSubMenu("Import");
     exportMenu = fileMenu.getSubMenu("Export");
+    preferencesMenu = fileMenu.getSubMenu("Preferences");
 
     MenuItem editMenu = window.getMenuBar().getMenu("Edit");
     undoMenu = editMenu.getSubMenu("Undo");
@@ -85,6 +87,10 @@ public class OperationChecker {
 
   public Trigger getExportTrigger() {
     return exportMenu.triggerClick();
+  }
+
+  public PreferencesChecker getPreferences() {
+    return new PreferencesChecker(WindowInterceptor.getModalDialog(preferencesMenu.triggerClick()));
   }
 
   public void undo() {

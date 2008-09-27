@@ -121,7 +121,7 @@ public class LicenseTest extends LicenseTestCase {
     window.dispose();
     checkPreviousVersionValidity("2010/07");
     activateNewLicenseInNewVersion(newActivationCode);
-    checkPreviousVersionValidity("2008/07");
+    checkPreviousVersionValidity("2010/07");
   }
 
   public void testRegisterAndBadlyReRegister() throws Exception {
@@ -193,7 +193,7 @@ public class LicenseTest extends LicenseTestCase {
     LoginChecker login = new LoginChecker(window);
     login.logUser("user", "passw@rd");
     MonthChecker monthChecker = new MonthChecker(window);
-    monthChecker.assertDisplays("2008/07");
+    monthChecker.assertSpanEquals("2008/07", "2010/07");
     LicenseChecker license = new LicenseChecker(window);
     license.enterLicense(window, MAIL, code, 24);
     monthChecker.assertSpanEquals("2008/07", "2010/07");

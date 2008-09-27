@@ -48,8 +48,6 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
                 repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_OK);
               }
               else {
-                repository.update(UserPreferences.KEY, UserPreferences.FUTURE_MONTH_COUNT,
-                                  UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS);
                 repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_BAD_SIGNATURE);
               }
             }

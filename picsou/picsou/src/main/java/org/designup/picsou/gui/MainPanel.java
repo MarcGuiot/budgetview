@@ -4,6 +4,7 @@ import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ExportFileAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
+import org.designup.picsou.gui.actions.PreferencesAction;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
@@ -39,7 +40,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldContainsIgnoreCase;
+import static org.globsframework.model.utils.GlobMatchers.or;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -53,6 +55,7 @@ public class MainPanel {
   private PicsouFrame parent;
   private ImportFileAction importFileAction;
   private ExportFileAction exportFileAction;
+  private PreferencesAction preferencesFileAction;
   private ExitAction exitAction;
   protected GlobsPanelBuilder builder;
   private MainWindow mainWindow;
@@ -88,6 +91,7 @@ public class MainPanel {
 
     importFileAction = ImportFileAction.initAndRegisterInOpenRequestManager(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
+    preferencesFileAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(parent, repository, directory);
     check = new CheckRepositoryAction(repository);
     exitAction = new ExitAction(directory);
@@ -157,6 +161,8 @@ public class MainPanel {
     JMenu fileMenu = new JMenu(Lang.get("file"));
     fileMenu.add(importFileAction);
     fileMenu.add(exportFileAction);
+    fileMenu.addSeparator();
+    fileMenu.add(preferencesFileAction);
     fileMenu.addSeparator();
     fileMenu.add(registerAction);
     fileMenu.addSeparator();

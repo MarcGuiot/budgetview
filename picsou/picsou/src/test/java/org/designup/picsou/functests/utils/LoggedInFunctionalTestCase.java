@@ -138,9 +138,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     budgetView = null;
     categorization = null;
     series = null;
+    license = null;
     picsouApplication.shutdown();
     picsouApplication = null;
-    license = null;
   }
 
   public OperationChecker getOperations() {

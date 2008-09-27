@@ -15,13 +15,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ExportFileAction extends AbstractAction {
-  private GlobRepository globRepository;
+  private GlobRepository repository;
   private Component parent;
 
-  public ExportFileAction(GlobRepository globRepository, Directory directory) {
+  public ExportFileAction(GlobRepository repository, Directory directory) {
     super(Lang.get("export"));
     this.parent = directory.get(JFrame.class);
-    this.globRepository = globRepository;
+    this.repository = repository;
   }
 
   public void actionPerformed(ActionEvent event) {
@@ -63,7 +63,7 @@ public class ExportFileAction extends AbstractAction {
   private void writeFile(File file) throws IOException {
     BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
     try {
-      OfxExporter.write(globRepository, bufferedWriter);
+      OfxExporter.write(repository, bufferedWriter);
     }
     finally {
       bufferedWriter.close();

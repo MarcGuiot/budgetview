@@ -9,7 +9,6 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -53,7 +52,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private int paintCount = 0;
   private int currentPaintCount = 0;
   private TimeService timeService;
-  private boolean isRegisteredUser;
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
     this.repository = globRepository;
@@ -61,9 +59,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     Font monthFont = getFont();
     Font yearFont = monthFont.deriveFont((float)monthFont.getSize() - 2);
     colors = new MonthViewColors(directory, yearFont, monthFont);
-    isRegisteredUser = repository.get(UserPreferences.KEY).get(UserPreferences.REGISTRED_USER);
     GlobList list = globRepository.getAll(Month.TYPE).sort(Month.ID);
-    filterMonth(list);
     timeGraph = new TimeGraph(list, colors, timeService, getFontMetrics(yearFont), getFontMetrics(monthFont));
     selectionService = directory.get(SelectionService.class);
     setName("MonthSelector");
@@ -243,12 +239,9 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
 
   public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
     if (changeSet.containsChanges(UserPreferences.KEY)) {
-      if (repository.get(UserPreferences.KEY).get(UserPreferences.REGISTRED_USER) != isRegisteredUser) {
-        isRegisteredUser = !isRegisteredUser;
-        reloadMonth();
-        repaint();
-        return;
-      }
+      reloadMonth();
+      repaint();
+      return;
     }
     if (changeSet.containsChanges(Month.TYPE)) {
       reloadMonth();
@@ -257,21 +250,28 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
-    isRegisteredUser = repository.get(UserPreferences.KEY).get(UserPreferences.REGISTRED_USER);
     reloadMonth();
     repaint();
   }
 
   private void reloadMonth() {
     GlobList list = repository.getAll(Month.TYPE).sort(Month.ID);
-    filterMonth(list);
     timeGraph = new TimeGraph(list, colors, timeService, getFontMetrics(colors.getYearFont()),
                               getFontMetrics(colors.getMonthFont()));
-  }
-
-  private void filterMonth(GlobList list) {
-    if (!isRegisteredUser) {
-      list.filterSelf(GlobMatchers.fieldLesserOrEqual(Month.ID, timeService.getCurrentMonthId()), repository);
+    GlobList selectedMonth = selectionService.getSelection(Month.TYPE);
+    GlobList stillThere = new GlobList();
+    for (Glob glob : list) {
+      if (selectedMonth.remove(glob)) {
+        stillThere.add(glob);
+      }
+    }
+    if (stillThere.isEmpty()) {
+      Integer currentMonthId = timeService.getCurrentMonthId();
+      Glob month = repository.find(Key.create(Month.TYPE, currentMonthId));
+      selectionService.select(month);
+    }
+    else {
+      selectionService.select(stillThere, Month.TYPE);
     }
   }
 

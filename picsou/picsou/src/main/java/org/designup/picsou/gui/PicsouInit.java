@@ -58,7 +58,7 @@ public class PicsouInit {
     repository.addTrigger(new RegistrationTrigger(directory));
     repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
     repository.addTrigger(new FutureMonthTrigger(directory));
-    repository.addTrigger(new MonthsToSeriesBudgetTrigger());
+    repository.addTrigger(new MonthsToSeriesBudgetTrigger(directory));
     repository.addTrigger(new OccasionalSeriesBudgetCreationTrigger());
     repository.addTrigger(new ObservedSeriesStatTrigger());
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
@@ -118,9 +118,7 @@ public class PicsouInit {
                       value(User.NAME, user));
     repository.create(ServerInformation.KEY,
                       value(ServerInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.CONFIG_VERSION));
-    repository.create(UserPreferences.KEY,
-                      FieldValue.value(UserPreferences.FUTURE_MONTH_COUNT,
-                                       UserPreferences.VISIBLE_MONTH_COUNT_FOR_ANONYMOUS));
+    repository.create(UserPreferences.KEY);
     repository.create(CurrentMonth.KEY,
                       FieldValue.value(CurrentMonth.MONTH_ID, 0),
                       FieldValue.value(CurrentMonth.DAY, 0));

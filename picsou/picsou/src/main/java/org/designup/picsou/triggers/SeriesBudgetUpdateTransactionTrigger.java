@@ -60,11 +60,12 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        GlobList transactions = repository.findByIndex(Transaction.MONTH_INDEX, previousValues.get(SeriesBudget.MONTH))
-          .filterSelf(GlobMatchers.and(
-            GlobMatchers.fieldEquals(Transaction.PLANNED, true),
-            GlobMatchers.fieldEquals(Transaction.SERIES, previousValues.get(SeriesBudget.SERIES))),
-                      repository).sort(Transaction.DAY);
+        GlobList transactions =
+          repository.findByIndex(Transaction.MONTH_INDEX, previousValues.get(SeriesBudget.MONTH))
+            .filterSelf(GlobMatchers.and(
+              GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+              GlobMatchers.fieldEquals(Transaction.SERIES, previousValues.get(SeriesBudget.SERIES))), repository)
+            .sort(Transaction.DAY); //??
         repository.delete(transactions);
       }
     });
