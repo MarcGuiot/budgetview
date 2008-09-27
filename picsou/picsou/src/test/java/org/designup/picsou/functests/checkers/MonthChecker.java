@@ -22,7 +22,8 @@ public class MonthChecker extends DataChecker {
   }
 
   public void assertEmpty() {
-    Assert.assertTrue(timeViewPanel.getCurrentlySelectedToUpdate().isEmpty());
+    Set<Selectable> selectables = timeViewPanel.getCurrentlySelectedToUpdate();
+    Assert.assertTrue("Contains: " + selectables, selectables.isEmpty());
   }
 
   public void assertDisplays(String... elements) {

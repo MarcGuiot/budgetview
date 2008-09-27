@@ -31,6 +31,24 @@
            labelColor="repartition.chart.label"
            percentLabelColor="repartition.chart.percent"
            fill="both"/>
+
+    <!-- Timeview buttons -->
+    <ui name="arrowLeft" class="org.designup.picsou.gui.components.ArrowButtonUI"
+        rotation="180" doubleArrow="false"
+        rolloverColor="periods.button.rollover" pressedColor="periods.button.pressed"/>
+    <ui name="doubleArrowLeft" class="org.designup.picsou.gui.components.ArrowButtonUI"
+        rotation="180" doubleArrow="true"
+        rolloverColor="periods.button.rollover" pressedColor="periods.button.pressed"/>
+    <ui name="arrowRight" class="org.designup.picsou.gui.components.ArrowButtonUI"
+        rotation="0" doubleArrow="false"
+        rolloverColor="periods.button.rollover" pressedColor="periods.button.pressed"/>
+    <ui name="doubleArrowRight" class="org.designup.picsou.gui.components.ArrowButtonUI"
+        rotation="0" doubleArrow="true"
+        rolloverColor="periods.button.rollover" pressedColor="periods.button.pressed"/>
+    <style selector="button.periodButton" opaque="false" borderPainted="false" anchor="south"
+           foreground="periods.button.normal" preferredSize="(20,14)" margin="2" marginBottom="10"/>
+    <style selector="button.doublePeriodButton" opaque="false" borderPainted="false" anchor="south"
+           foreground="periods.button.normal" preferredSize="(20,10)" margin="2" marginBottom="12"/>
   </styles>
 
   <panel styleClass="main" ui="wave">
@@ -46,19 +64,13 @@
         <toggleButton ref="categorizationCardToggle" styleClass="masterViewSelector"/>
       </row>
 
-      <row weightY="0.1">
-        <grid name="time" weightY="10" marginTop="20" marginLeft="20" marginRight="20">
-          <button ref="firstPeriod" gridPos="(0,0)" anchor="southeast"
-                  icon="first.png" rolloverIcon="firstrollover.png" pressedIcon="firstpressed.png"/>
-          <button ref="prevPeriod" gridPos="(0,1)" anchor="northeast"
-                  icon="prev.png" rolloverIcon="prevrollover.png" pressedIcon="prevpressed.png"/>
-          <component ref="month" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
-                     marginLeft="5" marginRight="5" weightX="1000.0" weightY="100.0" border="empty"/>
-          <button ref="lastPeriod" gridPos="(2,0)" anchor="southeast"
-                  icon="last.png" rolloverIcon="lastrollover.png" pressedIcon="lastpressed.png"/>
-          <button ref="nextPeriod" gridPos="(2,1)" anchor="northeast"
-                  icon="next.png" rolloverIcon="nextrollover.png" pressedIcon="nextpressed.png"/>
-        </grid>
+      <row weightY="0.1" name="time" marginTop="20" marginLeft="20" marginRight="20">
+        <button ref="firstPeriod" ui="doubleArrowLeft" styleClass="doublePeriodButton"/>
+        <button ref="prevPeriod" ui="arrowLeft" styleClass="periodButton"/>
+        <component ref="month" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
+                   marginLeft="2" marginRight="2" weightX="1000.0" weightY="100.0" border="empty"/>
+        <button ref="lastPeriod" ui="arrowRight" styleClass="periodButton"/>
+        <button ref="nextPeriod" ui="doubleArrowRight" styleClass="doublePeriodButton"/>
       </row>
 
       <cards ref="mainCards" opaque="false" marginTop="20" weightY="10.0">

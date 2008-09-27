@@ -11,6 +11,8 @@ public class ArrowButtonUI extends BasicButtonUI {
 
   private boolean doubleArrow = false;
   private int rotation = 0;
+  private Color pressedColor = Color.GRAY;
+  private Color rolloverColor = Color.BLUE;
 
   public void installUI(JComponent c) {
     super.installUI(c);
@@ -42,13 +44,13 @@ public class ArrowButtonUI extends BasicButtonUI {
     JButton button = (JButton)c;
     ButtonModel model = button.getModel();
     if (model.isPressed()) {
-      g2.setColor(Color.PINK);
+      g2.setColor(pressedColor);
     }
     else if (model.isRollover()) {
-      g2.setColor(Color.RED);
+      g2.setColor(rolloverColor);
     }
     else {
-      g2.setColor(Color.BLUE);
+      g2.setColor(c.getForeground());
     }
 
     if (rotation != 0)
@@ -76,6 +78,14 @@ public class ArrowButtonUI extends BasicButtonUI {
     shape.lineTo(0, 10);
     shape.closePath();
     return shape;
+  }
+
+  public void setPressedColor(Color pressedColor) {
+    this.pressedColor = pressedColor;
+  }
+
+  public void setRolloverColor(Color rolloverColor) {
+    this.rolloverColor = rolloverColor;
   }
 
   public void setDoubleArrow(boolean doubleArrow) {

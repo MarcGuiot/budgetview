@@ -21,17 +21,18 @@
         <column border="empty(0,10,0,0)">
           <grid>
             <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
-            <textField gridPos="(1,0,2,1)" ref="nameField" marginBottom="4"/>
+            <textField gridPos="(1,0,3,1)" ref="nameField" marginBottom="4"/>
 
             <label gridPos="(0,1)" ref="categoryLabel" styleClass="formLabel"/>
 
+            
             <scrollPane gridPos="(1,1)" autoHideSource="multipleCategoryList">
-              <list ref="multipleCategoryList"/>
+              <list ref="multipleCategoryList" visibleRowCount="4"/>
             </scrollPane>
 
-            <textField gridPos="(1,1)" ref="singleCategoryField"/>
+            <textField gridPos="(2,1)" ref="singleCategoryField"/>
 
-            <button gridPos="(2,1)" action="assignCategory" anchor="northwest" weightX="0.1"/>
+            <button gridPos="(3,1)" action="assignCategory" anchor="northwest" weightX="0.1"/>
             <label gridPos="(1,2,2,1)" ref="missingCategoryLabel" fill="horizontal" marginTop="4"/>
           </grid>
 

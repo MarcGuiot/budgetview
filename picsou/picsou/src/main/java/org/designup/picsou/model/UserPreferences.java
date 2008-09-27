@@ -28,7 +28,7 @@ public class UserPreferences {
 
   public static StringField LAST_DIRECTORY;
 
-  @DefaultInteger(24)
+  @DefaultInteger(12)
   public static IntegerField FUTURE_MONTH_COUNT;
 
   @DefaultBoolean(false)
