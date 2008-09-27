@@ -106,15 +106,20 @@ public class TransactionDetailsChecker extends DataChecker {
     assertTrue(UISpecAssert.and(splitMessage.isVisible(), splitMessage.isEnabled()));
   }
 
-  /**
-   * @deprecated
-   */
   public TransactionDetailsChecker checkNote(String text) {
-//    assertThat(getPanel().getTextBox("note").textEquals(text));
-    System.out.println("############# TransactionDetailsChecker.checkNote: " +
-                       "A reintegrer quand il y aura les notes dans TransactionDetails " +
-                       "#############");
+    TextBox textBox = getPanel().getInputTextBox("noteField");
+    assertThat(textBox.isVisible());
+    assertThat(textBox.textEquals(text));
     return this;
+  }
+
+  public TransactionDetailsChecker setNote(String text) {
+    getPanel().getInputTextBox("noteField").setText(text);
+    return this;
+  }
+
+  public void checkNotesFieldNotVisible() {
+    checkComponentNotVisible(getPanel(), JTextField.class, "noteField");
   }
 
   public void checkMessage(String message) {

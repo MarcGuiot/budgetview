@@ -222,4 +222,37 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(1);
     transactionDetails.checkBankDateNotVisible();
   }
+
+  public void testEditingNotes() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/18", -10.50, "Burger King")
+      .addTransaction("2008/06/18", -10.50, "McDo")
+      .addTransaction("2008/06/18", -10.10, "Quick")
+      .load();
+
+    transactionDetails.checkNotesFieldNotVisible();
+
+    categorization.selectTableRow(0);
+    transactionDetails.checkNote("");
+    transactionDetails.setNote("burger");
+    transactionDetails.checkNote("burger");
+
+    categorization.selectTableRow(1);
+    transactionDetails.checkNote("");
+    transactionDetails.setNote("mac");
+    transactionDetails.checkNote("mac");
+
+    categorization.selectTableRow(0);
+    transactionDetails.checkNote("burger");
+
+    categorization.selectTableRows(0, 1);
+    transactionDetails.checkNote("");
+    transactionDetails.setNote("common");
+
+    categorization.selectTableRow(0);
+    transactionDetails.checkNote("common");
+
+    categorization.selectTableRow(1);
+    transactionDetails.checkNote("common");
+  }
 }

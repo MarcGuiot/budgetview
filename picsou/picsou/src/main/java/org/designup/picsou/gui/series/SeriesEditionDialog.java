@@ -382,7 +382,7 @@ public class SeriesEditionDialog {
   private void initBudgetAreaSeries(BudgetArea budgetArea) {
     this.budgetArea = budgetArea;
 
-    this.titleLabel.setText(Lang.get("budgetArea." + budgetArea.getName()));
+    this.titleLabel.setText(Lang.get("seriesEdition.title." + budgetArea.getName()));
 
     initCategorizeVisibility();
     GlobList seriesList =

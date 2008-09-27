@@ -133,7 +133,8 @@ public enum PicsouColors {
                                                  "/regis.properties",
                                                  "/darkgreycolors.properties",
                                                  "/blackcolors.properties",
-                                                 "/purplecolors.properties",
+                                                 "/color_purple.properties",
+                                                 "/color_green.properties",
                                                  "/grey_yellow1.properties");
     check(colorService);
     return colorService;

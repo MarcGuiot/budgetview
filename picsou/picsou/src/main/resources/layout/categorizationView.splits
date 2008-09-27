@@ -50,12 +50,12 @@
         </panel>
       </column>
 
-      <verticalSplit dividerLocation="190" marginLeft="5">
+      <verticalSplit dividerLocation="160" marginLeft="5">
 
         <column>
           <label text="$categorization.details.title" styleClass="blockTitle"/>
           <panel styleClass="block">
-            <panel ref="transactionDetails" styleClass="innerBlock"/>
+            <panel ref="transactionDetails" styleClass="innerBlock" marginTop="10"/>
           </panel>
         </column>
 

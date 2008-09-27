@@ -54,24 +54,34 @@
             <textArea ref="userLabel" styleClass="readonly"/>
             <row autoHideSource="bankDate">
 
-              <label text="$transaction.detail.userDate" styleClass="formLabel" autoHideSource="userDate"/>
+              <label text="$transaction.details.userDate" styleClass="formLabel" autoHideSource="userDate"/>
               <label ref="userDate" font="$transaction.date" styleClass="formValue"/>
 
-              <label text="$transaction.detail.bankDate" styleClass="formLabel" autoHideSource="bankDate"/>
+              <label text="$transaction.details.bankDate" styleClass="formLabel" autoHideSource="bankDate"/>
               <label ref="bankDate" font="$transaction.date" styleClass="formValue"/>
-
-              <row autoHideSource="originalLabel">
-                <label text="$transaction.details.label.original" styleClass="formLabel"
-                       autoHideSource="originalLabel"/>
-                <label ref="originalLabel" fill="horizontal" horizontalAlignment="left"/>
-              </row>
 
               <filler fill="horizontal"/>
             </row>
-          </column>
-          <column>
+
+            <row autoHideSource="originalLabel">
+              <label text="$transaction.details.label.original" styleClass="formLabel"
+                     autoHideSource="originalLabel"/>
+              <label ref="originalLabel" fill="horizontal" horizontalAlignment="left"/>
+              <filler fill="horizontal"/>
+            </row>
+
+            <row>
+              <label text="$transaction.details.note" styleClass="formLabel"/>
+              <textField ref="noteField"/>
+            </row>
+
             <filler fill="vertical"/>
+
+          </column>
+
+          <column>
             <button name="splitLink" action="split" marginTop="0" autoHideIfDisabled="true"/>
+            <filler fill="vertical"/>
           </column>
         </row>
       </card>
