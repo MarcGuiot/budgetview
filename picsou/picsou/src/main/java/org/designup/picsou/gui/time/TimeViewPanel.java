@@ -65,7 +65,9 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     setName("MonthSelector");
     globRepository.addChangeListener(this);
     enableEvents(AWTEvent.KEY_EVENT_MASK);
+
     selectionService.addListener(this, Month.TYPE, UserPreferences.TYPE);
+
     setFocusable(true);
     addMouseListener(this);
     addMouseMotionListener(this);
@@ -264,9 +266,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       }
     }
     if (stillThere.isEmpty()) {
-      Integer currentMonthId = timeService.getCurrentMonthId();
-      Glob month = repository.find(Key.create(Month.TYPE, currentMonthId));
-      selectionService.select(month);
+      selectionService.clear(Month.TYPE);
     }
     else {
       selectionService.select(stillThere, Month.TYPE);

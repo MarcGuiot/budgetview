@@ -12,9 +12,9 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
@@ -31,7 +31,6 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
@@ -82,6 +81,7 @@ public class ImportPanel {
 
   public ImportPanel(String textForCloseButton, List<File> files, Glob defaultAccount,
                      final Window owner, final GlobRepository repository, Directory directory) {
+
     this.defaultAccount = defaultAccount;
     this.owner = owner;
     this.repository = repository;
@@ -428,9 +428,10 @@ public class ImportPanel {
   }
 
   private void selectImportedMonth(Set<Integer> month) {
-    GlobList monthToSelect = repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, month));
-    if (!monthToSelect.isEmpty()) {
-      directory.get(SelectionService.class).select(monthToSelect, Month.TYPE);
+    GlobList monthsToSelect = repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, month));
+    if (!monthsToSelect.isEmpty()) {
+      SelectionService selectionService = directory.get(SelectionService.class);
+      selectionService.select(monthsToSelect, Month.TYPE);
     }
   }
 

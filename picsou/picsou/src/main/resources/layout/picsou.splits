@@ -139,7 +139,10 @@
                         <table ref="transaction" background="transactions.bg" rowHeight="20"
                                autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
                       </scrollPane>
-                      <component ref="transactionSearch"/>
+                      <row marginBottom="5">
+                        <filler fill="horizontal"/>
+                        <component ref="transactionSearch"/>
+                      </row>
                     </column>
                   </card>
 

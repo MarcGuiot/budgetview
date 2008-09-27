@@ -49,9 +49,11 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   private CardHandler cards;
   private SelectionService parentSelectionService;
   private GlobStringifier budgetAreaStringifier;
+  private ImportFileAction importFileAction;
 
-  public MonthSummaryView(GlobRepository repository, Directory parentDirectory) {
+  public MonthSummaryView(ImportFileAction importFileAction, GlobRepository repository, Directory parentDirectory) {
     super(repository, createDirectory(parentDirectory));
+    this.importFileAction = importFileAction;
     parentSelectionService = parentDirectory.get(SelectionService.class);
     parentSelectionService.addListener(this, Month.TYPE);
     budgetAreaStringifier = descriptionService.getStringifier(BudgetArea.TYPE);
@@ -76,7 +78,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     cards = builder.addCardHandler("cards");
 
-    builder.add("import", ImportFileAction.init(Lang.get("import"), repository, directory, null));
+    builder.add("import", importFileAction);
 
     builder.addRepeat("budgetAreaRepeat",
                       getBudgetAreas(),

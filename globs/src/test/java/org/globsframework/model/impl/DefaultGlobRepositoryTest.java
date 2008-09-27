@@ -543,7 +543,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
       fail();
     }
     catch (InvalidState e) {
-      assertEquals("Using a deleted instance of 'dummyObject'", e.getMessage());
+      assertEquals("Using a deleted instance of 'dummyObject' : " + glob.getKey(), e.getMessage());
     }
   }
 

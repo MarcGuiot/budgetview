@@ -86,9 +86,7 @@ public class MainPanel {
     SeriesView seriesView = new SeriesView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
 
-    directory.add(new NavigationService(categorizationView,
-                                        categoryView,
-                                        seriesView,
+    directory.add(new NavigationService(categorizationView, categoryView, seriesView,
                                         repository, directory));
 
     importFileAction = ImportFileAction.initAndRegisterInOpenRequestManager(Lang.get("import"), repository, directory);
@@ -108,7 +106,7 @@ public class MainPanel {
     };
     builder.add("transactionSearch", search.getPanel());
 
-    MonthSummaryView monthSummary = new MonthSummaryView(repository, directory);
+    MonthSummaryView monthSummary = new MonthSummaryView(importFileAction, repository, directory);
 
     createPanel(
       titleView,

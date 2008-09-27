@@ -56,15 +56,13 @@ public class ImportFileAction extends AbstractAction {
   }
 
   private static class OpenRunnable implements Runnable {
-    private JFrame frame;
     private PicsouDialog dialog;
     private ImportPanel panel;
-    private Directory directory;
 
     public OpenRunnable(List<File> files, Directory directory, GlobRepository repository, Glob defaultAccount) {
-      this.directory = directory;
-      frame = directory.get(JFrame.class);
-      panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount, frame, repository, directory);
+      JFrame frame = directory.get(JFrame.class);
+      panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount, 
+                              frame, repository, directory);
     }
 
     public void run() {

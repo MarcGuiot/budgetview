@@ -33,6 +33,22 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkLabelIsNotEditable();
   }
 
+  public void testAnonymizedLabelDisplayedForMultiSelections() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/16", -27.50, "Burger King")
+      .addTransaction("2008/06/16", -27.50, "Cheque 1")
+      .addTransaction("2008/06/18", -15.10, "Cheque 2")
+      .addTransaction("2008/06/18", -15.10, "McDo 1")
+      .addTransaction("2008/06/18", -15.10, "McDo 2")
+      .load();
+
+    categorization.selectTableRows(1, 2);
+    transactionDetails.checkLabel("2 operations");
+
+    categorization.selectTableRows(3, 4);
+    transactionDetails.checkLabel("McDo [2 operations]");
+  }
+
   public void testDate() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/18", -27.50, "Burger King")
@@ -53,32 +69,6 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkNoDate();
   }
 
-  public void testAmount() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/06/18", -10.00, "Burger King")
-      .addTransaction("2008/06/18", -30.00, "Burger King")
-      .addTransaction("2008/06/15", -20.00, "McDo")
-      .load();
-
-    categorization.initContent()
-      .add("18/06/2008", TransactionType.PRELEVEMENT, "Burger King", "", -10.00)
-      .add("18/06/2008", TransactionType.PRELEVEMENT, "Burger King", "", -30.00)
-      .add("15/06/2008", TransactionType.PRELEVEMENT, "McDo", "", -20.00)
-      .check();
-
-    categorization.selectTableRow(2);
-    transactionDetails.checkAmount("Amount", "-20.00");
-    transactionDetails.checkNoAmountStatistics();
-
-    categorization.selectTableRows(0, 1);
-    transactionDetails.checkAmount("Total amount", "-40.00");
-    transactionDetails.checkAmountStatistics("-30.00", "-10.00", "-20.00");
-
-    transactions.getTable().clearSelection();
-    transactionDetails.checkNoAmount();
-    transactionDetails.checkNoAmountStatistics();
-  }
-
   public void testDisplayWithNoSelection() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/18", -10.00, "Burger King")
@@ -88,16 +78,18 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectAll();
     categorization.checkNoSelectedTableRows();
-    transactionDetails.checkNoSelectionLabels("3 operations", "1000.00", "-30.00", "970.00");
+    transactionDetails.checkMessage("No operation selected");
+  }
 
-    timeline.selectMonth("2008/08");
-    transactionDetails.checkNoSelectionLabels("1 operation", null, "-10.00", null);
+  public void testDisplayWithNoData() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/15", -10.00, "Burger King")
+      .addTransaction("2008/06/15", -10.00, "McDo")
+      .load();
 
     timeline.selectMonth("2008/07");
-    transactionDetails.checkNoSelectionPanelHidden();
-
-    timeline.selectAll();
-    transactionDetails.checkNoSelectionLabels("3 operations", "1000.00", "-30.00", "970.00");
+    categorization.checkNoSelectedTableRows();
+    transactionDetails.checkMessage("No data");
   }
 
   public void testSplitButtonInitiallyVisibleWithOneTransaction() throws Exception {

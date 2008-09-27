@@ -164,6 +164,8 @@ public class GuiUtils {
   public static void initHtmlComponent(JEditorPane editorPane) {
     editorPane.setContentType("text/html");
 
+    editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
+
     HTMLEditorKit kit = (HTMLEditorKit)editorPane.getEditorKit();
     StyleSheet css = kit.getStyleSheet();
     css.addRule("H1 -");

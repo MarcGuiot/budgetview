@@ -10,6 +10,8 @@ import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
+
 public class TransactionDetailsChecker extends DataChecker {
   private Window window;
 
@@ -34,30 +36,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkNoDate() {
-    checkNotVisible("userDate");
-  }
-
-  public void checkAmount(String label, String amount) {
-    checkValue("amountLabel", label);
-    checkValue("amountValue", amount);
-  }
-
-  public void checkNoAmount() {
-    checkNotVisible("amountLabel");
-    checkNotVisible("amountValue");
-  }
-
-  public void checkAmountStatistics(String minAmount,
-                                    String maxAmount,
-                                    String averageAmount) {
-    assertTrue(getPanel().getPanel("multiSelectionPanel").isVisible());
-    checkValue("minimumAmount", minAmount);
-    checkValue("maximumAmount", maxAmount);
-    checkValue("averageAmount", averageAmount);
-  }
-
-  public void checkNoAmountStatistics() {
-    assertFalse(getPanel().getPanel("multiSelectionPanel").isVisible());
+    checkComponentNotVisible(getPanel(), JLabel.class, "userDate");
   }
 
   private void checkValue(String name, String label) {
@@ -69,7 +48,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkSplitNotVisible() {
-    assertFalse(getPanel().getButton("split").isVisible());
+    checkComponentNotVisible(getPanel(), JButton.class, "split");
   }
 
   public void checkSplitVisible() {
@@ -90,7 +69,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkOriginalLabelNotVisible() {
-    assertFalse(getPanel().getTextBox("originalLabel").isVisible());
+    checkComponentNotVisible(getPanel(), JLabel.class, "originalLabel");
   }
 
   public void checkOriginalLabel(String originalLabel) {
@@ -104,7 +83,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkTypeNotVisible() {
-    assertFalse(getPanel().getTextBox("transactionType").isVisible());
+    checkComponentNotVisible(getPanel(), JLabel.class, "transactionType");
   }
 
   public void checkBankDate(String yyyyMMdd) {
@@ -114,8 +93,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkBankDateNotVisible() {
-    TextBox bankDate = getPanel().getTextBox("bankDate");
-    assertFalse(bankDate.isVisible());
+    checkComponentNotVisible(getPanel(), JLabel.class, "bankDate");
   }
 
   public SplitDialogChecker openSplitDialog() {
@@ -128,28 +106,6 @@ public class TransactionDetailsChecker extends DataChecker {
     assertTrue(UISpecAssert.and(splitMessage.isVisible(), splitMessage.isEnabled()));
   }
 
-  public void checkNoSelectionLabels(String label, String received, String spent, String total) {
-    assertTrue(getPanel().getPanel("noSelectionPanel").isVisible());
-    assertTrue(getPanel().getTextBox("noSelectionLabel").textEquals(label));
-
-    checkNoSelectionLabel("noSelectionReceived", received);
-    checkNoSelectionLabel("noSelectionSpent", spent);
-    checkNoSelectionLabel("noSelectionTotal", total);
-  }
-
-  private void checkNoSelectionLabel(String componentName, String expectedText) {
-    TextBox label = getPanel().getTextBox(componentName);
-    assertEquals(expectedText != null, label.isVisible());
-    if (expectedText != null) {
-      assertTrue(label.textEquals(expectedText));
-    }
-  }
-
-  public TransactionDetailsChecker checkNoSelectionPanelHidden() {
-    assertFalse(getPanel().getPanel("noSelectionPanel").isVisible());
-    return this;
-  }
-
   /**
    * @deprecated
    */
@@ -159,5 +115,9 @@ public class TransactionDetailsChecker extends DataChecker {
                        "A reintegrer quand il y aura les notes dans TransactionDetails " +
                        "#############");
     return this;
+  }
+
+  public void checkMessage(String message) {
+    UISpecAssert.assertThat(getPanel().getTextBox().textContains(message));
   }
 }
