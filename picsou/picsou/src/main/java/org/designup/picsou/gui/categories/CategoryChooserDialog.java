@@ -78,6 +78,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
     changeSet.safeVisit(Category.TYPE, new DefaultChangeSetVisitor() {
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         categoryToButton.get(key).setText(categoryStringifier.toString(repository.get(key), repository));
+        dialog.repaint();
       }
     });
   }
