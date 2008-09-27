@@ -78,12 +78,12 @@
                     <path refid="maven.runtime.classpath"/>
                   </classpath>
                   <arg
-                    line="picsou00000000000001.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
+                    line="fourmics00000000000001.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
                 </java>
                 <manifest file="target/classes/MANIFEST.MF">
                   <attribute name="Main-Class" value="picsou.Main"/>
                 </manifest>
-                <jar update="true" jarfile="picsou00000000000001.jar" manifest="target/classes/MANIFEST.MF"/>
+                <jar update="true" jarfile="fourmics00000000000001.jar" manifest="target/classes/MANIFEST.MF"/>
                 <jar destfile="config00000000000001.jar">
                   <fileset dir="src/main/resources" includes="banks/**"/>
                 </jar>

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class Main {
   private static final String MAC_PLATFORM_ID = "Mac OS X";
   private static final String LINUX_PLATFORM_ID = "Linux";
-  private static final String PICSOU = "picsou";
+  private static final String PICSOU = "fourmics";
   private static final Pattern FILTER = Pattern.compile(PICSOU + "[0-9][0-9]*" + "\\.jar");
   private static final String JAR_DIRECTORY = "/jars";
 

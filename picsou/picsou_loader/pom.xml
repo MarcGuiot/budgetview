@@ -2,8 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.globsframework</groupId>
   <packaging>jar</packaging>
-  <artifactId>picsouloader</artifactId>
-  <name>picsouloader</name>
+  <artifactId>fourmicsloader</artifactId>
+  <name>fourmicsloader</name>
   <version>1.0</version>
   <url>http://www.design-up.com</url>
 
@@ -44,7 +44,7 @@
                 <manifest file="target/classes/MANIFEST.MF">
                   <attribute name="Main-Class" value="org.designup.picsou.start.Main"/>
                 </manifest>
-                <jar update="true" jarfile="target/picsouloader-1.0.jar" manifest="target/classes/MANIFEST.MF"/>
+                <jar update="true" jarfile="target/fourmicsloader-1.0.jar" manifest="target/classes/MANIFEST.MF"/>
 
                 <mkdir dir="${basedir}/app/"/>
 
@@ -55,7 +55,7 @@
                 <jarbundler dir="${basedir}/app/"
                             name="Picsou"
                             mainclass="org.designup.picsou.start.Main"
-                            jar="target/picsouloader-1.0.jar"
+                            jar="target/fourmicsloader-1.0.jar"
                             stubfile="dev/install/JavaApplicationStub"
                             icon="dev/images/picsou_icon.icns"
                             jvmversion="1.5+"
