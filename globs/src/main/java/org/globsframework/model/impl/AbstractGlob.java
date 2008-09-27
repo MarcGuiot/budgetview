@@ -101,7 +101,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
 
   public Object doGet(Field field) {
     if (disposed) {
-      throw new InvalidState("Using a deleted instance of '" + type.getName() + "'");
+      throw new InvalidState("Using a deleted instance of '" + type.getName() + "' : " + getKey());
     }
     if (!field.getGlobType().equals(type)) {
       throw new ItemNotFound("Field '" + field.getName() + "' is declared for type '" +
