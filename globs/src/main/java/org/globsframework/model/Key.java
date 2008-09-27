@@ -2,6 +2,7 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.impl.ThreeFieldKey;
 import org.globsframework.model.impl.TwoFieldKey;
 
 public abstract class Key implements FieldValues {
@@ -13,6 +14,10 @@ public abstract class Key implements FieldValues {
 
   public static Key create(Field field1, Object value1, Field field2, Object value2) {
     return new TwoFieldKey(field1, value1, field2, value2);
+  }
+
+  public static Key create(Field field1, Object value1, Field field2, Object value2, Field field3, Object value3) {
+    return new ThreeFieldKey(field1, value1, field2, value2, field3, value3);
   }
 
   public static KeyBuilder create(GlobType type) {
