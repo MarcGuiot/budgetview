@@ -1,5 +1,4 @@
 TransactionDetails
-*** Notes
 * Date (reporter / annuler report = on reprend la date banque si ok)
 * Label
 * Type

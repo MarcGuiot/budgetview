@@ -6,7 +6,7 @@
     <column styleClass="innerDialog">
 
       <label text="$preferences.title" styleClass="title"/>
-
+'
       <grid>
         <label gridPos="(0,0)" text="$preferences.future.month" styleClass="formLabel"/>
         <comboBox gridPos="(1,0)" ref="futureMonth"/>

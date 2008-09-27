@@ -52,6 +52,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private int paintCount = 0;
   private int currentPaintCount = 0;
   private TimeService timeService;
+  private VisibilityListener visibilityListener;
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
     this.repository = globRepository;
@@ -114,7 +115,17 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       paintCount++;
       this.notify();
     }
+    visibilityListener.change(timeGraph.getFirstSelectable(), timeGraph.getLastSelectable());
   }
+
+  public void register(VisibilityListener visibilityListener) {
+    this.visibilityListener = visibilityListener;
+  }
+
+  public interface VisibilityListener {
+    void change(Selectable first, Selectable last);
+  }
+
 
   public void mouseClicked(MouseEvent e) {
   }
@@ -266,9 +277,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       }
     }
     if (stillThere.isEmpty()) {
-      Integer currentMonthId = timeService.getCurrentMonthId();
-      Glob month = repository.find(Key.create(Month.TYPE, currentMonthId));
-      selectionService.select(month);
+      selectionService.clear(Month.TYPE);
     }
     else {
       selectionService.select(stillThere, Month.TYPE);

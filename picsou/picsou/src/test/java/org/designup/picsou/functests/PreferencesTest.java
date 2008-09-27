@@ -55,6 +55,6 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
       .check();
 
     operations.getPreferences().changeFutureMonth(12).validate();
-    timeline.checkSelection("2008/08");
+    timeline.assertEmpty();
   }
 }
