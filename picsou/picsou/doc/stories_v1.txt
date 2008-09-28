@@ -4,7 +4,6 @@ TransactionDetails
 * Type
 
 SeriesEditionDialog
-*** Bug layout en mode enveloppe
 * Modifier l'ordre des series
 * Bouton ou double-clic pour selectionner tout
 * Enveloppes : "Nom" => "Nom de l'enveloppe", titre = "Enveloppes de frais courants"
