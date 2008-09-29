@@ -241,19 +241,12 @@ public class GlobViewModel implements ChangeSetListener {
           toRemove.add(glob);
         }
         else if (deleted.size() == 0 && updated.size() == 0) {
-          return;
+          break;
         }
       }
-    }
-
-    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-      toRemove.add(globs.getFirst(new GlobKeyMatcher(key), repository));
-      Glob glob = repository.get(key);
-      toAdd.add(glob);
-    }
-
-    public void visitDeletion(Key key, FieldValues values) throws Exception {
-      toRemove.add(globs.getFirst(new GlobKeyMatcher(key), repository));
+      for (Key key : updated) {
+        toAdd.add(repository.get(key));
+      }
     }
 
     public void complete() {
