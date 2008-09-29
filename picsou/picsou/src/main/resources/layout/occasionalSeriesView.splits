@@ -17,10 +17,12 @@
       <column margin="10">
         <grid weightY="0" marginLeft="20" marginRight="20">
           <label text="$budgetview.observed" styleClass="totalAmountTitle" gridPos="(0,0)"/>
-          <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(0,1)"/>
+          <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(0,1)"
+                 tooltipText="$budgetview.tooltip.total.observed"/>
           <component ref="totalGauge" styleClass="totalGauge" gridPos="(1,0,1,2)" anchor="south" marginBottom="3"/>
           <label text="$budgetview.available" styleClass="totalAmountTitle" gridPos="(2,0)"/>
-          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(2,1)"/>
+          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(2,1)"
+                 tooltipText="$budgetview.tooltip.total.planned.occasional"/>
         </grid>
 
         <scrollPane>
@@ -30,7 +32,8 @@
                      weightX="10.0" marginRight="10"/>
               <button ref="observedCategoryAmount" styleClass="amountLink"
                      fill="horizontal" anchor="right" horizontalAlignment="right"
-                     weightX="0.1" marginRight="6"/>
+                     weightX="0.1" marginRight="6"
+                     tooltipText="$budgetview.tooltip.detail.observed"/>
             </repeat>
             <filler fill="vertical"/>
           </column>
