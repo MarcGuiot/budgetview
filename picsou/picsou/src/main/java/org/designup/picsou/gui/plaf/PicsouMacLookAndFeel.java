@@ -19,16 +19,6 @@ public class PicsouMacLookAndFeel extends AquaLookAndFeel {
     }
   }
 
-  protected void initComponentDefaults(UIDefaults defaults) {
-    super.initComponentDefaults(defaults);
-
-    Object[] properties = {
-      "Button.margin", new InsetsUIResource(6, 12, 6, 12),
-    };
-
-    defaults.putDefaults(properties);
-  }
-
   public boolean getSupportsWindowDecorations() {
     return true;
   }

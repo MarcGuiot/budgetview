@@ -1,6 +1,6 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>crossbowloab</groupId>
+  <groupId>root</groupId>
   <artifactId>root</artifactId>
   <version>1.0</version>
   <packaging>pom</packaging>

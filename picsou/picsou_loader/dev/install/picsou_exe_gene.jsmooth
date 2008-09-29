@@ -9,10 +9,10 @@
   <arguments></arguments>
   <currentDirectory>${EXECUTABLEPATH}</currentDirectory>
   <embeddedJar>true</embeddedJar>
-  <executableName>picsou.exe</executableName>
+  <executableName>fourmics.exe</executableName>
   <iconLocation>../images/picsou_icon_32.png</iconLocation>
   <initialMemoryHeap>-1</initialMemoryHeap>
-  <jarLocation>../../target/picsouloader-1.0.jar</jarLocation>
+  <jarLocation>../../target/fourmicsloader-1.0.jar</jarLocation>
   <javaProperties>
     <name>picsou.exe.dir</name>
     <value>${EXECUTABLEPATH}</value>

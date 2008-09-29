@@ -2,6 +2,7 @@ package org.designup.picsou.gui;
 
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
+import org.designup.picsou.gui.components.ArrowButtonUI;
 import org.designup.picsou.gui.components.SelectionToggleUI;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
@@ -76,6 +77,7 @@ public class PicsouApplication {
   private static final String SPLITPANE_UI = "org" + dot() + "designup.picsou.gui.plaf.PicsouSplitPaneUI";
   private static final String SERIES_TOGGLE_UI = "org" + dot() + "designup.picsou.gui.components.SelectionToggleUI";
   private static final String BUTTON_PANEL_UI = "org" + dot() + "designup.picsou.gui.plaf.ButtonPanelItemUI";
+  private static final String ARROW_BUTTON_UI = "org" + dot() + "designup.picsou.gui.components.ArrowButtonUI";
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
@@ -185,7 +187,7 @@ public class PicsouApplication {
   }
 
   public boolean isDataInMemory() {
-    return "true" .equalsIgnoreCase(System.getProperty(IS_DATA_IN_MEMORY));
+    return "true".equalsIgnoreCase(System.getProperty(IS_DATA_IN_MEMORY));
   }
 
   public static String getLocalPrevaylerPath() {
@@ -194,9 +196,9 @@ public class PicsouApplication {
 
   public static String getPicsouPath() {
     if (Gui.isMacOSX() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
-      return System.getProperty("user.home") + "/Library/Application Support/" + PICSOU;
+      return System.getProperty("user.home") + "/Library/Application Support/Fourmics";
     }
-    return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.picsou");
+    return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.fourmics");
   }
 
   public static String getPicsouConfigPath() {
@@ -212,7 +214,7 @@ public class PicsouApplication {
   }
 
   public static void clearRepositoryIfNeeded() {
-    if ("true" .equalsIgnoreCase(System.getProperty(DELETE_LOCAL_PREVAYLER_PROPERTY))) {
+    if ("true".equalsIgnoreCase(System.getProperty(DELETE_LOCAL_PREVAYLER_PROPERTY))) {
       clearRepository();
     }
   }
@@ -248,8 +250,8 @@ public class PicsouApplication {
     directory.add(IconLocator.class, Gui.ICON_LOCATOR);
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
-    UIService uiService = initUiService();
-    directory.add(uiService);
+    directory.add(initUiService());
+
     Long localConfigVersion = getConfigVersion();
     String configPath = getPicsouPath() + "/config";
     File lastJar = findLastJar(configPath);
@@ -278,6 +280,7 @@ public class PicsouApplication {
     uiService.registerClass(SPLITPANE_UI, PicsouSplitPaneUI.class);
     uiService.registerClass(SERIES_TOGGLE_UI, SelectionToggleUI.class);
     uiService.registerClass(BUTTON_PANEL_UI, ButtonPanelItemUI.class);
+    uiService.registerClass(ARROW_BUTTON_UI, ArrowButtonUI.class);
     return uiService;
   }
 

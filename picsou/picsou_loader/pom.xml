@@ -2,8 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.globsframework</groupId>
   <packaging>jar</packaging>
-  <artifactId>picsouloader</artifactId>
-  <name>picsouloader</name>
+  <artifactId>fourmicsloader</artifactId>
+  <name>fourmicsloader</name>
   <version>1.0</version>
   <url>http://www.design-up.com</url>
 
@@ -44,18 +44,18 @@
                 <manifest file="target/classes/MANIFEST.MF">
                   <attribute name="Main-Class" value="org.designup.picsou.start.Main"/>
                 </manifest>
-                <jar update="true" jarfile="target/picsouloader-1.0.jar" manifest="target/classes/MANIFEST.MF"/>
+                <jar update="true" jarfile="target/fourmicsloader-1.0.jar" manifest="target/classes/MANIFEST.MF"/>
 
-                <mkdir dir="${basedir}/app/"/>
+                <mkdir dir="${basedir}/Fourmics/"/>
 
                 <taskdef name="jarbundler"
                          classpath="dev/install/jarbundler-1.9.jar;dev/install/xercesImpl-2.4.0.jar"
                          classname="net.sourceforge.jarbundler.JarBundler"/>
 
-                <jarbundler dir="${basedir}/app/"
-                            name="Picsou"
+                <jarbundler dir="${basedir}/Fourmics/"
+                            name="Fourmics"
                             mainclass="org.designup.picsou.start.Main"
-                            jar="target/picsouloader-1.0.jar"
+                            jar="target/fourmicsloader-1.0.jar"
                             stubfile="dev/install/JavaApplicationStub"
                             icon="dev/images/picsou_icon.icns"
                             jvmversion="1.5+"
@@ -63,9 +63,7 @@
                             vmoptions="-Xmx128m -Dapple.awt.graphics.UseQuartz=false">
 
 
-                  <resourcefilelist dir="../picsou/ofuscated" files="picsou00000000000001.jar"/>
-                  <!-- Contents/Resources/ -->
-                  <!--<javafilelist dir="./build" files="libHelpBookJNI.jnilib"/>-->
+                  <resourcefilelist dir="../picsou/obfuscated" files="fourmics00000000000001.jar"/>
 
                   <documenttype name="Financial information"
                                 extensions="ofx qif"
@@ -78,7 +76,7 @@
                 </jarbundler>
 
                 <exec executable="hdiutil">
-                  <arg line="create -srcfolder ${basedir}/app/ Picsou.dmg"/>
+                  <arg line="create -srcfolder ${basedir}/Fourmics/ Fourmics.dmg"/>
                 </exec>
 
               </tasks>
