@@ -27,7 +27,7 @@ public class Main {
     String pathToInstallDir = System.getProperty("picsou.exe.dir");
     if (pathToInstallDir == null) {
       if (isMacOSX()) {
-        pathToInstallDir = System.getProperty("user.dir") + "/Picsou.app/Contents/Resources/";
+        pathToInstallDir = System.getProperty("user.dir") + "/Fourmics.app/Contents/Resources/";
       }
       else {
         pathToInstallDir = System.getProperty("user.dir");

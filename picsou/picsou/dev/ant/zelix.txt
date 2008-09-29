@@ -29,4 +29,4 @@ obfuscate  changeLogFileOut="ChangeLogOutput.txt"
            lineNumbers=scramble 
 ;
 
-saveAll archiveCompression=all "ofuscated";
+saveAll archiveCompression=all "obfuscated";

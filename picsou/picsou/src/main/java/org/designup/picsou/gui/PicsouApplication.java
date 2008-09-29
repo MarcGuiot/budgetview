@@ -196,7 +196,7 @@ public class PicsouApplication {
 
   public static String getPicsouPath() {
     if (Gui.isMacOSX() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
-      return System.getProperty("user.home") + "/Library/Application Support/" + PICSOU;
+      return System.getProperty("user.home") + "/Library/Application Support/Fourmics";
     }
     return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.fourmics");
   }
@@ -250,8 +250,8 @@ public class PicsouApplication {
     directory.add(IconLocator.class, Gui.ICON_LOCATOR);
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
-    UIService uiService = initUiService();
-    directory.add(uiService);
+    directory.add(initUiService());
+
     Long localConfigVersion = getConfigVersion();
     String configPath = getPicsouPath() + "/config";
     File lastJar = findLastJar(configPath);

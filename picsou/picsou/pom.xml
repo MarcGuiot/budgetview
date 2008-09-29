@@ -87,7 +87,7 @@
                 <jar destfile="config00000000000001.jar">
                   <fileset dir="src/main/resources" includes="banks/**"/>
                 </jar>
-                <delete dir="ofuscated"/>
+                <delete dir="obfuscated"/>
                 <java fork="yes" jar="dev/Zelix/ZKM.jar">
                   <jvmarg line="-Xmx512M"/>
                   <arg line="-de dev/Zelix/defaultExclude.txt dev/ant/zelix.txt"/>
