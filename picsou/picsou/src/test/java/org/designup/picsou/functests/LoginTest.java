@@ -276,8 +276,9 @@ public class LoginTest extends StartUpFunctionalTestCase {
           window.getInputTextBox("fileField").setText(path);
           window.getButton("Import").click();
           assertTrue(window.getComboBox("accountBank")
-            .contentEquals("Autre", "BNP", "CIC", "Caisse d'épargne", "Credit Agricole", "Credit Mutuel", "LCL", "La Poste",
-                           "Societe Generale"));
+            .contentEquals("Autre", "BNP", "CIC", "Caisse d'épargne",
+                           "Crédit Agricole", "Crédit Mutuel", "LCL", "La Poste",
+                           "Société Générale"));
           return window.getButton("Skip file").triggerClick();
         }
       }).run();

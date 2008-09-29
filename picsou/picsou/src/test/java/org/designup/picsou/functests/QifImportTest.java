@@ -15,7 +15,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"),
                            fileName);
 
-    operations.importQifFile(fileName, "Societe Generale");
+    operations.importQifFile(fileName, SOCIETE_GENERALE);
     transactions
       .initContent()
       .add("22/04/2006", TransactionType.CREDIT_CARD, "SACLAY", "", -55.49)
@@ -54,7 +54,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
                     "N\n" +
                     "MAuchan\n" +
                     "^");
-    operations.importQifFile(file, "Societe Generale");
+    operations.importQifFile(file, SOCIETE_GENERALE);
     transactions.initAmountContent()
       .add("Auchan", -20, 80, 80)
       .add("SACLAY", -55.49, 100, 100)
@@ -77,8 +77,8 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
                     "PFAC.FRANCE 4561409\n" +
                     "MFAC.FRANCE 4561409787231717 19/04/06 STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS\n" +
                     "^");
-    operations.importQifFile(file, "Societe Generale");
-    operations.importQifFile(file, "Societe Generale");
+    operations.importQifFile(file, SOCIETE_GENERALE);
+    operations.importQifFile(file, SOCIETE_GENERALE);
 
     timeline.selectMonth("2006/04");
     transactions.initContent()
@@ -137,7 +137,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       builder.append(block);
     }
     String file = createQifFile("file", builder.toString());
-    operations.importQifFile(file, "Societe Generale");
+    operations.importQifFile(file, SOCIETE_GENERALE);
   }
 
   private String createQifFile(String discriminant) {

@@ -18,7 +18,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   protected Window window;
   protected TextBox fileField;
   protected Button importButton;
-  private static final String SOCIETE_GENERALE = "Societe Generale";
+  private static final String SOCIETE_GENERALE = "Société Générale";
 
   protected void setUp() throws Exception {
     super.setUp();

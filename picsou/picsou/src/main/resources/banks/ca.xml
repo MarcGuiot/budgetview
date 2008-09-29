@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="Credit Agricole" id='1'>
+  <bank name="Crédit Agricole" id='1'>
     <bankEntity id="13006"/>
     <bankEntity id="10206"/>
     <bankEntity id="11206"/>

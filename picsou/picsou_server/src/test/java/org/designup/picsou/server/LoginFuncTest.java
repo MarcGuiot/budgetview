@@ -44,7 +44,7 @@ public class LoginFuncTest extends ServerFuncTestCase {
     ImportChecker checker = operations.openImportDialog();
     checker.selectFiles(fileName);
     checker.startImport();
-    checker.selectBank("Societe Generale");
+    checker.selectBank("Société Générale");
     checker.enterAccountNumber("1111");
     checker.doImport();
 

@@ -78,7 +78,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/01", 12.35, "foo")
       .addTransaction("2006/02/01", -7.50, "foo")
       .save();
-    operations.importQifFiles("Societe generale", path);
+    operations.importQifFiles(SOCIETE_GENERALE, path);
 
     views.selectHome();
     accounts.assertDisplayEquals("Main account");
@@ -90,7 +90,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/02/01", -7.50, "foo")
       .save();
 
-    operations.importQifFiles("Societe generale", path);
+    operations.importQifFiles(SOCIETE_GENERALE, path);
 
     OfxBuilder
       .init(this)

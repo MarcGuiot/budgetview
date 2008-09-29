@@ -136,7 +136,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", 20.00, "PRELEVEMENT 123123 Auchan")
       .addTransaction("2008/06/16", 10.00, "PRELEVEMENT 123123 ED")
       .save();
-    operations.importQifFiles("Societe generale", fileName);
+    operations.importQifFiles(SOCIETE_GENERALE, fileName);
     transactionDetails.checkOriginalLabelNotVisible();
     categorization.selectTableRows(0, 1);
     transactionDetails.checkOriginalLabelNotVisible();
@@ -148,7 +148,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/14", -100.00, "Burger King")
       .save();
 
-    operations.importQifFiles("Societe generale", fileName);
+    operations.importQifFiles(SOCIETE_GENERALE, fileName);
 
     categorization.initContent()
       .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -20.00)
@@ -168,7 +168,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/14", -10.00, "PRELEVEMENT 123123 Monop")
       .addTransaction("2008/06/13", -40.00, "CHEQUE 123123")
       .save();
-    operations.importQifFiles("Societe generale", fileName);
+    operations.importQifFiles(SOCIETE_GENERALE, fileName);
 
     categorization.initContent()
       .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -20.00)
@@ -193,7 +193,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     String fileName = QifBuilder.init(this)
       .addTransaction("2008/06/15", -20.00, "PRELEVEMENT 123123 Auchan")
       .save();
-    operations.importQifFiles("Societe generale", fileName);
+    operations.importQifFiles(SOCIETE_GENERALE, fileName);
 
     categorization.getTable().clearSelection();
     transactionDetails.checkTypeNotVisible();
@@ -204,7 +204,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", -20.00, "CARTE 123123 12/06/08 AUCHAN1")
       .addTransaction("2008/06/10", -10.00, "CARTE 123123 10/06/08 AUCHAN2")
       .save();
-    operations.importQifFiles("Societe generale", fileName);
+    operations.importQifFiles(SOCIETE_GENERALE, fileName);
 
     categorization.initContent()
       .add("12/06/2008", TransactionType.CREDIT_CARD, "AUCHAN1", "", -20.00)

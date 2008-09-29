@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="Credit Mutuel" id='7'>
-    
+  <bank name="Crédit Mutuel" id='7'>
+
     <bankEntity id="16306"/>
     <bankEntity id="10278"/>
     <bankEntity id="15589"/>

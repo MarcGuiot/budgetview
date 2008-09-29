@@ -68,7 +68,7 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
       .checkNoErrorMessage();
 
     if (fileName.endsWith(".qif")) {
-      importDialog.selectBank("Societe Generale");
+      importDialog.selectBank("Société Générale");
       importDialog.enterAccountNumber("333");
     }
 

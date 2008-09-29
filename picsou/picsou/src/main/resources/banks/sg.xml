@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="Societe Generale" id="4" downloadUrl="https://logitelnet.socgen.com/index.html">
+  <bank name="Société Générale" id="4" downloadUrl="https://logitelnet.socgen.com/index.html">
     <bankEntity id="30003"/>
 
     <transactionTypeMatcher regexp="VIR[\s]+RECU[\s]+[\d]+[\s]+DE[\s]*:[\s]*(.*)"

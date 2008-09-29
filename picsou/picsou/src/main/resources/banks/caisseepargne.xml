@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <globs>
   <bank name="Caisse d'épargne" downloadUrl="" id='6'>
     <bankEntity id="18645"/>
@@ -28,6 +29,6 @@
     <transactionTypeMatcher regexp="RETRAIT DAB[\s]+(.*)"
                             transactionTypeName="withdrawal" label="RETRAIT $1"/>
 
-    
+
   </bank>
 </globs>

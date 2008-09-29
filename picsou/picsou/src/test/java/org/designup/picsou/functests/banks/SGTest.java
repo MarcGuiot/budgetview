@@ -5,7 +5,7 @@ import org.designup.picsou.model.TransactionType;
 public class SGTest extends SpecificBankTestCase {
 
   public void test1() throws Exception {
-    operations.importQifFile(getFile("sg1.qif"), "Societe Generale");
+    operations.importQifFile(getFile("sg1.qif"), SOCIETE_GENERALE);
     timeline.selectAll();
     transactions
       .initContent()
@@ -18,7 +18,7 @@ public class SGTest extends SpecificBankTestCase {
   }
 
   public void test2() throws Exception {
-    operations.importQifFile(getFile("sg2.qif"), "Societe Generale");
+    operations.importQifFile(getFile("sg2.qif"), SOCIETE_GENERALE);
     timeline.selectAll();
     transactions
       .initContent()
@@ -37,7 +37,7 @@ public class SGTest extends SpecificBankTestCase {
   }
 
   public void testNewFormat() throws Exception {
-    operations.importQifFile(getFile("sg2008.qif"), "Societe Generale");
+    operations.importQifFile(getFile("sg2008.qif"), SOCIETE_GENERALE);
     timeline.selectAll();
     transactions
       .initContent()

@@ -43,6 +43,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   private String isInMemory = "true";
   private String deleteLocalPrevayler = "true";
 
+  static public String SOCIETE_GENERALE = "Société Générale";
+
   protected void setUp() throws Exception {
 
 //    TimeService.setCurrentDate(currentDate);
