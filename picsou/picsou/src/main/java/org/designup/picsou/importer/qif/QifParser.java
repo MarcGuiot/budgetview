@@ -63,7 +63,7 @@ public class QifParser {
             break;
           case 'T':
             updated = true;
-            values.set(ImportedTransaction.AMOUNT, Double.parseDouble(reader.readLine().replaceAll(",", "")));
+            values.set(ImportedTransaction.AMOUNT, extractAmount(reader.readLine()));
             break;
           case 'P':
             pValue = reader.readLine();
@@ -100,6 +100,14 @@ public class QifParser {
     catch (IOException e) {
       return null;
     }
+  }
+
+  private double extractAmount(final String amount) throws IOException {
+    String tmp = amount.replaceAll(",", "").replaceAll("\\.", "");
+    if (Strings.isNullOrEmpty(tmp)) {
+      return 0.;
+    }
+    return Double.parseDouble(tmp) / 100.0;
   }
 
   private Glob createTransaction(FieldValuesBuilder values) {

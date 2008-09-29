@@ -55,6 +55,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private VisibilityListener visibilityListener;
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
+    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     this.repository = globRepository;
     timeService = directory.get(TimeService.class);
     Font monthFont = getFont();

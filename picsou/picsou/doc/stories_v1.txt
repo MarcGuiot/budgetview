@@ -4,8 +4,6 @@
 
 - bug Antoine / balanceSummaryView : charges negatives inexpliquees
 
-- pb separateur virgules import QIF/OFX
-
 Points de blocage:
 - OFX/QIF ? => Money / Quicken
 - import : description plus complete (hyperlien) + guide par banque

@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.utils;
 
 import org.designup.picsou.functests.checkers.OperationChecker;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.TestUtils;
 
@@ -29,7 +30,7 @@ public class QifBuilder {
     writer.write(yyyyMMdd);
     writer.write(Strings.LINE_SEPARATOR);
     writer.write("T");
-    writer.write(Double.toString(amount));
+    writer.write(PicsouDescriptionService.DECIMAL_FORMAT.format(amount));
     writer.write(Strings.LINE_SEPARATOR);
     writer.write("N");
     writer.write(Strings.LINE_SEPARATOR);
