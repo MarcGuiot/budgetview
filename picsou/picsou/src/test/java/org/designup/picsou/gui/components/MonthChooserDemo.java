@@ -19,7 +19,7 @@ public class MonthChooserDemo {
       repository.findOrCreate(Key.create(Month.TYPE, monthId));
     }
 
-    PicsouDialog.MODAL = false;
+    PicsouDialog.FORCE_NONMODAL = true;
     MonthChooserDialog chooser = new MonthChooserDialog(new JFrame(), directory);
     chooser.show(200806, -1, 200904);
   }

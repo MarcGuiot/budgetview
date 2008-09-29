@@ -18,6 +18,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary
       .checkNoBudgetAreasDisplayed()
       .checkNoDataMessage("You must import your financial operations");
+    monthSummary.openHelp().checkContains("import").close();
     balanceSummary
       .checkNothingShown();
 

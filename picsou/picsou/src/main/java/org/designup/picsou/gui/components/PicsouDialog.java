@@ -20,24 +20,32 @@ import java.awt.event.WindowEvent;
 
 public class PicsouDialog extends JDialog {
 
-  public static boolean MODAL = true;
+  public static boolean FORCE_NONMODAL = false;
   private static final Insets BUTTON_INSETS = new Insets(0, 10, 10, 10);
   private ColorService colorService;
   private static final int HORIZONTAL_BUTTON_MARGIN = Gui.isMacOSX() ? 20 : 0;
   private Action closeAction;
 
   public static PicsouDialog create(Window owner, Directory directory) {
+    return create(owner, true, directory);
+  }
+
+  public static PicsouDialog create(Window owner, boolean modal, Directory directory) {
     if (owner instanceof JFrame) {
-      return new PicsouDialog((JFrame)owner, directory);
+      return new PicsouDialog((JFrame)owner, modal, directory);
     }
     else if (owner instanceof JDialog) {
-      return new PicsouDialog((JDialog)owner, directory);
+      return new PicsouDialog((JDialog)owner, modal, directory);
     }
     throw new InvalidParameter("unknown type " + owner.getClass());
   }
 
-  public static PicsouDialog createWithButton(Window owner, JPanel panel, Action closeAction, Directory directory) {
-    PicsouDialog dialog = create(owner, directory);
+  public static PicsouDialog createWithButton(Window owner, JPanel panel, Action action, Directory directory) {
+    return createWithButton(owner, true, panel, action, directory);
+  }
+
+  public static PicsouDialog createWithButton(Window owner, boolean modal, JPanel panel, Action closeAction, Directory directory) {
+    PicsouDialog dialog = create(owner, modal, directory);
     dialog.setPanelAndButton(panel, closeAction);
     return dialog;
   }
@@ -130,13 +138,13 @@ public class PicsouDialog extends JDialog {
     });
   }
 
-  private PicsouDialog(JFrame parent, Directory directory) {
-    super(parent, MODAL);
+  private PicsouDialog(JFrame parent, boolean modal, Directory directory) {
+    super(parent, !FORCE_NONMODAL && modal);
     init(directory);
   }
 
-  private PicsouDialog(JDialog parent, Directory directory) {
-    super(parent, MODAL);
+  private PicsouDialog(JDialog parent, boolean modal, Directory directory) {
+    super(parent, !FORCE_NONMODAL && modal);
     init(directory);
   }
 

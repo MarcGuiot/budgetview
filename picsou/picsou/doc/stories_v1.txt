@@ -24,6 +24,8 @@ Points de blocage:
 
 - SED: titre pour description mode auto
 
+- CategorizationView : bug serie qui reste selectionnee apres changement de transaction
+
 - tooltips partout
 
 - budgetView : afficher un message quand plusieurs mois sont selectionnes

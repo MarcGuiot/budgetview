@@ -2,12 +2,15 @@ package org.designup.picsou.utils;
 
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
+import org.globsframework.utils.Files;
 
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.io.InputStream;
 
 public class Lang {
   private static ResourceBundle bundle;
@@ -38,6 +41,15 @@ public class Lang {
     MessageFormat formatter = new MessageFormat(message);
     formatter.setLocale(LOCALE);
     return formatter;
+  }
+
+  public static String getFile(String fileName) {
+    String filePath = "/help/" + LOCALE.getLanguage() + "/" + fileName;
+    InputStream stream = Lang.class.getResourceAsStream(filePath);
+    if (stream == null) {
+      throw new ResourceAccessFailed("File " + filePath);
+    }
+    return Files.loadStreamToString(stream);
   }
 
   private static String getMessage(String key) {

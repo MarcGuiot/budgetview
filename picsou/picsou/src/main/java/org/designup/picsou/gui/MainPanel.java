@@ -26,6 +26,7 @@ import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.triggers.GlobStateChecker;
@@ -73,6 +74,7 @@ public class MainPanel {
     this.parent = mainWindow.getFrame();
     directory.add(JFrame.class, parent);
     directory.add(new UndoRedoService(repository, directory));
+    directory.add(new HelpService(repository, directory));
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 

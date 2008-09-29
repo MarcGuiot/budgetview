@@ -4,9 +4,9 @@ import junit.framework.Assert;
 import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.model.BudgetArea;
+import org.uispec4j.*;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
-import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
@@ -160,5 +160,9 @@ public class MonthSummaryChecker extends DataChecker {
 
   private Panel getPanel() {
     return window.getPanel("monthSummaryView");
+  }
+
+  public HelpChecker openHelp() {
+    return HelpChecker.open(window.getButton("help").triggerClick());
   }
 }

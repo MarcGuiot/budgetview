@@ -2,9 +2,9 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector=".message" marginTop="10" marginBottom="10"
+    <style selector="column.message" margin="10"
            opaque="true" background="block.inner.bg" border="line(block.inner.border)"/>
-    <style selector=".message htmlEditorPane" margin="15" marginTop="15"/>
+    <style selector=".message htmlEditorPane" margin="10" marginTop="0"/>
     <style selector=".message button" fill="none" anchor="center"/>
 
     <style selector="label.amount" font="-,plain,10"/>
@@ -27,6 +27,7 @@
             <htmlEditorPane text="$monthsummary.noData.text"/>
             <button action="import"/>
             <filler fill="vertical"/>
+            <button action="help" styleClass="hyperlink" anchor="right" margin="10"/>
           </column>
         </card>
 
