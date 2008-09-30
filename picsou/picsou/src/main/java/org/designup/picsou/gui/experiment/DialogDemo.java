@@ -23,7 +23,7 @@ public class DialogDemo {
   public static void main(String[] args) throws Exception {
 
     MainWindow window = new MainWindow();
-    PicsouDialog.MODAL = false;
+    PicsouDialog.FORCE_NONMODAL = true;
     PicsouApplication.parseLanguage("-l", "fr");
     Directory directory = PicsouApplication.createDirectory();
     GlobRepository repository = PicsouInit.init(ServerAccess.NULL, "user", true, directory).getRepository();

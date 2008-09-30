@@ -7,6 +7,7 @@ import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.help.HelpAction;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
@@ -95,7 +96,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                           nameButton.setName(budgetArea.getGlob().get(BudgetArea.NAME));
 
                           JButton amountButton =
-                            cellBuilder.add("budgetAreaAmount", new JButton(new AbstractAction(){
+                            cellBuilder.add("budgetAreaAmount", new JButton(new AbstractAction() {
                               public void actionPerformed(ActionEvent e) {
                                 directory.get(NavigationService.class).gotoData(budgetArea);
                               }
@@ -119,6 +120,8 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     builder.add("categorize", new CategorizationAction(Lang.get("budgetArea.uncategorized"), false));
     builder.add("categorizeAll", new CategorizationAction(null, true));
+
+    builder.add("help", new HelpAction(Lang.get("monthsummary.help"), "import", directory));
 
     parentBuilder.add("monthSummaryView", builder);
 

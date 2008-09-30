@@ -88,6 +88,7 @@ public class SeriesEditionDialog {
   private JPanel seriesPanel;
   private Key createdSeries;
   Integer currentlySelectedCategory;
+  private JPanel buttonSeriePanel;
 
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
@@ -134,6 +135,8 @@ public class SeriesEditionDialog {
 
     builder.add("seriesList", seriesList.getComponent());
 
+    buttonSeriePanel = new JPanel();
+    builder.add("buttonSeriesPanel", buttonSeriePanel);
     builder.add("create", new CreateSeriesAction());
     builder.add("delete", new DeleteSeriesAction());
 
@@ -339,6 +342,7 @@ public class SeriesEditionDialog {
       localRepository.completeBulkDispatchingMode();
     }
     seriesPanel.setVisible(true);
+    buttonSeriePanel.setVisible(true);
     doShow(monthIds, null, null);
   }
 
@@ -352,6 +356,7 @@ public class SeriesEditionDialog {
       localRepository.completeBulkDispatchingMode();
     }
     seriesPanel.setVisible(false);
+    buttonSeriePanel.setVisible(false);
     doShow(monthIds, localRepository.get(series.getKey()), false);
   }
 
@@ -380,6 +385,7 @@ public class SeriesEditionDialog {
       localRepository.completeBulkDispatchingMode();
     }
     seriesPanel.setVisible(false);
+    buttonSeriePanel.setVisible(false);
     this.createdSeries = null;
     this.currentlySelectedCategory = null;
     doShow(getCurrentMonthId(), createdSeries, true);

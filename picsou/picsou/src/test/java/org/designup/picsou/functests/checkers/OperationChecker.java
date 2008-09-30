@@ -120,4 +120,8 @@ public class OperationChecker {
   public void exit() {
     window.getMenuBar().getMenu("File").getSubMenu("Exit").click();
   }
+
+  public HelpChecker openHelp() {
+    return HelpChecker.open(window.getMenuBar().getMenu("Help").getSubMenu("Index").triggerClick());
+  }
 }

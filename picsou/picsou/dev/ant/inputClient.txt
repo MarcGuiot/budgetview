@@ -32,6 +32,7 @@ R layout/
 R banks/
 R logging/
 R i18n/
+R help/
 R images/
 R darkgreycolors.properties
 R color_purple.properties

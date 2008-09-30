@@ -4,6 +4,7 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.importer.ImportSession;
 import org.designup.picsou.model.*;
@@ -18,6 +19,7 @@ import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -76,6 +78,8 @@ public class ImportPanel {
   private JPanel mainPanel;
   private JPanel panelStep1;
   private JPanel panelStep2;
+
+  private static final int[] COLUMN_SIZES = {10, 45};
 
   private PicsouDialog dialog;
 
@@ -167,7 +171,8 @@ public class ImportPanel {
 
     GlobTableView tableView = GlobTableView.init(ImportedTransaction.TYPE, sessionRepository,
                                                  dateRenderer.getComparator(), sessionDirectory)
-      .addColumn(Lang.get("import.bankDate"), ImportedTransaction.BANK_DATE, dateRenderer)
+      .addColumn(Lang.get("import.bankDate"), ImportedTransaction.BANK_DATE,
+                 chain(fontSize(9), dateRenderer))
       .addColumn(Lang.get("label"), ImportedTransaction.LABEL)
       .addColumn(Lang.get("amount"), ImportedTransaction.AMOUNT);
 
@@ -175,6 +180,7 @@ public class ImportPanel {
 
     JTable transactionTable = tableView.getComponent();
     dateRenderer.setTable(tableView);
+    Gui.setColumnSizes(transactionTable, COLUMN_SIZES);
 
     builder2.add("table", transactionTable);
     builder2.add("fileName", fileNameLabel);

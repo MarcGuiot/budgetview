@@ -116,11 +116,11 @@
         </column>
       </horizontalSplit>
 
-      <row styleClass="iconButtonGroup">
+      <row ref="buttonSeriesPanel" styleClass="iconButtonGroup">
         <button action="create" name="create"
-                icon='button_plus.png' disabledIcon='button_plus_disabled.png'/>
+                icon='button_plus.png' disabledIcon='button_plus_disabled.png' autoHideIfDisabled="true"/>
         <button action="delete" name="delete"
-                icon='button_minus.png' disabledIcon='button_minus_disabled.png'/>
+                icon='button_minus.png' disabledIcon='button_minus_disabled.png' autoHideIfDisabled="true"/>
         <filler fill="horizontal"/>
       </row>
 

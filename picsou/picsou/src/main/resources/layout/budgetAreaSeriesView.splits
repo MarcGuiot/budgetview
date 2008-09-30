@@ -14,19 +14,24 @@
       <column border="empty(10)">
         <grid weightY="0" marginLeft="20" marginRight="20">
           <label text="$budgetview.observed" styleClass="totalAmountTitle" gridPos="(0,0)"/>
-          <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(0,1)"/>
+          <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(0,1)"
+                 tooltipText="$budgetview.tooltip.total.observed"/>
           <component ref="totalGauge" styleClass="totalGauge" gridPos="(1,0,1,2)" anchor="south" marginBottom="3"/>
           <label text="$budgetview.planned" styleClass="totalAmountTitle" gridPos="(2,0)"/>
-          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(2,1)"/>
+          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(2,1)"
+                 tooltipText="$budgetview.tooltip.total.planned"/>
         </grid>
 
         <scrollPane marginBottom="0">
           <column>
             <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid" margin="10">
-              <button ref="seriesName" styleClass="itemLink"/>
-              <button ref="observedSeriesAmount" styleClass="amountLink" marginRight="6"/>
+              <button ref="seriesName" styleClass="itemLink"
+                      tooltipText="$budgetview.tooltip.detail.series"/>
+              <button ref="observedSeriesAmount" styleClass="amountLink" marginRight="6"
+                      tooltipText="$budgetview.tooltip.detail.observed"/>
               <component ref="gauge" styleClass="detailGauge"/>
-              <label ref="plannedSeriesAmount" styleClass="amount"/>
+              <label ref="plannedSeriesAmount" styleClass="amount"
+                      tooltipText="$budgetview.tooltip.detail.planned"/>
             </repeat>
             <filler fill="vertical"/>
           </column>

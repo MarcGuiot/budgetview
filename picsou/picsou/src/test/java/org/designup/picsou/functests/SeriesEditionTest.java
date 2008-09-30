@@ -922,4 +922,12 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .contentEquals("Every month", "Each two month", "Each three month", "Each four month", "Each six month",
                      "One time a year", "Custom", "Undefined"));
   }
+
+  public void testSeriesLsiteVisibility() throws Exception {
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .seriesListIsHidden().setName("").setCategory(MasterCategory.FOOD).validate();
+    budgetView.envelopes.editSeriesList()
+      .seriesListIsVisible().cancel();
+  }
 }

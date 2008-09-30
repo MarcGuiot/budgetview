@@ -8,4 +8,5 @@ C org.designup.picsou.client.local.LocalClientTransport
 M org.designup.picsou.gui.MainWindow initLocal
 P banks/.svn
 P i18n/.svn
+P help/.svn
 P images/.svn

@@ -62,12 +62,13 @@
 
     <style selector=".dialog label.title"
            font="-,bold,18" foreground="dialog.title"
-           fill="none" anchor="center" marginTop="5" marginBottom="20"/>
+           fill="none" anchor="center" marginTop="0" marginBottom="15"/>
 
     <!-- Hyperlinks -->
 
     <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
     <style selector="button.hyperlink" ui="hyperlinkButton" fill="none" anchor="right"/>
+    <style selector="button.help" ui="hyperlinkButton" fill="none" anchor="right"/>
 
     <ui name="hyperlinkButtonWithoutUnderline" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false"/>

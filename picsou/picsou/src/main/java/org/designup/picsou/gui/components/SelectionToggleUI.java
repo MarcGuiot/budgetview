@@ -26,6 +26,7 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
     button.setRolloverEnabled(true);
     button.setOpaque(false);
     button.setBorderPainted(false);
+    button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
     if (useBold) {
       final Font defaultFont = button.getFont();

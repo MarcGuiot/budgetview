@@ -1,29 +1,23 @@
 - pb severine transaction planned non voulue
 
-- bug Antoine / occasionnel negatif
+- bug Antoine / occasionnel negatif (devrait etre a 0 comme dans BudgetView)
 
 - bug Antoine / balanceSummaryView : charges negatives inexpliquees
 
-Points de blocage:
-- OFX/QIF ? => Money / Quicken
-- import : description plus complete (hyperlien) + guide par banque
-- import : retailler jtable
 - premier import QIF : saisie du solde
 
-- voir redimensionnement TransactionDetails
+- voir redimensionnement TransactionDetails (voir MuliLineLabel jide ?)
 
 - description budgetArea : lien "Retour" + lien "En savoir plus sur les series"
-
-- selectionToggle et timePanel : mettre un curseur
 
 - SED: combo "tous les mois / tous les ans / operation unique"
 
 - Message d'aide dans CategoryChooserDialog
 
-- SED: titre pour description mode auto
+- CategorizationView : bug serie qui reste selectionnee apres changement de transaction
 
 - tooltips partout
 
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
 
-- categoryView : afficher un message quand 
+- categoryView : afficher un message quand la categorisation est assez avancee (90%) ?

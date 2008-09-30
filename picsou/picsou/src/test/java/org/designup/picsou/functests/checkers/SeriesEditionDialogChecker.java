@@ -575,4 +575,17 @@ public class SeriesEditionDialogChecker extends DataChecker {
     getPeriodCombo().select("Custom");
     return this;
   }
+
+  public SeriesEditionDialogChecker seriesListIsHidden() {
+    assertFalse(dialog.getPanel("buttonSeriesPanel").isVisible());
+    assertFalse(dialog.getPanel("seriesPanel").isVisible());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker seriesListIsVisible() {
+    assertTrue(dialog.getPanel("buttonSeriesPanel").isVisible());
+    assertTrue(dialog.getPanel("seriesPanel").isVisible());
+    return this;
+  }
+
 }
