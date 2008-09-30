@@ -10,7 +10,7 @@
 
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(450,380)">
+  <panel styleClass="dialog" preferredSize="(550,500)">
 
     <column styleClass="innerDialog">
 

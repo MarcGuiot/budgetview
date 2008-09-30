@@ -4,11 +4,9 @@
 
 - bug Antoine / balanceSummaryView : charges negatives inexpliquees
 
-- import : retailler jtable
-
 - premier import QIF : saisie du solde
 
-- voir redimensionnement TransactionDetails
+- voir redimensionnement TransactionDetails (voir MuliLineLabel jide ?)
 
 - description budgetArea : lien "Retour" + lien "En savoir plus sur les series"
 
