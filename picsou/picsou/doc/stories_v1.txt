@@ -6,17 +6,15 @@
 
 - pb separateur virgules import QIF/OFX
 
-Points de blocage:
-- OFX/QIF ? => Money / Quicken
 - import : description plus complete (hyperlien) + guide par banque
+
 - import : retailler jtable
+
 - premier import QIF : saisie du solde
 
 - voir redimensionnement TransactionDetails
 
 - description budgetArea : lien "Retour" + lien "En savoir plus sur les series"
-
-- selectionToggle et timePanel : mettre un curseur
 
 - SED: combo "tous les mois / tous les ans / operation unique"
 
@@ -30,4 +28,4 @@ Points de blocage:
 
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
 
-- categoryView : afficher un message quand 
+- categoryView : afficher un message quand la categorisation est assez avancee (90%) ?

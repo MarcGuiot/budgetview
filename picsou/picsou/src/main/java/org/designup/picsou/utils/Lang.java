@@ -27,6 +27,7 @@ public class Lang {
 
   public static void setLocale(Locale locale) {
     LOCALE = locale;
+    bundle = null;
   }
 
   public static String get(String key, Object... arguments) throws ItemNotFound {
