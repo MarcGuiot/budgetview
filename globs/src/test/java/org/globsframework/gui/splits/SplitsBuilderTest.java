@@ -512,4 +512,9 @@ public class SplitsBuilderTest extends SplitsTestCase {
     JLabel label = parse("<label text='$aa.bb.cc'/>");
     assertEquals("aa bb cc", label.getText());
   }
+
+  public void testCursor() throws Exception {
+    JLabel label = parse("<label cursor='hand'/>");
+    assertEquals(Cursor.HAND_CURSOR, label.getCursor().getType());
+  }
 }

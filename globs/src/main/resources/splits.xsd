@@ -673,6 +673,8 @@
       </xs:annotation>
     </xs:attribute>
 
+    <xs:attribute name="cursor" type="xs:string"/>
+    <xs:attribute name="tooltipText" type="xs:string"/>
 
     <xs:anyAttribute processContents="skip"/>
 

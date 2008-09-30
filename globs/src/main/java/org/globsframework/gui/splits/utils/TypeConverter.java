@@ -58,6 +58,9 @@ public class TypeConverter {
     if (targetClass == Border.class) {
       return BorderUtils.parse(value, context.getService(ColorService.class), context);
     }
+    if (targetClass == Cursor.class) {
+      return Cursors.parse(value);
+    }
     if (ComponentUI.class.isAssignableFrom(targetClass)) {
       return context.getService(UIService.class).getUI(value, context);
     }
