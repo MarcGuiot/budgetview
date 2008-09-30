@@ -684,6 +684,7 @@
     <xs:attribute name="icon" type="xs:string"/>
     <xs:attribute name="rolloverIcon" type="xs:string"/>
     <xs:attribute name="pressedIcon" type="xs:string"/>
+    <xs:attribute name="disabledIcon" type="xs:string"/>
   </xs:attributeGroup>
 
   <xs:attributeGroup name="buttonAttributes">
