@@ -40,7 +40,22 @@
             <row styleClass="separator">
               <column marginTop="10" weightX="3" minimumSize="(150,300)">
 
-                <label text="$seriesEdition.begin" styleClass="formLabelTop" fill="horizontal"/>
+                <label text="$seriesEdition.period" styleClass="formLabelTop" marginTop="10"/>
+                <comboBox ref="periodCombo"/>
+                <panel ref="monthSelectionPanel" opaque="false">
+                  <column>
+                    <label text="$seriesEdition.months" styleClass="formLabelTop" marginTop="10"/>
+                    <repeat ref="monthRepeat" styleClass="innerBlock" margin="15" marginTop="2"
+                            layout="horizontalGrid" gridWrapLimit="3" weightY="0.1">
+                      <label ref="monthLabel" styleClass="month" labelFor="monthSelector"
+                             fill="none" anchor="south" marginBottom="0"/>
+                      <checkBox ref="monthSelector"
+                                fill="none" anchor="north" marginTop="0" marginBottom="7"/>
+                    </repeat>
+                  </column>
+                </panel>
+
+                <label text="$seriesEdition.begin" styleClass="formLabelTop" fill="horizontal" marginTop="10"/>
                 <row>
                   <textField ref="beginSeriesDate" fill="horizontal" columns="20"
                              marginRight="5"/>
@@ -67,14 +82,6 @@
                   <filler fill="horizontal" weightX="0.1"/>
                 </row>
 
-                <label text="$seriesEdition.months" styleClass="formLabelTop" marginTop="10"/>
-                <repeat ref="monthRepeat" styleClass="innerBlock" margin="15" marginTop="2"
-                        layout="horizontalGrid" gridWrapLimit="3" weightY="0.1">
-                  <label ref="monthLabel" styleClass="month" labelFor="monthSelector"
-                         fill="none" anchor="south" marginBottom="0"/>
-                  <checkBox ref="monthSelector"
-                            fill="none" anchor="north" marginTop="0" marginBottom="7"/>
-                </repeat>
                 <filler fill="vertical"/>
               </column>
 
@@ -97,7 +104,7 @@
                   <column>
                     <htmlEditorPane text="$seriesEdition.automatic.explain" margin="20" marginBottom="30"/>
                     <row>
-                    <filler fill="horizontal"/>
+                      <filler fill="horizontal"/>
                       <button action="manual"/>
                       <filler fill="horizontal"/>
                     </row>

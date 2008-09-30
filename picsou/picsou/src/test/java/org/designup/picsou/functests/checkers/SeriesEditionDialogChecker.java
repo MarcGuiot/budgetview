@@ -20,6 +20,18 @@ public class SeriesEditionDialogChecker extends DataChecker {
   private Window dialog;
   private boolean singleSelection;
   private Table table;
+  public static final String JAN = "Jan";
+  public static final String FEB = "Feb";
+  public static final String MAR = "Mar";
+  public static final String APR = "Apr";
+  public static final String MAY = "May";
+  public static final String JUN = "Jun";
+  public static final String JUL = "Jul";
+  public static final String AOU = "Aug";
+  public static final String SEP = "Sep";
+  public static final String OCT = "Oct";
+  public static final String NOV = "Nov";
+  public static final String DEC = "Dec";
 
   public SeriesEditionDialogChecker(Window dialog, boolean singleSelection) {
     this.dialog = dialog;
@@ -213,46 +225,40 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesEditionDialogChecker toggleMonth(int... months) {
     String labels[] = new String[months.length];
     for (int i = 0; i < months.length; i++) {
-      int month = months[i];
-      switch (month) {
-        case 1:
-          labels[i] = "Jan";
-          break;
-        case 2:
-          labels[i] = "Feb";
-          break;
-        case 3:
-          labels[i] = "Mar";
-          break;
-        case 4:
-          labels[i] = "Apr";
-          break;
-        case 5:
-          labels[i] = "May";
-          break;
-        case 6:
-          labels[i] = "Jun";
-          break;
-        case 7:
-          labels[i] = "Jul";
-          break;
-        case 8:
-          labels[i] = "Aou";
-          break;
-        case 9:
-          labels[i] = "Sep";
-          break;
-        case 10:
-          labels[i] = "Oct";
-          break;
-        case 11:
-          labels[i] = "Nov";
-          break;
-        case 12:
-          labels[i] = "Dec";
-      }
+      labels[i] = transposeMonthId(months[i]);
     }
     return toggleMonth(labels);
+  }
+
+  private String transposeMonthId(int month) {
+    switch (month) {
+      case 1:
+        return JAN;
+      case 2:
+        return FEB;
+      case 3:
+        return MAR;
+      case 4:
+        return APR;
+      case 5:
+        return MAY;
+      case 6:
+        return JUN;
+      case 7:
+        return JUL;
+      case 8:
+        return AOU;
+      case 9:
+        return SEP;
+      case 10:
+        return OCT;
+      case 11:
+        return NOV;
+      case 12:
+        return DEC;
+    }
+    fail(month + " unknown");
+    return "";
   }
 
   public SeriesEditionDialogChecker toggleMonth(String... monthsLabel) {
@@ -267,6 +273,14 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker checkMonthIsChecked(int... months) {
+    for (int month : months) {
+      assertThat(transposeMonthId(month) + " is not checked", getMonthCheckBox(transposeMonthId(month)).isSelected());
+    }
+    return this;
+  }
+
+
   public SeriesEditionDialogChecker checkMonthIsChecked(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
       assertThat(monthLabel + " is not checked", getMonthCheckBox(monthLabel).isSelected());
@@ -277,6 +291,13 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesEditionDialogChecker checkMonthIsNotChecked(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
       assertFalse(monthLabel + " is checked", getMonthCheckBox(monthLabel).isSelected());
+    }
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkMonthIsNotChecked(int... months) {
+    for (int month : months) {
+      assertFalse(transposeMonthId(month) + " is checked", getMonthCheckBox(transposeMonthId(month)).isSelected());
     }
     return this;
   }
@@ -519,5 +540,39 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   public SeriesDeleteDialogChecker deleteSeriesWithConfirmation() {
     return new SeriesDeleteDialogChecker(WindowInterceptor.getModalDialog(dialog.getButton("delete").triggerClick()));
+  }
+
+  public SeriesEditionDialogChecker setUnknown() {
+    getPeriodCombo().select("Undefined");
+    return this;
+  }
+
+  public ComboBox getPeriodCombo() {
+    return dialog.getComboBox("periodCombo");
+  }
+
+  public SeriesEditionDialogChecker monthsAreHidden() {
+    assertFalse(dialog.getPanel("monthSelectionPanel").isVisible());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker monthsAreVisible() {
+    assertTrue(dialog.getPanel("monthSelectionPanel").isVisible());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker setSixMonths() {
+    getPeriodCombo().select("Each six month");
+    return this;
+  }
+
+  public SeriesEditionDialogChecker setFourMonths() {
+    getPeriodCombo().select("Each four month");
+    return this;
+  }
+
+  public SeriesEditionDialogChecker setCustom() {
+    getPeriodCombo().select("Custom");
+    return this;
   }
 }

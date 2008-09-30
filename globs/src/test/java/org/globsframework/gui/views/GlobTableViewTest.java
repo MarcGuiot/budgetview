@@ -579,7 +579,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       {"newName1", "1.1"},
     }));
     table.rowIsSelected(0);
-    
+
     repository.update(glob2.getKey(), DummyObject.NAME, "zeNewName2");
 
     listener.assertEmpty();
@@ -834,6 +834,35 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       {"2", "aName", "0.1", "2006/08/01"},
       {"3", "yetAnotherName", "2.2", "2006/08/05"},
       {"1", "zorro", "0.23", "2006/08/14"},
+    }));
+  }
+
+
+  public void testUpdatesCanInsertOrRemoveRow() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
+                    "<dummyObject id='2' name='name2' value='2.2'/>" +
+                    "<dummyObject id='3' name='name2' value='2.2'/>" +
+                    "<dummyObject id='4' name='name2' value='2.2'/>" +
+                    "");
+    view = GlobTableView.init(DummyObject.TYPE, repository, new GlobFieldComparator(ID), directory)
+      .setFilter(GlobMatchers.fieldEquals(DummyObject.NAME, "name2"))
+      .addColumn(DummyObject.ID)
+      .addColumn(DummyObject.NAME);
+    Table table = new Table(view.getComponent());
+    assertTrue(table.contentEquals(new String[][]{
+      {"2", "name2"},
+      {"3", "name2"},
+      {"4", "name2"},
+    }));
+    repository.enterBulkDispatchingMode();
+    repository.update(key1, DummyObject.NAME, "name2");
+    repository.update(key2, DummyObject.NAME, "name1");
+    repository.update(key3, DummyObject.NAME, "name1");
+    repository.completeBulkDispatchingMode();
+    assertTrue(table.contentEquals(new String[][]{
+      {"1", "name2"},
+      {"4", "name2"},
     }));
   }
 

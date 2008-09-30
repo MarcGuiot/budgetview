@@ -19,6 +19,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -83,6 +84,7 @@ public class SeriesEditionDialog {
   private TimeService timeService;
   private JLabel categoryLabel;
   private CardHandler modeCard;
+  private JPanel monthSelectionPanel;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -90,9 +92,11 @@ public class SeriesEditionDialog {
 
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     localRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(Category.TYPE, BudgetArea.TYPE, Month.TYPE, SeriesToCategory.TYPE, CurrentMonth.TYPE)
+      .copy(Category.TYPE, BudgetArea.TYPE, Month.TYPE, SeriesToCategory.TYPE, CurrentMonth.TYPE,
+            ProfileType.TYPE)
       .get();
 
+    localRepository.addTrigger(new ProfileTypeSeriesTrigger());
     localRepository.addTrigger(new AutomaticSeriesBudgetTrigger());
     localRepository.addTrigger(new SeriesBudgetTrigger());
     selectionService = new SelectionService();
@@ -129,6 +133,21 @@ public class SeriesEditionDialog {
     nameEditor = builder.addEditor("nameField", Series.LABEL).setNotifyAtKeyPressed(true);
 
     registerCategoryComponents(descriptionService, builder);
+
+    GlobLinkComboEditor periodCombo =
+      new GlobLinkComboEditor(Series.PROFILE_TYPE, localRepository, localDirectory);
+    periodCombo.setShowEmptyOption(false);
+    periodCombo.setComparator(new Comparator<Glob>() {
+
+      public int compare(Glob o1, Glob o2) {
+        return ProfileType.get(o1.get(ProfileType.ID)).getOrder()
+          .compareTo(ProfileType.get(o2.get(ProfileType.ID)).getOrder());
+      }
+    });
+    builder.add("periodCombo", periodCombo);
+
+    monthSelectionPanel = new JPanel();
+    builder.add("monthSelectionPanel", monthSelectionPanel);
 
     registerDateComponents(builder);
 
@@ -174,12 +193,14 @@ public class SeriesEditionDialog {
           multiCategoryList.setFilter(GlobMatchers.NONE);
         }
         updateDateState();
+        updateMonthChooser();
       }
     }, Series.TYPE);
 
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         updateDateState();
+        updateMonthChooser();
       }
     });
 
@@ -200,6 +221,13 @@ public class SeriesEditionDialog {
     JPanel panel = builder.load();
     okAction = new ValidateAction();
     dialog.addInPanelWithButton(panel, okAction, new CancelAction());
+  }
+
+  private void updateMonthChooser() {
+    if (currentSeries != null) {
+      monthSelectionPanel.setVisible(
+        ProfileType.get(currentSeries.get(Series.PROFILE_TYPE)).getMonthStep() != -1);
+    }
   }
 
   private void registerCategoryComponents(DescriptionService descriptionService, GlobsPanelBuilder builder) {
@@ -654,7 +682,6 @@ public class SeriesEditionDialog {
       try {
         updateInProgress = true;
         updateCheckBox();
-        checkBox.setSelected((currentSeries != null) && currentSeries.get(Series.getField(monthIndex)));
       }
       finally {
         updateInProgress = false;
@@ -665,10 +692,26 @@ public class SeriesEditionDialog {
       if (updateInProgress) {
         return;
       }
-      if (currentSeries != null) {
-        BooleanField field = Series.getField(monthIndex);
-        boolean newState = e.getStateChange() == ItemEvent.SELECTED;
-        localRepository.update(currentSeries.getKey(), field, newState);
+      localRepository.enterBulkDispatchingMode();
+      try {
+        if (currentSeries != null) {
+          BooleanField field = Series.getField(monthIndex);
+          boolean newState = e.getStateChange() == ItemEvent.SELECTED;
+          localRepository.update(currentSeries.getKey(), field, newState);
+          ProfileType profileType = ProfileType.get(currentSeries.get(Series.PROFILE_TYPE));
+          if (newState &&
+              profileType.getMonthStep() != -1 && profileType != ProfileType.CUSTOM) {
+            BooleanField[] months = Series.getMonths();
+            for (BooleanField month : months) {
+              if (month != field) {
+                localRepository.update(currentSeries.getKey(), month, false);
+              }
+            }
+          }
+        }
+      }
+      finally {
+        localRepository.completeBulkDispatchingMode();
       }
     }
 
@@ -698,6 +741,7 @@ public class SeriesEditionDialog {
         }
       }
       checkBox.setEnabled(!forceDisable && currentSeries != null);
+      checkBox.setSelected((currentSeries != null) && currentSeries.get(Series.getField(monthIndex)));
     }
   }
 

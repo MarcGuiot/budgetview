@@ -2,10 +2,7 @@ package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultBoolean;
-import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.NamingField;
-import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
@@ -33,6 +30,7 @@ public class Series {
   @Target(Category.class)
   public static LinkField DEFAULT_CATEGORY;
 
+  @DefaultInteger(0)
   @Target(ProfileType.class)
   public static LinkField PROFILE_TYPE;
 
@@ -124,6 +122,11 @@ public class Series {
     throw new ItemNotFound(Month.toString(monthId) + " is not a month number");
   }
 
+  public static BooleanField[] getMonths() {
+    return new BooleanField[]{JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST,
+                              SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER};
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues fieldValues) {
@@ -196,13 +199,21 @@ public class Series {
       fieldSetter.set(Series.NAME, input.readString());
       fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
       fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
-      fieldSetter.set(Series.PROFILE_TYPE, input.readInteger());
+      Integer profileType = input.readInteger();
+      if (profileType == null) {
+        profileType = ProfileType.CUSTOM.getId();
+      }
+      fieldSetter.set(Series.PROFILE_TYPE, profileType);
       fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
       fieldSetter.set(Series.LAST_MONTH, input.readInteger());
       fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
       fieldSetter.set(Series.DAY, input.readInteger());
       fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
-      fieldSetter.set(Series.IS_AUTOMATIC, input.readBoolean());
+      Boolean isAutomatic = input.readBoolean();
+      if (isAutomatic == null) {
+        isAutomatic = false;
+      }
+      fieldSetter.set(Series.IS_AUTOMATIC, isAutomatic);
       fieldSetter.set(Series.JANUARY, input.readBoolean());
       fieldSetter.set(Series.FEBRUARY, input.readBoolean());
       fieldSetter.set(Series.MARCH, input.readBoolean());

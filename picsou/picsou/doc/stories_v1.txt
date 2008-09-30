@@ -4,8 +4,6 @@
 
 - bug Antoine / balanceSummaryView : charges negatives inexpliquees
 
-- pb separateur virgules import QIF/OFX
-
 - import : description plus complete (hyperlien) + guide par banque
 
 - import : retailler jtable

@@ -50,7 +50,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       createQifFile("file",
                     "!Type:Bank\n" +
                     "D30/04/2006\n" +
-                    "T-20\n" +
+                    "T-20.00\n" +
                     "N\n" +
                     "MAuchan\n" +
                     "^");
@@ -65,6 +65,30 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .check();
     views.selectHome();
     accounts.changeBalance(OperationChecker.DEFAULT_ACCOUNT_NUMBER, 80, "Auchan");
+  }
+
+  public void testImportAmountWithVariousDecimalSeparator() throws Exception {
+    String[] blocks = {
+      "D20/04/2006" + "\n" +
+      "T-17,65\n" +
+      "MPARIS\n" +
+      "^" +
+      "D21/04/2006" + "\n" +
+      "T,117.65\n" +
+      "MPARIS\n" +
+      "^" +
+      "D22/04/2006" + "\n" +
+      "T-,65\n" +
+      "MPARIS\n" +
+      "^" +
+      ""};
+    importBlocks(blocks);
+    transactions.initContent()
+      .add("22/04/2006", TransactionType.PRELEVEMENT, "PARIS", "", -0.65)
+      .add("21/04/2006", TransactionType.VIREMENT, "PARIS", "", 117.65)
+      .add("20/04/2006", TransactionType.PRELEVEMENT, "PARIS", "", -17.65)
+      .check();
+
   }
 
   public void testTakesUserAndBankDatesIntoAccountWhenDetectingDuplicates() throws Exception {
