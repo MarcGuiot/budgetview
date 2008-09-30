@@ -364,18 +364,11 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
                                    link + "'");
       }
     }
-    link.apply(new FieldMappingFunctor() {
-      public void process(Field sourceField, Field targetField) {
-        Object value = targetKey != null ? targetKey.getValue(targetField) : null;
-        Object previousValue = sourceGlob.setObject(sourceField, value);
-        IndexTables indexTables = indexManager.getAssociatedTable(sourceField);
-        if (indexTables != null) {
-          indexTables.add(value, sourceGlob, sourceField, previousValue);
-        }
-        changeSetToDispatch.processUpdate(sourceKey, sourceField, value, previousValue);
-      }
-    });
-    notifyListeners(true);
+    LinkFieldMappingFunctor fieldMappingFunctor = new LinkFieldMappingFunctor(targetKey, sourceGlob, sourceKey);
+    link.apply(fieldMappingFunctor);
+    if (fieldMappingFunctor.hasChange()) {
+      notifyListeners(true);
+    }
   }
 
   public void delete(Key key) throws ItemNotFound, OperationDenied {
@@ -708,6 +701,37 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
           }
         }
       }
+    }
+  }
+
+  private class LinkFieldMappingFunctor implements FieldMappingFunctor {
+    private final Key targetKey;
+    private final MutableGlob sourceGlob;
+    private final Key sourceKey;
+    private boolean hasChange = false;
+
+    public LinkFieldMappingFunctor(Key targetKey, MutableGlob sourceGlob, Key sourceKey) {
+      this.targetKey = targetKey;
+      this.sourceGlob = sourceGlob;
+      this.sourceKey = sourceKey;
+    }
+
+    public void process(Field sourceField, Field targetField) {
+      Object value = targetKey != null ? targetKey.getValue(targetField) : null;
+      Object previousValue = sourceGlob.setObject(sourceField, value);
+      if (Utils.equal(previousValue, value)) {
+        return;
+      }
+      hasChange = true;
+      IndexTables indexTables = indexManager.getAssociatedTable(sourceField);
+      if (indexTables != null) {
+        indexTables.add(value, sourceGlob, sourceField, previousValue);
+      }
+      changeSetToDispatch.processUpdate(sourceKey, sourceField, value, previousValue);
+    }
+
+    public boolean hasChange() {
+      return hasChange;
     }
   }
 }

@@ -460,6 +460,9 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     changeListener.assertLastChangesEqual(
       "<update type='dummyObject' id='1' link='3' _link='(null)'/>"
     );
+    changeListener.reset();
+    repository.setTarget(getKey(1), DummyObject.LINK, getKey(3));
+    changeListener.assertNoChanges();
   }
 
   public void testResettingALink() {
