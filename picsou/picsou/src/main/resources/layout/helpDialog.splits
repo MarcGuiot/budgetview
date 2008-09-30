@@ -8,6 +8,13 @@
       <scrollPane>
         <htmlEditorPane ref="editor" opaque="false" editable="false" border="empty(10)"/>
       </scrollPane>
+      <row styleClass="iconButtonGroup">
+        <button action="back" name="back" styleClass="icon"
+                icon="button_prev.png" disabledIcon="button_prev_disabled.png"/>
+        <button action="forward" name="forward" styleClass="icon"
+                icon="button_next.png" disabledIcon="button_next_disabled.png"/>
+        <filler fill="horizontal"/>
+      </row>
     </column>
   </panel>
 

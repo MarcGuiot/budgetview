@@ -26,7 +26,29 @@ public class HelpChecker extends DataChecker {
     return this;
   }
 
+  public HelpChecker clickLink(String hyperlinkText) {
+    dialog.getTextBox("editor").clickOnHyperlink(hyperlinkText);
+    return this;
+  }
+
   public void close() {
     dialog.getButton("Close").click();
   }
+
+  public void checkForwardEnabled(boolean enabled) {
+    UISpecAssert.assertEquals(enabled, dialog.getButton("forward").isEnabled());
+  }
+
+  public void forward() {
+    dialog.getButton("forward").click();
+  }
+
+  public void checkBackEnabled(boolean enabled) {
+    UISpecAssert.assertEquals(enabled, dialog.getButton("back").isEnabled());
+  }
+
+  public void back() {
+    dialog.getButton("back").click();
+  }
+
 }

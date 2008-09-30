@@ -5,6 +5,8 @@ import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.utils.PicsouTestCase;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.ui.UIService;
+import org.globsframework.gui.splits.utils.DummyIconLocator;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.format.DescriptionService;
 import org.uispec4j.UISpec4J;
@@ -21,6 +23,7 @@ public abstract class PicsouGuiTestCase extends PicsouTestCase {
     super.setUp();
     directory.add(SelectionService.class, new SelectionService());
     directory.add(DescriptionService.class, new PicsouDescriptionService());
+    directory.add(new UIService());
     PicsouColors.registerColorService(directory);
   }
 
