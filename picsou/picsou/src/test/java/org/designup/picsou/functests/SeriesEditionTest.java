@@ -7,6 +7,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.uispec4j.Key;
+import org.uispec4j.assertion.UISpecAssert;
 
 public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
@@ -847,5 +848,73 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "July", "30.00", "20.00"},
         {"2008", "June", "20.00", "20.00"}
       });
+  }
+
+  public void testMonthsAreShowOrNot() throws Exception {
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
+    edition.setUnknown()
+      .monthsAreHidden()
+      .setSixMonths()
+      .monthsAreVisible()
+      .setCustom()
+      .monthsAreVisible()
+      .setUnknown()
+      .monthsAreHidden();
+  }
+
+  public void testChangeMonthChangeOtherMonth() throws Exception {
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
+    edition.setName("S1");
+    edition.setSixMonths()
+      .checkMonthIsChecked(1, 7);
+    edition.toggleMonth(1)
+      .checkMonthIsChecked(1, 7)
+      .checkMonthIsNotChecked(2, 5);
+
+    edition.toggleMonth(2)
+      .checkMonthIsChecked(2, 8)
+      .checkMonthIsNotChecked(1, 5, 7);
+
+    edition.setFourMonths()
+      .checkMonthIsChecked(1, 5, 9)
+      .toggleMonth(10)
+      .checkMonthIsChecked(10, 2, 6)
+      .toggleMonth(3)
+      .checkMonthIsChecked(3, 7, 11);
+
+  }
+
+  public void testSwitchBettewnSeries() throws Exception {
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries()
+      .setName("S1");
+    edition.setSixMonths()
+      .toggleMonth(3)
+      .checkMonthIsChecked(3, 9);
+
+    edition.createSeries().setName("S2")
+      .setFourMonths()
+      .checkMonthIsChecked(1, 5, 9)
+      .toggleMonth(2)
+      .checkMonthIsChecked(2, 6, 10);
+
+    edition.selectSeries("S1")
+      .monthsAreVisible()
+      .checkMonthIsChecked(3, 9);
+    edition
+      .selectSeries("S2")
+      .monthsAreVisible()
+      .checkMonthIsChecked(2, 6, 10);
+  }
+
+  public void testPeriodOrder() throws Exception {
+    views.selectBudget();
+    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries()
+      .setName("S1");
+    UISpecAssert.assertThat(edition.getPeriodCombo()
+      .contentEquals("Every month", "Each two month", "Each three month", "Each four month", "Each six month",
+                     "One time a year", "Custom", "Undefined"));
   }
 }

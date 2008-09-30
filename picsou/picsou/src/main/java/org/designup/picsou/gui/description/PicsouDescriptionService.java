@@ -22,7 +22,7 @@ import java.util.Locale;
 
 public class PicsouDescriptionService extends DefaultDescriptionService {
   public static final DecimalFormat INTEGER_FORMAT = new DecimalFormat("0");
-  public static final DecimalFormat DECIMAL_FORMAT = 
+  public static final DecimalFormat DECIMAL_FORMAT =
     new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
   private static SimpleDateFormat YEAR_MONTH_FORMAT = new SimpleDateFormat("MMMMMMMMMM yyyy", Locale.FRANCE);
@@ -93,6 +93,9 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
           return Month.getFullLabel(glob.get(Month.ID));
         }
       };
+    }
+    if (globType.equals(ProfileType.TYPE)) {
+      return new BundleBasedStringifier(ProfileType.NAME, ProfileType.TYPE.getName() + ".");
     }
     return super.getStringifier(globType);
   }

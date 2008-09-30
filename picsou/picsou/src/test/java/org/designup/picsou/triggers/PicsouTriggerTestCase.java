@@ -47,7 +47,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
   protected void createSeries(int seriesId, double amount) {
     repository.create(Key.create(Series.TYPE, seriesId),
                       value(Series.INITIAL_AMOUNT, amount),
-                      value(Series.PROFILE_TYPE, ProfileType.MONTHLY.getId()),
+                      value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
                       value(Series.IS_AUTOMATIC, false),
                       value(Series.BUDGET_AREA, BudgetArea.RECURRING_EXPENSES.getId()));
   }
@@ -79,7 +79,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.DAY, 4),
                       value(Series.BUDGET_AREA, BudgetArea.INCOME.getId()),
                       value(Series.LABEL, "salaire"),
-                      value(Series.PROFILE_TYPE, ProfileType.MONTHLY.getId()),
+                      value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
                       value(Series.IS_AUTOMATIC, false),
                       value(Series.DEFAULT_CATEGORY, MasterCategory.INCOME.getId()));
   }
@@ -91,7 +91,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.BUDGET_AREA, BudgetArea.EXPENSES_ENVELOPE.getId()),
                       value(Series.DAY, 25),
                       value(Series.LABEL, "course"),
-                      value(Series.PROFILE_TYPE, ProfileType.MONTHLY.getId()),
+                      value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
                       value(Series.IS_AUTOMATIC, false),
                       value(Series.DEFAULT_CATEGORY, MasterCategory.FOOD.getId()));
   }
@@ -103,7 +103,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.DAY, 7),
                       value(Series.BUDGET_AREA, BudgetArea.RECURRING_EXPENSES.getId()),
                       value(Series.LABEL, "free telecom"),
-                      value(Series.PROFILE_TYPE, ProfileType.MONTHLY.getId()),
+                      value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
                       value(Series.IS_AUTOMATIC, false),
                       value(Series.DEFAULT_CATEGORY, MasterCategory.TELECOMS.getId()));
   }
