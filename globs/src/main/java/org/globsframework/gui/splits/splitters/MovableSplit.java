@@ -1,21 +1,19 @@
 package org.globsframework.gui.splits.splitters;
 
+import com.jidesoft.swing.JideSplitPane;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.layout.Fill;
 
-import javax.swing.*;
-
-public class MovableSplit extends DefaultComponent<JSplitPane> {
+public class MovableSplit extends DefaultComponent<JideSplitPane> {
   private Direction direction;
 
   public enum Direction {
-    HORIZONTAL("horizontalSplit", JSplitPane.HORIZONTAL_SPLIT),
-    VERTICAL("verticalSplit", JSplitPane.VERTICAL_SPLIT);
+    HORIZONTAL("horizontalSplit", JideSplitPane.HORIZONTAL_SPLIT),
+    VERTICAL("verticalSplit", JideSplitPane.VERTICAL_SPLIT);
 
     private String name;
     private int value;
@@ -27,7 +25,7 @@ public class MovableSplit extends DefaultComponent<JSplitPane> {
   }
 
   public MovableSplit(Direction direction, SplitProperties properties, Splitter[] subSplitters) {
-    super(JSplitPane.class, direction.name, properties, subSplitters, true);
+    super(JideSplitPane.class, direction.name, properties, subSplitters, true);
     this.direction = direction;
   }
 
@@ -36,46 +34,26 @@ public class MovableSplit extends DefaultComponent<JSplitPane> {
   }
 
   public ComponentStretch createRawStretch(SplitsContext context) {
-    if (getSubSplitters().length != 2) {
-      throw new SplitsException("verticalSplit requires two subcomponents");
+    JideSplitPane component = findOrCreateComponent(context);
+    double weightX = 0.;
+    double weightY = 0.;
+    for (Splitter splitter : getSubSplitters()) {
+      ComponentStretch stretch = splitter.createComponentStretch(context, true);
+      component.addPane(stretch.getComponent());
+      weightX += stretch.getWeightX();
+      weightY += stretch.getWeightY();
     }
-    ComponentStretch stretch1 = getSubSplitters()[0].createComponentStretch(context, true);
-    ComponentStretch stretch2 = getSubSplitters()[1].createComponentStretch(context, true);
-    JSplitPane component = findOrCreateComponent(context);
     component.setOrientation(direction.value);
-    component.setLeftComponent(stretch1.getComponent());
-    component.setRightComponent(stretch2.getComponent());
     component.setBorder(null);
 
-    switch (direction) {
-      case HORIZONTAL:
-        component.setResizeWeight(getRatio(stretch1.getWeightX(), stretch2.getWeightX()));
-      case VERTICAL:
-        component.setResizeWeight(getRatio(stretch1.getWeightX(), stretch2.getWeightX()));
-    }
-
     setDividerProperties(component);
-    return new ComponentStretch(component, Fill.BOTH, Anchor.CENTER,
-                                stretch1.getWeightX() + stretch2.getWeightX(),
-                                stretch1.getWeightY() + stretch2.getWeightY());
+    return new ComponentStretch(component, Fill.BOTH, Anchor.CENTER, weightX, weightY);
   }
 
-  private double getRatio(double x, double y) {
-    if (x + y == 0) {
-      return 100;
-    }
-    return x / (x + y);
-  }
-
-  private void setDividerProperties(JSplitPane splitPane) {
+  private void setDividerProperties(JideSplitPane splitPane) {
     Integer size = getProperties().getInt("dividerSize");
     if (size != null) {
       splitPane.setDividerSize(size);
-    }
-
-    Integer location = getProperties().getInt("dividerLocation");
-    if (location != null) {
-      splitPane.setDividerLocation(location);
     }
   }
 
