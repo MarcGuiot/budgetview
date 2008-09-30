@@ -1,10 +1,8 @@
 - pb severine transaction planned non voulue
 
-- bug Antoine / occasionnel negatif
+- bug Antoine / occasionnel negatif (devrait etre a 0 comme dans BudgetView)
 
 - bug Antoine / balanceSummaryView : charges negatives inexpliquees
-
-- import : description plus complete (hyperlien) + guide par banque
 
 - import : retailler jtable
 
@@ -17,8 +15,6 @@
 - SED: combo "tous les mois / tous les ans / operation unique"
 
 - Message d'aide dans CategoryChooserDialog
-
-- SED: titre pour description mode auto
 
 - CategorizationView : bug serie qui reste selectionnee apres changement de transaction
 
