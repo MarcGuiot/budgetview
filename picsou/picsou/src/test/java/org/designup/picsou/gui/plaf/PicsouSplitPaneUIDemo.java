@@ -20,19 +20,19 @@ public class PicsouSplitPaneUIDemo {
     SplitsBuilder builder = new SplitsBuilder(directory);
     builder.setSource("<splits>" +
                       "  <styles>" +
-                      "    <ui name='ui' class='" + PicsouSplitPaneUI.class.getName() + "'" +
-                      "        handleColor='#FF0000'/>" +
-                      "    <style selector='horizontalSplit' ui='ui'/>" +
-                      "  </styles>" +
-                      "<panel background='#1e64c2' opaque='true'>" +
-                      "  <row margin='15' preferredSize='(500,500)'>" +
-                      "    <horizontalSplit dividerLocation='200' opaque='false'>" +
-                      "      <list/>" +
-                      "      <table/>" +
-                      "    </horizontalSplit>" +
-                      "  </row>" +
-                      "</panel>" +
-                      "</splits>");
+//                      "    <ui name='ui' class='" + PicsouSplitPaneUI.class.getName() + "'" +
+//                      "        handleColor='#FF0000'/>" +
+//                      "    <style selector='horizontalSplit' ui='ui'/>" +
+"  </styles>" +
+"<panel background='#1e64c2' opaque='true'>" +
+"  <row margin='15' preferredSize='(500,500)'>" +
+"    <horizontalSplit dividerSize='30'>" +
+"      <list/>" +
+"      <table/>" +
+"    </horizontalSplit>" +
+"  </row>" +
+"</panel>" +
+"</splits>");
 
     JPanel panel = builder.load();
     GuiUtils.show(panel);

@@ -2,22 +2,23 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <row styleClass="main">
+    <horizontalSplit ref="horizontalSplitPane">
 
-    <verticalSplit dividerLocation="250" opaque="false" weightX="1.0">
-      <panel ref="incomeBudgetView"/>
-      <panel ref="occasionalBudgetView"/>
-    </verticalSplit>
+      <verticalSplit ref="firstVerticalSplitPane" opaque="false" marginRight="10">
+        <panel ref="incomeBudgetView" preferredSize="(100,250)"/>
+        <panel ref="occasionalBudgetView" preferredSize="(100,250)"/>
+      </verticalSplit>
 
-    <verticalSplit dividerLocation="350" opaque="false" weightX="1.0"
-                   marginLeft="20" marginRight="20">
-      <panel ref="recurringBudgetView"/>
-      <panel ref="savingsBudgetView"/>
-    </verticalSplit>
+      <verticalSplit ref="secondVerticalSplitPane" opaque="false" marginLeft="10" marginRight="10">
+        <panel ref="recurringBudgetView" preferredSize="(100,350)"/>
+        <panel ref="savingsBudgetView" preferredSize="(100,250)"/>
+      </verticalSplit>
 
-    <verticalSplit dividerLocation="250" opaque="false" weightX="1.0">
-      <panel ref="envelopeBudgetView"/>
-      <panel ref="projectsBudgetView"/>
-    </verticalSplit>
+      <verticalSplit ref="thirdVerticalSplitPane" opaque="false" marginLeft="10">
+        <panel ref="envelopeBudgetView" preferredSize="(100,250)"/>
+        <panel ref="projectsBudgetView" preferredSize="(100,250)"/>
+      </verticalSplit>
+    </horizontalSplit>
 
   </row>
 </splits>

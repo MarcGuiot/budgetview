@@ -85,6 +85,10 @@ public class SeriesEditionDialog {
   private JLabel categoryLabel;
   private CardHandler modeCard;
   private JPanel monthSelectionPanel;
+  private JPanel seriesPanel;
+  private Key createdSeries;
+  Integer currentlySelectedCategory;
+
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -125,6 +129,9 @@ public class SeriesEditionDialog {
         }
       },
                    seriesStringifier.getComparator(localRepository));
+    seriesPanel = new JPanel();
+    builder.add("seriesPanel", seriesPanel);
+
     builder.add("seriesList", seriesList.getComponent());
 
     builder.add("create", new CreateSeriesAction());
@@ -243,6 +250,7 @@ public class SeriesEditionDialog {
     multiCategoryList = GlobListView.init(SeriesToCategory.TYPE, localRepository, localDirectory)
       .setComparator(new GlobLinkComparator(SeriesToCategory.CATEGORY, localRepository,
                                             categoryStringifier.getComparator(localRepository)))
+      .setSingleSelectionMode()
       .setRenderer(new SeriesToCategoryStringifier(categoryStringifier));
     builder.add("multipleCategoryList", multiCategoryList);
 
@@ -330,6 +338,7 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeBulkDispatchingMode();
     }
+    seriesPanel.setVisible(true);
     doShow(monthIds, null, null);
   }
 
@@ -342,10 +351,11 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeBulkDispatchingMode();
     }
+    seriesPanel.setVisible(false);
     doShow(monthIds, localRepository.get(series.getKey()), false);
   }
 
-  public void showNewSeries(GlobList transactions, BudgetArea budgetArea) {
+  public Key showNewSeries(GlobList transactions, BudgetArea budgetArea) {
     this.budgetArea = BudgetArea.get(budgetArea.getId());
     Glob createdSeries;
     try {
@@ -369,7 +379,14 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeBulkDispatchingMode();
     }
+    seriesPanel.setVisible(false);
+    this.createdSeries = null;
+    this.currentlySelectedCategory = null;
     doShow(getCurrentMonthId(), createdSeries, true);
+    if (this.createdSeries != null) {
+      return this.createdSeries;
+    }
+    return null;
   }
 
   private Glob createSeries(String label, Double initialAmount, Integer day) {
@@ -499,6 +516,10 @@ public class SeriesEditionDialog {
     return dialog;
   }
 
+  public Integer getCurrentCategory() {
+    return currentlySelectedCategory;
+  }
+
   private class AssignCategoryAction extends AbstractAction {
     private AssignCategoryAction() {
       super(Lang.get("seriesEdition.categorize"));
@@ -537,6 +558,7 @@ public class SeriesEditionDialog {
           localRepository.completeBulkDispatchingMode();
         }
 
+        SeriesEditionDialog.this.multiCategoryList.selectFirst();
       }
 
       public Set<Integer> getPreselectedCategoryIds() {
@@ -577,6 +599,16 @@ public class SeriesEditionDialog {
 
     public void actionPerformed(ActionEvent e) {
       trimNames();
+      if (currentSeries != null) {
+        createdSeries = currentSeries.getKey();
+        if (budgetArea.isMultiCategories()) {
+          GlobList globList = selectionService.getSelection(SeriesToCategory.TYPE);
+          if (globList.size() == 1) {
+            Glob series = globList.get(0);
+            currentlySelectedCategory = series.get(SeriesToCategory.CATEGORY);
+          }
+        }
+      }
       localRepository.commitChanges(false);
       localRepository.rollback();
       dialog.setVisible(false);

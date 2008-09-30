@@ -162,6 +162,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     timeline.selectMonths("2008/08", "2008/06");
     budgetView.recurring.editSeries("Internet")
+      .setCustom()
       .setManual()
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
@@ -268,6 +269,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editSeriesList()
       .checkSeriesList("Electricity", "Internet")
       .checkSeriesSelected("Electricity")
+      .setCustom()
       .setManual()
       .selectAllMonths()
       .setAmount("70")
@@ -382,8 +384,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring
       .createSeries()
+      .setCustom()
       .setManual()
       .createSeries()
+      .setCustom()
       .setManual()
       .checkSeriesList("New series", "New series")
 
@@ -607,8 +611,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
-    edition.setManual();
-    edition.toggleMonth("Jan", "Mar", "Jul", "Sep", "Nov");
+    edition.setCustom()
+      .setManual()
+      .toggleMonth("Jan", "Mar", "Jul", "Sep", "Nov");
 
     edition.selectAllMonths()
       .setAmount("30");

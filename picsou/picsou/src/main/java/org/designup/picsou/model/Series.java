@@ -30,7 +30,7 @@ public class Series {
   @Target(Category.class)
   public static LinkField DEFAULT_CATEGORY;
 
-  @DefaultInteger(0)
+  @DefaultInteger(2)
   @Target(ProfileType.class)
   public static LinkField PROFILE_TYPE;
 

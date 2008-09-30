@@ -182,7 +182,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"25/06/2008", "Internet", "France Telecom", -59.90},
       {"30/06/2008", "Internet", "Free", -29.90},
     });
-    
+
     categorization.selectTableRows(0);
     categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
     categorization.selectTableRow(1);
@@ -882,6 +882,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   public void testAutomaticWithInactiveMonth() throws Exception {
     views.selectBudget();
     budgetView.recurring.createSeries().setName("Tel")
+      .setCustom()
       .toggleMonth(1, 3, 5, 7, 9, 11)
       .setCategory(MasterCategory.TELECOMS)
       .validate();
@@ -971,5 +972,24 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     budgetView.envelopes.checkSeries("Courant", 0, 20);
 
+  }
+
+  public void testAutoCategoriseWithFirstSelectedCategory() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -20., "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRow(0)
+      .selectEnvelopes()
+      .createEnvelopeSeries()
+      .setName("Divers")
+      .setCategory(MasterCategory.EDUCATION, MasterCategory.EQUIPMENT)
+      .validate();
+
+    views.selectData();
+    transactions.checkSeries("Auchan", "Divers");
+    transactions.checkCategory("Auchan", MasterCategory.EDUCATION);
   }
 }

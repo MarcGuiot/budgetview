@@ -107,8 +107,9 @@ public class BudgetAreaSeriesView extends View {
                         new GlobList(),
                         new RepeatComponentFactory<Glob>() {
                           public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
-                            final GlobButtonView globButtonView = GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
-                              .forceSelection(series);
+                            final GlobButtonView globButtonView =
+                              GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
+                                .forceSelection(series);
                             cellBuilder.add("seriesName", globButtonView.getComponent());
                             addAmountButton("observedSeriesAmount", SeriesStat.AMOUNT, series, cellBuilder);
                             addAmountLabel("plannedSeriesAmount", SeriesStat.PLANNED_AMOUNT, series, cellBuilder);

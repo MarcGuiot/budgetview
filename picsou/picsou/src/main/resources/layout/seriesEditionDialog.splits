@@ -13,7 +13,7 @@
       <label ref="title" styleClass="title"/>
 
       <horizontalSplit dividerLocation="150" opaque="false">
-        <column>
+        <column ref="seriesPanel">
           <scrollPane>
             <list ref="seriesList"/>
           </scrollPane>
@@ -42,18 +42,16 @@
 
                 <label text="$seriesEdition.period" styleClass="formLabelTop" marginTop="10"/>
                 <comboBox ref="periodCombo"/>
-                <panel ref="monthSelectionPanel" opaque="false">
-                  <column>
-                    <label text="$seriesEdition.months" styleClass="formLabelTop" marginTop="10"/>
-                    <repeat ref="monthRepeat" styleClass="innerBlock" margin="15" marginTop="2"
-                            layout="horizontalGrid" gridWrapLimit="3" weightY="0.1">
-                      <label ref="monthLabel" styleClass="month" labelFor="monthSelector"
-                             fill="none" anchor="south" marginBottom="0"/>
-                      <checkBox ref="monthSelector"
-                                fill="none" anchor="north" marginTop="0" marginBottom="7"/>
-                    </repeat>
-                  </column>
-                </panel>
+                <column ref="monthSelectionPanel" opaque="false">
+                  <label text="$seriesEdition.months" styleClass="formLabelTop" marginTop="10"/>
+                  <repeat ref="monthRepeat" styleClass="innerBlock" margin="15" marginTop="2"
+                          layout="horizontalGrid" gridWrapLimit="3" weightY="0.1">
+                    <label ref="monthLabel" styleClass="month" labelFor="monthSelector"
+                           fill="none" anchor="south" marginBottom="0"/>
+                    <checkBox ref="monthSelector"
+                              fill="none" anchor="north" marginTop="0" marginBottom="7"/>
+                  </repeat>
+                </column>
 
                 <label text="$seriesEdition.begin" styleClass="formLabelTop" fill="horizontal" marginTop="10"/>
                 <row>

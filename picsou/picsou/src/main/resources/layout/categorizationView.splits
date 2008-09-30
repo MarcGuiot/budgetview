@@ -27,7 +27,7 @@
 
   <panel styleClass="main">
 
-    <horizontalSplit dividerLocation="450" resizeWeight="0" opaque="false">
+    <horizontalSplit opaque="false">
 
       <column marginRight="5">
         <label text="$categorization.list.title" styleClass="blockTitle"/>
