@@ -7,13 +7,13 @@ import org.designup.picsou.model.TransactionType;
 
 public class PreferencesTest extends LoggedInFunctionalTestCase {
 
-  public void testChangeFuturMonth() throws Exception {
+  public void testChangeFutureMonths() throws Exception {
     timeline.assertDisplays("2008/08");
     operations.getPreferences().changeFutureMonth(24).validate();
     timeline.assertSpanEquals("2008/08", "2010/08");
   }
 
-  public void testChangeFuturMonthAndBackAndAgainWithSeries() throws Exception {
+  public void testChangeFutureMonthsAndBackAndAgainWithSeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/12", -95.00, "Auchan")
       .addTransaction("2008/08/04", -55.00, "EDF")

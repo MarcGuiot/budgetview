@@ -15,6 +15,7 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.filtering.TextFilterPanel;
 import org.designup.picsou.gui.graphics.CategoriesChart;
 import org.designup.picsou.gui.graphics.HistoricalChart;
+import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
@@ -26,7 +27,6 @@ import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.triggers.GlobStateChecker;
@@ -41,8 +41,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.fieldContainsIgnoreCase;
-import static org.globsframework.model.utils.GlobMatchers.or;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -52,11 +51,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.StringWriter;
 
+import net.roydesign.mac.MRJAdapter;
+
 public class MainPanel {
   private PicsouFrame parent;
   private ImportFileAction importFileAction;
   private ExportFileAction exportFileAction;
-  private PreferencesAction preferencesFileAction;
+  private PreferencesAction preferencesAction;
   private ExitAction exitAction;
   protected GlobsPanelBuilder builder;
   private MainWindow mainWindow;
@@ -93,7 +94,7 @@ public class MainPanel {
 
     importFileAction = ImportFileAction.initAndRegisterInOpenRequestManager(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
-    preferencesFileAction = new PreferencesAction(repository, directory);
+    preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(parent, repository, directory);
     check = new CheckRepositoryAction(repository);
     exitAction = new ExitAction(directory);
@@ -160,36 +161,68 @@ public class MainPanel {
   }
 
   public void createMenuBar(final PicsouFrame frame, Directory directory) {
-    JMenu fileMenu = new JMenu(Lang.get("file"));
-    fileMenu.add(importFileAction);
-    fileMenu.add(exportFileAction);
-    fileMenu.addSeparator();
-    fileMenu.add(preferencesFileAction);
-    fileMenu.addSeparator();
-    fileMenu.add(registerAction);
-    fileMenu.addSeparator();
-    fileMenu.add(exitAction);
-
-    JMenu editMenu = new JMenu(Lang.get("edit"));
-    final UndoAction undoAction = new UndoAction(directory);
-    editMenu.add(undoAction);
-    final RedoAction redoAction = new RedoAction(directory);
-    editMenu.add(redoAction);
-
-    Utils.beginRemove();
-    editMenu.add(check);
-    Utils.endRemove();
 
     JMenuBar menuBar = new JMenuBar();
-    menuBar.add(fileMenu);
-    menuBar.add(editMenu);
+    menuBar.add(createFileMenu());
+    menuBar.add(createEditMenu(frame, directory));
+    menuBar.add(createHelpMenu(directory));
     frame.setJMenuBar(menuBar);
+
+  }
+
+  private JMenu createFileMenu() {
+    JMenu menu = new JMenu(Lang.get("file"));
+    menu.add(importFileAction);
+    menu.add(exportFileAction);
+
+    boolean useMacOSMenu = Gui.isMacOSX();
+    Utils.beginRemove();
+    useMacOSMenu = false;
+    Utils.endRemove();
+    if (useMacOSMenu) {
+      MRJAdapter.setPreferencesEnabled(true);
+      MRJAdapter.addPreferencesListener(preferencesAction);
+    }
+    else {
+      menu.addSeparator();
+      menu.add(preferencesAction);
+    }
+
+    menu.addSeparator();
+    menu.add(registerAction);
+    menu.addSeparator();
+    menu.add(exitAction);
+    return menu;
+  }
+
+  private JMenu createEditMenu(PicsouFrame frame, Directory directory) {
+    final UndoAction undoAction = new UndoAction(directory);
+    final RedoAction redoAction = new RedoAction(directory);
+
+    JMenu editMenu = new JMenu(Lang.get("edit"));
+    editMenu.add(undoAction);
+    editMenu.add(redoAction);
 
     JRootPane rootPane = frame.getRootPane();
     GuiUtils.addShortcut(rootPane, "UNDO", undoAction,
                          KeyStroke.getKeyStroke(KeyEvent.VK_Z, Gui.getCtrlModifier()));
     GuiUtils.addShortcut(rootPane, "REDO", redoAction,
                          KeyStroke.getKeyStroke(KeyEvent.VK_Y, Gui.getCtrlModifier()));
+
+    Utils.beginRemove();
+    editMenu.add(check);
+    Utils.endRemove();
+    return editMenu;
+  }
+
+  private JMenu createHelpMenu(final Directory directory) {
+    JMenu menu = new JMenu(Lang.get("help"));
+    menu.add(new AbstractAction(Lang.get("help.index")) {
+      public void actionPerformed(ActionEvent e) {
+        directory.get(HelpService.class).show("index");
+      }
+    });
+    return menu;
   }
 
   private static class RegisterLicenseAction extends AbstractAction {

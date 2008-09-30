@@ -47,8 +47,20 @@ public class HelpChecker extends DataChecker {
     UISpecAssert.assertEquals(enabled, dialog.getButton("back").isEnabled());
   }
 
+  public void checkNavigation(boolean back, boolean forward) {
+    checkBackEnabled(back);
+    checkForwardEnabled(forward);
+  }
+
   public void back() {
     dialog.getButton("back").click();
   }
 
+  public void checkHomeEnabled(boolean enabled) {
+    UISpecAssert.assertEquals(enabled, dialog.getButton("home").isEnabled());
+  }
+
+  public void home() {
+    dialog.getButton("home").click();
+  }
 }

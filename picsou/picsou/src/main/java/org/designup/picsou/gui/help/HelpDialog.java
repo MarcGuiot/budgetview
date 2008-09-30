@@ -15,15 +15,17 @@ import java.util.Stack;
 
 public class HelpDialog {
   private PicsouDialog dialog;
-  private JEditorPane editor;
   private JLabel title;
+  private JEditorPane editor;
+  private Action homePageAction = new HomePageAction();
+  private Action forwardPageAction = new ForwardPageAction();
+  private Action backPageAction = new BackPageAction();
+
+  private HelpSource source;
 
   private String currentPage;
   private Stack<String> backPages = new Stack<String>();
   private Stack<String> forwardPages = new Stack<String>();
-  private Action forwardPageAction = new ForwardPageAction();
-  private Action backPageAction = new BackPageAction();
-  private HelpSource source;
 
   public HelpDialog(HelpSource source, GlobRepository repository, Directory directory) {
     this.source = source;
@@ -38,6 +40,7 @@ public class HelpDialog {
 
     editor.addHyperlinkListener(new HyperlinkHandler());
 
+    builder.add("home", homePageAction);
     builder.add("forward", forwardPageAction);
     builder.add("back", backPageAction);
     updateNavigationActions();
@@ -79,6 +82,18 @@ public class HelpDialog {
     }
   }
 
+  private class HomePageAction extends AbstractAction {
+    private static final String INDEX_PAGE = "index";
+
+    private HomePageAction() {
+      super(Lang.get("help.index"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      openPage(INDEX_PAGE, true);
+    }
+  }
+
   private class BackPageAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       if (currentPage != null) {
@@ -98,6 +113,7 @@ public class HelpDialog {
   }
 
   private void updateNavigationActions() {
+    homePageAction.setEnabled(!HomePageAction.INDEX_PAGE.equals(currentPage));
     backPageAction.setEnabled(!backPages.isEmpty());
     forwardPageAction.setEnabled(!forwardPages.isEmpty());
   }

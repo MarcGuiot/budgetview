@@ -2,18 +2,22 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(500,500)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(600,500)" opaque="true">
     <column styleClass="innerDialog">
       <label ref="title" styleClass="title"/>
       <scrollPane>
         <htmlEditorPane ref="editor" opaque="false" editable="false" border="empty(10)"/>
       </scrollPane>
-      <row styleClass="iconButtonGroup">
-        <button action="back" name="back" styleClass="icon"
-                icon="button_prev.png" disabledIcon="button_prev_disabled.png"/>
-        <button action="forward" name="forward" styleClass="icon"
-                icon="button_next.png" disabledIcon="button_next_disabled.png"/>
+
+      <row margin="0" weightY="0">
+        <row styleClass="iconButtonGroup">
+          <button action="back" name="back" styleClass="icon"
+                  icon="button_prev.png" disabledIcon="button_prev_disabled.png"/>
+          <button action="forward" name="forward" styleClass="icon"
+                  icon="button_next.png" disabledIcon="button_next_disabled.png"/>
+        </row>
         <filler fill="horizontal"/>
+        <button action="home" styleClass="hyperlink"/>
       </row>
     </column>
   </panel>
