@@ -42,6 +42,9 @@
     <bankEntity id="14006"/>
     <bankEntity id="19906"/>
 
+    <transactionTypeMatcher regexp="PAIEMENT CARTE[\s]+(\d{6})[\s]+(.*)"
+                            transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="ddMMyy"/>    
+
     <transactionTypeMatcher regexp="REGLEM ECHEANCE PRET (.*)"
                             transactionTypeName="credit" label="PRET $1"/>
 

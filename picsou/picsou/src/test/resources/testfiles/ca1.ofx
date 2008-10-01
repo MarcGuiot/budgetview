@@ -124,6 +124,14 @@
             <NAME>Reglem Echeance Pret 610458019pr
             <MEMO>062006 Capital            119,
           </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DEP
+            <DTPOSTED>20060809
+            <TRNAMT>-200.00
+            <FITID>2006080900269
+            <NAME>PAIEMENT CARTE 070806 FOUQUET'S
+            <MEMO>.
+          </STMTTRN>
         </BANKTRANLIST>
         <LEDGERBAL>
           <BALAMT>+10242.10

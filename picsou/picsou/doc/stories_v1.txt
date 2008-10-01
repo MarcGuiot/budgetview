@@ -5,7 +5,7 @@
 
 - premier import QIF : saisie du solde
 
-- voir redimensionnement TransactionDetails (voir MuliLineLabel jide ?)
+- voir redimensionnement TransactionDetails (voir AutoResizingTextArea de JIDE)
 
 - Message d'aide dans CategoryChooserDialog
 
@@ -20,8 +20,6 @@
 - categoryView : afficher un message quand la categorisation est assez avancee (90%) ?
 
 - bug reduction dans la barre des taches windows
-
-- voir TransactionMatchers pour la banque d'antoine (cartes non reconnues). Recalibrer dans le check ?
 
 - bug calcul solde total pour ghosts (le solde augmente au lieu de diminuer)
 
