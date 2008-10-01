@@ -26,3 +26,5 @@
 ------
 
 - ordre des series : prevu decroissant
+
+- back/forward

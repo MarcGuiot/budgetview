@@ -58,7 +58,7 @@
 
             <panel ref="transactionDetails" marginBottom="15" weightY="0.1"/>
 
-            <label text="$categorization.series.title" styleClass="formLabelTop"/>
+            <label text="$categorization.series.title" styleClass="header"/>
 
             <cards ref="budgetAreaCard" opaque="false">
 

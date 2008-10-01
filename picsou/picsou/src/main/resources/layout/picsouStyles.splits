@@ -180,7 +180,7 @@
         disabledTextColor="toggle.selector.disabled"/>
     <style selector="toggleButton.budgetAreaSelector"
            ui="budgetAreaSelectionToggle" foreground="toggle.selector.normal" font="-,plain,12"
-           marginRight="2" fill="none" anchor="center" weightY="0"/>
+           marginRight="2" fill="horizontal" anchor="center" weightY="0"/>
 
 
     <ui name="selectionToggle"
