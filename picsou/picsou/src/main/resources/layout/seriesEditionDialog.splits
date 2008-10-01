@@ -13,7 +13,7 @@
       <label ref="title" styleClass="title"/>
 
       <horizontalSplit>
-        <column weightX="3">
+        <column ref="seriesPanel" weightX="3">
           <scrollPane>
             <list ref="seriesList"/>
           </scrollPane>
@@ -118,7 +118,7 @@
         </column>
       </horizontalSplit>
 
-      <row styleClass="iconButtonGroup">
+      <row ref="buttonSeriesPanel" styleClass="iconButtonGroup">
         <button action="create" name="create"
                 icon='button_plus.png' disabledIcon='button_plus_disabled.png'/>
         <button action="delete" name="delete"

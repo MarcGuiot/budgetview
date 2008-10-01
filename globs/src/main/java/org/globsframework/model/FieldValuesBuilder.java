@@ -79,7 +79,7 @@ public class FieldValuesBuilder {
     return setValue(field, value);
   }
 
-  public FieldValuesBuilder set(LongField field, long value) {
+  public FieldValuesBuilder set(LongField field, Long value) {
     return setValue(field, value);
   }
 

@@ -30,7 +30,7 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
       return GlobList.EMPTY;
     }
     else {
-      return glob;
+      return new GlobList(glob);
     }
   }
 
@@ -71,6 +71,9 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
       GlobList oldGlobList = indexedGlob.get(oldValue);
       if (oldGlobList != null) {
         oldGlobList.remove(glob);
+        if (oldGlobList.isEmpty()) {
+          indexedGlob.remove(oldValue);
+        }
       }
     }
     add(glob);

@@ -26,6 +26,6 @@ public abstract class DataChecker {
                                                               String componentName,
                                                               boolean visible) {
     JComponent component = panel.findSwingComponent(swingComponentClass, componentName);
-    Assert.assertTrue(component == null || !component.isVisible());
+    Assert.assertEquals(!visible, component == null || !component.isVisible());
   }
 }

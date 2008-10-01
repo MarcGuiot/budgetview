@@ -150,6 +150,7 @@ public class IndexManager {
         }
         updateFieldToIndexTables(field, rootIndex);
       }
+      updateFieldToIndexTables(fields[0], rootIndex);
       updateGlobTypeToIndexTables(multiFieldIndexed.getField().getGlobType(), rootIndex);
     }
 
