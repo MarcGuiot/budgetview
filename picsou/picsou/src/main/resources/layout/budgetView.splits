@@ -4,19 +4,19 @@
   <row styleClass="main">
     <horizontalSplit ref="horizontalSplitPane">
 
-      <verticalSplit ref="firstVerticalSplitPane" opaque="false" marginRight="10">
-        <panel ref="incomeBudgetView" preferredSize="(100,250)"/>
-        <panel ref="occasionalBudgetView" preferredSize="(100,250)"/>
+      <verticalSplit ref="firstVerticalSplitPane">
+        <panel ref="incomeBudgetView" weightY="5"/>
+        <panel ref="occasionalBudgetView" weightY="5"/>
       </verticalSplit>
 
-      <verticalSplit ref="secondVerticalSplitPane" opaque="false" marginLeft="10" marginRight="10">
-        <panel ref="recurringBudgetView" preferredSize="(100,350)"/>
-        <panel ref="savingsBudgetView" preferredSize="(100,250)"/>
+      <verticalSplit ref="secondVerticalSplitPane">
+        <panel ref="recurringBudgetView" weightY="6"/>
+        <panel ref="savingsBudgetView" weightY="4"/>
       </verticalSplit>
 
-      <verticalSplit ref="thirdVerticalSplitPane" opaque="false" marginLeft="10">
-        <panel ref="envelopeBudgetView" preferredSize="(100,250)"/>
-        <panel ref="projectsBudgetView" preferredSize="(100,250)"/>
+      <verticalSplit ref="thirdVerticalSplitPane">
+        <panel ref="envelopeBudgetView" weightY="5"/>
+        <panel ref="projectsBudgetView" weightY="5"/>
       </verticalSplit>
     </horizontalSplit>
 

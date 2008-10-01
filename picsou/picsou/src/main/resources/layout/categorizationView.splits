@@ -27,9 +27,9 @@
 
   <panel styleClass="main">
 
-    <horizontalSplit resizeWeight="0" opaque="false">
+    <horizontalSplit opaque="false">
 
-      <column marginRight="5">
+      <column weightX="4">
         <label text="$categorization.list.title" styleClass="blockTitle"/>
         <panel styleClass="block">
           <column styleClass="innerBlock">
@@ -50,7 +50,7 @@
         </panel>
       </column>
 
-      <column>
+      <column weightX="6">
         <label text="$categorization.details.title" styleClass="blockTitle"/>
         <panel styleClass="block">
 

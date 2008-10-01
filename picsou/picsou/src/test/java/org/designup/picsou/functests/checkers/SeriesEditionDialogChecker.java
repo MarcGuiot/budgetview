@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.ProfileType;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
@@ -456,12 +457,12 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkCategorizeEnable(boolean enable) {
-    Button categoryzeButton = getCategoryzeButton();
+    Button categorizeButton = getCategorizeButton();
     if (enable) {
-      assertThat(categoryzeButton.isEnabled());
+      assertThat(categorizeButton.isEnabled());
     }
     else {
-      assertFalse(categoryzeButton.isEnabled());
+      assertFalse(categorizeButton.isEnabled());
     }
     return this;
   }
@@ -478,7 +479,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  private Button getCategoryzeButton() {
+  private Button getCategorizeButton() {
     return dialog.getButton("assignCategory");
   }
 
@@ -542,11 +543,6 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return new SeriesDeleteDialogChecker(WindowInterceptor.getModalDialog(dialog.getButton("delete").triggerClick()));
   }
 
-  public SeriesEditionDialogChecker setUnknown() {
-    getPeriodCombo().select("Undefined");
-    return this;
-  }
-
   public ComboBox getPeriodCombo() {
     return dialog.getComboBox("periodCombo");
   }
@@ -561,28 +557,33 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker setUnknown() {
+    getPeriodCombo().select(ProfileType.UNKNOWN.getLabel());
+    return this;
+  }
+
   public SeriesEditionDialogChecker setSixMonths() {
-    getPeriodCombo().select("Each six month");
+    getPeriodCombo().select(ProfileType.SIX_MONTHS.getLabel());
     return this;
   }
 
   public SeriesEditionDialogChecker setFourMonths() {
-    getPeriodCombo().select("Each four month");
+    getPeriodCombo().select(ProfileType.FOUR_MONTHS.getLabel());
     return this;
   }
 
   public SeriesEditionDialogChecker setCustom() {
-    getPeriodCombo().select("Custom");
+    getPeriodCombo().select(ProfileType.CUSTOM.getLabel());
     return this;
   }
 
-  public SeriesEditionDialogChecker seriesListIsHidden() {
+  public SeriesEditionDialogChecker checkSeriesListIsHidden() {
     assertFalse(dialog.getPanel("buttonSeriesPanel").isVisible());
     assertFalse(dialog.getPanel("seriesPanel").isVisible());
     return this;
   }
 
-  public SeriesEditionDialogChecker seriesListIsVisible() {
+  public SeriesEditionDialogChecker checkSeriesListIsVisible() {
     assertTrue(dialog.getPanel("buttonSeriesPanel").isVisible());
     assertTrue(dialog.getPanel("seriesPanel").isVisible());
     return this;

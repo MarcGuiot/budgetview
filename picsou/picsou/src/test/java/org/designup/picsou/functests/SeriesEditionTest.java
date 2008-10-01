@@ -891,7 +891,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
   }
 
-  public void testSwitchBettewnSeries() throws Exception {
+  public void testSwitchBetweenSeries() throws Exception {
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries()
       .setName("S1");
@@ -919,15 +919,20 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries()
       .setName("S1");
     UISpecAssert.assertThat(edition.getPeriodCombo()
-      .contentEquals("Every month", "Each two month", "Each three month", "Each four month", "Each six month",
-                     "One time a year", "Custom", "Undefined"));
+      .contentEquals("Every month", "Every two months", "Every three months", "Every four months", "Every six months",
+                     "Once a year", "Custom", "Irregular"));
   }
 
-  public void testSeriesLsiteVisibility() throws Exception {
+  public void testSeriesListVisibility() throws Exception {
     views.selectBudget();
     budgetView.envelopes.createSeries()
-      .seriesListIsHidden().setName("").setCategory(MasterCategory.FOOD).validate();
+      .checkSeriesListIsHidden()
+      .setName("")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+
     budgetView.envelopes.editSeriesList()
-      .seriesListIsVisible().cancel();
+      .checkSeriesListIsVisible()
+      .cancel();
   }
 }

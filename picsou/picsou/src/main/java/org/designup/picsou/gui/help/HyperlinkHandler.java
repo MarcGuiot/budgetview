@@ -17,7 +17,7 @@ public class HyperlinkHandler implements HyperlinkListener {
       return;
     }
     String description = e.getDescription().trim();
-    if (description.startsWith("url:")) {
+    if (description.startsWith("page:")) {
       helpService.show(description.substring(5));
     }
   }
