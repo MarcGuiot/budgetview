@@ -141,7 +141,8 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
                  seriesColumn.getComparator())
       .addColumn(Lang.get("category"), new CategoryStringifier(descriptionService), LabelCustomizers.font(categoryFont))
       .addColumn(Lang.get("label"),
-                 descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.BOLD)
+                 descriptionService.getStringifier(Transaction.LABEL),
+                 LabelCustomizers.chain(LabelCustomizers.BOLD, LabelCustomizers.autoTooltip()))
       .addColumn(Lang.get("amount"), amountColumn, amountStringifier.getComparator(repository));
 
     view.startColumn()

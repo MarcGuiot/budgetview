@@ -5,7 +5,7 @@
   <panel styleClass="dialog" preferredSize="(380,230)">
     <column styleClass="innerDialog">
       <label text="$delete.category.title" styleClass="title"/>
-      <htmlEditorPane ref="warningText" editable="false"/>
+      <htmlEditorPane ref="warningText"/>
       <row margin="20" fill="horizontal">
         <label text="$delete.category.label"/>
         <textField ref="categoryField" marginLeft="5" marginRight="5" fill="horizontal" weightX="10"/>

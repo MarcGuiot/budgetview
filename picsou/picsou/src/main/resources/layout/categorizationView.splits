@@ -65,7 +65,8 @@
               <card name="noSelection">
                 <panel styleClass="innerBlockBackground">
                   <column margin="15">
-                    <htmlEditorPane name="noSelectionMessage" text="$categorization.no.selection" editable="false"/>
+                    <htmlEditorPane name="noSelectionMessage" text="$categorization.no.selection"
+                                    hyperlinkListener="hyperlinkHandler"/>
                     <filler fill="vertical"/>
                   </column>
                 </panel>
@@ -84,14 +85,16 @@
 
                     <card name="uncategorized">
                       <column styleClass="budgetAreaSelection">
-                        <htmlEditorPane name="uncategorizedMessage" text="$categorization.uncategorized"/>
+                        <htmlEditorPane name="uncategorizedMessage" text="$categorization.uncategorized"
+                                        hyperlinkListener="hyperlinkHandler"/>
                         <filler fill="vertical"/>
                       </column>
                     </card>
 
                     <card name="multipleAreas">
                       <column styleClass="budgetAreaSelection">
-                        <htmlEditorPane name="multipleAreasMessage" text="$categorization.multiple.areas"/>
+                        <htmlEditorPane name="multipleAreasMessage" text="$categorization.multiple.areas"
+                                        hyperlinkListener="hyperlinkHandler"/>
                         <filler fill="vertical"/>
                       </column>
                     </card>

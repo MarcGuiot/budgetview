@@ -6,7 +6,7 @@
     <column styleClass="innerDialog">
       <label ref="title" styleClass="title"/>
       <scrollPane>
-        <htmlEditorPane ref="editor" opaque="false" editable="false" border="empty(10)" foreground="#222222"/>
+        <htmlEditorPane ref="editor" opaque="false" foreground="#222222"/>
       </scrollPane>
 
       <row margin="0" weightY="0">

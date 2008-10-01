@@ -34,11 +34,11 @@ public class HelpDialogTest extends PicsouGuiTestCase {
     init("page1");
 
     checker.checkTitle("page1Title");
-    checker.checkContains("page1 content - <a href=\"page:page2\">page2</a>");
+    checker.checkContains("page1 content - <a href=\"help:page2\">page2</a>");
 
     checker.clickLink("page2");
     checker.checkTitle("page2Title");
-    checker.checkContains("page2 content - <a href=\"page:page1\">page1</a>");
+    checker.checkContains("page2 content - <a href=\"help:page1\">page1</a>");
   }
 
   public void testBackForward() throws Exception {
@@ -107,13 +107,13 @@ public class HelpDialogTest extends PicsouGuiTestCase {
 
     public String getContent(String ref) {
       if (ref.equals("index")) {
-        return "home - <a href='page:page1'>page1</a> - <a href='page:page2'>page2</a>";
+        return "home - <a href='help:page1'>page1</a> - <a href='help:page2'>page2</a>";
       }
       if (ref.equals("page1")) {
-        return "page1 content - <a href='page:page2'>page2</a>";
+        return "page1 content - <a href='help:page2'>page2</a>";
       }
       if (ref.equals("page2")) {
-        return "page2 content - <a href='page:page1'>page1</a>";
+        return "page2 content - <a href='help:page1'>page1</a>";
       }
       throw new ItemNotFound(ref);
     }

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
@@ -28,6 +29,8 @@ import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
+import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -102,6 +105,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationView.splits",
                                                       this.repository, directory);
 
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
+
     CategorizationGaugePanel gauge = new CategorizationGaugePanel(repository, parentDirectory);
     builder.add("gaugePanel", gauge.getPanel());
 
@@ -114,7 +119,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
                    LabelCustomizers.fontSize(9))
         .addColumn(Lang.get("series"), new CompactSeriesStringifier(directory),
                    LabelCustomizers.fontSize(9))
-        .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL), LabelCustomizers.BOLD)
+        .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL),
+                   chain(LabelCustomizers.BOLD, autoTooltip()))
         .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), LabelCustomizers.ALIGN_RIGHT);
     headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
 
@@ -222,6 +228,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
                                                            "/layout/singleCategorySeriesChooserPanel.splits",
                                                            repository, directory);
 
+    panelBuilder.add("hyperlinkHandler", new HyperlinkHandler(directory));
+
     NoSeriesMessage noSeriesMessage = new NoSeriesMessage(budgetArea, repository);
     panelBuilder.add("noSeriesMessage", noSeriesMessage.getComponent());
 
@@ -245,6 +253,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
     GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
                                                            "/layout/multiCategoriesSeriesChooserPanel.splits",
                                                            repository, directory);
+
+    panelBuilder.add("hyperlinkHandler", new HyperlinkHandler(directory));
 
     NoSeriesMessage noSeriesMessage = new NoSeriesMessage(budgetArea, repository);
     panelBuilder.add("noSeriesMessage", noSeriesMessage.getComponent());

@@ -17,6 +17,7 @@ import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
 import javax.swing.AbstractButton;
 import java.awt.*;
 import java.util.ArrayList;
@@ -113,9 +114,7 @@ public class CategorizationChecker extends DataChecker {
         .setAmount("0")
         .validate();
     }
-    else {
-      panel.getToggleButton(name).click();
-    }
+    panel.getToggleButton(name).click();
     return this;
   }
 
@@ -127,9 +126,7 @@ public class CategorizationChecker extends DataChecker {
         .setCategory(MasterCategory.INCOME)
         .validate();
     }
-    else {
-      panel.getToggleButton(name).click();
-    }
+    panel.getToggleButton(name).click();
     return this;
   }
 
@@ -199,9 +196,7 @@ public class CategorizationChecker extends DataChecker {
         .setCategory(category)
         .validate();
     }
-    else {
-      panel.getToggleButton(name).click();
-    }
+    panel.getToggleButton(name).click();
     return this;
   }
 
@@ -303,10 +298,9 @@ public class CategorizationChecker extends DataChecker {
         .setCategory(category)
         .validate();
     }
-    else {
-      String toggleName = envelopeName + ":" + category.getName();
-      panel.getToggleButton(toggleName).click();
-    }
+
+    String toggleName = envelopeName + ":" + category.getName();
+    panel.getToggleButton(toggleName).click();
     return this;
   }
 
@@ -365,9 +359,7 @@ public class CategorizationChecker extends DataChecker {
         .setCategory(category)
         .validate();
     }
-    else {
-      panel.getToggleButton(savingsName).click();
-    }
+    panel.getToggleButton(savingsName).click();
     return this;
   }
 
@@ -562,23 +554,17 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   public void checkAutoSelectSimilarEnabled(boolean enabled) {
     assertEquals(enabled, getPanel().getCheckBox("similar").isSelected());
   }
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   public void enableAutoSelectSimilar() {
     getPanel().getCheckBox("similar").select();
   }
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   public void disableAutoSelectSimilar() {
     getPanel().getCheckBox("similar").unselect();
   }
@@ -804,6 +790,12 @@ public class CategorizationChecker extends DataChecker {
   public CategorizationChecker setUncategorized() {
     selectBudgetArea(BudgetArea.UNCATEGORIZED);
     return this;
+  }
+
+  public HelpChecker clickHelpLink(String linkText) {
+    JEditorPane editorPane = getPanel().getPanel("series").findSwingComponent(JEditorPane.class);
+    TextBox textBox = new TextBox(editorPane);
+    return HelpChecker.open(textBox.triggerClickOnHyperlink(linkText));
   }
 
   public class CategorizationTableChecker extends TableChecker {

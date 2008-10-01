@@ -1027,4 +1027,17 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries("Auchan", "Divers");
     transactions.checkCategory("Auchan", MasterCategory.EDUCATION);
   }
+
+  public void testHelpForUncategorizedBudgetArea() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -20., "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.clickHelpLink("categorization")
+      .checkTitle("Categorization")
+      .close();
+  }
 }

@@ -7,13 +7,13 @@
 
 - voir redimensionnement TransactionDetails (voir MuliLineLabel jide ?)
 
-- description budgetArea : lien "Retour" + lien "En savoir plus sur les series"
-
 - Message d'aide dans CategoryChooserDialog
 
-- CategorizationView : bug serie qui reste selectionnee apres changement de transaction
+- CategorizationView : bug serie qui reste selectionnee apres changement de transaction (?)
 
-- tooltips partout
+- tooltips jauges
+
+- tooltips monthSummaryView / balance
 
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
 

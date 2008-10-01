@@ -7,7 +7,7 @@
 
   <column>
     <column styleClass="budgetAreaSelection">
-      <htmlEditorPane ref="noSeriesMessage" border="empty(10)"/>
+      <htmlEditorPane ref="noSeriesMessage" border="empty(10)" hyperlinkListener="hyperlinkHandler"/>
       <toggleButton ref="invisibleToggle" visible="false"/>
       <scrollPane>
         <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
