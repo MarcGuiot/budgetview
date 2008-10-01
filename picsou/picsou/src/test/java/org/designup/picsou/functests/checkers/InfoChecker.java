@@ -18,7 +18,7 @@ public class InfoChecker extends DataChecker {
   }
 
   public InfoChecker checkNoNewVersion() {
-    checkComponentNotVisible(mainWindow, JPanel.class, "informationPanel");
+    checkComponentVisible(mainWindow, JPanel.class, "informationPanel", false);
     return this;
   }
 }
