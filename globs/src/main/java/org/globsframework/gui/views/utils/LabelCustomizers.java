@@ -89,6 +89,14 @@ public class LabelCustomizers {
     };
   }
 
+  public static LabelCustomizer autoTooltip() {
+    return new LabelCustomizer() {
+      public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
+        label.setToolTipText(label.getText());
+      }
+    };
+  }
+
   private static class AligmentCustomizer implements LabelCustomizer {
     private int alignment;
 
