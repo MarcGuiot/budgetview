@@ -5,12 +5,17 @@ import org.globsframework.gui.splits.impl.DefaultSplitProperties;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collection;
 
 public class StyleContext {
   private List<Style> styles = new ArrayList<Style>();
 
   public void createStyle(Selector[] selectors, SplitProperties properties) {
     styles.add(new Style(selectors, properties));
+  }
+
+  public void addAll(StyleContext other) {
+    this.styles.addAll(other.styles);
   }
 
   public SplitProperties getProperties(SplitsPath path) {

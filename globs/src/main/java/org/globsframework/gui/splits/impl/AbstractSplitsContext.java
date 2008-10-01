@@ -1,12 +1,13 @@
 package org.globsframework.gui.splits.impl;
 
 import org.globsframework.gui.splits.SplitsContext;
-import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.repeat.RepeatHandler;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -23,6 +24,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
   private Map<String, RepeatHandler> repeats = new HashMap<String, RepeatHandler>();
   private Map<JLabel, String> labelForAssociations = new HashMap<JLabel, String>();
   private java.util.List<Disposable> disposables = new ArrayList<Disposable>();
+  private Map<String, HyperlinkListener> hyperlinkListenersByName = new HashMap<String, HyperlinkListener>();
 
   public void addComponent(String id, Component component) {
     if (componentsByName.containsKey(id)) {
@@ -93,6 +95,18 @@ public abstract class AbstractSplitsContext implements SplitsContext {
       throw new SplitsException("No action registered for id '" + id + "'" + dump());
     }
     return action;
+  }
+
+  public void add(String name, HyperlinkListener listener) {
+    hyperlinkListenersByName.put(name, listener);
+  }
+
+  public HyperlinkListener getHyperlinkListener(String name) {
+    HyperlinkListener listener = hyperlinkListenersByName.get(name);
+    if (listener == null) {
+      throw new SplitsException("No hyperlinkListener registered for name '" + name + "'" + dump());
+    }
+    return listener;
   }
 
   public String dump() {

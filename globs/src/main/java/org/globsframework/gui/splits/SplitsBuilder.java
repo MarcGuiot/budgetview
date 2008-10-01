@@ -20,6 +20,7 @@ import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -72,6 +73,11 @@ public class SplitsBuilder {
 
   public SplitsBuilder add(String name, Action action) {
     context.add(name, action);
+    return this;
+  }
+
+  public SplitsBuilder add(String name, HyperlinkListener listener) {
+    context.add(name, listener);
     return this;
   }
 

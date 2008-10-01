@@ -5,6 +5,7 @@ import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.gui.splits.styles.StyleContext;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 
 public interface SplitsContext {
@@ -20,6 +21,10 @@ public interface SplitsContext {
   void add(String name, Action action);
 
   Action getAction(String id);
+
+  void add(String name, HyperlinkListener listener);
+
+  HyperlinkListener getHyperlinkListener(String name);
 
   <T> T getService(Class<T> serviceClass);
 

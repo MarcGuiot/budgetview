@@ -483,7 +483,6 @@
   <xs:attributeGroup name="splitPaneAttributes">
     <xs:attribute name="dividerSize" type="xs:integer"/>
     <xs:attribute name="continuousLayout" type="xs:boolean"/>
-    <xs:attribute name="resizeWeight" type="xs:float"/>
   </xs:attributeGroup>
 
   <!-- ====================================  -->
@@ -600,6 +599,7 @@
       <xs:attributeGroup ref="componentAttributes"/>
       <xs:attribute name="text" type="xs:string"/>
       <xs:attribute name="editable" type="xs:boolean"/>
+      <xs:attribute name="hyperlinkListener" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 

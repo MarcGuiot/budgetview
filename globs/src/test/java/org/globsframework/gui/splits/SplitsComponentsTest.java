@@ -14,6 +14,8 @@ import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -172,6 +174,24 @@ public class SplitsComponentsTest extends SplitsTestCase {
                  "  </body>\n" +
                  "</html>\n",
                  editorPane.getText());
+  }
+
+  public void testHtmlHyperlinkListener() throws Exception {
+
+    final StringBuilder log = new StringBuilder();
+    builder.add("listener", new HyperlinkListener() {
+      public void hyperlinkUpdate(HyperlinkEvent e) {
+        log.append(e.getDescription());
+      }
+    });
+
+    textLocator.set("editor.text", "<html><a href='link'>Click me</a> please</html>");
+    JEditorPane editorPane = parse("<htmlEditorPane text='$editor.text' hyperlinkListener='listener'/>");
+    assertEquals("text/html", editorPane.getContentType());
+    TextBox textBox = new TextBox(editorPane);
+    textBox.clickOnHyperlink("Click me");
+    
+    assertEquals("link", log.toString());
   }
 
   public void testCreatingAComboBox() throws Exception {

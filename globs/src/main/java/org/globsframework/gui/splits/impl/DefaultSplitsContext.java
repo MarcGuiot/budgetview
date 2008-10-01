@@ -3,6 +3,7 @@ package org.globsframework.gui.splits.impl;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.gui.splits.styles.StyleContext;
 
+import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.Collections;
 
@@ -42,5 +43,4 @@ public class DefaultSplitsContext extends AbstractSplitsContext {
     createdComponents.clear();
     super.cleanUp();
   }
-
 }
