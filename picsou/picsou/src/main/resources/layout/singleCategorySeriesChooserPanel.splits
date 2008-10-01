@@ -2,14 +2,14 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="scrollPane" viewportBackground="dialog.block"/>
+    <style selector="scrollPane" opaque="false" border=""/>
   </styles>
 
   <column>
-    <column opaque="true" background="block.inner.bg" border="line(block.inner.border.noscroll)">
+    <column styleClass="budgetAreaSelection">
       <htmlEditorPane ref="noSeriesMessage" border="empty(10)"/>
       <toggleButton ref="invisibleToggle" visible="false"/>
-      <scrollPane opaque="true" border="">
+      <scrollPane>
         <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
           <toggleButton ref="seriesToggle" styleClass="selector"/>
         </repeat>

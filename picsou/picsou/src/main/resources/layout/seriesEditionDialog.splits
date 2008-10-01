@@ -7,7 +7,7 @@
     <style selector="label.month" foreground="#444444" font="-,plain,10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(720,550)">
+  <panel styleClass="dialog" preferredSize="(720,600)">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>

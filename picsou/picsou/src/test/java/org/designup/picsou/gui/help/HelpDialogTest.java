@@ -19,10 +19,13 @@ public class HelpDialogTest extends PicsouGuiTestCase {
   }
 
   private void init(final String ref) {
-    final HelpDialog helpDialog = new HelpDialog(new DummyHelpSource(), repository, directory);
+    final HelpService helpService = new HelpService(repository, directory);
+    helpService.setSource(new DummyHelpSource());
+    directory.add(helpService);
+
     checker = HelpChecker.open(new Trigger() {
       public void run() throws Exception {
-        helpDialog.show(ref);
+        helpService.show(ref);
       }
     });
   }

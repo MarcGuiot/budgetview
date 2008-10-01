@@ -786,6 +786,11 @@ public class CategorizationChecker extends DataChecker {
     getPanel().getPanel("customFilter").getButton().click();
   }
 
+  public CategorizationChecker setUncategorized() {
+    selectBudgetArea(BudgetArea.UNCATEGORIZED);
+    return this;
+  }
+
   public class CategorizationTableChecker extends TableChecker {
 
     private CategorizationTableChecker() {

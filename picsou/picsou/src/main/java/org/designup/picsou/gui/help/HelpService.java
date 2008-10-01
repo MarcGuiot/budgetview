@@ -9,15 +9,22 @@ public class HelpService {
   private HelpDialog dialog;
   private GlobRepository repository;
   private Directory directory;
+  private HelpSource source;
 
   public HelpService(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
+    this.source = new I18NHelpSource();
+  }
+
+  public void setSource(HelpSource source) {
+    this.source = source;
+    this.dialog = null;
   }
 
   public void show(String helpRef) {
     if (dialog == null) {
-      dialog = new HelpDialog(new I18NHelpSource(), repository, directory);
+      dialog = new HelpDialog(source, repository, directory);
     }
     dialog.show(helpRef);
   }

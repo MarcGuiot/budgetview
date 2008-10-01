@@ -1,4 +1,3 @@
-- pb severine transaction planned non voulue
 
 - bug Antoine / occasionnel negatif (devrait etre a 0 comme dans BudgetView)
 
@@ -10,8 +9,6 @@
 
 - description budgetArea : lien "Retour" + lien "En savoir plus sur les series"
 
-- SED: combo "tous les mois / tous les ans / operation unique"
-
 - Message d'aide dans CategoryChooserDialog
 
 - CategorizationView : bug serie qui reste selectionnee apres changement de transaction
@@ -21,3 +18,9 @@
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
 
 - categoryView : afficher un message quand la categorisation est assez avancee (90%) ?
+
+- bug reduction dans la barre des taches windows
+
+- voir TransactionMatchers pour la banque d'antoine (cartes non reconnues). Recalibrer dans le check ?
+
+- bug calcul solde total pour ghosts (le solde augmente au lieu de diminuer)

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -14,6 +15,7 @@ import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobUtils;
@@ -26,7 +28,8 @@ import java.util.*;
 public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListener {
 
   private BudgetArea[] budgetAreas =
-    {BudgetArea.INCOME, BudgetArea.RECURRING_EXPENSES, BudgetArea.EXPENSES_ENVELOPE,
+    {BudgetArea.UNCATEGORIZED,
+     BudgetArea.INCOME, BudgetArea.RECURRING_EXPENSES, BudgetArea.EXPENSES_ENVELOPE,
      BudgetArea.OCCASIONAL_EXPENSES, BudgetArea.SAVINGS, BudgetArea.PROJECTS};
 
   private GlobRepository repository;
@@ -37,7 +40,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   private GlobStringifier budgetAreaStringifier;
 
   private Map<BudgetArea, JToggleButton> toggles = new HashMap<BudgetArea, JToggleButton>();
-  private JToggleButton invisibleBudgetAreaToggle;
+  private JToggleButton multiBudgetAreaToggle;
 
   private GlobList selectedTransactions = GlobList.EMPTY;
 
@@ -55,33 +58,19 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
 
     title = builder.add("budgetAreaSelectorTitle", new JLabel());
 
-    invisibleBudgetAreaToggle = new JToggleButton(new AbstractAction() {
+    multiBudgetAreaToggle = new JToggleButton(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        showList(false);
+        seriesCard.show("multipleAreas");
       }
     });
 
-    builder.add("invisibleBudgetAreaToggle", invisibleBudgetAreaToggle);
     builder.addRepeat("budgetAreaToggles",
                       Arrays.asList(budgetAreas),
                       new ToggleFactory());
-
-    builder.addRepeat("budgetAreaButtons",
-                      Arrays.asList(budgetAreas),
-                      new ButtonFactory());
   }
 
   private void showNoSelection() {
     budgetAreaCard.show("noSelection");
-  }
-
-  private void showList(boolean activateToggle) {
-    if (activateToggle) {
-      invisibleBudgetAreaToggle.doClick(0);
-    }
-    else {
-      budgetAreaCard.show("budgetAreas");
-    }
   }
 
   private void select(BudgetArea budgetArea, boolean activateToggle) {
@@ -99,7 +88,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
     private ButtonGroup buttonGroup = new ButtonGroup();
 
     public ToggleFactory() {
-      buttonGroup.add(invisibleBudgetAreaToggle);
+      buttonGroup.add(multiBudgetAreaToggle);
     }
 
     public void registerComponents(RepeatCellBuilder cellBuilder, final BudgetArea budgetArea) {
@@ -107,9 +96,13 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       final JToggleButton toggle = new JToggleButton(new AbstractAction(label) {
         public void actionPerformed(ActionEvent e) {
           select(budgetArea, false);
+          if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
+            uncategorizeSelectedTransactions();
+          }
         }
       });
       toggle.setName(budgetArea.getName());
+      toggle.setToolTipText("<html>" + Lang.get("budgetArea.description." + budgetArea.getName()) + "</html>");
       cellBuilder.add("budgetAreaToggle", toggle);
       buttonGroup.add(toggle);
       toggles.put(budgetArea, toggle);
@@ -121,22 +114,19 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
         }
       });
     }
-  }
 
-  public class ButtonFactory implements RepeatComponentFactory<BudgetArea> {
-
-    public void registerComponents(RepeatCellBuilder cellBuilder, final BudgetArea budgetArea) {
-      String label = budgetAreaStringifier.toString(repository.get(budgetArea.getKey()), repository);
-      final JButton button = new JButton(new AbstractAction(label) {
-        public void actionPerformed(ActionEvent e) {
-          select(budgetArea, true);
+    private void uncategorizeSelectedTransactions() {
+      try {
+        repository.enterBulkDispatchingMode();
+        for (Glob transaction : selectedTransactions) {
+          repository.update(transaction.getKey(),
+                            value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                            value(Transaction.CATEGORY, MasterCategory.NONE.getId()));
         }
-      });
-      button.setName(budgetArea.getName());
-      cellBuilder.add("budgetAreaButton", button);
-
-      cellBuilder.add("budgetAreaDescription",
-                      new JTextArea(Lang.get("budgetArea.description." + budgetArea.getName())));
+      }
+      finally {
+        repository.completeBulkDispatchingMode();
+      }
     }
   }
 
@@ -171,8 +161,8 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
 
     GlobList series = GlobUtils.getTargets(selectedTransactions, Transaction.SERIES, repository);
     SortedSet<Integer> areas = series.getSortedSet(Series.BUDGET_AREA);
-    if (areas.size() != 1 || BudgetArea.UNCATEGORIZED.getId().equals(areas.first())) {
-      showList(true);
+    if (areas.size() != 1) {
+      multiBudgetAreaToggle.doClick(0);
       return;
     }
 

@@ -189,6 +189,41 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkRecurringSeriesIsSelected("Internet");
   }
 
+  public void testResettingTransactionsToUncategorized() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -29.90, "Free")
+      .addTransaction("2008/06/25", -59.90, "France Telecom")
+      .addTransaction("2008/06/15", -40, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.setRecurring("Free", "Internet", MasterCategory.TELECOMS, true);
+    categorization.setRecurring("France Telecom", "Telephone", MasterCategory.TELECOMS, true);
+    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "Groceries", "Auchan", -40.00},
+      {"25/06/2008", "Telephone", "France Telecom", -59.90},
+      {"30/06/2008", "Internet", "Free", -29.90},
+    });
+
+    categorization.selectTableRow(0);
+    categorization.setUncategorized();
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"25/06/2008", "Telephone", "France Telecom", -59.90},
+      {"30/06/2008", "Internet", "Free", -29.90},
+    });
+    
+    categorization.selectTableRows(1,2);
+    categorization.setUncategorized();
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"25/06/2008", "", "France Telecom", -59.90},
+      {"30/06/2008", "", "Free", -29.90},
+    });
+  }
+
   public void testUnassignedTransaction() throws Exception {
     OfxBuilder
       .init(this)

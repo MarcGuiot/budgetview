@@ -38,7 +38,7 @@ public class HelpDialog {
     title = builder.add("title", new JLabel());
     editor = builder.add("editor", new JEditorPane());
 
-    editor.addHyperlinkListener(new HyperlinkHandler());
+    editor.addHyperlinkListener(new HyperlinkHandler(directory));
 
     builder.add("home", homePageAction);
     builder.add("forward", forwardPageAction);
@@ -53,8 +53,11 @@ public class HelpDialog {
   }
 
   public void show(String ref) {
+    forwardPages.clear();
     openPage(ref, true);
-    GuiUtils.showCentered(dialog);
+    if (!dialog.isVisible()) {
+      GuiUtils.showCentered(dialog);
+    }
   }
 
   private void openPage(String ref, boolean updateHistory) {
@@ -67,19 +70,6 @@ public class HelpDialog {
     }
     currentPage = ref;
     updateNavigationActions();
-  }
-
-  private class HyperlinkHandler implements HyperlinkListener {
-    public void hyperlinkUpdate(HyperlinkEvent e) {
-      if (!HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
-        return;
-      }
-      String description = e.getDescription().trim();
-      if (description.startsWith("page:")) {
-        forwardPages.clear();
-        openPage(description.substring(5), true);
-      }
-    }
   }
 
   private class HomePageAction extends AbstractAction {

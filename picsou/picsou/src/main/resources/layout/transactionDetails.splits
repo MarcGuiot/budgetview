@@ -50,8 +50,8 @@
       <card name="selection">
         <row>
           <column>
-            <label ref="transactionType" styleClass="formLabel"/>
             <textArea ref="userLabel" styleClass="readonly"/>
+            <label ref="transactionType" styleClass="formLabel"/>
             <row autoHideSource="bankDate">
 
               <label text="$transaction.details.userDate" styleClass="formLabel" autoHideSource="userDate"/>
