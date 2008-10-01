@@ -1,6 +1,6 @@
 <splits>
   <frame title="Blog App" size="(700,400)">
-    <horizontalSplit margin="20"  dividerLocation="300">
+    <horizontalSplit margin="20">
 
       <verticalSplit opaque="false">
         <column>

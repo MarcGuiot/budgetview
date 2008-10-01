@@ -1,9 +1,11 @@
 package org.globsframework.gui.splits;
 
+import com.jidesoft.swing.JideSplitPane;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.SwingStretches;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 
@@ -27,62 +29,75 @@ public class SplitsBuilderTest extends SplitsTestCase {
 
   public void testMovableSplits() throws Exception {
     builder.add(aTable, aList, aButton);
-    JSplitPane hSplit =
+    JButton anotherButton = builder.add("anotherButton", new JButton());
+    JideSplitPane hSplit =
       parse(
         "<horizontalSplit>" +
         "  <component ref='aList'/>" +
         "  <verticalSplit>" +
         "    <component ref='aTable'/>" +
         "    <component ref='aButton'/>" +
+        "    <component ref='anotherButton'/>" +
         "  </verticalSplit>" +
         "</horizontalSplit>");
     assertEquals(JSplitPane.HORIZONTAL_SPLIT, hSplit.getOrientation());
-    assertSame(aList, hSplit.getLeftComponent());
+    assertEquals(2, hSplit.getPaneCount());
+    assertSame(aList, hSplit.getPaneAt(0));
 
-    JSplitPane vSplit = (JSplitPane)hSplit.getRightComponent();
+    JideSplitPane vSplit = (JideSplitPane)hSplit.getPaneAt(1);
     assertEquals(JSplitPane.VERTICAL_SPLIT, vSplit.getOrientation());
-    assertSame(aTable, vSplit.getLeftComponent());
-    assertSame(aButton, vSplit.getRightComponent());
+    assertEquals(3, vSplit.getPaneCount());
+    assertSame(aTable, vSplit.getPaneAt(0));
+    assertSame(aButton, vSplit.getPaneAt(1));
+    assertSame(anotherButton, vSplit.getPaneAt(2));
   }
 
   public void testMovableSplitProperties() throws Exception {
     builder.add(aTable, aList, aButton);
-    JSplitPane hSplit =
+    JideSplitPane hSplit =
       parse(
-        "<horizontalSplit dividerSize='21' dividerLocation='250'>" +
+        "<horizontalSplit dividerSize='21'>" +
         "  <component ref='aList'/>" +
         "  <component ref='aTable'/>" +
         "</horizontalSplit>");
     assertEquals(21, hSplit.getDividerSize());
-    assertEquals(250, hSplit.getDividerLocation());
   }
 
-  public void testDefaultMovableSplitLocation() throws Exception {
+  public void testHorizontalSplitProportionsAreBasedOnTheComponentWeights() throws Exception {
+    checkMovableSplitsProportions("horizontalSplit", 0.1, 0.8);
+  }
+
+  public void testVerticalSplitProportionsAreBasedOnTheComponentWeights() throws Exception {
+    checkMovableSplitsProportions("verticalSplit", 0.5, 0.5);
+  }
+
+  private void checkMovableSplitsProportions(String tag, double... expected) throws Exception {
     builder.add(aTable, aList, aButton);
-    JSplitPane hSplit =
+    JideSplitPane hSplit =
       parse(
-        "<horizontalSplit>" +
-        "  <component ref='aList'/>" +
-        "  <component ref='aTable'/>" +
-        "</horizontalSplit>");
-    assertEquals(0.1, hSplit.getResizeWeight(), 0.1);
+        "<" + tag + ">" +
+        "  <list ref='aList'/>" +
+        "  <table ref='aTable'/>" +
+        "  <button ref='aButton'/>" +
+        "</" + tag + ">");
+    TestUtils.assertEquals(0.05, hSplit.getProportions(), expected);
   }
 
   public void testUsingRefOnMovableSplit() throws Exception {
-    JSplitPane splitPane = new JSplitPane();
+    JideSplitPane splitPane = new JideSplitPane();
     splitPane.setDividerSize(2);
 
     builder.add(aTable, aList);
     builder.add("aSplit", splitPane);
 
-    JSplitPane hSplit =
+    JideSplitPane hSplit =
       parse(
         "<horizontalSplit ref='aSplit' continuousLayout='true'>" +
         "  <component ref='aList'/>" +
         "  <component ref='aTable'/>" +
         "</horizontalSplit>");
 
-    assertEquals(JSplitPane.HORIZONTAL_SPLIT, hSplit.getOrientation());
+    assertEquals(JideSplitPane.HORIZONTAL_SPLIT, hSplit.getOrientation());
     assertEquals(2, hSplit.getDividerSize());
     assertTrue(hSplit.isContinuousLayout());
   }
@@ -336,12 +351,12 @@ public class SplitsBuilderTest extends SplitsTestCase {
 
     JPanel column = (JPanel)frame.getContentPane().getComponent(0);
     assertSame(panel1, column);
-    assertEquals(Color.GREEN,  column.getBackground());
+    assertEquals(Color.GREEN, column.getBackground());
 
     JPanel row = (JPanel)column.getComponent(0);
     assertSame(panel2, row);
-    assertEquals(Color.BLUE,  row.getBackground());
-    
+    assertEquals(Color.BLUE, row.getBackground());
+
     JLabel label = (JLabel)panel2.getComponent(0);
     assertEquals("hello", label.getText());
   }

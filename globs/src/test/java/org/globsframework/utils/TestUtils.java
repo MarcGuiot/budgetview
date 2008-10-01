@@ -44,7 +44,18 @@ public class TestUtils {
     }
   }
 
-  public static void assertEquals(int[] expected, int... actual) {
+  public static void assertEquals(double precision, double[] actual, double... expected) {
+    if (actual.length != expected.length) {
+      Assert.fail("invalid length - expected: " + Arrays.toString(expected) + " but was: " + Arrays.toString(actual));
+    }
+    for (int i = 0; i < expected.length; i++) {
+      if (Math.abs(expected[i] - actual[i]) > precision) {
+        Assert.fail("error at position " + i + " - expected: " + Arrays.toString(expected) + " but was: " + Arrays.toString(actual));
+      }
+    }
+  }
+
+  public static void assertEquals(int[] actual, int... expected) {
     if (!Arrays.equals(expected, actual)) {
       Assert.fail("expected: " + Arrays.toString(expected) + " but was: " + Arrays.toString(actual));
     }

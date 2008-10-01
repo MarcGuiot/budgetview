@@ -5,7 +5,7 @@
   <panel styleClass="dialog" preferredSize="(550,450)">
     <column styleClass="innerDialog">
       <label text="$categoriesEdition.title" styleClass="title"/>
-      <horizontalSplit dividerLocation="250" opaque="false">
+      <horizontalSplit opaque="false">
         <column weightX="1" margin="10">
           <label text="$categoriesEdition.masters" styleClass="formLabelTop"/>
           <scrollPane>

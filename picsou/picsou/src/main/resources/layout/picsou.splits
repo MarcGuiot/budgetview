@@ -76,22 +76,22 @@
       <cards ref="mainCards" opaque="false" marginTop="20" weightY="10.0">
 
         <card name="home">
-          <row>
-            <column>
-              <panel ref="accountView" minimumSize="(200,200)" preferredSize="(300,250)"/>
+          <horizontalSplit>
+            <column marginRight="10">
+              <panel ref="accountView" minimumSize="(250,200)" preferredSize="(300,250)"/>
               <filler fill="vertical"/>
             </column>
 
-            <column marginLeft="20" marginRight="20">
-              <panel ref="monthSummaryView" minimumSize="(300,100)" preferredSize="(350,400)"/>
+            <column marginLeft="10" marginRight="10">
+              <panel ref="monthSummaryView" minimumSize="(300,360)" preferredSize="(350,400)"/>
               <filler fill="vertical"/>
             </column>
 
-            <column>
-              <panel ref="balanceSummaryView" minimumSize="(200,200)" preferredSize="(300,250)"/>
+            <column marginLeft="10">
+              <panel ref="balanceSummaryView" minimumSize="(250,200)" preferredSize="(300,250)"/>
               <filler fill="vertical"/>
             </column>
-          </row>
+          </horizontalSplit>
         </card>
 
         <card name="categorization">
@@ -104,10 +104,9 @@
 
         <card name="analysis">
 
-          <horizontalSplit dividerLocation="230"
-                           continuousLayout="true" opaque="false" border="empty" resizeWeight="0">
+          <horizontalSplit continuousLayout="true" opaque="false" border="empty">
             <panel styleClass="block">
-              <verticalSplit margin="10" dividerLocation="200">
+              <verticalSplit margin="10">
                 <column>
                   <label text="$seriesView.title" styleClass="formLabelTop"/>
                   <scrollPane border="line(category.border)" viewportBackground="categories.bg"

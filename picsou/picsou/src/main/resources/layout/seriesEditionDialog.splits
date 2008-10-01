@@ -12,7 +12,7 @@
 
       <label ref="title" styleClass="title"/>
 
-      <horizontalSplit dividerLocation="150" opaque="false">
+      <horizontalSplit opaque="false">
         <column>
           <scrollPane>
             <list ref="seriesList"/>

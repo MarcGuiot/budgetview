@@ -2,7 +2,7 @@
   <frame title="Yet Another Address Book!" size="(700,400)">
     <column margin="20">
 
-      <horizontalSplit dividerLocation="500" opaque="false">
+      <horizontalSplit opaque="false">
         <scrollPane>
           <table ref="contact"/>
         </scrollPane>

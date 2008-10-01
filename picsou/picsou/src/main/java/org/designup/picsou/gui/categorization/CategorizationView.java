@@ -355,7 +355,25 @@ public class CategorizationView extends View implements TableView, Filterable, C
     }
 
     public void actionPerformed(ActionEvent e) {
-      seriesEditionDialog.showNewSeries(currentTransactions, budgetArea);
+      Key key = seriesEditionDialog.showNewSeries(currentTransactions, budgetArea);
+      Glob series = repository.find(key);
+      if (key != null && series != null) {
+        Integer category = seriesEditionDialog.getCurrentCategory();
+        if (category == null) {
+          category = series.get(Series.DEFAULT_CATEGORY);
+        }
+        repository.enterBulkDispatchingMode();
+        try {
+          for (Glob transaction : currentTransactions) {
+            repository.update(transaction.getKey(),
+                              FieldValue.value(Transaction.SERIES, series.get(Series.ID)),
+                              FieldValue.value(Transaction.CATEGORY, category));
+          }
+        }
+        finally {
+          repository.completeBulkDispatchingMode();
+        }
+      }
     }
   }
 

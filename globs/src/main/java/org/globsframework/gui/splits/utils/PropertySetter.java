@@ -107,6 +107,10 @@ public class PropertySetter {
       throw new SplitsException("Setter for property '" + attribute +
                                 "' in class " + componentClass.getName() + "' threw exception:", e);
     }
+    catch (IllegalArgumentException e) {
+      throw new SplitsException("Setter for property '" + attribute +
+                                "' in class " + componentClass.getName() + "' threw exception:", e);
+    }
 
     if (targetValue instanceof Action) {
       processAction(object, attributeValue);

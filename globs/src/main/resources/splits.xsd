@@ -204,7 +204,7 @@
 
   <xs:element name="horizontalSplit">
     <xs:complexType>
-      <xs:sequence minOccurs="2" maxOccurs="2">
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
         <xs:group ref="splitsComponents"/>
       </xs:sequence>
       <xs:attributeGroup ref="componentAttributes"/>
@@ -214,7 +214,7 @@
 
   <xs:element name="verticalSplit">
     <xs:complexType>
-      <xs:sequence minOccurs="2" maxOccurs="2">
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
         <xs:group ref="splitsComponents"/>
       </xs:sequence>
       <xs:attributeGroup ref="componentAttributes"/>
@@ -482,7 +482,6 @@
 
   <xs:attributeGroup name="splitPaneAttributes">
     <xs:attribute name="dividerSize" type="xs:integer"/>
-    <xs:attribute name="dividerLocation" type="xs:float"/>
     <xs:attribute name="continuousLayout" type="xs:boolean"/>
     <xs:attribute name="resizeWeight" type="xs:float"/>
   </xs:attributeGroup>

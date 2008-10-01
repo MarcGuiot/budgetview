@@ -4,7 +4,7 @@
       <label text="File" marginLeft="20" marginRight="10" anchor="east" fill="none"/>
       <comboBox ref="colorSets" fill="none" anchor="west"/>
     </row>
-    <horizontalSplit dividerLocation="300">
+    <horizontalSplit>
       <scrollPane margin="20">
         <list ref="colorList"/>
       </scrollPane>

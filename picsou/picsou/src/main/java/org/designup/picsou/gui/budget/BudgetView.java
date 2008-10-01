@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.budget;
 
+import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.BudgetArea;
@@ -22,6 +23,10 @@ import java.util.Set;
 
 public class BudgetView extends View implements GlobSelectionListener, ChangeSetListener {
   private GlobList currentSelectedMonth = GlobList.EMPTY;
+  private JideSplitPane horizontalSplitPane;
+  private JideSplitPane firstVerticalSplitPane;
+  private JideSplitPane secondVerticalSplitPane;
+  private JideSplitPane thirdVerticalSplitPane;
 
   public BudgetView(GlobRepository repository, Directory parentDirectory) {
     super(repository, createLocalDirectory(parentDirectory));
@@ -38,6 +43,14 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetView.splits",
                                                       repository, directory);
 
+    horizontalSplitPane = new JideSplitPane();
+    builder.add("horizontalSplitPane", horizontalSplitPane);
+    firstVerticalSplitPane = new JideSplitPane();
+    builder.add("firstVerticalSplitPane", firstVerticalSplitPane);
+    secondVerticalSplitPane = new JideSplitPane();
+    builder.add("secondVerticalSplitPane", secondVerticalSplitPane);
+    thirdVerticalSplitPane = new JideSplitPane();
+    builder.add("thirdVerticalSplitPane", thirdVerticalSplitPane);
     addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder);
 
     addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING_EXPENSES, builder);

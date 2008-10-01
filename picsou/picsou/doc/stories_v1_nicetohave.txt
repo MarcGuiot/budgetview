@@ -4,15 +4,12 @@ TransactionDetails
 * Type
 
 SeriesEditionDialog
-* Modifier l'ordre des series
 * Bouton ou double-clic pour selectionner tout
-* Enveloppes : "Nom" => "Nom de l'enveloppe", titre = "Enveloppes de frais courants"
 * Afficher/modifier le jour de debit pour les recurrences
 
 BudgetView
 ** Mettre en rouge les depassements
 ** Mettre en rouge un montant occasional prevu a zero
-** Renommer "Projets" en "Projets & Operations Speciales" ?
 * Infos de synthese :  delta recu/depense en observe et prevu (avec highlight de depassement) + non classe
 * Afficher le diff sur les jauges total
 * Gauges : afficher le delta en tooltip ("Depassement: 111.11", etc.)
@@ -52,7 +49,6 @@ Home page
 ** Afficher un message avec une URL vers la page de changeLog en cas de changement de version
 
 Licence
-*** Pb perte licence + reemission quotidienne de mails (severine)
 *** Apres expiration : la fonction "import" est bloquee (dialog avec message)
 ** Afficher le nombre de jours restants
 ** Completer les messages pour les mails
@@ -70,7 +66,7 @@ CategoryEditionDialog
 * Modifier l'ordre des categories
 
 HistoricalChart
-*** voir affichage avec ghosts
+*** Voir affichage avec ghosts
 
 RepartitionChart
 *** a completer

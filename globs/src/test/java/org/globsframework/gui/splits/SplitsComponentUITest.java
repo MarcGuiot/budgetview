@@ -70,7 +70,7 @@ public class SplitsComponentUITest extends SplitsTestCase {
                       "  <ui name='myUI' class='" + MyLabelUI.class.getName() + "'/>" +
                       "</styles>" +
                       "<button ui='myUI'/>",
-                      "argument type mismatch");
+                      "Setter for property 'ui' in class javax.swing.JButton' threw exception");
   }
 
   public static class MyLabelUI extends BasicLabelUI {

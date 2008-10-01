@@ -1,5 +1,7 @@
 package org.globsframework.gui.splits;
 
+import com.jidesoft.swing.JideSplitPane;
+
 import javax.swing.*;
 
 public class SplitsReloadTest extends SplitsTestCase {
@@ -9,7 +11,7 @@ public class SplitsReloadTest extends SplitsTestCase {
     builder.add("button1", button1);
     builder.add("label1", label1);
 
-    JSplitPane splitPane = builder.setSource(
+    JideSplitPane splitPane = builder.setSource(
         "<splits>" +
         "  <horizontalSplit>" +
         "    <label ref='label1' text='label1Before'/>" +
@@ -17,9 +19,10 @@ public class SplitsReloadTest extends SplitsTestCase {
         "  </horizontalSplit>" +
         "</splits>")
         .load();
-    assertSame(label1, splitPane.getLeftComponent());
+    assertEquals(2, splitPane.getPaneCount());
+    assertSame(label1, splitPane.getPaneAt(0));
     assertEquals("label1Before", label1.getText());
-    assertSame(button1, splitPane.getRightComponent());
+    assertSame(button1, splitPane.getPaneAt(1));
     assertEquals("button1Before", button1.getText());
 
     JPanel panel = builder.setSource(
@@ -35,8 +38,7 @@ public class SplitsReloadTest extends SplitsTestCase {
     assertSame(button1, panel.getComponent(1));
     assertEquals("button1After", button1.getText());
 
-    assertNull(splitPane.getRightComponent());
-    assertNull(splitPane.getLeftComponent());
+    assertEquals(0, splitPane.getPaneCount());
   }
 
   public void testContainedBuilders() throws Exception {

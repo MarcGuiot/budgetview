@@ -3,7 +3,7 @@
     <column margin="20">
 
       <row>
-        <horizontalSplit dividerLocation="500" opaque="false">
+        <horizontalSplit opaque="false">
           <scrollPane>
             <table ref="movie"/>
           </scrollPane>

@@ -24,3 +24,7 @@
 - voir TransactionMatchers pour la banque d'antoine (cartes non reconnues). Recalibrer dans le check ?
 
 - bug calcul solde total pour ghosts (le solde augmente au lieu de diminuer)
+
+------
+
+- ordre des series : prevu decroissant
