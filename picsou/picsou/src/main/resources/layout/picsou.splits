@@ -108,7 +108,7 @@
 
             <panel styleClass="block" weightX="3">
               <verticalSplit margin="10">
-                <column>
+                <column weightY="3">
                   <label text="$seriesView.title" styleClass="formLabelTop"/>
                   <scrollPane border="line(category.border)" viewportBackground="categories.bg"
                               background="categories.bg"
@@ -116,14 +116,14 @@
                     <table ref="seriesView" opaque="false" margin="10"/>
                   </scrollPane>
                 </column>
-                <column>
+                <column weightY="7">
                   <label text="$categoryView.title" styleClass="formLabelTop"/>
                   <scrollPane border="line(category.border)" viewportBackground="categories.bg"
                               background="categories.bg"
                               minimumSize="(200,40)" weightX="1" marginTop="5" marginBottom="0">
                     <table ref="category" opaque="false" margin="10"/>
                   </scrollPane>
-                  <row styleClass="iconButtonGroupDark">
+                  <row styleClass="iconButtonGroup">
                     <button action="editCategories" name="editCategories" styleClass="list"/>
                     <filler fill="horizontal"/>
                   </row>

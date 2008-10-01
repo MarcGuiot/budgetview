@@ -15,7 +15,7 @@
           </column>
         </repeat>
       </scrollPane>
-      <row styleClass="iconButtonGroupDark">
+      <row styleClass="iconButtonGroup">
         <button action="editCategories" name="editCategories" styleClass="list"/>
         <filler fill="horizontal"/>
       </row>

@@ -21,9 +21,10 @@ public abstract class DataChecker {
     return Lang.get("category." + category.getName());
   }
 
-  protected <T extends JComponent> void checkComponentNotVisible(final Panel panel,
-                                                                 final Class<T> swingComponentClass,
-                                                                 final String componentName) {
+  protected <T extends JComponent> void checkComponentVisible(Panel panel,
+                                                              Class<T> swingComponentClass,
+                                                              String componentName,
+                                                              boolean visible) {
     JComponent component = panel.findSwingComponent(swingComponentClass, componentName);
     Assert.assertTrue(component == null || !component.isVisible());
   }

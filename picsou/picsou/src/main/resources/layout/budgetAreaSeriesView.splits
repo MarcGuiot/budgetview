@@ -37,7 +37,7 @@
           </column>
         </scrollPane>
 
-        <row styleClass="iconButtonGroupDark">
+        <row styleClass="iconButtonGroup">
           <button action="createSeries" styleClass="create"/>
           <button action="editAllSeries" styleClass="list"/>
           <filler fill="horizontal"/>

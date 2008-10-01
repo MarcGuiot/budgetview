@@ -29,7 +29,7 @@
 
     <horizontalSplit opaque="false">
 
-      <column weightX="4">
+      <column weightX="45">
         <label text="$categorization.list.title" styleClass="blockTitle"/>
         <panel styleClass="block">
           <column styleClass="innerBlock">
@@ -50,7 +50,7 @@
         </panel>
       </column>
 
-      <column weightX="6">
+      <column weightX="55">
         <label text="$categorization.details.title" styleClass="blockTitle"/>
         <panel styleClass="block">
 
@@ -59,7 +59,6 @@
             <panel ref="transactionDetails" marginBottom="15" weightY="0.1"/>
 
             <label text="$categorization.series.title" styleClass="formLabelTop"/>
-
 
             <cards ref="budgetAreaCard" opaque="false">
 

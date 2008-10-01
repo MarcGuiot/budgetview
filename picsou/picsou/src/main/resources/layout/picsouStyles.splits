@@ -81,7 +81,7 @@
         cornerRadius="20"/>
     <style selector=".block" ui="block" opaque="false" marginBottom="5"/>
     <style selector=".block .innerBlock" margin="15" marginBottom="10"/>
-    <style selector=".budgetAreaSelection"  opaque="true" background="block.inner.bg"
+    <style selector=".budgetAreaSelection" opaque="true" background="block.inner.bg"
            border="line(block.inner.border.noscroll)"/>
 
     <style selector="label.blockTitle" anchor="center"
@@ -112,7 +112,14 @@
            foreground="block.item.link"/>
 
     <!-- Icon buttons -->
-    <ui name="iconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"/>
+    <ui name="iconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"
+        border="iconbutton.border"
+        borderTop="iconbutton.border.top"
+        borderBottom="iconbutton.border.bottom"
+        pressedTopColor="iconbutton.pressed.top"
+        pressedBottomColor="iconbutton.pressed.bottom"
+        normalTopColor="iconbutton.normal.top"
+        normalBottomColor="iconbutton.normal.bottom"/>
     <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>
     <style selector=".iconButtonGroup button" ui='iconButton' fill='none' weightX='0'/>
     <style selector=".iconButtonGroup toggleButton" ui='iconButton' fill='none' weightX='0'/>
@@ -132,31 +139,6 @@
     <style selector="button.icon" text="" opaque="false" borderPainted="false"
            minimumSize="(18,20)" preferredSize="(18,20)" maximumSize="(18,20)"
            fill='none' weightX='0'/>
-
-
-    <!-- Dark Icon buttons -->
-    <ui name="iconButtonDark" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"
-        border="iconbutton.dark.border"
-        borderTop="iconbutton.dark.border.top"
-        borderBottom="iconbutton.dark.border.bottom"
-        pressedTopColor="iconbutton.dark.pressed.top"
-        pressedBottomColor="iconbutton.dark.pressed.bottom"
-        normalTopColor="iconbutton.dark.normal.top"
-        normalBottomColor="iconbutton.dark.normal.bottom"/>
-    <style selector=".iconButtonGroupDark" marginTop="5" weightY="0"/>
-    <style selector=".iconButtonGroupDark button" ui='iconButtonDark' fill='none' weightX='0'/>
-    <style selector=".iconButtonGroupDark button.create"
-           icon="button_plus.png" disabledIcon="button_plus_disabled.png"/>
-    <style selector=".iconButtonGroupDark button.delete"
-           icon="button_minus.png" disabledIcon="button_minus_disabled.png"/>
-    <style selector=".iconButtonGroupDark button.rename"
-           icon="button_rename.png" disabledIcon="button_rename_disabled.png"/>
-    <style selector=".iconButtonGroupDark button.list"
-           icon="button_list.png" disabledIcon="button_list_disabled.png"/>
-    <style selector=".iconButtonGroupDark button.up"
-           icon="button_up.png" disabledIcon="button_up_disabled.png"/>
-    <style selector=".iconButtonGroupDark button.down"
-           icon="button_down.png" disabledIcon="button_down_disabled.png"/>
 
     <!-- Gauge -->
     <style selector=".totalGauge"

@@ -578,14 +578,14 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkSeriesListIsHidden() {
-    assertFalse(dialog.getPanel("buttonSeriesPanel").isVisible());
-    assertFalse(dialog.getPanel("seriesPanel").isVisible());
+    checkComponentVisible(dialog, JPanel.class, "buttonSeriesPanel", false);
+    checkComponentVisible(dialog, JPanel.class, "seriesPanel", false);
     return this;
   }
 
   public SeriesEditionDialogChecker checkSeriesListIsVisible() {
-    assertTrue(dialog.getPanel("buttonSeriesPanel").isVisible());
-    assertTrue(dialog.getPanel("seriesPanel").isVisible());
+    checkComponentVisible(dialog, JPanel.class, "buttonSeriesPanel", true);
+    checkComponentVisible(dialog, JPanel.class, "seriesPanel", true);
     return this;
   }
 

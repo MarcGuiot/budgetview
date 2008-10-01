@@ -36,7 +36,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkNoDate() {
-    checkComponentNotVisible(getPanel(), JLabel.class, "userDate");
+    checkComponentVisible(getPanel(), JLabel.class, "userDate", false);
   }
 
   private void checkValue(String name, String label) {
@@ -48,7 +48,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkSplitNotVisible() {
-    checkComponentNotVisible(getPanel(), JButton.class, "split");
+    checkComponentVisible(getPanel(), JButton.class, "split", false);
   }
 
   public void checkSplitVisible() {
@@ -69,7 +69,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkOriginalLabelNotVisible() {
-    checkComponentNotVisible(getPanel(), JLabel.class, "originalLabel");
+    checkComponentVisible(getPanel(), JLabel.class, "originalLabel", false);
   }
 
   public void checkOriginalLabel(String originalLabel) {
@@ -83,7 +83,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkTypeNotVisible() {
-    checkComponentNotVisible(getPanel(), JLabel.class, "transactionType");
+    checkComponentVisible(getPanel(), JLabel.class, "transactionType", false);
   }
 
   public void checkBankDate(String yyyyMMdd) {
@@ -93,7 +93,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkBankDateNotVisible() {
-    checkComponentNotVisible(getPanel(), JLabel.class, "bankDate");
+    checkComponentVisible(getPanel(), JLabel.class, "bankDate", false);
   }
 
   public SplitDialogChecker openSplitDialog() {
@@ -119,7 +119,7 @@ public class TransactionDetailsChecker extends DataChecker {
   }
 
   public void checkNotesFieldNotVisible() {
-    checkComponentNotVisible(getPanel(), JTextField.class, "noteField");
+    checkComponentVisible(getPanel(), JTextField.class, "noteField", false);
   }
 
   public void checkMessage(String message) {
