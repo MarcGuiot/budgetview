@@ -23,5 +23,6 @@ public class SerializationManager {
     SeriesBudget.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SeriesBudget.Serializer());
     SeriesToCategory.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SeriesToCategory.Serializer());
     UserPreferences.TYPE.updateProperty(SERIALIZATION_PROPERTY, new UserPreferences.Serializer());
+    VersionInformation.TYPE.updateProperty(SERIALIZATION_PROPERTY, new VersionInformation.Serializer());
   }
 }

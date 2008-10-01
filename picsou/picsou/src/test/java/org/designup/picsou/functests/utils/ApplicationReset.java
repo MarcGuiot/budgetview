@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.utils;
 
-import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.model.*;
@@ -28,8 +27,8 @@ public class ApplicationReset {
     temp.getAll();
 
     GlobType[] typesToDelete = getTypesToDelete(
-      User.TYPE, ServerInformation.TYPE, BudgetArea.TYPE,
-      TransactionType.TYPE, TransactionTypeMatcher.TYPE, Bank.TYPE, BankEntity.TYPE, 
+      User.TYPE, VersionInformation.TYPE, BudgetArea.TYPE,
+      TransactionType.TYPE, TransactionTypeMatcher.TYPE, Bank.TYPE, BankEntity.TYPE,
       ProfileType.TYPE, Card.TYPE);
     repository.reset(temp.getAll(), typesToDelete);
   }

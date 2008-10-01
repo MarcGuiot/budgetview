@@ -28,7 +28,8 @@ import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -303,11 +304,8 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   }
 
   private GlobList getUncategorizedTransactions(Glob month, GlobRepository repository) {
-    GlobMatcher matcher = and(
-      fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-      not(fieldEquals(Transaction.PLANNED, true))
-    );
-    return repository.findByIndex(Transaction.MONTH_INDEX, month.get(Month.ID))
-      .filterSelf(matcher, repository);
+    return repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)
+      .findByIndex(Transaction.MONTH, month.get(Month.ID)).getGlobs()
+      .filterSelf(fieldEquals(Transaction.PLANNED, false), repository);
   }
 }

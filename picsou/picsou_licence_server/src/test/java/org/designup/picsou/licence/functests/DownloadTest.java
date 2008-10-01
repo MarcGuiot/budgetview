@@ -1,11 +1,13 @@
 package org.designup.picsou.licence.functests;
 
-import org.designup.picsou.functests.checkers.LoginChecker;
+import org.designup.picsou.functests.checkers.*;
+import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.licence.LicenseTestCase;
 import org.designup.picsou.licence.model.SoftwareInfo;
+import org.designup.picsou.model.TransactionType;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
@@ -55,20 +57,33 @@ public class DownloadTest extends LicenseTestCase {
     SqlConnection connection = getSqlConnection();
     connection.getCreateBuilder(SoftwareInfo.TYPE)
       .set(SoftwareInfo.LATEST_JAR_VERSION, PicsouApplication.JAR_VERSION + 1L)
-      .set(SoftwareInfo.LATEST_CONFIG_VERSION, PicsouApplication.CONFIG_VERSION + 1L)
+      .set(SoftwareInfo.LATEST_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION + 1L)
       .getRequest().run();
     connection.commitAndClose();
     start();
-    final String jarName = ConfigService.generatePicsouJarName(2);
-    final String configJarName = ConfigService.generateConfigJarName(2);
+    final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
+    final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
     byte[] content = generateConfigContent();
     LicenseTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
     startPicsou();
     retr.assertOk();
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-//    ImportChecker importer = new ImportChecker(window);
-//    importer.selectBank("picsouBank");
+    InfoChecker checker = new InfoChecker(window);
+    checker.checkNewVersion();
+
+    OfxBuilder builder = OfxBuilder.init(this);
+    builder.addBankAccount(4321, -2, "1111", 123.3, "10/09/2008");
+    builder.addTransaction("2008/09/10", -100., "STUPID HEADER blabla");
+    String ofxFile = builder.save();
+    OperationChecker operation = new OperationChecker(window);
+    operation.importOfxFile(ofxFile);
+    ViewSelectionChecker views = new ViewSelectionChecker(window);
+    views.selectData();
+    TransactionChecker transaction = new TransactionChecker(window);
+    transaction.initContent()
+      .add("10/09/2008", TransactionType.VIREMENT, "GOOD HEADER", "", -100.00)
+      .check();
     String path = PicsouApplication.getPicsouPath();
     File pathToJar = new File(path + "/jars");
     String[] jars = pathToJar.list(new FilenameFilter() {
@@ -84,8 +99,8 @@ public class DownloadTest extends LicenseTestCase {
       }
     });
     assertTrue(configs.length == 1);
-
   }
+
 
   private byte[] generateConfigContent() throws Exception {
     File tempFile = File.createTempFile("config", ".jar");
@@ -97,6 +112,9 @@ public class DownloadTest extends LicenseTestCase {
     jarOutputStream.write(("<globs>\n" +
                            "  <bank name=\"picsouBank\" downloadUrl=\"\" id='-2'>\n" +
                            "    <bankEntity id=\"4321\"/> \n" +
+                           "    <transactionTypeMatcher regexp=\"STUPID HEADER .*\"\n" +
+                           "                            transactionTypeName=\"virement\" " +
+                           "                            label=\"GOOD HEADER\"/>" +
                            "  </bank>\n" +
                            "</globs>\n").getBytes());
     jarOutputStream.close();

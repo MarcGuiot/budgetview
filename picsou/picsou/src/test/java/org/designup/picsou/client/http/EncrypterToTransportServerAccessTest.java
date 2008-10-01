@@ -8,6 +8,7 @@ import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.*;
+import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -18,22 +19,37 @@ import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.Functor;
 import org.globsframework.utils.TestUtils;
+import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
+  protected Directory directory;
+  private ServerDirectory serverDirectory;
+  private boolean inMemory = false;
+  protected String url;
+
 
   protected void setUp() throws Exception {
-    setInMemory(false);
     super.setUp();
+    url = initServerEnvironment(inMemory);
     directory.add(new ConfigService(1L, 1L, 1L, null));
   }
 
   protected void tearDown() throws Exception {
     super.tearDown();
-    setInMemory(true);
+    serverDirectory = null;
+    directory = null;
+    url = null;
+  }
+
+  public String initServerEnvironment(boolean inMemory) throws Exception {
+    String prevaylerPath = createPrevaylerRepository();
+    serverDirectory = new ServerDirectory(prevaylerPath, inMemory);
+    directory = serverDirectory.getServiceDirectory();
+    return prevaylerPath;
   }
 
   private GlobRepository init(final EncrypterToTransportServerAccess createClientCategorizer) {

@@ -114,8 +114,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     }
     else {
       if (amount > 0) {
-        transfertToPlanned(series, monthId, amount, monthInCurrentMonth,
-                           repository);
+        transfertToPlanned(series, monthId, amount, monthInCurrentMonth, repository);
       }
       else if (amount < 0) {
         transfertFromPlanned(series, monthId, amount, repository);

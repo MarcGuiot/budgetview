@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
@@ -71,15 +72,12 @@ public class Transaction {
 
   public static NotUniqueIndex LABEL_FOR_CATEGORISATION_INDEX;
 
-  public static NotUniqueIndex MONTH_INDEX;
-
-  public static NotUniqueIndex SERIES_INDEX;
+  public static MultiFieldNotUniqueIndex SERIES_INDEX;
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(Transaction.class, "transaction");
     loader.defineNonUniqueIndex(LABEL_FOR_CATEGORISATION_INDEX, LABEL_FOR_CATEGORISATION);
-    loader.defineNonUniqueIndex(MONTH_INDEX, MONTH);
-    loader.defineNonUniqueIndex(SERIES_INDEX, SERIES);
+    loader.defineMultiFieldNotUniqueIndex(SERIES_INDEX, SERIES, MONTH);
   }
 
   public static int fullDate(Glob transaction) {

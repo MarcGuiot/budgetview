@@ -21,7 +21,8 @@ public class PicsouModel {
                           SeriesToCategory.TYPE,
                           SeriesBudget.TYPE,
                           BudgetArea.TYPE,
-                          ProfileType.TYPE)
+                          ProfileType.TYPE,
+                          VersionInformation.TYPE)
       .get();
 
   static {

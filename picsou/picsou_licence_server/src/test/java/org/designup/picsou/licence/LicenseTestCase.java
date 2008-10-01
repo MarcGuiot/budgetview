@@ -23,6 +23,7 @@ import org.mockftpserver.stub.command.AbstractStubDataCommandHandler;
 import org.uispec4j.UISpecTestCase;
 
 import java.util.Iterator;
+import java.util.Locale;
 
 public abstract class LicenseTestCase extends UISpecTestCase {
   protected SimpleSmtpServer mailServer;
@@ -37,6 +38,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
+    Locale.setDefault(Locale.ENGLISH);
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(ConfigService.COM_PICSOU_LICENCE_URL, "http://localhost:5000");
     System.setProperty(ConfigService.COM_PICSOU_LICENCE_FTP_URL, "ftp://localhost:12000");
