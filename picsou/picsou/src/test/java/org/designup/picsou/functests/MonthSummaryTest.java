@@ -15,6 +15,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
   public void testNoData() throws Exception {
     views.selectHome();
+    infochecker.checkNoNewVersion();
     monthSummary
       .checkNoBudgetAreasDisplayed()
       .checkNoDataMessage("You must import your financial operations");
@@ -33,17 +34,17 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .doImport();
 
     timeline.checkSelection("2008/08");
-    
+
     monthSummary
       .checkNoBudgetAreasDisplayed()
       .checkNoSeriesMessage("You must categorize your operations");
     balanceSummary
-        .checkBalance(00.00)
-        .checkIncome(0.00)
-        .checkFixed(0.00)
-        .checkSavings(0.00)
-        .checkProjects(0.00)
-        .checkTotal(0.00);
+      .checkBalance(00.00)
+      .checkIncome(0.00)
+      .checkFixed(0.00)
+      .checkSavings(0.00)
+      .checkProjects(0.00)
+      .checkTotal(0.00);
   }
 
   public void testNoSeries() throws Exception {

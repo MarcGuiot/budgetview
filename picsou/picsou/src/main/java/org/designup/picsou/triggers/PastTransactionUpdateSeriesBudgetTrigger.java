@@ -59,7 +59,8 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
             continue;
           }
           Integer currentMonthId = values.get(CurrentMonth.MONTH_ID);
-          ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, oneSeries.get(Series.ID));
+          ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgets =
+            repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, oneSeries.get(Series.ID));
           Glob currentSeriesBudget = seriesBudgets.findByIndex(SeriesBudget.MONTH, currentMonthId)
             .getGlobs().getFirst();
           if (currentSeriesBudget == null || !currentSeriesBudget.get(SeriesBudget.ACTIVE)) {
@@ -107,7 +108,8 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
 
 
     if (statMonthId.equals(currentMonthId)) {
-      ReadOnlyGlobRepository.MultiFieldIndexed index = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId);
+      ReadOnlyGlobRepository.MultiFieldIndexed index =
+        repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId);
       GlobList seriesBudgets =
         index
           .getGlobs().sort(SeriesBudget.MONTH);

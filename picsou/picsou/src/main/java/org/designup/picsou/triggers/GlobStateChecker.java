@@ -6,10 +6,15 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.directory.Directory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -26,7 +31,7 @@ public class GlobStateChecker {
   }
 
   public interface Correcteur {
-    String info();
+    String info(GlobRepository repository, Directory directory);
 
     void correct(GlobRepository repository);
   }
@@ -38,24 +43,49 @@ public class GlobStateChecker {
   public boolean check() {
     SortedSet<Integer> months = repository.getAll(Month.TYPE).getSortedSet(Month.ID);
     checkMonths(months);
-    checkAsError();
     checkTransactions(months);
-    checkAsError();
     checkBudgetAndStat(months);
-    checkAsError();
-    checkPlannedTransaction(months);
-    checkAsError();
+    checkPlannedTransaction();
+    checkPlannedTransactionAmount();
     return correcteurs.isEmpty();
   }
 
-  private void checkPlannedTransaction(SortedSet<Integer> months) {
+  private void checkPlannedTransactionAmount() {
+    PlannedTransactionChecker transactionChecker = new PlannedTransactionChecker();
+    GlobList seriesBudget = repository.getAll(SeriesBudget.TYPE);
+    for (Glob budget : seriesBudget) {
+      GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, budget.get(SeriesBudget.SERIES))
+        .findByIndex(Transaction.MONTH, budget.get(SeriesBudget.MONTH))
+        .getGlobs();
+      Double plannedAmount = 0.;
+      Double amount = 0.;
+      for (Glob transaction : transactions) {
+        if (transaction.get(Transaction.PLANNED)) {
+          plannedAmount += transaction.get(Transaction.AMOUNT);
+        }
+        else {
+          amount += transaction.get(Transaction.AMOUNT);
+        }
+      }
+      if (amount + plannedAmount > budget.get(SeriesBudget.AMOUNT)) {
+        transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES), budget.get(SeriesBudget.MONTH),
+                                    amount, plannedAmount, budget.get(SeriesBudget.AMOUNT));
+      }
+    }
+  }
+
+  private void checkPlannedTransaction() {
     MonthPlannedChecker monthPlannedChecker = new MonthPlannedChecker();
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     Integer currentMonthId = currentMonth.get(CurrentMonth.MONTH_ID);
+    Integer lastDay = currentMonth.get(CurrentMonth.DAY);
     GlobList planneds = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true));
     for (Glob planned : planneds) {
       if (planned.get(Transaction.MONTH) < currentMonthId ||
           planned.get(Transaction.BANK_MONTH) < currentMonthId) {
+        monthPlannedChecker.add(planned);
+      }
+      else if (planned.get(Transaction.MONTH).equals(currentMonthId) && planned.get(Transaction.DAY) < lastDay) {
         monthPlannedChecker.add(planned);
       }
     }
@@ -77,8 +107,8 @@ public class GlobStateChecker {
     Integer currentMonth = repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID);
     if (currentMonth != 0 && !months.contains(currentMonth)) {
       correcteurs.add(new Correcteur() {
-        public String info() {
-          return "" + repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID) + " not in existing month";
+        public String info(GlobRepository repository, Directory directory) {
+          return "" + GlobStateChecker.this.repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID) + " not in existing month";
         }
 
         public void correct(GlobRepository repository) {
@@ -114,7 +144,7 @@ public class GlobStateChecker {
     }
     if (budgets.isEmpty()) {
       correcteurs.add(new Correcteur() {
-        public String info() {
+        public String info(GlobRepository repository, Directory directory) {
           return "no series budget for " + GlobPrinter.toString(series);
         }
 
@@ -144,7 +174,7 @@ public class GlobStateChecker {
         if (stat == null) {
           final Integer firstMonth1 = firstMonth;
           correcteurs.add(new Correcteur() {
-            public String info() {
+            public String info(GlobRepository repository, Directory directory) {
               return "Missing stat month " + firstMonth1 + " for " + GlobPrinter.toString(series);
             }
 
@@ -162,9 +192,9 @@ public class GlobStateChecker {
     }
   }
 
-  private void checkAsError() {
+  private void checkAsError(Directory directory) {
     if (!correcteurs.isEmpty()) {
-      throw new RuntimeException(correcteurs.get(0).info());
+      throw new RuntimeException(correcteurs.get(0).info(repository, directory));
     }
   }
 
@@ -196,7 +226,7 @@ public class GlobStateChecker {
       }
     }
 
-    public String info() {
+    public String info(GlobRepository repository, Directory directory) {
       return info + months;
     }
 
@@ -216,7 +246,7 @@ public class GlobStateChecker {
       this.series = series;
     }
 
-    public String info() {
+    public String info(GlobRepository repository, Directory directory) {
       return "For series " + GlobPrinter.toString(series) +
              "\nmissing month : " + missing +
              "\nextra month : " + extrat;
@@ -252,7 +282,7 @@ public class GlobStateChecker {
       this.lastMonth = lastMonth;
     }
 
-    public String info() {
+    public String info(GlobRepository repository, Directory directory) {
       return "first month " + firstMonth + " should be before last month " + lastMonth;
     }
 
@@ -269,7 +299,7 @@ public class GlobStateChecker {
   static class MonthPlannedChecker implements Correcteur {
     GlobList planned = new GlobList();
 
-    public String info() {
+    public String info(GlobRepository repository, Directory directory) {
       return "Unexpected planned transaction " + GlobPrinter.init(planned).toString();
     }
 
@@ -284,6 +314,89 @@ public class GlobStateChecker {
 
     public void add(Glob planned) {
       this.planned.add(planned);
+    }
+  }
+
+  static private class PlannedTransactionChecker implements Correcteur {
+    private MultiMap<Integer, Info> infos = new MultiMap<Integer, Info>();
+
+    public String info(GlobRepository repository, Directory directory) {
+      DescriptionService descriptionService = directory.get(DescriptionService.class);
+      StringBuilder builder = new StringBuilder();
+      GlobStringifier categoryStringifier = descriptionService.getStringifier(Series.TYPE);
+      for (Integer seriesId : infos.keySet()) {
+        String name = categoryStringifier.toString(repository.get(Key.create(Series.TYPE, seriesId)), repository);
+        builder.append("Series ").append(name).append(" has error \n");
+        List<Info> infoList = infos.get(seriesId);
+        for (Info info : infoList) {
+          builder.append("==>")
+            .append(info.monthId)
+            .append(" budget=").append(info.budgetAmount)
+            .append(" real=").append(info.observedAmount)
+            .append(" planned=").append(info.plannedAmount).append("\n");
+        }
+      }
+      return builder.toString();
+    }
+
+    public void correct(GlobRepository repository) {
+      for (Integer seriesId : infos.keySet()) {
+        List<Info> infoList = infos.get(seriesId);
+        for (Info info : infoList) {
+          GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
+            .findByIndex(Transaction.MONTH, info.monthId).getGlobs()
+            .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, true), repository);
+          Iterator<Glob> iterator = transactions.iterator();
+          if (iterator.hasNext()) {
+            Glob transaction = iterator.next();
+            if (info.observedAmount >= info.budgetAmount) {
+              repository.delete(transaction.getKey());
+              repository.update(Key.create(SeriesBudget.TYPE, info.seriesBudgetId), SeriesBudget.OVERRUN_AMOUNT,
+                                info.budgetAmount - info.observedAmount);
+            }
+            else {
+              repository.update(transaction.getKey(), Transaction.AMOUNT,
+                                info.budgetAmount - info.observedAmount);
+            }
+            while (iterator.hasNext()) {
+              repository.delete(iterator.next().getKey());
+            }
+          }
+          else {
+            if (info.observedAmount >= info.budgetAmount) {
+              repository.update(Key.create(SeriesBudget.TYPE, info.seriesBudgetId), SeriesBudget.OVERRUN_AMOUNT,
+                                info.budgetAmount - info.observedAmount);
+            }
+            else {
+              Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+              SeriesBudgetUpdateTransactionTrigger
+                .createPlannedTransaction(series, repository, info.monthId, series.get(Series.DAY),
+                                          info.budgetAmount - info.observedAmount);
+            }
+          }
+        }
+      }
+    }
+
+    public void addError(Integer seriesBudgetId, Integer seriesID, Integer monthId, Double plannedAmount,
+                         Double observedAMount, Double budgetAmount) {
+      infos.put(seriesID, new Info(seriesBudgetId, monthId, plannedAmount, observedAMount, budgetAmount));
+    }
+
+    static class Info {
+      private Integer seriesBudgetId;
+      Integer monthId;
+      private Double plannedAmount;
+      private Double observedAmount;
+      private Double budgetAmount;
+
+      public Info(Integer seriesBudgetId, Integer monthId, Double plannedAmount, Double observedAmount, Double budgetAmount) {
+        this.seriesBudgetId = seriesBudgetId;
+        this.monthId = monthId;
+        this.plannedAmount = plannedAmount;
+        this.observedAmount = observedAmount;
+        this.budgetAmount = budgetAmount;
+      }
     }
   }
 }

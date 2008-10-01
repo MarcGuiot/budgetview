@@ -4,9 +4,14 @@ import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 
 public class InitialCategories {
   public static void run(GlobRepository repository) {
+
+    if (repository.find(Key.create(Category.TYPE, Category.ALL)) != null) {
+      return;
+    }
 
     MasterCategory[] masterCategories = MasterCategory.values();
     for (MasterCategory master : masterCategories) {

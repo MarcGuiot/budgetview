@@ -5,6 +5,7 @@ import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
+import org.designup.picsou.gui.upgrade.UpgradeService;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
@@ -71,11 +72,7 @@ public class PicsouInit {
     repository.addTrigger(new OccasionalSeriesStatTrigger());
 
     if (!newUser) {
-      repository.create(User.TYPE,
-                        value(User.ID, User.SINGLETON_ID),
-                        value(User.NAME, user));
-      repository.create(ServerInformation.KEY,
-                        value(ServerInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.CONFIG_VERSION));
+      repository.create(User.KEY, value(User.NAME, user));
     }
     MutableChangeSet changeSet = new DefaultChangeSet();
     try {
@@ -92,37 +89,57 @@ public class PicsouInit {
       throw new InvalidData(Lang.get("login.data.load.fail"), e);
     }
     serverAccess.applyChanges(changeSet, repository);
-    if (newUser) {
-      try {
-        repository.enterBulkDispatchingMode();
-        createDataForNewUser(user, repository);
-      }
-      finally {
-        repository.completeBulkDispatchingMode();
-      }
+    Glob versionInfo;
+    try {
+      repository.enterBulkDispatchingMode();
+      versionInfo = repository.find(VersionInformation.KEY);
+      createDataForNewUser(user, repository);
+    }
+    finally {
+      repository.completeBulkDispatchingMode();
     }
 
     initDirectory(repository);
     if (!directory.get(ConfigService.class).loadConfigFileFromLastestJar(directory, repository)) {
-      directory.get(TransactionAnalyzerFactory.class).load(this.getClass().getClassLoader(),
-                                                           PicsouApplication.JAR_VERSION);
+      directory.get(TransactionAnalyzerFactory.class)
+        .load(this.getClass().getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION);
     }
+
+    checkForUpgrade(repository, versionInfo == null && !newUser);
+
     LicenseCheckerThread licenseCheckerThread = new LicenseCheckerThread(directory, repository);
     licenseCheckerThread.setDaemon(true);
     licenseCheckerThread.start();
   }
 
+  private void checkForUpgrade(GlobRepository repository, boolean forceUpgrade) {
+    Glob version = repository.get(VersionInformation.KEY);
+    if (!version.get(VersionInformation.CURRENT_JAR_VERSION).equals(PicsouApplication.JAR_VERSION)
+        || forceUpgrade) {
+      directory.get(UpgradeService.class).upgrade(repository, version);
+    }
+
+    if (!version.get(VersionInformation.CURRENT_BANK_CONFIG_VERSION).equals(version.get(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION))
+        || forceUpgrade) {
+      directory.get(UpgradeService.class).applyFilter(repository, version);
+    }
+  }
+
   public static void createDataForNewUser(String user, GlobRepository repository) {
-    repository.create(User.TYPE,
-                      value(User.ID, User.SINGLETON_ID),
-                      value(User.NAME, user));
-    repository.create(ServerInformation.KEY,
-                      value(ServerInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.CONFIG_VERSION));
-    repository.create(UserPreferences.KEY);
-    repository.create(CurrentMonth.KEY,
-                      FieldValue.value(CurrentMonth.MONTH_ID, 0),
-                      FieldValue.value(CurrentMonth.DAY, 0));
-    repository.create(Account.SUMMARY_KEY);
+    repository.findOrCreate(User.KEY,
+                            value(User.NAME, user));
+    repository.findOrCreate(VersionInformation.KEY,
+                            value(VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION),
+                            value(VersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
+                            value(VersionInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION),
+                            value(VersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),
+                            value(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
+                            value(VersionInformation.LATEST_AVALAIBLE_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
+    repository.findOrCreate(UserPreferences.KEY);
+    repository.findOrCreate(CurrentMonth.KEY,
+                            FieldValue.value(CurrentMonth.MONTH_ID, 0),
+                            FieldValue.value(CurrentMonth.DAY, 0));
+    repository.findOrCreate(Account.SUMMARY_KEY);
     InitialCategories.run(repository);
     InitialSeries.run(repository);
   }

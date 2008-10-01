@@ -61,10 +61,9 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         GlobList transactions =
-          repository.findByIndex(Transaction.MONTH_INDEX, previousValues.get(SeriesBudget.MONTH))
-            .filterSelf(GlobMatchers.and(
-              GlobMatchers.fieldEquals(Transaction.PLANNED, true),
-              GlobMatchers.fieldEquals(Transaction.SERIES, previousValues.get(SeriesBudget.SERIES))), repository)
+          repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, previousValues.get(SeriesBudget.SERIES))
+            .findByIndex(Transaction.MONTH, previousValues.get(SeriesBudget.MONTH)).getGlobs()
+            .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, true), repository)
             .sort(Transaction.DAY); //??
         repository.delete(transactions);
       }
@@ -82,11 +81,10 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
 
   private GlobList getPlannedTransactions(Key key, GlobRepository repository) {
     Glob seriesBudget = repository.get(key);
-    return repository.findByIndex(Transaction.MONTH_INDEX, seriesBudget.get(SeriesBudget.MONTH))
-      .filterSelf(GlobMatchers.and(
-        GlobMatchers.fieldEquals(Transaction.PLANNED, true),
-        GlobMatchers.fieldEquals(Transaction.SERIES, seriesBudget.get(SeriesBudget.SERIES))),
-                  repository).sort(Transaction.DAY);
+    return repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesBudget.get(SeriesBudget.SERIES))
+      .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
+      .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, true), repository)
+      .sort(Transaction.DAY);
   }
 
   public static void createPlannedTransaction(Glob series, GlobRepository repository, int monthId,

@@ -281,9 +281,10 @@ public class SeriesEditionDialog {
 
     beginDateCalendar = new CalendarAction(Series.FIRST_MONTH, -1) {
       protected Integer getMonthLimit() {
-        GlobList transactions = localRepository.findByIndex(Transaction.SERIES_INDEX, currentSeries.get(Series.ID))
-          .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, false), localRepository)
-          .sort(Transaction.MONTH);
+        GlobList transactions =
+          localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, currentSeries.get(Series.ID))
+            .getGlobs().filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, false), localRepository)
+            .sort(Transaction.MONTH);
         Glob firstMonth = transactions.getFirst();
         if (firstMonth == null) {
           return currentSeries.get(Series.LAST_MONTH);
@@ -309,8 +310,9 @@ public class SeriesEditionDialog {
 
     endDateCalendar = new CalendarAction(Series.LAST_MONTH, 1) {
       protected Integer getMonthLimit() {
-        GlobList transactions = localRepository.findByIndex(Transaction.SERIES_INDEX, currentSeries.get(Series.ID))
-          .sort(Transaction.MONTH);
+        GlobList transactions =
+          localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, currentSeries.get(Series.ID)).getGlobs()
+            .sort(Transaction.MONTH);
         Glob lastMonth = transactions.getLast();
         if (lastMonth == null) {
           return currentSeries.get(Series.FIRST_MONTH);
@@ -444,8 +446,8 @@ public class SeriesEditionDialog {
       globsToLoad.add(series);
       globsToLoad.addAll(repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
                                                 series.get(Series.ID)).getGlobs());
-      globsToLoad.addAll(repository.findByIndex(Transaction.SERIES_INDEX, series.get(Series.ID))
-        .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, false), repository));
+      globsToLoad.addAll(repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
+        .getGlobs().filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, false), repository));
     }
     localRepository.reset(globsToLoad, SeriesBudget.TYPE, Series.TYPE, Transaction.TYPE);
   }

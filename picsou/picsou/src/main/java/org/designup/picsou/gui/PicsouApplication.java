@@ -14,6 +14,7 @@ import org.designup.picsou.gui.plaf.WavePanelUI;
 import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.upgrade.UpgradeService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.utils.Lang;
@@ -47,11 +48,11 @@ import java.util.regex.Pattern;
 public class PicsouApplication {
 
   public static final Long APPLICATION_VERSION = 1L;
-  public static final Long JAR_VERSION = 1L;
-  public static final Long CONFIG_VERSION = 1L;
+  public static final Long JAR_VERSION = 2L;
+  public static final Long BANK_CONFIG_VERSION = 2L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String CONFIG_DIRECTORY = "configs";
-  public static final String PICSOU = "picsou";
+  public static final String PICSOU = "fourmics";
   private static final String CONFIG = "config";
   private static final Pattern CONFIG_FILTER = Pattern.compile(CONFIG + "[0-9][0-9]*" + "\\.jar");
 
@@ -210,7 +211,7 @@ public class PicsouApplication {
   }
 
   public static void clearRepository() {
-    Files.deleteSubtree(new File(getLocalPrevaylerPath()));
+    Files.deleteSubtree(new File(getPicsouPath()));
   }
 
   public static void clearRepositoryIfNeeded() {
@@ -243,6 +244,7 @@ public class PicsouApplication {
   public static Directory createDirectory() throws IOException {
     Directory directory = new DefaultDirectory();
     directory.add(new TimeService());
+    directory.add(new UpgradeService(directory));
     directory.add(DescriptionService.class, new PicsouDescriptionService());
     directory.add(GlobModel.class, PicsouGuiModel.get());
     directory.add(SelectionService.class, new SelectionService());
@@ -252,18 +254,17 @@ public class PicsouApplication {
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
     directory.add(initUiService());
 
-    Long localConfigVersion = getConfigVersion();
-    String configPath = getPicsouPath() + "/config";
+    Long localConfigVersion;
+    String configPath = getPicsouConfigPath();
     File lastJar = findLastJar(configPath);
     if (lastJar != null) {
       localConfigVersion = extractVersion(lastJar.getName());
     }
     else {
-      localConfigVersion = CONFIG_VERSION;
+      localConfigVersion = BANK_CONFIG_VERSION;
     }
 
-    directory.add(new ConfigService(APPLICATION_VERSION, JAR_VERSION, localConfigVersion,
-                                    lastJar));
+    directory.add(new ConfigService(APPLICATION_VERSION, JAR_VERSION, localConfigVersion, lastJar));
 
     UIManager.put("ColorService", directory.get(ColorService.class));
 
@@ -286,15 +287,6 @@ public class PicsouApplication {
 
   private static String dot() {
     return ".";
-  }
-
-  static private Long getConfigVersion() {
-    String configPath = getPicsouPath() + "/config";
-    File lastJar = findLastJar(configPath);
-    if (lastJar != null) {
-      return extractVersion(lastJar.getName());
-    }
-    return PicsouApplication.CONFIG_VERSION;
   }
 
   static private File findLastJar(String path) {

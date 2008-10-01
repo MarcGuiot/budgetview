@@ -151,11 +151,12 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
     double newAmount = updateStat(stat, multiplier, amount, repository);
 
     if (newAmount == 0.0) {
-      GlobList transactions = repository.findByIndex(Transaction.MONTH_INDEX, monthId)
-        .filterSelf(and(
-          fieldEquals(Transaction.CATEGORY, categoryId),
-          fieldEquals(Transaction.SERIES, Series.OCCASIONAL_SERIES_ID),
-          fieldEquals(Transaction.PLANNED, false)), repository);
+      GlobList transactions =
+        repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.OCCASIONAL_SERIES_ID)
+          .findByIndex(Transaction.MONTH, monthId).getGlobs()
+          .filterSelf(and(
+            fieldEquals(Transaction.CATEGORY, categoryId),
+            fieldEquals(Transaction.PLANNED, false)), repository);
       if (transactions.isEmpty()) {
         repository.delete(stat.getKey());
       }

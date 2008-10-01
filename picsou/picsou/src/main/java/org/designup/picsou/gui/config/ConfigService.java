@@ -8,9 +8,9 @@ import org.designup.picsou.client.http.HttpsClientTransport;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
-import org.designup.picsou.model.ServerInformation;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.model.VersionInformation;
 import org.designup.picsou.utils.Inline;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Log;
@@ -64,13 +64,12 @@ public class ConfigService {
   private DownloadThread dowloadConfigThread;
   private ConfigReceive configReceive;
   private JarReceive jarReceive;
-  private File pathToconfigFileToLoad;
+  private File currentConfigFile;
   private byte[] repoId;
   public static int RETRY_PERIOD = 10000;
 
-  public ConfigService(Long applicationVersion, Long jarVersion, Long localConfigVersion,
-                       File pathToconfigFileToLoad) {
-    this.pathToconfigFileToLoad = pathToconfigFileToLoad;
+  public ConfigService(Long applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {
+    this.currentConfigFile = currentConfigFile;
     Utils.beginRemove();
     URL = System.getProperty(COM_PICSOU_LICENCE_URL);
     FTP_URL = System.getProperty(COM_PICSOU_LICENCE_FTP_URL);
@@ -310,8 +309,8 @@ public class ConfigService {
     if (configReceive != null) {
       configLoaded = configReceive.set(directory, repository);
     }
-    if (!configLoaded && pathToconfigFileToLoad != null) {
-      configLoaded = loadConfigFile(pathToconfigFileToLoad, localConfigVersion, directory);
+    if (!configLoaded && currentConfigFile != null) {
+      configLoaded = loadConfigFile(currentConfigFile, localConfigVersion, repository, directory);
     }
     if (jarReceive != null) {
       jarReceive.set(directory, repository);
@@ -360,11 +359,11 @@ public class ConfigService {
   private class ConfigReceive extends AbstractJarReceived {
 
     protected void loadJar(File jarFile, long version) {
-      loadConfigFile(jarFile, version, directory);
+      loadConfigFile(jarFile, version, repository, directory);
     }
   }
 
-  private boolean loadConfigFile(File jarFile, long version, Directory directory) {
+  private boolean loadConfigFile(File jarFile, long version, GlobRepository repository, Directory directory) {
     try {
       final JarFile jar = new JarFile(jarFile);
       TransactionAnalyzerFactory.Loader loader = new TransactionAnalyzerFactory.Loader() {
@@ -379,6 +378,7 @@ public class ConfigService {
         }
       };
       directory.get(TransactionAnalyzerFactory.class).load(loader, version);
+      repository.update(VersionInformation.KEY, VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, version);
       return true;
     }
     catch (Exception e) {
@@ -389,7 +389,7 @@ public class ConfigService {
   private static class JarReceive extends AbstractJarReceived {
 
     protected void loadJar(File jarFile, long version) {
-      repository.update(ServerInformation.KEY, ServerInformation.LATEST_SOFTWARE_VERSION, version);
+      repository.update(VersionInformation.KEY, VersionInformation.LATEST_AVALAIBLE_JAR_VERSION, version);
     }
   }
 

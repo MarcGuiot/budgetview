@@ -38,6 +38,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected BudgetViewChecker budgetView;
   protected CategorizationChecker categorization;
   protected SeriesViewChecker series;
+  protected InfoChecker infochecker;
+
   private PicsouApplication picsouApplication;
   private Date currentDate = Dates.parse("2008/08/31");
   private String isInMemory = "true";
@@ -117,6 +119,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     categorization = new CategorizationChecker(mainWindow);
     series = new SeriesViewChecker(mainWindow);
     license = new LicenseChecker(mainWindow);
+    infochecker = new InfoChecker(mainWindow);
   }
 
   protected void tearDown() throws Exception {
@@ -141,6 +144,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     categorization = null;
     series = null;
     license = null;
+    infochecker = null;
     picsouApplication.shutdown();
     picsouApplication = null;
   }

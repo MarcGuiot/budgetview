@@ -1,5 +1,6 @@
 package org.designup.picsou.gui;
 
+import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ExportFileAction;
@@ -18,6 +19,7 @@ import org.designup.picsou.gui.graphics.HistoricalChart;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
+import org.designup.picsou.gui.monthsummary.InfoView;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.gui.time.TimeView;
@@ -41,7 +43,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldContainsIgnoreCase;
+import static org.globsframework.model.utils.GlobMatchers.or;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -50,8 +53,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.StringWriter;
-
-import net.roydesign.mac.MRJAdapter;
 
 public class MainPanel {
   private PicsouFrame parent;
@@ -96,7 +97,7 @@ public class MainPanel {
     exportFileAction = new ExportFileAction(repository, directory);
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(parent, repository, directory);
-    check = new CheckRepositoryAction(repository);
+    check = new CheckRepositoryAction(directory, repository);
     exitAction = new ExitAction(directory);
 
     builder.add("editCategories", new EditCategoriesAction(repository, directory));
@@ -116,6 +117,7 @@ public class MainPanel {
       transactionView,
       timeView,
       categoryView,
+      new InfoView(repository, directory),
       new AccountView(repository, directory),
       monthSummary,
       new BalanceSummaryView(repository, directory),
@@ -244,10 +246,12 @@ public class MainPanel {
   }
 
   private static class CheckRepositoryAction extends AbstractAction {
+    private Directory directory;
     private GlobRepository repository;
 
-    public CheckRepositoryAction(GlobRepository repository) {
+    public CheckRepositoryAction(Directory directory, GlobRepository repository) {
       super("check");
+      this.directory = directory;
       this.repository = repository;
     }
 
@@ -257,7 +261,8 @@ public class MainPanel {
         java.util.List<GlobStateChecker.Correcteur> correcteurs = globStateChecker.getCorrecteurs();
         StringWriter stringWriter = new StringWriter();
         for (GlobStateChecker.Correcteur correcteur : correcteurs) {
-          stringWriter.append(correcteur.info()).append("\n-----------------------------------------\n");
+          stringWriter.append(correcteur.info(repository, directory))
+            .append("\n-----------------------------------------\n");
         }
         throw new RuntimeException(stringWriter.toString());
       }

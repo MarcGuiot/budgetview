@@ -34,8 +34,8 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
     GlobList seriesBudgets =
       repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
         .getGlobs().sort(SeriesBudget.MONTH);
-    Iterator<Glob> transactions = repository.findByIndex(Transaction.SERIES_INDEX, seriesId)
-      .sort(TransactionComparator.ASCENDING).iterator();
+    Iterator<Glob> transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
+      .getGlobs().sort(TransactionComparator.ASCENDING).iterator();
     Glob currentTransaction = transactions.hasNext() ? transactions.next() : null;
     Double amount = 0.;
     boolean firstUpdate = false;

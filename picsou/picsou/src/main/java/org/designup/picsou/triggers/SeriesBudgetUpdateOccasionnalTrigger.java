@@ -56,9 +56,9 @@ public class SeriesBudgetUpdateOccasionnalTrigger implements ChangeSetListener {
     if (BudgetArea.OCCASIONAL_EXPENSES.getId().equals(series.get(Series.BUDGET_AREA))) {
       return;
     }
-    GlobList seriesBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
-                                                   Series.OCCASIONAL_SERIES_ID)
-      .findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
+    GlobList seriesBudget =
+      repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, Series.OCCASIONAL_SERIES_ID)
+        .findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
     if (seriesBudget.isEmpty()) {
       throw new RuntimeException("SeriesBudgetUpdateOccasionnalTrigger.update " + monthId);
     }
