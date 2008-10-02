@@ -44,9 +44,9 @@ public class Files {
     }
   }
 
-  public static String loadStreamToString(InputStream stream) throws IOFailure {
+  public static String loadStreamToString(InputStream stream, final String charsetName) throws IOFailure {
     try {
-      Reader reader = new BufferedReader(new InputStreamReader(stream));
+      Reader reader = new BufferedReader(new InputStreamReader(stream, charsetName));
       StringBuilder result = new StringBuilder();
       char[] buffer = new char[1024];
       int count = reader.read(buffer);

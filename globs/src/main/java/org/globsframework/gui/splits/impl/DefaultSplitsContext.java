@@ -20,6 +20,10 @@ public class DefaultSplitsContext extends AbstractSplitsContext {
     this.referenceClass = referenceClass;
   }
 
+  public Directory getDirectory() {
+    return directory;
+  }
+
   public <T> T getService(Class<T> serviceClass) {
     return directory.get(serviceClass);
   }

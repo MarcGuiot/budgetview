@@ -18,6 +18,13 @@ public class UIService {
   private Map<String, UIFactory> factories = new HashMap<String, UIFactory>();
   private Map<String, Class> classes = new HashMap<String, Class>();
 
+  public UIService() {
+  }
+
+  public UIService(UIService parent) {
+    classes.putAll(parent.classes);
+  }
+
   public ComponentUI getUI(String name, SplitsContext context) {
     UIFactory factory = factories.get(name);
     if (factory == null) {
@@ -51,6 +58,11 @@ public class UIService {
     }
 
     factories.put(name, new UIFactory(uiClass, properties));
+  }
+
+  public void addAll(UIService other) {
+    factories.putAll(other.factories);
+    classes.putAll(other.classes);
   }
 
   private static class UIFactory {
