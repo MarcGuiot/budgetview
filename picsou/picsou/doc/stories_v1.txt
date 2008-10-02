@@ -15,14 +15,6 @@
 
 - categoryView : afficher un message quand la categorisation est assez avancee (90%) ?
 
-- bug reduction dans la barre des taches windows
-
-- bug calcul solde total pour ghosts (le solde augmente au lieu de diminuer)
-
-- BalanceSumaryView : ajouter les enveloppes
-
-- suppression des vieux fichiers de log
-
 ------
 
 - ordre des series : prevu decroissant

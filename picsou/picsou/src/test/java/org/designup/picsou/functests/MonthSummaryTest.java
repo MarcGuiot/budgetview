@@ -21,6 +21,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkNoDataMessage("You must import your financial operations");
     monthSummary.openHelp().checkContains("import").close();
     balanceSummary
+      .checkNoTotal()
       .checkNothingShown();
 
     String file = OfxBuilder.init(this)
@@ -110,12 +111,14 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkBalance(1000.00)
       .checkIncome(1500.00)
       .checkFixed(-1529.90)
+      .checkEnvelope(-80)
       .checkSavings(0.00)
       .checkProjects(0.00)
-      .checkTotal(970.10);
+      .checkTotal(890.10);
   }
 
   public void testTwoMonths() throws Exception {
+    operations.getPreferences().changeFutureMonth(12).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/07/07", -29.90, "free telecom")
       .addTransaction("2008/07/08", -1500, "Loyer")
@@ -146,6 +149,12 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkEnvelope(80)
       .checkOccasional(10);
 
+
+    balanceSummary
+      .checkMessage("Balance at end of the month")
+      .checkTotal(1529.90)
+      .checkNothingShown();
+
     timeline.selectMonth("2008/08");
 
     views.selectCategorization();
@@ -161,6 +170,14 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkEnvelope(0)
       .checkOccasional(0);
 
+    balanceSummary.checkEnvelope(-80)
+      .checkMessage("Balance")
+      .checkBalance(0.)
+      .checkFixed(0)
+      .checkEnvelope(-80)
+      .checkIncome(1500)
+      .checkTotal(1420.);
+
     timeline.selectMonths("2008/07", "2008/08");
     monthSummary
       .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 1500 + 29.90), false)
@@ -168,6 +185,19 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkRecurring(1500 + 29.90 + 1500 + 29.90)
       .checkEnvelope(80)
       .checkOccasional(10);
+    balanceSummary.checkEnvelope(-80)
+      .checkBalance(0.)
+      .checkFixed(0)
+      .checkEnvelope(-80)
+      .checkIncome(1500)
+      .checkTotal(1420.);
+
+    timeline.selectMonth("2008/09");
+    balanceSummary.checkEnvelope(-80)
+      .checkBalance(1420.)
+      .checkFixed(-1529.90)
+      .checkIncome(1500)
+      .checkTotal(1420 + 1500 - 1529.90 - 80);
   }
 
   public void testUncategorized() throws Exception {

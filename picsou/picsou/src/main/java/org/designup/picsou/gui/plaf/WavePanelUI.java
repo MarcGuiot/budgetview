@@ -54,7 +54,7 @@ public class WavePanelUI extends BasicPanelUI {
     width = dimension.width;
     height = dimension.height;
 
-    image = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
+    image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     Graphics2D g2 = image.createGraphics();
 
     Rectangle rect = new Rectangle(0, 0, width, height);

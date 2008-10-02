@@ -197,7 +197,7 @@ public class BalanceTrigger implements ChangeSetListener {
         repository.update(transaction.getKey(), Transaction.BALANCE, balance);
       }
       else {
-        balance -= transaction.get(Transaction.AMOUNT);
+        balance += transaction.get(Transaction.AMOUNT);
         repository.update(transaction.getKey(), Transaction.BALANCE, balance);
       }
     }

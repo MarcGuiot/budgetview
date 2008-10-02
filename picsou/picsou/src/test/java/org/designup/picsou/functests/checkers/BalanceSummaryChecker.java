@@ -16,7 +16,6 @@ public class BalanceSummaryChecker extends DataChecker {
   public void checkNothingShown() {
     Panel panel = getPanel();
     UISpecAssert.assertFalse(panel.getPanel("content").isVisible());
-    UISpecAssert.assertTrue(panel.getTextBox("totalLabel").textIsEmpty());
   }
 
   public BalanceSummaryChecker checkBalance(double amount) {
@@ -39,9 +38,25 @@ public class BalanceSummaryChecker extends DataChecker {
     return check(amount, "projectsLabel");
   }
 
+  public BalanceSummaryChecker checkEnvelope(double amount) {
+    return check(amount, "envelopeLabel");
+  }
+
   public BalanceSummaryChecker checkTotal(double amount) {
     return check(amount, "totalLabel");
   }
+
+  public BalanceSummaryChecker checkNoTotal() {
+    TextBox textBox = getPanel().getTextBox("totalLabel");
+    assertThat(textBox.textEquals(""));
+    return this;
+  }
+
+  public BalanceSummaryChecker checkMessage(String message) {
+    assertThat(getPanel().getTextBox("amountSummaryLabel").textEquals(message));
+    return this;
+  }
+
   private Panel getPanel() {
     return window.getPanel("balanceSummary");
   }

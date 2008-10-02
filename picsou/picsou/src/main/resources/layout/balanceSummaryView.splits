@@ -5,7 +5,7 @@
     <style selector="label#message" foreground="balanceSummary.message"
            fill="horizontal" anchor="center" horizontalAlignment="left"
            font="-,plain,10" marginBottom="5"/>
-    
+
     <style selector="label.amountLabel" foreground="balanceSummary.label"
            fill="horizontal" anchor="center" horizontalAlignment="right"/>
     <style selector="label.amount" foreground="balanceSummary.amount"
@@ -21,7 +21,7 @@
 
       <column styleClass="innerBlock">
 
-        <label text="$balanceSummary.amount.total" styleClass="totalAmountTitle"/>
+        <label ref="amountSummaryLabel" styleClass="totalAmountTitle"/>
         <label ref="totalLabel" styleClass="totalAmount"/>
 
         <panel styleClass="innerBlockBackground">
@@ -42,6 +42,9 @@
 
               <label gridPos="(0,4)" text="$balanceSummary.amount.projects" styleClass="amountLabel"/>
               <label gridPos="(1,4)" ref="projectsLabel" styleClass="amount"/>
+
+              <label gridPos="(0,5)" text="$balanceSummary.amount.envelope" styleClass="amountLabel"/>
+              <label gridPos="(1,5)" ref="envelopeLabel" styleClass="amount"/>
             </grid>
             <filler fill="vertical"/>
           </column>

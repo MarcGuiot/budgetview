@@ -14,6 +14,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   private Table table;
 
   protected void setUp() throws Exception {
+    setCurrentMonth("2006/07");
     super.setUp();
     OfxBuilder
       .init(this)
@@ -179,6 +180,26 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.LEISURES)
       .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00, MasterCategory.BANK)
       .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.LEISURES)
+      .check();
+  }
+
+  public void testBalanceOfFuture() throws Exception {
+    views.selectCategorization();
+    categorization.setEnvelope("essence", "Voiture", MasterCategory.TRANSPORTS, true);
+    categorization.setRecurring("nounou", "Nounou", MasterCategory.EDUCATION, true);
+    views.selectHome();
+    accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_ID, 500, "nounou");
+    views.selectData();
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .add("Nounou", -100.00, 160.0)
+      .add("Voiture", -70.00, 260.0)
+      .add("Nounou", -100.00, 330.0)
+      .add("Voiture", -70.00, 430.0)
+      .add("nounou", -100.00, 500.00, 500.00)
+      .add("peage", -30.00, 600.00, 600.00)
+      .add("sg", -200.00, 630.00, 630.00)
+      .add("essence", -70.00, 830.00, 830.00)
       .check();
   }
 

@@ -116,6 +116,14 @@ public class TransactionChecker extends ViewChecker {
       return TransactionChecker.this.getTable();
     }
 
+    public TransactionAmountChecker add(String label, double amount, double solde) {
+      expected.add(new Object[]{label,
+                                TransactionChecker.this.toString(amount),
+                                "",
+                                TransactionChecker.this.toString(solde)});
+      return this;
+    }
+
     public TransactionAmountChecker add(String label, double amount, double accountSolde, double solde) {
       expected.add(new Object[]{label,
                                 TransactionChecker.this.toString(amount),
