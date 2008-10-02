@@ -17,8 +17,8 @@ import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
-import javax.swing.*;
 import javax.swing.AbstractButton;
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +114,9 @@ public class CategorizationChecker extends DataChecker {
         .setAmount("0")
         .validate();
     }
-    panel.getToggleButton(name).click();
+    else {
+      panel.getToggleButton(name).click();
+    }
     return this;
   }
 
@@ -126,7 +128,9 @@ public class CategorizationChecker extends DataChecker {
         .setCategory(MasterCategory.INCOME)
         .validate();
     }
-    panel.getToggleButton(name).click();
+    else {
+      panel.getToggleButton(name).click();
+    }
     return this;
   }
 
@@ -196,7 +200,9 @@ public class CategorizationChecker extends DataChecker {
         .setCategory(category)
         .validate();
     }
-    panel.getToggleButton(name).click();
+    else {
+      panel.getToggleButton(name).click();
+    }
     return this;
   }
 
@@ -298,9 +304,10 @@ public class CategorizationChecker extends DataChecker {
         .setCategory(category)
         .validate();
     }
-
-    String toggleName = envelopeName + ":" + category.getName();
-    panel.getToggleButton(toggleName).click();
+    else {
+      String toggleName = envelopeName + ":" + category.getName();
+      panel.getToggleButton(toggleName).click();
+    }
     return this;
   }
 
@@ -336,7 +343,9 @@ public class CategorizationChecker extends DataChecker {
         .setCategory(category)
         .validate();
     }
-    panel.getToggleButton(name).click();
+    else {
+      panel.getToggleButton(name).click();
+    }
     return this;
   }
 
@@ -359,7 +368,9 @@ public class CategorizationChecker extends DataChecker {
         .setCategory(category)
         .validate();
     }
-    panel.getToggleButton(savingsName).click();
+    else {
+      panel.getToggleButton(savingsName).click();
+    }
     return this;
   }
 
@@ -554,17 +565,23 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   public void checkAutoSelectSimilarEnabled(boolean enabled) {
     assertEquals(enabled, getPanel().getCheckBox("similar").isSelected());
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   public void enableAutoSelectSimilar() {
     getPanel().getCheckBox("similar").select();
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   public void disableAutoSelectSimilar() {
     getPanel().getCheckBox("similar").unselect();
   }
