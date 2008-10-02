@@ -7,24 +7,43 @@
 
 - CategorizationView : bug serie qui reste selectionnee apres changement de transaction (?)
 
-- tooltips jauges
-
 - tooltips monthSummaryView / balance
 
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
 
 - categoryView : afficher un message quand la categorisation est assez avancee (90%) ?
 
-- bug reduction dans la barre des taches windows
-
 - bug calcul solde total pour ghosts (le solde augmente au lieu de diminuer)
-
+- BalanceSumaryView dans le futur
 - BalanceSumaryView : ajouter les enveloppes
 
 - suppression des vieux fichiers de log
 
+- AccountEditionDialog : Enter pour valider le montant et fermer la fenetre
+
+
 ------
+
+- Gestion des licences
+
+* Afficher SLA au premier lancement (repository vide) + creation compte
+
+*** Edition compte (renommage)
+** BalanceSumary : Qu'affiche-t-on dans le passe et le futur ? Label à changer ?
+** Mettre en rouge les depassements
+** Mettre en rouge un montant occasional prevu a zero
+*** Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
+*** Revoir libelle des transactions planned ("Prevision 'xxx'")
+*** TransactionView : Afficher la somme (total ou multi-selection)
+** TransactionView : Filtrage transactions par Compte
+* TransactionView : Filtrage transactions par TransactionType
+* TransactionView : click sur serie d'une planned : ouvrir SED
+
+
+- Format des montants : mettre des espaces pour separer les milliers
 
 - ordre des series : prevu decroissant
 
-- back/forward
+- tests d'undo/redo
+
+- back/forward ?

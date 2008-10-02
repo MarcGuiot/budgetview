@@ -10,7 +10,8 @@ public class GaugeTest extends TestCase {
       .checkFill(0)
       .checkOverrun(0, false)
       .checkEmpty(1.0)
-      .checkWarningNotShown();
+      .checkWarningNotShown()
+      .checkTooltip("No value defined");
   }
 
   public void testStandardCases() throws Exception {
@@ -19,21 +20,24 @@ public class GaugeTest extends TestCase {
       .checkFill(0)
       .checkOverrun(0, false)
       .checkEmpty(1.0)
-      .checkWarningNotShown();
+      .checkWarningNotShown()
+      .checkTooltip("Remainder: 10.00");
 
     init()
       .set(5, 10)
       .checkFill(0.5)
       .checkOverrun(0, false)
       .checkEmpty(0.5)
-      .checkWarningNotShown();
+      .checkWarningNotShown()
+      .checkTooltip("Remainder: 5.00");
 
     init()
       .set(10, 10)
       .checkFill(1.0)
       .checkOverrun(0, false)
       .checkEmpty(0)
-      .checkWarningNotShown();
+      .checkWarningNotShown()
+      .checkTooltip("Complete");
   }
 
   public void testOverrun() throws Exception {
@@ -42,28 +46,32 @@ public class GaugeTest extends TestCase {
       .checkFill(0.66)
       .checkOverrun(0.33, true)
       .checkEmpty(0)
-      .checkWarningShown();
+      .checkWarningShown()
+      .checkTooltip("Overrun: 5.00");
 
     init(true, false, true)
       .set(15, 10)
       .checkFill(0.66)
       .checkOverrun(0.33, true)
       .checkEmpty(0)
-      .checkWarningNotShown();
+      .checkWarningNotShown()
+      .checkTooltip("Overrun: 5.00");
 
     init(false, true, true)
       .set(15, 10)
       .checkFill(0.66)
       .checkOverrun(0.33, false)
       .checkEmpty(0)
-      .checkWarningNotShown();
+      .checkWarningNotShown()
+      .checkTooltip("Extra: 5.00");
 
     init(false, false, true)
       .set(15, 10)
       .checkFill(0.66)
       .checkOverrun(0.33, false)
       .checkEmpty(0)
-      .checkWarningNotShown();
+      .checkWarningNotShown()
+      .checkTooltip("Extra: 5.00");
   }
 
   public void testInvertedSign() throws Exception {
@@ -72,14 +80,24 @@ public class GaugeTest extends TestCase {
       .checkFill(0.0)
       .checkOverrun(0.33, true)
       .checkEmpty(0.66)
-      .checkWarningShown();
+      .checkWarningShown()
+      .checkTooltip("Inverted: 5.00");
 
     init(true, false, true)
       .set(-5, 10)
       .checkFill(0.0)
       .checkOverrun(0.33, true)
       .checkEmpty(0.66)
-      .checkWarningNotShown();
+      .checkWarningNotShown()
+      .checkTooltip("Inverted: 5.00");
+
+    init(true, false, false)
+      .set(-5, 10)
+      .checkFill(0.0)
+      .checkOverrun(0.33, true)
+      .checkEmpty(0.66)
+      .checkWarningNotShown()
+      .checkTooltip("Bonus: 5.00");
   }
 
   public void testNoTarget() throws Exception {
@@ -88,21 +106,24 @@ public class GaugeTest extends TestCase {
       .checkFill(0.0)
       .checkOverrun(1.0, true)
       .checkEmpty(0)
-      .checkWarningShown();
+      .checkWarningShown()
+      .checkTooltip("Overrun: 5.00");
 
     init(false, true, true)
       .set(5, 0)
       .checkFill(0.0)
       .checkOverrun(1.0, false)
       .checkEmpty(0)
-      .checkWarningNotShown();
+      .checkWarningNotShown()
+      .checkTooltip("Extra: 5.00");
 
     init(false, false, true)
       .set(5, 0)
       .checkFill(0.0)
       .checkOverrun(1.0, false)
       .checkEmpty(0)
-      .checkWarningNotShown();
+      .checkWarningNotShown()
+      .checkTooltip("Extra: 5.00");
   }
 
   public void testAmountsAreRoundedToTwoDecimals() throws Exception {
