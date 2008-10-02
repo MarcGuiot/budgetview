@@ -1,23 +1,25 @@
 package org.globsframework.gui.splits.layout;
 
-import org.globsframework.utils.Utils;
+import org.globsframework.gui.splits.exceptions.SplitsException;
 
 import java.awt.*;
 
 public enum Anchor {
-  CENTER(GridBagConstraints.CENTER),
-  EAST(GridBagConstraints.EAST),
-  WEST(GridBagConstraints.WEST),
-  NORTH(GridBagConstraints.NORTH),
-  NORTHEAST(GridBagConstraints.NORTHEAST),
-  NORTHWEST(GridBagConstraints.NORTHWEST),
-  SOUTH(GridBagConstraints.SOUTH),
-  SOUTHEAST(GridBagConstraints.SOUTHEAST),
-  SOUTHWEST(GridBagConstraints.SOUTHWEST);
+  CENTER("center", GridBagConstraints.CENTER),
+  EAST("east", GridBagConstraints.EAST),
+  WEST("west", GridBagConstraints.WEST),
+  NORTH("north", GridBagConstraints.NORTH),
+  NORTHEAST("northeast", GridBagConstraints.NORTHEAST),
+  NORTHWEST("northwest", GridBagConstraints.NORTHWEST),
+  SOUTH("south", GridBagConstraints.SOUTH),
+  SOUTHEAST("southeast", GridBagConstraints.SOUTHEAST),
+  SOUTHWEST("southwest", GridBagConstraints.SOUTHWEST);
 
+  private String name;
   private int value;
 
-  Anchor(int value) {
+  Anchor(String name, int value) {
+    this.name = name;
     this.value = value;
   }
 
@@ -39,6 +41,12 @@ public enum Anchor {
       return SOUTH;
     }
 
-    return Utils.toEnum(Anchor.class, anchor);
+    Anchor[] anchors = Anchor.values();
+    for (Anchor value : anchors) {
+      if (anchor.equalsIgnoreCase(value.name)) {
+        return value;
+      }
+    }
+    throw new SplitsException("No enum Anchor found for value: " + anchor);
   }
 }
