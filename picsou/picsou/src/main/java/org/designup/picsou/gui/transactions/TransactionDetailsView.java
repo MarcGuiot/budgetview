@@ -30,6 +30,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -76,9 +77,6 @@ public class TransactionDetailsView extends View {
                 GlobMultiLineTextView.init(Transaction.TYPE, repository, directory, new UserLabelStringifier())
                   .setAutoHideIfEmpty(true));
 
-    builder.add("userDate",
-                addLabel(new TransactionDateListStringifier(Transaction.MONTH, Transaction.DAY), true));
-
     builder.add("bankDate",
                 addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true)
                   .setAutoHideMatcher(new BankDateVisibilityMatcher()));
@@ -92,7 +90,7 @@ public class TransactionDetailsView extends View {
     builder.add("split", new SplitTransactionAction(repository, directory));
 
     builder.add("originalLabel",
-                GlobLabelView.init(Transaction.TYPE, repository, directory,
+                GlobMultiLineTextView.init(Transaction.TYPE, repository, directory,
                                    new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, "..."))
                   .setAutoHideMatcher(new OriginalLabelVisibilityMatcher()));
 

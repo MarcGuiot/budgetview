@@ -477,7 +477,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
       if (isSelected) {
         label.setForeground(Color.WHITE);
       }
-      else if (Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
+      else if ((transaction != null) && Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
         label.setForeground(transactionColorError);
       }
       else {

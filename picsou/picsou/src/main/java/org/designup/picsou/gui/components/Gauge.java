@@ -1,5 +1,8 @@
 package org.designup.picsou.gui.components;
 
+import org.designup.picsou.utils.Lang;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -50,6 +53,8 @@ public class Gauge extends JPanel {
 
     setMinimumSize(new Dimension(60, 28));
     setPreferredSize(new Dimension(200, 28));
+
+    setToolTip("gauge.unset");
   }
 
   public void setValues(double actualValue, double targetValue) {
@@ -70,6 +75,7 @@ public class Gauge extends JPanel {
       emptyPercent = 1;
       overrunError = false;
       warningShown = false;
+      setToolTip("gauge.unset");
     }
     else if (absTarget == 0) {
       fillPercent = 0;
@@ -77,6 +83,7 @@ public class Gauge extends JPanel {
       emptyPercent = 0;
       overrunError = overrunIsAnError;
       warningShown = overrunError && showWarningForErrors;
+      setToolTip("gauge.overrun." + (overrunIsAnError  ? "error" : "ok"), absActual);
     }
     else if (!sameSign) {
       fillPercent = 0;
@@ -84,6 +91,7 @@ public class Gauge extends JPanel {
       emptyPercent = 1 - overrunPercent;
       overrunError = invertedSignIsAnError;
       warningShown = overrunError && showWarningForErrors;
+      setToolTip("gauge.inverted." + (invertedSignIsAnError ? "error" : "ok"), absActual);
     }
     else if (absActual - absTarget >= 0.01) {
       fillPercent = absTarget / absActual;
@@ -91,6 +99,15 @@ public class Gauge extends JPanel {
       emptyPercent = 0;
       overrunError = overrunIsAnError;
       warningShown = overrunError && showWarningForErrors;
+      setToolTip("gauge.overrun." + (overrunIsAnError  ? "error" : "ok"), absActual - absTarget);
+    }
+    else if (Math.abs(absTarget - absActual) <= 0.01) {
+      fillPercent = 1;
+      overrunPercent = 0;
+      emptyPercent = 0;
+      overrunError = false;
+      warningShown = false;
+      setToolTip("gauge.complete");
     }
     else {
       fillPercent = absActual / absTarget;
@@ -101,7 +118,17 @@ public class Gauge extends JPanel {
       emptyPercent = 1 - fillPercent;
       overrunError = false;
       warningShown = false;
+      setToolTip("gauge.partial", absTarget - absActual);
     }
+  }
+
+  private void setToolTip(String key, Double... values) {
+    String[] formattedValues = new String[values.length];
+    for (int i = 0; i < values.length; i++) {
+      formattedValues[i] = PicsouDescriptionService.DECIMAL_FORMAT.format(values[i]);
+
+    }
+    this.setToolTipText(Lang.get(key, formattedValues));
   }
 
   public void paint(Graphics g) {

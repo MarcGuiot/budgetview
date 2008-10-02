@@ -8,6 +8,7 @@ import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
@@ -116,6 +117,23 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     transactions
       .initContent()
       .add("20/02/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2.2)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
+      .check();
+  }
+
+  public void testAcceptsOfcFiles() throws Exception {
+    final String path = OfxBuilder.init(TestUtils.getFileName(this, ".ofc"))
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .save();
+
+    WindowInterceptor.init(window.getButton("Browse").triggerClick())
+      .process(FileChooserHandler.init().select(new String[]{path}))
+      .run();
+    importButton.click();
+    window.getButton("OK").click();
+
+    transactions
+      .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
   }

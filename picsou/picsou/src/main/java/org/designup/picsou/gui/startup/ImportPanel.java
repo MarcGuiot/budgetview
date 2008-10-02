@@ -102,11 +102,12 @@ public class ImportPanel {
     this.localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
 
+    dialog = PicsouDialog.create(owner, directory);
+    
     initStep1Panel(textForCloseButton, directory);
     initStep2Panel(textForCloseButton, owner);
     initMainPanel();
 
-    dialog = PicsouDialog.create(owner, directory);
     dialog.setContentPane(mainPanel);
 
     if (defaultAccount != null) {
@@ -189,7 +190,7 @@ public class ImportPanel {
     builder2.add("table", transactionTable);
     builder2.add("fileName", fileNameLabel);
 
-    newAccountButton = new JButton(new NewAccountAction(sessionRepository, sessionDirectory, owner));
+    newAccountButton = new JButton(new NewAccountAction(sessionRepository, sessionDirectory, dialog));
     builder2.add("newAccount", newAccountButton);
 
     GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory);
@@ -567,7 +568,8 @@ public class ImportPanel {
     chooser.setMultiSelectionEnabled(true);
     chooser.addChoosableFileFilter(new FileFilter() {
       public boolean accept(File file) {
-        return file.getName().endsWith("ofx") || file.getName().endsWith("qif") || file.isDirectory();
+        return BankFileType.isFileNameSupported(file.getName())
+               || file.isDirectory();
       }
 
       public String getDescription() {

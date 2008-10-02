@@ -31,14 +31,6 @@ public class TransactionDetailsChecker extends DataChecker {
     assertFalse(getPanel().getTextBox("userLabel").isEditable());
   }
 
-  public void checkDate(String expected) {
-    checkValue("userDate", expected);
-  }
-
-  public void checkNoDate() {
-    checkComponentVisible(getPanel(), JLabel.class, "userDate", false);
-  }
-
   private void checkValue(String name, String label) {
     assertThat(getPanel().getTextBox(name).textEquals(label));
   }

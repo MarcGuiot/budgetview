@@ -3,8 +3,8 @@ package org.designup.picsou.gui.components;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.utils.BackgroundColorUpdater;
 import org.globsframework.gui.splits.color.ColorUpdater;
+import org.globsframework.gui.splits.color.utils.BackgroundColorUpdater;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
@@ -31,13 +31,18 @@ public class PicsouDialog extends JDialog {
   }
 
   public static PicsouDialog create(Window owner, boolean modal, Directory directory) {
-    if (owner instanceof JFrame) {
-      return new PicsouDialog((JFrame)owner, modal, directory);
+    Component parent = GuiUtils.getEnclosingComponent(owner, new GuiUtils.ComponentMatcher() {
+      public boolean matches(Component component) {
+        return JFrame.class.isInstance(component) || JDialog.class.isInstance(component);
+      }
+    });
+    if (parent instanceof JFrame) {
+      return new PicsouDialog((JFrame)parent, modal, directory);
     }
-    else if (owner instanceof JDialog) {
-      return new PicsouDialog((JDialog)owner, modal, directory);
+    else if (parent instanceof JDialog) {
+      return new PicsouDialog((JDialog)parent, modal, directory);
     }
-    throw new InvalidParameter("unknown type " + owner.getClass());
+    throw new InvalidParameter("unknown type " + parent.getClass());
   }
 
   public static PicsouDialog createWithButton(Window owner, JPanel panel, Action action, Directory directory) {

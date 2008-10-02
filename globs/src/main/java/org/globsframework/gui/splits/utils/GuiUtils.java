@@ -168,12 +168,10 @@ public class GuiUtils {
 
     HTMLEditorKit kit = (HTMLEditorKit)editorPane.getEditorKit();
     StyleSheet css = kit.getStyleSheet();
-    css.addRule("H1 -");
+    css.addRule("H1 { font-size:16; }");
     css.addRule("H1 { font-weight:bold; }");
-    css.addRule("H2 { font-size:16; }");
+    css.addRule("H2 { font-size:14; }");
     css.addRule("H2 { font-weight:bold; }");
-    css.addRule("body, p, li { font:" + getDefaultLabelFont().getFamily() + "; }");
-    css.addRule("body, p, li { font-size:" + (getDefaultLabelFont().getSize()) + "; }");
   }
 
   public static void runInSwingThread(Runnable runnable) {

@@ -35,6 +35,10 @@ public class OfxBuilder {
     return new OfxBuilder(TestUtils.getFileName(testCase, ".ofx"), null);
   }
 
+  public static OfxBuilder init(String fileName) {
+    return new OfxBuilder(fileName, null);
+  }
+
   public static OfxBuilder init(TestCase testCase, OperationChecker operations) {
     return new OfxBuilder(TestUtils.getFileName(testCase, ".ofx"), operations);
   }

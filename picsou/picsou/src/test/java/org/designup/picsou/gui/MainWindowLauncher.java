@@ -17,27 +17,30 @@ import java.util.List;
 
 public class MainWindowLauncher {
   private static OpenRequestManager openRequestManager = new OpenRequestManager();
-  private static String user;
-  private static String password;
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
   }
 
   public static void main(String... args) throws Exception {
-
     if (args.length > 1) {
       args = PicsouApplication.parseLanguage(args);
     }
     List<String> arguments = new ArrayList<String>();
     arguments.addAll(Arrays.asList(args));
-    user = parseArguments(arguments, "-u", "user");
-    password = parseArguments(arguments, "-p", "pwd");
+    String user = parseArguments(arguments, "-u", "user");
+    String password = parseArguments(arguments, "-p", "pwd");
+    run(user, password);
+  }
+
+  public static Directory run(String user, String password) throws Exception {
     ServerDirectory serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), false);
     ServerAccess serverAccess =
       new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
                                            PicsouApplication.createDirectory());
-    run(serverAccess, PicsouApplication.createDirectory());
+    Directory directory = PicsouApplication.createDirectory();
+    run(user, password, serverAccess, directory);
+    return directory;
   }
 
   private static String parseArguments(List<String> args, String key, String defaultValue) {
@@ -55,7 +58,7 @@ public class MainWindowLauncher {
     return defaultValue;
   }
 
-  private static GlobRepository run(ServerAccess serverAccess, Directory directory) throws Exception {
+  private static GlobRepository run(String user, String password, ServerAccess serverAccess, Directory directory) throws Exception {
     boolean newUser;
     try {
       serverAccess.connect();

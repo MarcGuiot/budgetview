@@ -42,4 +42,8 @@ public class GaugeChecker extends DataChecker {
     Assert.assertFalse(gauge.isWarningShown());
     return this;
   }
+
+  public void checkTooltip(String text) {
+    Assert.assertEquals(text, gauge.getToolTipText());
+  }
 }

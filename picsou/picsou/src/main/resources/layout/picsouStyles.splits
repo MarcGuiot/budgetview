@@ -17,6 +17,8 @@
     <style selector="textArea.multiLineLabel" foreground="help.messages.text"
            opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
 
+    <style selector="scrollPane.textArea" border="" opaque="false" viewportOpaque="false"/>
+
     <style selector="htmlEditorPane" foreground="help.messages.text"/>
     <style selector="scrollPane htmlEditorPane" border="empty(10)"/>
     <style selector=".budgetAreaSelection htmlEditorPane" border="empty(10)"/>
@@ -26,7 +28,7 @@
 
     <style selector="label.header"
            font="-,plain,11" foreground="import.header.label"
-           marginTop="5" marginBottom="3" fill="none" anchor="left"/>
+           marginTop="5" marginBottom="3" fill="none" anchor="southwest"/>
 
     <style selector="label.formLabel"
            font="-,plain,12" foreground="import.form.label"
