@@ -96,6 +96,11 @@ public class DirectAccountDataManager implements AccountDataManager {
         version++;
       }
       catch (EOFIOFailure e) {
+        try {
+          inputStream.close();
+        }
+        catch (IOException e1) {
+        }
         File newfile = prevaylerDirectory.journalFile(version, "journal");
         if (newfile.equals(file)) {
           PrevaylerDirectory.renameUnusedFile(file);
@@ -106,6 +111,11 @@ public class DirectAccountDataManager implements AccountDataManager {
         file = newfile;
         inputStream = new BufferedInputStream(new FileInputStream(file));
       }
+    }
+    try {
+      inputStream.close();
+    }
+    catch (Exception e) {
     }
     return version;
   }
@@ -133,15 +143,26 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   void readSnapshot(MapOfMaps<String, Integer, SerializableGlobType> globs, File file) {
+    BufferedInputStream inputStream = null;
     try {
+      inputStream = new BufferedInputStream(new FileInputStream(file));
       SerializedInput serializedInput =
-        SerializedInputOutputFactory.init(new BufferedInputStream(new FileInputStream(file)));
+        SerializedInputOutputFactory.init(inputStream);
       String version = serializedInput.readString();
       if ("2".equals(version)) {
         readVersion2(serializedInput, globs);
       }
     }
     catch (FileNotFoundException e) {
+    }
+    finally {
+      if (inputStream != null) {
+        try {
+          inputStream.close();
+        }
+        catch (IOException e) {
+        }
+      }
     }
   }
 

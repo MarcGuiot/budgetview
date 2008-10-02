@@ -85,6 +85,28 @@ public class PicsouApplication {
   }
 
   public static void main(String... args) throws Exception {
+    if (args.length > 0) {
+      if ("-v".equals(args[0])) {
+        if (args.length > 1) {
+          if ("-jar".equals(args[1])) {
+            System.out.println("Jar version: " + JAR_VERSION);
+            return;
+          }
+          if ("-soft".equals(args[1])) {
+            System.out.println("Software version: " + APPLICATION_VERSION);
+            return;
+          }
+          if ("-config".equals(args[1])) {
+            System.out.println("Bank config version: " + BANK_CONFIG_VERSION);
+            return;
+          }
+        }
+        System.out.println("Software version: " + APPLICATION_VERSION);
+        System.out.println("Jar version: " + JAR_VERSION);
+        System.out.println("Bank config version: " + BANK_CONFIG_VERSION);
+        return;
+      }
+    }
     Utils.beginRemove();
     changeDate();
     Utils.endRemove();
@@ -107,7 +129,7 @@ public class PicsouApplication {
       }
       File logFilePath = new File(getPicsouPath() + "/" + "logs");
       logFilePath.mkdirs();
-      FileOutputStream stream = new FileOutputStream(File.createTempFile("picsoulog", ".txt", logFilePath));
+      FileOutputStream stream = new FileOutputStream(File.createTempFile("log", ".txt", logFilePath));
       PrintStream output = new PrintStream(stream);
       Log.init(output);
       System.setOut(output);

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.utils.Gui;
@@ -19,7 +20,8 @@ import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
-import static org.globsframework.gui.views.utils.LabelCustomizers.*;
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import static org.globsframework.gui.views.utils.LabelCustomizers.fontSize;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -37,6 +39,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -316,8 +320,31 @@ public class ImportPanel {
   }
 
   public void show() {
-    dialog.pack();
-    GuiUtils.showCentered(dialog);
+    final PicsouFrame frame = (PicsouFrame)directory.get(JFrame.class);
+    if (frame.isIconified()) {
+      frame.addWindowListener(new WindowAdapter() {
+        public void windowDeiconified(WindowEvent e) {
+          frame.removeWindowListener(this);
+          dialog.pack();
+          GuiUtils.showCentered(dialog);
+        }
+      });
+      final JDialog dialog = new JDialog(frame);
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          while (!dialog.isVisible()) {
+            SwingUtilities.invokeLater(this);
+          }
+          dialog.setVisible(false);
+        }
+      });
+      dialog.setModal(true);
+      dialog.setVisible(true);
+    }
+    else {
+      dialog.pack();
+      GuiUtils.showCentered(dialog);
+    }
   }
 
   private class ImportAction extends AbstractAction {

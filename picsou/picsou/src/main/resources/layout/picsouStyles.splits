@@ -202,8 +202,8 @@
            font="-,plain,10" fill="none" anchor="west"/>
 
     <!-- Split panes -->
-    <style selector="horizontalSplit" showGripper="true" dividerSize="20" opaque="false"/>
-    <style selector="verticalSplit" showGripper="true" dividerSize="10" opaque="false"/>
+    <style selector="horizontalSplit" showGripper="false" dividerSize="20" opaque="false"/>
+    <style selector="verticalSplit" showGripper="false" dividerSize="10" opaque="false"/>
 
   </styles>
 

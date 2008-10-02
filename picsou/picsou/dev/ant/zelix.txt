@@ -1,7 +1,7 @@
-open "fourmics00000000000001.jar"
-     -"fourmics00000000000001.jar!apple/laf/*.class"
-     -"fourmics00000000000001.jar!net/roydesign/mac/*.class"
-     -"fourmics00000000000001.jar!net/roydesign/event/*.class";
+open "fourmics.jar"
+     -"fourmics.jar!apple/laf/*.class"
+     -"fourmics.jar!net/roydesign/mac/*.class"
+     -"fourmics.jar!net/roydesign/event/*.class";
 
 exclude   picsou.^Main and
           picsou.Main main(*) and
@@ -11,7 +11,8 @@ exclude   picsou.^Main and
           *.*UI set*(*) and
           *.*UI get*(*) and
           org.designup.picsou.gui.components.* set*(*) and
-          org.designup.picsou.gui.components.* get*(*)
+          org.designup.picsou.gui.components.* get*(*) and
+          com.jidesoft*.* *(*)
           ;
 
 /*

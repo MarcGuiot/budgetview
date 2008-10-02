@@ -63,7 +63,7 @@
                             vmoptions="-Xmx128m -Dapple.awt.graphics.UseQuartz=false">
 
 
-                  <resourcefilelist dir="../picsou/obfuscated" files="fourmics00000000000001.jar"/>
+                  <resourcefilelist dir="../picsou/obfuscated" files="fourmics.jar"/>
 
                   <documenttype name="Financial information"
                                 extensions="ofx qif"
@@ -75,10 +75,14 @@
                                 role="Editor"/>
                 </jarbundler>
 
+                <exec executable="dev/install/rename.sh"/>
                 <exec executable="hdiutil">
                   <arg line="create -srcfolder ${basedir}/Fourmics/ Fourmics.dmg"/>
                 </exec>
 
+              </tasks>
+              <tasks unless="${GenerateWindowsInstall}">
+                <exec executable="${basedir}/dev/install/updateMpi.sh"/>
               </tasks>
             </configuration>
             <goals>
@@ -132,7 +136,19 @@
         </os>
       </activation>
       <properties>
-        <GenerateInstall>true</GenerateInstall>
+        <GenerateMacInstall>true</GenerateMacInstall>
+      </properties>
+    </profile>
+    <profile>
+      <id>mac</id>
+      <activation>
+        <os>
+          <family>unix</family>
+          <name>Linux</name>
+        </os>
+      </activation>
+      <properties>
+        <GenerateWindowsInstall>true</GenerateWindowsInstall>
       </properties>
     </profile>
   </profiles>

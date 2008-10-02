@@ -34,6 +34,8 @@ R logging/
 R i18n/
 R help/
 R images/
+R icons/
+R jide/
 R darkgreycolors.properties
 R color_purple.properties
 R color_green.properties
