@@ -1,10 +1,10 @@
 package org.globsframework.gui.views;
 
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -40,6 +40,7 @@ public class GlobMultiLineTextView extends AbstractGlobTextView<GlobMultiLineTex
 
   protected void doUpdate(String text) {
     textArea.setText(text);
+    textArea.setCaretPosition(0);
   }
 
   protected String getText() {
