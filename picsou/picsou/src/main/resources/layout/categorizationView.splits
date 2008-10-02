@@ -56,9 +56,7 @@
 
           <column styleClass="innerBlock">
 
-            <panel ref="transactionDetails" marginBottom="15" weightY="0.1"/>
-
-            <label text="$categorization.series.title" styleClass="header"/>
+            <panel ref="transactionDetails" weightY="0.1"/>
 
             <cards ref="budgetAreaCard" opaque="false">
 

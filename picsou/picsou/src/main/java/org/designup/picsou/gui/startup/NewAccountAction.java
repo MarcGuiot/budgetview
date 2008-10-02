@@ -39,9 +39,8 @@ public class NewAccountAction extends AbstractAction {
     CreateAccountAction action = new CreateAccountAction(tempRepository);
     CancelAction cancelAction = new CancelAction();
     PicsouDialog dialog =
-      PicsouDialog.createWithButtons(owner.getOwner(), createEditionPanel(tempRepository),
-                                     action,
-                                     cancelAction, directory);
+      PicsouDialog.createWithButtons(owner, createEditionPanel(tempRepository),
+                                     action, cancelAction, directory);
     action.set(dialog);
     cancelAction.set(dialog);
     createdAccount = tempRepository.create(Account.TYPE);
@@ -53,10 +52,12 @@ public class NewAccountAction extends AbstractAction {
   private JPanel createEditionPanel(LocalGlobRepository tempRepository) {
     JLabel messageLabel = new JLabel();
     accountEditionPanel = new AccountEditionPanel(tempRepository, directory, messageLabel);
-    return GridBagBuilder.init()
+    JPanel panel = GridBagBuilder.init()
       .add(accountEditionPanel.getPanel(), 0, 0, 1, 1, new Insets(10, 10, 10, 10))
       .add(messageLabel, 0, 1, 1, 1, new Insets(10, 10, 10, 10))
       .getPanel();
+    panel.setOpaque(false);
+    return panel;
   }
 
   private class CancelAction extends AbstractAction {

@@ -17,12 +17,7 @@ public class TypedInputStream {
     stream = new RepeatableInputStream(new FileInputStream(file));
     checkCoding();
     fileName = file.getName().toLowerCase();
-    if (fileName.endsWith(".ofx")) {
-      type = BankFileType.OFX;
-    }
-    else if (fileName.endsWith(".qif")) {
-      type = BankFileType.QIF;
-    }
+    type = BankFileType.getTypeFromName(fileName);
   }
 
   public TypedInputStream(InputStream inputStream) throws IOException {

@@ -6,7 +6,7 @@
     <style selector="#transactionDetails label" foreground="transaction.detail.text"/>
 
     <style selector="label.formLabel"
-           fill="none" anchor="left"
+           fill="none" anchor="left" weightX="0"
            foreground="transaction.detail.formLabel" font="-,plain,10"
            marginRight="5"/>
 
@@ -21,11 +21,13 @@
     <style selector="textArea" foreground="transaction.detail.text" opaque="false" anchor="top"
            lineWrap="true" wrapStyleWord="true"/>
 
-    <style selector="textArea#userLabel" font="$transaction.label"/>
+    <style selector="scrollPane.textArea"
+           verticalScrollBarPolicy="javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER"
+           horizontalScrollBarPolicy="javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED"/>
+
+    <style selector="#userLabel" font="$transaction.label"/>
 
     <style selector="#transactionDetails .hyperlink" foreground="transaction.detail.hyperlink"/>
-
-    <style selector="row" marginTop="5"/>
 
   </styles>
 
@@ -34,56 +36,54 @@
     <cards ref="cards" opaque="false">
 
       <card name="noData">
-        <column>
+        <column marginBottom="10">
           <htmlEditorPane text="$transaction.details.nodata"/>
           <filler fill="vertical"/>
         </column>
       </card>
 
       <card name="noSelection">
-        <column>
+        <column marginBottom="10">
           <htmlEditorPane text="$transaction.details.noselection"/>
           <filler fill="vertical"/>
         </column>
       </card>
 
       <card name="selection">
-        <row>
-          <column>
-            <textArea ref="userLabel" styleClass="readonly"/>
-            <label ref="transactionType" styleClass="formLabel"/>
-            <row autoHideSource="bankDate">
+        <column>
+          <scrollPane ref="scroll" styleClass="textArea">
+            <textArea ref="userLabel" styleClass="multiLineLabel"/>
+          </scrollPane>
 
-              <label text="$transaction.details.userDate" styleClass="formLabel" autoHideSource="userDate"/>
-              <label ref="userDate" font="$transaction.date" styleClass="formValue"/>
+          <scrollPane styleClass="textArea" autoHideSource="originalLabel" marginTop="2">
+            <textArea ref="originalLabel" styleClass="multiLineLabel"
+                      foreground="transaction.detail.formLabel" font="-,plain,10"/>
+          </scrollPane>
 
-              <label text="$transaction.details.bankDate" styleClass="formLabel" autoHideSource="bankDate"/>
-              <label ref="bankDate" font="$transaction.date" styleClass="formValue"/>
+          <row marginTop="2">
+            <label ref="transactionType" styleClass="formLabel" marginRight="0"/>
+            <label text=" - " styleClass="formLabel" autoHideSource="bankDate" marginRight="0"/>
+            <label text="$transaction.details.bankDate" styleClass="formLabel"
+                   autoHideSource="bankDate" marginRight="3"/>
+            <label ref="bankDate" styleClass="formLabel"/>
+            <filler fill="horizontal"/>
+          </row>
 
-              <filler fill="horizontal"/>
-            </row>
+          <row marginTop="5">
+            <label text="$transaction.details.note" styleClass="formLabel"/>
+            <textField ref="noteField"/>
+          </row>
 
-            <row autoHideSource="originalLabel">
-              <label text="$transaction.details.label.original" styleClass="formLabel"
-                     autoHideSource="originalLabel"/>
-              <label ref="originalLabel" fill="horizontal" horizontalAlignment="left"/>
-              <filler fill="horizontal"/>
-            </row>
+          <filler fill="vertical" weightY="0.1"/>
 
-            <row>
-              <label text="$transaction.details.note" styleClass="formLabel"/>
-              <textField ref="noteField"/>
-            </row>
+          <row autoHideSource="splitLink" border="empty(10,0,0,0)">
+            <label text="$categorization.series.title" styleClass="header"/>
+            <filler fill="horizontal"/>
+            <button name="splitLink" action="split" autoHideIfDisabled="true" marginBottom="3"/>
+          </row>
 
-            <filler fill="vertical"/>
+        </column>
 
-          </column>
-
-          <column>
-            <button name="splitLink" action="split" marginTop="0" autoHideIfDisabled="true"/>
-            <filler fill="vertical"/>
-          </column>
-        </row>
       </card>
 
     </cards>

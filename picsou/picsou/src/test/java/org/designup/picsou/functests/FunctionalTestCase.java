@@ -5,6 +5,7 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.UISpec4J;
 import org.uispec4j.UISpecTestCase;
+import org.uispec4j.utils.DummyRepaintManager;
 
 import java.io.File;
 import java.util.Locale;
@@ -15,6 +16,7 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
     TestUtils.clearTmpDir();
     Locale.setDefault(Locale.ENGLISH);
     UISpec4J.setAssertionTimeLimit(1000);
+    DummyRepaintManager.init();
   }
 
   protected void setUp() throws Exception {

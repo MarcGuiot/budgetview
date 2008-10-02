@@ -49,26 +49,6 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkLabel("McDo [2 operations]");
   }
 
-  public void testDate() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/06/18", -27.50, "Burger King")
-      .addTransaction("2008/06/18", -15.10, "Burger King")
-      .addTransaction("2008/06/15", -15.50, "McDo")
-      .load();
-
-    categorization.selectTableRow(0);
-    transactionDetails.checkDate("18/06/2008");
-
-    categorization.selectTableRows(0, 1);
-    transactionDetails.checkDate("18/06/2008");
-
-    categorization.selectTableRows(0, 1, 2);
-    transactionDetails.checkNoDate();
-
-    transactions.getTable().clearSelection();
-    transactionDetails.checkNoDate();
-  }
-
   public void testDisplayWithNoSelection() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/18", -10.00, "Burger King")

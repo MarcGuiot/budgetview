@@ -92,7 +92,7 @@ public class PicsouSampleGenerator {
     add("VINCIPARK0921502 ANTONY", sometimes(), between(-1.5, -4.0), any());
     add("EVEIL - JEUX ANTONY", upTo(3), between(-10.0, -60.0), any());
     add("AUTOUR DE BEBE FRESNES", sometimes(), between(-30.0, -80.0), any());
-    add("PHIE 4 CHEMINS SCEAUX", upTo(4), between(-5.0, -30.0), any());
+    add("PHARMA 4 CHEMINS", upTo(4), between(-5.0, -30.0), any());
     add("AUCHAN VELIZY CARTE 24371925 PAI", upTo(5), between(-15.0, -150.0), any());
     add("AMAZON EU SARL AMAZON EU LUX", sometimes(), between(-8.0, -40.0), any());
     add("PHARMADISCOUNT SAINT LOUIS", upTo(3), between(-5.0, -30.0), any());
