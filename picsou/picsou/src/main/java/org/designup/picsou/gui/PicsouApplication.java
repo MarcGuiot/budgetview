@@ -52,16 +52,16 @@ public class PicsouApplication {
   public static final Long BANK_CONFIG_VERSION = 2L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String CONFIG_DIRECTORY = "configs";
-  public static final String PICSOU = "fourmics";
+  public static final String APPNAME = "fourmics";
   private static final String CONFIG = "config";
   private static final Pattern CONFIG_FILTER = Pattern.compile(CONFIG + "[0-9][0-9]*" + "\\.jar");
 
-  private static final String COM_PICSOU_LOG_SOUT = PICSOU + ".log.sout";
-  public static final String LOCAL_PREVAYLER_PATH_PROPERTY = PICSOU + ".prevayler.path";
-  public static final String DEFAULT_ADDRESS_PROPERTY = PICSOU + ".server.url";
-  public static String DELETE_LOCAL_PREVAYLER_PROPERTY = PICSOU + ".prevayler.delete";
-  public static String IS_DATA_IN_MEMORY = PICSOU + ".data.in.memory";
-  public static String FORCE_DATE = PICSOU + ".today";
+  private static final String LOG_SOUT = APPNAME + ".log.sout";
+  public static final String LOCAL_PREVAYLER_PATH_PROPERTY = APPNAME + ".prevayler.path";
+  public static final String DEFAULT_ADDRESS_PROPERTY = APPNAME + ".server.url";
+  public static String DELETE_LOCAL_PREVAYLER_PROPERTY = APPNAME + ".prevayler.delete";
+  public static String IS_DATA_IN_MEMORY = APPNAME + ".data.in.memory";
+  public static String FORCE_DATE = APPNAME + ".today";
   private static String DEFAULT_ADDRESS = "https://startupxp.dynalias.org";
   public static final String REGISTER_URL = "https://91.121.123.100:8443"; //startupxp.dynalias.org";
   public static final String FTP_URL = "ftp://91.121.123.100"; //startupxp.dynalias.org";
@@ -123,14 +123,24 @@ public class PicsouApplication {
 
   private static void initLogger() {
     try {
-      String sout = System.getProperty(COM_PICSOU_LOG_SOUT);
+      String sout = System.getProperty(LOG_SOUT);
       if (sout != null && sout.equalsIgnoreCase("true")) {
         return;
       }
       File logFilePath = new File(getPicsouPath() + "/" + "logs");
       logFilePath.mkdirs();
-      FileOutputStream stream = new FileOutputStream(File.createTempFile("log", ".txt", logFilePath));
+      File logFile = new File(logFilePath, "log.txt");
+      if (logFile.exists() && logFile.length() > 2 * 1024 * 1024){
+        File oldFile = new File(logFilePath, "oldLog.txt");
+        if (oldFile.exists()){
+          oldFile.delete();
+        }
+        logFile.renameTo(oldFile);
+      }
+      FileOutputStream stream = new FileOutputStream(logFile);
       PrintStream output = new PrintStream(stream);
+      output.println("---------------------------");
+      output.println("version : " + PicsouApplication.JAR_VERSION + " " + new Date());
       Log.init(output);
       System.setOut(output);
       System.setErr(output);
@@ -265,6 +275,7 @@ public class PicsouApplication {
 
   public static Directory createDirectory() throws IOException {
     Directory directory = new DefaultDirectory();
+    directory.add(initUiService());
     directory.add(new TimeService());
     directory.add(new UpgradeService(directory));
     directory.add(DescriptionService.class, new PicsouDescriptionService());
@@ -274,7 +285,6 @@ public class PicsouApplication {
     directory.add(IconLocator.class, Gui.ICON_LOCATOR);
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
-    directory.add(initUiService());
 
     Long localConfigVersion;
     String configPath = getPicsouConfigPath();

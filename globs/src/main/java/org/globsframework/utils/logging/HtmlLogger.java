@@ -31,12 +31,12 @@ class HtmlLogger {
           "    Log " + Dates.toTimestampString(new Date()) + " - " + file.getAbsolutePath() +
           "  </title>\n" +
           "  <script>\n" +
-          Files.loadStreamToString(HtmlLogger.class.getResourceAsStream("/logging/htmlLogger.js")) +
-          Files.loadStreamToString(HtmlLogger.class.getResourceAsStream("/logging/tabber.js")) +
+          Files.loadStreamToString(HtmlLogger.class.getResourceAsStream("/logging/htmlLogger.js"), "UTF-8") +
+          Files.loadStreamToString(HtmlLogger.class.getResourceAsStream("/logging/tabber.js"), "UTF-8") +
           "  </script>\n" +
           "  <style type='text/css'>\n" +
-          Files.loadStreamToString(HtmlLogger.class.getResourceAsStream("/logging/htmlLogger.css")) +
-          Files.loadStreamToString(HtmlLogger.class.getResourceAsStream("/logging/tabber.css")) +
+          Files.loadStreamToString(HtmlLogger.class.getResourceAsStream("/logging/htmlLogger.css"), "UTF-8") +
+          Files.loadStreamToString(HtmlLogger.class.getResourceAsStream("/logging/tabber.css"), "UTF-8") +
           "  </style>\n" +
           "</head>\n" +
           "<body>\n");

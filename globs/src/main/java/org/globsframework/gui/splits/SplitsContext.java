@@ -3,6 +3,7 @@ package org.globsframework.gui.splits;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.gui.splits.styles.StyleContext;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -45,4 +46,6 @@ public interface SplitsContext {
   String dump();
 
   void addDisposable(Disposable disposable);
+
+  Directory getDirectory();
 }
