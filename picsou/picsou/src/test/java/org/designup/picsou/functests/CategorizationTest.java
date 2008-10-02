@@ -689,7 +689,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   public void testSeriesList() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
+      .addTransaction("2008/06/26", 1000, "Salaire")
       .load();
 
     views.selectCategorization();
@@ -704,9 +704,18 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .createIncomeSeries()
       .setName("Salary")
       .setCategory(MasterCategory.INCOME)
+      .createSeries()
+      .setName("Other salary")
+      .setCategory(MasterCategory.INCOME)
       .validate();
 
     categorization.checkContainsIncomeSeries("Salary");
+    categorization.selectIncome()
+      .selectIncomeSeries("Salary", false);
+    categorization.editSeries(true).checkSeriesSelected("Salary").cancel();
+    categorization
+      .selectIncomeSeries("Other salary", false);
+    categorization.editSeries(true).checkSeriesSelected("Other salary").cancel();
   }
 
   public void testEditingOccasionalCategories() throws Exception {

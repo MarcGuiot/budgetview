@@ -334,7 +334,7 @@ public class SeriesEditionDialog {
     deleteEndDateAction.setEnabled(currentSeries != null && currentSeries.get(Series.LAST_MONTH) != null);
   }
 
-  public void show(BudgetArea budgetArea, Set<Integer> monthIds) {
+  public void show(BudgetArea budgetArea, Set<Integer> monthIds, Integer seriesId) {
     try {
       localRepository.enterBulkDispatchingMode();
       localRepository.rollback();
@@ -345,7 +345,11 @@ public class SeriesEditionDialog {
     }
     seriesPanel.setVisible(true);
     buttonSeriePanel.setVisible(true);
-    doShow(monthIds, null, null);
+    Glob series = null;
+    if (seriesId != null) {
+      series = localRepository.get(Key.create(Series.TYPE, seriesId));
+    }
+    doShow(monthIds, series, null);
   }
 
   public void show(Glob series, Set<Integer> monthIds) {

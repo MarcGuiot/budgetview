@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
@@ -10,6 +9,7 @@ import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.components.filtering.FilterSetListener;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
@@ -390,6 +390,23 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private class EditAllSeriesAction extends EditSeriesAction {
     private EditAllSeriesAction(BudgetArea budgetArea) {
       super(repository, directory, seriesEditionDialog, budgetArea);
+    }
+
+    public Integer getSelectedSeries() {
+      if (currentTransactions.size() == 0) {
+        return null;
+      }
+      Integer seriesId = currentTransactions.get(0).get(Transaction.SERIES);
+      for (Glob transaction : currentTransactions) {
+        if (!seriesId.equals(transaction.get(Transaction.SERIES))) {
+          return null;
+        }
+      }
+      Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+      if (budgetArea.getId().equals(series.get(Series.BUDGET_AREA))) {
+        return seriesId;
+      }
+      return null;
     }
   }
 

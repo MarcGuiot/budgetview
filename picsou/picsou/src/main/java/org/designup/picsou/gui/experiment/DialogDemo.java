@@ -1,20 +1,20 @@
 package org.designup.picsou.gui.experiment;
 
 import org.designup.picsou.client.ServerAccess;
+import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.generator.PicsouSampleGenerator;
+import org.globsframework.gui.splits.SplitsEditor;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.GlobList;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.gui.splits.SplitsEditor;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -47,7 +47,7 @@ public class DialogDemo {
     SeriesEditionDialog dialog = new SeriesEditionDialog(frame, repository, directory);
     SplitsEditor.show(dialog.getDialog(), directory);
 //    dialog.show(BudgetArea.EXPENSES_ENVELOPE, Collections.singleton(200808));
-    dialog.show(BudgetArea.RECURRING_EXPENSES, Collections.singleton(200808));
+    dialog.show(BudgetArea.RECURRING_EXPENSES, Collections.singleton(200808), null);
   }
 
   private static void showCategoriesEditionDialog(GlobRepository repository, Directory directory) {

@@ -20,7 +20,7 @@ import java.util.Set;
 public class EditSeriesAction extends AbstractAction {
   private Directory directory;
   private SeriesEditionDialog seriesEditionDialog;
-  private BudgetArea budgetArea;
+  protected final BudgetArea budgetArea;
 
   public EditSeriesAction(GlobRepository repository,
                           Directory directory,
@@ -32,7 +32,9 @@ public class EditSeriesAction extends AbstractAction {
     this.budgetArea = budgetArea;
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        update(repository);
+        if (changeSet.containsChanges(Series.TYPE)) {
+          update(repository);
+        }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
@@ -48,11 +50,15 @@ public class EditSeriesAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-    seriesEditionDialog.show(budgetArea, getSelectedMonthIds());
+    seriesEditionDialog.show(budgetArea, getSelectedMonthIds(), getSelectedSeries());
   }
 
   protected Set<Integer> getSelectedMonthIds() {
     int currentMonthId = directory.get(TimeService.class).getCurrentMonthId();
     return Collections.singleton(currentMonthId);
+  }
+
+  public Integer getSelectedSeries() {
+    return null;
   }
 }
