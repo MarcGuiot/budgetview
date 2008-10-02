@@ -30,18 +30,18 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
     timeline.selectLast();
     views.selectData();
     transactions.initContent()
-      .add("12/08/2010", TransactionType.PLANNED, "Courant", "", -95.00, "Courant", MasterCategory.FOOD)
-      .add("04/08/2010", TransactionType.PLANNED, "EDF", "", -55.00, "EDF", MasterCategory.HOUSE)
-      .add("01/08/2010", TransactionType.PLANNED, "Salaire", "", 1200.00, "Salaire", MasterCategory.INCOME)
+      .add("12/08/2010", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant", MasterCategory.FOOD)
+      .add("04/08/2010", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF", MasterCategory.HOUSE)
+      .add("01/08/2010", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire", MasterCategory.INCOME)
       .check();
 
     operations.getPreferences().changeFutureMonth(12).validate();
     timeline.assertSpanEquals("2008/08", "2009/08");
     timeline.selectLast();
     transactions.initContent()
-      .add("12/08/2009", TransactionType.PLANNED, "Courant", "", -95.00, "Courant", MasterCategory.FOOD)
-      .add("04/08/2009", TransactionType.PLANNED, "EDF", "", -55.00, "EDF", MasterCategory.HOUSE)
-      .add("01/08/2009", TransactionType.PLANNED, "Salaire", "", 1200.00, "Salaire", MasterCategory.INCOME)
+      .add("12/08/2009", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant", MasterCategory.FOOD)
+      .add("04/08/2009", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF", MasterCategory.HOUSE)
+      .add("01/08/2009", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire", MasterCategory.INCOME)
       .check();
 
     operations.getPreferences().changeFutureMonth(36).validate();
@@ -49,9 +49,9 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
     timeline.selectLast();
     views.selectData();
     transactions.initContent()
-      .add("12/08/2011", TransactionType.PLANNED, "Courant", "", -95.00, "Courant", MasterCategory.FOOD)
-      .add("04/08/2011", TransactionType.PLANNED, "EDF", "", -55.00, "EDF", MasterCategory.HOUSE)
-      .add("01/08/2011", TransactionType.PLANNED, "Salaire", "", 1200.00, "Salaire", MasterCategory.INCOME)
+      .add("12/08/2011", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant", MasterCategory.FOOD)
+      .add("04/08/2011", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF", MasterCategory.HOUSE)
+      .add("01/08/2011", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire", MasterCategory.INCOME)
       .check();
 
     operations.getPreferences().changeFutureMonth(12).validate();

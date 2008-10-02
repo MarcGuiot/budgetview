@@ -214,8 +214,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"25/06/2008", "Telephone", "France Telecom", -59.90},
       {"30/06/2008", "Internet", "Free", -29.90},
     });
-    
-    categorization.selectTableRows(1,2);
+
+    categorization.selectTableRows(1, 2);
     categorization.setUncategorized();
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "", "Auchan", -40.00},
@@ -373,7 +373,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
-      .add("26/06/2008", TransactionType.PLANNED, "Groceries", "", -170.00, "Groceries", MasterCategory.FOOD)
+      .add("26/06/2008", TransactionType.PLANNED, "Planned: Groceries", "", -170.00, "Groceries", MasterCategory.FOOD)
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet", MasterCategory.TELECOMS)
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet", MasterCategory.TELECOMS)
       .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan 1111", "", -90.00, "Groceries", MasterCategory.FOOD)
@@ -471,7 +471,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("26/06/2008", TransactionType.PLANNED, "Groceries", "", -170.00, "Groceries", MasterCategory.FOOD)
+      .add("26/06/2008", TransactionType.PLANNED, "Planned: Groceries", "", -170.00, "Groceries", MasterCategory.FOOD)
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet", MasterCategory.TELECOMS)
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet", MasterCategory.TELECOMS)
       .add("15/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "Groceries", MasterCategory.FOOD)
@@ -873,9 +873,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     timeline.selectAll();
     transactions.initContent()
-      .add("01/08/2008", TransactionType.PLANNED, "Courant", "", -20.00, "Courant", MasterCategory.FOOD)
-      .add("01/07/2008", TransactionType.PLANNED, "Courant", "", -20.00, "Courant", MasterCategory.FOOD)
-      .add("10/06/2008", TransactionType.PLANNED, "Courant", "", -10.00, "Courant", MasterCategory.FOOD)
+      .add("01/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant", MasterCategory.FOOD)
+      .add("01/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant", MasterCategory.FOOD)
+      .add("10/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -10.00, "Courant", MasterCategory.FOOD)
       .add("10/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -10.00, "Courant", MasterCategory.FOOD)
       .add("20/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -20.00, "Courant", MasterCategory.FOOD)
       .add("10/05/2008", TransactionType.PRELEVEMENT, "ED", "", -10.00, "Occasional", MasterCategory.FOOD)

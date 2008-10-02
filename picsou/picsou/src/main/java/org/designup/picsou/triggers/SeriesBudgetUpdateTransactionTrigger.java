@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.*;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
@@ -101,7 +102,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
                       value(Transaction.BANK_DAY, day),
                       value(Transaction.MONTH, monthId),
                       value(Transaction.DAY, day),
-                      value(Transaction.LABEL, series.get(Series.LABEL)),
+                      value(Transaction.LABEL, Lang.get("transaction.planned") + series.get(Series.LABEL)),
                       value(Transaction.PLANNED, true),
                       value(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId()),
                       value(Transaction.CATEGORY, series.get(Series.DEFAULT_CATEGORY)));

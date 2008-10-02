@@ -720,6 +720,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("AA")
       .setCategory(MasterCategory.FOOD)
       .validate();
+    views.selectData();
+    timeline.selectMonths("2008/06", "2008/07");
+    transactions.initContent()
+      .add("30/07/2008", TransactionType.PLANNED, "Planned: AA", "", -60.00, "AA", MasterCategory.FOOD)
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "Forfait Kro", "", -60.00, "AA", MasterCategory.FOOD)
+      .check();
+
+    views.selectCategorization();
     SeriesEditionDialogChecker seriesEdition = categorization.editSeries(false)
       .selectSeries("AA")
       .setName("AA1");
@@ -735,6 +743,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     seriesEdition.validate();
     categorization.checkContainsLabelInEnvelope("AA1");
     categorization.checkContainsLabelInEnvelope("Boire");
+
+    views.selectData();
+    transactions.initContent()
+      .add("30/07/2008", TransactionType.PLANNED, "Planned: AA1", "", -60.00, "AA1", "Boire")
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "Forfait Kro", "", -60.00, "AA1", "Boire")
+      .check();
+
   }
 
   public void testRenameRecurrent() throws Exception {

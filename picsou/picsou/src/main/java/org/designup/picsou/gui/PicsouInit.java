@@ -56,6 +56,7 @@ public class PicsouInit {
     repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
     repository.addTrigger(new CurrentMonthTrigger());
+    repository.addTrigger(new SeriesRenameTrigger());
     repository.addTrigger(new RegistrationTrigger(directory));
     repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
     repository.addTrigger(new FutureMonthTrigger(directory));

@@ -192,10 +192,10 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     views.selectData();
     timeline.selectAll();
     transactions.initAmountContent()
-      .add("Nounou", -100.00, 160.0)
-      .add("Voiture", -70.00, 260.0)
-      .add("Nounou", -100.00, 330.0)
-      .add("Voiture", -70.00, 430.0)
+      .add("Planned: Nounou", -100.00, 160.0)
+      .add("Planned: Voiture", -70.00, 260.0)
+      .add("Planned: Nounou", -100.00, 330.0)
+      .add("Planned: Voiture", -70.00, 430.0)
       .add("nounou", -100.00, 500.00, 500.00)
       .add("peage", -30.00, 600.00, 600.00)
       .add("sg", -200.00, 630.00, 630.00)
