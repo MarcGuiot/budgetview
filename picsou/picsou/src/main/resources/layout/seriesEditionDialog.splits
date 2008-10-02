@@ -7,18 +7,18 @@
     <style selector="label.month" foreground="#444444" font="-,plain,10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(720,600)">
+  <panel styleClass="dialog">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>
 
       <horizontalSplit>
-        <column ref="seriesPanel" weightX="3">
+        <column ref="seriesPanel" weightX="3" preferredSize="(200,400)">
           <scrollPane>
             <list ref="seriesList"/>
           </scrollPane>
         </column>
-        <column weightX="7">
+        <column weightX="7" preferredSize="(440,400)">
           <grid>
             <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
             <textField gridPos="(1,0,3,1)" ref="nameField" marginBottom="4"/>
@@ -38,24 +38,23 @@
           <column marginTop="20">
             <label text="Echeances" styleClass="separatorTitle"/>
             <row styleClass="separator">
-              <column marginTop="10" weightX="3" minimumSize="(150,300)">
+              <column marginTop="5" weightX="3" minimumSize="(150,300)">
 
-                <label text="$seriesEdition.period" styleClass="formLabelTop" marginTop="10"/>
+                <label text="$seriesEdition.period" styleClass="formLabelTop" marginTop="5" marginBottom="5"/>
                 <comboBox ref="periodCombo"/>
                 <panel ref="monthSelectionPanel" opaque="false">
                   <column>
-                    <label text="$seriesEdition.months" styleClass="formLabelTop" marginTop="10"/>
-                    <repeat ref="monthRepeat" styleClass="innerBlock" margin="15" marginTop="2"
+                    <repeat ref="monthRepeat" styleClass="innerBlock" margin="5" marginTop="2"
                             layout="horizontalGrid" gridWrapLimit="3" weightY="0.1">
                       <label ref="monthLabel" styleClass="month" labelFor="monthSelector"
                              fill="none" anchor="south" marginBottom="0"/>
                       <checkBox ref="monthSelector"
-                                fill="none" anchor="north" marginTop="0" marginBottom="7"/>
+                                fill="none" anchor="north" marginTop="0" marginBottom="3"/>
                     </repeat>
                   </column>
                 </panel>
 
-                <label text="$seriesEdition.begin" styleClass="formLabelTop" fill="horizontal" marginTop="10"/>
+                <label text="$seriesEdition.begin" styleClass="formLabelTop" fill="horizontal" marginTop="2"/>
                 <row>
                   <textField ref="beginSeriesDate" fill="horizontal" columns="20"
                              marginRight="5"/>
