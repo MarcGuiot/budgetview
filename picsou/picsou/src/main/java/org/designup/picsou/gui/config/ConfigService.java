@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 
 public class ConfigService {
-  private static final Pattern FILTER = Pattern.compile(PicsouApplication.PICSOU + "[0-9][0-9]*" + "\\.jar");
+  private static final Pattern FILTER = Pattern.compile(PicsouApplication.APPNAME + "[0-9][0-9]*" + "\\.jar");
 
 
   public static final String COM_PICSOU_LICENCE_URL = "com.picsou.licence.url";
@@ -348,7 +348,7 @@ public class ConfigService {
 
   static public String generatePicsouJarName(long newVersion) {
     String name = "0000000000000000000" + newVersion;
-    return PicsouApplication.PICSOU + name.substring(name.length() - 19) + ".jar";
+    return PicsouApplication.APPNAME + name.substring(name.length() - 19) + ".jar";
   }
 
   static public String generateConfigJarName(long newVersion) {

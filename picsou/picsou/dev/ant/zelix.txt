@@ -10,6 +10,7 @@ exclude   picsou.^Main and
           *.* @*.NoObfuscation *(*) and
           *.*UI set*(*) and
           *.*UI get*(*) and
+          com.jidesoft.swing.* set*(*) and
           org.designup.picsou.gui.components.* set*(*) and
           org.designup.picsou.gui.components.* get*(*)
           ;

@@ -1,8 +1,4 @@
 
-- bug Antoine / occasionnel negatif (devrait etre a 0 comme dans BudgetView)
-
-- bug Antoine / balanceSummaryView : charges negatives inexpliquees
-
 - premier import QIF : saisie du solde
 
 - voir redimensionnement TransactionDetails (voir AutoResizingTextArea de JIDE)
@@ -22,6 +18,10 @@
 - bug reduction dans la barre des taches windows
 
 - bug calcul solde total pour ghosts (le solde augmente au lieu de diminuer)
+
+- BalanceSumaryView : ajouter les enveloppes
+
+- suppression des vieux fichiers de log
 
 ------
 

@@ -50,7 +50,7 @@ public class Lang {
     if (stream == null) {
       throw new ResourceAccessFailed("File " + filePath);
     }
-    return Files.loadStreamToString(stream);
+    return Files.loadStreamToString(stream, "UTF-8");
   }
 
   private static String getMessage(String key) {
