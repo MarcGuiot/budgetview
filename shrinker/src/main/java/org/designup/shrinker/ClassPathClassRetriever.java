@@ -82,7 +82,7 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
   }
 
   public void complete(List<String> ressources, List<String> pathToIgnore) {
-    for (Map.Entry<String, List<String>> entry : dependencies.values()) {
+    for (Map.Entry<String, List<String>> entry : dependencies.entries()) {
       System.out.println("Key " + entry.getKey());
       for (String s : entry.getValue()) {
         System.out.println("     " + s);

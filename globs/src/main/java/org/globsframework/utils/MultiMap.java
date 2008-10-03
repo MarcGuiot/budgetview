@@ -46,7 +46,7 @@ public class MultiMap<K, V> {
     return Collections.unmodifiableList(values);
   }
 
-  public Set<Map.Entry<K, List<V>>> values() {
+  public Set<Map.Entry<K, List<V>>> entries() {
     return map.entrySet();
   }
 

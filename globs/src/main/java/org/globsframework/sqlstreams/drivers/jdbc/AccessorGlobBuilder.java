@@ -28,7 +28,7 @@ public class AccessorGlobBuilder {
 
   public List<Glob> getGlobs() {
     List globs = new ArrayList();
-    for (Map.Entry<GlobType, List<Pair<Field, Accessor>>> entry : accessors.values()) {
+    for (Map.Entry<GlobType, List<Pair<Field, Accessor>>> entry : accessors.entries()) {
       DefaultGlob defaultGlob = new DefaultGlob(entry.getKey());
       globs.add(defaultGlob);
       for (Pair<Field, Accessor> pair : entry.getValue()) {

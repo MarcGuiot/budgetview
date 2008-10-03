@@ -41,7 +41,7 @@ public class DirectoryClassRetriever implements DependExtractor.ClassRetreiver {
   }
 
   void complete() {
-    for (Map.Entry<String, List<String>> entry : dependencies.values()) {
+    for (Map.Entry<String, List<String>> entry : dependencies.entries()) {
       System.out.println("Key " + entry.getKey());
       for (String s : entry.getValue()) {
         System.out.println("     " + s);
