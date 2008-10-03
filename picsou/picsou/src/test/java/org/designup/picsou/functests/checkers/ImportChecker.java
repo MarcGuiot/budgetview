@@ -2,10 +2,10 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
-import org.uispec4j.finder.ComponentMatchers;
-import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
+import org.uispec4j.finder.ComponentMatchers;
+import org.uispec4j.interception.WindowInterceptor;
 
 public class ImportChecker {
   private Panel panel;
@@ -18,9 +18,10 @@ public class ImportChecker {
     importButton = panel.getButton("Import");
   }
 
-  public void selectBank(String bank) {
+  public ImportChecker selectBank(String bank) {
     ComboBox accountBankCombo = panel.getComboBox("accountBank");
     accountBankCombo.select(bank);
+    return this;
   }
 
   public ImportChecker selectFiles(String... path) {
@@ -54,6 +55,10 @@ public class ImportChecker {
     panel.getButton("OK").click();
   }
 
+  public BalanceEditionChecker doImportWithBalance() {
+    return new BalanceEditionChecker(WindowInterceptor.getModalDialog(panel.getButton("OK").triggerClick()));
+  }
+
   public void close() {
     panel.getButton("close").click();
   }
@@ -67,15 +72,17 @@ public class ImportChecker {
     dateFormatCombo.select(dateFormat);
   }
 
-  public void enterAccountNumber(String number) {
+  public ImportChecker enterAccountNumber(String number) {
     panel.getInputTextBox("number").setText(number);
+    return this;
   }
 
-  public void checkSelectedFiles(String... files) {
+  public ImportChecker checkSelectedFiles(String... files) {
     TextBox fileField = panel.getTextBox("fileField");
     for (String file : files) {
       assertTrue(fileField.textContains(file));
     }
+    return this;
   }
 
   public void checkCloseButton(String text) {

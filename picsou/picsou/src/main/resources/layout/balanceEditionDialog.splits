@@ -6,6 +6,7 @@
   <panel styleClass="dialog" preferredSize="(340,180)" opaque="true">
     <column styleClass="innerDialog">
       <label text="$balance.edition.title" styleClass="title"/>
+      <label ref="accountName" styleClass="formLabel" anchor="left" marginBottom="10"/>
       <row marginBottom="10">
         <label text="$balance.edition.label" styleClass="formLabel"/>
         <textField ref="amount"/>

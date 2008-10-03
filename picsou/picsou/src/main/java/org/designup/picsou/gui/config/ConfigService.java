@@ -347,13 +347,13 @@ public class ConfigService {
   }
 
   static public String generatePicsouJarName(long newVersion) {
-    String name = "0000000000000000000" + newVersion;
-    return PicsouApplication.APPNAME + name.substring(name.length() - 19) + ".jar";
+    String name = Long.toString(newVersion);
+    return PicsouApplication.APPNAME + name + ".jar";
   }
 
   static public String generateConfigJarName(long newVersion) {
-    String name = "0000000000000000000" + newVersion;
-    return "config" + name.substring(name.length() - 19) + ".jar";
+    String name = Long.toString(newVersion);
+    return "config" + name + ".jar";
   }
 
   private class ConfigReceive extends AbstractJarReceived {

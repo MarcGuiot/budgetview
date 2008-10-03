@@ -9,7 +9,6 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatcher;
 import org.uispec4j.finder.ComponentMatchers;
-import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import java.util.Date;
@@ -48,17 +47,18 @@ public class AccountChecker extends DataChecker {
     return getAccountPanel(account).getButton("Import data").triggerClick();
   }
 
-  public AccountChecker changeBalance(String accountName, final double balance, final String label) {
+  public BalanceEditionChecker getBalance(String accountName) {
     Panel parentPanel = getAccountPanel(accountName);
-    WindowInterceptor.init(parentPanel.getButton("accountBalance").triggerClick())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          window.getInputTextBox().setText(Double.toString(balance));
-          UISpecAssert.assertThat(window.getTextBox("labelInfo").textEquals(label));
-          UISpecAssert.assertThat(window.getTextBox("labelInfo").textEquals(label));
-          return window.getButton("ok").triggerClick();
-        }
-      }).run();
+    Window window = WindowInterceptor.getModalDialog(parentPanel.getButton("accountBalance").triggerClick());
+    return new BalanceEditionChecker(window);
+  }
+
+  public AccountChecker changeBalance(String accountName, final double balance, final String label) {
+    BalanceEditionChecker balanceEditor = getBalance(accountName);
+    balanceEditor
+      .setAmount(balance)
+      .checkLabel(label)
+      .validate();
     return this;
   }
 }

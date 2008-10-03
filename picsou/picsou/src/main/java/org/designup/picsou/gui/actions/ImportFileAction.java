@@ -35,6 +35,10 @@ public class ImportFileAction extends AbstractAction {
     this.directory = directory;
     OpenRequestManager openRequestManager = directory.get(OpenRequestManager.class);
     openRequestManager.pushCallback(new OpenRequestManager.Callback() {
+      public boolean accept() {
+        return true;
+      }
+
       public void openFiles(List<File> files) {
         SwingUtilities.invokeLater(new OpenRunnable(files, directory, repository, defaulAccount));
         defaulAccount = null;
@@ -61,7 +65,7 @@ public class ImportFileAction extends AbstractAction {
 
     public OpenRunnable(List<File> files, Directory directory, GlobRepository repository, Glob defaultAccount) {
       JFrame frame = directory.get(JFrame.class);
-      panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount, 
+      panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount,
                               frame, repository, directory);
     }
 

@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components;
 
+import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorService;
@@ -17,6 +18,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.List;
 
 public class PicsouDialog extends JDialog {
 
@@ -25,6 +28,8 @@ public class PicsouDialog extends JDialog {
   private ColorService colorService;
   private static final int HORIZONTAL_BUTTON_MARGIN = Gui.isMacOSX() ? 20 : 0;
   private Action closeAction;
+  private Directory directory;
+  private boolean openRequestIsManaged = false;
 
   public static PicsouDialog create(Window owner, Directory directory) {
     return create(owner, true, directory);
@@ -116,6 +121,29 @@ public class PicsouDialog extends JDialog {
     super.setContentPane(contentPane);
   }
 
+  public void setVisible(boolean b) {
+    final OpenRequestManager requestManager = directory.get(OpenRequestManager.class);
+    if (b && !openRequestIsManaged) {
+      requestManager.pushCallback(new OpenRequestManager.Callback() {
+        public boolean accept() {
+          return false;
+        }
+
+        public void openFiles(final List<File> files) {
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              requestManager.openFiles(files);
+            }
+          });
+        }
+      });
+    }
+    super.setVisible(b);
+    if (b && !openRequestIsManaged) {
+      requestManager.popCallback();
+    }
+  }
+
   private void adjustSizes(JButton cancelButton, JButton okButton) {
     Dimension preferredSize = getWidest(okButton.getPreferredSize(), cancelButton.getPreferredSize());
     okButton.setPreferredSize(preferredSize);
@@ -154,6 +182,7 @@ public class PicsouDialog extends JDialog {
   }
 
   private void init(Directory directory) {
+    this.directory = directory;
     setTitle(Lang.get("application"));
     colorService = directory.get(ColorService.class);
   }
@@ -162,6 +191,10 @@ public class PicsouDialog extends JDialog {
     JRootPane rootPane = new JRootPane();
     GuiUtils.addShortcut(rootPane, "ESCAPE", new CloseAction());
     return rootPane;
+  }
+
+  public void setOpenRequestIsManaged(boolean openRequestIsManaged) {
+    this.openRequestIsManaged = openRequestIsManaged;
   }
 
   private class CloseAction extends AbstractAction {

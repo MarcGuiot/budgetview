@@ -22,10 +22,6 @@ C org.globsframework.gui.splits.components.ShadowedLabelUI
 C org.globsframework.gui.splits.components.HyperlinkButtonUI
 C com.jidesoft.plaf.aqua.AquaJideUtils
 P com/jgoodies/looks true
-R org/jfree/resources/JCommonResources.class
-R org/jfree/chart/LocalizationBundle.properties
-R org/jfree/chart/editor/LocalizationBundle.properties
-R org/jfree/chart/plot/LocalizationBundle.properties
 R fonts.properties
 R color.properties
 R layout/

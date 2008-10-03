@@ -12,7 +12,7 @@
 
         <column margin="20" anchor="center" fill="none" marginBottom="20">
 
-          <label icon="picsou_icon_128.png" fill="none" anchor="center" marginBottom="20"/>
+          <label icon="fourmics_icon_128.png" fill="none" anchor="center" marginBottom="20"/>
 
           <textArea styleClass="multiLineLabel" text="$login.intro"
                     marginBottom="15"/>

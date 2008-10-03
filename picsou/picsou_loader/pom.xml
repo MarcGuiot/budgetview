@@ -42,7 +42,7 @@
             <configuration>
               <tasks unless="${GenerateInstall}">
                 <manifest file="target/classes/MANIFEST.MF">
-                  <attribute name="Main-Class" value="org.designup.picsou.start.Main"/>
+                  <attribute name="Main-Class" value="com.fourmics.Main"/>
                 </manifest>
                 <jar update="true" jarfile="target/fourmicsloader-1.0.jar" manifest="target/classes/MANIFEST.MF"/>
 
@@ -54,10 +54,10 @@
 
                 <jarbundler dir="${basedir}/Fourmics/"
                             name="Fourmics"
-                            mainclass="org.designup.picsou.start.Main"
+                            mainclass="com.fourmics.Main"
                             jar="target/fourmicsloader-1.0.jar"
                             stubfile="dev/install/JavaApplicationStub"
-                            icon="dev/images/picsou_icon.icns"
+                            icon="dev/images/fourmics_icon.icns"
                             jvmversion="1.5+"
                             arguments="-l fr"
                             vmoptions="-Xmx128m -Dapple.awt.graphics.UseQuartz=false">
@@ -67,11 +67,11 @@
 
                   <documenttype name="Financial information"
                                 extensions="ofx qif"
-                                iconFile="dev/images/picsou_icon.icns"
+                                iconFile="dev/images/fourmics_icon.icns"
                                 role="Editor"/>
                   <documenttype name="Financial information"
                                 mimetypes="text/ofx text/qif"
-                                iconFile="dev/images/picsou_icon.icns"
+                                iconFile="dev/images/fourmics_icon.icns"
                                 role="Editor"/>
                 </jarbundler>
 
@@ -82,7 +82,7 @@
 
               </tasks>
               <tasks unless="${GenerateWindowsInstall}">
-                <exec executable="${basedir}/dev/install/updateMpi.sh"/>
+                <exec executable="${basedir}/dev/install/createInstall.sh"/>
               </tasks>
             </configuration>
             <goals>

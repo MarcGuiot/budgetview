@@ -37,6 +37,7 @@ public class ImportSession {
   private BankFileType fileType;
   private ChangeSetAggregator importChangeSetAggregator;
   private TypedInputStream typedStream;
+  private boolean load = false;
 
   public ImportSession(GlobRepository referenceRepository, Directory directory) {
     this.referenceRepository = referenceRepository;
@@ -62,6 +63,7 @@ public class ImportSession {
     fileType = typedStream.getType();
     importService.run(typedStream, referenceRepository, localRepository);
     localRepository.completeBulkDispatchingMode();
+    load = true;
     return getImportedTransactionFormat();
   }
 
@@ -73,7 +75,10 @@ public class ImportSession {
   }
 
   public Key importTransactions(Glob currentlySelectedAccount, String selectedDateFormat) {
-
+    if (!load) {
+      return null;
+    }
+    load = false;
     TransactionFilter transactionFilter = new TransactionFilter();
     GlobList newTransactions = transactionFilter.loadTransactions(referenceRepository, localRepository,
                                                                   convertImportedTransaction(selectedDateFormat));

@@ -57,10 +57,10 @@ ExtractSolidArchivesOnStartup
 No
 
 Icon
-../images/picsou_icon_48.png
+../images/fourmics_icon_48.png
 
 Image
-../images/picsou_icon_128.png
+../images/fourmics_icon_128.png
 
 IncludeDebugging
 Yes
@@ -213,11 +213,11 @@ FileGroup ::8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42 -setup Install -active Yes -pla
 File ::2B46BFAC-3F00-4290-B80A-D790CCEB6778 -name msvcr71.dll -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::09B3F2A4-3934-FAA3-B4DF-514E8A7332E9 -name license.txt -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::2FD90047-B823-2003-90B2-D3469C68FBE9 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/install/fourmics.exe -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
-File ::7D0C4D57-E1C1-C244-4722-B0DDFF5C6150 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/picsou_icon_32.ico -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
+File ::7D0C4D57-E1C1-C244-4722-B0DDFF5C6150 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/fourmics_icon_32.ico -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::A427121E-CA00-2A1E-B0AF-61AAE6EB9666 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/obfuscated/JAR_FOURMICS.jar -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 FileGroup ::89CD3510-FDE9-0208-D7B5-DE37109ECD51 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 MacOS-X Solaris-sparc TarArchive} -name {linux program files} -parent FileGroups
-File ::2FB1AD48-CACB-8786-FF0B-91202764BB49 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/images/picsou_icon_32.png -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
-File ::4C60DC39-5780-FE0B-6BF3-22B7D15526FC -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/install/picsou.sh -permissions 00555 -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
+File ::2FB1AD48-CACB-8786-FF0B-91202764BB49 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/images/fourmics_icon_32.png -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
+File ::4C60DC39-5780-FE0B-6BF3-22B7D15526FC -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/install/fourmics.sh -permissions 00555 -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
 File ::49DA2101-38B8-6939-FCAE-79D836889D7C -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/striped_picsou.jar -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
 Component ::89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92 -setup Install -active Yes -platforms {Solaris-sparc Windows} -name {Default Component} -parent Components
 Component ::BEF85513-C17E-C854-1584-C6A50E5E906C -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 MacOS-X Solaris-sparc} -name {unix component} -parent Components
@@ -682,7 +682,7 @@ text/ofx
 text/qif
 
 4A6ADC8C-83B7-433C-AE38-4A306C5E9671,IconPath
-{<%InstallDir%>\picsou_icon_32.ico}
+{<%InstallDir%>\fourmics_icon_32.ico}
 
 4A6ADC8C-83B7-433C-AE38-4A306C5E9671,Title
 Fourmics
@@ -973,7 +973,7 @@ CreateDesktopShortcut
 text/ofx
 
 7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,IconPath
-{<%InstallDir%>\picsou_icon_32.ico}
+{<%InstallDir%>\fourmics_icon_32.ico}
 
 7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,Title
 Fourmics
@@ -1195,7 +1195,7 @@ AIX-ppc,InstallType
 Typical
 
 AIX-ppc,ProgramExecutable
-<%InstallDir%>/picsou
+<%InstallDir%>/fourmics
 
 AIX-ppc,ProgramFolderAllUsers
 No
@@ -1624,7 +1624,7 @@ FreeBSD-4-x86,InstallType
 Typical
 
 FreeBSD-4-x86,ProgramExecutable
-<%InstallDir%>/picsou
+<%InstallDir%>/fourmics
 
 FreeBSD-4-x86,ProgramFolderAllUsers
 No
@@ -1675,7 +1675,7 @@ FreeBSD-x86,InstallType
 Typical
 
 FreeBSD-x86,ProgramExecutable
-<%InstallDir%>/picsou
+<%InstallDir%>/fourmics
 
 FreeBSD-x86,ProgramFolderAllUsers
 No
@@ -1726,7 +1726,7 @@ HPUX-hppa,InstallType
 Typical
 
 HPUX-hppa,ProgramExecutable
-<%InstallDir%>/picsou
+<%InstallDir%>/fourmics
 
 HPUX-hppa,ProgramFolderAllUsers
 No
@@ -1777,7 +1777,7 @@ Linux-x86,InstallType
 Typical
 
 Linux-x86,ProgramExecutable
-<%InstallDir%>/picsou
+<%InstallDir%>/fourmics
 
 Linux-x86,ProgramFolderAllUsers
 No
@@ -1828,7 +1828,7 @@ Solaris-sparc,InstallType
 Typical
 
 Solaris-sparc,ProgramExecutable
-<%InstallDir%>/picsou
+<%InstallDir%>/fourmics
 
 Solaris-sparc,ProgramFolderAllUsers
 No
@@ -1951,7 +1951,7 @@ Windows,ProgramReadme
 <%InstallDir%>/README.txt
 
 Windows,WindowsIcon
-/home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/picsou_icon_32.ico
+/home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/fourmics_icon_32.ico
 
 ZipArchive,Active
 No

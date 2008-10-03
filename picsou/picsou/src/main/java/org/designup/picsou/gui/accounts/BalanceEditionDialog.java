@@ -15,6 +15,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -38,6 +39,9 @@ public class BalanceEditionDialog {
                                                       localRepository, directory);
     builder.addEditor("amount", Account.BALANCE).setNotifyAtKeyPressed(true)
       .forceSelection(account);
+    builder.add("accountName", new JLabel(Lang.get("balance.edition.account.name",
+                                                   Strings.toString(account.get(Account.NAME)),
+                                                   Strings.toString(account.get(Account.NUMBER)))));
     Integer transactionId = account.get(Account.TRANSACTION_ID);
     Glob transaction = null;
     if (transactionId == null) {

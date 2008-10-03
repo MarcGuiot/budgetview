@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.accounts.BalanceEditionDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
@@ -103,7 +104,8 @@ public class ImportPanel {
     localDirectory.add(new SelectionService());
 
     dialog = PicsouDialog.create(owner, directory);
-    
+    dialog.setOpenRequestIsManaged(true);
+
     initStep1Panel(textForCloseButton, directory);
     initStep2Panel(textForCloseButton, owner);
     initMainPanel();
@@ -219,6 +221,15 @@ public class ImportPanel {
   private void initOpenRequestManager(Directory directory) {
     openRequestManager = directory.get(OpenRequestManager.class);
     openRequestManager.pushCallback(new OpenRequestManager.Callback() {
+      public boolean accept() {
+        synchronized (fileField) {
+          if (step1) {
+            return true;
+          }
+        }
+        return false;
+      }
+
       public void openFiles(final List<File> files) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
@@ -359,13 +370,31 @@ public class ImportPanel {
       }
       openRequestManager.popCallback();
       openRequestManager.pushCallback(new OpenRequestManager.Callback() {
-        public void openFiles(List<File> files) {
+        public boolean accept() {
+          synchronized (ImportPanel.this.files) {
+            if (step2) {
+              return true;
+            }
+          }
+          return false;
+        }
+
+        public void openFiles(final List<File> files) {
           synchronized (ImportPanel.this.files) {
             if (step2) {
               ImportPanel.this.files.addAll(files);
             }
             else {
-              openRequestManager.openFiles(files);
+              SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                  try {
+                    Thread.sleep(50);
+                  }
+                  catch (InterruptedException e) {
+                  }
+                  openRequestManager.openFiles(files);
+                }
+              });
             }
           }
         }
@@ -390,9 +419,10 @@ public class ImportPanel {
     }
     if (!step2) {
       try {
-        openRequestManager.popCallback();
         Set<Integer> month = createMonth();
         learn();
+        showBalanceDialog();
+        openRequestManager.popCallback();
         localRepository.commitChanges(true);
         selectImportedMonth(month);
         complete();
@@ -422,6 +452,21 @@ public class ImportPanel {
       Log.write("", e);
       messageLabel.setText(message);
       return false;
+    }
+  }
+
+  private void showBalanceDialog() {
+    Set<Key> transactions = localRepository.getCurrentChanges().getCreated(Transaction.TYPE);
+    Set<Integer> accounts = new HashSet<Integer>();
+    for (Key transaction : transactions) {
+      accounts.add(localRepository.get(transaction).get(Transaction.ACCOUNT));
+    }
+    for (Integer accountId : accounts) {
+      Glob account = localRepository.get(Key.create(Account.TYPE, accountId));
+      if (account.get(Account.BALANCE) == null) {
+        BalanceEditionDialog dialog = new BalanceEditionDialog(this.dialog, localRepository, localDirectory, account);
+        dialog.show();
+      }
     }
   }
 
@@ -536,7 +581,9 @@ public class ImportPanel {
         }
         Key importKey = importSession.importTransactions(currentlySelectedAccount,
                                                          dateFormatSelectionPanel.getSelectedFormat());
-        importKeys.add(importKey.get(TransactionImport.ID));
+        if (importKey != null) {
+          importKeys.add(importKey.get(TransactionImport.ID));
+        }
         nextImport();
       }
       finally {

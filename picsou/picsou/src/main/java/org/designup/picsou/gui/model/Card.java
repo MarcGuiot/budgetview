@@ -22,8 +22,8 @@ public enum Card implements GlobConstantContainer {
 
   static {
     DATA.setMasterCard(ANALYSIS);
-    EVOLUTION.setMasterCard(EVOLUTION);
-    REPARTITION.setMasterCard(REPARTITION);
+    EVOLUTION.setMasterCard(ANALYSIS);
+    REPARTITION.setMasterCard(ANALYSIS);
   }
 
   public static GlobType TYPE;

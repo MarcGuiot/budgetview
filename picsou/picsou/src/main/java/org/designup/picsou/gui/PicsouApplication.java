@@ -110,7 +110,6 @@ public class PicsouApplication {
     Utils.beginRemove();
     changeDate();
     Utils.endRemove();
-    initLogger();
     new PicsouApplication().run(args);
   }
 
@@ -130,20 +129,18 @@ public class PicsouApplication {
       File logFilePath = new File(getPicsouPath() + "/" + "logs");
       logFilePath.mkdirs();
       File logFile = new File(logFilePath, "log.txt");
-      if (logFile.exists() && logFile.length() > 2 * 1024 * 1024){
+      if (logFile.exists() && logFile.length() > 2 * 1024 * 1024) {
         File oldFile = new File(logFilePath, "oldLog.txt");
-        if (oldFile.exists()){
+        if (oldFile.exists()) {
           oldFile.delete();
         }
         logFile.renameTo(oldFile);
       }
-      FileOutputStream stream = new FileOutputStream(logFile);
+      FileOutputStream stream = new FileOutputStream(logFile, true);
       PrintStream output = new PrintStream(stream);
       output.println("---------------------------");
-      output.println("version : " + PicsouApplication.JAR_VERSION + " " + new Date());
+      output.println("version : " + PicsouApplication.JAR_VERSION + " ; " + new Date());
       Log.init(output);
-      System.setOut(output);
-      System.setErr(output);
     }
     catch (IOException e) {
       e.printStackTrace();
@@ -178,6 +175,7 @@ public class PicsouApplication {
       return;
     }
 
+    initLogger();
     clearRepositoryIfNeeded();
 
     directory = createDirectory();

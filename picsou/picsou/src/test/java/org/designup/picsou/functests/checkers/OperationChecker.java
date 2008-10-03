@@ -36,22 +36,26 @@ public class OperationChecker {
   }
 
   public void importOfxFile(String name) {
-    importFile(new String[]{name}, null);
+    importFile(new String[]{name}, null, null);
   }
 
   public void importQifFile(String file, String bank) {
-    importFile(new String[]{file}, bank);
+    importFile(new String[]{file}, bank, null);
   }
+
+  public void importQifFile(String file, String bank, Double amount) {
+    importFile(new String[]{file}, bank, amount);
+  }
+
 
   public void importQifFiles(String bank, String... files) {
-    importFile(files, bank);
+    importFile(files, bank, null);
   }
 
-  private void importFile(final String[] fileNames, final String bank) {
+  private void importFile(final String[] fileNames, final String bank, final Double amount) {
     WindowInterceptor
       .init(importMenu.triggerClick())
       .process(new WindowHandler() {
-
         public Trigger process(Window importDialog) throws Exception {
 
           WindowInterceptor.init(importDialog.getButton("Browse").triggerClick())
@@ -67,7 +71,12 @@ public class OperationChecker {
           for (int i = 0; i < fileNames.length - 1; i++) {
             okButton.click();
           }
-
+          if (amount != null) {
+            Window window = WindowInterceptor.getModalDialog(okButton.triggerClick());
+            BalanceEditionChecker balance = new BalanceEditionChecker(window);
+            balance.setAmount(amount);
+            return balance.getValidate();
+          }
           return okButton.triggerClick();
         }
       })

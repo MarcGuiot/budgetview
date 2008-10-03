@@ -15,7 +15,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"),
                            fileName);
 
-    operations.importQifFile(fileName, SOCIETE_GENERALE);
+    operations.importQifFile(fileName, SOCIETE_GENERALE, 0.);
     transactions
       .initContent()
       .add("22/04/2006", TransactionType.CREDIT_CARD, "SACLAY", "", -55.49)
@@ -28,11 +28,11 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     categories.checkSelection(MasterCategory.ALL);
 
     transactions.initAmountContent()
-      .add("SACLAY", -55.49)
-      .add("STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65)
-      .add("BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", -49.00)
-      .add("SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50)
-      .add("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70)
+      .add("SACLAY", -55.49, 0, 0)
+      .add("STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65, 55.49, 55.49)
+      .add("BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", -49.00, 73.14, 73.14)
+      .add("SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50, 122.14, 122.14)
+      .add("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, 136.64, 136.64)
       .check();
     views.selectHome();
 
@@ -65,6 +65,8 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .check();
     views.selectHome();
     accounts.changeBalance(OperationChecker.DEFAULT_ACCOUNT_NUMBER, 80, "Auchan");
+    accounts.getBalance(OperationChecker.DEFAULT_ACCOUNT_NUMBER)
+      .checkAccountName("Acount: Main account (11111)");
   }
 
   public void testImportAmountWithVariousDecimalSeparator() throws Exception {
@@ -161,7 +163,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       builder.append(block);
     }
     String file = createQifFile("file", builder.toString());
-    operations.importQifFile(file, SOCIETE_GENERALE);
+    operations.importQifFile(file, SOCIETE_GENERALE, 0.);
   }
 
   private String createQifFile(String discriminant) {
