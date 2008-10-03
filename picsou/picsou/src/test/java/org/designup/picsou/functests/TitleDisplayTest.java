@@ -34,27 +34,19 @@ public class TitleDisplayTest extends LoggedInFunctionalTestCase {
     title.checkContent("Dashboard august 2008 - february 2009");
 
     timeline.selectMonth("2008/10");
-    
+
     views.selectBudget();
     title.checkContent("Budget october 2008");
 
     views.selectAnalysis();
     title.checkContent("Operations october 2008");
-
-    views.selectEvolution();
-    title.checkContent("Evolution october 2008");
 
     views.selectData();
     title.checkContent("Operations october 2008");
 
-    views.selectRepartition();
-    title.checkContent("Repartition october 2008");
-
     views.selectBudget();
     title.checkContent("Budget october 2008");
 
-    views.selectAnalysis();
-    title.checkContent("Repartition october 2008");
   }
 
   public void testSeveralMonths() throws Exception {

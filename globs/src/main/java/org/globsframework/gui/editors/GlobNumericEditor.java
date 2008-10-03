@@ -47,6 +47,9 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNu
     if (!isMinusAllowed && str.startsWith("-")) {
       return false;
     }
+    if ("".equals(str)) {
+      return true;
+    }
     try {
       convertValue(str);
       return true;
@@ -58,7 +61,9 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNu
 
   protected Object getValue() {
     String s = textComponent.getText();
-    s = invertIfNeeded(s);
+    if (!"".equals(s.trim())) {
+      s = invertIfNeeded(s);
+    }
     return convertValue(s).getValue();
   }
 
@@ -139,6 +144,18 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNu
           super.replace(fb, offset, length, replaceText, attrs);
         }
       }
+
+      public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+        StringBuffer buffer = new StringBuffer();
+        String text = textComponent.getText();
+        buffer
+          .append(text, 0, offset)
+          .append(text, offset + length, text.length());
+        if (checkValue(buffer.toString())) {
+          super.remove(fb, offset, length);
+        }
+
+      }
     });
   }
 
@@ -154,14 +171,14 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNu
     }
 
     public void visitInteger(IntegerField field) throws Exception {
-      value = null;
+      value = 0;
       if (!"".equals(text.trim())) {
         value = Integer.parseInt(text);
       }
     }
 
     public void visitDouble(DoubleField field) throws Exception {
-      value = null;
+      value = 0.0;
       if (!"".equals(text.trim())) {
         value = Double.parseDouble(text.replace(',', '.'));
       }
