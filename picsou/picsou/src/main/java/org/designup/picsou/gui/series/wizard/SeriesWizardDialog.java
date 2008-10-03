@@ -57,6 +57,7 @@ public class SeriesWizardDialog {
   }
 
   public void show() {
+    dialog.pack();
     GuiUtils.showCentered(dialog);
   }
 

@@ -3,22 +3,24 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
+    <style selector="label.budgetArea" font="-,bold,14"/>
+    <style selector="checkBox" foreground="help.messages.text"/>
   </styles>
 
-  <panel styleClass="dialog">
+  <panel styleClass="dialog" preferredSize="(500,600)">
     <column styleClass="innerDialog">
 
       <label text="$seriesWizard.title" styleClass="title"/>
 
       <htmlEditorPane text="$seriesWizard.message.top"/>
 
-      <scrollPane>
+      <scrollPane weightY="100">
         <column name="content">
           
           <repeat ref="budgetAreasRepeat">
               <column>
-                <label text="budgetAreaTitle"/>
-                <htmlEditorPane ref="budgetAreaDescription"/>
+                <label ref="budgetAreaTitle" styleClass="budgetArea"/>
+                <htmlEditorPane ref="budgetAreaDescription" styleClass="description"/>
                 <repeat ref="entryRepeat">
                   <checkBox ref="checkBox"/>
                 </repeat>
