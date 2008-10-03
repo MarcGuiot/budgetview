@@ -14,8 +14,6 @@ import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.filtering.TextFilterPanel;
-import org.designup.picsou.gui.graphics.CategoriesChart;
-import org.designup.picsou.gui.graphics.HistoricalChart;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
@@ -124,9 +122,7 @@ public class MainPanel {
       categorizationView,
       new CardView(repository, directory),
       new BudgetView(repository, directory),
-      seriesView,
-      new HistoricalChart(repository, directory),
-      new CategoriesChart(repository, directory, transactionSelection));
+      seriesView);
 
     monthSummary.init();
 

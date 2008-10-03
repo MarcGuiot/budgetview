@@ -21,7 +21,7 @@
                 name="Picsou"
                 mainclass="org.designup.picsou.gui.PicsouApplication"
                 jar="generated/${picsou.jar}"
-                icon="dev/images/picsou_icon.icns"
+                icon="dev/images/fourmics_icon.icns"
                 jvmversion="1.5*">
       <documenttype name="OFX Document"
                     extensions="ofx"

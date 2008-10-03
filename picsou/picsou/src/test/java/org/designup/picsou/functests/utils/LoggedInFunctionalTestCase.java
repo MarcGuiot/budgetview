@@ -28,7 +28,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected TransactionChecker transactions;
   protected TransactionDetailsChecker transactionDetails;
   protected OperationChecker operations;
-  protected GraphicChecker graphics;
   protected GlobRepository repository;
   protected ServerAccess serverAccess;
   protected TitleChecker title;
@@ -111,7 +110,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     timeline = new MonthChecker(mainWindow);
     transactions = new TransactionChecker(mainWindow);
     transactionDetails = new TransactionDetailsChecker(mainWindow);
-    graphics = new GraphicChecker(mainWindow);
     title = new TitleChecker(mainWindow);
     monthSummary = new MonthSummaryChecker(mainWindow);
     balanceSummary = new BalanceSummaryChecker(mainWindow);
@@ -134,7 +132,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     transactions = null;
     transactionDetails = null;
     operations = null;
-    graphics = null;
     serverAccess = null;
     title = null;
     repository = null;
