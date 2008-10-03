@@ -88,7 +88,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
   public void testNewProject() throws Exception {
     views.selectBudget();
-    budgetView.projects.createSeries()
+    budgetView.specials.createSeries()
       .setName("Machine a laver")
       .setCategory(MasterCategory.HOUSE)
       .checkStartDate("June 2008")
@@ -100,7 +100,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/30", -10, "mac")
       .load();
     timeline.selectMonths("2008/06", "2008/07");
-    budgetView.projects.createSeries()
+    budgetView.specials.createSeries()
       .setName("Machine a laver")
       .setCategory(MasterCategory.HOUSE)
       .checkStartDate("June 2008")

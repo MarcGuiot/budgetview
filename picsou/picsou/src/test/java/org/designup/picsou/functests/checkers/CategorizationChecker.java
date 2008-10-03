@@ -36,11 +36,15 @@ public class CategorizationChecker extends DataChecker {
   }
 
   private void selectBudgetArea(BudgetArea area) {
-    AbstractButton button = getPanel().findSwingComponent(AbstractButton.class, area.getName());
+    AbstractButton button = getBudgetAreasPanel().findSwingComponent(AbstractButton.class, area.getName());
     if (button == null) {
       Assert.fail("No button found for budget area " + area);
     }
     button.doClick(0);
+  }
+
+  private Panel getBudgetAreasPanel() {
+    return getPanel().getPanel("budgetAreaToggles");
   }
 
   public CategorizationChecker checkLabel(String expected) {
@@ -141,7 +145,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker selectRecurring() {
-    selectBudgetArea(BudgetArea.RECURRING_EXPENSES);
+    selectBudgetArea(BudgetArea.RECURRING);
     return this;
   }
 
@@ -221,7 +225,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker checkRecurringSeriesIsSelected(String seriesName) {
-    assertTrue(getPanel().getToggleButton("RecurringExpenses").isSelected());
+    assertTrue(getPanel().getToggleButton("Recurring").isSelected());
 
     Panel panel = getRecurringSeriesPanel();
     assertTrue(panel.getToggleButton(seriesName).isSelected());
@@ -247,7 +251,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker selectEnvelopes() {
-    selectBudgetArea(BudgetArea.EXPENSES_ENVELOPE);
+    selectBudgetArea(BudgetArea.ENVELOPES);
     return this;
   }
 
@@ -325,21 +329,21 @@ public class CategorizationChecker extends DataChecker {
     return envelopeSeriesPanel;
   }
 
-  public CategorizationChecker selectProjects() {
-    selectBudgetArea(BudgetArea.PROJECTS);
+  public CategorizationChecker selectSpecial() {
+    selectBudgetArea(BudgetArea.SPECIAL);
     return this;
   }
 
-  public CategorizationChecker selectProjectSeries(String projectName, MasterCategory category, boolean createSeries) {
-    Panel panel = getProjectSeriesPanel();
-    String name = projectName + ":" + category.getName();
+  public CategorizationChecker selectSpecialSeries(String seriesName, MasterCategory category, boolean createSeries) {
+    Panel panel = getSpecialSeriesPanel();
+    String name = seriesName + ":" + category.getName();
     Component component = panel.findSwingComponent(ComponentMatchers.innerNameIdentity(name));
     if (component != null) {
       // TODO avec la multi affectation de category a une enveloppe
     }
     if (createSeries) {
-      createProjectSeries()
-        .setName(projectName)
+      createSpecialSeries()
+        .setName(seriesName)
         .setCategory(category)
         .validate();
     }
@@ -349,8 +353,8 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  private Panel getProjectSeriesPanel() {
-    Panel panel = this.getPanel().getPanel("projectSeriesChooser");
+  private Panel getSpecialSeriesPanel() {
+    Panel panel = this.getPanel().getPanel("specialSeriesChooser");
     assertTrue(panel.isVisible());
     return panel;
   }
@@ -381,7 +385,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker selectOccasional() {
-    selectBudgetArea(BudgetArea.OCCASIONAL_EXPENSES);
+    selectBudgetArea(BudgetArea.OCCASIONAL);
     return this;
   }
 
@@ -399,7 +403,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   private Panel getOccasionalSeriesPanel() {
-    Panel panel = this.getPanel().getPanel("occasionalSeriesChooser");
+    Panel panel = getPanel().getPanel("occasionalSeriesChooser");
     assertTrue(panel.isVisible());
     return panel;
   }
@@ -429,12 +433,12 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public void checkOccasionalSeries(MasterCategory category) {
-    assertTrue(getPanel().getToggleButton("occasionalExpenses").isSelected());
+    assertTrue(getBudgetAreasPanel().getToggleButton("occasional").isSelected());
     assertTrue(getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).isSelected());
   }
 
   public void checkOccasionalContainLabel(String category) {
-    assertTrue(getPanel().getToggleButton("occasionalExpenses").isSelected());
+    assertTrue(getBudgetAreasPanel().getToggleButton("occasional").isSelected());
     assertTrue(getOccasionalSeriesPanel().getToggleButton(category).isEnabled());
   }
 
@@ -447,7 +451,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker checkOccasionalSeriesIsSelected(MasterCategory category) {
-    assertTrue(getPanel().getToggleButton("occasionalExpenses").isSelected());
+    assertTrue(getBudgetAreasPanel().getToggleButton("occasional").isSelected());
     Panel panel = getOccasionalSeriesPanel();
     assertFalse(panel.getToggleButton("invisibleOccasionalToggle").isSelected());
     assertTrue(panel.getToggleButton("occasionalSeries" + ":" + category.getName()).isSelected());
@@ -455,7 +459,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker checkEnvelopeSeriesIsSelected(String seriesName, MasterCategory category) {
-    assertTrue(getPanel().getToggleButton("expensesEnvelope").isSelected());
+    assertTrue(getPanel().getToggleButton("envelopes").isSelected());
     Panel panel = getEnvelopeSeriesPanel();
     assertFalse(panel.getToggleButton("invisibleToggle").isSelected());
     assertTrue(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
@@ -474,8 +478,8 @@ public class CategorizationChecker extends DataChecker {
     return createSeries("envelope", false);
   }
 
-  public SeriesEditionDialogChecker createProjectSeries() {
-    return createSeries("project", false);
+  public SeriesEditionDialogChecker createSpecialSeries() {
+    return createSeries("special", false);
   }
 
   public SeriesEditionDialogChecker createSavingsSeries() {
@@ -725,26 +729,26 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationChecker setProject(String label, String seriesName, MasterCategory master, boolean createSeries) {
+  public CategorizationChecker setSpecial(String label, String seriesName, MasterCategory master, boolean createSeries) {
     int[] indices = getRowIndices(label);
     boolean first = createSeries;
     for (int indice : indices) {
-      setProject(indice, seriesName, master, first);
+      setSpecial(indice, seriesName, master, first);
       first = false;
     }
     return this;
   }
 
-  public CategorizationChecker setProject(int rowIndex, String seriesName, MasterCategory master, boolean createSeries) {
+  public CategorizationChecker setSpecial(int rowIndex, String seriesName, MasterCategory master, boolean createSeries) {
     selectTableRows(rowIndex);
-    selectProjects();
-    selectProjectSeries(seriesName, master, createSeries);
+    selectSpecial();
+    selectSpecialSeries(seriesName, master, createSeries);
     return this;
   }
 
-  public CategorizationChecker checkProjectSeriesIsSelected(String seriesName, MasterCategory category) {
-    assertTrue(getPanel().getToggleButton("project").isSelected());
-    Panel panel = getProjectSeriesPanel();
+  public CategorizationChecker checkSpecialSeriesIsSelected(String seriesName, MasterCategory category) {
+    assertTrue(getPanel().getToggleButton("special").isSelected());
+    Panel panel = getSpecialSeriesPanel();
     assertFalse(panel.getToggleButton("invisibleToggle").isSelected());
     assertTrue(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
     return this;

@@ -21,7 +21,7 @@ public class MonthStatTriggerTest extends PicsouTestCase {
   public void checkResetOrChangeSet(boolean reset) throws Exception {
     String input =
       "<series name='salary' budgetAreaName='income'/>" +
-      "<series name='groceries' budgetAreaName='expensesEnvelope'/>" +
+      "<series name='groceries' budgetAreaName='envelopes'/>" +
       "<account id='" + Account.SUMMARY_ACCOUNT_ID + "'/>" +
       "<month id='200605'/>" +
       "<month id='200606'/>" +

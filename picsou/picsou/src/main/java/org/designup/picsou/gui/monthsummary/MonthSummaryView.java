@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.BalanceGraph;
@@ -44,9 +45,9 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   private static final GlobMatcher USER_SERIES_MATCHER =
     GlobMatchers.fieldIn(Series.BUDGET_AREA,
                          BudgetArea.INCOME.getId(),
-                         BudgetArea.RECURRING_EXPENSES.getId(),
-                         BudgetArea.EXPENSES_ENVELOPE.getId(),
-                         BudgetArea.PROJECTS.getId(),
+                         BudgetArea.RECURRING.getId(),
+                         BudgetArea.ENVELOPES.getId(),
+                         BudgetArea.SPECIAL.getId(),
                          BudgetArea.SAVINGS.getId());
   private CardHandler cards;
   private SelectionService parentSelectionService;
@@ -120,6 +121,9 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       .setUpdateMatcher(ChangeSetMatchers.changesForType(Transaction.TYPE));
 
     builder.add("categorize", new CategorizationAction(Lang.get("budgetArea.uncategorized"), false));
+
+    builder.add("openSeriesWizard", new OpenSeriesWizardAction());
+
     builder.add("categorizeAll", new CategorizationAction(null, true));
 
     builder.add("help", new HelpAction(Lang.get("monthsummary.help"), "import", directory));
@@ -307,5 +311,16 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     return repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)
       .findByIndex(Transaction.MONTH, month.get(Month.ID)).getGlobs()
       .filterSelf(fieldEquals(Transaction.PLANNED, false), repository);
+  }
+
+  private class OpenSeriesWizardAction extends AbstractAction {
+    public OpenSeriesWizardAction() {
+      super(Lang.get("monthsummary.openSeriesWizard"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        SeriesWizardDialog dialog = new SeriesWizardDialog(repository, directory);
+        dialog.show();
+      }
   }
 }

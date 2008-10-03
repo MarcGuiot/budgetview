@@ -81,7 +81,7 @@ class SeriesWrapperUpdater implements ChangeSetListener {
 
       for (Glob series : repository.getAll(Series.TYPE)) {
         Integer budgetAreaId = series.get(Series.BUDGET_AREA);
-        if (BudgetArea.OCCASIONAL_EXPENSES.getId().equals(budgetAreaId) ||
+        if (BudgetArea.OCCASIONAL.getId().equals(budgetAreaId) ||
             BudgetArea.UNCATEGORIZED.getId().equals(budgetAreaId)) {
           continue;
         }

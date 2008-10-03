@@ -47,7 +47,7 @@ public class DialogDemo {
     SeriesEditionDialog dialog = new SeriesEditionDialog(frame, repository, directory);
     SplitsEditor.show(dialog.getDialog(), directory);
 //    dialog.show(BudgetArea.EXPENSES_ENVELOPE, Collections.singleton(200808));
-    dialog.show(BudgetArea.RECURRING_EXPENSES, Collections.singleton(200808), null);
+    dialog.show(BudgetArea.RECURRING, Collections.singleton(200808), null);
   }
 
   private static void showCategoriesEditionDialog(GlobRepository repository, Directory directory) {

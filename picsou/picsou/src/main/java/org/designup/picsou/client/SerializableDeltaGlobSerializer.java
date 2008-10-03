@@ -22,7 +22,7 @@ public class SerializableDeltaGlobSerializer {
   public void serialize(SerializedOutput output, MultiMap<String, ServerDelta> deltaGlobMap) {
     int globTypeCount = deltaGlobMap.keySet().size();
     output.write(globTypeCount);
-    for (Map.Entry<String, List<ServerDelta>> stringListEntry : deltaGlobMap.values()) {
+    for (Map.Entry<String, List<ServerDelta>> stringListEntry : deltaGlobMap.entries()) {
       output.writeString(stringListEntry.getKey());
       output.write(stringListEntry.getValue().size());
       for (ServerDelta deltaGlob : stringListEntry.getValue()) {

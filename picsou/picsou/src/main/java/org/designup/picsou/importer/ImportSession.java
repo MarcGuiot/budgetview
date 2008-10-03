@@ -99,7 +99,7 @@ public class ImportSession {
         Glob transaction = localRepository.get(key);
         transactionByAccountId.put(transaction.get(Transaction.ACCOUNT), transaction);
       }
-      for (Map.Entry<Integer, List<Glob>> accountIdAndTransactions : transactionByAccountId.values()) {
+      for (Map.Entry<Integer, List<Glob>> accountIdAndTransactions : transactionByAccountId.entries()) {
         Glob account = localRepository.get(Key.create(Account.TYPE, accountIdAndTransactions.getKey()));
         Glob bankEntity = localRepository.findLinkTarget(account, Account.BANK_ENTITY);
         Glob bank = localRepository.findLinkTarget(bankEntity, BankEntity.BANK);

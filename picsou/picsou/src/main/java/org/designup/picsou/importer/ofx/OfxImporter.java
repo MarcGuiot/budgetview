@@ -164,7 +164,7 @@ public class OfxImporter implements AccountFileImporter {
 
     private void processCategories() {
       Set<Integer> categoryIds = new HashSet<Integer>();
-      for (Map.Entry<String, List<String>> entry : categoriesForTransaction.values()) {
+      for (Map.Entry<String, List<String>> entry : categoriesForTransaction.entries()) {
         String masterName = entry.getKey();
         if (Strings.isNullOrEmpty(masterName)) {
           continue;

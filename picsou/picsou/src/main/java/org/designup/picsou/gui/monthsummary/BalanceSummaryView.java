@@ -28,7 +28,7 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
   private JLabel fixe;
   private JLabel total;
   private JLabel savings;
-  private JLabel projects;
+  private JLabel special;
   private JLabel envelope;
   private JPanel contentPanel;
   private JLabel amountSummaryLabel;
@@ -65,7 +65,7 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     income = builder.add("incomeLabel", new JLabel());
     fixe = builder.add("fixedLabel", new JLabel());
     savings = builder.add("savingsLabel", new JLabel());
-    projects = builder.add("projectsLabel", new JLabel());
+    special = builder.add("specialLabel", new JLabel());
     envelope = builder.add("envelopeLabel", new JLabel());
     contentPanel = builder.add("content", new JPanel());
     contentPanel.setVisible(false);
@@ -126,30 +126,30 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     Set<Integer> incomeSeries = new HashSet<Integer>();
     Set<Integer> fixeSeries = new HashSet<Integer>();
     Set<Integer> savingsSeries = new HashSet<Integer>();
-    Set<Integer> projectsSeries = new HashSet<Integer>();
+    Set<Integer> specialSeries = new HashSet<Integer>();
     Set<Integer> envelopeSeries = new HashSet<Integer>();
 
     for (Glob series : allSeries) {
       if (BudgetArea.INCOME.getId().equals(series.get(Series.BUDGET_AREA))) {
         incomeSeries.add(series.get(Series.ID));
       }
-      else if (BudgetArea.RECURRING_EXPENSES.getId().equals(series.get(Series.BUDGET_AREA))) {
+      else if (BudgetArea.RECURRING.getId().equals(series.get(Series.BUDGET_AREA))) {
         fixeSeries.add(series.get(Series.ID));
       }
       else if (BudgetArea.SAVINGS.getId().equals(series.get(Series.BUDGET_AREA))) {
         savingsSeries.add(series.get(Series.ID));
       }
-      else if (BudgetArea.PROJECTS.getId().equals(series.get(Series.BUDGET_AREA))) {
-        projectsSeries.add(series.get(Series.ID));
+      else if (BudgetArea.SPECIAL.getId().equals(series.get(Series.BUDGET_AREA))) {
+        specialSeries.add(series.get(Series.ID));
       }
-      else if (BudgetArea.EXPENSES_ENVELOPE.getId().equals(series.get(Series.BUDGET_AREA))) {
+      else if (BudgetArea.ENVELOPES.getId().equals(series.get(Series.BUDGET_AREA))) {
         envelopeSeries.add(series.get(Series.ID));
       }
     }
     double incomeAmount = 0;
     double fixedAmount = 0;
     double savingsAmount = 0;
-    double projectsAmount = 0;
+    double specialAmount = 0;
     double envelopeAmount = 0;
     for (; i < transactions.length; i++) {
       Glob transaction = transactions[i];
@@ -161,8 +161,8 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
         else if (envelopeSeries.contains(transactionSeries)) {
           envelopeAmount += transaction.get(Transaction.AMOUNT);
         }
-        else if (projectsSeries.contains(transactionSeries)) {
-          projectsAmount += transaction.get(Transaction.AMOUNT);
+        else if (specialSeries.contains(transactionSeries)) {
+          specialAmount += transaction.get(Transaction.AMOUNT);
         }
         else if (savingsSeries.contains(transactionSeries)) {
           savingsAmount += transaction.get(Transaction.AMOUNT);
@@ -173,12 +173,12 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
       }
     }
 
-    double totalAmount = balanceAmount + incomeAmount + fixedAmount + savingsAmount + projectsAmount + envelopeAmount;
+    double totalAmount = balanceAmount + incomeAmount + fixedAmount + savingsAmount + specialAmount + envelopeAmount;
 
     income.setText(PicsouDescriptionService.toString(incomeAmount));
     fixe.setText(PicsouDescriptionService.toString(fixedAmount));
     savings.setText(PicsouDescriptionService.toString(savingsAmount));
-    projects.setText(PicsouDescriptionService.toString(projectsAmount));
+    special.setText(PicsouDescriptionService.toString(specialAmount));
     envelope.setText(PicsouDescriptionService.toString(envelopeAmount));
     total.setText(PicsouDescriptionService.toString(totalAmount));
     contentPanel.setVisible(true);

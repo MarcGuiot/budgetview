@@ -101,15 +101,15 @@
                       <panel ref="incomeSeriesChooser"/>
                     </card>
 
-                    <card name="recurringExpenses">
+                    <card name="recurring">
                       <panel ref="recurringSeriesChooser"/>
                     </card>
 
-                    <card name="expensesEnvelope">
+                    <card name="envelopes">
                       <panel ref="envelopeSeriesChooser"/>
                     </card>
 
-                    <card name="occasionalExpenses">
+                    <card name="occasional">
                       <column name="occasionalSeriesChooser">
                         <scrollPane marginBottom="0" border="etched" opaque="true" verticalUnitIncrement="20">
                           <column margin="10">
@@ -134,8 +134,8 @@
                       </column>
                     </card>
 
-                    <card name="projects">
-                      <panel ref="projectSeriesChooser"/>
+                    <card name="special">
+                      <panel ref="specialSeriesChooser"/>
                     </card>
 
                     <card name="savings">

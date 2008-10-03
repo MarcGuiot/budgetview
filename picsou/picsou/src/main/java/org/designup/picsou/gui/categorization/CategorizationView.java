@@ -162,10 +162,10 @@ public class CategorizationView extends View implements TableView, Filterable, C
     selector.registerComponents(builder);
 
     addSingleCategorySeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
-    addSingleCategorySeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING_EXPENSES, builder);
+    addSingleCategorySeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING, builder);
 
-    addMultiCategoriesSeriesChooser("envelopeSeriesChooser", BudgetArea.EXPENSES_ENVELOPE, builder);
-    addMultiCategoriesSeriesChooser("projectSeriesChooser", BudgetArea.PROJECTS, builder);
+    addMultiCategoriesSeriesChooser("envelopeSeriesChooser", BudgetArea.ENVELOPES, builder);
+    addMultiCategoriesSeriesChooser("specialSeriesChooser", BudgetArea.SPECIAL, builder);
     addSingleCategorySeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
 
     addOccasionalSeriesChooser(builder);
@@ -285,7 +285,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
                         }
                       },
                       new OccasionalCategoriesComponentFactory("occasionalSeries", "occasionalCategoryToggle",
-                                                               BudgetArea.OCCASIONAL_EXPENSES,
+                                                               BudgetArea.OCCASIONAL,
                                                                invisibleOccasionalToggle,
                                                                repository, directory));
     builder.add("editCategories", new EditCategoriesAction());

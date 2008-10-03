@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+  </styles>
+
+  <panel styleClass="dialog">
+    <column styleClass="innerDialog">
+
+      <label text="$seriesWizard.title" styleClass="title"/>
+
+      <htmlEditorPane text="$seriesWizard.message.top"/>
+
+      <scrollPane>
+        <column name="content">
+          
+          <repeat ref="budgetAreasRepeat">
+              <column>
+                <label text="budgetAreaTitle"/>
+                <htmlEditorPane ref="budgetAreaDescription"/>
+                <repeat ref="entryRepeat">
+                  <checkBox ref="checkBox"/>
+                </repeat>
+              </column>
+          </repeat>
+
+        </column>
+      </scrollPane>
+
+      <htmlEditorPane text="$seriesWizard.message.bottom"/>
+
+    </column>
+  </panel>
+</splits>

@@ -24,7 +24,7 @@
 
         <card name="noData">
           <column styleClass="message">
-            <htmlEditorPane text="$monthsummary.noData.text"/>
+            <htmlEditorPane text="$monthsummary.noData.text" name="noDataMessage"/>
             <button action="import"/>
             <filler fill="vertical"/>
             <button action="help" styleClass="help" anchor="right" margin="10"/>
@@ -33,7 +33,9 @@
 
         <card name="noSeries">
           <column styleClass="message">
-            <htmlEditorPane text="$monthsummary.noSeries.text"/>
+            <htmlEditorPane text="$monthsummary.noSeries.text1" name="noSeriesMessage1"/>
+            <button action="openSeriesWizard"/>
+            <htmlEditorPane text="$monthsummary.noSeries.text2" name="noSeriesMessage2"/>
             <button action="categorizeAll" text="" icon="categorization.png" cursor="hand"
                      rolloverIcon="categorization_rollover.png" minimumSize="(40,40)"/>
             <filler fill="vertical"/>

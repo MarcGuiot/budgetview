@@ -35,9 +35,9 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testUnassignedTransactionSeriesAndDeleteSeries() throws Exception {
     checker.parse(repository,
-                  "<series id='10' initialAmount='-100.0' budgetAreaName='recurringExpenses' " +
+                  "<series id='10' initialAmount='-100.0' budgetAreaName='recurring' " +
                   "        profileTypeName='custom' isAutomatic='false' />" +
-                  "<series id='20' initialAmount='-100.0' budgetAreaName='recurringExpenses' " +
+                  "<series id='20' initialAmount='-100.0' budgetAreaName='recurring' " +
                   "        profileTypeName='custom' isAutomatic='false' />" +
                   "<month id='200807'/>" +
                   "<transaction id='1' series='10' month='200807' day='1' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
@@ -100,7 +100,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testChangingMonths() throws Exception {
     checker.parse(repository,
-                  "<series id='10' initialAmount='100.0'  budgetAreaName='recurringExpenses' isAutomatic='false' " +
+                  "<series id='10' initialAmount='100.0'  budgetAreaName='recurring' isAutomatic='false' " +
                   "        july='true' profileTypeName='custom'/>" +
                   "<month id='200807'/>" +
                   "<month id='200808'/>" +
@@ -117,7 +117,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testUpdatingPlannedAmount() throws Exception {
     checker.parse(repository,
-                  "<series id='10' initialAmount='100.0' budgetAreaName='recurringExpenses' isAutomatic='false' " +
+                  "<series id='10' initialAmount='100.0' budgetAreaName='recurring' isAutomatic='false' " +
                   "        profileTypeName='custom'/>" +
                   "<month id='200807'/>" +
                   "<transaction id='1' series='10' month='200807' bankMonth='200807' bankDay='1'  amount='10.0'/>");
@@ -129,11 +129,11 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testWithIncomeAndReccuring() throws Exception {
     checker.parse(repository,
-                  "<series id='10' initialAmount='-100.0' budgetAreaName='recurringExpenses'" +
+                  "<series id='10' initialAmount='-100.0' budgetAreaName='recurring'" +
                   "        profileTypeName='custom' defaultCategoryName='none' isAutomatic='false' />" +
                   "<series id='20' initialAmount='1000.0' budgetAreaName='income' profileTypeName='custom'" +
                   "         defaultCategoryName='none' isAutomatic='false' />" +
-                  "<series id='30' initialAmount='-500.0' budgetAreaName='expensesEnvelope' profileTypeName='custom'" +
+                  "<series id='30' initialAmount='-500.0' budgetAreaName='envelopes' profileTypeName='custom'" +
                   "         defaultCategoryName='none' isAutomatic='false' />" +
                   "<month id='200807'/>" +
                   "<transaction id='1' series='10' month='200807' bankMonth='200807' bankDay='1' amount='-90.0' categoryName='none'/>" +

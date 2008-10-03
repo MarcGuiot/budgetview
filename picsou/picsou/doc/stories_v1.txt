@@ -1,5 +1,4 @@
 
-- premier import QIF : saisie du solde
 - voir redimensionnement TransactionDetails (voir AutoResizingTextArea de JIDE)
 - Message d'aide dans CategoryChooserDialog
 - CategorizationView : bug serie qui reste selectionnee apres changement de transaction (?)
@@ -12,7 +11,6 @@
 - Edition compte (renommage)
 - Mettre en rouge les depassements
 - Mettre en rouge un montant occasional prevu a zero
-- Ouverture de SeriesEditionDialog via bouton "liste" : selectionner la serie courante
 - TransactionView : Afficher la somme (total ou multi-selection)
 - TransactionView : Filtrage transactions par Compte
 - TransactionView : Filtrage transactions par TransactionType

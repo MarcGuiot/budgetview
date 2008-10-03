@@ -5,7 +5,8 @@
 
   <panel styleClass="dialog" preferredSize="(400,200)" opaque="true">
     <column styleClass="innerDialog">
-      <htmlEditorPane text="$seriesEdition.manual.warning" opaque="false" editable="false"/>
+      <label ref="title" styleClass="title"/>
+      <htmlEditorPane ref="message"/>
     </column>
   </panel>
 

@@ -16,7 +16,7 @@ public class SeriesBudgetTriggerTest extends PicsouTriggerTestCase {
   public void testCreateIncomeCreateOccasionalBudget() throws Exception {
     repository.enterBulkDispatchingMode();
     createSeries(10, BudgetArea.INCOME, 100.);
-    createSeries(20, BudgetArea.EXPENSES_ENVELOPE, -50.);
+    createSeries(20, BudgetArea.ENVELOPES, -50.);
     repository.completeBulkDispatchingMode();
     Integer[] occasional = getBudgetId(Series.OCCASIONAL_SERIES_ID);
     Integer[] id10 = getBudgetId(10);
@@ -32,7 +32,7 @@ public class SeriesBudgetTriggerTest extends PicsouTriggerTestCase {
 
   public void testCreateRecurringBudgetChangeOccasionalBudget() throws Exception {
     createSeries(10, BudgetArea.INCOME, 100.);
-    createSeries(20, BudgetArea.RECURRING_EXPENSES, -100.);
+    createSeries(20, BudgetArea.RECURRING, -100.);
     Integer[] occasional = getBudgetId(Series.OCCASIONAL_SERIES_ID);
     Integer[] id20 = getBudgetId(20);
     listener.assertLastChangesEqual(SeriesBudget.TYPE,
@@ -43,7 +43,7 @@ public class SeriesBudgetTriggerTest extends PicsouTriggerTestCase {
 
   public void testDeleteChangeOccasionalBudget() throws Exception {
     createSeries(10, BudgetArea.INCOME, 100.);
-    createSeries(20, BudgetArea.RECURRING_EXPENSES, -100.);
+    createSeries(20, BudgetArea.RECURRING, -100.);
     Integer[] id0 = getBudgetId(Series.OCCASIONAL_SERIES_ID);
     Integer[] id20 = getBudgetId(20);
     repository.delete(Key.create(Series.TYPE, 20));

@@ -124,7 +124,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
 
   private static void transfertToPlanned(Glob series, Integer monthId, Double amount,
                                          int lastMonthInCurrentMonth, GlobRepository repository) {
-    if (ProfileType.UNKNOWN.getId().equals(series.get(Series.PROFILE_TYPE))) {
+    if (ProfileType.IRREGULAR.getId().equals(series.get(Series.PROFILE_TYPE))) {
       return;
     }
     Integer seriesId = series.get(Series.ID);
@@ -166,7 +166,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
 
   public static void transfertFromPlanned(Glob series, Integer monthId,
                                           Double amountToDeduce, GlobRepository repository) {
-    if (ProfileType.UNKNOWN.getId().equals(series.get(Series.PROFILE_TYPE))) {
+    if (ProfileType.IRREGULAR.getId().equals(series.get(Series.PROFILE_TYPE))) {
       return;
     }
     Integer seriesId = series.get(Series.ID);

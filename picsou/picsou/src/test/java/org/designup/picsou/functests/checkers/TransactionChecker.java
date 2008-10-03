@@ -314,12 +314,18 @@ public class TransactionChecker extends ViewChecker {
           return "MasterCategory." + master.getName().toUpperCase();
         }
 
-        org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
-        UIComponent[] categoryLabels = panel.getUIComponents(TextBox.class);
-        if (categoryLabels.length != 1) {
-          return "???";
+        TextBox label = null;
+        if (renderedComponent instanceof JLabel) {
+          label = new TextBox((JLabel)renderedComponent);
         }
-        TextBox label = (TextBox)categoryLabels[0];
+        else if (renderedComponent instanceof JPanel) {
+          org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
+          UIComponent[] categoryLabels = panel.getUIComponents(TextBox.class);
+          if (categoryLabels.length != 1) {
+            return "???";
+          }
+          label = (TextBox)categoryLabels[0];
+        }
         return "\"" + label.getText() + "\"";
       }
     }

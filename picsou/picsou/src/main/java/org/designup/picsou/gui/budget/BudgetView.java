@@ -53,13 +53,13 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     builder.add("thirdVerticalSplitPane", thirdVerticalSplitPane);
     addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder);
 
-    addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING_EXPENSES, builder);
+    addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder);
 
-    addBudgetAreaView("envelopeBudgetView", BudgetArea.EXPENSES_ENVELOPE, builder);
+    addBudgetAreaView("envelopeBudgetView", BudgetArea.ENVELOPES, builder);
 
-    addBudgetAreaView("occasionalBudgetView", BudgetArea.OCCASIONAL_EXPENSES, builder);
+    addBudgetAreaView("occasionalBudgetView", BudgetArea.OCCASIONAL, builder);
 
-    addBudgetAreaView("projectsBudgetView", BudgetArea.PROJECTS, builder);
+    addBudgetAreaView("projectsBudgetView", BudgetArea.SPECIAL, builder);
 
     addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder);
 
@@ -70,7 +70,7 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
 
   private void addBudgetAreaView(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
     View view;
-    if (budgetArea == BudgetArea.OCCASIONAL_EXPENSES) {
+    if (budgetArea == BudgetArea.OCCASIONAL) {
       view = new OccasionalSeriesView(name, repository, directory);
     }
     else {

@@ -3,10 +3,7 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.categories.CategoryChooserCallback;
 import org.designup.picsou.gui.categories.CategoryChooserDialog;
-import org.designup.picsou.gui.components.MonthChooserDialog;
-import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
-import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
+import org.designup.picsou.gui.components.*;
 import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -22,7 +19,6 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
-import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -44,8 +40,7 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -90,7 +85,6 @@ public class SeriesEditionDialog {
   Integer currentlySelectedCategory;
   private JPanel buttonSeriePanel;
 
-
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
@@ -101,9 +95,7 @@ public class SeriesEditionDialog {
             ProfileType.TYPE)
       .get();
 
-    localRepository.addTrigger(new ProfileTypeSeriesTrigger());
-    localRepository.addTrigger(new AutomaticSeriesBudgetTrigger());
-    localRepository.addTrigger(new SeriesBudgetTrigger());
+    addSeriesCreationTriggers(localRepository);
     selectionService = new SelectionService();
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(selectionService);
@@ -230,7 +222,13 @@ public class SeriesEditionDialog {
 
     JPanel panel = builder.load();
     okAction = new ValidateAction();
-    dialog.addInPanelWithButton(panel, okAction, new CancelAction());
+    dialog.addInPanelWithButtons(panel, okAction, new CancelAction());
+  }
+
+  public static void addSeriesCreationTriggers(GlobRepository repository) {
+    repository.addTrigger(new ProfileTypeSeriesTrigger());
+    repository.addTrigger(new AutomaticSeriesBudgetTrigger());
+    repository.addTrigger(new SeriesBudgetTrigger());
   }
 
   private void updateMonthChooser() {
@@ -419,7 +417,7 @@ public class SeriesEditionDialog {
                                               value(Series.OCTOBER, true),
                                               value(Series.NOVEMBER, true),
                                               value(Series.DECEMBER, true)));
-    if (budgetArea == BudgetArea.PROJECTS) {
+    if (budgetArea == BudgetArea.SPECIAL) {
       SelectionService selectionService = directory.get(SelectionService.class);
       GlobList list = selectionService.getSelection(Month.TYPE).sort(Month.ID);
       values.add(value(Series.IS_AUTOMATIC, false));
@@ -1043,35 +1041,20 @@ public class SeriesEditionDialog {
   }
 
   private class GotoAutomaticAction extends AbstractAction {
-    public boolean ok;
-    private PicsouDialog warningDialog;
-
     public GotoAutomaticAction() {
       super(Lang.get("seriesEdition.goto.automatic"));
     }
 
     public void actionPerformed(ActionEvent e) {
-      ok = false;
-      JPanel panel = SplitsBuilder.init(localDirectory)
-        .setSource(SeriesEditionDialog.class, "/layout/automaticWarningDialog.splits").load();
-      warningDialog = PicsouDialog.createWithButtons(dialog, panel,
-                                                     new AbstractAction(Lang.get("ok")) {
-                                                       public void actionPerformed(ActionEvent e) {
-                                                         ok = true;
-                                                         warningDialog.setVisible(false);
-                                                       }
-                                                     }, new AbstractAction(Lang.get("cancel")) {
-        public void actionPerformed(ActionEvent e) {
-          warningDialog.setVisible(false);
+      ConfirmationDialog confirm = new ConfirmationDialog("seriesEdition.goto.automatic.title",
+                                                          "seriesEdition.goto.automatic.warning",
+                                                          dialog, localDirectory) {
+        protected void postValidate() {
+          localRepository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, true);
+          modeCard.show("automatic");
         }
-      }, localDirectory);
-      warningDialog.pack();
-      GuiUtils.showCentered(warningDialog);
-      if (ok) {
-        localRepository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, true);
-        modeCard.show("automatic");
-      }
-      warningDialog = null;
+      };
+      confirm.show();
     }
   }
 

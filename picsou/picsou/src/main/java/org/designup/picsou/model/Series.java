@@ -19,8 +19,10 @@ public class Series {
   @Key
   public static IntegerField ID;
 
+  /** @deprecated TODO: migrer LABEL dans NAME, et garder NAME */
   public static StringField LABEL;
 
+  /** @deprecated TODO: migrer LABEL dans NAME, et garder NAME */
   @NamingField
   public static StringField NAME;
 
@@ -30,8 +32,7 @@ public class Series {
   @Target(Category.class)
   public static LinkField DEFAULT_CATEGORY;
 
-  @DefaultInteger(2)
-  @Target(ProfileType.class)
+  @Target(ProfileType.class) @DefaultInteger(2)
   public static LinkField PROFILE_TYPE;
 
   @Target(Month.class)

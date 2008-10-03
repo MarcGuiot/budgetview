@@ -121,7 +121,7 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   private void apply(MapOfMaps<String, Integer, SerializableGlobType> globs, MultiMap<String, ServerDelta> map) {
-    for (Map.Entry<String, List<ServerDelta>> stringListEntry : map.values()) {
+    for (Map.Entry<String, List<ServerDelta>> stringListEntry : map.entries()) {
       Map<Integer, SerializableGlobType> globToMerge = globs.get(stringListEntry.getKey());
       for (ServerDelta deltaGlob : stringListEntry.getValue()) {
         if (deltaGlob.getState() == ServerState.DELETED) {

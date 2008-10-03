@@ -22,10 +22,10 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
     series.checkContains("All",
                          "To categorize",
                          "Income",
-                         "Recurring expenses",
-                         "Envelope expenses",
-                         "Occasional expenses",
-                         "Projects",
+                         "Recurring",
+                         "Envelopes",
+                         "Occasional",
+                         "Special",
                          "Savings");
 
     views.selectCategorization();
@@ -40,10 +40,10 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
     series.checkContains("All",
                          "To categorize",
                          "Income", "Exceptional Income", "Salary",
-                         "Recurring expenses", "Electricity", "Internet",
-                         "Envelope expenses", "Groceries",
-                         "Occasional expenses",
-                         "Projects",
+                         "Recurring", "Electricity", "Internet",
+                         "Envelopes", "Groceries",
+                         "Occasional",
+                         "Special",
                          "Savings");
 
     series.select("Income");
@@ -95,10 +95,10 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
     series.checkContains("All",
                          "To categorize",
                          "Income",
-                         "Recurring expenses",
-                         "Envelope expenses", "New envelope",
-                         "Occasional expenses",
-                         "Projects",
+                         "Recurring",
+                         "Envelopes", "New envelope",
+                         "Occasional",
+                         "Special",
                          "Savings");
 
     views.selectBudget();
@@ -111,10 +111,10 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
     series.checkContains("All",
                          "To categorize",
                          "Income",
-                         "Recurring expenses",
-                         "Envelope expenses",
-                         "Occasional expenses",
-                         "Projects",
+                         "Recurring",
+                         "Envelopes",
+                         "Occasional",
+                         "Special",
                          "Savings");
   }
 
@@ -127,10 +127,10 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
     series.checkContains("All",
                          "To categorize",
                          "Income",
-                         "Recurring expenses",
-                         "Envelope expenses",
-                         "Occasional expenses",
-                         "Projects",
+                         "Recurring",
+                         "Envelopes",
+                         "Occasional",
+                         "Special",
                          "Savings");
 
     views.selectBudget();
@@ -148,26 +148,26 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
     series.checkContains("All",
                          "To categorize",
                          "Income",
-                         "Recurring expenses",
-                         "Envelope expenses", "envelope1", "envelope2",
-                         "Occasional expenses",
-                         "Projects",
+                         "Recurring",
+                         "Envelopes", "envelope1", "envelope2",
+                         "Occasional",
+                         "Special",
                          "Savings");
 
     series.checkExpansionEnabled("All", false);
     series.checkExpansionEnabled("To categorize", false);
     series.checkExpansionEnabled("Income", false);
 
-    series.checkExpansionEnabled("Envelope expenses", true);
-    series.toggle("Envelope expenses");
+    series.checkExpansionEnabled("Envelopes", true);
+    series.toggle("Envelopes");
 
     series.checkContains("All",
                          "To categorize",
                          "Income",
-                         "Recurring expenses",
-                         "Envelope expenses",
-                         "Occasional expenses",
-                         "Projects",
+                         "Recurring",
+                         "Envelopes",
+                         "Occasional",
+                         "Special",
                          "Savings");
 
 

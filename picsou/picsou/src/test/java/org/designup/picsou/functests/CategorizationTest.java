@@ -246,7 +246,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(0);
     categorization.selectRecurring();
     categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
-    categorization.checkBudgetAreaIsSelected(BudgetArea.RECURRING_EXPENSES);
+    categorization.checkBudgetAreaIsSelected(BudgetArea.RECURRING);
   }
 
   public void testNoSelection() throws Exception {

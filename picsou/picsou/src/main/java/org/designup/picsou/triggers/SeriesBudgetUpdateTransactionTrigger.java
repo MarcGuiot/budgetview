@@ -33,7 +33,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
           return;
         }
         Glob series = repository.get(Key.create(Series.TYPE, seriesBudget.get(SeriesBudget.SERIES)));
-        if (BudgetArea.OCCASIONAL_EXPENSES.getId().equals(series.get(Series.BUDGET_AREA))) {
+        if (BudgetArea.OCCASIONAL.getId().equals(series.get(Series.BUDGET_AREA))) {
           return;
         }
         if (values.contains(SeriesBudget.ACTIVE)) {
@@ -77,7 +77,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
            (Math.abs(values.get(SeriesBudget.AMOUNT)) != 0.0) &&
            (values.get(SeriesBudget.DAY) != null) &&
            values.get(SeriesBudget.MONTH) >= lastAvailableTransactionMonthId &&
-           !ProfileType.UNKNOWN.getId().equals(series.get(Series.PROFILE_TYPE));
+           !ProfileType.IRREGULAR.getId().equals(series.get(Series.PROFILE_TYPE));
   }
 
   private GlobList getPlannedTransactions(Key key, GlobRepository repository) {

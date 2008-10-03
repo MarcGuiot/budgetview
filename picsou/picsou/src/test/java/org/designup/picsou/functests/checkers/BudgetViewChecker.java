@@ -17,7 +17,7 @@ public class BudgetViewChecker extends DataChecker {
   public final BudgetAreaChecker recurring;
   public final BudgetAreaChecker envelopes;
   public final OccasionalAreaChecker occasional;
-  public final BudgetAreaChecker projects;
+  public final BudgetAreaChecker specials;
   public final BudgetAreaChecker savings;
 
   private Window window;
@@ -28,8 +28,8 @@ public class BudgetViewChecker extends DataChecker {
     this.recurring = new BudgetAreaChecker("recurringBudgetView", true);
     this.envelopes = new BudgetAreaChecker("envelopeBudgetView", false);
     this.occasional = new OccasionalAreaChecker();
-    this.projects = new BudgetAreaChecker("projectsBudgetView", false);
-    this.savings = new BudgetAreaChecker("savingsBudgetView", false);
+    this.specials = new BudgetAreaChecker("projectsBudgetView", false);
+    this.savings = new BudgetAreaChecker("savingsBudgetView", true);
   }
 
   private int getIndex(JPanel panel, Component component) {

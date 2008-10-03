@@ -18,10 +18,10 @@ import org.designup.picsou.utils.Lang;
 public enum BudgetArea implements GlobConstantContainer {
   ALL("ALL", -1, false, false, false),
   INCOME("INCOME", 0, true, false, true),
-  RECURRING_EXPENSES("RECURRING_EXPENSES", 1, false, false, false),
-  EXPENSES_ENVELOPE("EXPENSES_ENVELOPE", 2, false, true, false),
-  OCCASIONAL_EXPENSES("OCCASIONAL_EXPENSES", 3, false, true, false),
-  PROJECTS("PROJECTS", 4, false, true, false),
+  RECURRING("RECURRING", 1, false, false, false),
+  ENVELOPES("ENVELOPES", 2, false, true, false),
+  OCCASIONAL("OCCASIONAL", 3, false, true, false),
+  SPECIAL("SPECIAL", 4, false, true, false),
   SAVINGS("SAVINGS", 5, false, false, true),
   UNCATEGORIZED("UNCATEGORIZED", 6, false, true, false);
 
@@ -73,6 +73,10 @@ public enum BudgetArea implements GlobConstantContainer {
     return Strings.toNiceLowerCase(name);
   }
 
+  public String getLabel() {
+    return Lang.get("budgetArea." + getName());
+  }
+
   public static BudgetArea get(int id) {
     switch (id) {
       case -1:
@@ -80,13 +84,13 @@ public enum BudgetArea implements GlobConstantContainer {
       case 0:
         return INCOME;
       case 1:
-        return RECURRING_EXPENSES;
+        return RECURRING;
       case 2:
-        return EXPENSES_ENVELOPE;
+        return ENVELOPES;
       case 3:
-        return OCCASIONAL_EXPENSES;
+        return OCCASIONAL;
       case 4:
-        return PROJECTS;
+        return SPECIAL;
       case 5:
         return SAVINGS;
       case 6:
@@ -109,9 +113,5 @@ public enum BudgetArea implements GlobConstantContainer {
       result.add(repository.get(budgetArea.getKey()));
     }
     return result;
-  }
-
-  public String getLabel() {
-    return Lang.get("budgetArea." + getName());
   }
 }

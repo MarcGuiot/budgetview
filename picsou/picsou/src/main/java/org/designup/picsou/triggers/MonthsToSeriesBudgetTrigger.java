@@ -73,7 +73,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
                                               )));
     for (Glob series : seriesList) {
       Glob existingSeriesBudget[];
-      if (ProfileType.UNKNOWN.getId().equals(series.get(Series.PROFILE_TYPE))) {
+      if (ProfileType.IRREGULAR.getId().equals(series.get(Series.PROFILE_TYPE))) {
         existingSeriesBudget = new Glob[0];
       }
       else {

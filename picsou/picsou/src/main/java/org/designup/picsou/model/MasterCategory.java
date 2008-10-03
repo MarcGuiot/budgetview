@@ -30,7 +30,8 @@ public enum MasterCategory {
   EDUCATION("EDUCATION", 16),
   MISC_SPENDINGS("MISC_SPENDINGS", 18),
   INCOME("INCOME", 19),
-  GIFTS("GIFTS", 20);
+  GIFTS("GIFTS", 20),
+  CASH("CASH", -21);
 
   private Integer id;
   private String name;

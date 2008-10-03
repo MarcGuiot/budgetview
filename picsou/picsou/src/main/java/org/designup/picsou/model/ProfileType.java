@@ -14,7 +14,7 @@ import org.designup.picsou.utils.Lang;
 
 public enum ProfileType implements GlobConstantContainer {
   CUSTOM("CUSTOM", 0, 1, 7),
-  UNKNOWN("UNKNOWN", 1, -1, 8),
+  IRREGULAR("UNKNOWN", 1, -1, 8),
   EVERY_MONTH("EVERY_MONTH", 2, -1, 1),
   TWO_MONTHS("TWO_MONTH", 3, 2, 2),
   THREE_MONTHS("THREE_MONTH", 4, 3, 3),
@@ -57,7 +57,7 @@ public enum ProfileType implements GlobConstantContainer {
       case 0:
         return CUSTOM;
       case 1:
-        return UNKNOWN;
+        return IRREGULAR;
       case 2:
         return EVERY_MONTH;
       case 3:

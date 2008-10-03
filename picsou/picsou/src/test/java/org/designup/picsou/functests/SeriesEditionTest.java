@@ -7,7 +7,6 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.uispec4j.Key;
-import org.uispec4j.assertion.UISpecAssert;
 
 public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
@@ -325,7 +324,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring
       .createSeries()
       .setManual()
-      .checkTitle("Recurring expenses")
+      .checkTitle("Recurring")
       .checkNameIsSelected()
       .checkSeriesList("New series")
       .checkSeriesSelected("New series")
@@ -348,13 +347,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.createSeries()
-      .checkTitle("Recurring expenses")
+      .checkTitle("Recurring")
       .setName("My recurrence")
       .setCategory(MasterCategory.FOOD)
       .validate();
 
     budgetView.envelopes.createSeries()
-      .checkTitle("Envelope expenses")
+      .checkTitle("Envelopes")
       .setName("My envelope")
       .setCategory(MasterCategory.HOUSE)
       .validate();
@@ -931,11 +930,11 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testPeriodOrder() throws Exception {
     views.selectBudget();
-    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries()
-      .setName("S1");
-    UISpecAssert.assertThat(edition.getPeriodCombo()
-      .contentEquals("Every month", "Every two months", "Every three months", "Every four months", "Every six months",
-                     "Once a year", "Custom", "Irregular"));
+    SeriesEditionDialogChecker edition =
+      budgetView.envelopes.createSeries()
+        .setName("S1")
+        .checkPeriods("Every month", "Every two months", "Every three months", "Every four months", "Every six months",
+                      "Once a year", "Custom", "Irregular");
   }
 
   public void testSeriesListVisibility() throws Exception {

@@ -52,7 +52,7 @@ public class InitialCategories {
     for (String subcat : subcats) {
       repository.create(Category.TYPE,
                         value(Category.MASTER, master.getId()),
-                        value(Category.INNER_NAME, master.getName() + "." + subcat));
+                        value(Category.INNER_NAME, Category.getInnerName(master, subcat)));
     }
   }
 }

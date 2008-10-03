@@ -48,11 +48,11 @@ public class OccasionalSeriesView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/occasionalSeriesView.splits",
                                                       repository, directory);
 
-    builder.add("budgetAreaTitle", new JLabel(stringify(BudgetArea.OCCASIONAL_EXPENSES)));
+    builder.add("budgetAreaTitle", new JLabel(stringify(BudgetArea.OCCASIONAL)));
     addObservedTotalLabel("totalObservedAmount", SeriesStat.AMOUNT, builder);
     addPlannedTotalLabel("totalPlannedAmount", SeriesStat.PLANNED_AMOUNT, builder);
 
-    final GlobGaugeView gaugeView = new GlobGaugeView(SeriesStat.TYPE, BudgetArea.OCCASIONAL_EXPENSES,
+    final GlobGaugeView gaugeView = new GlobGaugeView(SeriesStat.TYPE, BudgetArea.OCCASIONAL,
                                                       SeriesStat.AMOUNT, SeriesStat.PLANNED_AMOUNT,
                                                       totalMatcher, repository, directory);
     builder.add("totalGauge", gaugeView.getComponent());
@@ -118,7 +118,7 @@ public class OccasionalSeriesView extends View {
 
   private void addObservedTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
     builder.addLabel(name, SeriesStat.TYPE,
-                     new ForcedPlusGlobListStringifier(BudgetArea.OCCASIONAL_EXPENSES,
+                     new ForcedPlusGlobListStringifier(BudgetArea.OCCASIONAL,
                                                        GlobListStringifiers.sum(field, decimalFormat, true)))
       .setFilter(totalMatcher);
   }
@@ -157,7 +157,7 @@ public class OccasionalSeriesView extends View {
 
     public void run(GlobList occasionalSeriesStatList, GlobRepository repository) {
       NavigationService navigationService = directory.get(NavigationService.class);
-      navigationService.gotoData(BudgetArea.OCCASIONAL_EXPENSES, masterCategory);
+      navigationService.gotoData(BudgetArea.OCCASIONAL, masterCategory);
     }
   }
 }

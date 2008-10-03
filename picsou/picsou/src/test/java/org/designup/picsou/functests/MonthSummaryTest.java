@@ -94,7 +94,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("ED", "groceries", MasterCategory.FOOD, false);
     categorization.setOccasional("fnac", MasterCategory.EQUIPMENT);
     categorization.setIncome("Salaire", "Salaire", true);
-    categorization.setProject("Air France", "voyage", MasterCategory.LEISURES, true);
+    categorization.setSpecial("Air France", "voyage", MasterCategory.LEISURES, true);
 
     views.selectHome();
     monthSummary

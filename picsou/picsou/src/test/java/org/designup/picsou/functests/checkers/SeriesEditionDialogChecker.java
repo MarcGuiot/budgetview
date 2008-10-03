@@ -543,7 +543,17 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return new SeriesDeleteDialogChecker(WindowInterceptor.getModalDialog(dialog.getButton("delete").triggerClick()));
   }
 
-  public ComboBox getPeriodCombo() {
+  public SeriesEditionDialogChecker checkPeriods(String... periods) {
+    UISpecAssert.assertThat(getPeriodCombo().contentEquals(periods));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSelectedPeriod(String period) {
+    UISpecAssert.assertThat(getPeriodCombo().selectionEquals(period));
+    return this;
+  }
+
+  private ComboBox getPeriodCombo() {
     return dialog.getComboBox("periodCombo");
   }
 
@@ -558,7 +568,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker setUnknown() {
-    getPeriodCombo().select(ProfileType.UNKNOWN.getLabel());
+    getPeriodCombo().select(ProfileType.IRREGULAR.getLabel());
     return this;
   }
 
@@ -588,5 +598,4 @@ public class SeriesEditionDialogChecker extends DataChecker {
     checkComponentVisible(dialog, JPanel.class, "seriesPanel", true);
     return this;
   }
-
 }

@@ -118,6 +118,10 @@ public class Category {
     return categoryId;
   }
 
+  public static String getInnerName(MasterCategory master, String subcat) {
+    return master.getName() + "." + subcat;
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues values) {

@@ -14,7 +14,7 @@ public class OccasionalSeriesBudgetCreationTrigger implements ChangeSetListener 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        if (ProfileType.UNKNOWN.getId().equals(values.get(Series.PROFILE_TYPE))) {
+        if (ProfileType.IRREGULAR.getId().equals(values.get(Series.PROFILE_TYPE))) {
           ReadOnlyGlobRepository.MultiFieldIndexed index =
             repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, values.get(Series.ID));
           GlobList months = repository.getAll(Month.TYPE);
@@ -28,7 +28,7 @@ public class OccasionalSeriesBudgetCreationTrigger implements ChangeSetListener 
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        if (ProfileType.UNKNOWN.getId().equals(previousValues.get(Series.PROFILE_TYPE))) {
+        if (ProfileType.IRREGULAR.getId().equals(previousValues.get(Series.PROFILE_TYPE))) {
           GlobList seriesBudget =
             repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, previousValues.get(Series.ID))
               .getGlobs();

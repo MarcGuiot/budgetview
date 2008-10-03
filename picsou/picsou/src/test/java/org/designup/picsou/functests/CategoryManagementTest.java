@@ -129,6 +129,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       "Unassigned",
       "Bank",
       "Beauty",
+      "Cash",
       "Clothing",
       "Education",
       "Equipement",

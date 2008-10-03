@@ -43,12 +43,12 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
 
-    budgetView.recurring.checkTitle("Recurring expenses");
+    budgetView.recurring.checkTitle("Recurring");
     budgetView.recurring.checkTotalAmounts(84.0, 84.0);
     budgetView.recurring.checkSeries("Internet", 29.0, 29.0);
     budgetView.recurring.checkSeries("Electricity", 55.0, 55.0);
 
-    budgetView.envelopes.checkTitle("Envelope expenses");
+    budgetView.envelopes.checkTitle("Envelopes");
     budgetView.envelopes.checkTotalAmounts(145.0, 145);
     budgetView.envelopes.checkSeries("Groceries", 145.0, 145.0);
 
@@ -57,7 +57,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
     budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
 
-    budgetView.occasional.checkTitle("Occasional expenses");
+    budgetView.occasional.checkTitle("Occasional");
     budgetView.occasional.checkTotalAmounts(0, 3540 - 145 - 84);
 
     timeline.selectMonths("2008/08");
@@ -69,12 +69,12 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Salary", "", 3540.00, "Salary", getCategoryName(MasterCategory.INCOME))
       .check();
 
-    budgetView.recurring.checkTitle("Recurring expenses");
+    budgetView.recurring.checkTitle("Recurring");
     budgetView.recurring.checkTotalAmounts(0.0, 84.0);
     budgetView.recurring.checkSeries("Internet", 0.0, 29.0);
     budgetView.recurring.checkSeries("Electricity", 0.0, 55.0);
 
-    budgetView.envelopes.checkTitle("Envelope expenses");
+    budgetView.envelopes.checkTitle("Envelopes");
     budgetView.envelopes.checkTotalAmounts(0.0, 145);
     budgetView.envelopes.checkSeries("Groceries", 0.0, 145.0);
 
@@ -102,7 +102,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.occasional.checkNotContains("health.medecin");
   }
 
-  public void testProjectSeries() throws Exception {
+  public void testSpecialSeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
       .load();
@@ -114,16 +114,16 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2008/07");
     views.selectCategorization();
-    categorization.setProject("Auchan", "Anniversaire", MasterCategory.FOOD, true);
+    categorization.setSpecial("Auchan", "Anniversaire", MasterCategory.FOOD, true);
 
     views.selectBudget();
 
-    budgetView.projects.checkTitle("Projects");
-    budgetView.projects.checkTotalAmounts(95.0, 95.0);
-    budgetView.projects.checkSeries("Anniversaire", 95.0, 95.0);
+    budgetView.specials.checkTitle("Special");
+    budgetView.specials.checkTotalAmounts(95.0, 95.0);
+    budgetView.specials.checkSeries("Anniversaire", 95.0, 95.0);
 
     views.selectCategorization();
-    categorization.checkProjectSeriesIsSelected("Anniversaire", MasterCategory.FOOD);
+    categorization.checkSpecialSeriesIsSelected("Anniversaire", MasterCategory.FOOD);
   }
 
   public void testSavingsSeries() throws Exception {
@@ -173,11 +173,11 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectBudget();
 
-    budgetView.recurring.checkTitle("Recurring expenses");
+    budgetView.recurring.checkTitle("Recurring");
     budgetView.recurring.checkTotalAmounts(29.0, 29.0);
     budgetView.recurring.checkSeries("Internet", 29.0, 29.0);
 
-    budgetView.envelopes.checkTitle("Envelope expenses");
+    budgetView.envelopes.checkTitle("Envelopes");
     budgetView.envelopes.checkTotalAmounts(145.0, 145.);
     budgetView.envelopes.checkSeries("Groceries", 145.0, 145.0);
 
@@ -185,7 +185,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkTotalAmounts(3540.0, 3540.00);
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
 
-    budgetView.occasional.checkTitle("Occasional expenses");
+    budgetView.occasional.checkTitle("Occasional");
     budgetView.occasional.checkTotalAmounts(0, 3540 - 145 - 29);
   }
 
@@ -206,7 +206,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.editSeries("Internet")
-      .checkTitle("Recurring expenses")
+      .checkTitle("Recurring")
       .checkName("Internet")
       .setName("Free")
       .validate();
@@ -284,7 +284,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .selectAllMonths()
       .setAmount("100")
       .validate();
-    budgetView.projects.createSeries().setName("courantAuchan")
+    budgetView.specials.createSeries().setName("courantAuchan")
       .setStartDate(200806)
       .setEndDate(200806)
       .selectAllMonths()
@@ -302,7 +302,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectCategorization();
     categorization.setEnvelope("Monoprix", "courantMonoprix", MasterCategory.FOOD, false);
-    categorization.setProject("Auchan", "courantAuchan", MasterCategory.FOOD, false);
+    categorization.setSpecial("Auchan", "courantAuchan", MasterCategory.FOOD, false);
     categorization.setEnvelope("ED1", "courantED", MasterCategory.FOOD, false);
     categorization.setEnvelope("ED2", "courantED", MasterCategory.FOOD, false);
 
@@ -313,7 +313,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkSeries("courantMonoprix", 50, 200)
       .checkSeries("courantED", 79, 200);
 
-    budgetView.projects
+    budgetView.specials
       .checkSeries("courantAuchan", 95, 100);
 
     timeline.selectMonth("2008/05");
@@ -321,7 +321,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkSeries("courantED", 29, 100)
       .checkSeriesNotPresent("courantMonoprix");
 
-    budgetView.projects
+    budgetView.specials
       .checkSeriesNotPresent("courantAuchan");
 
     timeline.selectMonth("2008/06");
@@ -329,7 +329,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkSeries("courantMonoprix", 0, 100)
       .checkSeriesNotPresent("courantED");
 
-    budgetView.projects
+    budgetView.specials
       .checkSeries("courantAuchan", 95, 100);
 
     timeline.selectMonth("2008/07");
@@ -338,7 +338,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkSeries("courantMonoprix", 50, 100)
       .checkSeriesNotPresent("courantED");
 
-    budgetView.projects
+    budgetView.specials
       .checkSeriesNotPresent("courantAuchan");
 
     timeline.selectMonth("2008/08");
@@ -529,9 +529,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.setOccasional("WorldCo", MasterCategory.INCOME);
 
     views.selectData();
-    series.checkExpanded("Envelope expenses", true);
-    series.toggle("Envelope expenses");
-    series.checkExpanded("Envelope expenses", false);
+    series.checkExpanded("Envelopes", true);
+    series.toggle("Envelopes");
+    series.checkExpanded("Envelopes", false);
 
     views.selectBudget();
     budgetView.envelopes.gotoData("Groceries");
@@ -543,12 +543,12 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries", MasterCategory.FOOD)
       .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries", MasterCategory.FOOD)
       .check();
-    series.checkExpanded("Envelope expenses", true);
+    series.checkExpanded("Envelopes", true);
 
     views.selectBudget();
     budgetView.occasional.gotoData(MasterCategory.TELECOMS);
     views.checkDataSelected();
-    series.checkSelection("Occasional expenses");
+    series.checkSelection("Occasional");
     categories.checkSelection(MasterCategory.TELECOMS);
     transactions.initContent()
       .addOccasional("05/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00, MasterCategory.TELECOMS)
@@ -559,6 +559,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.checkDataSelected();
     series.checkSelection("Groceries");
     categories.checkSelection(MasterCategory.ALL);
-    series.checkExpanded("Envelope expenses", true);
+    series.checkExpanded("Envelopes", true);
   }
 }
