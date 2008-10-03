@@ -74,8 +74,11 @@ public class DateFormatSelectionPanel {
   }
 
   public boolean check() {
-    messageLabel.setText(Lang.get("import.dateformat.undefined"));
-    return getSelectedFormat() != null;
+    boolean b = getSelectedFormat() != null;
+    if (!b) {
+      messageLabel.setText(Lang.get("import.dateformat.undefined"));
+    }
+    return b;
   }
 
 

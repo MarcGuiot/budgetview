@@ -1,5 +1,4 @@
 
-- premier import QIF : saisie du solde
 - voir redimensionnement TransactionDetails (voir AutoResizingTextArea de JIDE)
 - Message d'aide dans CategoryChooserDialog
 - CategorizationView : bug serie qui reste selectionnee apres changement de transaction (?)

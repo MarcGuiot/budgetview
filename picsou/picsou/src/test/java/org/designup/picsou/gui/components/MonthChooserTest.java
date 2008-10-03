@@ -2,6 +2,7 @@ package org.designup.picsou.gui.components;
 
 import org.designup.picsou.functests.checkers.MonthChooserChecker;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.globsframework.gui.GuiTestCase;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
@@ -16,6 +17,7 @@ public class MonthChooserTest extends GuiTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     directory.add(new TimeService());
+    directory.add(OpenRequestManager.class, new OpenRequestManager());
     TimeService.setCurrentDate(Dates.parseMonth("2008/06"));
   }
 

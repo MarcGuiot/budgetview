@@ -10,20 +10,27 @@ public class OpenRequestManager {
   private List<File> pendingFiles = new ArrayList<File>();
 
   public interface Callback {
+    boolean accept();
+
     void openFiles(List<File> files);
   }
 
   synchronized public void pushCallback(Callback callback) {
     callbacks.push(callback);
-    if (callbacks.size() == 1 && !pendingFiles.isEmpty()) {
+    push();
+  }
+
+  private void push() {
+    if (callbacks.size() >= 1 && !pendingFiles.isEmpty() && callbacks.peek().accept()) {
       List<File> filesToOpen = new ArrayList<File>(pendingFiles);
       pendingFiles.clear();
-      callback.openFiles(filesToOpen);
+      callbacks.peek().openFiles(filesToOpen);
     }
   }
 
   synchronized public void popCallback() {
     callbacks.pop();
+    push();
   }
 
   synchronized public void openFiles(List<File> files) {
@@ -31,7 +38,13 @@ public class OpenRequestManager {
       pendingFiles.addAll(files);
     }
     else {
-      callbacks.peek().openFiles(files);
+      Callback callback = callbacks.peek();
+      if (callback.accept()) {
+        callback.openFiles(files);
+      }
+      else {
+        pendingFiles.addAll(files);
+      }
     }
   }
 }

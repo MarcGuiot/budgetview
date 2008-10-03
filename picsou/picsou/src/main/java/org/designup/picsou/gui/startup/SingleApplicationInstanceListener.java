@@ -212,6 +212,10 @@ public class SingleApplicationInstanceListener {
       return socket != null && RESPONSE_OK.equals(answer);
     }
 
+    public boolean accept() {
+      return true;
+    }
+
     public void openFiles(List<File> file) {
       trySendToRemote(file);
     }
