@@ -153,17 +153,17 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     textBox.setText("-8.8");
     assertThat(textBox.textEquals("-8.8"));
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' value='-8.8' _value='(null)'/>");
+      "<update type='dummyObject' id='1' value='-8.8' _value='0.0'/>");
     textBox.setText(null);
     textBox.pressKey(Key.d5);
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' value='5.0' _value='(null)'/>");
+      "<update type='dummyObject' id='1' value='5.0' _value='0.0'/>");
 
     textBox.setText(null);
     textBox.pressKey(Key.MINUS);
     textBox.pressKey(Key.d6);
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' value='-6.0' _value='(null)'/>");
+      "<update type='dummyObject' id='1' value='-6.0' _value='0.0'/>");
   }
 
   protected void tearDown() throws Exception {
