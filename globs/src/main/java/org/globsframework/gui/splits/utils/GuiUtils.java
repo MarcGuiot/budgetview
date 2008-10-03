@@ -172,6 +172,7 @@ public class GuiUtils {
     css.addRule("H1 { font-weight:bold; }");
     css.addRule("H2 { font-size:14; }");
     css.addRule("H2 { font-weight:bold; }");
+    css.addRule("p  { margin-top:4px; margin-bottom:4px;margin-left:0;margin-right:0;}");
   }
 
   public static void runInSwingThread(Runnable runnable) {

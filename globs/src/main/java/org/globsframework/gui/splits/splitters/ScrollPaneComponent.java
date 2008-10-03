@@ -4,15 +4,15 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.color.ColorUpdater;
+import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.color.utils.BackgroundColorUpdater;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class ScrollPaneComponent extends AbstractSplitter {
 
@@ -65,6 +65,16 @@ public class ScrollPaneComponent extends AbstractSplitter {
       scrollPane.getHorizontalScrollBar().setUnitIncrement(horizontalUnitIncrement);
     }
 
+    String horizontalPolicy = properties.getString("horizontalScrollbarPolicy");
+    if (horizontalPolicy != null) {
+      scrollPane.setHorizontalScrollBarPolicy(getHorizontalPolicy(horizontalPolicy));
+    }
+
+    String verticalPolicy = properties.getString("verticalScrollbarPolicy");
+    if (verticalPolicy != null) {
+      scrollPane.setVerticalScrollBarPolicy(getVerticalPolicy(verticalPolicy));
+    }
+
     return stretch;
   }
 
@@ -73,6 +83,35 @@ public class ScrollPaneComponent extends AbstractSplitter {
   }
 
   protected String[] getExcludedParameters() {
-    return new String[]{"viewportBackground", "viewportOpaque", "verticalUnitIncrement", "horizontalUnitIncrement"};
+    return new String[]{"viewportBackground", "viewportOpaque",
+                        "verticalUnitIncrement", "horizontalUnitIncrement",
+                        "verticalScrollbarPolicy", "horizontalScrollbarPolicy"};
   }
+
+  private int getHorizontalPolicy(String policy) {
+    if (policy.equalsIgnoreCase("always")) {
+      return ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS;
+    }
+    if (policy.equalsIgnoreCase("asNeeded")) {
+      return ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
+    }
+    if (policy.equalsIgnoreCase("never")) {
+      return ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
+    }
+    throw new InvalidParameter("Invalid horizontal scrollbar policy: " + policy);
+  }
+
+  private int getVerticalPolicy(String policy) {
+    if (policy.equalsIgnoreCase("always")) {
+      return ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
+    }
+    if (policy.equalsIgnoreCase("asNeeded")) {
+      return ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
+    }
+    if (policy.equalsIgnoreCase("never")) {
+      return ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER;
+    }
+    throw new InvalidParameter("Invalid vertical scrollbar policy: " + policy);
+  }
+
 }

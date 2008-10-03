@@ -5,10 +5,10 @@
       <comboBox ref="colorSets" fill="none" anchor="west"/>
     </row>
     <horizontalSplit>
-      <scrollPane margin="20">
+      <scrollPane margin="20" weightX="4">
         <list ref="colorList"/>
       </scrollPane>
-      <column margin="20">
+      <column margin="20" weightX="6">
         <row>
           <label text="Value:" anchor="northeast"/>
           <textField ref="colorName" marginLeft="10" marginRight="30" marginBottom="10"/>

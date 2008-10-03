@@ -249,6 +249,24 @@
       <xs:attribute name="viewportOpaque" type="xs:boolean"/>
       <xs:attribute name="verticalUnitIncrement" type="xs:integer"/>
       <xs:attribute name="horizontalUnitIncrement" type="xs:integer"/>
+      <xs:attribute name="verticalScrollbarPolicy">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="always"/>
+            <xs:enumeration value="asNeeded"/>
+            <xs:enumeration value="never"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="horizontalScrollbarPolicy">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="always"/>
+            <xs:enumeration value="asNeeded"/>
+            <xs:enumeration value="never"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 
