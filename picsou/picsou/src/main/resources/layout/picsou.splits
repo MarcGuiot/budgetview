@@ -135,47 +135,18 @@
             <panel styleClass="block" weightX="7">
               <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
 
-                <!--<row styleClass="iconButtonGroup" marginRight="5" marginBottom="10">-->
-                <!--<filler fill="horizontal"/>-->
-                <!--<toggleButton ref="dataCardToggle" icon="button_data.png"/>-->
-                <!--<toggleButton ref="repartitionCardToggle" icon="button_repartition.png"/>-->
-                <!--<toggleButton ref="evolutionCardToggle" icon="button_evolution.png"/>-->
-                <!--</row>-->
-
-                <cards ref="analysisCards" opaque="false" marginRight="5">
-
-                  <card name="data">
-                    <column>
-                      <scrollPane borderPos="center" viewportBackground="transactions.bg"
-                                  border="line(transaction.border)" opaque="false"
-                                  marginLeft="5">
-                        <table ref="transaction" background="transactions.bg" rowHeight="20"
-                               autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
-                      </scrollPane>
-                      <row marginBottom="5">
-                        <filler fill="horizontal"/>
-                        <component ref="transactionSearch"/>
-                      </row>
-                    </column>
-                  </card>
-
-                  <!--<card name="repartition">-->
-                  <!--<row background="#FFFFFF">-->
-                  <!--<filler fill="horizontal"/>-->
-                  <!--<component ref="categoriesChart" opaque="false" fill="both" margin="10"/>-->
-                  <!--<filler fill="horizontal"/>-->
-                  <!--</row>-->
-                  <!--</card>-->
-
-                  <!--<card name="evolution">-->
-                  <!--<column>-->
-                  <!--<component ref="historicalChart" opaque="false" fill="both" anchor="center"-->
-                  <!--marginLeft="30" marginRight="20" border="empty(10,10,10,10)"/>-->
-                  <!--<filler fill="vertical" weightY="1.0"/>-->
-                  <!--</column>-->
-                  <!--</card>-->
-
-                </cards>
+                <column>
+                  <scrollPane borderPos="center" viewportBackground="transactions.bg"
+                              border="line(transaction.border)" opaque="false"
+                              marginLeft="5">
+                    <table ref="transaction" background="transactions.bg" rowHeight="20"
+                           autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
+                  </scrollPane>
+                  <row marginBottom="5">
+                    <filler fill="horizontal"/>
+                    <component ref="transactionSearch"/>
+                  </row>
+                </column>
 
               </column>
             </panel>

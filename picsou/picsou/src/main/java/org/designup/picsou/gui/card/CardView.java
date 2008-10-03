@@ -52,7 +52,6 @@ public class CardView extends View implements GlobSelectionListener {
       toggles[card.getId()] = toggle;
     }
 
-    showCard(Card.DATA);
     showCard(Card.HOME);
   }
 

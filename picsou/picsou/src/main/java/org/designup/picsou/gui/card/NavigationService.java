@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.card;
 
+import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.series.view.SeriesView;
-import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.globsframework.gui.SelectionService;
@@ -51,19 +51,19 @@ public class NavigationService {
   public void gotoDataForSeries(Glob series) {
     seriesView.selectSeries(series);
     categoryView.select(MasterCategory.ALL.getId());
-    select(Card.DATA);
+    select(Card.ANALYSIS);
   }
 
   public void gotoData(BudgetArea budgetArea) {
     seriesView.selectBudgetArea(budgetArea);
     categoryView.select(MasterCategory.ALL.getId());
-    select(Card.DATA);
+    select(Card.ANALYSIS);
   }
 
   public void gotoData(BudgetArea budgetArea, Glob category) {
     seriesView.selectBudgetArea(budgetArea);
     categoryView.select(category);
-    select(Card.DATA);
+    select(Card.ANALYSIS);
   }
 
   private void select(final Card card) {

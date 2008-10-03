@@ -29,7 +29,6 @@ public class ViewSelectionChecker extends DataChecker {
 
   public void selectData() {
     select("analysis");
-    select("data");
   }
 
   public void selectEvolution() {
@@ -48,7 +47,6 @@ public class ViewSelectionChecker extends DataChecker {
 
   public void checkDataSelected() {
     assertSelected("analysis");
-    assertSelected("data");
   }
 
   public void checkEvolutionSelected() {
