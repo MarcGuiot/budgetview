@@ -44,7 +44,7 @@ public class MonthSummaryChecker extends DataChecker {
   }
 
   public MonthSummaryChecker checkNoSeriesMessage(String text) {
-    return checkMessage(text, "noSeriesMessage1", "noSeries");
+    return checkMessage(text, "noSeriesMessage", "noSeries");
   }
 
   private MonthSummaryChecker checkMessage(String text, String textBoxName, final String panelName) {
@@ -148,10 +148,6 @@ public class MonthSummaryChecker extends DataChecker {
 
   public void categorize() {
     getPanel().getButton("categorize").click();
-  }
-
-  public void categorizeAll() {
-    getPanel().getButton("categorizeAll").click();
   }
 
   public ImportChecker openImport() {

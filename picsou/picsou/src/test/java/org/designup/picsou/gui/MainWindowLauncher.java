@@ -7,7 +7,6 @@ import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.server.ServerDirectory;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.ArrayList;
@@ -35,11 +34,27 @@ public class MainWindowLauncher {
 
   public static Directory run(String user, String password) throws Exception {
     ServerDirectory serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), false);
+    Directory directory = PicsouApplication.createDirectory(openRequestManager);
     ServerAccess serverAccess =
       new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
-                                           PicsouApplication.createDirectory());
-    Directory directory = PicsouApplication.createDirectory();
-    run(user, password, serverAccess, directory);
+                                           directory);
+    boolean newUser;
+    try {
+      serverAccess.connect();
+      serverAccess.createUser(user, password.toCharArray());
+      newUser = true;
+    }
+    catch (UserAlreadyExists userAlreadyExists) {
+      serverAccess.initConnection(user, password.toCharArray(), false);
+      newUser = false;
+    }
+    PicsouInit init = PicsouInit.init(serverAccess, user, newUser, directory);
+
+    MainWindow window = new MainWindow();
+    MainPanel.show(init.getRepository(), init.getDirectory(), window);
+    window.show();
+
+    init.getRepository();
     return directory;
   }
 
@@ -58,24 +73,4 @@ public class MainWindowLauncher {
     return defaultValue;
   }
 
-  private static GlobRepository run(String user, String password, ServerAccess serverAccess, Directory directory) throws Exception {
-    boolean newUser;
-    try {
-      serverAccess.connect();
-      serverAccess.createUser(user, password.toCharArray());
-      newUser = true;
-    }
-    catch (UserAlreadyExists userAlreadyExists) {
-      serverAccess.initConnection(user, password.toCharArray(), false);
-      newUser = false;
-    }
-    directory.add(OpenRequestManager.class, openRequestManager);
-    PicsouInit init = PicsouInit.init(serverAccess, user, newUser, directory);
-
-    MainWindow window = new MainWindow();
-    MainPanel.show(init.getRepository(), init.getDirectory(), window);
-    window.show();
-
-    return init.getRepository();
-  }
 }

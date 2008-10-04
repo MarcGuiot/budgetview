@@ -4,9 +4,11 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.generator.PicsouSampleGenerator;
@@ -39,8 +41,15 @@ public class DialogDemo {
     JFrame frame = window.getFrame();
     directory.add(JFrame.class, frame);
 
-    showSeriesEditionDialog(repository, directory, frame);
+    showSeriesWizardDialog(repository, directory, frame);
+//    showSeriesEditionDialog(repository, directory, frame);
 //    showCategoriesEditionDialog(repository, directory);
+  }
+
+  private static void showSeriesWizardDialog(GlobRepository repository, Directory directory, JFrame frame) {
+    SeriesWizardDialog dialog = new SeriesWizardDialog(repository, directory);
+//    SplitsEditor.show(dialog.getDialog(), directory);
+    dialog.show();
   }
 
   private static void showSeriesEditionDialog(GlobRepository repository, Directory directory, JFrame frame) {

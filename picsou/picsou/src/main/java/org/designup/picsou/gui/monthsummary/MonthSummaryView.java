@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.BalanceGraph;
@@ -11,6 +10,7 @@ import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.help.HelpAction;
 import org.designup.picsou.gui.model.MonthStat;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -29,8 +29,7 @@ import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -50,14 +49,15 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                          BudgetArea.SPECIAL.getId(),
                          BudgetArea.SAVINGS.getId());
   private CardHandler cards;
-  private SelectionService parentSelectionService;
   private GlobStringifier budgetAreaStringifier;
   private ImportFileAction importFileAction;
+  private Directory parentDirectory;
 
   public MonthSummaryView(ImportFileAction importFileAction, GlobRepository repository, Directory parentDirectory) {
     super(repository, createDirectory(parentDirectory));
     this.importFileAction = importFileAction;
-    parentSelectionService = parentDirectory.get(SelectionService.class);
+    this.parentDirectory = parentDirectory;
+    SelectionService parentSelectionService = parentDirectory.get(SelectionService.class);
     parentSelectionService.addListener(this, Month.TYPE);
     budgetAreaStringifier = descriptionService.getStringifier(BudgetArea.TYPE);
   }
@@ -120,11 +120,9 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       .setAutoHideIfEmpty(true)
       .setUpdateMatcher(ChangeSetMatchers.changesForType(Transaction.TYPE));
 
-    builder.add("categorize", new CategorizationAction(Lang.get("budgetArea.uncategorized"), false));
+    builder.add("categorize", new CategorizationAction(Lang.get("budgetArea.uncategorized")));
 
     builder.add("openSeriesWizard", new OpenSeriesWizardAction());
-
-    builder.add("categorizeAll", new CategorizationAction(null, true));
 
     builder.add("help", new HelpAction(Lang.get("monthsummary.help"), "import", directory));
 
@@ -292,17 +290,12 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   }
 
   private class CategorizationAction extends AbstractAction {
-    private boolean selectAll;
 
-    private CategorizationAction(final String title, boolean all) {
+    private CategorizationAction(final String title) {
       super(title);
-      this.selectAll = all;
     }
 
     public void actionPerformed(ActionEvent e) {
-      if (selectAll) {
-        parentSelectionService.select(repository.getAll(Month.TYPE), Month.TYPE);
-      }
       directory.get(NavigationService.class).gotoCategorization();
     }
   }
@@ -319,8 +312,8 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        SeriesWizardDialog dialog = new SeriesWizardDialog(repository, directory);
-        dialog.show();
-      }
+      SeriesWizardDialog dialog = new SeriesWizardDialog(repository, parentDirectory);
+      dialog.show();
+    }
   }
 }

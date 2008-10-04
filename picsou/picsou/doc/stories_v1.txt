@@ -1,7 +1,5 @@
 
-- voir redimensionnement TransactionDetails (voir AutoResizingTextArea de JIDE)
 - Message d'aide dans CategoryChooserDialog
-- CategorizationView : bug serie qui reste selectionnee apres changement de transaction (?)
 - tooltips monthSummaryView / balance
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
 - categoryView : afficher un message quand la categorisation est assez avancee (90%) ?
@@ -23,3 +21,8 @@
 - tests d'undo/redo
 - back/forward ?
 - import QIF avec creation de compte : joliesse panneau + selection auto
+
+- CategorizationView : bug serie qui reste selectionnee apres changement de transaction (?)
+
+
+- voir redimensionnement TransactionDetails (voir AutoResizingTextArea de JIDE)

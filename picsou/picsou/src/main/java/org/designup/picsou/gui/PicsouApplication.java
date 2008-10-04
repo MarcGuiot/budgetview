@@ -56,7 +56,7 @@ public class PicsouApplication {
   private static final String CONFIG = "config";
   private static final Pattern CONFIG_FILTER = Pattern.compile(CONFIG + "[0-9][0-9]*" + "\\.jar");
 
-  private static final String LOG_SOUT = APPNAME + ".log.sout";
+  public static final String LOG_SOUT = APPNAME + ".log.sout";
   public static final String LOCAL_PREVAYLER_PATH_PROPERTY = APPNAME + ".prevayler.path";
   public static final String DEFAULT_ADDRESS_PROPERTY = APPNAME + ".server.url";
   public static String DELETE_LOCAL_PREVAYLER_PROPERTY = APPNAME + ".prevayler.delete";
@@ -123,7 +123,7 @@ public class PicsouApplication {
   private static void initLogger() {
     try {
       String sout = System.getProperty(LOG_SOUT);
-      if (sout != null && sout.equalsIgnoreCase("true")) {
+      if ("true".equalsIgnoreCase(sout)) {
         return;
       }
       File logFilePath = new File(getPicsouPath() + "/" + "logs");
@@ -178,8 +178,7 @@ public class PicsouApplication {
     initLogger();
     clearRepositoryIfNeeded();
 
-    directory = createDirectory();
-    directory.add(openRequestManager);
+    directory = createDirectory(openRequestManager);
 
     final MainWindow mainWindow = new MainWindow();
     final LoginPanel loginPanel = new LoginPanel(getServerAddress(), getLocalPrevaylerPath(), isDataInMemory(),
@@ -272,7 +271,12 @@ public class PicsouApplication {
   }
 
   public static Directory createDirectory() throws IOException {
+    return createDirectory(new OpenRequestManager());
+  }
+
+  public static Directory createDirectory(OpenRequestManager openRequestManager) throws IOException {
     Directory directory = new DefaultDirectory();
+    directory.add(OpenRequestManager.class, openRequestManager);
     directory.add(initUiService());
     directory.add(new TimeService());
     directory.add(new UpgradeService(directory));

@@ -40,7 +40,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     monthSummary
       .checkNoBudgetAreasDisplayed()
-      .checkNoSeriesMessage("You must categorize your operations");
+      .checkNoSeriesMessage("Use the series wizard:");
     balanceSummary
       .checkBalance(00.00)
       .checkIncome(0.00)
@@ -53,26 +53,32 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
   public void testNoSeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/15", 1000, "Company")
+      .addTransaction("2008/05/15", -100, "FNAC")
       .load();
+
+    timeline.selectMonth("2008/06");
 
     views.selectHome();
     monthSummary
       .checkNoBudgetAreasDisplayed()
-      .checkNoSeriesMessage("You must categorize your operations")
-      .categorizeAll();
+      .checkNoSeriesMessage("Use the series wizard:")
+      .openSeriesWizard()
+      .validate();
 
-    timeline.checkSelection("2008/06", "2008/07", "2008/08");
+    views.checkCategorizationSelected();
+    timeline.checkSelection("2008/05", "2008/06");
 
     categorization
       .checkTable(new Object[][]{
         {"15/06/2008", "", "Company", 1000.0},
+        {"15/05/2008", "", "FNAC", -100.0},
       })
       .setIncome("Company", "Salary", true);
 
     views.selectHome();
     monthSummary
       .checkNoHelpMessageDisplayed()
-      .checkIncome(1000.0, 3000.0);
+      .checkIncome(1000.0, 0.0);
   }
 
   public void testOneMonth() throws Exception {

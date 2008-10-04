@@ -19,14 +19,17 @@ public class SeriesWizardEntry {
   private String subCategory;
   private boolean addSubCategories;
   private boolean selected;
+  private Integer categoryId;
 
   public SeriesWizardEntry(BudgetArea budgetArea, ProfileType profileType, String key,
-                           MasterCategory master, String subCategory, boolean addSubCategories) {
+                           MasterCategory master, String subCategory, boolean addSubCategories,
+                           GlobRepository repository) {
     this.budgetArea = budgetArea;
     this.profileType = profileType;
     this.name = Lang.get("seriesWizard." + budgetArea.getName() + "." + key);
     this.master = master;
     this.subCategory = subCategory;
+    this.categoryId = getCategoryId(repository);
     this.addSubCategories = addSubCategories;
   }
 
@@ -42,8 +45,6 @@ public class SeriesWizardEntry {
     if (!selected) {
       return;
     }
-
-    Integer categoryId = getCategoryId(repository);
 
     Glob series = repository.create(Series.TYPE,
                                     value(Series.LABEL, name),

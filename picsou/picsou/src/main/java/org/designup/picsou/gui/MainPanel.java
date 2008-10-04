@@ -254,10 +254,10 @@ public class MainPanel {
     public void actionPerformed(ActionEvent e) {
       GlobStateChecker globStateChecker = new GlobStateChecker(repository);
       if (!globStateChecker.check()) {
-        java.util.List<GlobStateChecker.Correcteur> correcteurs = globStateChecker.getCorrecteurs();
+        java.util.List<GlobStateChecker.Correction> corrections = globStateChecker.getCorrections();
         StringWriter stringWriter = new StringWriter();
-        for (GlobStateChecker.Correcteur correcteur : correcteurs) {
-          stringWriter.append(correcteur.info(repository, directory))
+        for (GlobStateChecker.Correction correction : corrections) {
+          stringWriter.append(correction.info(repository, directory))
             .append("\n-----------------------------------------\n");
         }
         throw new RuntimeException(stringWriter.toString());

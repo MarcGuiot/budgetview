@@ -33,11 +33,8 @@
 
         <card name="noSeries">
           <column styleClass="message">
-            <htmlEditorPane text="$monthsummary.noSeries.text1" name="noSeriesMessage1"/>
+            <htmlEditorPane text="$monthsummary.noSeries.text" name="noSeriesMessage"/>
             <button action="openSeriesWizard"/>
-            <htmlEditorPane text="$monthsummary.noSeries.text2" name="noSeriesMessage2"/>
-            <button action="categorizeAll" text="" icon="categorization.png" cursor="hand"
-                     rolloverIcon="categorization_rollover.png" minimumSize="(40,40)"/>
             <filler fill="vertical"/>
           </column>
         </card>

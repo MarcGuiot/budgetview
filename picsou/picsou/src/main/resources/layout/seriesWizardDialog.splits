@@ -3,7 +3,8 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="label.budgetArea" font="-,bold,14"/>
+    <style selector="textArea" marginTop="5" marginBottom="5" weightX="1" weightY="0" fill="both"/>
+    <style selector="label.budgetArea" font="-,bold,14" margin="0"/>
     <style selector="checkBox" foreground="help.messages.text"/>
   </styles>
 
@@ -14,17 +15,17 @@
 
       <htmlEditorPane text="$seriesWizard.message.top"/>
 
-      <scrollPane weightY="100">
-        <column name="content">
-          
-          <repeat ref="budgetAreasRepeat">
-              <column>
-                <label ref="budgetAreaTitle" styleClass="budgetArea"/>
-                <htmlEditorPane ref="budgetAreaDescription" styleClass="description"/>
-                <repeat ref="entryRepeat">
-                  <checkBox ref="checkBox"/>
-                </repeat>
-              </column>
+      <scrollPane weightY="100" ref="scrollPane" horizontalScrollbarPolicy="never" verticalUnitIncrement="20">
+        <column name="content" border="empty(10)">
+
+          <repeat ref="budgetAreasRepeat" margin="0">
+            <column margin="0" marginBottom="15">
+              <label ref="budgetAreaTitle" styleClass="budgetArea"/>
+              <textArea ref="budgetAreaDescription" styleClass="multiLineLabel" margin="0"/>
+              <repeat ref="entryRepeat" marginLeft="10">
+                <checkBox ref="checkBox"/>
+              </repeat>
+            </column>
           </repeat>
 
         </column>

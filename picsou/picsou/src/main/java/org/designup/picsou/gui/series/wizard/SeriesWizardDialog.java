@@ -3,30 +3,39 @@ package org.designup.picsou.gui.series.wizard;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
+import java.util.Set;
 
 public class SeriesWizardDialog {
   private LocalGlobRepository localRepository;
   private Directory directory;
   private SeriesWizardModel model;
   private PicsouDialog dialog;
+  private JScrollPane scrollPane;
+  private GlobRepository parentRepository;
 
   public SeriesWizardDialog(GlobRepository parentRepository, Directory directory) {
+    this.parentRepository = parentRepository;
+
     this.localRepository =
       LocalGlobRepositoryBuilder.init(parentRepository)
         .copy(Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE,
@@ -37,7 +46,7 @@ public class SeriesWizardDialog {
     SeriesEditionDialog.addSeriesCreationTriggers(localRepository);
 
     this.directory = directory;
-    this.model = new SeriesWizardModel();
+    this.model = new SeriesWizardModel(localRepository);
     createDialog();
   }
 
@@ -49,6 +58,8 @@ public class SeriesWizardDialog {
                       Arrays.asList(model.getBudgetAreas()),
                       new BudgetAreaRepeatFactory());
 
+    scrollPane = builder.add("scrollPane", new JScrollPane());
+
     JPanel panel = builder.load();
 
     dialog = PicsouDialog.createWithButtons(directory.get(JFrame.class), panel,
@@ -58,7 +69,12 @@ public class SeriesWizardDialog {
 
   public void show() {
     dialog.pack();
+    scrollPane.getVerticalScrollBar().setValue(0);
     GuiUtils.showCentered(dialog);
+  }
+
+  public Window getDialog() {
+    return dialog;
   }
 
   private class BudgetAreaRepeatFactory implements RepeatComponentFactory<BudgetArea> {
@@ -67,7 +83,7 @@ public class SeriesWizardDialog {
       cellBuilder.add("budgetAreaTitle", new JLabel(budgetArea.getLabel()));
 
       String key = "seriesWizard.description." + budgetArea.getName();
-      cellBuilder.add("budgetAreaDescription", new JEditorPane("text/html", Lang.get(key)));
+      cellBuilder.add("budgetAreaDescription", new JTextArea(Lang.get(key)));
 
       cellBuilder.addRepeat("entryRepeat",
                             model.getEntries(budgetArea),
@@ -95,15 +111,25 @@ public class SeriesWizardDialog {
                                                             "seriesWizard.validation.message",
                                                             dialog, directory) {
           protected void postValidate() {
+
             model.createSeries(localRepository);
             localRepository.commitChanges(true);
-            dialog.setVisible(false);
+
+            GlobList list = getAllMonths();
+            directory.get(SelectionService.class).select(list, Month.TYPE);
             directory.get(NavigationService.class).gotoCategorization();
+
+            dialog.setVisible(false);
           }
         };
         confirm.show();
       }
     };
+  }
+
+  private GlobList getAllMonths() {
+    Set<Integer> valueSet = parentRepository.getAll(Transaction.TYPE).getValueSet(Transaction.MONTH);
+    return parentRepository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, valueSet));
   }
 
   private AbstractAction createCancelAction() {

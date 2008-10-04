@@ -20,17 +20,17 @@ import java.util.SortedSet;
 
 public class GlobStateChecker {
   private GlobRepository repository;
-  private List<Correcteur> correcteurs = new ArrayList<Correcteur>();
+  private List<Correction> corrections = new ArrayList<Correction>();
 
   boolean hasError() {
-    return !correcteurs.isEmpty();
+    return !corrections.isEmpty();
   }
 
-  public List<Correcteur> getCorrecteurs() {
-    return correcteurs;
+  public List<Correction> getCorrections() {
+    return corrections;
   }
 
-  public interface Correcteur {
+  public interface Correction {
     String info(GlobRepository repository, Directory directory);
 
     void correct(GlobRepository repository);
@@ -47,7 +47,7 @@ public class GlobStateChecker {
     checkBudgetAndStat(months);
     checkPlannedTransaction();
     checkPlannedTransactionAmount();
-    return correcteurs.isEmpty();
+    return corrections.isEmpty();
   }
 
   private void checkPlannedTransactionAmount() {
@@ -89,7 +89,7 @@ public class GlobStateChecker {
         monthPlannedChecker.add(planned);
       }
     }
-    monthPlannedChecker.addToErrorList(correcteurs);
+    monthPlannedChecker.addToErrorList(corrections);
   }
 
   private void checkMonths(SortedSet<Integer> months) {
@@ -102,11 +102,11 @@ public class GlobStateChecker {
       }
       expectedMonth = Month.next(expectedMonth);
     }
-    missingMonthonth.addToErrorList(correcteurs);
+    missingMonthonth.addToErrorList(corrections);
 
     Integer currentMonth = repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID);
     if (currentMonth != 0 && !months.contains(currentMonth)) {
-      correcteurs.add(new Correcteur() {
+      corrections.add(new Correction() {
         public String info(GlobRepository repository, Directory directory) {
           return "" + GlobStateChecker.this.repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID) + " not in existing month";
         }
@@ -139,11 +139,11 @@ public class GlobStateChecker {
     }
     if (firstMonth > lastMonth) {
       MonthSeriesChecker monthSeriesChecker = new MonthSeriesChecker(series.get(Series.ID), firstMonth, lastMonth);
-      monthSeriesChecker.addToErrorList(correcteurs);
+      monthSeriesChecker.addToErrorList(corrections);
       return;
     }
     if (budgets.isEmpty()) {
-      correcteurs.add(new Correcteur() {
+      corrections.add(new Correction() {
         public String info(GlobRepository repository, Directory directory) {
           return "no series budget for " + GlobPrinter.toString(series);
         }
@@ -173,7 +173,7 @@ public class GlobStateChecker {
         Glob stat = repository.find(Key.create(SeriesStat.SERIES, series.get(Series.ID), SeriesStat.MONTH, firstMonth));
         if (stat == null) {
           final Integer firstMonth1 = firstMonth;
-          correcteurs.add(new Correcteur() {
+          corrections.add(new Correction() {
             public String info(GlobRepository repository, Directory directory) {
               return "Missing stat month " + firstMonth1 + " for " + GlobPrinter.toString(series);
             }
@@ -193,8 +193,8 @@ public class GlobStateChecker {
   }
 
   private void checkAsError(Directory directory) {
-    if (!correcteurs.isEmpty()) {
-      throw new RuntimeException(correcteurs.get(0).info(repository, directory));
+    if (!corrections.isEmpty()) {
+      throw new RuntimeException(corrections.get(0).info(repository, directory));
     }
   }
 
@@ -208,7 +208,7 @@ public class GlobStateChecker {
     }
   }
 
-  static class MissingMonth implements Correcteur {
+  static class MissingMonth implements Correction {
     List<Integer> months = new ArrayList<Integer>();
     private String info;
 
@@ -220,9 +220,9 @@ public class GlobStateChecker {
       months.add(monthId);
     }
 
-    public void addToErrorList(List<Correcteur> correcteurs) {
+    public void addToErrorList(List<Correction> corrections) {
       if (!months.isEmpty()) {
-        correcteurs.add(this);
+        corrections.add(this);
       }
     }
 
@@ -237,7 +237,7 @@ public class GlobStateChecker {
     }
   }
 
-  static class SeriesBudgetChecker implements Correcteur {
+  static class SeriesBudgetChecker implements Correction {
     List<Integer> missing = new ArrayList<Integer>();
     List<Integer> extrat = new ArrayList<Integer>();
     private Glob series;
@@ -252,9 +252,9 @@ public class GlobStateChecker {
              "\nextra month : " + extrat;
     }
 
-    public void addToErrorList(List<Correcteur> correcteurs) {
+    public void addToErrorList(List<Correction> corrections) {
       if (!extrat.isEmpty() || !missing.isEmpty()) {
-        correcteurs.add(this);
+        corrections.add(this);
       }
     }
 
@@ -271,7 +271,7 @@ public class GlobStateChecker {
     }
   }
 
-  static class MonthSeriesChecker implements Correcteur {
+  static class MonthSeriesChecker implements Correction {
     private Integer seriesId;
     private Integer firstMonth;
     private Integer lastMonth;
@@ -291,12 +291,12 @@ public class GlobStateChecker {
       repository.update(Key.create(Series.TYPE, seriesId), Series.LAST_MONTH, firstMonth);
     }
 
-    public void addToErrorList(List<Correcteur> correcteurs) {
-      correcteurs.add(this);
+    public void addToErrorList(List<Correction> corrections) {
+      corrections.add(this);
     }
   }
 
-  static class MonthPlannedChecker implements Correcteur {
+  static class MonthPlannedChecker implements Correction {
     GlobList planned = new GlobList();
 
     public String info(GlobRepository repository, Directory directory) {
@@ -306,9 +306,9 @@ public class GlobStateChecker {
     public void correct(GlobRepository repository) {
     }
 
-    public void addToErrorList(List<Correcteur> correcteurs) {
+    public void addToErrorList(List<Correction> corrections) {
       if (!planned.isEmpty()) {
-        correcteurs.add(this);
+        corrections.add(this);
       }
     }
 
@@ -317,7 +317,7 @@ public class GlobStateChecker {
     }
   }
 
-  static private class PlannedTransactionChecker implements Correcteur {
+  static private class PlannedTransactionChecker implements Correction {
     private MultiMap<Integer, Info> infos = new MultiMap<Integer, Info>();
 
     public String info(GlobRepository repository, Directory directory) {
