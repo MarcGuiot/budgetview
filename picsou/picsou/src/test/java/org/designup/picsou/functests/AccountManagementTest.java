@@ -104,6 +104,6 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     ImportChecker importer = new ImportChecker(dialog);
     importer.selectFiles(path);
     importer.acceptFile();
-    importer.checkSelectedAccount("Main account(11111)");
+    importer.checkSelectedAccount("Main account (11111)");
   }
 }

@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.startup;
+package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
@@ -25,6 +25,7 @@ public class AccountEditionPanel {
   private GlobRepository repository;
   private JLabel messageLabel;
   private GlobsPanelBuilder builder;
+  private JTextField balanceEditor;
 
   public AccountEditionPanel(final GlobRepository repository, Directory directory, JLabel messageLabel) {
     this.repository = repository;
@@ -51,12 +52,19 @@ public class AccountEditionPanel {
     });
     builder.addEditor("name", Account.NAME).setNotifyAtKeyPressed(true);
     builder.addEditor("number", Account.NUMBER).setNotifyAtKeyPressed(true);
+
+    balanceEditor = builder.addEditor("balance", Account.BALANCE).setNotifyAtKeyPressed(true).getComponent();
+
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
         panel = (JPanel)component;
         panel.setVisible(false);
       }
     });
+  }
+
+  public void setBalanceEditorVisible(boolean visible) {
+    balanceEditor.setVisible(visible);
   }
 
   public GlobsPanelBuilder getBuilder() {

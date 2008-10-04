@@ -33,7 +33,10 @@
         <comboBox ref="accountCombo"/>
         <button ref="newAccount"/>
       </row>
+
+      <label text="$import.account.panel.title" styleClass="header" autoHideSource="accountEditionPanel"/>
       <panel ref="accountEditionPanel"/>
+
       <label ref="importMessage" foreground="#FF0000"/>
 
       <row styleClass="buttons">

@@ -2,22 +2,31 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.globsframework.utils.Dates;
-import org.uispec4j.Panel;
-import org.uispec4j.TextBox;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatcher;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
 import java.util.Date;
+import java.util.Set;
+import java.util.HashSet;
 
-public class AccountChecker extends DataChecker {
+public class AccountViewChecker extends DataChecker {
   private Panel panel;
 
-  public AccountChecker(Panel panel) {
+  public AccountViewChecker(Panel panel) {
     this.panel = panel;
+  }
+
+  public void checkAccountNames(String... names) {
+    UIComponent[] uiComponents = panel.getUIComponents(TextBox.class, "accountName");
+    Set<String> existingNames = new HashSet<String>();
+    for (UIComponent uiComponent : uiComponents) {
+      TextBox textBox = (TextBox)uiComponent;
+      existingNames.add(textBox.getText());
+    }
+    org.globsframework.utils.TestUtils.assertSetEquals(existingNames, names);
   }
 
   public void assertDisplayEquals(String accountNumber, double balance, String updateDate) {
@@ -53,7 +62,7 @@ public class AccountChecker extends DataChecker {
     return new BalanceEditionChecker(window);
   }
 
-  public AccountChecker changeBalance(String accountName, final double balance, final String label) {
+  public AccountViewChecker changeBalance(String accountName, final double balance, final String label) {
     BalanceEditionChecker balanceEditor = getBalance(accountName);
     balanceEditor
       .setAmount(balance)

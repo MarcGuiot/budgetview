@@ -4,7 +4,6 @@
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
 - categoryView : afficher un message quand la categorisation est assez avancee (90%) ?
 - AccountEditionDialog : Enter pour valider le montant et fermer la fenetre
-- Gestion des licences
 - Afficher SLA au premier lancement (repository vide) + creation compte
 - Edition compte (renommage)
 - Mettre en rouge les depassements
@@ -15,9 +14,13 @@
 - TransactionView : click sur serie d'une planned : ouvrir SED
 - Format des montants : mettre des espaces pour separer les milliers
 - ordre des series : prevu decroissant
-- TransactionDetail : mettre le compte
+- TransactionDetails : mettre le compte & co
 
-- back/forward=======
+- Gestion des licences
+
+=======
+
+- back/forward
 - tests d'undo/redo
 - back/forward ?
 - import QIF avec creation de compte : joliesse panneau + selection auto
@@ -26,3 +29,8 @@
 
 
 - voir redimensionnement TransactionDetails (voir AutoResizingTextArea de JIDE)
+
+----
+
+- navigateur sous Linux ?
+- transactionView : colonne compte

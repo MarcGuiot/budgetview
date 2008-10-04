@@ -23,14 +23,14 @@ public class CurrentMonthTrigger implements ChangeSetListener {
     int lastDay = previousLastDay;
     if (changeSet.containsCreationsOrDeletions(Transaction.TYPE)) {
       MonthCallback monthCallback = new MonthCallback();
-      repository.saveApply(Transaction.TYPE, GlobMatchers.ALL, monthCallback);
+      repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, monthCallback);
       lastMonth = monthCallback.getLastMonthId();
       if (previousLastMonth != lastMonth) {
         repository.update(CurrentMonth.KEY, CurrentMonth.MONTH_ID, lastMonth);
         previousLastDay = -1;
       }
       DayCallback dayCallback = new DayCallback(lastMonth, previousLastDay);
-      repository.saveApply(Transaction.TYPE, GlobMatchers.ALL, dayCallback);
+      repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, dayCallback);
       lastDay = dayCallback.getLastMonthDay();
       if (previousLastDay != lastDay) {
         repository.update(CurrentMonth.KEY, CurrentMonth.DAY, lastDay);
@@ -44,7 +44,7 @@ public class CurrentMonthTrigger implements ChangeSetListener {
         GlobMatchers.fieldEquals(Transaction.PLANNED, true),
         GlobMatchers.fieldStrickyLesser(Transaction.MONTH, lastMonth)));
       repository.delete(transactions);
-      repository.saveApply(Transaction.TYPE, GlobMatchers.ALL,
+      repository.safeApply(Transaction.TYPE, GlobMatchers.ALL,
                            new UpdateDayCallback(lastMonth, lastDay));
     }
   }

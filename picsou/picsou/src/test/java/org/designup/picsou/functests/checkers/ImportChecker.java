@@ -2,11 +2,11 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
+import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
-import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.interception.FileChooserHandler;
+import org.uispec4j.interception.WindowInterceptor;
 
 public class ImportChecker {
   private Panel dialog;
@@ -78,6 +78,12 @@ public class ImportChecker {
     return this;
   }
 
+  public ImportChecker completeImport() {
+    dialog.getButton("OK").click();
+    UISpecAssert.assertFalse(dialog.isVisible());
+    return this;
+  }
+
   public BalanceEditionChecker doImportWithBalance() {
     return new BalanceEditionChecker(WindowInterceptor.getModalDialog(dialog.getButton("OK").triggerClick()));
   }
@@ -106,8 +112,9 @@ public class ImportChecker {
     assertThat(dialog.getButton("close").textEquals(text));
   }
 
-  public void checkSelectedAccount(String accountNumber) {
+  public ImportChecker checkSelectedAccount(String accountNumber) {
     assertThat(dialog.getComboBox("accountCombo").selectionEquals(accountNumber));
+    return this;
   }
 
   public ImportChecker checkNoErrorMessage() {
@@ -179,12 +186,30 @@ public class ImportChecker {
     return this;
   }
 
-  public void selectAccount(final String accountName) {
+  public ImportChecker selectAccount(final String accountName) {
     dialog.getComboBox("accountCombo").select(accountName);
+    return this;
   }
 
   public ImportChecker checkNoAccountBankSelected() {
     assertTrue(dialog.getComboBox("accountBank").selectionEquals(null));
+    return this;
+  }
+
+  public ImportChecker defineAccount(String bank, String accountName, String number) {
+    selectAccountBank(bank);
+    setAccountName(accountName);
+    setAccountNumber(number);
+    return this;
+  }
+
+  public ImportChecker createNewAccount(String bank, String accountName, String number, double initialBalance) {
+    AccountEditionChecker.open(dialog.getButton("newAccount").triggerClick())
+      .selectBank(bank)
+      .setAccountName(accountName)
+      .setAccountNumber(number)
+      .setBalance(initialBalance)
+      .validate();
     return this;
   }
 }

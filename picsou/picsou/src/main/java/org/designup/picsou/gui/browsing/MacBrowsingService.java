@@ -12,7 +12,7 @@ public class MacBrowsingService extends BrowsingService {
       MRJAdapter.openURL(url);
     }
     catch (IOException e) {
-      throw new IOFailure(Lang.get("downloadService.error"), e);
+      throw new IOFailure(Lang.get("browsing.error"), e);
     }
   }
 }

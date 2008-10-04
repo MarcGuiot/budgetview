@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.startup;
+package org.designup.picsou.gui.preferences;
 
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;

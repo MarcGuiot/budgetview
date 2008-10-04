@@ -1,0 +1,20 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+
+  <panel styleClass="dialog" preferredSize="(340,300)" opaque="true">
+    <column styleClass="innerDialog">
+
+      <label text="$account.panel.title" styleClass="title"/>
+
+      <panel ref="panel"/>
+
+      <label ref="message" foreground="#FF0000"/>
+
+      <filler fill="vertical" weightY="20"/>
+
+    </column>
+  </panel>
+
+</splits>

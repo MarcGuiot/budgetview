@@ -2,6 +2,8 @@ package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.accounts.BalanceEditionDialog;
+import org.designup.picsou.gui.accounts.NewAccountAction;
+import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
@@ -25,10 +27,7 @@ import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import static org.globsframework.gui.views.utils.LabelCustomizers.fontSize;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
@@ -205,10 +204,13 @@ public class ImportPanel {
       }
     });
 
+    registerAccountCreationListener(sessionRepository, sessionDirectory);
+    
     bankEntityEditionPanel = new BankEntityEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
     builder2.add("bankEntityEditionPanel", bankEntityEditionPanel.getPanel());
 
     accountEditionPanel = new AccountEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
+    accountEditionPanel.setBalanceEditorVisible(false);
     builder2.add("accountEditionPanel", accountEditionPanel.getBuilder());
 
     builder2.add("importMessage", importMessageLabel);
@@ -217,6 +219,19 @@ public class ImportPanel {
     builder2.add("finish", new FinishAction());
     builder2.add("close", new CancelAction(textForCloseButton));
     this.panelStep2 = builder2.load();
+  }
+
+  private void registerAccountCreationListener(final GlobRepository sessionRepository,
+                                               final Directory sessionDirectory) {
+    sessionRepository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        Set<Key> createdAccountKeys = changeSet.getCreated(Account.TYPE);
+        if (createdAccountKeys.size() == 1) {
+          Glob account = sessionRepository.get(createdAccountKeys.iterator().next());
+          sessionDirectory.get(SelectionService.class).select(account);
+        }
+      }
+    });
   }
 
   private void initOpenRequestManager(Directory directory) {
@@ -425,7 +440,7 @@ public class ImportPanel {
         showBalanceDialog();
         openRequestManager.popCallback();
         localRepository.commitChanges(true);
-        selectImportedMonth(month);
+        selectImportedMonths(month);
         complete();
         return true;
       }
@@ -475,7 +490,7 @@ public class ImportPanel {
     localRepository.enterBulkDispatchingMode();
     final SortedSet<Integer> monthIds = new TreeSet<Integer>();
     try {
-      localRepository.saveApply(Transaction.TYPE,
+      localRepository.safeApply(Transaction.TYPE,
                                 GlobMatchers.fieldIn(Transaction.IMPORT, importKeys),
                                 new GlobFunctor() {
                                   public void run(Glob month, GlobRepository repository) throws Exception {
@@ -502,12 +517,12 @@ public class ImportPanel {
   }
 
   private void learn() {
-    localRepository.saveApply(Transaction.TYPE,
+    localRepository.safeApply(Transaction.TYPE,
                               GlobMatchers.fieldIn(Transaction.IMPORT, importKeys),
-                              new LearningGlobFunctor(repository));
+                              new AutoCategorizationFunctor(repository));
   }
 
-  private void selectImportedMonth(Set<Integer> month) {
+  private void selectImportedMonths(Set<Integer> month) {
     GlobList monthsToSelect = repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, month));
     if (!monthsToSelect.isEmpty()) {
       SelectionService selectionService = directory.get(SelectionService.class);
@@ -610,7 +625,7 @@ public class ImportPanel {
     }
   }
 
-  private File[] queryFile(Component parent) {
+  private static File[] queryFile(Component parent) {
     JFileChooser chooser = new JFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     chooser.setMultiSelectionEnabled(true);

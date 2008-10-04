@@ -19,7 +19,7 @@ public class AccountStringifier extends AbstractGlobStringifier {
     String name = account.get(Account.NAME);
     if (Strings.isNotEmpty(name)) {
       if (Strings.isNotEmpty(number)) {
-        return name + "(" + number + ")";
+        return name + " (" + number + ")";
       }
       else {
         return name;

@@ -22,7 +22,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected Window mainWindow;
 
   protected ViewSelectionChecker views;
-  protected AccountChecker accounts;
+  protected AccountViewChecker accounts;
   protected CategoryChecker categories;
   protected MonthChecker timeline;
   protected TransactionChecker transactions;
@@ -105,7 +105,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected void initCheckers() {
     views = new ViewSelectionChecker(mainWindow);
-    accounts = new AccountChecker(mainWindow);
+    accounts = new AccountViewChecker(mainWindow);
     operations = new OperationChecker(mainWindow);
     categories = new CategoryChecker(mainWindow);
     timeline = new MonthChecker(mainWindow);

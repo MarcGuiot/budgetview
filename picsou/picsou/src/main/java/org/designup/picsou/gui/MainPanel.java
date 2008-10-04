@@ -5,7 +5,7 @@ import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ExportFileAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
-import org.designup.picsou.gui.actions.PreferencesAction;
+import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;

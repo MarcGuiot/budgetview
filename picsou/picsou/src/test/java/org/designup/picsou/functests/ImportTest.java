@@ -45,7 +45,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkFileContent(new Object[][]{
         {"10/01/2006", "Menu K", "-1.10"}
       })
-      .doImport();
+      .completeImport();
 
     transactions
       .initContent()
@@ -78,7 +78,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkFileContent(new Object[][]{
         {"20/02/2006", "Menu K", "-2.20"}
       })
-      .doImport();
+      .completeImport();
 
     transactions
       .initContent()
@@ -95,7 +95,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     openImportDialog()
       .browseAndSelect(path)
       .acceptFile()
-      .doImport();
+      .completeImport();
 
     transactions
       .initContent()
@@ -121,7 +121,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .doImport()
       .checkImportMessage("You must enter the account number")
       .setAccountNumber("0123546")
-      .doImport();
+      .completeImport();
 
     transactions
       .initContent()
@@ -129,7 +129,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void ENCOURS_testImportTwoQifFilesInTwoDifferentAccounts() throws Exception {
+  public void testImportTwoQifFilesInTwoDifferentAccounts() throws Exception {
     String firstQif = QifBuilder.init(this)
       .addTransaction("2006/01/01", 10, "first")
       .save();
@@ -137,7 +137,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     openImportDialog()
       .setFilePath(firstQif)
       .acceptFile()
-      .doImport();
+      .defineAccount(SOCIETE_GENERALE, "Main account", "00011")
+      .completeImport();
 
     String secondQif = QifBuilder
       .init(this)
@@ -146,7 +147,14 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     openImportDialog()
       .setFilePath(secondQif)
-      .selectAccount("Main account");
+      .acceptFile()
+      .checkAvailableAccounts("Main account (00011)")
+      .createNewAccount(SOCIETE_GENERALE, "Second account", "00022", 12.30)
+      .checkSelectedAccount("Second account (00022)")
+      .completeImport();
+
+    views.selectHome();
+    accounts.checkAccountNames("Main account", "Second account");
   }
 
   public void testSkipFirstQifFile() throws Exception {
@@ -174,7 +182,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       })
       .selectAccountBank(SOCIETE_GENERALE)
       .setAccountNumber("1111")
-      .doImport();
+      .completeImport();
 
     transactions
       .initContent()
@@ -190,7 +198,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     openImportDialog()
       .setFilePath(firstQif)
       .acceptFile()
-      .doImport();
+      .defineAccount(SOCIETE_GENERALE, "Main account", "12345")
+      .completeImport();
 
     String qifFile = QifBuilder
       .init(this)
@@ -200,8 +209,12 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     openImportDialog()
       .setFilePath(qifFile)
       .acceptFile()
-      .checkAvailableAccounts("Main account")
-      .selectAccount("Main account");
+      .checkAvailableAccounts("Main account (12345)")
+      .selectAccount("Main account (12345)")
+      .completeImport();
+
+    views.selectHome();
+    accounts.checkAccountNames("Main account");
   }
 
   public void testImportWithCreateAccountChecksAccountBankIsFilled() throws Exception {
@@ -247,7 +260,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkAccountsForEntity("666", new String[]{"12345678a", "12345678b"})
       .checkAccountsForEntity("777", new String[]{"1111222233334444", "87654321"})
       .selectBankForEntity("777", SOCIETE_GENERALE)
-      .doImport();
+      .completeImport();
 
     String secondFileName = OfxBuilder.init(this)
       .addBankAccount(666, 2048, "77777777", 77.0, "2008/06/11")
@@ -257,7 +270,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     openImportDialog()
       .setFilePath(secondFileName)
       .acceptFile()
-      .doImport();
+      .completeImport();
 
     transactions
       .initContent()
@@ -290,7 +303,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
         {"01/02/2001", "Menu K", "-1.10"}
       })
       .enterAccountNumber("0123546")
-      .doImport();
+      .completeImport();
 
     transactions.initContent()
       .add("01/02/2001", TransactionType.PRELEVEMENT, "Menu K", "", -1.10)

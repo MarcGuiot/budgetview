@@ -11,10 +11,10 @@ import org.globsframework.model.utils.GlobFunctor;
 
 import java.util.ListIterator;
 
-public class LearningGlobFunctor implements GlobFunctor {
+public class AutoCategorizationFunctor implements GlobFunctor {
   private GlobRepository referenceRepository;
 
-  public LearningGlobFunctor(GlobRepository referenceRepository) {
+  public AutoCategorizationFunctor(GlobRepository referenceRepository) {
     this.referenceRepository = referenceRepository;
   }
 

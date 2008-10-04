@@ -106,7 +106,6 @@ public class AccountView extends View {
       }
 
       public void actionPerformed(ActionEvent e) {
-
         directory.get(BrowsingService.class).launchBrowser(url);
       }
     }

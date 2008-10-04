@@ -2,16 +2,18 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <column>
-    <label text="$account.panel.title" styleClass="header"/>
-    <grid>
-      <label text="$account.bank" gridPos="(0,0)" styleClass="formLabel"/>
-      <comboBox ref="accountBank" gridPos="(1,0)"/>
-      <label text="$account.name" gridPos="(0,1)" styleClass="formLabel"/>
-      <textField ref="name" gridPos="(1,1)"/>
-      <label text="$account.number" gridPos="(0,2)" styleClass="formLabel"/>
-      <textField ref="number" gridPos="(1,2)"/>
-    </grid>
-  </column>
+  <grid>
+    <label text="$account.bank" gridPos="(0,0)" styleClass="formLabel"/>
+    <comboBox ref="accountBank" gridPos="(1,0)"/>
+
+    <label text="$account.name" gridPos="(0,1)" styleClass="formLabel"/>
+    <textField ref="name" gridPos="(1,1)"/>
+
+    <label text="$account.number" gridPos="(0,2)" styleClass="formLabel"/>
+    <textField ref="number" gridPos="(1,2)"/>
+
+    <label text="$account.initialBalance" gridPos="(0,3)" styleClass="formLabel" autoHideSource="balance"/>
+    <textField ref="balance" gridPos="(1,3)"/>
+  </grid>
 
 </splits>
