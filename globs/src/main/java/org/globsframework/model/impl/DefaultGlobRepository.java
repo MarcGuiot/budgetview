@@ -151,7 +151,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     }
   }
 
-  public void saveApply(GlobType type, GlobMatcher matcher, GlobFunctor callback) {
+  public void safeApply(GlobType type, GlobMatcher matcher, GlobFunctor callback) {
     try {
       apply(type, matcher, callback);
     }

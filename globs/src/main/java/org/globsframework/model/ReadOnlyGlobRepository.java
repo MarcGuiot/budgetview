@@ -26,7 +26,7 @@ public interface ReadOnlyGlobRepository {
 
   void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception;
 
-  void saveApply(GlobType type, GlobMatcher matcher, GlobFunctor callback);
+  void safeApply(GlobType type, GlobMatcher matcher, GlobFunctor callback);
 
   Glob findUnique(GlobType type, FieldValue... values)
     throws ItemAmbiguity;
