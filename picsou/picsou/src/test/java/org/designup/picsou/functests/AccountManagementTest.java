@@ -103,7 +103,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       accounts.getImportTrigger(OperationChecker.DEFAULT_ACCOUNT_NUMBER));
     ImportChecker importer = new ImportChecker(dialog);
     importer.selectFiles(path);
-    importer.startImport();
+    importer.acceptFile();
     importer.checkSelectedAccount("Main account(11111)");
   }
 }

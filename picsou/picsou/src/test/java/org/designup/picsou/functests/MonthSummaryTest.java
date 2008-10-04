@@ -33,7 +33,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary
       .openImport()
       .selectFiles(file)
-      .startImport()
+      .acceptFile()
       .doImport();
 
     timeline.checkSelection("2008/08");

@@ -43,7 +43,7 @@ public class LoginFuncTest extends ServerFuncTestCase {
     OperationChecker operations = new OperationChecker(window);
     ImportChecker checker = operations.openImportDialog();
     checker.selectFiles(fileName);
-    checker.startImport();
+    checker.acceptFile();
     checker.selectBank("Société Générale");
     checker.enterAccountNumber("1111");
     checker.doImport();

@@ -64,7 +64,7 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     ImportChecker importDialog = operations.openImportDialog();
     importDialog
       .selectFiles(fileName)
-      .startImport()
+      .acceptFile()
       .checkNoErrorMessage();
 
     if (fileName.endsWith(".qif")) {

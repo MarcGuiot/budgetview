@@ -60,7 +60,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
     ImportChecker importer = new ImportChecker(importDialog);
     importer.checkSelectedFiles(files);
-    importer.startImport();
+    importer.acceptFile();
 
     String step2File = OfxBuilder.init(this)
       .addTransaction("2000/01/04", 1.2, "menu K")
@@ -114,7 +114,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .save();
     PicsouApplication.main(step1File);
     importer.checkSelectedFiles(initialFile, step1File);
-    importer.startImport();
+    importer.acceptFile();
     String step2File = OfxBuilder.init(this)
       .addTransaction("2000/01/02", 1.2, "quick")
       .save();
@@ -167,7 +167,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     trigger2.waitEnd();
     ImportChecker importer = new ImportChecker(importDialog);
     importer.checkSelectedFiles(initialFile);
-    importer.startImport();
+    importer.acceptFile();
     importer.doImport();
     getTransactionView(window).initContent()
       .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
@@ -176,7 +176,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     picsouApplication.shutdown();
   }
 
-  public void testWhenFirstPortAreInUse() throws Exception {
+  public void testWhenFirstPortsAreInUse() throws Exception {
     ServerSocket serverSocket1 = new ServerSocket(5454);
     ServerSocket serverSocket2 = new ServerSocket(3474);
     testOpenRequestsDuringLoginAndInitialFileImport();
@@ -208,7 +208,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     Window importDialog = WindowInterceptor.getModalDialog(operations.getImportTrigger());
     ImportChecker importer = new ImportChecker(importDialog);
     BalanceEditionChecker balance = importer.selectFiles(file)
-      .startImport()
+      .acceptFile()
       .selectBank(LoggedInFunctionalTestCase.SOCIETE_GENERALE)
       .enterAccountNumber("11111")
       .doImportWithBalance();
