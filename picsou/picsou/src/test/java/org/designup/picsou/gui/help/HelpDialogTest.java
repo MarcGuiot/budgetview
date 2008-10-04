@@ -25,7 +25,7 @@ public class HelpDialogTest extends PicsouGuiTestCase {
 
     checker = HelpChecker.open(new Trigger() {
       public void run() throws Exception {
-        helpService.show(ref);
+        helpService.show(ref, directory.get(JFrame.class));
       }
     });
   }

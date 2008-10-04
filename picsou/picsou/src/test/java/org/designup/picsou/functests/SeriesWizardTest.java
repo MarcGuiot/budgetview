@@ -22,8 +22,8 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
       .select("Exceptional income")
       .select("Rent")
       .select("Cell phone 1")
-      .select("Groceries")
-      .select("Health")
+      .checkSelected("Groceries")
+      .checkSelected("Health")
       .select("Regular savings")
       .select("Irregular savings")
       .validate();
@@ -37,7 +37,7 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.income.editSeriesList()
-      .checkSeriesList("Exceptional Income", "Income 1")
+      .checkSeriesListEquals("Exceptional Income", "Income 1")
       .selectSeries("Income 1")
       .checkSelectedPeriod("Every month")
       .checkCategory(MasterCategory.INCOME)
@@ -47,7 +47,7 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     budgetView.recurring.editSeriesList()
-      .checkSeriesList("Cell phone 1", "Rent")
+      .checkSeriesListEquals("Cell phone 1", "Rent")
       .selectSeries("Rent")
       .checkSelectedPeriod("Every month")
       .checkCategory("Rent")
@@ -57,7 +57,7 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     budgetView.envelopes.editSeriesList()
-      .checkSeriesList("Groceries", "Health")
+      .checkSeriesListContains("Groceries", "Health")
       .selectSeries("Groceries")
       .checkSelectedPeriod("Every month")
       .checkCategory(MasterCategory.FOOD)
@@ -67,7 +67,7 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     budgetView.savings.editSeriesList()
-      .checkSeriesList("Irregular savings", "Regular savings")
+      .checkSeriesListEquals("Irregular savings", "Regular savings")
       .selectSeries("Regular savings")
       .checkSelectedPeriod("Every month")
       .checkCategory(MasterCategory.SAVINGS)

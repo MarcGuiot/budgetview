@@ -78,11 +78,11 @@ public class PicsouDialog extends JDialog {
 
   public static PicsouDialog createWithButtons(Window owner, JPanel panel, Action ok, Action cancel, Directory directory) {
     PicsouDialog dialog = create(owner, directory);
-    dialog.addInPanelWithButtons(panel, ok, cancel);
+    dialog.addPanelWithButtons(panel, ok, cancel);
     return dialog;
   }
 
-  public void addInPanelWithButtons(JPanel panel, Action ok, Action cancel) {
+  public void addPanelWithButtons(JPanel panel, Action ok, Action cancel) {
     closeAction = cancel;
     int buttonCount = 0;
     if (ok != null) {

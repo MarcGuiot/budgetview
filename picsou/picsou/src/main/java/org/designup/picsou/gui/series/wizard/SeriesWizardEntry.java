@@ -31,6 +31,7 @@ public class SeriesWizardEntry {
     this.subCategory = subCategory;
     this.categoryId = getCategoryId(repository);
     this.addSubCategories = addSubCategories;
+    this.selected = budgetArea == BudgetArea.ENVELOPES;
   }
 
   public String getName() {
@@ -39,6 +40,10 @@ public class SeriesWizardEntry {
 
   public void setSelected(boolean selected) {
     this.selected = selected;
+  }
+
+  public boolean isSelected() {
+    return selected;
   }
 
   public void createSeries(GlobRepository repository) {

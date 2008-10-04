@@ -23,6 +23,7 @@ import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import static org.globsframework.gui.views.utils.LabelCustomizers.fontSize;
+import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -180,7 +181,7 @@ public class ImportPanel {
                                                  dateRenderer.getComparator(), sessionDirectory)
       .addColumn(Lang.get("import.bankDate"), ImportedTransaction.BANK_DATE,
                  chain(fontSize(9), dateRenderer))
-      .addColumn(Lang.get("label"), ImportedTransaction.LABEL)
+      .addColumn(Lang.get("label"), ImportedTransaction.LABEL, LabelCustomizers.autoTooltip())
       .addColumn(Lang.get("amount"), ImportedTransaction.AMOUNT);
 
     PicsouTableHeaderPainter.install(tableView, localDirectory);

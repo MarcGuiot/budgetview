@@ -20,7 +20,7 @@ public abstract class ConfirmationDialog {
     builder.add("message", new JEditorPane("text/html", Lang.get(contentKey)));
 
     dialog = PicsouDialog.create(owner, directory);
-    dialog.addInPanelWithButtons(builder.<JPanel>load(), createOkAction(), createCancelAction());
+    dialog.addPanelWithButtons(builder.<JPanel>load(), createOkAction(), createCancelAction());
     dialog.pack();
   }
 

@@ -16,6 +16,6 @@ public class HelpAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-    directory.get(HelpService.class).show(helpRef);
+    directory.get(HelpService.class).show(helpRef, directory.get(JFrame.class));
   }
 }

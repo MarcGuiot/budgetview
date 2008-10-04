@@ -9,6 +9,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.*;
 import java.util.Stack;
 
 public class HelpDialog {
@@ -25,12 +26,12 @@ public class HelpDialog {
   private Stack<String> backPages = new Stack<String>();
   private Stack<String> forwardPages = new Stack<String>();
 
-  public HelpDialog(HelpSource source, GlobRepository repository, Directory directory) {
+  public HelpDialog(HelpSource source, GlobRepository repository, Directory directory, Window owner) {
     this.source = source;
-    createDialog(repository, directory);
+    createDialog(owner, repository, directory);
   }
 
-  private void createDialog(GlobRepository repository, Directory directory) {
+  private void createDialog(Window owner, GlobRepository repository, Directory directory) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/helpDialog.splits",
                                                       repository, directory);
     title = builder.add("title", new JLabel());
@@ -45,7 +46,7 @@ public class HelpDialog {
 
     JPanel panel = builder.load();
 
-    dialog = PicsouDialog.createWithButton(directory.get(JFrame.class), false, panel, new CloseAction(),
+    dialog = PicsouDialog.createWithButton(owner, false, panel, new CloseAction(),
                                            directory);
     dialog.pack();
   }

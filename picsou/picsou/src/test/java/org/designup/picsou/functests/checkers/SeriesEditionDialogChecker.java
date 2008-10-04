@@ -340,8 +340,13 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkSeriesList(String... names) {
+  public SeriesEditionDialogChecker checkSeriesListEquals(String... names) {
     assertThat(dialog.getListBox("seriesList").contentEquals(names));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSeriesListContains(String... names) {
+    assertThat(dialog.getListBox("seriesList").contains(names));
     return this;
   }
 

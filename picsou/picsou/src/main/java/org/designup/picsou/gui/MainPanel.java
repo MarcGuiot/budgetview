@@ -217,7 +217,7 @@ public class MainPanel {
     JMenu menu = new JMenu(Lang.get("help"));
     menu.add(new AbstractAction(Lang.get("help.index")) {
       public void actionPerformed(ActionEvent e) {
-        directory.get(HelpService.class).show("index");
+        directory.get(HelpService.class).show("index", parent);
       }
     });
     return menu;

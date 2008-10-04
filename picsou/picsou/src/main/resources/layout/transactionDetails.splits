@@ -51,7 +51,7 @@
 
       <card name="selection">
         <column>
-          <scrollPane ref="scroll" styleClass="textArea">
+          <scrollPane styleClass="textArea">
             <textArea ref="userLabel" styleClass="multiLineLabel"/>
           </scrollPane>
 

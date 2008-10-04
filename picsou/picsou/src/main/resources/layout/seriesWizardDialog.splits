@@ -13,9 +13,9 @@
 
       <label text="$seriesWizard.title" styleClass="title"/>
 
-      <htmlEditorPane text="$seriesWizard.message.top"/>
+      <htmlEditorPane text="$seriesWizard.message.top" hyperlinkListener="hyperlinkHandler"/>
 
-      <scrollPane weightY="100" ref="scrollPane" horizontalScrollbarPolicy="never" verticalUnitIncrement="20">
+      <scrollPane ref="scrollPane" weightY="100" horizontalScrollbarPolicy="never" verticalUnitIncrement="20">
         <column name="content" border="empty(10)">
 
           <repeat ref="budgetAreasRepeat" margin="0">
@@ -30,8 +30,6 @@
 
         </column>
       </scrollPane>
-
-      <htmlEditorPane text="$seriesWizard.message.bottom"/>
 
     </column>
   </panel>

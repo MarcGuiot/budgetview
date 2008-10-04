@@ -5,6 +5,7 @@ import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -51,6 +52,8 @@ public class SeriesWizardDialog {
   }
 
   private void createDialog() {
+    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/seriesWizardDialog.splits",
                                                       localRepository, directory);
 
@@ -60,17 +63,28 @@ public class SeriesWizardDialog {
 
     scrollPane = builder.add("scrollPane", new JScrollPane());
 
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
+
     JPanel panel = builder.load();
 
-    dialog = PicsouDialog.createWithButtons(directory.get(JFrame.class), panel,
-                                            createOkAction(), createCancelAction(),
-                                            directory);
+    dialog.addPanelWithButtons(panel, createOkAction(), createCancelAction());
   }
 
   public void show() {
     dialog.pack();
-    scrollPane.getVerticalScrollBar().setValue(0);
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        scrollToTop();
+      }
+    });
     GuiUtils.showCentered(dialog);
+  }
+
+  private void scrollToTop() {
+    scrollPane.getViewport().setViewPosition(new Point(0,0));
+    scrollPane.getVerticalScrollBar().setValue(0);
+    scrollPane.getViewport().scrollRectToVisible(new Rectangle(1,1,1,1));
+    scrollPane.scrollRectToVisible(new Rectangle(1,1,1,1));
   }
 
   public Window getDialog() {
@@ -99,6 +113,7 @@ public class SeriesWizardDialog {
           entry.setSelected(checkBox.isSelected());
         }
       });
+      checkBox.setSelected(entry.isSelected());
       checkBox.setText(entry.getName());
       cellBuilder.add("checkBox", checkBox);
     }

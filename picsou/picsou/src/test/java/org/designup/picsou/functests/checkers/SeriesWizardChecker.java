@@ -25,6 +25,11 @@ public class SeriesWizardChecker extends DataChecker {
     return this;
   }
 
+  public SeriesWizardChecker checkSelected(String text) {
+    UISpecAssert.assertThat(content.getCheckBox(text).isSelected());
+    return this;
+  }
+
   public void validate() {
     WindowInterceptor.init(dialog.getButton("OK").triggerClick())
       .processWithButtonClick("OK")

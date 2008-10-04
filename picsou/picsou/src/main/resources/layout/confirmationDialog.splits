@@ -3,10 +3,11 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
 
-  <panel styleClass="dialog" preferredSize="(400,200)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(400,300)" opaque="true">
     <column styleClass="innerDialog">
       <label ref="title" styleClass="title"/>
-      <htmlEditorPane ref="message"/>
+      <htmlEditorPane ref="message" marginBottom="10"/>
+      <filler fill="vertical"/>
     </column>
   </panel>
 

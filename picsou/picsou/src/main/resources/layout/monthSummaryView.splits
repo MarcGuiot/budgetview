@@ -4,7 +4,7 @@
   <styles>
     <style selector="column.message" margin="10"
            opaque="true" background="block.inner.bg" border="line(block.inner.border)"/>
-    <style selector=".message htmlEditorPane" margin="10" marginTop="0"/>
+    <style selector=".message htmlEditorPane" margin="10" marginTop="5"/>
     <style selector=".message button" fill="none" anchor="center"/>
 
     <style selector="label.amount" font="-,plain,10"/>

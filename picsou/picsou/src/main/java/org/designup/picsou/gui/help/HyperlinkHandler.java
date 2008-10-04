@@ -4,11 +4,19 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.*;
+import java.awt.*;
 
 public class HyperlinkHandler implements HyperlinkListener {
   private HelpService helpService;
+  private Window owner;
 
   public HyperlinkHandler(Directory directory) {
+    this(directory, directory.get(JFrame.class));
+  }
+
+  public HyperlinkHandler(Directory directory, Window owner) {
+    this.owner = owner;
     this.helpService = directory.get(HelpService.class);
   }
 
@@ -18,7 +26,7 @@ public class HyperlinkHandler implements HyperlinkListener {
     }
     String description = e.getDescription().trim();
     if (description.startsWith("help:")) {
-      helpService.show(description.substring(5));
+      helpService.show(description.substring(5), owner);
     }
   }
 }

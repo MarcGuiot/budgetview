@@ -53,7 +53,7 @@ public class CategoryDeletionDialog {
     builder.add("categoryChooser", chooserAction);
 
     final OkAction okAction = new OkAction();
-    categoryChooserDialog.addInPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction());
+    categoryChooserDialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction());
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         okAction.setEnabled(!selection.getAll(Category.TYPE).isEmpty());

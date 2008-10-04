@@ -235,15 +235,15 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.editSeriesList()
-      .checkSeriesList("Electricity", "Internet")
+      .checkSeriesListEquals("Electricity", "Internet")
       .validate();
 
     budgetView.envelopes.editSeriesList()
-      .checkSeriesList("Groceries")
+      .checkSeriesListEquals("Groceries")
       .validate();
 
     budgetView.income.editSeriesList()
-      .checkSeriesList("Exceptional Income", "Salary")
+      .checkSeriesListEquals("Exceptional Income", "Salary")
       .validate();
   }
 
@@ -266,7 +266,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.recurring.editSeriesList()
-      .checkSeriesList("Electricity", "Internet")
+      .checkSeriesListEquals("Electricity", "Internet")
       .checkSeriesSelected("Electricity")
       .setCustom()
       .setManual()
@@ -326,14 +326,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setManual()
       .checkTitle("Recurring")
       .checkNameIsSelected()
-      .checkSeriesList("New series")
+      .checkSeriesListEquals("New series")
       .checkSeriesSelected("New series")
       .setCategory(MasterCategory.TELECOMS)
       .checkName("New series")
       .setName("Free Telecom")
       .selectAllMonths()
       .setAmount("40")
-      .checkSeriesList("Free Telecom")
+      .checkSeriesListEquals("Free Telecom")
       .checkTable(new Object[][]{
         {"2008", "August", "", "40.00"},
         {"2008", "July", "", "40.00"},
@@ -359,18 +359,18 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.envelopes.createSeries()
-      .checkSeriesList("My envelope", "New series")
+      .checkSeriesListEquals("My envelope", "New series")
       .checkSeriesSelected("New series")
       .setName("My new envelope")
       .setCategory(MasterCategory.HOUSE)
       .validate();
 
     budgetView.envelopes.createSeries()
-      .checkSeriesList("My envelope", "My new envelope", "New series")
+      .checkSeriesListEquals("My envelope", "My new envelope", "New series")
       .cancel();
 
     budgetView.recurring.createSeries()
-      .checkSeriesList("My recurrence", "New series")
+      .checkSeriesListEquals("My recurrence", "New series")
       .cancel();
   }
 
@@ -388,7 +388,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .createSeries()
       .setCustom()
       .setManual()
-      .checkSeriesList("New series", "New series")
+      .checkSeriesListEquals("New series", "New series")
 
       .selectSeries(0)
       .selectAllMonths()
@@ -521,7 +521,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.createSeries()
       .cancel();
     budgetView.envelopes.createSeries()
-      .checkSeriesList("New series")
+      .checkSeriesListEquals("New series")
       .cancel();
   }
 
@@ -778,7 +778,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.income.createSeries()
       .setName("AA")
       .deleteSeries()
-      .checkSeriesList();
+      .checkSeriesListEquals();
   }
 
   public void testDeleteUsedSeries() throws Exception {
@@ -803,7 +803,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .deleteSeriesWithConfirmation()
       .checkMessage()
       .validate();
-    edition.checkSeriesList();
+    edition.checkSeriesListEquals();
   }
 
   public void testFillNameAndAmountWithKeyPressed() throws Exception {
@@ -823,7 +823,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition.setCategory(MasterCategory.FOOD)
       .checkName("AA")
       .checkAmount("13")
-      .checkSeriesList("AA");
+      .checkSeriesListEquals("AA");
     edition.checkTable(new Object[][]{
       {"2008", "August", "", "13.00"},
       {"2008", "July", "", "13.00"},

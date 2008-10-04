@@ -4,6 +4,8 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.model.GlobRepository;
 import org.designup.picsou.utils.Lang;
 
+import java.awt.*;
+
 public class HelpService {
 
   private HelpDialog dialog;
@@ -22,9 +24,9 @@ public class HelpService {
     this.dialog = null;
   }
 
-  public void show(String helpRef) {
+  public void show(String helpRef, Window owner) {
     if (dialog == null) {
-      dialog = new HelpDialog(source, repository, directory);
+      dialog = new HelpDialog(source, repository, directory, owner);
     }
     dialog.show(helpRef);
   }

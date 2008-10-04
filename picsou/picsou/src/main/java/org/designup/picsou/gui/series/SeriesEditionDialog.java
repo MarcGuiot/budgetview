@@ -222,7 +222,7 @@ public class SeriesEditionDialog {
 
     JPanel panel = builder.load();
     okAction = new ValidateAction();
-    dialog.addInPanelWithButtons(panel, okAction, new CancelAction());
+    dialog.addPanelWithButtons(panel, okAction, new CancelAction());
   }
 
   public static void addSeriesCreationTriggers(GlobRepository repository) {
