@@ -296,6 +296,18 @@ public class SplitsComponentsTest extends SplitsTestCase {
     assertEquals(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED, scrollPane.getHorizontalScrollBarPolicy());
   }
 
+  public void testCanUseRefsForScrollPanes() throws Exception {
+    JScrollPane ref = new JScrollPane();
+    builder.add("scroll", ref);
+
+    JScrollPane parsed = parse(
+      "<scrollPane ref='scroll'>" +
+      "  <button/>" +
+      "</scrollPane>");
+
+    assertSame(parsed, ref);
+  }
+
   public void testScrollPaneAcceptsOnlyOneSubcomponent() throws Exception {
     try {
       parseWithoutSchemaValidation(

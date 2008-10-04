@@ -13,6 +13,7 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class ScrollPaneComponent extends AbstractSplitter {
 
@@ -25,18 +26,14 @@ public class ScrollPaneComponent extends AbstractSplitter {
 
   protected ComponentStretch createRawStretch(SplitsContext context) {
     ComponentStretch subStretch = getSubSplitters()[0].createComponentStretch(context, true);
-    JScrollPane scrollPane = new JScrollPane(subStretch.getComponent());
+    JScrollPane scrollPane = findOrCreateComponent(context);
+    scrollPane.setViewportView(subStretch.getComponent());
 
     ComponentStretch stretch = new ComponentStretch(scrollPane,
                                                     subStretch.getFill(),
                                                     subStretch.getAnchor(),
                                                     subStretch.getWeightX(),
                                                     subStretch.getWeightY());
-
-    String id = properties.getString("id");
-    if (id != null) {
-      context.addComponent(id, scrollPane);
-    }
 
     String bg = properties.getString("viewportBackground");
     if (Strings.isNotEmpty(bg)) {
@@ -76,6 +73,12 @@ public class ScrollPaneComponent extends AbstractSplitter {
     }
 
     return stretch;
+  }
+
+  protected JScrollPane findOrCreateComponent(SplitsContext context) {
+    String ref = properties.getString("ref");
+    String componentName = properties.getString("name");
+    return context.findOrCreateComponent(ref, componentName, JScrollPane.class, getName());
   }
 
   public String getName() {

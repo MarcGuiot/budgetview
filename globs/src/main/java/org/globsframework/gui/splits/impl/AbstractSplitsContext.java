@@ -50,7 +50,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
 
       Component component = componentsByName.get(ref);
       if (component == null) {
-        throw new SplitsException("Error for tag: " + splitterName + " - no component registered with name '" + ref +
+        throw new SplitsException("Error for tag: " + splitterName + " - no component registered with ref='" + ref +
                                   "' - available names: " + componentsByName.keySet() + dump());
       }
 
