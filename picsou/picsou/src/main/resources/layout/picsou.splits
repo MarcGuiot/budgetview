@@ -78,18 +78,18 @@
         <card name="home">
           <horizontalSplit>
             <column>
-              <panel ref="accountView" minimumSize="(250,200)" preferredSize="(300,250)"/>
+              <panel ref="accountView" minimumSize="(250,200)" preferredSize="(300,350)"/>
               <panel ref="infoView" minimumSize="(250,100)" preferredSize="(300,100)"/>
               <filler fill="vertical"/>
             </column>
 
             <column>
-              <panel ref="monthSummaryView" minimumSize="(300,360)" preferredSize="(350,400)"/>
+              <panel ref="monthSummaryView" minimumSize="(300,360)" preferredSize="(350,430)"/>
               <filler fill="vertical"/>
             </column>
 
             <column>
-              <panel ref="balanceSummaryView" minimumSize="(250,200)" preferredSize="(300,250)"/>
+              <panel ref="balanceSummaryView" minimumSize="(250,200)" preferredSize="(300,350)"/>
               <filler fill="vertical"/>
             </column>
           </horizontalSplit>
