@@ -7,7 +7,7 @@
 
       <filler fill="vertical" weightY="10"/>
 
-      <panel ui="loginPanel" name="loginPanel" opaque="true" anchor="center" fill="none" weightY="20"
+      <panel ui="loginPanel" name="loginPanel" opaque="false" anchor="center" fill="none" weightY="20"
              preferredSize="(350,480)">
 
         <column margin="20" anchor="center" fill="none" marginBottom="20">

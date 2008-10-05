@@ -7,13 +7,11 @@ import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.xml.XmlGlobParser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class TransactionAnalyzerFactory {
 
@@ -66,7 +64,13 @@ public class TransactionAnalyzerFactory {
       throw new ResourceAccessFailed("missing bank file list'" + bankListFileName + "'");
     }
     BufferedReader bankListReader =
-      new BufferedReader(new InputStreamReader(bankListStream));
+      null;
+    try {
+      bankListReader = new BufferedReader(new InputStreamReader(bankListStream, "UTF-8"));
+    }
+    catch (UnsupportedEncodingException e) {
+      throw new InvalidFormat(e);
+    }
     while (true) {
       String bankFileName;
       try {

@@ -13,16 +13,15 @@
 
     <style selector="button" opaque="false"/>
     <style selector="checkBox" opaque="false"/>
+    <style selector="comboBox" opaque="false"/>
 
     <style selector="textArea.multiLineLabel" foreground="help.messages.text"
            opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
 
     <style selector="scrollPane.textArea" border="" opaque="false" viewportOpaque="false"/>
 
-    <style selector="htmlEditorPane" foreground="help.messages.text"/>
+    <style selector="htmlEditorPane" foreground="help.messages.text" opaque="false"/>
     <style selector="scrollPane htmlEditorPane" border="empty(10)"/>
-    <style selector=".budgetAreaSelection htmlEditorPane" border="empty(10)"/>
-    <style selector=".budgetAreaSelection textArea" border="empty(10)"/>
 
     <style selector="label.message" fill="horizontal" horizontalAlignment="left" anchor="center"
            weightX="10.0"/>
@@ -88,6 +87,9 @@
     <style selector=".block .innerBlock" margin="15" marginBottom="10"/>
     <style selector=".budgetAreaSelection" opaque="true" background="block.inner.bg"
            border="line(block.inner.border.noscroll)"/>
+
+    <style selector=".budgetAreaSelection htmlEditorPane" border="empty(10)"/>
+    <style selector=".budgetAreaSelection textArea" border="empty(10)"/>
 
     <style selector="label.blockTitle" anchor="center"
            foreground="#FFFFFF" marginBottom="5" font="-,bold,13" weightY="0"
