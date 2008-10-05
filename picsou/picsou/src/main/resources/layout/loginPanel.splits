@@ -2,6 +2,13 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
+  <styles>
+    <ui name="loginPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="login.block.top" bottomColor="login.block.bottom" borderColor="login.block.border"
+        borderWidth="2" cornerRadius="10"/>
+
+  </styles>
+
   <panel ui="wave">
     <column>
 

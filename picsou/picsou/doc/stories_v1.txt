@@ -56,3 +56,5 @@
 - Test de serialisation
 - SED / changement de ProfileType de custom vers 6 mois : seriesBudget remis à 0
 - Libelle "Solde" trop sec sur BalanceSummaryView
+- Plus de titre quand on arrive dans l'appli
+- ProgressBar ou autre au login
