@@ -64,6 +64,8 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       }
     });
 
+    builder.add("uncategorizeSelected", new UncategorizeTransactionsAction());
+
     builder.addRepeat("budgetAreaToggles",
                       Arrays.asList(budgetAreas),
                       new ToggleFactory());
@@ -79,7 +81,18 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
     }
     else {
       budgetAreaCard.show("series");
-      seriesCard.show(budgetArea.getName());
+      if (BudgetArea.UNCATEGORIZED.equals(budgetArea)) {
+        SortedSet<Integer> areaIds = getSelectedTransactionAreas();
+        if ((areaIds.size() == 1) && BudgetArea.UNCATEGORIZED.getId().equals(areaIds.iterator().next())) {
+          seriesCard.show(budgetArea.getName());
+        }
+        else {
+          seriesCard.show("revertToUncategorized");
+        }
+      }
+      else {
+        seriesCard.show(budgetArea.getName());
+      }
     }
   }
 
@@ -96,9 +109,6 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       final JToggleButton toggle = new JToggleButton(new AbstractAction(label) {
         public void actionPerformed(ActionEvent e) {
           select(budgetArea, false);
-          if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
-            uncategorizeSelectedTransactions();
-          }
         }
       });
       toggle.setName(budgetArea.getName());
@@ -113,20 +123,6 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
           toggles.remove(budgetArea);
         }
       });
-    }
-
-    private void uncategorizeSelectedTransactions() {
-      try {
-        repository.enterBulkDispatchingMode();
-        for (Glob transaction : selectedTransactions) {
-          repository.update(transaction.getKey(),
-                            value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                            value(Transaction.CATEGORY, MasterCategory.NONE.getId()));
-        }
-      }
-      finally {
-        repository.completeBulkDispatchingMode();
-      }
     }
   }
 
@@ -159,8 +155,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       return;
     }
 
-    GlobList series = GlobUtils.getTargets(selectedTransactions, Transaction.SERIES, repository);
-    SortedSet<Integer> areas = series.getSortedSet(Series.BUDGET_AREA);
+    SortedSet<Integer> areas = getSelectedTransactionAreas();
     if (areas.size() != 1) {
       multiBudgetAreaToggle.doClick(0);
       return;
@@ -169,4 +164,31 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
     final Integer selectedAreaId = areas.first();
     select(BudgetArea.get(selectedAreaId), true);
   }
+
+  private SortedSet<Integer> getSelectedTransactionAreas() {
+    GlobList series = GlobUtils.getTargets(selectedTransactions, Transaction.SERIES, repository);
+    return series.getSortedSet(Series.BUDGET_AREA);
+  }
+
+  private class UncategorizeTransactionsAction extends AbstractAction {
+
+    private UncategorizeTransactionsAction() {
+      super(Lang.get("categorization.revert.uncategorized.button"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      try {
+        repository.enterBulkDispatchingMode();
+        for (Glob transaction : selectedTransactions) {
+          repository.update(transaction.getKey(),
+                            value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                            value(Transaction.CATEGORY, MasterCategory.NONE.getId()));
+        }
+      }
+      finally {
+        repository.completeBulkDispatchingMode();
+      }
+    }
+  }
+
 }

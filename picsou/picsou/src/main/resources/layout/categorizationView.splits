@@ -89,6 +89,15 @@
                       </column>
                     </card>
 
+                    <card name="revertToUncategorized">
+                      <column styleClass="budgetAreaSelection">
+                        <textArea name="revertToUncategorizedMessage" styleClass="multiLineLabel"
+                                  text="$categorization.revert.uncategorized.message"/>
+                        <button action="uncategorizeSelected" fill="none" anchor="center"/>
+                        <filler fill="vertical"/>
+                      </column>
+                    </card>
+
                     <card name="multipleAreas">
                       <column styleClass="budgetAreaSelection">
                         <htmlEditorPane name="multipleAreasMessage" text="$categorization.multiple.areas"

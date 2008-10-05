@@ -32,6 +32,7 @@ import org.globsframework.gui.views.utils.LabelCustomizers;
 import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.DefaultChangeSetListener;

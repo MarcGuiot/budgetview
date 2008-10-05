@@ -808,8 +808,14 @@ public class CategorizationChecker extends DataChecker {
     getPanel().getPanel("customFilter").getButton().click();
   }
 
-  public CategorizationChecker setUncategorized() {
+  public CategorizationChecker selectUncategorized() {
     selectBudgetArea(BudgetArea.UNCATEGORIZED);
+    return this;
+  }
+
+  public CategorizationChecker setUncategorized() {
+    selectUncategorized();
+    getPanel().getButton("uncategorizeSelected").click();
     return this;
   }
 

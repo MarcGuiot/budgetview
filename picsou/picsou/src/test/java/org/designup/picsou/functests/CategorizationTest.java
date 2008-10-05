@@ -189,7 +189,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkRecurringSeriesIsSelected("Internet");
   }
 
-  public void testResettingTransactionsToUncategorized() throws Exception {
+  public void testRevertingTransactionsToUncategorized() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -29.90, "Free")
@@ -208,6 +208,13 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.selectTableRow(0);
+    categorization.selectUncategorized();
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "Groceries", "Auchan", -40.00},
+      {"25/06/2008", "Telephone", "France Telecom", -59.90},
+      {"30/06/2008", "Internet", "Free", -29.90},
+    });
+    
     categorization.setUncategorized();
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "", "Auchan", -40.00},

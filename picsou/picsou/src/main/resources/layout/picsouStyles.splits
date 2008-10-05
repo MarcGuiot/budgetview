@@ -22,6 +22,7 @@
     <style selector="htmlEditorPane" foreground="help.messages.text"/>
     <style selector="scrollPane htmlEditorPane" border="empty(10)"/>
     <style selector=".budgetAreaSelection htmlEditorPane" border="empty(10)"/>
+    <style selector=".budgetAreaSelection textArea" border="empty(10)"/>
 
     <style selector="label.message" fill="horizontal" horizontalAlignment="left" anchor="center"
            weightX="10.0"/>
