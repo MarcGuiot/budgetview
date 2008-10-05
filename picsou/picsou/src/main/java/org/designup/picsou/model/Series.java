@@ -174,7 +174,11 @@ public class Series {
       fieldSetter.set(Series.NAME, input.readString());
       fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
       fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
-      fieldSetter.set(Series.PROFILE_TYPE, input.readInteger());
+      Integer profileType = input.readInteger();
+      if (profileType == null) {
+        profileType = ProfileType.CUSTOM.getId();
+      }
+      fieldSetter.set(Series.PROFILE_TYPE, profileType);
       fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
       fieldSetter.set(Series.LAST_MONTH, input.readInteger());
       fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
