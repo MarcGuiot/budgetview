@@ -37,10 +37,11 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <id>install</id>
+            <id>install_LINUX_MAC</id>
             <phase>install</phase>
             <configuration>
-              <tasks unless="${GenerateInstall}">
+              <tasks>
+                <exec executable="${basedir}/dev/install/createLinuxZip.sh"/>
                 <manifest file="target/classes/MANIFEST.MF">
                   <attribute name="Main-Class" value="com.fourmics.Main"/>
                 </manifest>
@@ -63,7 +64,7 @@
                             vmoptions="-Xmx128m -Dapple.awt.graphics.UseQuartz=false">
 
 
-                  <resourcefilelist dir="../picsou/obfuscated" files="fourmics.jar"/>
+                  <!--<resourcefilelist dir="../picsou/obfuscated" files="fourmics.jar"/>-->
 
                   <documenttype name="Financial information"
                                 extensions="ofx qif"
@@ -75,14 +76,34 @@
                                 role="Editor"/>
                 </jarbundler>
 
-                <exec executable="dev/install/rename.sh"/>
+                <exec executable="${basedir}/dev/install/macMoveJarToResource.sh"/>
+
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>install_MAC</id>
+            <phase>install</phase>
+            <configuration>
+              <tasks unless="${GenerateMacInstall}">
                 <exec executable="hdiutil">
                   <arg line="create -srcfolder ${basedir}/Fourmics/ Fourmics.dmg"/>
                 </exec>
-
               </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>install_WINDOWS</id>
+            <phase>install</phase>
+            <configuration>
               <tasks unless="${GenerateWindowsInstall}">
-                <exec executable="${basedir}/dev/install/createInstall.sh"/>
+                <exec executable="${basedir}/dev/install/createWindowsInstall.sh"/>
               </tasks>
             </configuration>
             <goals>
