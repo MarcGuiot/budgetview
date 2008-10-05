@@ -26,7 +26,7 @@ public class FilterWriter extends ClassWriter {
       if (opcode == Opcodes.INVOKESTATIC) {
         if (name.equals("beginRemove")) {
           tmpMv = mv;
-          mv = new DependExtractor.EmptyVisitor();
+          mv = new EmptyVisitor();
         }
         else if (name.equals("endRemove")) {
           mv = tmpMv;

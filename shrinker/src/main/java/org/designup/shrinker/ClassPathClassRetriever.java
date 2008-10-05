@@ -58,10 +58,10 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
   public void addPathContent(String path, Boolean isRecursive) {
     String[] names = (DependExtractor.undotte(path)).split("/");
     DirectoryNode node = entryNode;
-    for (int i = 0; i < names.length; i++) {
-      Node child = node.findChild(names[i]);
+    for (String name : names) {
+      Node child = node.findChild(name);
       if (child == null) {
-        throw new RuntimeException("bad path " + names[i] + " in " + path);
+        throw new RuntimeException("bad path " + name + " in " + path);
       }
       node = child.asDirectory();
     }
@@ -82,6 +82,7 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
   }
 
   public void complete(List<String> ressources, List<String> pathToIgnore) {
+    if (JarShrinker.LOG_ENABLED)
     for (Map.Entry<String, List<String>> entry : dependencies.entries()) {
       System.out.println("Key " + entry.getKey());
       for (String s : entry.getValue()) {

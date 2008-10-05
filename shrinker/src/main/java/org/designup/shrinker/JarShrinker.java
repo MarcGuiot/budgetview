@@ -5,6 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class JarShrinker {
+
+  public static final boolean LOG_ENABLED = true;
+
   public static void main(String[] args) throws ClassNotFoundException, IOException {
     if (args.length < 3) {
       System.out.println("Usage: targetJar contentFileToFollow contentFileToIgnore");
