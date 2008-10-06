@@ -45,6 +45,9 @@
 
           <htmlEditorPane ref="message" margin="5" preferredSize="(200,30)"/>
 
+          <component ref="progressPanel" opaque="false" visible="false"
+                     preferredSize="(30,30)" minimumSize="(30,30)"/>
+
           <row styleClass="buttons">
             <button ref="login"/>
           </row>

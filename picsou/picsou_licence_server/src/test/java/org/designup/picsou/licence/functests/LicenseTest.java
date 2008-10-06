@@ -66,6 +66,7 @@ public class LicenseTest extends LicenseTestCase {
     startPicsou();
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logUser("user", "passw@rd");
+
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
     MonthChecker monthChecker = new MonthChecker(window);

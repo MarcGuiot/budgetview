@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Window;
+import org.uispec4j.TextBox;
 import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ public class InfoChecker extends DataChecker {
   }
 
   public InfoChecker checkNewVersion() {
+    UISpecAssert.assertThat(mainWindow.containsUIComponent(TextBox.class, "versionInfo"));
     UISpecAssert.assertThat(mainWindow.getTextBox("versionInfo").textContains("new version"));
     return this;
   }

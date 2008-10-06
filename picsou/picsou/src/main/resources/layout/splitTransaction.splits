@@ -2,14 +2,17 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(500,320)">
+  <panel styleClass="dialog" preferredSize="(500,350)">
 
     <column styleClass="innerDialog">
 
       <label text="$split.transaction.title" styleClass="title"/>
 
-      <row margin="5" weightY="100">
-        <scrollPane viewportBackground="transactions.bg" border="etched">
+      <htmlEditorPane text="$split.transaction.help"/>
+
+      <label text="$split.transaction.table" styleClass="separatorTitle" marginTop="5"/>
+      <row styleClass="separator" weightY="100">
+        <scrollPane viewportBackground="transactions.bg" border="etched" margin="5">
           <table ref="transaction" background="transactions.bg" intercellSpacing="(0,0)" showGrid="false"/>
         </scrollPane>
       </row>

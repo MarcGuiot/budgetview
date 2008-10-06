@@ -49,8 +49,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     mainWindow.dispose();
     mainWindow = null;
     mainWindow = getMainWindow();
-    LoginChecker loginChecker = new LoginChecker(mainWindow);
-    loginChecker.logUser("anonymous", "p@ssword");
     initCheckers();
 
     views.selectBudget();

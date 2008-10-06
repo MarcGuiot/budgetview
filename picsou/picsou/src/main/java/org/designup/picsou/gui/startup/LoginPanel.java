@@ -32,6 +32,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
 
+import com.jidesoft.swing.InfiniteProgressPanel;
+
 public class LoginPanel {
   private ServerAccess serverAccess;
 
@@ -43,6 +45,7 @@ public class LoginPanel {
   private JButton loginButton = new JButton(new LoginAction());
   private JCheckBox creationCheckBox = new JCheckBox();
   private JEditorPane messageLabel = new JEditorPane();
+  private InfiniteProgressPanel progressPanel = new InfiniteProgressPanel();
 
   private JComponent[] creationComponents = {confirmPasswordLabel, confirmPasswordField};
   private MainWindow mainWindow;
@@ -108,6 +111,7 @@ public class LoginPanel {
     builder.add("confirmLabel", confirmPasswordLabel);
     builder.add("createAccountCheckBox", creationCheckBox);
     builder.add("message", messageLabel);
+    builder.add("progressPanel", progressPanel);
     GuiUtils.initHtmlComponent(messageLabel);
     builder.add("login", loginButton);
     builder.addLoader(new SplitsLoader() {
@@ -130,50 +134,89 @@ public class LoginPanel {
   }
 
   private void login() {
-    panel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-    try {
-      String user = userField.getText();
-      char[] password = passwordField.getPassword();
-      if (creationCheckBox.isSelected()) {
-        if (!userIdAccepted() || !passwordAccepted()) {
-          return;
+
+    String user = userField.getText();
+    char[] password = passwordField.getPassword();
+    boolean createUser = false;
+    if (creationCheckBox.isSelected()) {
+      if (!userIdAccepted() || !passwordAccepted()) {
+        return;
+      }
+      createUser = true;
+    }
+
+    setComponentsEnabled(false);
+    progressPanel.start();
+    Thread thread = new Thread(new LoginFunctor(user, password, createUser));
+    thread.setDaemon(true);
+    thread.start();
+  }
+
+  private class LoginFunctor implements Runnable {
+    private String user;
+    private char[] password;
+    private boolean createUser;
+
+    public LoginFunctor(String user, char[] password, boolean createUser) {
+      this.user = user;
+      this.password = password;
+      this.createUser = createUser;
+    }
+
+    public void run() {
+      try {
+        if (createUser) {
+          serverAccess.createUser(user, password);
         }
-        serverAccess.createUser(user, password);
+        else {
+          serverAccess.initConnection(user, password, false);
+        }
+        PicsouInit init = PicsouInit.init(serverAccess, user, creationCheckBox.isSelected(), directory);
+        final MainPanel mainPanel = MainPanel.init(init.getRepository(), init.getDirectory(), mainWindow);
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            mainPanel.show();
+          }
+        });
       }
-      else {
-        serverAccess.initConnection(user, password, false);
+      catch (UserAlreadyExists e) {
+        displayErrorMessageFromKey("login.user.exists");
       }
-      PicsouInit init = PicsouInit.init(serverAccess, user, creationCheckBox.isSelected(), directory);
-      MainPanel.show(init.getRepository(), init.getDirectory(), mainWindow);
+      catch (BadPassword e) {
+        displayErrorMessageFromKey("login.invalid.credentials");
+      }
+      catch (UserNotRegistered e) {
+        displayErrorMessageFromKey("login.invalid.credentials");
+      }
+      catch (PasswordBasedEncryptor.EncryptFail e) {
+        displayBadPasswordMessage("login.password.error", e.getMessage());
+      }
+      catch (InvalidData e) {
+        displayMessage(e.getMessage());
+        e.printStackTrace();
+      }
+      catch (Exception e) {
+        displayErrorMessageFromKey("login.server.connection.failure");
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
+        e.printStackTrace(writer);
+        e.printStackTrace();
+        JTextArea textArea = new JTextArea(stringWriter.toString());
+        GuiUtils.show(textArea);
+      }
+      finally {
+        setComponentsEnabled(true);
+        progressPanel.stop();        
+      }
     }
-    catch (UserAlreadyExists e) {
-      displayErrorMessageFromKey("login.user.exists");
-    }
-    catch (BadPassword e) {
-      displayErrorMessageFromKey("login.invalid.credentials");
-    }
-    catch (UserNotRegistered e) {
-      displayErrorMessageFromKey("login.invalid.credentials");
-    }
-    catch (PasswordBasedEncryptor.EncryptFail e) {
-      displayBadPasswordMessage("login.password.error", e.getMessage());
-    }
-    catch (InvalidData e) {
-      displayMessage(e.getMessage());
-      e.printStackTrace();
-    }
-    catch (Exception e) {
-      displayErrorMessageFromKey("login.server.connection.failure");
-      StringWriter stringWriter = new StringWriter();
-      PrintWriter writer = new PrintWriter(stringWriter);
-      e.printStackTrace(writer);
-      e.printStackTrace();
-      JTextArea textArea = new JTextArea(stringWriter.toString());
-      GuiUtils.show(textArea);
-    }
-    finally {
-      panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-    }
+  }
+
+  private void setComponentsEnabled(boolean enabled) {
+    this.userField.setEnabled(enabled);
+    this.passwordField.setEnabled(enabled);
+    this.creationCheckBox.setEnabled(false);
+    this.confirmPasswordField.setEnabled(false);
+    this.loginButton.setEnabled(enabled);
   }
 
   private boolean userIdAccepted() {
@@ -243,7 +286,6 @@ public class LoginPanel {
     }
     components[components.length - 1].setNextFocusableComponent(components[0]);
   }
-
 
   private void initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
     if (!remoteAdress.startsWith("http")) {

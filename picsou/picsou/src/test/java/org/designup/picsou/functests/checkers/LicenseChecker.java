@@ -16,34 +16,37 @@ public class LicenseChecker {
   }
 
   static public void enterLicense(Window window, final String mail, final String code, final int monthCount) {
-    WindowInterceptor.init(window.getMenuBar().getMenu("File")
-      .getSubMenu("Register").triggerClick())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          window.getInputTextBox("mail").setText(mail);
-          window.getInputTextBox("code").setText(code);
-          UISpecAssert.assertThat(window.getInputTextBox("monthCount").textEquals("24"));
-          window.getInputTextBox("monthCount").setText(Integer.toString(monthCount));
-          return window.getButton("OK").triggerClick();
-        }
-      }).run();
+    enterLicense(window, new WindowHandler() {
+      public Trigger process(Window window) throws Exception {
+        window.getInputTextBox("mail").setText(mail);
+        window.getInputTextBox("code").setText(code);
+        UISpecAssert.assertThat(window.getInputTextBox("monthCount").textEquals("24"));
+        window.getInputTextBox("monthCount").setText(Integer.toString(monthCount));
+        return window.getButton("OK").triggerClick();
+      }
+    });
   }
 
   static public void enterBadLicense(Window window, final String mail, final String code, final int monthCount) {
-    WindowInterceptor.init(window.getMenuBar().getMenu("File")
-      .getSubMenu("Register").triggerClick())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          window.getInputTextBox("mail").setText(mail);
-          window.getInputTextBox("code").setText(code);
-          window.getInputTextBox("monthCount").setText(Integer.toString(monthCount));
-          window.getButton("ok").click();
-          return window.getButton("cancel").triggerClick();
-        }
-      }).run();
+    enterLicense(window, new WindowHandler() {
+      public Trigger process(Window window) throws Exception {
+        window.getInputTextBox("mail").setText(mail);
+        window.getInputTextBox("code").setText(code);
+        window.getInputTextBox("monthCount").setText(Integer.toString(monthCount));
+        window.getButton("ok").click();
+        return window.getButton("cancel").triggerClick();
+      }
+    });
+  }
+
+  private static void enterLicense(Window window, WindowHandler windowHandler) {
+    UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
+    WindowInterceptor.init(window.getMenuBar().getMenu("File").getSubMenu("Register").triggerClick())
+      .process(windowHandler).run();
   }
 
   public static LicenseChecker open(Window window) {
+    UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
     return new LicenseChecker(WindowInterceptor.getModalDialog(window.getMenuBar().getMenu("File")
       .getSubMenu("Register").triggerClick()));
   }

@@ -11,6 +11,7 @@ import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -190,6 +191,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
     openNewLoginWindow();
     enterUserPassword("toto", "p4ssw0rd", false);
     loginButton.click();
+    
+    UISpecAssert.assertTrue(window.containsMenuBar());
     OfxBuilder
       .init(this, new OperationChecker(window))
       .addTransaction("2006/01/12", -2, "Menu A")
@@ -217,6 +220,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
     createUserCheckbox.select();
     enterUserPassword(user, password, true);
     loginButton.click();
+
+    UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
 
     OperationChecker operations = new OperationChecker(window);
     operations.importOfxFile(filePath);
@@ -256,6 +261,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
   }
 
   private TransactionChecker getTransactionView() {
+    UISpecAssert.waitUntil(window.containsUIComponent(ToggleButton.class, "analysisCardToggle"), 10000);
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectData();
     return new TransactionChecker(window);
@@ -268,6 +274,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
   }
 
   private void checkBankOnImport(final String path) {
+    UISpecAssert.waitUntil(window.containsMenuBar(), 2000);
     OperationChecker operations = new OperationChecker(window);
     Trigger trigger = operations.getImportTrigger();
     WindowInterceptor.init(trigger)

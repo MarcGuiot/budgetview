@@ -15,8 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class MainWindowLauncher {
-  private static OpenRequestManager openRequestManager = new OpenRequestManager();
-
   static {
     PicsouMacLookAndFeel.initApplicationName();
   }
@@ -34,7 +32,7 @@ public class MainWindowLauncher {
 
   public static Directory run(String user, String password) throws Exception {
     ServerDirectory serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), false);
-    Directory directory = PicsouApplication.createDirectory(openRequestManager);
+    Directory directory = PicsouApplication.createDirectory(new OpenRequestManager());
     ServerAccess serverAccess =
       new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
                                            directory);
@@ -51,7 +49,7 @@ public class MainWindowLauncher {
     PicsouInit init = PicsouInit.init(serverAccess, user, newUser, directory);
 
     MainWindow window = new MainWindow();
-    MainPanel.show(init.getRepository(), init.getDirectory(), window);
+    MainPanel.init(init.getRepository(), init.getDirectory(), window).show();
     window.show();
 
     init.getRepository();
