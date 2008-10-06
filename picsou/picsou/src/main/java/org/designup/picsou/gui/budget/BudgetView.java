@@ -2,6 +2,7 @@ package org.designup.picsou.gui.budget;
 
 import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
@@ -11,14 +12,14 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
+import org.globsframework.model.impl.ReplicationGlobRepository;
+import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class BudgetView extends View implements GlobSelectionListener, ChangeSetListener {
@@ -29,7 +30,7 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
   private JideSplitPane thirdVerticalSplitPane;
 
   public BudgetView(GlobRepository repository, Directory parentDirectory) {
-    super(repository, createLocalDirectory(parentDirectory));
+    super(new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE), createLocalDirectory(parentDirectory));
     parentDirectory.get(SelectionService.class).addListener(this, Month.TYPE);
   }
 
@@ -85,13 +86,23 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
   }
 
   private void updateSelection() {
-    Set<Integer> monthIds = currentSelectedMonth.getValueSet(Month.ID);
-    GlobList seriesStats = repository.getAll(SeriesStat.TYPE, GlobMatchers.fieldContained(SeriesStat.MONTH, monthIds));
+    repository.enterBulkDispatchingMode();
+    PeriodSeriesStatFunctor seriesStatFunctor = new PeriodSeriesStatFunctor(repository);
+    try {
+      repository.deleteAll(PeriodSeriesStat.TYPE);
+      Set<Integer> monthIds = currentSelectedMonth.getValueSet(Month.ID);
+
+      repository.safeApply(SeriesStat.TYPE, GlobMatchers.fieldContained(SeriesStat.MONTH, monthIds),
+                           seriesStatFunctor);
+    }
+    finally {
+      repository.completeBulkDispatchingMode();
+    }
 
     SelectionService localSelectionService = directory.get(SelectionService.class);
     localSelectionService.select(GlobSelectionBuilder.init()
       .add(currentSelectedMonth, Month.TYPE)
-      .add(seriesStats, SeriesStat.TYPE).get());
+      .add(seriesStatFunctor.getStats(), PeriodSeriesStat.TYPE).get());
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -99,12 +110,38 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
       currentSelectedMonth.removeAll(changeSet.getDeleted(Month.TYPE));
       updateSelection();
     }
-    else if (changeSet.containsCreationsOrDeletions(SeriesStat.TYPE)) {
+    else if (changeSet.containsChanges(SeriesStat.TYPE)) {
       updateSelection();
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     currentSelectedMonth = GlobList.EMPTY;
+  }
+
+  private static class PeriodSeriesStatFunctor implements GlobFunctor {
+    private Set<Glob> stats = new HashSet<Glob>();
+    private GlobRepository repository;
+
+    public PeriodSeriesStatFunctor(GlobRepository repository) {
+      this.repository = repository;
+    }
+
+    public void run(Glob glob, GlobRepository remote) throws Exception {
+      Glob stat =
+        repository.findOrCreate(Key.create(PeriodSeriesStat.TYPE, glob.get(SeriesStat.SERIES)));
+      double amount = stat.get(PeriodSeriesStat.AMOUNT) + glob.get(SeriesStat.AMOUNT);
+      double plannedAmount = stat.get(PeriodSeriesStat.PLANNED_AMOUNT) + glob.get(SeriesStat.PLANNED_AMOUNT);
+      repository.update(stat.getKey(),
+                        FieldValue.value(PeriodSeriesStat.AMOUNT, amount),
+                        FieldValue.value(PeriodSeriesStat.PLANNED_AMOUNT, plannedAmount),
+                        FieldValue.value(PeriodSeriesStat.ABS_SUM_AMOUNT, Math.abs(plannedAmount) + Math.abs(amount))
+      );
+      stats.add(stat);
+    }
+
+    public GlobList getStats() {
+      return new GlobList(stats);
+    }
   }
 }

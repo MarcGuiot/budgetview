@@ -4,7 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.model.OccasionalSeriesStat;
-import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
@@ -41,7 +41,7 @@ public class OccasionalSeriesView extends View {
     super(repository, directory);
     this.name = name;
     this.totalMatcher =
-      GlobMatchers.linkTargetFieldEquals(SeriesStat.SERIES, Series.ID, Series.OCCASIONAL_SERIES_ID);
+      GlobMatchers.linkTargetFieldEquals(PeriodSeriesStat.SERIES, Series.ID, Series.OCCASIONAL_SERIES_ID);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -49,11 +49,11 @@ public class OccasionalSeriesView extends View {
                                                       repository, directory);
 
     builder.add("budgetAreaTitle", new JLabel(stringify(BudgetArea.OCCASIONAL)));
-    addObservedTotalLabel("totalObservedAmount", SeriesStat.AMOUNT, builder);
-    addPlannedTotalLabel("totalPlannedAmount", SeriesStat.PLANNED_AMOUNT, builder);
+    addObservedTotalLabel("totalObservedAmount", PeriodSeriesStat.AMOUNT, builder);
+    addPlannedTotalLabel("totalPlannedAmount", PeriodSeriesStat.PLANNED_AMOUNT, builder);
 
-    final GlobGaugeView gaugeView = new GlobGaugeView(SeriesStat.TYPE, BudgetArea.OCCASIONAL,
-                                                      SeriesStat.AMOUNT, SeriesStat.PLANNED_AMOUNT,
+    final GlobGaugeView gaugeView = new GlobGaugeView(PeriodSeriesStat.TYPE, BudgetArea.OCCASIONAL,
+                                                      PeriodSeriesStat.AMOUNT, PeriodSeriesStat.PLANNED_AMOUNT,
                                                       totalMatcher, repository, directory);
     builder.add("totalGauge", gaugeView.getComponent());
 
@@ -117,7 +117,7 @@ public class OccasionalSeriesView extends View {
   }
 
   private void addObservedTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
-    builder.addLabel(name, SeriesStat.TYPE,
+    builder.addLabel(name, PeriodSeriesStat.TYPE,
                      new ForcedPlusGlobListStringifier(BudgetArea.OCCASIONAL,
                                                        GlobListStringifiers.sum(field, decimalFormat, true)))
       .setFilter(totalMatcher);
@@ -126,7 +126,7 @@ public class OccasionalSeriesView extends View {
   private void addPlannedTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
     final GlobListStringifier globListStringifier = GlobListStringifiers.sum(field, decimalFormat, true);
 
-    builder.addLabel(name, SeriesStat.TYPE, new GlobListStringifier() {
+    builder.addLabel(name, PeriodSeriesStat.TYPE, new GlobListStringifier() {
       public String toString(GlobList list, GlobRepository repository) {
         String amount = globListStringifier.toString(list, repository);
         if (amount.startsWith("-")) {

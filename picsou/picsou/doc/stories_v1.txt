@@ -20,8 +20,6 @@
 
 - Format des montants : mettre des espaces pour separer les milliers
 
-- ordre des series : prevu decroissant
-
 - TransactionDetails : mettre le compte, la date et le montant (faire un seul label ?)
 
 - Fenetre About
@@ -40,7 +38,6 @@
 - Fichier licences pour Package install / About / etc :
 - Libelles des transation planned : mettre un espace apres le ':'
 - Message upgrade : lien vers http://www.fourmics.com/changes ou versions
-- SED / changement de ProfileType de custom vers 6 mois : seriesBudget remis à 0
 
 - ProgressBar ou autre au login
 
