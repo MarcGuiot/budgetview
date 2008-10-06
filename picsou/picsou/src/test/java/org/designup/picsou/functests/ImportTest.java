@@ -9,19 +9,12 @@ import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
-import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
 
 import java.io.File;
 
 public class ImportTest extends LoggedInFunctionalTestCase {
 
   private static final String SOCIETE_GENERALE = "Société Générale";
-
-  private ImportChecker openImportDialog() {
-    Window window = WindowInterceptor.getModalDialog(operations.getImportTrigger());
-    return new ImportChecker(window);
-  }
 
   public void testStandardImport() throws Exception {
 
@@ -30,7 +23,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .checkHeaderMessage("Select an OFX or QIF file to import")
       .acceptFile()
       .checkErrorMessage("login.data.file.required")
@@ -54,7 +47,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCloseButtonLabelBeforeImport() throws Exception {
-    openImportDialog()
+    operations.openImportDialog()
       .checkCloseButton(Lang.get("import.step1.close"));
   }
 
@@ -68,7 +61,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/02/20", -2.2, "Menu K")
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .setFilePath(path1 + ";" + path2)
       .acceptFile()
       .checkFileContent(new Object[][]{
@@ -92,7 +85,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .browseAndSelect(path)
       .acceptFile()
       .completeImport();
@@ -109,7 +102,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .setFilePath(path1)
       .acceptFile()
       .checkFileContent(new Object[][]{
@@ -129,12 +122,41 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testSettingInitialBalanceForQifFiles() throws Exception {
+    final String path = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .save();
+
+    ImportChecker importDialog = operations.openImportDialog()
+      .setFilePath(path)
+      .acceptFile()
+      .selectAccountBank(SOCIETE_GENERALE)
+      .setAccountName("Main")
+      .setAccountNumber("12345");
+
+    importDialog
+      .doImportWithBalance()
+      .checkAccountLabel("Account: Main (12345)")
+      .checkCancelNotAvailable()
+      .checkEscNotAvailable()
+      .checkInitialAmountSelected("0.0")
+      .checkInitialMessageDisplayed()
+      .setAmount(12.33)
+      .checkDialogClosed();
+    
+    importDialog.checkClosed();
+
+    views.selectHome();
+    accounts.assertDisplayEquals("12345", 12.33, "2006/01/10");
+  }
+
   public void testImportTwoQifFilesInTwoDifferentAccounts() throws Exception {
     String firstQif = QifBuilder.init(this)
       .addTransaction("2006/01/01", 10, "first")
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .setFilePath(firstQif)
       .acceptFile()
       .defineAccount(SOCIETE_GENERALE, "Main account", "00011")
@@ -145,7 +167,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "second")
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .setFilePath(secondQif)
       .acceptFile()
       .checkAvailableAccounts("Main account (00011)")
@@ -167,7 +189,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/20", -2.2, "Second operation")
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .setFilePath(path1 + ";" + path2)
       .acceptFile()
       .checkFileContent(new Object[][]{
@@ -195,7 +217,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/01", 10, "monop")
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .setFilePath(firstQif)
       .acceptFile()
       .defineAccount(SOCIETE_GENERALE, "Main account", "12345")
@@ -206,7 +228,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .setFilePath(qifFile)
       .acceptFile()
       .checkAvailableAccounts("Main account (12345)")
@@ -223,7 +245,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .setFilePath(path1)
       .acceptFile()
       .checkFileContent(new Object[][]{
@@ -248,7 +270,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", 71.0, "Metro")
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile()
       .checkFileContent(new Object[][]{
@@ -267,7 +289,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/14", 1.0, "V'lib", MasterCategory.TRANSPORTS)
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .setFilePath(secondFileName)
       .acceptFile()
       .completeImport();
@@ -288,7 +310,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("02/01/01", -1.1, "Menu K")
       .save();
 
-    openImportDialog()
+    operations.openImportDialog()
       .selectFiles(path1)
       .acceptFile()
       .checkFileContent(new Object[][]{
@@ -316,7 +338,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
                            "Dsdfsdf sdfsf\n" +
                            "^sdfsf");
 
-    openImportDialog()
+    operations.openImportDialog()
       .selectFiles(path)
       .acceptFile()
       .checkErrorMessage("import.file.error", new File(path).getAbsolutePath())
@@ -330,7 +352,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
                            "sdfsdfsdf\n" +
                            "</bad>");
 
-    openImportDialog()
+    operations.openImportDialog()
       .selectFiles(path)
       .acceptFile()
       .checkErrorMessage("import.file.error", new File(path).getAbsolutePath())

@@ -17,6 +17,7 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.uispec4j.*;
 import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.utils.DummyRepaintManager;
 
 import javax.swing.*;
 import java.util.Iterator;
@@ -78,6 +79,9 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
   }
 
   public void testScrollToVisibleDoNotScrollTooMuch_2() throws Exception {
+    if (DummyRepaintManager.isInstalled()) {
+      return;
+    }
     init(170);
     Selectable selectable = getLastSelected();
     assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);
@@ -85,6 +89,9 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
   }
 
   public void testScrollToVisibleDoNotScrollTooMuch_1() throws Exception {
+    if (DummyRepaintManager.isInstalled()) {
+      return;
+    }
     init(270);
     Selectable selectable = getLastSelected();
     assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);
@@ -92,6 +99,9 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
   }
 
   public void testScrollToVisibleDoNotScrollTooMuch_3() throws Exception {
+    if (DummyRepaintManager.isInstalled()) {
+      return;
+    }
     init(470);
     Selectable selectable = getLastSelected();
     assertTrue(selectable.isVisible() == Selectable.Visibility.FULLY);
@@ -99,6 +109,9 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
   }
 
   public void DISABLED_testScrollReduceSize() throws Exception {
+    if (DummyRepaintManager.isInstalled()) {
+      return;
+    }
     init(470);
     timeViewPanel.waitRepaint();
     timeViewPanel.savePaintPoint();
@@ -109,6 +122,9 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
   }
 
   public void testReduceSizeLetSelectedVisible() throws Exception {
+    if (DummyRepaintManager.isInstalled()) {
+      return;
+    }
     init(170);
     timeViewPanel.savePaintPoint();
     timeViewPanel.setSize(80, 40);

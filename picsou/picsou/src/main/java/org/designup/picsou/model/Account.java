@@ -40,7 +40,7 @@ public class Account {
 
   public static IntegerField TRANSACTION_ID;
 
-  public static DateField UPDATE_DATE;
+  public static DateField BALANCE_DATE;
 
   public static DateField CLOSED_DATE;
 
@@ -76,7 +76,7 @@ public class Account {
       outputStream.writeString(values.get(NAME));
       outputStream.writeDouble(values.get(BALANCE));
       outputStream.writeInteger(values.get(TRANSACTION_ID));
-      outputStream.writeDate(values.get(UPDATE_DATE));
+      outputStream.writeDate(values.get(BALANCE_DATE));
       outputStream.writeBoolean(values.get(IS_CARD_ACCOUNT));
       return serializedByteArrayOutput.toByteArray();
     }
@@ -95,7 +95,7 @@ public class Account {
       fieldSetter.set(NAME, input.readString());
       fieldSetter.set(BALANCE, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
-      fieldSetter.set(UPDATE_DATE, input.readDate());
+      fieldSetter.set(BALANCE_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
     }
 

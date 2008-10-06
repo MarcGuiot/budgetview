@@ -480,7 +480,8 @@ public class ImportPanel {
     for (Integer accountId : accounts) {
       Glob account = localRepository.get(Key.create(Account.TYPE, accountId));
       if (account.get(Account.BALANCE) == null) {
-        BalanceEditionDialog dialog = new BalanceEditionDialog(this.dialog, localRepository, localDirectory, account);
+        BalanceEditionDialog dialog =
+          new BalanceEditionDialog(account, true, localRepository, localDirectory, this.dialog);
         dialog.show();
       }
     }

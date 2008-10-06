@@ -212,4 +212,8 @@ public class ImportChecker {
       .validate();
     return this;
   }
+
+  public void checkClosed() {
+    assertFalse(dialog.isVisible());
+  }
 }

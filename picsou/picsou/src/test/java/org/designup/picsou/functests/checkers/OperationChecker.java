@@ -74,8 +74,8 @@ public class OperationChecker {
           if (amount != null) {
             Window window = WindowInterceptor.getModalDialog(okButton.triggerClick());
             BalanceEditionChecker balance = new BalanceEditionChecker(window);
-            balance.setAmount(amount);
-            return balance.getValidate();
+            balance.setAmountWithoutEnter(amount);
+            return balance.triggerValidate();
           }
           return okButton.triggerClick();
         }

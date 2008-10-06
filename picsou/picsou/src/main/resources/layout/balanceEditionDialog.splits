@@ -2,15 +2,22 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-
-  <panel styleClass="dialog" preferredSize="(340,180)" opaque="true">
+  <panel styleClass="dialog">
     <column styleClass="innerDialog">
       <label text="$balance.edition.title" styleClass="title"/>
-      <label ref="accountName" styleClass="formLabel" anchor="left" marginBottom="10"/>
+
+      <textArea ref="initialMessage" text="$balance.edition.initialMessage" 
+                styleClass="multiLineLabel" anchor="left" border="empty(0,0,10,0)"
+                preferredSize="(250,50)"/>
+
+      <label ref="accountName" styleClass="formLabel" fill="horizontal" horizontalAlignment="center"
+             marginBottom="10"/>
+
       <row marginBottom="10">
         <label text="$balance.edition.label" styleClass="formLabel"/>
-        <textField ref="amount"/>
+        <textField ref="amountField"/>
       </row>
+
       <label text="$balance.edition.operation" styleClass="separatorTitle"/>
       <row styleClass="separator">
         <grid>
@@ -23,7 +30,7 @@
         </grid>
         <filler fill="horizontal"/>
       </row>
-      <filler fill="vertical" weightY="20"/>
+      <filler fill="vertical"/>
     </column>
   </panel>
 

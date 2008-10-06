@@ -5,7 +5,6 @@
 - tooltips monthSummaryView / balance
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
 - categoryView : afficher un message quand la categorisation est assez avancee (90%) ?
-- AccountEditionDialog : Enter pour valider le montant et fermer la fenetre
 - Afficher SLA au premier lancement (repository vide) + creation compte
 - Edition compte (renommage)
 - Mettre en rouge les depassements
@@ -33,7 +32,7 @@
 
 ----
 
-- navigateur sous Linux ?
+- BrowsingService sous Linux ?
 - transactionView : colonne compte ?
 
 ----
@@ -54,7 +53,7 @@
 - Look categoryChooser
 - Test de serialisation
 - SED / changement de ProfileType de custom vers 6 mois : seriesBudget remis à 0
-- Libelle "Solde" trop sec sur BalanceSummaryView
-- Plus de titre quand on arrive dans l'appli
 - ProgressBar ou autre au login
 - Controler la couleur de selection dans les tables de transactions
+
+- Serialisation des strings : voir charset

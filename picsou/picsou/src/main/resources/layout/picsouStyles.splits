@@ -34,12 +34,6 @@
            font="-,plain,12" foreground="import.form.label"
            anchor="west"/>
 
-    <style selector="label.separatorTitle"
-           font="-,plain,10" foreground="#444444"/>
-
-    <style selector=".separator" opaque="false" marginTop="0"
-           border="matte(1,0,0,0,dialog.separator)"/>
-
     <style selector="row.buttons"
            fill="horizontal" anchor="center"
            marginTop="10" marginBottom="10" marginLeft="40" marginRight="40"/>
@@ -68,6 +62,12 @@
     <style selector=".dialog label.title"
            font="-,bold,18" foreground="dialog.title"
            fill="none" anchor="center" marginTop="0" marginBottom="15"/>
+
+    <style selector=".separator" opaque="false" marginTop="0"
+           border="matte(1,0,0,0,dialog.separator)"/>
+
+    <style selector="label.separatorTitle"
+           font="-,plain,10" foreground="dialog.separator.title"/>    
 
     <!-- Hyperlinks -->
 

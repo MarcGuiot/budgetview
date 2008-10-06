@@ -21,27 +21,76 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowStateListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
+import java.util.Date;
 import java.util.SortedSet;
 
 public class BalanceEditionDialog {
   private PicsouDialog dialog;
   private LocalGlobRepository localRepository;
   private Glob account;
+  private Date balanceDate;
+  private JTextField editor;
 
-  public BalanceEditionDialog(Window parent, GlobRepository repository, Directory directory, Glob account) {
+  public BalanceEditionDialog(Glob account, boolean accountInitialization,
+                              GlobRepository repository, Directory directory, Window parent) {
     this.account = account;
 
-    LocalGlobRepositoryBuilder localGlobRepositoryBuilder = LocalGlobRepositoryBuilder.init(repository)
-      .copy(Account.TYPE);
-    this.localRepository = localGlobRepositoryBuilder.get();
+    this.localRepository =
+      LocalGlobRepositoryBuilder.init(repository)
+        .copy(Account.TYPE)
+        .get();
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/balanceEditionDialog.splits",
                                                       localRepository, directory);
-    builder.addEditor("amount", Account.BALANCE).setNotifyAtKeyPressed(true)
-      .forceSelection(account);
+
+    ValidateAction validateAction = new ValidateAction();
+
+    editor = builder.addEditor("amountField", Account.BALANCE)
+      .setValidationAction(validateAction)
+      .setNotifyAtKeyPressed(true)
+      .forceSelection(account)
+      .getComponent();
+
+    JTextArea initialMessage = builder.add("initialMessage", new JTextArea());
+
     builder.add("accountName", new JLabel(Lang.get("balance.edition.account.name",
                                                    Strings.toString(account.get(Account.NAME)),
                                                    Strings.toString(account.get(Account.NUMBER)))));
+
+    JLabel date = builder.add("dateInfo", new JLabel());
+    JLabel label = builder.add("labelInfo", new JLabel());
+    JLabel amount = builder.add("amountInfo", new JLabel());
+
+    updateOperationInfo(account, date, label, amount, repository);
+
+    if (accountInitialization) {
+      dialog = PicsouDialog.createWithButton(parent, builder.<JPanel>load(), validateAction, directory);
+      dialog.disableEscShortcut();
+      initialMessage.setVisible(true);
+      editor.setText("0.0");
+      dialog.setPreferredSize(new Dimension(400,350));
+    }
+    else {
+      dialog = PicsouDialog.createWithButtons(parent, builder.<JPanel>load(),
+                                              validateAction, new CancelAction(), directory);
+      dialog.setPreferredSize(new Dimension(400,300));
+      initialMessage.setVisible(false);
+    }
+
+    dialog.addWindowListener(new WindowAdapter() {
+      public void windowOpened(WindowEvent e) {
+        editor.selectAll();
+        editor.requestFocusInWindow();
+      }
+    });
+
+    dialog.pack();
+  }
+
+  private void updateOperationInfo(Glob account, JLabel date, JLabel label, JLabel amount, GlobRepository repository) {
     Integer transactionId = account.get(Account.TRANSACTION_ID);
     Glob transaction = null;
     if (transactionId == null) {
@@ -56,39 +105,32 @@ public class BalanceEditionDialog {
     else {
       transaction = repository.get(Key.create(Transaction.TYPE, transactionId));
     }
+
     String dateInfo = "";
     String labelInfo = "";
     String amountInfo = "";
     if (transaction != null) {
-      int month = Month.toMonth(transaction.get(Transaction.BANK_MONTH));
+      Integer monthId = transaction.get(Transaction.BANK_MONTH);
+      int month = Month.toMonth(monthId);
       Integer day = transaction.get(Transaction.BANK_DAY);
       dateInfo = Lang.get("transactionView.dateFormat",
                           (day < 10 ? "0" : "") + day,
                           (month < 10 ? "0" : "") + month,
-                          Integer.toString(Month.toYear(transaction.get(Transaction.BANK_MONTH)))
-      );
+                          Integer.toString(Month.toYear(monthId)));
+      balanceDate = Month.toDate(monthId, day);
       labelInfo = transaction.get(Transaction.LABEL);
       amountInfo = PicsouDescriptionService.DECIMAL_FORMAT.format(transaction.get(Transaction.AMOUNT));
     }
-    JLabel date = new JLabel(dateInfo);
-    builder.add("dateInfo", date);
 
-    JLabel label = new JLabel(labelInfo);
-    builder.add("labelInfo", label);
-
-    JLabel amount = new JLabel(amountInfo);
-    builder.add("amountInfo", amount);
+    date.setText(dateInfo);
+    label.setText(labelInfo);
+    amount.setText(amountInfo);
 
     if (transaction == null) {
       date.setVisible(false);
       label.setVisible(false);
       amount.setVisible(false);
     }
-
-    dialog = PicsouDialog.createWithButtons(parent, builder.<JPanel>load(),
-                                            new ValidateAction(),
-                                            new CancelAction(), directory);
-    dialog.pack();
   }
 
   public void show() {
@@ -102,6 +144,9 @@ public class BalanceEditionDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
+      if (balanceDate != null) {
+        localRepository.update(account.getKey(), Account.BALANCE_DATE, balanceDate);
+      }
       localRepository.update(account.getKey(), Account.TRANSACTION_ID, null);
       localRepository.commitChanges(true);
       dialog.setVisible(false);

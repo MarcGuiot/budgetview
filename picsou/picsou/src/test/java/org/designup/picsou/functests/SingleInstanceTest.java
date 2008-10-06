@@ -216,7 +216,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     newApplication.start();
     Thread.sleep(1000);
     newApplication.checkNotOpen();
-    balance.setAmount(0.).validate();
+    balance.setAmount(0.0);
     Window newImportDialog = newApplication.getImportDialog();
     assertNotNull(newImportDialog);
     new ImportChecker(newImportDialog).close();
@@ -239,15 +239,19 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .save();
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectData();
+
     CategoryChecker category = new CategoryChecker(window);
     CategoryEditionChecker edition = category.openEditionDialog();
     NewApplicationThread newApplication = new NewApplicationThread(initialFile);
     newApplication.start();
+
     Thread.sleep(1000);
     newApplication.checkNotOpen();
     edition.cancel();
+
     Window dialog = newApplication.getImportDialog();
     assertNotNull(dialog);
+    
     new ImportChecker(dialog).checkSelectedFiles(initialFile).close();
     picsouApplication.shutdown();
   }

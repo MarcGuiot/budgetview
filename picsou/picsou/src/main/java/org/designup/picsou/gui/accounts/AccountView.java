@@ -38,7 +38,7 @@ public class AccountView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountView.splits", repository, directory);
 
     Glob summaryAccount = repository.get(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID));
-    builder.addLabel("totalBalance", Account.BALANCE).forceSelection(summaryAccount);
+    builder.addLabel("totalBalance", Account.BALANCE).setAutoHideIfEmpty(true).forceSelection(summaryAccount);
 
     builder.addRepeat("accountRepeat", Account.TYPE, not(contains(summaryAccount)),
                       new AccountComparator(),
@@ -51,7 +51,7 @@ public class AccountView extends View {
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
       add("accountName", Account.NAME, account, cellBuilder);
       add("accountNumber", Account.NUMBER, account, cellBuilder);
-      add("accountUpdateDate", Account.UPDATE_DATE, account, cellBuilder);
+      add("accountUpdateDate", Account.BALANCE_DATE, account, cellBuilder);
       final GlobButtonView balance =
         GlobButtonView.init(Account.TYPE, repository, directory,
                             new GlobListStringifier() {
@@ -69,7 +69,7 @@ public class AccountView extends View {
                             new GlobListFunctor() {
                               public void run(GlobList list, GlobRepository repository) {
                                 BalanceEditionDialog balanceEditor =
-                                  new BalanceEditionDialog(directory.get(JFrame.class), repository, directory, account);
+                                  new BalanceEditionDialog(account, false, repository, directory, directory.get(JFrame.class));
                                 balanceEditor.show();
                               }
                             }).forceSelection(account);

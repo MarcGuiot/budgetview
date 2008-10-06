@@ -62,11 +62,11 @@ public class AccountViewChecker extends DataChecker {
     return new BalanceEditionChecker(window);
   }
 
-  public AccountViewChecker changeBalance(String accountName, final double balance, final String label) {
+  public AccountViewChecker changeBalance(String accountName, final double balance, final String operationLabel) {
     BalanceEditionChecker balanceEditor = getBalance(accountName);
     balanceEditor
-      .setAmount(balance)
-      .checkLabel(label)
+      .checkOperationLabel(operationLabel)
+      .setAmountWithoutEnter(balance)
       .validate();
     return this;
   }

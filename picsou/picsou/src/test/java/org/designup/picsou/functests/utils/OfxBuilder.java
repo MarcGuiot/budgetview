@@ -68,7 +68,7 @@ public class OfxBuilder {
                         FieldValue.value(Account.BRANCH_ID, branchId),
                         FieldValue.value(Account.NUMBER, accountNumber),
                         FieldValue.value(Account.BALANCE, balance),
-                        FieldValue.value(Account.UPDATE_DATE, Dates.parse(updateDate)));
+                        FieldValue.value(Account.BALANCE_DATE, Dates.parse(updateDate)));
     return this;
   }
 
@@ -77,7 +77,7 @@ public class OfxBuilder {
       repository.create(Key.create(Account.TYPE, repository.getIdGenerator().getNextId(Account.ID, 1)),
                         FieldValue.value(Account.NUMBER, cardId),
                         FieldValue.value(Account.BALANCE, balance),
-                        FieldValue.value(Account.UPDATE_DATE, Dates.parse(updateDate)),
+                        FieldValue.value(Account.BALANCE_DATE, Dates.parse(updateDate)),
                         FieldValue.value(Account.IS_CARD_ACCOUNT, true));
     return this;
   }
