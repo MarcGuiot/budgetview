@@ -39,11 +39,6 @@ public class ProfileTypeSeriesTrigger implements ChangeSetListener {
           return;
         }
 
-        if (values.contains(Series.PROFILE_TYPE)) {
-          for (BooleanField field : Series.getMonths()) {
-            repository.update(key, field, false);
-          }
-        }
         updateProfileType(repository.get(key));
       }
 

@@ -903,7 +903,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsNotChecked(1, 5, 7);
 
     edition.setFourMonths()
-      .checkMonthIsChecked(1, 5, 9)
+      .checkMonthIsChecked(2, 6, 10)
       .toggleMonth(10)
       .checkMonthIsChecked(10, 2, 6)
       .toggleMonth(3)
