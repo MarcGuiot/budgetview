@@ -21,7 +21,7 @@
     <style selector="textArea" foreground="transaction.detail.text" opaque="false" anchor="top"
            lineWrap="true" wrapStyleWord="true"/>
 
-    <style selector="scrollPane.textArea"
+    <style selector="scrollPane.textArea" opaque="false"
            verticalScrollBarPolicy="javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER"
            horizontalScrollBarPolicy="javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED"/>
 

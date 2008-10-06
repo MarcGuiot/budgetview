@@ -30,6 +30,7 @@
 
 - back/forward
 - tests d'undo/redo
+- Test de serialisation
 
 - BrowsingService sous Linux ?
 
@@ -39,7 +40,6 @@
 - Fichier licences pour Package install / About / etc :
 - Libelles des transation planned : mettre un espace apres le ':'
 - Message upgrade : lien vers http://www.fourmics.com/changes ou versions
-- Test de serialisation
 - SED / changement de ProfileType de custom vers 6 mois : seriesBudget remis à 0
 
 - ProgressBar ou autre au login
