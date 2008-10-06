@@ -3,6 +3,7 @@ package org.designup.picsou.functests.utils;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
+import org.designup.picsou.gui.MainWindowLauncher;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.PicsouFrame;
@@ -11,6 +12,8 @@ import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.MasterCategory;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.gui.splits.color.ColorService;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
@@ -28,8 +31,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected TransactionChecker transactions;
   protected TransactionDetailsChecker transactionDetails;
   protected OperationChecker operations;
-  protected GlobRepository repository;
-  protected ServerAccess serverAccess;
   protected TitleChecker title;
   protected LicenseChecker license;
   protected MonthSummaryChecker monthSummary;
@@ -39,7 +40,10 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected SeriesViewChecker series;
   protected InfoChecker infochecker;
 
-  private PicsouApplication picsouApplication;
+  protected GlobRepository repository;
+  private Directory directory;
+  protected ServerAccess serverAccess;
+
   private Date currentDate = Dates.parse("2008/08/31");
   private String isInMemory = "true";
   private String deleteLocalPrevayler = "true";
@@ -69,8 +73,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
         if (mainWindow == null) {
           mainWindow = WindowInterceptor.run(new Trigger() {
             public void run() throws Exception {
-              picsouApplication = new PicsouApplication();
-              picsouApplication.run();
+              clearDirectory();
+              directory = MainWindowLauncher.run("anonymous", "p@ssword");
             }
           });
         }
@@ -79,8 +83,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     });
 
     mainWindow = getMainWindow();
-    LoginChecker loginChecker = new LoginChecker(mainWindow);
-    loginChecker.logNewUser("anonymous", "p@ssword");
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
     LicenseChecker.enterLicense(mainWindow, "admin", "zz", 0);
@@ -133,18 +135,25 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     transactions = null;
     transactionDetails = null;
     operations = null;
-    serverAccess = null;
     title = null;
-    repository = null;
+    infochecker = null;
     monthSummary = null;
     balanceSummary = null;
     budgetView = null;
     categorization = null;
     series = null;
     license = null;
-    infochecker = null;
-    picsouApplication.shutdown();
-    picsouApplication = null;
+
+    repository = null;
+    clearDirectory();
+    directory = null;
+    serverAccess = null;
+  }
+
+  private void clearDirectory() {
+    if (directory != null) {
+      directory.get(ColorService.class).removeAllListeners();
+    }
   }
 
   public OperationChecker getOperations() {

@@ -5,7 +5,7 @@
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
 - categoryView : afficher un message quand la categorisation est assez avancee (90%) ?
 
-- Afficher SLA au premier lancement (repository vide) + creation compte
+- Creation compte : afficher SLA
 
 - Creation + Edition de compte
 
@@ -20,7 +20,7 @@
 
 - Format des montants : mettre des espaces pour separer les milliers
 
-- ordre des series : prevu decroissant
+- Ordre des series : prevu decroissant
 
 - TransactionDetails : mettre le compte, la date et le montant (faire un seul label ?)
 
@@ -40,8 +40,5 @@
 - Fichier licences pour Package install / About / etc :
 - Libelles des transation planned : mettre un espace apres le ':'
 - Message upgrade : lien vers http://www.fourmics.com/changes ou versions
-- SED / changement de ProfileType de custom vers 6 mois : seriesBudget remis à 0
-
-- ProgressBar ou autre au login
 
 - Serialisation des strings : voir charset

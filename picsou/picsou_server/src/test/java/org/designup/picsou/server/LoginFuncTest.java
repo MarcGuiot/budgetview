@@ -40,6 +40,7 @@ public class LoginFuncTest extends ServerFuncTestCase {
 
     window.getButton("login").click();
 
+    UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
     OperationChecker operations = new OperationChecker(window);
     ImportChecker checker = operations.openImportDialog();
     checker.selectFiles(fileName);

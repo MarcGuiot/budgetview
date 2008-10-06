@@ -63,7 +63,7 @@ public class MainPanel {
   private RegisterLicenseAction registerAction;
   private CheckRepositoryAction check;
 
-  public static MainPanel show(GlobRepository repository, Directory directory, MainWindow mainWindow) {
+  public static MainPanel init(GlobRepository repository, Directory directory, MainWindow mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
     mainWindow.getFrame().setRepository(repository);
     return panel;
@@ -154,8 +154,11 @@ public class MainPanel {
       }
     });
 
-    builder.load();
     SplitsEditor.show(builder, parent);
+  }
+
+  public void show() {
+    builder.load();
   }
 
   public void createMenuBar(final PicsouFrame frame, Directory directory) {
