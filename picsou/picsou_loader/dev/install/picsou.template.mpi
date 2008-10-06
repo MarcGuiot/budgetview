@@ -3,7 +3,7 @@ AllowLanguageSelection
 No
 
 AppName
-fourmics
+Fourmics
 
 ApplicationID
 C2342569-C720-485C-A1B4-2453930EEB03
@@ -27,7 +27,7 @@ CommandLineFailureAction
 {Fail (recommended)}
 
 Company
-fourmics
+Fourmics
 
 CompressionLevel
 6
@@ -69,7 +69,7 @@ InstallPassword
 {}
 
 InstallVersion
-1.0.0.0
+SOFT_VERSION
 
 Language,de
 No
@@ -147,7 +147,7 @@ ScriptExt
 .sh
 
 ShortAppName
-fourmics
+Fourmics
 
 SkipUnusedFileGroups
 Yes
@@ -168,7 +168,7 @@ UpgradeApplicationID
 {}
 
 Version
-1.0
+SOFT_VERSION
 
 ViewReadme
 Yes
@@ -685,7 +685,7 @@ text/qif
 {<%InstallDir%>\fourmics_icon_32.ico}
 
 4A6ADC8C-83B7-433C-AE38-4A306C5E9671,Title
-Fourmics
+{qif file}
 
 4B5B669B-18E9-44FA-B564-B4B443625591,CheckCondition
 {Before Action is Executed}
@@ -976,7 +976,7 @@ text/ofx
 {<%InstallDir%>\fourmics_icon_32.ico}
 
 7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,Title
-Fourmics
+{ofx file}
 
 7E3CB86B-F5F0-40DE-9528-3A7956E7D313,Alias
 {Finish Actions}

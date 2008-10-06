@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.browsing;
 
-public class LinuxBrowsingService extends BrowsingService {
+public class UnixBrowsingService extends BrowsingService {
   public void launchBrowser(String url) {
 //    try {
 //      Runtime.getRuntime().exec()

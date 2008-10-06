@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final Long APPLICATION_VERSION = 1L;
+  public static final String APPLICATION_VERSION = "0.9";
   public static final Long JAR_VERSION = 2L;
   public static final Long BANK_CONFIG_VERSION = 2L;
   private static final String JAR_DIRECTORY = "jars";
@@ -227,6 +227,9 @@ public class PicsouApplication {
   public static String getPicsouPath() {
     if (Gui.isMacOSX() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
       return System.getProperty("user.home") + "/Library/Application Support/Fourmics";
+    }
+    if (Gui.isWindows() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
+      return System.getProperty("user.home") + "/Application Data/Fourmics";
     }
     return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.fourmics");
   }

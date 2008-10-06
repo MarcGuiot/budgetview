@@ -10,9 +10,6 @@
   <modules>
     <module>picsou</module>
     <module>picsou_loader</module>
-    <module>picsou_licence_server</module>
-    <module>picsou_server</module>
-    <module>morphograph</module>
   </modules>
 
 </project>

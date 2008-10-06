@@ -35,7 +35,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     url = initServerEnvironment(inMemory);
-    directory.add(new ConfigService(1L, 1L, 1L, null));
+    directory.add(new ConfigService("1", 1L, 1L, null));
   }
 
   protected void tearDown() throws Exception {

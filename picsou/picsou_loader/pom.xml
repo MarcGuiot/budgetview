@@ -99,6 +99,18 @@
             </goals>
           </execution>
           <execution>
+            <id>install_MAC_rename_dmg</id>
+            <phase>install</phase>
+            <configuration>
+              <tasks unless="${GenerateMacInstall}">
+                <exec executable="${basedir}/dev/install/rename_dmg.sh"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
             <id>install_WINDOWS</id>
             <phase>install</phase>
             <configuration>
