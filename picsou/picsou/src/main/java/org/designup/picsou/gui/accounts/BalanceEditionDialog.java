@@ -21,9 +21,8 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowStateListener;
-import java.awt.event.WindowEvent;
 import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Date;
 import java.util.SortedSet;
 
@@ -71,12 +70,12 @@ public class BalanceEditionDialog {
       dialog.disableEscShortcut();
       initialMessage.setVisible(true);
       editor.setText("0.0");
-      dialog.setPreferredSize(new Dimension(400,350));
+      dialog.setPreferredSize(new Dimension(400, 350));
     }
     else {
       dialog = PicsouDialog.createWithButtons(parent, builder.<JPanel>load(),
                                               validateAction, new CancelAction(), directory);
-      dialog.setPreferredSize(new Dimension(400,300));
+      dialog.setPreferredSize(new Dimension(400, 300));
       initialMessage.setVisible(false);
     }
 

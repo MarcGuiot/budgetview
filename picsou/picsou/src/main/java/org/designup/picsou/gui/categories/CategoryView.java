@@ -11,6 +11,7 @@ import org.designup.picsou.gui.components.expansion.TableExpansionInstaller;
 import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -87,6 +88,7 @@ public class CategoryView extends View implements ExpandableTable {
 
     setFilter(expansionModel);
     expandColumn.init(this, expansionModel);
+    PicsouColors.installSelectionColors(table, directory);
 
     TableExpansionInstaller.setUp(this, expansionModel, table, expandColumn, CATEGORY_COLUMN_INDEX);
 

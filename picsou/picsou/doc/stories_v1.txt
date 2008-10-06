@@ -17,6 +17,8 @@
 - ordre des series : prevu decroissant
 - TransactionDetails : mettre le compte, la date et le montant (faire un seul label ?)
 
+- Fenetre About
+
 - Gestion des licences
 
 =======
@@ -24,7 +26,6 @@
 - back/forward
 - tests d'undo/redo
 - back/forward ?
-- import QIF avec creation de compte : joliesse panneau + selection auto
 
 - CategorizationView : bug serie qui reste selectionnee apres changement de transaction (?)
 
@@ -38,7 +39,6 @@
 ----
 
 - Largeur CategoryView
-- Message d'aide pour BalanceEditionDialog initiale (à l'import QIF) + look
 - Messages sur fenetre de repartition
 - Fenetre about avec numero de version (il nous faut de vrais numeros de build)
 - Ajustement de solde : le numero de compte ne rentre pas dans la fenetre
@@ -53,6 +53,7 @@
 - Look categoryChooser
 - Test de serialisation
 - SED / changement de ProfileType de custom vers 6 mois : seriesBudget remis à 0
+
 - ProgressBar ou autre au login
 - Controler la couleur de selection dans les tables de transactions
 

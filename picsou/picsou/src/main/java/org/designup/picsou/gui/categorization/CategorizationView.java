@@ -16,6 +16,7 @@ import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.gui.utils.TableView;
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
@@ -123,9 +124,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
         .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL),
                    chain(LabelCustomizers.BOLD, autoTooltip()))
         .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), LabelCustomizers.ALIGN_RIGHT);
+
     headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
 
-    Gui.setColumnSizes(transactionTable.getComponent(), COLUMN_SIZES);
+    JTable table = transactionTable.getComponent();
+    PicsouColors.installSelectionColors(table, directory);
+    Gui.setColumnSizes(table, COLUMN_SIZES);
     installDoubleClickHandler();
 
     this.filterSet = new FilterSet(this);

@@ -1,9 +1,12 @@
 package org.designup.picsou.gui.utils;
 
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -145,5 +148,23 @@ public enum PicsouColors {
         service.set(name, Color.RED);
       }
     }
+  }
+
+  public static void installSelectionColors(final JTable table, Directory directory) {
+    final ColorService colorService = directory.get(ColorService.class);
+    colorService.addListener(new ColorChangeListener() {
+      public void colorsChanged(ColorLocator colorLocator) {
+        setSelectionColors(table, colorLocator);
+      }
+    });
+  }
+
+  public static void setSelectionColors(final JTable table, Directory directory) {
+    setSelectionColors(table, directory.get(ColorService.class));
+  }
+
+  public static void setSelectionColors(JTable table, ColorLocator colors) {
+    table.setSelectionBackground(colors.get("transaction.selected.bg"));
+    table.setSelectionForeground(colors.get("transaction.selected.text"));
   }
 }
