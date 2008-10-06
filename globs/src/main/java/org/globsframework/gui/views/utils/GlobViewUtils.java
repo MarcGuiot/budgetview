@@ -3,7 +3,8 @@ package org.globsframework.gui.views.utils;
 import javax.swing.*;
 
 public class GlobViewUtils {
-  public static void updateSelectionAfterItemMoved(ListSelectionModel selectionModel, int[] previousSelection, int previousIndex, int newIndex) {
+  public static void updateSelectionAfterItemMoved(ListSelectionModel selectionModel, int[] previousSelection,
+                                                   int previousIndex, int newIndex) {
 
     selectionModel.setValueIsAdjusting(true);
     selectionModel.clearSelection();

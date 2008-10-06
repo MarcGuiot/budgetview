@@ -62,6 +62,11 @@ class SerializedOutputChecker implements SerializedOutput {
     serializationOutput.writeString(value);
   }
 
+  public void writeUtf8String(String value) {
+    serializationOutput.writeString("StringUtf8");
+    serializationOutput.writeUtf8String(value);
+  }
+
   public void write(boolean value) {
     serializationOutput.writeString("Boolean");
     serializationOutput.write(value);

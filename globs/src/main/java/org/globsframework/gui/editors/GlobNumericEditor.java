@@ -20,6 +20,7 @@ import java.util.Date;
 public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNumericEditor> {
   private boolean isMinusAllowed = true;
   private boolean invertValue = false;
+  private Object valueForNull = null;
 
   public static GlobNumericEditor init(Field field, GlobRepository repository, Directory directory) {
     return new GlobNumericEditor(field, repository, directory, new JTextField());
@@ -32,6 +33,11 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNu
 
   public GlobNumericEditor setMinusAllowed(boolean minusAllowed) {
     this.isMinusAllowed = minusAllowed;
+    return this;
+  }
+
+  public GlobNumericEditor setValueForNull(Object value) {
+    this.valueForNull = value;
     return this;
   }
 
@@ -83,7 +89,7 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNu
   }
 
   private StringParserFieldVisitor convertValue(String s) {
-    StringParserFieldVisitor fieldVisitor = new StringParserFieldVisitor(s, descriptionService);
+    StringParserFieldVisitor fieldVisitor = new StringParserFieldVisitor(s, descriptionService, valueForNull);
     try {
       field.visit(fieldVisitor);
     }
@@ -94,15 +100,27 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNu
   }
 
   protected void setValue(Object value) {
-    if (value == null) {
-      textComponent.setText("");
-      return;
-    }
+    setAdjusting(true);
+    try {
+      if (value == null) {
+        textComponent.setText("");
+        return;
+      }
 
-    StringifierFieldValueVisitor visitor = new StringifierFieldValueVisitor(descriptionService);
-    field.safeVisit(visitor, value);
-    String text = invertIfNeeded(visitor.getText());
-    textComponent.setText(text);
+      StringifierFieldValueVisitor visitor = new StringifierFieldValueVisitor(descriptionService);
+      field.safeVisit(visitor, value);
+      String text;
+      if (value.equals(valueForNull)) {
+        text = visitor.getText();
+      }
+      else {
+        text = invertIfNeeded(visitor.getText());
+      }
+      textComponent.setText(text);
+    }
+    finally {
+      setAdjusting(false);
+    }
   }
 
   protected void registerChangeListener() {
@@ -128,20 +146,34 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNu
       }
 
       public void replace(FilterBypass fb, int offset, int length, String replaceText, AttributeSet attrs) throws BadLocationException {
-        if (Strings.isNullOrEmpty(replaceText)) {
+        if (isAdjusting()) {
           super.replace(fb, offset, length, replaceText, attrs);
           return;
         }
         StringBuffer buffer = new StringBuffer();
         String text = textComponent.getText();
         buffer
-          .append(text, 0, offset)
-          .append(replaceText);
+          .append(text, 0, offset);
+        if (replaceText != null) {
+          buffer.append(replaceText);
+        }
         if (text.length() - offset > 0) {
           buffer.append(text, offset + length, text.length());
         }
-        if (checkValue(buffer.toString())) {
-          super.replace(fb, offset, length, replaceText, attrs);
+
+        try {
+          setAdjusting(true);
+          if (Strings.isNullOrEmpty(buffer.toString())) {
+            super.replace(fb, offset, length, replaceText, attrs);
+            return;
+          }
+          if (checkValue(buffer.toString())) {
+            super.replace(fb, offset, length, replaceText, attrs);
+          }
+        }
+        finally {
+          setAdjusting(false);
+          applyChanges();
         }
       }
 
@@ -154,7 +186,6 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNu
         if (checkValue(buffer.toString())) {
           super.remove(fb, offset, length);
         }
-
       }
     });
   }
@@ -163,22 +194,24 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNu
     private String text;
     private Object value;
     private DescriptionService descriptionService;
+    private Object valueForNull;
 
-    private StringParserFieldVisitor(String text, DescriptionService descriptionService) {
+    private StringParserFieldVisitor(String text, DescriptionService descriptionService, Object valueForNull) {
       this.text = text;
       value = text;
       this.descriptionService = descriptionService;
+      this.valueForNull = valueForNull;
     }
 
     public void visitInteger(IntegerField field) throws Exception {
-      value = 0;
+      value = valueForNull;
       if (!"".equals(text.trim())) {
         value = Integer.parseInt(text);
       }
     }
 
     public void visitDouble(DoubleField field) throws Exception {
-      value = 0.0;
+      value = valueForNull;
       if (!"".equals(text.trim())) {
         value = Double.parseDouble(text.replace(',', '.'));
       }
@@ -189,7 +222,7 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNu
     }
 
     public void visitDate(DateField field) throws Exception {
-      value = null;
+      value = valueForNull;
       if (!"".equals(text)) {
         value = descriptionService.getFormats().getDateFormat().parse(text);
       }
@@ -199,7 +232,7 @@ public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNu
     }
 
     public void visitTimeStamp(TimeStampField field) throws Exception {
-      value = null;
+      value = valueForNull;
       if (!"".equals(text)) {
         value = descriptionService.getFormats().getTimestampFormat().parse(text);
       }

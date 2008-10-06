@@ -138,7 +138,6 @@ public class GlobViewModel implements ChangeSetListener {
       }
       else if (changeCount > 1) {
         MajorChanges visitor = new MajorChanges(changeSet, repository);
-//        changeSet.safeVisit(type, visitor);
         visitor.complete();
       }
     }

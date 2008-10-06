@@ -9,6 +9,7 @@ import org.uispec4j.Key;
 import org.uispec4j.TextBox;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class GlobNumericEditorTest extends GuiComponentTestCase {
@@ -157,13 +158,77 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     textBox.setText(null);
     textBox.pressKey(Key.d5);
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' value='5.0' _value='0.0'/>");
+      "<update type='dummyObject' id='1' value='5.0' _value='(null)'/>");
 
     textBox.setText(null);
     textBox.pressKey(Key.MINUS);
     textBox.pressKey(Key.d6);
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' value='-6.0' _value='0.0'/>");
+      "<update type='dummyObject' id='1' value='-6.0' _value='(null)'/>");
+
+    ((JTextField)textBox.getAwtComponent()).setSelectionEnd(0);
+    textBox.pressKey(Key.DELETE);
+    textBox.pressKey(Key.DELETE);
+    changeListener.assertLastChangesEqual(
+      "<update type='dummyObject' id='1' value='(null)' _value='6.0'/>");
+  }
+
+  public void testMultiSelection() throws Exception {
+    Glob glob1 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 2), FieldValue.value(DummyObject.VALUE, 1.0));
+    Glob glob2 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 3), FieldValue.value(DummyObject.VALUE, 2.0));
+    JTextField textField =
+      GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
+        .setNotifyAtKeyPressed(true).getComponent();
+    TextBox textBox = new TextBox(textField);
+
+    selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
+    assertThat(textBox.textEquals(""));
+    selectionService.select(Arrays.asList(glob1), DummyObject.TYPE);
+    assertThat(textBox.textEquals("1"));
+    selectionService.select(Arrays.asList(glob2), DummyObject.TYPE);
+    assertThat(textBox.textEquals("2"));
+    textBox.setText("44");
+    changeListener.assertLastChangesEqual(
+      "<update type='dummyObject' id='3' value='44.0' _value='2.0'/>");
+    selectionService.select(Arrays.asList(glob1), DummyObject.TYPE);
+    assertThat(textBox.textEquals("1"));
+    selectionService.select(Arrays.asList(glob2), DummyObject.TYPE);
+    assertThat(textBox.textEquals("44"));
+  }
+
+  public void testSetValueForNullAndNotifyAtKeyPressed() throws Exception {
+    Glob glob1 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 2), FieldValue.value(DummyObject.VALUE, 1.0));
+    Glob glob2 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 3), FieldValue.value(DummyObject.VALUE, 2.0));
+    JTextField textField =
+      GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
+        .setNotifyAtKeyPressed(true)
+        .setValueForNull(0.0)
+        .setMinusAllowed(false)
+        .setInvertValue(true)
+        .getComponent();
+    TextBox textBox = new TextBox(textField);
+
+    selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
+    textBox.setText("44");
+    changeListener.assertLastChangesEqual(
+      "<update type='dummyObject' id='2' value='-44.0' _value='1.0'/>" +
+      "<update type='dummyObject' id='3' value='-44.0' _value='2.0'/>" +
+      "");
+    selectionService.select(Arrays.asList(glob1), DummyObject.TYPE);
+    ((JTextField)textBox.getAwtComponent()).setSelectionEnd(0);
+    textBox.pressKey(Key.DELETE);
+    textBox.pressKey(Key.DELETE);
+    textBox.pressKey(Key.DELETE);
+    textBox.pressKey(Key.DELETE);
+    textBox.pressKey(Key.DELETE);
+    changeListener.assertLastChangesEqual(
+      "<update type='dummyObject' id='2' value='0.0' _value='-4.0'/>");
+    changeListener.reset();
+    selectionService.select(Arrays.asList(glob2), DummyObject.TYPE);
+    assertThat(textBox.textEquals("44"));
+    selectionService.select(Arrays.asList(glob1), DummyObject.TYPE);
+    changeListener.assertNoChanges();
+    assertThat(textBox.textEquals("0"));
   }
 
   protected void tearDown() throws Exception {

@@ -68,23 +68,32 @@ public class StyledPanelUI extends BasicPanelUI {
   public void paint(Graphics graphics, JComponent component) {
     component.setOpaque(false);
     if (height != component.getHeight() || width != component.getWidth() || image == null) {
-      createImage(component);
+      createImage(graphics, component);
     }
-    graphics.drawImage(image, 0, 0, null);
+    if (image != null) {
+      graphics.drawImage(image, 0, 0, null);
+    }
   }
 
-  private void createImage(JComponent c) {
+  private void createImage(Graphics graphics, JComponent c) {
     height = c.getHeight();
     width = c.getWidth();
-    int type;
-    if (cornerRadius != 0) {
-      type = BufferedImage.TYPE_INT_ARGB;
+    Graphics2D g2d;
+    try {
+      int type;
+      if (cornerRadius != 0) {
+        type = BufferedImage.TYPE_INT_ARGB;
+      }
+      else {
+        type = BufferedImage.TYPE_INT_BGR;
+      }
+      image = new BufferedImage(width, height, type);
+      g2d = image.createGraphics();
     }
-    else {
-      type = BufferedImage.TYPE_INT_BGR;
+    catch (Exception e) {
+      image = null;
+      g2d = (Graphics2D)graphics;
     }
-    image = new BufferedImage(width, height, type);
-    Graphics2D g2d = image.createGraphics();
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     Insets vInsets = c.getInsets();
@@ -126,6 +135,9 @@ public class StyledPanelUI extends BasicPanelUI {
     else {
       g2d.fillRect(x + borderWidth, y + borderWidth,
                    innerWidth, innerHeight);
+    }
+    if (image != null) {
+      g2d.dispose();
     }
   }
 }
