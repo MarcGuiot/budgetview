@@ -20,15 +20,9 @@ public abstract class AbstractGraphicRenderer extends JPanel implements ColorCha
   protected Color selectedBottomBgColor;
   protected Color selectedTopBgColor;
   protected Color selectedBorderColor;
-  protected Color incomeTextColor;
-  protected Color expenseTextColor;
   protected Color titleColor;
   protected Color grayedTitleColor;
   protected Color errorTitleColor;
-  protected Color incomeBarLightColor;
-  protected Color incomeBarDarkColor;
-  protected Color expenseBarLightColor;
-  protected Color expenseBarDarkColor;
   protected Font titleFont;
   protected Font valueFont;
   private PicsouColors selectionBackgroundBottomColorId;
@@ -62,14 +56,8 @@ public abstract class AbstractGraphicRenderer extends JPanel implements ColorCha
     selectedBorderColor = colorLocator.get(PicsouColors.SELECTION_BG_BORDER);
     bottomBgColor = colorLocator.get(backgroundBottomColorId);
     topBgColor = colorLocator.get(backgroundTopColorId);
-    incomeTextColor = colorLocator.get(PicsouColors.INCOME_TEXT);
-    expenseTextColor = colorLocator.get(PicsouColors.EXPENSE_TEXT);
     titleColor = colorLocator.get(PicsouColors.CATEGORY_TITLE);
     grayedTitleColor = colorLocator.get(PicsouColors.CATEGORY_TITLE_GRAYED);
     errorTitleColor = colorLocator.get(PicsouColors.CATEGORY_TITLE_ERROR);
-    incomeBarLightColor = colorLocator.get(PicsouColors.INCOME_BAR_LIGHT);
-    incomeBarDarkColor = colorLocator.get(PicsouColors.INCOME_BAR_DARK);
-    expenseBarLightColor = colorLocator.get(PicsouColors.EXPENSE_BAR_LIGHT);
-    expenseBarDarkColor = colorLocator.get(PicsouColors.EXPENSE_BAR_DARK);
   }
 }

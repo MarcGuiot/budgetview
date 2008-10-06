@@ -60,6 +60,11 @@
     <style selector=".innerDialog" opaque="false" margin="15" marginBottom="10"/>
     <style selector=".innerDialogContent" opaque="false" margin="15"/>
 
+    <style selector=".dialog label" foreground="dialog.bg.text" opaque="false"/>
+    <style selector=".dialog textArea" foreground="dialog.bg.text" opaque="false"/>
+    <style selector=".dialog htmlEditorPane" foreground="dialog.bg.text" opaque="false"/>
+    <style selector=".dialog checkBox" foreground="dialog.bg.text" opaque="false"/>
+
     <style selector=".dialog label.title"
            font="-,bold,18" foreground="dialog.title"
            fill="none" anchor="center" marginTop="0" marginBottom="15"/>

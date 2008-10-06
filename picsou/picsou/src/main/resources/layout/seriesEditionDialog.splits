@@ -18,7 +18,7 @@
             <list ref="seriesList"/>
           </scrollPane>
         </column>
-        <column weightX="7" preferredSize="(440,400)">
+        <column weightX="7" preferredSize="(440,500)">
           <grid>
             <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
             <textField gridPos="(1,0,3,1)" ref="nameField" marginBottom="4"/>

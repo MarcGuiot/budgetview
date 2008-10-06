@@ -58,3 +58,4 @@
 - Libelle "Solde" trop sec sur BalanceSummaryView
 - Plus de titre quand on arrive dans l'appli
 - ProgressBar ou autre au login
+- Controler la couleur de selection dans les tables de transactions

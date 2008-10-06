@@ -42,10 +42,10 @@ public class MonthViewColors implements ColorChangeListener {
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    yearBackgroundEvenTop = colorLocator.get(PicsouColors.YEAR_PERIOD_BG_EVEN_TOP);
-    yearBackgroundEvenBottom = colorLocator.get(PicsouColors.YEAR_PERIOD_BG_EVEN_BOTTOM);
-    yearBackgroundOddTop = colorLocator.get(PicsouColors.YEAR_PERIOD_BG_ODD_TOP);
-    yearBackgroundOddBottom = colorLocator.get(PicsouColors.YEAR_PERIOD_BG_ODD_BOTTOM);
+    yearBackgroundEvenTop = colorLocator.get(PicsouColors.PERIOD_YEAR_BG_EVEN_TOP);
+    yearBackgroundEvenBottom = colorLocator.get(PicsouColors.PERIOD_YEAR_BG_EVEN_BOTTOM);
+    yearBackgroundOddTop = colorLocator.get(PicsouColors.PERIOD_YEAR_BG_ODD_TOP);
+    yearBackgroundOddBottom = colorLocator.get(PicsouColors.PERIOD_YEAR_BG_ODD_BOTTOM);
     pastBackgroundTop = colorLocator.get(PicsouColors.PERIOD_PAST_BG_TOP);
     pastBackgroundBottom = colorLocator.get(PicsouColors.PERIOD_PAST_BG_BOTTOM);
     currentBackgroundTop = colorLocator.get(PicsouColors.PERIOD_CURRENT_BG_TOP);

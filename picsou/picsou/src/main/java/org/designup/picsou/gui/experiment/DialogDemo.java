@@ -41,8 +41,8 @@ public class DialogDemo {
     JFrame frame = window.getFrame();
     directory.add(JFrame.class, frame);
 
-    showSeriesWizardDialog(repository, directory, frame);
-//    showSeriesEditionDialog(repository, directory, frame);
+//    showSeriesWizardDialog(repository, directory, frame);
+    showSeriesEditionDialog(repository, directory, frame);
 //    showCategoriesEditionDialog(repository, directory);
   }
 
@@ -56,6 +56,7 @@ public class DialogDemo {
     SeriesEditionDialog dialog = new SeriesEditionDialog(frame, repository, directory);
     SplitsEditor.show(dialog.getDialog(), directory);
 //    dialog.show(BudgetArea.EXPENSES_ENVELOPE, Collections.singleton(200808));
+    SplitsEditor.show(dialog.getDialog(), directory);
     dialog.show(BudgetArea.RECURRING, Collections.singleton(200808), null);
   }
 
