@@ -28,6 +28,7 @@ import java.io.StringWriter;
 import java.util.*;
 
 public class DefaultGlobRepository implements GlobRepository, IndexSource {
+  private Map<Key, AbstractGlob> pendingDeletions = new HashMap<Key, AbstractGlob>();
   private MapOfMaps<GlobType, Key, Glob> globs = new MapOfMaps<GlobType, Key, Glob>();
   private List<ChangeSetListener> changeListeners = new ArrayList<ChangeSetListener>();
   private List<ChangeSetListener> triggers = new ArrayList<ChangeSetListener>();
@@ -226,7 +227,13 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   private Glob create(GlobType type, Key key, Object[] globValuesArray) {
     checkKeyDoesNotExist(key);
-    final DefaultGlob glob = new DefaultGlob(type, globValuesArray);
+    AbstractGlob glob = pendingDeletions.remove(key);
+    if (glob == null) {
+      glob = new DefaultGlob(type, globValuesArray);
+    }
+    else {
+      glob.setValues(globValuesArray);
+    }
 
     IndexTables indexTables = indexManager.getAssociatedTable(type);
     globs.put(key.getGlobType(), key, glob);
@@ -487,6 +494,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   private void disable(Glob glob) {
     if (glob instanceof AbstractGlob) {
+      pendingDeletions.put(glob.getKey(), (AbstractGlob)glob);
       ((AbstractGlob)glob).dispose();
     }
   }
@@ -617,6 +625,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     for (ChangeSetListener listener : changeListeners) {
       listener.globsChanged(currentChangeSetToDispatch, this);
     }
+    pendingDeletions.clear();
   }
 
   public void addTrigger(ChangeSetListener trigger) {

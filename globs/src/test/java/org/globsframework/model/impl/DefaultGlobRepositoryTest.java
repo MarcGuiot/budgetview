@@ -603,6 +603,33 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     );
   }
 
+  public void testDeleteAndRecreateKeepTheSameInstance() throws Exception {
+    init(
+      "<dummyObject id='1' name='value' />" +
+      "<dummyObject id='2'/>");
+    Key key1 = Key.create(DummyObject.TYPE, 1);
+    Glob glob1 = repository.get(key1);
+    Key key2 = Key.create(DummyObject.TYPE, 2);
+    repository.enterBulkDispatchingMode();
+    repository.deleteAll(DummyObject.TYPE);
+    repository.create(key1, FieldValue.value(DummyObject.VALUE, 3.3));
+    repository.completeBulkDispatchingMode();
+    assertSame(glob1, repository.get(key1));
+    assertEquals(3.3, glob1.get(DummyObject.VALUE));
+  }
+
+  public void testDeleteAndRecreateResetDefaultValue() throws Exception {
+    Key key = Key.create(DummyObjectWithDefaultValues.TYPE, 1);
+    repository = new DefaultGlobRepository();
+    Glob glob = repository.create(key, FieldValue.value(DummyObjectWithDefaultValues.LONG, 23L));
+    repository.enterBulkDispatchingMode();
+    repository.deleteAll(DummyObjectWithDefaultValues.TYPE);
+    repository.create(key);
+    repository.completeBulkDispatchingMode();
+    assertSame(glob, repository.get(key));
+    assertEquals(5L, glob.get(DummyObjectWithDefaultValues.LONG).longValue());
+  }
+
   public void testChangeSetIsResetAtEachStep() throws Exception {
     init(
       "<dummyObject id='1' name='name1'/>" +
