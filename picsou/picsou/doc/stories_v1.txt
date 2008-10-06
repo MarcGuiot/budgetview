@@ -1,60 +1,47 @@
 
-- Bug edition GlobNumericEditor dans SED (en cours)
-
-- Message d'aide dans CategoryChooserDialog
+- Message d'aide dans CategoryChooserDialog + joliesse ?
 - tooltips monthSummaryView / balance
+
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
 - categoryView : afficher un message quand la categorisation est assez avancee (90%) ?
+
 - Afficher SLA au premier lancement (repository vide) + creation compte
-- Edition compte (renommage)
+
+- Creation + Edition de compte
+
 - Mettre en rouge les depassements
 - Mettre en rouge un montant occasional prevu a zero
+
 - TransactionView : Afficher la somme (total ou multi-selection)
 - TransactionView : Filtrage transactions par Compte
 - TransactionView : Filtrage transactions par TransactionType
 - TransactionView : click sur serie d'une planned : ouvrir SED
+- transactionView : colonne compte ?
+
 - Format des montants : mettre des espaces pour separer les milliers
+
 - ordre des series : prevu decroissant
+
 - TransactionDetails : mettre le compte, la date et le montant (faire un seul label ?)
 
 - Fenetre About
 
 - Gestion des licences
 
-=======
-
 - back/forward
 - tests d'undo/redo
-- back/forward ?
-
-- CategorizationView : bug serie qui reste selectionnee apres changement de transaction (?)
-
-- voir redimensionnement TransactionDetails (voir AutoResizingTextArea de JIDE)
-
-----
 
 - BrowsingService sous Linux ?
-- transactionView : colonne compte ?
-
-----
 
 - Largeur CategoryView
 - Messages sur fenetre de repartition
-- Fenetre about avec numero de version (il nous faut de vrais numeros de build)
-- Ajustement de solde : le numero de compte ne rentre pas dans la fenetre
-- Install Windows : Fourmics plutot que fourmics
-- Install Windows : donnnees dans ~/Application Data/Fourmics
-- Install : mettre des numeros de version dans les exes d'install ?
-- Zip linux : faire des sous-repertoires pour faire ressortir le .sh ?
-- Package install / About / etc : fichier licences
+
+- Fichier licences pour Package install / About / etc :
 - Libelles des transation planned : mettre un espace apres le ':'
-- Noms des planned pas mis a jour lors du reload
 - Message upgrade : lien vers http://www.fourmics.com/changes ou versions
-- Look categoryChooser
 - Test de serialisation
 - SED / changement de ProfileType de custom vers 6 mois : seriesBudget remis à 0
 
 - ProgressBar ou autre au login
-- Controler la couleur de selection dans les tables de transactions
 
 - Serialisation des strings : voir charset
