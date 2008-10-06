@@ -155,7 +155,7 @@ public class SplitTransactionDialog {
     LabelCustomizer defaultCustomizer = new SplitLabelCustomizer();
 
     tableView
-      .addColumn(Lang.get("category"),
+      .addColumn(Lang.get("series"),
                  new CompactSeriesStringifier(localDirectory),
                  chain(defaultCustomizer, LabelCustomizers.fontSize(9)))
       .addColumn(Lang.get("label"), LABEL,

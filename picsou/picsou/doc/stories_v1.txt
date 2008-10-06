@@ -35,7 +35,6 @@
 - BrowsingService sous Linux ?
 
 - Largeur CategoryView
-- Messages sur fenetre de repartition
 
 - Fichier licences pour Package install / About / etc :
 - Libelles des transation planned : mettre un espace apres le ':'
