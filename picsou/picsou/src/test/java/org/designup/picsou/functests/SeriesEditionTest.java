@@ -7,6 +7,9 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.uispec4j.Key;
+import org.uispec4j.TextBox;
+
+import javax.swing.*;
 
 public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
@@ -818,8 +821,11 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setManual()
       .setAmount(null)
       .getNameBox().pressKey(Key.A).pressKey(Key.A);
-    edition.selectAllMonths()
-      .getAmount().pressKey(Key.d1).pressKey(Key.d3);
+    TextBox amount = edition.selectAllMonths()
+      .getAmount();
+    JTextField textAmount = (JTextField)amount.getAwtComponent();
+    textAmount.select(0, textAmount.getText().length());
+    amount.pressKey(Key.DELETE).pressKey(Key.d1).pressKey(Key.d3);
     edition.setCategory(MasterCategory.FOOD)
       .checkName("AA")
       .checkAmount("13")
@@ -897,7 +903,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsNotChecked(1, 5, 7);
 
     edition.setFourMonths()
-      .checkMonthIsChecked(1, 5, 9)
+      .checkMonthIsChecked(2, 6, 10)
       .toggleMonth(10)
       .checkMonthIsChecked(10, 2, 6)
       .toggleMonth(3)

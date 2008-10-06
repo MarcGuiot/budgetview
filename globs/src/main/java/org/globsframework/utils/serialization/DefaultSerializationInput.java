@@ -10,11 +10,13 @@ import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.exceptions.EOFIOFailure;
 import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 public class DefaultSerializationInput implements SerializedInput {
@@ -256,6 +258,19 @@ public class DefaultSerializationInput implements SerializedInput {
       return null;
     }
     return new String(bytes);
+  }
+
+  public String readUtf8String() {
+    byte[] bytes = readBytes();
+    if (bytes == null) {
+      return null;
+    }
+    try {
+      return new String(bytes, "UTF-8");
+    }
+    catch (UnsupportedEncodingException e) {
+      throw new InvalidFormat(e);
+    }
   }
 
   public Boolean readBoolean() {

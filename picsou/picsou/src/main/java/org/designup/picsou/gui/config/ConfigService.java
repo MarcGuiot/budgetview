@@ -57,7 +57,7 @@ public class ConfigService {
   private HttpClient httpClient;
   private long localJarVersion = -1;
   private long localConfigVersion = -1;
-  private Long applicationVersion;
+  private String applicationVersion;
   private UserState userState = null;
   private boolean mailSend = false;
   private DownloadThread dowloadJarThread;
@@ -68,7 +68,7 @@ public class ConfigService {
   private byte[] repoId;
   public static int RETRY_PERIOD = 10000;
 
-  public ConfigService(Long applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {
+  public ConfigService(String applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {
     this.currentConfigFile = currentConfigFile;
     Utils.beginRemove();
     URL = System.getProperty(COM_PICSOU_LICENCE_URL);
@@ -93,7 +93,7 @@ public class ConfigService {
     PostMethod postMethod = new PostMethod(url);
     postMethod.setRequestHeader(HEADER_CONFIG_VERSION, Long.toString(localConfigVersion));
     postMethod.setRequestHeader(HEADER_JAR_VERSION, Long.toString(localJarVersion));
-    postMethod.setRequestHeader(HEADER_APPLICATION_VERSION, Long.toString(applicationVersion));
+    postMethod.setRequestHeader(HEADER_APPLICATION_VERSION, applicationVersion);
     postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
     if (signature != null && signature.length() > 1 && mail != null && activationCode != null) {
       postMethod.setRequestHeader(HEADER_MAIL, mail);

@@ -19,6 +19,8 @@ public interface SerializedInput {
 
   String readString();
 
+  String readUtf8String();
+
   Boolean readBoolean();
 
   Long readLong();

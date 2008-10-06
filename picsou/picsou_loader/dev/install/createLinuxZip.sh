@@ -3,18 +3,26 @@
 VERSION=`java -jar ../picsou/obfuscated/fourmics.jar -v -jar`
 JAR_VERSION=`echo $VERSION | grep "Jar version:" | sed -e 's/Jar version://g' | sed -e 's/  *//g'`
 
+SOFT_VERSION=`java -jar ../picsou/obfuscated/fourmics.jar -v -soft | grep "Software version:" |
+              sed -e 's/Software version://g' | sed -e 's/  *//g'`
+
 rm ../picsou/obfuscated/fourmics${JAR_VERSION}.jar
 cp ../picsou/obfuscated/fourmics.jar ../picsou/obfuscated/fourmics${JAR_VERSION}.jar
 
-rm -rf Fourmics Fourmics.zip
-mkdir -p Fourmics
-cp dev/images/fourmics_icon_16.png Fourmics/
-cp dev/images/fourmics_icon_32.png Fourmics/
-cp dev/images/fourmics_icon_48.png Fourmics/
-cp dev/images/fourmics_icon_128.png Fourmics/
-cp dev/install/fourmics.sh Fourmics/
-cp dev/install/license.txt Fourmics/
-cp target/fourmicsloader-1.0.jar Fourmics/
-cp ../picsou/obfuscated/fourmics${JAR_VERSION}.jar Fourmics/
-zip Fourmics.zip Fourmics/fourmics.sh Fourmics/license.txt Fourmics/fourmics${JAR_VERSION}.jar Fourmics/fourmicsloader-1.0.jar Fourmics/fourmics_icon_16.png Fourmics/fourmics_icon_32.png Fourmics/fourmics_icon_48.png Fourmics/fourmics_icon_128.png
-rm -rf Fourmics
+rm -rf fourmics fourmics.zip
+mkdir -p fourmics
+java -jar ../picsou/obfuscated/fourmics.jar -v  > fourmics/version.txt
+cp dev/images/fourmics_icon_16.png fourmics/
+cp dev/images/fourmics_icon_32.png fourmics/
+cp dev/images/fourmics_icon_48.png fourmics/
+cp dev/images/fourmics_icon_128.png fourmics/
+cp dev/install/fourmics.sh fourmics/
+cp dev/install/license.txt fourmics/
+cp target/fourmicsloader-1.0.jar fourmics/
+cp ../picsou/obfuscated/fourmics${JAR_VERSION}.jar fourmics/
+zip fourmics.zip fourmics/fourmics.sh fourmics/license.txt fourmics/fourmics${JAR_VERSION}.jar \
+    fourmics/fourmicsloader-1.0.jar fourmics/fourmics_icon_16.png fourmics/fourmics_icon_32.png \
+    fourmics/fourmics_icon_48.png fourmics/fourmics_icon_128.png fourmics/version.txt
+
+mv fourmics.zip fourmis-${SOFT_VERSION}.zip
+rm -rf fourmics

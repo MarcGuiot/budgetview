@@ -85,7 +85,13 @@ public class TransactionAnalyzerFactory {
       String path = "banks/" + bankFileName;
       InputStream stream = loader.load(path);
       if (stream != null) {
-        InputStreamReader reader = new InputStreamReader(stream);
+        InputStreamReader reader = null;
+        try {
+          reader = new InputStreamReader(stream, "UTF-8");
+        }
+        catch (UnsupportedEncodingException e) {
+          throw new ResourceAccessFailed(e);
+        }
         XmlGlobParser.parse(modelRepository, globRepository, reader, "globs");
       }
       else {

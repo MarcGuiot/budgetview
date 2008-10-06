@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.plaf;
 
+import org.designup.picsou.gui.utils.Gui;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
@@ -45,17 +47,31 @@ public class WavePanelUI extends BasicPanelUI {
     component.setOpaque(false);
     Dimension dimension = component.getSize();
     if (height != dimension.height || width != dimension.width || image == null) {
-      createImage(component, dimension);
+      createImage(g, component, dimension);
     }
-    g.drawImage(image, 0, 0, null);
+    if (image != null) {
+      g.drawImage(image, 0, 0, null);
+    }
   }
 
-  private void createImage(JComponent component, Dimension dimension) {
+  private void createImage(Graphics g, JComponent component, Dimension dimension) {
     width = dimension.width;
     height = dimension.height;
 
-    image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    Graphics2D g2 = image.createGraphics();
+    Graphics2D g2;
+    try {
+      if (!Gui.isWindows()) {
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        g2 = image.createGraphics();
+      }
+      else {
+        g2 = (Graphics2D)g;
+      }
+    }
+    catch (Exception e) {
+      image = null;
+      g2 = (Graphics2D)g;
+    }
 
     Rectangle rect = new Rectangle(0, 0, width, height);
     GradientPaint gradient = new GradientPaint(0, 0, topColor, 0, height, bottomColor, true);
@@ -71,6 +87,9 @@ public class WavePanelUI extends BasicPanelUI {
     transform.setToScale(width * 0.3, height * 2.5);
     transformedShape = path.createTransformedShape(transform);
     drawGradient(g2, transformedShape, new GradientPaint(0, 0, waveColor, 0, height * 2.5f, bottomColor, true));
+    if (image != null) {
+      g2.dispose();
+    }
   }
 
   private void drawGradient(Graphics2D g2d, Shape rect, GradientPaint gradient) {

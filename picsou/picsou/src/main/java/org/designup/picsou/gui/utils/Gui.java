@@ -25,6 +25,7 @@ public class Gui {
   public static final Font DEFAULT_TABLE_FONT_BOLD;
   private static final String MAC_PLATFORM_ID = "Mac OS X";
   private static final String LINUX_PLATFORM_ID = "Linux";
+  private static final String WINDOWS_PLATFORM_ID = "Windows";
 
   public static char EURO = '\u20ac';
 
@@ -35,8 +36,9 @@ public class Gui {
   public static final int DEFAULT_COLUMN_CHAR_WIDTH = 7;
 
   private static Color selectionBackground;
-  private static final boolean IS_MACOSX = ((String)AccessController.doPrivileged(new GetPropertyAction("os.name"))).contains(MAC_PLATFORM_ID);
-  private static final boolean IS_LINUX = ((String)AccessController.doPrivileged(new GetPropertyAction("os.name"))).contains(LINUX_PLATFORM_ID);
+  private static final boolean IS_MACOSX;
+  private static final boolean IS_LINUX;
+  private static final boolean IS_WINDOWS;
   public static final Insets NO_INSETS = new Insets(0, 0, 0, 0);
 
   static {
@@ -57,6 +59,10 @@ public class Gui {
 
     JTable table = new JTable();
     selectionBackground = table.getSelectionBackground();
+    String os = (String)AccessController.doPrivileged(new GetPropertyAction("os.name"));
+    IS_MACOSX = os.contains(MAC_PLATFORM_ID);
+    IS_LINUX = os.contains(LINUX_PLATFORM_ID);
+    IS_WINDOWS = os.contains(WINDOWS_PLATFORM_ID);
   }
 
   private Gui() {
@@ -68,6 +74,10 @@ public class Gui {
 
   public static boolean isLinux() {
     return IS_LINUX;
+  }
+
+  public static boolean isWindows() {
+    return IS_WINDOWS;
   }
 
   public static Font getDefaultFont() {

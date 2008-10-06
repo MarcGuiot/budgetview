@@ -32,6 +32,8 @@ public interface SerializedOutput {
 
   void writeString(String value);
 
+  void writeUtf8String(String value);
+
   void writeGlob(Glob glob);
 
   void writeChangeSet(ChangeSet changeSet);

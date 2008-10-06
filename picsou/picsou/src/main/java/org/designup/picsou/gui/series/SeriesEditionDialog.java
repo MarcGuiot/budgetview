@@ -40,7 +40,8 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -159,6 +160,7 @@ public class SeriesEditionDialog {
 
     amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT)
       .setMinusAllowed(false)
+      .setValueForNull(0.0)
       .setNotifyAtKeyPressed(true);
 
     final GlobTableView budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE,

@@ -3,9 +3,9 @@ package org.globsframework.gui.editors;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
-import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -16,7 +16,6 @@ import org.globsframework.utils.exceptions.InvalidFormat;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
-import javax.swing.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
@@ -30,7 +29,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   private boolean isInitialized = false;
   private boolean notifyAtKeyPressed;
   private DocumentListener keyPressedListener;
-  private boolean notify = true;
+  private boolean isAdjusting = false;
   private String name;
 
   protected AbstractGlobTextEditor(Field field, COMPONENT_TYPE component, GlobRepository repository, Directory directory) {
@@ -132,7 +131,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   }
 
   protected void applyChanges() {
-    if (!notify) {
+    if (isAdjusting) {
       return;
     }
     if (forceNotEditable) {
@@ -191,12 +190,12 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   }
 
   protected void setValue(Object value) {
-    notify = false;
+    isAdjusting = true;
     try {
       textComponent.setText((String)(value == null ? "" : value));
     }
     finally {
-      notify = true;
+      isAdjusting = false;
     }
   }
 
@@ -206,5 +205,13 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
 
   public boolean isNotifyAtKeyPressed() {
     return notifyAtKeyPressed;
+  }
+
+  public boolean isAdjusting() {
+    return isAdjusting;
+  }
+
+  public void setAdjusting(boolean adjusting) {
+    this.isAdjusting = adjusting;
   }
 }

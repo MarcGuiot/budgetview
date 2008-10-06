@@ -3,10 +3,12 @@ package org.globsframework.utils.serialization;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.*;
+import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVisitor {
@@ -132,6 +134,20 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
     }
     else {
       writeBytes(value.getBytes());
+    }
+  }
+
+  public void writeUtf8String(String value) {
+    if (value == null) {
+      writeBytes(null);
+    }
+    else {
+      try {
+        writeBytes(value.getBytes("UTF-8"));
+      }
+      catch (UnsupportedEncodingException e) {
+        throw new InvalidFormat(e);
+      }
     }
   }
 

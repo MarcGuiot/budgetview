@@ -115,6 +115,16 @@ public class SerializationInputChecker implements SerializedInput {
     }
   }
 
+  public String readUtf8String() {
+    String value = serializedInput.readString();
+    if ("StringUtf8".equals(value)) {
+      return serializedInput.readString();
+    }
+    else {
+      throw new UnexpectedApplicationState("String expected but got " + value);
+    }
+  }
+
   public Boolean readBoolean() {
     String value = serializedInput.readString();
     if ("Boolean".equals(value)) {
