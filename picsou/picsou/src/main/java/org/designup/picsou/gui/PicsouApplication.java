@@ -216,7 +216,7 @@ public class PicsouApplication {
     return getSystemValue(DEFAULT_ADDRESS_PROPERTY, "");
   }
 
-  public boolean isDataInMemory() {
+  public static boolean isDataInMemory() {
     return "true".equalsIgnoreCase(System.getProperty(IS_DATA_IN_MEMORY));
   }
 

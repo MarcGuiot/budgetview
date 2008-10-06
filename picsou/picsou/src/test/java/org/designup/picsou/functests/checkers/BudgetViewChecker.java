@@ -1,9 +1,10 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
-import org.uispec4j.TextBox;
+import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
@@ -129,6 +130,17 @@ public class BudgetViewChecker extends DataChecker {
       Button button = new Button((JButton)panel.getComponent(nameIndex + OBSERVED_LABEL_OFFSET));
       button.click();
     }
+
+    public BudgetAreaChecker checkOrder(String... seriesNames) {
+      Panel budgetPanel = window.getPanel(panelName);
+      UIComponent[] uiComponents = budgetPanel.getUIComponents(Button.class, "seriesName");
+      Assert.assertEquals(uiComponents.length, seriesNames.length);
+      for (int i = 0; i < uiComponents.length; i++) {
+        UIComponent component = uiComponents[i];
+        UISpecAssert.assertThat(((Button)component).textEquals(seriesNames[i]));
+      }
+      return this;
+    }
   }
 
   public class OccasionalAreaChecker {
@@ -151,7 +163,7 @@ public class BudgetViewChecker extends DataChecker {
       TextBox totalPlanned = budgetPanel.getTextBox("totalPlannedAmount");
       String amount = BudgetViewChecker.this.toString(free);
       if (free < 0.0) {
-        amount = "0";
+        amount = "0.0";
       }
       UISpecAssert.assertTrue(totalPlanned.textEquals(amount));
     }
@@ -174,6 +186,17 @@ public class BudgetViewChecker extends DataChecker {
       Panel budgetPanel = window.getPanel("occasionalBudgetView");
       UISpecAssert.assertTrue(budgetPanel.containsUIComponent(TextBox.class, "categoryName." + getCategoryName(master)));
       budgetPanel.getButton("amount." + getCategoryName(master)).click();
+    }
+
+    public OccasionalAreaChecker checkOrder(MasterCategory... categories) {
+      Panel budgetPanel = window.getPanel("occasionalBudgetView");
+      UIComponent[] uiComponents = budgetPanel.getUIComponents(TextBox.class, "categoryName");
+      Assert.assertEquals(uiComponents.length, categories.length);
+      for (int i = 0; i < uiComponents.length; i++) {
+        UIComponent component = uiComponents[i];
+        UISpecAssert.assertThat(((TextBox)component).textEquals(getCategoryName(categories[i])));
+      }
+      return this;
     }
   }
 }

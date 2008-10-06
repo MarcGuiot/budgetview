@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.model.OccasionalSeriesStat;
+import org.designup.picsou.gui.model.PeriodOccasionalSeriesStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Category;
@@ -12,10 +13,10 @@ import org.designup.picsou.model.Series;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
-import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
@@ -26,16 +27,20 @@ import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 
 public class OccasionalSeriesView extends View {
   private String name;
   private GlobMatcher totalMatcher;
   private Set<Integer> currentMonths = Collections.emptySet();
+  private GlobList currentStat = GlobList.EMPTY;
 
   protected OccasionalSeriesView(String name, GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -57,12 +62,12 @@ public class OccasionalSeriesView extends View {
                                                       totalMatcher, repository, directory);
     builder.add("totalGauge", gaugeView.getComponent());
 
-    final GlobRepeat repeat =
+    final Repeat<Glob> repeat =
       builder.addRepeat("seriesRepeat",
-                        Category.TYPE,
-                        GlobMatchers.NONE,
+                        new EmptyGlobList(),
                         new RepeatComponentFactory<Glob>() {
-                          public void registerComponents(RepeatCellBuilder cellBuilder, Glob master) {
+                          public void registerComponents(RepeatCellBuilder cellBuilder, Glob stat) {
+                            Glob master = repository.findLinkTarget(stat, PeriodOccasionalSeriesStat.CATEGORY);
                             final GlobLabelView category = GlobLabelView.init(Category.TYPE, repository, directory)
                               .forceSelection(master);
                             JLabel label = category.getComponent();
@@ -91,7 +96,7 @@ public class OccasionalSeriesView extends View {
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsCreationsOrDeletions(OccasionalSeriesStat.TYPE)) {
+        if (changeSet.containsChanges(OccasionalSeriesStat.TYPE)) {
           updateFilterAndSelection(repeat);
         }
       }
@@ -103,13 +108,49 @@ public class OccasionalSeriesView extends View {
     parentBuilder.add(name, builder);
   }
 
-  private void updateFilterAndSelection(GlobRepeat repeat) {
+  private void updateFilterAndSelection(final Repeat<Glob> repeat) {
     GlobList stats =
       repository.getAll(OccasionalSeriesStat.TYPE, GlobMatchers.contained(OccasionalSeriesStat.MONTH, currentMonths));
-    selectionService.select(stats, OccasionalSeriesStat.TYPE);
 
-    Set<Integer> masterIds = stats.getValueSet(OccasionalSeriesStat.CATEGORY);
-    repeat.setFilter(GlobMatchers.contained(Category.ID, masterIds));
+    Set<Glob> newStats = new HashSet<Glob>();
+    repository.enterBulkDispatchingMode();
+    try {
+      repository.deleteAll(PeriodOccasionalSeriesStat.TYPE);
+      for (Glob stat : stats) {
+        Glob periodeStat = repository.findOrCreate(Key.create(PeriodOccasionalSeriesStat.TYPE,
+                                                              stat.get(OccasionalSeriesStat.CATEGORY)));
+        newStats.add(periodeStat);
+        repository.update(periodeStat.getKey(), PeriodOccasionalSeriesStat.AMOUNT,
+                          periodeStat.get(PeriodOccasionalSeriesStat.AMOUNT) +
+                          stat.get(OccasionalSeriesStat.AMOUNT));
+      }
+    }
+    finally {
+      repository.completeBulkDispatchingMode();
+    }
+    GlobList orderedStat = new GlobList(newStats);
+    orderedStat.sort(new Comparator<Glob>() {
+      public int compare(Glob o1, Glob o2) {
+        return new Double(Math.abs(o2.get(PeriodOccasionalSeriesStat.AMOUNT)))
+          .compareTo(Math.abs(o1.get(PeriodOccasionalSeriesStat.AMOUNT)));
+      }
+    });
+
+    GlobUtils.diff(currentStat, orderedStat, new GlobUtils.DiffFunctor<Glob>() {
+      public void add(Glob glob, int index) {
+        repeat.insert(glob, index);
+      }
+
+      public void remove(int index) {
+        repeat.remove(index);
+      }
+
+      public void move(int previousIndex, int newIndex) {
+        repeat.move(previousIndex, newIndex);
+      }
+    });
+    currentStat = orderedStat;
+    selectionService.select(newStats, PeriodOccasionalSeriesStat.TYPE);
   }
 
   private String stringify(BudgetArea budgetArea) {
@@ -130,7 +171,7 @@ public class OccasionalSeriesView extends View {
       public String toString(GlobList list, GlobRepository repository) {
         String amount = globListStringifier.toString(list, repository);
         if (amount.startsWith("-")) {
-          amount = "0";
+          amount = "0.0";
         }
         return amount;
       }
@@ -139,10 +180,10 @@ public class OccasionalSeriesView extends View {
   }
 
   private GlobButtonView addAmountButton(String name, Glob master, RepeatCellBuilder cellBuilder, String amountName) {
-    GlobListStringifier stringifier = GlobListStringifiers.sum(decimalFormat, OccasionalSeriesStat.AMOUNT);
-    GlobButtonView view = GlobButtonView.init(OccasionalSeriesStat.TYPE, repository, directory, stringifier,
+    GlobListStringifier stringifier = GlobListStringifiers.sum(decimalFormat, PeriodOccasionalSeriesStat.AMOUNT);
+    GlobButtonView view = GlobButtonView.init(PeriodOccasionalSeriesStat.TYPE, repository, directory, stringifier,
                                               new NavigateToTransactions(master));
-    JButton label = view.setFilter(GlobMatchers.linkedTo(master, OccasionalSeriesStat.CATEGORY)).getComponent();
+    JButton label = view.setFilter(GlobMatchers.linkedTo(master, PeriodOccasionalSeriesStat.CATEGORY)).getComponent();
     cellBuilder.add(name, label);
     label.setName(amountName);
     return view;
@@ -155,7 +196,7 @@ public class OccasionalSeriesView extends View {
       this.masterCategory = masterCategory;
     }
 
-    public void run(GlobList occasionalSeriesStatList, GlobRepository repository) {
+    public void run(GlobList periodOccasionalSeriesStatList, GlobRepository repository) {
       NavigationService navigationService = directory.get(NavigationService.class);
       navigationService.gotoData(BudgetArea.OCCASIONAL, masterCategory);
     }

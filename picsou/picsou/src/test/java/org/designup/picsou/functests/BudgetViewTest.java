@@ -561,4 +561,37 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categories.checkSelection(MasterCategory.ALL);
     series.checkExpanded("Envelopes", true);
   }
+
+  public void testSeriesAreOrder() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .addTransaction("2008/07/10", -50.00, "Monoprix")
+      .addTransaction("2008/07/05", -29.00, "Free Telecom")
+      .load();
+
+    views.selectCategorization();
+    categorization.setEnvelope("Free Telecom", "tel", MasterCategory.TELECOMS, true);
+    categorization.setEnvelope("Auchan", "Auchan", MasterCategory.FOOD, true);
+    categorization.setEnvelope("Monoprix", "Monop", MasterCategory.FOOD, true);
+
+    views.selectBudget();
+    budgetView.envelopes.checkOrder("Auchan", "Monop", "tel");
+  }
+
+  public void testOccasionalAreOrder() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .addTransaction("2008/07/10", -50.00, "Monoprix")
+      .addTransaction("2008/07/05", -29.00, "Free Telecom")
+      .load();
+
+    views.selectCategorization();
+    categorization.setOccasional("Free Telecom", MasterCategory.TELECOMS);
+    categorization.setOccasional("Auchan", MasterCategory.FOOD);
+    categorization.setOccasional("Monoprix", MasterCategory.CLOTHING);
+
+    views.selectBudget();
+    budgetView.occasional.checkOrder(MasterCategory.FOOD, MasterCategory.CLOTHING, MasterCategory.TELECOMS);
+  }
+
 }
