@@ -40,7 +40,7 @@ public class OfxExporter {
       if (!Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT))) {
         writer.writeBankMsgHeader(account.get(Account.BANK_ENTITY), account.get(Account.BRANCH_ID), account.get(Account.NUMBER));
         writeTransactions(account);
-        Date updateDate = account.get(Account.UPDATE_DATE);
+        Date updateDate = account.get(Account.BALANCE_DATE);
         writer.writeBankMsgFooter(account.get(Account.BALANCE), toString(updateDate != null ? updateDate : new Date()));
       }
     }
@@ -52,7 +52,7 @@ public class OfxExporter {
       if (Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT))) {
         writer.writeCardMsgHeader(account.get(Account.NUMBER));
         writeTransactions(account);
-        writer.writeCardMsgFooter(account.get(Account.BALANCE), toString(account.get(Account.UPDATE_DATE)));
+        writer.writeCardMsgFooter(account.get(Account.BALANCE), toString(account.get(Account.BALANCE_DATE)));
       }
     }
     writer.writeFooter();

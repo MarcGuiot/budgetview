@@ -8,6 +8,7 @@ import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class TransactionRendererColors implements ColorChangeListener {
@@ -54,10 +55,6 @@ public class TransactionRendererColors implements ColorChangeListener {
     return categoryColor;
   }
 
-  public Color getSelectionBgColor() {
-    return selectionBgColor;
-  }
-
   public Color getTransactionSelectedTextColor() {
     return transactionSelectedTextColor;
   }
@@ -87,7 +84,7 @@ public class TransactionRendererColors implements ColorChangeListener {
 
   public void setBackground(Component component, boolean isSelected, int row) {
     if (isSelected) {
-      component.setBackground(getSelectionBgColor());
+      component.setBackground(selectionBgColor);
     }
     else {
       component.setBackground((row % 2) == 0 ? getEvenRowsBgColor() : getOddRowsBgColor());

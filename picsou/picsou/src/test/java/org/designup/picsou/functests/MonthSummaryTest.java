@@ -159,7 +159,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
 
     balanceSummary
-      .checkMessage("Balance at end of the month")
+      .checkMessage("End of month balance")
       .checkTotal(1529.90)
       .checkNothingShown();
 
@@ -179,7 +179,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkOccasional(0);
 
     balanceSummary.checkEnvelope(-80)
-      .checkMessage("Balance")
+      .checkMessage("Estimated end of month balance")
       .checkBalance(0.)
       .checkFixed(0)
       .checkEnvelope(-80)

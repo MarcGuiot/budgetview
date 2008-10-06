@@ -32,6 +32,7 @@ public class TitleView extends View implements GlobSelectionListener {
 
   public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("title", label);
+    updateLabel();
   }
 
   public void selectionUpdated(GlobSelection selection) {

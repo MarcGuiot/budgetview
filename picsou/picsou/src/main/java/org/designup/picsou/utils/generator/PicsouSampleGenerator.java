@@ -133,7 +133,7 @@ public class PicsouSampleGenerator {
                                   value(Account.BRANCH_ID, BRANCH_ID),
                                   value(Account.NUMBER, accountNumber),
                                   value(Account.IS_CARD_ACCOUNT, isCardAccount),
-                                  value(Account.UPDATE_DATE, new Date()),
+                                  value(Account.BALANCE_DATE, new Date()),
                                   value(Account.BALANCE, -1050.12))
       .get(Account.ID);
   }

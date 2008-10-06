@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.Locale;
 
 public abstract class FunctionalTestCase extends UISpecTestCase {
-
+  
   static {
     TestUtils.clearTmpDir();
     Locale.setDefault(Locale.ENGLISH);

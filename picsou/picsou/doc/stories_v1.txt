@@ -5,7 +5,6 @@
 - tooltips monthSummaryView / balance
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
 - categoryView : afficher un message quand la categorisation est assez avancee (90%) ?
-- AccountEditionDialog : Enter pour valider le montant et fermer la fenetre
 - Afficher SLA au premier lancement (repository vide) + creation compte
 - Edition compte (renommage)
 - Mettre en rouge les depassements
@@ -18,6 +17,8 @@
 - ordre des series : prevu decroissant
 - TransactionDetails : mettre le compte, la date et le montant (faire un seul label ?)
 
+- Fenetre About
+
 - Gestion des licences
 
 =======
@@ -25,7 +26,6 @@
 - back/forward
 - tests d'undo/redo
 - back/forward ?
-- import QIF avec creation de compte : joliesse panneau + selection auto
 
 - CategorizationView : bug serie qui reste selectionnee apres changement de transaction (?)
 
@@ -33,13 +33,12 @@
 
 ----
 
-- navigateur sous Linux ?
+- BrowsingService sous Linux ?
 - transactionView : colonne compte ?
 
 ----
 
 - Largeur CategoryView
-- Message d'aide pour BalanceEditionDialog initiale (à l'import QIF) + look
 - Messages sur fenetre de repartition
 - Fenetre about avec numero de version (il nous faut de vrais numeros de build)
 - Ajustement de solde : le numero de compte ne rentre pas dans la fenetre
@@ -54,7 +53,8 @@
 - Look categoryChooser
 - Test de serialisation
 - SED / changement de ProfileType de custom vers 6 mois : seriesBudget remis à 0
-- Libelle "Solde" trop sec sur BalanceSummaryView
-- Plus de titre quand on arrive dans l'appli
+
 - ProgressBar ou autre au login
 - Controler la couleur de selection dans les tables de transactions
+
+- Serialisation des strings : voir charset

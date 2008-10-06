@@ -19,13 +19,13 @@
 
   <column name="balanceSummary">
 
-    <label text="$balancesummary.title" styleClass="blockTitle"/>
+    <label text="$balanceSummary.title" styleClass="blockTitle"/>
 
     <panel styleClass="block">
 
       <column styleClass="innerBlock">
 
-        <label ref="amountSummaryLabel" styleClass="totalAmountTitle"/>
+        <label ref="amountSummaryLabel" styleClass="totalAmountTitle" autoHideSource="totalLabel"/>
         <label ref="totalLabel" styleClass="totalAmount"/>
 
         <panel styleClass="innerBlockBackground">

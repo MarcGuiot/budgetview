@@ -5,10 +5,6 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 
 public class TitleDisplayTest extends LoggedInFunctionalTestCase {
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
-
   public void testViewNames() throws Exception {
 
     title.checkContent("Initialization");

@@ -60,22 +60,6 @@ public class PicsouDialog extends JDialog {
     return dialog;
   }
 
-  private void setPanelAndButton(JPanel panel, Action closeAction) {
-    this.closeAction = closeAction;
-    JPanel contentPane = GridBagBuilder.init()
-      .add(panel, 0, 0, 2, 1, Gui.NO_INSETS)
-      .add(Box.createHorizontalGlue(), 0, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER)
-      .add(createButton(closeAction), 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS)
-      .getPanel();
-    setContentPane(contentPane);
-  }
-
-  private JButton createButton(Action action) {
-    JButton button = new JButton(action);
-    button.setOpaque(false);
-    return button;
-  }
-
   public static PicsouDialog createWithButtons(Window owner, JPanel panel, Action ok, Action cancel, Directory directory) {
     PicsouDialog dialog = create(owner, directory);
     dialog.addPanelWithButtons(panel, ok, cancel);
@@ -144,6 +128,22 @@ public class PicsouDialog extends JDialog {
     }
   }
 
+  private void setPanelAndButton(JPanel panel, Action closeAction) {
+    this.closeAction = closeAction;
+    JPanel contentPane = GridBagBuilder.init()
+      .add(panel, 0, 0, 2, 1, Gui.NO_INSETS)
+      .add(Box.createHorizontalGlue(), 0, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER)
+      .add(createButton(closeAction), 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS)
+      .getPanel();
+    setContentPane(contentPane);
+  }
+
+  private JButton createButton(Action action) {
+    JButton button = new JButton(action);
+    button.setOpaque(false);
+    return button;
+  }
+
   private void adjustSizes(JButton cancelButton, JButton okButton) {
     Dimension preferredSize = getWidest(okButton.getPreferredSize(), cancelButton.getPreferredSize());
     okButton.setPreferredSize(preferredSize);
@@ -191,6 +191,10 @@ public class PicsouDialog extends JDialog {
     JRootPane rootPane = new JRootPane();
     GuiUtils.addShortcut(rootPane, "ESCAPE", new CloseAction());
     return rootPane;
+  }
+
+  public void disableEscShortcut() {
+    GuiUtils.removeShortcut(getRootPane(), "ESCAPE", KeyStroke.getKeyStroke("ESCAPE"));
   }
 
   public void setOpenRequestIsManaged(boolean openRequestIsManaged) {

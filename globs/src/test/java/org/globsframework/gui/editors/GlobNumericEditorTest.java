@@ -11,6 +11,7 @@ import org.uispec4j.TextBox;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Locale;
+import java.awt.event.ActionEvent;
 
 public class GlobNumericEditorTest extends GuiComponentTestCase {
   protected Glob glob;
@@ -229,6 +230,25 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     selectionService.select(Arrays.asList(glob1), DummyObject.TYPE);
     changeListener.assertNoChanges();
     assertThat(textBox.textEquals("0"));
+  }
+
+  public void testValidateActionIsCalledAfterLastUpdate() throws Exception {
+    JTextField textField =
+      GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
+        .setValidationAction(new AbstractAction() {
+          public void actionPerformed(ActionEvent e) {
+            repository.update(glob.getKey(), DummyObject.VALUE, 3.14);
+          }
+        })
+        .setNotifyAtKeyPressed(true)
+        .getComponent();
+    TextBox textBox = new TextBox(textField);
+
+    selectionService.select(glob);
+    textBox.setText("8.8");
+    changeListener.assertLastChangesEqual(
+      "<update type='dummyObject' id='1' value='3.14' _value='8.8'/>");
+
   }
 
   protected void tearDown() throws Exception {

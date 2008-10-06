@@ -114,11 +114,11 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     if (lastMonth < currentMonth.get(CurrentMonth.MONTH_ID)) {
       contentPanel.setVisible(false);
       total.setText(PicsouDescriptionService.toString(balanceAmount));
-      amountSummaryLabel.setText(Lang.get("balanceSummary.title.end.of.month"));
+      amountSummaryLabel.setText(Lang.get("balanceSummary.title.past"));
       return;
     }
 
-    amountSummaryLabel.setText(Lang.get("balancesummary.title"));
+    amountSummaryLabel.setText(Lang.get("balanceSummary.title.future"));
 
     String label = PicsouDescriptionService.toString(balanceAmount);
     balance.setText(label);
@@ -181,10 +181,12 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     special.setText(PicsouDescriptionService.toString(specialAmount));
     envelope.setText(PicsouDescriptionService.toString(envelopeAmount));
     total.setText(PicsouDescriptionService.toString(totalAmount));
+    total.setVisible(true);
     contentPanel.setVisible(true);
   }
 
   private void hide() {
+    total.setVisible(false);
     total.setText("");
     contentPanel.setVisible(false);
   }

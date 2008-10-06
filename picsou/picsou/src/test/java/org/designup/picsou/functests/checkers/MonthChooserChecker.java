@@ -158,8 +158,7 @@ public class MonthChooserChecker extends DataChecker {
   }
 
   public void pressEscapeKey() {
-    final JDialog jDialog = (JDialog)dialog.getAwtComponent();
-    KeyUtils.pressKey(jDialog.getRootPane(), Key.ESCAPE);
+    pressEsc(dialog);
     assertFalse(dialog.isVisible());
   }
 

@@ -9,6 +9,10 @@ import java.awt.*;
  * This can speed up the execution of your tests. */
 public class DummyRepaintManager extends RepaintManager {
 
+  public static boolean isInstalled() {
+    return RepaintManager.currentManager(null) instanceof DummyRepaintManager;
+  }
+
   public static void init() {
     RepaintManager.setCurrentManager(new DummyRepaintManager());
   }

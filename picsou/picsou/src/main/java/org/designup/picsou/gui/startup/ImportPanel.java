@@ -9,6 +9,7 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.importer.ImportSession;
 import org.designup.picsou.model.*;
@@ -187,6 +188,7 @@ public class ImportPanel {
 
     JTable transactionTable = tableView.getComponent();
     dateRenderer.setTable(tableView);
+    PicsouColors.setSelectionColors(transactionTable, directory);
     Gui.setColumnSizes(transactionTable, COLUMN_SIZES);
 
     builder2.add("table", transactionTable);
@@ -480,7 +482,8 @@ public class ImportPanel {
     for (Integer accountId : accounts) {
       Glob account = localRepository.get(Key.create(Account.TYPE, accountId));
       if (account.get(Account.BALANCE) == null) {
-        BalanceEditionDialog dialog = new BalanceEditionDialog(this.dialog, localRepository, localDirectory, account);
+        BalanceEditionDialog dialog =
+          new BalanceEditionDialog(account, true, localRepository, localDirectory, this.dialog);
         dialog.show();
       }
     }

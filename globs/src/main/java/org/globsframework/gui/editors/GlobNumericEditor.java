@@ -8,7 +8,6 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;
 
-import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -17,18 +16,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 
-public class GlobNumericEditor extends AbstractGlobTextEditor<JTextField, GlobNumericEditor> {
+public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEditor> {
   private boolean isMinusAllowed = true;
   private boolean invertValue = false;
   private Object valueForNull = null;
 
   public static GlobNumericEditor init(Field field, GlobRepository repository, Directory directory) {
-    return new GlobNumericEditor(field, repository, directory, new JTextField());
+    return new GlobNumericEditor(field, repository, directory);
   }
 
-  private GlobNumericEditor(Field field, GlobRepository repository,
-                            Directory directory, JTextField component) {
-    super(field, component, repository, directory);
+  private GlobNumericEditor(Field field, GlobRepository repository, Directory directory) {
+    super(field, repository, directory);
   }
 
   public GlobNumericEditor setMinusAllowed(boolean minusAllowed) {
