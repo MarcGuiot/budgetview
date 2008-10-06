@@ -16,6 +16,7 @@ import org.globsframework.utils.exceptions.InvalidFormat;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
+import javax.swing.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
@@ -30,6 +31,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   private boolean notifyAtKeyPressed;
   private DocumentListener keyPressedListener;
   private boolean notify = true;
+  private String name;
 
   protected AbstractGlobTextEditor(Field field, COMPONENT_TYPE component, GlobRepository repository, Directory directory) {
     super(field.getGlobType(), repository, directory);
@@ -47,14 +49,23 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     return (PARENT)this;
   }
 
+  public PARENT setName(String name) {
+    this.name = name;
+    return (PARENT)this;
+  }
+
   private void initTextComponent() {
-    textComponent.setName(field.getName());
+    textComponent.setName(name != null ? name : field.getName());
     textComponent.setEnabled(false);
     textComponent.setEditable(false);
     textComponent.setText("");
+    registerActions();
     registerFocusLostListener();
     registerChangeListener();
     registerKeyPressedListener();
+  }
+
+  protected void registerActions() {
   }
 
   private void registerKeyPressedListener() {

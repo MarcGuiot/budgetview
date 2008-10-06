@@ -24,6 +24,12 @@ public class GuiUtils {
     rootPane.getActionMap().put(command, action);
   }
 
+  public static void removeShortcut(JRootPane rootPane, String command, KeyStroke stroke) {
+    InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    inputMap.remove(stroke);
+    rootPane.getActionMap().remove(command);
+  }
+
   public static void drawStringUnderlineCharAt(Graphics g, String text, int underlinedIndex, int x, int y) {
     g.drawString(text, x, y);
     if (underlinedIndex >= 0 && underlinedIndex < text.length()) {
