@@ -47,12 +47,11 @@
 - Install Windows : donnnees dans ~/Application Data/Fourmics
 - Install : mettre des numeros de version dans les exes d'install ?
 - Zip linux : faire des sous-repertoires pour faire ressortir le .sh ?
-- Zip linux : fichier licences
+- Package install / About / etc : fichier licences
 - Libelles des transation planned : mettre un espace apres le ':'
-- Message upgrade : lien vers http://www.fourmics.com/changes ou versions
-- BudgetView: navigation des occasional
-- Look categoryChooser
 - Noms des planned pas mis a jour lors du reload
+- Message upgrade : lien vers http://www.fourmics.com/changes ou versions
+- Look categoryChooser
 - Test de serialisation
 - SED / changement de ProfileType de custom vers 6 mois : seriesBudget remis à 0
 - Libelle "Solde" trop sec sur BalanceSummaryView
