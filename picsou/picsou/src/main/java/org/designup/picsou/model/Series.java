@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.*;
@@ -19,10 +20,14 @@ public class Series {
   @Key
   public static IntegerField ID;
 
-  /** @deprecated TODO: migrer LABEL dans NAME, et garder NAME */
+  /**
+   * @deprecated TODO: migrer LABEL dans NAME, et garder NAME
+   */
   public static StringField LABEL;
 
-  /** @deprecated TODO: migrer LABEL dans NAME, et garder NAME */
+  /**
+   * @deprecated TODO: migrer LABEL dans NAME, et garder NAME
+   */
   @NamingField
   public static StringField NAME;
 
@@ -126,6 +131,10 @@ public class Series {
   public static BooleanField[] getMonths() {
     return new BooleanField[]{JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST,
                               SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER};
+  }
+
+  public static String getPlannedTransactionLabel(FieldValues series) {
+    return Lang.get("transaction.planned", series.get(Series.LABEL));
   }
 
   public static class Serializer implements PicsouGlobSerializer {

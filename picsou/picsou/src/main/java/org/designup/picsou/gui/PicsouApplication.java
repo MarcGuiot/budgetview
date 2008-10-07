@@ -47,11 +47,11 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "0.9";
+  public static final String APPLICATION_VERSION = "0.10";
   public static final Long JAR_VERSION = 3L;
   public static final Long BANK_CONFIG_VERSION = 3L;
   private static final String JAR_DIRECTORY = "jars";
-  private static final String CONFIG_DIRECTORY = "configs";
+  private static final String BANK_CONFIG_DIRECTORY = "configs";
   public static final String APPNAME = "fourmics";
   private static final String CONFIG = "config";
   private static final Pattern CONFIG_FILTER = Pattern.compile(CONFIG + "[0-9][0-9]*" + "\\.jar");
@@ -126,7 +126,7 @@ public class PicsouApplication {
       if ("true".equalsIgnoreCase(sout)) {
         return;
       }
-      File logFilePath = new File(getPicsouPath() + "/" + "logs");
+      File logFilePath = new File(getDataPath() + "/" + "logs");
       logFilePath.mkdirs();
       File logFile = new File(logFilePath, "log.txt");
       if (logFile.exists() && logFile.length() > 2 * 1024 * 1024) {
@@ -221,10 +221,10 @@ public class PicsouApplication {
   }
 
   public static String getLocalPrevaylerPath() {
-    return getPicsouPath() + "/data";
+    return getDataPath() + "/data";
   }
 
-  public static String getPicsouPath() {
+  public static String getDataPath() {
     if (Gui.isMacOSX() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
       return System.getProperty("user.home") + "/Library/Application Support/Fourmics";
     }
@@ -234,16 +234,16 @@ public class PicsouApplication {
     return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.fourmics");
   }
 
-  public static String getPicsouConfigPath() {
-    return getPicsouPath() + "/" + PicsouApplication.CONFIG_DIRECTORY;
+  public static String getBankConfigPath() {
+    return getDataPath() + "/" + PicsouApplication.BANK_CONFIG_DIRECTORY;
   }
 
-  public static String getPicsouJarPath() {
-    return getPicsouPath() + "/" + PicsouApplication.JAR_DIRECTORY;
+  public static String getJarPath() {
+    return getDataPath() + "/" + PicsouApplication.JAR_DIRECTORY;
   }
 
   public static void clearRepository() {
-    Files.deleteSubtree(new File(getPicsouPath()));
+    Files.deleteSubtree(new File(getDataPath()));
   }
 
   public static void clearRepositoryIfNeeded() {
@@ -297,7 +297,7 @@ public class PicsouApplication {
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
 
     Long localConfigVersion;
-    String configPath = getPicsouConfigPath();
+    String configPath = getBankConfigPath();
     File lastJar = findLastJar(configPath);
     if (lastJar != null) {
       localConfigVersion = extractVersion(lastJar.getName());

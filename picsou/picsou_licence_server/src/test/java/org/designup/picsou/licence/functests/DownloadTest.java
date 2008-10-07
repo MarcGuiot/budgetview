@@ -84,7 +84,7 @@ public class DownloadTest extends LicenseTestCase {
     transaction.initContent()
       .add("10/09/2008", TransactionType.VIREMENT, "GOOD HEADER", "", -100.00)
       .check();
-    String path = PicsouApplication.getPicsouPath();
+    String path = PicsouApplication.getDataPath();
     File pathToJar = new File(path + "/jars");
     String[] jars = pathToJar.list(new FilenameFilter() {
       public boolean accept(File dir, String name) {

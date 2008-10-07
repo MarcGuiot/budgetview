@@ -109,6 +109,10 @@ public class TransactionChecker extends ViewChecker {
     return new TransactionAmountChecker();
   }
 
+  public void checkSelectedRow(int row) {
+    assertTrue(table.rowIsSelected(row));
+  }
+
   public class TransactionAmountChecker {
     java.util.List<Object[]> expected = new ArrayList<Object[]>();
 

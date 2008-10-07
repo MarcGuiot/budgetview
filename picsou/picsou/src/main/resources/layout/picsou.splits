@@ -49,6 +49,20 @@
            foreground="periods.button.normal" preferredSize="(20,14)" margin="2" marginBottom="10"/>
     <style selector="button.doublePeriodButton" opaque="false" borderPainted="false" anchor="south"
            foreground="periods.button.normal" preferredSize="(20,10)" margin="2" marginBottom="12"/>
+
+    <!-- Back/forward buttons -->
+    <ui name="backArrow" class="org.designup.picsou.gui.components.ArrowButtonUI"
+        rotation="180" doubleArrow="false"
+        rolloverColor="backforward.rollover" pressedColor="backforward.pressed" disabledColor="backforward.disabled"/>
+    <ui name="forwardArrow" class="org.designup.picsou.gui.components.ArrowButtonUI"
+        rotation="0" doubleArrow="false"
+        rolloverColor="backforward.rollover" pressedColor="backforward.pressed" disabledColor="backforward.disabled"/>
+    <style selector="button.backforward"
+           preferredSize="(20,16)" foreground="backforward.normal" 
+           fill="none" margin="3" weightX="0"/>
+    <style selector="button#back" ui="backArrow"/>
+    <style selector="button#forward" ui="forwardArrow"/>
+
   </styles>
 
   <panel styleClass="main" ui="wave">
@@ -58,6 +72,8 @@
         <label ref="title" opaque="false" font="Arial,bold,22"
                horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
         <filler fill="horizontal"/>
+        <button name="back" action="back" styleClass="backforward" tooltipText="$back"/>
+        <button name="forward" action="forward" styleClass="backforward" tooltipText="$forward"/>
         <toggleButton ref="homeCardToggle" styleClass="masterViewSelector"/>
         <toggleButton ref="budgetCardToggle" styleClass="masterViewSelector"/>
         <toggleButton ref="analysisCardToggle" styleClass="masterViewSelector"/>

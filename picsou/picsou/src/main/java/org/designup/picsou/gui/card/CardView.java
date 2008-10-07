@@ -21,7 +21,7 @@ public class CardView extends View implements GlobSelectionListener {
   private CardHandler mainCards;
   private CardHandler analysisCards;
 
-  private Card lastSelectedMasterCard = Card.HOME;
+  private Card lastSelectedMasterCard = NavigationService.INITIAL_CARD;
   private Card lastSelectedSubCard = Card.DATA;
   private JToggleButton[] toggles = new JToggleButton[Card.values().length];
 
@@ -52,7 +52,31 @@ public class CardView extends View implements GlobSelectionListener {
       toggles[card.getId()] = toggle;
     }
 
-    showCard(Card.HOME);
+    addBackForwardActions(builder);
+
+    showCard(NavigationService.INITIAL_CARD);
+  }
+
+  private void addBackForwardActions(GlobsPanelBuilder builder) {
+    builder.add("back", new NavigationAction(directory) {
+      protected boolean getEnabledState(NavigationService navigationService) {
+        return navigationService.backEnabled();
+      }
+
+      protected void apply(NavigationService navigationService) {
+        navigationService.back();
+      }
+    });
+
+    builder.add("forward", new NavigationAction(directory) {
+      protected boolean getEnabledState(NavigationService navigationService) {
+        return navigationService.forwardEnabled();
+      }
+
+      protected void apply(NavigationService navigationService) {
+        navigationService.forward();
+      }
+    });
   }
 
   private void showCard(Card card) {

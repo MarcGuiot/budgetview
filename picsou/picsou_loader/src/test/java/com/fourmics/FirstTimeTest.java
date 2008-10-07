@@ -330,11 +330,11 @@ public class FirstTimeTest extends UISpecTestCase {
         prevaylerDir.mkdirs();
         File userDir = new File(prevaylerDir + File.separator + "data" + File.separator + "users");
         userDir.mkdirs();
-        File dataDir = new File(prevaylerDir + File.separator + "data" + File.separator + "563422403");
+        File dataDir = new File(prevaylerDir + File.separator + "data" + File.separator + "795391559");
         dataDir.mkdirs();
 
         InputStream dataStream =
-          getClass().getResourceAsStream("/files/v3/data/563422403/0000000000000000040.snapshot");
+          getClass().getResourceAsStream("/files/v3/data/795391559/0000000000000000040.snapshot");
         Files.copyStreamTofile(dataStream, dataDir.getAbsolutePath() + "/0000000000000000040.snapshot");
 
         InputStream usersDataStream =

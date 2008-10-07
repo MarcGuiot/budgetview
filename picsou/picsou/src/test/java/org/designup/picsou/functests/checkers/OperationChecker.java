@@ -5,7 +5,6 @@ import org.uispec4j.MenuItem;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import org.uispec4j.assertion.Assertion;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
@@ -47,7 +46,6 @@ public class OperationChecker {
   public void importQifFile(String file, String bank, Double amount) {
     importFile(new String[]{file}, bank, amount);
   }
-
 
   public void importQifFiles(String bank, String... files) {
     importFile(files, bank, null);
@@ -133,5 +131,9 @@ public class OperationChecker {
 
   public HelpChecker openHelp() {
     return HelpChecker.open(window.getMenuBar().getMenu("Help").getSubMenu("Index").triggerClick());
+  }
+
+  public AboutChecker openAbout() {
+    return AboutChecker.open(window.getMenuBar().getMenu("Help").getSubMenu("About").triggerClick());
   }
 }

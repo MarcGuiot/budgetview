@@ -86,7 +86,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
     LicenseChecker.enterLicense(mainWindow, "admin", "zz", 0);
-    views.selectData();
+    selectInitialView();
   }
 
   private void reinitMainWindow() {
@@ -94,6 +94,10 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     ApplicationReset.run(repository);
     initCheckers();
     license.enterLicense("admin", "zz", 0);
+    selectInitialView();
+  }
+
+  protected void selectInitialView() {
     views.selectData();
   }
 

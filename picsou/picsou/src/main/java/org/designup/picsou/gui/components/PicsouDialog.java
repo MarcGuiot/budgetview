@@ -128,7 +128,7 @@ public class PicsouDialog extends JDialog {
     }
   }
 
-  private void setPanelAndButton(JPanel panel, Action closeAction) {
+  public void setPanelAndButton(JPanel panel, Action closeAction) {
     this.closeAction = closeAction;
     JPanel contentPane = GridBagBuilder.init()
       .add(panel, 0, 0, 2, 1, Gui.NO_INSETS)

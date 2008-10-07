@@ -126,7 +126,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNavigatingToCategorizationView() throws Exception {
-
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/11", -1.0, "Something else")
@@ -143,6 +142,13 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     });
     categorization.checkSelectedTableRows(1);
     categorization.checkCustomFilterVisible(false);
+
+    views.back();
+    views.checkDataSelected();
+    transactions.checkSelectedRow(0);
+    
+    views.forward();
+    views.checkCategorizationSelected();
   }
 
   public void testMultiCategorization() throws Exception {

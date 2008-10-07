@@ -83,7 +83,7 @@
 
                     <card name="uncategorized">
                       <column styleClass="budgetAreaSelection">
-                        <htmlEditorPane name="uncategorizedMessage" text="$categorization.uncategorized"
+                        <htmlEditorPane ref="uncategorizedMessage"
                                         hyperlinkListener="hyperlinkHandler"/>
                         <filler fill="vertical"/>
                       </column>

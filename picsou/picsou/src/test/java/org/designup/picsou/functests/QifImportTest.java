@@ -90,7 +90,6 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .add("21/04/2006", TransactionType.VIREMENT, "PARIS", "", 117.65)
       .add("20/04/2006", TransactionType.PRELEVEMENT, "PARIS", "", -17.65)
       .check();
-
   }
 
   public void testTakesUserAndBankDatesIntoAccountWhenDetectingDuplicates() throws Exception {

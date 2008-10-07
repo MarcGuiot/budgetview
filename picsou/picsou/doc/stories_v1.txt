@@ -24,11 +24,8 @@
 
 - TransactionDetails : mettre le compte, la date et le montant (faire un seul label ?)
 
-- Fenetre About
-
 - Gestion des licences
 
-- back/forward
 - tests d'undo/redo
 - Test de serialisation
 
@@ -37,7 +34,7 @@
 - Largeur CategoryView
 
 - Fichier licences pour Package install / About / etc :
-- Libelles des transation planned : mettre un espace apres le ':'
+
 - Message upgrade : lien vers http://www.fourmics.com/changes ou versions
 
 - Serialisation des strings : voir charset

@@ -1,0 +1,20 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" preferredSize="(500,500)">
+    <column styleClass="innerDialog">
+
+      <label icon="fourmics_icon_128.png" fill="none" anchor="center" marginTop="20" marginBottom="5"/>
+
+      <label ref="versionLabel" marginBottom="10" fill="horizontal" horizontalAlignment="center"/>
+
+      <label text="$about.configuration" styleClass="separatorTitle"/>
+      <scrollPane weightY="100">
+        <htmlEditorPane ref="configurationArea"/>
+      </scrollPane>
+
+    </column>
+  </panel>
+
+</splits>
