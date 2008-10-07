@@ -20,7 +20,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     infochecker.checkNoNewVersion();
     monthSummary
       .checkNoBudgetAreasDisplayed()
-      .checkNoDataMessage("You must import your financial operations");
+      .checkNoDataMessage();
     monthSummary.openHelp().checkContains("import").close();
     balanceSummary
       .checkNoTotal()
@@ -40,7 +40,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     monthSummary
       .checkNoBudgetAreasDisplayed()
-      .checkNoSeriesMessage("Use the series wizard:");
+      .checkNoSeriesMessage();
     balanceSummary
       .checkBalance(00.00)
       .checkIncome(0.00)
@@ -61,7 +61,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     monthSummary
       .checkNoBudgetAreasDisplayed()
-      .checkNoSeriesMessage("Use the series wizard:")
+      .checkNoSeriesMessage()
       .openSeriesWizard()
       .validate();
 

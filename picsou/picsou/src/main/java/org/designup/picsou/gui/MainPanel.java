@@ -59,9 +59,14 @@ public class MainPanel {
   private PreferencesAction preferencesAction;
   private ExitAction exitAction;
   protected GlobsPanelBuilder builder;
+  private GlobRepository repository;
+  private Directory directory;
   private MainWindow mainWindow;
   private RegisterLicenseAction registerAction;
   private CheckRepositoryAction check;
+  private MonthSummaryView monthSummary;
+  private CategoryView categoryView;
+  private SeriesView seriesView;
 
   public static MainPanel init(GlobRepository repository, Directory directory, MainWindow mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -70,6 +75,8 @@ public class MainPanel {
   }
 
   private MainPanel(GlobRepository repository, Directory directory, MainWindow mainWindow) {
+    this.repository = repository;
+    this.directory = directory;
     this.mainWindow = mainWindow;
     this.parent = mainWindow.getFrame();
     directory.add(JFrame.class, parent);
@@ -84,8 +91,8 @@ public class MainPanel {
 
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
     CategorizationView categorizationView = new CategorizationView(repository, directory);
-    CategoryView categoryView = new CategoryView(repository, directory);
-    SeriesView seriesView = new SeriesView(repository, directory);
+    categoryView = new CategoryView(repository, directory);
+    seriesView = new SeriesView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
 
     directory.add(new NavigationService(categorizationView, categoryView, seriesView,
@@ -108,7 +115,7 @@ public class MainPanel {
     };
     builder.add("transactionSearch", search.getPanel());
 
-    MonthSummaryView monthSummary = new MonthSummaryView(importFileAction, repository, directory);
+    monthSummary = new MonthSummaryView(importFileAction, repository, directory);
 
     createPanel(
       titleView,
@@ -123,12 +130,6 @@ public class MainPanel {
       new CardView(repository, directory),
       new BudgetView(repository, directory),
       seriesView);
-
-    monthSummary.init();
-
-    selectLastMonthWithATransaction(repository, directory);
-    categoryView.selectAll();
-    seriesView.selectAll();
 
     createMenuBar(parent, directory);
   }
@@ -154,11 +155,19 @@ public class MainPanel {
       }
     });
 
-    SplitsEditor.show(builder, parent);
   }
 
   public void show() {
+
     builder.load();
+
+    monthSummary.init();
+
+    selectLastMonthWithATransaction(repository, directory);
+    categoryView.selectAll();
+    seriesView.selectAll();
+
+    SplitsEditor.show(builder, parent);
   }
 
   public void createMenuBar(final PicsouFrame frame, Directory directory) {

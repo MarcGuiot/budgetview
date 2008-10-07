@@ -9,6 +9,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -195,12 +196,16 @@ public class TimeGraph {
   }
 
   public void selectMonth(Set<Integer> monthIds, Set<Selectable> selectables) {
+    Set<Integer> remainingIds = new HashSet<Integer>(monthIds);
     for (Glob month : months) {
-      if (monthIds.contains(month.get(Month.ID))) {
+      if (remainingIds.remove(month.get(Month.ID))) {
         for (YearGraph year : yearGraphs) {
           year.select(month, selectables);
         }
       }
+    }
+    if (!remainingIds.isEmpty()) {
+      throw new InvalidParameter("Unknown months: " + remainingIds);
     }
   }
 

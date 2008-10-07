@@ -206,5 +206,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkIncome(2000., 2000.)
       .checkOccasional(55, 486.1)
       .checkSavings(100, 100);
+
+    window.dispose();
   }
 }

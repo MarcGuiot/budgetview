@@ -63,6 +63,7 @@ public class SeriesWizardModel {
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "groceries", MasterCategory.FOOD, false);
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "health", MasterCategory.HEALTH, true);
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "leisures", MasterCategory.LEISURES, true);
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "clothing", MasterCategory.CLOTHING, true);
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "fuel", MasterCategory.TRANSPORTS, true);
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "cash", MasterCategory.CASH, false);
 
