@@ -47,19 +47,9 @@ public class GridRepeatLayout implements RepeatLayout {
     rebuild(panel);
   }
 
-  public void move(JPanel panel, int index1, int index2) {
-    if (index1 > index2) {
-      ComponentStretch[] stretches1 = lineStretches.remove(index1);
-      ComponentStretch[] stretches2 = lineStretches.remove(index2);
-      lineStretches.add(index2, stretches1);
-      lineStretches.add(index1, stretches2);
-    }
-    else {
-      ComponentStretch[] stretches2 = lineStretches.remove(index2);
-      ComponentStretch[] stretches1 = lineStretches.remove(index1);
-      lineStretches.add(index1, stretches2);
-      lineStretches.add(index2, stretches1);
-    }
+  public void move(JPanel panel, int previousIndex, int newIndex) {
+    ComponentStretch[] stretches = lineStretches.remove(previousIndex);
+    lineStretches.add(newIndex, stretches);
     rebuild(panel);
   }
 
