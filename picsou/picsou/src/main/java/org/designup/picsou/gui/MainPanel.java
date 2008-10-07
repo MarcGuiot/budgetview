@@ -5,7 +5,6 @@ import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ExportFileAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
-import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
@@ -19,6 +18,7 @@ import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
 import org.designup.picsou.gui.monthsummary.InfoView;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
+import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
@@ -99,7 +99,7 @@ public class MainPanel {
     directory.add(new NavigationService(categorizationView, categoryView, seriesView,
                                         repository, directory));
 
-    importFileAction = ImportFileAction.initAndRegisterInOpenRequestManager(Lang.get("import"), repository, directory);
+    importFileAction = ImportFileAction.initAndRegisterToOpenRequestManager(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(parent, repository, directory);

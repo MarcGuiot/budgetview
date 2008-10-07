@@ -15,6 +15,7 @@ public class ExitAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent e) {
+    frame.setVisible(false);
     frame.dispose();
     //   System.exit(0);
   }

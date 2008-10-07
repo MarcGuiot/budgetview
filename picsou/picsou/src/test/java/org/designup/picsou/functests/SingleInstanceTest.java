@@ -79,6 +79,10 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .add("01/01/2000", TransactionType.VIREMENT, "mac do", "", 1.20)
       .check();
 
+    ImportChecker importerForPathCheck = new ImportChecker(WindowInterceptor.getModalDialog(new OperationChecker(window).getImportTrigger()));
+    importerForPathCheck.checkDirectory(System.getProperty("user.home"))
+      .close();
+
     window.dispose();
     for (ApplicationThread thread : threads) {
       thread.shutdown();
@@ -251,7 +255,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
     Window dialog = newApplication.getImportDialog();
     assertNotNull(dialog);
-    
+
     new ImportChecker(dialog).checkSelectedFiles(initialFile).close();
     picsouApplication.shutdown();
   }

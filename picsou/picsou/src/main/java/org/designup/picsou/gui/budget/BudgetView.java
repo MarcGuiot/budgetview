@@ -2,6 +2,7 @@ package org.designup.picsou.gui.budget;
 
 import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.model.PeriodOccasionalSeriesStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.BudgetArea;
@@ -30,7 +31,8 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
   private JideSplitPane thirdVerticalSplitPane;
 
   public BudgetView(GlobRepository repository, Directory parentDirectory) {
-    super(new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE), createLocalDirectory(parentDirectory));
+    super(new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodOccasionalSeriesStat.TYPE),
+          createLocalDirectory(parentDirectory));
     parentDirectory.get(SelectionService.class).addListener(this, Month.TYPE);
   }
 

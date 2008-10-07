@@ -210,6 +210,12 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
+  public CategorizationChecker selectRecurringSeries(String name) {
+    Panel panel = getRecurringSeriesPanel();
+    panel.getToggleButton(name).click();
+    return this;
+  }
+
   private Panel getRecurringSeriesPanel() {
     Panel panel = getPanel();
     assertTrue(panel.containsUIComponent(Panel.class, "recurringSeriesChooser"));
@@ -847,6 +853,11 @@ public class CategorizationChecker extends DataChecker {
 
     public CategorizationTableChecker add(String date, String label, double amount) {
       add(new Object[]{date, "", label, amount});
+      return this;
+    }
+
+    public CategorizationTableChecker add(String date, String series, String label, double amount) {
+      add(new Object[]{date, series, label, amount});
       return this;
     }
 

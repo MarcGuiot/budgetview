@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.accounts.BalanceEditionDialog;
 import org.designup.picsou.gui.accounts.NewAccountAction;
-import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
@@ -24,9 +24,9 @@ import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
+import org.globsframework.gui.views.utils.LabelCustomizers;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import static org.globsframework.gui.views.utils.LabelCustomizers.fontSize;
-import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
@@ -58,6 +58,7 @@ public class ImportPanel {
 
   private GlobRepository repository;
   private Directory directory;
+  private boolean usePreferedPath;
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
 
@@ -90,12 +91,13 @@ public class ImportPanel {
   private PicsouDialog dialog;
 
   public ImportPanel(String textForCloseButton, List<File> files, Glob defaultAccount,
-                     final Window owner, final GlobRepository repository, Directory directory) {
+                     final Window owner, final GlobRepository repository, Directory directory, boolean usePreferedPath) {
 
     this.defaultAccount = defaultAccount;
     this.owner = owner;
     this.repository = repository;
     this.directory = directory;
+    this.usePreferedPath = usePreferedPath;
 
     updateFileField(files);
     initOpenRequestManager(directory);
@@ -207,7 +209,7 @@ public class ImportPanel {
     });
 
     registerAccountCreationListener(sessionRepository, sessionDirectory);
-    
+
     bankEntityEditionPanel = new BankEntityEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
     builder2.add("bankEntityEditionPanel", bankEntityEditionPanel.getPanel());
 
@@ -278,7 +280,7 @@ public class ImportPanel {
 
   private void loadLocalRepository(GlobRepository repository) {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE, Transaction.TYPE,
-                            TransactionTypeMatcher.TYPE, Month.TYPE};
+                            TransactionTypeMatcher.TYPE, Month.TYPE, UserPreferences.TYPE};
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
         .copy(globTypes).get();
@@ -628,8 +630,11 @@ public class ImportPanel {
     }
   }
 
-  private static File[] queryFile(Component parent) {
+  private static File[] queryFile(Component parent, File path) {
     JFileChooser chooser = new JFileChooser();
+    if (path != null && path.exists()) {
+      chooser.setCurrentDirectory(path);
+    }
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     chooser.setMultiSelectionEnabled(true);
     chooser.addChoosableFileFilter(new FileFilter() {
@@ -666,13 +671,25 @@ public class ImportPanel {
     }
 
     public void actionPerformed(ActionEvent e) {
-      File[] files = queryFile(owner.getOwner());
+      File path = null;
+      if (usePreferedPath) {
+        Glob preferences = localRepository.get(UserPreferences.KEY);
+        String directory = preferences.get(UserPreferences.LAST_DIRECTORY);
+        if (directory != null) {
+          path = new File(directory);
+        }
+      }
+      File[] files = queryFile(owner.getOwner(), path);
       if (files != null) {
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < files.length; i++) {
           buffer.append(files[i].getPath());
           if (i + 1 < files.length) {
             buffer.append(";");
+          }
+          if (usePreferedPath) {
+            localRepository.update(UserPreferences.KEY, UserPreferences.LAST_DIRECTORY,
+                                   files[i].getAbsoluteFile().getParent());
           }
         }
         fileField.setText(buffer.toString());

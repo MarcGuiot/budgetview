@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.utils;
 
+import junit.framework.TestCase;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.globsframework.utils.Strings;
@@ -15,6 +16,10 @@ public class QifBuilder {
 
   public static QifBuilder init(LoggedInFunctionalTestCase testCase) throws Exception {
     return new QifBuilder(TestUtils.getFileName(testCase, ".qif"), testCase.getOperations());
+  }
+
+  public static QifBuilder init(TestCase testCase) throws Exception {
+    return new QifBuilder(TestUtils.getFileName(testCase, ".qif"), null);
   }
 
   private QifBuilder(String fileName, OperationChecker operations) throws Exception {

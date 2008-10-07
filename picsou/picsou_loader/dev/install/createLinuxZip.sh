@@ -8,6 +8,8 @@ SOFT_VERSION=`java -jar ../picsou/obfuscated/fourmics.jar -v -soft | grep "Softw
 
 rm ../picsou/obfuscated/fourmics${JAR_VERSION}.jar
 cp ../picsou/obfuscated/fourmics.jar ../picsou/obfuscated/fourmics${JAR_VERSION}.jar
+mkdir -p src/test/resources/jars
+cp ../picsou/obfuscated/fourmics.jar src/test/resources/jars/fourmics.jar
 
 rm -rf fourmics fourmics.zip
 mkdir -p fourmics

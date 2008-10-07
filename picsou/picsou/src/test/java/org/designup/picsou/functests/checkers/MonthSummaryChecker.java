@@ -9,7 +9,8 @@ import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.and;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -63,8 +64,23 @@ public class MonthSummaryChecker extends DataChecker {
     return this;
   }
 
+  public MonthSummaryChecker checkRecurring(double amount, double planned) {
+    checkBudgetArea(BudgetArea.RECURRING, amount, planned);
+    return this;
+  }
+
+  public MonthSummaryChecker checkSavings(double amount, double planned) {
+    checkBudgetArea(BudgetArea.SAVINGS, amount, planned);
+    return this;
+  }
+
   public MonthSummaryChecker checkEnvelope(double amount) {
     check(BudgetArea.ENVELOPES, amount);
+    return this;
+  }
+
+  public MonthSummaryChecker checkEnvelope(double amount, double planned) {
+    checkBudgetArea(BudgetArea.ENVELOPES, amount, planned);
     return this;
   }
 
@@ -106,11 +122,13 @@ public class MonthSummaryChecker extends DataChecker {
 
   private void check(BudgetArea budgetArea, double amount) {
     Button button = getPanel().getButton(budgetArea.getName() + ":budgetAreaAmount");
+//    System.out.println("MonthSummaryChecker.check " + button.getLabel());
     assertThat(button.textEquals(MonthSummaryChecker.this.toString(amount)));
   }
 
   private void checkPlanned(BudgetArea budgetArea, double amount) {
     TextBox textBox = getPanel().getTextBox(budgetArea.getName() + ":budgetAreaPlannedAmount");
+//    System.out.println("MonthSummaryChecker.checkPlanned " + textBox.getText());
     assertThat(textBox.textEquals(MonthSummaryChecker.this.toString(amount)));
   }
 

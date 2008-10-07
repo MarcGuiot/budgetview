@@ -144,7 +144,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkInitialMessageDisplayed()
       .setAmount(12.33)
       .checkDialogClosed();
-    
+
     importDialog.checkClosed();
 
     views.selectHome();
@@ -356,6 +356,23 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectFiles(path)
       .acceptFile()
       .checkErrorMessage("import.file.error", new File(path).getAbsolutePath())
+      .close();
+  }
+
+  public void testImportKeepDirectory() throws Exception {
+    final String path1 = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .save();
+
+    operations.openImportDialog()
+      .checkDirectory(System.getProperty("user.home"))
+      .browseAndSelect(path1)
+      .acceptFile()
+      .completeImport();
+
+    operations.openImportDialog()
+      .checkDirectory(new File(path1).getAbsoluteFile().getParent())
       .close();
   }
 }

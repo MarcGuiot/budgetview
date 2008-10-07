@@ -31,7 +31,8 @@ public class MainWindowLauncher {
   }
 
   public static Directory run(String user, String password) throws Exception {
-    ServerDirectory serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), false);
+    ServerDirectory serverDirectory =
+      new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), PicsouApplication.isDataInMemory());
     Directory directory = PicsouApplication.createDirectory(new OpenRequestManager());
     ServerAccess serverAccess =
       new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
