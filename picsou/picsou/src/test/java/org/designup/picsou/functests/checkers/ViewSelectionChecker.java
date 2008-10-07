@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.uispec4j.ToggleButton;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
+import org.uispec4j.assertion.UISpecAssert;
 
 public class ViewSelectionChecker extends DataChecker {
   private Window window;
@@ -77,5 +78,18 @@ public class ViewSelectionChecker extends DataChecker {
 
   private ToggleButton getToggle(String viewName) {
     return window.getToggleButton(viewName + "CardToggle");
+  }
+
+  public void checkBackForward(boolean backEnabled, boolean forwardEnabled) {
+    UISpecAssert.assertEquals("back", backEnabled, window.getButton("back").isEnabled());
+    UISpecAssert.assertEquals("forward", forwardEnabled, window.getButton("forward").isEnabled());
+  }
+
+  public void back() {
+    window.getButton("back").click();
+  }
+
+  public void forward() {
+    window.getButton("forward").click();
   }
 }

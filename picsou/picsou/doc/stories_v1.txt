@@ -26,7 +26,6 @@
 
 - Gestion des licences
 
-- back/forward
 - tests d'undo/redo
 - Test de serialisation
 

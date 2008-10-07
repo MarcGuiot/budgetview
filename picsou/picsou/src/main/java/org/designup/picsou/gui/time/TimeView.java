@@ -43,30 +43,30 @@ public class TimeView extends View {
   }
 
   private void createNavigationButtons() {
-    gotoFirstButton = new JButton(new FirstPeriodNavigationAction(viewPanel));
+    gotoFirstButton = new JButton(new FirstMonthNavigationAction(viewPanel));
     Gui.configureIconButton(gotoFirstButton, "firstPeriod", new Dimension(19, 19));
 
-    gotoLastButton = new JButton(new LastNavigationAction(viewPanel));
+    gotoLastButton = new JButton(new LastMonthNavigationAction(viewPanel));
     Gui.configureIconButton(gotoLastButton, "lastPeriod", new Dimension(19, 19));
 
-    gotoPrevButton = new JButton(new PreviousNavigationAction(viewPanel));
+    gotoPrevButton = new JButton(new PreviousMonthNavigationAction(viewPanel));
     Gui.configureIconButton(gotoPrevButton, "prevPeriod", new Dimension(19, 19));
 
-    gotoNextButton = new JButton(new NextNavigationAction(viewPanel));
+    gotoNextButton = new JButton(new NextMonthNavigationAction(viewPanel));
     Gui.configureIconButton(gotoNextButton, "nextPeriod", new Dimension(19, 19));
   }
 
-  private static abstract class NavigationAction extends AbstractAction {
+  private static abstract class MonthNavigationAction extends AbstractAction {
 
-    public NavigationAction(String name) {
+    public MonthNavigationAction(String name) {
       super(name);
     }
   }
 
-  private static class FirstPeriodNavigationAction extends NavigationAction {
+  private static class FirstMonthNavigationAction extends MonthNavigationAction {
     private TimeViewPanel viewPanel;
 
-    public FirstPeriodNavigationAction(TimeViewPanel viewPanel) {
+    public FirstMonthNavigationAction(TimeViewPanel viewPanel) {
       super("First");
       this.viewPanel = viewPanel;
     }
@@ -76,10 +76,10 @@ public class TimeView extends View {
     }
   }
 
-  private static class LastNavigationAction extends NavigationAction {
+  private static class LastMonthNavigationAction extends MonthNavigationAction {
     private TimeViewPanel viewPanel;
 
-    public LastNavigationAction(TimeViewPanel viewPanel) {
+    public LastMonthNavigationAction(TimeViewPanel viewPanel) {
       super("Last");
       this.viewPanel = viewPanel;
     }
@@ -89,10 +89,10 @@ public class TimeView extends View {
     }
   }
 
-  private static class PreviousNavigationAction extends NavigationAction {
+  private static class PreviousMonthNavigationAction extends MonthNavigationAction {
     private TimeViewPanel viewPanel;
 
-    public PreviousNavigationAction(TimeViewPanel viewPanel) {
+    public PreviousMonthNavigationAction(TimeViewPanel viewPanel) {
       super("Prev");
       this.viewPanel = viewPanel;
     }
@@ -102,10 +102,10 @@ public class TimeView extends View {
     }
   }
 
-  private static class NextNavigationAction extends NavigationAction {
+  private static class NextMonthNavigationAction extends MonthNavigationAction {
     private TimeViewPanel viewPanel;
 
-    public NextNavigationAction(TimeViewPanel viewPanel) {
+    public NextMonthNavigationAction(TimeViewPanel viewPanel) {
       super("Next");
       this.viewPanel = viewPanel;
     }
