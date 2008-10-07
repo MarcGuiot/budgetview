@@ -8,6 +8,8 @@ import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
+import java.io.File;
+
 public class ImportChecker {
   private Panel dialog;
   private TextBox fileField;
@@ -215,5 +217,12 @@ public class ImportChecker {
 
   public void checkClosed() {
     assertFalse(dialog.isVisible());
+  }
+
+  public ImportChecker checkDirectory(String directory) {
+    WindowInterceptor.init(dialog.getButton("Browse").triggerClick())
+      .process(FileChooserHandler.init().assertCurrentDirEquals(new File(directory)).cancelSelection())
+      .run();
+    return this;
   }
 }
