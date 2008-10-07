@@ -43,6 +43,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   private JToggleButton multiBudgetAreaToggle;
 
   private GlobList selectedTransactions = GlobList.EMPTY;
+  private JEditorPane uncategorizedMessage;
 
   public BudgetAreaSelector(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -64,6 +65,8 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       }
     });
 
+    uncategorizedMessage = builder.add("uncategorizedMessage", new JEditorPane());
+
     builder.add("uncategorizeSelected", new UncategorizeTransactionsAction());
 
     builder.addRepeat("budgetAreaToggles",
@@ -81,9 +84,16 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
     }
     else {
       budgetAreaCard.show("series");
+
       if (BudgetArea.UNCATEGORIZED.equals(budgetArea)) {
         SortedSet<Integer> areaIds = getSelectedTransactionAreas();
         if ((areaIds.size() == 1) && BudgetArea.UNCATEGORIZED.getId().equals(areaIds.iterator().next())) {
+          if (selectedTransactions.size() == 1) {
+            uncategorizedMessage.setText(Lang.get("categorization.uncategorized.single"));
+          }
+          else {
+            uncategorizedMessage.setText(Lang.get("categorization.uncategorized.multiple"));            
+          }
           seriesCard.show(budgetArea.getName());
         }
         else {

@@ -66,7 +66,7 @@ public class AboutDialog {
       .append("<h2>").append(Lang.get("about.system.properties")).append("</h2>");
     for (String property : SYSTEM_PROPERTIES) {
       builder
-        .append("<p><b>").append(property).append("</b>:")
+        .append("<p>- <b>").append(property).append("</b>: ")
         .append(System.getProperty(property))
         .append("</p>");
     }
