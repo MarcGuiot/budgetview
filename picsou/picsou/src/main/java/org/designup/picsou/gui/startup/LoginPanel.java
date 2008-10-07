@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.startup;
 
+import com.jidesoft.swing.InfiniteProgressPanel;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadPassword;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
@@ -26,13 +27,9 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
-
-import com.jidesoft.swing.InfiniteProgressPanel;
 
 public class LoginPanel {
   private ServerAccess serverAccess;
@@ -57,16 +54,22 @@ public class LoginPanel {
     this.mainWindow = mainWindow;
     this.directory = directory;
     initServerAccess(remoteAdress, prevaylerPath, dataInMemory);
-    mainWindow.getFrame().addWindowListener(new WindowAdapter() {
-      public void windowClosing(WindowEvent e) {
+
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      public void run() {
         try {
-          serverAccess.takeSnapshot();
-          serverAccess.disconnect();
+          if (serverAccess != null) {
+            serverAccess.takeSnapshot();
+            serverAccess.disconnect();
+            serverAccess = null;
+          }
           if (serverDirectory != null) {
             serverDirectory.close();
+            serverDirectory = null;
           }
         }
         catch (Exception ex) {
+          ex.printStackTrace();
         }
       }
     });
@@ -206,7 +209,7 @@ public class LoginPanel {
       }
       finally {
         setComponentsEnabled(true);
-        progressPanel.stop();        
+        progressPanel.stop();
       }
     }
   }

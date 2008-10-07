@@ -169,6 +169,13 @@ public class TransactionChecker extends ViewChecker {
             .append(getTable().getContentAt(i, accountBalance)).append(", ")
             .append(getTable().getContentAt(i, balance));
         }
+        if (getTable().getContentAt(i, accountBalance).equals("") &&
+            !getTable().getContentAt(i, balance).equals("")) {
+          buffer
+            .append(", ")
+            .append(getTable().getContentAt(i, balance));
+        }
+
         buffer.append(")\n");
       }
       buffer.append(".check();\n");

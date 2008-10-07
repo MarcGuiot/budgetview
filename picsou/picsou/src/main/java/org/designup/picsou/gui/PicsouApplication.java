@@ -48,8 +48,8 @@ import java.util.regex.Pattern;
 public class PicsouApplication {
 
   public static final String APPLICATION_VERSION = "0.9";
-  public static final Long JAR_VERSION = 2L;
-  public static final Long BANK_CONFIG_VERSION = 2L;
+  public static final Long JAR_VERSION = 3L;
+  public static final Long BANK_CONFIG_VERSION = 3L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String CONFIG_DIRECTORY = "configs";
   public static final String APPNAME = "fourmics";
@@ -253,9 +253,14 @@ public class PicsouApplication {
   }
 
   public void shutdown() {
-    singleInstanceListener.shutdown();
-    if (directory != null) {
-      directory.get(ColorService.class).removeAllListeners();
+    try {
+      singleInstanceListener.shutdown();
+      if (directory != null) {
+        directory.get(ColorService.class).removeAllListeners();
+      }
+    }
+    catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
