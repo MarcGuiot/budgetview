@@ -3,9 +3,11 @@
 - tooltips monthSummaryView / balance
 
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
-- categoryView : afficher un message quand la categorisation est assez avancee (90%) ?
+- categorizationView : afficher un message quand la categorisation est assez avancee (90%) ?
 
 - Creation compte : afficher SLA
+
+- Voir mise a jour SeriesBudget avec declassement de transaction
 
 - Creation + Edition de compte
 

@@ -39,12 +39,12 @@ public class MonthSummaryChecker extends DataChecker {
     return this;
   }
 
-  public MonthSummaryChecker checkNoDataMessage(String text) {
-    return checkMessage(text, "noDataMessage", "noData");
+  public MonthSummaryChecker checkNoDataMessage() {
+    return checkMessage("You must import your financial operations", "noDataMessage", "noData");
   }
 
-  public MonthSummaryChecker checkNoSeriesMessage(String text) {
-    return checkMessage(text, "noSeriesMessage", "noSeries");
+  public MonthSummaryChecker checkNoSeriesMessage() {
+    return checkMessage("Use the series wizard:", "noSeriesMessage", "noSeries");
   }
 
   private MonthSummaryChecker checkMessage(String text, String textBoxName, final String panelName) {

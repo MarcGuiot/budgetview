@@ -1,8 +1,10 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.TransactionType;
 
 public class RestartTest extends LoggedInFunctionalTestCase {
 
@@ -13,7 +15,90 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
+  public void testReinitializationWithTransactionsOnly() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/26", 1000, "Company")
+      .load();
+
+    views.selectHome();
+    monthSummary.checkNoSeriesMessage();
+    balanceSummary
+      .checkBalance(00.00)
+      .checkIncome(0.00)
+      .checkFixed(0.00)
+      .checkSavings(0.00)
+      .checkProjects(0.00)
+      .checkTotal(0.00);
+
+    views.selectData();
+    transactions.initContent()
+      .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00)
+      .check();
+
+    restartApplication();
+
+    views.selectHome();
+    monthSummary.checkNoSeriesMessage();
+    balanceSummary
+      .checkBalance(00.00)
+      .checkIncome(0.00)
+      .checkFixed(0.00)
+      .checkSavings(0.00)
+      .checkProjects(0.00)
+      .checkTotal(0.00);
+
+    views.selectData();
+    transactions.initContent()
+      .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00)
+      .check();
+  }
+
+  public void testReinitializationWithTransactionsAndSeries() throws Exception {
+    LicenseChecker.enterLicense(mainWindow, "admin", "", 1);
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/26", 1000, "Company")
+      .load();
+
+    views.selectCategorization();
+    categorization.setIncome("Company", "Salary", true);
+
+    views.selectBudget();
+    budgetView.income.checkSeries("Salary", 1000.0, 1000.0);
+
+    timeline.selectMonth("2008/09");
+    budgetView.income.checkSeries("Salary", 0.0, 1000.0);
+
+    timeline.selectMonth("2008/08");
+    views.selectHome();
+    monthSummary.checkIncome(1000.0, 1000.0);
+    balanceSummary.checkIncome(0.0);
+
+    restartApplication();
+
+    timeline.checkSelection("2008/08");
+
+    views.selectHome();
+    monthSummary.checkIncome(1000.0, 1000.0);
+    balanceSummary.checkIncome(0.0);
+
+    views.selectBudget();
+    budgetView.income.checkSeries("Salary", 1000.0, 1000.0);
+
+    timeline.selectMonth("2008/09");
+    budgetView.income.checkSeries("Salary", 0.0, 1000.0);
+
+    timeline.selectMonths("2008/08", "2008/09");
+
+    views.selectData();
+    transactions.initContent()
+      .add("26/09/2008", TransactionType.PLANNED, "Planned: Salary", "", 1000.00, "Salary", MasterCategory.INCOME)
+      .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salary", MasterCategory.INCOME)
+      .check();
+  }
+
   public void testReloadBudgetViewStat() throws Exception {
+
     views.selectBudget();
     budgetView.envelopes.createSeries()
       .setName("Courant")
@@ -46,13 +131,17 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .validate();
     budgetView.occasional.checkTotalAmounts(0, -600);
 
-    mainWindow.dispose();
-    mainWindow = null;
-    mainWindow = getMainWindow();
-    initCheckers();
+    restartApplication();
 
     views.selectBudget();
     timeline.selectMonth("2008/08");
     budgetView.occasional.checkTotalAmounts(0, -600);
+  }
+
+  protected void restartApplication() {
+    mainWindow.dispose();
+    mainWindow = null;
+    mainWindow = getMainWindow();
+    initCheckers();
   }
 }
