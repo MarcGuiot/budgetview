@@ -110,7 +110,7 @@ public class ConfigService {
         if (localConfigVersion < newConfigVersion) {
           configReceive = new ConfigReceive();
           dowloadConfigThread =
-            new DownloadThread(FTP_URL, PicsouApplication.getPicsouConfigPath(),
+            new DownloadThread(FTP_URL, PicsouApplication.getBankConfigPath(),
                                generateConfigJarName(newConfigVersion), newConfigVersion, configReceive);
           dowloadConfigThread.start();
         }
@@ -121,7 +121,7 @@ public class ConfigService {
         if (localJarVersion < newJarVersion) {
           jarReceive = new JarReceive();
           dowloadJarThread =
-            new DownloadThread(FTP_URL, PicsouApplication.getPicsouJarPath(),
+            new DownloadThread(FTP_URL, PicsouApplication.getJarPath(),
                                generatePicsouJarName(newJarVersion), newJarVersion, jarReceive);
           dowloadJarThread.start();
         }

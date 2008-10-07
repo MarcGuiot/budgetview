@@ -27,6 +27,7 @@ import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.triggers.GlobStateChecker;
@@ -171,13 +172,11 @@ public class MainPanel {
   }
 
   public void createMenuBar(final PicsouFrame frame, Directory directory) {
-
     JMenuBar menuBar = new JMenuBar();
     menuBar.add(createFileMenu());
     menuBar.add(createEditMenu(frame, directory));
     menuBar.add(createHelpMenu(directory));
     frame.setJMenuBar(menuBar);
-
   }
 
   private JMenu createFileMenu() {
@@ -185,11 +184,7 @@ public class MainPanel {
     menu.add(importFileAction);
     menu.add(exportFileAction);
 
-    boolean useMacOSMenu = Gui.isMacOSX();
-    Utils.beginRemove();
-    useMacOSMenu = false;
-    Utils.endRemove();
-    if (useMacOSMenu) {
+    if (useMacOSMenu()) {
       MRJAdapter.setPreferencesEnabled(true);
       MRJAdapter.addPreferencesListener(preferencesAction);
     }
@@ -203,6 +198,14 @@ public class MainPanel {
     menu.addSeparator();
     menu.add(exitAction);
     return menu;
+  }
+
+  private boolean useMacOSMenu() {
+    boolean result = Gui.isMacOSX();
+    Utils.beginRemove();
+    result = false;
+    Utils.endRemove();
+    return result;
   }
 
   private JMenu createEditMenu(PicsouFrame frame, Directory directory) {
@@ -232,6 +235,15 @@ public class MainPanel {
         directory.get(HelpService.class).show("index", parent);
       }
     });
+
+    AboutAction aboutAction = new AboutAction(repository, directory);
+    if (useMacOSMenu()) {
+      MRJAdapter.addAboutListener(aboutAction);
+    }
+    else {
+      menu.addSeparator();
+      menu.add(aboutAction);
+    }
     return menu;
   }
 
