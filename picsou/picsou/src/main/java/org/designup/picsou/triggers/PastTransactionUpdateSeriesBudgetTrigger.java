@@ -99,7 +99,6 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
       return;
     }
 
-
     Glob currentBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
       .findByIndex(SeriesBudget.MONTH, statMonthId).getGlobs().getFirst();
     if (currentBudget == null || !currentBudget.get(SeriesBudget.ACTIVE)) {
@@ -110,9 +109,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
     if (statMonthId.equals(currentMonthId)) {
       ReadOnlyGlobRepository.MultiFieldIndexed index =
         repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId);
-      GlobList seriesBudgets =
-        index
-          .getGlobs().sort(SeriesBudget.MONTH);
+      GlobList seriesBudgets = index.getGlobs().sort(SeriesBudget.MONTH);
       Integer previousMonth = null;
       for (Glob glob : seriesBudgets) {
         if (glob.get(SeriesBudget.ACTIVE) && glob.get(SeriesBudget.MONTH) < statMonthId) {
@@ -131,11 +128,16 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
           multi = 1;
         }
 
+        Double futureAmount;
         if (multi * amount > multi * previousStat.get(SeriesStat.AMOUNT)) {
-          for (Glob budget : seriesBudgets) {
-            if (budget.get(SeriesBudget.ACTIVE) && budget.get(SeriesBudget.MONTH) > currentMonthId) {
-              repository.update(budget.getKey(), SeriesBudget.AMOUNT, amount);
-            }
+          futureAmount = amount;
+        }
+        else {
+          futureAmount = previousStat.get(SeriesStat.AMOUNT);
+        }
+        for (Glob budget : seriesBudgets) {
+          if (budget.get(SeriesBudget.ACTIVE) && budget.get(SeriesBudget.MONTH) > currentMonthId) {
+            repository.update(budget.getKey(), SeriesBudget.AMOUNT, futureAmount);
           }
         }
       }
@@ -168,6 +170,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
 
       if (budget.get(SeriesBudget.MONTH) > statMonthId) {
         repository.update(budget.getKey(), SeriesBudget.AMOUNT, amount);
+        Double futureAmount = amount;
         if (budget.get(SeriesBudget.MONTH).equals(currentMonthId)) {
           Glob currentSeriesStat =
             repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
@@ -177,14 +180,14 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
             multi = 1;
           }
           if (multi * currentSeriesStat.get(SeriesStat.AMOUNT) > multi * amount) {
-            return;
+            futureAmount = currentSeriesStat.get(SeriesStat.AMOUNT);
           }
         }
         if (budget.get(SeriesBudget.MONTH) >= currentMonthId) {
           while (it.hasNext()) {
             Glob futurBudget = (Glob)it.next();
             if (futurBudget.get(SeriesBudget.ACTIVE)) {
-              repository.update(futurBudget.getKey(), SeriesBudget.AMOUNT, amount);
+              repository.update(futurBudget.getKey(), SeriesBudget.AMOUNT, futureAmount);
             }
           }
         }

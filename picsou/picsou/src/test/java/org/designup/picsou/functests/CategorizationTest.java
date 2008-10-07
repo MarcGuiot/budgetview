@@ -214,7 +214,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"25/06/2008", "Telephone", "France Telecom", -59.90},
       {"30/06/2008", "Internet", "Free", -29.90},
     });
-    
+
     categorization.setUncategorized();
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "", "Auchan", -40.00},
@@ -987,6 +987,90 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkSeries("Courant", 0, 20);
     timeline.selectMonth("2008/08");
     budgetView.envelopes.checkSeries("Courant", 0, 20);
+
+
+    views.selectCategorization();
+    timeline.selectMonth("2008/06");
+    categorization.selectTableRows("ED");
+    transactionDetails.split("5", "DVD");
+    categorization.selectOccasionalSeries(MasterCategory.LEISURES);
+
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 15, 10);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("Courant", 0, 15);
+    timeline.selectMonth("2008/08");
+    budgetView.envelopes.checkSeries("Courant", 0, 15);
+
+    views.selectCategorization();
+    timeline.selectMonth("2008/06");
+    categorization.selectTableRows("ED");
+    transactionDetails.split("10", "CD");
+    categorization.selectOccasionalSeries(MasterCategory.LEISURES);
+
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 5, 10);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    timeline.selectMonth("2008/08");
+    budgetView.envelopes.checkSeries("Courant", 0, 10);
+
+  }
+
+  public void testInAutomaticUpdateImmediatelyPreviousFromCurrentImpactFutur() throws Exception {
+    LicenseChecker.enterLicense(mainWindow, "admin", "zz", 2);
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("Courant")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/10", -10, "Auchan")
+      .addTransaction("2008/06/20", -20, "ED")
+      .load();
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, false);
+    categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, false);
+    categorization.selectTableRows("ED");
+    transactionDetails.split("15", "DVD");
+    categorization.selectOccasionalSeries(MasterCategory.LEISURES);
+
+    views.selectBudget();
+    timeline.selectMonth("2008/05");
+    budgetView.envelopes.checkSeries("Courant", 10, 10);
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 5, 10);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("Courant", 0, 10);
+
+    views.selectCategorization();
+    timeline.selectMonth("2008/05");
+    categorization.selectTableRows("Auchan");
+    transactionDetails.split("9", "DVD");
+    categorization.selectOccasionalSeries(MasterCategory.LEISURES);
+
+    views.selectBudget();
+    timeline.selectMonth("2008/05");
+    budgetView.envelopes.checkSeries("Courant", 1, 1);
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 5, 1);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("Courant", 0, 5);
+
+    views.selectCategorization();
+    timeline.selectMonth("2008/05");
+    categorization.selectTableRows("Auchan");
+    transactionDetails.openSplitDialog().deleteRow(1).ok();
+
+    views.selectBudget();
+    timeline.selectMonth("2008/05");
+    budgetView.envelopes.checkSeries("Courant", 10, 10);
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("Courant", 5, 10);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("Courant", 0, 10);
   }
 
   public void testInAutomaticNewMonthUpdateFuture() throws Exception {
