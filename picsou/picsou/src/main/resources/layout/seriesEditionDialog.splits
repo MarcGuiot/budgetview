@@ -87,12 +87,7 @@
               <cards ref="modeCard" opaque="false">
                 <card name="manual">
                   <column margin="10" marginBottom="0" weightX="7">
-                    <label ref="seriesEditionAmountLabel" styleClass="formLabelTop" fill="horizontal"/>
-                    <textField ref="amountEditor"/>
-                    <label text="$seriesEdition.entries" styleClass="formLabelTop"/>
-                    <scrollPane weightY="1000" margin="5">
-                      <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>
-                    </scrollPane>
+                    <panel ref="serieBudgetEditionPanel"/>
                     <row>
                       <filler fill="horizontal"/>
                       <button action="automatic" styleClass="hyperlink"/>

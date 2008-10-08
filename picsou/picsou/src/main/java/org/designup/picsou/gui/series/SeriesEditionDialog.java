@@ -3,11 +3,10 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.categories.CategoryChooserCallback;
 import org.designup.picsou.gui.categories.CategoryChooserDialog;
-import org.designup.picsou.gui.components.*;
-import org.designup.picsou.gui.description.MonthListStringifier;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
-import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.components.ConfirmationDialog;
+import org.designup.picsou.gui.components.MonthChooserDialog;
+import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
@@ -17,19 +16,14 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
-import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
-import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorLocator;
-import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.views.*;
+import org.globsframework.gui.views.GlobLabelView;
+import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.impl.StringListCellRenderer;
-import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -42,7 +36,6 @@ import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -51,7 +44,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.text.DecimalFormat;
 import java.util.*;
 
 public class SeriesEditionDialog {
@@ -76,8 +68,6 @@ public class SeriesEditionDialog {
   private AbstractAction deleteEndDateAction;
   private SeriesEditionDialog.CalendarAction endDateCalendar;
   private GlobTextEditor nameEditor;
-  private GlobNumericEditor amountEditor;
-  private TimeService timeService;
   private JLabel categoryLabel;
   private CardHandler modeCard;
   private JPanel monthSelectionPanel;
@@ -85,6 +75,7 @@ public class SeriesEditionDialog {
   private Key createdSeries;
   Integer currentlySelectedCategory;
   private JPanel buttonSeriePanel;
+  private SeriesBudgetEditionPanel budgetEditionPanel;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -100,8 +91,6 @@ public class SeriesEditionDialog {
     selectionService = new SelectionService();
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(selectionService);
-
-    this.timeService = localDirectory.get(TimeService.class);
 
     dialog = PicsouDialog.create(parent, directory);
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
@@ -158,23 +147,10 @@ public class SeriesEditionDialog {
     builder.add("manual", new GotoManualAction());
     builder.add("automatic", new GotoAutomaticAction());
 
-    amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT)
-      .setMinusAllowed(false)
-      .setValueForNull(0.0)
-      .setNotifyAtKeyPressed(true);
+    budgetEditionPanel = new SeriesBudgetEditionPanel(repository, localRepository, localDirectory);
+    JPanel seriesBudgetPanel = budgetEditionPanel.getPanel();
 
-    final GlobTableView budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE,
-                                                       new ReverseGlobFieldComparator(SeriesBudget.MONTH))
-      .setFilter(fieldEquals(SeriesBudget.ACTIVE, true))
-      .setDefaultBackgroundPainter(new TableBackgroundPainter())
-      .setDefaultLabelCustomizer(new SeriesBudgetLabelCustomizer())
-      .addColumn(Lang.get("seriesEdition.year"), new YearStringifier())
-      .addColumn(Lang.get("seriesEdition.month"), new MonthStringifier())
-      .addColumn(Lang.get("seriesEdition.observed.amount"),
-                 new ObservedAmountStringifier(repository, descriptionService),
-                 new ObservedLabelCustomizer(repository))
-      .addColumn(Lang.get("seriesBudget.amount"), new AmountStringifier(), LabelCustomizers.ALIGN_RIGHT);
-    PicsouTableHeaderPainter.install(budgetTable, localDirectory);
+    builder.add("serieBudgetEditionPanel", seriesBudgetPanel);
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -186,13 +162,10 @@ public class SeriesEditionDialog {
           else {
             modeCard.show("manual");
           }
-          budgetTable.setFilter(GlobMatchers.and(fieldEquals(SeriesBudget.ACTIVE, true),
-                                                 fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID))));
           assignCategoryAction.setEnabled(true);
           multiCategoryList.setFilter(GlobMatchers.fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)));
         }
         else {
-          budgetTable.setFilter(GlobMatchers.NONE);
           assignCategoryAction.setEnabled(false);
           multiCategoryList.setFilter(GlobMatchers.NONE);
         }
@@ -218,7 +191,6 @@ public class SeriesEditionDialog {
                         }
                       });
 
-    builder.addLabel("seriesEditionAmountLabel", SeriesBudget.TYPE, new AmountLabelStringifier());
 
     localRepository.addChangeListener(new OkButtonUpdater());
 
@@ -475,18 +447,8 @@ public class SeriesEditionDialog {
     else {
       seriesList.selectFirst();
     }
-    if (budgetArea.isIncome()) {
-      amountEditor.setInvertValue(false);
-    }
-    else {
-      amountEditor.setInvertValue(true);
-    }
     if (currentSeries != null) {
-      GlobList budgets =
-        localRepository.getAll(SeriesBudget.TYPE,
-                               GlobMatchers.and(fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID)),
-                                                fieldIn(SeriesBudget.MONTH, monthIds)));
-      selectionService.select(budgets, SeriesBudget.TYPE);
+      budgetEditionPanel.selectBudgets(monthIds);
     }
     dialog.pack();
     SwingUtilities.invokeLater(new Runnable() {
@@ -497,10 +459,7 @@ public class SeriesEditionDialog {
             nameEditor.getComponent().selectAll();
           }
           else {
-            if (amountEditor.getComponent().isVisible()) {
-              amountEditor.getComponent().requestFocusInWindow();
-              amountEditor.getComponent().selectAll();
-            }
+            budgetEditionPanel.selectedAmountEditor();
           }
         }
       }
@@ -589,18 +548,6 @@ public class SeriesEditionDialog {
         }
         return Collections.emptySet();
       }
-    }
-  }
-
-  private class YearStringifier extends AbstractGlobStringifier {
-    public String toString(Glob seriesBudget, GlobRepository repository) {
-      return Integer.toString(Month.toYear(seriesBudget.get(SeriesBudget.MONTH)));
-    }
-  }
-
-  private class MonthStringifier extends AbstractGlobStringifier {
-    public String toString(Glob seriesBudget, GlobRepository repository) {
-      return Month.getFullMonthLabel(seriesBudget.get(SeriesBudget.MONTH));
     }
   }
 
@@ -839,16 +786,6 @@ public class SeriesEditionDialog {
     }
   }
 
-  private class AmountStringifier extends AbstractGlobStringifier {
-    public String toString(Glob glob, GlobRepository repository) {
-      Double value = glob.get(SeriesBudget.AMOUNT);
-      if ((value == null) || (value == 0.0)) {
-        return "0";
-      }
-      return PicsouDescriptionService.DECIMAL_FORMAT.format((budgetArea.isIncome() ? 1 : -1) * value);
-    }
-  }
-
   private class OkButtonUpdater extends DefaultChangeSetListener {
     public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
       if (changeSet.containsChanges(Series.TYPE)) {
@@ -872,66 +809,6 @@ public class SeriesEditionDialog {
     }
   }
 
-  private class TableBackgroundPainter implements CellPainter {
-    public void paint(Graphics g, Glob seriesBudget, int row, int column,
-                      boolean isSelected, boolean hasFocus, int width, int height) {
-      Color color;
-      if (isSelected) {
-        color = Gui.getDefaultTableSelectionBackground();
-      }
-      else {
-        Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
-        if (monthId == timeService.getCurrentMonthId()) {
-          color = Colors.toColor("EEEEFF");
-        }
-        else {
-          boolean even = Month.toYear(monthId) % 2 == 0;
-          color = even ? Color.WHITE : Colors.toColor("EEEEEE");
-        }
-      }
-      g.setColor(color);
-      g.fillRect(0, 0, width, height);
-    }
-  }
-
-  private class SeriesBudgetLabelCustomizer implements LabelCustomizer, ColorChangeListener {
-    private Color pastTextColor;
-    private Color normalTextColor;
-
-    private SeriesBudgetLabelCustomizer() {
-      localDirectory.get(ColorService.class).addListener(this);
-    }
-
-    protected void finalize() throws Throwable {
-      super.finalize();
-      localDirectory.get(ColorService.class).removeListener(this);
-    }
-
-    public void colorsChanged(ColorLocator colorLocator) {
-      pastTextColor = colorLocator.get("seriesEdition.table.text.past");
-      normalTextColor = colorLocator.get("seriesEdition.table.text.normal");
-    }
-
-    public void process(JLabel label, Glob seriesBudget, boolean isSelected, boolean hasFocus, int row, int column) {
-      int budgetMonthId = seriesBudget.get(SeriesBudget.MONTH);
-      int currentMonthId = timeService.getCurrentMonthId();
-      if (budgetMonthId == currentMonthId) {
-        label.setForeground(normalTextColor);
-        LabelCustomizers.BOLD.process(label, seriesBudget, isSelected, hasFocus, row, column);
-      }
-      else if (budgetMonthId < currentMonthId) {
-        label.setForeground(pastTextColor);
-        LabelCustomizers.PLAIN.process(label, seriesBudget, isSelected, hasFocus, row, column);
-      }
-      else if (budgetMonthId > currentMonthId) {
-        label.setForeground(normalTextColor);
-        LabelCustomizers.PLAIN.process(label, seriesBudget, isSelected, hasFocus, row, column);
-      }
-      if (isSelected) {
-        label.setForeground(Color.WHITE);
-      }
-    }
-  }
 
   private static class SeriesToCategoryStringifier extends AbstractGlobStringifier {
     private final GlobStringifier categoryStringifier;
@@ -964,81 +841,6 @@ public class SeriesEditionDialog {
       else {
         return Lang.get("seriesEdition.missing.category.label.single");
       }
-    }
-  }
-
-  private class AmountLabelStringifier implements GlobListStringifier {
-    public String toString(GlobList list, GlobRepository repository) {
-      Set<Integer> monthIds = list.getValueSet(SeriesBudget.MONTH);
-      String monthDescription = MonthListStringifier.toString(monthIds);
-      if (Strings.isNullOrEmpty(monthDescription)) {
-        return Lang.get("seriesEdition.amount.label.short");
-      }
-      else {
-        return Lang.get("seriesEdition.amount.label.full", monthDescription.toLowerCase());
-      }
-    }
-  }
-
-  private class ObservedAmountStringifier extends AbstractGlobStringifier {
-    private DecimalFormat format;
-    private GlobRepository repository;
-
-    private ObservedAmountStringifier(GlobRepository repository, DescriptionService descriptionService) {
-      this.repository = repository;
-      format = descriptionService.getFormats().getDecimalFormat();
-    }
-
-    public String toString(Glob glob, GlobRepository repository) {
-      Integer monthId = glob.get(SeriesBudget.MONTH);
-      Integer seriesId = glob.get(SeriesBudget.SERIES);
-      Glob seriesStat = this.repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
-      if (seriesStat != null) {
-        Double amount = seriesStat.get(SeriesStat.AMOUNT);
-        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome() && amount != 0.0) {
-          amount = -amount;
-        }
-        String str = format.format(amount);
-        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome()) {
-          if (amount < 0) {
-            return str.replace("-", "+");
-          }
-        }
-        return str;
-      }
-      return "";
-    }
-  }
-
-  private class ObservedLabelCustomizer implements LabelCustomizer, ColorChangeListener {
-    private GlobRepository repository;
-    private Color color;
-
-    private ObservedLabelCustomizer(GlobRepository repository) {
-      this.repository = repository;
-      localDirectory.get(ColorService.class).addListener(this);
-    }
-
-    public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
-      Integer monthId = glob.get(SeriesBudget.MONTH);
-      Integer seriesId = glob.get(SeriesBudget.SERIES);
-      Glob seriesStat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
-      if (seriesStat != null) {
-        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome()) {
-          if (seriesStat.get(SeriesStat.AMOUNT) < glob.get(SeriesBudget.AMOUNT)) {
-            label.setForeground(color);
-          }
-        }
-      }
-    }
-
-    public void colorsChanged(ColorLocator colorLocator) {
-      color = colorLocator.get("seriesEdition.table.amount.overrun");
-    }
-
-    protected void finalize() throws Throwable {
-      super.finalize();
-      localDirectory.get(ColorService.class).removeListener(this);
     }
   }
 

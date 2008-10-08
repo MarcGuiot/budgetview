@@ -540,7 +540,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkAmountLabel(final String text) {
-    assertThat(dialog.getTextBox("seriesEditionAmountLabel").textEquals(text));
+    assertThat(dialog.getTextBox("seriesBudgetEditionAmountLabel").textEquals(text));
     return this;
   }
 
