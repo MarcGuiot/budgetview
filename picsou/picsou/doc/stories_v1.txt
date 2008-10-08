@@ -1,18 +1,33 @@
 
-- Message d'aide dans CategoryChooserDialog + joliesse ?
-- tooltips monthSummaryView / balance
+- bug back/forward avec analyse/releve
+
+- login : bug grisage sur erreur login
+
+- regler les montants des occasional
+
+- balancesummary : afficher balance ("Variation/Balance")
+
+- balancesummary : "montant estime au 31/10/2008"
+
+- SED : changement de periodicite = se caler sur les donnees existantes
 
 - budgetView : afficher un message quand plusieurs mois sont selectionnes
+
 - categorizationView : afficher un message quand la categorisation est assez avancee (90%) ?
+
+- courbe evolution solde fin de mois avec reglage de seuil
+
+======================================
 
 - Creation compte : afficher SLA
 
-- Voir mise a jour SeriesBudget avec declassement de transaction
+- TransactionDetails : layout box pour resoudre probleme layout JEditorPane & co
 
 - Creation + Edition de compte
 
-- Mettre en rouge les depassements
-- Mettre en rouge un montant occasional prevu a zero
+- BudgetView : Mettre en rouge les depassements
+
+- BudgetView : Mettre en rouge un montant occasional prevu a zero
 
 - TransactionView : Afficher la somme (total ou multi-selection)
 - TransactionView : Filtrage transactions par Compte
@@ -27,7 +42,6 @@
 - Gestion des licences
 
 - tests d'undo/redo
-- Test de serialisation
 
 - BrowsingService sous Linux ?
 
@@ -38,3 +52,7 @@
 - Message upgrade : lien vers http://www.fourmics.com/changes ou versions
 
 - Serialisation des strings : voir charset
+
+- tooltips monthSummaryView / balance
+
+- Message d'aide dans CategoryChooserDialog + joliesse ?
