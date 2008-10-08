@@ -63,19 +63,19 @@ public class NavigationService implements GlobSelectionListener {
   public void gotoDataForSeries(Glob series) {
     seriesView.selectSeries(series);
     categoryView.select(MasterCategory.ALL.getId());
-    select(Card.ANALYSIS, false);
+    select(Card.DATA, false);
   }
 
   public void gotoData(BudgetArea budgetArea) {
     seriesView.selectBudgetArea(budgetArea);
     categoryView.select(MasterCategory.ALL.getId());
-    select(Card.ANALYSIS, false);
+    select(Card.DATA, false);
   }
 
   public void gotoData(BudgetArea budgetArea, Glob category) {
     seriesView.selectBudgetArea(budgetArea);
     categoryView.select(category);
-    select(Card.ANALYSIS, false);
+    select(Card.DATA, false);
   }
 
   public boolean backEnabled() {

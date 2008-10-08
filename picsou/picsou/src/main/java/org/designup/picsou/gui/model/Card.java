@@ -15,16 +15,7 @@ public enum Card implements GlobConstantContainer {
   HOME("home", 0),
   CATEGORIZATION("categorization", 1),
   BUDGET("budget", 2),
-  ANALYSIS("analysis", 3),
-  DATA("data", 4),
-  REPARTITION("repartition", 5),
-  EVOLUTION("evolution", 6);
-
-  static {
-    DATA.setMasterCard(ANALYSIS);
-    EVOLUTION.setMasterCard(ANALYSIS);
-    REPARTITION.setMasterCard(ANALYSIS);
-  }
+  DATA("data", 3);
 
   public static GlobType TYPE;
 
@@ -33,8 +24,6 @@ public enum Card implements GlobConstantContainer {
 
   private int id;
   private String name;
-  private Card masterCard;
-  private boolean containsSubCards;
 
   static {
     GlobTypeLoader.init(Card.class);
@@ -47,27 +36,6 @@ public enum Card implements GlobConstantContainer {
 
   public String getName() {
     return name;
-  }
-
-  public boolean isMaster() {
-    return masterCard == null;
-  }
-
-  public Card getMasterCard() {
-    return masterCard;
-  }
-
-  private void setMasterCard(Card master) {
-    this.masterCard = master;
-    master.containsSubCards = true;
-  }
-
-  public boolean containsSubCards() {
-    return containsSubCards;
-  }
-
-  public void setContainsSubCards(boolean containsSubCards) {
-    this.containsSubCards = containsSubCards;
   }
 
   public String getLabel() {
@@ -87,13 +55,7 @@ public enum Card implements GlobConstantContainer {
       case 2:
         return BUDGET;
       case 3:
-        return ANALYSIS;
-      case 4:
         return DATA;
-      case 5:
-        return REPARTITION;
-      case 6:
-        return EVOLUTION;
     }
     throw new ItemNotFound(id + " is not associated to any Card enum value");
   }

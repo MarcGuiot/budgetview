@@ -18,11 +18,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class CardView extends View implements GlobSelectionListener {
-  private CardHandler mainCards;
-  private CardHandler analysisCards;
+  private CardHandler cards;
 
-  private Card lastSelectedMasterCard = NavigationService.INITIAL_CARD;
-  private Card lastSelectedSubCard = Card.DATA;
+  private Card lastSelectedCard = NavigationService.INITIAL_CARD;
   private JToggleButton[] toggles = new JToggleButton[Card.values().length];
 
   public CardView(GlobRepository repository, Directory directory) {
@@ -32,8 +30,7 @@ public class CardView extends View implements GlobSelectionListener {
 
   public void registerComponents(GlobsPanelBuilder builder) {
 
-    mainCards = builder.addCardHandler("mainCards");
-    analysisCards = builder.addCardHandler("analysisCards");
+    cards = builder.addCardHandler("mainCards");
 
     ButtonGroup masterGroup = new ButtonGroup();
     ButtonGroup secondaryGroup = new ButtonGroup();
@@ -43,12 +40,7 @@ public class CardView extends View implements GlobSelectionListener {
       String name = card.getName() + "CardToggle";
       Gui.configureIconButton(toggle, name, new Dimension(45, 45));
       builder.add(name, toggle);
-      if (card.isMaster()) {
-        masterGroup.add(toggle);
-      }
-      else {
-        secondaryGroup.add(toggle);
-      }
+      masterGroup.add(toggle);
       toggles[card.getId()] = toggle;
     }
 
@@ -80,13 +72,7 @@ public class CardView extends View implements GlobSelectionListener {
   }
 
   private void showCard(Card card) {
-    if (card.isMaster()) {
-      toggles[card.getId()].doClick(0);
-    }
-    else {
-      toggles[card.getMasterCard().getId()].doClick(0);
-      toggles[card.getId()].doClick(0);
-    }
+    toggles[card.getId()].doClick(0);
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -97,7 +83,7 @@ public class CardView extends View implements GlobSelectionListener {
       }
     }
     if (selection.isRelevantForType(Month.TYPE) || selection.isRelevantForType(Category.TYPE)) {
-      showCard(lastSelectedMasterCard);
+      showCard(lastSelectedCard);
     }
   }
 
@@ -110,35 +96,13 @@ public class CardView extends View implements GlobSelectionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-      if (card == lastSelectedMasterCard) {
+      if (card == lastSelectedCard) {
         return;
       }
 
-      if (card.isMaster()) {
-        lastSelectedMasterCard = card;
-      }
-      else {
-        if ((card.getMasterCard() == lastSelectedMasterCard) && (card == lastSelectedSubCard)) {
-          return;
-        }
-        lastSelectedMasterCard = card.getMasterCard();
-        lastSelectedSubCard = card;
-      }
-
-      if (card.isMaster()) {
-        mainCards.show(card.getName());
-      }
-      else {
-        analysisCards.show(card.getName());
-        mainCards.show(card.getMasterCard().getName());
-      }
-
-      if (card.containsSubCards()) {
-        selectionService.select(repository.get(lastSelectedSubCard.getKey()));
-      }
-      else {
-        selectionService.select(repository.get(card.getKey()));
-      }
+      lastSelectedCard = card;
+      cards.show(card.getName());
+      selectionService.select(repository.get(card.getKey()));
     }
   }
 }

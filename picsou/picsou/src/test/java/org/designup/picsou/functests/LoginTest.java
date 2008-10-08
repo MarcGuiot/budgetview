@@ -261,7 +261,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
   }
 
   private TransactionChecker getTransactionView() {
-    UISpecAssert.waitUntil(window.containsUIComponent(ToggleButton.class, "analysisCardToggle"), 10000);
+    UISpecAssert.waitUntil(window.containsUIComponent(ToggleButton.class, "dataCardToggle"), 10000);
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectData();
     return new TransactionChecker(window);
