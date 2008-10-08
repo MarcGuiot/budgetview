@@ -216,7 +216,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       this.initialFilter = matcher;
       return this;
     }
-    GlobList selection = getCurrentSelection();
+    GlobList selection = selectionService.getSelection(type);
     int initialSize = selection.size();
     selection.filterSelf(matcher, repository);
     boolean selectionChanged = (initialSize != selection.size());

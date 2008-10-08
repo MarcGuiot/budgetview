@@ -11,11 +11,11 @@ public class DummyIconLocator implements IconLocator {
   public static final String ICON2_NAME = "icon2";
   public static final String ICON3_NAME = "icon3";
 
-  public static final Icon ICON1 = new ImageIcon();
-  public static final Icon ICON2 = new ImageIcon();
-  public static final Icon ICON3 = new ImageIcon();
+  public static final ImageIcon ICON1 = new ImageIcon();
+  public static final ImageIcon ICON2 = new ImageIcon();
+  public static final ImageIcon ICON3 = new ImageIcon();
 
-  public Icon get(String name) throws IconNotFound {
+  public ImageIcon get(String name) throws IconNotFound {
     if (ICON1_NAME.equals(name)) {
       return ICON1;
     }

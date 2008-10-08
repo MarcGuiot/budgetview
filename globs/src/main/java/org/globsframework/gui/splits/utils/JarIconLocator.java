@@ -18,7 +18,7 @@ public class JarIconLocator implements IconLocator {
     this.imagesPath = imagesPath;
   }
 
-  synchronized public Icon get(String fileName) throws IconNotFound {
+  synchronized public ImageIcon get(String fileName) throws IconNotFound {
     ImageIcon imageIcon = loadedImages.get(fileName);
     if (imageIcon == null) {
       String path = imagesPath + "/" + fileName;

@@ -866,6 +866,25 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     }));
   }
 
+  public void testChangeFilterWithSelectedDeletedGlob() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
+                    "<dummyObject id='2' name='name2' value='2.2'/>" +
+                    "<dummyObject id='3' name='name2' value='2.2'/>" +
+                    "<dummyObject id='4' name='name2' value='2.2'/>" +
+                    "");
+    view = GlobTableView.init(DummyObject.TYPE, repository, new GlobFieldComparator(ID), directory)
+      .setFilter(GlobMatchers.fieldEquals(DummyObject.NAME, "name2"))
+      .addColumn(DummyObject.ID)
+      .addColumn(DummyObject.NAME);
+    Table table = new Table(view.getComponent());
+    selectionService.select(repository.get(key2));
+    repository.enterBulkDispatchingMode();
+    repository.delete(key2);
+    view.setFilter(GlobMatchers.fieldEquals(DummyObject.NAME, "name1"));
+    repository.completeBulkDispatchingMode();
+  }
+
   private void checkColumnIsNotRightAligned(Table table, int column) {
     JLabel label = (JLabel)TableUtils.getRenderedComponentAt(table.getJTable(), 0, column);
     assertFalse(label.getHorizontalAlignment() == JLabel.RIGHT);
