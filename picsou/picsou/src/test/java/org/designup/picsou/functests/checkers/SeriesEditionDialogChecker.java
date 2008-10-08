@@ -100,6 +100,22 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return setCategory(categories);
   }
 
+  public SeriesEditionDialogChecker addCategory(String... categories) {
+    Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
+    CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
+    if (singleSelection) {
+      Assert.fail("only one category can be selected");
+    }
+    else {
+      categoryChooser.checkTitle("Select categories");
+      for (String category : categories) {
+        categoryChooser.selectCategory(category);
+      }
+      categoryChooser.validate();
+    }
+    return this;
+  }
+
   public SeriesEditionDialogChecker setCategory(String... categories) {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
     CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);

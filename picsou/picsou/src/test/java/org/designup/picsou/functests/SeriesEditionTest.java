@@ -955,4 +955,49 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkSeriesListIsVisible()
       .cancel();
   }
+
+  public void testChangeCategoriesOnEnvelopeChangePlannedTransaction() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -20., "PointP")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRows("PointP");
+    SeriesEditionDialogChecker edition =
+      categorization.selectEnvelopes().createEnvelopeSeries();
+    edition
+      .setName("Maison")
+      .setCategory("Entretien")
+      .validate();
+    views.selectData();
+    timeline.selectMonth("2008/07");
+    transactions
+      .initContent()
+      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", "Entretien")
+      .check();
+
+    views.selectBudget();
+    budgetView.envelopes.editSeries("Maison")
+      .addCategory("Furniture")
+      .validate();
+
+    views.selectData();
+    transactions
+      .initContent()
+      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", MasterCategory.HOUSE)
+      .check();
+
+    views.selectBudget();
+    budgetView.envelopes.editSeries("Maison")
+      .addCategory(getCategoryName(MasterCategory.LEISURES))
+      .validate();
+
+    views.selectData();
+    transactions
+      .initContent()
+      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", MasterCategory.NONE)
+      .check();
+
+  }
 }

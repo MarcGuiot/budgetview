@@ -6,6 +6,7 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobMatchers;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
@@ -90,23 +91,8 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
     if (month.get(CurrentMonth.MONTH_ID) == monthId && day < month.get(CurrentMonth.DAY)) {
       day = month.get(CurrentMonth.DAY);
     }
+    Integer categoryId = getCategory(series, repository);
     Integer seriesId = series.get(Series.ID);
-    Integer categoryId = series.get(Series.DEFAULT_CATEGORY); //MasterCategory.NONE.getId();
-//    GlobList seriesToCategory = repository.getAll(SeriesToCategory.TYPE, GlobMatchers.fieldEquals(SeriesToCategory.SERIES, seriesId));
-//    if (seriesToCategory.size() == 1) {
-//      categoryId = seriesToCategory.get(0).get(SeriesToCategory.CATEGORY);
-//    }
-//    else {
-//      Set<Integer> categories = new HashSet<Integer>();
-//      for (Glob glob : seriesToCategory) {
-//        Glob category = repository.findLinkTarget(glob, SeriesToCategory.CATEGORY);
-//        categories.add(category.get(Category.MASTER) == null ?
-//                       category.get(Category.ID) : category.get(Category.MASTER));
-//      }
-//      if (categories.size() == 1){
-//        categoryId = categories.iterator().next();
-//      }
-//    }
     repository.create(Transaction.TYPE,
                       value(Transaction.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
                       value(Transaction.AMOUNT, amount),
@@ -119,6 +105,30 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
                       value(Transaction.PLANNED, true),
                       value(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId()),
                       value(Transaction.CATEGORY, categoryId));
+  }
+
+  public static Integer getCategory(Glob series, GlobRepository repository) {
+    Integer seriesId = series.get(Series.ID);
+    Integer categoryId = series.get(Series.DEFAULT_CATEGORY);
+    GlobList seriesToCategory = repository.getAll(SeriesToCategory.TYPE, GlobMatchers.fieldEquals(SeriesToCategory.SERIES, seriesId));
+    if (seriesToCategory.size() == 1) {
+      categoryId = seriesToCategory.get(0).get(SeriesToCategory.CATEGORY);
+    }
+    else if (seriesToCategory.size() != 0) {
+      Set<Integer> categories = new HashSet<Integer>();
+      for (Glob glob : seriesToCategory) {
+        Glob category = repository.findLinkTarget(glob, SeriesToCategory.CATEGORY);
+        categories.add(category.get(Category.MASTER) == null ?
+                       category.get(Category.ID) : category.get(Category.MASTER));
+      }
+      if (categories.size() == 1) {
+        categoryId = categories.iterator().next();
+      }
+      else if (categories.size() > 1) {
+        categoryId = MasterCategory.NONE.getId();
+      }
+    }
+    return categoryId;
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
