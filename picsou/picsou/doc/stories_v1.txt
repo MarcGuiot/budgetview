@@ -1,6 +1,4 @@
 
-- bug back/forward avec analyse/releve
-
 - regler les montants des occasional
 
 - balancesummary : afficher balance ("Variation/Balance")
@@ -11,11 +9,11 @@
 
 - SED : changement de periodicite = se caler sur les donnees existantes
 
-- budgetView : afficher un message quand plusieurs mois sont selectionnes
-
 - courbe evolution solde fin de mois avec reglage de seuil
 
 - saisir des montants positifs/negatifs pour les series
+
+- tooltip sur repartir
 
 ======================================
 

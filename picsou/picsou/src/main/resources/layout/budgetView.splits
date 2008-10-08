@@ -1,7 +1,14 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <row styleClass="main">
+  <column styleClass="main">
+
+    <row>
+      <filler fill="horizontal"/>
+      <htmlEditorPane ref="multiSelectionWarning" styleClass="mainPanelMessage" text="$budgetview.multiselection"/>
+      <filler fill="horizontal"/>
+    </row>
+
     <horizontalSplit ref="horizontalSplitPane">
 
       <verticalSplit ref="firstVerticalSplitPane">
@@ -20,5 +27,5 @@
       </verticalSplit>
     </horizontalSplit>
 
-  </row>
+  </column>
 </splits>

@@ -60,9 +60,7 @@ public class CategorizationGaugePanel implements GlobSelectionListener, ChangeSe
   private void createProgressMessage() {
     progressMessage = new JEditorPane();
     progressMessage.setContentType("text/html");
-
     PicsouColors.installLinkColor(progressMessage, "mainpanel", "mainpanel.message.link", directory);
-
     progressMessage.setVisible(false);
   }
 

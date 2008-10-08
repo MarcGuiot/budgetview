@@ -199,4 +199,8 @@ public class BudgetViewChecker extends DataChecker {
       return this;
     }
   }
+
+  public void checkMultiSelectionMessageVisible(boolean visible) {
+    UISpecAssert.assertEquals(visible, window.getTextBox("multiSelectionWarning").isVisible());
+  }
 }
