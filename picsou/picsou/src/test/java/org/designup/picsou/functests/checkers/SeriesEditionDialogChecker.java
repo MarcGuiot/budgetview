@@ -75,7 +75,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker setAmount(String value) {
-    dialog.getInputTextBox("amountEditor").setText(value);
+    getAmount().setText(value);
     return this;
   }
 

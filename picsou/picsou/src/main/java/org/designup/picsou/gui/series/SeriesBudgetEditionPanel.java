@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
@@ -20,6 +21,7 @@ import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
@@ -39,22 +41,25 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
 import java.util.Set;
 
 public class SeriesBudgetEditionPanel {
   private GlobNumericEditor amountEditor;
   private JPanel panel;
-  private GlobRepository repository;
+  private Window container;
   private GlobRepository localRepository;
   private Directory directory;
   private TimeService timeService;
   private Glob series;
   private BudgetArea budgetArea;
   private SelectionService selectionService;
+  private CardHandler modeCard;
 
-  public SeriesBudgetEditionPanel(final GlobRepository repository, final GlobRepository localRepository, Directory directory) {
-    this.repository = repository;
+  public SeriesBudgetEditionPanel(Window container, final GlobRepository repository,
+                                  final GlobRepository localRepository, Directory directory) {
+    this.container = container;
     this.localRepository = localRepository;
     this.directory = directory;
     DescriptionService descriptionService = directory.get(DescriptionService.class);
@@ -62,6 +67,10 @@ public class SeriesBudgetEditionPanel {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/seriesBudgetEditionPanel.splits",
                                                       localRepository, directory);
+
+    modeCard = builder.addCardHandler("modeCard");
+    builder.add("manual", new GotoManualAction());
+    builder.add("automatic", new GotoAutomaticAction());
 
     amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT)
       .setMinusAllowed(false)
@@ -104,6 +113,12 @@ public class SeriesBudgetEditionPanel {
           }
           else {
             amountEditor.setInvertValue(true);
+          }
+          if (SeriesBudgetEditionPanel.this.series.get(Series.IS_AUTOMATIC)) {
+            modeCard.show("automatic");
+          }
+          else {
+            modeCard.show("manual");
           }
         }
       }
@@ -294,4 +309,34 @@ public class SeriesBudgetEditionPanel {
       }
     }
   }
+
+  private class GotoAutomaticAction extends AbstractAction {
+    public GotoAutomaticAction() {
+      super(Lang.get("seriesEdition.goto.automatic"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      ConfirmationDialog confirm = new ConfirmationDialog("seriesEdition.goto.automatic.title",
+                                                          "seriesEdition.goto.automatic.warning",
+                                                          container, directory) {
+        protected void postValidate() {
+          localRepository.update(series.getKey(), Series.IS_AUTOMATIC, true);
+          modeCard.show("automatic");
+        }
+      };
+      confirm.show();
+    }
+  }
+
+  private class GotoManualAction extends AbstractAction {
+    private GotoManualAction() {
+      super(Lang.get("seriesEdition.goto.manual"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      localRepository.update(series.getKey(), Series.IS_AUTOMATIC, false);
+      modeCard.show("manual");
+    }
+  }
+
 }

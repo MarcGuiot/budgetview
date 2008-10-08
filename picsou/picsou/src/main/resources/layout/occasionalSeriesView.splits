@@ -31,13 +31,18 @@
               <label ref="categoryName" styleClass="item" fill="horizontal" anchor="right" horizontalAlignment="right"
                      weightX="10.0" marginRight="10"/>
               <button ref="observedCategoryAmount" styleClass="amountLink"
-                     fill="horizontal" anchor="right" horizontalAlignment="right"
-                     weightX="0.1" marginRight="6"
-                     tooltipText="$budgetview.tooltip.detail.observed"/>
+                      fill="horizontal" anchor="right" horizontalAlignment="right"
+                      weightX="0.1" marginRight="6"
+                      tooltipText="$budgetview.tooltip.detail.observed"/>
             </repeat>
             <filler fill="vertical"/>
           </column>
         </scrollPane>
+        <row>
+          <button action="editOccasionalSeries" styleClass="list"/>
+          <filler fill="horizontal"/>
+        </row>
+
       </column>
     </panel>
 

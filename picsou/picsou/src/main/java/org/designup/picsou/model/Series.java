@@ -37,7 +37,8 @@ public class Series {
   @Target(Category.class)
   public static LinkField DEFAULT_CATEGORY;
 
-  @Target(ProfileType.class) @DefaultInteger(2)
+  @Target(ProfileType.class)
+  @DefaultInteger(2)
   public static LinkField PROFILE_TYPE;
 
   @Target(Month.class)
@@ -94,8 +95,11 @@ public class Series {
   public static final Integer OCCASIONAL_SERIES_ID = 0;
   public static final Integer UNCATEGORIZED_SERIES_ID = 1;
 
+  public static org.globsframework.model.Key OCCASIONAL_SERIES;
+
   static {
     GlobTypeLoader.init(Series.class, "series");
+    OCCASIONAL_SERIES = org.globsframework.model.Key.create(TYPE, OCCASIONAL_SERIES_ID);
   }
 
   public static BooleanField getField(int monthId) {
@@ -133,7 +137,10 @@ public class Series {
                               SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER};
   }
 
-  public static String getPlannedTransactionLabel(FieldValues series) {
+  public static String getPlannedTransactionLabel(Integer seriesId, FieldValues series) {
+    if (seriesId == 0) {
+      return Lang.get("transaction.planned", BudgetArea.OCCASIONAL.getLabel());
+    }
     return Lang.get("transaction.planned", series.get(Series.LABEL));
   }
 

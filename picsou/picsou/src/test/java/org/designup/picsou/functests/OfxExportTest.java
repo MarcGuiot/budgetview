@@ -53,7 +53,7 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
       "            <DTPOSTED>20060110\n" +
       "            <DTUSER>20060110\n" +
       "            <TRNAMT>-1.0\n" +
-      "            <FITID>PICSOU1\n" +
+      "            <FITID>PICSOU33\n" +
       "            <NAME>Menu K\n" +
       "            <CATEGORY>2\n" +
       "            <NOTE>COCA\n" +

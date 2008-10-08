@@ -61,10 +61,9 @@ public class PicsouInit {
     repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
     repository.addTrigger(new FutureMonthTrigger(directory));
     repository.addTrigger(new MonthsToSeriesBudgetTrigger(directory));
-    repository.addTrigger(new OccasionalSeriesBudgetCreationTrigger());
+    repository.addTrigger(new IrregularSeriesBudgetCreationTrigger());
     repository.addTrigger(new ObservedSeriesStatTrigger());
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
-    repository.addTrigger(new SeriesBudgetUpdateOccasionnalTrigger());
     repository.addTrigger(new SeriesBudgetUpdateTransactionTrigger());
     repository.addTrigger(new TransactionPlannedTrigger());
     repository.addTrigger(new BalanceTrigger());

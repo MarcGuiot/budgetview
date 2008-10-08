@@ -3,7 +3,6 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.categories.CategoryChooserCallback;
 import org.designup.picsou.gui.categories.CategoryChooserDialog;
-import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.MonthChooserDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
@@ -17,7 +16,6 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
-import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -69,7 +67,6 @@ public class SeriesEditionDialog {
   private SeriesEditionDialog.CalendarAction endDateCalendar;
   private GlobTextEditor nameEditor;
   private JLabel categoryLabel;
-  private CardHandler modeCard;
   private JPanel monthSelectionPanel;
   private JPanel seriesPanel;
   private Key createdSeries;
@@ -143,25 +140,14 @@ public class SeriesEditionDialog {
 
     registerDateComponents(builder);
 
-    modeCard = builder.addCardHandler("modeCard");
-    builder.add("manual", new GotoManualAction());
-    builder.add("automatic", new GotoAutomaticAction());
-
-    budgetEditionPanel = new SeriesBudgetEditionPanel(repository, localRepository, localDirectory);
+    budgetEditionPanel = new SeriesBudgetEditionPanel(dialog, repository, localRepository, localDirectory);
     JPanel seriesBudgetPanel = budgetEditionPanel.getPanel();
-
-    builder.add("serieBudgetEditionPanel", seriesBudgetPanel);
+    builder.add("seriesBudgetEditionPanel", seriesBudgetPanel);
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         currentSeries = selection.getAll(Series.TYPE).getFirst();
         if (currentSeries != null) {
-          if (currentSeries.get(Series.IS_AUTOMATIC)) {
-            modeCard.show("automatic");
-          }
-          else {
-            modeCard.show("manual");
-          }
           assignCategoryAction.setEnabled(true);
           multiCategoryList.setFilter(GlobMatchers.fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)));
         }
@@ -841,35 +827,6 @@ public class SeriesEditionDialog {
       else {
         return Lang.get("seriesEdition.missing.category.label.single");
       }
-    }
-  }
-
-  private class GotoAutomaticAction extends AbstractAction {
-    public GotoAutomaticAction() {
-      super(Lang.get("seriesEdition.goto.automatic"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      ConfirmationDialog confirm = new ConfirmationDialog("seriesEdition.goto.automatic.title",
-                                                          "seriesEdition.goto.automatic.warning",
-                                                          dialog, localDirectory) {
-        protected void postValidate() {
-          localRepository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, true);
-          modeCard.show("automatic");
-        }
-      };
-      confirm.show();
-    }
-  }
-
-  private class GotoManualAction extends AbstractAction {
-    private GotoManualAction() {
-      super(Lang.get("seriesEdition.goto.manual"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      localRepository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, false);
-      modeCard.show("manual");
     }
   }
 }

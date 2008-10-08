@@ -10,7 +10,7 @@ import org.globsframework.model.*;
 import java.util.Calendar;
 import java.util.Set;
 
-public class OccasionalSeriesBudgetCreationTrigger implements ChangeSetListener {
+public class IrregularSeriesBudgetCreationTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {

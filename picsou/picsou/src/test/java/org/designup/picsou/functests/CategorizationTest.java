@@ -889,8 +889,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     timeline.selectAll();
     transactions.initContent()
+      .add("01/08/2008", TransactionType.PLANNED, "Planned: Occasional", "", -10.00, "Occasional")
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant", MasterCategory.FOOD)
+      .add("01/07/2008", TransactionType.PLANNED, "Planned: Occasional", "", -10.00, "Occasional")
       .add("01/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant", MasterCategory.FOOD)
+      .add("10/06/2008", TransactionType.PLANNED, "Planned: Occasional", "", -10.00, "Occasional")
       .add("10/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -10.00, "Courant", MasterCategory.FOOD)
       .add("10/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -10.00, "Courant", MasterCategory.FOOD)
       .add("20/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -20.00, "Courant", MasterCategory.FOOD)

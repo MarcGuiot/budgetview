@@ -21,7 +21,7 @@ public class SeriesRenameTrigger implements ChangeSetListener {
               .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, true), repository);
             for (Glob transaction : globs) {
               repository.update(transaction.getKey(), Transaction.LABEL,
-                                Series.getPlannedTransactionLabel(values));
+                                Series.getPlannedTransactionLabel(key.get(Series.ID), values));
             }
           }
         }

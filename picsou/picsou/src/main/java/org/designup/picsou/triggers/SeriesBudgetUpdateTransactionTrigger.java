@@ -32,9 +32,6 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
           return;
         }
         Glob series = repository.get(Key.create(Series.TYPE, seriesBudget.get(SeriesBudget.SERIES)));
-        if (BudgetArea.OCCASIONAL.getId().equals(series.get(Series.BUDGET_AREA))) {
-          return;
-        }
         if (values.contains(SeriesBudget.ACTIVE)) {
           if (values.get(SeriesBudget.ACTIVE)) {
             Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
@@ -93,18 +90,35 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
     if (month.get(CurrentMonth.MONTH_ID) == monthId && day < month.get(CurrentMonth.DAY)) {
       day = month.get(CurrentMonth.DAY);
     }
+    Integer seriesId = series.get(Series.ID);
+    Integer categoryId = series.get(Series.DEFAULT_CATEGORY); //MasterCategory.NONE.getId();
+//    GlobList seriesToCategory = repository.getAll(SeriesToCategory.TYPE, GlobMatchers.fieldEquals(SeriesToCategory.SERIES, seriesId));
+//    if (seriesToCategory.size() == 1) {
+//      categoryId = seriesToCategory.get(0).get(SeriesToCategory.CATEGORY);
+//    }
+//    else {
+//      Set<Integer> categories = new HashSet<Integer>();
+//      for (Glob glob : seriesToCategory) {
+//        Glob category = repository.findLinkTarget(glob, SeriesToCategory.CATEGORY);
+//        categories.add(category.get(Category.MASTER) == null ?
+//                       category.get(Category.ID) : category.get(Category.MASTER));
+//      }
+//      if (categories.size() == 1){
+//        categoryId = categories.iterator().next();
+//      }
+//    }
     repository.create(Transaction.TYPE,
                       value(Transaction.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
                       value(Transaction.AMOUNT, amount),
-                      value(Transaction.SERIES, series.get(Series.ID)),
+                      value(Transaction.SERIES, seriesId),
                       value(Transaction.BANK_MONTH, monthId),
                       value(Transaction.BANK_DAY, day),
                       value(Transaction.MONTH, monthId),
                       value(Transaction.DAY, day),
-                      value(Transaction.LABEL, Series.getPlannedTransactionLabel(series)),
+                      value(Transaction.LABEL, Series.getPlannedTransactionLabel(series.get(Series.ID), series)),
                       value(Transaction.PLANNED, true),
                       value(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId()),
-                      value(Transaction.CATEGORY, series.get(Series.DEFAULT_CATEGORY)));
+                      value(Transaction.CATEGORY, categoryId));
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {

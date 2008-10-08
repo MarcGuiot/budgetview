@@ -86,6 +86,10 @@ public class TransactionFilter {
           long actualDate = Transaction.fullBankDate(sortedActual[actualIndex]);
           if (importedDate < actualDate) {
             transactionsToAdd.add(sortedImported[importedIndex]);
+            if (Transaction.isSplitSource(sortedImported[importedIndex])) {
+              transactionsToAdd.addAll(importedSplitedTransaction
+                .get(sortedImported[importedIndex].get(Transaction.ID)));
+            }
             importedIndex++;
           }
           else if (importedDate == actualDate) {
@@ -94,7 +98,7 @@ public class TransactionFilter {
             }
             else {
               transactionsToAdd.add(sortedImported[importedIndex]);
-              if (Transaction.isSplitPart(sortedImported[importedIndex])) {
+              if (Transaction.isSplitSource(sortedImported[importedIndex])) {
                 transactionsToAdd.addAll(importedSplitedTransaction
                   .get(sortedImported[importedIndex].get(Transaction.ID)));
               }

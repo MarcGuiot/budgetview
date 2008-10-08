@@ -84,29 +84,7 @@
                 <filler fill="vertical"/>
               </column>
 
-              <cards ref="modeCard" opaque="false">
-                <card name="manual">
-                  <column margin="10" marginBottom="0" weightX="7">
-                    <panel ref="serieBudgetEditionPanel"/>
-                    <row>
-                      <filler fill="horizontal"/>
-                      <button action="automatic" styleClass="hyperlink"/>
-                    </row>
-                  </column>
-                </card>
-                <card name="automatic">
-                  <column>
-                    <htmlEditorPane text="$seriesEdition.automatic.explain" margin="20" marginBottom="30"/>
-                    <row>
-                      <filler fill="horizontal"/>
-                      <button action="manual"/>
-                      <filler fill="horizontal"/>
-                    </row>
-                    <filler fill="vertical"/>
-                  </column>
-                </card>
-              </cards>
-
+              <panel ref="seriesBudgetEditionPanel"/>
             </row>
           </column>
         </column>

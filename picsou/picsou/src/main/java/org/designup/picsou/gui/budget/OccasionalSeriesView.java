@@ -6,6 +6,7 @@ import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.model.OccasionalSeriesStat;
 import org.designup.picsou.gui.model.PeriodOccasionalSeriesStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.designup.picsou.gui.series.OccasionalSeriesEditionDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
@@ -31,6 +32,7 @@ import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -41,12 +43,14 @@ public class OccasionalSeriesView extends View {
   private GlobMatcher totalMatcher;
   private Set<Integer> currentMonths = Collections.emptySet();
   private GlobList currentStat = GlobList.EMPTY;
+  private OccasionalSeriesEditionDialog occasionalEditionDialog;
 
   protected OccasionalSeriesView(String name, GlobRepository repository, Directory directory) {
     super(repository, directory);
     this.name = name;
     this.totalMatcher =
       GlobMatchers.linkTargetFieldEquals(PeriodSeriesStat.SERIES, Series.ID, Series.OCCASIONAL_SERIES_ID);
+    occasionalEditionDialog = new OccasionalSeriesEditionDialog(directory.get(JFrame.class), repository, directory);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -85,6 +89,13 @@ public class OccasionalSeriesView extends View {
                             });
                           }
                         });
+
+    builder.add("editOccasionalSeries", new AbstractAction() {
+
+      public void actionPerformed(ActionEvent e) {
+        occasionalEditionDialog.show();
+      }
+    });
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {

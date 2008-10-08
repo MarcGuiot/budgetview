@@ -20,9 +20,6 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
     Integer[] free = getBudgetId(FREE_SERIES_ID);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "  <update _amount='0.0' amount='29.9' id='" + occasional[0] + "' type='seriesBudget'/>" +
-      "  <update _amount='0.0' amount='29.9' id='" + occasional[1] + "' type='seriesBudget'/>" +
-      "  <update _amount='0.0' amount='29.9' id='" + occasional[2] + "' type='seriesBudget'/>" +
       "  <create active='true' amount='-29.9' day='7' id='" + free[2] + "'" +
       "          month='200809' series='100' type='seriesBudget' overrunAmount='0.0'/>" +
       "  <create active='true' amount='-29.9' day='7' id='" + free[1] + "'" +
@@ -57,9 +54,6 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
     Integer[] occasional = getBudgetId(0);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "  <update _amount='29.9' amount='0.0' id='" + occasional[0] + "' type='seriesBudget'/>" +
-      "  <update _amount='29.9' amount='0.0' id='" + occasional[1] + "' type='seriesBudget'/>" +
-      "  <update _amount='29.9' amount='0.0' id='" + occasional[2] + "' type='seriesBudget'/>" +
       "  <delete _active='true' _amount='-29.9' _day='7' _month='200809'" +
       "          _series='100' id='" + free[2] + "' type='seriesBudget' _overrunAmount='0.0'/>" +
       "  <delete _active='true' _amount='-29.9' _day='7' _month='200808'" +
