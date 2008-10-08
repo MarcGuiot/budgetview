@@ -3,10 +3,13 @@ package org.designup.picsou.gui.utils;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -166,5 +169,18 @@ public enum PicsouColors {
   public static void setSelectionColors(JTable table, ColorLocator colors) {
     table.setSelectionBackground(colors.get("transaction.selected.bg"));
     table.setSelectionForeground(colors.get("transaction.selected.text"));
+  }
+
+  public static void installLinkColor(final JEditorPane editor, final String cssClass, final String colorKey, Directory directory) {
+    directory.get(ColorService.class).addListener(new ColorChangeListener() {
+      public void colorsChanged(ColorLocator colorLocator) {
+
+        Color color = colorLocator.get(colorKey);
+
+        HTMLEditorKit kit = (HTMLEditorKit)editor.getEditorKit();
+        StyleSheet css = kit.getStyleSheet();
+        css.addRule("a." + cssClass + " { color: #" + Colors.toString(color) + "; }");
+      }
+    });
   }
 }

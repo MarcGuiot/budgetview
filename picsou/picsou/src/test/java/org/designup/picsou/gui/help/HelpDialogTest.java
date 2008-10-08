@@ -2,6 +2,7 @@ package org.designup.picsou.gui.help;
 
 import org.designup.picsou.functests.checkers.HelpChecker;
 import org.designup.picsou.gui.PicsouGuiTestCase;
+import org.designup.picsou.gui.card.NavigationService;
 import org.uispec4j.Trigger;
 import org.globsframework.gui.splits.utils.DummyIconLocator;
 import org.globsframework.gui.splits.IconLocator;

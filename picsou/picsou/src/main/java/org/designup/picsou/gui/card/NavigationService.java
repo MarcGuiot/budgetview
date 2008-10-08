@@ -43,16 +43,20 @@ public class NavigationService implements GlobSelectionListener {
     this.selectionService.addListener(this, Card.TYPE);
   }
 
+  public void gotoCard(Card card) {
+    select(card, false);
+  }
+
   public void gotoHome() {
-    select(Card.HOME, false);
+    gotoCard(Card.HOME);
   }
 
   public void gotoBudget() {
-    select(Card.BUDGET, false);
+    gotoCard(Card.BUDGET);
   }
 
   public void gotoCategorization() {
-    select(Card.CATEGORIZATION, false);
+    gotoCard(Card.CATEGORIZATION);
   }
 
   public void gotoCategorization(GlobList transactions) {

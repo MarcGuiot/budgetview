@@ -11,6 +11,8 @@ import org.globsframework.gui.utils.TableUtils;
 import sun.security.action.GetPropertyAction;
 
 import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.TableColumnModel;

@@ -121,6 +121,10 @@
            fill="none" anchor="right" horizontalAlignment="right"
            foreground="block.item.link"/>
 
+    <!-- Main panel -->
+    <style selector="htmlEditorPane.mainPanelMessage" fill="horizontal" anchor="center"
+           foreground="mainpanel.message" weightY="0" border="empty(0,0,10,0)"/>
+
     <!-- Icon buttons -->
     <ui name="iconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"
         border="iconbutton.border"

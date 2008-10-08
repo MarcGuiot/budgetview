@@ -25,7 +25,13 @@
            foreground="categorization.budgetAreaSelector.description"/>
   </styles>
 
-  <panel styleClass="main">
+  <column styleClass="main">
+
+    <row>
+      <filler fill="horizontal"/>
+      <htmlEditorPane ref="progressMessage" styleClass="mainPanelMessage" hyperlinkListener="hyperlinkHandler"/>
+      <filler fill="horizontal"/>
+    </row>
 
     <horizontalSplit opaque="false">
 
@@ -161,5 +167,5 @@
       </column>
 
     </horizontalSplit>
-  </panel>
+  </column>
 </splits>

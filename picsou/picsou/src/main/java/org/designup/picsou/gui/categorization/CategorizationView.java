@@ -111,6 +111,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     CategorizationGaugePanel gauge = new CategorizationGaugePanel(repository, parentDirectory);
     builder.add("gaugePanel", gauge.getPanel());
+    builder.add("progressMessage", gauge.getProgressMessage());
 
     Comparator<Glob> transactionComparator = getTransactionComparator();
     DescriptionService descriptionService = directory.get(DescriptionService.class);

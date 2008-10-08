@@ -798,7 +798,7 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationGaugeChecker getGauge() {
-    return new CategorizationGaugeChecker(getPanel().getPanel("gaugePanel"));
+    return new CategorizationGaugeChecker(getPanel());
   }
 
   public CategorizationTableChecker initContent() {

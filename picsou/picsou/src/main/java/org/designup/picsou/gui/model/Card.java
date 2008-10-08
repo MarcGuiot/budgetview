@@ -10,6 +10,7 @@ import org.globsframework.model.KeyBuilder;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.Strings;
 
 public enum Card implements GlobConstantContainer {
   HOME("home", 0),
@@ -58,6 +59,10 @@ public enum Card implements GlobConstantContainer {
         return DATA;
     }
     throw new ItemNotFound(id + " is not associated to any Card enum value");
+  }
+
+  public static Card get(String name) {
+    return Card.valueOf(Strings.toNiceUpperCase(name));
   }
 
   public org.globsframework.model.Key getKey() {
