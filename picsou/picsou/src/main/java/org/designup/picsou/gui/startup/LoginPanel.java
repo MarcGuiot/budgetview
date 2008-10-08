@@ -150,6 +150,7 @@ public class LoginPanel {
 
     setComponentsEnabled(false);
     progressPanel.start();
+
     Thread thread = new Thread(new LoginFunctor(user, password, createUser));
     thread.setDaemon(true);
     thread.start();
@@ -200,16 +201,24 @@ public class LoginPanel {
       }
       catch (Exception e) {
         displayErrorMessageFromKey("login.server.connection.failure");
-        StringWriter stringWriter = new StringWriter();
+        final StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
         e.printStackTrace(writer);
         e.printStackTrace();
-        JTextArea textArea = new JTextArea(stringWriter.toString());
-        GuiUtils.show(textArea);
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            JTextArea textArea = new JTextArea(stringWriter.toString());
+            GuiUtils.show(textArea);
+          }
+        });
       }
       finally {
-        setComponentsEnabled(true);
-        progressPanel.stop();
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            setComponentsEnabled(true);
+            progressPanel.stop();
+          }
+        });
       }
     }
   }
@@ -217,8 +226,8 @@ public class LoginPanel {
   private void setComponentsEnabled(boolean enabled) {
     this.userField.setEnabled(enabled);
     this.passwordField.setEnabled(enabled);
-    this.creationCheckBox.setEnabled(false);
-    this.confirmPasswordField.setEnabled(false);
+    this.creationCheckBox.setEnabled(enabled);
+    this.confirmPasswordField.setEnabled(enabled);
     this.loginButton.setEnabled(enabled);
   }
 

@@ -1,11 +1,11 @@
 
 - bug back/forward avec analyse/releve
 
-- login : bug grisage sur erreur login
-
 - regler les montants des occasional
 
 - balancesummary : afficher balance ("Variation/Balance")
+
+- balancesummary : ajouter occasional
 
 - balancesummary : "montant estime au 31/10/2008"
 
@@ -16,6 +16,8 @@
 - categorizationView : afficher un message quand la categorisation est assez avancee (90%) ?
 
 - courbe evolution solde fin de mois avec reglage de seuil
+
+- saisir des montants positifs/negatifs pour les series
 
 ======================================
 

@@ -588,7 +588,7 @@ public class ImportPanel {
 
   private class FinishAction extends AbstractAction {
     public FinishAction() {
-      super(Lang.get("ok"));
+      super(Lang.get("import.ok"));
     }
 
     public void actionPerformed(ActionEvent event) {
