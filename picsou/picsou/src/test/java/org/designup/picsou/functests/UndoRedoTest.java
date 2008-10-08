@@ -113,4 +113,31 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
       .add("15/07/2008", TransactionType.VIREMENT, "Orange", "", 95.00)
       .check();
   }
+
+  public void testUndoImportWithManyMonth() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/15", -45.00, "Free")
+      .addTransaction("2008/07/15", -50.00, "Orange")
+      .addTransaction("2008/08/15", 15.00, "McDo", MasterCategory.FOOD)
+      .load();
+
+    views.selectCategorization();
+    categorization.setRecurring("Orange", "FT", MasterCategory.TELECOMS, true);
+    categorization.setRecurring("Free", "Free Telecom", MasterCategory.TELECOMS, true);
+    categorization.setEnvelope("McDo", "Resto", MasterCategory.FOOD, true);
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/05/10", -95.00, "Orange")
+      .addTransaction("2008/05/11", -10.00, "Free")
+      .load();
+
+    timeline.selectAll();
+    categorization.selectTableRows(0, 1, 2, 3, 4);
+    views.selectCategorization();
+    operations.undo();
+    operations.undo();
+    operations.undo();
+    operations.undo();
+    operations.undo();
+  }
 }

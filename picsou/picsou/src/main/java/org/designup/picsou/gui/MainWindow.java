@@ -31,7 +31,7 @@ public class MainWindow {
       }
       JDialog.setDefaultLookAndFeelDecorated(false);
       ToolTipManager.sharedInstance().setInitialDelay(500);
-      ToolTipManager.sharedInstance().setDismissDelay(100000);      
+      ToolTipManager.sharedInstance().setDismissDelay(100000);
     }
     catch (Exception e) {
       throw new RuntimeException(e);
@@ -41,6 +41,8 @@ public class MainWindow {
   public MainWindow() throws Exception {
     frame = new PicsouFrame(Lang.get("application"));
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    ImageIcon icon = Gui.ICON_LOCATOR.get("fourmics_icon_128.png");
+    frame.setIconImage(icon.getImage());
   }
 
   public void setPanel(JPanel panel) {

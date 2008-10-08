@@ -78,6 +78,7 @@ public class ImportPanel {
   private ImportedTransactionDateRenderer dateRenderer;
   private boolean step1 = true;
   private boolean step2 = true;
+  private boolean completed = false;
   private OpenRequestManager openRequestManager;
   private Glob defaultAccount;
   private Window owner;
@@ -437,8 +438,12 @@ public class ImportPanel {
         step2 = false;
       }
     }
+    if (completed) {
+      return true;
+    }
     if (!step2) {
       try {
+        completed = true;
         Set<Integer> month = createMonth();
         learn();
         showBalanceDialog();
@@ -459,7 +464,6 @@ public class ImportPanel {
       file = files.remove(0);
     }
     try {
-
       fileNameLabel.setText(file.getAbsolutePath());
       List<String> dateFormat = importSession.loadFile(file);
       initBankEntityEditionPanel();
