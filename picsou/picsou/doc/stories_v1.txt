@@ -1,23 +1,21 @@
 
-- bug back/forward avec analyse/releve
-
-- login : bug grisage sur erreur login
-
 - regler les montants des occasional
 
-- balancesummary : afficher balance ("Variation/Balance")
+- monthsummary : afficher balance ("Variation/Balance") a la place de percu/...
+
+- BalanceStat avec trigger
+
+- balanceSummary : baser sur BalanceStat et ajouter occasional
 
 - balancesummary : "montant estime au 31/10/2008"
 
+- saisir des montants positifs/negatifs pour les series
+
 - SED : changement de periodicite = se caler sur les donnees existantes
 
-- budgetView : afficher un message quand plusieurs mois sont selectionnes
-
-- categorizationView : afficher un message quand la categorisation est assez avancee (90%) ?
-
-- courbe evolution solde fin de mois avec reglage de seuil
-
 ======================================
+
+- tooltip sur repartir
 
 - Creation compte : afficher SLA
 

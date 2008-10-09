@@ -212,4 +212,8 @@ public class BudgetViewChecker extends DataChecker {
         WindowInterceptor.getModalDialog(getPanel().getButton("editOccasionalSeries").triggerClick()));
     }
   }
+
+  public void checkMultiSelectionMessageVisible(boolean visible) {
+    UISpecAssert.assertEquals(visible, window.getTextBox("multiSelectionWarning").isVisible());
+  }
 }

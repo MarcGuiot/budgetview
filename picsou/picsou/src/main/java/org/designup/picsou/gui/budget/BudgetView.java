@@ -20,15 +20,17 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public class BudgetView extends View implements GlobSelectionListener, ChangeSetListener {
-  private GlobList currentSelectedMonth = GlobList.EMPTY;
+  private GlobList selectedMonths = GlobList.EMPTY;
   private JideSplitPane horizontalSplitPane;
   private JideSplitPane firstVerticalSplitPane;
   private JideSplitPane secondVerticalSplitPane;
   private JideSplitPane thirdVerticalSplitPane;
+  private JEditorPane multiSelectionWarning;
 
   public BudgetView(GlobRepository repository, Directory parentDirectory) {
     super(new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodOccasionalSeriesStat.TYPE),
@@ -46,25 +48,20 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetView.splits",
                                                       repository, directory);
 
-    horizontalSplitPane = new JideSplitPane();
-    builder.add("horizontalSplitPane", horizontalSplitPane);
-    firstVerticalSplitPane = new JideSplitPane();
-    builder.add("firstVerticalSplitPane", firstVerticalSplitPane);
-    secondVerticalSplitPane = new JideSplitPane();
-    builder.add("secondVerticalSplitPane", secondVerticalSplitPane);
-    thirdVerticalSplitPane = new JideSplitPane();
-    builder.add("thirdVerticalSplitPane", thirdVerticalSplitPane);
     addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder);
-
     addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder);
-
     addBudgetAreaView("envelopeBudgetView", BudgetArea.ENVELOPES, builder);
-
     addBudgetAreaView("occasionalBudgetView", BudgetArea.OCCASIONAL, builder);
-
     addBudgetAreaView("projectsBudgetView", BudgetArea.SPECIAL, builder);
-
     addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder);
+
+    horizontalSplitPane = builder.add("horizontalSplitPane", new JideSplitPane());
+    firstVerticalSplitPane = builder.add("firstVerticalSplitPane", new JideSplitPane());
+    secondVerticalSplitPane = builder.add("secondVerticalSplitPane", new JideSplitPane());
+    thirdVerticalSplitPane = builder.add("thirdVerticalSplitPane", new JideSplitPane());
+
+    multiSelectionWarning = builder.add("multiSelectionWarning", new JEditorPane());
+    multiSelectionWarning.setVisible(false);
 
     parentBuilder.add("budgetView", builder);
 
@@ -83,8 +80,9 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    currentSelectedMonth = selection.getAll(Month.TYPE);
+    selectedMonths = selection.getAll(Month.TYPE);
     updateSelection();
+    updateWarningMessage();
   }
 
   private void updateSelection() {
@@ -92,7 +90,7 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     PeriodSeriesStatFunctor seriesStatFunctor = new PeriodSeriesStatFunctor(repository);
     try {
       repository.deleteAll(PeriodSeriesStat.TYPE);
-      Set<Integer> monthIds = currentSelectedMonth.getValueSet(Month.ID);
+      Set<Integer> monthIds = selectedMonths.getValueSet(Month.ID);
 
       repository.safeApply(SeriesStat.TYPE, GlobMatchers.fieldContained(SeriesStat.MONTH, monthIds),
                            seriesStatFunctor);
@@ -103,13 +101,17 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
 
     SelectionService localSelectionService = directory.get(SelectionService.class);
     localSelectionService.select(GlobSelectionBuilder.init()
-      .add(currentSelectedMonth, Month.TYPE)
+      .add(selectedMonths, Month.TYPE)
       .add(seriesStatFunctor.getStats(), PeriodSeriesStat.TYPE).get());
+  }
+
+  private void updateWarningMessage() {
+    multiSelectionWarning.setVisible(selectedMonths.size() > 1);
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsCreationsOrDeletions(Month.TYPE)) {
-      currentSelectedMonth.removeAll(changeSet.getDeleted(Month.TYPE));
+      selectedMonths.removeAll(changeSet.getDeleted(Month.TYPE));
       updateSelection();
     }
     else if (changeSet.containsChanges(SeriesStat.TYPE)) {
@@ -118,7 +120,7 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    currentSelectedMonth = GlobList.EMPTY;
+    selectedMonths = GlobList.EMPTY;
   }
 
   private static class PeriodSeriesStatFunctor implements GlobFunctor {

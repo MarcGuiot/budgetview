@@ -24,22 +24,8 @@ public class ViewSelectionChecker extends DataChecker {
     select("budget");
   }
 
-  public void selectAnalysis() {
-    select("analysis");
-  }
-
   public void selectData() {
-    select("analysis");
-  }
-
-  public void selectEvolution() {
-    select("analysis");
-    select("evolution");
-  }
-
-  public void selectRepartition() {
-    select("analysis");
-    select("repartition");
+    select("data");
   }
 
   public void checkHomeSelected() {
@@ -47,12 +33,7 @@ public class ViewSelectionChecker extends DataChecker {
   }
 
   public void checkDataSelected() {
-    assertSelected("analysis");
-  }
-
-  public void checkEvolutionSelected() {
-    assertSelected("analysis");
-    assertSelected("evolution");
+    assertSelected("data");
   }
 
   public void checkCategorizationSelected() {
@@ -61,11 +42,6 @@ public class ViewSelectionChecker extends DataChecker {
 
   public void checkBudgetSelected() {
     assertSelected("budget");
-  }
-
-  public void checkRepartitionSelected() {
-    assertSelected("analysis");
-    assertSelected("repartition");
   }
 
   private void select(String viewName) {

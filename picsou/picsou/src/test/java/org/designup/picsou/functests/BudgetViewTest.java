@@ -572,7 +572,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     series.checkExpanded("Envelopes", true);
   }
 
-  public void testSeriesAreOrder() throws Exception {
+  public void testSeriesAreOrderedByDecreasingAmounts() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
       .addTransaction("2008/07/10", -50.00, "Monoprix")
@@ -588,7 +588,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkOrder("Auchan", "Monop", "tel");
   }
 
-  public void testOccasionalAreOrder() throws Exception {
+  public void testOccasionalAreOrderedByDecreasingAmounts() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
       .addTransaction("2008/07/10", -50.00, "Monoprix")
@@ -604,4 +604,22 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.occasional.checkOrder(MasterCategory.FOOD, MasterCategory.CLOTHING, MasterCategory.TELECOMS);
   }
 
+  public void testMultiSelectionWarningMessage() throws Exception {
+    views.selectBudget();
+    budgetView.checkMultiSelectionMessageVisible(false);
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .addTransaction("2008/06/10", -50.00, "Monoprix")
+      .load();
+
+    timeline.checkSelection("2008/06", "2008/07");
+    budgetView.checkMultiSelectionMessageVisible(true);
+
+    timeline.selectMonth("2008/07");
+    budgetView.checkMultiSelectionMessageVisible(false);
+
+    timeline.selectMonths("2008/06", "2008/07");
+    budgetView.checkMultiSelectionMessageVisible(true);
+  }
 }

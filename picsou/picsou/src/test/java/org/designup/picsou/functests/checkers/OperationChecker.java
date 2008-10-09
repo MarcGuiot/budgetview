@@ -8,6 +8,7 @@ import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
+import org.designup.picsou.utils.Lang;
 
 public class OperationChecker {
   private MenuItem importMenu;
@@ -66,7 +67,7 @@ public class OperationChecker {
             importDialog.getInputTextBox("number").setText(DEFAULT_ACCOUNT_NUMBER);
             importDialog.getComboBox("accountBank").select(bank);
           }
-          Button okButton = importDialog.getButton("OK");
+          Button okButton = importDialog.getButton(Lang.get("import.ok"));
           for (int i = 0; i < fileNames.length - 1; i++) {
             okButton.click();
           }

@@ -34,9 +34,6 @@ public class TitleDisplayTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     title.checkContent("Budget october 2008");
 
-    views.selectAnalysis();
-    title.checkContent("Operations october 2008");
-
     views.selectData();
     title.checkContent("Operations october 2008");
 

@@ -43,16 +43,20 @@ public class NavigationService implements GlobSelectionListener {
     this.selectionService.addListener(this, Card.TYPE);
   }
 
+  public void gotoCard(Card card) {
+    select(card, false);
+  }
+
   public void gotoHome() {
-    select(Card.HOME, false);
+    gotoCard(Card.HOME);
   }
 
   public void gotoBudget() {
-    select(Card.BUDGET, false);
+    gotoCard(Card.BUDGET);
   }
 
   public void gotoCategorization() {
-    select(Card.CATEGORIZATION, false);
+    gotoCard(Card.CATEGORIZATION);
   }
 
   public void gotoCategorization(GlobList transactions) {
@@ -63,19 +67,19 @@ public class NavigationService implements GlobSelectionListener {
   public void gotoDataForSeries(Glob series) {
     seriesView.selectSeries(series);
     categoryView.select(MasterCategory.ALL.getId());
-    select(Card.ANALYSIS, false);
+    select(Card.DATA, false);
   }
 
   public void gotoData(BudgetArea budgetArea) {
     seriesView.selectBudgetArea(budgetArea);
     categoryView.select(MasterCategory.ALL.getId());
-    select(Card.ANALYSIS, false);
+    select(Card.DATA, false);
   }
 
   public void gotoData(BudgetArea budgetArea, Glob category) {
     seriesView.selectBudgetArea(budgetArea);
     categoryView.select(category);
-    select(Card.ANALYSIS, false);
+    select(Card.DATA, false);
   }
 
   public boolean backEnabled() {

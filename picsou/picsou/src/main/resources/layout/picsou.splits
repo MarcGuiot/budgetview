@@ -12,11 +12,7 @@
     <style selector="toggleButton#homeCardToggle" icon="card_home.png"/>
     <style selector="toggleButton#categorizationCardToggle" icon="card_categorization.png"/>
     <style selector="toggleButton#budgetCardToggle" icon="card_budget.png"/>
-    <style selector="toggleButton#analysisCardToggle" icon="card_analysis.png"/>
-
     <style selector="toggleButton#dataCardToggle" icon="card_list.png"/>
-    <style selector="toggleButton#repartitionCardToggle" icon="card_pie.png"/>
-    <style selector="toggleButton#evolutionCardToggle" icon="card_line.png"/>
 
     <style selector="#time button" size="(15,20)" fill="none"/>
 
@@ -77,7 +73,7 @@
         <button name="forward" action="forward" styleClass="backforward" tooltipText="$forward"/>
         <toggleButton ref="homeCardToggle" styleClass="masterViewSelector"/>
         <toggleButton ref="budgetCardToggle" styleClass="masterViewSelector"/>
-        <toggleButton ref="analysisCardToggle" styleClass="masterViewSelector"/>
+        <toggleButton ref="dataCardToggle" styleClass="masterViewSelector"/>
         <toggleButton ref="categorizationCardToggle" styleClass="masterViewSelector"/>
       </row>
 
@@ -120,7 +116,7 @@
           <panel ref="budgetView"/>
         </card>
 
-        <card name="analysis">
+        <card name="data">
 
           <horizontalSplit continuousLayout="true" opaque="false" border="empty">
 

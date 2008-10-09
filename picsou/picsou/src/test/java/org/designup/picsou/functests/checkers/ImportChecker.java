@@ -76,18 +76,18 @@ public class ImportChecker {
   }
 
   public ImportChecker doImport() {
-    dialog.getButton("OK").click();
+    dialog.getButton(Lang.get("import.ok")).click();
     return this;
   }
 
   public ImportChecker completeImport() {
-    dialog.getButton("OK").click();
+    dialog.getButton(Lang.get("import.ok")).click();
     UISpecAssert.assertFalse(dialog.isVisible());
     return this;
   }
 
   public BalanceEditionChecker doImportWithBalance() {
-    return new BalanceEditionChecker(WindowInterceptor.getModalDialog(dialog.getButton("OK").triggerClick()));
+    return new BalanceEditionChecker(WindowInterceptor.getModalDialog(dialog.getButton(Lang.get("import.ok")).triggerClick()));
   }
 
   public void close() {

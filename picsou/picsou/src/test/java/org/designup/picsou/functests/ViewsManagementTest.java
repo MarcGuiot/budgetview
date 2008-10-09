@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 
 public class ViewsManagementTest extends LoggedInFunctionalTestCase {
+
   public void testHomePage() throws Exception {
     views.selectHome();
     views.checkHomeSelected();

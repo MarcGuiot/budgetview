@@ -25,7 +25,7 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
     return new GlobNumericEditor(field, repository, directory);
   }
 
-  private GlobNumericEditor(Field field, GlobRepository repository, Directory directory) {
+  protected GlobNumericEditor(Field field, GlobRepository repository, Directory directory) {
     super(field, repository, directory);
   }
 
