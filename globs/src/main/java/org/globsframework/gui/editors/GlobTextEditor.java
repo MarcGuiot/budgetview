@@ -17,10 +17,10 @@ public class GlobTextEditor extends AbstractGlobTextEditor<JTextField, GlobTextE
     super(field, component, repository, directory);
   }
 
-  protected void registerChangeListener() {
+  protected void registerActionListener() {
     textComponent.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        applyChanges();
+        apply();
       }
     });
   }

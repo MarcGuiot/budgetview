@@ -17,8 +17,7 @@ import java.awt.event.ActionListener;
 import java.util.Date;
 
 public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEditor> {
-  private boolean isMinusAllowed = true;
-  private boolean invertValue = false;
+  private boolean absoluteValueMode = false;
   private Object valueForNull = null;
 
   public static GlobNumericEditor init(Field field, GlobRepository repository, Directory directory) {
@@ -29,26 +28,21 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
     super(field, repository, directory);
   }
 
-  public GlobNumericEditor setMinusAllowed(boolean minusAllowed) {
-    this.isMinusAllowed = minusAllowed;
-    return this;
-  }
-
   public GlobNumericEditor setValueForNull(Object value) {
     this.valueForNull = value;
     return this;
   }
 
-  public GlobNumericEditor setInvertValue(boolean value) {
-    this.invertValue = value;
+  public GlobNumericEditor setAbsoluteValue(boolean value) {
+    this.absoluteValueMode = value;
     return this;
   }
 
   protected boolean checkValue(String str) {
     if ("-".equals(str)) {
-      return isMinusAllowed;
+      return !absoluteValueMode;
     }
-    if (!isMinusAllowed && str.startsWith("-")) {
+    if (absoluteValueMode && str.startsWith("-")) {
       return false;
     }
     if ("".equals(str)) {
@@ -63,44 +57,39 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
     }
   }
 
-  protected Object getValue() {
-    String s = textComponent.getText();
-    if (!"".equals(s.trim())) {
-      s = invertIfNeeded(s);
+  protected Object getConvertedDisplayedValue() {
+    String text = textComponent.getText();
+    if (!"".equals(text.trim())) {
+      text = processDisplayedValue(text);
     }
-    return convertValue(s).getValue();
+    return convertValue(text);
   }
 
-  private String invertIfNeeded(String text) {
-    if (invertValue) {
-      if (text == null) {
-        return "";
-      }
-      if (text.startsWith("-")) {
-        text = text.substring(1);
-      }
-      else {
-        text = "-" + text;
-      }
+  private String processDisplayedValue(String text) {
+    if (text == null) {
+      return "";
+    }
+    if (absoluteValueMode && text.startsWith("-")) {
+      return text.substring(1);
     }
     return text;
   }
 
-  private StringParserFieldVisitor convertValue(String s) {
-    StringParserFieldVisitor fieldVisitor = new StringParserFieldVisitor(s, descriptionService, valueForNull);
+  private Object convertValue(String text) {
+    StringParserVisitor visitor = new StringParserVisitor(text, descriptionService, valueForNull);
     try {
-      field.visit(fieldVisitor);
+      field.visit(visitor);
     }
     catch (Exception e) {
       throw new InvalidFormat(e);
     }
-    return fieldVisitor;
+    return visitor.getValue();
   }
 
-  protected void setValue(Object value) {
+  protected void setDisplayedValue(Object value) {
     setAdjusting(true);
     try {
-      if (value == null) {
+      if (value == null || "".equals(value)) {
         textComponent.setText("");
         return;
       }
@@ -112,7 +101,7 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
         text = visitor.getText();
       }
       else {
-        text = invertIfNeeded(visitor.getText());
+        text = processDisplayedValue(visitor.getText());
       }
       textComponent.setText(text);
     }
@@ -121,10 +110,10 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
     }
   }
 
-  protected void registerChangeListener() {
+  protected void registerActionListener() {
     textComponent.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        applyChanges();
+        apply();
       }
     });
     ((AbstractDocument)textComponent.getDocument()).setDocumentFilter(new DocumentFilter() {
@@ -171,7 +160,7 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
         }
         finally {
           setAdjusting(false);
-          applyChanges();
+          apply();
         }
       }
 
@@ -188,13 +177,13 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
     });
   }
 
-  private static class StringParserFieldVisitor implements FieldVisitor {
+  private static class StringParserVisitor implements FieldVisitor {
     private String text;
     private Object value;
     private DescriptionService descriptionService;
     private Object valueForNull;
 
-    private StringParserFieldVisitor(String text, DescriptionService descriptionService, Object valueForNull) {
+    private StringParserVisitor(String text, DescriptionService descriptionService, Object valueForNull) {
       this.text = text;
       value = text;
       this.descriptionService = descriptionService;
@@ -307,4 +296,5 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
     public void visitLink(LinkField field, Integer value) throws Exception {
     }
   }
+
 }

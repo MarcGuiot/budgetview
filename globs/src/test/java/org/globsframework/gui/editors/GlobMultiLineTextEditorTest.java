@@ -12,7 +12,7 @@ public class GlobMultiLineTextEditorTest extends AbstractGlobTextEditorTestCase 
   protected TextBox init(StringField name, String defaultValueForMultivalue, boolean isEditable, boolean sendAtKeyPressed) {
     editor = GlobMultiLineTextEditor.init(name, repository, directory)
       .setMultiSelectionText(defaultValueForMultivalue)
-      .setNotifyAtKeyPressed(sendAtKeyPressed)
+      .setNotifyOnKeyPressed(sendAtKeyPressed)
       .setEditable(isEditable);
     JTextArea field = editor.getComponent();
     return new TextBox(field);

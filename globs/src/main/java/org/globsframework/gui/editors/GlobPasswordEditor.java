@@ -17,10 +17,10 @@ public class GlobPasswordEditor extends AbstractGlobTextEditor<JPasswordField, G
     super(field, component, repository, directory);
   }
 
-  protected void registerChangeListener() {
+  protected void registerActionListener() {
     textComponent.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        applyChanges();
+        apply();
       }
     });
   }

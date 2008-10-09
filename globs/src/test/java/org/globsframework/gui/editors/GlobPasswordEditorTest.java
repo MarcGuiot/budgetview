@@ -12,7 +12,7 @@ public class GlobPasswordEditorTest extends AbstractGlobTextEditorTestCase {
   protected TextBox init(StringField name, String defaultValueForMultivalue, boolean isEditable, boolean sendAtKeyPressed) {
     editor = GlobPasswordEditor.init(name, repository, directory)
       .setMultiSelectionText(defaultValueForMultivalue)
-      .setNotifyAtKeyPressed(sendAtKeyPressed)
+      .setNotifyOnKeyPressed(sendAtKeyPressed)
       .setEditable(isEditable);
     JPasswordField textField =
       editor.getComponent();

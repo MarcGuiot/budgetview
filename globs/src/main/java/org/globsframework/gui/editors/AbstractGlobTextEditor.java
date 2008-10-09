@@ -19,9 +19,11 @@ import javax.swing.text.JTextComponent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextComponent, PARENT extends AbstractGlobTextEditor> extends AbstractGlobComponentHolder implements GlobSelectionListener {
+public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextComponent, PARENT extends AbstractGlobTextEditor>
+  extends AbstractGlobComponentHolder implements GlobSelectionListener {
+
   protected Field field;
-  private GlobList lastSelectedGlobs;
+  private GlobList currentGlobs = GlobList.EMPTY;
   protected COMPONENT_TYPE textComponent;
   private Object valueForMultiSelection;
   private boolean forceNotEditable;
@@ -60,7 +62,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     textComponent.setText("");
     registerActions();
     registerFocusLostListener();
-    registerChangeListener();
+    registerActionListener();
     registerKeyPressedListener();
   }
 
@@ -72,7 +74,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       if (keyPressedListener == null) {
         keyPressedListener = new AbstractDocumentListener() {
           protected void documentChanged(DocumentEvent e) {
-            applyChanges();
+            apply();
           }
         };
         textComponent.getDocument().addDocumentListener(keyPressedListener);
@@ -93,13 +95,13 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
 
       public void focusLost(FocusEvent e) {
         if (!notifyAtKeyPressed) {
-          applyChanges();
+          apply();
         }
       }
     });
   }
 
-  protected abstract void registerChangeListener();
+  protected abstract void registerActionListener();
 
   public final COMPONENT_TYPE getComponent() {
     if (isInitialized) {
@@ -130,23 +132,20 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     return (PARENT)this;
   }
 
-  protected void applyChanges() {
-    if (isAdjusting) {
-      return;
-    }
-    if (forceNotEditable) {
+  public void apply() {
+    if (isAdjusting || forceNotEditable || currentGlobs.isEmpty()) {
       return;
     }
     Object value;
     try {
-      value = getValue();
+      value = getConvertedDisplayedValue();
     }
     catch (InvalidFormat e) {
       return;
     }
     try {
       repository.enterBulkDispatchingMode();
-      for (Glob glob : lastSelectedGlobs) {
+      for (Glob glob : currentGlobs) {
         repository.update(glob.getKey(), AbstractGlobTextEditor.this.field, value);
       }
     }
@@ -159,16 +158,16 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     if (!selection.isRelevantForType(field.getGlobType())) {
       return;
     }
-    lastSelectedGlobs = selection.getAll(field.getGlobType());
+    currentGlobs = selection.getAll(field.getGlobType());
 
-    boolean selectionNotEmpty = !lastSelectedGlobs.isEmpty();
+    boolean selectionNotEmpty = !currentGlobs.isEmpty();
     textComponent.setEnabled(selectionNotEmpty);
     if (!forceNotEditable) {
       textComponent.setEditable(selectionNotEmpty);
     }
 
     Object value = null;
-    for (Glob glob : lastSelectedGlobs) {
+    for (Glob glob : currentGlobs) {
       Object globValue = glob.getValue(field);
       if ((value != null) && (!value.equals(globValue))) {
         value = valueForMultiSelection;
@@ -176,20 +175,20 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       }
       value = globValue;
     }
-    setValue(value);
+    setDisplayedValue(value);
   }
 
-  public PARENT setNotifyAtKeyPressed(boolean notifyAtKeyPressed) {
-    this.notifyAtKeyPressed = notifyAtKeyPressed;
+  public PARENT setNotifyOnKeyPressed(boolean notifyOnKeyPressed) {
+    this.notifyAtKeyPressed = notifyOnKeyPressed;
     registerKeyPressedListener();
     return (PARENT)this;
   }
 
-  protected Object getValue() throws InvalidFormat {
+  protected Object getConvertedDisplayedValue() throws InvalidFormat {
     return textComponent.getText();
   }
 
-  protected void setValue(Object value) {
+  protected void setDisplayedValue(Object value) {
     isAdjusting = true;
     try {
       textComponent.setText((String)(value == null ? "" : value));
