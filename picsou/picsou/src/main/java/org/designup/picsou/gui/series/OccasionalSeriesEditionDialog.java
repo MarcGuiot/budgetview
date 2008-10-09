@@ -20,6 +20,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.SortedSet;
 
 public class OccasionalSeriesEditionDialog {
   private LocalGlobRepository localRepository;
@@ -27,6 +28,8 @@ public class OccasionalSeriesEditionDialog {
   private DefaultDirectory localDirectory;
   private GlobRepository repository;
   private PicsouDialog dialog;
+  private Directory directory;
+  private SeriesBudgetEditionPanel budgetEditionPanel;
 
   public OccasionalSeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -38,7 +41,8 @@ public class OccasionalSeriesEditionDialog {
     localRepository.addTrigger(new SeriesBudgetTrigger());
 
     selectionService = new SelectionService();
-    localDirectory = new DefaultDirectory(directory);
+    this.directory = directory;
+    localDirectory = new DefaultDirectory(this.directory);
     localDirectory.add(selectionService);
 
     dialog = PicsouDialog.create(parent, localDirectory);
@@ -46,8 +50,7 @@ public class OccasionalSeriesEditionDialog {
                                                       "/layout/occasionalSeriesEditionDialog.splits",
                                                       localRepository, localDirectory);
 
-    SeriesBudgetEditionPanel budgetEditionPanel =
-      new SeriesBudgetEditionPanel(dialog, repository, localRepository, localDirectory);
+    budgetEditionPanel = new SeriesBudgetEditionPanel(dialog, repository, localRepository, localDirectory);
     builder.add("serieBudgetEditionPanel", budgetEditionPanel.getPanel());
 
     dialog.addPanelWithButtons(builder.<JPanel>load(), new AbstractAction(Lang.get("ok")) {
@@ -72,6 +75,9 @@ public class OccasionalSeriesEditionDialog {
       .getGlobs().filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, false), repository));
     localRepository.reset(globList, Series.TYPE, SeriesBudget.TYPE, Transaction.TYPE);
     localDirectory.get(SelectionService.class).select(series);
+    SortedSet<Integer> selectedMonthId = directory.get(SelectionService.class)
+      .getSelection(Month.TYPE).getSortedSet(Month.ID);
+    budgetEditionPanel.selectBudgets(selectedMonthId);
     dialog.pack();
     GuiUtils.showCentered(dialog);
   }

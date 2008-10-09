@@ -58,8 +58,8 @@ public class OccasionalSeriesView extends View {
                                                       repository, directory);
 
     builder.add("budgetAreaTitle", new JLabel(stringify(BudgetArea.OCCASIONAL)));
-    addObservedTotalLabel("totalObservedAmount", PeriodSeriesStat.AMOUNT, builder);
-    addPlannedTotalLabel("totalPlannedAmount", PeriodSeriesStat.PLANNED_AMOUNT, builder);
+    addTotalLabel("totalObservedAmount", PeriodSeriesStat.AMOUNT, builder);
+    addTotalLabel("totalPlannedAmount", PeriodSeriesStat.PLANNED_AMOUNT, builder);
 
     final GlobGaugeView gaugeView = new GlobGaugeView(PeriodSeriesStat.TYPE, BudgetArea.OCCASIONAL,
                                                       PeriodSeriesStat.AMOUNT, PeriodSeriesStat.PLANNED_AMOUNT,
@@ -168,25 +168,10 @@ public class OccasionalSeriesView extends View {
     return descriptionService.getStringifier(BudgetArea.TYPE).toString(budgetArea.getGlob(), repository);
   }
 
-  private void addObservedTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
+  private void addTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
     builder.addLabel(name, PeriodSeriesStat.TYPE,
                      new ForcedPlusGlobListStringifier(BudgetArea.OCCASIONAL,
                                                        GlobListStringifiers.sum(field, decimalFormat, true)))
-      .setFilter(totalMatcher);
-  }
-
-  private void addPlannedTotalLabel(String name, DoubleField field, GlobsPanelBuilder builder) {
-    final GlobListStringifier globListStringifier = GlobListStringifiers.sum(field, decimalFormat, true);
-
-    builder.addLabel(name, PeriodSeriesStat.TYPE, new GlobListStringifier() {
-      public String toString(GlobList list, GlobRepository repository) {
-        String amount = globListStringifier.toString(list, repository);
-        if (amount.startsWith("-")) {
-          amount = "0.0";
-        }
-        return amount;
-      }
-    })
       .setFilter(totalMatcher);
   }
 

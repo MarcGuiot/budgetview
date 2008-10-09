@@ -58,7 +58,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
 
     budgetView.occasional.checkTitle("Occasional");
-    budgetView.occasional.checkTotalAmounts(0, 3540 - 145 - 84);
+    budgetView.occasional.checkTotalAmount(0., 0.);
+    budgetView.checkBalance((double)(3540 - 145 - 84));
 
     timeline.selectMonths("2008/08");
 
@@ -186,7 +187,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
 
     budgetView.occasional.checkTitle("Occasional");
-    budgetView.occasional.checkTotalAmounts(0, 3540 - 145 - 29);
+    budgetView.occasional.checkTotalAmount((double)0, 0);
+    budgetView.checkBalance((double)(3540 - 145 - 29));
   }
 
   public void testEditingASeriesWithTransactions() throws Exception {
@@ -265,7 +267,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkTotalAmounts(0.0, 3540.00);
     budgetView.income.checkSeries("Salary", 0.0, 3540.0);
 
-    budgetView.occasional.checkTotalAmounts(0, 3540 - 95 - 29);
+    budgetView.occasional.checkTotalAmount((double)0, 0);
+    budgetView.checkBalance((double)(3540 - 95 - 29));
   }
 
   public void testSeveralMonthsShowOrNotSeries() throws Exception {
@@ -431,7 +434,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.HOUSE)
       .validate();
     timeline.selectMonth("2008/08");
-    budgetView.occasional.checkTotalAmounts(0, 400);
+    budgetView.occasional.checkTotalAmount((double)0, 0);
+    budgetView.checkBalance((double)400);
 
     budgetView.recurring.createSeries()
       .setName("Loyer").setManual()
@@ -441,7 +445,13 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.setOccasional("moto", MasterCategory.LEISURES);
     views.selectBudget();
-    budgetView.occasional.checkTotalAmounts(5000, -600);
+    double free = -600;
+    budgetView.occasional.checkTotalAmount(5000, 5000);
+    budgetView.checkBalance(free);
+    views.selectCategorization();
+    transactionDetails.split("2500", "divers");
+    views.selectBudget();
+    budgetView.occasional.checkTotalAmount(2500, 2500);
   }
 
   public void testCreateAndDeleteManyCategory() throws Exception {

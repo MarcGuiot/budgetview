@@ -42,6 +42,10 @@ public class BudgetViewChecker extends DataChecker {
     return -1;
   }
 
+  public BudgetViewChecker checkBalance(double free) {
+    return this;
+  }
+
   public class BudgetAreaChecker {
 
     private String panelName;
@@ -151,7 +155,7 @@ public class BudgetViewChecker extends DataChecker {
       UISpecAssert.assertThat(label.textEquals(title));
     }
 
-    public void checkTotalAmounts(double spent, double free) {
+    public void checkTotalAmount(double spent, double free) {
       Panel budgetPanel = getPanel();
       TextBox totalObserved = budgetPanel.getTextBox("totalObservedAmount");
       String observedAmount = BudgetViewChecker.this.toString(spent);
@@ -160,12 +164,12 @@ public class BudgetViewChecker extends DataChecker {
       }
       UISpecAssert.assertTrue(totalObserved.textEquals(observedAmount));
 
-//      TextBox totalPlanned = budgetPanel.getTextBox("totalPlannedAmount");
-//      String amount = BudgetViewChecker.this.toString(free);
-//      if (free < 0.0) {
-//        amount = "0.0";
-//      }
-//      UISpecAssert.assertTrue(totalPlanned.textEquals(amount));
+      TextBox totalPlanned = budgetPanel.getTextBox("totalPlannedAmount");
+      String amount = BudgetViewChecker.this.toString(free);
+      if (free < 0.0) {
+        amount = amount.replace("-", "+");
+      }
+      UISpecAssert.assertTrue(totalPlanned.textEquals(amount));
     }
 
     public OccasionalAreaChecker check(MasterCategory category, Double amount) {

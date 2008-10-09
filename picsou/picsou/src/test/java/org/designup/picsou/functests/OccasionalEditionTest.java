@@ -126,4 +126,22 @@ public class OccasionalEditionTest extends LoggedInFunctionalTestCase {
       })
       .validate();
   }
+
+  public void testOpenEditionSelectSelectedMonth() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", -19.00, "DVD")
+      .load();
+    views.selectBudget();
+
+    timeline.selectMonth("2008/07");
+    budgetView.occasional.edit()
+      .setManual()
+      .checkMonthsSelected(1)
+      .validate();
+
+    timeline.selectMonth("2008/08");
+    budgetView.occasional.edit()
+      .checkMonthsSelected(0)
+      .validate();
+  }
 }
