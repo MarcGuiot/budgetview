@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="textField" fill="horizontal" anchor="left"/>
+    <style selector="label.month" foreground="#444444" font="-,plain,10"/>
+  </styles>
+
+  <panel name="seriesBudgetEdition" opaque="false">
+    <column>
+      <cards ref="modeCard" opaque="false">
+        <card name="manual">
+          <column margin="10" marginBottom="0" weightX="7">
+            <label ref="seriesBudgetEditionAmountLabel" styleClass="formLabelTop" fill="horizontal"/>
+            <textField ref="amountEditor"/>
+            <label text="$seriesBudgetEdition.entries" styleClass="formLabelTop"/>
+            <scrollPane weightY="1000" margin="5">
+              <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>
+            </scrollPane>
+            <row>
+              <filler fill="horizontal"/>
+              <button action="automatic" styleClass="hyperlink"/>
+            </row>
+          </column>
+        </card>
+        <card name="automatic">
+          <column>
+            <htmlEditorPane text="$seriesEdition.automatic.explain" margin="20" marginBottom="30"/>
+            <row>
+              <filler fill="horizontal"/>
+              <button action="manual"/>
+              <filler fill="horizontal"/>
+            </row>
+            <filler fill="vertical"/>
+          </column>
+        </card>
+      </cards>
+    </column>
+  </panel>
+
+</splits>

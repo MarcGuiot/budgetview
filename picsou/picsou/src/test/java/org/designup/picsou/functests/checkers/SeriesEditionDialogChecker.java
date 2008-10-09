@@ -75,7 +75,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker setAmount(String value) {
-    dialog.getInputTextBox("amountEditor").setText(value);
+    getAmount().setText(value);
     return this;
   }
 
@@ -98,6 +98,22 @@ public class SeriesEditionDialogChecker extends DataChecker {
       i++;
     }
     return setCategory(categories);
+  }
+
+  public SeriesEditionDialogChecker addCategory(String... categories) {
+    Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
+    CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
+    if (singleSelection) {
+      Assert.fail("only one category can be selected");
+    }
+    else {
+      categoryChooser.checkTitle("Select categories");
+      for (String category : categories) {
+        categoryChooser.selectCategory(category);
+      }
+      categoryChooser.validate();
+    }
+    return this;
   }
 
   public SeriesEditionDialogChecker setCategory(String... categories) {
@@ -540,7 +556,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkAmountLabel(final String text) {
-    assertThat(dialog.getTextBox("seriesEditionAmountLabel").textEquals(text));
+    assertThat(dialog.getTextBox("seriesBudgetEditionAmountLabel").textEquals(text));
     return this;
   }
 

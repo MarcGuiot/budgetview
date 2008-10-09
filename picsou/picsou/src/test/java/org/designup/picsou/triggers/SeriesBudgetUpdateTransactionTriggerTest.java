@@ -61,13 +61,11 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
     listener.assertLastChangesEqual(Transaction.TYPE, "");
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _amount='1000.0' amount='900.0' id='" + occasionnalBudgetIds[1] + "' type='seriesBudget'/>" +
       "<update _amount='-1000.0' _overrunAmount='0.0' overrunAmount='-100.0'  amount='-900.0' id='" + enveloppeBudgetIds[1] + "' type='seriesBudget'/>");
     repository.update(Key.create(SeriesBudget.TYPE, budgetId[1]), SeriesBudget.AMOUNT, -1000.);
     listener.assertLastChangesEqual(Transaction.TYPE, "");
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "  <update _amount='900.0' amount='1000.0' id='" + occasionnalBudgetIds[1] + "' type='seriesBudget'/>" +
       "  <update _amount='-900.0' _overrunAmount='-100.0' amount='-1000.0' id='" + enveloppeBudgetIds[1] + "'" +
       "          overrunAmount='0.0' type='seriesBudget'/>");
     repository.update(Key.create(SeriesBudget.TYPE, budgetId[1]), SeriesBudget.AMOUNT, -1100.);
@@ -79,7 +77,6 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
       "        planned='true' series='101' transactionType='11' type='transaction'/>");
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _amount='1000.0' amount='1100.0' id='" + occasionnalBudgetIds[1] + "' type='seriesBudget'/>" +
       "<update _amount='-1000.0' amount='-1100.0' id='" + budgetId[1] + "' type='seriesBudget'/>");
   }
 
@@ -109,7 +106,6 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
       "<update _amount='500.0' amount='300.0' id='0' type='transaction'/>");
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "  <update _amount='-2000.0' amount='-1800.0' id='" + occasionalBudgetIds[1] + "' type='seriesBudget'/>" +
       "  <update _amount='2000.0' amount='1800.0' id='" + incomeBudget[1] + "'" +
       "          type='seriesBudget'/>");
     repository.update(budget, SeriesBudget.AMOUNT, 1500.);
@@ -121,7 +117,6 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
       "");
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _amount='-1800.0' amount='-1500.0' id='" + occasionalBudgetIds[1] + "' type='seriesBudget'/>" +
       "<update _amount='1800.0' amount='1500.0' id='" + incomeBudget[1] + "'" +
       "        type='seriesBudget'/>");
     repository.update(budget, SeriesBudget.AMOUNT, 1400.);
@@ -130,7 +125,6 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
       "");
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _amount='-1500.0' amount='-1400.0' id='" + occasionalBudgetIds[1] + "' type='seriesBudget'/>" +
       "<update _amount='1500.0' amount='1400.0' id='" + incomeBudget[1] + "' _overrunAmount='0.0'" +
       "        overrunAmount='100.0' type='seriesBudget'/>");
   }

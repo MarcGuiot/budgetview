@@ -19,7 +19,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                                     "<create type='seriesStat' series='10' month='200807'" +
                                     "        amount='0.0' plannedAmount='150.0'/>" +
                                     "<create type='seriesStat' series='0' month='200807'" +
-                                    "        amount='0.0' plannedAmount='-150.0'/>" +
+                                    "        amount='0.0' plannedAmount='0.0'/>" +
                                     "<create amount='0.0' month='200807' plannedAmount='0.0' series='1'" +
                                     "        type='seriesStat'/>");
     repository.enterBulkDispatchingMode();
@@ -52,7 +52,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                                     "<create type='seriesStat' series='20' month='200807'" +
                                     "        amount='-20.0' plannedAmount='-100.0'/>" +
                                     "<create type='seriesStat' series='0' month='200807'" +
-                                    "        amount='0.0' plannedAmount='200.0'/>" +
+                                    "        amount='0.0' plannedAmount='0.0'/>" +
                                     "<create type='seriesStat' series='1' month='200807'" +
                                     "        amount='-50.0' plannedAmount='0.0'/>" +
                                     "");
@@ -66,8 +66,6 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<delete type='seriesStat' series='20' month='200807'" +
                                     "        _amount='-20.0' _plannedAmount='-100.0'/>" +
-                                    "<update type='seriesStat' month='200807' series='0'" +
-                                    "        plannedAmount='100.0' _plannedAmount='200.0'/>" +
                                     "<update _amount='-50.0' amount='-60.0' month='200807' series='1'" +
                                     "        type='seriesStat'/>");
   }
@@ -143,7 +141,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
       SeriesStat.TYPE,
       "<create amount='-90.0' month='200807' plannedAmount='-100.0' series='10' type='seriesStat'/>" +
       "<create amount='0.0' month='200807' plannedAmount='1000.0' series='20' type='seriesStat'/>" +
-      "<create amount='0.0' month='200807' plannedAmount='-400.0' series='0' type='seriesStat'/>" +
+      "<create amount='0.0' month='200807' plannedAmount='0.0' series='0' type='seriesStat'/>" +
       "<create amount='0.0' month='200807' plannedAmount='0.0' series='1' type='seriesStat'/>" +
       "<create amount='200.0' month='200807' plannedAmount='-500.0' series='30' type='seriesStat'/>");
     createTransaction(10, 20, 200807, 750.);

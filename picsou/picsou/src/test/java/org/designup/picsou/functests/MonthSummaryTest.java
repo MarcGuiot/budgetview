@@ -1,8 +1,8 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
@@ -11,7 +11,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    LicenseChecker.enterLicense(mainWindow, "admin", "zz", 0);    
+    LicenseChecker.enterLicense(mainWindow, "admin", "zz", 0);
     setCurrentMonth("2008/08");
   }
 
@@ -202,10 +202,10 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/09");
     balanceSummary.checkEnvelope(-80)
-      .checkBalance(1420.)
+      .checkBalance(1410.)
       .checkFixed(-1529.90)
       .checkIncome(1500)
-      .checkTotal(1420 + 1500 - 1529.90 - 80);
+      .checkTotal(1420 + 1500 - 1529.90 - 80 - 10);
   }
 
   public void testUncategorized() throws Exception {
@@ -288,7 +288,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     monthSummary
       .checkIncome(1000, 1000)
-      .checkOccasional(10, 1000);
+      .checkOccasional(10, 10);
   }
 
   public void testNavigatingToBudgetView() throws Exception {

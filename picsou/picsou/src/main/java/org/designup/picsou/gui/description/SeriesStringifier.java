@@ -16,11 +16,11 @@ public class SeriesStringifier implements GlobStringifier {
       return "";
     }
     final String label = series.get(Series.LABEL);
+    if (Series.OCCASIONAL_SERIES_ID.equals(series.get(Series.ID))) {
+      return Lang.get(Series.TYPE.getName() + "." + series.get(Series.NAME));
+    }
     if (Strings.isNotEmpty(label)) {
       return label;
-    }
-    if (Series.OCCASIONAL_SERIES_ID.equals(series.get(Series.ID))){
-      return Lang.get(Series.TYPE.getName() + "." + series.get(Series.NAME));
     }
     return series.get(Series.NAME);
   }
