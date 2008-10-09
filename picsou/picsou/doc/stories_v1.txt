@@ -1,21 +1,21 @@
 
 - regler les montants des occasional
 
-- balancesummary : afficher balance ("Variation/Balance")
+- monthsummary : afficher balance ("Variation/Balance") a la place de percu/...
 
-- balancesummary : ajouter occasional
+- BalanceStat avec trigger
+
+- balanceSummary : baser sur BalanceStat et ajouter occasional
 
 - balancesummary : "montant estime au 31/10/2008"
 
-- SED : changement de periodicite = se caler sur les donnees existantes
-
-- courbe evolution solde fin de mois avec reglage de seuil
-
 - saisir des montants positifs/negatifs pour les series
 
-- tooltip sur repartir
+- SED : changement de periodicite = se caler sur les donnees existantes
 
 ======================================
+
+- tooltip sur repartir
 
 - Creation compte : afficher SLA
 
