@@ -74,7 +74,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     addMouseListener(this);
     addMouseMotionListener(this);
     addKeyListener(this);
-    Dimension dimension = new Dimension(50, timeGraph.getTotalHeight());
+    Dimension dimension = new Dimension(50, timeGraph.getAbsoluteHeight());
     setMinimumSize(dimension);
     setPreferredSize(dimension);
     addFocusListener(this);
@@ -92,11 +92,13 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     if (getWidth() < previousWidth) {
       shouldScroll = true;
     }
+    if (previousWidth != getWidth()) {
+      timeGraph.init(getWidth());
+    }
     previousWidth = getWidth();
     Graphics2D d = (Graphics2D)g.create();
     d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     try {
-      timeGraph.init(getWidth());
       if (pendingOperation != null) {
         pendingOperation.run();
         pendingOperation = null;

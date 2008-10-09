@@ -8,7 +8,8 @@ import java.awt.*;
 public abstract class AbstractComponent implements Selectable {
   protected boolean selected = false;
   protected ChainedSelectableElement element;
-  protected Rectangle clickableArea = new Rectangle();
+  protected Rectangle clickableAreaTop = new Rectangle();
+  protected Rectangle clickableAreaButton = new Rectangle();
   protected Visibility isVisible = Visibility.NOT_VISIBLE;
 
   public AbstractComponent(ChainedSelectableElement element) {
@@ -16,7 +17,10 @@ public abstract class AbstractComponent implements Selectable {
   }
 
   public Selectable getSelectable(int x, int y) {
-    if (clickableArea.contains(x - 1, y - 1)) {
+    if (clickableAreaTop != null && clickableAreaTop.contains(x - 1, y - 1)) {
+      return this;
+    }
+    if (clickableAreaButton != null && clickableAreaButton.contains(x - 1, y - 1)) {
       return this;
     }
     return null;
@@ -58,6 +62,6 @@ public abstract class AbstractComponent implements Selectable {
 
   // for testing
   public Rectangle getClickableArea() {
-    return clickableArea;
+    return clickableAreaTop;
   }
 }

@@ -24,6 +24,7 @@ public class YearGraph extends DefaultCompositeComponent {
   public static final int ENLARGE = 4;
   private boolean isFirstYear;
   private boolean isLastYear;
+  private int monthHeight;
 
   public YearGraph(boolean isFirstYear, boolean isLastYear, int year, java.util.List<Glob> months,
                    MonthViewColors colors, ChainedSelectableElement monthElement,
@@ -51,15 +52,16 @@ public class YearGraph extends DefaultCompositeComponent {
     for (MonthGraph month : monthsGraph) {
       month.init(monthFontMetricInfo);
     }
+    initMonthHeight();
   }
 
   public int draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter, int height, int monthWidth,
                   int monthRank, Rectangle visibleRectangle) {
     int monthDim = monthsGraph.length * monthWidth;
     transformationAdapter.save();
-    clickableArea = TimeGraph.getClickableArea(transformationAdapter.getTransform(), monthDim, height);
-    Rectangle2D intersection = visibleRectangle.createIntersection(clickableArea);
-    if (intersection.getWidth() != clickableArea.getWidth()) {
+    clickableAreaTop = TimeGraph.getClickableArea(transformationAdapter.getTransform(), monthDim, height);
+    Rectangle2D intersection = visibleRectangle.createIntersection(clickableAreaTop);
+    if (intersection.getWidth() != clickableAreaTop.getWidth()) {
       isVisible = Visibility.PARTIALLY;
     }
     else {
@@ -72,35 +74,28 @@ public class YearGraph extends DefaultCompositeComponent {
       }
       return monthDim;
     }
-    int beginShift = 0;
-    int endShift = 0;
-    if (isFirstYear) {
-      beginShift = 0;
-    }
-    if (isLastYear) {
-      endShift = 0;
-    }
-    transformationAdapter.translate(0, yearCellHeight - HEIGHT);
-    if (selected) {
-      Paint paint = graphics2D.getPaint();
-      graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedTop, 0, HEIGHT, colors.selectedBottom));
-      graphics2D.fillRect(beginShift, height - yearCellHeight, monthDim - endShift - beginShift, HEIGHT);
-      graphics2D.setPaint(paint);
-    }
-    else {
-      Paint paint = graphics2D.getPaint();
-      if (year % 2 == 0) {
-        graphics2D.setPaint(new GradientPaint(0, 0, colors.yearBackgroundEvenTop, 0, HEIGHT, colors.yearBackgroundEvenBottom));
+    try {
+      transformationAdapter.translate(0, yearCellHeight);
+      if (selected) {
+        Paint paint = graphics2D.getPaint();
+        graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedTop, 0, HEIGHT, colors.selectedBottom));
+        graphics2D.fillRect(0, monthHeight, monthDim, HEIGHT);
+        graphics2D.setPaint(paint);
       }
       else {
-        graphics2D.setPaint(new GradientPaint(0, 0, colors.yearBackgroundOddTop, 0, HEIGHT, colors.yearBackgroundOddBottom));
+        Paint paint = graphics2D.getPaint();
+        if (year % 2 == 0) {
+          graphics2D.setPaint(new GradientPaint(0, 0, colors.yearBackgroundEvenTop, 0, HEIGHT, colors.yearBackgroundEvenBottom));
+        }
+        else {
+          graphics2D.setPaint(new GradientPaint(0, 0, colors.yearBackgroundOddTop, 0, HEIGHT, colors.yearBackgroundOddBottom));
+        }
+        graphics2D.fillRect(0, monthHeight, monthDim, HEIGHT);
+        graphics2D.setPaint(paint);
       }
-      graphics2D.fillRect(beginShift, height - yearCellHeight, monthDim - endShift - beginShift, HEIGHT);
-      graphics2D.setPaint(paint);
-    }
-    try {
       for (MonthGraph month : monthsGraph) {
-        month.draw(graphics2D, transformationAdapter, height - yearCellHeight, monthWidth, monthRank, visibleRectangle);
+        month.draw(graphics2D, transformationAdapter, monthHeight, monthWidth,
+                   monthRank, visibleRectangle);
         transformationAdapter.translate(monthWidth, 0);
       }
     }
@@ -110,20 +105,20 @@ public class YearGraph extends DefaultCompositeComponent {
 
     int startX;
     graphics2D.setFont(colors.getYearFont());
-    if (clickableArea.getX() < 0) {
-      startX = (int)(clickableArea.getWidth() - intersection.getWidth()) + 2;
+    if (clickableAreaTop.getX() < 0) {
+      startX = (int)(clickableAreaTop.getWidth() - intersection.getWidth()) + 2;
     }
     else {
       startX = 2;
     }
     if (monthDim < yearWidth || intersection.getWidth() < yearWidth) {
       if (intersection.getWidth() > shortYearWidth + 1) {
-        TimeGraph.drawStringIn(graphics2D, startX, yearCellHeight - HEIGHT - 3, shortYearText, colors);
+        TimeGraph.drawStringIn(graphics2D, startX, yearCellHeight - 3, shortYearText, colors);
       }
     }
     else {
       TimeGraph.drawStringIn(graphics2D, startX + (int)((intersection.getWidth() - yearWidth) / 2),
-                             yearCellHeight - HEIGHT - 3, yearText, colors);
+                             yearCellHeight - 3, yearText, colors);
     }
     return monthDim;
   }
@@ -139,11 +134,14 @@ public class YearGraph extends DefaultCompositeComponent {
   }
 
   public int getHeight() {
-    int maxMonthHeight = 0;
+    return monthHeight + yearCellHeight + HEIGHT;
+  }
+
+  private void initMonthHeight() {
+    monthHeight = 0;
     for (MonthGraph month : monthsGraph) {
-      maxMonthHeight = Math.max(maxMonthHeight, month.getHeight());
+      monthHeight = Math.max(monthHeight, month.getHeight());
     }
-    return maxMonthHeight + yearCellHeight + HEIGHT;
   }
 
   public int getMaxWidth() {

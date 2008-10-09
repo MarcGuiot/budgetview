@@ -23,7 +23,6 @@ public class TimeGraph {
   private int monthWidth;
   private int totalHeight;
   private int monthRank;
-  private int monthHeight;
 
   public TimeGraph(GlobList months, MonthViewColors colors, TimeService timeService, FontMetrics yearFontMetrics,
                    FontMetrics monthFontMetrics) {
@@ -70,7 +69,6 @@ public class TimeGraph {
     for (YearGraph year : yearGraphs) {
       year.init(monthFontMetricInfo, yearFontMetrics);
     }
-    monthHeight = yearGraphs.get(0).getMonthHeight();
     totalHeight = yearGraphs.get(0).getHeight();
   }
 
@@ -85,18 +83,17 @@ public class TimeGraph {
   }
 
   public void draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter,
-                   int preferredWidth, int preferredHeight) {
-    Rectangle visibleRectangle = new Rectangle(0, 0, preferredWidth, preferredHeight);
+                   int width, int height) {
+    Rectangle visibleRectangle = new Rectangle(0, 0, width, height);
     transformationAdapter.save();
     try {
       if (yearGraphs.isEmpty()) {
         return;
       }
-      init(preferredWidth);
-
       for (YearGraph yearGraph : yearGraphs) {
         int actualMonthPos =
-          yearGraph.draw(graphics2D, transformationAdapter, totalHeight, monthWidth, monthRank, visibleRectangle);
+          yearGraph.draw(graphics2D, transformationAdapter, totalHeight, monthWidth,
+                         monthRank, visibleRectangle);
         transformationAdapter.translate(actualMonthPos, 0);
       }
     }
@@ -128,12 +125,8 @@ public class TimeGraph {
     return monthWidth * 12;
   }
 
-  public int getTotalHeight() {
+  public int getAbsoluteHeight() {
     return totalHeight;
-  }
-
-  public int getMonthHeight() {
-    return monthHeight;
   }
 
   public static void drawStringIn(Graphics2D graphics2D, int x, int y, String text, MonthViewColors colors) {

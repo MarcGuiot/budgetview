@@ -34,9 +34,10 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
 
   public void draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter, int height, int width,
                    int monthRank, Rectangle visibleRectangle) {
-    clickableArea = TimeGraph.getClickableArea(transformationAdapter.getTransform(), width, height);
-    Rectangle2D intersection = visibleRectangle.createIntersection(clickableArea);
-    if (intersection.getWidth() != clickableArea.getWidth()) {
+    clickableAreaTop = TimeGraph.getClickableArea(transformationAdapter.getTransform(), width, height);
+    clickableAreaButton = TimeGraph.getClickableArea(transformationAdapter.getTransform(), width, height);
+    Rectangle2D intersection = visibleRectangle.createIntersection(clickableAreaTop);
+    if (intersection.getWidth() != clickableAreaTop.getWidth()) {
       isVisible = Visibility.PARTIALLY;
     }
     else {
@@ -84,12 +85,12 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
 
     MonthFontMetricInfo.Size nearest = monthSize.getSize(monthRank);
     graphics2D.setFont(colors.getMonthFont());
-    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, getHeight() - 1,
+    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, getHeight() - 5,
                            nearest.getName(), colors);
   }
 
   public int getHeight() {
-    return monthSize.getHeight() + 0;
+    return monthSize.getHeight() + 4;
   }
 
   public int getMaxWidth() {
