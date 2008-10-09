@@ -48,10 +48,10 @@ public class SeriesWizardModel {
     createEntry(BudgetArea.INCOME, ProfileType.EVERY_MONTH, "income2", MasterCategory.INCOME, false);
     createEntry(BudgetArea.INCOME, ProfileType.IRREGULAR, "exceptional", MasterCategory.INCOME, false);
 
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "rent", MasterCategory.HOUSE, "loyer", false);
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "mortgage", MasterCategory.HOUSE, "credit", false);
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "electricity", MasterCategory.HOUSE, "energie", false);
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "gas", MasterCategory.HOUSE, "energie", false);
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "rent", MasterCategory.HOUSE, "loyer");
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "mortgage", MasterCategory.HOUSE, "credit");
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "electricity", MasterCategory.HOUSE, "energie");
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "gas", MasterCategory.HOUSE, "energie");
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "carCredit", MasterCategory.TRANSPORTS, false);
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "carInsurance", MasterCategory.TRANSPORTS, false);
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "incomeTaxes", MasterCategory.TAXES, false);
@@ -64,7 +64,7 @@ public class SeriesWizardModel {
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "health", MasterCategory.HEALTH, true);
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "leisures", MasterCategory.LEISURES, true);
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "clothing", MasterCategory.CLOTHING, true);
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "fuel", MasterCategory.TRANSPORTS, true);
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "fuel", MasterCategory.TRANSPORTS, "essence");
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "cash", MasterCategory.CASH, false);
 
     createEntry(BudgetArea.SAVINGS, ProfileType.EVERY_MONTH, "regular", MasterCategory.SAVINGS, false);
@@ -76,17 +76,18 @@ public class SeriesWizardModel {
                            String nameKey,
                            MasterCategory category,
                            boolean addSubCategories) {
-    createEntry(budgetArea, profileType, nameKey, category, null, addSubCategories);
+    SeriesWizardEntry entry = new SeriesWizardEntry(budgetArea, profileType, nameKey,
+                                                    category, null, addSubCategories, repository);
+    entries.put(budgetArea, entry);
   }
 
   private void createEntry(BudgetArea budgetArea,
                            ProfileType profileType,
                            String nameKey,
                            MasterCategory category,
-                           String subCategory,
-                           boolean addSubCategories) {
+                           String subCategory) {
     SeriesWizardEntry entry = new SeriesWizardEntry(budgetArea, profileType, nameKey,
-                                                    category, subCategory, addSubCategories, repository);
+                                                    category, subCategory, false, repository);
     entries.put(budgetArea, entry);
   }
 }
