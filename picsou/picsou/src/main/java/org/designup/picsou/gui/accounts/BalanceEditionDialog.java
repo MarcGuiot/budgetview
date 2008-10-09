@@ -49,7 +49,7 @@ public class BalanceEditionDialog {
 
     editor = builder.addEditor("amountField", Account.BALANCE)
       .setValidationAction(validateAction)
-      .setNotifyAtKeyPressed(true)
+      .setNotifyOnKeyPressed(true)
       .forceSelection(account)
       .getComponent();
 

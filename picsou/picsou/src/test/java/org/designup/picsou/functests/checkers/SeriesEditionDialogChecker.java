@@ -213,12 +213,12 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return table;
   }
 
-  public SeriesEditionDialogChecker setManual() {
+  public SeriesEditionDialogChecker switchToManual() {
     dialog.getButton("manual").click();
     return this;
   }
 
-  public SeriesEditionDialogChecker setAutomatic() {
+  public SeriesEditionDialogChecker switchToAutomatic() {
     WindowInterceptor.init(dialog.getButton("automatic").triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
@@ -557,6 +557,26 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker checkAmountLabel(final String text) {
     assertThat(dialog.getTextBox("seriesBudgetEditionAmountLabel").textEquals(text));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker selectPositiveAmounts() {
+    dialog.getRadioButton("positiveAmounts").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkPositiveAmountsSelected() {
+    assertThat(dialog.getRadioButton("positiveAmounts").isSelected());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker selectNegativeAmounts() {
+    dialog.getRadioButton("negativeAmounts").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkNegativeAmountsSelected() {
+    assertThat(dialog.getRadioButton("negativeAmounts").isSelected());
     return this;
   }
 

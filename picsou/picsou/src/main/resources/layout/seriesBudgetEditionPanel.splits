@@ -5,6 +5,7 @@
   <styles>
     <style selector="textField" fill="horizontal" anchor="left"/>
     <style selector="label.month" foreground="#444444" font="-,plain,10"/>
+    <style selector="radioButton" font="-,plain,10"/>
   </styles>
 
   <panel name="seriesBudgetEdition" opaque="false">
@@ -13,7 +14,11 @@
         <card name="manual">
           <column margin="10" marginBottom="0" weightX="7">
             <label ref="seriesBudgetEditionAmountLabel" styleClass="formLabelTop" fill="horizontal"/>
-            <textField ref="amountEditor"/>
+            <row>
+              <radioButton ref="positiveAmounts" weightX="0"/>
+              <radioButton ref="negativeAmounts" weightX="0"/>
+              <textField ref="amountEditor" columns="10"/>
+            </row>
             <label text="$seriesBudgetEdition.entries" styleClass="formLabelTop"/>
             <scrollPane weightY="1000" margin="5">
               <table ref="seriesBudget" intercellSpacing="(0,0)" showGrid="false"/>

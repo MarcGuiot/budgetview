@@ -102,7 +102,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.envelopes.createSeries()
       .setName("Courant")
-      .setManual()
+      .switchToManual()
       .selectAllMonths()
       .setAmount("2500")
       .setCategory(MasterCategory.HEALTH)
@@ -110,13 +110,13 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     budgetView.income.createSeries()
       .setName("Salaire")
-      .setManual()
+      .switchToManual()
       .selectAllMonths().setAmount("3000")
       .setCategory(MasterCategory.INCOME)
       .validate();
     budgetView.recurring.createSeries()
       .setName("EDF")
-      .setManual()
+      .switchToManual()
       .selectAllMonths().setAmount("100")
       .setCategory(MasterCategory.HOUSE)
       .validate();
@@ -125,7 +125,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     budgetView.recurring.createSeries()
       .setName("Loyer")
-      .setManual()
+      .switchToManual()
       .setAmount("1000")
       .setCategory(MasterCategory.HOUSE)
       .validate();

@@ -48,9 +48,9 @@ public class LicenseDialog {
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/LicenseDialog.splits",
                                                       localRepository, this.localDirectory);
-    builder.addEditor("mail", User.MAIL).setNotifyAtKeyPressed(true);
-    builder.addEditor("code", User.ACTIVATION_CODE).setNotifyAtKeyPressed(true);
-    builder.addEditor("monthCount", UserPreferences.FUTURE_MONTH_COUNT).setNotifyAtKeyPressed(true);
+    builder.addEditor("mail", User.MAIL).setNotifyOnKeyPressed(true);
+    builder.addEditor("code", User.ACTIVATION_CODE).setNotifyOnKeyPressed(true);
+    builder.addEditor("monthCount", UserPreferences.FUTURE_MONTH_COUNT).setNotifyOnKeyPressed(true);
     connectMessageLabel = new JLabel(Lang.get("license.connect"));
     builder.add("connectionMessage", connectMessageLabel);
     progressBar = new JProgressBar();

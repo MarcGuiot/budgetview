@@ -38,7 +38,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.createIncomeSeries()
       .setName("Exceptional Income")
-      .setManual()
+      .switchToManual()
       .setCategory(MasterCategory.INCOME)
       .setAmount("0.0")
       .validate();
@@ -760,21 +760,21 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.createSeries().setName("courantED")
       .setEndDate(200805)
       .setCategory(MasterCategory.FOOD)
-      .setManual()
+      .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .validate();
     budgetView.envelopes.createSeries().setName("courantAuchan")
       .setStartDate(200806)
       .setEndDate(200806)
-      .setManual()
+      .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .setCategory(MasterCategory.FOOD)
       .validate();
     budgetView.envelopes.createSeries().setName("courantMonoprix")
       .setStartDate(200806)
-      .setManual()
+      .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .setCategory(MasterCategory.FOOD)
@@ -849,11 +849,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, false);
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", 20, 20);
+    budgetView.envelopes.checkSeries("Courant", -20, -20);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 10, 20);
+    budgetView.envelopes.checkSeries("Courant", -10, -20);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, 20);
+    budgetView.envelopes.checkSeries("Courant", 0, -20);
 
     OfxBuilder
       .init(this)
@@ -867,13 +867,13 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/04");
-    budgetView.envelopes.checkSeries("Courant", 100, 100);
+    budgetView.envelopes.checkSeries("Courant", -100, -100);
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", 30, 100);
+    budgetView.envelopes.checkSeries("Courant", -30, -100);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 10, 30);
+    budgetView.envelopes.checkSeries("Courant", -10, -30);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, 30);
+    budgetView.envelopes.checkSeries("Courant", 0, -30);
 
     views.selectCategorization();
     timeline.selectMonth("2008/05");
@@ -881,11 +881,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", 20, 100);
+    budgetView.envelopes.checkSeries("Courant", -20, -100);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 10, 20);
+    budgetView.envelopes.checkSeries("Courant", -10, -20);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, 20);
+    budgetView.envelopes.checkSeries("Courant", 0, -20);
     views.selectData();
     timeline.selectAll();
     transactions.initContent()
@@ -918,7 +918,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 30, 30);
+    budgetView.envelopes.checkSeries("Courant", -30, -30);
 
     OfxBuilder
       .init(this)
@@ -928,9 +928,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("ATAC", "Courant", MasterCategory.FOOD, false);
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", 10, 10);
+    budgetView.envelopes.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 30, 10);
+    budgetView.envelopes.checkSeries("Courant", -30, -10);
   }
 
   public void testAutomaticWithInactiveMonth() throws Exception {
@@ -950,12 +950,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/05");
     budgetView.recurring.checkSeriesNotPresent("Tel");
     timeline.selectMonth("2008/06");
-    budgetView.recurring.checkSeries("Tel", 0, 10);
+    budgetView.recurring.checkSeries("Tel", 0, -10);
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/20", -10, "FT")
       .load();
-    budgetView.recurring.checkSeries("Tel", 10, 10);
+    budgetView.recurring.checkSeries("Tel", -10, -10);
   }
 
   public void testInAutomaticBudgetOverrunInCurrentUpdateFuture() throws Exception {
@@ -973,24 +973,23 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, false);
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", 10, 10);
+    budgetView.envelopes.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    budgetView.envelopes.checkSeries("Courant", 0, -10);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    budgetView.envelopes.checkSeries("Courant", 0, -10);
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    budgetView.envelopes.checkSeries("Courant", 0, -10);
     views.selectCategorization();
     timeline.selectMonth("2008/06");
     categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, false);
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 20, 10);
+    budgetView.envelopes.checkSeries("Courant", -20, -10);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, 20);
+    budgetView.envelopes.checkSeries("Courant", 0, -20);
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.checkSeries("Courant", 0, 20);
-
+    budgetView.envelopes.checkSeries("Courant", 0, -20);
 
     views.selectCategorization();
     timeline.selectMonth("2008/06");
@@ -1000,11 +999,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 15, 10);
+    budgetView.envelopes.checkSeries("Courant", -15, -10);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, 15);
+    budgetView.envelopes.checkSeries("Courant", 0, -15);
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.checkSeries("Courant", 0, 15);
+    budgetView.envelopes.checkSeries("Courant", 0, -15);
 
     views.selectCategorization();
     timeline.selectMonth("2008/06");
@@ -1014,11 +1013,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 5, 10);
+    budgetView.envelopes.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    budgetView.envelopes.checkSeries("Courant", 0, -10);
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    budgetView.envelopes.checkSeries("Courant", 0, -10);
 
   }
 
@@ -1042,11 +1041,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", 10, 10);
+    budgetView.envelopes.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 5, 10);
+    budgetView.envelopes.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    budgetView.envelopes.checkSeries("Courant", 0, -10);
 
     views.selectCategorization();
     timeline.selectMonth("2008/05");
@@ -1056,11 +1055,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", 1, 1);
+    budgetView.envelopes.checkSeries("Courant", -1, -1);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 5, 1);
+    budgetView.envelopes.checkSeries("Courant", -5, -1);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, 5);
+    budgetView.envelopes.checkSeries("Courant", 0, -5);
 
     views.selectCategorization();
     timeline.selectMonth("2008/05");
@@ -1069,11 +1068,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", 10, 10);
+    budgetView.envelopes.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 5, 10);
+    budgetView.envelopes.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    budgetView.envelopes.checkSeries("Courant", 0, -10);
   }
 
   public void testInAutomaticNewMonthUpdateFuture() throws Exception {
@@ -1092,23 +1091,23 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("ATAC", "Courant", MasterCategory.FOOD, false);
     views.selectBudget();
     timeline.selectMonth("2008/04");
-    budgetView.envelopes.checkSeries("Courant", 10, 10);
+    budgetView.envelopes.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", 5, 10);
+    budgetView.envelopes.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 0, 10);
+    budgetView.envelopes.checkSeries("Courant", 0, -10);
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/20", -20, "Auchan")
       .load();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", 5, 10);
+    budgetView.envelopes.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 20, 5);
+    budgetView.envelopes.checkSeries("Courant", -20, -5);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, 20);
+    budgetView.envelopes.checkSeries("Courant", 0, -20);
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.checkSeries("Courant", 0, 20);
+    budgetView.envelopes.checkSeries("Courant", 0, -20);
 
   }
 

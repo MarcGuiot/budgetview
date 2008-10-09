@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
@@ -25,12 +26,12 @@ public class BudgetViewChecker extends DataChecker {
 
   public BudgetViewChecker(Window window) {
     this.window = window;
-    this.income = new BudgetAreaChecker("incomeBudgetView", true);
-    this.recurring = new BudgetAreaChecker("recurringBudgetView", true);
-    this.envelopes = new BudgetAreaChecker("envelopeBudgetView", false);
+    this.income = new BudgetAreaChecker("incomeBudgetView", true, BudgetArea.INCOME);
+    this.recurring = new BudgetAreaChecker("recurringBudgetView", true, BudgetArea.RECURRING);
+    this.envelopes = new BudgetAreaChecker("envelopeBudgetView", false, BudgetArea.ENVELOPES);
     this.occasional = new OccasionalAreaChecker();
-    this.specials = new BudgetAreaChecker("projectsBudgetView", false);
-    this.savings = new BudgetAreaChecker("savingsBudgetView", true);
+    this.specials = new BudgetAreaChecker("projectsBudgetView", false, BudgetArea.SPECIAL);
+    this.savings = new BudgetAreaChecker("savingsBudgetView", true, BudgetArea.SAVINGS);
   }
 
   private int getIndex(JPanel panel, Component component) {
@@ -46,11 +47,14 @@ public class BudgetViewChecker extends DataChecker {
 
     private String panelName;
     private boolean singleSelection;
+    private BudgetArea budgetArea;
     private static final int OBSERVED_LABEL_OFFSET = 1;
+    private static final int PLANNED_LABEL_OFFSET = 3;
 
-    public BudgetAreaChecker(String panelName, boolean singleSelection) {
+    public BudgetAreaChecker(String panelName, boolean singleSelection, BudgetArea budgetArea) {
       this.panelName = panelName;
       this.singleSelection = singleSelection;
+      this.budgetArea = budgetArea;
     }
 
     public void checkTitle(String title) {
@@ -76,19 +80,30 @@ public class BudgetViewChecker extends DataChecker {
       int nameIndex = getIndex(panel, nameButton.getAwtComponent());
 
       Button observedLabel = new Button((JButton)panel.getComponent(nameIndex + OBSERVED_LABEL_OFFSET));
-      String modifiedObservedAmount = (observedAmount < 0 ? "+" : "") +
-                                      BudgetViewChecker.this.toString(Math.abs(observedAmount));
-      UISpecAssert.assertTrue(seriesName + " observed : \nExpected  :" + modifiedObservedAmount +
-                              "\nActual    :" + observedLabel.getLabel(),
-                              observedLabel.textEquals(modifiedObservedAmount));
+      String expectedObservedAmount = convert(observedAmount);
+      UISpecAssert.assertTrue(seriesName + " observed:\nExpected :" + expectedObservedAmount +
+                              "\nActual   :" + observedLabel.getLabel(),
+                              observedLabel.textEquals(expectedObservedAmount));
 
-      String modifiedPlannedAmount = (plannedAmount < 0 ? "+" : "") +
-                                     BudgetViewChecker.this.toString(Math.abs(plannedAmount));
-      TextBox plannedLabel = new TextBox((JLabel)panel.getComponent(nameIndex + 3));
-      UISpecAssert.assertTrue(seriesName + " planned : \nExpected  :" + modifiedPlannedAmount +
-                              "\nActual    :" + plannedLabel.getText(),
-                              plannedLabel.textEquals(modifiedPlannedAmount));
+      TextBox plannedLabel = new TextBox((JLabel)panel.getComponent(nameIndex + PLANNED_LABEL_OFFSET));
+      String expectedPlannedAmount = convert(plannedAmount);
+      UISpecAssert.assertTrue(seriesName + " planned:\nExpected :" + expectedPlannedAmount +
+                              "\nActual   :" + plannedLabel.getText(),
+                              plannedLabel.textEquals(expectedPlannedAmount));
       return this;
+    }
+
+    private String convert(double amount) {
+      StringBuilder builder = new StringBuilder();
+      if (budgetArea.isIncome()) {
+        builder.append(amount < 0 ? "-" : "");
+      }
+      else {
+        builder.append(amount > 0 ? "+" : "");
+      }
+
+      builder.append(BudgetViewChecker.this.toString(Math.abs(amount)));
+      return builder.toString();
     }
 
     public BudgetAreaChecker checkSeriesNotPresent(String... seriesName) {

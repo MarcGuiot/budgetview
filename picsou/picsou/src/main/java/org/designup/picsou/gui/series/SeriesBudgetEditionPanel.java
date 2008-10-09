@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.MonthListStringifier;
@@ -16,7 +17,6 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -46,7 +46,7 @@ import java.text.DecimalFormat;
 import java.util.Set;
 
 public class SeriesBudgetEditionPanel {
-  private GlobNumericEditor amountEditor;
+  private AmountEditor amountEditor;
   private JPanel panel;
   private Window container;
   private GlobRepository localRepository;
@@ -72,13 +72,12 @@ public class SeriesBudgetEditionPanel {
     builder.add("manual", new GotoManualAction());
     builder.add("automatic", new GotoAutomaticAction());
 
-    amountEditor = builder.addEditor("amountEditor", SeriesBudget.AMOUNT)
-      .setMinusAllowed(false)
-      .setValueForNull(0.0)
-      .setNotifyAtKeyPressed(true);
+    amountEditor = new AmountEditor(SeriesBudget.AMOUNT, localRepository, directory);
+    builder.add("amountEditor", amountEditor.getNumericEditor());
+    builder.add("positiveAmounts", amountEditor.getPositiveRadio());
+    builder.add("negativeAmounts", amountEditor.getNegativeRadio());
 
     builder.addLabel("seriesBudgetEditionAmountLabel", SeriesBudget.TYPE, new AmountLabelStringifier());
-
 
     final GlobTableView budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE,
                                                        new ReverseGlobFieldComparator(SeriesBudget.MONTH))
@@ -92,7 +91,6 @@ public class SeriesBudgetEditionPanel {
                  new ObservedLabelCustomizer(repository))
       .addColumn(Lang.get("seriesBudgetEdition.amount"), new AmountStringifier(), LabelCustomizers.ALIGN_RIGHT);
     PicsouTableHeaderPainter.install(budgetTable, directory);
-
 
     selectionService = directory.get(SelectionService.class);
     selectionService.addListener(new GlobSelectionListener() {
@@ -108,12 +106,7 @@ public class SeriesBudgetEditionPanel {
                              fieldEquals(SeriesBudget.SERIES, SeriesBudgetEditionPanel.this.series.get(Series.ID))));
 
           budgetArea = BudgetArea.get(SeriesBudgetEditionPanel.this.series.get(Series.BUDGET_AREA));
-          if (budgetArea.isIncome()) {
-            amountEditor.setInvertValue(false);
-          }
-          else {
-            amountEditor.setInvertValue(true);
-          }
+          amountEditor.setBudgetArea(budgetArea);
           if (SeriesBudgetEditionPanel.this.series.get(Series.IS_AUTOMATIC)) {
             modeCard.show("automatic");
           }
@@ -135,11 +128,8 @@ public class SeriesBudgetEditionPanel {
     this.series = series;
   }
 
-  public void selectedAmountEditor() {
-    if (amountEditor.getComponent().isVisible()) {
-      amountEditor.getComponent().requestFocusInWindow();
-      amountEditor.getComponent().selectAll();
-    }
+  public void selectAmountEditor() {
+    amountEditor.selectAll();
   }
 
   public void selectBudgets(Set<Integer> monthIds) {
@@ -170,7 +160,15 @@ public class SeriesBudgetEditionPanel {
       if ((value == null) || (value == 0.0)) {
         return "0";
       }
-      return PicsouDescriptionService.DECIMAL_FORMAT.format((budgetArea.isIncome() ? 1 : -1) * value);
+      StringBuilder builder = new StringBuilder();
+      if ((value < 0) && budgetArea.isIncome()) {
+        builder.append("-");
+      }
+      if ((value > 0) && !budgetArea.isIncome()) {
+        builder.append("+");
+      }
+      builder.append(PicsouDescriptionService.DECIMAL_FORMAT.format(Math.abs(value)));
+      return builder.toString();
     }
   }
 

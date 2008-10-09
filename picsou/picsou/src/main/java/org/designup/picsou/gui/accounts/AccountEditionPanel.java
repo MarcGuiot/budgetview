@@ -50,10 +50,10 @@ public class AccountEditionPanel {
         }
       }
     });
-    builder.addEditor("name", Account.NAME).setNotifyAtKeyPressed(true);
-    builder.addEditor("number", Account.NUMBER).setNotifyAtKeyPressed(true);
+    builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
+    builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
 
-    balanceEditor = builder.addEditor("balance", Account.BALANCE).setNotifyAtKeyPressed(true).getComponent();
+    balanceEditor = builder.addEditor("balance", Account.BALANCE).setNotifyOnKeyPressed(true).getComponent();
 
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
