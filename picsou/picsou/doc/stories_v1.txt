@@ -97,3 +97,5 @@
 - budgetView: pouvoir cliquer sur les montants attendus
 
 - categorizationView : edition des series a partir du toggle, sans passer par bouton liste
+
+- categorizationGauge : mettre un tooltip avec le nombre de transactions non classees

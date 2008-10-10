@@ -276,32 +276,29 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkBudgetAreaSelectionPanelDisplayed();
   }
 
-  public void testAutoSelectSimilarTransactionsByDoubleClick() throws Exception {
+  public void testTableInitiallyShowsAllAvailableTransactions() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
-      .addTransaction("2008/06/25", -29.90, "Free Telecom 25/05")
-      .addTransaction("2008/06/24", -29.90, "Free Telecom 21/04")
-      .addTransaction("2008/06/15", -90.0, "Cheque 1111")
-      .addTransaction("2008/06/14", -80.0, "Cheque 2222")
+      .addTransaction("2008/07/30", -29.90, "Carouf")
+      .addTransaction("2008/06/15", -40.00, "Auchan")
       .load();
 
     views.selectCategorization();
+
+    categorization.checkShowsAllTransactions();
+
+    timeline.selectMonth("2008/07");
+
     categorization.checkTable(new Object[][]{
-      {"15/06/2008", "", "CHEQUE N. 1111", -90.00},
-      {"14/06/2008", "", "CHEQUE N. 2222", -80.00},
-      {"24/06/2008", "", "Free Telecom 21/04", -29.90},
-      {"25/06/2008", "", "Free Telecom 25/05", -29.90},
-      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"30/07/2008", "", "Carouf", -29.90},
     });
 
-    categorization.disableAutoHide();
+    categorization.showSelectMonthsOnly();
 
-    categorization.getTable().doubleClick(0, 0);
-    categorization.checkSelectedTableRows(0);
-
-    categorization.getTable().doubleClick(2, 0);
-    categorization.checkSelectedTableRows(2, 3, 4);
+    categorization.checkTable(new Object[][]{
+      {"30/07/2008", "", "Carouf", -29.90}
+    });
   }
 
   public void testSort() throws Exception {
@@ -339,6 +336,34 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "", "Free Telecom 26/06", -29.90},
       {"27/05/2008", "", "Free Telecom 27/05", -29.90},
     });
+  }
+
+  public void testAutoSelectSimilarTransactionsByDoubleClick() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/26", -29.90, "Free Telecom 26/06")
+      .addTransaction("2008/06/25", -29.90, "Free Telecom 25/05")
+      .addTransaction("2008/06/24", -29.90, "Free Telecom 21/04")
+      .addTransaction("2008/06/15", -90.0, "Cheque 1111")
+      .addTransaction("2008/06/14", -80.0, "Cheque 2222")
+      .load();
+
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "", "CHEQUE N. 1111", -90.00},
+      {"14/06/2008", "", "CHEQUE N. 2222", -80.00},
+      {"24/06/2008", "", "Free Telecom 21/04", -29.90},
+      {"25/06/2008", "", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "", "Free Telecom 26/06", -29.90}
+    });
+
+    categorization.disableAutoHide();
+
+    categorization.getTable().doubleClick(0, 0);
+    categorization.checkSelectedTableRows(0);
+
+    categorization.getTable().doubleClick(2, 0);
+    categorization.checkSelectedTableRows(2, 3, 4);
   }
 
   public void testAutomaticSelectionOfSimilarTransactionsMode() throws Exception {
@@ -398,6 +423,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
+    categorization.showSelectMonthsOnly();
     categorization.checkTable(new Object[][]{
       {"24/04/2008", "", "Free Telecom 21/04", -29.90},
       {"25/05/2008", "", "Free Telecom 25/05", -29.90},

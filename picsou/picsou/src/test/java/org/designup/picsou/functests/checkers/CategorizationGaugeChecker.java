@@ -14,12 +14,13 @@ public class CategorizationGaugeChecker extends DataChecker {
     this.progressMessage = panel.getTextBox("progressMessage");
   }
 
-  public void checkLevel(double gaugeLevel, String displayed) {
+  public CategorizationGaugeChecker checkLevel(double gaugeLevel, String displayed) {
     UISpecAssert.assertThat(panel.isVisible());
     GaugeChecker gauge = new GaugeChecker(panel.findSwingComponent(Gauge.class));
     gauge.checkFill(gaugeLevel);
 
     UISpecAssert.assertThat(panel.getTextBox("level").textEquals(displayed));
+    return this;
   }
 
   public void checkHidden() {

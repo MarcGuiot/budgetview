@@ -128,7 +128,7 @@ public class LicenseDialog {
       Utils.beginRemove();
       Glob user = localRepository.get(User.KEY);
       if (user.get(User.MAIL).equals("admin")) {
-        localRepository.update(UserPreferences.KEY, UserPreferences.REGISTRED_USER, true);
+        localRepository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, true);
         localRepository.commitChanges(false);
         localDirectory.get(UndoRedoService.class).cleanUndo();
         dialog.setVisible(false);

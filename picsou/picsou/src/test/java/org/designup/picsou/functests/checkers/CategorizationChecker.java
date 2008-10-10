@@ -6,6 +6,7 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.gui.categorization.components.TransactionFilteringMode;
 import org.globsframework.model.Glob;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
@@ -832,6 +833,22 @@ public class CategorizationChecker extends DataChecker {
     JEditorPane editorPane = getPanel().getPanel("series").findSwingComponent(JEditorPane.class);
     TextBox textBox = new TextBox(editorPane);
     return HelpChecker.open(textBox.triggerClickOnHyperlink(linkText));
+  }
+
+  public void checkShowsAllTransactions() {
+    assertThat(getPanel().getComboBox("transactionFilterCombo").selectionEquals(TransactionFilteringMode.ALL.toString()));
+  }
+
+  public void showAllTransactions() {
+    selectTransactionFilterMode(TransactionFilteringMode.ALL.toString());
+  }
+  
+  public void showSelectMonthsOnly() {
+    selectTransactionFilterMode(TransactionFilteringMode.SELECTED_MONTHS.toString());
+  }
+
+  private void selectTransactionFilterMode(String mode) {
+    getPanel().getComboBox("transactionFilterCombo").select(mode);
   }
 
   public class CategorizationTableChecker extends TableChecker {

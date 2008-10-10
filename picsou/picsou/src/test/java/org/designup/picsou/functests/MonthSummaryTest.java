@@ -231,6 +231,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     monthSummary.categorize();
     views.checkCategorizationSelected();
+    categorization.showSelectMonthsOnly();
     categorization.checkTable(new Object[][]{
       {"26/08/2008", "", "FNAC", -10.0},
       {"26/08/2008", "", "MyCompany", 1000.0},

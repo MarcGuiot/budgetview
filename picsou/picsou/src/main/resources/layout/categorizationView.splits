@@ -40,6 +40,7 @@
         <panel styleClass="block">
           <column styleClass="innerBlock">
             <panel ref="gaugePanel" opaque="false"/>
+            <comboBox ref="transactionFilterCombo"/>
             <scrollPane viewportBackground="#FFFFFF" marginBottom="0">
               <table ref="transactionTable" rowHeight="20"/>
             </scrollPane>

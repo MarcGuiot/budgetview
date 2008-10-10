@@ -220,7 +220,7 @@ public class ConfigService {
         Header signature = postMethod.getResponseHeader(HEADER_SIGNATURE);
         if (signature != null) {
           String value = signature.getValue();
-          repository.update(UserPreferences.KEY, UserPreferences.REGISTRED_USER, true);
+          repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, true);
           repository.update(User.KEY, User.SIGNATURE, Encoder.stringToByte(value));
         }
         else {
@@ -288,7 +288,7 @@ public class ConfigService {
   @Inline
   public static void check(Directory directory, GlobRepository repository) {
     ConfigService configService = directory.get(ConfigService.class);
-    if (repository.get(UserPreferences.KEY).get(UserPreferences.REGISTRED_USER)) {
+    if (repository.get(UserPreferences.KEY).get(UserPreferences.REGISTERED_USER)) {
       configService.updateRegisteredUserValidity(directory, repository);
     }
     else {
@@ -450,7 +450,7 @@ public class ConfigService {
       try {
         repository.update(User.KEY, User.ACTIVATION_STATE,
                           User.ACTIVATED_AS_ANONYMOUS_BUT_REGISTERED_USER);
-        repository.update(UserPreferences.KEY, UserPreferences.REGISTRED_USER, false);
+        repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
       }
       finally {
         repository.completeBulkDispatchingMode();
@@ -459,7 +459,7 @@ public class ConfigService {
     }
 
     public UserState updateNotRegisteredUser(Directory directory, GlobRepository repository) {
-      repository.update(UserPreferences.KEY, UserPreferences.REGISTRED_USER, false);
+      repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
       return this;
     }
   }
@@ -534,7 +534,7 @@ public class ConfigService {
     public UserState updateRegisteredUserValidity(Directory directory, GlobRepository repository) {
       repository.enterBulkDispatchingMode();
       try {
-        repository.update(UserPreferences.KEY, UserPreferences.REGISTRED_USER, false);
+        repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
         if (mailSent) {
           repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_MAIL_SEND);
         }
@@ -548,7 +548,7 @@ public class ConfigService {
     public UserState updateNotRegisteredUser(Directory directory, GlobRepository repository) {
       repository.enterBulkDispatchingMode();
       try {
-        repository.update(UserPreferences.KEY, UserPreferences.REGISTRED_USER, false);
+        repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
         if (mailSent) {
           repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_MAIL_SEND);
         }
@@ -581,7 +581,7 @@ public class ConfigService {
     public UserState updateNotRegisteredUser(Directory directory, GlobRepository repository) {
       repository.update(User.KEY, User.ACTIVATION_STATE,
                         User.ACTIVATED_AS_ANONYMOUS_BUT_REGISTERED_USER);
-      repository.update(UserPreferences.KEY, UserPreferences.REGISTRED_USER, false);
+      repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
       return new CompletedUserState();
     }
   }
