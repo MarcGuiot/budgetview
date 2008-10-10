@@ -159,6 +159,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/28", "2008/08/01", 3540.00, "WorldCo")
       .load();
 
+    timeline.selectMonth("2008/07");
+
     views.selectData();
     transactions.initContent()
       .add("31/07/2008", "02/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00)
@@ -452,13 +454,13 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.occasional.checkTotalAmount(2500, 2500);
   }
 
-  public void testCreateAndDeleteManyCategories() throws Exception {
+  public void testCreateAndDeleteManySeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/29", -29.00, "Auchan")
       .addTransaction("2008/06/29", -60.00, "ELF")
       .load();
 
-    timeline.selectAll();
+    timeline.selectMonths("2008/06", "2008/07");
 
     views.selectBudget();
     budgetView.recurring.createSeries()

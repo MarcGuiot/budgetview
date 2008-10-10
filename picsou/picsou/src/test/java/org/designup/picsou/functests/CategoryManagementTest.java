@@ -484,6 +484,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categories.select("Apero");
     categories.openEditionDialog()
       .checkMasterSelected(MasterCategory.FOOD)
-      .checkSubSelected("Apero");
+      .checkSubSelected("Apero")
+      .cancel();
   }
 }

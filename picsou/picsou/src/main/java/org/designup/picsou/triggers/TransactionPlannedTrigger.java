@@ -178,7 +178,6 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       Double available = transaction.get(Transaction.AMOUNT);
       newAmount = available - newAmount;
       if (multiplier * newAmount < -10E-6) {
-        System.out.println("TransactionPlannedTrigger.transfertFromPlanned " + multiplier * newAmount);
         repository.update(transaction.getKey(), FieldValue.value(Transaction.AMOUNT, newAmount));
         return;
       }

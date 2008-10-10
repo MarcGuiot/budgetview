@@ -863,6 +863,10 @@ public class CategorizationChecker extends DataChecker {
     getPanel().getComboBox("transactionFilterCombo").select(mode);
   }
 
+  public void showLastImportedFileOnly() {
+    selectTransactionFilterMode(TransactionFilteringMode.LAST_IMPORTED_FILE.toString());
+  }
+
   public class CategorizationTableChecker extends TableChecker {
 
     private CategorizationTableChecker() {
