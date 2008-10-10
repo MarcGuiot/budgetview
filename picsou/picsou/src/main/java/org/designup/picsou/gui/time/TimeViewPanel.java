@@ -54,8 +54,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private int currentPaintCount = 0;
   private TimeService timeService;
   private VisibilityListener visibilityListener;
-  private double minBalance;
-  private double maxBalance;
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -67,7 +65,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     GlobList list = globRepository.getAll(Month.TYPE).sort(Month.ID);
     timeGraph = new TimeGraph(list, colors, timeService, getFontMetrics(yearFont),
                               getFontMetrics(monthFont), this);
-    computeBalance(list);
     selectionService = directory.get(SelectionService.class);
     setName("MonthSelector");
     globRepository.addChangeListener(this);
@@ -135,12 +132,8 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     return balance.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
   }
 
-  public double getMin() {
-    return minBalance;
-  }
-
-  public double getMax() {
-    return maxBalance;
+  public double getCurrentLevel(int monthId) {
+    return 0.;
   }
 
   public interface VisibilityListener {
@@ -276,7 +269,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       return;
     }
     if (changeSet.containsChanges(BalanceStat.TYPE)) {
-      computeBalance(globRepository.getAll(Month.TYPE));
       repaint();
     }
   }
@@ -288,7 +280,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
 
   private void reloadMonth() {
     GlobList list = repository.getAll(Month.TYPE).sort(Month.ID);
-    computeBalance(list);
     timeGraph = new TimeGraph(list, colors, timeService, getFontMetrics(colors.getYearFont()),
                               getFontMetrics(colors.getMonthFont()), this);
     timeGraph.init(getWidth());
@@ -304,24 +295,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     }
     else {
       selectionService.select(stillThere, Month.TYPE);
-    }
-  }
-
-  private void computeBalance(GlobList months) {
-    minBalance = Double.MAX_VALUE;
-    maxBalance = Double.MIN_VALUE;
-    for (Glob month : months) {
-      Glob stat = repository.find(Key.create(BalanceStat.TYPE, month.get(Month.ID)));
-      if (stat == null) {
-        return;
-      }
-      Double balance = stat.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
-      if (balance < minBalance) {
-        minBalance = balance;
-      }
-      if (balance > maxBalance) {
-        maxBalance = balance;
-      }
     }
   }
 

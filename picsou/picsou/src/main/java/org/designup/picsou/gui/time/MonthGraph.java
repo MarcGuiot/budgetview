@@ -90,22 +90,55 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
     TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, getHeight() - 5,
                            nearest.getName(), colors);
 
-//    try {
-//      transformationAdapter.save();
-//      transformationAdapter.translate(0, topGraph);
-//      clickableAreaButton = TimeGraph.getClickableArea(transformationAdapter.getTransform(), width, heightGraph);
-//      double balance = balancesProvider.getBalance(this.month.get(Month.ID));
-//      double min = balancesProvider.getMin();
-//      double max = balancesProvider.getMax();
-//      double ratio = (balance - min) / (max - min);
-//      double h = heightGraph * ratio;
-//      graphics2D.drawLine(0, heightGraph - (int)h - 1, width, heightGraph - (int)h - 1);
-//    }
-//    finally {
-//      transformationAdapter.restore();
-//    }
+    try {
+      transformationAdapter.save();
+      transformationAdapter.translate(0, topGraph);
+      clickableAreaButton = TimeGraph.getClickableArea(transformationAdapter.getTransform(), width, heightGraph);
+      double balance = balancesProvider.getBalance(this.month.get(Month.ID));
+      double currentLevel = balancesProvider.getCurrentLevel(this.month.get(Month.ID));
+      double diff = balance - currentLevel;
+      Color color = getColor(diff);
+      graphics2D.setPaint(color);
+      graphics2D.fillRect(0, 0, width, heightGraph);
+    }
+    finally {
+      transformationAdapter.restore();
+    }
+  }
 
-
+  private Color getColor(double diff) {
+    Color color = colors.balanceZero;
+    if (diff > 400) {
+      color = colors.balancePlus4;
+    }
+    else if (diff > 300) {
+      color = colors.balancePlus3;
+    }
+    else if (diff > 200) {
+      color = colors.balancePlus2;
+    }
+    else if (diff > 100) {
+      color = colors.balancePlus1;
+    }
+    else if (diff > 50) {
+      color = colors.balancePlus05;
+    }
+    else if (diff < 400) {
+      color = colors.balanceMinus4;
+    }
+    else if (diff < 300) {
+      color = colors.balanceMinus3;
+    }
+    else if (diff < 200) {
+      color = colors.balanceMinus2;
+    }
+    else if (diff < 100) {
+      color = colors.balanceMinus1;
+    }
+    else if (diff < 50) {
+      color = colors.balanceMinus05;
+    }
+    return color;
   }
 
   public int getHeight() {

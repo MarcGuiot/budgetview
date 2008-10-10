@@ -22,7 +22,7 @@ public class YearGraph extends DefaultCompositeComponent {
   private MonthGraph[] monthsGraph;
   public static final int HEIGHT = 6;
   public static final int ENLARGE = 4;
-  private static final int BALANCE_HEIGHT = 0;
+  private static final int BALANCE_HEIGHT = 4;
   private boolean isFirstYear;
   private boolean isLastYear;
   private int monthHeight;
@@ -83,7 +83,7 @@ public class YearGraph extends DefaultCompositeComponent {
       if (selected) {
         Paint paint = graphics2D.getPaint();
         graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedTop, 0, HEIGHT, colors.selectedBottom));
-        graphics2D.fillRect(0, monthHeight, monthDim, HEIGHT);
+        graphics2D.fillRect(0, monthHeight + BALANCE_HEIGHT, monthDim, HEIGHT);
         graphics2D.setPaint(paint);
       }
       else {
@@ -94,14 +94,13 @@ public class YearGraph extends DefaultCompositeComponent {
         else {
           graphics2D.setPaint(new GradientPaint(0, 0, colors.yearBackgroundOddTop, 0, HEIGHT, colors.yearBackgroundOddBottom));
         }
-        graphics2D.fillRect(0, monthHeight, monthDim, HEIGHT);
+        graphics2D.fillRect(0, monthHeight + BALANCE_HEIGHT, monthDim, HEIGHT);
         graphics2D.setPaint(paint);
       }
       for (MonthGraph month : monthsGraph) {
         month.draw(graphics2D, transformationAdapter, monthHeight, monthWidth,
                    monthRank, visibleRectangle,
-                   HEIGHT + monthHeight,
-                   height - yearCellHeight - monthHeight - HEIGHT);
+                   monthHeight, BALANCE_HEIGHT);
         transformationAdapter.translate(monthWidth, 0);
       }
     }
