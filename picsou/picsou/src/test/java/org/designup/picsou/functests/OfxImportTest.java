@@ -1,13 +1,11 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.importer.ofx.OfxWriter;
 import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.model.Glob;
-import org.globsframework.model.utils.GlobFieldMatcher;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Trigger;
@@ -215,34 +213,17 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testManagesSplitOfTransaction() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransactionWithNote("2006/01/15", -10.0, "Auchan", "RAS", MasterCategory.FOOD)
-      .splitTransaction("2006/01/15", "Auchan", -10, "DVD", MasterCategory.LEISURES.getName())
-      .load();
-
-    transactions
-      .initContent()
-      .addOccasional("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "RAS", -10, MasterCategory.FOOD)
-      .addOccasional("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "DVD", -10, MasterCategory.LEISURES)
-      .check();
-
-    Glob parentTransaction = repository.getAll(Transaction.TYPE, new GlobFieldMatcher(Transaction.NOTE, "RAS")).get(0);
-    Glob splitTransaction = repository.getAll(Transaction.TYPE, new GlobFieldMatcher(Transaction.NOTE, "DVD")).get(0);
-    assertTrue(parentTransaction.get(Transaction.SPLIT, false));
-    assertEquals(parentTransaction.get(Transaction.ID),
-                 splitTransaction.get(Transaction.SPLIT_SOURCE));
-  }
-
   public void testImportingTheSameFileTwiceOnSplittedDoesNotDuplicateTransactions() throws Exception {
 
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
-      .addTransaction("2006/01/11", -1.2, "Tx 2")
-      .splitTransaction("2006/01/11", "Tx 2", -1, "info", MasterCategory.BEAUTY.getName())
+      .addTransaction("2006/01/11", -2.2, "Tx 2")
       .load();
+    views.selectCategorization();
+    categorization.selectTableRows("Tx 2");
+    transactionDetails.split("-1", "info");
+    categorization.selectOccasional().selectOccasionalSeries(MasterCategory.BEAUTY);
 
     OfxBuilder
       .init(this)
@@ -250,33 +231,10 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/11", -2.2, "Tx 2")
       .load();
 
+    views.selectData();
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2, MasterCategory.NONE)
-      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.0, MasterCategory.BEAUTY)
-      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
-      .check();
-  }
-
-  public void testImportingTheSameSplitedFileTwiceDoesNotDuplicateTransactions() throws Exception {
-
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
-      .addTransaction("2006/01/11", -1.2, "Tx 2")
-      .splitTransaction("2006/01/11", "Tx 2", -1, "info", MasterCategory.BEAUTY.getName())
-      .load();
-
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
-      .addTransaction("2006/01/11", -1.2, "Tx 2")
-      .splitTransaction("2006/01/11", "Tx 2", -1, "info", MasterCategory.BEAUTY.getName())
-      .load();
-
-    transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2)
       .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.0, MasterCategory.BEAUTY)
       .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
       .check();
@@ -287,47 +245,27 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
-      .addTransaction("2006/01/11", -1.2, "Tx 2")
-      .splitTransaction("2006/01/11", "Tx 2", -1.5, "info", MasterCategory.BEAUTY.getName())
-      .splitTransaction("2006/01/11", "Tx 2", -1.5, "info2", MasterCategory.CLOTHING.getName())
+      .addTransaction("2006/01/11", -4.2, "Tx 2")
       .load();
+
+    views.selectCategorization();
+    categorization.selectTableRows("Tx 2");
+    transactionDetails.split("-1.5", "info");
+    categorization.selectOccasional().selectOccasionalSeries(MasterCategory.BEAUTY);
+    categorization.selectTableRow(categorization.getTable()
+      .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, -4.2 + 1.5));
+    transactionDetails.split("-1.5", "info2");
+    categorization.selectOccasional().selectOccasionalSeries(MasterCategory.CLOTHING);
 
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
-      .addTransaction("2006/01/11", -1.2, "Tx 2")
-      .splitTransaction("2006/01/11", "Tx 2", -3, "info", MasterCategory.BEAUTY.getName())
+      .addTransaction("2006/01/11", -4.2, "Tx 2")
       .load();
 
+    views.selectData();
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2, MasterCategory.NONE)
-      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info2", -1.5, MasterCategory.CLOTHING)
-      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.5, MasterCategory.BEAUTY)
-      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
-      .check();
-  }
-
-  public void testImportingSplitOnOtherSplitImportUnknownSplitTransaction() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
-      .addTransaction("2006/01/11", -1.2, "Tx 2")
-      .splitTransaction("2006/01/11", "Tx 2", -1.5, "info", MasterCategory.BEAUTY.getName())
-      .splitTransaction("2006/01/11", "Tx 2", -1.5, "info2", MasterCategory.CLOTHING.getName())
-      .load();
-
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
-      .addTransaction("2006/01/14", -1.2, "Tx 3")
-      .splitTransaction("2006/01/14", "Tx 3", -1, "info", MasterCategory.BEAUTY.getName())
-      .load();
-
-    transactions
-      .initContent()
-      .add("14/01/2006", TransactionType.PRELEVEMENT, "Tx 3", "", -1.2, MasterCategory.NONE)
-      .addOccasional("14/01/2006", TransactionType.PRELEVEMENT, "Tx 3", "info", -1.0, MasterCategory.BEAUTY)
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2, MasterCategory.NONE)
       .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info2", -1.5, MasterCategory.CLOTHING)
       .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.5, MasterCategory.BEAUTY)

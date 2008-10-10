@@ -1,5 +1,6 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
@@ -13,7 +14,6 @@ import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
-import org.designup.picsou.utils.Lang;
 
 public enum BudgetArea implements GlobConstantContainer {
   ALL("ALL", -1, false, false, false),
@@ -97,6 +97,43 @@ public enum BudgetArea implements GlobConstantContainer {
         return UNCATEGORIZED;
     }
     throw new ItemNotFound(id + " not associated to any BugdetArea enum value");
+  }
+
+  public interface BudgetAreaVisitor {
+
+    void visitIncome();
+
+    void visitRecurring();
+
+    void visitEnvelopes();
+
+    void visitOccasional();
+
+    void visitSpecial();
+
+    void visitSavings();
+  }
+
+  public void visit(BudgetArea budgetArea, BudgetAreaVisitor visitor) {
+    switch (budgetArea) {
+      case INCOME:
+        visitor.visitIncome();
+        return;
+      case RECURRING:
+        visitor.visitRecurring();
+        return;
+      case ENVELOPES:
+        visitor.visitEnvelopes();
+        return;
+      case OCCASIONAL:
+        visitor.visitOccasional();
+        return;
+      case SPECIAL:
+        visitor.visitSpecial();
+        return;
+      case SAVINGS:
+        visitor.visitSavings();
+    }
   }
 
   public Integer getId() {

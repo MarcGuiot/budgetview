@@ -51,7 +51,7 @@ public class GlobStateChecker {
   }
 
   private void checkPlannedTransactionAmount() {
-    PlannedTransactionChecker transactionChecker = new PlannedTransactionChecker();
+    PlannedTransactionChecker transactionChecker = new PlannedTransactionChecker(corrections);
     GlobList seriesBudget = repository.getAll(SeriesBudget.TYPE);
     for (Glob budget : seriesBudget) {
       GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, budget.get(SeriesBudget.SERIES))
@@ -67,7 +67,7 @@ public class GlobStateChecker {
           amount += transaction.get(Transaction.AMOUNT);
         }
       }
-      if (amount + plannedAmount > budget.get(SeriesBudget.AMOUNT)) {
+      if (plannedAmount != 0. && Math.abs(amount + plannedAmount) > Math.abs(budget.get(SeriesBudget.AMOUNT))) {
         transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES), budget.get(SeriesBudget.MONTH),
                                     amount, plannedAmount, budget.get(SeriesBudget.AMOUNT));
       }
@@ -319,6 +319,11 @@ public class GlobStateChecker {
 
   static private class PlannedTransactionChecker implements Correction {
     private MultiMap<Integer, Info> infos = new MultiMap<Integer, Info>();
+    private List<Correction> corrections;
+
+    private PlannedTransactionChecker(List<Correction> corrections) {
+      this.corrections = corrections;
+    }
 
     public String info(GlobRepository repository, Directory directory) {
       DescriptionService descriptionService = directory.get(DescriptionService.class);
@@ -380,6 +385,9 @@ public class GlobStateChecker {
 
     public void addError(Integer seriesBudgetId, Integer seriesID, Integer monthId, Double plannedAmount,
                          Double observedAMount, Double budgetAmount) {
+      if (infos.size() == 0) {
+        corrections.add(this);
+      }
       infos.put(seriesID, new Info(seriesBudgetId, monthId, plannedAmount, observedAMount, budgetAmount));
     }
 

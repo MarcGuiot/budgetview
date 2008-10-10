@@ -18,7 +18,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    accounts.assertDisplayEquals("10101010", 1.23, "2006/01/30");
+    accounts.assertDisplayEquals("10101010", 1.23, "2006/01/10");
     accounts.checkSummary(1.23, "2006/01/30");
     views.selectData();
     transactions.initAmountContent()
@@ -45,8 +45,8 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     accounts.checkSummary(20.0, "2006/01/29");
-    accounts.assertDisplayEquals("Compte 123123123", 10, "2006/01/31");
-    accounts.assertDisplayEquals("Carte 1000-2000-3000-4000", 10, "2006/01/29");
+    accounts.assertDisplayEquals("Compte 123123123", 10, "2006/01/15");
+    accounts.assertDisplayEquals("Carte 1000-2000-3000-4000", 10, "2006/01/20");
     views.selectData();
     transactions.initAmountContent()
       .add("Bar", -6.00, 10.00, 20.00)
@@ -69,7 +69,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    accounts.assertDisplayEquals("10101010", 12345.60, "2006/05/30");
+    accounts.assertDisplayEquals("10101010", 12345.60, "2006/05/01");
     accounts.checkSummary(12345.60, "2006/05/30");
   }
 

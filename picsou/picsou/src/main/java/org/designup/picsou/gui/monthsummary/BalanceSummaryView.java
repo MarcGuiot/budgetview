@@ -2,34 +2,35 @@ package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobListStringifiers;
+import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 
 public class BalanceSummaryView extends View implements GlobSelectionListener {
   private SelectionService parentSelectionService;
   private JLabel balance;
-  private JLabel income;
-  private JLabel fixe;
   private JLabel total;
-  private JLabel savings;
-  private JLabel special;
-  private JLabel envelope;
   private JPanel contentPanel;
   private JLabel amountSummaryLabel;
 
@@ -62,11 +63,18 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     amountSummaryLabel = builder.add("amountSummaryLabel", new JLabel());
     total = builder.add("totalLabel", new JLabel());
     balance = builder.add("balanceLabel", new JLabel());
-    income = builder.add("incomeLabel", new JLabel());
-    fixe = builder.add("fixedLabel", new JLabel());
-    savings = builder.add("savingsLabel", new JLabel());
-    special = builder.add("specialLabel", new JLabel());
-    envelope = builder.add("envelopeLabel", new JLabel());
+    builder.addLabel("incomeLabel", BalanceStat.TYPE,
+                     GlobListStringifiers.sum(decimalFormat, BalanceStat.INCOME_PLANNED));
+    builder.addLabel("fixedLabel", BalanceStat.TYPE,
+                     GlobListStringifiers.sum(decimalFormat, BalanceStat.RECURRING_PLANNED));
+    builder.addLabel("savingsLabel", BalanceStat.TYPE,
+                     GlobListStringifiers.sum(decimalFormat, BalanceStat.SAVINGS_PLANNED));
+    builder.addLabel("specialLabel", BalanceStat.TYPE,
+                     GlobListStringifiers.sum(decimalFormat, BalanceStat.SPECIAL_PLANNED));
+    builder.addLabel("envelopeLabel", BalanceStat.TYPE,
+                     GlobListStringifiers.sum(decimalFormat, BalanceStat.ENVELOPES_PLANNED));
+    builder.addLabel("occasionalLabel", BalanceStat.TYPE,
+                     GlobListStringifiers.sum(decimalFormat, BalanceStat.OCCASIONAL_PLANNED));
     contentPanel = builder.add("content", new JPanel());
     contentPanel.setVisible(false);
 
@@ -84,103 +92,51 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
       return;
     }
 
-    Integer lastMonth = currentMonths.last();
-    Glob[] transactions = getSortedTransactions(lastMonth);
-    if (transactions.length == 0) {
+    SortedSet<Glob> tmp = repository.getSorted(BalanceStat.TYPE, new GlobFieldComparator(BalanceStat.MONTH_ID),
+                                               GlobMatchers.fieldIn(BalanceStat.MONTH_ID, currentMonths));
+
+    Glob[] balanceStats = tmp.toArray(new Glob[tmp.size()]);
+    if (balanceStats.length == 0) {
       hide();
       return;
     }
-
-    Glob firstTransaction = null;
-    int i;
-    for (i = transactions.length - 1; i >= 0; i--) {
-      firstTransaction = transactions[i];
-      if (!firstTransaction.get(Transaction.PLANNED)) {
-        break;
-      }
-    }
-
-    Double balanceAmount = firstTransaction.get(Transaction.BALANCE);
-    if (balanceAmount == null) {
-      hide();
-      return;
-    }
-    if (firstTransaction.get(Transaction.PLANNED)) {
-      balanceAmount -= firstTransaction.get(Transaction.AMOUNT);
-      i = 0;
-    }
+    selectionService.select(tmp, BalanceStat.TYPE);
 
     Glob currentMonth = repository.get(CurrentMonth.KEY);
-    if (lastMonth < currentMonth.get(CurrentMonth.MONTH_ID)) {
+    if (currentMonths.last() < currentMonth.get(CurrentMonth.MONTH_ID)) {
       contentPanel.setVisible(false);
-      total.setText(PicsouDescriptionService.toString(balanceAmount));
+      Double amount = balanceStats[balanceStats.length - 1].get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
+      total.setText(PicsouDescriptionService.toString(amount));
       amountSummaryLabel.setText(Lang.get("balanceSummary.title.past"));
       return;
     }
 
     amountSummaryLabel.setText(Lang.get("balanceSummary.title.future"));
-
-    String label = PicsouDescriptionService.toString(balanceAmount);
+    Double amount;
+    int firstBalanceIndex;
+    for (firstBalanceIndex = 0; firstBalanceIndex < balanceStats.length; firstBalanceIndex++) {
+      Glob balanceStat = balanceStats[firstBalanceIndex];
+      if (balanceStat.get(BalanceStat.MONTH_ID) >= currentMonth.get(CurrentMonth.MONTH_ID)) {
+        break;
+      }
+    }
+    amount = balanceStats[firstBalanceIndex].get(BalanceStat.LAST_KNOWN_ACCOUNT_BALANCE);
+    if (amount == null) {
+      amount = balanceStats[firstBalanceIndex].get(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_BALANCE);
+    }
+    String label = PicsouDescriptionService.toString(amount);
     balance.setText(label);
-    GlobList allSeries = repository.getAll(Series.TYPE);
-    Set<Integer> incomeSeries = new HashSet<Integer>();
-    Set<Integer> fixeSeries = new HashSet<Integer>();
-    Set<Integer> savingsSeries = new HashSet<Integer>();
-    Set<Integer> specialSeries = new HashSet<Integer>();
-    Set<Integer> envelopeSeries = new HashSet<Integer>();
 
-    for (Glob series : allSeries) {
-      if (BudgetArea.INCOME.getId().equals(series.get(Series.BUDGET_AREA))) {
-        incomeSeries.add(series.get(Series.ID));
-      }
-      else if (BudgetArea.RECURRING.getId().equals(series.get(Series.BUDGET_AREA))) {
-        fixeSeries.add(series.get(Series.ID));
-      }
-      else if (BudgetArea.SAVINGS.getId().equals(series.get(Series.BUDGET_AREA))) {
-        savingsSeries.add(series.get(Series.ID));
-      }
-      else if (BudgetArea.SPECIAL.getId().equals(series.get(Series.BUDGET_AREA))) {
-        specialSeries.add(series.get(Series.ID));
-      }
-      else if (BudgetArea.ENVELOPES.getId().equals(series.get(Series.BUDGET_AREA))) {
-        envelopeSeries.add(series.get(Series.ID));
-      }
-    }
-    double incomeAmount = 0;
-    double fixedAmount = 0;
-    double savingsAmount = 0;
-    double specialAmount = 0;
-    double envelopeAmount = 0;
-    for (; i < transactions.length; i++) {
-      Glob transaction = transactions[i];
-      if (transaction.get(Transaction.PLANNED)) {
-        Integer transactionSeries = transaction.get(Transaction.SERIES);
-        if (fixeSeries.contains(transactionSeries)) {
-          fixedAmount += transaction.get(Transaction.AMOUNT);
-        }
-        else if (envelopeSeries.contains(transactionSeries)) {
-          envelopeAmount += transaction.get(Transaction.AMOUNT);
-        }
-        else if (specialSeries.contains(transactionSeries)) {
-          specialAmount += transaction.get(Transaction.AMOUNT);
-        }
-        else if (savingsSeries.contains(transactionSeries)) {
-          savingsAmount += transaction.get(Transaction.AMOUNT);
-        }
-        else if (incomeSeries.contains(transactionSeries)) {
-          incomeAmount += transaction.get(Transaction.AMOUNT);
-        }
-      }
+    for (Glob balance : balanceStats) {
+      amount += balance.get(BalanceStat.ENVELOPES_PLANNED) +
+                balance.get(BalanceStat.INCOME_PLANNED) +
+                balance.get(BalanceStat.OCCASIONAL_PLANNED) +
+                balance.get(BalanceStat.RECURRING_PLANNED) +
+                balance.get(BalanceStat.SAVINGS_PLANNED) +
+                balance.get(BalanceStat.SPECIAL_PLANNED);
     }
 
-    double totalAmount = balanceAmount + incomeAmount + fixedAmount + savingsAmount + specialAmount + envelopeAmount;
-
-    income.setText(PicsouDescriptionService.toString(incomeAmount));
-    fixe.setText(PicsouDescriptionService.toString(fixedAmount));
-    savings.setText(PicsouDescriptionService.toString(savingsAmount));
-    special.setText(PicsouDescriptionService.toString(specialAmount));
-    envelope.setText(PicsouDescriptionService.toString(envelopeAmount));
-    total.setText(PicsouDescriptionService.toString(totalAmount));
+    total.setText(PicsouDescriptionService.toString(amount));
     total.setVisible(true);
     contentPanel.setVisible(true);
   }
@@ -191,9 +147,4 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     contentPanel.setVisible(false);
   }
 
-  private Glob[] getSortedTransactions(Integer currentMonths) {
-    SortedSet<Glob> tmp = repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_BANK,
-                                               GlobMatchers.fieldEquals(Transaction.BANK_MONTH, currentMonths));
-    return tmp.toArray(new Glob[tmp.size()]);
-  }
 }

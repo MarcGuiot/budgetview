@@ -80,6 +80,7 @@ public class MonthChecker extends DataChecker {
 
   public void selectMonth(String yyyymm) {
     selectMonths(yyyymm);
+    checkSelection(yyyymm);
   }
 
   public void selectMonths(String... yyyymm) {

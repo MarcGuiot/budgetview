@@ -622,4 +622,5 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonths("2008/06", "2008/07");
     budgetView.checkMultiSelectionMessageVisible(true);
   }
+
 }

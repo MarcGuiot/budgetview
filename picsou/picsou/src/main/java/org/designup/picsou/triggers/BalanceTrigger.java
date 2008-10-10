@@ -142,6 +142,12 @@ public class BalanceTrigger implements ChangeSetListener {
       }
     }
     repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
+    if (lastUpdateTransactionId != null) {
+      Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
+      repository.update(account.getKey(), Account.BALANCE_DATE,
+                        Month.toDate(lastTransaction.get(Transaction.BANK_MONTH),
+                                     lastTransaction.get(Transaction.BANK_DAY)));
+    }
     return true;
   }
 

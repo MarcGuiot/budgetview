@@ -40,13 +40,15 @@ public class LCLTest extends SpecificBankTestCase {
 
   private void checkContent() {
     timeline.selectAll();
+    transactions.getTable().getHeader().click(1);
+
     transactions.initContent()
-      .add("25/06/2008", TransactionType.VIREMENT, "ACS/FRAIS GENERAUX", "", 2228.79)
+      .add("22/06/2008", "27/06/2008", TransactionType.CREDIT_CARD, "SOFREMI SARL", "", -21.59)
       .add("24/06/2008", "26/06/2008", TransactionType.CREDIT_CARD, "SM CASINO CS494", "", -36.42)
+      .add("25/06/2008", TransactionType.VIREMENT, "ACS/FRAIS GENERAUX", "", 2228.79)
       .add("24/06/2008", "25/06/2008", TransactionType.CREDIT_CARD, "LRP DEFE2", "", -30.00)
       .add("24/06/2008", TransactionType.CREDIT_CARD, "RATP", "", -16.00)
       .add("24/06/2008", TransactionType.WITHDRAWAL, "RETRAIT", "", -60.00)
-      .add("22/06/2008", "27/06/2008", TransactionType.CREDIT_CARD, "SOFREMI SARL", "", -21.59)
       .add("21/06/2008", "23/06/2008", TransactionType.CREDIT_CARD, "SM CASINO CS494", "", -218.50)
       .add("20/06/2008", TransactionType.VIREMENT, "GESTION BCAC", "", 14.60)
       .add("20/06/2008", TransactionType.CHECK, "CHEQUE N. 364966", "", -35.00)
@@ -70,8 +72,8 @@ public class LCLTest extends SpecificBankTestCase {
       .add("03/06/2008", "04/06/2008", TransactionType.CREDIT_CARD, "LRP DEFE2", "", -30.00)
       .add("03/06/2008", "04/06/2008", TransactionType.CREDIT_CARD, "PECCA 206", "", -12.99)
       .add("03/06/2008", "04/06/2008", TransactionType.WITHDRAWAL, "RETRAIT", "", -80.00)
-      .add("03/06/2008", TransactionType.CREDIT_CARD, "RATP", "", -16.00)
       .add("02/06/2008", "03/06/2008", TransactionType.CREDIT_CARD, "DR GARRIGUES", "", -55.00)
+      .add("03/06/2008", TransactionType.CREDIT_CARD, "RATP", "", -16.00)
       .add("01/06/2008", "02/06/2008", TransactionType.CREDIT_CARD, "DURANT ET FILS", "", -22.50)
       .add("28/05/2008", "29/05/2008", TransactionType.CREDIT_CARD, "SM CASINO CS494", "", -11.83)
       .add("28/05/2008", "29/05/2008", TransactionType.WITHDRAWAL, "RETRAIT", "", -60.00)

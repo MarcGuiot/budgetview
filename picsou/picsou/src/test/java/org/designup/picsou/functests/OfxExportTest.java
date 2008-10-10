@@ -1,8 +1,6 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
@@ -10,58 +8,6 @@ import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class OfxExportTest extends LoggedInFunctionalTestCase {
-
-  public void testExport() throws Exception {
-
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -1.2, "Menu K", MasterCategory.FOOD)
-      .load();
-    transactions
-      .initContent()
-      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.2, MasterCategory.FOOD)
-      .check();
-
-    views.selectCategorization();
-    categorization.selectTableRow(0);
-    transactionDetails.openSplitDialog()
-      .enterAmount("-1")
-      .enterNote("COCA")
-      .ok();
-
-    categorization.setEnvelope("Menu K", "Groceries", MasterCategory.FOOD, true);
-
-    String fileName = TestUtils.getFileName(this, ".ofx");
-    operations.exportFile(fileName);
-    String exportedContent = Files.loadFileToString(fileName);
-
-    assertTrue(exportedContent.contains(
-      "<BANKTRANLIST>\n" +
-      "          <DTSTART>20060131000000\n" +
-      "          <DTEND>20060203000000\n" +
-      "          <STMTTRN>\n" +
-      "            <TRNTYPE>DEBIT\n" +
-      "            <DTPOSTED>20060110\n" +
-      "            <DTUSER>20060110\n" +
-      "            <TRNAMT>-0.2\n" +
-      "            <FITID>PICSOU0\n" +
-      "            <NAME>Menu K\n" +
-      "            <CATEGORY>2\n" +
-      "          </STMTTRN>\n" +
-      "          <STMTTRN>\n" +
-      "            <TRNTYPE>DEBIT\n" +
-      "            <DTPOSTED>20060110\n" +
-      "            <DTUSER>20060110\n" +
-      "            <TRNAMT>-1.0\n" +
-      "            <FITID>PICSOU33\n" +
-      "            <NAME>Menu K\n" +
-      "            <CATEGORY>2\n" +
-      "            <NOTE>COCA\n" +
-      "            <PARENT>PICSOU0\n" +
-      "          </STMTTRN>\n" +
-      "        </BANKTRANLIST>"
-    ));
-  }
 
   public void testAsksForConfirmationWhenTheSelectedFileExists() throws Exception {
     String fileName = TestUtils.getFileName(this, ".ofx");

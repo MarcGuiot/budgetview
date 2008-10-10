@@ -57,6 +57,9 @@
 
                 <label gridPos="(0,8)" text="$balanceSummary.amount.envelope" styleClass="amountLabel"/>
                 <label gridPos="(1,8)" ref="envelopeLabel" styleClass="amount"/>
+
+                <label gridPos="(0,9)" text="$balanceSummary.amount.occasional" styleClass="amountLabel"/>
+                <label gridPos="(1,9)" ref="occasionalLabel" styleClass="amount"/>
               </grid>
               <filler fill="horizontal"/>
             </row>

@@ -1000,4 +1000,49 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
 
   }
+
+  public void testInManualDoNotSelectHiddenSeriesBudget() throws Exception {
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("S1")
+      .setSixMonths()
+      .setManual()
+      .setCategory(MasterCategory.FOOD)
+      .toggleMonth(3)
+      .checkMonthIsChecked(3, 9)
+      .validate();
+    timeline.selectMonth("2008/08");
+    budgetView.envelopes.editSeriesList().selectSeries("S1")
+      .checkAmountIsDisable();
+  }
+
+  public void testAutomatiqueAndManual() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/28", -30., "EAU")
+      .addTransaction("2008/08/27", -20., "EAU")
+      .load();
+
+    views.selectCategorization();
+    timeline.selectMonth("2008/06");
+    categorization.setEnvelope("EAU", "EAU", MasterCategory.HOUSE, true);
+
+    views.selectCategorization();
+    timeline.selectMonth("2008/08");
+    categorization.setEnvelope("EAU", "EAU", MasterCategory.HOUSE, false);
+    categorization.selectEnvelopes()
+      .editSeries(false)
+      .selectSeries("EAU")
+      .setTwoMonths()
+      .toggleMonth(6)
+      .validate();
+    views.selectData();
+    timeline.selectMonths("2008/06", "2008/07", "2008/08");
+    transactions.initContent()
+      .add("28/08/2008", TransactionType.PLANNED, "Planned: EAU", "", -10.00, "EAU", MasterCategory.HOUSE)
+      .add("27/08/2008", TransactionType.PRELEVEMENT, "EAU", "", -20.00, "EAU", MasterCategory.HOUSE)
+      .add("28/06/2008", TransactionType.PRELEVEMENT, "EAU", "", -30.00, "EAU", MasterCategory.HOUSE)
+      .check();
+  }
+
 }

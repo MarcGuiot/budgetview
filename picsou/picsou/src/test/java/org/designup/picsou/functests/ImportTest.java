@@ -96,6 +96,17 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+
+  public void testSameDateKeepOfxOrder() throws Exception {
+    final String path1 = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .addTransaction("2006/01/09", -1.1, "Menu K")
+      .save();
+  }
+
+
   public void testImportQifFileWithNoExistingAccount() throws Exception {
     final String path1 = QifBuilder
       .init(this)
@@ -374,5 +385,39 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .checkDirectory(new File(path1).getAbsoluteFile().getParent())
       .close();
+  }
+
+  public void testImportReOrderId() throws Exception {
+    String file1 = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -3, "Menu K")
+      .addTransaction("2006/01/10", -2, "Menu K")
+      .addTransaction("2006/01/09", -1, "Menu K")
+      .save();
+    operations.importQifFile(file1, SOCIETE_GENERALE, 100.);
+
+    views.selectData();
+
+    String file2 = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/11", -4, "Menu K")
+      .addTransaction("2006/01/12", -5, "Menu K")
+      .addTransaction("2006/01/12", -6, "Menu K")
+      .save();
+    operations.importQifFile(file2, SOCIETE_GENERALE);
+
+    transactions
+      .getTable()
+      .getHeader().click(1);
+
+    transactions
+      .initAmountContent()
+      .add("Menu K", -6.00, 85.00, 85.00)
+      .add("Menu K", -5.00, 91.00, 91.00)
+      .add("Menu K", -4.00, 96.00, 96.00)
+      .add("Menu K", -3.00, 100.00, 100.00)
+      .add("Menu K", -2.00, 103.00, 103.00)
+      .add("Menu K", -1.00, 105.00, 105.00)
+      .check();
   }
 }

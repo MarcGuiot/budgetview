@@ -44,10 +44,7 @@
             <row>
               <filler fill="horizontal"/>
               <grid weightY="0">
-                <label text="$monthsummary.received" styleClass="totalAmountTitle" gridPos="(0,0)"
-                       autoHideSource="totalReceivedAmount"/>
-                <label ref="totalReceivedAmount" styleClass="totalAmount" gridPos="(0,1)"/>
-                <component ref="totalBalance" gridPos="(1,0,1,2)"
+                <component ref="totalBalance" gridPos="(0,0,1,2)"
                            receivedColorTop="balancegraph.received.top"
                            receivedColorBottom="balancegraph.received.bottom"
                            spentColorTop="balancegraph.spent.top"
@@ -58,9 +55,9 @@
                            weightX="0.1" weightY="1.0"
                            marginLeft="10" marginRight="10" marginBottom="5"
                            fill="none"/>
-                <label text="$monthsummary.spent" styleClass="totalAmountTitle" gridPos="(2,0)"
-                       autoHideSource="totalSpentAmount"/>
-                <label ref="totalSpentAmount" styleClass="totalAmount" gridPos="(2,1)"/>
+                <label text="$monthsummary.balance" styleClass="totalAmountTitle" gridPos="(1,0)"
+                       autoHideSource="balanceAmount"/>
+                <label ref="balanceAmount" styleClass="totalAmount" gridPos="(1,1)"/>
               </grid>
               <filler fill="horizontal"/>
             </row>
@@ -71,8 +68,7 @@
                   <button ref="budgetAreaName" styleClass="itemLink"/>
                   <button ref="budgetAreaAmount" styleClass="amountLink"/>
                   <component ref="budgetAreaGauge" styleClass="detailGauge"/>
-                  <label ref="budgetAreaPlannedAmount" styleClass="amount"
-                         anchor="right"/>
+                  <label ref="budgetAreaPlannedAmount" styleClass="amount" anchor="right"/>
                 </repeat>
                 <filler fill="vertical"/>
                 <row margin="10" autoHideSource="uncategorizedAmountLabel">

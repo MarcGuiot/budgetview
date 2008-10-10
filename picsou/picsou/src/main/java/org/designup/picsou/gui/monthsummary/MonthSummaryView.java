@@ -8,10 +8,13 @@ import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.help.HelpAction;
-import org.designup.picsou.gui.model.MonthStat;
+import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -29,7 +32,7 @@ import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -72,12 +75,11 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/monthSummaryView.splits", repository, directory);
 
-    builder.addLabel("totalReceivedAmount", MonthStat.TYPE,
-                     GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, MonthStat.TOTAL_RECEIVED));
-    builder.addLabel("totalSpentAmount", MonthStat.TYPE,
-                     GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, MonthStat.TOTAL_SPENT));
+    builder.addLabel("balanceAmount", BalanceStat.TYPE,
+                     GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT,
+                                              BalanceStat.MONTH_BALANCE));
     builder.add("totalBalance",
-                new BalanceGraph(MonthStat.TYPE, MonthStat.TOTAL_RECEIVED, MonthStat.TOTAL_SPENT, directory));
+                new BalanceGraph(BalanceStat.TYPE, BalanceStat.INCOME, BalanceStat.EXPENSE, directory));
 
     cards = builder.addCardHandler("cards");
 
@@ -137,6 +139,9 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
         if (changeSet.containsCreationsOrDeletions(Transaction.TYPE) ||
             changeSet.containsCreationsOrDeletions(Series.TYPE)) {
           updateCard();
+        }
+        if (changeSet.containsChanges(BalanceStat.TYPE)) {
+          selectStatAndMonth(selectionService.getSelection(Month.TYPE));
         }
       }
 
@@ -236,24 +241,23 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
   public void selectionUpdated(GlobSelection selection) {
     GlobList months = selection.getAll(Month.TYPE);
+    selectStatAndMonth(months);
+  }
+
+  private void selectStatAndMonth(GlobList months) {
     GlobList selectedMonthStats = new GlobList();
     GlobList selectedSeriesStats = new GlobList();
     for (Glob month : months) {
       Integer monthId = month.get(Month.ID);
-      selectedMonthStats.addAll(
-        repository.getAll(MonthStat.TYPE,
-                          and(fieldEquals(MonthStat.MONTH, monthId),
-                              fieldEquals(MonthStat.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
-                              fieldEquals(MonthStat.CATEGORY, Category.ALL))));
-      selectedSeriesStats.addAll(
-        repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, monthId)));
+      selectedMonthStats.addAll(repository.getAll(BalanceStat.TYPE, fieldEquals(BalanceStat.MONTH_ID, monthId)));
+      selectedSeriesStats.addAll(repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, monthId)));
     }
 
     SelectionService localSelectionService = directory.get(SelectionService.class);
     localSelectionService.select(
       GlobSelectionBuilder.init()
-        .add(selectedMonthStats, MonthStat.TYPE)
-        .add(selection.getAll(Month.TYPE), Month.TYPE)
+        .add(selectedMonthStats, BalanceStat.TYPE)
+        .add(months, Month.TYPE)
         .add(selectedSeriesStats, SeriesStat.TYPE)
         .get());
   }

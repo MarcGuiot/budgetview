@@ -10,10 +10,10 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.MasterCategory;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.gui.splits.color.ColorService;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
@@ -130,7 +130,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected void tearDown() throws Exception {
 //    mainWindow.getMenuBar().getMenu("Edit").getSubMenu("check").click();
     super.tearDown();
-    mainWindow.dispose();
+    if (mainWindow != null) {
+      mainWindow.dispose();
+    }
     mainWindow = null;
     views = null;
     accounts = null;

@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -1008,7 +1009,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     timeline.selectMonth("2008/06");
-    categorization.selectTableRows("ED");
+    categorization.selectTableRows(categorization.getTable()
+      .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, -15.0));
     transactionDetails.split("10", "CD");
     categorization.selectOccasionalSeries(MasterCategory.LEISURES);
 
@@ -1064,7 +1066,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     timeline.selectMonth("2008/05");
-    categorization.selectTableRows("Auchan");
+    categorization.selectTableRows(
+      categorization.getTable().getRowIndex(CategorizationChecker.LABEL_COLUMN_INDEX, "Auchan"));
     transactionDetails.openSplitDialog().deleteRow(1).ok();
 
     views.selectBudget();

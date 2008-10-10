@@ -6,17 +6,19 @@ public class CreditMutuelTest extends SpecificBankTestCase {
   public void test() throws Exception {
     operations.importQifFile(getFile("credit_mutuel.qif"), "Crédit Mutuel");
     timeline.selectAll();
+
+    transactions.getTable().getHeader().click(1);
     transactions.initContent()
-      .add("15/07/2008", TransactionType.PRELEVEMENT, "MUTUELLE 403 111111", "", -68.25)
       .add("15/07/2008", TransactionType.PRELEVEMENT, "EDF PR QE CLIO BRED 001007", "", -25.00)
-      .add("10/07/2008", TransactionType.CHECK, "CHEQUE N. 11111", "", -74.50)
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "MUTUELLE 403 111111", "", -68.25)
       .add("10/07/2008", TransactionType.PRELEVEMENT, "GROUPAMA 333333", "", -30.78)
+      .add("10/07/2008", TransactionType.CHECK, "CHEQUE N. 11111", "", -74.50)
       .add("08/07/2008", TransactionType.CREDIT_CARD, "GARAGE YVES", "", -96.70)
       .add("05/07/2008", TransactionType.VIREMENT, "COUTURA", "", 300.00)
       .add("04/07/2008", TransactionType.VIREMENT, "COURAP330332102950TG033", "", 4.94)
       .add("02/07/2008", "03/07/2008", TransactionType.CREDIT_CARD, "AUCHAN CARBURANT CHASSENEUIL DU", "", -53.45)
-      .add("01/07/2008", TransactionType.VIREMENT, "SARL CENTRE OUEST EVASIO", "", 150.00)
       .add("01/07/2008", TransactionType.PRELEVEMENT, "CAPMA-CAPMI 102113", "", -109.59)
+      .add("01/07/2008", TransactionType.VIREMENT, "SARL CENTRE OUEST EVASIO", "", 150.00)
       .add("30/06/2008", TransactionType.PRELEVEMENT, "URSSAF ST ETIENNE-CN 143065", "", -148.23)
       .add("27/06/2008", TransactionType.VIREMENT, "CAPMA & CAPMI", "", 172.29)
       .add("26/06/2008", TransactionType.VIREMENT, "CNE AVAILLES 24", "", 111.69)

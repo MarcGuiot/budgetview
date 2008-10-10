@@ -598,6 +598,12 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker setTwoMonths() {
+    getPeriodCombo().select(ProfileType.TWO_MONTHS.getLabel());
+    return this;
+  }
+
+
   public SeriesEditionDialogChecker setFourMonths() {
     getPeriodCombo().select(ProfileType.FOUR_MONTHS.getLabel());
     return this;
@@ -617,6 +623,11 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesEditionDialogChecker checkSeriesListIsVisible() {
     checkComponentVisible(dialog, JPanel.class, "buttonSeriesPanel", true);
     checkComponentVisible(dialog, JPanel.class, "seriesPanel", true);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkAmountIsDisable() {
+    assertFalse(getAmount().isEnabled());
     return this;
   }
 }

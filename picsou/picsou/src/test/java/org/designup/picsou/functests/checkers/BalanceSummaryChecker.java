@@ -34,6 +34,10 @@ public class BalanceSummaryChecker extends DataChecker {
     return check(amount, "savingsLabel");
   }
 
+  public BalanceSummaryChecker checkOccasional(double amount) {
+    return check(amount, "occasionalLabel");
+  }
+
   public BalanceSummaryChecker checkProjects(double amount) {
     return check(amount, "specialLabel");
   }

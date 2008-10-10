@@ -105,6 +105,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     monthSummary
       .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 23 + 200), false)
+      .checkBalance((29.9 + 1500 + 60 + 20 + 10 + 23 + 200) - 1500)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(80)
@@ -121,8 +122,9 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkFixed(-1529.90)
       .checkEnvelope(-80)
       .checkSavings(0.00)
+      .checkOccasional(-10.00)
       .checkProjects(0.00)
-      .checkTotal(890.10);
+      .checkTotal(880.10);
   }
 
   public void testTwoMonths() throws Exception {
@@ -152,6 +154,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     monthSummary
       .total(1500, (29.9 + 1500 + 60 + 20 + 10), false)
+      .checkBalance((29.9 + 1500 + 60 + 20 + 10) - 1500)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(80)
@@ -183,8 +186,9 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkBalance(0.)
       .checkFixed(0)
       .checkEnvelope(-80)
+      .checkOccasional(-10)
       .checkIncome(1500)
-      .checkTotal(1420.);
+      .checkTotal(1410.);
 
     timeline.selectMonths("2008/07", "2008/08");
     monthSummary
@@ -196,16 +200,18 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     balanceSummary.checkEnvelope(-80)
       .checkBalance(0.)
       .checkFixed(0)
+      .checkOccasional(-10)
       .checkEnvelope(-80)
       .checkIncome(1500)
-      .checkTotal(1420.);
+      .checkTotal(1410.);
 
     timeline.selectMonth("2008/09");
     balanceSummary.checkEnvelope(-80)
       .checkBalance(1410.)
       .checkFixed(-1529.90)
       .checkIncome(1500)
-      .checkTotal(1420 + 1500 - 1529.90 - 80 - 10);
+      .checkOccasional(-10)
+      .checkTotal(1420 + 1500 - 1529.90 - 80 - 10 - 10);
   }
 
   public void testUncategorized() throws Exception {
@@ -223,6 +229,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     monthSummary
       .total(1000, 10, true)
+      .checkBalance(-990)
       .checkIncome(0, 0)
       .checkRecurring(0)
       .checkEnvelope(0)

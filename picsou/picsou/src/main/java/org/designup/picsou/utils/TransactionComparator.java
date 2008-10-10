@@ -15,7 +15,7 @@ public class TransactionComparator implements Comparator<Glob> {
   public static final TransactionComparator DESCENDING_SPLIT_AFTER =
     new TransactionComparator(false, Transaction.MONTH, Transaction.DAY, true);
 
-  public static final TransactionComparator ASCENDING_BANK=
+  public static final TransactionComparator ASCENDING_BANK =
     new TransactionComparator(true, Transaction.BANK_MONTH, Transaction.BANK_DAY, false);
   public static final TransactionComparator ASCENDING_BANK_SPLIT_AFTER =
     new TransactionComparator(true, Transaction.BANK_MONTH, Transaction.BANK_DAY, true);
@@ -74,7 +74,7 @@ public class TransactionComparator implements Comparator<Glob> {
       }
       return dateMultiplier * o1.get(Transaction.ID).compareTo(source2);
     }
-    if (o1.get(Transaction.PLANNED) != o2.get(Transaction.PLANNED)) {
+    if (!o1.get(Transaction.PLANNED).equals(o2.get(Transaction.PLANNED))) {
       if (o1.get(Transaction.PLANNED)) {
         return dateMultiplier;
       }

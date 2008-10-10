@@ -25,7 +25,8 @@ import java.util.List;
 
 public class CategorizationChecker extends DataChecker {
   private Window mainWindow;
-  private static final int LABEL_COLUMN_INDEX = 2;
+  public static final int LABEL_COLUMN_INDEX = 2;
+  public static final int AMOUNT_COLUMN_INDEX = 3;
 
   public CategorizationChecker(Window mainWindow) {
     this.mainWindow = mainWindow;
@@ -562,11 +563,22 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker selectTableRows(String... labels) {
-    int rows[] = new int[labels.length];
-    for (int i = 0; i < labels.length; i++) {
-      rows[i] = getTable().getRowIndex(LABEL_COLUMN_INDEX, labels[i]);
+    int lenght = 0;
+    List<int[]> indices = new ArrayList<int[]>();
+    for (String label : labels) {
+      int[] ints = getRowIndices(label);
+      lenght += ints.length;
+      indices.add(ints);
     }
-    selectTableRows(rows);
+    int[] ind = new int[lenght];
+    int j = 0;
+    for (int[] indice : indices) {
+      for (int i : indice) {
+        ind[j] = i;
+        j++;
+      }
+    }
+    selectTableRows(ind);
     return this;
   }
 

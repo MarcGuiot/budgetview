@@ -1,5 +1,6 @@
 package org.designup.picsou.importer;
 
+import org.apache.commons.collections.iterators.ReverseListIterator;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
@@ -23,10 +24,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ImportSession {
   private GlobRepository referenceRepository;
@@ -131,15 +129,34 @@ public class ImportSession {
 
   private GlobList convertImportedTransaction(String selectedDateFormat) {
     DateFormat dateFormat = new SimpleDateFormat(selectedDateFormat);
-    GlobList importedTransactions = localRepository.getAll(ImportedTransaction.TYPE);
+    GlobList importedTransactions =
+      localRepository.getAll(ImportedTransaction.TYPE)
+        .sort(ImportedTransaction.ID);
+    if (importedTransactions.isEmpty()) {
+      return GlobList.EMPTY;
+    }
+    Glob firstTransaction = importedTransactions.getFirst();
+    Glob lastTransaction = importedTransactions.getLast();
+    Iterator<Glob> iterator = importedTransactions.iterator();
+    if (lastTransaction != firstTransaction) {
+      Date firstDate = parseDate(dateFormat, firstTransaction, ImportedTransaction.BANK_DATE);
+      Date lastDate = parseDate(dateFormat, lastTransaction, ImportedTransaction.BANK_DATE);
+      if (lastDate.before(firstDate)) {
+        iterator = new ReverseListIterator(importedTransactions);
+      }
+    }
+
     GlobList createdTransactions = new GlobList();
 
-    for (Glob importedTransaction : importedTransactions) {
+    int nextId = localRepository.getIdGenerator().getNextId(Transaction.ID, importedTransactions.size() + 10);
+
+    for (; iterator.hasNext();) {
+      Glob importedTransaction = iterator.next();
       Date bankDate = parseDate(dateFormat, importedTransaction, ImportedTransaction.BANK_DATE);
       Date userDate = parseDate(dateFormat, importedTransaction, ImportedTransaction.DATE);
 
       Glob transaction = localRepository.create(
-        Key.create(Transaction.TYPE, importedTransaction.getValue(ImportedTransaction.ID)),
+        Key.create(Transaction.TYPE, nextId),
         value(Transaction.TRANSACTION_TYPE,
               importedTransaction.get(ImportedTransaction.IS_CARD, false) ? TransactionType.getId(TransactionType.CREDIT_CARD) : null),
         value(Transaction.BANK_MONTH, Month.getMonthId(bankDate)),
@@ -161,7 +178,7 @@ public class ImportSession {
         localRepository.update(transaction.getKey(), Transaction.SERIES, seriesId);
       }
       createdTransactions.add(transaction);
-
+      nextId++;
     }
     return createdTransactions;
   }

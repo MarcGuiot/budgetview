@@ -42,13 +42,11 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
     for (Glob seriesBudget : seriesBudgets) {
       if (!seriesBudget.get(SeriesBudget.ACTIVE)) {
         repository.update(seriesBudget.getKey(),
-                          FieldValue.value(SeriesBudget.AMOUNT, 0.),
-                          FieldValue.value(SeriesBudget.OVERRUN_AMOUNT, 0.));
+                          FieldValue.value(SeriesBudget.AMOUNT, 0.));
       }
       else {
         repository.update(seriesBudget.getKey(),
-                          FieldValue.value(SeriesBudget.AMOUNT, amount),
-                          FieldValue.value(SeriesBudget.OVERRUN_AMOUNT, 0.));
+                          FieldValue.value(SeriesBudget.AMOUNT, amount));
         Double previousAmount = amount;
         if (seriesBudget.get(SeriesBudget.MONTH) <= currentMonth.get(CurrentMonth.MONTH_ID)) {
           amount = 0.;
@@ -69,8 +67,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
         }
         if (!firstUpdate) {
           repository.update(seriesBudget.getKey(),
-                            FieldValue.value(SeriesBudget.AMOUNT, amount),
-                            FieldValue.value(SeriesBudget.OVERRUN_AMOUNT, 0.));
+                            FieldValue.value(SeriesBudget.AMOUNT, amount));
           firstUpdate = true;
         }
       }

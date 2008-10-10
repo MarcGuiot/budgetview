@@ -16,12 +16,15 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
   private MonthViewColors colors;
   private TimeService timeService;
   private MonthFontMetricInfo.MonthSizes monthSize;
+  private BalancesProvider balancesProvider;
 
-  public MonthGraph(Glob month, MonthViewColors colors, ChainedSelectableElement element, TimeService timeService) {
+  public MonthGraph(Glob month, MonthViewColors colors, ChainedSelectableElement element,
+                    TimeService timeService, BalancesProvider balancesProvider) {
     super(element);
     this.month = month;
     this.colors = colors;
     this.timeService = timeService;
+    this.balancesProvider = balancesProvider;
   }
 
   public void init(MonthFontMetricInfo monthFontMetricInfo) {
@@ -33,9 +36,8 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
   }
 
   public void draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter, int height, int width,
-                   int monthRank, Rectangle visibleRectangle) {
+                   int monthRank, Rectangle visibleRectangle, int topGraph, int heightGraph) {
     clickableAreaTop = TimeGraph.getClickableArea(transformationAdapter.getTransform(), width, height);
-    clickableAreaButton = TimeGraph.getClickableArea(transformationAdapter.getTransform(), width, height);
     Rectangle2D intersection = visibleRectangle.createIntersection(clickableAreaTop);
     if (intersection.getWidth() != clickableAreaTop.getWidth()) {
       isVisible = Visibility.PARTIALLY;
@@ -87,6 +89,23 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
     graphics2D.setFont(colors.getMonthFont());
     TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, getHeight() - 5,
                            nearest.getName(), colors);
+
+//    try {
+//      transformationAdapter.save();
+//      transformationAdapter.translate(0, topGraph);
+//      clickableAreaButton = TimeGraph.getClickableArea(transformationAdapter.getTransform(), width, heightGraph);
+//      double balance = balancesProvider.getBalance(this.month.get(Month.ID));
+//      double min = balancesProvider.getMin();
+//      double max = balancesProvider.getMax();
+//      double ratio = (balance - min) / (max - min);
+//      double h = heightGraph * ratio;
+//      graphics2D.drawLine(0, heightGraph - (int)h - 1, width, heightGraph - (int)h - 1);
+//    }
+//    finally {
+//      transformationAdapter.restore();
+//    }
+
+
   }
 
   public int getHeight() {

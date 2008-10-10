@@ -6,6 +6,7 @@ public class CICTest extends SpecificBankTestCase {
   public void test() throws Exception {
     operations.importOfxFile(getFile("cic1.ofx"));
     timeline.selectMonths("2006/05", "2006/06", "2006/07");
+    transactions.getTable().getHeader().click(1);
     transactions
       .initContent()
       .add("08/07/2006", "08/07/2006", TransactionType.CREDIT_CARD, "EVEIL - JEUX ANTONY", "", -49.63)

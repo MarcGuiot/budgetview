@@ -147,7 +147,8 @@ public class SeriesBudgetEditionPanel {
       GlobList budgets =
         localRepository.getAll(SeriesBudget.TYPE,
                                GlobMatchers.and(fieldEquals(SeriesBudget.SERIES, series.get(Series.ID)),
-                                                GlobMatchers.fieldIn(SeriesBudget.MONTH, monthIds)));
+                                                GlobMatchers.fieldIn(SeriesBudget.MONTH, monthIds),
+                                                fieldEquals(SeriesBudget.ACTIVE, true)));
       selectionService.select(budgets, SeriesBudget.TYPE);
     }
   }

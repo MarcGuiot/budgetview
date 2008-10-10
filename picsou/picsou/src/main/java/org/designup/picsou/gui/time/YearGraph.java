@@ -22,22 +22,26 @@ public class YearGraph extends DefaultCompositeComponent {
   private MonthGraph[] monthsGraph;
   public static final int HEIGHT = 6;
   public static final int ENLARGE = 4;
+  private static final int BALANCE_HEIGHT = 0;
   private boolean isFirstYear;
   private boolean isLastYear;
   private int monthHeight;
+  private BalancesProvider balancesProvider;
 
   public YearGraph(boolean isFirstYear, boolean isLastYear, int year, java.util.List<Glob> months,
                    MonthViewColors colors, ChainedSelectableElement monthElement,
-                   ChainedSelectableElement yearElement, TimeService timeService) {
+                   ChainedSelectableElement yearElement, TimeService timeService, BalancesProvider balancesProvider) {
     super(monthElement, yearElement);
     this.isFirstYear = isFirstYear;
     this.isLastYear = isLastYear;
     this.year = year;
     this.colors = colors;
+    this.balancesProvider = balancesProvider;
     this.monthsGraph = new MonthGraph[months.size()];
     int i = 0;
     for (Glob month : months) {
-      this.monthsGraph[i] = new MonthGraph(month, colors, new DefaultChainedSelectableElement(i), timeService);
+      this.monthsGraph[i] = new MonthGraph(month, colors, new DefaultChainedSelectableElement(i),
+                                           timeService, this.balancesProvider);
       i++;
     }
     add(this.monthsGraph);
@@ -95,7 +99,9 @@ public class YearGraph extends DefaultCompositeComponent {
       }
       for (MonthGraph month : monthsGraph) {
         month.draw(graphics2D, transformationAdapter, monthHeight, monthWidth,
-                   monthRank, visibleRectangle);
+                   monthRank, visibleRectangle,
+                   HEIGHT + monthHeight,
+                   height - yearCellHeight - monthHeight - HEIGHT);
         transformationAdapter.translate(monthWidth, 0);
       }
     }
@@ -134,7 +140,7 @@ public class YearGraph extends DefaultCompositeComponent {
   }
 
   public int getHeight() {
-    return monthHeight + yearCellHeight + HEIGHT;
+    return monthHeight + yearCellHeight + HEIGHT + BALANCE_HEIGHT;
   }
 
   private void initMonthHeight() {

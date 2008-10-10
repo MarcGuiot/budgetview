@@ -1,6 +1,7 @@
 package org.designup.picsou.gui;
 
 import net.roydesign.mac.MRJAdapter;
+import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ExportFileAction;
@@ -27,7 +28,6 @@ import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.triggers.GlobStateChecker;
@@ -284,7 +284,7 @@ public class MainPanel {
           stringWriter.append(correction.info(repository, directory))
             .append("\n-----------------------------------------\n");
         }
-        throw new RuntimeException(stringWriter.toString());
+        System.out.println("ERROR find" + stringWriter.toString());
       }
     }
   }

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.time;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.time.selectable.*;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.UserPreferences;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionListener, KeyListener, FocusListener,
                                                      SelectableContainer,
-                                                     ChangeSetListener, GlobSelectionListener {
+                                                     ChangeSetListener, GlobSelectionListener, BalancesProvider {
 
   private TimeGraph timeGraph;
   private Set<Selectable> currentlySelected = new TreeSet<Selectable>(new Comparator<Selectable>() {
@@ -53,6 +54,8 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private int currentPaintCount = 0;
   private TimeService timeService;
   private VisibilityListener visibilityListener;
+  private double minBalance;
+  private double maxBalance;
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -62,7 +65,9 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     Font yearFont = monthFont.deriveFont((float)monthFont.getSize() - 2);
     colors = new MonthViewColors(directory, yearFont, monthFont);
     GlobList list = globRepository.getAll(Month.TYPE).sort(Month.ID);
-    timeGraph = new TimeGraph(list, colors, timeService, getFontMetrics(yearFont), getFontMetrics(monthFont));
+    timeGraph = new TimeGraph(list, colors, timeService, getFontMetrics(yearFont),
+                              getFontMetrics(monthFont), this);
+    computeBalance(list);
     selectionService = directory.get(SelectionService.class);
     setName("MonthSelector");
     globRepository.addChangeListener(this);
@@ -123,6 +128,19 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
 
   public void register(VisibilityListener visibilityListener) {
     this.visibilityListener = visibilityListener;
+  }
+
+  public double getBalance(int monthId) {
+    Glob balance = repository.find(Key.create(BalanceStat.TYPE, monthId));
+    return balance.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
+  }
+
+  public double getMin() {
+    return minBalance;
+  }
+
+  public double getMax() {
+    return maxBalance;
   }
 
   public interface VisibilityListener {
@@ -252,13 +270,13 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
-    if (changeSet.containsChanges(UserPreferences.KEY)) {
+    if (changeSet.containsChanges(Month.TYPE)) {
       reloadMonth();
       repaint();
       return;
     }
-    if (changeSet.containsChanges(Month.TYPE)) {
-      reloadMonth();
+    if (changeSet.containsChanges(BalanceStat.TYPE)) {
+      computeBalance(globRepository.getAll(Month.TYPE));
       repaint();
     }
   }
@@ -270,8 +288,10 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
 
   private void reloadMonth() {
     GlobList list = repository.getAll(Month.TYPE).sort(Month.ID);
+    computeBalance(list);
     timeGraph = new TimeGraph(list, colors, timeService, getFontMetrics(colors.getYearFont()),
-                              getFontMetrics(colors.getMonthFont()));
+                              getFontMetrics(colors.getMonthFont()), this);
+    timeGraph.init(getWidth());
     GlobList selectedMonth = selectionService.getSelection(Month.TYPE);
     GlobList stillThere = new GlobList();
     for (Glob glob : list) {
@@ -284,6 +304,24 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     }
     else {
       selectionService.select(stillThere, Month.TYPE);
+    }
+  }
+
+  private void computeBalance(GlobList months) {
+    minBalance = Double.MAX_VALUE;
+    maxBalance = Double.MIN_VALUE;
+    for (Glob month : months) {
+      Glob stat = repository.find(Key.create(BalanceStat.TYPE, month.get(Month.ID)));
+      if (stat == null) {
+        return;
+      }
+      Double balance = stat.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
+      if (balance < minBalance) {
+        minBalance = balance;
+      }
+      if (balance > maxBalance) {
+        maxBalance = balance;
+      }
     }
   }
 

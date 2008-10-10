@@ -23,10 +23,12 @@ public class TimeGraph {
   private int monthWidth;
   private int totalHeight;
   private int monthRank;
+  private BalancesProvider balancesProvider;
 
   public TimeGraph(GlobList months, MonthViewColors colors, TimeService timeService, FontMetrics yearFontMetrics,
-                   FontMetrics monthFontMetrics) {
+                   FontMetrics monthFontMetrics, BalancesProvider balancesProvider) {
     this.months = months;
+    this.balancesProvider = balancesProvider;
     this.yearGraphs = new ArrayList<YearGraph>();
     if (months.isEmpty()) {
       return;
@@ -47,7 +49,7 @@ public class TimeGraph {
                                      years.last().equals(currentYear),
                                      currentYear, monthForYear, colors,
                                      new MonthChainedSelectableElement(yearCount),
-                                     new YearChainedSelectableElement(yearCount), timeService));
+                                     new YearChainedSelectableElement(yearCount), timeService, balancesProvider));
         monthForYear.clear();
         currentYear = year;
         yearCount++;
@@ -57,7 +59,7 @@ public class TimeGraph {
     yearGraphs.add(new YearGraph(years.first().equals(currentYear), years.last().equals(currentYear),
                                  currentYear, monthForYear, colors,
                                  new MonthChainedSelectableElement(yearCount),
-                                 new YearChainedSelectableElement(yearCount), timeService));
+                                 new YearChainedSelectableElement(yearCount), timeService, this.balancesProvider));
     initFontMetrics(yearFontMetrics, monthFontMetrics);
   }
 
