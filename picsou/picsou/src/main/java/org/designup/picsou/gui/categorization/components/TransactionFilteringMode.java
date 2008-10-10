@@ -21,7 +21,14 @@ public enum TransactionFilteringMode {
   LAST_IMPORTED_FILE(3),
   UNCATEGORIZED(4);
 
+  private int id;
+
   TransactionFilteringMode(int id) {
+    this.id = id;
+  }
+
+  public int getId() {
+    return id;
   }
 
   public GlobMatcher getMatcher(GlobRepository repository, SelectionService selectionService) {
@@ -43,12 +50,21 @@ public enum TransactionFilteringMode {
 
       case UNCATEGORIZED:
         return GlobMatchers.fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
-      
+
     }
     throw new UnexpectedApplicationState(name());
   }
 
   public String toString() {
     return Lang.get("categorization.filtering." + Strings.toNiceLowerCase(name()));
+  }
+
+  public static Object get(Integer modeId) {
+    for (TransactionFilteringMode mode : values()) {
+      if (mode.getId() == modeId) {
+        return mode;
+      }
+    }
+    return null;
   }
 }

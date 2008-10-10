@@ -315,6 +315,18 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"15/06/2008", "", "Auchan", -40.00},
       {"17/06/2008", "", "MacDo", -12.00}
     });
+
+    categorization.setOccasional("MacDo", MasterCategory.FOOD);
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"17/06/2008", "Groceries", "MacDo", -12.00}
+    });
+
+    categorization.showUncategorizedTransactionsOnly();
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"30/07/2008", "", "Carouf", -29.90}
+    });
   }
 
   public void testSort() throws Exception {

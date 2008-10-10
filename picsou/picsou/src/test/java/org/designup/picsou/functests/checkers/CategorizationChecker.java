@@ -848,23 +848,35 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public void checkShowsAllTransactions() {
-    assertThat(getPanel().getComboBox("transactionFilterCombo").selectionEquals(TransactionFilteringMode.ALL.toString()));
+    checkTransctionFilterMode(TransactionFilteringMode.ALL);
+  }
+
+  public void checkShowsUncategorizedTransactionsOnly() {
+    checkTransctionFilterMode(TransactionFilteringMode.UNCATEGORIZED);
+  }
+
+  private void checkTransctionFilterMode(final TransactionFilteringMode mode) {
+    assertThat(getPanel().getComboBox("transactionFilterCombo").selectionEquals(mode.toString()));
   }
 
   public void showAllTransactions() {
-    selectTransactionFilterMode(TransactionFilteringMode.ALL.toString());
+    selectTransactionFilterMode(TransactionFilteringMode.ALL);
   }
 
   public void showSelectedMonthsOnly() {
-    selectTransactionFilterMode(TransactionFilteringMode.SELECTED_MONTHS.toString());
+    selectTransactionFilterMode(TransactionFilteringMode.SELECTED_MONTHS);
   }
 
-  private void selectTransactionFilterMode(String mode) {
-    getPanel().getComboBox("transactionFilterCombo").select(mode);
+  private void selectTransactionFilterMode(TransactionFilteringMode mode) {
+    getPanel().getComboBox("transactionFilterCombo").select(mode.toString());
   }
 
   public void showLastImportedFileOnly() {
-    selectTransactionFilterMode(TransactionFilteringMode.LAST_IMPORTED_FILE.toString());
+    selectTransactionFilterMode(TransactionFilteringMode.LAST_IMPORTED_FILE);
+  }
+
+  public void showUncategorizedTransactionsOnly() {
+    selectTransactionFilterMode(TransactionFilteringMode.UNCATEGORIZED);
   }
 
   public class CategorizationTableChecker extends TableChecker {

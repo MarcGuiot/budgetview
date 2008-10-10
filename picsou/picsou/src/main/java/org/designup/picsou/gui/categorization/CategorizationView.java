@@ -50,7 +50,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CategorizationView extends View implements TableView, Filterable, ColorChangeListener {
   private GlobList currentTransactions = GlobList.EMPTY;
@@ -112,9 +115,14 @@ public class CategorizationView extends View implements TableView, Filterable, C
     filteringModeCombo = builder.add("transactionFilterCombo", new JComboBox(TransactionFilteringMode.values()));
     filteringModeCombo.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
+        TransactionFilteringMode mode = (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
+          repository.update(UserPreferences.KEY, UserPreferences.CATEGORIZATION_FILTERING_MODE, mode.getId());
         updateTableFilter();
       }
     });
+    Integer defaultFilteringModeId =
+      repository.get(UserPreferences.KEY).get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
+    filteringModeCombo.setSelectedItem(TransactionFilteringMode.get(defaultFilteringModeId));
 
     Comparator<Glob> transactionComparator = getTransactionComparator();
     DescriptionService descriptionService = directory.get(DescriptionService.class);

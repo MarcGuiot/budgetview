@@ -34,6 +34,9 @@ public class UserPreferences {
   @DefaultBoolean(false)
   public static BooleanField REGISTERED_USER;
 
+  @DefaultInteger(1)
+  public static IntegerField CATEGORIZATION_FILTERING_MODE;
+
   static {
     GlobTypeLoader.init(UserPreferences.class, "userPreferences");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
@@ -47,12 +50,16 @@ public class UserPreferences {
       outputStream.writeString(values.get(LAST_DIRECTORY));
       outputStream.writeInteger(values.get(FUTURE_MONTH_COUNT));
       outputStream.writeBoolean(values.get(REGISTERED_USER));
+      outputStream.writeInteger(values.get(CATEGORIZATION_FILTERING_MODE));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
+      }
+      if (version == 2) {
+        deserializeDataV2(fieldSetter, data);
       }
     }
 
@@ -63,8 +70,16 @@ public class UserPreferences {
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
     }
 
+    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(LAST_DIRECTORY, input.readString());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+    }
+
     public int getWriteVersion() {
-      return 1;
+      return 2;
     }
   }
 

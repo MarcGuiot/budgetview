@@ -144,7 +144,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     budgetView.checkBalance(free);
   }
 
-  public void testCategorizationGauge() throws Exception {
+  public void testCategorizationView() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/10", 1000.0, "WorldCo")
@@ -161,9 +161,19 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     gauge.checkLevel(0.5, "50%");
     gauge.checkProgressMessageHidden();
 
+    categorization.showUncategorizedTransactionsOnly();
+    categorization.checkTable(new Object[][]{
+      {"10/07/2008", "", "FNAC", -1000.00}
+    });
+
     restartApplication();
 
     views.selectCategorization();
+
+    categorization.checkShowsUncategorizedTransactionsOnly();
+    categorization.checkTable(new Object[][]{
+      {"10/07/2008", "", "FNAC", -1000.00}
+    });
 
     categorization.getGauge()
       .checkLevel(0.5, "50%")
