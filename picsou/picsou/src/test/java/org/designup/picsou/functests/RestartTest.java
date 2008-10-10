@@ -1,8 +1,8 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
@@ -121,7 +121,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.HOUSE)
       .validate();
     timeline.selectMonth("2008/08");
-    budgetView.occasional.checkTotalAmounts(0, 400);
+    budgetView.occasional.checkTotalAmount((double)0, 0);
+    budgetView.checkBalance((double)400);
 
     budgetView.recurring.createSeries()
       .setName("Loyer")
@@ -129,13 +130,17 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .setAmount("1000")
       .setCategory(MasterCategory.HOUSE)
       .validate();
-    budgetView.occasional.checkTotalAmounts(0, -600);
+    double free1 = -600;
+    budgetView.occasional.checkTotalAmount((double)0, 0);
+    budgetView.checkBalance(free1);
 
     restartApplication();
 
     views.selectBudget();
     timeline.selectMonth("2008/08");
-    budgetView.occasional.checkTotalAmounts(0, -600);
+    double free = -600;
+    budgetView.occasional.checkTotalAmount((double)0, 0);
+    budgetView.checkBalance(free);
   }
 
   protected void restartApplication() {

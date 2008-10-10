@@ -18,8 +18,9 @@
             <list ref="seriesList"/>
           </scrollPane>
         </column>
+
         <column weightX="7" preferredSize="(440,500)">
-          <grid>
+          <grid weightY="0.1">
             <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
             <textField gridPos="(1,0,3,1)" ref="nameField" marginBottom="4"/>
 
@@ -35,7 +36,7 @@
             <label gridPos="(1,2,2,1)" ref="missingCategoryLabel" fill="horizontal" marginTop="4"/>
           </grid>
 
-          <column marginTop="20">
+          <column weightY="10" marginTop="20">
             <label text="Echeances" styleClass="separatorTitle"/>
             <row styleClass="separator">
               <column marginTop="5" weightX="0" preferredSize="(200,400)">

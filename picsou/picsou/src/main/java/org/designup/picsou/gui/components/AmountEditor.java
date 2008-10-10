@@ -10,6 +10,8 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class AmountEditor {
   private NumericEditor numericEditor;
@@ -69,6 +71,17 @@ public class AmountEditor {
   private class NumericEditor extends GlobNumericEditor {
     private NumericEditor(Field field, GlobRepository repository, Directory directory) {
       super(field, repository, directory);
+    }
+
+    protected void registerActionListener() {
+      super.registerActionListener();
+      final JTextField textField = numericEditor.getComponent();
+      textField.addPropertyChangeListener("enabled", new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent evt) {
+          positiveRadio.setEnabled(textField.isEnabled());
+          negativeRadio.setEnabled(textField.isEnabled());
+        }
+      });
     }
 
     protected Object getConvertedDisplayedValue() {

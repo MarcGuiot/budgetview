@@ -70,6 +70,13 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker checkAmountDisabled() {
+    assertFalse(getAmount().isEnabled());
+    assertFalse(dialog.getRadioButton("positiveAmounts").isEnabled());
+    assertFalse(dialog.getRadioButton("negativeAmounts").isEnabled());
+    return this;
+  }
+
   public TextBox getAmount() {
     return dialog.getInputTextBox("amountEditor");
   }
@@ -199,6 +206,11 @@ public class SeriesEditionDialogChecker extends DataChecker {
     }
     assertThat(fail(monthId + " not found "));
     return null;
+  }
+
+  public SeriesEditionDialogChecker selectNoMonth() {
+    getTable().clearSelection();
+    return this;
   }
 
   public SeriesEditionDialogChecker checkTable(Object[][] content) {

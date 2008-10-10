@@ -1008,15 +1008,15 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows("McDo");
     SeriesEditionDialogChecker edition = categorization.selectEnvelopes().createEnvelopeSeries();
-    edition.setName("Diet Food");
-    edition.setCategory(MasterCategory.FOOD);
 
-    edition.switchToManual();
-    edition.checkTable(new Object[][]{
-      {"2008", "August", "", "0"},
-      {"2008", "July", "", "0"},
-      {"2008", "June", "", "0"}
-    });
+    edition.setName("Diet Food")
+      .setCategory(MasterCategory.FOOD)
+      .switchToManual()
+      .checkTable(new Object[][]{
+        {"2008", "August", "", "0"},
+        {"2008", "July", "", "0"},
+        {"2008", "June", "", "0"}
+      });
 
     edition.checkNegativeAmountsSelected();
 
@@ -1058,6 +1058,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "June", "", "35.00"}
       });
 
+    edition.selectNoMonth()
+      .checkAmountDisabled();
+
     edition.selectMonth(200807)
       .checkNegativeAmountsSelected()
       .checkAmount("20.00")
@@ -1073,10 +1076,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.checkSeries("Diet Food", -0, -10.00);
+    budgetView.envelopes.checkSeries("Diet Food", 0, -10.00);
 
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Diet Food", -0, 20.00);
+    budgetView.envelopes.checkSeries("Diet Food", 0, 20.00);
   }
 
   public void testEnteringPositiveOrNegativeValuesInAnIncomeBudgetArea() throws Exception {
@@ -1088,14 +1091,15 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows("WorldCo");
     SeriesEditionDialogChecker edition = categorization.selectIncome().createIncomeSeries();
-    edition.setName("Salary");
-    edition.setCategory(MasterCategory.INCOME);
-    edition.switchToManual();
-    edition.checkTable(new Object[][]{
-      {"2008", "August", "", "0"},
-      {"2008", "July", "", "0"},
-      {"2008", "June", "", "0"}
-    });
+
+    edition.setName("Salary")
+      .setCategory(MasterCategory.INCOME)
+      .switchToManual()
+      .checkTable(new Object[][]{
+        {"2008", "August", "", "0"},
+        {"2008", "July", "", "0"},
+        {"2008", "June", "", "0"}
+      });
 
     edition.checkPositiveAmountsSelected();
 
@@ -1137,6 +1141,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "July", "", "-20.00"},
         {"2008", "June", "", "30.00"}
       });
+
+    edition.selectNoMonth()
+      .checkAmountDisabled();
 
     edition.selectMonth(200807)
       .checkNegativeAmountsSelected()

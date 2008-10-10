@@ -69,4 +69,10 @@ public class OccasionalSerieEditionChecker extends DataChecker {
     getTable().selectRowSpan(0, getTable().getRowCount() - 1);
     return this;
   }
+
+  public OccasionalSerieEditionChecker checkMonthsSelected(int... rows) {
+    assertThat(getTable().rowsAreSelected(rows));
+    return this;
+  }
+
 }

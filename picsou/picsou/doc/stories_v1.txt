@@ -1,6 +1,4 @@
 
-- regler les montants des occasional
-
 - monthsummary : afficher balance ("Variation/Balance") a la place de percu/...
 
 - BalanceStat avec trigger
@@ -15,31 +13,37 @@
 
 - saisie balance : maj date
 
+- bug: l'aide s'ouvre sous l'assistant de creation des series sous Linux
+
+- creation de compte / qif : ne pas forcer la saisie du numero de compte
+
 ======================================
 
 - tooltip sur repartir
+
+- tooltips monthSummaryView / balance
 
 - Creation compte : afficher SLA
 
 - TransactionDetails : layout box pour resoudre probleme layout JEditorPane & co
 
+- TransactionDetails : mettre le compte, la date et le montant (faire un seul label ?)
+
 - Creation + Edition de compte
 
 - BudgetView : Mettre en rouge les depassements
-
-- BudgetView : Mettre en rouge un montant occasional prevu a zero
 
 - TransactionView : Afficher la somme (total ou multi-selection)
 - TransactionView : Filtrage transactions par Compte
 - TransactionView : Filtrage transactions par TransactionType
 - TransactionView : click sur serie d'une planned : ouvrir SED
-- transactionView : colonne compte ?
+- transactionView : colonne compte
 
-- Format des montants : mettre des espaces pour separer les milliers
+- Gestion des licences : desactiver import + message jours restants
 
-- TransactionDetails : mettre le compte, la date et le montant (faire un seul label ?)
+- Gestion des licences : check mensuel ?
 
-- Gestion des licences
+- Verifier comportement appli avec firewall qui bloque les ports
 
 - tests d'undo/redo
 
@@ -53,6 +57,39 @@
 
 - Serialisation des strings : voir charset
 
-- tooltips monthSummaryView / balance
-
 - Message d'aide dans CategoryChooserDialog + joliesse ?
+
+- Tournure des mails
+
+- Voir message dans l'appli si pb licence et reenvoi de mail
+
+- Retirer choix du nombre de mois dans la fenetre de licence (voir tests)
+
+- Backup/restore
+
+====================================================
+
+- lancement via "ouvrir avec" la première fois : la popup casse tout
+
+- mettre en evidence le bouton "lancer l'assistant", voire le bloc de message d'aide complet (fond jaune ?)
+
+- pas bien vu le message dans CategorizationView : le mettre dans un bloc ?
+
+- mode "selectionner automatiquement les operations suivantes"
+
+- chemin initial : si on navigue via le message dansdou categorizationView, selectionner le dernier mois.
+  Ou sinon, trouver un moyen de rendre la liste de CategorizationView independante de la selection de mois ?
+
+- vitesse de scroll dans BudgetView
+
+- timeview fait un peu "cheap"
+
+- budgetView : besoin des infos de synthèse, au moins la balance, comme "titre" de la vue.
+
+- mettre des tooltips partout, c'est sympa
+
+- budgetView: pouvoir cliquer sur les montants attendus
+
+- categorizationView : edition des series a partir du toggle, sans passer par bouton liste
+
+- categorizationView : look&feel selection enveloppes
