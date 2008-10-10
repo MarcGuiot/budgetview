@@ -466,7 +466,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   private GlobMatcher getCurrentFilteringMode() {
     TransactionFilteringMode mode = (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
-    return mode.getMatcher(selectionService);
+    return mode.getMatcher(repository, selectionService);
   }
 
   private class AutoHideAction extends AbstractAction {

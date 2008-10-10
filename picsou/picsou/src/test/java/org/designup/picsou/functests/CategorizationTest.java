@@ -276,28 +276,43 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkBudgetAreaSelectionPanelDisplayed();
   }
 
-  public void testTableInitiallyShowsAllAvailableTransactions() throws Exception {
+  public void testTransactionFilteringMode() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/07/30", -29.90, "Carouf")
+      .load();
+
+    OfxBuilder
+      .init(this)
       .addTransaction("2008/06/15", -40.00, "Auchan")
+      .addTransaction("2008/06/17", -12.00, "MacDo")
       .load();
 
     views.selectCategorization();
 
     categorization.checkShowsAllTransactions();
-
-    timeline.selectMonth("2008/07");
-
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "", "Auchan", -40.00},
       {"30/07/2008", "", "Carouf", -29.90},
+      {"17/06/2008", "", "MacDo", -12.00}
+    });
+
+    timeline.selectMonth("2008/07");
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"30/07/2008", "", "Carouf", -29.90},
+      {"17/06/2008", "", "MacDo", -12.00}
     });
 
     categorization.showSelectedMonthsOnly();
-
     categorization.checkTable(new Object[][]{
       {"30/07/2008", "", "Carouf", -29.90}
+    });
+
+    categorization.showLastImportedFileOnly();
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"17/06/2008", "", "MacDo", -12.00}
     });
   }
 
