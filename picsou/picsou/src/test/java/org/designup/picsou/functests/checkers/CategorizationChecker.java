@@ -843,7 +843,7 @@ public class CategorizationChecker extends DataChecker {
     selectTransactionFilterMode(TransactionFilteringMode.ALL.toString());
   }
   
-  public void showSelectMonthsOnly() {
+  public void showSelectedMonthsOnly() {
     selectTransactionFilterMode(TransactionFilteringMode.SELECTED_MONTHS.toString());
   }
 

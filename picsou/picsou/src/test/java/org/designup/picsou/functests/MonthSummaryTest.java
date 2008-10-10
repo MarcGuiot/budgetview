@@ -66,8 +66,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.checkCategorizationSelected();
-    timeline.checkSelection("2008/05", "2008/06");
-
     categorization
       .checkTable(new Object[][]{
         {"15/06/2008", "", "Company", 1000.0},
@@ -231,7 +229,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     monthSummary.categorize();
     views.checkCategorizationSelected();
-    categorization.showSelectMonthsOnly();
+    categorization.showSelectedMonthsOnly();
     categorization.checkTable(new Object[][]{
       {"26/08/2008", "", "FNAC", -10.0},
       {"26/08/2008", "", "MyCompany", 1000.0},

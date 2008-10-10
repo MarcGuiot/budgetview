@@ -280,6 +280,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/04/29", -50.00, "ED1")
       .load();
 
+    timeline.selectAll();
+
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("courantED")
       .setEndDate(200805)
@@ -450,11 +452,13 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.occasional.checkTotalAmount(2500, 2500);
   }
 
-  public void testCreateAndDeleteManyCategory() throws Exception {
+  public void testCreateAndDeleteManyCategories() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/29", -29.00, "Auchan")
       .addTransaction("2008/06/29", -60.00, "ELF")
       .load();
+
+    timeline.selectAll();
 
     views.selectBudget();
     budgetView.recurring.createSeries()
@@ -480,9 +484,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTableRows("ELF")
-      .selectRecurring().categorizeInRecurringSeries("Fuel");
+      .selectRecurring()
+      .categorizeInRecurringSeries("Fuel");
     views.selectBudget();
-    budgetView.recurring.checkSeries("Fuel", -(double)60, -(double)120);
+    budgetView.recurring.checkSeries("Fuel", -60, -120);
 
     budgetView.recurring.editSeriesList()
       .selectSeries("Groceries")
@@ -609,7 +614,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", -50.00, "Monoprix")
       .load();
 
-    timeline.checkSelection("2008/06", "2008/07");
+    timeline.selectAll();
     budgetView.checkMultiSelectionMessageVisible(true);
 
     timeline.selectMonth("2008/07");

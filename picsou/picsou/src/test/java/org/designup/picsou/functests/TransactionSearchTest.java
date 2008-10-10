@@ -72,6 +72,8 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", -500, "FNAC", MasterCategory.LEISURES)
       .load();
 
+    timeline.selectAll();
+
     TextBox searchField = transactions.getSearchField();
     searchField.setText("vi");
 

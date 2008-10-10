@@ -29,7 +29,7 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.checkCategorizationSelected();
-    timeline.checkSelection("2008/06", "2008/07");
+    timeline.selectAll();
 
     views.selectHome();
     monthSummary.checkSeriesWizardButtonVisible(false);

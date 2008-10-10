@@ -46,6 +46,17 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testLastMonthIsSelectedAfterImport() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .addTransaction("2006/03/10", -1.1, "Menu K")
+      .addTransaction("2006/02/10", -1.1, "Menu K")
+      .load();
+
+    timeline.checkSelection("2006/03");
+  }
+
   public void testCloseButtonLabelBeforeImport() throws Exception {
     operations.openImportDialog()
       .checkCloseButton(Lang.get("import.step1.close"));
@@ -73,6 +84,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       })
       .completeImport();
 
+    timeline.checkSelection("2006/02");
+
+    timeline.selectAll();
     transactions
       .initContent()
       .add("20/02/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2.2)

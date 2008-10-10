@@ -111,15 +111,19 @@ public class LicenseTest extends LicenseTestCase {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     startPicsou();
+
     LoginChecker login = new LoginChecker(window);
     login.logNewUser("user", "passw@rd");
     checkRepoIdIsUpdated(getSqlConnection(), 1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
+
     LicenseChecker.enterBadLicense(window, MAIL, "1234", 24);
     String mailcontent = checkReceive(MAIL);
     assertTrue(mailcontent, mailcontent.contains(": "));
+
     int startCode = mailcontent.indexOf(": ") + 2;
     String newActivationCode = mailcontent.substring(startCode, startCode + 4);
     window.dispose();
+
     checkPreviousVersionValidity("2010/07");
     activateNewLicenseInNewVersion(newActivationCode);
     checkPreviousVersionValidity("2010/07");

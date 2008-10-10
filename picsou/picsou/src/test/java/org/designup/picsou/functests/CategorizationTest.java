@@ -294,7 +294,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/07/2008", "", "Carouf", -29.90},
     });
 
-    categorization.showSelectMonthsOnly();
+    categorization.showSelectedMonthsOnly();
 
     categorization.checkTable(new Object[][]{
       {"30/07/2008", "", "Carouf", -29.90}
@@ -404,6 +404,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
 
     views.selectData();
+    timeline.selectAll();
     transactions.initContent()
       .add("26/06/2008", TransactionType.PLANNED, "Planned: Groceries", "", -170.00, "Groceries", MasterCategory.FOOD)
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet", MasterCategory.TELECOMS)
@@ -423,14 +424,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.showSelectMonthsOnly();
+    timeline.selectMonth("2008/06");
+    categorization.showSelectedMonthsOnly();
     categorization.checkTable(new Object[][]{
-      {"24/04/2008", "", "Free Telecom 21/04", -29.90},
-      {"25/05/2008", "", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
 
-    timeline.selectMonth("2008/06");
     categorization.doubleClickTableRow(0);
     transactionDetails.checkLabel("Free Telecom 26/06");
     categorization.setRecurring(0, "Internet", MasterCategory.TELECOMS, true);
@@ -502,6 +501,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkTableIsEmpty();
 
     views.selectData();
+    timeline.selectAll();
     transactions
       .initContent()
       .add("26/06/2008", TransactionType.PLANNED, "Planned: Groceries", "", -170.00, "Groceries", MasterCategory.FOOD)
@@ -603,6 +603,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkNoTransactionSelected();
 
     views.selectData();
+    timeline.selectAll();
     transactions
       .initContent()
       .add("26/06/2008", TransactionType.PLANNED, "Planned: Groceries", "", -170.00, "Groceries", MasterCategory.FOOD)
