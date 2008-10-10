@@ -15,6 +15,6 @@ public class GlobMultiLineTextEditor extends AbstractGlobTextEditor<JTextArea, G
     super(field, component, repository, directory);
   }
 
-  protected void registerChangeListener() {
+  protected void registerActionListener() {
   }
 }

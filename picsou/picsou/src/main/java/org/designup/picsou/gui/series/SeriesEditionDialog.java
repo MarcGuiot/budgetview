@@ -119,7 +119,7 @@ public class SeriesEditionDialog {
     builder.add("create", new CreateSeriesAction());
     builder.add("delete", new DeleteSeriesAction());
 
-    nameEditor = builder.addEditor("nameField", Series.LABEL).setNotifyAtKeyPressed(true);
+    nameEditor = builder.addEditor("nameField", Series.LABEL).setNotifyOnKeyPressed(true);
 
     registerCategoryComponents(descriptionService, builder);
 
@@ -445,7 +445,7 @@ public class SeriesEditionDialog {
             nameEditor.getComponent().selectAll();
           }
           else {
-            budgetEditionPanel.selectedAmountEditor();
+            budgetEditionPanel.selectAmountEditor();
           }
         }
       }

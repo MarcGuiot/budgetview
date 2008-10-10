@@ -30,7 +30,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -91,7 +90,7 @@ public class TransactionDetailsView extends View {
 
     builder.add("originalLabel",
                 GlobMultiLineTextView.init(Transaction.TYPE, repository, directory,
-                                   new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, "..."))
+                                           new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, "..."))
                   .setAutoHideMatcher(new OriginalLabelVisibilityMatcher()));
 
     return builder;

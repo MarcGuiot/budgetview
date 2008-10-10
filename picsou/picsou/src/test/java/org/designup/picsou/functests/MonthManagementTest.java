@@ -4,7 +4,6 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.utils.Dates;
 
 public class MonthManagementTest extends LoggedInFunctionalTestCase {
 
@@ -35,8 +34,11 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/02/20", +5, "income")
       .load();
 
+    timeline.checkSelection("2006/02");
+
     timeline.assertDisplays("2006/01 (0.00/10.00)", "2006/02 (5.00/0.00)");
 
+    timeline.selectAll();
     timeline.checkSelection("2006/01", "2006/02");
     timeline.selectMonth("2006/02");
     transactions.initContent()
@@ -56,9 +58,6 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/03/20", +5, "income")
       .load();
 
-    timeline.assertDisplays("2006/01 (0.00/10.00)", "2006/02 (0.00/0.00)", "2006/03 (5.00/0.00)");
-    timeline.checkSelection("2006/01", "2006/03");
-    timeline.selectMonth("2006/01");
     timeline.selectMonth("2006/03");
     transactions
       .initContent()

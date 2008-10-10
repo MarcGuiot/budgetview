@@ -136,6 +136,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     transactions.categorize(0);
     views.checkCategorizationSelected();
+    categorization.showSelectedMonthsOnly();
     categorization.checkTable(new Object[][]{
       {"10/01/2006", "", "Menu 14", -1.0},
       {"11/01/2006", "", "Something else", -1.0}

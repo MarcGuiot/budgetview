@@ -70,6 +70,13 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker checkAmountDisabled() {
+    assertFalse(getAmount().isEnabled());
+    assertFalse(dialog.getRadioButton("positiveAmounts").isEnabled());
+    assertFalse(dialog.getRadioButton("negativeAmounts").isEnabled());
+    return this;
+  }
+
   public TextBox getAmount() {
     return dialog.getInputTextBox("amountEditor");
   }
@@ -201,6 +208,11 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return null;
   }
 
+  public SeriesEditionDialogChecker selectNoMonth() {
+    getTable().clearSelection();
+    return this;
+  }
+
   public SeriesEditionDialogChecker checkTable(Object[][] content) {
     assertThat(getTable().contentEquals(content));
     return this;
@@ -213,12 +225,12 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return table;
   }
 
-  public SeriesEditionDialogChecker setManual() {
+  public SeriesEditionDialogChecker switchToManual() {
     dialog.getButton("manual").click();
     return this;
   }
 
-  public SeriesEditionDialogChecker setAutomatic() {
+  public SeriesEditionDialogChecker switchToAutomatic() {
     WindowInterceptor.init(dialog.getButton("automatic").triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
@@ -557,6 +569,26 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker checkAmountLabel(final String text) {
     assertThat(dialog.getTextBox("seriesBudgetEditionAmountLabel").textEquals(text));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker selectPositiveAmounts() {
+    dialog.getRadioButton("positiveAmounts").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkPositiveAmountsSelected() {
+    assertThat(dialog.getRadioButton("positiveAmounts").isSelected());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker selectNegativeAmounts() {
+    dialog.getRadioButton("negativeAmounts").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkNegativeAmountsSelected() {
+    assertThat(dialog.getRadioButton("negativeAmounts").isSelected());
     return this;
   }
 

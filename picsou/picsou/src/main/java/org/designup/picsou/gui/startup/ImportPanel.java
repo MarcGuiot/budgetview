@@ -25,8 +25,7 @@ import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
-import static org.globsframework.gui.views.utils.LabelCustomizers.fontSize;
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
@@ -449,7 +448,7 @@ public class ImportPanel {
         showBalanceDialog();
         openRequestManager.popCallback();
         localRepository.commitChanges(true);
-        selectImportedMonths(month);
+        selectLastImportedMonth(month);
         complete();
         return true;
       }
@@ -531,11 +530,12 @@ public class ImportPanel {
                               new AutoCategorizationFunctor(repository));
   }
 
-  private void selectImportedMonths(Set<Integer> month) {
-    GlobList monthsToSelect = repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, month));
+  private void selectLastImportedMonth(Set<Integer> month) {
+    GlobList monthsToSelect =
+      repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, month)).sort(Month.ID);
     if (!monthsToSelect.isEmpty()) {
       SelectionService selectionService = directory.get(SelectionService.class);
-      selectionService.select(monthsToSelect, Month.TYPE);
+      selectionService.select(monthsToSelect.getLast());
     }
   }
 

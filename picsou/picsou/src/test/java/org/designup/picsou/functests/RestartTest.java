@@ -1,6 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.LicenseChecker;
+import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -15,7 +16,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
-  public void testReinitializationWithTransactionsOnly() throws Exception {
+  public void testTransactionsOnly() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
       .load();
@@ -53,7 +54,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testReinitializationWithTransactionsAndSeries() throws Exception {
+  public void testSeries() throws Exception {
     LicenseChecker.enterLicense(mainWindow, "admin", "", 1);
 
     OfxBuilder.init(this)
@@ -97,12 +98,12 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testReloadBudgetViewStat() throws Exception {
+  public void testBudgetView() throws Exception {
 
     views.selectBudget();
     budgetView.envelopes.createSeries()
       .setName("Courant")
-      .setManual()
+      .switchToManual()
       .selectAllMonths()
       .setAmount("2500")
       .setCategory(MasterCategory.HEALTH)
@@ -110,13 +111,13 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     budgetView.income.createSeries()
       .setName("Salaire")
-      .setManual()
+      .switchToManual()
       .selectAllMonths().setAmount("3000")
       .setCategory(MasterCategory.INCOME)
       .validate();
     budgetView.recurring.createSeries()
       .setName("EDF")
-      .setManual()
+      .switchToManual()
       .selectAllMonths().setAmount("100")
       .setCategory(MasterCategory.HOUSE)
       .validate();
@@ -126,7 +127,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     budgetView.recurring.createSeries()
       .setName("Loyer")
-      .setManual()
+      .switchToManual()
       .setAmount("1000")
       .setCategory(MasterCategory.HOUSE)
       .validate();
@@ -141,6 +142,32 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     double free = -600;
     budgetView.occasional.checkTotalAmount((double)0, 0);
     budgetView.checkBalance(free);
+  }
+
+  public void testCategorizationGauge() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/10", 1000.0, "WorldCo")
+      .addTransaction("2008/07/10", -1000.0, "FNAC")
+      .load();
+
+    views.selectCategorization();
+    
+    CategorizationGaugeChecker gauge = categorization.getGauge();
+    gauge.checkLevel(1, "100%");
+    gauge.checkProgressMessageHidden();
+
+    categorization.setIncome("WorldCo", "Salaire", true);
+    gauge.checkLevel(0.5, "50%");
+    gauge.checkProgressMessageHidden();
+
+    restartApplication();
+
+    views.selectCategorization();
+
+    categorization.getGauge()
+      .checkLevel(0.5, "50%")
+      .checkProgressMessageHidden();
   }
 
   protected void restartApplication() {

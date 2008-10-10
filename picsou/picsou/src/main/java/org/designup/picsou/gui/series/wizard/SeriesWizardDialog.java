@@ -131,7 +131,6 @@ public class SeriesWizardDialog {
             localRepository.commitChanges(true);
 
             GlobList list = getAllMonths();
-            directory.get(SelectionService.class).select(list, Month.TYPE);
             directory.get(NavigationService.class).gotoCategorization();
 
             dialog.setVisible(false);

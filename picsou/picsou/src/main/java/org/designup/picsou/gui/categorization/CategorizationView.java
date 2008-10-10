@@ -14,9 +14,9 @@ import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.gui.utils.TableView;
-import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
@@ -30,10 +30,8 @@ import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
-import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.DefaultChangeSetListener;
@@ -57,9 +55,9 @@ import java.util.*;
 public class CategorizationView extends View implements TableView, Filterable, ColorChangeListener {
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
-  private Set<Integer> selectedMonthIds = Collections.emptySet();
   private JCheckBox autoHideCheckBox;
   private JCheckBox autoSelectNextCheckBox;
+  private JComboBox filteringModeCombo;
   private java.util.List<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>> seriesRepeat =
     new ArrayList<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>>();
 
@@ -79,10 +77,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
     this.parentDirectory = parentDirectory;
     parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        GlobList selectedMonth = selection.getAll(Month.TYPE);
-        selectedMonthIds = selectedMonth.getValueSet(Month.ID);
+        selectionService.select(selection.getAll(Month.TYPE), Month.TYPE);
         updateTableFilter();
-        selectionService.select(selectedMonth, Month.TYPE);
       }
     }, Month.TYPE);
 
@@ -112,6 +108,13 @@ public class CategorizationView extends View implements TableView, Filterable, C
     CategorizationGaugePanel gauge = new CategorizationGaugePanel(repository, parentDirectory);
     builder.add("gaugePanel", gauge.getPanel());
     builder.add("progressMessage", gauge.getProgressMessage());
+
+    filteringModeCombo = builder.add("transactionFilterCombo", new JComboBox(TransactionFilteringMode.values()));
+    filteringModeCombo.addActionListener(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        updateTableFilter();
+      }
+    });
 
     Comparator<Glob> transactionComparator = getTransactionComparator();
     DescriptionService descriptionService = directory.get(DescriptionService.class);
@@ -455,10 +458,15 @@ public class CategorizationView extends View implements TableView, Filterable, C
         filter,
         fieldEquals(Transaction.PLANNED, false),
         autoHideCheckBox.isSelected() ? fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID) : ALL,
-        fieldIn(Transaction.MONTH, selectedMonthIds)
+        getCurrentFilteringMode()
       );
 
     transactionTable.setFilter(matcher);
+  }
+
+  private GlobMatcher getCurrentFilteringMode() {
+    TransactionFilteringMode mode = (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
+    return mode.getMatcher(selectionService);
   }
 
   private class AutoHideAction extends AbstractAction {

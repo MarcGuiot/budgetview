@@ -2,32 +2,22 @@ package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
-import javax.swing.text.EditorKit;
 import java.text.DecimalFormat;
-import java.util.Collections;
 import java.util.Set;
 
-public class CategorizationGaugePanel implements GlobSelectionListener, ChangeSetListener {
+public class CategorizationGaugePanel implements ChangeSetListener {
   private GlobRepository repository;
   private Directory directory;
-
-  private Set<Integer> selectedMonthIds = Collections.emptySet();
 
   private DecimalFormat format = new DecimalFormat("0");
 
@@ -41,8 +31,8 @@ public class CategorizationGaugePanel implements GlobSelectionListener, ChangeSe
     this.directory = directory;
     createPanel();
     createProgressMessage();
-    directory.get(SelectionService.class).addListener(this, Month.TYPE);
     repository.addChangeListener(this);
+    update();
   }
 
   public void createPanel() {
@@ -73,14 +63,13 @@ public class CategorizationGaugePanel implements GlobSelectionListener, ChangeSe
   }
 
   public void update() {
-    GlobList transactionsForSelectedMonths =
+    GlobList transactions =
       repository.getAll(Transaction.TYPE,
-                        and(not(fieldEquals(Transaction.PLANNED, true)),
-                            fieldIn(Transaction.MONTH, selectedMonthIds)));
+                        not(fieldEquals(Transaction.PLANNED, true)));
 
     double total = 0;
     double uncategorized = 0;
-    for (Glob transaction : transactionsForSelectedMonths) {
+    for (Glob transaction : transactions) {
       double amount = Math.abs(transaction.get(Transaction.AMOUNT));
       total += amount;
       if (Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
@@ -135,10 +124,5 @@ public class CategorizationGaugePanel implements GlobSelectionListener, ChangeSe
     if (changedTypes.contains(Transaction.TYPE)) {
       update();
     }
-  }
-
-  public void selectionUpdated(GlobSelection selection) {
-    selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
-    update();
   }
 }

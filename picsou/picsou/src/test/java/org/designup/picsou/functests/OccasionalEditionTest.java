@@ -76,6 +76,7 @@ public class OccasionalEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectData();
+    timeline.selectAll();
     transactions
       .initContent()
       .add("29/08/2008", TransactionType.PLANNED, "Planned: Detente", "", -9.00, "Detente", MasterCategory.LEISURES)

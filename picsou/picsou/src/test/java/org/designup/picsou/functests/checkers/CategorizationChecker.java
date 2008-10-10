@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
+import org.designup.picsou.gui.categorization.components.TransactionFilteringMode;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
@@ -114,7 +115,7 @@ public class CategorizationChecker extends DataChecker {
       createIncomeSeries()
         .setName(name)
         .setCategory(MasterCategory.INCOME)
-        .setManual()
+        .switchToManual()
         .selectAllMonths()
         .setAmount("0")
         .validate();
@@ -569,6 +570,9 @@ public class CategorizationChecker extends DataChecker {
       int[] ints = getRowIndices(label);
       lenght += ints.length;
       indices.add(ints);
+      if (ints.length == 0) {
+        Assert.fail("Operation '" + label + "' not found");
+      }
     }
     int[] ind = new int[lenght];
     int j = 0;
@@ -841,6 +845,22 @@ public class CategorizationChecker extends DataChecker {
     JEditorPane editorPane = getPanel().getPanel("series").findSwingComponent(JEditorPane.class);
     TextBox textBox = new TextBox(editorPane);
     return HelpChecker.open(textBox.triggerClickOnHyperlink(linkText));
+  }
+
+  public void checkShowsAllTransactions() {
+    assertThat(getPanel().getComboBox("transactionFilterCombo").selectionEquals(TransactionFilteringMode.ALL.toString()));
+  }
+
+  public void showAllTransactions() {
+    selectTransactionFilterMode(TransactionFilteringMode.ALL.toString());
+  }
+
+  public void showSelectedMonthsOnly() {
+    selectTransactionFilterMode(TransactionFilteringMode.SELECTED_MONTHS.toString());
+  }
+
+  private void selectTransactionFilterMode(String mode) {
+    getPanel().getComboBox("transactionFilterCombo").select(mode);
   }
 
   public class CategorizationTableChecker extends TableChecker {

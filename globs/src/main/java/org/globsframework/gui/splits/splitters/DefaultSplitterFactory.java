@@ -71,6 +71,15 @@ public class DefaultSplitterFactory implements SplitterFactory {
     else if (name.equals("toggleButton")) {
       return createDefaultComponent(JToggleButton.class, "toggleButton", properties, subSplitters);
     }
+    else if (name.equals("radioButton")) {
+      return createDefaultComponent(JRadioButton.class, "radioButton", properties, subSplitters);
+    }
+    else if (name.equals("checkBox")) {
+      return createDefaultComponent(JCheckBox.class, "checkBox", properties, subSplitters);
+    }
+    else if (name.equals("comboBox")) {
+      return createDefaultComponent(JComboBox.class, "comboBox", properties, subSplitters);
+    }
     else if (name.equals("textField")) {
       return createDefaultComponent(JTextField.class, "textField", properties, subSplitters);
     }
@@ -82,12 +91,6 @@ public class DefaultSplitterFactory implements SplitterFactory {
     }
     else if (name.equals("htmlEditorPane")) {
       return new HtmlEditorPane(properties, subSplitters, false);
-    }
-    else if (name.equals("comboBox")) {
-      return createDefaultComponent(JComboBox.class, "comboBox", properties, subSplitters);
-    }
-    else if (name.equals("checkBox")) {
-      return createDefaultComponent(JCheckBox.class, "checkBox", properties, subSplitters);
     }
     else if (name.equals("progressBar")) {
       return createDefaultComponent(JProgressBar.class, "progressBar", properties, subSplitters);

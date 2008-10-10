@@ -86,7 +86,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/02/10", -2.0, "Unknown")
       .load();
 
-    timeline.checkSelection("2006/01", "2006/02");
+    timeline.selectAll();
     categories.select(MasterCategory.FOOD, MasterCategory.TRANSPORTS);
 
     timeline.selectMonth("2006/01");

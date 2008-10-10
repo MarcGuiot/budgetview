@@ -32,7 +32,7 @@ public class UserPreferences {
   public static IntegerField FUTURE_MONTH_COUNT;
 
   @DefaultBoolean(false)
-  public static BooleanField REGISTRED_USER;
+  public static BooleanField REGISTERED_USER;
 
   static {
     GlobTypeLoader.init(UserPreferences.class, "userPreferences");
@@ -46,7 +46,7 @@ public class UserPreferences {
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeString(values.get(LAST_DIRECTORY));
       outputStream.writeInteger(values.get(FUTURE_MONTH_COUNT));
-      outputStream.writeBoolean(values.get(REGISTRED_USER));
+      outputStream.writeBoolean(values.get(REGISTERED_USER));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -60,7 +60,7 @@ public class UserPreferences {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(LAST_DIRECTORY, input.readString());
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
-      fieldSetter.set(REGISTRED_USER, input.readBoolean());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
     }
 
     public int getWriteVersion() {

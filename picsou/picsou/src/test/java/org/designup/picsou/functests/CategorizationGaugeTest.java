@@ -26,6 +26,7 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectAll();
+    views.selectCategorization();
 
     gauge.checkLevel(1, "100%");
     gauge.checkProgressMessageHidden();
@@ -39,12 +40,8 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     gauge.checkQuasiCompleteProgressMessageShown();
 
     timeline.selectMonth("2008/06");
-    gauge.checkHidden();
-    gauge.checkCompleteProgressMessageShown();
-
-    timeline.selectMonth("2008/07");
-    gauge.checkLevel(1, "100%");
-    gauge.checkProgressMessageHidden();
+    gauge.checkLevel(0.05, "5%");
+    gauge.checkQuasiCompleteProgressMessageShown();
 
     timeline.selectAll();
     gauge.checkLevel(0.05, "5%");
@@ -55,10 +52,6 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     gauge.checkQuasiCompleteProgressMessageShown();
 
     categorization.setOccasional("SAPN", MasterCategory.TRANSPORTS);
-    gauge.checkHidden();
-    gauge.checkCompleteProgressMessageShown();
-
-    timeline.selectMonth("2008/07");
     gauge.checkHidden();
     gauge.checkCompleteProgressMessageShown();
   }
@@ -87,11 +80,10 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/10", 1000.0, "WorldCo")
       .load();
 
-    timeline.selectMonth("2008/06");
-    categorization.checkTableIsEmpty();
+    categorization.setOccasional("WorldCo", MasterCategory.INCOME);
 
     categorization.getGauge().checkHidden();
-    categorization.getGauge().checkProgressMessageHidden();
+    categorization.getGauge().checkCompleteProgressMessageShown();
   }
 
   public void testMessageNavigation() throws Exception {

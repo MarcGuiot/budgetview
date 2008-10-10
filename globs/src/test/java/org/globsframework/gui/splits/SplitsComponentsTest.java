@@ -210,6 +210,11 @@ public class SplitsComponentsTest extends SplitsTestCase {
     assertNotNull(check);
   }
 
+  public void testCreatingARadioButton() throws Exception {
+    JRadioButton button = parse("<radioButton/>");
+    assertNotNull(button);
+  }
+
   public void testCreatingAProgressBar() throws Exception {
     JProgressBar progressBar = parse("<progressBar/>");
     assertNotNull(progressBar);

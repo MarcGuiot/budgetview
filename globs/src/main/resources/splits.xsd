@@ -112,6 +112,7 @@
       <xs:element ref="toggleButton"/>
       <xs:element ref="label"/>
       <xs:element ref="checkBox"/>
+      <xs:element ref="radioButton"/>
       <xs:element ref="comboBox"/>
       <xs:element ref="progressBar"/>
       <xs:element ref="table"/>
@@ -535,6 +536,12 @@
   </xs:element>
 
   <xs:element name="checkBox">
+    <xs:complexType>
+      <xs:attributeGroup ref="buttonAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="radioButton">
     <xs:complexType>
       <xs:attributeGroup ref="buttonAttributes"/>
     </xs:complexType>

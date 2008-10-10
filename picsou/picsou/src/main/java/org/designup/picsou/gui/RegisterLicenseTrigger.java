@@ -42,7 +42,7 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
             activationCode = user.get(User.ACTIVATION_CODE);
             if (mail != null && signature != null && activationCode != null) {
               byte[] mailAsByte = mail.getBytes();
-              repository.update(UserPreferences.KEY, UserPreferences.REGISTRED_USER, true);
+              repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, true);
               if (KeyService.checkSignature(mailAsByte, signature)) {
                 serverAccess.localRegister(mailAsByte, signature, activationCode);
                 repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_OK);
@@ -64,8 +64,8 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
         }
 
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-          if (values.contains(UserPreferences.REGISTRED_USER) &&
-              !values.get(UserPreferences.REGISTRED_USER)) {
+          if (values.contains(UserPreferences.REGISTERED_USER) &&
+              !values.get(UserPreferences.REGISTERED_USER)) {
             serverAccess.localRegister(null, null, null);
           }
         }

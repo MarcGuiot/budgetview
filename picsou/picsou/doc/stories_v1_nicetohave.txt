@@ -91,13 +91,7 @@ Compte demo (pour essai par les utilisateurs + nos screencasts)
 Legal
 * Validation SLA par utilisateur a l'install ou a la creation de compte
 * Packaging : integrer les licences open-source
-* Declaration CNIL ?
-
-
-
-
-
-
+* Declaration CNIL 
 
 
 

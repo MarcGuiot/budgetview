@@ -103,41 +103,24 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     assertThat(textBox.textEquals("-83,4"));
   }
 
-  public void testMinusNotAllowed() throws Exception {
+  public void testAbsoluteValueMode() throws Exception {
     JTextField textField =
-      GlobNumericEditor.init(DummyObject.LINK, repository, directory).setMinusAllowed(false).getComponent();
+      GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
+        .setAbsoluteValue(true)
+        .getComponent();
     selectionService.select(glob);
     TextBox textBox = new TextBox(textField);
 
     textBox.setText("");
+    textBox.appendText("-");
+    assertThat(textBox.textEquals(""));
+
     textBox.insertText("-3", 0);
     assertThat(textBox.textEquals(""));
 
     textBox.insertText("4", 0);
     assertThat(textBox.textEquals("4"));
-  }
 
-  public void testInvert() throws Exception {
-    JTextField textField =
-      GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
-        .setInvertValue(true).getComponent();
-    TextBox textBox = new TextBox(textField);
-    selectionService.select(glob);
-    textBox.setText("8.8");
-    changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' value='-8.8' _value='3.5'/>");
-    textBox.setText("-3");
-    changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='1' value='3.0' _value='-8.8'/>");
-  }
-
-  public void testInvertAndMinusNotAllowed() throws Exception {
-    JTextField textField =
-      GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
-        .setMinusAllowed(false)
-        .setInvertValue(true)
-        .getComponent();
-    TextBox textBox = new TextBox(textField);
     repository.update(glob.getKey(), DummyObject.VALUE, -8.8);
     selectionService.select(glob);
     assertThat(textBox.textEquals("8.8"));
@@ -146,10 +129,10 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
   public void testSendUpdateAtKeyPressed() throws Exception {
     JTextField textField =
       GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
-        .setMinusAllowed(true)
-        .setNotifyAtKeyPressed(true)
+        .setNotifyOnKeyPressed(true)
         .getComponent();
     TextBox textBox = new TextBox(textField);
+
     repository.update(glob.getKey(), DummyObject.VALUE, 0.);
     selectionService.select(glob);
     textBox.setText("-8.8");
@@ -179,7 +162,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     Glob glob2 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 3), FieldValue.value(DummyObject.VALUE, 2.0));
     JTextField textField =
       GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
-        .setNotifyAtKeyPressed(true).getComponent();
+        .setNotifyOnKeyPressed(true).getComponent();
     TextBox textBox = new TextBox(textField);
 
     selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
@@ -202,19 +185,19 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     Glob glob2 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 3), FieldValue.value(DummyObject.VALUE, 2.0));
     JTextField textField =
       GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
-        .setNotifyAtKeyPressed(true)
+        .setNotifyOnKeyPressed(true)
         .setValueForNull(0.0)
-        .setMinusAllowed(false)
-        .setInvertValue(true)
+        .setAbsoluteValue(true)
         .getComponent();
     TextBox textBox = new TextBox(textField);
 
     selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
     textBox.setText("44");
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='2' value='-44.0' _value='1.0'/>" +
-      "<update type='dummyObject' id='3' value='-44.0' _value='2.0'/>" +
+      "<update type='dummyObject' id='2' value='44.0' _value='1.0'/>" +
+      "<update type='dummyObject' id='3' value='44.0' _value='2.0'/>" +
       "");
+    
     selectionService.select(Arrays.asList(glob1), DummyObject.TYPE);
     ((JTextField)textBox.getAwtComponent()).setSelectionEnd(0);
     textBox.pressKey(Key.DELETE);
@@ -223,10 +206,12 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     textBox.pressKey(Key.DELETE);
     textBox.pressKey(Key.DELETE);
     changeListener.assertLastChangesEqual(
-      "<update type='dummyObject' id='2' value='0.0' _value='-4.0'/>");
+      "<update type='dummyObject' id='2' value='0.0' _value='4.0'/>");
     changeListener.reset();
+
     selectionService.select(Arrays.asList(glob2), DummyObject.TYPE);
     assertThat(textBox.textEquals("44"));
+
     selectionService.select(Arrays.asList(glob1), DummyObject.TYPE);
     changeListener.assertNoChanges();
     assertThat(textBox.textEquals("0"));
@@ -240,7 +225,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
             repository.update(glob.getKey(), DummyObject.VALUE, 3.14);
           }
         })
-        .setNotifyAtKeyPressed(true)
+        .setNotifyOnKeyPressed(true)
         .getComponent();
     TextBox textBox = new TextBox(textField);
 
