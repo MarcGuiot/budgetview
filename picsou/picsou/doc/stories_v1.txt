@@ -13,9 +13,27 @@
 
 - saisie balance : maj date
 
-- bug: l'aide s'ouvre sous l'assistant de creation des series sous Linux
+- bug: l'aide s'ouvre sous SeriesWizardDialog sous Linux ?
 
 - creation de compte / qif : ne pas forcer la saisie du numero de compte
+
+======================================
+
+- Creation + Edition de compte
+
+- BudgetView : Mettre en rouge les depassements
+
+- TransactionView : Afficher la somme (total ou multi-selection)
+
+- tests d'undo/redo
+
+======================================
+
+- Gestion des licences : desactiver import + message jours restants
+
+- Gestion des licences : check mensuel ?
+
+- Tournure des mails
 
 ======================================
 
@@ -29,23 +47,12 @@
 
 - TransactionDetails : mettre le compte, la date et le montant (faire un seul label ?)
 
-- Creation + Edition de compte
-
-- BudgetView : Mettre en rouge les depassements
-
-- TransactionView : Afficher la somme (total ou multi-selection)
 - TransactionView : Filtrage transactions par Compte
 - TransactionView : Filtrage transactions par TransactionType
 - TransactionView : click sur serie d'une planned : ouvrir SED
 - transactionView : colonne compte
 
-- Gestion des licences : desactiver import + message jours restants
-
-- Gestion des licences : check mensuel ?
-
 - Verifier comportement appli avec firewall qui bloque les ports
-
-- tests d'undo/redo
 
 - BrowsingService sous Linux ?
 
@@ -59,7 +66,6 @@
 
 - Message d'aide dans CategoryChooserDialog + joliesse ?
 
-- Tournure des mails
 
 - Voir message dans l'appli si pb licence et reenvoi de mail
 
@@ -75,9 +81,9 @@
 
 - pas bien vu le message dans CategorizationView : le mettre dans un bloc ?
 
-- mode "selectionner automatiquement les operations suivantes"
+- mode "selectionner automatiquement les operations suivantes" ?
 
-- chemin initial : si on navigue via le message dansdou categorizationView, selectionner le dernier mois.
+- chemin initial : si on navigue via le message dans categorizationView, selectionner le dernier mois.
   Ou sinon, trouver un moyen de rendre la liste de CategorizationView independante de la selection de mois ?
 
 - vitesse de scroll dans BudgetView
@@ -91,5 +97,3 @@
 - budgetView: pouvoir cliquer sur les montants attendus
 
 - categorizationView : edition des series a partir du toggle, sans passer par bouton liste
-
-- categorizationView : look&feel selection enveloppes

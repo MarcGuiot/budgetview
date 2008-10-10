@@ -40,17 +40,17 @@
         <panel styleClass="block">
           <column styleClass="innerBlock">
             <panel ref="gaugePanel" opaque="false"/>
-            <scrollPane viewportBackground="#FFFFFF">
+            <scrollPane viewportBackground="#FFFFFF" marginBottom="0">
               <table ref="transactionTable" rowHeight="20"/>
             </scrollPane>
-            <column marginBottom="5">
-              <row>
+            <column marginBottom="5" border="matte(1,1,1,1,categorization.modes.border)" background="categorization.modes.bg" opaque="true">
+              <row autoHideSource="customFilterMessage">
                 <filler fill="horizontal"/>
                 <component ref="customFilterMessage"/>
                 <filler fill="horizontal"/>
               </row>
-              <checkBox ref="autoSelectNext" text="$categorization.autoselect.next" anchor="left"/>
               <checkBox ref="autoHide" text="$categorization.autohide" anchor="left"/>
+              <checkBox ref="autoSelectNext" text="$categorization.autoselect.next" anchor="left"/>
             </column>
           </column>
         </panel>
