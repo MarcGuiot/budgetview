@@ -1,15 +1,59 @@
 
-- monthsummary : afficher balance ("Variation/Balance") a la place de percu/...
+====================================
+               MARC
+====================================
 
-- BalanceStat avec trigger
+- monthSummary : forcer le "+" pour la balance
 
-- balanceSummary : baser sur BalanceStat et ajouter occasional
-
-- balancesummary : "montant estime au 31/10/2008"
+- balanceSummary : ajouter occasional
 
 - SED : changement de periodicite = se caler sur les donnees existantes
 
+- balancesummary : "montant estime au 31/10/2008"
+
+- Gestion des licences : desactiver import + message jours restants
+
+- Sortir le contenu des mails dans le lang_fr.properties
+
+- Serialisation des strings : voir charset
+
+
+====================================
+               SEB
+====================================
+
+- CategorizationView : revoir les UI des toggles de selection
+
+- CategorizationView : ajouter des boutons "edit" a cote des series (sauf occasional ?)
+
+
+====================================
+               REGIS
+====================================
+
+- tooltip sur repartir
+
+- tooltips monthSummaryView / balance
+
+- largeur CategoryView
+
 - BudgetView : afficher balance + solde fin de mois
+
+- mettre en evidence le bouton "lancer l'assistant", voire le bloc de message d'aide complet (fond jaune ?)
+
+- pas bien vu le message dans CategorizationView : le mettre dans un bloc ?
+
+- vitesse de scroll dans BudgetView
+
+- Creation + Edition de compte
+
+
+
+====================================
+               RESTE
+====================================
+
+- Gestion des licences : check mensuel ?
 
 - saisie balance : maj date
 
@@ -17,29 +61,11 @@
 
 - creation de compte / qif : ne pas forcer la saisie du numero de compte
 
-======================================
-
-- Creation + Edition de compte
-
 - BudgetView : Mettre en rouge les depassements
 
 - TransactionView : Afficher la somme (total ou multi-selection)
 
 - tests d'undo/redo
-
-======================================
-
-- Gestion des licences : desactiver import + message jours restants
-
-- Gestion des licences : check mensuel ?
-
-- Tournure des mails
-
-======================================
-
-- tooltip sur repartir
-
-- tooltips monthSummaryView / balance
 
 - Creation compte : afficher SLA
 
@@ -56,46 +82,22 @@
 
 - BrowsingService sous Linux ?
 
-- Largeur CategoryView
-
 - Fichier licences pour Package install / About / etc :
 
 - Message upgrade : lien vers http://www.fourmics.com/changes ou versions
 
-- Serialisation des strings : voir charset
-
 - Message d'aide dans CategoryChooserDialog + joliesse ?
-
 
 - Voir message dans l'appli si pb licence et reenvoi de mail
 
 - Retirer choix du nombre de mois dans la fenetre de licence (voir tests)
 
-- Backup/restore
+- Backup/restore (fonctionnel precis a definir ensemble)
 
-====================================================
+- lancement via "ouvrir avec" la première fois : la popup casse tout ?
 
-- lancement via "ouvrir avec" la première fois : la popup casse tout
+- supprimer mode "selectionner automatiquement les operations suivantes" ?
 
-- mettre en evidence le bouton "lancer l'assistant", voire le bloc de message d'aide complet (fond jaune ?)
-
-- pas bien vu le message dans CategorizationView : le mettre dans un bloc ?
-
-- mode "selectionner automatiquement les operations suivantes" ?
-
-- chemin initial : si on navigue via le message dans categorizationView, selectionner le dernier mois.
-  Ou sinon, trouver un moyen de rendre la liste de CategorizationView independante de la selection de mois ?
-
-- vitesse de scroll dans BudgetView
-
-- timeview fait un peu "cheap"
-
-- budgetView : besoin des infos de synthèse, au moins la balance, comme "titre" de la vue.
-
-- mettre des tooltips partout, c'est sympa
-
-- budgetView: pouvoir cliquer sur les montants attendus
-
-- categorizationView : edition des series a partir du toggle, sans passer par bouton liste
+- budgetView: pouvoir cliquer sur les montants attendus ? (comportement a definir)
 
 - categorizationGauge : mettre un tooltip avec le nombre de transactions non classees
