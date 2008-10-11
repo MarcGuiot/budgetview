@@ -5,11 +5,10 @@
 
 - monthSummary : forcer le "+" pour la balance
 
-- balanceSummary : ajouter occasional
-
 - SED : changement de periodicite = se caler sur les donnees existantes
 
 - balancesummary : "montant estime au 31/10/2008"
+
 
 - Gestion des licences : desactiver import + message jours restants
 
@@ -31,17 +30,11 @@
                REGIS
 ====================================
 
-- tooltip sur repartir
-
 - tooltips monthSummaryView / balance
 
 - BudgetView : afficher balance + solde fin de mois
 
-- mettre en evidence le bouton "lancer l'assistant", voire le bloc de message d'aide complet (fond jaune ?)
-
 - pas bien vu le message dans CategorizationView : le mettre dans un bloc ?
-
-- vitesse de scroll dans BudgetView
 
 - Creation + Edition de compte
 
@@ -100,4 +93,7 @@
 
 - budgetView: pouvoir cliquer sur les montants attendus ? (comportement a definir)
 
-- categorizationGauge : mettre un tooltip avec le nombre de transactions non classees
+- categorizationGauge : mettre un tooltip avec le nombre de transactions non classees*
+
+- mettre en evidence le bouton "lancer l'assistant", voire le bloc de message d'aide complet (fond jaune ?)
+
