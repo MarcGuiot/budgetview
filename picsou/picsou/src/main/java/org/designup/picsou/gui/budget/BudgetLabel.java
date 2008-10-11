@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.budget;
 
-import org.designup.picsou.gui.description.ColoredAmountStringifier;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.model.Month;
@@ -25,16 +24,14 @@ public class BudgetLabel implements GlobSelectionListener, ChangeSetListener {
   private JLabel label = new JLabel();
   private SelectionService selectionService;
   private GlobRepository repository;
-  private ColoredAmountStringifier monthBalanceStringifier;
   private DecimalFormat format = PicsouDescriptionService.DECIMAL_FORMAT;
+  private static final String SEPARATOR = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
   public BudgetLabel(GlobRepository repository, Directory directory) {
     this.repository = repository;
     repository.addChangeListener(this);
     selectionService = directory.get(SelectionService.class);
     selectionService.addListener(this, Month.TYPE);
-
-    monthBalanceStringifier = new ColoredAmountStringifier(BalanceStat.MONTH_BALANCE, true, directory);
 
     update();
   }
@@ -63,13 +60,15 @@ public class BudgetLabel implements GlobSelectionListener, ChangeSetListener {
       builder
         .append("<b>")
         .append(Lang.get("budgetLabel.multimonth", selectedMonthIds.size()))
-        .append("</b> - ");
+        .append("</b>")
+        .append(SEPARATOR);
     }
 
     builder
       .append(Lang.get("budgetLabel.monthBalance")).append(" <b>")
-      .append(monthBalanceStringifier.toString(balanceStats, repository))
-      .append("</b> - ")
+      .append(format.format(balanceStats.getSum(BalanceStat.MONTH_BALANCE)))
+      .append("</b>")
+      .append(SEPARATOR)
       .append(Lang.get("budgetLabel.endBalance")).append(" <b>")
       .append(format.format(balanceStats.getLast().get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE)))
       .append("</b>");
@@ -78,7 +77,7 @@ public class BudgetLabel implements GlobSelectionListener, ChangeSetListener {
     if (uncategorizedTotal != 0) {
       String uncategorized = format.format(uncategorizedTotal);
       builder
-        .append(" - ")
+        .append(SEPARATOR)
         .append(Lang.get("budgetLabel.uncategorized")).append(" <b>")
         .append(uncategorized)
         .append("</b>");

@@ -2,13 +2,8 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <styles>
-    <ui name="labelBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="budgetLabel.top" bottomColor="budgetLabel.bottom" borderColor="budgetLabel.border"
-        borderWidth="1" cornerRadius="20"/>
-
-    <style selector=".budgetLabelBlock" ui="labelBlock" marginTop="10"/>
-    <style selector=".budgetLabelBlock label" foreground="budgetLabel.text"
-      marginLeft="40" marginRight="40" marginTop="2" marginBottom="2"/>
+    <style selector=".budgetLabelBlock" marginBottom="10"/>
+    <style selector=".budgetLabelBlock label" foreground="budgetLabel.text" marginTop="5" font="-,plain,10"/>
   </styles>
 
   <column styleClass="main">
@@ -36,8 +31,7 @@
       <row styleClass="budgetLabelBlock">
         <label ref="budgetLabel"/>
       </row>
-      <filler fill="horizontal"/>
     </row>
-    
+
   </column>
 </splits>
