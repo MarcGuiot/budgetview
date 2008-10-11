@@ -58,7 +58,6 @@ import java.util.Set;
 public class CategorizationView extends View implements TableView, Filterable, ColorChangeListener {
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
-  private JCheckBox autoHideCheckBox;
   private JCheckBox autoSelectNextCheckBox;
   private JComboBox filteringModeCombo;
   private java.util.List<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>> seriesRepeat =
@@ -158,10 +157,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
     autoSelectNextCheckBox = new JCheckBox();
     autoSelectNextCheckBox.setSelected(false);
     builder.add("autoSelectNext", autoSelectNextCheckBox);
-
-    autoHideCheckBox = new JCheckBox(new AutoHideAction());
-    autoHideCheckBox.setSelected(false);
-    builder.add("autoHide", autoHideCheckBox);
 
     builder.addLabel("transactionLabel", Transaction.TYPE, new GlobListStringifier() {
       public String toString(GlobList list, GlobRepository repository) {
@@ -465,7 +460,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
       and(
         filter,
         fieldEquals(Transaction.PLANNED, false),
-        autoHideCheckBox.isSelected() ? fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID) : ALL,
         getCurrentFilteringMode()
       );
 
@@ -475,12 +469,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private GlobMatcher getCurrentFilteringMode() {
     TransactionFilteringMode mode = (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
     return mode.getMatcher(repository, selectionService);
-  }
-
-  private class AutoHideAction extends AbstractAction {
-    public void actionPerformed(ActionEvent e) {
-      updateTableFilter();
-    }
   }
 
   private class EditCategoriesAction extends AbstractAction {

@@ -385,8 +385,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
 
-    categorization.disableAutoHide();
-
     categorization.getTable().doubleClick(0, 0);
     categorization.checkSelectedTableRows(0);
 
@@ -413,7 +411,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
 
-    categorization.disableAutoHide();
     categorization.disableAutoSelectNext();
 
     categorization.doubleClickTableRow(0);
@@ -500,8 +497,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"25/05/2008", "", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
-    categorization.checkAutoHideEnabled(false);
-    categorization.enableAutoHide();
+    categorization.showUncategorizedTransactionsOnly();
 
     categorization.selectTableRow(0);
     categorization.selectEnvelopes();
@@ -557,8 +553,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
 
-    categorization.disableAutoHide();
-
     categorization.selectTableRows(0, 1);
     categorization.selectEnvelopes();
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
@@ -572,14 +566,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRows(0, 1);
     categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
 
-    categorization.enableAutoHide();
+    categorization.showUncategorizedTransactionsOnly();
     categorization.checkTable(new Object[][]{
       {"25/05/2008", "", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
     categorization.checkNoSelectedTableRows();
 
-    categorization.disableAutoHide();
+    categorization.showAllTransactions();
     categorization.checkTable(new Object[][]{
       {"15/05/2008", "Groceries", "Auchan", -90.00},
       {"14/05/2008", "Groceries", "Carouf", -80.00},
@@ -607,7 +601,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
     categorization.checkAutoSelectNextEnabled(false);
     categorization.enableAutoSelectNext();
-    categorization.disableAutoHide();
+    categorization.showAllTransactions();
 
     categorization.selectTableRow(0);
     categorization.selectEnvelopes();
@@ -659,7 +653,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
     categorization.disableAutoSelectNext();
-    categorization.disableAutoHide();
 
     categorization.selectTableRow(0);
     categorization.selectEnvelopes();
@@ -678,7 +671,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.enableAutoSelectNext();
-    categorization.disableAutoHide();
 
     categorization.checkTable(new Object[][]{
       {"15/05/2008", "", "Auchan", -90.00},
@@ -712,7 +704,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
 
     categorization.enableAutoSelectNext();
-    categorization.disableAutoHide();
 
     categorization.checkTable(new Object[][]{
       {"28/06/2008", "", "France Telecom", -50.00},
@@ -738,7 +729,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.enableAutoSelectNext();
-    categorization.disableAutoHide();
 
     categorization.doubleClickTableRow(2);
     categorization.checkSelectedTableRows(2, 3);
@@ -756,7 +746,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTableRow(0);
-    categorization.disableAutoHide();
 
     categorization.selectIncome()
       .checkNoIncomeSeriesDisplayed()

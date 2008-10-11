@@ -455,7 +455,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization
-      .disableAutoHide()
       .selectTableRow(0)
       .selectEnvelopes()
       .selectEnvelopeSeries("courant", MasterCategory.FOOD, false)

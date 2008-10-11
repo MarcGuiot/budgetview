@@ -50,7 +50,6 @@
                 <component ref="customFilterMessage"/>
                 <filler fill="horizontal"/>
               </row>
-              <checkBox ref="autoHide" text="$categorization.autohide" anchor="left"/>
               <checkBox ref="autoSelectNext" text="$categorization.autoselect.next" anchor="left"/>
             </column>
           </column>

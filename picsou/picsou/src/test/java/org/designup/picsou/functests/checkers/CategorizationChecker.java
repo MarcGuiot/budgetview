@@ -616,15 +616,6 @@ public class CategorizationChecker extends DataChecker {
     assertEquals(enabled, getPanel().getCheckBox("hide").isSelected());
   }
 
-  public void enableAutoHide() {
-    getPanel().getCheckBox("hide").select();
-  }
-
-  public CategorizationChecker disableAutoHide() {
-    getPanel().getCheckBox("hide").unselect();
-    return this;
-  }
-
   public void checkAutoSelectNextEnabled(boolean enabled) {
     assertEquals(enabled, getPanel().getCheckBox("next").isSelected());
   }
