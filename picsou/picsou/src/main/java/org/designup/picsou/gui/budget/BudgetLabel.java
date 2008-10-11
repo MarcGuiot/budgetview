@@ -64,11 +64,15 @@ public class BudgetLabel implements GlobSelectionListener, ChangeSetListener {
         .append(SEPARATOR);
     }
 
+    double balance = balanceStats.getSum(BalanceStat.MONTH_BALANCE);
     builder
       .append(Lang.get("budgetLabel.monthBalance")).append(" <b>")
-      .append(format.format(balanceStats.getSum(BalanceStat.MONTH_BALANCE)))
+      .append(balance > 0 ? "+" : "")
+      .append(format.format(balance))
       .append("</b>")
-      .append(SEPARATOR)
+      .append(SEPARATOR);
+
+    builder
       .append(Lang.get("budgetLabel.endBalance")).append(" <b>")
       .append(format.format(balanceStats.getLast().get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE)))
       .append("</b>");
