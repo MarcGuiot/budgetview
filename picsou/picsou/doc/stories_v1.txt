@@ -17,6 +17,8 @@
 
 - Serialisation des strings : voir charset
 
+- Probleme de transaction plannifié a 0 : probleme d'arondie?
+
 
 ====================================
                SEB
@@ -58,6 +60,7 @@
 - saisie balance : maj date
 
 - bug: l'aide s'ouvre sous SeriesWizardDialog sous Linux ?
+  ==> Elle ne s'ouvre pas vraiement desous mais elle a un comportement bizarre et on ne peux pas cliquer dedans.
 
 - creation de compte / qif : ne pas forcer la saisie du numero de compte
 
