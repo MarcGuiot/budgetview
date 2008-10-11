@@ -251,4 +251,15 @@ public class GlobList extends ArrayList<Glob> {
     }
     return map;
   }
+
+  public double getSum(DoubleField field) {
+    double result = 0;
+    for (Glob glob : this) {
+      Double value = glob.get(field);
+      if (value != null) {
+        result += value;
+      }
+    }
+    return result;
+  }
 }
