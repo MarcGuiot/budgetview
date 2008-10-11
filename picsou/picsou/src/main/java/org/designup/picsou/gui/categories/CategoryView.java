@@ -78,7 +78,7 @@ public class CategoryView extends View implements ExpandableTable {
       .setDefaultBackgroundPainter(backgroundPainter)
       .addColumn(" ", expandColumn, expandColumn, categoryStringifier.getComparator(repository))
       .addColumn(Lang.get("category"), categoryStringifier, customizer)
-      .addColumn(Lang.get("amount"), amountStringifier, chain(ALIGN_RIGHT, customizer))
+      .addColumn(Lang.get("amount"), amountStringifier, ALIGN_RIGHT)
       .hideHeader()
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 

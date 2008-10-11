@@ -35,8 +35,6 @@
 
 - tooltips monthSummaryView / balance
 
-- largeur CategoryView
-
 - BudgetView : afficher balance + solde fin de mois
 
 - mettre en evidence le bouton "lancer l'assistant", voire le bloc de message d'aide complet (fond jaune ?)
@@ -52,6 +50,8 @@
 ====================================
                RESTE
 ====================================
+
+- Creation d'une serie OperationsSpeciales : selectionner le mois en cours dans la table
 
 - Gestion des licences : check mensuel ?
 

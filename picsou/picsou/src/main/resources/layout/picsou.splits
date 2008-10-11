@@ -14,7 +14,7 @@
     <style selector="toggleButton#budgetCardToggle" icon="card_budget.png"/>
     <style selector="toggleButton#dataCardToggle" icon="card_list.png"/>
 
-    <style selector="#time button" size="(15,20)" fill="none"/>
+    <style selector="#time button" minimumSize="(15,20)" preferredSize="(15,20)" fill="none"/>
 
     <style selector="component#categoriesChart"
            color1="repartition.chart.color1"
@@ -41,10 +41,15 @@
     <ui name="doubleArrowRight" class="org.designup.picsou.gui.components.ArrowButtonUI"
         rotation="0" doubleArrow="true"
         rolloverColor="periods.button.rollover" pressedColor="periods.button.pressed"/>
-    <style selector="button.periodButton" opaque="false" borderPainted="false" anchor="south"
-           foreground="periods.button.normal" preferredSize="(20,14)" margin="2" marginBottom="10"/>
-    <style selector="button.doublePeriodButton" opaque="false" borderPainted="false" anchor="south"
-           foreground="periods.button.normal" preferredSize="(20,10)" margin="2" marginBottom="12"/>
+    
+    <style selector="button.periodButton"
+           anchor="south" margin="2" marginBottom="10"
+           foreground="periods.button.normal"
+           minimumSize="(20,14)" preferredSize="(20,14)"/>
+    <style selector="button.doublePeriodButton"
+           anchor="south" margin="2" marginBottom="12"
+           foreground="periods.button.normal"
+           minimumSize="(20,10)" preferredSize="(20,10)"/>
 
     <!-- Back/forward buttons -->
     <ui name="backArrow" class="org.designup.picsou.gui.components.ArrowButtonUI"
@@ -54,10 +59,10 @@
         rotation="0" doubleArrow="false"
         rolloverColor="backforward.rollover" pressedColor="backforward.pressed" disabledColor="backforward.disabled"/>
     <style selector="button.backforward"
-           preferredSize="(20,16)" foreground="backforward.normal" 
+           minimumSize="(20,16)" preferredSize="(20,16)" foreground="backforward.normal" 
            fill="none" margin="3" weightX="0"/>
     <style selector="button#back" ui="backArrow"/>
-    <style selector="button#forward" ui="forwardArrow"/>
+    <style selector="button#forward" ui="forwardArrow" marginRight="20"/>
 
   </styles>
 
@@ -118,9 +123,9 @@
 
         <card name="data">
 
-          <horizontalSplit continuousLayout="true" opaque="false" border="empty">
+          <row opaque="false">
 
-            <column weightX="3">
+            <column preferredSize="(280,800)" minimumSize="(280,800)" weightX="0.1" marginRight="20">
               <label text="$transactionView.filtering.title" styleClass="blockTitle"/>
               <panel styleClass="block">
                 <verticalSplit margin="10">
@@ -148,7 +153,7 @@
               </panel>
             </column>
 
-            <column weightX="7">
+            <column weightX="100">
               <label text="$transactionView.operations.title" styleClass="blockTitle"/>
               <panel styleClass="block">
                 <column>
@@ -169,7 +174,7 @@
                 </column>
               </panel>
             </column>
-          </horizontalSplit>
+          </row>
 
         </card>
 

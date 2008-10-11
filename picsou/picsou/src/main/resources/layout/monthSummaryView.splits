@@ -41,7 +41,7 @@
 
         <card name="standard">
           <column>
-            <row>
+            <row weightY="0">
               <filler fill="horizontal"/>
               <grid weightY="0">
                 <component ref="totalBalance" gridPos="(0,0,1,2)"
@@ -50,11 +50,11 @@
                            spentColorTop="balancegraph.spent.top"
                            spentColorBottom="balancegraph.spent.bottom"
                            borderColor="balancegraph.border"
-                           preferredSize="(70,40)"
-                           minimumSize="(70,40)"
+                           preferredSize="(70,35)"
+                           minimumSize="(70,35)"
                            weightX="0.1" weightY="1.0"
                            marginLeft="10" marginRight="10" marginBottom="5"
-                           fill="none"/>
+                           fill="vertical"/>
                 <label text="$monthsummary.balance" styleClass="totalAmountTitle" gridPos="(1,0)"
                        autoHideSource="balanceAmount"/>
                 <label ref="balanceAmount" styleClass="totalAmount" gridPos="(1,1)"/>
@@ -62,8 +62,8 @@
               <filler fill="horizontal"/>
             </row>
 
-            <scrollPane>
-              <column>
+            <scrollPane weightY="100">
+              <column border="empty(10)">
                 <repeat ref="budgetAreaRepeat" layout="verticalGrid">
                   <button ref="budgetAreaName" styleClass="itemLink"/>
                   <button ref="budgetAreaAmount" styleClass="amountLink"/>

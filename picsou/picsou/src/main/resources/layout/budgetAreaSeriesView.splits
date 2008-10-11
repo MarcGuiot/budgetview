@@ -22,7 +22,7 @@
                  tooltipText="$budgetview.tooltip.total.planned"/>
         </grid>
 
-        <scrollPane marginBottom="0">
+        <scrollPane marginBottom="0" verticalUnitIncrement="10">
           <column>
             <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid" margin="10">
               <button ref="seriesName" styleClass="itemLink"

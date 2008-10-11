@@ -11,16 +11,20 @@
     <style selector="checkBox" opaque="false"/>
     <style selector="comboBox" opaque="false"/>
 
-    <style selector="textArea.multiLineLabel" foreground="help.messages.text"
-           opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
+    <style selector="textArea.multiLineLabel"
+           foreground="help.messages.text" opaque="false"
+           editable="false" lineWrap="true" wrapStyleWord="true"/>
 
-    <style selector="scrollPane.textArea" border="" opaque="false" viewportOpaque="false"/>
+    <style selector="scrollPane.textArea"
+           border="" opaque="false" viewportOpaque="false"/>
 
-    <style selector="htmlEditorPane" foreground="help.messages.text" opaque="false"/>
+    <style selector="htmlEditorPane"
+           foreground="help.messages.text" opaque="false"/>
     <style selector="scrollPane htmlEditorPane" border="empty(10)"/>
 
-    <style selector="label.message" fill="horizontal" horizontalAlignment="left" anchor="center"
-           weightX="10.0"/>
+    <style selector="label.message"
+           fill="horizontal" horizontalAlignment="left"
+           anchor="center" weightX="10.0"/>
 
     <style selector="label.header"
            font="-,plain,11" foreground="import.header.label"

@@ -18,6 +18,7 @@ public class ArrowButtonUI extends BasicButtonUI {
   public void installUI(JComponent c) {
     super.installUI(c);
     JButton button = (JButton)c;
+    button.setOpaque(false);
     button.setBorderPainted(false);
     button.setRolloverEnabled(true);
   }

@@ -25,7 +25,7 @@
                  tooltipText="$budgetview.tooltip.total.planned.occasional"/>
         </grid>
 
-        <scrollPane marginBottom="0">
+        <scrollPane marginBottom="0" verticalUnitIncrement="10">
           <column>
             <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid" margin="10">
               <label ref="categoryName" styleClass="item" fill="horizontal" anchor="right" horizontalAlignment="right"
