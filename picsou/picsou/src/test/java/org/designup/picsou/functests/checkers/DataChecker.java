@@ -20,6 +20,11 @@ public abstract class DataChecker {
     return format.format(value);
   }
 
+  protected String toString(double value, boolean forcePlus) {
+    String prefix = (forcePlus && value > 0) ? "+" : "";
+    return prefix + format.format(value);
+  }
+
   public static String getCategoryName(MasterCategory category) {
     return Lang.get("category." + category.getName());
   }

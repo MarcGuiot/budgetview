@@ -7,6 +7,7 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class BalanceStat {
@@ -14,7 +15,7 @@ public class BalanceStat {
 
   @Key
   @Target(Month.class)
-  public static IntegerField MONTH_ID;
+  public static LinkField MONTH_ID;
 
   @DefaultDouble(0.0)
   public static DoubleField BEGIN_OF_MONTH_ACCOUNT_BALANCE;

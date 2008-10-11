@@ -47,6 +47,10 @@ public class BudgetViewChecker extends DataChecker {
     return this;
   }
 
+  public BudgetLabelChecker getLabel() {
+    return new BudgetLabelChecker(window);
+  }
+
   public class BudgetAreaChecker {
 
     private String panelName;
@@ -226,9 +230,5 @@ public class BudgetViewChecker extends DataChecker {
       return new OccasionalSerieEditionChecker(
         WindowInterceptor.getModalDialog(getPanel().getButton("editOccasionalSeries").triggerClick()));
     }
-  }
-
-  public void checkMultiSelectionMessageVisible(boolean visible) {
-    UISpecAssert.assertEquals(visible, window.getTextBox("multiSelectionWarning").isVisible());
   }
 }

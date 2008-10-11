@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.model.OccasionalSeriesStat;

@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.budget;
+package org.designup.picsou.gui.description;
 
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.model.GlobList;

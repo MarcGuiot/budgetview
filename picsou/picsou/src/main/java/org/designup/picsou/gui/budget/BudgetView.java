@@ -14,27 +14,25 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.impl.ReplicationGlobRepository;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.ReplicationGlobRepository;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public class BudgetView extends View implements GlobSelectionListener, ChangeSetListener {
   private GlobList selectedMonths = GlobList.EMPTY;
-  private JideSplitPane horizontalSplitPane;
-  private JideSplitPane firstVerticalSplitPane;
-  private JideSplitPane secondVerticalSplitPane;
-  private JideSplitPane thirdVerticalSplitPane;
-  private JEditorPane multiSelectionWarning;
+  private Directory parentDirectory;
 
   public BudgetView(GlobRepository repository, Directory parentDirectory) {
-    super(new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodOccasionalSeriesStat.TYPE),
+    super(new ReplicationGlobRepository(repository,
+                                        PeriodSeriesStat.TYPE,
+                                        PeriodOccasionalSeriesStat.TYPE),
           createLocalDirectory(parentDirectory));
+    this.parentDirectory = parentDirectory;
     parentDirectory.get(SelectionService.class).addListener(this, Month.TYPE);
   }
 
@@ -46,7 +44,10 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetView.splits",
-                                                      repository, directory);
+                                                      repository, parentDirectory);
+
+    BudgetLabel budgetLabel = new BudgetLabel(repository, parentDirectory);
+    builder.add("budgetLabel", budgetLabel.getLabel());
 
     addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder);
     addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder);
@@ -55,13 +56,10 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     addBudgetAreaView("projectsBudgetView", BudgetArea.SPECIAL, builder);
     addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder);
 
-    horizontalSplitPane = builder.add("horizontalSplitPane", new JideSplitPane());
-    firstVerticalSplitPane = builder.add("firstVerticalSplitPane", new JideSplitPane());
-    secondVerticalSplitPane = builder.add("secondVerticalSplitPane", new JideSplitPane());
-    thirdVerticalSplitPane = builder.add("thirdVerticalSplitPane", new JideSplitPane());
-
-    multiSelectionWarning = builder.add("multiSelectionWarning", new JEditorPane());
-    multiSelectionWarning.setVisible(false);
+    builder.add("horizontalSplitPane", new JideSplitPane());
+    builder.add("firstVerticalSplitPane", new JideSplitPane());
+    builder.add("secondVerticalSplitPane", new JideSplitPane());
+    builder.add("thirdVerticalSplitPane", new JideSplitPane());
 
     parentBuilder.add("budgetView", builder);
 
@@ -82,7 +80,6 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
   public void selectionUpdated(GlobSelection selection) {
     selectedMonths = selection.getAll(Month.TYPE);
     updateSelection();
-    updateWarningMessage();
   }
 
   private void updateSelection() {
@@ -103,10 +100,6 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     localSelectionService.select(GlobSelectionBuilder.init()
       .add(selectedMonths, Month.TYPE)
       .add(seriesStatFunctor.getStats(), PeriodSeriesStat.TYPE).get());
-  }
-
-  private void updateWarningMessage() {
-    multiSelectionWarning.setVisible(selectedMonths.size() > 1);
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

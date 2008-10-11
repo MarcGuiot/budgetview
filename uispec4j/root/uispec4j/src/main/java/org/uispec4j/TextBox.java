@@ -95,7 +95,7 @@ public class TextBox extends AbstractUIComponent {
 
   /**
    * Checks the displayed text in cases where HTML text is used. This is
-   * different from {@link #textIsEmpty()} in that whitespaces, carriage return
+   * different from {@link #textEquals(String)} in that whitespaces, carriage return
    * and other formatting adjustments are ignored.
    */
   public Assertion htmlEquals(String html) {

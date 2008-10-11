@@ -1,6 +1,7 @@
 package org.uispec4j.utils;
 
 import org.uispec4j.assertion.testlibrairies.AssertAdapter;
+import org.uispec4j.xml.XmlEscape;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -109,5 +110,16 @@ public class Utils {
     list.remove(0);
     list.remove(0);
     return (StackTraceElement[])list.toArray(new StackTraceElement[list.size()]);
+  }
+
+  public static String cleanupHtml(String html) {
+    String actual = html
+      .replaceAll("<[^<>]+>", "")
+      .replaceAll("\n", "")
+      .replaceAll(LINE_SEPARATOR, "")
+      .replaceAll("[ ]+", " ")
+      .trim();
+    String label = XmlEscape.convertXmlEntitiesToText(actual);
+    return label;
   }
 }

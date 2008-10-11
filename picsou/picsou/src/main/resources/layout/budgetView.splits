@@ -1,13 +1,17 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <column styleClass="main">
+  <styles>
+    <ui name="labelBlock" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="budgetLabel.top" bottomColor="budgetLabel.bottom" borderColor="budgetLabel.border"
+        borderWidth="1" cornerRadius="20"/>
 
-    <row>
-      <filler fill="horizontal"/>
-      <htmlEditorPane ref="multiSelectionWarning" styleClass="mainPanelMessage" text="$budgetview.multiselection"/>
-      <filler fill="horizontal"/>
-    </row>
+    <style selector=".budgetLabelBlock" ui="labelBlock" marginTop="10"/>
+    <style selector=".budgetLabelBlock label" foreground="budgetLabel.text"
+      marginLeft="40" marginRight="40" marginTop="2" marginBottom="2"/>
+  </styles>
+
+  <column styleClass="main">
 
     <horizontalSplit ref="horizontalSplitPane">
 
@@ -27,5 +31,13 @@
       </verticalSplit>
     </horizontalSplit>
 
+    <row>
+      <filler fill="horizontal"/>
+      <row styleClass="budgetLabelBlock">
+        <label ref="budgetLabel"/>
+      </row>
+      <filler fill="horizontal"/>
+    </row>
+    
   </column>
 </splits>
