@@ -116,6 +116,7 @@ public class Utils {
     String actual = html
       .replaceAll("<[^<>]+>", "")
       .replaceAll("\n", "")
+      .replaceAll("&nbsp;", " ")
       .replaceAll(LINE_SEPARATOR, "")
       .replaceAll("[ ]+", " ")
       .trim();
