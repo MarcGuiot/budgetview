@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.time;
 
-import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.AmountColors;
+import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -11,28 +11,21 @@ import java.awt.*;
 
 public class MonthViewColors implements ColorChangeListener {
 
-  public Color yearBackgroundEvenTop;
-  public Color yearBackgroundEvenBottom;
-  public Color yearBackgroundOddTop;
-  public Color yearBackgroundOddBottom;
-  public Color pastBackgroundTop;
-  public Color pastBackgroundBottom;
+  public Color yearBackground;
+  public Color yearSeparator;
+
   public Color currentBackgroundTop;
   public Color currentBackgroundBottom;
-  public Color futureBackgroundTop;
-  public Color futureBackgroundBottom;
-  public Color pastSelectedTop;
-  public Color pastSelectedBottom;
-  public Color currentSelectedTop;
-  public Color currentSelectedBottom;
-  public Color futureSelectedTop;
-  public Color futureSelectedBottom;
-  public Color selectedTop;
-  public Color selectedBottom;
-  public Color grid;
-  public Color text;
+  public Color monthTop;
+  public Color monthBottom;
+  public Color selectedMonthTop;
+  public Color selectedMonthBottom;
+
+  public Color currentText;
+  public Color futureText;
+  public Color pastText;
   public Color textShadow;
-  public Color yearSeparator;
+  public Color yearText;
 
   public Font monthFont;
   public Font yearFont;
@@ -47,29 +40,21 @@ public class MonthViewColors implements ColorChangeListener {
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    yearBackgroundEvenTop = colorLocator.get(PicsouColors.PERIOD_YEAR_BG_EVEN_TOP);
-    yearBackgroundEvenBottom = colorLocator.get(PicsouColors.PERIOD_YEAR_BG_EVEN_BOTTOM);
-    yearBackgroundOddTop = colorLocator.get(PicsouColors.PERIOD_YEAR_BG_ODD_TOP);
-    yearBackgroundOddBottom = colorLocator.get(PicsouColors.PERIOD_YEAR_BG_ODD_BOTTOM);
-    pastBackgroundTop = colorLocator.get(PicsouColors.PERIOD_PAST_BG_TOP);
-    pastBackgroundBottom = colorLocator.get(PicsouColors.PERIOD_PAST_BG_BOTTOM);
-    currentBackgroundTop = colorLocator.get(PicsouColors.PERIOD_CURRENT_BG_TOP);
-    currentBackgroundBottom = colorLocator.get(PicsouColors.PERIOD_CURRENT_BG_BOTTOM);
-    futureBackgroundTop = colorLocator.get(PicsouColors.PERIOD_FUTURE_BG_TOP);
-    futureBackgroundBottom = colorLocator.get(PicsouColors.PERIOD_FUTURE_BG_BOTTOM);
-    grid = colorLocator.get(PicsouColors.PERIOD_GRID);
-    yearSeparator = colorLocator.get(PicsouColors.PERIOD_YEAR_SEPARATOR);
-    futureSelectedTop = colorLocator.get(PicsouColors.PERIOD_FUTURE_SELECTED_BG_TOP);
-    futureSelectedBottom = colorLocator.get(PicsouColors.PERIOD_FUTURE_SELECTED_BG_BOTTOM);
-    currentSelectedTop = colorLocator.get(PicsouColors.PERIOD_CURRENT_SELECTED_BG_TOP);
-    currentSelectedBottom = colorLocator.get(PicsouColors.PERIOD_CURRENT_SELECTED_BG_BOTTOM);
-    pastSelectedTop = colorLocator.get(PicsouColors.PERIOD_PAST_SELECTED_BG_TOP);
-    pastSelectedBottom = colorLocator.get(PicsouColors.PERIOD_PAST_SELECTED_BG_BOTTOM);
-    selectedBottom = colorLocator.get(PicsouColors.PERIOD_YEAR_SELECTED_BG_BOTTOM);
-    selectedTop = colorLocator.get(PicsouColors.PERIOD_YEAR_SELECTED_BG_TOP);
+    monthTop = colorLocator.get(PicsouColors.TIMEVIEW_MONTH_TOP);
+    monthBottom = colorLocator.get(PicsouColors.TIMEVIEW_MONTH_BOTTOM);
+    currentBackgroundTop = colorLocator.get(PicsouColors.TIMEVIEW_CURRENT_MONTH_TOP);
+    currentBackgroundBottom = colorLocator.get(PicsouColors.TIMEVIEW_CURRENT_MONTH_BOTTOM);
+    selectedMonthBottom = colorLocator.get(PicsouColors.TIMEVIEW_SELECTED_MONTH_BOTTOM);
+    selectedMonthTop = colorLocator.get(PicsouColors.TIMEVIEW_SELECTED_MONTH_TOP);
 
-    text = colorLocator.get(PicsouColors.PERIOD_TEXT);
-    textShadow = colorLocator.get(PicsouColors.PERIOD_TEXT_SHADOW);
+    yearBackground = monthBottom;
+    yearSeparator = colorLocator.get(PicsouColors.TIMEVIEW_YEAR_SEPARATOR);
+
+    futureText = colorLocator.get(PicsouColors.TIMEVIEW_TEXT_FUTURE);
+    pastText = colorLocator.get(PicsouColors.TIMEVIEW_TEXT_PAST);
+    currentText = colorLocator.get(PicsouColors.TIMEVIEW_TEXT_CURRENT);
+    yearText = colorLocator.get(PicsouColors.TIMEVIEW_TEXT_YEAR);
+    textShadow = colorLocator.get(PicsouColors.TIMEVIEW_TEXT_SHADOW);
   }
 
   public Font getYearFont() {
@@ -78,6 +63,18 @@ public class MonthViewColors implements ColorChangeListener {
 
   public Font getMonthFont() {
     return monthFont;
+  }
+
+  public Color getMonthTextColor(int month, int currentMonth) {
+    if (month < currentMonth) {
+      return pastText;
+    }
+    else if (month > currentMonth) {
+      return futureText;
+    }
+    else {
+      return currentText;
+    }
   }
 
   public Color getAmountColor(double diff) {

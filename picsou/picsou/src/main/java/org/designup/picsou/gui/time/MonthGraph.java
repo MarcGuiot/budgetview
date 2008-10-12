@@ -49,29 +49,15 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
       isVisible = Visibility.NOT_VISIBLE;
       return;
     }
-    else if (timeService.getCurrentMonthId() > month.get(Month.ID)) {
-      if (selected) {
-        graphics2D.setPaint(new GradientPaint(0, 0, colors.pastSelectedTop, 0, height, colors.pastSelectedBottom));
-      }
-      else {
-        graphics2D.setPaint(new GradientPaint(0, 0, colors.pastBackgroundTop, 0, height, colors.pastBackgroundBottom));
-      }
+
+    if (selected) {
+      graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedMonthTop, 0, height, colors.selectedMonthBottom));
     }
-    else if (timeService.getCurrentMonthId() < month.get(Month.ID)) {
-      if (selected) {
-        graphics2D.setPaint(new GradientPaint(0, 0, colors.futureSelectedTop, 0, height, colors.futureSelectedBottom));
-      }
-      else {
-        graphics2D.setPaint(new GradientPaint(0, 0, colors.futureBackgroundTop, 0, height, colors.futureBackgroundBottom));
-      }
+    else if (timeService.getCurrentMonthId() != month.get(Month.ID)) {
+      graphics2D.setPaint(new GradientPaint(0, 0, colors.monthTop, 0, height, colors.monthBottom));
     }
     else if (timeService.getCurrentMonthId() == month.get(Month.ID)) {
-      if (selected) {
-        graphics2D.setPaint(new GradientPaint(0, 0, colors.currentSelectedTop, 0, height, colors.currentSelectedBottom));
-      }
-      else {
-        graphics2D.setPaint(new GradientPaint(0, 0, colors.currentBackgroundTop, 0, height, colors.currentBackgroundBottom));
-      }
+      graphics2D.setPaint(new GradientPaint(0, 0, colors.currentBackgroundTop, 0, height, colors.currentBackgroundBottom));
     }
     graphics2D.fillRect(0, 0, width, height);
 
@@ -87,8 +73,8 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
 
     MonthFontMetricInfo.Size nearest = monthSize.getSize(monthRank);
     graphics2D.setFont(colors.getMonthFont());
-    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, getHeight() - 5,
-                           nearest.getName(), colors);
+    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, getHeight() - 5, nearest.getName(),
+                           colors.getMonthTextColor(this.month.get(Month.ID), timeService.getCurrentMonthId()), colors.textShadow);
 
     try {
       transformationAdapter.save();
@@ -97,9 +83,14 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
       double balance = balancesProvider.getBalance(this.month.get(Month.ID));
       double currentLevel = balancesProvider.getCurrentLevel(this.month.get(Month.ID));
       double diff = balance - currentLevel;
+
+      graphics2D.setPaint(selected ? colors.selectedMonthBottom : colors.yearBackground);
+      graphics2D.fillRect(0, 0, width, heightGraph);
+
       Color color = colors.getAmountColor(diff);
       graphics2D.setPaint(color);
-      graphics2D.fillRect(0, 0, width, heightGraph);
+      int barWidth = width / 4;
+      graphics2D.fillRect((width - barWidth) / 2, 0, barWidth, heightGraph);
     }
     finally {
       transformationAdapter.restore();

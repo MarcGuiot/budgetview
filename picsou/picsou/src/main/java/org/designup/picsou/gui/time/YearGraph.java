@@ -82,18 +82,13 @@ public class YearGraph extends DefaultCompositeComponent {
       transformationAdapter.translate(0, yearCellHeight);
       if (selected) {
         Paint paint = graphics2D.getPaint();
-        graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedTop, 0, HEIGHT, colors.selectedBottom));
+        graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedMonthTop, 0, HEIGHT, colors.selectedMonthBottom));
         graphics2D.fillRect(0, monthHeight + BALANCE_HEIGHT, monthDim, HEIGHT);
         graphics2D.setPaint(paint);
       }
       else {
         Paint paint = graphics2D.getPaint();
-        if (year % 2 == 0) {
-          graphics2D.setPaint(new GradientPaint(0, 0, colors.yearBackgroundEvenTop, 0, HEIGHT, colors.yearBackgroundEvenBottom));
-        }
-        else {
-          graphics2D.setPaint(new GradientPaint(0, 0, colors.yearBackgroundOddTop, 0, HEIGHT, colors.yearBackgroundOddBottom));
-        }
+        graphics2D.setPaint(colors.yearBackground);
         graphics2D.fillRect(0, monthHeight + BALANCE_HEIGHT, monthDim, HEIGHT);
         graphics2D.setPaint(paint);
       }
@@ -118,12 +113,14 @@ public class YearGraph extends DefaultCompositeComponent {
     }
     if (monthDim < yearWidth || intersection.getWidth() < yearWidth) {
       if (intersection.getWidth() > shortYearWidth + 1) {
-        TimeGraph.drawStringIn(graphics2D, startX, yearCellHeight - 3, shortYearText, colors);
+        TimeGraph.drawStringIn(graphics2D, startX, yearCellHeight - 3, shortYearText,
+                               colors.yearText, colors.textShadow);
       }
     }
     else {
       TimeGraph.drawStringIn(graphics2D, startX + (int)((intersection.getWidth() - yearWidth) / 2),
-                             yearCellHeight - 3, yearText, colors);
+                             yearCellHeight - 3, yearText,
+                             colors.yearText, colors.textShadow);
     }
     return monthDim;
   }
