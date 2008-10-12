@@ -9,7 +9,6 @@
 
 - balancesummary : "montant estime au 31/10/2008"
 
-
 - Gestion des licences : desactiver import + message jours restants
 
 - Sortir le contenu des mails dans le lang_fr.properties
@@ -30,10 +29,6 @@
                REGIS
 ====================================
 
-- tooltips monthSummaryView / balance
-
-- BudgetView : afficher balance + solde fin de mois
-
 - pas bien vu le message dans CategorizationView : le mettre dans un bloc ?
 
 - Creation + Edition de compte
@@ -43,6 +38,8 @@
 ====================================
                RESTE
 ====================================
+
+- BudgetView : quand on clique sur une serie, aucun moyen pour la supprimer a partir de la fenetre qui apparait 
 
 - Creation d'une serie OperationsSpeciales : selectionner le mois en cours dans la table
 
