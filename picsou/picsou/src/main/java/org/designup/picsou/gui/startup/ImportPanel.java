@@ -25,7 +25,8 @@ import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.*;
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import static org.globsframework.gui.views.utils.LabelCustomizers.fontSize;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
@@ -80,7 +81,6 @@ public class ImportPanel {
   private boolean completed = false;
   private OpenRequestManager openRequestManager;
   private Glob defaultAccount;
-  private Window owner;
   private Set<Integer> importKeys = new HashSet<Integer>();
   private JPanel mainPanel;
   private JPanel panelStep1;
@@ -94,7 +94,6 @@ public class ImportPanel {
                      final Window owner, final GlobRepository repository, Directory directory, boolean usePreferedPath) {
 
     this.defaultAccount = defaultAccount;
-    this.owner = owner;
     this.repository = repository;
     this.directory = directory;
     this.usePreferedPath = usePreferedPath;
@@ -683,7 +682,7 @@ public class ImportPanel {
           path = new File(directory);
         }
       }
-      File[] files = queryFile(owner.getOwner(), path);
+      File[] files = queryFile(dialog, path);
       if (files != null) {
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < files.length; i++) {

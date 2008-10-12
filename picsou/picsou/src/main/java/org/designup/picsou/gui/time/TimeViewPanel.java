@@ -129,6 +129,9 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
 
   public double getBalance(int monthId) {
     Glob balance = repository.find(Key.create(BalanceStat.TYPE, monthId));
+    if (balance == null) {
+      return 0.;
+    }
     return balance.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
   }
 
