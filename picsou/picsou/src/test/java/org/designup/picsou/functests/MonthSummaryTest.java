@@ -102,8 +102,9 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     monthSummary
-      .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 23 + 200), false)
+      .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 23 + 200))
       .checkBalance(1500 - (29.9 + 1500 + 60 + 20 + 10 + 23 + 200))
+      .checkBalanceGraph(0.81, 1)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(80)
@@ -151,12 +152,14 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     views.selectHome();
 
     monthSummary
-      .total(1500, (29.9 + 1500 + 60 + 20 + 10), false)
+      .total(1500, (29.9 + 1500 + 60 + 20 + 10))
       .checkBalance(1500 - (29.9 + 1500 + 60 + 20 + 10))
+      .checkBalanceGraph(0.92, 1)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(80)
-      .checkOccasional(10);
+      .checkOccasional(10)
+      .checkNoUncategorized();
 
 
     balanceSummary
@@ -173,7 +176,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     monthSummary
-      .total(0, (1500 + 29.90), false)
+      .total(1500, (29.9 + 1500 + 60 + 20 + 10))
       .checkIncome(0)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(0)
@@ -190,7 +193,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/07", "2008/08");
     monthSummary
-      .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 1500 + 29.90), false)
+      .total(1500 + 1500, (29.9 + 1500 + 60 + 20 + 10) + (29.9 + 1500 + 60 + 20 + 10))
       .checkIncome(1500)
       .checkRecurring(1500 + 29.90 + 1500 + 29.90)
       .checkEnvelope(80)
@@ -226,7 +229,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     monthSummary
-      .total(1000, 10, true)
       .checkBalance(990)
       .checkIncome(0, 0)
       .checkRecurring(0)
@@ -247,7 +249,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     monthSummary
-      .total(1000, 10, true)
       .checkIncome(0)
       .checkRecurring(0)
       .checkEnvelope(0)
@@ -266,7 +267,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     monthSummary
-      .total(1000, 10, true)
       .checkIncome(1000)
       .checkRecurring(0)
       .checkEnvelope(0)

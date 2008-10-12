@@ -13,6 +13,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
@@ -63,22 +64,20 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     amountSummaryLabel = builder.add("amountSummaryLabel", new JLabel());
     total = builder.add("totalLabel", new JLabel());
     balance = builder.add("balanceLabel", new JLabel());
-    builder.addLabel("incomeLabel", BalanceStat.TYPE,
-                     GlobListStringifiers.sum(decimalFormat, BalanceStat.INCOME_PLANNED));
-    builder.addLabel("fixedLabel", BalanceStat.TYPE,
-                     GlobListStringifiers.sum(decimalFormat, BalanceStat.RECURRING_PLANNED));
-    builder.addLabel("savingsLabel", BalanceStat.TYPE,
-                     GlobListStringifiers.sum(decimalFormat, BalanceStat.SAVINGS_PLANNED));
-    builder.addLabel("specialLabel", BalanceStat.TYPE,
-                     GlobListStringifiers.sum(decimalFormat, BalanceStat.SPECIAL_PLANNED));
-    builder.addLabel("envelopeLabel", BalanceStat.TYPE,
-                     GlobListStringifiers.sum(decimalFormat, BalanceStat.ENVELOPES_PLANNED));
-    builder.addLabel("occasionalLabel", BalanceStat.TYPE,
-                     GlobListStringifiers.sum(decimalFormat, BalanceStat.OCCASIONAL_PLANNED));
+    addLabel(builder, "incomeLabel", BalanceStat.INCOME_REMAINING);
+    addLabel(builder, "fixedLabel", BalanceStat.RECURRING_REMAINING);
+    addLabel(builder, "savingsLabel", BalanceStat.SAVINGS_REMAINING);
+    addLabel(builder, "specialLabel", BalanceStat.SPECIAL_REMAINING);
+    addLabel(builder, "envelopeLabel", BalanceStat.ENVELOPES_REMAINING);
+    addLabel(builder, "occasionalLabel", BalanceStat.OCCASIONAL_REMAINING);
     contentPanel = builder.add("content", new JPanel());
     contentPanel.setVisible(false);
 
     parentBuilder.add("balanceSummaryView", builder);
+  }
+
+  private void addLabel(GlobsPanelBuilder builder, String name, DoubleField field) {
+    builder.addLabel(name, BalanceStat.TYPE, GlobListStringifiers.sum(decimalFormat, field));
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -128,12 +127,12 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     balance.setText(label);
 
     for (Glob balance : balanceStats) {
-      amount += balance.get(BalanceStat.ENVELOPES_PLANNED) +
-                balance.get(BalanceStat.INCOME_PLANNED) +
-                balance.get(BalanceStat.OCCASIONAL_PLANNED) +
-                balance.get(BalanceStat.RECURRING_PLANNED) +
-                balance.get(BalanceStat.SAVINGS_PLANNED) +
-                balance.get(BalanceStat.SPECIAL_PLANNED);
+      amount += balance.get(BalanceStat.ENVELOPES_REMAINING) +
+                balance.get(BalanceStat.INCOME_REMAINING) +
+                balance.get(BalanceStat.OCCASIONAL_REMAINING) +
+                balance.get(BalanceStat.RECURRING_REMAINING) +
+                balance.get(BalanceStat.SAVINGS_REMAINING) +
+                balance.get(BalanceStat.SPECIAL_REMAINING);
     }
 
     total.setText(PicsouDescriptionService.toString(amount));

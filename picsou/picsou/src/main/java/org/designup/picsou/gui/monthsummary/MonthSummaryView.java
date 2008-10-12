@@ -78,8 +78,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     builder.addLabel("balanceAmount", BalanceStat.TYPE,
                      GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT,
                                               BalanceStat.MONTH_BALANCE));
-    builder.add("totalBalance",
-                new BalanceGraph(BalanceStat.TYPE, BalanceStat.INCOME, BalanceStat.EXPENSE, directory));
+    builder.add("totalBalance", new BalanceGraph(repository, directory));
 
     cards = builder.addCardHandler("cards");
 

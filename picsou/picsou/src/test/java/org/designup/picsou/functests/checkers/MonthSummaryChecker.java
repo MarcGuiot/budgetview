@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.Button;
@@ -8,8 +9,7 @@ import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.and;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -137,18 +137,22 @@ public class MonthSummaryChecker extends DataChecker {
     Assert.assertEquals(planned, gauge.getTargetValue(), 0.01);
   }
 
-  public MonthSummaryChecker total(double received, double spent, boolean receivedGreaterThanExpenses) {
-//    assertThat(getPanel().getTextBox("totalSpentAmount").textEquals(MonthSummaryChecker.this.toString(spent)));
-//    assertThat(getPanel().getTextBox("totalReceivedAmount").textEquals(MonthSummaryChecker.this.toString(received)));
-//    BalanceGraph balanceGraph = (BalanceGraph)getPanel().getSwingComponents(BalanceGraph.class)[0];
-//    if (receivedGreaterThanExpenses) {
-//      Assert.assertEquals(1.0, balanceGraph.getReceivedPercent());
-//      Assert.assertEquals(spent / received, balanceGraph.getSpentPercent(), 0.1);
-//    }
-//    else {
-//      Assert.assertEquals(received / spent, balanceGraph.getReceivedPercent(), 0.1);
-//      Assert.assertEquals(1.0, balanceGraph.getSpentPercent());
-//    }
+  public MonthSummaryChecker total(double received, double spent) {
+    checkBalance(received - spent);
+    if (received > spent) {
+      checkBalanceGraph(1, spent / received);
+    }
+    else {
+      checkBalanceGraph(received / spent, 1);
+    }
+    return this;
+  }
+
+  public MonthSummaryChecker checkBalanceGraph(double incomePercent, double expensesPercent) {
+    BalanceGraph graph = getPanel().findSwingComponent(BalanceGraph.class);
+    String actual = "Actual: " + graph.getIncomePercent() + " / " + graph.getExpensesPercent();
+    Assert.assertEquals(actual, incomePercent, graph.getIncomePercent(), 0.01);
+    Assert.assertEquals(actual, expensesPercent, graph.getExpensesPercent(), 0.01);
     return this;
   }
 

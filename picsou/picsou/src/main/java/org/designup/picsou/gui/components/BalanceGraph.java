@@ -1,15 +1,18 @@
 package org.designup.picsou.gui.components;
 
+import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
 
 public class BalanceGraph extends JPanel implements GlobSelectionListener {
   private Color receivedColorTop = Color.GREEN.darker();
@@ -17,37 +20,46 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
   private Color spentColorTop = Color.RED.darker();
   private Color spentColorBottom = Color.RED.brighter();
   private Color borderColor = Color.GRAY;
-  private GlobType type;
-  private DoubleField receivedField;
-  private DoubleField spentField;
-  private double receivedPercent = 0.0;
-  private double spentPercent = 0.0;
+  private double incomePercent = 0.0;
+  private double expensesPercent = 0.0;
+  private GlobRepository repository;
+  private Directory directory;
 
-  public BalanceGraph(GlobType type, DoubleField receivedField, DoubleField spentField, Directory directory) {
-    this.type = type;
-    this.receivedField = receivedField;
-    this.spentField = spentField;
+  public BalanceGraph(GlobRepository repository, Directory directory) {
+    this.repository = repository;
+    this.directory = directory;
     setOpaque(false);
-    directory.get(SelectionService.class).addListener(this, type);
+    directory.get(SelectionService.class).addListener(this, Month.TYPE);
   }
 
   public void selectionUpdated(GlobSelection selection) {
+
+    Set<Integer> monthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
+
     double received = 0;
     double spent = 0;
-    for (Glob glob : selection.getAll(type)) {
-      received += Math.abs(glob.get(receivedField));
-      spent += Math.abs(glob.get(spentField));
+    for (Glob stat : repository.getAll(BalanceStat.TYPE, GlobMatchers.fieldIn(BalanceStat.MONTH_ID, monthIds))) {
+      received += stat.get(BalanceStat.INCOME) + stat.get(BalanceStat.INCOME_REMAINING);
+      spent += stat.get(BalanceStat.EXPENSE) + stat.get(BalanceStat.EXPENSE_REMAINING);
+    }
+
+    received = Math.abs(received);
+    if (spent < 0)
+    spent = Math.abs(spent);
+    else {
+      spent = 0;
+      received += Math.abs(spent);
     }
 
     double max = Math.max(received, spent);
     if (max == 0) {
-      receivedPercent = 0;
-      spentPercent = 0;
+      incomePercent = 0;
+      expensesPercent = 0;
       return;
     }
 
-    receivedPercent = received / max;
-    spentPercent = spent / max;
+    incomePercent = received / max;
+    expensesPercent = spent / max;
 
     repaint();
   }
@@ -55,16 +67,16 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
   public void paint(Graphics g) {
     Graphics2D g2 = (Graphics2D)g;
 
-    if ((receivedPercent == 0) && (spentPercent == 0)) {
+    if ((incomePercent == 0) && (expensesPercent == 0)) {
       return;
     }
 
     int h = getHeight() - 1;
     int w = getWidth() - 1;
-    
+
     int middle = w / 2;
-    int incomeHeight = (int)(h * receivedPercent);
-    int spentHeight = (int)(h * spentPercent);
+    int incomeHeight = (int)(h * incomePercent);
+    int spentHeight = (int)(h * expensesPercent);
 
     g2.setPaint(new GradientPaint(0, 0, receivedColorTop,
                                   0, incomeHeight, receivedColorBottom));
@@ -100,11 +112,11 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
     this.borderColor = borderColor;
   }
 
-  public double getReceivedPercent() {
-    return receivedPercent;
+  public double getIncomePercent() {
+    return incomePercent;
   }
 
-  public double getSpentPercent() {
-    return spentPercent;
+  public double getExpensesPercent() {
+    return expensesPercent;
   }
 }

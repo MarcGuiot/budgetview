@@ -12,12 +12,12 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.utils.Dates;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class PicsouSampleGenerator {
@@ -25,10 +25,12 @@ public class PicsouSampleGenerator {
   private static final int BANK_ID = 30066;
   private static final int BRANCH_ID = 10674;
 
+  private static final String UPDATE_DATE = "2008/10/31";
+
   public static void main(String[] args) throws Exception {
     PicsouSampleGenerator generator = new PicsouSampleGenerator();
-    generator.run(200807, 200809);
-    generator.write("tmp/sample_3months.ofx");
+    generator.run(200809, 200810);
+    generator.write("tmp/sample_2months.ofx");
   }
 
   private GlobRepository repository;
@@ -47,7 +49,7 @@ public class PicsouSampleGenerator {
 
     repository.create(Bank.TYPE, value(Bank.ID, BANK_ID));
 
-    setAccount("23412342234", false);
+    setAccount("23412342234", false, UPDATE_DATE);
 
     add("WORLDCO SLAVE COMPENSATION 346Z45GF346", once(), between(3500.0, 4500.0), dayBetween(1, 5));
     add("YETANOTHERCO EMPLOY. 233 2A34F2", once(), between(1500.0, 2500.0), dayBetween(1, 8));
@@ -73,7 +75,7 @@ public class PicsouSampleGenerator {
     add("PRLV TRESOR PUBLIC 92 IMPOT MENM", once(), AmountGenerator.value(-334.7), dayBetween(15, 20));
     add("ING DIRECT 2134 F324 GDE165", once(), AmountGenerator.value(-200.0), dayBetween(10, 13));
 
-    setAccount("1234234534564567", true);
+    setAccount("1234234534564567", true, UPDATE_DATE);
     add("PHARMADISCOUNT SAINT LOUIS", upTo(5), between(-8.0, -60.0), any());
     add("MONOPRIX SCEAUX", upTo(6), between(-15.0, -150.0), any());
     add("TOYS'R'US VELIZY 3802/", sometimes(), between(-15.0, -60.0), any());
@@ -126,14 +128,14 @@ public class PicsouSampleGenerator {
     writer.close();
   }
 
-  private void setAccount(String accountNumber, boolean isCardAccount) {
+  private void setAccount(String accountNumber, boolean isCardAccount, final String updateDate) {
     accountId = repository.create(Account.TYPE,
                                   value(Account.NAME, accountNumber),
                                   value(Account.BANK_ENTITY, BANK_ID),
                                   value(Account.BRANCH_ID, BRANCH_ID),
                                   value(Account.NUMBER, accountNumber),
                                   value(Account.IS_CARD_ACCOUNT, isCardAccount),
-                                  value(Account.BALANCE_DATE, new Date()),
+                                  value(Account.BALANCE_DATE, Dates.parse(updateDate)),
                                   value(Account.BALANCE, -1050.12))
       .get(Account.ID);
   }

@@ -21,8 +21,7 @@
 
           <label icon="fourmics_icon_128.png" fill="none" anchor="center" marginBottom="20"/>
 
-          <textArea styleClass="multiLineLabel" text="$login.intro"
-                    marginBottom="15"/>
+          <textArea styleClass="multiLineLabel" text="$login.intro" marginBottom="15"/>
 
           <grid defaultMarginBottom="5">
             <label text="$login.id" gridPos="(0,0)" styleClass="formLabel"/>
@@ -30,7 +29,6 @@
 
             <label text="$login.password" gridPos="(0,1)" styleClass="formLabel"/>
             <component ref="password" gridPos="(1,1)"/>
-
           </grid>
 
           <checkBox ref="createAccountCheckBox" gridPos="(0,2,2,1)"

@@ -34,46 +34,51 @@ public class BalanceStat {
   public static DoubleField INCOME;
 
   @DefaultDouble(0.0)
-  public static DoubleField INCOME_PLANNED;
+  public static DoubleField INCOME_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField EXPENSE;
 
   @DefaultDouble(0.0)
-  public static DoubleField EXPENSE_PLANNED;
+  public static DoubleField EXPENSE_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField RECURRING;
 
   @DefaultDouble(0.0)
-  public static DoubleField RECURRING_PLANNED;
+  public static DoubleField RECURRING_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField ENVELOPES;
 
   @DefaultDouble(0.0)
-  public static DoubleField ENVELOPES_PLANNED;
+  public static DoubleField ENVELOPES_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField OCCASIONAL;
 
   @DefaultDouble(0.0)
-  public static DoubleField OCCASIONAL_PLANNED;
+  public static DoubleField OCCASIONAL_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField SPECIAL;
 
   @DefaultDouble(0.0)
-  public static DoubleField SPECIAL_PLANNED;
+  public static DoubleField SPECIAL_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField SAVINGS;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_PLANNED;
+  public static DoubleField SAVINGS_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField UNCATEGORIZED;
+
+  public static DoubleField[] INCOME_FIELDS = {INCOME, INCOME_REMAINING};
+
+  public static DoubleField[] EXPENSE_FIELDS = {ENVELOPES, ENVELOPES_REMAINING, OCCASIONAL, OCCASIONAL_REMAINING,
+                                                SPECIAL, SPECIAL_REMAINING, SAVINGS, SAVINGS_REMAINING, UNCATEGORIZED};
 
   static {
     GlobTypeLoader.init(BalanceStat.class);
