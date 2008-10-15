@@ -106,7 +106,7 @@
             </column>
 
             <column>
-              <panel ref="balanceSummaryView" minimumSize="(250,200)" preferredSize="(300,350)"/>
+              <panel ref="balanceSummaryView" minimumSize="(250,200)" preferredSize="(300,380)"/>
               <filler fill="vertical"/>
             </column>
           </horizontalSplit>

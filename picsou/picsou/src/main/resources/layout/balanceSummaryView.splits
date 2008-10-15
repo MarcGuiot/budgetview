@@ -66,6 +66,11 @@
             <filler fill="vertical"/>
           </column>
         </panel>
+
+        <row>
+          <filler fill="horizontal"/>
+          <button action="accountBalanceLimit" styleClass="hyperlink"/>
+        </row>
       </column>
     </panel>
 

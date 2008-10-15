@@ -70,8 +70,11 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     addLabel(builder, "specialLabel", BalanceStat.SPECIAL_REMAINING);
     addLabel(builder, "envelopeLabel", BalanceStat.ENVELOPES_REMAINING);
     addLabel(builder, "occasionalLabel", BalanceStat.OCCASIONAL_REMAINING);
+
     contentPanel = builder.add("content", new JPanel());
     contentPanel.setVisible(false);
+
+    builder.add("accountBalanceLimit", new AccountBalanceLimitAction(repository, directory));
 
     parentBuilder.add("balanceSummaryView", builder);
   }

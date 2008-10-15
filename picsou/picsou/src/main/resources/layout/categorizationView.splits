@@ -40,7 +40,10 @@
         <panel styleClass="block">
           <column styleClass="innerBlock">
             <panel ref="gaugePanel" opaque="false"/>
-            <comboBox ref="transactionFilterCombo"/>
+            <row marginBottom="5">
+              <label text="$categorization.filter.label" styleClass="formLabel" foreground="gauge.categorization.label"/>
+              <comboBox ref="transactionFilterCombo"/>
+            </row>
             <scrollPane viewportBackground="#FFFFFF" marginBottom="0">
               <table ref="transactionTable" rowHeight="20"/>
             </scrollPane>

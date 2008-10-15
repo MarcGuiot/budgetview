@@ -1,0 +1,22 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" preferredSize="(400,180)">
+    <column styleClass="innerDialog">
+
+      <label text="$accountLimitDialog.title" styleClass="title"/>
+
+      <htmlEditorPane text="$accountLimitDialog.message"/>
+
+      <row marginTop="10">
+        <label text="$accountLimitDialog.editor"  foreground="gauge.categorization.label" styleClass="formLabel"/>
+        <textField ref="editor"/>
+      </row>
+
+      <filler fill="vertical" weightY="20"/>
+
+    </column>
+  </panel>
+
+</splits>

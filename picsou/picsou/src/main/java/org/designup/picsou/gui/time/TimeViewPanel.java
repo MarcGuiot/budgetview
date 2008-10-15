@@ -5,6 +5,7 @@ import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.time.selectable.*;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.model.AccountBalanceLimit;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -127,22 +128,21 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     this.visibilityListener = visibilityListener;
   }
 
-  public double getBalance(int monthId) {
+  public double getAccountBalance(int monthId) {
     Glob balance = repository.find(Key.create(BalanceStat.TYPE, monthId));
     if (balance == null) {
-      return 0.;
+      return 0.0;
     }
     return balance.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
   }
 
-  public double getCurrentLevel(int monthId) {
-    return 0.;
+  public double getAccountBalanceLimit(int monthId) {
+    return AccountBalanceLimit.getLimit(repository);
   }
 
   public interface VisibilityListener {
     void change(Selectable first, Selectable last);
   }
-
 
   public void mouseClicked(MouseEvent e) {
   }
@@ -271,7 +271,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       repaint();
       return;
     }
-    if (changeSet.containsChanges(BalanceStat.TYPE)) {
+    if (changeSet.containsChanges(BalanceStat.TYPE) || changeSet.containsChanges(AccountBalanceLimit.TYPE)) {
       repaint();
     }
   }

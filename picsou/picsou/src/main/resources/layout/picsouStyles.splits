@@ -32,7 +32,7 @@
 
     <style selector="label.formLabel"
            font="-,plain,12" foreground="import.form.label"
-           anchor="east" marginRight="10"/>
+           anchor="east" marginRight="10" weightX="0"/>
 
     <style selector="label.formLabelTop"
            font="-,plain,12" foreground="import.form.label"

@@ -161,7 +161,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkOccasional(10)
       .checkNoUncategorized();
 
-
     balanceSummary
       .checkMessage("End of month balance")
       .checkTotal(1529.90)
@@ -333,5 +332,24 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salary", MasterCategory.INCOME)
       .check();
+  }
+
+  public void testEditingTheAccountBalanceLimit() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "000123", 100, "2008/08/26")
+      .addTransaction("2008/08/26", 1000, "WorldCo")
+      .addTransaction("2008/08/26", -800, "FNAC")
+      .load();
+
+    views.selectCategorization();
+    categorization.setIncome("WorldCo", "Salary", true);
+
+    views.selectHome();
+    balanceSummary.checkLimit(0);
+    balanceSummary.setLimit(100, true);
+    balanceSummary.checkLimit(100);
+
+    balanceSummary.setLimit(200, false);
+    balanceSummary.checkLimit(200);
   }
 }

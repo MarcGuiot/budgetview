@@ -1,10 +1,10 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.Panel;
-import org.uispec4j.TextBox;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import org.uispec4j.interception.WindowHandler;
+import org.uispec4j.interception.WindowInterceptor;
 
 public class BalanceSummaryChecker extends DataChecker {
   private Window window;
@@ -67,7 +67,36 @@ public class BalanceSummaryChecker extends DataChecker {
 
   private BalanceSummaryChecker check(double amount, String name) {
     TextBox textBox = getPanel().getTextBox(name);
-    assertThat(textBox.textEquals(BalanceSummaryChecker.this.toString(amount)));
+    assertThat(textBox.textEquals(toString(amount)));
     return this;
+  }
+
+  public void checkLimit(double amount) {
+    Button button = getPanel().getButton("accountBalanceLimit");
+    assertThat(button.textEquals("Limit: " + toString(amount)));
+  }
+
+  public void setLimit(final double amount, final boolean validateThroughTextField) {
+    WindowInterceptor.init(getPanel().getButton("accountBalanceLimit").triggerClick())
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          final TextBox textField = window.getInputTextBox("editor");
+          final String text = BalanceSummaryChecker.this.toString(amount);
+
+          if (validateThroughTextField) {
+            return new Trigger() {
+              public void run() throws Exception {
+                textField.setText(text);
+              }
+            };
+          }
+          else {
+            textField.clear();
+            textField.appendText(text);
+            return window.getButton("OK").triggerClick();
+          }
+        }
+      })
+      .run();
   }
 }

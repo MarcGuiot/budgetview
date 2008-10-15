@@ -21,7 +21,7 @@ public class YearGraph extends DefaultCompositeComponent {
   private String shortYearText;
   private MonthGraph[] monthsGraph;
   public static final int HEIGHT = 6;
-  public static final int ENLARGE = 4;
+  public static final int VERTICAL_MARGIN = 8;
   private static final int BALANCE_HEIGHT = 4;
   private boolean isFirstYear;
   private boolean isLastYear;
@@ -48,7 +48,7 @@ public class YearGraph extends DefaultCompositeComponent {
   }
 
   public void init(MonthFontMetricInfo monthFontMetricInfo, final FontMetrics yearFontMetrics) {
-    yearCellHeight = yearFontMetrics.getHeight() + ENLARGE;
+    yearCellHeight = yearFontMetrics.getHeight() + VERTICAL_MARGIN;
     yearText = Integer.toString(year);
     yearWidth = yearFontMetrics.stringWidth(yearText);
     shortYearText = yearText.substring(2);
@@ -113,13 +113,13 @@ public class YearGraph extends DefaultCompositeComponent {
     }
     if (monthDim < yearWidth || intersection.getWidth() < yearWidth) {
       if (intersection.getWidth() > shortYearWidth + 1) {
-        TimeGraph.drawStringIn(graphics2D, startX, yearCellHeight - 3, shortYearText,
+        TimeGraph.drawStringIn(graphics2D, startX, yearCellHeight - 5, shortYearText,
                                colors.yearText, colors.textShadow);
       }
     }
     else {
       TimeGraph.drawStringIn(graphics2D, startX + (int)((intersection.getWidth() - yearWidth) / 2),
-                             yearCellHeight - 3, yearText,
+                             yearCellHeight - 5, yearText,
                              colors.yearText, colors.textShadow);
     }
     return monthDim;

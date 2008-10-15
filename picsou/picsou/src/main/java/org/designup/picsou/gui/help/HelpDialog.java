@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.help;
 
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.CloseAction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -46,8 +47,8 @@ public class HelpDialog {
 
     JPanel panel = builder.load();
 
-    dialog = PicsouDialog.createWithButton(owner, false, panel, new CloseAction(),
-                                           directory);
+    dialog = PicsouDialog.create(owner, false, directory);
+    dialog.setPanelAndButton(panel, new CloseAction(dialog));
     dialog.pack();
   }
 
@@ -106,15 +107,4 @@ public class HelpDialog {
     backPageAction.setEnabled(!backPages.isEmpty());
     forwardPageAction.setEnabled(!forwardPages.isEmpty());
   }
-
-  private class CloseAction extends AbstractAction {
-    public CloseAction() {
-      super(Lang.get("close"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      dialog.setVisible(false);
-    }
-  }
-
 }

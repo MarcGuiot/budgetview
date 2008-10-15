@@ -79,12 +79,7 @@ public class BalanceEditionDialog {
       initialMessage.setVisible(false);
     }
 
-    dialog.addWindowListener(new WindowAdapter() {
-      public void windowOpened(WindowEvent e) {
-        editor.selectAll();
-        editor.requestFocusInWindow();
-      }
-    });
+    dialog.setAutoFocusOnOpen(editor);
 
     dialog.pack();
   }

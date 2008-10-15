@@ -80,13 +80,15 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
       transformationAdapter.save();
       transformationAdapter.translate(0, topGraph);
       clickableAreaButton = TimeGraph.getClickableArea(transformationAdapter.getTransform(), width, heightGraph);
-      double balance = balancesProvider.getBalance(this.month.get(Month.ID));
-      double currentLevel = balancesProvider.getCurrentLevel(this.month.get(Month.ID));
-      double diff = balance - currentLevel;
 
       graphics2D.setPaint(selected ? colors.selectedMonthBottom : colors.yearBackground);
       graphics2D.fillRect(0, 0, width, heightGraph);
 
+      double accountBalance = balancesProvider.getAccountBalance(this.month.get(Month.ID));
+      double accountBalanceLimit = balancesProvider.getAccountBalanceLimit(this.month.get(Month.ID));
+
+      double diff = accountBalance - accountBalanceLimit;
+      
       Color color = colors.getAmountColor(diff);
       graphics2D.setPaint(color);
       int barWidth = width / 4;

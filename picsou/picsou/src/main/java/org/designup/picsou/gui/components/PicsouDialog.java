@@ -201,6 +201,19 @@ public class PicsouDialog extends JDialog {
     this.openRequestIsManaged = openRequestIsManaged;
   }
 
+  public void showCentered() {
+    GuiUtils.showCentered(this);
+  }
+
+  public void setAutoFocusOnOpen(final JTextField editor) {
+    addWindowListener(new WindowAdapter() {
+      public void windowOpened(WindowEvent e) {
+        editor.selectAll();
+        editor.requestFocusInWindow();
+      }
+    });
+  }
+
   private class CloseAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       if (closeAction != null) {

@@ -55,19 +55,19 @@ public class AmountColors implements ColorChangeListener {
     else if (diff > 50) {
       color = balancePlus05;
     }
-    else if (diff < 400) {
+    else if (diff < -400) {
       color = balanceMinus4;
     }
-    else if (diff < 300) {
+    else if (diff < -200) {
       color = balanceMinus3;
     }
-    else if (diff < 200) {
+    else if (diff < -100) {
       color = balanceMinus2;
     }
-    else if (diff < 100) {
+    else if (diff < -50) {
       color = balanceMinus1;
     }
-    else if (diff < 50) {
+    else if (diff < 0) {
       color = balanceMinus05;
     }
     return color;
