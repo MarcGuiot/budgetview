@@ -1,5 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.model.Month;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
@@ -48,6 +50,18 @@ public class BalanceSummaryChecker extends DataChecker {
     return check(amount, "envelopeLabel");
   }
 
+  public BalanceSummaryChecker checkFutureTotalLabel(int monthId) {
+    TextBox textBox = getPanel().getTextBox("amountSummaryLabel");
+    assertThat(textBox.textEquals("Estimated balance at " + PicsouDescriptionService.toString(Month.getLastDay(monthId))));
+    return this;
+  }
+
+  public BalanceSummaryChecker checkPastTotalLabel(int monthId) {
+    TextBox textBox = getPanel().getTextBox("amountSummaryLabel");
+    assertThat(textBox.textEquals("Balance at " + PicsouDescriptionService.toString(Month.getLastDay(monthId))));
+    return this;
+  }
+
   public BalanceSummaryChecker checkTotal(double amount) {
     TextBox textBox = getPanel().getTextBox("totalLabel");
     assertThat(textBox.textEquals(toString(amount, true)));
@@ -57,11 +71,6 @@ public class BalanceSummaryChecker extends DataChecker {
   public BalanceSummaryChecker checkNoTotal() {
     TextBox textBox = getPanel().getTextBox("totalLabel");
     assertThat(textBox.textEquals(""));
-    return this;
-  }
-
-  public BalanceSummaryChecker checkMessage(String message) {
-    assertThat(getPanel().getTextBox("amountSummaryLabel").textEquals(message));
     return this;
   }
 

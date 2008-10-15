@@ -104,13 +104,18 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     if (currentMonths.last() < currentMonth.get(CurrentMonth.MONTH_ID)) {
       contentPanel.setVisible(false);
-      Double amount = balanceStats[balanceStats.length - 1].get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
+      Glob balanceStat = balanceStats[balanceStats.length - 1];
+      Double amount = balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
       total.setText(PicsouDescriptionService.toStringWithPlus(amount));
-      amountSummaryLabel.setText(Lang.get("balanceSummary.title.past"));
+      amountSummaryLabel.setText(Lang.get("balanceSummary.title.past",
+                                          PicsouDescriptionService.toString(
+                                            Month.getLastDay(balanceStat.get(BalanceStat.MONTH_ID)))));
       return;
     }
 
-    amountSummaryLabel.setText(Lang.get("balanceSummary.title.future"));
+    amountSummaryLabel.setText(Lang.get("balanceSummary.title.future",
+                                        PicsouDescriptionService.toString(
+                                          Month.getLastDay(balanceStats[balanceStats.length - 1].get(BalanceStat.MONTH_ID)))));
     Double amount;
     int firstBalanceIndex;
     for (firstBalanceIndex = 0; firstBalanceIndex < balanceStats.length; firstBalanceIndex++) {

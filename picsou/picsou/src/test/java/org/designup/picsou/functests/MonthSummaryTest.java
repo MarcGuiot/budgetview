@@ -163,7 +163,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
 
     balanceSummary
-      .checkMessage("End of month balance")
+      .checkPastTotalLabel(200807)
       .checkTotal(1529.90)
       .checkNothingShown();
 
@@ -183,7 +183,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkOccasional(0);
 
     balanceSummary.checkEnvelope(-80)
-      .checkMessage("Estimated end of month balance")
       .checkBalance(0.)
       .checkFixed(0)
       .checkEnvelope(-80)
@@ -198,7 +197,9 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkRecurring(1500 + 29.90 + 1500 + 29.90)
       .checkEnvelope(80)
       .checkOccasional(10);
-    balanceSummary.checkEnvelope(-80)
+    balanceSummary
+      .checkFutureTotalLabel(200808)
+      .checkEnvelope(-80)
       .checkBalance(0.)
       .checkFixed(0)
       .checkOccasional(-10)
@@ -207,7 +208,9 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkTotal(1410.);
 
     timeline.selectMonth("2008/09");
-    balanceSummary.checkEnvelope(-80)
+    balanceSummary
+      .checkFutureTotalLabel(200809)
+      .checkEnvelope(-80)
       .checkBalance(1410.)
       .checkFixed(-1529.90)
       .checkIncome(1500)

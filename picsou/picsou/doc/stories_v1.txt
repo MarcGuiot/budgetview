@@ -3,7 +3,7 @@
                MARC
 ====================================
 
-- balancesummary : "montant estime au 31/10/2008"
+- Gérer la monthSummaryView avec les transactions plannifiées.
 
 - Gestion des licences : desactiver import + message jours restants
 
