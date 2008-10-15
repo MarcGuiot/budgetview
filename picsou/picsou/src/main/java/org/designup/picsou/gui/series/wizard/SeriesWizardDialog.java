@@ -3,21 +3,21 @@ package org.designup.picsou.gui.series.wizard;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.series.ProfileTypeSeriesTrigger;
+import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -44,7 +44,7 @@ public class SeriesWizardDialog {
               SeriesStat.TYPE, SeriesBudget.TYPE)
         .get();
 
-    SeriesEditionDialog.addSeriesCreationTriggers(localRepository);
+    SeriesEditionDialog.addSeriesCreationTriggers(localRepository, ProfileTypeSeriesTrigger.NULL);
 
     this.directory = directory;
     this.model = new SeriesWizardModel(localRepository);
@@ -81,10 +81,10 @@ public class SeriesWizardDialog {
   }
 
   private void scrollToTop() {
-    scrollPane.getViewport().setViewPosition(new Point(0,0));
+    scrollPane.getViewport().setViewPosition(new Point(0, 0));
     scrollPane.getVerticalScrollBar().setValue(0);
-    scrollPane.getViewport().scrollRectToVisible(new Rectangle(1,1,1,1));
-    scrollPane.scrollRectToVisible(new Rectangle(1,1,1,1));
+    scrollPane.getViewport().scrollRectToVisible(new Rectangle(1, 1, 1, 1));
+    scrollPane.scrollRectToVisible(new Rectangle(1, 1, 1, 1));
   }
 
   public Window getDialog() {

@@ -1209,4 +1209,43 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testChangePeriodicitySelectCurrentMonth() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/28", -30., "EAU")
+      .addTransaction("2008/08/27", -20., "EAU")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRows("EAU");
+    categorization.selectEnvelopes().
+      createEnvelopeSeries().setName("Eau")
+      .setTwoMonths()
+      .checkMonthIsChecked(2, 4, 6, 8, 10, 12)
+      .checkMonthIsNotChecked(1, 3, 5, 7, 9, 11)
+      .setCategory(MasterCategory.HOUSE)
+      .validate();
+  }
+
+  public void testChangePeriodicityToPersonnalUseSelectedMonth() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/28", -30., "EAU")
+      .addTransaction("2008/08/27", -20., "EAU")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRows("EAU");
+    categorization.selectEnvelopes().
+      createEnvelopeSeries().setName("Eau")
+      .setCustom()
+      .checkMonthIsChecked(6, 8)
+      .checkMonthIsNotChecked(1, 2, 3, 4, 5, 7, 9, 10, 11, 12)
+      .setEveryMonth()
+      .checkMonthIsChecked(1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12)
+      .setCustom()
+      .checkMonthIsChecked(6, 8)
+      .setCategory(MasterCategory.HOUSE)
+      .validate();
+  }
 }
