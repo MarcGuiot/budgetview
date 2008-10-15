@@ -3,6 +3,7 @@ package org.designup.picsou.model;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
+import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.BooleanField;
@@ -36,6 +37,7 @@ public class SeriesBudget {
   @DefaultDouble(0.0)
   public static DoubleField OVERRUN_AMOUNT;
 
+  @DefaultInteger(1)
   public static IntegerField DAY;
 
   public static BooleanField ACTIVE;

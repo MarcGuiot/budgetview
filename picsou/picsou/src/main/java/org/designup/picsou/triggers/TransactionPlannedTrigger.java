@@ -84,13 +84,16 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           if (previousAmount != null && previousSeries != null) {
             Glob series = repository.find(Key.create(Series.TYPE, previousSeries));
             if (series != null) {
-              transfertToPlanned(series, previousMonth, -previousAmount,
-                                 currentMonth.get(CurrentMonth.MONTH_ID),
-                                 repository);
+              transfertAmount(series, -previousAmount,
+                              previousMonth, BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome(),
+                              currentMonth.get(CurrentMonth.MONTH_ID), repository);
             }
           }
           if (newAmount != null && newSeries != null) {
-            transfertFromPlanned(repository.get(Key.create(Series.TYPE, newSeries)), newMonth, newAmount, repository);
+            Glob series = repository.get(Key.create(Series.TYPE, newSeries));
+            transfertAmount(series, newAmount,
+                            newMonth, BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome(),
+                            currentMonth.get(CurrentMonth.MONTH_ID), repository);
           }
         }
       }
@@ -159,13 +162,18 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       Key plannedTransactionKeyToUpdate = plannedTransaction.get(0).getKey();
       Double currentAmount = repository.get(plannedTransactionKeyToUpdate).get(Transaction.AMOUNT);
       double newAmount = currentAmount - amount;
-      repository.update(plannedTransactionKeyToUpdate,
-                        FieldValue.value(Transaction.AMOUNT, newAmount));
+      if (newAmount > -10E-6 && newAmount < 10E-6) {
+        repository.delete(plannedTransactionKeyToUpdate);
+      }
+      else {
+        repository.update(plannedTransactionKeyToUpdate,
+                          FieldValue.value(Transaction.AMOUNT, newAmount));
+      }
     }
   }
 
-  public static void transfertFromPlanned(Glob series, Integer monthId,
-                                          Double amountToDeduce, GlobRepository repository) {
+  private static void transfertFromPlanned(Glob series, Integer monthId,
+                                           Double amountToDeduce, GlobRepository repository) {
     if (ProfileType.IRREGULAR.getId().equals(series.get(Series.PROFILE_TYPE))) {
       return;
     }

@@ -3,8 +3,6 @@
                MARC
 ====================================
 
-- monthSummary : forcer le "+" pour la balance
-
 - SED : changement de periodicite = se caler sur les donnees existantes
 
 - balancesummary : "montant estime au 31/10/2008"
@@ -15,7 +13,7 @@
 
 - Serialisation des strings : voir charset
 
-- Probleme de transaction plannifié a 0 : probleme d'arondie?
+- Probleme de transaction plannifié a 0. (Ajouter des tests si on rembourse un salaire)
 
 
 ====================================

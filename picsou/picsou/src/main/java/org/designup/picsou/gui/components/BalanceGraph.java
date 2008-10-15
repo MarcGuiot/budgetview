@@ -5,6 +5,9 @@ import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatchers;
@@ -29,13 +32,26 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
     this.repository = repository;
     this.directory = directory;
     setOpaque(false);
-    directory.get(SelectionService.class).addListener(this, Month.TYPE);
+    final SelectionService selectionService = directory.get(SelectionService.class);
+    selectionService.addListener(this, Month.TYPE);
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(BalanceStat.TYPE)) {
+          update(selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID));
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        update(selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID));
+      }
+    });
   }
 
   public void selectionUpdated(GlobSelection selection) {
+    update(selection.getAll(Month.TYPE).getValueSet(Month.ID));
+  }
 
-    Set<Integer> monthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
-
+  private void update(Set<Integer> monthIds) {
     double received = 0;
     double spent = 0;
     for (Glob stat : repository.getAll(BalanceStat.TYPE, GlobMatchers.fieldIn(BalanceStat.MONTH_ID, monthIds))) {
@@ -44,12 +60,7 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
     }
 
     received = Math.abs(received);
-    if (spent < 0)
     spent = Math.abs(spent);
-    else {
-      spent = 0;
-      received += Math.abs(spent);
-    }
 
     double max = Math.max(received, spent);
     if (max == 0) {

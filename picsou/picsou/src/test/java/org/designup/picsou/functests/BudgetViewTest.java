@@ -1,8 +1,8 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.BudgetViewChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.functests.checkers.BudgetViewChecker;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
@@ -45,12 +45,12 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.checkTitle("Recurring");
-    budgetView.recurring.checkTotalAmounts(84.0, 84.0);
+    budgetView.recurring.checkTotalAmounts(-84.0, -84.0);
     budgetView.recurring.checkSeries("Internet", -29.0, -29.0);
     budgetView.recurring.checkSeries("Electricity", -55.0, -55.0);
 
     budgetView.envelopes.checkTitle("Envelopes");
-    budgetView.envelopes.checkTotalAmounts(145.0, 145);
+    budgetView.envelopes.checkTotalAmounts(-145.0, -145);
     budgetView.envelopes.checkSeries("Groceries", -145.0, -145.0);
 
     budgetView.income.checkTitle("Income");
@@ -72,12 +72,12 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     budgetView.recurring.checkTitle("Recurring");
-    budgetView.recurring.checkTotalAmounts(0.0, 84.0);
+    budgetView.recurring.checkTotalAmounts(0.0, -84.0);
     budgetView.recurring.checkSeries("Internet", -0.0, -29.0);
     budgetView.recurring.checkSeries("Electricity", -0.0, -55.0);
 
     budgetView.envelopes.checkTitle("Envelopes");
-    budgetView.envelopes.checkTotalAmounts(0.0, 145);
+    budgetView.envelopes.checkTotalAmounts(0.0, -145);
     budgetView.envelopes.checkSeries("Groceries", -0.0, -145.0);
 
     budgetView.income.checkTitle("Income");
@@ -121,7 +121,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.specials.checkTitle("Special");
-    budgetView.specials.checkTotalAmounts(95.0, 95.0);
+    budgetView.specials.checkTotalAmounts(-95.0, -95.0);
     budgetView.specials.checkSeries("Anniversaire", -95.0, -95.0);
 
     views.selectCategorization();
@@ -144,7 +144,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.savings.checkTitle("Savings");
-    budgetView.savings.checkTotalAmounts(25.0, 25.0);
+    budgetView.savings.checkTotalAmounts(-25.0, -25.0);
     budgetView.savings.checkSeries("Epargne", -25.0, -25.0);
 
     views.selectCategorization();
@@ -178,11 +178,11 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.checkTitle("Recurring");
-    budgetView.recurring.checkTotalAmounts(29.0, 29.0);
+    budgetView.recurring.checkTotalAmounts(-29.0, -29.0);
     budgetView.recurring.checkSeries("Internet", -29.0, -29.0);
 
     budgetView.envelopes.checkTitle("Envelopes");
-    budgetView.envelopes.checkTotalAmounts(145.0, 145.);
+    budgetView.envelopes.checkTotalAmounts(-145.0, -145.);
     budgetView.envelopes.checkSeries("Groceries", -145.0, -145.0);
 
     budgetView.income.checkTitle("Income");
@@ -261,10 +261,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
 
-    budgetView.recurring.checkTotalAmounts(0.0, 29.0);
+    budgetView.recurring.checkTotalAmounts(0.0, -29.0);
     budgetView.recurring.checkSeries("Internet", 0.0, -29.0);
 
-    budgetView.envelopes.checkTotalAmounts(50.0, 95);
+    budgetView.envelopes.checkTotalAmounts(-50.0, -95);
     budgetView.envelopes.checkSeries("Groceries", -50.0, -95.0);
 
     budgetView.income.checkTotalAmounts(0.0, 3540.00);

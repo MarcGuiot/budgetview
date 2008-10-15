@@ -15,7 +15,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
   public void testNewIncomeSeries() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2008/06/30", -1129.90, "WorldCo/june")
+      .addTransaction("2008/06/30", 1129.90, "WorldCo/june")
       .load();
 
     views.selectCategorization();
@@ -34,7 +34,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries(0, "Prime");
     transactions.checkCategory(0, MasterCategory.INCOME);
     transactions.initContent()
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "WorldCo/june", "", -1129.90, "Prime", MasterCategory.INCOME)
+      .add("30/06/2008", TransactionType.VIREMENT, "WorldCo/june", "", 1129.90, "Prime", MasterCategory.INCOME)
       .check();
   }
 

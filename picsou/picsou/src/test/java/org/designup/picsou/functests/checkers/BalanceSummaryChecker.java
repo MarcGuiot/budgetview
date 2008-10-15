@@ -19,7 +19,9 @@ public class BalanceSummaryChecker extends DataChecker {
   }
 
   public BalanceSummaryChecker checkBalance(double amount) {
-    return check(amount, "balanceLabel");
+    TextBox textBox = getPanel().getTextBox("balanceLabel");
+    assertThat(textBox.textEquals(toString(amount, false)));
+    return this;
   }
 
   public BalanceSummaryChecker checkIncome(double amount) {
@@ -47,7 +49,9 @@ public class BalanceSummaryChecker extends DataChecker {
   }
 
   public BalanceSummaryChecker checkTotal(double amount) {
-    return check(amount, "totalLabel");
+    TextBox textBox = getPanel().getTextBox("totalLabel");
+    assertThat(textBox.textEquals(toString(amount, true)));
+    return this;
   }
 
   public BalanceSummaryChecker checkNoTotal() {

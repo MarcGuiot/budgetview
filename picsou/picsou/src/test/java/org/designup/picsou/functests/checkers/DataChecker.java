@@ -3,9 +3,9 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.utils.Lang;
+import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
-import org.uispec4j.Key;
 import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 public abstract class DataChecker {
-  private DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
+  private static DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
 
   protected String toString(double value) {
     return format.format(value);

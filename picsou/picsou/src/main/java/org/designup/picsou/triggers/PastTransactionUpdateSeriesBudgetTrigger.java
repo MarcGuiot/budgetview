@@ -94,7 +94,8 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
     });
   }
 
-  private void updateSeriesBudget(Integer currentMonthId, Glob series, Integer seriesId, Integer statMonthId, Double amount, GlobRepository repository) {
+  private void updateSeriesBudget(Integer currentMonthId, Glob series, Integer seriesId, Integer statMonthId,
+                                  Double amount, GlobRepository repository) {
     if (!series.get(Series.IS_AUTOMATIC) || statMonthId > currentMonthId) {
       return;
     }

@@ -41,7 +41,7 @@
     <ui name="doubleArrowRight" class="org.designup.picsou.gui.components.ArrowButtonUI"
         rotation="0" doubleArrow="true"
         rolloverColor="periods.button.rollover" pressedColor="periods.button.pressed"/>
-    
+
     <style selector="button.periodButton"
            anchor="south" margin="2" marginBottom="10"
            foreground="periods.button.normal"
@@ -59,7 +59,7 @@
         rotation="0" doubleArrow="false"
         rolloverColor="backforward.rollover" pressedColor="backforward.pressed" disabledColor="backforward.disabled"/>
     <style selector="button.backforward"
-           minimumSize="(20,16)" preferredSize="(20,16)" foreground="backforward.normal" 
+           minimumSize="(20,16)" preferredSize="(20,16)" foreground="backforward.normal"
            fill="none" margin="3" weightX="0"/>
     <style selector="button#back" ui="backArrow"/>
     <style selector="button#forward" ui="forwardArrow" marginRight="20"/>
@@ -165,6 +165,8 @@
                              autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
                     </scrollPane>
                     <row marginBottom="5">
+                      <label text="$amount"/>
+                      <label ref="sum"/>
                       <filler fill="horizontal"/>
                       <component ref="transactionSearch"/>
                     </row>

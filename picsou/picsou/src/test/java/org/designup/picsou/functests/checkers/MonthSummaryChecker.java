@@ -9,7 +9,8 @@ import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.and;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -139,11 +140,13 @@ public class MonthSummaryChecker extends DataChecker {
 
   public MonthSummaryChecker total(double received, double spent) {
     checkBalance(received - spent);
+    spent = Math.abs(spent);
+    received = Math.abs(received);
     if (received > spent) {
-      checkBalanceGraph(1, spent / received);
+      checkBalanceGraph(1., spent / received);
     }
     else {
-      checkBalanceGraph(received / spent, 1);
+      checkBalanceGraph(received / spent, 1.);
     }
     return this;
   }
@@ -157,7 +160,7 @@ public class MonthSummaryChecker extends DataChecker {
   }
 
   public MonthSummaryChecker checkBalance(double balance) {
-    assertThat(getPanel().getTextBox("balanceAmount").textEquals(toString(balance)));
+    assertThat(getPanel().getTextBox("balanceAmount").textEquals(toString(balance, true)));
     return this;
   }
 
