@@ -75,9 +75,19 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/monthSummaryView.splits", repository, directory);
 
+    final GlobListStringifier globListStringifier = GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT,
+                                                                             BalanceStat.MONTH_BALANCE);
+
     builder.addLabel("balanceAmount", BalanceStat.TYPE,
-                     GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT,
-                                              BalanceStat.MONTH_BALANCE));
+                     new GlobListStringifier() {
+                       public String toString(GlobList list, GlobRepository repository) {
+                         String balance = globListStringifier.toString(list, repository);
+                         if (balance.startsWith("-") || "0.00".equals(balance)) {
+                           return balance;
+                         }
+                         return "+" + balance;
+                       }
+                     });
     builder.add("totalBalance", new BalanceGraph(repository, directory));
 
     cards = builder.addCardHandler("cards");

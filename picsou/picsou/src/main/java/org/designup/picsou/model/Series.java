@@ -49,6 +49,7 @@ public class Series {
 
   public static IntegerField OCCURENCES_COUNT;
 
+  @DefaultInteger(1)
   public static IntegerField DAY;
 
   public static DoubleField INITIAL_AMOUNT;

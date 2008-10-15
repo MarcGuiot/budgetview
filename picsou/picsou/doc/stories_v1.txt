@@ -3,11 +3,7 @@
                MARC
 ====================================
 
-- monthSummary : forcer le "+" pour la balance
-
-- SED : changement de periodicite = se caler sur les donnees existantes
-
-- balancesummary : "montant estime au 31/10/2008"
+- Gérer la monthSummaryView avec les transactions plannifiées.
 
 - Gestion des licences : desactiver import + message jours restants
 
@@ -15,7 +11,7 @@
 
 - Serialisation des strings : voir charset
 
-- Probleme de transaction plannifié a 0 : probleme d'arondie?
+- Probleme de transaction plannifié a 0. (Ajouter des tests si on rembourse dans la budget area revenu)
 
 
 ====================================

@@ -35,17 +35,17 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "<create active='true' amount='-29.9' day='7' id='" + budgetId[0] + "'" +
       "        month='200807' series='100' type='seriesBudget' overrunAmount='0.0'/>" +
       "<create active='true' amount='0.0' id='" + occasionalBudget[2] + "' month='200809'" +
-      "        series='0' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        series='0' day='1' type='seriesBudget' overrunAmount='0.0'/>" +
       "<create active='true' amount='0.0' id='" + occasionalBudget[1] + "' month='200808'" +
-      "        series='0' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        series='0' day='1' type='seriesBudget' overrunAmount='0.0'/>" +
       "<create active='true' amount='0.0' id='" + occasionalBudget[0] + "' month='200807'" +
-      "        series='0' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        series='0' day='1' type='seriesBudget' overrunAmount='0.0'/>" +
       "<create active='true' amount='0.0' id='" + unknownBudget[2] + "' month='200809'" +
-      "        overrunAmount='0.0' series='1' type='seriesBudget'/>" +
+      "        overrunAmount='0.0' series='1' day='1' type='seriesBudget'/>" +
       "<create active='true' amount='0.0' id='" + unknownBudget[1] + "' month='200808'" +
-      "        overrunAmount='0.0' series='1' type='seriesBudget'/>" +
+      "        overrunAmount='0.0' series='1' day='1' type='seriesBudget'/>" +
       "<create active='true' amount='0.0' id='" + unknownBudget[0] + "' month='200807'" +
-      "        overrunAmount='0.0' series='1' type='seriesBudget'/>");
+      "        overrunAmount='0.0' series='1' day='1' type='seriesBudget'/>");
     Key transactionKey = Key.create(Transaction.TYPE, 10);
     repository.create(transactionKey,
                       value(Transaction.SERIES, FREE_SERIES_ID),
@@ -118,11 +118,11 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "        month='200808' series='102' type='seriesBudget' overrunAmount='0.0'/>" +
       "<create active='true' amount='2000.0' day='4' id='" + incomBudgetIds[2] + "'" +
       "        month='200809' series='102' type='seriesBudget' overrunAmount='0.0'/>" +
-      "<create active='true' amount='0.0' id='" + occasionalBudgetIds[0] + "' month='200807'" +
+      "<create active='true' amount='0.0' id='" + occasionalBudgetIds[0] + "' day='1' month='200807'" +
       "        series='0' type='seriesBudget' overrunAmount='0.0'/>" +
-      "<create active='true' amount='0.0' id='" + occasionalBudgetIds[1] + "' month='200808'" +
+      "<create active='true' amount='0.0' id='" + occasionalBudgetIds[1] + "' day='1' month='200808'" +
       "        series='0' type='seriesBudget' overrunAmount='0.0'/>" +
-      "<create active='true' amount='0.0' id='" + occasionalBudgetIds[2] + "' month='200809'" +
+      "<create active='true' amount='0.0' id='" + occasionalBudgetIds[2] + "' day='1' month='200809'" +
       "        series='0' type='seriesBudget' overrunAmount='0.0'/>" +
       "<create active='true' amount='-1000.0' day='25' id='" + enveloppeBudgetIds[0] + "'" +
       "        month='200807' series='101' type='seriesBudget' overrunAmount='0.0'/>" +
@@ -130,11 +130,11 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "        month='200808' series='101' type='seriesBudget' overrunAmount='0.0'/>" +
       "<create active='true' amount='-1000.0' day='25' id='" + enveloppeBudgetIds[2] + "'" +
       "        month='200809' series='101' type='seriesBudget' overrunAmount='0.0'/>" +
-      "<create active='true' amount='0.0' id='" + unknownBudgetIds[2] + "' month='200809'" +
+      "<create active='true' amount='0.0' id='" + unknownBudgetIds[2] + "' day='1' month='200809'" +
       "        overrunAmount='0.0' series='1' type='seriesBudget'/>" +
-      "<create active='true' amount='0.0' id='" + unknownBudgetIds[1] + "' month='200808'" +
+      "<create active='true' amount='0.0' id='" + unknownBudgetIds[1] + "' day='1' month='200808'" +
       "        overrunAmount='0.0' series='1' type='seriesBudget'/>" +
-      "<create active='true' amount='0.0' id='" + unknownBudgetIds[0] + "' month='200807'" +
+      "<create active='true' amount='0.0' id='" + unknownBudgetIds[0] + "' day='1' month='200807'" +
       "        overrunAmount='0.0' series='1' type='seriesBudget'/>");
     repository.enterBulkDispatchingMode();
     repository.create(Transaction.TYPE,

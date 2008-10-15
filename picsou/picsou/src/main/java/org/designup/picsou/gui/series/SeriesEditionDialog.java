@@ -73,6 +73,7 @@ public class SeriesEditionDialog {
   Integer currentlySelectedCategory;
   private JPanel buttonSeriePanel;
   private SeriesBudgetEditionPanel budgetEditionPanel;
+  private GlobList selectedTransactions = new EmptyGlobList();
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -84,7 +85,11 @@ public class SeriesEditionDialog {
             ProfileType.TYPE)
       .get();
 
-    addSeriesCreationTriggers(localRepository);
+    addSeriesCreationTriggers(localRepository, new ProfileTypeSeriesTrigger.UserMonth() {
+      public Set<Integer> getMonthWithTransction() {
+        return selectedTransactions.getSortedSet(Transaction.MONTH);
+      }
+    });
     selectionService = new SelectionService();
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(selectionService);
@@ -185,8 +190,9 @@ public class SeriesEditionDialog {
     dialog.addPanelWithButtons(panel, okAction, new CancelAction());
   }
 
-  public static void addSeriesCreationTriggers(GlobRepository repository) {
-    repository.addTrigger(new ProfileTypeSeriesTrigger());
+  public static void addSeriesCreationTriggers(GlobRepository repository,
+                                               final ProfileTypeSeriesTrigger.UserMonth userMonth) {
+    repository.addTrigger(new ProfileTypeSeriesTrigger(userMonth));
     repository.addTrigger(new AutomaticSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetTrigger());
   }
@@ -325,6 +331,7 @@ public class SeriesEditionDialog {
   }
 
   public Key showNewSeries(GlobList transactions, BudgetArea budgetArea) {
+    selectedTransactions = transactions;
     this.budgetArea = BudgetArea.get(budgetArea.getId());
     Glob createdSeries;
     try {

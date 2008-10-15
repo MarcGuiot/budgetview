@@ -1,8 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
@@ -71,13 +71,13 @@ public class BudgetViewChecker extends DataChecker {
       UISpecAssert.assertThat(label.textEquals(title));
     }
 
-    public void checkTotalAmounts(double received, double planned) {
+    public void checkTotalAmounts(double observed, double planned) {
       Panel budgetPanel = window.getPanel(panelName);
       TextBox totalObserved = budgetPanel.getTextBox("totalObservedAmount");
-      UISpecAssert.assertTrue(totalObserved.textEquals(BudgetViewChecker.this.toString(received)));
+      UISpecAssert.assertTrue(totalObserved.textEquals(convert(observed)));
 
       TextBox totalPlanned = budgetPanel.getTextBox("totalPlannedAmount");
-      UISpecAssert.assertTrue(totalPlanned.textEquals(BudgetViewChecker.this.toString(planned)));
+      UISpecAssert.assertTrue(totalPlanned.textEquals(convert(planned)));
     }
 
     public BudgetAreaChecker checkSeries(String seriesName, double observedAmount, double plannedAmount) {

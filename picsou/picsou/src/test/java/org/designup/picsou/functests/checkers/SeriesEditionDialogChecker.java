@@ -646,6 +646,11 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker setEveryMonth() {
+    getPeriodCombo().select(ProfileType.EVERY_MONTH.getLabel());
+    return this;
+  }
+
   public SeriesEditionDialogChecker checkSeriesListIsHidden() {
     checkComponentVisible(dialog, JPanel.class, "buttonSeriesPanel", false);
     checkComponentVisible(dialog, JPanel.class, "seriesPanel", false);

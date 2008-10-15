@@ -120,7 +120,7 @@ public class Month {
     return yyyymm * 100 + dd;
   }
 
-  public static int toMonthId(int yyyy, int mm){
+  public static int toMonthId(int yyyy, int mm) {
     return yyyy * 100 + mm;
   }
 
@@ -174,6 +174,13 @@ public class Month {
       monthIds[i] = monthId;
     }
     return monthIds;
+  }
+
+
+  public static Date getLastDay(int monthId) {
+    CALENDAR.setTime(toDate(monthId, 1));
+    CALENDAR.set(Calendar.DAY_OF_MONTH, CALENDAR.getActualMaximum(Calendar.DAY_OF_MONTH));
+    return CALENDAR.getTime();
   }
 
   public static Integer getDay(Integer day, int monthId, Calendar calendar) {
