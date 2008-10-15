@@ -27,11 +27,6 @@ public class SelectionService {
 
   public void removeListener(GlobSelectionListener listener) {
     boolean removed = listenersByType.removeValue(listener);
-    Utils.beginRemove();
-    if (!removed) {
-      throw new RuntimeException("BUG");
-    }
-    Utils.endRemove();
   }
 
   public void select(Glob glob) {

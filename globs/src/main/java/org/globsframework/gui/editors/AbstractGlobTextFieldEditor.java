@@ -5,6 +5,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 
 public abstract class AbstractGlobTextFieldEditor<PARENT extends AbstractGlobTextFieldEditor>
   extends AbstractGlobTextEditor<JTextField, PARENT> {
@@ -22,5 +23,12 @@ public abstract class AbstractGlobTextFieldEditor<PARENT extends AbstractGlobTex
 
   protected void registerActions() {
     textComponent.addActionListener(validationAction);
+  }
+
+  public void dispose() {
+    super.dispose();
+    for (ActionListener listener : textComponent.getActionListeners()) {
+      textComponent.removeActionListener(listener);
+    }
   }
 }

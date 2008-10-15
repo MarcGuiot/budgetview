@@ -200,6 +200,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
 
   public void dispose() {
     selectionService.removeListener(this);
+    for (FocusListener listener : textComponent.getFocusListeners()) {
+      textComponent.removeFocusListener(listener);
+    }
   }
 
   public boolean isNotifyAtKeyPressed() {
