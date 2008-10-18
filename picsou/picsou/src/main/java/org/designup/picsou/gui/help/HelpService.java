@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.help;
 
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.model.GlobRepository;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 
@@ -12,6 +12,7 @@ public class HelpService {
   private GlobRepository repository;
   private Directory directory;
   private HelpSource source;
+  private Window lastOwner;
 
   public HelpService(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -21,12 +22,19 @@ public class HelpService {
 
   public void setSource(HelpSource source) {
     this.source = source;
-    this.dialog = null;
   }
 
   public void show(String helpRef, Window owner) {
-    if (dialog == null) {
+    if ((dialog != null) && dialog.isVisible()) {
+      if (owner != lastOwner) {
+        dialog.close();
+        dialog = null;
+        lastOwner = null;
+      }
+    }
+    if ((dialog == null) || (lastOwner != owner)) {
       dialog = new HelpDialog(source, repository, directory, owner);
+      lastOwner = owner;
     }
     dialog.show(helpRef);
   }

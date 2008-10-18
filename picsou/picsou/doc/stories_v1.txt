@@ -27,7 +27,9 @@
                REGIS
 ====================================
 
-- Gestion de AccountBalanceLimit
+- Login : message avertissement / mot de passe
+
+- Messages d'aide / sequence entree dans l'appli
 
 - pas bien vu le message dans CategorizationView : le mettre dans un bloc ?
 
@@ -39,6 +41,10 @@
                RESTE
 ====================================
 
+- La taille mini des mois dans TimeView est trop petite
+
+- Revoir centrage par defaut de TimeView quand le nombre de mois est grand (> 3 ans) : plutot montrer le futur
+
 - BudgetView : quand on clique sur une serie, aucun moyen pour la supprimer a partir de la fenetre qui apparait 
 
 - Creation d'une serie OperationsSpeciales : selectionner le mois en cours dans la table
@@ -49,6 +55,7 @@
 
 - bug: l'aide s'ouvre sous SeriesWizardDialog sous Linux ?
   ==> Elle ne s'ouvre pas vraiement desous mais elle a un comportement bizarre et on ne peux pas cliquer dedans.
+  (corrige ? a reverifier - regis)
 
 - creation de compte / qif : ne pas forcer la saisie du numero de compte
 
@@ -91,7 +98,7 @@
 
 - budgetView: pouvoir cliquer sur les montants attendus ? (comportement a definir)
 
-- categorizationGauge : mettre un tooltip avec le nombre de transactions non classees*
+- categorizationGauge : mettre un tooltip avec le nombre de transactions non classees
 
 - mettre en evidence le bouton "lancer l'assistant", voire le bloc de message d'aide complet (fond jaune ?)
 

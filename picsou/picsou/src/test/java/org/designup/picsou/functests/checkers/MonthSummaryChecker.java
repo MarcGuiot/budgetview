@@ -193,8 +193,8 @@ public class MonthSummaryChecker extends DataChecker {
     return window.getPanel("monthSummaryView");
   }
 
-  public HelpChecker openHelp() {
-    return HelpChecker.open(window.getButton("help").triggerClick());
+  public HelpChecker openImportHelp() {
+    return HelpChecker.open(window.getTextBox("noDataMessage").triggerClickOnHyperlink("import"));
   }
 
   public SeriesWizardChecker openSeriesWizard() {

@@ -24,16 +24,15 @@
 
         <card name="noData">
           <column styleClass="message">
-            <htmlEditorPane text="$monthsummary.noData.text" name="noDataMessage"/>
+            <htmlEditorPane text="$monthsummary.noData.text" name="noDataMessage" hyperlinkListener="hyperlinkHandler"/>
             <button action="import"/>
             <filler fill="vertical"/>
-            <button action="help" styleClass="help" anchor="right" margin="10"/>
           </column>
         </card>
 
         <card name="noSeries">
           <column styleClass="message">
-            <htmlEditorPane text="$monthsummary.noSeries.text" name="noSeriesMessage"/>
+            <htmlEditorPane text="$monthsummary.noSeries.text" name="noSeriesMessage" hyperlinkListener="hyperlinkHandler"/>
             <button action="openSeriesWizard"/>
             <filler fill="vertical"/>
           </column>

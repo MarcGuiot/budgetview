@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.accounts.BalanceEditionDialog;
 import org.designup.picsou.gui.accounts.NewAccountAction;
@@ -143,6 +144,7 @@ public class ImportPanel {
         complete();
       }
     });
+    builder1.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
 
     panelStep1 = builder1.load();
   }

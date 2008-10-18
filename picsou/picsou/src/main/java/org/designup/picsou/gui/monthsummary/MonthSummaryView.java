@@ -7,7 +7,7 @@ import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.help.HelpAction;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
@@ -135,7 +135,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     builder.add("openSeriesWizard", new OpenSeriesWizardAction());
 
-    builder.add("help", new HelpAction(Lang.get("monthsummary.help"), "import", directory));
+    builder.add("hyperlinkHandler", new HyperlinkHandler(parentDirectory));
 
     parentBuilder.add("monthSummaryView", builder);
 

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.help;
 
-import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -9,8 +9,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.Stack;
 
 public class HelpDialog {
@@ -38,7 +38,7 @@ public class HelpDialog {
     title = builder.add("title", new JLabel());
     editor = builder.add("editor", new JEditorPane());
 
-    editor.addHyperlinkListener(new HyperlinkHandler(directory));
+    editor.addHyperlinkListener(new HyperlinkHandler(directory, owner));
 
     builder.add("home", homePageAction);
     builder.add("forward", forwardPageAction);
@@ -70,6 +70,14 @@ public class HelpDialog {
     }
     currentPage = ref;
     updateNavigationActions();
+  }
+
+  public boolean isVisible() {
+    return dialog.isVisible();
+  }
+
+  public void close() {
+    dialog.setVisible(false);
   }
 
   private class HomePageAction extends AbstractAction {

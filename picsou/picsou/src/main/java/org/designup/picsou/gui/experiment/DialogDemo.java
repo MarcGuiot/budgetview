@@ -4,9 +4,9 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
 import org.designup.picsou.model.BudgetArea;
@@ -34,6 +34,7 @@ public class DialogDemo {
       repository.findOrCreate(Key.create(Month.TYPE, monthId));
     }
     repository.completeBulkDispatchingMode();
+    directory.add(new HelpService(repository, directory));
 
     PicsouSampleGenerator generator = new PicsouSampleGenerator(repository);
     generator.run(200710, 200809);
@@ -41,9 +42,15 @@ public class DialogDemo {
     JFrame frame = window.getFrame();
     directory.add(JFrame.class, frame);
 
+    showHelpDialog(repository, directory, frame);
 //    showSeriesWizardDialog(repository, directory, frame);
-    showSeriesEditionDialog(repository, directory, frame);
+//    showSeriesEditionDialog(repository, directory, frame);
 //    showCategoriesEditionDialog(repository, directory);
+  }
+
+  private static void showHelpDialog(GlobRepository repository, Directory directory, JFrame frame) {
+    HelpService service = directory.get(HelpService.class);
+    service.show("intro", frame);
   }
 
   private static void showSeriesWizardDialog(GlobRepository repository, Directory directory, JFrame frame) {

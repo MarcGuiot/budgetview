@@ -66,7 +66,7 @@
     <style selector=".dialog checkBox" foreground="dialog.bg.text" opaque="false"/>
 
     <style selector=".dialog label.title"
-           font="-,bold,18" foreground="dialog.title"
+           font="-,bold,20" foreground="dialog.title"
            fill="none" anchor="center" marginTop="0" marginBottom="15"/>
 
     <style selector=".separator" opaque="false" marginTop="0"
@@ -130,7 +130,9 @@
            foreground="mainpanel.message" weightY="0" border="empty(0,0,10,0)"/>
 
     <!-- Icon buttons -->
-    <ui name="iconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"
+    <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>
+
+    <ui name="standardIconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"
         border="iconbutton.border"
         borderTop="iconbutton.border.top"
         borderBottom="iconbutton.border.bottom"
@@ -138,9 +140,20 @@
         pressedBottomColor="iconbutton.pressed.bottom"
         normalTopColor="iconbutton.normal.top"
         normalBottomColor="iconbutton.normal.bottom"/>
-    <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>
-    <style selector=".iconButtonGroup button" ui='iconButton' fill='none' weightX='0'/>
-    <style selector=".iconButtonGroup toggleButton" ui='iconButton' fill='none' weightX='0'/>
+    <style selector=".iconButtonGroup button" ui='standardIconButton' fill='none' weightX='0'/>
+    <style selector=".iconButtonGroup toggleButton" ui='standardIconButton' fill='none' weightX='0'/>
+
+    <ui name="dialogIconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"
+        border="dialog.iconbutton.border"
+        borderTop="dialog.iconbutton.border.top"
+        borderBottom="dialog.iconbutton.border.bottom"
+        pressedTopColor="dialog.iconbutton.pressed.top"
+        pressedBottomColor="dialog.iconbutton.pressed.bottom"
+        normalTopColor="dialog.iconbutton.normal.top"
+        normalBottomColor="dialog.iconbutton.normal.bottom"/>
+    <style selector=".dialog .iconButtonGroup button" ui='dialogIconButton' fill='none' weightX='0'/>
+    <style selector=".dialog .iconButtonGroup toggleButton" ui='dialogIconButton' fill='none' weightX='0'/>
+
     <style selector=".iconButtonGroup button.create"
            icon="button_plus.png" disabledIcon="button_plus_disabled.png"/>
     <style selector=".iconButtonGroup button.delete"
