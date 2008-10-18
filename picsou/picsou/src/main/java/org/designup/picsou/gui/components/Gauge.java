@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 
 import javax.swing.*;
 import java.awt.*;
@@ -125,7 +125,7 @@ public class Gauge extends JPanel {
   private void setToolTip(String key, Double... values) {
     String[] formattedValues = new String[values.length];
     for (int i = 0; i < values.length; i++) {
-      formattedValues[i] = PicsouDescriptionService.DECIMAL_FORMAT.format(values[i]);
+      formattedValues[i] = Formatting.DECIMAL_FORMAT.format(values[i]);
 
     }
     this.setToolTipText(Lang.get(key, formattedValues));

@@ -14,7 +14,7 @@ import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.filtering.TextFilterPanel;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
@@ -118,7 +118,7 @@ public class MainPanel {
     };
     builder.add("transactionSearch", search.getPanel());
     builder.addLabel("sum", Transaction.TYPE,
-                     GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT, Transaction.AMOUNT));
+                     GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, Transaction.AMOUNT));
 
     monthSummary = new MonthSummaryView(importFileAction, repository, directory);
 

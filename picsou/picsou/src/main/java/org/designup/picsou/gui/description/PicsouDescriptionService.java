@@ -7,30 +7,19 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.Formats;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.format.utils.DefaultDescriptionService;
 import org.globsframework.utils.Strings;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 
 public class PicsouDescriptionService extends DefaultDescriptionService {
-  public static final DecimalFormat INTEGER_FORMAT = new DecimalFormat("0");
-  public static final DecimalFormat DECIMAL_FORMAT =
-    new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
-  private static SimpleDateFormat YEAR_MONTH_FORMAT = new SimpleDateFormat("MMMMMMMMMM yyyy", Locale.FRANCE);
 
   public PicsouDescriptionService() {
-    super(new Formats(DATE_FORMAT,
+    super(new org.globsframework.model.format.Formats(Formatting.DATE_FORMAT,
                       new SimpleDateFormat("dd/MM/yyyy hh:mm:ss"),
-                      DECIMAL_FORMAT,
+                      Formatting.DECIMAL_FORMAT,
                       Lang.get("yes"), Lang.get("no")));
   }
 
@@ -52,36 +41,6 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
       lang = Strings.capitalize(name);
     }
     return lang;
-  }
-
-  public static String toString(Double value) {
-    if (value == null) {
-      return "";
-    }
-    return DECIMAL_FORMAT.format(value);
-  }
-
-  public static String toStringWithPlus(Double value) {
-    if (value == null) {
-      return "";
-    }
-    if (value <= 0.) {
-      return DECIMAL_FORMAT.format(value);
-    }
-    else {
-      return "+" + DECIMAL_FORMAT.format(value);
-    }
-  }
-
-
-  public static String toString(Date date) {
-    return DATE_FORMAT.format(date);
-  }
-
-  public static String toString(int year, int month) {
-    GregorianCalendar calendar =
-      new GregorianCalendar(year, month - 1, 1);
-    return Strings.capitalize(YEAR_MONTH_FORMAT.format(calendar.getTime()));
   }
 
   public GlobStringifier getStringifier(GlobType globType) {

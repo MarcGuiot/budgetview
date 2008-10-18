@@ -5,7 +5,7 @@ import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.MonthListStringifier;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.BudgetArea;
@@ -168,7 +168,7 @@ public class SeriesBudgetEditionPanel {
       if ((value > 0) && !budgetArea.isIncome()) {
         builder.append("+");
       }
-      builder.append(PicsouDescriptionService.DECIMAL_FORMAT.format(Math.abs(value)));
+      builder.append(Formatting.DECIMAL_FORMAT.format(Math.abs(value)));
       return builder.toString();
     }
   }

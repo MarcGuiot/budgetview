@@ -3,7 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.components.expansion.TableExpansionColumn;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
 import org.globsframework.model.Glob;
@@ -317,7 +317,7 @@ public class CategoryChecker extends ViewChecker {
       if (value == 0) {
         return "";
       }
-      return PicsouDescriptionService.INTEGER_FORMAT.format(value);
+      return Formatting.INTEGER_FORMAT.format(value);
     }
 
     private List<MasterCategory> getSortedCategories() {

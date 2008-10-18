@@ -338,8 +338,10 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
   }
 
   public void testEditingTheAccountBalanceLimit() throws Exception {
+
     OfxBuilder.init(this)
       .addBankAccount(30006, 10674, "000123", 100, "2008/08/26")
+      .addTransaction("2008/07/26", 1000, "WorldCo")
       .addTransaction("2008/08/26", 1000, "WorldCo")
       .addTransaction("2008/08/26", -800, "FNAC")
       .load();
@@ -348,11 +350,27 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     categorization.setIncome("WorldCo", "Salary", true);
 
     views.selectHome();
-    balanceSummary.checkLimit(0);
-    balanceSummary.setLimit(100, true);
-    balanceSummary.checkLimit(100);
+    timeline.selectMonth("2008/08");
 
-    balanceSummary.setLimit(200, false);
-    balanceSummary.checkLimit(200);
+    balanceSummary.checkTotal(100)
+      .checkTotalColor("darkGreen")
+      .checkLimit(0);
+
+    balanceSummary
+      .setLimit(1000, true)
+      .checkLimit(1000)
+      .checkTotalColor("red");
+
+    balanceSummary.setLimit(-2000, false)
+      .checkLimit(-2000)
+      .checkTotalColor("green");
+
+    balanceSummary.setLimit(0, false)
+      .checkTotalColor("darkGreen");
+
+    timeline.selectMonth("2008/07");
+    balanceSummary
+      .checkTotal(-100)
+      .checkTotalColor("darkRed");
   }
 }

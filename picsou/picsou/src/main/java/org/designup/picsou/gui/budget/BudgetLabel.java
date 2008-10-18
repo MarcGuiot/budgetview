@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.budget;
 
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
@@ -24,7 +24,7 @@ public class BudgetLabel implements GlobSelectionListener, ChangeSetListener {
   private JLabel label = new JLabel();
   private SelectionService selectionService;
   private GlobRepository repository;
-  private DecimalFormat format = PicsouDescriptionService.DECIMAL_FORMAT;
+  private DecimalFormat format = Formatting.DECIMAL_FORMAT;
   private static final String SEPARATOR = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
   public BudgetLabel(GlobRepository repository, Directory directory) {

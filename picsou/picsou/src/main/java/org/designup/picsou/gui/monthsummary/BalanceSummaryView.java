@@ -1,9 +1,11 @@
 package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.utils.AmountColors;
+import org.designup.picsou.model.AccountBalanceLimit;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -27,6 +29,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.util.Set;
 import java.util.SortedSet;
+import java.awt.*;
 
 public class BalanceSummaryView extends View implements GlobSelectionListener {
   private SelectionService parentSelectionService;
@@ -34,19 +37,28 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
   private JLabel total;
   private JPanel contentPanel;
   private JLabel amountSummaryLabel;
+  private AmountColors amountColors;
 
   public BalanceSummaryView(GlobRepository repository, Directory parentDirectory) {
     super(repository, createDirectory(parentDirectory));
     parentSelectionService = parentDirectory.get(SelectionService.class);
     parentSelectionService.addListener(this, Month.TYPE);
+    amountColors = new AmountColors(parentDirectory);
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(SeriesStat.TYPE) || changeSet.containsUpdates(Transaction.BALANCE)) {
+        if (changeSet.containsChanges(SeriesStat.TYPE) ||
+            changeSet.containsUpdates(Transaction.BALANCE) ||
+            changeSet.containsUpdates(AccountBalanceLimit.LIMIT)) {
           updateDetails();
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        if (changedTypes.contains(SeriesStat.TYPE) ||
+            changedTypes.contains(Transaction.TYPE) ||
+            changedTypes.contains(AccountBalanceLimit.TYPE)) {
+          updateDetails();
+        }
       }
     });
   }
@@ -109,15 +121,15 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
       contentPanel.setVisible(false);
       Glob balanceStat = balanceStats[balanceStats.length - 1];
       Double amount = balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
-      total.setText(PicsouDescriptionService.toStringWithPlus(amount));
+      updateTotal(amount);
       amountSummaryLabel.setText(Lang.get("balanceSummary.title.past",
-                                          PicsouDescriptionService.toString(
+                                          Formatting.toString(
                                             Month.getLastDay(balanceStat.get(BalanceStat.MONTH_ID)))));
       return;
     }
 
     amountSummaryLabel.setText(Lang.get("balanceSummary.title.future",
-                                        PicsouDescriptionService.toString(
+                                        Formatting.toString(
                                           Month.getLastDay(balanceStats[balanceStats.length - 1].get(BalanceStat.MONTH_ID)))));
     Double amount;
     int firstBalanceIndex;
@@ -131,7 +143,7 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     if (amount == null) {
       amount = balanceStats[firstBalanceIndex].get(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_BALANCE);
     }
-    String label = PicsouDescriptionService.toString(amount);
+    String label = Formatting.toString(amount);
     balance.setText(label);
 
     for (Glob balance : balanceStats) {
@@ -143,10 +155,18 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
                 balance.get(BalanceStat.SPECIAL_REMAINING);
     }
 
-    String s = PicsouDescriptionService.toStringWithPlus(amount);
-    total.setText(s);
-    total.setVisible(true);
+    updateTotal(amount);
     contentPanel.setVisible(true);
+  }
+
+  private void updateTotal(Double amount) {
+    total.setText(Formatting.toString(amount));
+
+    Double limit = AccountBalanceLimit.getLimit(repository);
+    Color color = amountColors.get(amount - limit);
+    total.setForeground(color);
+
+    total.setVisible(true);
   }
 
   private void hide() {

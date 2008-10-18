@@ -24,5 +24,6 @@ public class SerializationManager {
     SeriesToCategory.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SeriesToCategory.Serializer());
     UserPreferences.TYPE.updateProperty(SERIALIZATION_PROPERTY, new UserPreferences.Serializer());
     VersionInformation.TYPE.updateProperty(SERIALIZATION_PROPERTY, new VersionInformation.Serializer());
+    AccountBalanceLimit.TYPE.updateProperty(SERIALIZATION_PROPERTY, new AccountBalanceLimit.Serializer());
   }
 }

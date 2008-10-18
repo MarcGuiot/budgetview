@@ -2,7 +2,7 @@ package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.model.AccountBalanceLimit;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
@@ -43,6 +43,6 @@ public class AccountBalanceLimitAction extends AbstractAction implements ChangeS
 
   private void updateName() {
     double limit = AccountBalanceLimit.getLimit(repository);
-    this.putValue(NAME, Lang.get("accountLimitAction.label", PicsouDescriptionService.DECIMAL_FORMAT.format(limit)));
+    this.putValue(NAME, Lang.get("accountLimitAction.label", Formatting.DECIMAL_FORMAT.format(limit)));
   }
 }

@@ -1,6 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.transactions.split.SplitTransactionDialog;
 import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.Button;
@@ -139,7 +139,7 @@ public class SplitDialogChecker {
       expected[i] = new Object[]{
         TransactionChecker.getCategoryName(category),
         objects[i][column++],
-        PicsouDescriptionService.DECIMAL_FORMAT.format(objects[i][column++]),
+        Formatting.DECIMAL_FORMAT.format(objects[i][column++]),
         objects[i][column],
         ""};
     }

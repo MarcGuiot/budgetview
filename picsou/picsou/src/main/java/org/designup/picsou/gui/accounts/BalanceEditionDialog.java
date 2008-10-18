@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -21,8 +21,6 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Date;
 import java.util.SortedSet;
 
@@ -113,7 +111,7 @@ public class BalanceEditionDialog {
                           Integer.toString(Month.toYear(monthId)));
       balanceDate = Month.toDate(monthId, day);
       labelInfo = transaction.get(Transaction.LABEL);
-      amountInfo = PicsouDescriptionService.DECIMAL_FORMAT.format(transaction.get(Transaction.AMOUNT));
+      amountInfo = Formatting.DECIMAL_FORMAT.format(transaction.get(Transaction.AMOUNT));
     }
 
     date.setText(dateInfo);

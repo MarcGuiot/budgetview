@@ -29,7 +29,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .checkFixed(0.00)
       .checkSavings(0.00)
       .checkProjects(0.00)
-      .checkTotal(0.00);
+      .checkTotal(0.00)
+      .setLimit(25.00, true);
 
     views.selectData();
     transactions.initContent()
@@ -46,7 +47,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .checkFixed(0.00)
       .checkSavings(0.00)
       .checkProjects(0.00)
-      .checkTotal(0.00);
+      .checkTotal(0.00)
+      .checkLimit(25.00);
 
     views.selectData();
     transactions.initContent()

@@ -1,6 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.utils.Dates;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
@@ -33,7 +33,7 @@ public class AccountViewChecker extends DataChecker {
     Panel parentPanel = getAccountPanel(accountNumber);
     UISpecAssert.assertThat(parentPanel.getButton("accountBalance").textEquals(toString(balance)));
     Date date = Dates.parse(updateDate);
-    UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(PicsouDescriptionService.toString(date)));
+    UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(Formatting.toString(date)));
   }
 
   private Panel getAccountPanel(final String accountName) {

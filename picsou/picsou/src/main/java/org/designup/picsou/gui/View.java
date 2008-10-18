@@ -1,6 +1,6 @@
 package org.designup.picsou.gui;
 
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorService;
@@ -27,7 +27,7 @@ public abstract class View {
     this.descriptionService = directory.get(DescriptionService.class);
     this.selectionService = directory.get(SelectionService.class);
     this.fontLocator = directory.get(FontLocator.class);
-    this.decimalFormat = PicsouDescriptionService.DECIMAL_FORMAT;
+    this.decimalFormat = Formatting.DECIMAL_FORMAT;
   }
 
   public abstract void registerComponents(GlobsPanelBuilder builder);

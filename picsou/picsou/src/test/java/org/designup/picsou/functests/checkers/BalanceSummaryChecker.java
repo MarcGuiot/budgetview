@@ -1,6 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Month;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
@@ -52,19 +52,19 @@ public class BalanceSummaryChecker extends DataChecker {
 
   public BalanceSummaryChecker checkFutureTotalLabel(int monthId) {
     TextBox textBox = getPanel().getTextBox("amountSummaryLabel");
-    assertThat(textBox.textEquals("Estimated balance at " + PicsouDescriptionService.toString(Month.getLastDay(monthId))));
+    assertThat(textBox.textEquals("Estimated balance at " + Formatting.toString(Month.getLastDay(monthId))));
     return this;
   }
 
   public BalanceSummaryChecker checkTotalLabel(int monthId) {
     TextBox textBox = getPanel().getTextBox("amountSummaryLabel");
-    assertThat(textBox.textEquals("Balance at " + PicsouDescriptionService.toString(Month.getLastDay(monthId))));
+    assertThat(textBox.textEquals("Balance at " + Formatting.toString(Month.getLastDay(monthId))));
     return this;
   }
 
   public BalanceSummaryChecker checkTotal(double amount) {
     TextBox textBox = getPanel().getTextBox("totalLabel");
-    assertThat(textBox.textEquals(toString(amount, true)));
+    assertThat(textBox.textEquals(toString(amount, false)));
     return this;
   }
 
@@ -84,12 +84,19 @@ public class BalanceSummaryChecker extends DataChecker {
     return this;
   }
 
-  public void checkLimit(double amount) {
+  public BalanceSummaryChecker checkLimit(double amount) {
     Button button = getPanel().getButton("accountBalanceLimit");
     assertThat(button.textEquals("Limit: " + toString(amount)));
+    return this;
   }
 
-  public void setLimit(final double amount, final boolean validateThroughTextField) {
+  public BalanceSummaryChecker checkTotalColor(String color) {
+    TextBox textBox = getPanel().getTextBox("totalLabel");
+    assertThat(textBox.foregroundNear(color));
+    return this;
+  }
+
+  public BalanceSummaryChecker setLimit(final double amount, final boolean validateThroughTextField) {
     WindowInterceptor.init(getPanel().getButton("accountBalanceLimit").triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
@@ -111,5 +118,6 @@ public class BalanceSummaryChecker extends DataChecker {
         }
       })
       .run();
+    return this;
   }
 }

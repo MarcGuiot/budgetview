@@ -6,7 +6,7 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.Gauge;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HelpAction;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -75,7 +75,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/monthSummaryView.splits", repository, directory);
 
-    final GlobListStringifier globListStringifier = GlobListStringifiers.sum(PicsouDescriptionService.DECIMAL_FORMAT,
+    final GlobListStringifier globListStringifier = GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT,
                                                                              BalanceStat.MONTH_BALANCE);
 
     builder.addLabel("balanceAmount", BalanceStat.TYPE,
@@ -240,10 +240,10 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
         }
       }
 
-      amountLabel.setText(PicsouDescriptionService.DECIMAL_FORMAT.format(observed));
+      amountLabel.setText(Formatting.DECIMAL_FORMAT.format(observed));
       amountLabel.setVisible(true);
       amountLabel.setBackground(Color.RED);
-      plannedLabel.setText(PicsouDescriptionService.DECIMAL_FORMAT.format(planned));
+      plannedLabel.setText(Formatting.DECIMAL_FORMAT.format(planned));
       gauge.setValues(observed, planned);
     }
   }
@@ -287,7 +287,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
         }
       }
 
-      DecimalFormat format = PicsouDescriptionService.DECIMAL_FORMAT;
+      DecimalFormat format = Formatting.DECIMAL_FORMAT;
       StringBuilder builder = new StringBuilder();
       if (received > 0) {
         builder.append(format.format(received));

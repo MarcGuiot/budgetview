@@ -9,7 +9,7 @@ import org.designup.picsou.gui.components.expansion.ExpandableTable;
 import org.designup.picsou.gui.components.expansion.TableExpansionColumn;
 import org.designup.picsou.gui.components.expansion.TableExpansionInstaller;
 import org.designup.picsou.gui.description.CategoryComparator;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Category;
@@ -137,7 +137,7 @@ public class CategoryView extends View implements ExpandableTable {
     if (amount == 0.0) {
       return "";
     }
-    return PicsouDescriptionService.INTEGER_FORMAT.format(amount);
+    return Formatting.INTEGER_FORMAT.format(amount);
   }
 }
 

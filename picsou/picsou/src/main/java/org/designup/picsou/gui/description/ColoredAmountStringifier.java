@@ -39,10 +39,10 @@ public class ColoredAmountStringifier implements GlobListStringifier {
       builder.append("0");
     }
     else if (forcePlus && (total > 0)) {
-      builder.append("+").append(PicsouDescriptionService.DECIMAL_FORMAT.format(total));
+      builder.append("+").append(Formatting.DECIMAL_FORMAT.format(total));
     }
     else {
-      builder.append(PicsouDescriptionService.DECIMAL_FORMAT.format(total));
+      builder.append(Formatting.DECIMAL_FORMAT.format(total));
     }
 
     builder.append("</font>");

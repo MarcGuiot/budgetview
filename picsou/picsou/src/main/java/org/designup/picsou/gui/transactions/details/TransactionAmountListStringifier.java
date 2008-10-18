@@ -5,7 +5,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 
 public class TransactionAmountListStringifier implements GlobListStringifier {
   public String toString(GlobList selected, GlobRepository repository) {
@@ -16,6 +16,6 @@ public class TransactionAmountListStringifier implements GlobListStringifier {
     for (Glob transaction : selected) {
       total += transaction.get(Transaction.AMOUNT);
     }
-    return PicsouDescriptionService.DECIMAL_FORMAT.format(total);
+    return Formatting.DECIMAL_FORMAT.format(total);
   }
 }

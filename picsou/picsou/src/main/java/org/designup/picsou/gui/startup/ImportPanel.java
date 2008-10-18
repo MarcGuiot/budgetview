@@ -7,7 +7,7 @@ import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.importer.BankFileType;
@@ -726,7 +726,7 @@ public class ImportPanel {
       catch (ParseException e) {
         label.setText("Failed to parse date");
       }
-      label.setText(PicsouDescriptionService.toString(date));
+      label.setText(Formatting.toString(date));
     }
 
     public void setTable(GlobTableView transactionTable) {

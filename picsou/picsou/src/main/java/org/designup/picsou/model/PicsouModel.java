@@ -22,7 +22,8 @@ public class PicsouModel {
                           SeriesBudget.TYPE,
                           BudgetArea.TYPE,
                           ProfileType.TYPE,
-                          VersionInformation.TYPE)
+                          VersionInformation.TYPE,
+                          AccountBalanceLimit.TYPE)
       .get();
 
   static {
