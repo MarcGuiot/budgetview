@@ -136,9 +136,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectAccountBank(SOCIETE_GENERALE)
       .checkAccountName("Main account")
       .setAccountName("My SG account")
-      .doImport()
-      .checkImportMessage("You must enter the account number")
       .setAccountNumber("0123546")
+      .doImport()
       .completeImport();
 
     transactions

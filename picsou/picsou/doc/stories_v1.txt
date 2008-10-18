@@ -57,8 +57,6 @@
   ==> Elle ne s'ouvre pas vraiement desous mais elle a un comportement bizarre et on ne peux pas cliquer dedans.
   (corrige ? a reverifier - regis)
 
-- creation de compte / qif : ne pas forcer la saisie du numero de compte
-
 - BudgetView : Mettre en rouge les depassements
 
 - TransactionView : Afficher la somme (total ou multi-selection)

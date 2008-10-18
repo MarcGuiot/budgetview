@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.description.AccountStringifier;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
@@ -15,7 +16,6 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -29,7 +29,6 @@ public class BalanceEditionDialog {
   private LocalGlobRepository localRepository;
   private Glob account;
   private Date balanceDate;
-  private JTextField editor;
 
   public BalanceEditionDialog(Glob account, boolean accountInitialization,
                               GlobRepository repository, Directory directory, Window parent) {
@@ -45,7 +44,7 @@ public class BalanceEditionDialog {
 
     ValidateAction validateAction = new ValidateAction();
 
-    editor = builder.addEditor("amountField", Account.BALANCE)
+    JTextField editor = builder.addEditor("amountField", Account.BALANCE)
       .setValidationAction(validateAction)
       .setNotifyOnKeyPressed(true)
       .forceSelection(account)
@@ -53,9 +52,9 @@ public class BalanceEditionDialog {
 
     JTextArea initialMessage = builder.add("initialMessage", new JTextArea());
 
+    AccountStringifier accountStringifier = new AccountStringifier();
     builder.add("accountName", new JLabel(Lang.get("balance.edition.account.name",
-                                                   Strings.toString(account.get(Account.NAME)),
-                                                   Strings.toString(account.get(Account.NUMBER)))));
+                                                   accountStringifier.toString(account, repository))));
 
     JLabel date = builder.add("dateInfo", new JLabel());
     JLabel label = builder.add("labelInfo", new JLabel());
