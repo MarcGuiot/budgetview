@@ -131,6 +131,24 @@ public abstract class AbstractUIComponent implements UIComponent {
   }
 
   /**
+   * Checks that the foreground color of the component is close to the given value. <p/>
+   * The color can be given in either hexadecimal ("FF45C0") or human-readable ("red") format.
+   *
+   * @see <a href="http://www.uispec4j.org/usingcolors.html">Using colors</a>
+   */
+  public Assertion foregroundNear(final String expectedColor) {
+    return new Assertion() {
+      public void check() {
+        Color foreground = getAwtComponent().getForeground();
+        if (foreground == null) {
+          foreground = Color.BLACK;
+        }
+        ColorUtils.assertSimilar(expectedColor, foreground);
+      }
+    };
+  }
+
+  /**
    * Checks the background color of the component
    * The color can be given in either hexadecimal ("FF45C0") or human-readable ("red") format.
    *
@@ -140,6 +158,24 @@ public abstract class AbstractUIComponent implements UIComponent {
     return new Assertion() {
       public void check() {
         ColorUtils.assertEquals(expectedColor, getAwtComponent().getBackground());
+      }
+    };
+  }
+
+  /**
+   * Checks that the background color of the component is close to the given value. <p/>
+   * The color can be given in either hexadecimal ("FF45C0") or human-readable ("red") format.
+   *
+   * @see <a href="http://www.uispec4j.org/usingcolors.html">Using colors</a>
+   */
+  public Assertion backgroundNear(final String expectedColor) {
+    return new Assertion() {
+      public void check() {
+        Color background = getAwtComponent().getBackground();
+        if (background == null) {
+          background = Color.BLACK;
+        }
+        ColorUtils.assertSimilar(expectedColor, background);
       }
     };
   }
