@@ -190,12 +190,12 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testBalanceOfFuture() throws Exception {
+  public void testFutureBalance() throws Exception {
     views.selectCategorization();
     categorization.setEnvelope("essence", "Voiture", MasterCategory.TRANSPORTS, true);
     categorization.setRecurring("nounou", "Nounou", MasterCategory.EDUCATION, true);
     views.selectHome();
-    accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_ID, 500, "nounou");
+    accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_NAME, 500, "nounou");
     views.selectData();
     timeline.selectAll();
     transactions.initAmountContent()

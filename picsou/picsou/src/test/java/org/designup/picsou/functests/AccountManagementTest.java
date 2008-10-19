@@ -1,12 +1,9 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.ImportChecker;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
-import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
 
 public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
@@ -18,7 +15,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    accounts.assertDisplayEquals("10101010", 1.23, "2006/01/10");
+    accounts.checkAccount("Account n. 10101010", 1.23, "2006/01/10");
     accounts.checkSummary(1.23, "2006/01/30");
     views.selectData();
     transactions.initAmountContent()
@@ -45,8 +42,8 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     accounts.checkSummary(20.0, "2006/01/29");
-    accounts.assertDisplayEquals("Compte 123123123", 10, "2006/01/15");
-    accounts.assertDisplayEquals("Carte 1000-2000-3000-4000", 10, "2006/01/20");
+    accounts.checkAccount("Account n. 123123123", 10, "2006/01/15");
+    accounts.checkAccount("Card n. 1000-2000-3000-4000", 10, "2006/01/20");
     views.selectData();
     transactions.initAmountContent()
       .add("Bar", -6.00, 10.00, 20.00)
@@ -69,7 +66,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    accounts.assertDisplayEquals("10101010", 12345.60, "2006/05/01");
+    accounts.checkAccount("Account n. 10101010", 12345.60, "2006/05/01");
     accounts.checkSummary(12345.60, "2006/05/30");
   }
 
@@ -81,7 +78,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     operations.importQifFiles(SOCIETE_GENERALE, path);
 
     views.selectHome();
-    accounts.assertDisplayEquals("Main account");
+    accounts.checkDisplayIsEmpty("Main account");
   }
 
   public void testImportFromViewInitializesTheDefaultBankAndAccountForQifFiles() throws Exception {
@@ -99,11 +96,9 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    Window dialog = WindowInterceptor.getModalDialog(
-      accounts.getImportTrigger(OperationChecker.DEFAULT_ACCOUNT_NUMBER));
-    ImportChecker importer = new ImportChecker(dialog);
-    importer.selectFiles(path);
-    importer.acceptFile();
-    importer.checkSelectedAccount("Main account (11111)");
+    accounts.openImportForAccount("Main account")
+      .selectFiles(path)
+      .acceptFile()
+      .checkSelectedAccount("Main account (11111)");
   }
 }

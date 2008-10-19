@@ -8,7 +8,9 @@ import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class AccountEditionChecker {
+import javax.swing.*;
+
+public class AccountEditionChecker extends DataChecker {
   private Window dialog;
 
   public static AccountEditionChecker open(Trigger trigger) {
@@ -25,9 +27,9 @@ public class AccountEditionChecker {
     return this;
   }
 
-  public AccountEditionChecker checkAccountName(String text) {
+  public AccountEditionChecker checkAccountName(String name) {
     TextBox accountNameField = dialog.getInputTextBox("name");
-    assertThat(accountNameField.textEquals("Main account"));
+    assertThat(accountNameField.textEquals(name));
     return this;
   }
 
@@ -42,13 +44,38 @@ public class AccountEditionChecker {
     return this;
   }
 
+  public AccountEditionChecker checkAccountNumber(String number) {
+    assertThat(dialog.getInputTextBox("number").textEquals(number));
+    return this;
+  }
+
   public AccountEditionChecker setBalance(double initialBalance) {
     dialog.getInputTextBox("balance").setText(Double.toString(initialBalance));
     return this;
   }
 
+  public AccountEditionChecker checkBalanceDisplayed(boolean visible) {
+    checkComponentVisible(dialog, JTextField.class, "balance", false);
+    return this;
+  }
+
+  public AccountEditionChecker checkValidationError(String message) {
+    dialog.getButton("OK").click();
+    UISpecAssert.assertTrue(dialog.isVisible());
+
+    TextBox errorLabel = dialog.getTextBox("message");
+    assertThat(errorLabel.isVisible());
+    assertThat(errorLabel.textEquals(message));
+    return this;
+  }
+
   public void validate() {
     dialog.getButton("OK").click();
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
+  public void cancel() {
+    dialog.getButton("Cancel").click();
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 }
