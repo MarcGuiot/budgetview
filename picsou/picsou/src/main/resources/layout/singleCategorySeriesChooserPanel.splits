@@ -13,7 +13,7 @@
         <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
           <row>
             <toggleButton ref="seriesToggle" styleClass="selector"/>
-            <button ref="editSeries" icon="magnifier_small.png" rolloverIcon="magnifier.png" pressedIcon="magnifier_small.png"
+            <button ref="editSeries" icon="magnifier_small.png" rolloverIcon="magnifier_rollover.png" pressedIcon="magnifier_small.png"
                     text="" opaque="false" borderPainted="false"/>
             <filler fill="horizontal"/>
           </row>
