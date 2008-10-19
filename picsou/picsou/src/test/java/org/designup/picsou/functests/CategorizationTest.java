@@ -763,10 +763,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkContainsIncomeSeries("Salary");
     categorization.selectIncome()
       .selectIncomeSeries("Salary", false);
-    categorization.editSeries(true).checkSeriesSelected("Salary").cancel();
-    categorization
-      .selectIncomeSeries("Other salary", false);
-    categorization.editSeries(true).checkSeriesSelected("Other salary").cancel();
+    categorization.editSeries("Salary").checkSeriesSelected("Salary").cancel();
+
+    categorization.selectIncomeSeries("Other salary", false);
+    categorization.editSeries("Other salary").checkSeriesSelected("Other salary").cancel();
   }
 
   public void testEditingOccasionalCategories() throws Exception {
