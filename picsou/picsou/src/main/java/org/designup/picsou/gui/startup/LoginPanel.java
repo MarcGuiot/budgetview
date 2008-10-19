@@ -97,9 +97,7 @@ public class LoginPanel {
     confirmPasswordField.addActionListener(new LoginAction());
     creationCheckBox.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        if (creationCheckBox.isSelected()) {
-          clearMessage();
-        }
+        clearMessage();
         setVisible(creationComponents, creationCheckBox.isSelected());
         initFocus();
       }

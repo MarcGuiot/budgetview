@@ -15,7 +15,7 @@
       <filler fill="vertical" weightY="10"/>
 
       <panel ui="loginPanel" name="loginPanel" opaque="false" anchor="center" fill="none" weightY="20"
-             preferredSize="(350,480)">
+             preferredSize="(350,530)">
 
         <column margin="20" anchor="center" fill="none" marginBottom="20">
 
@@ -41,10 +41,14 @@
             <component ref="confirmPassword"/>
           </row>
 
-          <htmlEditorPane ref="message" margin="5" preferredSize="(200,30)"/>
+          <textArea styleClass="multiLineLabel" text="$login.password.warning" autoHideSource="confirmPassword"
+                    preferredSize="(200,30)"/>
 
-          <component ref="progressPanel" opaque="false" visible="false"
-                     preferredSize="(30,30)" minimumSize="(30,30)"/>
+          <column minimumSize="(200,30)" preferredSize="(200,30)" margin="5">
+            <htmlEditorPane ref="message" preferredSize="(200,30)"/>
+            <component ref="progressPanel" opaque="false" visible="false"
+                       preferredSize="(30,30)" minimumSize="(30,30)"/>
+          </column>
 
           <row styleClass="buttons">
             <button ref="login"/>

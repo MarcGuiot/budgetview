@@ -21,7 +21,7 @@
 
       <label text="$import.step1.title" styleClass="title"/>
 
-      <htmlEditorPane text="$login.initial.file"/>
+      <htmlEditorPane text="$import.step1.select.file"/>
 
       <row margin="5" defaultAnchor="center">
         <textField ref="fileField" marginRight="10" anchor="center" weightX="100"/>

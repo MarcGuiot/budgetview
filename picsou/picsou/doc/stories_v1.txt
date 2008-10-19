@@ -27,14 +27,11 @@
                REGIS
 ====================================
 
-- Login : message avertissement / mot de passe
-
 - Messages d'aide / sequence entree dans l'appli
 
 - pas bien vu le message dans CategorizationView : le mettre dans un bloc ?
 
 - Creation + Edition de compte
-
 
 
 ====================================
