@@ -505,6 +505,12 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker editSeries(String seriesLabel) {
+    final Window creationDialog = WindowInterceptor.getModalDialog(getPanel().getButton("seriesEdit." + seriesLabel).triggerClick());
+    return new SeriesEditionDialogChecker(creationDialog, true);
+  }
+
+
   public SeriesEditionDialogChecker editSeries(boolean isSingleSelection) {
     final Window creationDialog = WindowInterceptor.getModalDialog(getPanel().getButton("editSeries").triggerClick());
     return new SeriesEditionDialogChecker(creationDialog, isSingleSelection);
