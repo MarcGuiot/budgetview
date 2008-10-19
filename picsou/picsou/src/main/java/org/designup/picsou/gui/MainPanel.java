@@ -44,8 +44,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.fieldContainsIgnoreCase;
-import static org.globsframework.model.utils.GlobMatchers.or;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -199,17 +198,15 @@ public class MainPanel {
 
     menu.addSeparator();
     menu.add(registerAction);
-    menu.addSeparator();
-    menu.add(exitAction);
+    
+    if (useMacOSMenu()) {
+      MRJAdapter.addQuitApplicationListener(exitAction);
+    }
+    else {
+      menu.addSeparator();
+      menu.add(exitAction);
+    }
     return menu;
-  }
-
-  private boolean useMacOSMenu() {
-    boolean result = Gui.isMacOSX();
-    Utils.beginRemove();
-    result = false;
-    Utils.endRemove();
-    return result;
   }
 
   private JMenu createEditMenu(PicsouFrame frame, Directory directory) {
@@ -249,6 +246,14 @@ public class MainPanel {
       menu.add(aboutAction);
     }
     return menu;
+  }
+
+  private boolean useMacOSMenu() {
+    boolean result = Gui.isMacOSX();
+    Utils.beginRemove();
+    result = false;
+    Utils.endRemove();
+    return result;
   }
 
   private static class RegisterLicenseAction extends AbstractAction {

@@ -17,6 +17,7 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
   private TimeService timeService;
   private MonthFontMetricInfo.MonthSizes monthSize;
   private BalancesProvider balancesProvider;
+  private static final int MIN_WIDTH = 50;
 
   public MonthGraph(Glob month, MonthViewColors colors, ChainedSelectableElement element,
                     TimeService timeService, BalancesProvider balancesProvider) {
@@ -108,7 +109,7 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
   }
 
   public int getMinWidth() {
-    return monthSize.getMinWidth() + 4;
+    return Math.max(monthSize.getMinWidth() + 4, MIN_WIDTH);
   }
 
   public boolean equals(Object o) {

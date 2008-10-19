@@ -38,8 +38,6 @@
                RESTE
 ====================================
 
-- La taille mini des mois dans TimeView est trop petite
-
 - Revoir centrage par defaut de TimeView quand le nombre de mois est grand (> 3 ans) : plutot montrer le futur
 
 - BudgetView : quand on clique sur une serie, aucun moyen pour la supprimer a partir de la fenetre qui apparait 
