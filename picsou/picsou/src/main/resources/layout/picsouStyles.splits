@@ -73,7 +73,10 @@
            border="matte(1,0,0,0,dialog.separator)"/>
 
     <style selector="label.separatorTitle"
-           font="-,plain,10" foreground="dialog.separator.title"/>    
+           font="-,plain,10" foreground="dialog.separator.title"/>
+
+    <style selector="label.errorMessage" horizontalAlignment="center" foreground="#FF0000"
+               fill="horizontal" anchor="center"/>
 
     <!-- Hyperlinks -->
 
