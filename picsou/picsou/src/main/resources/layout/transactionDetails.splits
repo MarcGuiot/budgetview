@@ -37,14 +37,14 @@
 
       <card name="noData">
         <column marginBottom="10">
-          <htmlEditorPane text="$transaction.details.nodata"/>
+          <htmlEditorPane text="$transaction.details.nodata" hyperlinkListener="hyperlinkHandler"/>
           <filler fill="vertical"/>
         </column>
       </card>
 
       <card name="noSelection">
         <column marginBottom="10">
-          <htmlEditorPane text="$transaction.details.noselection"/>
+          <htmlEditorPane text="$transaction.details.noselection" hyperlinkListener="hyperlinkHandler"/>
           <filler fill="vertical"/>
         </column>
       </card>
