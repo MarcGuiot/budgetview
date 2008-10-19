@@ -22,8 +22,6 @@ C org.globsframework.gui.splits.components.ShadowedLabelUI
 C org.globsframework.gui.splits.components.HyperlinkButtonUI
 C com.jidesoft.plaf.aqua.AquaJideUtils
 P com/jgoodies/looks true
-R fonts.properties
-R color.properties
 R layout/
 R banks/
 R logging/
@@ -32,13 +30,6 @@ R help/
 R images/
 R icons/
 R jide/
-R darkgreycolors.properties
-R color_purple.properties
-R color_green.properties
-R blackcolors.properties
-R grey_yellow1.properties
-R regis.properties
-R seb.properties
-R whitecolors.properties
+R colors/
 R fonts.properties
 R logging.properties

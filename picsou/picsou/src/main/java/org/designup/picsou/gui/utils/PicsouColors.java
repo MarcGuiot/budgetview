@@ -130,14 +130,15 @@ public enum PicsouColors {
 
   public static ColorService createColorService() {
     ColorService colorService = new ColorService(PicsouColors.class,
-                                                 "/color.properties",
-                                                 "/seb.properties",
-                                                 "/regis.properties",
-                                                 "/darkgreycolors.properties",
-                                                 "/blackcolors.properties",
-                                                 "/color_purple.properties",
-                                                 "/color_green.properties",
-                                                 "/grey_yellow1.properties");
+                                                 "/colors/color.properties",
+                                                 "/colors/seb.properties",
+                                                 "/colors/regis.properties",
+                                                 "/colors/darkgreycolors.properties",
+                                                 "/colors/blackcolors.properties",
+                                                 "/colors/color_purple.properties",
+                                                 "/colors/color_green.properties",
+                                                 "/colors/color_print.properties",
+                                                 "/colors/grey_yellow1.properties");
     check(colorService);
     return colorService;
   }
