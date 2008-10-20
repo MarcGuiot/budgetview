@@ -11,7 +11,12 @@
       <toggleButton ref="invisibleToggle" visible="false"/>
       <scrollPane>
         <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
-          <toggleButton ref="seriesToggle" styleClass="selector"/>
+          <row>
+            <toggleButton ref="seriesToggle" styleClass="selector"/>
+            <button ref="editSeries" icon="magnifier_small.png" rolloverIcon="magnifier_rollover.png" pressedIcon="magnifier_rollover.png"
+                    text="" opaque="false" borderPainted="false"/>
+            <filler fill="horizontal"/>
+          </row>
         </repeat>
       </scrollPane>
     </column>

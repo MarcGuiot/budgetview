@@ -203,8 +203,7 @@ public class ImportSession {
   }
 
   public Glob createDefaultAccount() {
-    return localRepository.create(Account.TYPE,
-                                  value(Account.NAME, Lang.get("account.default.current.name")));
+    return localRepository.create(Account.TYPE, value(Account.NAME, Lang.get("account.default.current.name")));
   }
 
   public Key createImport(TypedInputStream file, GlobList createdTransactions, GlobRepository targetRepository) {

@@ -36,7 +36,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .check();
     views.selectHome();
 
-    accounts.changeBalance(OperationChecker.DEFAULT_ACCOUNT_NUMBER, 100, "SACLAY");
+    accounts.changeBalance("Main account", 100, "SACLAY");
     views.selectData();
     transactions.initAmountContent()
       .add("SACLAY", -55.49, 100, 100)
@@ -64,8 +64,8 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .add("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, 236.64, 236.64)
       .check();
     views.selectHome();
-    accounts.changeBalance(OperationChecker.DEFAULT_ACCOUNT_NUMBER, 80, "Auchan");
-    accounts.getBalance(OperationChecker.DEFAULT_ACCOUNT_NUMBER)
+    accounts.changeBalance("Main account", 80, "Auchan");
+    accounts.getBalance("Main account")
       .checkAccountLabel("Account: Main account (11111)");
   }
 

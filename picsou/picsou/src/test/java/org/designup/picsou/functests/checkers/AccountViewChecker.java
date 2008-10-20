@@ -4,13 +4,16 @@ import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.utils.Dates;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.finder.ComponentMatcher;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
 import java.util.Date;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
+
+import junit.framework.Assert;
 
 public class AccountViewChecker extends DataChecker {
   private Panel panel;
@@ -19,41 +22,42 @@ public class AccountViewChecker extends DataChecker {
     this.panel = panel;
   }
 
-  public void checkAccountNames(String... names) {
-    UIComponent[] uiComponents = panel.getUIComponents(TextBox.class, "accountName");
-    Set<String> existingNames = new HashSet<String>();
-    for (UIComponent uiComponent : uiComponents) {
-      TextBox textBox = (TextBox)uiComponent;
-      existingNames.add(textBox.getText());
-    }
-    org.globsframework.utils.TestUtils.assertSetEquals(existingNames, names);
+  public void checkAccountNames(String... expectedNames) {
+    Set<String> existingNames = getDisplayedAccounts();
+    org.globsframework.utils.TestUtils.assertSetEquals(existingNames, expectedNames);
   }
 
-  public void assertDisplayEquals(String accountNumber, double balance, String updateDate) {
-    Panel parentPanel = getAccountPanel(accountNumber);
-    UISpecAssert.assertThat(parentPanel.getButton("accountBalance").textEquals(toString(balance)));
+  private Set<String> getDisplayedAccounts() {
+    UIComponent[] uiComponents = panel.getUIComponents(Button.class, "accountName");
+    Set<String> existingNames = new HashSet<String>();
+    for (UIComponent uiComponent : uiComponents) {
+      Button button = (Button)uiComponent;
+      existingNames.add(button.getLabel());
+    }
+    return existingNames;
+  }
+
+  public void checkAccount(String accountName, double balance, String updateDate) {
+    Panel parentPanel = getAccountPanel(accountName);
+    assertThat(parentPanel.getButton("accountBalance").textEquals(toString(balance)));
     Date date = Dates.parse(updateDate);
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(Formatting.toString(date)));
   }
 
-  private Panel getAccountPanel(final String accountName) {
-    final ComponentMatcher componentMatcher = ComponentMatchers.displayedNameIdentity(accountName);
-    TextBox account = panel.getTextBox(componentMatcher);
-    return account.getContainer("accountParent");
-  }
-
-  public void assertDisplayEquals(String accountName) {
+  public void checkDisplayIsEmpty(String accountName) {
     Panel parentPanel = getAccountPanel(accountName);
     UISpecAssert.assertTrue(parentPanel.getButton("accountBalance").textEquals("0.0"));
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textIsEmpty());
   }
 
   public void checkSummary(double amount, String updateDate) {
-    UISpecAssert.assertThat(panel.getTextBox("totalBalance").textEquals(toString(amount)));
+    assertThat(panel.getTextBox("totalBalance").textEquals(toString(amount)));
   }
 
-  public Trigger getImportTrigger(String account) {
-    return getAccountPanel(account).getButton("Import data").triggerClick();
+  public ImportChecker openImportForAccount(String accountName) {
+    Button importButton = getAccountPanel(accountName).getButton("Import data");
+    Window dialog = WindowInterceptor.getModalDialog(importButton.triggerClick());
+    return new ImportChecker(dialog);
   }
 
   public BalanceEditionChecker getBalance(String accountName) {
@@ -69,5 +73,28 @@ public class AccountViewChecker extends DataChecker {
       .setAmountWithoutEnter(balance)
       .validate();
     return this;
+  }
+
+  public AccountEditionChecker edit(String accountName) {
+    return AccountEditionChecker.open(getAccountPanel(accountName).getButton(accountName).triggerClick());
+  }
+
+  public AccountViewChecker checkAccountInformation(String accountName, String accountNumber) {
+    Panel panel = getAccountPanel(accountName);
+    assertThat(panel.getButton("name").textEquals(accountName));
+    assertThat(panel.getTextBox("number").textEquals(accountNumber));
+    return this;
+  }
+
+  private Panel getAccountPanel(final String accountName) {
+    Button account = null;
+    try {
+      final ComponentMatcher componentMatcher = ComponentMatchers.displayedNameIdentity(accountName);
+      account = panel.getButton(componentMatcher);
+    }
+    catch (Throwable e) {
+      Assert.fail("Account '" + accountName + "' not found - available accounts: " + getDisplayedAccounts());
+    }
+    return account.getContainer("accountParent");
   }
 }

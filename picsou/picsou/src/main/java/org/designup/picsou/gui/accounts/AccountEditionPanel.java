@@ -104,6 +104,10 @@ public class AccountEditionPanel {
         setMessage("account.error.missing.bank");
         return false;
       }
+      if (Strings.isNullOrEmpty(account.get(Account.NAME))) {
+        setMessage("account.error.missing.name");
+        return false;
+      }
       return true;
     }
     return true;

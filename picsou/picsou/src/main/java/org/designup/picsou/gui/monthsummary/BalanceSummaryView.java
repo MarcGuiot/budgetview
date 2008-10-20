@@ -121,10 +121,12 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
       contentPanel.setVisible(false);
       Glob balanceStat = balanceStats[balanceStats.length - 1];
       Double amount = balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
-      updateTotal(amount);
-      amountSummaryLabel.setText(Lang.get("balanceSummary.title.past",
-                                          Formatting.toString(
-                                            Month.getLastDay(balanceStat.get(BalanceStat.MONTH)))));
+      if (amount != null) {
+        updateTotal(amount);
+        amountSummaryLabel.setText(Lang.get("balanceSummary.title.past",
+                                            Formatting.toString(
+                                              Month.getLastDay(balanceStat.get(BalanceStat.MONTH)))));
+      }
       return;
     }
 

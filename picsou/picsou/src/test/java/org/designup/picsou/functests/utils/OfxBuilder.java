@@ -21,6 +21,7 @@ import java.util.Date;
 public class OfxBuilder {
 
   public static final String DEFAULT_ACCOUNT_ID = "00001123";
+public static final String DEFAULT_ACCOUNT_NAME = "Account n. 00001123";
 
   private GlobRepository repository;
   private String fileName;

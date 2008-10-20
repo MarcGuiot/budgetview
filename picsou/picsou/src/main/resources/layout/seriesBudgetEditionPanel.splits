@@ -5,7 +5,7 @@
   <styles>
     <style selector="textField" fill="horizontal" anchor="left"/>
     <style selector="label.month" foreground="#444444" font="-,plain,10"/>
-    <style selector="radioButton" font="-,plain,10"/>
+    <style selector="radioButton" opaque="false" font="-,plain,10"/>
   </styles>
 
   <panel name="seriesBudgetEdition" opaque="false">

@@ -10,6 +10,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.Directory;
@@ -42,23 +43,29 @@ public class AccountEditionDialog {
 
     dialog =
       PicsouDialog.createWithButtons(owner, builder.<JPanel>load(),
-                                     new CreateAccountAction(), new CancelAction(),
+                                     new OkAction(), new CancelAction(),
                                      directory);
   }
 
-  public void show() {
-    createAccount();
+  public void show(Glob account) {
+    localRepository.reset(new GlobList(account), Account.TYPE);
+    accountEditionPanel.setBalanceEditorVisible(false);
+    doShow(localRepository.get(account.getKey()));
+  }
+
+  public void showWithNewAccount() {
+    doShow(localRepository.create(Account.TYPE));
+  }
+
+  private void doShow(Glob localAccount) {
+    currentAccount = localAccount;
+    accountEditionPanel.setAccount(localAccount);
     dialog.pack();
     GuiUtils.showCentered(dialog);
   }
 
-  private void createAccount() {
-    currentAccount = localRepository.create(Account.TYPE);
-    accountEditionPanel.setAccount(currentAccount);
-  }
-
-  private class CreateAccountAction extends AbstractAction {
-    public CreateAccountAction() {
+  private class OkAction extends AbstractAction {
+    public OkAction() {
       super(Lang.get("ok"));
     }
 

@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(340,300)">
+  <panel styleClass="dialog" preferredSize="(340,200)">
     <column styleClass="innerDialog">
 
       <label text="$account.panel.title" styleClass="title"/>
@@ -11,7 +11,7 @@
 
       <label ref="message" foreground="#FF0000"/>
 
-      <filler fill="vertical" weightY="20"/>
+      <filler fill="vertical" weightY="10"/>
 
     </column>
   </panel>

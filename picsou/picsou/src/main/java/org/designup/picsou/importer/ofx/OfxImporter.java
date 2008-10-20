@@ -5,6 +5,7 @@ import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Category.*;
 import org.designup.picsou.utils.PicsouUtils;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobIdGenerator;
@@ -386,10 +387,10 @@ public class OfxImporter implements AccountFileImporter {
 
     private String getName(String number, boolean isCard) {
       if (isCard) {
-        return "Carte " + PicsouUtils.splitCardNumber(number);
+        return Lang.get("account.defaultName.card", PicsouUtils.splitCardNumber(number));
       }
       else {
-        return "Compte " + number;
+        return Lang.get("account.defaultName.standard", number);
       }
     }
 

@@ -235,7 +235,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
-
     GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
                                                            "/layout/singleCategorySeriesChooserPanel.splits",
                                                            repository, directory);
@@ -250,7 +249,10 @@ public class CategorizationView extends View implements TableView, Filterable, C
     GlobRepeat repeat = panelBuilder.addRepeat("seriesRepeat",
                                                Series.TYPE,
                                                linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                                               new SingleCategorySeriesComponentFactory(invisibleToggle, repository, directory));
+                                               new SingleCategorySeriesComponentFactory(invisibleToggle, 
+                                                                                        seriesEditionDialog,
+                                                                                        repository,
+                                                                                        directory));
     seriesRepeat.add(
       new Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>(
         PicsouMatchers.seriesDateFilter(budgetArea.getId(), true), repeat));
@@ -261,7 +263,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   private void addMultiCategoriesSeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
-
     GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
                                                            "/layout/multiCategoriesSeriesChooserPanel.splits",
                                                            repository, directory);

@@ -10,7 +10,7 @@
 
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(550,500)">
+  <panel styleClass="dialog" preferredSize="(550,550)">
 
     <column styleClass="innerDialog">
 
@@ -37,7 +37,9 @@
       <label text="$import.account.panel.title" styleClass="header" autoHideSource="accountEditionPanel"/>
       <panel ref="accountEditionPanel"/>
 
-      <label ref="importMessage" foreground="#FF0000"/>
+      <panel minimumSize="(200,20)" opaque="false" marginTop="5">
+        <label ref="importMessage" styleClass="errorMessage"/>
+      </panel>
 
       <row styleClass="buttons">
         <button action="finish"/>

@@ -29,10 +29,11 @@
       </row>
 
       <htmlEditorPane text="$import.step1.format.advice" marginTop="10"
-                styleClass="multiLineLabel" font="-,plain,11" hyperlinkListener="hyperlinkHandler"/>
+                      styleClass="multiLineLabel" font="-,plain,11" hyperlinkListener="hyperlinkHandler"/>
 
-      <label ref="message" margin="5" horizontalAlignment="center" foreground="#FF0000"
-             fill="horizontal" anchor="center"/>
+      <panel minimumSize="(200,20)" opaque="false" margin="5">
+        <label ref="message" styleClass="errorMessage"/>
+      </panel>
 
       <filler fill="vertical"/>
 

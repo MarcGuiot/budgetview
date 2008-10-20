@@ -22,6 +22,6 @@ public class NewAccountAction extends AbstractAction {
 
   public void actionPerformed(ActionEvent e) {
     AccountEditionDialog dialog = new AccountEditionDialog(owner, repository, directory);
-    dialog.show();
+    dialog.showWithNewAccount();
   }
 }

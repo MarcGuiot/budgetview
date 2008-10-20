@@ -1,6 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.LicenseChecker;
+import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
@@ -112,7 +113,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkProjects(200)
       .checkUncategorized("-23.00");
 
-    accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_ID, 1000, "Air France");
+    accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "Air France");
 
     timeline.selectAll();
     balanceSummary

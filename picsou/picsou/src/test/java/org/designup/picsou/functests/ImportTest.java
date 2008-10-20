@@ -172,7 +172,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     importDialog.checkClosed();
 
     views.selectHome();
-    accounts.assertDisplayEquals("12345", 12.33, "2006/01/10");
+    accounts.checkAccount("Main", 12.33, "2006/01/10");
   }
 
   public void testImportTwoQifFilesInTwoDifferentAccounts() throws Exception {

@@ -17,6 +17,7 @@ public class OperationChecker {
   private MenuItem undoMenu;
   private MenuItem redoMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
+  public static final String DEFAULT_ACCOUNT_NAME = "Account n. 11111";
   private Window window;
 
   public OperationChecker(Window window) {

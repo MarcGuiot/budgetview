@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
 import org.designup.picsou.gui.utils.TableView;
@@ -92,6 +93,8 @@ public class TransactionDetailsView extends View {
                 GlobMultiLineTextView.init(Transaction.TYPE, repository, directory,
                                            new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, "..."))
                   .setAutoHideMatcher(new OriginalLabelVisibilityMatcher()));
+
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
 
     return builder;
   }

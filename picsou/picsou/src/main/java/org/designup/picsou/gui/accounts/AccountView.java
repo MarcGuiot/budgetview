@@ -10,17 +10,16 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.views.AbstractGlobTextView;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
-import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
-import static org.globsframework.model.utils.GlobMatchers.contains;
-import static org.globsframework.model.utils.GlobMatchers.not;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -49,9 +48,15 @@ public class AccountView extends View {
 
   private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
-      add("accountName", Account.NAME, account, cellBuilder);
-      add("accountNumber", Account.NUMBER, account, cellBuilder);
-      add("accountUpdateDate", Account.BALANCE_DATE, account, cellBuilder);
+      add(GlobButtonView.init(Account.NAME, repository, directory, new EditAccountFunctor()),
+          "accountName", account, cellBuilder);
+
+      add(GlobLabelView.init(Account.NUMBER, repository, directory),
+          "accountNumber", account, cellBuilder);
+
+      add(GlobLabelView.init(Account.BALANCE_DATE, repository, directory),
+          "accountUpdateDate", account, cellBuilder);
+
       final GlobButtonView balance =
         GlobButtonView.init(Account.TYPE, repository, directory,
                             new GlobListStringifier() {
@@ -84,11 +89,8 @@ public class AccountView extends View {
       });
     }
 
-    private void add(String name, Field field, Glob account, RepeatCellBuilder cellBuilder) {
-      final GlobLabelView globLabelView = GlobLabelView.init(field, repository, directory);
-      cellBuilder.add(name, globLabelView
-        .forceSelection(account)
-        .getComponent());
+    private void add(final AbstractGlobTextView globLabelView, String name, Glob account, RepeatCellBuilder cellBuilder) {
+      cellBuilder.add(name, globLabelView.forceSelection(account).getComponent());
       cellBuilder.addDisposeListener(new Disposable() {
         public void dispose() {
           globLabelView.dispose();
@@ -107,6 +109,13 @@ public class AccountView extends View {
 
       public void actionPerformed(ActionEvent e) {
         directory.get(BrowsingService.class).launchBrowser(url);
+      }
+    }
+
+    private class EditAccountFunctor implements GlobListFunctor {
+      public void run(GlobList list, GlobRepository repository) {
+        AccountEditionDialog dialog = new AccountEditionDialog(directory.get(JFrame.class), repository, directory);
+        dialog.show(list.get(0));
       }
     }
   }
