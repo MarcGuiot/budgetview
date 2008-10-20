@@ -205,13 +205,15 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     }
 
     public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-      if (changeSet.containsChanges(SeriesStat.TYPE)) {
+      if (changeSet.containsChanges(BalanceStat.TYPE)
+          || changeSet.containsChanges(SeriesStat.TYPE)) {
         update();
       }
     }
 
     public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-      if (changedTypes.contains(SeriesStat.TYPE)) {
+      if (changedTypes.contains(BalanceStat.TYPE)
+          || changedTypes.contains(SeriesStat.TYPE)) {
         update();
       }
     }
@@ -224,27 +226,33 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     }
 
     public void update() {
+      Double remaining = 0.0;
       Double observed = 0.0;
       Double planned = 0.0;
-      Map<Integer, Integer> cache = new HashMap<Integer, Integer>();
-      for (Glob seriesStat : repository.getAll(SeriesStat.TYPE, GlobMatchers.fieldIn(SeriesStat.MONTH, selectedMonths))) {
-        Integer budgetAreaId = cache.get(seriesStat.get(SeriesStat.SERIES));
-        if (budgetAreaId == null) {
-          Glob series = repository.get(Key.create(Series.TYPE, seriesStat.get(SeriesStat.SERIES)));
-          budgetAreaId = series.get(Series.BUDGET_AREA);
-          cache.put(seriesStat.get(SeriesStat.SERIES), budgetAreaId);
-        }
-        if (budgetArea.getId().equals(budgetAreaId)) {
-          observed += multiplier * seriesStat.get(SeriesStat.AMOUNT);
-          planned += multiplier * seriesStat.get(SeriesStat.PLANNED_AMOUNT);
-        }
+      for (Glob balanceStat : repository.getAll(BalanceStat.TYPE,
+                                                GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonths))) {
+        observed += multiplier * balanceStat.get(BalanceStat.getObserved(budgetArea));
+        planned += multiplier * balanceStat.get(BalanceStat.getPlanned(budgetArea));
+        remaining += multiplier * balanceStat.get(BalanceStat.getRemaining(budgetArea));
       }
+      // Pla Obs res
+      // 100 50 50
+      // 100 110 0 (-10)
+      // 200 160 50
+      // ==> 160, 200, -10 (200 - 50 - 160)
+      // ==> 160 / (160 + 200 + 50), 50 / (160 + 200 + 50), 200 / (160 + 200),
 
       amountLabel.setText(Formatting.DECIMAL_FORMAT.format(observed));
       amountLabel.setVisible(true);
       amountLabel.setBackground(Color.RED);
-      plannedLabel.setText(Formatting.DECIMAL_FORMAT.format(planned));
-      gauge.setValues(observed, planned);
+      double overrunValue = multiplier * (planned - (remaining + observed));
+      if (overrunValue > 10E-6) {
+        this.plannedLabel.setText(Formatting.DECIMAL_FORMAT.format(planned + overrunValue));
+      }
+      else {
+        this.plannedLabel.setText(Formatting.DECIMAL_FORMAT.format(planned));
+      }
+      gauge.setValues(observed, planned, overrunValue);
     }
   }
 
@@ -258,7 +266,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     GlobList selectedSeriesStats = new GlobList();
     for (Glob month : months) {
       Integer monthId = month.get(Month.ID);
-      selectedMonthStats.addAll(repository.getAll(BalanceStat.TYPE, fieldEquals(BalanceStat.MONTH_ID, monthId)));
+      selectedMonthStats.addAll(repository.getAll(BalanceStat.TYPE, fieldEquals(BalanceStat.MONTH, monthId)));
       selectedSeriesStats.addAll(repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, monthId)));
     }
 
@@ -329,4 +337,5 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       dialog.show();
     }
   }
+
 }

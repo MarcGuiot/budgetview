@@ -1,10 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.BalanceStat;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -45,18 +42,25 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
   private static class SeriesAmounts {
     double income = 0;
+    double stillPlannedIncome = 0;
     double plannedIncome = 0;
     double expenses = 0;
+    double stillPlannedExpenses = 0;
     double plannedExpenses = 0;
     double recurring = 0;
+    double stillPlannedRecurring = 0;
     double plannedRecurring = 0;
     double envelopes = 0;
+    double stillPlannedEnvelopes = 0;
     double plannedEnvelopes = 0;
     double occasional = 0;
+    double stillPlannedOccasional = 0;
     double plannedOccasional = 0;
     double special = 0;
+    double stillPlannedSpecial = 0;
     double plannedSpecial = 0;
     double savings = 0;
+    double stillPlannedSavings = 0;
     double plannedSavings = 0;
     double uncategorized = 0;
     double beginOfMonth = 0;
@@ -85,18 +89,61 @@ public class BalanceStatTrigger implements ChangeSetListener {
       for (Glob series : repository.getAll(Series.TYPE)) {
         if (BudgetArea.INCOME.getId().equals(series.get(Series.BUDGET_AREA))) {
           incomeSeries.add(series.get(Series.ID));
+          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+            .getGlobs();
+          for (Glob budget : budgets) {
+            SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
+            amounts.plannedIncome += budget.get(SeriesBudget.AMOUNT);
+          }
         }
         else if (BudgetArea.RECURRING.getId().equals(series.get(Series.BUDGET_AREA))) {
           fixedSeries.add(series.get(Series.ID));
+          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+            .getGlobs();
+          for (Glob budget : budgets) {
+            SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
+            amounts.plannedRecurring += budget.get(SeriesBudget.AMOUNT);
+            amounts.plannedExpenses += budget.get(SeriesBudget.AMOUNT);
+          }
         }
         else if (BudgetArea.ENVELOPES.getId().equals(series.get(Series.BUDGET_AREA))) {
           envelopeSeries.add(series.get(Series.ID));
+          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+            .getGlobs();
+          for (Glob budget : budgets) {
+            SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
+            amounts.plannedEnvelopes += budget.get(SeriesBudget.AMOUNT);
+            amounts.plannedExpenses += budget.get(SeriesBudget.AMOUNT);
+          }
         }
         else if (BudgetArea.SAVINGS.getId().equals(series.get(Series.BUDGET_AREA))) {
           savingsSeries.add(series.get(Series.ID));
+          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+            .getGlobs();
+          for (Glob budget : budgets) {
+            SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
+            amounts.plannedSavings += budget.get(SeriesBudget.AMOUNT);
+            amounts.plannedExpenses += budget.get(SeriesBudget.AMOUNT);
+          }
         }
         else if (BudgetArea.SPECIAL.getId().equals(series.get(Series.BUDGET_AREA))) {
           specialSeries.add(series.get(Series.ID));
+          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+            .getGlobs();
+          for (Glob budget : budgets) {
+            SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
+            amounts.plannedSpecial += budget.get(SeriesBudget.AMOUNT);
+            amounts.plannedExpenses += budget.get(SeriesBudget.AMOUNT);
+          }
+        }
+        else if (BudgetArea.OCCASIONAL.getId().equals(series.get(Series.BUDGET_AREA))) {
+          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+            .getGlobs();
+          for (Glob budget : budgets) {
+            SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
+            amounts.plannedOccasional += budget.get(SeriesBudget.AMOUNT);
+            amounts.plannedExpenses += budget.get(SeriesBudget.AMOUNT);
+          }
         }
       }
     }
@@ -120,17 +167,13 @@ public class BalanceStatTrigger implements ChangeSetListener {
       }
 
       Integer transactionSeries = transaction.get(Transaction.SERIES);
-      SeriesAmounts amounts = monthSeriesAmounts.get(transaction.get(Transaction.BANK_MONTH));
-      if (amounts == null) {
-        amounts = new SeriesAmounts();
-        monthSeriesAmounts.put(monthId, amounts);
-      }
+      SeriesAmounts amounts = getOrCreate(transaction.get(Transaction.MONTH));
 
       Double amount = transaction.get(Transaction.AMOUNT);
 
       if (incomeSeries.contains(transactionSeries)) {
         if (transaction.get(Transaction.PLANNED)) {
-          amounts.plannedIncome += amount;
+          amounts.stillPlannedIncome += amount;
         }
         else {
           amounts.income += amount;
@@ -139,7 +182,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
       else {
         if (fixedSeries.contains(transactionSeries)) {
           if (transaction.get(Transaction.PLANNED)) {
-            amounts.plannedRecurring += amount;
+            amounts.stillPlannedRecurring += amount;
           }
           else {
             amounts.recurring += amount;
@@ -147,7 +190,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
         }
         else if (envelopeSeries.contains(transactionSeries)) {
           if (transaction.get(Transaction.PLANNED)) {
-            amounts.plannedEnvelopes += amount;
+            amounts.stillPlannedEnvelopes += amount;
           }
           else {
             amounts.envelopes += amount;
@@ -155,7 +198,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
         }
         else if (specialSeries.contains(transactionSeries)) {
           if (transaction.get(Transaction.PLANNED)) {
-            amounts.plannedSpecial += amount;
+            amounts.stillPlannedSpecial += amount;
           }
           else {
             amounts.special += amount;
@@ -163,7 +206,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
         }
         else if (savingsSeries.contains(transactionSeries)) {
           if (transaction.get(Transaction.PLANNED)) {
-            amounts.plannedSavings += amount;
+            amounts.stillPlannedSavings += amount;
           }
           else {
             amounts.savings += amount;
@@ -171,7 +214,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
         }
         else if (Series.OCCASIONAL_SERIES_ID.equals(transactionSeries)) {
           if (transaction.get(Transaction.PLANNED)) {
-            amounts.plannedOccasional += amount;
+            amounts.stillPlannedOccasional += amount;
           }
           else {
             amounts.occasional += amount;
@@ -182,7 +225,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
         }
 
         if (transaction.get(Transaction.PLANNED)) {
-          amounts.plannedExpenses += amount;
+          amounts.stillPlannedExpenses += amount;
         }
         else {
           amounts.expenses += amount;
@@ -195,41 +238,64 @@ public class BalanceStatTrigger implements ChangeSetListener {
       }
     }
 
+    private SeriesAmounts getOrCreate(Integer monthId) {
+      SeriesAmounts amounts = monthSeriesAmounts.get(monthId);
+      if (amounts == null) {
+        amounts = new SeriesAmounts();
+        monthSeriesAmounts.put(monthId, amounts);
+      }
+      return amounts;
+    }
+
     void createStat() {
       for (Glob month : repository.getAll(Month.TYPE)) {
-
         Integer monthId = month.get(Month.ID);
         Glob beginOfMonthTransaction = firstTransactionForMonth.get(monthId);
         Glob endOfMonthTransaction = lastTransactionForMonth.get(monthId);
-        if (beginOfMonthTransaction == null) {
-          repository.create(Key.create(BalanceStat.TYPE, monthId));
-          continue;
+        Double beginOfMonthBalance = null;
+        Double balance = null;
+        Double endOfMonthBalance = null;
+        if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
+          endOfMonthBalance = endOfMonthTransaction.get(Transaction.BALANCE);
+          beginOfMonthBalance = beginOfMonthTransaction.get(Transaction.BALANCE) -
+                                beginOfMonthTransaction.get(Transaction.AMOUNT);
+          balance = endOfMonthBalance - beginOfMonthBalance;
         }
+
 
         SeriesAmounts seriesAmounts = monthSeriesAmounts.get(monthId);
 
-        double beginOfMonthBalance =
-          beginOfMonthTransaction.get(Transaction.BALANCE) -
-          beginOfMonthTransaction.get(Transaction.AMOUNT);
-
-        Double endOfMonthBalance = endOfMonthTransaction.get(Transaction.BALANCE);
-
         repository.create(Key.create(BalanceStat.TYPE, monthId),
-                          value(BalanceStat.MONTH_BALANCE, endOfMonthBalance - beginOfMonthBalance),
+                          value(BalanceStat.MONTH_BALANCE, balance),
+
                           value(BalanceStat.INCOME, seriesAmounts.income),
-                          value(BalanceStat.INCOME_REMAINING, seriesAmounts.plannedIncome),
+                          value(BalanceStat.INCOME_REMAINING, seriesAmounts.stillPlannedIncome),
+                          value(BalanceStat.INCOME_PLANNED, seriesAmounts.plannedIncome),
+
                           value(BalanceStat.EXPENSE, seriesAmounts.expenses),
-                          value(BalanceStat.EXPENSE_REMAINING, seriesAmounts.plannedExpenses),
+                          value(BalanceStat.EXPENSE_REMAINING, seriesAmounts.stillPlannedExpenses),
+                          value(BalanceStat.EXPENSE_PLANNED, seriesAmounts.plannedExpenses),
+
                           value(BalanceStat.OCCASIONAL, seriesAmounts.occasional),
-                          value(BalanceStat.OCCASIONAL_REMAINING, seriesAmounts.plannedOccasional),
+                          value(BalanceStat.OCCASIONAL_REMAINING, seriesAmounts.stillPlannedOccasional),
+                          value(BalanceStat.OCCASIONAL_PLANNED, seriesAmounts.plannedOccasional),
+
                           value(BalanceStat.RECURRING, seriesAmounts.recurring),
-                          value(BalanceStat.RECURRING_REMAINING, seriesAmounts.plannedRecurring),
+                          value(BalanceStat.RECURRING_REMAINING, seriesAmounts.stillPlannedRecurring),
+                          value(BalanceStat.RECURRING_PLANNED, seriesAmounts.plannedRecurring),
+
                           value(BalanceStat.ENVELOPES, seriesAmounts.envelopes),
-                          value(BalanceStat.ENVELOPES_REMAINING, seriesAmounts.plannedEnvelopes),
+                          value(BalanceStat.ENVELOPES_REMAINING, seriesAmounts.stillPlannedEnvelopes),
+                          value(BalanceStat.ENVELOPES_PLANNED, seriesAmounts.plannedEnvelopes),
+
                           value(BalanceStat.SAVINGS, seriesAmounts.savings),
-                          value(BalanceStat.SAVINGS_REMAINING, seriesAmounts.plannedSavings),
+                          value(BalanceStat.SAVINGS_REMAINING, seriesAmounts.stillPlannedSavings),
+                          value(BalanceStat.SAVINGS_PLANNED, seriesAmounts.plannedSavings),
+
                           value(BalanceStat.SPECIAL, seriesAmounts.special),
-                          value(BalanceStat.SPECIAL_REMAINING, seriesAmounts.plannedSpecial),
+                          value(BalanceStat.SPECIAL_REMAINING, seriesAmounts.stillPlannedSpecial),
+                          value(BalanceStat.SPECIAL_PLANNED, seriesAmounts.plannedSpecial),
+
                           value(BalanceStat.UNCATEGORIZED, seriesAmounts.uncategorized),
                           value(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_BALANCE, beginOfMonthBalance),
                           value(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE, endOfMonthBalance)

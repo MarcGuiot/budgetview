@@ -135,6 +135,12 @@ public class GaugeTest extends TestCase {
       .checkWarningNotShown();
   }
 
+  public void testForOverrun() throws Exception {
+    init(true, false, false)
+      .set(10, 20, 5);
+//      .checkEmpty()
+  }
+
   private GaugeChecker init() {
     return init(true, true, true);
   }

@@ -1,14 +1,19 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
+import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.components.GlobGaugeView;
+import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
+import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.globsframework.gui.GlobSelection;
@@ -20,17 +25,16 @@ import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,6 +51,9 @@ public class BudgetAreaSeriesView extends View {
   private GlobMatcher seriesFilter;
   private Repeat<Glob> seriesRepeat;
   private List<Key> currentSeries = Collections.emptyList();
+  private Gauge gauge;
+  private JLabel plannedLabel;
+  private JLabel amountLabel;
 
   protected BudgetAreaSeriesView(String name, final BudgetArea budgetArea, final GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -59,8 +66,19 @@ public class BudgetAreaSeriesView extends View {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
         seriesDateFilter.filterDates(selectedMonthIds);
         updateRepeat(repository);
+        update();
       }
     }, Month.TYPE);
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(BalanceStat.TYPE)) {
+          update();
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      }
+    });
   }
 
   private void updateRepeat(final GlobRepository repository) {
@@ -87,17 +105,56 @@ public class BudgetAreaSeriesView extends View {
     currentSeries = newSeries;
   }
 
+
+  void update() {
+    Double remaining = 0.0;
+    Double observed = 0.0;
+    Double planned = 0.0;
+    int multiplier = budgetArea.isIncome() ? 1 : -1;
+
+    Glob currentMonth = repository.get(CurrentMonth.KEY);
+
+    double overrunValue = 0;
+    for (Glob balanceStat : repository.getAll(BalanceStat.TYPE,
+                                              GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds))) {
+      observed += multiplier * balanceStat.get(BalanceStat.getObserved(budgetArea));
+      planned += multiplier * balanceStat.get(BalanceStat.getPlanned(budgetArea));
+      remaining += multiplier * balanceStat.get(BalanceStat.getRemaining(budgetArea));
+      if (balanceStat.get(BalanceStat.MONTH) >= currentMonth.get(CurrentMonth.MONTH_ID)) {
+        overrunValue += multiplier * (planned - (remaining + observed));
+      }
+    }
+    // Pla Obs res
+    // 100 50 50
+    // 100 110 0 (-10)
+    // 200 160 50
+    // ==> 160, 200, -10 (200 - 50 - 160)
+    // ==> 160 / (160 + 200 + 50), 50 / (160 + 200 + 50), 200 / (160 + 200),
+    amountLabel.setText(ForcedPlusGlobListStringifier.toString(Formatting.DECIMAL_FORMAT.format(observed), budgetArea));
+    amountLabel.setVisible(true);
+    amountLabel.setBackground(Color.RED);
+    if (overrunValue > 10E-6) {
+      this.plannedLabel.setText(ForcedPlusGlobListStringifier.toString(Formatting.DECIMAL_FORMAT.format(planned + overrunValue), budgetArea));
+    }
+    else {
+      this.plannedLabel.setText(ForcedPlusGlobListStringifier.toString(Formatting.DECIMAL_FORMAT.format(planned), budgetArea));
+    }
+    gauge.setValues(observed, planned, overrunValue);
+
+  }
+
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetAreaSeriesView.splits",
                                                       repository, directory);
 
     builder.add("budgetAreaTitle", new JLabel(budgetArea.getLabel()));
-    addTotalLabel("totalObservedAmount", PeriodSeriesStat.AMOUNT, builder);
-    addTotalLabel("totalPlannedAmount", PeriodSeriesStat.PLANNED_AMOUNT, builder);
+    amountLabel = new JLabel();
+    builder.add("totalObservedAmount", amountLabel);
+    plannedLabel = new JLabel();
+    builder.add("totalPlannedAmount", plannedLabel);
 
-    final GlobGaugeView gaugeView = new GlobGaugeView(PeriodSeriesStat.TYPE, budgetArea, PeriodSeriesStat.AMOUNT, PeriodSeriesStat.PLANNED_AMOUNT,
-                                                      totalMatcher, repository, directory);
-    builder.add("totalGauge", gaugeView.getComponent());
+    gauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
+    builder.add("totalGauge", gauge);
 
     seriesRepeat =
       builder.addRepeat("seriesRepeat",
@@ -176,6 +233,11 @@ public class BudgetAreaSeriesView extends View {
   }
 
   private GlobListStringifier getStringifier(final DoubleField field) {
+    return new ForcedPlusGlobListStringifier(budgetArea,
+                                             GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome()));
+  }
+
+  private GlobListStringifier getPlannedAmountStringifier(final DoubleField field) {
     return new ForcedPlusGlobListStringifier(budgetArea,
                                              GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome()));
   }

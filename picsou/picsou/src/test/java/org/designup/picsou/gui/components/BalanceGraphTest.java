@@ -24,12 +24,12 @@ public class BalanceGraphTest extends TestCase {
     Glob month10 = repository.create(Month.TYPE, value(Month.ID, 200810));
     Glob month11 = repository.create(Month.TYPE, value(Month.ID, 200811));
     repository.create(BalanceStat.TYPE,
-                      value(BalanceStat.MONTH_ID, 200810),
+                      value(BalanceStat.MONTH, 200810),
                       value(BalanceStat.INCOME, 2.0),
                       value(BalanceStat.EXPENSE, 4.0));
 
     repository.create(BalanceStat.TYPE,
-                      value(BalanceStat.MONTH_ID, 200811),
+                      value(BalanceStat.MONTH, 200811),
                       value(BalanceStat.INCOME, 4.0),
                       value(BalanceStat.EXPENSE, 2.0));
 

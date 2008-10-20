@@ -27,9 +27,9 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Set;
 import java.util.SortedSet;
-import java.awt.*;
 
 public class BalanceSummaryView extends View implements GlobSelectionListener {
   private SelectionService parentSelectionService;
@@ -106,8 +106,8 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
       return;
     }
 
-    SortedSet<Glob> tmp = repository.getSorted(BalanceStat.TYPE, new GlobFieldComparator(BalanceStat.MONTH_ID),
-                                               GlobMatchers.fieldIn(BalanceStat.MONTH_ID, currentMonths));
+    SortedSet<Glob> tmp = repository.getSorted(BalanceStat.TYPE, new GlobFieldComparator(BalanceStat.MONTH),
+                                               GlobMatchers.fieldIn(BalanceStat.MONTH, currentMonths));
 
     Glob[] balanceStats = tmp.toArray(new Glob[tmp.size()]);
     if (balanceStats.length == 0) {
@@ -124,18 +124,18 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
       updateTotal(amount);
       amountSummaryLabel.setText(Lang.get("balanceSummary.title.past",
                                           Formatting.toString(
-                                            Month.getLastDay(balanceStat.get(BalanceStat.MONTH_ID)))));
+                                            Month.getLastDay(balanceStat.get(BalanceStat.MONTH)))));
       return;
     }
 
     amountSummaryLabel.setText(Lang.get("balanceSummary.title.future",
                                         Formatting.toString(
-                                          Month.getLastDay(balanceStats[balanceStats.length - 1].get(BalanceStat.MONTH_ID)))));
+                                          Month.getLastDay(balanceStats[balanceStats.length - 1].get(BalanceStat.MONTH)))));
     Double amount;
     int firstBalanceIndex;
     for (firstBalanceIndex = 0; firstBalanceIndex < balanceStats.length; firstBalanceIndex++) {
       Glob balanceStat = balanceStats[firstBalanceIndex];
-      if (balanceStat.get(BalanceStat.MONTH_ID) >= currentMonth.get(CurrentMonth.MONTH_ID)) {
+      if (balanceStat.get(BalanceStat.MONTH) >= currentMonth.get(CurrentMonth.MONTH_ID)) {
         break;
       }
     }
@@ -143,7 +143,12 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     if (amount == null) {
       amount = balanceStats[firstBalanceIndex].get(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_BALANCE);
     }
+    if (amount == null) {
+      contentPanel.setVisible(false);
+      return;
+    }
     String label = Formatting.toString(amount);
+    balance.setVisible(true);
     balance.setText(label);
 
     for (Glob balance : balanceStats) {

@@ -15,7 +15,10 @@ public class ForcedPlusGlobListStringifier implements GlobListStringifier {
   }
 
   public String toString(GlobList list, GlobRepository repository) {
-    String amount = listStringifier.toString(list, repository);
+    return toString(listStringifier.toString(list, repository), budgetArea);
+  }
+
+  public static String toString(String amount, final BudgetArea budgetArea) {
     if (!budgetArea.isIncome()) {
       if (amount.startsWith("-")) {
         return amount.replace("-", "+");

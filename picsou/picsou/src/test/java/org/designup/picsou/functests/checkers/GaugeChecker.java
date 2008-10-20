@@ -17,6 +17,13 @@ public class GaugeChecker extends DataChecker {
     return this;
   }
 
+  public GaugeChecker set(double actualValue, double targetValue, double overrunValue) {
+    gauge.setValues(actualValue, targetValue, overrunValue);
+    Assert.assertEquals(1.0, gauge.getFillPercent() + gauge.getOverrunPercent() + gauge.getEmptyPercent(), 0.01);
+    return this;
+  }
+
+
   public GaugeChecker checkFill(double percentage) {
     Assert.assertEquals(percentage, gauge.getFillPercent(), 0.01);
     return this;

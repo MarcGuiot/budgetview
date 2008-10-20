@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.utils.Lang;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,6 +41,7 @@ public class Gauge extends JPanel {
   private static final int BAR_HEIGHT = 10;
   private static final float TRIANGLE_HEIGHT = 16f;
   private static final float TRIANGLE_WIDTH = 16f;
+  private double overrunValue;
 
   public Gauge() {
     this(true, true, true);
@@ -64,6 +65,26 @@ public class Gauge extends JPanel {
     repaint();
   }
 
+  public void setValues(double actualValue, double targetValue, double overrunValue) {
+    if (overrunValue < 10E-6) {
+      setValues(actualValue, targetValue);
+    }
+    else {
+      this.actualValue = actualValue - overrunValue;
+      this.targetValue = targetValue;
+      this.overrunValue = overrunValue;
+      fillPercent = Math.abs(actualValue / targetValue);
+      overrunPercent = Math.abs(overrunValue / targetValue);
+      emptyPercent = 1 - overrunPercent - fillPercent;
+      overrunError = true;
+      warningShown = overrunError && showWarningForErrors;
+      setToolTip("gauge.partial.overrun." + (overrunIsAnError ? "error" : "ok"),
+                 targetValue - actualValue + overrunValue, Math.abs(overrunValue));
+
+      repaint();
+    }
+  }
+
   private void updateValues() {
     boolean sameSign = Math.signum(actualValue) * Math.signum(targetValue) >= 0;
     double absActual = Math.abs(actualValue);
@@ -83,7 +104,7 @@ public class Gauge extends JPanel {
       emptyPercent = 0;
       overrunError = overrunIsAnError;
       warningShown = overrunError && showWarningForErrors;
-      setToolTip("gauge.overrun." + (overrunIsAnError  ? "error" : "ok"), absActual);
+      setToolTip("gauge.overrun." + (overrunIsAnError ? "error" : "ok"), absActual);
     }
     else if (!sameSign) {
       fillPercent = 0;
@@ -99,7 +120,7 @@ public class Gauge extends JPanel {
       emptyPercent = 0;
       overrunError = overrunIsAnError;
       warningShown = overrunError && showWarningForErrors;
-      setToolTip("gauge.overrun." + (overrunIsAnError  ? "error" : "ok"), absActual - absTarget);
+      setToolTip("gauge.overrun." + (overrunIsAnError ? "error" : "ok"), absActual - absTarget);
     }
     else if (Math.abs(absTarget - absActual) <= 0.01) {
       fillPercent = 1;

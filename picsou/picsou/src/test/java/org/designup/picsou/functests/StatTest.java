@@ -84,4 +84,48 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .add("13/08/2008", TransactionType.VIREMENT, "Pharma", "", 10.00, "Secu", MasterCategory.HEALTH)
       .check();
   }
+
+  public void testOverBurnIsTakenInAccountInMonthSummaryView() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/07/15", -90.00, "Auchan")
+      .addTransaction("2008/07/14", -80.00, "Carouf")
+      .load();
+
+    views.selectCategorization();
+
+    categorization.setEnvelope("Auchan", "Auchan", MasterCategory.FOOD, true);
+    categorization.setEnvelope("Carouf", "Carouf", MasterCategory.FOOD, true);
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/08/15", -110.00, "Auchan")
+      .addTransaction("2008/08/14", -0.00, "Carouf")
+      .load();
+
+    timeline.selectAll();
+    timeline.selectMonth("2008/08");
+    views.selectHome();
+    monthSummary.checkEnvelope(110, 190, -20);
+    views.selectBudget();
+    budgetView.envelopes.checkTotalAmounts(-110, -190);
+    views.selectData();
+    transactions.initContent()
+      .add("15/08/2008", TransactionType.PLANNED, "Planned: Carouf", "", -80.00, "Carouf", MasterCategory.FOOD)
+      .add("15/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -110.00, "Auchan", MasterCategory.FOOD)
+      .add("14/08/2008", TransactionType.VIREMENT, "Carouf", "", -0.00, "Carouf", MasterCategory.FOOD)
+      .check();
+  }
+
+  public void testBalanceDoNotTakeInAcount() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/01", 200.00, "Salaire")
+      .addTransaction("2008/06/15", -90.00, "Auchan")
+      .addTransaction("2008/06/31", "2008/07/01", -80.00, "Carouf")
+      .load();
+    timeline.selectMonth("2008/06");
+    views.selectBudget();
+//    monthSummary.checkBalance()
+  }
 }

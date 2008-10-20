@@ -79,7 +79,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
           if (seriesBudgets.isEmpty()) {
             defaultAmount = series.get(Series.INITIAL_AMOUNT);
           }
-          throw new RuntimeException("PlannedSeriesStatTrigger.visitUpdate series : " + name + ", (" + defaultAmount + ")" + currentSeriesId +
+          throw new RuntimeException("visitUpdate series : " + name + ", (" + defaultAmount + ")" + currentSeriesId +
                                      " month = " + currentMonthId + " series Budget :" +
                                      (seriesBudgets.isEmpty() ? " <none> " : seriesBudgets.get(0).get(SeriesBudget.AMOUNT)));
         }

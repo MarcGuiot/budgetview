@@ -45,8 +45,8 @@ public class BudgetLabel implements GlobSelectionListener, ChangeSetListener {
     Set<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
 
     GlobList balanceStats =
-      repository.getAll(BalanceStat.TYPE, GlobMatchers.fieldIn(BalanceStat.MONTH_ID, selectedMonthIds))
-        .sort(BalanceStat.MONTH_ID);
+      repository.getAll(BalanceStat.TYPE, GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds))
+        .sort(BalanceStat.MONTH);
 
     if (balanceStats.size() == 0) {
       label.setText("");
@@ -72,10 +72,13 @@ public class BudgetLabel implements GlobSelectionListener, ChangeSetListener {
       .append("</b>")
       .append(SEPARATOR);
 
-    builder
-      .append(Lang.get("budgetLabel.endBalance")).append(" <b>")
-      .append(format.format(balanceStats.getLast().get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE)))
-      .append("</b>");
+    Double amount = balanceStats.getLast().get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
+    if (amount != null) {
+      builder
+        .append(Lang.get("budgetLabel.endBalance")).append(" <b>")
+        .append(format.format(amount))
+        .append("</b>");
+    }
 
     double uncategorizedTotal = balanceStats.getSum(BalanceStat.UNCATEGORIZED);
     if (uncategorizedTotal != 0) {
