@@ -1,11 +1,9 @@
 package org.designup.picsou.gui.experiment;
 
 import org.designup.picsou.gui.components.Gauge;
-import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
-import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +23,10 @@ public class GaugeDemo {
     {50, 20},
     {-5, 20},
     {5, 0},
+  };
+
+  private static final double[][] triples = {
+    {10, 20, 5}
   };
 
   public static void main(String[] args) {
@@ -62,7 +64,16 @@ public class GaugeDemo {
             gauge.setMaximumSize(new Dimension(100, 28));
             gauge.setValues(pair[0], pair[1]);
             builder.add(gauge, column++, row, 1, 1, 1, 1, Fill.HORIZONTAL, Anchor.CENTER,
-                        new Insets(5,5,5,5));
+                        new Insets(5, 5, 5, 5));
+          }
+          for (double[] triple : triples) {
+            Gauge gauge = new Gauge(overrunIsAnError, showWarningForErrors, invertedSignIsAnError);
+            gauge.setPreferredSize(new Dimension(100, 28));
+            gauge.setMaximumSize(new Dimension(100, 28));
+            gauge.setValues(triple[0], triple[1], triple[2]);
+            builder.add(gauge, column++, row, 1, 1, 1, 1, Fill.HORIZONTAL, Anchor.CENTER,
+                        new Insets(5, 5, 5, 5));
+
           }
 
           row++;

@@ -26,11 +26,9 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
   private double incomePercent = 0.0;
   private double expensesPercent = 0.0;
   private GlobRepository repository;
-  private Directory directory;
 
   public BalanceGraph(GlobRepository repository, Directory directory) {
     this.repository = repository;
-    this.directory = directory;
     setOpaque(false);
     final SelectionService selectionService = directory.get(SelectionService.class);
     selectionService.addListener(this, Month.TYPE);
@@ -54,7 +52,7 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
   private void update(Set<Integer> monthIds) {
     double received = 0;
     double spent = 0;
-    for (Glob stat : repository.getAll(BalanceStat.TYPE, GlobMatchers.fieldIn(BalanceStat.MONTH_ID, monthIds))) {
+    for (Glob stat : repository.getAll(BalanceStat.TYPE, GlobMatchers.fieldIn(BalanceStat.MONTH, monthIds))) {
       received += stat.get(BalanceStat.INCOME) + stat.get(BalanceStat.INCOME_REMAINING);
       spent += stat.get(BalanceStat.EXPENSE) + stat.get(BalanceStat.EXPENSE_REMAINING);
     }

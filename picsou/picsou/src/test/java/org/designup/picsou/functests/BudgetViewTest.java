@@ -260,7 +260,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, false);
 
     views.selectBudget();
-
+    timeline.checkSelection("2008/06");
     budgetView.recurring.checkTotalAmounts(0.0, -29.0);
     budgetView.recurring.checkSeries("Internet", 0.0, -29.0);
 

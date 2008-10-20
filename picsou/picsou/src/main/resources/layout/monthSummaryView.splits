@@ -56,7 +56,8 @@
                            fill="vertical"/>
                 <label text="$monthsummary.balance" styleClass="totalAmountTitle" gridPos="(1,0)"
                        autoHideSource="balanceAmount" tooltipText="$monthsummary.balance.tooltip"/>
-                <label ref="balanceAmount" styleClass="totalAmount" gridPos="(1,1)"/>
+                <label ref="balanceAmount" styleClass="totalAmount" tooltipText="$monthsummary.balance.tooltip"
+                       gridPos="(1,1)"/>
               </grid>
               <filler fill="horizontal"/>
             </row>
