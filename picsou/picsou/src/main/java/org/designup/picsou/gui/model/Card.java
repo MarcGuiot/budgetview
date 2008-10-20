@@ -43,6 +43,10 @@ public enum Card implements GlobConstantContainer {
     return Lang.get("cards." + getName());
   }
 
+  public String getTooltip() {
+    return Lang.get("cards." + getName() + ".tooltip");
+  }
+
   public ReadOnlyGlob getGlob() {
     return new ReadOnlyGlob(Card.TYPE, value(ID, id));
   }

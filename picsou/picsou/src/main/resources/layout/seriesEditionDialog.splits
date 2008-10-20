@@ -61,10 +61,10 @@
                              marginRight="5"/>
                   <button action="deleteBeginSeriesDate" icon="button_delete.png" styleClass="icon"
                           pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
-                          fill="none"/>
+                          fill="none" tooltipText="$seriesEdition.begin.delete.tooltip"/>
                   <button action="beginSeriesCalendar" icon="button_calendar.png" styleClass="icon"
                           pressedIcon="button_calendar_pressed.png"
-                          marginLeft="5" fill="none"/>
+                          marginLeft="5" fill="none" tooltipText="$seriesEdition.begin.edit.tooltip"/>
                   <filler fill="horizontal" weightX="0.1"/>
                 </row>
 
@@ -75,10 +75,10 @@
                              marginRight="5"/>
                   <button action="deleteEndSeriesDate" icon="button_delete.png" styleClass="icon"
                           pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
-                          fill="none"/>
+                          fill="none" tooltipText="$seriesEdition.end.delete.tooltip"/>
                   <button action="endSeriesCalendar" icon="button_calendar.png" styleClass="icon"
                           pressedIcon="button_calendar_pressed.png"
-                          marginLeft="5" fill="none"/>
+                          marginLeft="5" fill="none" tooltipText="$seriesEdition.end.edit.tooltip"/>
                   <filler fill="horizontal" weightX="0.1"/>
                 </row>
 
@@ -92,9 +92,9 @@
       </horizontalSplit>
 
       <row ref="buttonSeriesPanel" styleClass="iconButtonGroup">
-        <button action="create" name="create"
+        <button action="create" name="create" tooltipText="$series.create.tooltip"
                 icon='button_plus.png' disabledIcon='button_plus_disabled.png'/>
-        <button action="delete" name="delete"
+        <button action="delete" name="delete" tooltipText="$series.delete.tooltip"
                 icon='button_minus.png' disabledIcon='button_minus_disabled.png'/>
         <filler fill="horizontal"/>
       </row>

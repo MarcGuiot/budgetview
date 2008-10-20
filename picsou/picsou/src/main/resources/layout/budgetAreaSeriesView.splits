@@ -38,8 +38,8 @@
         </scrollPane>
 
         <row styleClass="iconButtonGroup">
-          <button action="createSeries" styleClass="create"/>
-          <button action="editAllSeries" styleClass="list"/>
+          <button action="createSeries" styleClass="create" tooltipText="$series.create.tooltip"/>
+          <button action="editAllSeries" styleClass="list" tooltipText="$series.list.tooltip"/>
           <filler fill="horizontal"/>
         </row>
       </column>

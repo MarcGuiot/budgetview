@@ -42,9 +42,9 @@ public class DialogDemo {
     JFrame frame = window.getFrame();
     directory.add(JFrame.class, frame);
 
-    showHelpDialog(repository, directory, frame);
+//    showHelpDialog(repository, directory, frame);
 //    showSeriesWizardDialog(repository, directory, frame);
-//    showSeriesEditionDialog(repository, directory, frame);
+    showSeriesEditionDialog(repository, directory, frame);
 //    showCategoriesEditionDialog(repository, directory);
   }
 
