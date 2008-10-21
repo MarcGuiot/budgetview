@@ -183,6 +183,7 @@ public class BalanceTrigger implements ChangeSetListener {
 
     int lastCloseIndex = 0;
     Double realBalance = null;
+    Date balanceDate = null;
     for (Glob transaction : transactions) {
       if (!transaction.get(Transaction.PLANNED)) {
         Integer accountId = transaction.get(Transaction.ACCOUNT);
@@ -200,6 +201,8 @@ public class BalanceTrigger implements ChangeSetListener {
           balance += accountBalance;
         }
         realBalance = balance;
+        balanceDate = Month.toDate(transaction.get(Transaction.BANK_MONTH),
+                                   transaction.get(Transaction.BANK_DAY));
         repository.update(transaction.getKey(), Transaction.BALANCE, balance);
       }
       else {
@@ -208,7 +211,9 @@ public class BalanceTrigger implements ChangeSetListener {
       }
     }
     if (!updatePlannedOnly) {
-      repository.update(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID), Account.BALANCE, realBalance);
+      repository.update(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID),
+                        FieldValue.value(Account.BALANCE, realBalance),
+                        FieldValue.value(Account.BALANCE_DATE, balanceDate));
     }
   }
 }

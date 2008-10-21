@@ -3,9 +3,9 @@ package org.designup.picsou.gui.time;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.time.selectable.*;
+import org.designup.picsou.model.AccountBalanceLimit;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.UserPreferences;
-import org.designup.picsou.model.AccountBalanceLimit;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -128,7 +128,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     this.visibilityListener = visibilityListener;
   }
 
-  public double getAccountBalance(int monthId) {
+  public Double getAccountBalance(int monthId) {
     Glob balance = repository.find(Key.create(BalanceStat.TYPE, monthId));
     if (balance == null) {
       return 0.0;

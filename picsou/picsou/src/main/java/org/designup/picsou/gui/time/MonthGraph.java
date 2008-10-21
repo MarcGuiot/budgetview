@@ -85,15 +85,18 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
       graphics2D.setPaint(selected ? colors.selectedMonthBottom : colors.yearBackground);
       graphics2D.fillRect(0, 0, width, heightGraph);
 
-      double accountBalance = balancesProvider.getAccountBalance(this.month.get(Month.ID));
+      Double accountBalance = balancesProvider.getAccountBalance(this.month.get(Month.ID));
       double accountBalanceLimit = balancesProvider.getAccountBalanceLimit(this.month.get(Month.ID));
 
-      double diff = accountBalance - accountBalanceLimit;
-      
-      Color color = colors.getAmountColor(diff);
-      graphics2D.setPaint(color);
-      int barWidth = width / 4;
-      graphics2D.fillRect((width - barWidth) / 2, 0, barWidth, heightGraph);
+      if (accountBalance != null) {
+
+        double diff = accountBalance - accountBalanceLimit;
+
+        Color color = colors.getAmountColor(diff);
+        graphics2D.setPaint(color);
+        int barWidth = width / 4;
+        graphics2D.fillRect((width - barWidth) / 2, 0, barWidth, heightGraph);
+      }
     }
     finally {
       transformationAdapter.restore();

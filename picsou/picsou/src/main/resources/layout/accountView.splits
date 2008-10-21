@@ -10,7 +10,7 @@
 
       <column styleClass="innerBlock">
 
-        <label text="$account.total.title" styleClass="totalAmountTitle" autoHideSource="totalBalance"/>
+        <label ref="accountTotalTitle" styleClass="totalAmountTitle" autoHideSource="totalBalance"/>
         <label ref="totalBalance" styleClass="totalAmount" tooltipText="$account.total.tooltip"/>
 
         <scrollPane>

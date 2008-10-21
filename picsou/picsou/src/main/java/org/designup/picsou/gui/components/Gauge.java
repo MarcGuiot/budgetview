@@ -73,9 +73,16 @@ public class Gauge extends JPanel {
       this.actualValue = actualValue - overrunValue;
       this.targetValue = targetValue;
       this.overrunValue = overrunValue;
-      fillPercent = Math.abs(actualValue / targetValue);
-      overrunPercent = Math.abs(overrunValue / targetValue);
-      emptyPercent = 1 - overrunPercent - fillPercent;
+      if (actualValue > targetValue + 1.) {
+        fillPercent = targetValue / actualValue;
+        overrunPercent = 1 - fillPercent;
+        emptyPercent = 0.;
+      }
+      else {
+        fillPercent = Math.abs(actualValue / targetValue);
+        overrunPercent = Math.abs(overrunValue / targetValue);
+        emptyPercent = 1 - overrunPercent - fillPercent;
+      }
       overrunError = true;
       warningShown = overrunError && showWarningForErrors;
       setToolTip("gauge.partial.overrun." + (overrunIsAnError ? "error" : "ok"),

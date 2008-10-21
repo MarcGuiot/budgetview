@@ -3,6 +3,7 @@ package org.designup.picsou.gui.accounts;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.browsing.BrowsingService;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;
@@ -19,7 +20,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.contains;
+import static org.globsframework.model.utils.GlobMatchers.not;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -37,6 +39,14 @@ public class AccountView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountView.splits", repository, directory);
 
     Glob summaryAccount = repository.get(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID));
+    builder.addLabel("accountTotalTitle", Account.TYPE, new GlobListStringifier() {
+      public String toString(GlobList list, GlobRepository repository) {
+        if (list.isEmpty() || list.get(0).get(Account.BALANCE_DATE) == null) {
+          return "";
+        }
+        return Lang.get("account.total.title", Formatting.toString(list.get(0).get(Account.BALANCE_DATE)));
+      }
+    }).setAutoHideIfEmpty(true).forceSelection(summaryAccount);
     builder.addLabel("totalBalance", Account.BALANCE).setAutoHideIfEmpty(true).forceSelection(summaryAccount);
 
     builder.addRepeat("accountRepeat", Account.TYPE, not(contains(summaryAccount)),
