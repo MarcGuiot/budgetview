@@ -42,9 +42,11 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifiers;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldContainsIgnoreCase;
+import static org.globsframework.model.utils.GlobMatchers.or;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -66,6 +68,7 @@ public class MainPanel {
   private MainWindow mainWindow;
   private RegisterLicenseAction registerAction;
   private CheckRepositoryAction check;
+  private Action dumpRepository;
   private MonthSummaryView monthSummary;
   private CategoryView categoryView;
   private SeriesView seriesView;
@@ -76,7 +79,7 @@ public class MainPanel {
     return panel;
   }
 
-  private MainPanel(GlobRepository repository, Directory directory, MainWindow mainWindow) {
+  private MainPanel(final GlobRepository repository, Directory directory, MainWindow mainWindow) {
     this.repository = repository;
     this.directory = directory;
     this.mainWindow = mainWindow;
@@ -105,6 +108,11 @@ public class MainPanel {
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(parent, repository, directory);
     check = new CheckRepositoryAction(directory, repository);
+    dumpRepository = new AbstractAction("Dump") {
+      public void actionPerformed(ActionEvent e) {
+        GlobPrinter.print(repository);
+      }
+    };
     exitAction = new ExitAction(directory);
 
     builder.add("editCategories", new EditCategoriesAction(repository, directory));
@@ -198,7 +206,7 @@ public class MainPanel {
 
     menu.addSeparator();
     menu.add(registerAction);
-    
+
     if (useMacOSMenu()) {
       MRJAdapter.addQuitApplicationListener(exitAction);
     }
@@ -225,6 +233,7 @@ public class MainPanel {
 
     Utils.beginRemove();
     editMenu.add(check);
+    editMenu.add(dumpRepository);
     Utils.endRemove();
     return editMenu;
   }
@@ -293,7 +302,7 @@ public class MainPanel {
           stringWriter.append(correction.info(repository, directory))
             .append("\n-----------------------------------------\n");
         }
-        System.out.println("ERROR find" + stringWriter.toString());
+        System.out.println("ERROR find:\n" + stringWriter.toString());
       }
     }
   }

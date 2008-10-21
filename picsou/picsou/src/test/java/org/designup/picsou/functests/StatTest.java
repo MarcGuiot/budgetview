@@ -117,15 +117,23 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testBalanceDoNotTakeInAcount() throws Exception {
+  public void testBalanceDoNotTakeInAcountOperationForNextMont() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/01", 200.00, "Salaire")
       .addTransaction("2008/06/15", -90.00, "Auchan")
-      .addTransaction("2008/06/31", "2008/07/01", -80.00, "Carouf")
+      .addTransaction("2008/06/30", "2008/07/01", -80.00, "Carouf")
       .load();
+    views.selectCategorization();
+    categorization.setIncome("Salaire", "Salaire", true);
+    categorization.setEnvelope("Auchan", "courses", MasterCategory.FOOD, true);
+    categorization.setEnvelope("Carouf", "courses", MasterCategory.FOOD, false);
     timeline.selectMonth("2008/06");
-    views.selectBudget();
-//    monthSummary.checkBalance()
+    views.selectHome();
+    monthSummary.checkBalance(200 - 90);  //balance banque du mois : ne prends pas en compte les 80
+    balanceSummary.checkTotal(80);
+    timeline.selectMonth("2008/07");
+    balanceSummary.checkTotal(200 - 170);
+    monthSummary.checkBalance(200 - 80 - 170);  //-50 ==> prends en comptes les 80
   }
 }

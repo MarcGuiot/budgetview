@@ -63,6 +63,20 @@ public class SeriesViewChecker extends DataChecker {
   public void checkSelection(String label) {
     Table table = getTable();
     int row = table.getRowIndex(SeriesView.LABEL_COLUMN_INDEX, label);
-    assertThat(table.rowIsSelected(row));
+    if (row == -1) {
+      Assert.fail(label + " not found");
+    }
+    if (!table.rowIsSelected(row).isTrue()) {
+      int columnCount = table.getColumnCount();
+      String selectedRaw = "[";
+      for (int i = 0; i < columnCount; i++) {
+        if (table.rowIsSelected(i).isTrue()) {
+          selectedRaw += table.getContentAt(i, SeriesView.LABEL_COLUMN_INDEX).toString();
+          selectedRaw += ", ";
+        }
+      }
+      selectedRaw += "]";
+      Assert.fail(label + " not selected but " + selectedRaw + " are selected");
+    }
   }
 }

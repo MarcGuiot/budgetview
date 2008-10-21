@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.Button;
 import org.uispec4j.MenuItem;
 import org.uispec4j.Trigger;
@@ -8,7 +9,6 @@ import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
-import org.designup.picsou.utils.Lang;
 
 public class OperationChecker {
   private MenuItem importMenu;
@@ -16,6 +16,8 @@ public class OperationChecker {
   private MenuItem preferencesMenu;
   private MenuItem undoMenu;
   private MenuItem redoMenu;
+  private MenuItem dumpMenu;
+  private MenuItem checkMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
   public static final String DEFAULT_ACCOUNT_NAME = "Account n. 11111";
   private Window window;
@@ -30,6 +32,8 @@ public class OperationChecker {
     MenuItem editMenu = window.getMenuBar().getMenu("Edit");
     undoMenu = editMenu.getSubMenu("Undo");
     redoMenu = editMenu.getSubMenu("Redo");
+    dumpMenu = editMenu.getSubMenu("Dump");
+    checkMenu = editMenu.getSubMenu("check");
   }
 
   public ImportChecker openImportDialog() {
@@ -137,5 +141,13 @@ public class OperationChecker {
 
   public AboutChecker openAbout() {
     return AboutChecker.open(window.getMenuBar().getMenu("Help").getSubMenu("About").triggerClick());
+  }
+
+  public void dump() {
+    dumpMenu.click();
+  }
+
+  public void check() {
+    checkMenu.click();
   }
 }

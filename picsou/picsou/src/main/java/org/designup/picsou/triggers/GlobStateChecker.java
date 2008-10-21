@@ -67,7 +67,7 @@ public class GlobStateChecker {
           amount += transaction.get(Transaction.AMOUNT);
         }
       }
-      if (plannedAmount != 0. && Math.abs(amount + plannedAmount) > Math.abs(budget.get(SeriesBudget.AMOUNT))) {
+      if (plannedAmount != 0. && Math.abs(amount + plannedAmount) > Math.abs(budget.get(SeriesBudget.AMOUNT)) + 1.) {
         transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES), budget.get(SeriesBudget.MONTH),
                                     amount, plannedAmount, budget.get(SeriesBudget.AMOUNT));
       }
@@ -328,9 +328,15 @@ public class GlobStateChecker {
     public String info(GlobRepository repository, Directory directory) {
       DescriptionService descriptionService = directory.get(DescriptionService.class);
       StringBuilder builder = new StringBuilder();
-      GlobStringifier categoryStringifier = descriptionService.getStringifier(Series.TYPE);
+      GlobStringifier stringifier = descriptionService.getStringifier(Series.TYPE);
       for (Integer seriesId : infos.keySet()) {
-        String name = categoryStringifier.toString(repository.get(Key.create(Series.TYPE, seriesId)), repository);
+        String name = stringifier.toString(repository.get(Key.create(Series.TYPE, seriesId)), repository);
+        if (seriesId.equals(Series.OCCASIONAL_SERIES_ID)) {
+          name = "'uncategorized series'";
+        }
+        if (name.equals("")) {
+          name = Integer.toString(seriesId);
+        }
         builder.append("Series ").append(name).append(" has error \n");
         List<Info> infoList = infos.get(seriesId);
         for (Info info : infoList) {

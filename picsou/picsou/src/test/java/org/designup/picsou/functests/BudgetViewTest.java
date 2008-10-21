@@ -1,6 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.BudgetViewChecker;
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -488,13 +489,23 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows("ELF")
       .selectRecurring()
       .categorizeInRecurringSeries("Fuel");
+
+    categorization.selectTableRows("Auchan")
+      .selectRecurring()
+      .categorizeInRecurringSeries("Groceries");
+
+    views.selectData();
+    series.select("Groceries");
+
     views.selectBudget();
     budgetView.recurring.checkSeries("Fuel", -60, -120);
 
-    budgetView.recurring.editSeriesList()
-      .selectSeries("Groceries")
-      .deleteSeries()
+    SeriesEditionDialogChecker editionDialogChecker = budgetView.recurring.editSeriesList()
+      .selectSeries("Groceries");
+    editionDialogChecker
+      .deleteSeriesWithConfirmation()
       .validate();
+    editionDialogChecker.validate();
     budgetView.recurring.checkSeriesNotPresent("Groceries");
   }
 

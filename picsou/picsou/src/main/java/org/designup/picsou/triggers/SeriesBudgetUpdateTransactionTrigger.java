@@ -73,8 +73,8 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
            (values.get(SeriesBudget.AMOUNT) != null) &&
            (Math.abs(values.get(SeriesBudget.AMOUNT)) != 0.0) &&
            (values.get(SeriesBudget.DAY) != null) &&
-           values.get(SeriesBudget.MONTH) >= lastAvailableTransactionMonthId &&
-           !ProfileType.IRREGULAR.getId().equals(series.get(Series.PROFILE_TYPE));
+           values.get(SeriesBudget.MONTH) >= lastAvailableTransactionMonthId
+           && !series.get(Series.ID).equals(Series.UNCATEGORIZED_SERIES_ID);
   }
 
   private GlobList getPlannedTransactions(Key key, GlobRepository repository) {
@@ -88,7 +88,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
   public static void createPlannedTransaction(Glob series, GlobRepository repository, int monthId,
                                               Integer day, Double amount) {
     Glob month = repository.get(CurrentMonth.KEY);
-    if (month.get(CurrentMonth.MONTH_ID) == monthId && day < month.get(CurrentMonth.DAY)) {
+    if (month.get(CurrentMonth.MONTH_ID) == monthId && (day == null || day < month.get(CurrentMonth.DAY))) {
       day = month.get(CurrentMonth.DAY);
     }
     Integer categoryId = getCategory(series, repository);

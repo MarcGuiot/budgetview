@@ -115,6 +115,7 @@ public class CategorizationChecker extends DataChecker {
       createIncomeSeries()
         .setName(name)
         .setCategory(MasterCategory.INCOME)
+        .setUnknown()
         .switchToManual()
         .selectAllMonths()
         .setAmount("0")

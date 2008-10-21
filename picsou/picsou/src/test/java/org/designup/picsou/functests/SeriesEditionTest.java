@@ -1248,4 +1248,27 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.HOUSE)
       .validate();
   }
+
+
+  public void testChangeBudgetAmountWhileInOverBurn() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/08/28", 5000., "Complement")
+      .load();
+
+    views.selectCategorization();
+    categorization.setExceptionalIncome("Complement", "Salaire sup", true);
+
+    views.selectBudget();
+    budgetView.income.editSeries("Salaire sup")
+      .selectMonth(200808)
+      .setAmount("6000")
+      .validate();
+
+    views.selectData();
+    transactions.initContent()
+      .add("28/08/2008", TransactionType.PLANNED, "Planned: Salaire sup", "", 1000.00, "Salaire sup", MasterCategory.INCOME)
+      .add("28/08/2008", TransactionType.VIREMENT, "Complement", "", 5000.00, "Salaire sup", MasterCategory.INCOME)
+      .check();
+  }
 }
