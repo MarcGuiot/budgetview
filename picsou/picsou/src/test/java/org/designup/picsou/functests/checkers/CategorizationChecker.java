@@ -275,10 +275,10 @@ public class CategorizationChecker extends DataChecker {
 
   public CategorizationChecker checkContainsEnvelope(String envelopeName, MasterCategory... categories) {
     Panel panel = getEnvelopeSeriesPanel();
-    assertTrue(panel.containsLabel(envelopeName));
+    TextBox label = panel.getTextBox(envelopeName);
+    Panel seriesPanel = label.getContainer("seriesBlock");
     for (MasterCategory category : categories) {
-      panel.getToggleButton(envelopeName + ":" + category.getName());
-      assertTrue(panel.containsUIComponent(ToggleButton.class, envelopeName + ":" + category.getName()));
+      assertTrue(seriesPanel.containsUIComponent(ToggleButton.class, category.getName()));
     }
     return this;
   }
@@ -495,7 +495,7 @@ public class CategorizationChecker extends DataChecker {
     return createSeries("savings", true);
   }
 
-  public SeriesEditionDialogChecker createSeries(String type, boolean oneSelection) {
+  private SeriesEditionDialogChecker createSeries(String type, boolean oneSelection) {
     Button button = getPanel().getPanel(type + "SeriesChooser").getButton("createSeries");
     final Window creationDialog = WindowInterceptor.getModalDialog(button.triggerClick());
     return new SeriesEditionDialogChecker(creationDialog, oneSelection);
@@ -506,11 +506,11 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker editSeries(String seriesLabel) {
-    final Window creationDialog = WindowInterceptor.getModalDialog(getPanel().getButton("editSeries:" + seriesLabel).triggerClick());
-    return new SeriesEditionDialogChecker(creationDialog, true);
+  public SeriesEditionDialogChecker editSeries(String seriesLabel, final boolean singleCategorySeries) {
+    Button button = getPanel().getPanel("seriesCard").getButton("editSeries:" + seriesLabel);
+    final Window creationDialog = WindowInterceptor.getModalDialog(button.triggerClick());
+    return new SeriesEditionDialogChecker(creationDialog, singleCategorySeries);
   }
-
 
   public SeriesEditionDialogChecker editSeries(boolean isSingleSelection) {
     final Window creationDialog = WindowInterceptor.getModalDialog(getPanel().getButton("editSeries").triggerClick());

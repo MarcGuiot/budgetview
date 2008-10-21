@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.Window;
+import org.uispec4j.ToggleButton;
 import static org.uispec4j.finder.ComponentMatchers.and;
 import static org.uispec4j.finder.ComponentMatchers.fromClass;
 import static org.uispec4j.finder.ComponentMatchers.displayedNameIdentity;
@@ -31,7 +32,12 @@ public class CategoryChooserChecker extends DataChecker {
   }
 
   public CategoryChooserChecker selectCategory(String categoryName) {
-    window.getToggleButton(categoryName).click();
+    window.getToggleButton(categoryName).select();
+    return this;
+  }
+
+  public CategoryChooserChecker unselectCategory(String categoryName) {
+    window.getToggleButton(categoryName).unselect();
     return this;
   }
 
