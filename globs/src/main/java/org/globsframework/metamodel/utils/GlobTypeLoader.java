@@ -252,6 +252,9 @@ public class GlobTypeLoader {
   }
 
   private String getFieldName(java.lang.reflect.Field field) {
+    if (field.getName().length() == 1){
+      return field.getName();
+    }
     return Strings.toNiceLowerCase(field.getName());
   }
 
