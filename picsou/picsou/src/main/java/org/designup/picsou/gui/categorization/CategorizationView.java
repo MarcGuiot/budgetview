@@ -278,6 +278,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
                                                Series.TYPE,
                                                linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
                                                new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleToggle,
+                                                                                         seriesEditionDialog,
                                                                                          repository, directory));
     seriesRepeat.add(new Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>(
       PicsouMatchers.seriesDateFilter(budgetArea.getId(), true), repeat));

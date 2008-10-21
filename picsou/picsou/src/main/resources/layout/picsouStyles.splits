@@ -48,6 +48,10 @@
 
     <style selector="scrollPane" opaque="true" viewportBackground="block.inner.bg"/>
 
+    <style selector="button.editIcon" marginLeft="5" weightX="0"
+           icon="magnifier_small.png" rolloverIcon="magnifier_rollover.png" pressedIcon="magnifier_rollover.png"
+           preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
+
     <!-- Main panel -->
 
     <style selector="panel.main" opaque="false"/>

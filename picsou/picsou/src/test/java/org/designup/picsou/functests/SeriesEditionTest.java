@@ -432,7 +432,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition
       .setName("courant")
       .switchToManual()
-      .setCategory(MasterCategory.CLOTHING, MasterCategory.FOOD);
+      .setCategories(MasterCategory.CLOTHING, MasterCategory.FOOD);
 
     edition.openCategory()
       .checkSelected(MasterCategory.CLOTHING, MasterCategory.FOOD)
@@ -448,7 +448,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.envelopes.editSeries("courant")
-      .checkCategory(MasterCategory.CLOTHING, MasterCategory.FOOD)
+      .checkCategories(MasterCategory.CLOTHING, MasterCategory.FOOD)
       .cancel();
 
     budgetView.envelopes.checkSeries("courant", -(double)0, -(double)1000);
@@ -470,7 +470,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
     edition
       .setName("courant")
-      .setCategory(MasterCategory.CLOTHING, MasterCategory.FOOD)
+      .setCategories(MasterCategory.CLOTHING, MasterCategory.FOOD)
       .unselectCategory(MasterCategory.FOOD, MasterCategory.CLOTHING)
       .checkNoCategory()
       .openCategory()
@@ -479,7 +479,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition
       .checkNoCategory();
     edition
-      .setCategory(MasterCategory.CLOTHING, MasterCategory.FOOD)
+      .setCategories(MasterCategory.CLOTHING, MasterCategory.FOOD)
       .createSeries()
       .checkNoCategory()
       .cancel();
@@ -966,7 +966,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectEnvelopes().createEnvelopeSeries()
       .setName("Maison")
-      .setCategory("Entretien")
+      .setCategories("Entretien")
       .validate();
     views.selectData();
     timeline.selectMonth("2008/07");

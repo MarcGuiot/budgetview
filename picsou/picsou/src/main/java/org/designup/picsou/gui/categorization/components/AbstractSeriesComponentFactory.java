@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Category;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -30,6 +27,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
   protected GlobStringifier categoryStringifier;
   protected GlobStringifier budgetAreaStringifier;
 
+  protected SeriesEditionDialog seriesEditionDialog;
   protected GlobRepository repository;
   protected Directory directory;
   protected Window parent;
@@ -38,8 +36,11 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
   protected GlobList currentTransactions = GlobList.EMPTY;
 
   public AbstractSeriesComponentFactory(JToggleButton invisibleToggle,
-                                        GlobRepository repository, Directory directory) {
+                                        SeriesEditionDialog seriesEditionDialog,
+                                        GlobRepository repository,
+                                        Directory directory) {
     this.invisibleToggle = invisibleToggle;
+    this.seriesEditionDialog = seriesEditionDialog;
     this.repository = repository;
     this.directory = directory;
     this.parent = directory.get(JFrame.class);
@@ -108,6 +109,20 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
         }
       }
     });
+  }
+
+  protected class EditSeriesAction extends AbstractAction  {
+
+    private Key seriesKey;
+
+    protected EditSeriesAction(Key seriesKey) {
+      this.seriesKey = seriesKey;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      Glob series = repository.get(seriesKey);
+      seriesEditionDialog.show(series, selectionService.getSelection(Month.TYPE).getValueSet(Month.ID));
+    }
   }
 
 }

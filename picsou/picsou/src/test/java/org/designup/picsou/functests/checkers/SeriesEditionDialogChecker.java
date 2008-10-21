@@ -19,7 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class SeriesEditionDialogChecker extends DataChecker {
   private Window dialog;
-  private boolean singleSelection;
+  private boolean singleCategorySeries;
   private Table table;
   public static final String JAN = "Jan";
   public static final String FEB = "Feb";
@@ -34,9 +34,9 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public static final String NOV = "Nov";
   public static final String DEC = "Dec";
 
-  public SeriesEditionDialogChecker(Window dialog, boolean singleSelection) {
+  public SeriesEditionDialogChecker(Window dialog, boolean singleCategorySeries) {
     this.dialog = dialog;
-    this.singleSelection = singleSelection;
+    this.singleCategorySeries = singleCategorySeries;
   }
 
   public SeriesEditionDialogChecker checkTitle(String text) {
@@ -90,27 +90,31 @@ public class SeriesEditionDialogChecker extends DataChecker {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
     CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
     for (MasterCategory masterCategory : category) {
-      categoryChooser.selectCategory(getCategoryName(masterCategory));
+      categoryChooser.unselectCategory(getCategoryName(masterCategory));
     }
     categoryChooser.checkUnselected(category);
     categoryChooser.validate();
     return this;
   }
 
-  public SeriesEditionDialogChecker setCategory(MasterCategory... masterCategories) {
-    String categories[] = new String[masterCategories.length];
+  public SeriesEditionDialogChecker setCategory(MasterCategory master) {
+    return setCategories(master);
+  }
+
+  public SeriesEditionDialogChecker setCategories(MasterCategory... masters) {
+    String categories[] = new String[masters.length];
     int i = 0;
-    for (MasterCategory category : masterCategories) {
+    for (MasterCategory category : masters) {
       categories[i] = getCategoryName(category);
       i++;
     }
-    return setCategory(categories);
+    return setCategories(categories);
   }
 
   public SeriesEditionDialogChecker addCategory(String... categories) {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
     CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
-    if (singleSelection) {
+    if (singleCategorySeries) {
       Assert.fail("only one category can be selected");
     }
     else {
@@ -123,13 +127,13 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker setCategory(String... categories) {
+  public SeriesEditionDialogChecker setCategories(String... categories) {
     Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
     CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
-    if (singleSelection) {
+    if (singleCategorySeries) {
       Assert.assertEquals(1, categories.length);
       categoryChooser.checkTitle("Select a category");
-      categoryChooser.selectCategory(categories[0], singleSelection);
+      categoryChooser.selectCategory(categories[0], singleCategorySeries);
     }
     else {
       categoryChooser.checkTitle("Select categories");
@@ -141,10 +145,14 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return checkCategory(categories);
   }
 
-  public SeriesEditionDialogChecker checkCategory(MasterCategory... masterCategories) {
-    String categories[] = new String[masterCategories.length];
+  public SeriesEditionDialogChecker checkCategory(MasterCategory master) {
+    return checkCategories(master);
+  }
+
+  public SeriesEditionDialogChecker checkCategories(MasterCategory... masters) {
+    String categories[] = new String[masters.length];
     int i = 0;
-    for (MasterCategory category : masterCategories) {
+    for (MasterCategory category : masters) {
       categories[i] = getCategoryName(category);
       i++;
     }
@@ -152,7 +160,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkNoCategory() {
-    if (singleSelection) {
+    if (singleCategorySeries) {
       assertThat(dialog.getTextBox("singleCategoryField").textIsEmpty());
       assertThat(dialog.getTextBox("missingCategoryLabel").textContains("You must select a category"));
     }
@@ -168,7 +176,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
       return checkNoCategory();
     }
 
-    if (singleSelection) {
+    if (singleCategorySeries) {
       if (categories.length > 1) {
         fail("Only one category should be expected for single category series");
       }

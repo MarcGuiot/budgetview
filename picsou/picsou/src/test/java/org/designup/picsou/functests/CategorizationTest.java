@@ -738,7 +738,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRows(0);
   }
 
-  public void testSeriesList() throws Exception {
+  public void testEditingSingleCategorySeries() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/26", 1000, "Salaire")
@@ -761,12 +761,38 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     categorization.checkContainsIncomeSeries("Salary");
-    categorization.selectIncome()
-      .selectIncomeSeries("Salary", false);
-    categorization.editSeries("Salary").checkSeriesSelected("Salary").cancel();
+    categorization.selectIncome().selectIncomeSeries("Salary", false);
+    categorization.editSeries("Salary", true).checkSeriesSelected("Salary").cancel();
 
     categorization.selectIncomeSeries("Other salary", false);
-    categorization.editSeries("Other salary").checkSeriesSelected("Other salary").cancel();
+    categorization.editSeries("Other salary", true).checkSeriesSelected("Other salary").cancel();
+  }
+
+  public void testEditingMultiCategoriesSeries() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/26", 1000, "FNAC")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+
+    categorization.selectEnvelopes();
+    categorization
+      .createEnvelopeSeries()
+      .setName("Music")
+      .setCategory(MasterCategory.LEISURES)
+      .validate();
+
+    categorization.checkContainsEnvelope("Music", MasterCategory.LEISURES);
+    categorization.editSeries(true).checkSeriesSelected("Music").cancel();
+
+    categorization.editSeries("Music", false)
+      .checkName("Music")
+      .setName("CDs")
+      .validate();
+
+    categorization.checkContainsEnvelope("CDs", MasterCategory.LEISURES);
   }
 
   public void testEditingOccasionalCategories() throws Exception {
@@ -1168,7 +1194,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectEnvelopes()
       .createEnvelopeSeries()
       .setName("Divers")
-      .setCategory(MasterCategory.EDUCATION, MasterCategory.EQUIPMENT)
+      .setCategories(MasterCategory.EDUCATION, MasterCategory.EQUIPMENT)
       .validate();
 
     views.selectData();

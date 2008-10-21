@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.gui.series.SeriesEditionDialog;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
@@ -13,24 +12,21 @@ import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponentFactory {
-  ButtonGroup seriesGroup = new ButtonGroup();
-  SeriesEditionDialog seriesEditionDialog;
+  private ButtonGroup seriesGroup = new ButtonGroup();
 
   public SingleCategorySeriesComponentFactory(JToggleButton invisibleToggle, SeriesEditionDialog seriesEditionDialog,
                                               GlobRepository localRepository, Directory directory) {
-    super(invisibleToggle, localRepository, directory);
-    this.seriesEditionDialog = seriesEditionDialog;
+    super(invisibleToggle, seriesEditionDialog, localRepository, directory);
     seriesGroup.add(invisibleToggle);
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
-    String toggleLabel = seriesStringifier.toString(new GlobList(series), repository);
+    String seriesLabel = seriesStringifier.toString(new GlobList(series), repository);
     final Key seriesKey = series.getKey();
     final Key categoryKey = series.getTargetKey(Series.DEFAULT_CATEGORY);
-    final JToggleButton toggle = createSeriesToggle(toggleLabel, seriesKey, categoryKey);
+    final JToggleButton toggle = createSeriesToggle(seriesLabel, seriesKey, categoryKey);
 
     final DefaultChangeSetListener seriesUpdateListener = new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -60,7 +56,7 @@ public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponen
     cellBuilder.add("seriesToggle", toggle);
 
     JButton editSeriesButton = new JButton(new EditSeriesAction(seriesKey));
-    editSeriesButton.setName("editSeries:" + toggleLabel);
+    editSeriesButton.setName("editSeries:" + seriesLabel);
     cellBuilder.add("editSeries", editSeriesButton);
 
     cellBuilder.addDisposeListener(new Disposable() {
@@ -85,20 +81,6 @@ public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponen
     }
     else {
       invisibleToggle.setSelected(true);
-    }
-  }
-
-  private class EditSeriesAction extends AbstractAction  {
-
-    private Key seriesKey;
-
-    private EditSeriesAction(Key seriesKey) {
-      this.seriesKey = seriesKey;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      Glob series = repository.get(seriesKey);
-      seriesEditionDialog.show(series, selectionService.getSelection(Month.TYPE).getValueSet(Month.ID));
     }
   }
 }

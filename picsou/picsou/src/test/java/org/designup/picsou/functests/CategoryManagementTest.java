@@ -252,7 +252,7 @@ public class CategoryManagementTest extends LoggedInFunctionalTestCase {
     categorization.selectEnvelopes();
     categorization.createEnvelopeSeries()
       .setName("Quotidien")
-      .setCategory("Apero", "Courant")
+      .setCategories("Apero", "Courant")
       .validate();
     categorization.selectTableRow(0);
     categorization.selectEnvelopes();

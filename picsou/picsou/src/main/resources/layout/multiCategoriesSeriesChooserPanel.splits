@@ -11,8 +11,12 @@
       <toggleButton ref="invisibleToggle" visible="false"/>
       <scrollPane>
         <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
-          <column>
-            <label ref="seriesName" font="-,bold,14"/>
+          <column name="seriesBlock">
+            <row>
+              <label ref="seriesName" font="-,bold,14"/>
+              <button ref="editSeries" styleClass="editIcon"/>
+              <filler fill="horizontal"/>
+            </row>
             <repeat ref="categoryRepeat">
               <toggleButton ref="categoryToggle" styleClass="selector" horizontalAlignment="left"/>
             </repeat>

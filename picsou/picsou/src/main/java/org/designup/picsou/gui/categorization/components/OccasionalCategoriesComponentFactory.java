@@ -24,7 +24,7 @@ public class OccasionalCategoriesComponentFactory extends AbstractSeriesComponen
   public OccasionalCategoriesComponentFactory(String seriesName, String name, BudgetArea budgetArea,
                                               JToggleButton invisibleToggle, GlobRepository repository,
                                               Directory directory) {
-    super(invisibleToggle, repository, directory);
+    super(invisibleToggle, null, repository, directory);
     this.seriesName = seriesName;
     this.name = name;
     this.budgetArea = budgetArea;

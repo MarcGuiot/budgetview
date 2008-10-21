@@ -4,6 +4,7 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesToCategory;
+import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -24,9 +25,10 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
 
   public MultiCategoriesSeriesComponentFactory(BudgetArea budgetArea,
                                                JToggleButton invisibleToggle,
+                                               SeriesEditionDialog seriesEditionDialog,
                                                GlobRepository repository,
                                                Directory directory) {
-    super(invisibleToggle, repository, directory);
+    super(invisibleToggle, seriesEditionDialog, repository, directory);
     this.budgetArea = budgetArea;
   }
 
@@ -40,6 +42,11 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
                                 GlobMatchers.fieldEquals(SeriesToCategory.SERIES, series.get(Series.ID)),
                                 new GlobFieldComparator(SeriesToCategory.ID), repository, cellBuilder,
                                 new CategoriesComponentFactory(label, "categoryToggle", budgetArea));
+
+    JButton editSeriesButton = new JButton(new EditSeriesAction(series.getKey()));
+    editSeriesButton.setName("editSeries:" + label);
+    cellBuilder.add("editSeries", editSeriesButton);
+
     cellBuilder.addDisposeListener(new Disposable() {
       public void dispose() {
         globLabelView.dispose();
