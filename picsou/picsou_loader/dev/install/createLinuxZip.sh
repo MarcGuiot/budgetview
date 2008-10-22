@@ -26,5 +26,5 @@ zip fourmics.zip fourmics/fourmics.sh fourmics/license.txt fourmics/fourmics${JA
     fourmics/fourmicsloader-1.0.jar fourmics/fourmics_icon_16.png fourmics/fourmics_icon_32.png \
     fourmics/fourmics_icon_48.png fourmics/fourmics_icon_128.png fourmics/version.txt
 
-mv fourmics.zip fourmis-${SOFT_VERSION}.zip
+mv fourmics.zip fourmics-${SOFT_VERSION}.zip
 rm -rf fourmics
