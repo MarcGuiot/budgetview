@@ -50,7 +50,7 @@ public class Main {
     }
 
     if (installedVersion != null && downloadedVersion != null) {
-      if (installedVersion > downloadedVersion) {
+      if (downloadedVersion > installedVersion) {
         jarFile = downloadedFileName;
       }
     }
