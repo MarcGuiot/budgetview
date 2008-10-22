@@ -136,4 +136,61 @@ public class StatTest extends LoggedInFunctionalTestCase {
     balanceSummary.checkTotal(200 - 170);
     monthSummary.checkBalance(200 - 80 - 170);  //-50 ==> prends en comptes les 80
   }
+
+
+  public void testWithIncomRemboursment() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/01", 200.00, "Salaire")
+      .addTransaction("2008/06/15", -90.00, "Auchan")
+      .load();
+    views.selectCategorization();
+    categorization.setIncome("Salaire", "Salaire", true);
+    categorization.setEnvelope("Auchan", "courses", MasterCategory.FOOD, true);
+
+    views.selectHome();
+    monthSummary
+      .checkBalance(110);
+    balanceSummary
+      .checkBalance(0)
+      .checkTotal(0);
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/07/01", -200.00, "Salaire")
+      .addTransaction("2008/07/15", -90.00, "Auchan")
+      .load();
+
+    timeline.selectMonth("2008/07");
+    views.selectData();
+    transactions.initContent()
+      .add("15/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 400.00, "Salaire", MasterCategory.INCOME)
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "courses", MasterCategory.FOOD)
+      .add("01/07/2008", TransactionType.PRELEVEMENT, "Salaire", "", -200.00, "Salaire", MasterCategory.INCOME)
+      .check();
+    views.selectHome();
+    monthSummary
+      .checkBalance(110);
+    balanceSummary
+      .checkBalance(-290)
+      .checkTotal(110);
+    views.selectBudget();
+    budgetView.income.editSeriesList()
+      .switchToManual()
+      .selectMonth(200807)
+      .selectNegativeAmounts()
+      .setAmount("200")
+      .validate();
+    views.selectData();
+    transactions.initContent()
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "courses", MasterCategory.FOOD)
+      .add("01/07/2008", TransactionType.PRELEVEMENT, "Salaire", "", -200.00, "Salaire", MasterCategory.INCOME)
+      .check();
+    views.selectHome();
+    monthSummary
+      .checkBalance(-290);
+    balanceSummary
+      .checkBalance(-290)
+      .checkTotal(-290);
+  }
 }

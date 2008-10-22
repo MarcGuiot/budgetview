@@ -37,7 +37,7 @@ public class SingleApplicationInstanceListener {
     List<ServerSocket> serverSockets = new ArrayList<ServerSocket>();
     for (int port : PORTS) {
       try {
-        serverSockets.add(new ServerSocket(port));
+        serverSockets.add(new ServerSocket(port, 4, Inet4Address.getByAddress(new byte[]{127, 0, 0, 1})));
       }
       catch (BindException bindException) {
         if (canConnectToSameApplication(serverSockets, port)) {
