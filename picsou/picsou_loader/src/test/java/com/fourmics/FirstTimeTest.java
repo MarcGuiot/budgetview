@@ -150,18 +150,21 @@ public class FirstTimeTest extends UISpecTestCase {
       .openCategory().selectCategory(DataChecker.getCategoryName(MasterCategory.TAXES), true);
     series.validate();
     categorization
-      .setRecurring("Gaz de France", "gas", MasterCategory.HOUSE, false)
+      .setRecurring("Gaz de France", "Gas", MasterCategory.HOUSE, false)
       .setEnvelope("Retrait", "cash", MasterCategory.CASH, false)
       .setRecurring("SFR", "Cell phone 1", MasterCategory.TELECOMS, false)
       .selectRecurring();
     SeriesEditionDialogChecker seriesEdition = categorization.editSeries(true)
+      .checkSeriesListContains("Gas", "Cell phone 1")
       .createSeries();
     CategoryChooserChecker categoryChooser = seriesEdition.setName("Assurance")
       .openCategory();
     categoryChooser.openCategoryEdition()
       .createMasterCategory("Assurance all-in-one")
       .validate();
-    categoryChooser.selectCategory("Assurance all-in-one");
+    categoryChooser.selectCategory("Assurance all-in-one", true);
+    categoryChooser.checkClosed();
+    seriesEdition.checkCategory("Assurance all-in-one");
     seriesEdition.validate();
 
     categorization
@@ -207,7 +210,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkEnvelope(360., 360.)
       .checkRecurring(1413.90, 1413.90)
       .checkIncome(2000., 2000.)
-      .checkOccasional(55, 126.1)
+      .checkOccasional(55, 55) //126.1)
       .checkSavings(100, 100);
 
     BalanceSummaryChecker balance = new BalanceSummaryChecker(window);
@@ -244,28 +247,30 @@ public class FirstTimeTest extends UISpecTestCase {
     times.selectMonth("2008/10");
 
     transaction.initAmountContent()
-      .add("Planned: Income 1", 2000.00, 2406.10)
-      .add("Planned: Cell phone 1", -40.00, 406.10)
-      .add("Planned: Cash", -40.00, 446.10)
-      .add("Planned: Gas", -60.00, 486.10)
-      .add("Planned: Leisures", -10.00, 546.10)
-      .add("Planned: Internet", -29.90, 556.10)
-      .add("Planned: Mortgage", -700.00, 586.00)
-      .add("Planned: Groceries", -250.00, 1286.00)
-      .add("Planned: Regular savings", -100.00, 1536.00)
-      .add("Planned: Ecole", -40.00, 1636.00)
-      .add("Planned: Frais banque", -4.00, 1676.00)
-      .add("Planned: Fringue", -80.00, 1680.00)
-      .add("Planned: Don", -40.00, 1760.00)
-      .add("Planned: Assurance", -100.00, 1800.00)
+      .add("Planned: Ecole", -40.00, 2351.10)
+      .add("Planned: Frais banque", -4.00, 2391.10)
+      .add("Planned: Fringue", -80.00, 2395.10)
+      .add("Planned: Don", -40.00, 2475.10)
+      .add("Planned: Income 1", 2000.00, 2515.10)
+      .add("Planned: Occasional", -55.00, 515.10)
+      .add("Planned: Assurance", -100.00, 570.10)
+      .add("Planned: Cell phone 1", -40.00, 670.1)
+      .add("Planned: Cash", -40.00, 710.10)
+      .add("Planned: Gas", -60.00, 750.10)
+      .add("Planned: Leisures", -10.00, 810.1)
+      .add("Planned: Internet", -29.90, 820.10)
+      .add("Planned: Mortgage", -700.00, 850.00)
+      .add("Planned: Groceries", -250.00, 1550.00)
+      .add("Planned: Regular savings", -100.00, 1800.00)
       .check();
 
-    balance.checkTotal(2406.1)
+    balance.checkTotal(2351.1)
       .checkBalance(1900)
       .checkEnvelope(-380)
       .checkFixed(-1013.9)
       .checkSavings(-100)
-      .checkIncome(2000);
+      .checkIncome(2000)
+      .checkOccasional(-55.0);
 
     String file2 = QifBuilder.init(this)
       .addTransaction("2008/10/03", -100, "VIR epargne")
@@ -285,23 +290,25 @@ public class FirstTimeTest extends UISpecTestCase {
     operation.importQifFile(file2, "CIC");
 
     views.selectHome();
-    balance.checkTotal(2366.1)
+    balance.checkTotal(2311.1)
       .checkBalance(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
       .checkSavings(0)
-      .checkEnvelope(-230);
+      .checkEnvelope(-230)
+      .checkOccasional(-55);
 
     views.selectData();
     transaction.initAmountContent()
-      .add("Planned: Income 1", 2000.00, 2366.10)
-      .add("Planned: Cell phone 1", -40.00, 366.10)
-      .add("Planned: Cash", -40.00, 406.10)
-      .add("Planned: Leisures", -10.00, 446.10)
-      .add("Planned: Groceries", -180.00, 456.10)
-      .add("Planned: Ecole", -40.00, 636.10)
-      .add("Planned: Frais banque", -4.00, 676.10)
-      .add("Planned: Assurance", -100.00, 680.10)
+      .add("Planned: Ecole", -40.00, 2311.10)
+      .add("Planned: Frais banque", -4.00, 2351.10)
+      .add("Planned: Income 1", 2000.00, 2355.10)
+      .add("Planned: Occasional", -55.00, 355.10)
+      .add("Planned: Assurance", -100.00, 410.10)
+      .add("Planned: Cell phone 1", -40.00, 510.10)
+      .add("Planned: Cash", -40.00, 550.10)
+      .add("Planned: Leisures", -10.00, 590.10)
+      .add("Planned: Groceries", -180.00, 600.10)
       .add("Gaz de France", -60.00, 780.10, 780.10)
       .add("Auchan", -30.00, 840.10, 840.10)
       .add("Chausse moi", -60.00, 870.10, 870.10)
