@@ -15,7 +15,7 @@ public class Java2DUtils {
 
   public static void drawShadowedString(Graphics2D g2d, String label, Color textColor, Color shadowColor, int x, int y) {
     g2d.setColor(shadowColor);
-    g2d.drawString(label, x + 1, y + 1);
+    g2d.drawString(label, x + 0.8f, y + 0.8f);
     g2d.setColor(textColor);
     g2d.drawString(label, x, y);
   }

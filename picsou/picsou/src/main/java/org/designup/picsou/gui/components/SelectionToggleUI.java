@@ -2,23 +2,34 @@ package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.utils.Java2DUtils;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicToggleButtonUI;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 
 public class SelectionToggleUI extends BasicToggleButtonUI {
-  private boolean useBold = false;
+  private static final Color TOP_COLOR = new Color(203, 210, 221);
+  private static final Color BOTTOM_COLOR = new Color(143, 159, 183);
+
+  private static final Color clrGlowInnerHi = new Color(253, 239, 175, 148);
+  private static final Color clrGlowInnerLo = new Color(255, 209, 0);
+  private static final Color clrGlowOuterHi = new Color(253, 239, 175, 124);
+  private static final Color clrGlowOuterLo = new Color(255, 179, 0);
+
+  private boolean useBold = true;
   private int padding = 0;
-  private int borderWidth = 1;
+  private int borderWidth = 2;
   private Color borderColor = Color.GRAY.brighter();
   private int cornerRadius = 10;
-  private Color topColor = Color.WHITE;
-  private Color bottomColor = Color.WHITE;
+  private Color topColor;
+  private Color bottomColor;
   private Color rolloverTextColor = Color.RED;
-  private Color pressedTextColor = Color.BLUE;
+  private Color pressedTextColor = Color.WHITE;
   private Color disabledTextColor = Color.GRAY;
 
   protected void installDefaults(final AbstractButton button) {
@@ -42,11 +53,13 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
 
   protected void paintButtonPressed(Graphics g, AbstractButton button) {
     button.setOpaque(false);
+
     Graphics2D g2d = (Graphics2D)g;
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    Dimension size = button.getSize();
 
-    int width = button.getWidth();
-    int height = button.getHeight();
+    int width = size.width;
+    int height = size.height;
     if (Gui.isMacOSX()) {
       height -= 2;
     }
@@ -54,23 +67,27 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
     int x = 0;
     int y = 0;
 
-    int rectWidth = width - (padding * 2);
-    int rectHeight = height - (padding * 2);
-    if (borderWidth > 0) {
-      g2d.setColor(borderColor);
-      g2d.fillRoundRect(x, y, rectWidth, rectHeight, cornerRadius, cornerRadius);
-    }
+    int rectWidth = width - 1 - (padding * 2);
+    int rectHeight = height - 1 - (padding * 2);
 
-    int innerWidth = rectWidth - 2 * borderWidth;
-    int innerHeight = rectHeight - 2 * borderWidth;
-    int widthRadius = Math.max(0, cornerRadius - borderWidth);
-    int heightRadius = Math.max(0, cornerRadius - borderWidth);
+    Shape clipShape = new RoundRectangle2D.Float(x, y, rectWidth + 1, rectHeight + 1, cornerRadius, cornerRadius);
 
-    GradientPaint gradient = new GradientPaint(x, y, topColor, x, height, bottomColor);
-    g2d.setPaint(gradient);
-    g2d.fillRoundRect(x + borderWidth, y + borderWidth,
-                      innerWidth, innerHeight,
-                      widthRadius, heightRadius);
+    BufferedImage clipImage = createClipImage(g2d, clipShape, rectWidth + 1, rectHeight + 1);
+    Graphics2D g2 = clipImage.createGraphics();
+
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    g2.setComposite(AlphaComposite.SrcAtop);
+    g2.setPaint(new GradientPaint(0, 0, TOP_COLOR, 0, rectHeight, BOTTOM_COLOR.darker()));
+    g2.fill(clipShape);
+
+    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.4f));
+    g2.setColor(Color.DARK_GRAY);
+    g2.setStroke(new BasicStroke(2));
+    g2.drawRoundRect(x, y, rectWidth, rectHeight, cornerRadius, cornerRadius);
+
+    g2.dispose();
+
+    g.drawImage(clipImage, 0, 0, null);
   }
 
   protected void paintText(Graphics g, JComponent component, Rectangle textRect, String text) {
@@ -81,9 +98,6 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
     if (model.isRollover()) {
       g.setColor(rolloverTextColor);
     }
-    else if (model.isPressed() || model.isSelected()) {
-      g.setColor(pressedTextColor);
-    }
     else {
       g.setColor(component.getForeground());
     }
@@ -91,14 +105,20 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
       g.setColor(disabledTextColor);
     }
 
-    if (mnemonicIndex > 0) {
-      GuiUtils.drawStringUnderlineCharAt(g, text, mnemonicIndex,
-                                         textRect.x + getTextShiftOffset(),
-                                         textRect.y + fm.getAscent() + getTextShiftOffset());
+    if (model.isPressed() || model.isSelected()) {
+      Java2DUtils.drawShadowedString((Graphics2D)g, text, pressedTextColor, Color.DARK_GRAY,
+                                     textRect.x + getTextShiftOffset(),
+                                     textRect.y + (fm.getMaxAscent() - fm.getMaxDescent()) + getTextShiftOffset());
     }
     else {
-      g.drawString(text, textRect.x + getTextShiftOffset(),
-                   textRect.y + fm.getAscent() + getTextShiftOffset());
+      g.drawString(text,
+                   textRect.x + getTextShiftOffset(),
+                   textRect.y + (fm.getMaxAscent() - fm.getMaxDescent()) + getTextShiftOffset());
+    }
+    if (mnemonicIndex > 0) {
+      GuiUtils.drawUnderlineCharAt(g, text, mnemonicIndex,
+                                   textRect.x + getTextShiftOffset(),
+                                   textRect.y + (fm.getMaxAscent() - fm.getMaxDescent()) + getTextShiftOffset());
     }
   }
 
@@ -140,5 +160,22 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
 
   public void setPadding(int padding) {
     this.padding = padding;
+  }
+
+  private BufferedImage createClipImage(Graphics2D g, Shape shape, int width, int height) {
+    GraphicsConfiguration gc = g.getDeviceConfiguration();
+    BufferedImage img = gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+    Graphics2D g2 = img.createGraphics();
+
+    g2.setComposite(AlphaComposite.Clear);
+    g2.fillRect(0, 0, width, height);
+
+    g2.setComposite(AlphaComposite.Src);
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    g2.setColor(Color.WHITE);
+    g2.fill(shape);
+    g2.dispose();
+
+    return img;
   }
 }
