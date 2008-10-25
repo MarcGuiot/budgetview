@@ -1,6 +1,6 @@
 package org.globsframework.gui.splits.utils;
 
-import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.exceptions.IconNotFound;
 
 import javax.swing.*;
@@ -8,12 +8,12 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JarIconLocator implements IconLocator {
+public class JarImageLocator implements ImageLocator {
   private Class referenceClass;
   private String imagesPath;
   private Map<String, ImageIcon> loadedImages = new HashMap<String, ImageIcon>();
 
-  public JarIconLocator(Class referenceClass, String imagesPath) {
+  public JarImageLocator(Class referenceClass, String imagesPath) {
     this.referenceClass = referenceClass;
     this.imagesPath = imagesPath;
   }

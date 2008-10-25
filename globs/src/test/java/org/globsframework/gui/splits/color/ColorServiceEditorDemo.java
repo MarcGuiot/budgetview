@@ -1,6 +1,5 @@
 package org.globsframework.gui.splits.color;
 
-import org.globsframework.gui.splits.IconLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.utils.directory.Directory;

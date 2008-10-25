@@ -1,11 +1,11 @@
 package org.globsframework.gui.splits.utils;
 
-import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.exceptions.IconNotFound;
 
 import javax.swing.*;
 
-public class DummyIconLocator implements IconLocator {
+public class DummyImageLocator implements ImageLocator {
 
   public static final String ICON1_NAME = "icon1";
   public static final String ICON2_NAME = "icon2";
@@ -15,7 +15,12 @@ public class DummyIconLocator implements IconLocator {
   public static final ImageIcon ICON2 = new ImageIcon();
   public static final ImageIcon ICON3 = new ImageIcon();
 
+  public String lastRequestedImageName;
+
   public ImageIcon get(String name) throws IconNotFound {
+
+    this.lastRequestedImageName = name;
+
     if (ICON1_NAME.equals(name)) {
       return ICON1;
     }

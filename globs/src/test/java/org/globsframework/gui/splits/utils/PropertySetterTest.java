@@ -6,8 +6,7 @@ import org.globsframework.gui.splits.impl.DefaultSplitProperties;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
 import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.font.FontLocator;
-import org.globsframework.gui.splits.styles.StyleContext;
-import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -26,7 +25,7 @@ public class PropertySetterTest extends UISpecTestCase {
     colorService = new ColorService();
     Directory directory = new DefaultDirectory();
     directory.add(colorService);
-    directory.add(IconLocator.class, new DummyIconLocator());
+    directory.add(ImageLocator.class, new DummyImageLocator());
     directory.add(TextLocator.class, new DummyTextLocator());
     directory.add(FontLocator.class, new FontService());
     context = new DefaultSplitsContext(directory);
@@ -97,8 +96,8 @@ public class PropertySetterTest extends UISpecTestCase {
   }
 
   public void testIconParameterUsesIconLocator() throws Exception {
-    setButtonProperty("pressedIcon", DummyIconLocator.ICON2_NAME);
-    assertSame(DummyIconLocator.ICON2, button.getPressedIcon());
+    setButtonProperty("pressedIcon", DummyImageLocator.ICON2_NAME);
+    assertSame(DummyImageLocator.ICON2, button.getPressedIcon());
   }
 
   public void testDimensionParameter() throws Exception {
@@ -139,7 +138,7 @@ public class PropertySetterTest extends UISpecTestCase {
     setButtonProperty("background", "");
     assertEquals(null, button.getBackground());
 
-    button.setDisabledIcon(DummyIconLocator.ICON1);
+    button.setDisabledIcon(DummyImageLocator.ICON1);
     setButtonProperty("disabledIcon", "");
     assertEquals(null, button.getDisabledIcon());
   }
