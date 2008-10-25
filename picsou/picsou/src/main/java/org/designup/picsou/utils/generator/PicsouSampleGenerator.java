@@ -2,11 +2,9 @@ package org.designup.picsou.utils.generator;
 
 import org.designup.picsou.importer.ofx.OfxExporter;
 import org.designup.picsou.model.*;
-import static org.designup.picsou.utils.generator.AmountGenerator.anyOf;
-import static org.designup.picsou.utils.generator.AmountGenerator.between;
+import static org.designup.picsou.utils.generator.AmountGenerator.*;
 import static org.designup.picsou.utils.generator.CountGenerator.*;
-import static org.designup.picsou.utils.generator.DayGenerator.any;
-import static org.designup.picsou.utils.generator.DayGenerator.dayBetween;
+import static org.designup.picsou.utils.generator.DayGenerator.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -30,7 +28,7 @@ public class PicsouSampleGenerator {
   public static void main(String[] args) throws Exception {
     PicsouSampleGenerator generator = new PicsouSampleGenerator();
     generator.run(200809, 200810);
-    generator.write("tmp/sample_2months.ofx");
+    generator.write("tmp/sample.ofx");
   }
 
   private GlobRepository repository;
@@ -110,7 +108,7 @@ public class PicsouSampleGenerator {
     repository.enterBulkDispatchingMode();
     for (Integer month : Month.range(min, max)) {
       for (MonthGenerator generator : generators) {
-        generator.run(month);
+        generator.run(month, max);
       }
     }
     repository.completeBulkDispatchingMode();
@@ -143,12 +141,16 @@ public class PicsouSampleGenerator {
   private void add(final String label,
                    final CountGenerator count,
                    final AmountGenerator amount,
-                   final DayGenerator day) {
+                   final DayGenerator dayGenerator) {
     generators.add(new MonthGenerator(accountId) {
-      public void run(Integer month) {
+      public void run(Integer month, int maxMonth) {
         int countValue = count.get(month);
         for (int i = 0; i < countValue; i++) {
-          create(month, day.get(month), amount.get(), label, super.accountId);
+          int day = dayGenerator.get(month);
+          if ((month == maxMonth) && (day > 15)) {
+            continue;
+          }
+          create(month, day, amount.get(), label, super.accountId);
         }
       }
     });

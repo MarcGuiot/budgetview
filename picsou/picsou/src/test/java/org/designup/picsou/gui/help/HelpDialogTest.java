@@ -2,8 +2,8 @@ package org.designup.picsou.gui.help;
 
 import org.designup.picsou.functests.checkers.HelpChecker;
 import org.designup.picsou.gui.PicsouGuiTestCase;
-import org.globsframework.gui.splits.IconLocator;
-import org.globsframework.gui.splits.utils.DummyIconLocator;
+import org.globsframework.gui.splits.ImageLocator;
+import org.globsframework.gui.splits.utils.DummyImageLocator;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.uispec4j.Trigger;
 
@@ -15,7 +15,7 @@ public class HelpDialogTest extends PicsouGuiTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     directory.add(new JFrame());
-    directory.add(IconLocator.class, new DummyIconLocator());
+    directory.add(ImageLocator.class, new DummyImageLocator());
   }
 
   private void init(final String ref) {

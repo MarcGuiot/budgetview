@@ -19,7 +19,7 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
@@ -292,7 +292,7 @@ public class PicsouApplication {
     directory.add(GlobModel.class, PicsouGuiModel.get());
     directory.add(SelectionService.class, new SelectionService());
     PicsouColors.registerColorService(directory);
-    directory.add(IconLocator.class, Gui.ICON_LOCATOR);
+    directory.add(ImageLocator.class, Gui.IMAGE_LOCATOR);
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
 

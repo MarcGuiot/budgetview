@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.plaf;
 
 import org.designup.picsou.gui.utils.Gui;
-import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.ui.UIService;
@@ -16,7 +16,7 @@ public class ButtonPanelItemUIDemo {
     DefaultDirectory directory = new DefaultDirectory();
     directory.add(new ColorService());
     directory.add(new UIService());
-    directory.add(IconLocator.class, Gui.ICON_LOCATOR);
+    directory.add(ImageLocator.class, Gui.IMAGE_LOCATOR);
 
     SplitsBuilder builder = new SplitsBuilder(directory);
     builder.setSource("<splits>" +
