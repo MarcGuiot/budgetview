@@ -76,9 +76,9 @@
 
       <row weightY="0.1">
         <column>
-        <label ref="title" opaque="false" font="Arial,bold,22" weightX="0"
-               horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
-        <button action="help" styleClass="help" fill="none" anchor="west"/>
+          <label ref="title" opaque="false" font="Arial,bold,22" weightX="0"
+                 horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
+          <button action="help" styleClass="help" fill="none" anchor="west"/>
         </column>
         <filler fill="horizontal"/>
         <button name="back" action="back" styleClass="backforward" tooltipText="$back"/>
@@ -188,7 +188,9 @@
         </card>
 
       </cards>
-      <label ref="licenceMessage"/>
+      <row>
+        <label ref="licenceMessage" opaque="false" horizontalAlignment="center" weightY="0" fill="vertical"/>
+      </row>
     </column>
 
   </panel>
