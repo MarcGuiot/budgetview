@@ -77,9 +77,9 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   public void update() {
     JComponent component = getComponent();
 
-    GlobList filteredSelection = null;
+    GlobList filteredSelection;
     try {
-      filteredSelection = currentSelection.filter(filter, repository);
+      filteredSelection = getFilteredSelection();
     }
     catch (Exception e) {
       throw new RuntimeException("Exception for " + component.getName() +
@@ -101,6 +101,10 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
     }
 
     doUpdate(text);
+  }
+
+  protected GlobList getFilteredSelection() {
+    return currentSelection.filter(filter, repository);
   }
 
   public T setName(String name) {
