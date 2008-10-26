@@ -25,16 +25,12 @@
                REGIS
 ====================================
 
-- Messages d'aide / sequence entree dans l'appli
-
-- pas bien vu le message dans CategorizationView : le mettre dans un bloc ?
-
-- Creation + Edition de compte
-
 
 ====================================
                RESTE
 ====================================
+
+- Creation de compte
 
 - Revoir centrage par defaut de TimeView quand le nombre de mois est grand (> 3 ans) : plutot montrer le futur
 
