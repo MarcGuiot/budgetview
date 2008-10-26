@@ -186,6 +186,16 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     repository.reset(months, Month.TYPE);
     timeViewPanel = new TimeViewPanel(repository, directory);
     jFrame.add(timeViewPanel);
+    timeViewPanel.registerTooltips(new TooltipsHandler() {
+      public void enterMonth(int monthId) {
+      }
+
+      public void enterYear(int year) {
+      }
+
+      public void leave() {
+      }
+    });
     return jFrame;
   }
 

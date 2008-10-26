@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.time;
 
 import junit.framework.TestCase;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.MouseState;
 import org.designup.picsou.gui.time.selectable.ReleasedMouseState;
 import org.designup.picsou.gui.time.selectable.Selectable;
@@ -106,6 +107,7 @@ public class TimeViewPanelTest extends TestCase {
     final JFrame jFrame = new JFrame();
     jFrame.setBounds(0, 0, 270, 40);
     directory.add(SelectionService.class, new SelectionService());
+    directory.add(TimeService.class, new TimeService());
     directory.add(ColorService.class, PicsouColors.createColorService());
     GlobList months = new GlobList();
     for (int i = 4; i < 13; i++) {
@@ -118,7 +120,26 @@ public class TimeViewPanelTest extends TestCase {
       months.add(GlobBuilder.init(Month.TYPE).set(Month.ID, Month.toYyyyMm(2008, i)).get());
     }
     repository.reset(months, Month.TYPE);
-    jFrame.add(new TimeViewPanel(repository, directory));
+    TimeViewPanel timeViewPanel = new TimeViewPanel(repository, directory);
+    jFrame.add(timeViewPanel);
+    timeViewPanel.register(new TimeViewPanel.VisibilityListener() {
+      public void change(Selectable first, Selectable last) {
+      }
+    });
+    timeViewPanel.registerTooltips(new TooltipsHandler() {
+
+      public void enterMonth(int monthId) {
+        System.out.println("month " + monthId);
+      }
+
+      public void enterYear(int year) {
+        System.out.println("year " + year);
+      }
+
+      public void leave() {
+        System.out.println("leave");
+      }
+    });
     return jFrame;
   }
 

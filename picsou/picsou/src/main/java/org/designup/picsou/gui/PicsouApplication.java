@@ -139,7 +139,7 @@ public class PicsouApplication {
       FileOutputStream stream = new FileOutputStream(logFile, true);
       PrintStream output = new PrintStream(stream);
       output.println("---------------------------");
-      output.println("version : " + PicsouApplication.JAR_VERSION + " ; " + new Date());
+      output.println("version : " + PicsouApplication.JAR_VERSION + " ; " + TimeService.getToday());
       Log.init(output);
     }
     catch (IOException e) {

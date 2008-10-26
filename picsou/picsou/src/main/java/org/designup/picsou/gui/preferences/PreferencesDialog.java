@@ -8,6 +8,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -25,7 +26,12 @@ public class PreferencesDialog {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/preferencesDialog.splits",
                                                       repository, directory);
-    futureMonth = new JComboBox(new Integer[]{12, 18, 24, 36});
+    Integer[] items;
+    items = new Integer[]{12, 18, 24, 36};
+    Utils.beginRemove();
+    items = new Integer[]{0, 1, 2, 3, 12, 18, 24, 36};
+    Utils.endRemove();
+    futureMonth = new JComboBox(items);
     builder.add("futureMonth", futureMonth);
     dialog = PicsouDialog.createWithButtons(parent, (JPanel)builder.load(),
                                             new AbstractAction(Lang.get("ok")) {

@@ -49,6 +49,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   private String deleteLocalPrevayler = "true";
 
   static public String SOCIETE_GENERALE = "Société Générale";
+  private boolean notRegistered = false;
 
   protected void setUp() throws Exception {
 
@@ -85,7 +86,10 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     mainWindow = getMainWindow();
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
-    LicenseChecker.enterLicense(mainWindow, "admin", "zz", 0);
+    if (!notRegistered) {
+      LicenseChecker.enterLicense(mainWindow, "admin", "zz");
+      operations.getPreferences().changeFutureMonth(0).validate();
+    }
     selectInitialView();
   }
 
@@ -176,5 +180,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public void setDeleteLocalPrevayler(String deleteLocalPrevayler) {
     this.deleteLocalPrevayler = deleteLocalPrevayler;
+  }
+
+  public void setNotRegistered() {
+    notRegistered = true;
   }
 }

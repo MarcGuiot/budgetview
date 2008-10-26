@@ -1,11 +1,13 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.BooleanField;
+import org.globsframework.metamodel.fields.DateField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -37,6 +39,8 @@ public class UserPreferences {
   @DefaultInteger(1)
   public static IntegerField CATEGORIZATION_FILTERING_MODE;
 
+  public static DateField LAST_VALID_DAY;
+
   static {
     GlobTypeLoader.init(UserPreferences.class, "userPreferences");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
@@ -51,6 +55,7 @@ public class UserPreferences {
       outputStream.writeInteger(values.get(FUTURE_MONTH_COUNT));
       outputStream.writeBoolean(values.get(REGISTERED_USER));
       outputStream.writeInteger(values.get(CATEGORIZATION_FILTERING_MODE));
+      outputStream.writeDate(values.get(LAST_VALID_DAY));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -61,6 +66,9 @@ public class UserPreferences {
       if (version == 2) {
         deserializeDataV2(fieldSetter, data);
       }
+      if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
+      }
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -68,6 +76,7 @@ public class UserPreferences {
       fieldSetter.set(LAST_DIRECTORY, input.readString());
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -76,10 +85,20 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+      fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
+    }
+
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(LAST_DIRECTORY, input.readString());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+      fieldSetter.set(LAST_VALID_DAY, input.readDate());
     }
 
     public int getWriteVersion() {
-      return 2;
+      return 3;
     }
   }
 

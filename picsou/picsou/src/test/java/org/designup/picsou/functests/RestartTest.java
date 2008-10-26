@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -57,7 +56,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSeries() throws Exception {
-    LicenseChecker.enterLicense(mainWindow, "admin", "", 1);
+    operations.getPreferences().changeFutureMonth(1).validate();
 
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
@@ -154,7 +153,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    
+
     CategorizationGaugeChecker gauge = categorization.getGauge();
     gauge.checkLevel(1, "100%");
     gauge.checkProgressMessageHidden();

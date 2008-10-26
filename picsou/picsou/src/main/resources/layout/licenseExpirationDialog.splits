@@ -1,0 +1,13 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" minimumSize="(470,180)" preferredSize="(470,180)" opaque="true">
+    <column styleClass="innerDialog">
+      <label text="$license.expiration.title" styleClass="title"/>
+      <label ref="expirationMessage"/>
+      <filler fill="vertical" weightY="20"/>
+    </column>
+  </panel>
+
+</splits>

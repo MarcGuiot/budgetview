@@ -16,6 +16,7 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.filtering.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HelpService;
+import org.designup.picsou.gui.license.LicenceInfoView;
 import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
 import org.designup.picsou.gui.monthsummary.InfoView;
@@ -129,6 +130,8 @@ public class MainPanel {
 
     monthSummary = new MonthSummaryView(importFileAction, repository, directory);
 
+    LicenceInfoView licenceInfoView = new LicenceInfoView(repository, directory);
+
     createPanel(
       titleView,
       transactionView,
@@ -141,7 +144,8 @@ public class MainPanel {
       categorizationView,
       new CardView(repository, directory),
       new BudgetView(repository, directory),
-      seriesView);
+      seriesView,
+      licenceInfoView);
 
     createMenuBar(parent, directory);
   }

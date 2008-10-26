@@ -1,6 +1,7 @@
 package org.designup.picsou.importer;
 
 import org.apache.commons.collections.iterators.ReverseListIterator;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
@@ -68,7 +69,7 @@ public class ImportSession {
   private List<String> getImportedTransactionFormat() {
     Set<String> valueSet = localRepository.getAll(ImportedTransaction.TYPE)
       .getValueSet(ImportedTransaction.BANK_DATE);
-    DateFormatAnalyzer dateFormatAnalyzer = new DateFormatAnalyzer(new Date());
+    DateFormatAnalyzer dateFormatAnalyzer = new DateFormatAnalyzer(TimeService.getToday());
     return dateFormatAnalyzer.parse(valueSet);
   }
 
@@ -209,7 +210,7 @@ public class ImportSession {
   public Key createImport(TypedInputStream file, GlobList createdTransactions, GlobRepository targetRepository) {
     Glob transactionImport =
       targetRepository.create(TransactionImport.TYPE,
-                              value(TransactionImport.IMPORT_DATE, new Date()),
+                              value(TransactionImport.IMPORT_DATE, TimeService.getToday()),
                               value(TransactionImport.SOURCE, file.getName()));
 
     Key importKey = transactionImport.getKey();

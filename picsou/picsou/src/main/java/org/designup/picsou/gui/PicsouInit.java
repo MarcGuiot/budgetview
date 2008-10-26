@@ -120,9 +120,16 @@ public class PicsouInit {
       directory.get(UpgradeService.class).upgrade(repository, version);
     }
 
-    if (!version.get(VersionInformation.CURRENT_BANK_CONFIG_VERSION).equals(version.get(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION))
+    if (!version.get(VersionInformation.CURRENT_BANK_CONFIG_VERSION)
+      .equals(version.get(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION))
         || forceUpgrade) {
       directory.get(UpgradeService.class).applyFilter(repository, version);
+    }
+
+    Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
+    if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
+      repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
+                        Month.addOneMonth(TimeService.getToday()));
     }
   }
 
@@ -136,7 +143,12 @@ public class PicsouInit {
                             value(VersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),
                             value(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
                             value(VersionInformation.LATEST_AVALAIBLE_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
-    repository.findOrCreate(UserPreferences.KEY);
+    Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
+    if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
+      repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
+                        Month.addOneMonth(TimeService.getToday()));
+    }
+
     repository.findOrCreate(CurrentMonth.KEY,
                             FieldValue.value(CurrentMonth.MONTH_ID, 0),
                             FieldValue.value(CurrentMonth.DAY, 0));

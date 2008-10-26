@@ -1,7 +1,5 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.LicenseChecker;
-import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
@@ -12,7 +10,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    LicenseChecker.enterLicense(mainWindow, "admin", "zz", 0);
     setCurrentMonth("2008/08");
   }
 

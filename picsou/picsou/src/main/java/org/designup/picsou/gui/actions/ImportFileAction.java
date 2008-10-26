@@ -1,7 +1,10 @@
 package org.designup.picsou.gui.actions;
 
+import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.license.LicenceExpirationDialog;
 import org.designup.picsou.gui.startup.ImportPanel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
+import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -11,6 +14,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class ImportFileAction extends AbstractAction {
@@ -64,17 +68,33 @@ public class ImportFileAction extends AbstractAction {
   }
 
   private static class OpenRunnable implements Runnable {
-    private ImportPanel panel;
+    private ImportPanel panel = null;
+    private Directory directory;
+    private GlobRepository repository;
 
     public OpenRunnable(List<File> files, Directory directory, GlobRepository repository, Glob defaultAccount,
                         boolean usePreference) {
+      this.directory = directory;
+      this.repository = repository;
       JFrame frame = directory.get(JFrame.class);
-      panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount,
-                              frame, repository, directory, usePreference);
+      Glob preference = repository.get(UserPreferences.KEY);
+      Date lastValidDay = preference.get(UserPreferences.LAST_VALID_DAY);
+      if (preference.get(UserPreferences.REGISTERED_USER) ||
+          TimeService.getToday().before(lastValidDay)) {
+        panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount,
+                                frame, repository, directory, usePreference);
+      }
     }
 
     public void run() {
-      panel.show();
+      if (panel != null) {
+        panel.show();
+      }
+      else {
+        JFrame frame = directory.get(JFrame.class);
+        LicenceExpirationDialog dialog = new LicenceExpirationDialog(frame, repository, directory);
+        dialog.show();
+      }
     }
   }
 }

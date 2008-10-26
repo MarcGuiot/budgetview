@@ -180,6 +180,7 @@
         </card>
 
       </cards>
+      <label ref="licenceMessage"/>
     </column>
 
   </panel>

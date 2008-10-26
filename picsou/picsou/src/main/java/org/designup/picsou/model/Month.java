@@ -192,6 +192,12 @@ public class Month {
     return day;
   }
 
+  public static Date addOneMonth(Date date) {
+    CALENDAR.setTime(date);
+    CALENDAR.add(Calendar.MONTH, 1);
+    return CALENDAR.getTime();
+  }
+
   public static boolean isContinuousSequence(int[] months) {
     int previous = months[0];
     for (int i = 1; i < months.length; i++) {
