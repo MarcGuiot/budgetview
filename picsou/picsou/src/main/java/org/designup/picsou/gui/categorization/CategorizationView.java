@@ -110,6 +110,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     CategorizationGaugePanel gauge = new CategorizationGaugePanel(repository, parentDirectory);
     builder.add("gaugePanel", gauge.getPanel());
     builder.add("progressMessage", gauge.getProgressMessage());
+    builder.add("hideProgressMessage", gauge.getHideProgressMessageAction());
 
     filteringModeCombo = builder.add("transactionFilterCombo", new JComboBox(TransactionFilteringMode.values()));
     filteringModeCombo.addActionListener(new AbstractAction() {

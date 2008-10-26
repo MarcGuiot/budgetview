@@ -34,6 +34,12 @@ public class UserPreferences {
   @DefaultBoolean(false)
   public static BooleanField REGISTERED_USER;
 
+  @DefaultBoolean(true)
+  public static BooleanField SHOW_BUDGET_VIEW_HELP_MESSAGE;
+
+  @DefaultBoolean(true)
+  public static BooleanField SHOW_CATEGORIZATION_HELP_MESSAGE;
+
   @DefaultInteger(1)
   public static IntegerField CATEGORIZATION_FILTERING_MODE;
 
@@ -51,7 +57,13 @@ public class UserPreferences {
       outputStream.writeInteger(values.get(FUTURE_MONTH_COUNT));
       outputStream.writeBoolean(values.get(REGISTERED_USER));
       outputStream.writeInteger(values.get(CATEGORIZATION_FILTERING_MODE));
+      outputStream.writeBoolean(values.get(SHOW_BUDGET_VIEW_HELP_MESSAGE));
+      outputStream.writeBoolean(values.get(SHOW_CATEGORIZATION_HELP_MESSAGE));
       return serializedByteArrayOutput.toByteArray();
+    }
+
+    public int getWriteVersion() {
+      return 3;
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
@@ -60,6 +72,9 @@ public class UserPreferences {
       }
       if (version == 2) {
         deserializeDataV2(fieldSetter, data);
+      }
+      if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
       }
     }
 
@@ -78,8 +93,14 @@ public class UserPreferences {
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
     }
 
-    public int getWriteVersion() {
-      return 2;
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(LAST_DIRECTORY, input.readString());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+      fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, input.readBoolean());
+      fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
     }
   }
 

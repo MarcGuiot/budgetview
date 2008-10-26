@@ -2,8 +2,10 @@ package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.SetFieldValueAction;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.metamodel.GlobType;
@@ -62,6 +64,10 @@ public class CategorizationGaugePanel implements ChangeSetListener {
     return progressMessage;
   }
 
+  public Action getHideProgressMessageAction() {
+    return new SetFieldValueAction(UserPreferences.KEY, UserPreferences.SHOW_CATEGORIZATION_HELP_MESSAGE, false, repository);
+  }
+
   public void update() {
     GlobList transactions =
       repository.getAll(Transaction.TYPE,
@@ -98,6 +104,12 @@ public class CategorizationGaugePanel implements ChangeSetListener {
   }
 
   private void updateProgressMessage(double total, double percentage) {
+    Boolean preference = repository.get(UserPreferences.KEY).get(UserPreferences.SHOW_CATEGORIZATION_HELP_MESSAGE);
+    if (!Boolean.TRUE.equals(preference)) {
+      progressMessage.setVisible(false);
+      return;
+    }
+
     if (total == 0) {
       progressMessage.setVisible(false);
     }
@@ -115,13 +127,13 @@ public class CategorizationGaugePanel implements ChangeSetListener {
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(Transaction.TYPE)) {
+    if (changeSet.containsChanges(Transaction.TYPE) || changeSet.containsChanges(UserPreferences.KEY)) {
       update();
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(Transaction.TYPE)) {
+    if (changedTypes.contains(Transaction.TYPE) || changedTypes.contains(UserPreferences.TYPE)) {
       update();
     }
   }

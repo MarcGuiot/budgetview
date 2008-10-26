@@ -1,4 +1,5 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+  
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <styles>
@@ -7,6 +8,15 @@
   </styles>
 
   <column styleClass="main">
+
+    <row name="helpMessagePanel" autoHideSource="helpMessage">
+      <filler fill="horizontal"/>
+      <row styleClass="mainPanelMessage">
+        <htmlEditorPane ref="helpMessage" text="$budgetview.help.message" hyperlinkListener="hyperlinkHandler"/>
+        <button action="hideHelpMessage" styleClass="iconOnly" icon="button_delete.png" tooltipText="$hideMessage"/>
+      </row>
+      <filler fill="horizontal"/>
+    </row>
 
     <horizontalSplit ref="horizontalSplitPane">
 

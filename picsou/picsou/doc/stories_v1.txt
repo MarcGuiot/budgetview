@@ -79,13 +79,9 @@
 
 - Backup/restore (fonctionnel precis a definir ensemble)
 
-- lancement via "ouvrir avec" la première fois : la popup casse tout ?
-
 - supprimer mode "selectionner automatiquement les operations suivantes" ?
 
 - budgetView: pouvoir cliquer sur les montants attendus ? (comportement a definir)
 
 - categorizationGauge : mettre un tooltip avec le nombre de transactions non classees
-
-- mettre en evidence le bouton "lancer l'assistant", voire le bloc de message d'aide complet (fond jaune ?)
 

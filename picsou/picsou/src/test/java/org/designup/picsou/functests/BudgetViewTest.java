@@ -638,4 +638,11 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.occasional.checkOrder(MasterCategory.FOOD, MasterCategory.CLOTHING, MasterCategory.TELECOMS);
   }
+
+  public void testHelpMessage() throws Exception {
+    views.selectBudget();
+    budgetView.checkHelpMessageDisplayed(true);
+    budgetView.hideHelpMessage();
+    budgetView.checkHelpMessageDisplayed(false);
+  }
 }

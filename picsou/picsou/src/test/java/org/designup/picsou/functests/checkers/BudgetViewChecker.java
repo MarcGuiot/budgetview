@@ -51,6 +51,14 @@ public class BudgetViewChecker extends DataChecker {
     return new BudgetLabelChecker(window);
   }
 
+  public void checkHelpMessageDisplayed(boolean visible) {
+    checkComponentVisible(window.getPanel("budgetView"), JEditorPane.class, "helpMessage", visible);
+  }
+
+  public void hideHelpMessage() {
+    window.getPanel("budgetView").getButton("hideHelpMessage").click();
+  }
+
   public class BudgetAreaChecker {
 
     private String panelName;

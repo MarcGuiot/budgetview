@@ -9,6 +9,9 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentMonth("2008/06");
     super.setUp();
+  }
+
+  protected void selectInitialView() {
     views.selectCategorization();
   }
 
@@ -84,6 +87,19 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
 
     categorization.getGauge().checkHidden();
     categorization.getGauge().checkCompleteProgressMessageShown();
+  }
+
+  public void testHidingProgressMessage() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/10", 1000.0, "WorldCo")
+      .load();
+
+    categorization.setOccasional("WorldCo", MasterCategory.INCOME);
+
+    categorization.getGauge().checkCompleteProgressMessageShown();
+    categorization.getGauge().hideProgressMessage();
+    categorization.getGauge().checkProgressMessageHidden();
   }
 
   public void testMessageNavigation() throws Exception {

@@ -2,11 +2,15 @@ package org.designup.picsou.gui.budget;
 
 import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.PeriodOccasionalSeriesStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.SetFieldValueAction;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.UserPreferences;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -20,12 +24,14 @@ import org.globsframework.model.utils.ReplicationGlobRepository;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public class BudgetView extends View implements GlobSelectionListener, ChangeSetListener {
   private GlobList selectedMonths = GlobList.EMPTY;
   private Directory parentDirectory;
+  private JEditorPane helpMessage;
 
   public BudgetView(GlobRepository repository, Directory parentDirectory) {
     super(new ReplicationGlobRepository(repository,
@@ -61,6 +67,14 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     builder.add("secondVerticalSplitPane", new JideSplitPane());
     builder.add("thirdVerticalSplitPane", new JideSplitPane());
 
+    createHelpMessage();
+    builder.add("helpMessage", helpMessage);
+    builder.add("hideHelpMessage", 
+                new SetFieldValueAction(UserPreferences.KEY, UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE,
+                                        false, repository));
+
+    builder.add("hyperlinkHandler", new HyperlinkHandler(parentDirectory));
+
     parentBuilder.add("budgetView", builder);
 
     repository.addChangeListener(this);
@@ -75,6 +89,32 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
       view = new BudgetAreaSeriesView(name, budgetArea, repository, directory);
     }
     view.registerComponents(builder);
+  }
+
+  private JEditorPane createHelpMessage() {
+    helpMessage = new JEditorPane();
+    helpMessage.setContentType("text/html");
+    PicsouColors.installLinkColor(helpMessage, "mainpanel", "mainpanel.message.link", directory);
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)) {
+          updateHelpMessage();
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        updateHelpMessage();
+      }
+    });
+    updateHelpMessage();
+    return helpMessage;
+  }
+
+  private void updateHelpMessage() {
+    Glob prefs = repository.find(UserPreferences.KEY);
+    if (prefs != null) {
+      helpMessage.setVisible(Boolean.TRUE.equals(prefs.get(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)));
+    }
   }
 
   public void selectionUpdated(GlobSelection selection) {

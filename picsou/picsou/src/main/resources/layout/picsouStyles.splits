@@ -141,10 +141,11 @@
         topColor="mainpanel.message.top"
         bottomColor="mainpanel.message.bottom"
         borderColor="mainpanel.message.border"/>
-    <style selector="column.mainPanelMessage" ui="mainPanelMessage"
+    <style selector="row.mainPanelMessage" ui="mainPanelMessage"
            fill="horizontal" anchor="center" weightY="0" marginLeft="100" marginRight="100" border="empty(0,0,10,0)"/>
-    <style selector="htmlEditorPane.mainPanelMessage" fill="horizontal" anchor="center"
-           foreground="mainpanel.message" weightY="0" border="empty(5,20,5,20)"/>
+    <style selector="row.mainPanelMessage htmlEditorPane" fill="horizontal" anchor="center"
+           foreground="mainpanel.message" weightY="0" border="empty(5,20,5,0)"/>
+    <style selector="row.mainPanelMessage button" weightX="0" border="empty(5,0,5,20)"/>
 
     <!-- Icon buttons -->
     <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>

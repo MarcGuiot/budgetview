@@ -137,6 +137,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     budgetView.occasional.checkTotalAmount((double)0, 0);
     budgetView.checkBalance(free1);
 
+    budgetView.checkHelpMessageDisplayed(true);
+    budgetView.hideHelpMessage();
+
     restartApplication();
 
     views.selectBudget();
@@ -144,6 +147,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     double free = -600;
     budgetView.occasional.checkTotalAmount((double)0, 0);
     budgetView.checkBalance(free);
+
+    budgetView.checkHelpMessageDisplayed(false);
   }
 
   public void testCategorizationView() throws Exception {
@@ -182,6 +187,25 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .checkProgressMessageHidden();
   }
 
+  public void testCategorizationProgressMessage() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/10", 1000.0, "WorldCo")
+      .load();
+
+    views.selectCategorization();
+    categorization.setOccasional("WorldCo", MasterCategory.INCOME);
+
+    categorization.getGauge().checkCompleteProgressMessageShown();
+    categorization.getGauge().hideProgressMessage();
+    categorization.getGauge().checkProgressMessageHidden();
+
+    restartApplication();
+
+    views.selectCategorization();
+    categorization.getGauge().checkProgressMessageHidden();
+  }
+  
   protected void restartApplication() {
     mainWindow.dispose();
     mainWindow = null;

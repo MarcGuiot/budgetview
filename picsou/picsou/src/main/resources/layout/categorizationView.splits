@@ -28,11 +28,12 @@
 
   <column styleClass="main">
 
-    <row>
+    <row name="helpMessagePanel" autoHideSource="progressMessage">
       <filler fill="horizontal"/>
-      <column styleClass="mainPanelMessage" autoHideSource="progressMessage">
-        <htmlEditorPane ref="progressMessage" styleClass="mainPanelMessage" hyperlinkListener="hyperlinkHandler"/>
-      </column>
+      <row styleClass="mainPanelMessage">
+        <htmlEditorPane ref="progressMessage" hyperlinkListener="hyperlinkHandler"/>
+        <button action="hideProgressMessage" styleClass="iconOnly" icon="button_delete.png" tooltipText="$hideMessage"/>
+      </row>
       <filler fill="horizontal"/>
     </row>
 

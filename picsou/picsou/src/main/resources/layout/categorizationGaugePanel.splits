@@ -17,4 +17,5 @@
     <component ref="gauge"/>
     <label ref="level" foreground="gauge.categorization.label" font="-,plain,9"/>
   </row>
+  
 </splits>
