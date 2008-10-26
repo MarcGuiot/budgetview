@@ -1,7 +1,6 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategorizationChecker;
-import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
@@ -904,7 +903,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutomaticBudget() throws Exception {
-    LicenseChecker.enterLicense(mainWindow, "admin", "zz", 2);
+    operations.getPreferences().changeFutureMonth(2).validate();
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("Courant")
       .setCategory(MasterCategory.FOOD)
@@ -1029,7 +1028,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testInAutomaticBudgetOverrunInCurrentUpdateFuture() throws Exception {
-    LicenseChecker.enterLicense(mainWindow, "admin", "zz", 2);
+    operations.getPreferences().changeFutureMonth(2).validate();
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("Courant")
       .setCategory(MasterCategory.FOOD)
@@ -1093,7 +1092,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testInAutomaticUpdateImmediatelyPreviousFromCurrentImpactFutur() throws Exception {
-    LicenseChecker.enterLicense(mainWindow, "admin", "zz", 2);
+    operations.getPreferences().changeFutureMonth(2).validate();
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("Courant")
       .setCategory(MasterCategory.FOOD)
@@ -1148,7 +1147,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testInAutomaticNewMonthUpdateFuture() throws Exception {
-    LicenseChecker.enterLicense(mainWindow, "admin", "zz", 2);
+    operations.getPreferences().changeFutureMonth(2).validate();
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("Courant")
       .setCategory(MasterCategory.FOOD)

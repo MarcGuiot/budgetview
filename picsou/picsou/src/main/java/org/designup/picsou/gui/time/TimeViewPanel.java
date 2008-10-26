@@ -55,8 +55,11 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private int currentPaintCount = 0;
   private TimeService timeService;
   private VisibilityListener visibilityListener;
+  private TooltipsHandler tooltipsHandler;
+  private Selectable selectableForTooltips = null;
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
+    this.tooltipsHandler = tooltipsHandler;
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     this.repository = globRepository;
     timeService = directory.get(TimeService.class);
@@ -128,6 +131,10 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     this.visibilityListener = visibilityListener;
   }
 
+  public void registerTooltips(TooltipsHandler tooltipsHandler) {
+    this.tooltipsHandler = tooltipsHandler;
+  }
+
   public Double getAccountBalance(int monthId) {
     Glob balance = repository.find(Key.create(BalanceStat.TYPE, monthId));
     if (balance == null) {
@@ -172,9 +179,34 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void mouseEntered(MouseEvent e) {
+    selectableForTooltips = timeGraph.getSelectableAt(e.getX(), e.getY());
+    sendTooltipEvent();
+  }
+
+  private void sendTooltipEvent() {
+    if (selectableForTooltips instanceof MonthGraph) {
+      tooltipsHandler.enterMonth(((MonthGraph)selectableForTooltips).getMonth().get(Month.ID));
+    }
+    else if (selectableForTooltips instanceof YearGraph) {
+      tooltipsHandler.enterYear(((YearGraph)selectableForTooltips).getYear());
+    }
   }
 
   public void mouseExited(MouseEvent e) {
+    tooltipsHandler.leave();
+    selectableForTooltips = null;
+  }
+
+  public void mouseMoved(MouseEvent e) {
+    if (selectableForTooltips == null) {
+      return;
+    }
+    Selectable newSelectable = timeGraph.getSelectableAt(e.getX(), e.getY());
+    if (newSelectable == selectableForTooltips) {
+      return;
+    }
+    selectableForTooltips = newSelectable;
+    sendTooltipEvent();
   }
 
   public void mouseDragged(MouseEvent e) {
@@ -238,9 +270,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       }
     }
     return false;
-  }
-
-  public void mouseMoved(MouseEvent e) {
   }
 
   public Set<Selectable> getCurrentlySelectedToUpdate() {

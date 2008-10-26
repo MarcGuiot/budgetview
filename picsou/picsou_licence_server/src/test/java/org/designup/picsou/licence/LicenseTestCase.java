@@ -71,6 +71,11 @@ public abstract class LicenseTestCase extends UISpecTestCase {
   protected void tearDown() throws Exception {
     super.tearDown();
     stop();
+    mailServer = null;
+    mailThread = null;
+    sqlService = null;
+    ftpServer = null;
+    server = null;
   }
 
   protected void start() throws Exception {

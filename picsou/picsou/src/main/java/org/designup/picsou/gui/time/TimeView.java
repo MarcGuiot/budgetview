@@ -21,6 +21,16 @@ public class TimeView extends View {
   public TimeView(GlobRepository globRepository, Directory directory) {
     super(globRepository, directory);
     viewPanel = new TimeViewPanel(globRepository, directory);
+    viewPanel.registerTooltips(new TooltipsHandler() {
+      public void enterMonth(int monthId) {
+      }
+
+      public void enterYear(int year) {
+      }
+
+      public void leave() {
+      }
+    });
     viewPanel.register(new TimeViewPanel.VisibilityListener() {
 
       public void change(Selectable first, Selectable last) {

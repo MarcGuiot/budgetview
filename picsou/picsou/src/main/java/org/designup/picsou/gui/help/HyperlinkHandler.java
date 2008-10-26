@@ -3,6 +3,7 @@ package org.designup.picsou.gui.help;
 import org.globsframework.utils.directory.Directory;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.browsing.BrowsingService;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -35,6 +36,10 @@ public class HyperlinkHandler implements HyperlinkListener {
     else if (description.startsWith("card:")) {
       NavigationService navigationService = directory.get(NavigationService.class);
       navigationService.gotoCard(Card.get(description.substring(5)));
+    }
+    else if (description.startsWith("url:")) {
+      BrowsingService browser = directory.get(BrowsingService.class);
+      browser.launchBrowser(description.substring(4));
     }
   }
 }

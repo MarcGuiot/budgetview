@@ -15,13 +15,11 @@ public class LicenseChecker {
     this.dialog = dialog;
   }
 
-  static public void enterLicense(Window window, final String mail, final String code, final int monthCount) {
+  static public void enterLicense(Window window, final String mail, final String code) {
     enterLicense(window, new WindowHandler() {
       public Trigger process(Window window) throws Exception {
         window.getInputTextBox("mail").setText(mail);
         window.getInputTextBox("code").setText(code);
-        UISpecAssert.assertThat(window.getInputTextBox("monthCount").textEquals("24"));
-        window.getInputTextBox("monthCount").setText(Integer.toString(monthCount));
         return window.getButton("OK").triggerClick();
       }
     });

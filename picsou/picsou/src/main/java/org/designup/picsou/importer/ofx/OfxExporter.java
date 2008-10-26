@@ -1,5 +1,6 @@
 package org.designup.picsou.importer.ofx;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
@@ -41,7 +42,8 @@ public class OfxExporter {
         writer.writeBankMsgHeader(account.get(Account.BANK_ENTITY), account.get(Account.BRANCH_ID), account.get(Account.NUMBER));
         writeTransactions(account);
         Date updateDate = account.get(Account.BALANCE_DATE);
-        writer.writeBankMsgFooter(account.get(Account.BALANCE), toString(updateDate != null ? updateDate : new Date()));
+        writer.writeBankMsgFooter(account.get(Account.BALANCE),
+                                  toString(updateDate != null ? updateDate : TimeService.getToday()));
       }
     }
 

@@ -1,8 +1,8 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
@@ -15,7 +15,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testFirstSeriesInitialization() throws Exception {
-    LicenseChecker.enterLicense(mainWindow, "admin", "", 24);
+    operations.getPreferences().changeFutureMonth(24).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/07/08", -29.9, "free telecom")
       .load();
@@ -57,7 +57,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectCategorization();
     categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
-    LicenseChecker.enterLicense(mainWindow, "admin", "", 1);
+    operations.getPreferences().changeFutureMonth(1).validate();
     timeline.assertSpanEquals("2008/06", "2008/08");
     timeline.selectAll();
     views.selectBudget();
@@ -77,6 +77,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant", MasterCategory.FOOD)
       .check();
 
+    TimeService.setCurrentDate(Dates.parse("2008/08/10"));
     OfxBuilder
       .init(this)
       .addTransaction("2008/08/4", -50., "ED")
@@ -98,7 +99,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2008/06/20", -100., "Auchan")
       .load();
-    LicenseChecker.enterLicense(mainWindow, "admin", "", 1);
+    operations.getPreferences().changeFutureMonth(1).validate();
     views.selectCategorization();
     categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
     timeline.selectAll();
@@ -150,7 +151,8 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2008/06/20", -100., "Auchan")
       .load();
-    LicenseChecker.enterLicense(mainWindow, "admin", "", 1);
+
+    operations.getPreferences().changeFutureMonth(1);
     views.selectCategorization();
     categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
     timeline.selectAll();

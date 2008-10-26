@@ -42,10 +42,10 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
             activationCode = user.get(User.ACTIVATION_CODE);
             if (mail != null && signature != null && activationCode != null) {
               byte[] mailAsByte = mail.getBytes();
-              repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, true);
               if (KeyService.checkSignature(mailAsByte, signature)) {
                 serverAccess.localRegister(mailAsByte, signature, activationCode);
                 repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_OK);
+                repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, true);
               }
               else {
                 repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_BAD_SIGNATURE);

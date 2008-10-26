@@ -1,8 +1,6 @@
 package org.designup.picsou.licence.functests;
 
-import org.designup.picsou.functests.checkers.LicenseChecker;
-import org.designup.picsou.functests.checkers.LoginChecker;
-import org.designup.picsou.functests.checkers.MonthChecker;
+import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.licence.LicenseTestCase;
@@ -20,6 +18,7 @@ import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class LicenseTest extends LicenseTestCase {
@@ -30,6 +29,9 @@ public class LicenseTest extends LicenseTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
+    Calendar month = Calendar.getInstance();
+    month.set(2000, 1, 1);
+    TimeService.setCurrentDate(month.getTime());
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
     start();
@@ -83,7 +85,9 @@ public class LicenseTest extends LicenseTestCase {
       .getRequest()
       .run();
     connection.commit();
-    LicenseChecker.enterLicense(window, mail, "1234", 24);
+    LicenseChecker.enterLicense(window, mail, "1234");
+    OperationChecker operation = new OperationChecker(window);
+    operation.getPreferences().changeFutureMonth(24).validate();
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 1L);
     assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
     assertTrue(license.get(License.SIGNATURE).length > 1);
@@ -102,6 +106,8 @@ public class LicenseTest extends LicenseTestCase {
     checkRepoIdIsUpdated(connection, 2L, null);
     loginChecker = new LoginChecker(window);
     loginChecker.logUser("user", "passw@rd");
+    TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    checkLicenceExpiration();
   }
 
   public void testResendActivationKeyIfCountDecrease() throws Exception {
@@ -146,6 +152,9 @@ public class LicenseTest extends LicenseTestCase {
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
     MonthChecker monthChecker = new MonthChecker(window);
     monthChecker.assertSpanEquals("2008/07", "2010/07");
+    OperationChecker operation = new OperationChecker(window);
+    operation.openImportDialog()
+      .close();
   }
 
   public void testRegistrationWithBadKey() throws Exception {
@@ -155,6 +164,14 @@ public class LicenseTest extends LicenseTestCase {
       .enterLicenseAndValidate("titi@foo.org", "az", 24)
       .checkErrorMessage("Activation failed")
       .cancel();
+    TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    checkLicenceExpiration();
+  }
+
+  private void checkLicenceExpiration() {
+    OperationChecker operation = new OperationChecker(window);
+    LicenceExpirationChecker licenceExpiration = new LicenceExpirationChecker(operation.getImportTrigger());
+    licenceExpiration.close();
   }
 
   public void testStartRegistrationAndStopServer() throws Exception {
@@ -167,6 +184,8 @@ public class LicenseTest extends LicenseTestCase {
     license.validate();
     license.checkErrorMessage("Activation failed")
       .cancel();
+    TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    checkLicenceExpiration();
   }
 
   public void testEmptyActivationCode() throws Exception {
@@ -179,6 +198,9 @@ public class LicenseTest extends LicenseTestCase {
     license.enterLicense("titi@foo.org", "", 24);
     license.validate();
     license.checkErrorMessage("Activation failed");
+    license.cancel();
+    TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    checkLicenceExpiration();
   }
 
   private void restartPicsouToIncrementCount() {
@@ -200,7 +222,10 @@ public class LicenseTest extends LicenseTestCase {
     MonthChecker monthChecker = new MonthChecker(window);
     monthChecker.assertSpanEquals("2008/07", "2010/07");
     LicenseChecker license = new LicenseChecker(window);
-    license.enterLicense(window, MAIL, code, 24);
+    license.enterLicense(window, MAIL, code);
+    OperationChecker operation = new OperationChecker(window);
+    operation.getPreferences().changeFutureMonth(24).validate();
+
     monthChecker.assertSpanEquals("2008/07", "2010/07");
     window.dispose();
   }
@@ -233,7 +258,10 @@ public class LicenseTest extends LicenseTestCase {
       .run();
     connection.commit();
     LicenseChecker checker = new LicenseChecker(window);
-    checker.enterLicense(window, MAIL, "1234", 24);
+    checker.enterLicense(window, MAIL, "1234");
+    OperationChecker operation = new OperationChecker(window);
+    operation.getPreferences().changeFutureMonth(24).validate();
+
     Glob license = getLicense(connection, MAIL, License.ACCESS_COUNT, 1L);
     assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
     connection.commitAndClose();

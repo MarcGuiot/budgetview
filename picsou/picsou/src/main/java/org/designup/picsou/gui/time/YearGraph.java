@@ -225,4 +225,7 @@ public class YearGraph extends DefaultCompositeComponent {
     return maxMonthHeight;
   }
 
+  public int getYear() {
+    return year;
+  }
 }

@@ -1,6 +1,8 @@
 package org.designup.picsou.triggers;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -63,6 +65,10 @@ public class CurrentMonthTrigger implements ChangeSetListener {
     }
 
     public int getLastMonthId() {
+      int currentMonthId = Month.getMonthId(TimeService.getToday());
+      if (lastMonthId > currentMonthId) {
+        return currentMonthId;
+      }
       return lastMonthId;
     }
   }

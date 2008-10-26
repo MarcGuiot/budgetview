@@ -29,8 +29,9 @@ public class InfoView extends View {
     versionInfo.setContentType("text/html");
     builder.add("versionInfo", versionInfo);
     Glob version = repository.get(VersionInformation.KEY);
-    if (!version.get(VersionInformation.CURRENT_JAR_VERSION).equals(
-      version.get(VersionInformation.LATEST_AVALAIBLE_JAR_VERSION))) {
+    Long currentVersion = version.get(VersionInformation.CURRENT_JAR_VERSION);
+    Long latestVersion = version.get(VersionInformation.LATEST_AVALAIBLE_JAR_VERSION);
+    if (currentVersion != null && latestVersion != null && currentVersion < latestVersion) {
       versionInfo.setText(Lang.get("infoView.new.version"));
       informationPanel.setVisible(true);
     }

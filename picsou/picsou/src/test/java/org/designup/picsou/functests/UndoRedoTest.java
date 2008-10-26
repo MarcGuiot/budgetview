@@ -7,9 +7,14 @@ import org.designup.picsou.model.TransactionType;
 
 public class UndoRedoTest extends LoggedInFunctionalTestCase {
 
+  protected void setUp() throws Exception {
+    super.setNotRegistered();
+    super.setUp();
+  }
+
   public void testUndoRedoSequence() throws Exception {
 
-    operations.checkUndoNotAvailable();
+    //   operations.checkUndoNotAvailable();
     operations.checkRedoNotAvailable();
 
     OfxBuilder.init(this)

@@ -172,7 +172,8 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
     }
 
     public String toString(Glob glob, GlobRepository repository) {
-      if (glob.get(Transaction.CATEGORY).equals(Category.NONE)) {
+      Integer category = glob.get(Transaction.CATEGORY);
+      if (category == null || category.equals(Category.NONE)) {
         return "";
       }
       return stringifier.toString(repository.findLinkTarget(glob, Transaction.CATEGORY), repository);

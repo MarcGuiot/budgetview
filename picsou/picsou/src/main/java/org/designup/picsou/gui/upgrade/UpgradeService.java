@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.upgrade;
 
+import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.Account;
@@ -27,8 +28,7 @@ public class UpgradeService {
         plannedTransactionCorrecter.check();
         plannedTransactionCorrecter.correct();
       }
-      repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION,
-                        version.get(VersionInformation.LATEST_AVALAIBLE_JAR_VERSION));
+      repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
     }
     finally {
       repository.completeBulkDispatchingMode();
