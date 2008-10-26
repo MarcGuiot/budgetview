@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.utils;
 
-import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -13,7 +13,7 @@ public class RoundedButtonTest {
 
     Directory directory = new DefaultDirectory();
     ColorService colorService = PicsouColors.registerColorService(directory);
-    IconLocator iconLocator = Gui.ICON_LOCATOR;
+    ImageLocator imageLocator = Gui.IMAGE_LOCATOR;
 
     final JFrame frame = new JFrame();
 //    JPanel panel = new JGradientPanel(directory.get(ColorService.class),

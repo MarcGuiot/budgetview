@@ -68,4 +68,8 @@ public class ViewSelectionChecker extends DataChecker {
   public void forward() {
     window.getButton("forward").click();
   }
+
+  public HelpChecker openHelp() {
+    return HelpChecker.open(window.getButton("Help").triggerClick());
+  }
 }

@@ -90,7 +90,7 @@ public class StyledPanelUI extends BasicPanelUI {
       image = new BufferedImage(width, height, type);
       g2d = image.createGraphics();
     }
-    catch (Exception e) {
+    catch (OutOfMemoryError e) {
       image = null;
       g2d = (Graphics2D)graphics;
     }

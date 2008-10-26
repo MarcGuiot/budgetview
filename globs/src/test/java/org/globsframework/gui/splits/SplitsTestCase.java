@@ -6,9 +6,8 @@ import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
-import org.globsframework.gui.splits.styles.StyleContext;
 import org.globsframework.gui.splits.ui.UIService;
-import org.globsframework.gui.splits.utils.DummyIconLocator;
+import org.globsframework.gui.splits.utils.DummyImageLocator;
 import org.globsframework.gui.splits.utils.DummyTextLocator;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -28,7 +27,7 @@ public abstract class SplitsTestCase extends UISpecTestCase {
   protected SplitsBuilder builder;
   protected ColorService colorService = new ColorService();
   protected FontService fontService = new FontService();
-  protected DummyIconLocator iconLocator = new DummyIconLocator();
+  protected DummyImageLocator iconLocator = new DummyImageLocator();
   protected DummyTextLocator textLocator = new DummyTextLocator();
   protected UIService uiService = new UIService();
 
@@ -46,7 +45,7 @@ public abstract class SplitsTestCase extends UISpecTestCase {
     directory.add(colorService);
     directory.add(FontLocator.class, fontService);
     directory.add(TextLocator.class, textLocator);
-    directory.add(IconLocator.class, iconLocator);
+    directory.add(ImageLocator.class, iconLocator);
     directory.add(UIService.class, uiService);
     builder = new SplitsBuilder(directory);
   }

@@ -7,5 +7,5 @@ abstract class MonthGenerator {
     this.accountId = accountId;
   }
 
-  abstract void run(Integer month);
+  abstract void run(Integer month, int maxMonth);
 }

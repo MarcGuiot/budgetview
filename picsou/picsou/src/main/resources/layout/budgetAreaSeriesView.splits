@@ -30,7 +30,7 @@
               <button ref="observedSeriesAmount" styleClass="amountLink" marginRight="6"
                       tooltipText="$budgetview.tooltip.detail.observed"/>
               <component ref="gauge" styleClass="detailGauge"/>
-              <label ref="plannedSeriesAmount" styleClass="amount"
+              <button ref="plannedSeriesAmount" styleClass="amountLink"
                       tooltipText="$budgetview.tooltip.detail.planned"/>
             </repeat>
             <filler fill="vertical"/>

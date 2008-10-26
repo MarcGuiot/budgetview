@@ -10,7 +10,6 @@ import org.globsframework.gui.splits.repeat.DefaultRepeat;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.splitters.DefaultSplitterFactory;
-import org.globsframework.gui.splits.styles.StyleContext;
 import org.globsframework.gui.splits.xml.SplitsParser;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
@@ -40,7 +39,7 @@ public class SplitsBuilder {
     this.context = new DefaultSplitsContext(directory);
     addIfMissing(directory, ColorService.class, new ColorService());
     addIfMissing(directory, FontLocator.class, FontLocator.NULL);
-    addIfMissing(directory, IconLocator.class, IconLocator.NULL);
+    addIfMissing(directory, ImageLocator.class, ImageLocator.NULL);
     addIfMissing(directory, TextLocator.class, TextLocator.NULL);
   }
 

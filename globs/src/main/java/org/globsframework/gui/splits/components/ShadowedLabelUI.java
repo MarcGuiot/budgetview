@@ -61,9 +61,11 @@ public class ShadowedLabelUI extends BasicLabelUI {
     }
     int mnemIndex = l.getDisplayedMnemonicIndex();
     g.setColor(shadowColor);
-    GuiUtils.drawStringUnderlineCharAt(g, s, mnemIndex, textX + direction.x, textY + direction.y);
+    g.drawString(s, textX + direction.x, textY + direction.y);
+    GuiUtils.drawUnderlineCharAt(g, s, mnemIndex, textX + direction.x, textY + direction.y);
     g.setColor(l.getForeground());
-    GuiUtils.drawStringUnderlineCharAt(g, s, mnemIndex, textX, textY);
+    g.drawString(s, textX, textY);
+    GuiUtils.drawUnderlineCharAt(g, s, mnemIndex, textX, textY);
   }
 
 }

@@ -9,14 +9,14 @@
              fill="horizontal" horizontalAlignment="center" weightY="0" marginBottom="5"/>
       
       <scrollPane weightY="100">
-        <htmlEditorPane ref="editor" opaque="false" foreground="#222222"/>
+        <htmlEditorPane ref="editor" useImageLocator="true" opaque="false" foreground="#222222"/>
       </scrollPane>
 
       <row margin="0" weightY="0">
         <row styleClass="iconButtonGroup">
-          <button action="back" name="back" styleClass="icon"
+          <button action="back" name="back" styleClass="icon" tooltipText="$helpDialog.back.tooltip"
                   icon="button_prev.png" disabledIcon="button_prev_disabled.png"/>
-          <button action="forward" name="forward" styleClass="icon"
+          <button action="forward" name="forward" styleClass="icon" tooltipText="$helpDialog.forward.tooltip"
                   icon="button_next.png" disabledIcon="button_next_disabled.png"/>
         </row>
         <filler fill="horizontal"/>

@@ -1,10 +1,12 @@
 package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -45,6 +47,8 @@ public class CardView extends View implements GlobSelectionListener {
     }
 
     addBackForwardActions(builder);
+
+    builder.add("help", new ViewHelpAction());
 
     showCard(NavigationService.INITIAL_CARD);
   }
@@ -103,6 +107,18 @@ public class CardView extends View implements GlobSelectionListener {
       lastSelectedCard = card;
       cards.show(card.getName());
       selectionService.select(repository.get(card.getKey()));
+    }
+  }
+
+  private class ViewHelpAction extends AbstractAction {
+
+    private ViewHelpAction() {
+      super(Lang.get("help"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      String helpRef = "card_" + lastSelectedCard.getName();
+      directory.get(HelpService.class).show(helpRef, directory.get(JFrame.class));
     }
   }
 }

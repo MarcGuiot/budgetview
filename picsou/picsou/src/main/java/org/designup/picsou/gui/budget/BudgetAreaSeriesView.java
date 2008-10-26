@@ -24,7 +24,6 @@ import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.views.GlobButtonView;
-import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
@@ -105,7 +104,6 @@ public class BudgetAreaSeriesView extends View {
     currentSeries = newSeries;
   }
 
-
   void update() {
     Double remaining = 0.0;
     Double observed = 0.0;
@@ -161,13 +159,21 @@ public class BudgetAreaSeriesView extends View {
                         new GlobList(),
                         new RepeatComponentFactory<Glob>() {
                           public void registerComponents(RepeatCellBuilder cellBuilder, final Glob periodSeriesStat) {
-                            Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
+                            final Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
                             final GlobButtonView globButtonView =
                               GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
                                 .forceSelection(series);
                             cellBuilder.add("seriesName", globButtonView.getComponent());
-                            addAmountButton("observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, cellBuilder);
-                            addAmountLabel("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder);
+                            addAmountButton("observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, cellBuilder, new GlobListFunctor() {
+                              public void run(GlobList list, GlobRepository repository) {
+                                directory.get(NavigationService.class).gotoDataForSeries(series);
+                              }
+                            });
+                            addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
+                              public void run(GlobList list, GlobRepository repository) {
+                                seriesEditionDialog.show(series, selectedMonthIds);
+                              }
+                            });
 
                             final GlobGaugeView gaugeView =
                               new GlobGaugeView(PeriodSeriesStat.TYPE, budgetArea, PeriodSeriesStat.AMOUNT,
@@ -206,24 +212,14 @@ public class BudgetAreaSeriesView extends View {
       .setFilter(totalMatcher);
   }
 
-  private void addAmountLabel(String name, DoubleField field, Glob series, RepeatCellBuilder cellBuilder) {
-    final GlobLabelView globLabelView = GlobLabelView.init(PeriodSeriesStat.TYPE, repository, directory, getStringifier(field))
-      .setFilter(GlobMatchers.linkedTo(series, PeriodSeriesStat.SERIES));
-    cellBuilder.add(name, globLabelView.getComponent());
-    cellBuilder.addDisposeListener(new Disposable() {
-      public void dispose() {
-        globLabelView.dispose();
-      }
-    });
-  }
-
-  private void addAmountButton(String name, DoubleField field, final Glob series, RepeatCellBuilder cellBuilder) {
-    final GlobButtonView globButtonView = GlobButtonView.init(PeriodSeriesStat.TYPE, repository, directory, getStringifier(field), new GlobListFunctor() {
-      public void run(GlobList list, GlobRepository repository) {
-        directory.get(NavigationService.class).gotoDataForSeries(series);
-      }
-    })
-      .setFilter(GlobMatchers.linkedTo(series, PeriodSeriesStat.SERIES));
+  private void addAmountButton(String name,
+                               DoubleField field,
+                               final Glob series,
+                               RepeatCellBuilder cellBuilder,
+                               final GlobListFunctor callback) {
+    final GlobButtonView globButtonView =
+      GlobButtonView.init(PeriodSeriesStat.TYPE, repository, directory, getStringifier(field), callback)
+        .setFilter(GlobMatchers.linkedTo(series, PeriodSeriesStat.SERIES));
     cellBuilder.add(name, globButtonView.getComponent());
     cellBuilder.addDisposeListener(new Disposable() {
       public void dispose() {

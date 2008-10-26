@@ -23,13 +23,16 @@
     <style selector="column.budgetAreaSelector textArea"
            editable="false" lineWrap="true" wrapStyleWord="true" margin="10" font="-,plain,10"
            foreground="categorization.budgetAreaSelector.description"/>
+
   </styles>
 
   <column styleClass="main">
 
     <row>
       <filler fill="horizontal"/>
-      <htmlEditorPane ref="progressMessage" styleClass="mainPanelMessage" hyperlinkListener="hyperlinkHandler"/>
+      <column styleClass="mainPanelMessage" autoHideSource="progressMessage">
+        <htmlEditorPane ref="progressMessage" styleClass="mainPanelMessage" hyperlinkListener="hyperlinkHandler"/>
+      </column>
       <filler fill="horizontal"/>
     </row>
 
@@ -41,13 +44,15 @@
           <column styleClass="innerBlock">
             <panel ref="gaugePanel" opaque="false"/>
             <row marginBottom="5">
-              <label text="$categorization.filter.label" styleClass="formLabel" foreground="gauge.categorization.label"/>
+              <label text="$categorization.filter.label" styleClass="formLabel"
+                     foreground="gauge.categorization.label"/>
               <comboBox ref="transactionFilterCombo"/>
             </row>
             <scrollPane viewportBackground="#FFFFFF" marginBottom="0">
               <table ref="transactionTable" rowHeight="20"/>
             </scrollPane>
-            <column marginBottom="5" border="matte(1,1,1,1,categorization.modes.border)" background="categorization.modes.bg" opaque="true">
+            <column marginBottom="5" border="matte(1,1,1,1,categorization.modes.border)"
+                    background="categorization.modes.bg" opaque="true">
               <row autoHideSource="customFilterMessage">
                 <filler fill="horizontal"/>
                 <component ref="customFilterMessage"/>

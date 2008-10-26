@@ -48,6 +48,9 @@
 
     <style selector="scrollPane" opaque="true" viewportBackground="block.inner.bg"/>
 
+    <style selector="button.iconOnly" weightX="0"
+           text="" opaque="false" borderPainted="false"/>
+
     <style selector="button.editIcon" marginLeft="5" weightX="0"
            icon="magnifier_small.png" rolloverIcon="magnifier_rollover.png" pressedIcon="magnifier_rollover.png"
            preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
@@ -132,9 +135,16 @@
            fill="none" anchor="right" horizontalAlignment="right"
            foreground="block.item.link"/>
 
-    <!-- Main panel -->
+    <!-- Main window message panel -->
+    <ui name="mainPanelMessage" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        borderWidth="1" cornerRadius="30"
+        topColor="mainpanel.message.top"
+        bottomColor="mainpanel.message.bottom"
+        borderColor="mainpanel.message.border"/>
+    <style selector="column.mainPanelMessage" ui="mainPanelMessage"
+           fill="horizontal" anchor="center" weightY="0" marginLeft="100" marginRight="100" border="empty(0,0,10,0)"/>
     <style selector="htmlEditorPane.mainPanelMessage" fill="horizontal" anchor="center"
-           foreground="mainpanel.message" weightY="0" border="empty(0,0,10,0)"/>
+           foreground="mainpanel.message" weightY="0" border="empty(5,20,5,20)"/>
 
     <!-- Icon buttons -->
     <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>

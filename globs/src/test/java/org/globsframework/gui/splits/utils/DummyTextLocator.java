@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class DummyTextLocator implements TextLocator {
 
-  private static Pattern pattern = Pattern.compile("[a-z\\.]+");
+  private static Pattern pattern = Pattern.compile("[A-z\\.]+");
   private Map<String, String> values = new HashMap<String, String>();
 
   public void set(String key, String value) {

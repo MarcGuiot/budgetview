@@ -625,6 +625,7 @@
       <xs:attribute name="text" type="xs:string"/>
       <xs:attribute name="editable" type="xs:boolean"/>
       <xs:attribute name="hyperlinkListener" type="xs:string"/>
+      <xs:attribute name="useImageLocator" type="xs:boolean"/>
     </xs:complexType>
   </xs:element>
 

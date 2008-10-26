@@ -7,7 +7,7 @@ import org.globsframework.gui.splits.font.FontsTest;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.gui.splits.utils.DummyAction;
-import org.globsframework.gui.splits.utils.DummyIconLocator;
+import org.globsframework.gui.splits.utils.DummyImageLocator;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.uispec4j.TextBox;
 import org.uispec4j.finder.ComponentFinder;
@@ -136,9 +136,9 @@ public class SplitsComponentsTest extends SplitsTestCase {
   public void testButtonIcons() throws Exception {
     JButton btn =
       parse("<button icon='icon1' pressedIcon='icon2' rolloverIcon='icon3'/>");
-    assertSame(DummyIconLocator.ICON1, btn.getIcon());
-    assertSame(DummyIconLocator.ICON2, btn.getPressedIcon());
-    assertSame(DummyIconLocator.ICON3, btn.getRolloverIcon());
+    assertSame(DummyImageLocator.ICON1, btn.getIcon());
+    assertSame(DummyImageLocator.ICON2, btn.getPressedIcon());
+    assertSame(DummyImageLocator.ICON3, btn.getRolloverIcon());
     assertTrue(btn.isRolloverEnabled());
   }
 
@@ -192,6 +192,12 @@ public class SplitsComponentsTest extends SplitsTestCase {
     textBox.clickOnHyperlink("Click me");
     
     assertEquals("link", log.toString());
+  }
+
+  public void testUsingAnImageLocatorInHtmlComponents() throws Exception {
+    textLocator.set("editor.text", "<html><img src='anImage'/></html>");
+    JEditorPane editorPane = parse("<htmlEditorPane text='$editor.text' useImageLocator='true'/>");
+    assertEquals("anImage", iconLocator.lastRequestedImageName);
   }
 
   public void testCreatingAComboBox() throws Exception {

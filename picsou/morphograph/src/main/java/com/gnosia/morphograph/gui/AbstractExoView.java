@@ -2,7 +2,7 @@ package com.gnosia.morphograph.gui;
 
 import com.gnosia.morphograph.model.Exercise;
 import com.gnosia.morphograph.utils.TemplateProcessor;
-import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.Glob;
@@ -29,9 +29,9 @@ public abstract class AbstractExoView implements ExoView {
     this.templateFile = velocityFile;
     this.builder = new SplitsBuilder(directory);
 
-    IconLocator iconLocator = directory.get(IconLocator.class);
-    okIcon = iconLocator.get("accept.png");
-    failedIcon = iconLocator.get("exclamation.png");
+    ImageLocator imageLocator = directory.get(ImageLocator.class);
+    okIcon = imageLocator.get("accept.png");
+    failedIcon = imageLocator.get("exclamation.png");
   }
 
   public String getName() {

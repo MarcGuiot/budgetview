@@ -3,7 +3,7 @@ package org.designup.picsou.gui.transactions.columns;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
@@ -21,7 +21,7 @@ public class TransactionTypeCustomizer implements LabelCustomizer {
   private Icon bankIcon;
 
   public TransactionTypeCustomizer(Directory directory) {
-    IconLocator locator = directory.get(IconLocator.class);
+    ImageLocator locator = directory.get(ImageLocator.class);
     cashIcon = locator.get("cash.png");
     checkIcon = locator.get("check.png");
     creditCardIcon = locator.get("creditcard.png");

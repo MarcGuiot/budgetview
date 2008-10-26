@@ -380,7 +380,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeriesNotPresent("Fuel");
   }
 
-  public void testReimbursementsShowAPlus() throws Exception {
+  public void testReimbursementsAreShownWithAPlus() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/29", 25.00, "Secu")
       .addTransaction("2008/06/29", -30.00, "medecin")
@@ -531,6 +531,27 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectData();
     timeline.selectLast();
     transactions.initContent().check();
+  }
+
+  public void testEditingAPlannedSeriesAmountByClickingOnTheAmount() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
+      .load();
+
+    timeline.selectMonth("2008/07");
+    views.selectCategorization();
+    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+
+    views.selectBudget();
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkTitle("Recurring")
+      .checkName("Internet")
+      .setName("Free")
+      .switchToManual()
+      .setAmount("100")
+      .validate();
+
+    budgetView.recurring.checkSeries("Free", -29.00, -100.00);
   }
 
   public void testNavigatingToTransactions() throws Exception {

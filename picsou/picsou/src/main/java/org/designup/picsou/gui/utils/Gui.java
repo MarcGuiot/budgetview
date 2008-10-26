@@ -2,17 +2,15 @@ package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.gui.components.DialogMovingListener;
 import org.designup.picsou.gui.components.PicsouDialogPainter;
-import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.splits.utils.JarIconLocator;
+import org.globsframework.gui.splits.utils.JarImageLocator;
 import org.globsframework.gui.utils.TableUtils;
 import sun.security.action.GetPropertyAction;
 
 import javax.swing.*;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.TableColumnModel;
@@ -31,7 +29,7 @@ public class Gui {
 
   public static char EURO = '\u20ac';
 
-  public static final IconLocator ICON_LOCATOR = new JarIconLocator(Gui.class, "/images");
+  public static final ImageLocator IMAGE_LOCATOR = new JarImageLocator(Gui.class, "/images");
   public static final FontLocator FONT_LOCATOR = new FontService(Gui.class, "/fonts.properties");
 
   private static Font font;

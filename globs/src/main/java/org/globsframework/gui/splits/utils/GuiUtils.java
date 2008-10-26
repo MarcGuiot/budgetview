@@ -30,8 +30,7 @@ public class GuiUtils {
     rootPane.getActionMap().remove(command);
   }
 
-  public static void drawStringUnderlineCharAt(Graphics g, String text, int underlinedIndex, int x, int y) {
-    g.drawString(text, x, y);
+  public static void drawUnderlineCharAt(Graphics g, String text, int underlinedIndex, int x, int y) {
     if (underlinedIndex >= 0 && underlinedIndex < text.length()) {
       // PENDING: this needs to change.
       FontMetrics fm = g.getFontMetrics();

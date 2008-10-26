@@ -50,7 +50,7 @@ public class GlobButtonView extends AbstractGlobTextView<GlobButtonView> {
     this.callback = callback;
     this.button = new JButton(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        callback.run(currentSelection, repository);
+        callback.run(getFilteredSelection(), repository);
       }
     });
   }

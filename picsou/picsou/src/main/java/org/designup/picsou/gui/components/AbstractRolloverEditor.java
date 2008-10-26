@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -23,7 +23,7 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
   protected GlobRepository repository;
   protected Directory directory;
   protected SelectionService selectionService;
-  protected IconLocator iconLocator;
+  protected ImageLocator imageLocator;
 
   protected boolean hasFocus;
   protected boolean isSelected;
@@ -40,7 +40,7 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     this.directory = directory;
 
     this.selectionService = directory.get(SelectionService.class);
-    this.iconLocator = directory.get(IconLocator.class);
+    this.imageLocator = directory.get(ImageLocator.class);
   }
 
   protected abstract Component getComponent(Glob glob, boolean render);

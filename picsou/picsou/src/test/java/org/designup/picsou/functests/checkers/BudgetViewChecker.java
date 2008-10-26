@@ -54,25 +54,30 @@ public class BudgetViewChecker extends DataChecker {
   public class BudgetAreaChecker {
 
     private String panelName;
-    private boolean singleSelection;
+    private boolean singleCategorySeries;
     private BudgetArea budgetArea;
+
     private static final int OBSERVED_LABEL_OFFSET = 1;
     private static final int PLANNED_LABEL_OFFSET = 3;
 
-    public BudgetAreaChecker(String panelName, boolean singleSelection, BudgetArea budgetArea) {
+    public BudgetAreaChecker(String panelName, boolean singleCategorySeries, BudgetArea budgetArea) {
       this.panelName = panelName;
-      this.singleSelection = singleSelection;
+      this.singleCategorySeries = singleCategorySeries;
       this.budgetArea = budgetArea;
     }
 
     public void checkTitle(String title) {
-      Panel budgetPanel = window.getPanel(panelName);
+      Panel budgetPanel = getPanel();
       TextBox label = budgetPanel.getTextBox("budgetAreaTitle");
       UISpecAssert.assertThat(label.textEquals(title));
     }
 
+    private Panel getPanel() {
+      return window.getPanel(panelName);
+    }
+
     public void checkTotalAmounts(double observed, double planned) {
-      Panel budgetPanel = window.getPanel(panelName);
+      Panel budgetPanel = getPanel();
       TextBox totalObserved = budgetPanel.getTextBox("totalObservedAmount");
       UISpecAssert.assertTrue(totalObserved.textEquals(convert(observed)));
 
@@ -81,24 +86,25 @@ public class BudgetViewChecker extends DataChecker {
     }
 
     public BudgetAreaChecker checkSeries(String seriesName, double observedAmount, double plannedAmount) {
-      Panel budgetPanel = window.getPanel(panelName);
+      Panel budgetPanel = getPanel();
       Button nameButton = budgetPanel.getButton(seriesName);
 
       JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
       int nameIndex = getIndex(panel, nameButton.getAwtComponent());
 
-      Button observedLabel = new Button((JButton)panel.getComponent(nameIndex + OBSERVED_LABEL_OFFSET));
-      String expectedObservedAmount = convert(observedAmount);
-      UISpecAssert.assertTrue(seriesName + " observed:\nExpected :" + expectedObservedAmount +
-                              "\nActual   :" + observedLabel.getLabel(),
-                              observedLabel.textEquals(expectedObservedAmount));
-
-      TextBox plannedLabel = new TextBox((JLabel)panel.getComponent(nameIndex + PLANNED_LABEL_OFFSET));
-      String expectedPlannedAmount = convert(plannedAmount);
-      UISpecAssert.assertTrue(seriesName + " planned:\nExpected :" + expectedPlannedAmount +
-                              "\nActual   :" + plannedLabel.getText(),
-                              plannedLabel.textEquals(expectedPlannedAmount));
+      checkAmount("observed", OBSERVED_LABEL_OFFSET, seriesName, observedAmount, panel, nameIndex);
+      checkAmount("planned", PLANNED_LABEL_OFFSET, seriesName, plannedAmount, panel, nameIndex);
       return this;
+    }
+
+    private void checkAmount(String label, int offset,
+                             String seriesName, double expectedAmount,
+                             JPanel panel, int nameIndex) {
+      Button button = new Button((JButton)panel.getComponent(nameIndex + offset));
+      String expectedAmountText = convert(expectedAmount);
+      UISpecAssert.assertTrue(seriesName + " " + label + ":\nExpected :" + expectedAmountText +
+                              "\nActual   :" + button.getLabel(),
+                              button.textEquals(expectedAmountText));
     }
 
     private String convert(double amount) {
@@ -115,7 +121,7 @@ public class BudgetViewChecker extends DataChecker {
     }
 
     public BudgetAreaChecker checkSeriesNotPresent(String... seriesName) {
-      Panel budgetPanel = window.getPanel(panelName);
+      Panel budgetPanel = getPanel();
       for (String name : seriesName) {
         UISpecAssert.assertFalse(budgetPanel.containsUIComponent(Button.class, name));
       }
@@ -130,9 +136,20 @@ public class BudgetViewChecker extends DataChecker {
       return openSeriesEditionDialog(seriesName);
     }
 
+    public SeriesEditionDialogChecker clickOnPlannedAmount(String seriesName) {
+      Button nameButton = getPanel().getButton(seriesName);
+
+      JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
+      int nameIndex = getIndex(panel, nameButton.getAwtComponent());
+
+      Button button = new Button((JButton)panel.getComponent(nameIndex + PLANNED_LABEL_OFFSET));
+
+      Window dialog = WindowInterceptor.getModalDialog(button.triggerClick());
+      return new SeriesEditionDialogChecker(dialog, singleCategorySeries);
+    }
+
     public void checkEditAllSeriesIsEnabled(boolean enabled) {
-      Panel budgetPanel = window.getPanel(panelName);
-      UISpecAssert.assertEquals(enabled, budgetPanel.getButton("editAllSeries").isEnabled());
+      UISpecAssert.assertEquals(enabled, getPanel().getButton("editAllSeries").isEnabled());
     }
 
     public SeriesEditionDialogChecker createSeries() {
@@ -140,14 +157,12 @@ public class BudgetViewChecker extends DataChecker {
     }
 
     private SeriesEditionDialogChecker openSeriesEditionDialog(String seriesName) {
-      Panel budgetPanel = window.getPanel(panelName);
-      Window dialog = WindowInterceptor.getModalDialog(budgetPanel.getButton(seriesName).triggerClick());
-      return new SeriesEditionDialogChecker(dialog, singleSelection);
+      Window dialog = WindowInterceptor.getModalDialog(getPanel().getButton(seriesName).triggerClick());
+      return new SeriesEditionDialogChecker(dialog, singleCategorySeries);
     }
 
     public void gotoData(String seriesName) {
-      Panel budgetPanel = window.getPanel(panelName);
-      Button nameButton = budgetPanel.getButton(seriesName);
+      Button nameButton = getPanel().getButton(seriesName);
       JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
       int nameIndex = getIndex(panel, nameButton.getAwtComponent());
       Button button = new Button((JButton)panel.getComponent(nameIndex + OBSERVED_LABEL_OFFSET));
@@ -155,8 +170,7 @@ public class BudgetViewChecker extends DataChecker {
     }
 
     public BudgetAreaChecker checkOrder(String... seriesNames) {
-      Panel budgetPanel = window.getPanel(panelName);
-      UIComponent[] uiComponents = budgetPanel.getUIComponents(Button.class, "seriesName");
+      UIComponent[] uiComponents = getPanel().getUIComponents(Button.class, "seriesName");
       Assert.assertEquals(uiComponents.length, seriesNames.length);
       for (int i = 0; i < uiComponents.length; i++) {
         UIComponent component = uiComponents[i];

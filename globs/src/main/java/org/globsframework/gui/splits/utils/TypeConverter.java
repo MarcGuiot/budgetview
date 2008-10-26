@@ -1,6 +1,6 @@
 package org.globsframework.gui.splits.utils;
 
-import org.globsframework.gui.splits.IconLocator;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.ui.UIService;
@@ -43,7 +43,7 @@ public class TypeConverter {
       return Double.valueOf(value);
     }
     if (targetClass == Icon.class) {
-      IconLocator locator = context.getService(IconLocator.class);
+      ImageLocator locator = context.getService(ImageLocator.class);
       return locator.get(value);
     }
     if (targetClass == Dimension.class) {

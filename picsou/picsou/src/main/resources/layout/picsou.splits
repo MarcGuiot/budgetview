@@ -64,14 +64,22 @@
     <style selector="button#back" ui="backArrow"/>
     <style selector="button#forward" ui="forwardArrow" marginRight="20"/>
 
+    <!-- Help button -->
+    <ui name="helpButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="false" rolloverColor="title.help.rollover"/>
+    <style selector="button.help" ui="helpButton" font="-,plain,11" foreground="title.help"/>
+
   </styles>
 
   <panel styleClass="main" ui="wave">
     <column marginTop="20" marginLeft="20" marginRight="20" marginBottom="10">
 
       <row weightY="0.1">
-        <label ref="title" opaque="false" font="Arial,bold,22"
+        <column>
+        <label ref="title" opaque="false" font="Arial,bold,22" weightX="0"
                horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
+        <button action="help" styleClass="help" fill="none" anchor="west"/>
+        </column>
         <filler fill="horizontal"/>
         <button name="back" action="back" styleClass="backforward" tooltipText="$back"/>
         <button name="forward" action="forward" styleClass="backforward" tooltipText="$forward"/>

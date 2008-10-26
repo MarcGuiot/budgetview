@@ -17,8 +17,8 @@ public class TableExpansionColumn
   extends AbstractCellEditor
   implements TableCellRenderer, TableCellEditor, ActionListener {
 
-  public static Icon EXPANDED_ICON = Gui.ICON_LOCATOR.get("arrow_down.png");
-  public static Icon COLLAPSED_ICON = Gui.ICON_LOCATOR.get("arrow_right.png");
+  public static Icon EXPANDED_ICON = Gui.IMAGE_LOCATOR.get("arrow_down.png");
+  public static Icon COLLAPSED_ICON = Gui.IMAGE_LOCATOR.get("arrow_right.png");
   public static Icon DISABLED_ICON = new TransparentIcon(EXPANDED_ICON.getIconHeight(), EXPANDED_ICON.getIconWidth());
 
   private TableExpansionModel expansionModel;
