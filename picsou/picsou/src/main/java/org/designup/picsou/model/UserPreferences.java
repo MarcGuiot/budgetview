@@ -61,9 +61,9 @@ public class UserPreferences {
       outputStream.writeInteger(values.get(FUTURE_MONTH_COUNT));
       outputStream.writeBoolean(values.get(REGISTERED_USER));
       outputStream.writeInteger(values.get(CATEGORIZATION_FILTERING_MODE));
-      outputStream.writeDate(values.get(LAST_VALID_DAY));
       outputStream.writeBoolean(values.get(SHOW_BUDGET_VIEW_HELP_MESSAGE));
       outputStream.writeBoolean(values.get(SHOW_CATEGORIZATION_HELP_MESSAGE));
+      outputStream.writeDate(values.get(LAST_VALID_DAY));
       return serializedByteArrayOutput.toByteArray();
     }
 
