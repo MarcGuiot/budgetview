@@ -20,7 +20,7 @@ public class DefaultCreatingUserState extends AbstractSessionState implements Cr
 
   public void createUser(SerializedInput input) {
     lastAccess();
-    String name = input.readString();
+    String name = input.readUtf8String();
     byte[] encryptedPassword = input.readBytes();
     byte[] linkInfo = input.readBytes();
     byte[] encryptedLinkInfo = input.readBytes();

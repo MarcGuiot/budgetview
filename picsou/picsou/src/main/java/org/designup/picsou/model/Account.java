@@ -70,10 +70,10 @@ public class Account {
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
-      outputStream.writeString(values.get(NUMBER));
+      outputStream.writeUtf8String(values.get(NUMBER));
       outputStream.writeInteger(values.get(BANK_ENTITY));
       outputStream.writeInteger(values.get(BRANCH_ID));
-      outputStream.writeString(values.get(NAME));
+      outputStream.writeUtf8String(values.get(NAME));
       outputStream.writeDouble(values.get(BALANCE));
       outputStream.writeInteger(values.get(TRANSACTION_ID));
       outputStream.writeDate(values.get(BALANCE_DATE));
@@ -84,6 +84,9 @@ public class Account {
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
+      }
+      else if (version == 2) {
+        deserializeDataV2(fieldSetter, data);
       }
     }
 
@@ -99,8 +102,20 @@ public class Account {
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
     }
 
+    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BRANCH_ID, input.readInteger());
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(BALANCE, input.readDouble());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(BALANCE_DATE, input.readDate());
+      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+    }
+
     public int getWriteVersion() {
-      return 1;
+      return 2;
     }
   }
 

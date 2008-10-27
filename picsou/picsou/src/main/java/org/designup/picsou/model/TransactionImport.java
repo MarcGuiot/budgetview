@@ -31,7 +31,7 @@ public class TransactionImport {
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
-      outputStream.writeString(values.get(TransactionImport.SOURCE));
+      outputStream.writeUtf8String(values.get(TransactionImport.SOURCE));
       outputStream.writeDate(values.get(TransactionImport.IMPORT_DATE));
       return serializedByteArrayOutput.toByteArray();
     }
@@ -39,6 +39,9 @@ public class TransactionImport {
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
+      }
+      else if (version == 2) {
+        deserializeDataV2(fieldSetter, data);
       }
     }
 
@@ -48,8 +51,14 @@ public class TransactionImport {
       fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
     }
 
+    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(TransactionImport.SOURCE, input.readUtf8String());
+      fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
+    }
+
     public int getWriteVersion() {
-      return 1;
+      return 2;
     }
   }
 

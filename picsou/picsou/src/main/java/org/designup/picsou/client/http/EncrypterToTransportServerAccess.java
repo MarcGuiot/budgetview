@@ -68,7 +68,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
 
       SerializedByteArrayOutput request = new SerializedByteArrayOutput();
       SerializedOutput output = request.getOutput();
-      output.writeString(this.name);
+      output.writeUtf8String(this.name);
       output.writeBytes(generatePassword(password, passwordBasedEncryptor));
 
       byte[] linkInfo = generateLinkInfo();
@@ -103,7 +103,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedByteArrayOutput request = new SerializedByteArrayOutput();
     SerializedOutput output = request.getOutput();
 
-    output.writeString(this.name);
+    output.writeUtf8String(this.name);
     output.writeBytes(generatePassword(password, passwordBasedEncryptor));
 
     SerializedInput response = clientTransport.identifyUser(sessionId, request.toByteArray());
