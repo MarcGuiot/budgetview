@@ -127,8 +127,8 @@ public class Category {
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
-      outputStream.writeString(values.get(NAME));
-      outputStream.writeString(values.get(INNER_NAME));
+      outputStream.writeUtf8String(values.get(NAME));
+      outputStream.writeUtf8String(values.get(INNER_NAME));
       outputStream.writeInteger(values.get(MASTER));
       outputStream.writeBoolean(values.get(SYSTEM));
       return serializedByteArrayOutput.toByteArray();
@@ -138,6 +138,9 @@ public class Category {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+      else if (version == 2) {
+        deserializeDataV2(fieldSetter, data);
+      }
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -146,11 +149,18 @@ public class Category {
       fieldSetter.set(INNER_NAME, input.readString());
       fieldSetter.set(MASTER, input.readInteger());
       fieldSetter.set(SYSTEM, input.readBoolean());
+    }
 
+    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(INNER_NAME, input.readUtf8String());
+      fieldSetter.set(MASTER, input.readInteger());
+      fieldSetter.set(SYSTEM, input.readBoolean());
     }
 
     public int getWriteVersion() {
-      return 1;
+      return 2;
     }
   }
 

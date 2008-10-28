@@ -123,7 +123,7 @@ public class PRootData implements CustomSerializable {
   }
 
   public int getNewUserId(Date executionTime, String name) {
-    int userId = getHash(executionTime, name);
+    int userId = Math.abs(getHash(executionTime, name));
     while (true) {
       if (checkDoNotExist(userId)) {
         return userId;

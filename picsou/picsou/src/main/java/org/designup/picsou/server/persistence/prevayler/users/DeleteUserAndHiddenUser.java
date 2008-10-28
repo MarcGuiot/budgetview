@@ -15,6 +15,7 @@ public class DeleteUserAndHiddenUser implements Transaction, CustomSerializable 
   private String name;
   private String cryptedLinkInfo;
   private static final byte V1 = 1;
+  private static final byte V2 = 2;
   private static final String TRANSACTION_NAME = "DeleteUser";
 
   public DeleteUserAndHiddenUser(String name, byte[] cryptedLinkInfo) {
@@ -41,6 +42,9 @@ public class DeleteUserAndHiddenUser implements Transaction, CustomSerializable 
       case V1:
         readV1(input);
         break;
+      case V2:
+        readV2(input);
+        break;
       default:
         throw new UnexpectedApplicationState("version " + version + " not managed");
     }
@@ -51,9 +55,14 @@ public class DeleteUserAndHiddenUser implements Transaction, CustomSerializable 
     cryptedLinkInfo = input.readString();
   }
 
+  private void readV2(SerializedInput input) {
+    name = input.readUtf8String();
+    cryptedLinkInfo = input.readString();
+  }
+
   public void write(SerializedOutput output, Directory directory) {
-    output.writeByte(V1);
-    output.writeString(name);
+    output.writeByte(V2);
+    output.writeUtf8String(name);
     output.writeString(cryptedLinkInfo);
   }
 

@@ -127,10 +127,10 @@ public class PicsouInit {
     }
 
     Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
-    if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
-      repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                        Month.addOneMonth(TimeService.getToday()));
-    }
+//    if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
+    repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
+                      Month.addOneMonth(TimeService.getToday()));
+//    }
   }
 
   public static void createDataForNewUser(String user, GlobRepository repository) {

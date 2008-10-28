@@ -25,6 +25,7 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
   private byte[] linkInfo;
   private String encryptedLinkInfo;
   private static final byte V1 = 1;
+  private static final byte V2 = 2;
   private static final String TRANSACTION_NAME = "CreateUser";
 
   public CreateUserAndHiddenUser(String name, boolean isRegisteredUser,
@@ -74,6 +75,9 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
       case V1:
         readV1(input);
         break;
+      case V2:
+        readV2(input);
+        break;
       default:
         throw new UnexpectedApplicationState("version " + version + " not managed");
     }
@@ -87,9 +91,17 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
     isRegisteredUser = input.readBoolean();
   }
 
+  private void readV2(SerializedInput input) {
+    name = input.readUtf8String();
+    encryptedPassword = input.readBytes();
+    linkInfo = input.readBytes();
+    encryptedLinkInfo = input.readString();
+    isRegisteredUser = input.readBoolean();
+  }
+
   public void write(SerializedOutput output, Directory directory) {
-    output.writeByte(V1);
-    output.writeString(name);
+    output.writeByte(V2);
+    output.writeUtf8String(name);
     output.writeBytes(encryptedPassword);
     output.writeBytes(linkInfo);
     output.writeString(encryptedLinkInfo);

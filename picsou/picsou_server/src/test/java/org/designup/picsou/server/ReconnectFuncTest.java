@@ -11,11 +11,7 @@ import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Table;
 
-public class ReconnectFuncTest extends ServerFuncTestCase {
-
-
-  public void testEmpty() throws Exception {
-  }
+public abstract class ReconnectFuncTest extends ServerFuncTestCase {
 
   public void __test() throws Exception {
     String fileName = TestUtils.getFileName(this, ".ofx");

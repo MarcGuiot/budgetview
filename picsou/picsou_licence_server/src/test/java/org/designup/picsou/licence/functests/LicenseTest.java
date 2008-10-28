@@ -18,7 +18,6 @@ import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class LicenseTest extends LicenseTestCase {
@@ -29,9 +28,6 @@ public class LicenseTest extends LicenseTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    Calendar month = Calendar.getInstance();
-    month.set(2000, 1, 1);
-    TimeService.setCurrentDate(month.getTime());
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
     start();
@@ -107,6 +103,8 @@ public class LicenseTest extends LicenseTestCase {
     loginChecker = new LoginChecker(window);
     loginChecker.logUser("user", "passw@rd");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    OperationChecker operations = new OperationChecker(window);
+    operations.getPreferences().changeFutureMonth(3).validate();
     checkLicenceExpiration();
   }
 

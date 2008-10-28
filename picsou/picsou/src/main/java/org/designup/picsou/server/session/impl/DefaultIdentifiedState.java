@@ -19,7 +19,7 @@ public class DefaultIdentifiedState extends AbstractSessionState implements Iden
                                 SerializedInput input) {
     super(defaultSessionService, sessionId, privateId);
     this.persistence = persistence;
-    String name = input.readString();
+    String name = input.readUtf8String();
     byte[] cryptedPassword = input.readBytes();
     user = identify(name, cryptedPassword);
     defaultSessionService.register(sessionId, this);
