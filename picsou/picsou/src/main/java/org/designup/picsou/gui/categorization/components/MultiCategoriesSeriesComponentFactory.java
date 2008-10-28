@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.categorization.components;
 
+import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesToCategory;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -24,28 +24,28 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
   private BudgetArea budgetArea;
 
   public MultiCategoriesSeriesComponentFactory(BudgetArea budgetArea,
-                                               JToggleButton invisibleToggle,
+                                               JRadioButton invisibleSelector,
                                                SeriesEditionDialog seriesEditionDialog,
                                                GlobRepository repository,
                                                Directory directory) {
-    super(invisibleToggle, seriesEditionDialog, repository, directory);
+    super(invisibleSelector, seriesEditionDialog, repository, directory);
     this.budgetArea = budgetArea;
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
     final GlobLabelView globLabelView = GlobLabelView.init(Series.TYPE, repository, directory, seriesStringifier);
-    JLabel seriesLabel = globLabelView
-      .forceSelection(series).getComponent();
+    JLabel seriesLabel = globLabelView.forceSelection(series).getComponent();
     String label = seriesStringifier.toString(new GlobList(series), repository);
     cellBuilder.add("seriesName", seriesLabel);
-    GlobsPanelBuilder.addRepeat("categoryRepeat", SeriesToCategory.TYPE,
-                                GlobMatchers.fieldEquals(SeriesToCategory.SERIES, series.get(Series.ID)),
-                                new GlobFieldComparator(SeriesToCategory.ID), repository, cellBuilder,
-                                new CategoriesComponentFactory(label, "categoryToggle", budgetArea));
 
     JButton editSeriesButton = new JButton(new EditSeriesAction(series.getKey()));
     editSeriesButton.setName("editSeries:" + label);
     cellBuilder.add("editSeries", editSeriesButton);
+
+    GlobsPanelBuilder.addRepeat("categoryRepeat", SeriesToCategory.TYPE,
+                                GlobMatchers.fieldEquals(SeriesToCategory.SERIES, series.get(Series.ID)),
+                                new GlobFieldComparator(SeriesToCategory.ID), repository, cellBuilder,
+                                new CategoriesComponentFactory(label, "categorySelector", budgetArea));
 
     cellBuilder.addDisposeListener(new Disposable() {
       public void dispose() {
@@ -72,8 +72,8 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
       if (name == null) {
         name = category.get(Category.NAME);
       }
-      createUpdatableCategoryToggle(category, seriesKey, this.name, budgetArea, cellBuilder,
-                                    seriesName + ":" + name);
+      createUpdatableCategorySelector(category, seriesKey, this.name, budgetArea, cellBuilder,
+                                      seriesName + ":" + name);
     }
   }
 }

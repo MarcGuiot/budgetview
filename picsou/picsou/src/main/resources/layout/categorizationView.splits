@@ -140,12 +140,12 @@
                             <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
                             <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn" border="empty(5)"
                                     opaque="true" background="block.inner.bg">
-                              <column>
+                              <column marginBottom="5">
                                 <row>
-                                  <toggleButton ref="occasionalCategoryToggle" styleClass="masterCategorySelector"/>
+                                  <radioButton ref="occasionalCategoryToggle" styleClass="masterCategorySelector"/>
                                 </row>
-                                <repeat ref="occasionalSubcatRepeat" marginLeft="10" background="#FF0000">
-                                  <toggleButton ref="occasionalSubcatToggle" styleClass="subCategorySelector"/>
+                                <repeat ref="occasionalSubcatRepeat" marginLeft="20" background="#FF0000">
+                                  <radioButton ref="occasionalSubcatToggle" styleClass="subCategorySelector"/>
                                 </repeat>
                               </column>
                             </repeat>

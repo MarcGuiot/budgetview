@@ -245,12 +245,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
     NoSeriesMessage noSeriesMessage = new NoSeriesMessage(budgetArea, repository);
     panelBuilder.add("noSeriesMessage", noSeriesMessage.getComponent());
 
-    JToggleButton invisibleToggle = new JToggleButton(name);
-    panelBuilder.add("invisibleToggle", invisibleToggle);
+    JRadioButton invisibleRadio = new JRadioButton(name);
+    panelBuilder.add("invisibleToggle", invisibleRadio);
     GlobRepeat repeat = panelBuilder.addRepeat("seriesRepeat",
                                                Series.TYPE,
                                                linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                                               new SingleCategorySeriesComponentFactory(invisibleToggle, 
+                                               new SingleCategorySeriesComponentFactory(invisibleRadio,
                                                                                         seriesEditionDialog,
                                                                                         repository,
                                                                                         directory));
@@ -273,12 +273,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
     NoSeriesMessage noSeriesMessage = new NoSeriesMessage(budgetArea, repository);
     panelBuilder.add("noSeriesMessage", noSeriesMessage.getComponent());
 
-    final JToggleButton invisibleToggle = new JToggleButton("name");
-    panelBuilder.add("invisibleToggle", invisibleToggle);
+    final JRadioButton invisibleRadio = new JRadioButton("name");
+    panelBuilder.add("invisibleSelector", invisibleRadio);
     GlobRepeat repeat = panelBuilder.addRepeat("seriesRepeat",
                                                Series.TYPE,
                                                linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                                               new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleToggle,
+                                               new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleRadio,
                                                                                          seriesEditionDialog,
                                                                                          repository, directory));
     seriesRepeat.add(new Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>(
@@ -290,8 +290,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   private void addOccasionalSeriesChooser(GlobsPanelBuilder builder) {
-    JToggleButton invisibleOccasionalToggle = new JToggleButton("occasional");
-    builder.add("invisibleOccasionalToggle", invisibleOccasionalToggle);
+    JRadioButton invisibleOccasionalRadio = new JRadioButton("occasional");
+    builder.add("invisibleOccasionalToggle", invisibleOccasionalRadio);
     builder.addRepeat("occasionalSeriesRepeat",
                       Category.TYPE,
                       new GlobMatcher() {
@@ -301,7 +301,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
                       },
                       new OccasionalCategoriesComponentFactory("occasionalSeries", "occasionalCategoryToggle",
                                                                BudgetArea.OCCASIONAL,
-                                                               invisibleOccasionalToggle,
+                                                               invisibleOccasionalRadio,
                                                                repository, directory));
     builder.add("editCategories", new EditCategoriesAction());
   }

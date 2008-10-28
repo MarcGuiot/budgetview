@@ -22,9 +22,9 @@ public class OccasionalCategoriesComponentFactory extends AbstractSeriesComponen
   private BudgetArea budgetArea;
 
   public OccasionalCategoriesComponentFactory(String seriesName, String name, BudgetArea budgetArea,
-                                              JToggleButton invisibleToggle, GlobRepository repository,
+                                              JRadioButton invisibleSelector, GlobRepository repository,
                                               Directory directory) {
-    super(invisibleToggle, null, repository, directory);
+    super(invisibleSelector, null, repository, directory);
     this.seriesName = seriesName;
     this.name = name;
     this.budgetArea = budgetArea;
@@ -36,7 +36,7 @@ public class OccasionalCategoriesComponentFactory extends AbstractSeriesComponen
     String name = master.get(Category.INNER_NAME) != null ?
                   master.get(Category.INNER_NAME) : master.get(Category.NAME);
 
-    createUpdatableCategoryToggle(master, seriesKey, this.name, budgetArea, cellBuilder,
+    createUpdatableCategorySelector(master, seriesKey, this.name, budgetArea, cellBuilder,
                                   seriesName + ":" + name);
 
     GlobsPanelBuilder.addRepeat("occasionalSubcatRepeat",
@@ -53,7 +53,7 @@ public class OccasionalCategoriesComponentFactory extends AbstractSeriesComponen
                                     final String toggleName =
                                       seriesName + ":" + (masterName != null ? masterName : master.get(Category.NAME)) + ":" +
                                       (subName != null ? subName : subcat.get(Category.NAME));
-                                    createUpdatableCategoryToggle(
+                                    createUpdatableCategorySelector(
                                       subcat, seriesKey, "occasionalSubcatToggle",
                                       budgetArea, subcatCellBuilder, toggleName
                                     );

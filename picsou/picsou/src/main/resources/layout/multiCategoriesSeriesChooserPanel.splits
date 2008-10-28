@@ -8,17 +8,17 @@
   <column>
     <column styleClass="budgetAreaSelection">
       <htmlEditorPane ref="noSeriesMessage" border="empty(10)" hyperlinkListener="hyperlinkHandler"/>
-      <toggleButton ref="invisibleToggle" visible="false"/>
+      <radioButton ref="invisibleSelector" visible="false"/>
       <scrollPane>
         <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
-          <column name="seriesBlock">
+          <column name="seriesBlock" marginBottom="15">
             <row>
               <label ref="seriesName" font="-,bold,14"/>
-              <button ref="editSeries" styleClass="editIcon"/>
+              <button ref="editSeries" styleClass="editIcon" tooltipText="$series.edit.tooltip"/>
               <filler fill="horizontal"/>
             </row>
             <repeat ref="categoryRepeat">
-              <toggleButton ref="categoryToggle" styleClass="selector" horizontalAlignment="left"/>
+              <radioButton ref="categorySelector" styleClass="selector" horizontalAlignment="left"/>
             </repeat>
           </column>
         </repeat>

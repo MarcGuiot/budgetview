@@ -92,8 +92,8 @@ public class CategorizationChecker extends DataChecker {
     Panel seriesPanel = getIncomeSeriesPanel();
     UIComponent[] toggles = seriesPanel.getUIComponents(ToggleButton.class);
     Assert.assertEquals(1, toggles.length);
-    ToggleButton invisibleToggle = (ToggleButton)toggles[0];
-    assertFalse(invisibleToggle.isVisible());
+    RadioButton invisibleSelector = (RadioButton)toggles[0];
+    assertFalse(invisibleSelector.isVisible());
     return this;
   }
 
@@ -136,7 +136,7 @@ public class CategorizationChecker extends DataChecker {
         .validate();
     }
     else {
-      panel.getToggleButton(name).click();
+      panel.getRadioButton(name).click();
     }
     return this;
   }
@@ -171,10 +171,10 @@ public class CategorizationChecker extends DataChecker {
 
   public CategorizationChecker checkNoRecurringSeriesSelected() {
     Panel seriesPanel = getRecurringSeriesPanel();
-    UIComponent[] toggles = seriesPanel.getUIComponents(ToggleButton.class);
-    for (UIComponent toggle : toggles) {
-      if (toggle.getAwtComponent().isVisible()) {
-        assertFalse(toggle.getLabel() + " selected", ((ToggleButton)toggle).isSelected());
+    UIComponent[] selectors = seriesPanel.getUIComponents(RadioButton.class);
+    for (UIComponent selector : selectors) {
+      if (selector.getAwtComponent().isVisible()) {
+        assertFalse(selector.getLabel() + " selected", ((RadioButton)selector).isSelected());
       }
     }
     return this;
@@ -188,14 +188,14 @@ public class CategorizationChecker extends DataChecker {
       .setCategory(category)
       .validate();
     if (transactionWasAlreadyCategorized) {
-      panel.getToggleButton(name).click();
+      panel.getRadioButton(name).click();
     }
     return this;
   }
 
   public CategorizationChecker categorizeInRecurringSeries(String name) {
     Panel panel = getRecurringSeriesPanel();
-    panel.getToggleButton(name).click();
+    panel.getRadioButton(name).click();
     return this;
   }
 
@@ -208,7 +208,7 @@ public class CategorizationChecker extends DataChecker {
         .validate();
     }
     else {
-      panel.getToggleButton(name).click();
+      panel.getRadioButton(name).click();
     }
     return this;
   }
@@ -229,7 +229,7 @@ public class CategorizationChecker extends DataChecker {
 
   public CategorizationChecker checkContainsButtonInReccuring(String label) {
     Panel panel = getRecurringSeriesPanel();
-    assertTrue(panel.getToggleButton(label).isEnabled());
+    assertTrue(panel.getRadioButton(label).isEnabled());
     return this;
   }
 
@@ -237,12 +237,12 @@ public class CategorizationChecker extends DataChecker {
     assertTrue(getPanel().getToggleButton("Recurring").isSelected());
 
     Panel panel = getRecurringSeriesPanel();
-    assertTrue(panel.getToggleButton(seriesName).isSelected());
+    assertTrue(panel.getRadioButton(seriesName).isSelected());
     return this;
   }
 
   public CategorizationChecker checkRecurringSeriesIsNotSelected(String seriesName) {
-    UISpecAssert.assertFalse(getPanel().getPanel("recurringSeriesChooser").getToggleButton(seriesName).isSelected());
+    UISpecAssert.assertFalse(getPanel().getPanel("recurringSeriesChooser").getRadioButton(seriesName).isSelected());
     return this;
   }
 
@@ -250,12 +250,12 @@ public class CategorizationChecker extends DataChecker {
     assertTrue(getPanel().getToggleButton("Income").isSelected());
 
     Panel panel = getIncomeSeriesPanel();
-    assertTrue(panel.getToggleButton(seriesName).isSelected());
+    assertTrue(panel.getRadioButton(seriesName).isSelected());
     return this;
   }
 
   public CategorizationChecker checkIncomeSeriesIsNotSelected(String seriesName) {
-    UISpecAssert.assertFalse(getPanel().getPanel("incomeSeriesChooser").getToggleButton(seriesName).isSelected());
+    UISpecAssert.assertFalse(getPanel().getPanel("incomeSeriesChooser").getRadioButton(seriesName).isSelected());
     return this;
   }
 
@@ -268,7 +268,7 @@ public class CategorizationChecker extends DataChecker {
     Panel panel = getEnvelopeSeriesPanel();
     Assertion assertion = panel.containsLabel(label);
     if (!assertion.isTrue()) {
-      assertTrue(panel.getToggleButton(label).isEnabled());
+      assertTrue(panel.getRadioButton(label).isEnabled());
     }
     return this;
   }
@@ -278,7 +278,7 @@ public class CategorizationChecker extends DataChecker {
     TextBox label = panel.getTextBox(envelopeName);
     Panel seriesPanel = label.getContainer("seriesBlock");
     for (MasterCategory category : categories) {
-      assertTrue(seriesPanel.containsUIComponent(ToggleButton.class, category.getName()));
+      assertTrue(seriesPanel.containsUIComponent(RadioButton.class, category.getName()));
     }
     return this;
   }
@@ -287,7 +287,7 @@ public class CategorizationChecker extends DataChecker {
     Panel panel = getEnvelopeSeriesPanel();
     assertTrue(panel.containsLabel(envelopeName));
     for (String category : categories) {
-      assertTrue(panel.containsUIComponent(ToggleButton.class, envelopeName + ":" + category));
+      assertTrue(panel.containsUIComponent(RadioButton.class, envelopeName + ":" + category));
     }
     return this;
   }
@@ -304,7 +304,7 @@ public class CategorizationChecker extends DataChecker {
     Panel panel = getEnvelopeSeriesPanel();
     assertTrue(panel.containsLabel(envelopeName));
     for (String category : categories) {
-      assertFalse(panel.containsUIComponent(ToggleButton.class, envelopeName + ":" + category));
+      assertFalse(panel.containsUIComponent(RadioButton.class, envelopeName + ":" + category));
     }
     return this;
   }
@@ -318,15 +318,15 @@ public class CategorizationChecker extends DataChecker {
         .validate();
     }
     else {
-      String toggleName = envelopeName + ":" + category.getName();
-      panel.getToggleButton(toggleName).click();
+      String selectorName = envelopeName + ":" + category.getName();
+      panel.getRadioButton(selectorName).click();
     }
     return this;
   }
 
   public CategorizationChecker selectEnvelopeSeries(String envelopeName, String category) {
     Panel panel = getEnvelopeSeriesPanel();
-    panel.getToggleButton(envelopeName + ":" + category).click();
+    panel.getRadioButton(envelopeName + ":" + category).click();
     return this;
   }
 
@@ -357,7 +357,7 @@ public class CategorizationChecker extends DataChecker {
         .validate();
     }
     else {
-      panel.getToggleButton(name).click();
+      panel.getRadioButton(name).click();
     }
     return this;
   }
@@ -382,7 +382,7 @@ public class CategorizationChecker extends DataChecker {
         .validate();
     }
     else {
-      panel.getToggleButton(savingsName).click();
+      panel.getRadioButton(savingsName).click();
     }
     return this;
   }
@@ -400,14 +400,14 @@ public class CategorizationChecker extends DataChecker {
 
   public CategorizationChecker selectOccasionalSeries(MasterCategory category) {
     selectOccasional();
-    getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).click();
+    getOccasionalSeriesPanel().getRadioButton("occasionalSeries" + ":" + category.getName()).click();
     return this;
   }
 
   public CategorizationChecker selectOccasionalSeries(MasterCategory masterCategory, String subcat) {
     selectOccasional();
-    final String toggleName = "occasionalSeries" + ":" + masterCategory.getName() + ":" + subcat;
-    getOccasionalSeriesPanel().getToggleButton(toggleName).click();
+    final String selectorName = "occasionalSeries" + ":" + masterCategory.getName() + ":" + subcat;
+    getOccasionalSeriesPanel().getRadioButton(selectorName).click();
     return this;
   }
 
@@ -420,60 +420,71 @@ public class CategorizationChecker extends DataChecker {
   public void checkContainsOccasional(MasterCategory... categories) {
     Panel panel = getOccasionalSeriesPanel();
     for (MasterCategory category : categories) {
-      assertTrue(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + category.getName()));
+      assertTrue(panel.containsUIComponent(RadioButton.class, "occasionalSeries" + ":" + category.getName()));
     }
   }
 
   public void checkContainsOccasional(MasterCategory master, String subcat) {
     Panel panel = getOccasionalSeriesPanel();
-    assertTrue(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + master.getName()));
-    assertTrue(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + master.getName() + ":" + subcat));
+    assertTrue(panel.containsUIComponent(RadioButton.class, "occasionalSeries" + ":" + master.getName()));
+    assertTrue(panel.containsUIComponent(RadioButton.class, "occasionalSeries" + ":" + master.getName() + ":" + subcat));
   }
 
   public void checkDoesNotContainOccasional(MasterCategory master, String subcat) {
     Panel panel = getOccasionalSeriesPanel();
-    assertTrue(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + master.getName()));
-    assertFalse(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + master.getName() + ":" + subcat));
+    assertTrue(panel.containsUIComponent(RadioButton.class, "occasionalSeries" + ":" + master.getName()));
+    assertFalse(panel.containsUIComponent(RadioButton.class, "occasionalSeries" + ":" + master.getName() + ":" + subcat));
   }
 
   public void checkDoesNotContainOccasional(MasterCategory master) {
     Panel panel = getOccasionalSeriesPanel();
-    assertFalse(panel.containsUIComponent(ToggleButton.class, "occasionalSeries" + ":" + master.getName()));
+    assertFalse(panel.containsUIComponent(RadioButton.class, "occasionalSeries" + ":" + master.getName()));
   }
 
   public void checkOccasionalSeries(MasterCategory category) {
     assertTrue(getBudgetAreasPanel().getToggleButton("occasional").isSelected());
-    assertTrue(getOccasionalSeriesPanel().getToggleButton("occasionalSeries" + ":" + category.getName()).isSelected());
+    assertTrue(getOccasionalSeriesPanel().getRadioButton("occasionalSeries" + ":" + category.getName()).isSelected());
   }
 
   public void checkOccasionalContainLabel(String category) {
     assertTrue(getBudgetAreasPanel().getToggleButton("occasional").isSelected());
-    assertTrue(getOccasionalSeriesPanel().getToggleButton(category).isEnabled());
+    assertTrue(getOccasionalSeriesPanel().getRadioButton(category).isEnabled());
   }
 
   public void checkContainsOccasionalCategories(String[] names) {
     selectOccasional();
     Panel panel = getOccasionalSeriesPanel();
     for (String name : names) {
-      UISpecAssert.assertTrue(panel.getToggleButton(name).isVisible());
+      UISpecAssert.assertTrue(panel.getRadioButton(name).isVisible());
     }
   }
 
   public CategorizationChecker checkOccasionalSeriesIsSelected(MasterCategory category) {
     assertTrue(getBudgetAreasPanel().getToggleButton("occasional").isSelected());
     Panel panel = getOccasionalSeriesPanel();
-    assertFalse(panel.getToggleButton("invisibleOccasionalToggle").isSelected());
-    assertTrue(panel.getToggleButton("occasionalSeries" + ":" + category.getName()).isSelected());
+    assertFalse(panel.getRadioButton("invisibleOccasionalToggle").isSelected());
+    assertTrue(panel.getRadioButton("occasionalSeries" + ":" + category.getName()).isSelected());
     return this;
   }
 
   public CategorizationChecker checkEnvelopeSeriesIsSelected(String seriesName, MasterCategory category) {
-    assertTrue(getPanel().getToggleButton("envelopes").isSelected());
-    Panel panel = getEnvelopeSeriesPanel();
-    assertFalse(panel.getToggleButton("invisibleToggle").isSelected());
-    assertTrue(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
+    checkEnvelopeSeriesSelected(seriesName, category, true);
     return this;
   }
+
+  public CategorizationChecker checkEnvelopeSeriesNotSelected(String seriesName, MasterCategory category) {
+    checkEnvelopeSeriesSelected(seriesName, category, false);
+    return this;
+  }
+
+  private CategorizationChecker checkEnvelopeSeriesSelected(String seriesName, MasterCategory category, boolean selected) {
+    assertTrue(getPanel().getToggleButton("envelopes").isSelected());
+    Panel panel = getEnvelopeSeriesPanel();
+    assertEquals(!selected, panel.getRadioButton("invisibleSelector").isSelected());
+    assertEquals(selected, panel.getRadioButton(seriesName + ":" + category.getName()).isSelected());
+    return this;
+  }
+
 
   public SeriesEditionDialogChecker createIncomeSeries() {
     return createSeries("income", true);
@@ -769,8 +780,8 @@ public class CategorizationChecker extends DataChecker {
   public CategorizationChecker checkSpecialSeriesIsSelected(String seriesName, MasterCategory category) {
     assertTrue(getPanel().getToggleButton("special").isSelected());
     Panel panel = getSpecialSeriesPanel();
-    assertFalse(panel.getToggleButton("invisibleToggle").isSelected());
-    assertTrue(panel.getToggleButton(seriesName + ":" + category.getName()).isSelected());
+    assertFalse(panel.getRadioButton("invisibleSelector").isSelected());
+    assertTrue(panel.getRadioButton(seriesName + ":" + category.getName()).isSelected());
     return this;
   }
 
@@ -795,7 +806,7 @@ public class CategorizationChecker extends DataChecker {
   public CategorizationChecker checkSavingsSeriesIsSelected(String seriesName, MasterCategory category) {
     assertTrue(getPanel().getToggleButton("savings").isSelected());
     Panel panel = getSavingsSeriesPanel();
-    assertTrue(panel.getToggleButton(seriesName).isSelected());
+    assertTrue(panel.getRadioButton(seriesName).isSelected());
     return this;
   }
 
