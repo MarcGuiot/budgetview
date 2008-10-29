@@ -69,6 +69,11 @@
         underline="false" rolloverColor="title.help.rollover"/>
     <style selector="button.help" ui="helpButton" font="-,plain,11" foreground="title.help"/>
 
+    <style selector="#licenceMessage"
+           opaque="false" foreground="license.message" font="-,plain,14"
+           fill="horizontal" horizontalAlignment="left"
+           marginBottom="20"/>
+
   </styles>
 
   <panel styleClass="main" ui="wave">
@@ -188,9 +193,9 @@
         </card>
 
       </cards>
-      <row>
-        <label ref="licenceMessage" opaque="false" horizontalAlignment="center" weightY="0" fill="vertical"/>
-      </row>
+
+      <label ref="licenceMessage"/>
+      
     </column>
 
   </panel>
