@@ -1,5 +1,6 @@
 package org.designup.picsou.licence.servlet;
 
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.licence.mail.Mailler;
 import org.designup.picsou.licence.model.License;
 import org.designup.picsou.licence.model.MailError;
@@ -32,7 +33,8 @@ public class AskForMailServlet extends HttpServlet {
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String mailTo = req.getHeader("mailTo").trim();
-    logger.info("mail : " + mailTo);
+    String lang = req.getHeader(ConfigService.HEADER_LANG);
+    logger.info("mail : " + mailTo + " in " + lang);
     try {
       if (checkIsAMailAdress(mailTo)) {
         SqlConnection db = sqlService.getDb();
@@ -56,11 +58,11 @@ public class AskForMailServlet extends HttpServlet {
           db.commitAndClose();
         }
         if (registeredMail.size() >= 1) {
-          mailler.sendExistingLicence(registeredMail.get(0));
+          mailler.sendExistingLicence(registeredMail.get(0), lang);
           replyOk(resp);
         }
         else {
-          mailler.sendRequestLicence(mailTo);
+          mailler.sendRequestLicence(mailTo, lang);
           replyOk(resp);
         }
         if (registeredMail.size() > 1) {

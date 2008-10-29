@@ -7,8 +7,6 @@
 
 - Sortir le contenu des mails dans le lang_fr.properties
 
-- Serialisation des strings : voir charset
-
 - Probleme de transaction plannifié a 0.
 
 

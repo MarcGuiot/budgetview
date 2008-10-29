@@ -122,9 +122,9 @@ public class LicenseTest extends LicenseTestCase {
 
     LicenseChecker.enterBadLicense(window, MAIL, "1234", 24);
     String mailcontent = checkReceive(MAIL);
-    assertTrue(mailcontent, mailcontent.contains(": "));
+    assertTrue(mailcontent, mailcontent.contains("Your new activation code"));
 
-    int startCode = mailcontent.indexOf(": ") + 2;
+    int startCode = mailcontent.indexOf("is ") + 3;
     String newActivationCode = mailcontent.substring(startCode, startCode + 4);
     window.dispose();
 

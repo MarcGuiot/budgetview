@@ -69,10 +69,11 @@ public class RequestForConfigServlet extends HttpServlet {
     String mail = req.getHeader(ConfigService.HEADER_MAIL);
     String activationCode = req.getHeader(ConfigService.HEADER_CODE);
     String count = req.getHeader(ConfigService.HEADER_COUNT);
+    String lang = req.getHeader(ConfigService.HEADER_LANG);
     String signature = req.getHeader(ConfigService.HEADER_SIGNATURE);
     String applicationVersion = req.getHeader(ConfigService.HEADER_CONFIG_VERSION);
     if (mail != null && activationCode != null) {
-      computeLicense(resp, mail, activationCode, Long.parseLong(count), id);
+      computeLicense(resp, mail, activationCode, Long.parseLong(count), id, lang);
     }
     else {
       computeAnonymous(id, resp);
@@ -217,17 +218,17 @@ public class RequestForConfigServlet extends HttpServlet {
   }
 
   private void computeLicense(HttpServletResponse resp, String mail, String activationCode,
-                              Long count, String repoId) {
+                              Long count, String repoId, String lang) {
     logger.info("compute licence : mail : '" + mail + "' count :'" + count + "' " + "repoId :'" + repoId + "'");
     try {
-      computeLicense(resp, mail, activationCode, count);
+      computeLicense(resp, mail, activationCode, count, lang);
     }
     catch (Exception e) {
       logger.throwing("RequestForConfigServlet", "computeLicense", e);
       try {
         closeDb();
         initDb();
-        computeLicense(resp, mail, activationCode, count);
+        computeLicense(resp, mail, activationCode, count, lang);
       }
       catch (Exception ex) {
         logger.throwing("RequestForConfigServlet", "computeLicense retry", e);
@@ -236,7 +237,8 @@ public class RequestForConfigServlet extends HttpServlet {
     }
   }
 
-  private void computeLicense(HttpServletResponse resp, String mail, String activationCode, Long count) {
+  private void computeLicense(HttpServletResponse resp, String mail,
+                              String activationCode, Long count, String lang) {
     GlobList globList = licenceRequest.execute(mail);
     db.commit();
     if (globList.isEmpty()) {
@@ -253,7 +255,7 @@ public class RequestForConfigServlet extends HttpServlet {
           updateNewActivationCodeRequest.execute(mail, code);
           db.commit();
           resp.addHeader(ConfigService.HEADER_MAIL_SENT, "true");
-          mailler.sendNewLicense(mail, code);
+          mailler.sendNewLicense(mail, code, lang);
           logger.info("send new license to " + mail);
         }
       }

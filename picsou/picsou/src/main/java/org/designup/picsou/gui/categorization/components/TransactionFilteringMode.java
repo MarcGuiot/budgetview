@@ -8,6 +8,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
@@ -42,7 +43,9 @@ public enum TransactionFilteringMode {
         return GlobMatchers.fieldIn(Transaction.MONTH, selectedMonthIds);
 
       case LAST_IMPORTED_FILE:
-        GlobList imports = repository.getAll(TransactionImport.TYPE).sort(TransactionImport.IMPORT_DATE);
+        GlobList imports = repository.getAll(TransactionImport.TYPE)
+          .sort(new GlobFieldsComparator(TransactionImport.IMPORT_DATE, true, TransactionImport.ID, true));
+        imports.getLast().get(TransactionImport.IMPORT_DATE);
         if (imports.isEmpty()) {
           return GlobMatchers.NONE;
         }

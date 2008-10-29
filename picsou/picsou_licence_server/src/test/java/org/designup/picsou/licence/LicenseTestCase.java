@@ -137,7 +137,6 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     };
   }
 
-
   protected String checkReceive(String mailTo) throws InterruptedException {
     long end = System.currentTimeMillis() + 1000;
     synchronized (mailServer) {

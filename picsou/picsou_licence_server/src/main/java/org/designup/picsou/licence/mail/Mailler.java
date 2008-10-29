@@ -1,5 +1,6 @@
 package org.designup.picsou.licence.mail;
 
+import org.designup.picsou.licence.Lang;
 import org.designup.picsou.licence.model.License;
 import org.globsframework.model.Glob;
 
@@ -28,8 +29,37 @@ public class Mailler {
     this.host = host;
   }
 
-  public void sendRequestLicence(String to) throws MessagingException {
-    sendMail(to, fromAdress, "picsou", "Bonjour\nCliquez sur le lien suivant pour achetez Picsou.");
+  public void sendRequestLicence(String to, String lang) throws MessagingException {
+    try {
+      sendMail(to, fromAdress,
+               Lang.get("request.licence.subject", lang),
+               Lang.get("request.licence.message", lang));
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void sendExistingLicence(Glob licence, String lang) {
+    try {
+      sendMail(licence.get(License.MAIL), fromAdress, Lang.get("resend.licence.subject", lang),
+               Lang.get("resend.licence.message", lang));
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public boolean sendNewLicense(String mail, String code, String lang) {
+    try {
+      sendMail(mail, fromAdress, Lang.get("new.licence.subject", lang),
+               Lang.get("new.licence.message", lang, code));
+      return true;
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
   }
 
   private void sendMail(String to, String from, String subjet, String content) throws MessagingException {
@@ -44,27 +74,5 @@ public class Mailler {
     message.setText(content);
     message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
     Transport.send(message);
-  }
-
-  public void sendExistingLicence(Glob licence) {
-    try {
-      sendMail(licence.get(License.MAIL), fromAdress, "picsou",
-               "Bonjour\nVous avez demander a ce qu'on vous renvoie votre licence.");
-    }
-    catch (MessagingException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public boolean sendNewLicense(String mail, String code) {
-    try {
-      sendMail(mail, fromAdress, "picsou code d'activation",
-               "Bonjour\nVoici votre nouveau code d'activation : " + code);
-      return true;
-    }
-    catch (MessagingException e) {
-      e.printStackTrace();
-      return false;
-    }
   }
 }

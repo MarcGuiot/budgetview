@@ -41,16 +41,18 @@ public class RegisterServlet extends HttpServlet {
     String mail = req.getHeader(ConfigService.HEADER_MAIL).trim();
     String activationCode = req.getHeader(ConfigService.HEADER_CODE).trim();
     String repoId = req.getHeader(ConfigService.HEADER_REPO_ID).trim();
-    logger.info("mail : '" + mail + "' code d'activation :'" + activationCode + "' repoId : '" + repoId + "'");
+    String lang = req.getHeader(ConfigService.HEADER_LANG).trim();
+    logger.info("mail : '" + mail + "' code d'activation :'" + activationCode + "' repoId : '" +
+                repoId + "' lang : " + lang);
     SqlConnection db = sqlService.getDb();
     try {
-      register(resp, mail, activationCode, repoId, sqlService.getDb());
+      register(resp, mail, lang, repoId, activationCode, sqlService.getDb());
     }
     catch (Exception e) {
       logger.throwing("RegisterServlet", "doPost", e);
       SqlConnection db2 = sqlService.getDb();
       try {
-        register(resp, mail, activationCode, repoId, db2);
+        register(resp, mail, lang, repoId, activationCode, db2);
       }
       catch (Exception e1) {
         if (db2 != null) {
@@ -65,7 +67,9 @@ public class RegisterServlet extends HttpServlet {
     }
   }
 
-  private void register(HttpServletResponse resp, String mail, String activationCode, String repoId, SqlConnection db) throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
+  private void register(HttpServletResponse resp, String mail, String lang, String repoId, String activationCode,
+                        SqlConnection db)
+    throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
     SelectQuery query = db.getQueryBuilder(License.TYPE,
                                            Constraints.equal(License.MAIL, mail))
       .selectAll()
@@ -109,7 +113,7 @@ public class RegisterServlet extends HttpServlet {
           .getRequest()
           .run();
         db.commit();
-        mailler.sendNewLicense(mail, newCode);
+        mailler.sendNewLicense(mail, newCode, lang);
         resp.addHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "true");
       }
       else {

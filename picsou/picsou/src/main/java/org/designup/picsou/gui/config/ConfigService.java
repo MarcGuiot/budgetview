@@ -12,6 +12,7 @@ import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.model.VersionInformation;
 import org.designup.picsou.utils.Inline;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
@@ -48,6 +49,7 @@ public class ConfigService {
   public static final String HEADER_JAR_VERSION = "jarVersion";
   public static final String HEADER_NEW_JAR_VERSION = "newJarVersion";
   public static final String HEADER_REPO_ID = "repoId";
+  public static final String HEADER_LANG = "lang";
   public static final String REGISTER_SERVLET = "register";
   private static final String REGISTER = "/" + REGISTER_SERVLET;
   private static final String REQUEST_FOR_CONFIG = "/requestForConfig";
@@ -95,6 +97,7 @@ public class ConfigService {
     postMethod.setRequestHeader(HEADER_JAR_VERSION, Long.toString(localJarVersion));
     postMethod.setRequestHeader(HEADER_APPLICATION_VERSION, applicationVersion);
     postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
+    postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
     if (signature != null && signature.length() > 1 && mail != null && activationCode != null) {
       postMethod.setRequestHeader(HEADER_MAIL, mail);
       postMethod.setRequestHeader(HEADER_SIGNATURE, signature);
@@ -166,6 +169,7 @@ public class ConfigService {
       postMethod.setRequestHeader(HEADER_MAIL, mail);
       postMethod.setRequestHeader(HEADER_CODE, code);
       postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
+      postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
       httpClient.executeMethod(postMethod);
       int statusCode = postMethod.getStatusCode();
       if (statusCode == 200) {

@@ -37,6 +37,7 @@ public class AskMailTest extends LicenseTestCase {
   private PostMethod sendRequest() throws IOException {
     PostMethod postMethod = new PostMethod("http://localhost/mailTo");
     postMethod.setRequestHeader("mailto", "monPremierClient@pirate.du");
+    postMethod.setRequestHeader("lang", "en");
     client.executeMethod(postMethod);
     return postMethod;
   }
@@ -52,6 +53,7 @@ public class AskMailTest extends LicenseTestCase {
     PostMethod postMethod = new PostMethod("http://localhost/mailTo");
     String badMail = "monPremierClient@pirate";
     postMethod.setRequestHeader("mailto", badMail);
+    postMethod.setRequestHeader("lang", "en");
     client.executeMethod(postMethod);
     Header header = postMethod.getResponseHeader("status");
     assertEquals("badAdress", header.getValue());
