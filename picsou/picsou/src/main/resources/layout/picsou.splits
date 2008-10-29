@@ -69,7 +69,7 @@
         underline="false" rolloverColor="title.help.rollover"/>
     <style selector="button.help" ui="helpButton" font="-,plain,11" foreground="title.help"/>
 
-    <style selector="#licenceMessage"
+    <style selector="#licenseMessage"
            opaque="false" foreground="license.message" font="-,plain,14"
            fill="horizontal" horizontalAlignment="left"
            marginBottom="20"/>
@@ -194,7 +194,7 @@
 
       </cards>
 
-      <label ref="licenceMessage"/>
+      <label ref="licenseMessage"/>
       
     </column>
 

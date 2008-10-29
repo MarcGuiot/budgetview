@@ -1,4 +1,4 @@
-package org.designup.picsou.licence.model;
+package org.designup.picsou.license.model;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultLong;

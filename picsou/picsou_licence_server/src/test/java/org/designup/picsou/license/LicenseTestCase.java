@@ -1,4 +1,4 @@
-package org.designup.picsou.licence;
+package org.designup.picsou.license;
 
 import com.dumbster.smtp.SimpleSmtpServer;
 import com.dumbster.smtp.SmtpMessage;
@@ -7,11 +7,11 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
-import org.designup.picsou.licence.model.License;
-import org.designup.picsou.licence.model.MailError;
-import org.designup.picsou.licence.model.RepoInfo;
-import org.designup.picsou.licence.model.SoftwareInfo;
-import org.designup.picsou.licence.servlet.LicenceServer;
+import org.designup.picsou.license.model.License;
+import org.designup.picsou.license.model.MailError;
+import org.designup.picsou.license.model.RepoInfo;
+import org.designup.picsou.license.model.SoftwareInfo;
+import org.designup.picsou.license.servlet.LicenseServer;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
@@ -27,7 +27,7 @@ import java.util.Locale;
 
 public abstract class LicenseTestCase extends UISpecTestCase {
   protected SimpleSmtpServer mailServer;
-  private LicenceServer server;
+  private LicenseServer server;
   private Thread mailThread;
   private static final String databaseUrl = "jdbc:hsqldb:.";
   private SqlService sqlService = null;
@@ -40,12 +40,12 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     super.setUp();
     Locale.setDefault(Locale.ENGLISH);
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
-    System.setProperty(ConfigService.COM_PICSOU_LICENCE_URL, "http://localhost:5000");
-    System.setProperty(ConfigService.COM_PICSOU_LICENCE_FTP_URL, "ftp://localhost:12000");
+    System.setProperty(ConfigService.COM_PICSOU_LICENSE_URL, "http://localhost:5000");
+    System.setProperty(ConfigService.COM_PICSOU_LICENSE_FTP_URL, "ftp://localhost:12000");
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     mailServer = new SimpleSmtpServer(2500);
-    server = new LicenceServer();
+    server = new LicenseServer();
     server.useSsl(false);
     server.usePort(5000);
     server.setMailPort(2500);
@@ -115,14 +115,13 @@ public abstract class LicenseTestCase extends UISpecTestCase {
       ftpServer = null;
     }
     sqlService = null;
-    System.setProperty("com.picsou.licence.url", "");
+    System.setProperty("com.picsou.license.url", "");
     started = false;
   }
 
   public interface Retr {
     void assertOk();
   }
-
 
   public Retr setFtpReply(final String firstExpectedFile, final String firstContent,
                           final String secondExpectedFile, final byte[] secondContent) {

@@ -1,6 +1,6 @@
-package org.designup.picsou.licence.mail;
+package org.designup.picsou.license.mail;
 
-import org.designup.picsou.licence.model.License;
+import org.designup.picsou.license.model.License;
 import org.globsframework.model.Glob;
 
 import javax.mail.Message;
@@ -12,12 +12,12 @@ import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
 
-public class Mailler {
+public class Mailer {
   private int port = 25;
   private String host = "localhost";
   private String fromAdress = "picsou@noreply.com";
 
-  public Mailler() {
+  public Mailer() {
   }
 
   public void setPort(int port) {
@@ -28,15 +28,18 @@ public class Mailler {
     this.host = host;
   }
 
-  public void sendRequestLicence(String to) throws MessagingException {
-    sendMail(to, fromAdress, "picsou", "Bonjour\nCliquez sur le lien suivant pour achetez Picsou.");
+  public void sendRequestLicense(String to) throws MessagingException {
+    sendMail(to, fromAdress, "picsou", "Bonjour\nCliquez sur le lien suivant pour acheter Picsou.");
   }
 
   private void sendMail(String to, String from, String subjet, String content) throws MessagingException {
+
     Properties mailProperties = new Properties();
     mailProperties.setProperty("mail.smtp.host", host);
     mailProperties.setProperty("mail.smtp.port", Integer.toString(port));
+
     Session session = Session.getDefaultInstance(mailProperties);
+
     MimeMessage message = new MimeMessage(session);
     message.setFrom(new InternetAddress(from));
     message.setSubject(subjet);
@@ -46,9 +49,9 @@ public class Mailler {
     Transport.send(message);
   }
 
-  public void sendExistingLicence(Glob licence) {
+  public void sendExistingLicense(Glob license) {
     try {
-      sendMail(licence.get(License.MAIL), fromAdress, "picsou",
+      sendMail(license.get(License.MAIL), fromAdress, "picsou",
                "Bonjour\nVous avez demander a ce qu'on vous renvoie votre licence.");
     }
     catch (MessagingException e) {

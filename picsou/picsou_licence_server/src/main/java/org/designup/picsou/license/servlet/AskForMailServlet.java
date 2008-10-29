@@ -1,8 +1,9 @@
-package org.designup.picsou.licence.servlet;
+package org.designup.picsou.license.servlet;
 
-import org.designup.picsou.licence.mail.Mailler;
-import org.designup.picsou.licence.model.License;
-import org.designup.picsou.licence.model.MailError;
+import org.designup.picsou.license.mail.Mailer;
+import org.designup.picsou.license.model.License;
+import org.designup.picsou.license.model.MailError;
+import org.designup.picsou.license.generator.LicenseGenerator;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.sqlstreams.SqlConnection;
@@ -22,11 +23,11 @@ import java.util.regex.Pattern;
 
 public class AskForMailServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("mail");
-  private Mailler mailler;
+  private Mailer mailer;
   private SqlService sqlService;
 
   public AskForMailServlet(Directory directory) {
-    mailler = directory.get(Mailler.class);
+    mailer = directory.get(Mailer.class);
     sqlService = directory.get(SqlService.class);
   }
 
@@ -38,7 +39,7 @@ public class AskForMailServlet extends HttpServlet {
         SqlConnection db = sqlService.getDb();
         GlobList registeredMail;
         try {
-          String activationCode = LicenceGenerator.generateActivationCode();
+          String activationCode = LicenseGenerator.generateActivationCode();
           registeredMail = db.getQueryBuilder(License.TYPE,
                                               Constraints.equal(License.MAIL, mailTo))
             .select(License.MAIL)
@@ -56,11 +57,11 @@ public class AskForMailServlet extends HttpServlet {
           db.commitAndClose();
         }
         if (registeredMail.size() >= 1) {
-          mailler.sendExistingLicence(registeredMail.get(0));
+          mailer.sendExistingLicense(registeredMail.get(0));
           replyOk(resp);
         }
         else {
-          mailler.sendRequestLicence(mailTo);
+          mailer.sendRequestLicense(mailTo);
           replyOk(resp);
         }
         if (registeredMail.size() > 1) {

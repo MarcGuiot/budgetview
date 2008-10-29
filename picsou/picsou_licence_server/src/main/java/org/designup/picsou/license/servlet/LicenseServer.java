@@ -1,6 +1,6 @@
-package org.designup.picsou.licence.servlet;
+package org.designup.picsou.license.servlet;
 
-import org.designup.picsou.licence.mail.Mailler;
+import org.designup.picsou.license.mail.Mailer;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.logging.LogManager;
 
-public class LicenceServer {
+public class LicenseServer {
   public static final String USE_SSHL = "picsou.server.useSsl";
   public static final String KEYSTORE = "picsou.server.keystore";
   public static final String HOST_PROPERTY = "picsou.server.host";
@@ -35,7 +35,7 @@ public class LicenceServer {
   private QueryVersionTask queryVersionTask;
   private Timer timer;
 
-  public LicenceServer() throws IOException {
+  public LicenseServer() throws IOException {
     jetty = new Server();
   }
 
@@ -59,13 +59,13 @@ public class LicenceServer {
 
   public static void main(String[] args) throws Exception {
     initLogger();
-    LicenceServer server = new LicenceServer();
+    LicenseServer server = new LicenseServer();
     server.getParams();
     server.start();
   }
 
   private static void initLogger() throws IOException {
-    InputStream stream = LicenceServer.class.getClassLoader().getResourceAsStream("logging.properties");
+    InputStream stream = LicenseServer.class.getClassLoader().getResourceAsStream("logging.properties");
     LogManager.getLogManager().readConfiguration(stream);
   }
 
@@ -122,15 +122,14 @@ public class LicenceServer {
 
   private Directory createDirectory() {
     Directory directory = new DefaultDirectory();
-    Mailler mailler = new Mailler();
-    directory.add(mailler);
-    mailler.setPort(mailPort);
+    Mailer mailer = new Mailer();
+    directory.add(mailer);
+    mailer.setPort(mailPort);
     SqlService sqlService = new JdbcSqlService(databaseUrl, databaseUser, databasePassword);
     directory.add(SqlService.class, sqlService);
     directory.add(new VersionService());
     return directory;
   }
-
 
   public void start() throws Exception {
     init();

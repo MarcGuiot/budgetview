@@ -1,9 +1,10 @@
-package org.designup.picsou.licence.servlet;
+package org.designup.picsou.license.servlet;
 
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.licence.mail.Mailler;
-import org.designup.picsou.licence.model.License;
-import org.designup.picsou.licence.model.RepoInfo;
+import org.designup.picsou.license.mail.Mailer;
+import org.designup.picsou.license.model.License;
+import org.designup.picsou.license.model.RepoInfo;
+import org.designup.picsou.license.generator.LicenseGenerator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SelectQuery;
@@ -30,11 +31,11 @@ import java.util.logging.Logger;
 public class RegisterServlet extends HttpServlet {
   static Logger logger = Logger.getLogger(ConfigService.REGISTER_SERVLET);
   private SqlService sqlService;
-  private Mailler mailler;
+  private Mailer mailer;
 
   public RegisterServlet(Directory directory) {
     sqlService = directory.get(SqlService.class);
-    mailler = directory.get(Mailler.class);
+    mailer = directory.get(Mailer.class);
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -79,7 +80,7 @@ public class RegisterServlet extends HttpServlet {
       Glob license = globList.get(0);
       if (activationCode.equals(license.get(License.ACTIVATION_CODE))) {
         logger.info("License activation ok");
-        byte[] signature = LicenceGenerator.generateSignature(mail);
+        byte[] signature = LicenseGenerator.generateSignature(mail);
         db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
           .update(License.ACCESS_COUNT, 1L)
           .update(License.SIGNATURE, signature)
@@ -103,13 +104,13 @@ public class RegisterServlet extends HttpServlet {
       }
       else if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
         logger.info("Mail sent with new code");
-        String newCode = LicenceGenerator.generateActivationCode();
+        String newCode = LicenseGenerator.generateActivationCode();
         db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
           .update(License.ACTIVATION_CODE, newCode)
           .getRequest()
           .run();
         db.commit();
-        mailler.sendNewLicense(mail, newCode);
+        mailer.sendNewLicense(mail, newCode);
         resp.addHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "true");
       }
       else {

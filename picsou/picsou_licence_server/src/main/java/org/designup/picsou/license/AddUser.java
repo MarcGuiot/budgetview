@@ -1,7 +1,7 @@
-package org.designup.picsou.licence;
+package org.designup.picsou.license;
 
-import org.designup.picsou.licence.model.License;
-import org.designup.picsou.licence.servlet.LicenceGenerator;
+import org.designup.picsou.license.model.License;
+import org.designup.picsou.license.generator.LicenseGenerator;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
@@ -22,7 +22,7 @@ public class AddUser {
     SqlService sqlService = new JdbcSqlService(databaseUrl, user, passwd);
     SqlConnection db = sqlService.getDb();
     for (String arg : args) {
-      String code = LicenceGenerator.generateActivationCode();
+      String code = LicenseGenerator.generateActivationCode();
       db.getCreateBuilder(License.TYPE)
         .set(License.MAIL, arg)
         .set(License.ACTIVATION_CODE, code)

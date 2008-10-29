@@ -1,11 +1,11 @@
-package org.designup.picsou.licence.functests;
+package org.designup.picsou.license.functests;
 
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.licence.LicenseTestCase;
-import org.designup.picsou.licence.model.License;
-import org.designup.picsou.licence.model.RepoInfo;
+import org.designup.picsou.license.LicenseTestCase;
+import org.designup.picsou.license.model.License;
+import org.designup.picsou.license.model.RepoInfo;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.EmptyGlobList;
 import org.globsframework.model.Glob;
@@ -105,7 +105,7 @@ public class LicenseTest extends LicenseTestCase {
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     OperationChecker operations = new OperationChecker(window);
     operations.getPreferences().changeFutureMonth(3).validate();
-    checkLicenceExpiration();
+    checkLicenseExpiration();
   }
 
   public void testResendActivationKeyIfCountDecrease() throws Exception {
@@ -163,13 +163,13 @@ public class LicenseTest extends LicenseTestCase {
       .checkErrorMessage("Activation failed")
       .cancel();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
-    checkLicenceExpiration();
+    checkLicenseExpiration();
   }
 
-  private void checkLicenceExpiration() {
+  private void checkLicenseExpiration() {
     OperationChecker operation = new OperationChecker(window);
-    LicenceExpirationChecker licenceExpiration = new LicenceExpirationChecker(operation.getImportTrigger());
-    licenceExpiration.close();
+    LicenseExpirationChecker licenseExpiration = new LicenseExpirationChecker(operation.getImportTrigger());
+    licenseExpiration.close();
   }
 
   public void testStartRegistrationAndStopServer() throws Exception {
@@ -183,7 +183,7 @@ public class LicenseTest extends LicenseTestCase {
     license.checkErrorMessage("Activation failed")
       .cancel();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
-    checkLicenceExpiration();
+    checkLicenseExpiration();
   }
 
   public void testEmptyActivationCode() throws Exception {
@@ -198,7 +198,7 @@ public class LicenseTest extends LicenseTestCase {
     license.checkErrorMessage("Activation failed");
     license.cancel();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
-    checkLicenceExpiration();
+    checkLicenseExpiration();
   }
 
   private void restartPicsouToIncrementCount() {

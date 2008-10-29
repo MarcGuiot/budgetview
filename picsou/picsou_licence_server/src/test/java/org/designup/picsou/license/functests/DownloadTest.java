@@ -1,12 +1,12 @@
-package org.designup.picsou.licence.functests;
+package org.designup.picsou.license.functests;
 
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.licence.LicenseTestCase;
-import org.designup.picsou.licence.model.SoftwareInfo;
+import org.designup.picsou.license.LicenseTestCase;
+import org.designup.picsou.license.model.SoftwareInfo;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.utils.Dates;

@@ -1,7 +1,7 @@
-C org.designup.picsou.licence.AddUser
-C org.designup.picsou.licence.DbCreateTable
-C org.designup.picsou.licence.servlet.LicenceServer
-C org.designup.picsou.licence.servlet.LicenceGenerator
+C org.designup.picsou.license.AddUser
+C org.designup.picsou.license.DbCreateTable
+C org.designup.picsou.license.servlet.LicenseServer
+C org.designup.picsou.license.generator.LicenseGenerator
 C org.mortbay.jetty.RetryRequest
 C javax.servlet.SingleThreadModel
 R logging.properties

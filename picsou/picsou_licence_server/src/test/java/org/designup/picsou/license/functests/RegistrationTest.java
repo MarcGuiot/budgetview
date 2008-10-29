@@ -1,11 +1,11 @@
-package org.designup.picsou.licence.functests;
+package org.designup.picsou.license.functests;
 
 import org.designup.picsou.functests.checkers.LicenseChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.licence.LicenseTestCase;
+import org.designup.picsou.license.LicenseTestCase;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;

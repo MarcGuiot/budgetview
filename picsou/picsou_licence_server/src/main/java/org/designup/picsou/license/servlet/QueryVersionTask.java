@@ -1,6 +1,6 @@
-package org.designup.picsou.licence.servlet;
+package org.designup.picsou.license.servlet;
 
-import org.designup.picsou.licence.model.SoftwareInfo;
+import org.designup.picsou.license.model.SoftwareInfo;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.streams.GlobStream;

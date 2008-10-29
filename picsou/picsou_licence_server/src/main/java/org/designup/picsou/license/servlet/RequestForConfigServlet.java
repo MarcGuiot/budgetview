@@ -1,9 +1,10 @@
-package org.designup.picsou.licence.servlet;
+package org.designup.picsou.license.servlet;
 
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.licence.mail.Mailler;
-import org.designup.picsou.licence.model.License;
-import org.designup.picsou.licence.model.RepoInfo;
+import org.designup.picsou.license.mail.Mailer;
+import org.designup.picsou.license.model.License;
+import org.designup.picsou.license.model.RepoInfo;
+import org.designup.picsou.license.generator.LicenseGenerator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SelectQuery;
@@ -29,19 +30,19 @@ import java.util.logging.Logger;
 public class RequestForConfigServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("requestForConfig");
   private SqlService sqlService;
-  private Mailler mailler;
+  private Mailer mailer;
   private VersionService versionService;
   private SqlConnection db;
   private CreateAnonymousRequest createAnonymousRequest;
   private UpdateNewActivationCodeRequest updateNewActivationCodeRequest;
-  private LicenceRequest licenceRequest;
+  private LicenseRequest licenseRequest;
   private UpdateAnonymousAccesCount updateAnonymousAccesCount;
   private UpdateLastAccessRequest updateLastAccessRequest;
   private RepoIdAnonymousRequest repoIdAnonymousRequest;
 
   public RequestForConfigServlet(Directory directory) {
     sqlService = directory.get(SqlService.class);
-    mailler = directory.get(Mailler.class);
+    mailer = directory.get(Mailer.class);
     versionService = directory.get(VersionService.class);
     logger.info("RequestForConfigServlet started");
     initDb();
@@ -50,7 +51,7 @@ public class RequestForConfigServlet extends HttpServlet {
   private void initDb() {
     db = sqlService.getDb();
     createAnonymousRequest = new CreateAnonymousRequest(db);
-    licenceRequest = new LicenceRequest(db);
+    licenseRequest = new LicenseRequest(db);
     updateNewActivationCodeRequest = new UpdateNewActivationCodeRequest(db);
     updateLastAccessRequest = new UpdateLastAccessRequest(db);
     updateAnonymousAccesCount = new UpdateAnonymousAccesCount(db);
@@ -106,7 +107,7 @@ public class RequestForConfigServlet extends HttpServlet {
 
   private void closeDb() {
     try {
-      licenceRequest.close();
+      licenseRequest.close();
       updateAnonymousAccesCount.close();
       updateLastAccessRequest.close();
       updateNewActivationCodeRequest.close();
@@ -218,7 +219,7 @@ public class RequestForConfigServlet extends HttpServlet {
 
   private void computeLicense(HttpServletResponse resp, String mail, String activationCode,
                               Long count, String repoId) {
-    logger.info("compute licence : mail : '" + mail + "' count :'" + count + "' " + "repoId :'" + repoId + "'");
+    logger.info("compute license : mail : '" + mail + "' count :'" + count + "' " + "repoId :'" + repoId + "'");
     try {
       computeLicense(resp, mail, activationCode, count);
     }
@@ -237,7 +238,7 @@ public class RequestForConfigServlet extends HttpServlet {
   }
 
   private void computeLicense(HttpServletResponse resp, String mail, String activationCode, Long count) {
-    GlobList globList = licenceRequest.execute(mail);
+    GlobList globList = licenseRequest.execute(mail);
     db.commit();
     if (globList.isEmpty()) {
       resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
@@ -249,11 +250,11 @@ public class RequestForConfigServlet extends HttpServlet {
       if (count < license.get(License.ACCESS_COUNT)) {
         resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
         if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
-          String code = LicenceGenerator.generateActivationCode();
+          String code = LicenseGenerator.generateActivationCode();
           updateNewActivationCodeRequest.execute(mail, code);
           db.commit();
           resp.addHeader(ConfigService.HEADER_MAIL_SENT, "true");
-          mailler.sendNewLicense(mail, code);
+          mailer.sendNewLicense(mail, code);
           logger.info("send new license to " + mail);
         }
       }
@@ -272,11 +273,11 @@ public class RequestForConfigServlet extends HttpServlet {
     }
   }
 
-  static class LicenceRequest {
+  static class LicenseRequest {
     private ValueStringAccessor mail;
     private SelectQuery query;
 
-    LicenceRequest(SqlConnection db) {
+    LicenseRequest(SqlConnection db) {
       mail = new ValueStringAccessor();
       query = db.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
         .selectAll()
