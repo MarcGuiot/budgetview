@@ -1249,6 +1249,152 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
+  public void testUnknownPeriodicity() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/29", -100.00, "Virement")
+      .load();
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.selectSavings()
+      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+    categorization.selectSavings().editSeries("epargne", true)
+      .setUnknown()
+      .checkTable(new Object[][]{
+        {"2008", "August", "0.00", "0"},
+        {"2008", "July", "0.00", "0"},
+        {"2008", "June", "100.00", "100.00"}
+      })
+      .validate();
+    views.selectData();
+    timeline.selectMonths("2008/06", "2008/07");
+    transactions.initContent()
+      .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .check();
+  }
+
+  public void testUnkownPeriodicityAndPreverseAutomatic() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/29", -100.00, "Virement")
+      .load();
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.selectSavings()
+      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+    SeriesEditionDialogChecker edition = categorization.selectSavings().editSeries("epargne", true)
+      .checkInAutomatic()
+      .setUnknown()
+      .setTwoMonths();
+    edition
+      .checkInAutomatic()
+      .switchToManual()
+      .checkInManual()
+      .setUnknown()
+      .setTwoMonths()
+      .checkInManual()
+      .validate();
+
+    categorization.selectSavings().editSeries("epargne", true)
+      .checkInManual()
+      .setUnknown()
+      .validate();
+
+    categorization.selectSavings().editSeries("epargne", true)
+      .checkInManual()
+      .setUnknown()
+      .setTwoMonths()
+      .checkInManual()
+      .validate();
+  }
+
+  public void testChangeLastMonthInIrregular() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/29", -100.00, "Virement")
+      .load();
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.selectSavings()
+      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+    categorization.selectSavings().editSeries("epargne", true)
+      .checkInAutomatic()
+      .setUnknown()
+      .setEndDate(200807)
+      .validate();
+    operations.getPreferences().changeFutureMonth(2).validate();
+    categorization.selectSavings().editSeries("epargne", true)
+      .setEndDate(200810)
+      .validate();
+    timeline.assertSpanEquals("2008/06", "2008/10");
+    views.selectData();
+    timeline.selectAll();
+    transactions.initContent()
+      .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .check();
+  }
+
+  public void testAddMonthUpdateBudgetWithLastValidBudget() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/04", -100.00, "Virement")
+      .addTransaction("2008/07/04", -10.00, "McDo")
+      .load();
+    views.selectCategorization();
+    categorization.selectTableRows("Virement");
+    categorization.selectSavings()
+      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+    categorization.selectSavings().editSeries("epargne", true)
+      .setTwoMonths()
+      .validate();
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
+      .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .check();
+    operations.getPreferences().changeFutureMonth(2).validate();
+    timeline.selectAll();
+    timeline.assertSpanEquals("2008/06", "2008/10");
+    transactions.initContent()
+      .add("04/10/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
+      .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .check();
+  }
+
+  public void testNoAutomaticAddMonth() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/04", -100.00, "Virement")
+      .addTransaction("2008/07/04", -10.00, "McDo")
+      .load();
+    views.selectCategorization();
+    categorization.selectTableRows("Virement");
+    categorization.selectSavings()
+      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+    operations.getPreferences().changeFutureMonth(1).validate();
+    categorization.selectSavings().editSeries("epargne", true)
+      .switchToManual()
+      .selectMonth(200809)
+      .setAmount("0")
+      .setTwoMonths()
+      .validate();
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
+      .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .check();
+    System.out.println("SeriesEditionTest.testNoAutomaticAddMonth");
+    operations.getPreferences().changeFutureMonth(2).validate();
+    timeline.selectAll();
+    timeline.assertSpanEquals("2008/06", "2008/10");
+    transactions.initContent()
+      .add("04/10/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
+      .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .check();
+  }
 
   public void testChangeBudgetAmountWhileInOverBurn() throws Exception {
     OfxBuilder

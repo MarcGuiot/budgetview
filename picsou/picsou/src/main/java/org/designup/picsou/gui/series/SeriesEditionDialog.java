@@ -90,6 +90,28 @@ public class SeriesEditionDialog {
         return selectedTransactions.getSortedSet(Transaction.MONTH);
       }
     });
+    localRepository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
+        changeSet.safeVisit(Series.TYPE, new DefaultChangeSetVisitor() {
+          public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+            Glob series = repository.get(key);
+            if ((values.contains(Series.PROFILE_TYPE)
+                 && values.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId()))
+                && (values.contains(Series.IS_AUTOMATIC)
+                    || series.get(Series.IS_AUTOMATIC))) { // le trigger de passage en automatique peut ne pas etre encore appelle
+              GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
+                                                         GlobMatchers.fieldEquals(SeriesBudget.SERIES, series.get(Series.ID)));
+              Glob currentMonth = repository.get(CurrentMonth.KEY);
+              for (Glob budget : seriesBudgets) {
+                if (budget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.MONTH_ID)) {
+                  repository.update(budget.getKey(), SeriesBudget.AMOUNT, 0.0);
+                }
+              }
+            }
+          }
+        });
+      }
+    });
     selectionService = new SelectionService();
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(selectionService);

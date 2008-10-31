@@ -614,6 +614,16 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker checkInManual() {
+    UISpecAssert.assertTrue(dialog.getButton("automatic").isVisible());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkInAutomatic() {
+    UISpecAssert.assertTrue(dialog.getButton("manual").isVisible());
+    return this;
+  }
+
   private ComboBox getPeriodCombo() {
     return dialog.getComboBox("periodCombo");
   }

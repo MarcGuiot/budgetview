@@ -25,12 +25,11 @@ public class LicenseChecker {
     });
   }
 
-  static public void enterBadLicense(Window window, final String mail, final String code, final int monthCount) {
+  static public void enterBadLicense(Window window, final String mail, final String code) {
     enterLicense(window, new WindowHandler() {
       public Trigger process(Window window) throws Exception {
         window.getInputTextBox("mail").setText(mail);
         window.getInputTextBox("code").setText(code);
-        window.getInputTextBox("monthCount").setText(Integer.toString(monthCount));
         window.getButton("ok").click();
         return window.getButton("cancel").triggerClick();
       }
@@ -49,16 +48,15 @@ public class LicenseChecker {
       .getSubMenu("Register").triggerClick()));
   }
 
-  public LicenseChecker enterLicenseAndValidate(final String mail, final String code, final int monthCount) {
-    enterLicense(mail, code, monthCount);
+  public LicenseChecker enterLicenseAndValidate(final String mail, final String code) {
+    enterLicense(mail, code);
     dialog.getButton("ok").click();
     return this;
   }
 
-  public LicenseChecker enterLicense(String mail, String code, int monthCount) {
+  public LicenseChecker enterLicense(String mail, String code) {
     dialog.getInputTextBox("mail").setText(mail);
     dialog.getInputTextBox("code").setText(code);
-    dialog.getInputTextBox("monthCount").setText(Integer.toString(monthCount));
     return this;
   }
 

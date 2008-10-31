@@ -120,7 +120,7 @@ public class LicenseTest extends LicenseTestCase {
     login.logNewUser("user", "passw@rd");
     checkRepoIdIsUpdated(getSqlConnection(), 1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
 
-    LicenseChecker.enterBadLicense(window, MAIL, "1234", 24);
+    LicenseChecker.enterBadLicense(window, MAIL, "1234");
     String mailcontent = checkReceive(MAIL);
     assertTrue(mailcontent, mailcontent.contains("Your new activation code"));
 
@@ -144,7 +144,7 @@ public class LicenseTest extends LicenseTestCase {
 
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logUser("user", "passw@rd");
-    LicenseChecker.enterBadLicense(window, "titi@foo.org", "4321", 24);
+    LicenseChecker.enterBadLicense(window, "titi@foo.org", "4321");
 
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
@@ -159,7 +159,7 @@ public class LicenseTest extends LicenseTestCase {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
     LicenseChecker.open(window)
-      .enterLicenseAndValidate("titi@foo.org", "az", 24)
+      .enterLicenseAndValidate("titi@foo.org", "az")
       .checkErrorMessage("Activation failed")
       .cancel();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
@@ -176,7 +176,7 @@ public class LicenseTest extends LicenseTestCase {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
     LicenseChecker license = LicenseChecker.open(window)
-      .enterLicense("titi@foo.org", "az", 24);
+      .enterLicense("titi@foo.org", "az");
 
     stop();
     license.validate();
@@ -190,10 +190,10 @@ public class LicenseTest extends LicenseTestCase {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
     LicenseChecker license = LicenseChecker.open(window)
-      .enterLicense("titi@foo.org", "az", 24);
+      .enterLicense("titi@foo.org", "az");
     license.validate();
     license.checkErrorMessage("Activation failed");
-    license.enterLicense("titi@foo.org", "", 24);
+    license.enterLicense("titi@foo.org", "");
     license.validate();
     license.checkErrorMessage("Activation failed");
     license.cancel();

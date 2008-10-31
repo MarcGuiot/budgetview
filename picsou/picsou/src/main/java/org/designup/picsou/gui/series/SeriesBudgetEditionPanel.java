@@ -4,14 +4,11 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
-import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -26,13 +23,11 @@ import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.model.utils.ReverseGlobFieldComparator;
@@ -53,6 +48,7 @@ public class SeriesBudgetEditionPanel {
   private Directory directory;
   private TimeService timeService;
   private Glob series;
+  private boolean isAutomatic;
   private BudgetArea budgetArea;
   private SelectionService selectionService;
   private CardHandler modeCard;
@@ -70,7 +66,8 @@ public class SeriesBudgetEditionPanel {
 
     modeCard = builder.addCardHandler("modeCard");
     builder.add("manual", new GotoManualAction());
-    builder.add("automatic", new GotoAutomaticAction());
+    final GotoAutomaticAction automaticAction = new GotoAutomaticAction();
+    builder.add("automatic", automaticAction);
 
     amountEditor = new AmountEditor(SeriesBudget.AMOUNT, localRepository, directory);
     builder.add("amountEditor", amountEditor.getNumericEditor());
@@ -109,13 +106,47 @@ public class SeriesBudgetEditionPanel {
           amountEditor.setBudgetArea(budgetArea);
           if (SeriesBudgetEditionPanel.this.series.get(Series.IS_AUTOMATIC)) {
             modeCard.show("automatic");
+            isAutomatic = true;
+            if (SeriesBudgetEditionPanel.this.series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
+              automaticAction.setEnabled(false);
+            }
+            else {
+              automaticAction.setEnabled(true);
+            }
           }
           else {
             modeCard.show("manual");
+            isAutomatic = false;
           }
         }
       }
     }, Series.TYPE);
+
+    localRepository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (series == null) {
+          return;
+        }
+        if (changeSet.containsChanges(series.getKey())) {
+          FieldValues previousValue = changeSet.getPreviousValue(series.getKey());
+          if (previousValue.contains(Series.PROFILE_TYPE)) {
+            if (previousValue.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
+              repository.update(series.getKey(), Series.IS_AUTOMATIC, isAutomatic);
+              if (isAutomatic) {
+                modeCard.show("automatic");
+              }
+              else {
+                modeCard.show("manual");
+              }
+            }
+            else if (series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
+              repository.update(series.getKey(), Series.IS_AUTOMATIC, false);
+              modeCard.show("manual");
+            }
+          }
+        }
+      }
+    });
 
     panel = builder.load();
   }
@@ -321,6 +352,7 @@ public class SeriesBudgetEditionPanel {
         protected void postValidate() {
           localRepository.update(series.getKey(), Series.IS_AUTOMATIC, true);
           modeCard.show("automatic");
+          isAutomatic = true;
         }
       };
       confirm.show();
@@ -335,6 +367,7 @@ public class SeriesBudgetEditionPanel {
     public void actionPerformed(ActionEvent e) {
       localRepository.update(series.getKey(), Series.IS_AUTOMATIC, false);
       modeCard.show("manual");
+      isAutomatic = false;
     }
   }
 

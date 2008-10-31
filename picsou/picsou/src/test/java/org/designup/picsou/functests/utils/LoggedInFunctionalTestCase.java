@@ -97,7 +97,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     ApplicationReset.run(repository);
     initCheckers();
-    license.enterLicense("admin", "zz", 0);
+    license.enterLicense("admin", "zz");
     selectInitialView();
   }
 

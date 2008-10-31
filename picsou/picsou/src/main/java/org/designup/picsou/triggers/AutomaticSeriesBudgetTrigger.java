@@ -17,7 +17,9 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(Series.IS_AUTOMATIC)) {
-          if (values.get(Series.IS_AUTOMATIC)) {
+          if (values.get(Series.IS_AUTOMATIC))
+          //&& !values.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) 
+          {
             updateSeriesBudget(key, repository);
           }
         }

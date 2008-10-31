@@ -1,8 +1,6 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -46,7 +44,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
         if (series == null) {
           return;
         }
-        if (series.get(Series.IS_AUTOMATIC)) {
+        if (series.get(Series.IS_AUTOMATIC) && !series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
           AutomaticSeriesBudgetTrigger.updateSeriesBudget(series.getKey(), repository);
         }
       }
@@ -55,6 +53,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
       }
     });
   }
+
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
@@ -83,6 +82,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
       toIndex = Arrays.binarySearch(monthIds, toDate);
     }
 
+    Glob currentMonth = repository.get(CurrentMonth.KEY);
     if (fromIndex >= 0 && toIndex >= 0) {
       Calendar calendar = Calendar.getInstance();
       for (int i = fromIndex; i <= toIndex; i++) {
@@ -94,7 +94,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
           repository.create(SeriesBudget.TYPE,
                             value(SeriesBudget.SERIES, seriesId),
                             value(SeriesBudget.AMOUNT,
-                                  active ? Utils.zeroIfNull(series.get(Series.INITIAL_AMOUNT)) : 0.0),
+                                  getInitialAmount(series, active)),
                             value(SeriesBudget.MONTH, monthId),
                             value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
                             value(SeriesBudget.ACTIVE, active));
@@ -103,7 +103,9 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
           repository.update(seriesBudget.getKey(),
                             value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
                             value(SeriesBudget.ACTIVE, active));
-          if (!active) {
+          if (!active ||
+              (series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId()) &&
+               seriesBudget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.MONTH_ID))) {
             repository.update(seriesBudget.getKey(), SeriesBudget.AMOUNT, 0.0);
           }
         }
@@ -115,6 +117,15 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
 
     if (series.get(Series.IS_AUTOMATIC)) {
       AutomaticSeriesBudgetTrigger.updateSeriesBudget(series.getKey(), repository);
+    }
+  }
+
+  private double getInitialAmount(Glob series, Boolean active) {
+    if (active && !series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
+      return Utils.zeroIfNull(series.get(Series.INITIAL_AMOUNT));
+    }
+    else {
+      return 0.0;
     }
   }
 

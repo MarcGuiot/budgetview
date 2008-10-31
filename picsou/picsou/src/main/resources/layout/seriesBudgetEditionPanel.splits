@@ -25,7 +25,7 @@
             </scrollPane>
             <row>
               <filler fill="horizontal"/>
-              <button action="automatic" styleClass="hyperlink"/>
+              <button action="automatic" styleClass="hyperlink" autoHideIfDisabled="true"/>
             </row>
           </column>
         </card>

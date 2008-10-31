@@ -10,8 +10,6 @@
         <textField gridPos="(1,0)" ref="mail"/>
         <label gridPos="(0,1)" text="$license.code" styleClass="formLabel"/>
         <textField gridPos="(1,1)" ref="code" columns="20"/>
-        <label gridPos="(0,2)" text="$license.month.count" styleClass="formLabel"/>
-        <textField gridPos="(1,2)" ref="monthCount"/>
       </grid>
       <progressBar ref="connectionState" visible="false"/>
       <label ref="connectionMessage"/>
