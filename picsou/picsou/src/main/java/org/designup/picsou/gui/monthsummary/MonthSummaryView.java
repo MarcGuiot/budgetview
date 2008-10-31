@@ -235,24 +235,13 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
         planned += multiplier * balanceStat.get(BalanceStat.getPlanned(budgetArea));
         remaining += multiplier * balanceStat.get(BalanceStat.getRemaining(budgetArea));
       }
-      // Pla Obs res
-      // 100 50 50
-      // 100 110 0 (-10)
-      // 200 160 50
-      // ==> 160, 200, -10 (200 - 50 - 160)
-      // ==> 160 / (160 + 200 + 50), 50 / (160 + 200 + 50), 200 / (160 + 200),
-
       amountLabel.setText(Formatting.DECIMAL_FORMAT.format(observed));
       amountLabel.setVisible(true);
       amountLabel.setBackground(Color.RED);
-      double overrunValue = multiplier * (planned - (remaining + observed));
-      if (overrunValue > 10E-6) {
-        this.plannedLabel.setText(Formatting.DECIMAL_FORMAT.format(planned + overrunValue));
-      }
-      else {
-        this.plannedLabel.setText(Formatting.DECIMAL_FORMAT.format(planned));
-      }
-      gauge.setValues(observed, planned, overrunValue);
+      double overrunPart = multiplier * (planned - (remaining + observed));
+      double adjustedPlanned = overrunPart > 10E-6 ? planned + overrunPart : planned;
+      plannedLabel.setText(Formatting.toString(adjustedPlanned));
+      gauge.setValues(observed, adjustedPlanned, overrunPart);
     }
   }
 

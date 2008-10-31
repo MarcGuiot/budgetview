@@ -1,9 +1,9 @@
-package org.designup.picsou.licence;
+package org.designup.picsou.license;
 
-import org.designup.picsou.licence.model.License;
-import org.designup.picsou.licence.model.MailError;
-import org.designup.picsou.licence.model.RepoInfo;
-import org.designup.picsou.licence.model.SoftwareInfo;
+import org.designup.picsou.license.model.License;
+import org.designup.picsou.license.model.MailError;
+import org.designup.picsou.license.model.RepoInfo;
+import org.designup.picsou.license.model.SoftwareInfo;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;

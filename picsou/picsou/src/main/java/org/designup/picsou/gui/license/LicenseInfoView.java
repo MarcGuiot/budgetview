@@ -11,18 +11,19 @@ import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Millis;
 
 import javax.swing.*;
 import java.util.Set;
 
-public class LicenceInfoView extends View {
-  private JLabel licenceInfo;
+public class LicenseInfoView extends View {
+  private JLabel licenseInfo;
 
-  public LicenceInfoView(GlobRepository repository, Directory directory) {
+  public LicenseInfoView(GlobRepository repository, Directory directory) {
     super(repository, directory);
     this.repository = repository;
     this.directory = directory;
-    licenceInfo = new JLabel();
+    licenseInfo = new JLabel();
 
     Glob userPreferences = repository.get(UserPreferences.KEY);
     update(userPreferences);
@@ -42,25 +43,25 @@ public class LicenceInfoView extends View {
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
-    builder.add("licenceMessage", licenceInfo);
+    builder.add("licenseMessage", licenseInfo);
   }
 
   private void update(Glob preferences) {
     if (preferences.get(UserPreferences.REGISTERED_USER)) {
-      licenceInfo.setVisible(false);
+      licenseInfo.setVisible(false);
     }
     else {
-      licenceInfo.setVisible(true);
-      long days = (preferences.get(UserPreferences.LAST_VALID_DAY).getTime() - TimeService.getToday().getTime())
-                  / (1000 * 60 * 60 * 24);
+      licenseInfo.setVisible(true);
+      long days =
+        (preferences.get(UserPreferences.LAST_VALID_DAY).getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
       if (days >= 1) {
-        licenceInfo.setText(Lang.get("licence.info.message", days));
+        licenseInfo.setText(Lang.get("license.info.message", days));
       }
       else if (days == 0) {
-        licenceInfo.setText(Lang.get("licence.info.last.message"));
+        licenseInfo.setText(Lang.get("license.info.last.message"));
       }
       else {
-        licenceInfo.setText(Lang.get("licence.info.end.message"));
+        licenseInfo.setText(Lang.get("license.expiration.message"));
       }
     }
   }

@@ -1,10 +1,10 @@
-package org.designup.picsou.licence.servlet;
+package org.designup.picsou.license.generator;
 
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 
-public class LicenceGenerator {
+public class LicenseGenerator {
   public static byte[] privateKey = {
     48, -126, 1, 75, 2, 1, 0, 48, -126, 1, 44, 6, 7, 42, -122, 72, -50, 56, 4, 1, 48,
     -126, 1, 31, 2, -127, -127, 0, -3, 127, 83, -127, 29, 117, 18, 41, 82, -33, 74,

@@ -836,7 +836,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     });
   }
 
-  public void testAutomatique() throws Exception {
+  public void testAutomaticBudget() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -20., "Auchan")
@@ -907,7 +907,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked(10, 2, 6)
       .toggleMonth(3)
       .checkMonthIsChecked(3, 7, 11);
-
   }
 
   public void testSwitchBetweenSeries() throws Exception {
@@ -1180,7 +1179,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkAmountIsDisable();
   }
 
-  public void testAutomatiqueAndManual() throws Exception {
+  public void testAutomaticAndManual() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/28", -30., "EAU")
@@ -1396,7 +1395,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testChangeBudgetAmountWhileInOverBurn() throws Exception {
+  public void testChangeBudgetAmountWhileInOverrun() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/08/28", 5000., "Complement")

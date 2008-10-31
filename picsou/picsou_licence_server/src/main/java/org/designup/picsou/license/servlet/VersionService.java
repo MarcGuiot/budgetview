@@ -1,4 +1,4 @@
-package org.designup.picsou.licence.servlet;
+package org.designup.picsou.license.servlet;
 
 public class VersionService {
   private Long jarVersion = 0L;

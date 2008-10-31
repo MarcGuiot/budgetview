@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.model.*;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -20,7 +20,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public abstract class AbstractSeriesComponentFactory implements RepeatComponentFactory<Glob> {
-  protected JToggleButton invisibleToggle;
+  protected JRadioButton invisibleSelector;
   protected ButtonGroup buttonGroup = new ButtonGroup();
 
   protected GlobListStringifier seriesStringifier;
@@ -35,11 +35,13 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
 
   protected GlobList currentTransactions = GlobList.EMPTY;
 
-  public AbstractSeriesComponentFactory(JToggleButton invisibleToggle,
+  public AbstractSeriesComponentFactory(JRadioButton invisibleSelector,
                                         SeriesEditionDialog seriesEditionDialog,
                                         GlobRepository repository,
                                         Directory directory) {
-    this.invisibleToggle = invisibleToggle;
+    this.invisibleSelector = invisibleSelector;
+    this.buttonGroup.add(invisibleSelector);
+
     this.seriesEditionDialog = seriesEditionDialog;
     this.repository = repository;
     this.directory = directory;
@@ -57,45 +59,46 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
       }
     }, Transaction.TYPE);
 
-    this.buttonGroup.add(invisibleToggle);
   }
 
-  protected void createUpdatableCategoryToggle(final Glob category, final Key seriesKey,
-                                               String repeatToggleName, BudgetArea budgetArea,
-                                               RepeatCellBuilder cellBuilder, String toggleName) {
-    String toggleLabel = categoryStringifier.toString(category, repository);
-    final JToggleButton toggle = createSeriesToggle(toggleLabel, seriesKey, category.getKey());
+  protected void createUpdatableCategorySelector(final Glob category,
+                                                 final Key seriesKey,
+                                                 String repeatSelectorName,
+                                                 BudgetArea budgetArea,
+                                                 RepeatCellBuilder cellBuilder, String selectorName) {
+    String selectorLabel = categoryStringifier.toString(category, repository);
+    final JRadioButton selector = createSeriesSelector(selectorLabel, seriesKey, category.getKey());
     final Key key = category.getKey();
     final DefaultChangeSetListener categoryUpdateListener = new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(key)) {
           Glob category = repository.find(key);
           if (category != null) {
-            toggle.setText(categoryStringifier.toString(category, repository));
+            selector.setText(categoryStringifier.toString(category, repository));
           }
         }
       }
     };
     repository.addChangeListener(categoryUpdateListener);
-    toggle.setName(toggleName);
-    buttonGroup.add(toggle);
-    cellBuilder.add(repeatToggleName, toggle);
+    selector.setName(selectorName);
+    buttonGroup.add(selector);
+    cellBuilder.add(repeatSelectorName, selector);
 
     final CategoryUpdater updater =
-      new CategoryUpdater(toggle, invisibleToggle, seriesKey, category.getKey(), budgetArea, repository, selectionService);
+      new CategoryUpdater(selector, invisibleSelector, seriesKey, category.getKey(), budgetArea, repository, selectionService);
     cellBuilder.addDisposeListener(new Disposable() {
       public void dispose() {
         updater.dispose();
-        buttonGroup.remove(toggle);
+        buttonGroup.remove(selector);
         repository.removeChangeListener(categoryUpdateListener);
       }
     });
   }
 
-  protected JToggleButton createSeriesToggle(final String toggleLabel,
-                                             final Key seriesKey,
-                                             final Key categoryKey) {
-    return new JToggleButton(new AbstractAction(toggleLabel) {
+  protected JRadioButton createSeriesSelector(final String label,
+                                              final Key seriesKey,
+                                              final Key categoryKey) {
+    final JRadioButton selector = new JRadioButton(new AbstractAction(label) {
       public void actionPerformed(ActionEvent e) {
         try {
           repository.enterBulkDispatchingMode();
@@ -109,9 +112,11 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
         }
       }
     });
+    buttonGroup.add(selector);
+    return selector;
   }
 
-  protected class EditSeriesAction extends AbstractAction  {
+  protected class EditSeriesAction extends AbstractAction {
 
     private Key seriesKey;
 

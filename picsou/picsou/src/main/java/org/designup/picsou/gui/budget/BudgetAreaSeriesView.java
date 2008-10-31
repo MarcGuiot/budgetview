@@ -6,7 +6,6 @@ import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
-import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.EditSeriesAction;
@@ -112,33 +111,23 @@ public class BudgetAreaSeriesView extends View {
 
     Glob currentMonth = repository.get(CurrentMonth.KEY);
 
-    double overrunValue = 0;
+    double overrunPart = 0;
     for (Glob balanceStat : repository.getAll(BalanceStat.TYPE,
                                               GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds))) {
       observed += multiplier * balanceStat.get(BalanceStat.getObserved(budgetArea));
       planned += multiplier * balanceStat.get(BalanceStat.getPlanned(budgetArea));
       remaining += multiplier * balanceStat.get(BalanceStat.getRemaining(budgetArea));
       if (balanceStat.get(BalanceStat.MONTH) >= currentMonth.get(CurrentMonth.MONTH_ID)) {
-        overrunValue += multiplier * (planned - (remaining + observed));
+        overrunPart += multiplier * (planned - (remaining + observed));
       }
     }
-    // Pla Obs res
-    // 100 50 50
-    // 100 110 0 (-10)
-    // 200 160 50
-    // ==> 160, 200, -10 (200 - 50 - 160)
-    // ==> 160 / (160 + 200 + 50), 50 / (160 + 200 + 50), 200 / (160 + 200),
-    amountLabel.setText(ForcedPlusGlobListStringifier.toString(Formatting.DECIMAL_FORMAT.format(observed), budgetArea));
+    amountLabel.setText(ForcedPlusGlobListStringifier.toString(observed, budgetArea));
     amountLabel.setVisible(true);
     amountLabel.setBackground(Color.RED);
-    if (overrunValue > 10E-6) {
-      this.plannedLabel.setText(ForcedPlusGlobListStringifier.toString(Formatting.DECIMAL_FORMAT.format(planned + overrunValue), budgetArea));
-    }
-    else {
-      this.plannedLabel.setText(ForcedPlusGlobListStringifier.toString(Formatting.DECIMAL_FORMAT.format(planned), budgetArea));
-    }
-    gauge.setValues(observed, planned, overrunValue);
 
+    double adjustedPlanned = overrunPart > 10E-6 ? planned + overrunPart : planned;
+    plannedLabel.setText(ForcedPlusGlobListStringifier.toString(adjustedPlanned, budgetArea));
+    gauge.setValues(observed, planned, overrunPart);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {

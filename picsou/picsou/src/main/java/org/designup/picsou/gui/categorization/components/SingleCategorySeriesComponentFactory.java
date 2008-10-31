@@ -14,46 +14,43 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 
 public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponentFactory {
-  private ButtonGroup seriesGroup = new ButtonGroup();
 
-  public SingleCategorySeriesComponentFactory(JToggleButton invisibleToggle, SeriesEditionDialog seriesEditionDialog,
+  public SingleCategorySeriesComponentFactory(JRadioButton invisibleSelector, SeriesEditionDialog seriesEditionDialog,
                                               GlobRepository localRepository, Directory directory) {
-    super(invisibleToggle, seriesEditionDialog, localRepository, directory);
-    seriesGroup.add(invisibleToggle);
+    super(invisibleSelector, seriesEditionDialog, localRepository, directory);
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
     String seriesLabel = seriesStringifier.toString(new GlobList(series), repository);
     final Key seriesKey = series.getKey();
     final Key categoryKey = series.getTargetKey(Series.DEFAULT_CATEGORY);
-    final JToggleButton toggle = createSeriesToggle(seriesLabel, seriesKey, categoryKey);
+    final JRadioButton selector = createSeriesSelector(seriesLabel, seriesKey, categoryKey);
 
     final DefaultChangeSetListener seriesUpdateListener = new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(seriesKey)) {
           Glob series = repository.find(seriesKey);
           if (series != null) {
-            toggle.setText(seriesStringifier.toString(new GlobList(series), repository));
+            selector.setText(seriesStringifier.toString(new GlobList(series), repository));
           }
         }
         if (changeSet.containsChanges(Transaction.TYPE)) {
           GlobList transactions = selectionService.getSelection(Transaction.TYPE);
-          updateToggle(transactions, toggle, seriesKey);
+          updateSelector(selector, transactions, seriesKey);
         }
       }
     };
     repository.addChangeListener(seriesUpdateListener);
-    seriesGroup.add(toggle);
 
     final GlobSelectionListener listener = new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         GlobList transactions = selection.getAll(Transaction.TYPE);
-        updateToggle(transactions, toggle, seriesKey);
+        updateSelector(selector, transactions, seriesKey);
       }
     };
     selectionService.addListener(listener, Transaction.TYPE);
 
-    cellBuilder.add("seriesToggle", toggle);
+    cellBuilder.add("seriesToggle", selector);
 
     JButton editSeriesButton = new JButton(new EditSeriesAction(seriesKey));
     editSeriesButton.setName("editSeries:" + seriesLabel);
@@ -63,24 +60,31 @@ public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponen
       public void dispose() {
         repository.removeChangeListener(seriesUpdateListener);
         selectionService.removeListener(listener);
-        seriesGroup.remove(toggle);
+        buttonGroup.remove(selector);
       }
     });
 
-    updateToggle(selectionService.getSelection(Transaction.TYPE), toggle, seriesKey);
+    updateSelector(selector, selectionService.getSelection(Transaction.TYPE), seriesKey);
   }
 
-  private void updateToggle(GlobList transactions, JToggleButton toggle, Key seriesKey) {
+  private void updateSelector(JToggleButton selector, GlobList transactions, Key seriesKey) {
     if (transactions.size() != 1) {
       return;
     }
-    Glob transaction = transactions.get(0);
-    Glob transactionSeries = repository.findLinkTarget(transaction, Transaction.SERIES);
-    if (!Series.UNCATEGORIZED_SERIES_ID.equals(transactionSeries.get(Series.ID))) {
-      toggle.setSelected(transactionSeries.getKey().equals(seriesKey));
+
+    Glob selectorSeries = repository.find(seriesKey);
+    if (selectorSeries == null) {
+      return;
+    }
+
+    Glob transactionSeries = repository.findLinkTarget(transactions.get(0), Transaction.SERIES);
+    if (transactionSeries.get(Series.BUDGET_AREA).equals(selectorSeries.get(Series.BUDGET_AREA)) &&
+        !Series.UNCATEGORIZED_SERIES_ID.equals(transactionSeries.get(Series.ID))) {
+      boolean select = transactionSeries.getKey().equals(seriesKey);
+      selector.setSelected(select);
     }
     else {
-      invisibleToggle.setSelected(true);
+      invisibleSelector.setSelected(true);
     }
   }
 }

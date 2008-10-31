@@ -32,8 +32,8 @@ public class ConfigService {
   private static final Pattern FILTER = Pattern.compile(PicsouApplication.APPNAME + "[0-9][0-9]*" + "\\.jar");
 
 
-  public static final String COM_PICSOU_LICENCE_URL = "com.picsou.licence.url";
-  public static final String COM_PICSOU_LICENCE_FTP_URL = "com.picsou.licence.ftp.url";
+  public static final String COM_PICSOU_LICENSE_URL = "com.picsou.license.url";
+  public static final String COM_PICSOU_LICENSE_FTP_URL = "com.picsou.license.ftp.url";
   public static final String HEADER_MAIL = "mail";
   public static final String HEADER_SIGNATURE = "signature";
   public static final String HEADER_IS_VALIDE = "isValide";
@@ -73,8 +73,8 @@ public class ConfigService {
   public ConfigService(String applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {
     this.currentConfigFile = currentConfigFile;
     Utils.beginRemove();
-    URL = System.getProperty(COM_PICSOU_LICENCE_URL);
-    FTP_URL = System.getProperty(COM_PICSOU_LICENCE_FTP_URL);
+    URL = System.getProperty(COM_PICSOU_LICENSE_URL);
+    FTP_URL = System.getProperty(COM_PICSOU_LICENSE_FTP_URL);
     Utils.endRemove();
     this.applicationVersion = applicationVersion;
     localJarVersion = jarVersion;

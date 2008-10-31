@@ -69,6 +69,11 @@
         underline="false" rolloverColor="title.help.rollover"/>
     <style selector="button.help" ui="helpButton" font="-,plain,11" foreground="title.help"/>
 
+    <style selector="#licenseMessage"
+           opaque="false" foreground="license.message" font="-,plain,14"
+           fill="horizontal" horizontalAlignment="left"
+           marginBottom="20"/>
+
   </styles>
 
   <panel styleClass="main" ui="wave">
@@ -101,23 +106,28 @@
       <cards ref="mainCards" opaque="false" marginTop="20" weightY="10.0">
 
         <card name="home">
-          <horizontalSplit>
-            <column>
-              <panel ref="accountView" minimumSize="(250,200)" preferredSize="(300,350)"/>
-              <panel ref="infoView" minimumSize="(250,100)" preferredSize="(300,100)"/>
-              <filler fill="vertical"/>
-            </column>
+          <column>
+            <horizontalSplit>
+              <column>
+                <panel ref="accountView" minimumSize="(250,200)" preferredSize="(300,350)"/>
+                <panel ref="infoView" minimumSize="(250,100)" preferredSize="(300,100)"/>
+                <filler fill="vertical"/>
+              </column>
 
-            <column>
-              <panel ref="monthSummaryView" minimumSize="(300,360)" preferredSize="(350,430)"/>
-              <filler fill="vertical"/>
-            </column>
+              <column>
+                <panel ref="monthSummaryView" minimumSize="(300,360)" preferredSize="(350,430)"/>
+                <filler fill="vertical"/>
+              </column>
 
-            <column>
-              <panel ref="balanceSummaryView" minimumSize="(250,200)" preferredSize="(300,380)"/>
-              <filler fill="vertical"/>
-            </column>
-          </horizontalSplit>
+              <column>
+                <panel ref="balanceSummaryView" minimumSize="(250,200)" preferredSize="(300,380)"/>
+                <filler fill="vertical"/>
+              </column>
+            </horizontalSplit>
+
+            <label ref="licenseMessage"/>
+
+          </column>
         </card>
 
         <card name="categorization">
@@ -188,9 +198,7 @@
         </card>
 
       </cards>
-      <row>
-        <label ref="licenceMessage" opaque="false" horizontalAlignment="center" weightY="0" fill="vertical"/>
-      </row>
+
     </column>
 
   </panel>

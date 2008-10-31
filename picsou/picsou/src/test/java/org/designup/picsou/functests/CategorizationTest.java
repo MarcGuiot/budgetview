@@ -189,6 +189,27 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkRecurringSeriesIsSelected("Internet");
   }
 
+  public void testSelectingASeriesInABudgetAreaUnselectsPreviousSeriesInOtherBudgetAreas() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -59.90, "France Telecom")
+      .load();
+
+    views.selectCategorization();
+    categorization.setRecurring("France Telecom", "Telephone", MasterCategory.TELECOMS, true);
+    categorization.checkRecurringSeriesIsSelected("Telephone");
+
+    categorization.selectEnvelopes();
+    categorization.setEnvelope("France Telecom", "Phone", MasterCategory.TELECOMS, true);
+    
+    categorization.selectRecurring();
+    categorization.checkRecurringSeriesIsNotSelected("Telephone");
+    categorization.setRecurring("France Telecom", "Telephone", MasterCategory.TELECOMS, false);
+
+    categorization.selectEnvelopes();
+    categorization.checkEnvelopeSeriesNotSelected("Phone", MasterCategory.TELECOMS);
+  }
+
   public void testRevertingTransactionsToUncategorized() throws Exception {
     OfxBuilder
       .init(this)

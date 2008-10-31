@@ -51,7 +51,7 @@
     <style selector="button.iconOnly" weightX="0"
            text="" opaque="false" borderPainted="false"/>
 
-    <style selector="button.editIcon" marginLeft="5" weightX="0"
+    <style selector="button.editIcon" marginLeft="5" weightX="0" cursor='hand'
            icon="magnifier_small.png" rolloverIcon="magnifier_rollover.png" pressedIcon="magnifier_rollover.png"
            preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
 
@@ -217,35 +217,17 @@
            triangleSignColor="gauge.detail.triangle.sign"/>
 
     <!-- Selection toggles -->
-    <ui name="budgetAreaSelectionToggle"
-        class="org.designup.picsou.gui.components.SelectionToggleUI"
-        useBold="true"
-        bottomColor="toggle.selector.bg.bottom"
-        topColor="toggle.selector.bg.top"
-        borderColor="toggle.selector.bg.border"
-        rolloverTextColor="toggle.selector.rollover"
-        disabledTextColor="toggle.selector.disabled"/>
     <style selector="toggleButton.budgetAreaSelector"
-           ui="budgetAreaSelectionToggle" foreground="toggle.selector.normal" font="-,plain,12"
+           foreground="toggle.selector.normal" font="-,plain,12"
            marginRight="2" fill="horizontal" anchor="center" weightY="0"/>
-
-
-    <ui name="selectionToggle"
-        class="org.designup.picsou.gui.components.SelectionToggleUI"
-        bottomColor="toggle.selector.bg.bottom"
-        topColor="toggle.selector.bg.top"
-        borderColor="toggle.selector.bg.border"
-        rolloverTextColor="toggle.selector.rollover"
-        disabledTextColor="toggle.selector.disabled"/>
-    <style selector="toggleButton.selector"
-           ui="selectionToggle" foreground="toggle.selector.normal" font="-,plain,12"
+    <style selector="radioButton.selector"
+           foreground="toggle.selector.normal" font="-,plain,12" cursor='hand'
            marginRight="2" fill="none" anchor="center" weightY="0"/>
-    <style selector="toggleButton.masterCategorySelector"
-           ui="selectionToggle"
-           foreground="toggle.selector.categories.master"
-           fill="none" anchor="west" font="-,bold,12"/>
-    <style selector="toggleButton.subCategorySelector"
-           ui="selectionToggle" foreground="toggle.selector.categories.sub"
+    <style selector="radioButton.masterCategorySelector"
+           foreground="toggle.selector.categories.master" cursor='hand'
+           fill="none" anchor="west" font="-,bold,13"/>
+    <style selector="radioButton.subCategorySelector"
+           foreground="toggle.selector.categories.sub" cursor='hand'
            font="-,plain,10" fill="none" anchor="west"/>
 
     <!-- Split panes -->

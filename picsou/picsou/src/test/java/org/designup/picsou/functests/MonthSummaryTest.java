@@ -215,6 +215,38 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkTotal(1420 + 1500 - 1529.90 - 80 - 10 - 10);
   }
 
+  public void testOccasionalIsTakenIntoAccountWhenComputingFuturePosition() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "0001234", 500, "2008/08/15")
+      .addTransaction("2008/07/05", 1000, "WorldCo")
+      .addTransaction("2008/07/15", -100, "SAPN")
+      .addTransaction("2008/08/05", 1000, "WorldCo")
+      .addTransaction("2008/08/15", -25, "FNAC")
+      .load();
+
+    views.selectCategorization();
+    categorization.setIncome("WorldCo", "Salary", true);
+    categorization.setOccasional("SAPN", MasterCategory.EQUIPMENT);
+    categorization.setOccasional("FNAC", MasterCategory.EQUIPMENT);
+
+    views.selectHome();
+    timeline.selectMonth("2008/07");
+    monthSummary
+      .total(1000, 100)
+      .checkOccasional(100, 100);
+    balanceSummary
+      .checkOccasional(0)
+      .checkTotal((500 - 75) - (1000 - 100));
+
+    timeline.selectMonth("2008/08");
+    monthSummary
+      .total(1000, 100)
+      .checkOccasional(25, 100);
+    balanceSummary
+      .checkOccasional(-75)
+      .checkTotal(500 - 75);
+  }
+
   public void testUncategorized() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "MyCompany")

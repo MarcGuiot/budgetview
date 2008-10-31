@@ -11,19 +11,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class LicenceExpirationDialog {
+public class LicenseExpirationDialog {
   private PicsouDialog dialog;
-  private JLabel message;
 
-  public LicenceExpirationDialog(Window parent, GlobRepository repository, Directory directory) {
+  public LicenseExpirationDialog(Window parent, GlobRepository repository, Directory directory) {
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/licenseExpirationDialog.splits",
                                                       repository, directory);
-    message = new JLabel();
-    builder.add("expirationMessage", message);
     dialog = PicsouDialog.createWithButton(parent, builder.<JPanel>load(), new ValidateAction(), directory);
-    dialog.setTitle(Lang.get("license.expiration.title"));
-    message.setText(Lang.get("license.expiration.message"));
     dialog.pack();
   }
 
@@ -31,7 +26,6 @@ public class LicenceExpirationDialog {
     GuiUtils.center(dialog);
     dialog.setVisible(true);
   }
-
 
   private class ValidateAction extends AbstractAction {
     private ValidateAction() {

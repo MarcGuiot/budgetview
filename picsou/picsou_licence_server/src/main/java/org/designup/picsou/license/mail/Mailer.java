@@ -1,7 +1,7 @@
-package org.designup.picsou.licence.mail;
+package org.designup.picsou.license.mail;
 
 import org.designup.picsou.licence.Lang;
-import org.designup.picsou.licence.model.License;
+import org.designup.picsou.license.model.License;
 import org.globsframework.model.Glob;
 
 import javax.mail.Message;
@@ -13,12 +13,12 @@ import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
 
-public class Mailler {
+public class Mailer {
   private int port = 25;
   private String host = "localhost";
   private String fromAdress = "picsou@noreply.com";
 
-  public Mailler() {
+  public Mailer() {
   }
 
   public void setPort(int port) {
@@ -32,18 +32,18 @@ public class Mailler {
   public void sendRequestLicence(String to, String lang) throws MessagingException {
     try {
       sendMail(to, fromAdress,
-               Lang.get("request.licence.subject", lang),
-               Lang.get("request.licence.message", lang));
+               Lang.get("request.license.subject", lang),
+               Lang.get("request.license.message", lang));
     }
     catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  public void sendExistingLicence(Glob licence, String lang) {
+  public void sendExistingLicense(Glob licence, String lang) {
     try {
-      sendMail(licence.get(License.MAIL), fromAdress, Lang.get("resend.licence.subject", lang),
-               Lang.get("resend.licence.message", lang));
+      sendMail(licence.get(License.MAIL), fromAdress, Lang.get("resend.license.subject", lang),
+               Lang.get("resend.license.message", lang));
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -52,21 +52,25 @@ public class Mailler {
 
   public boolean sendNewLicense(String mail, String code, String lang) {
     try {
-      sendMail(mail, fromAdress, Lang.get("new.licence.subject", lang),
-               Lang.get("new.licence.message", lang, code));
+      sendMail(mail, fromAdress, Lang.get("new.license.subject", lang),
+               Lang.get("new.license.message", lang, code));
       return true;
     }
     catch (Exception e) {
       e.printStackTrace();
       return false;
     }
+
   }
 
   private void sendMail(String to, String from, String subjet, String content) throws MessagingException {
+
     Properties mailProperties = new Properties();
     mailProperties.setProperty("mail.smtp.host", host);
     mailProperties.setProperty("mail.smtp.port", Integer.toString(port));
+
     Session session = Session.getDefaultInstance(mailProperties);
+
     MimeMessage message = new MimeMessage(session);
     message.setFrom(new InternetAddress(from));
     message.setSubject(subjet);
@@ -75,4 +79,5 @@ public class Mailler {
     message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
     Transport.send(message);
   }
+
 }

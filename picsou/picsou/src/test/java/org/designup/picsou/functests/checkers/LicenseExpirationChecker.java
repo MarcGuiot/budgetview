@@ -6,11 +6,11 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class LicenceExpirationChecker extends DataChecker {
+public class LicenseExpirationChecker extends DataChecker {
   private Window window;
 
 
-  public LicenceExpirationChecker(Trigger trigger) {
+  public LicenseExpirationChecker(Trigger trigger) {
     window = WindowInterceptor.getModalDialog(trigger);
     TextBox box = window.getTextBox("expirationMessage");
     UISpecAssert.assertFalse(box.textIsEmpty());
