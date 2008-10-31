@@ -16,6 +16,7 @@ public class Gauge extends JPanel {
 
   private double actualValue;
   private double targetValue;
+  private double overrunPart = 0;
 
   private double fillPercent = 0;
   private double overrunPercent = 0;
@@ -41,7 +42,6 @@ public class Gauge extends JPanel {
   private static final int BAR_HEIGHT = 10;
   private static final float TRIANGLE_HEIGHT = 16f;
   private static final float TRIANGLE_WIDTH = 16f;
-  private double overrunValue;
 
   public Gauge() {
     this(true, true, true);
@@ -65,31 +65,27 @@ public class Gauge extends JPanel {
     repaint();
   }
 
-  public void setValues(double actualValue, double targetValue, double overrunValue) {
-    if (overrunValue < 10E-6) {
+  public void setValues(double actualValue, double targetValue, double overrunPart) {
+    if ((overrunPart < 10E-6) || (actualValue > targetValue)) {
       setValues(actualValue, targetValue);
+      return;
     }
-    else {
-      this.actualValue = actualValue - overrunValue;
-      this.targetValue = targetValue;
-      this.overrunValue = overrunValue;
-      if (actualValue > targetValue + 1.) {
-        fillPercent = targetValue / actualValue;
-        overrunPercent = 1 - fillPercent;
-        emptyPercent = 0.;
-      }
-      else {
-        fillPercent = Math.abs(actualValue / targetValue);
-        overrunPercent = Math.abs(overrunValue / targetValue);
-        emptyPercent = 1 - overrunPercent - fillPercent;
-      }
-      overrunError = true;
-      warningShown = overrunError && showWarningForErrors;
-      setToolTip("gauge.partial.overrun." + (overrunIsAnError ? "error" : "ok"),
-                 targetValue - actualValue + overrunValue, Math.abs(overrunValue));
 
-      repaint();
-    }
+    this.actualValue = actualValue;
+    this.targetValue = targetValue;
+    this.overrunPart = overrunPart;
+
+    double fillValue = actualValue - overrunPart;
+    fillPercent = Math.abs(fillValue / targetValue);
+    overrunPercent = Math.abs(overrunPart / targetValue);
+    emptyPercent = 1 - overrunPercent - fillPercent;
+    overrunError = overrunIsAnError;
+    warningShown = overrunError && showWarningForErrors;
+    double remainingValue = targetValue - actualValue;
+    setToolTip("gauge.partial.overrun." + (overrunIsAnError ? "error" : "ok"),
+               remainingValue, Math.abs(overrunPart));
+
+    repaint();
   }
 
   private void updateValues() {
@@ -285,6 +281,10 @@ public class Gauge extends JPanel {
 
   public double getTargetValue() {
     return targetValue;
+  }
+
+  public double getOverrunPart() {
+    return overrunPart;
   }
 
   public double getFillPercent() {

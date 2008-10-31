@@ -18,6 +18,10 @@ public class ForcedPlusGlobListStringifier implements GlobListStringifier {
     return toString(listStringifier.toString(list, repository), budgetArea);
   }
 
+  public static String toString(double amount, final BudgetArea budgetArea) {
+    return toString(Formatting.DECIMAL_FORMAT.format(amount), budgetArea);
+  }
+
   public static String toString(String amount, final BudgetArea budgetArea) {
     if (!budgetArea.isIncome()) {
       if (amount.startsWith("-")) {

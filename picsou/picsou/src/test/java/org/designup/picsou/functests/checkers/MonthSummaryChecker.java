@@ -84,8 +84,8 @@ public class MonthSummaryChecker extends DataChecker {
     return this;
   }
 
-  public MonthSummaryChecker checkEnvelope(double amount, double planned, double overburn) {
-    checkBudgetArea(BudgetArea.ENVELOPES, amount, planned, overburn);
+  public MonthSummaryChecker checkEnvelope(double amount, double planned, double overrunPart) {
+    checkBudgetArea(BudgetArea.ENVELOPES, amount, planned, overrunPart);
     return this;
   }
 
@@ -120,10 +120,10 @@ public class MonthSummaryChecker extends DataChecker {
     checkGauge(budgetArea, amount, planned);
   }
 
-  private void checkBudgetArea(BudgetArea budgetArea, double amount, double planned, double overburn) {
+  private void checkBudgetArea(BudgetArea budgetArea, double amount, double planned, double overrun) {
     check(budgetArea, amount);
     checkPlanned(budgetArea, planned);
-    checkGauge(budgetArea, amount, planned, overburn);
+    checkGauge(budgetArea, amount, planned, overrun);
   }
 
   public void gotoTransactions(BudgetArea budgetArea) {
@@ -133,26 +133,25 @@ public class MonthSummaryChecker extends DataChecker {
 
   private void check(BudgetArea budgetArea, double amount) {
     Button button = getPanel().getButton(budgetArea.getName() + ":budgetAreaAmount");
-//    System.out.println("MonthSummaryChecker.check " + button.getLabel());
     assertThat(button.textEquals(MonthSummaryChecker.this.toString(amount)));
   }
 
   private void checkPlanned(BudgetArea budgetArea, double amount) {
     TextBox textBox = getPanel().getTextBox(budgetArea.getName() + ":budgetAreaPlannedAmount");
-//    System.out.println("MonthSummaryChecker.checkPlanned " + textBox.getText());
     assertThat(textBox.textEquals(MonthSummaryChecker.this.toString(amount)));
   }
 
   private void checkGauge(BudgetArea budgetArea, double amount, double planned) {
-    Gauge gauge = getPanel().findSwingComponent(Gauge.class, budgetArea.getName() + ":budgetAreaGauge");
-    Assert.assertEquals(amount, gauge.getActualValue(), 0.01);
-    Assert.assertEquals(planned, gauge.getTargetValue(), 0.01);
+    GaugeChecker gauge = new GaugeChecker(getPanel(), budgetArea.getName() + ":budgetAreaGauge");
+    gauge.checkActualValue(amount);
+    gauge.checkTargetValue(planned);
   }
 
-  private void checkGauge(BudgetArea budgetArea, double amount, double planned, double overburn) {
-    Gauge gauge = getPanel().findSwingComponent(Gauge.class, budgetArea.getName() + ":budgetAreaGauge");
-    Assert.assertEquals(amount, gauge.getActualValue() - overburn, 0.01);
-    Assert.assertEquals(planned, gauge.getTargetValue() - overburn, 0.01);
+  private void checkGauge(BudgetArea budgetArea, double amount, double planned, double overrun) {
+    GaugeChecker gauge = new GaugeChecker(getPanel(), budgetArea.getName() + ":budgetAreaGauge");
+    gauge.checkActualValue(amount);
+    gauge.checkTargetValue(planned);
+    gauge.checkOverrunPart(overrun);
   }
 
   public MonthSummaryChecker total(double received, double spent) {

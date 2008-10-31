@@ -5,6 +5,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.TimeService;
 import org.globsframework.utils.Dates;
 import org.uispec4j.TextBox;
+import org.uispec4j.UISpecAdapter;
 import org.uispec4j.assertion.UISpecAssert;
 
 public class LicenseTest extends LoggedInFunctionalTestCase {
@@ -12,6 +13,10 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     super.setNotRegistered();
     super.setUp();
+  }
+
+  protected void selectInitialView() {
+    views.selectHome();
   }
 
   public void testMessage() throws Exception {
@@ -23,7 +28,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     UISpecAssert.assertFalse(box.isVisible());
   }
 
-  public void testStillOneDay() throws Exception {
+  public void testOneDayLeft() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/09/30"));
 
     // force call to update

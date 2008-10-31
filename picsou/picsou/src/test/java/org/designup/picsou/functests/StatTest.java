@@ -85,7 +85,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testOverBurnIsTakenInAccountInMonthSummaryView() throws Exception {
+  public void testOverrunIsTakenInAccountInMonthSummaryView() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/07/15", -90.00, "Auchan")
@@ -106,7 +106,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     timeline.selectMonth("2008/08");
     views.selectHome();
-    monthSummary.checkEnvelope(110, 190, -20);
+    monthSummary.checkEnvelope(110, 110 + 80, 110 - 90);
     views.selectBudget();
     budgetView.envelopes.checkTotalAmounts(-110, -190);
     views.selectData();
@@ -137,8 +137,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     monthSummary.checkBalance(200 - 80 - 170);  //-50 ==> prends en comptes les 80
   }
 
-
-  public void testWithIncomRemboursment() throws Exception {
+  public void testWithIncomReimbursement() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/01", 200.00, "Salaire")

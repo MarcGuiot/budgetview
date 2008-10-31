@@ -128,7 +128,7 @@ public class OccasionalEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testOpenEditionSelectSelectedMonth() throws Exception {
+  public void testOpenEditionSelectsSelectedMonth() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/29", -19.00, "DVD")
       .load();

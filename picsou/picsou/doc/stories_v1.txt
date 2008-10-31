@@ -7,7 +7,7 @@
 
 - Sortir le contenu des mails dans le lang_fr.properties
 
-- Serialisation des strings : voir charset
+- charset/serialisation des strings => voir compatibilite ascendante
 
 - Probleme de transaction plannifié a 0.
 
@@ -25,10 +25,23 @@
                REGIS
 ====================================
 
+- look CategoryChooserDialog
+
+- bouton "annuler filtrage"
+
+- initialisation userPrefs show_xxx_message
+
+- jauges
+
+- pb occasional Severine
+
 
 ====================================
                RESTE
 ====================================
+
+- BudgetAreaSeriesView : quand on a des overrun partiels, on met a jour le planned en consequence, mais alors
+ce n'est plus vraiment un "planned" => trouver un moyen de le rendre clair pour l'utilisateur
 
 - Creation de compte
 
@@ -41,12 +54,6 @@
 - Gestion des licences : check mensuel ?
 
 - saisie balance : maj date
-
-- bug: l'aide s'ouvre sous SeriesWizardDialog sous Linux ?
-  ==> Elle ne s'ouvre pas vraiement desous mais elle a un comportement bizarre et on ne peux pas cliquer dedans.
-  (corrige ? a reverifier - regis)
-
-- BudgetView : Mettre en rouge les depassements
 
 - TransactionView : Afficher la somme (total ou multi-selection)
 
@@ -75,13 +82,9 @@
 
 - Voir message dans l'appli si pb licence et reenvoi de mail
 
-- Retirer choix du nombre de mois dans la fenetre de licence (voir tests)
-
 - Backup/restore (fonctionnel precis a definir ensemble)
 
 - supprimer mode "selectionner automatiquement les operations suivantes" ?
-
-- budgetView: pouvoir cliquer sur les montants attendus ? (comportement a definir)
 
 - categorizationGauge : mettre un tooltip avec le nombre de transactions non classees
 

@@ -135,10 +135,34 @@ public class GaugeTest extends TestCase {
       .checkWarningNotShown();
   }
 
-  public void testForOverrun() throws Exception {
+  public void testPartialOverrun() throws Exception {
     init(true, false, false)
-      .set(10, 20, 5);
-//      .checkEmpty()
+      .set(10.0, 20.0, 3.0)
+      .checkFill((10.0 - 3.0) / 20.0)
+      .checkOverrun(3.0 / 20.0, true)
+      .checkEmpty(10.0 / 20.0)
+      .checkTooltip("<html>" +
+                    "<p>Remainder: 10.00</p>" +
+                    "<p>Overrun: 3.00</p>" +
+                    "</html>");
+
+    init(false, false, false)
+      .set(10.0, 20.0, 3.0)
+      .checkFill((10.0 - 3.0) / 20.0)
+      .checkOverrun(3.0 / 20.0, false)
+      .checkEmpty(10.0 / 20.0)
+      .checkTooltip("<html>" +
+                    "<p>Remainder: 10.00</p>" +
+                    "<p>Extra: 3.00</p>" +
+                    "</html>");
+  }
+
+  public void testPartialOverrunIsIgnoredIfActualGreatedThanTarget() throws Exception {
+    init(true, false, false)
+      .set(40.0, 20.0, 5.0)
+      .checkFill(0.5)
+      .checkOverrun(0.5, true)
+      .checkEmpty(0);
   }
 
   private GaugeChecker init() {
