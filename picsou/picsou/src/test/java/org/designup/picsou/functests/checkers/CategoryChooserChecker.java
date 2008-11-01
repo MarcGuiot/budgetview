@@ -2,7 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
-import org.uispec4j.ToggleButton;
+import org.uispec4j.CheckBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
@@ -30,14 +30,14 @@ public class CategoryChooserChecker extends DataChecker {
   }
 
   public CategoryChooserChecker selectCategory(String categoryName) {
-    ToggleButton button = window.getToggleButton(categoryName);
+    CheckBox button = window.getCheckBox(categoryName);
     button.select();
     assertThat(button.isSelected());
     return this;
   }
 
   public CategoryChooserChecker unselectCategory(String categoryName) {
-    ToggleButton button = window.getToggleButton(categoryName);
+    CheckBox button = window.getCheckBox(categoryName);
     button.unselect();
     assertFalse(button.isSelected());
     return this;
@@ -49,7 +49,7 @@ public class CategoryChooserChecker extends DataChecker {
   }
 
   public static void selectCategory(Window dialog, String categoryName, boolean oneSelection) {
-    dialog.getToggleButton(categoryName).click();
+    dialog.getCheckBox(categoryName).click();
     if (!oneSelection) {
       dialog.getButton("ok").click();
     }
@@ -58,7 +58,7 @@ public class CategoryChooserChecker extends DataChecker {
 
   public CategoryChooserChecker checkContains(String... expectedCategories) {
     for (String expectedCategory : expectedCategories) {
-      Assert.assertNotNull(window.getToggleButton(expectedCategory));
+      Assert.assertNotNull(window.getCheckBox(expectedCategory));
     }
     return this;
   }
@@ -67,7 +67,7 @@ public class CategoryChooserChecker extends DataChecker {
   public void checkNotFound(MasterCategory... masters) {
     for (MasterCategory master : masters) {
       UISpecAssert.assertFalse(
-        window.containsComponent(and(fromClass(JToggleButton.class),
+        window.containsComponent(and(fromClass(JCheckBox.class),
                                      displayedNameIdentity(getCategoryName(master)))
         )
       );
@@ -76,14 +76,14 @@ public class CategoryChooserChecker extends DataChecker {
 
   public CategoryChooserChecker checkSelected(MasterCategory... category) {
     for (MasterCategory masterCategory : category) {
-      assertThat(getCategoryName(masterCategory) + " not selected.", window.getToggleButton(getCategoryName(masterCategory)).isSelected());
+      assertThat(getCategoryName(masterCategory) + " not selected.", window.getCheckBox(getCategoryName(masterCategory)).isSelected());
     }
     return this;
   }
 
   public CategoryChooserChecker checkUnselected(MasterCategory... category) {
     for (MasterCategory masterCategory : category) {
-      assertFalse(getCategoryName(masterCategory) + " not unselected.", window.getToggleButton(getCategoryName(masterCategory)).isSelected());
+      assertFalse(getCategoryName(masterCategory) + " not unselected.", window.getCheckBox(getCategoryName(masterCategory)).isSelected());
     }
     return this;
   }
@@ -91,7 +91,7 @@ public class CategoryChooserChecker extends DataChecker {
 
   public void checkExcluded(String categoryName) {
     UISpecAssert.assertFalse(
-      window.containsComponent(and(fromClass(JToggleButton.class),
+      window.containsComponent(and(fromClass(JCheckBox.class),
                                    displayedNameIdentity(categoryName))
       )
     );

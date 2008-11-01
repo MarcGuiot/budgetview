@@ -28,16 +28,16 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
 
   public void enterMonth(int monthId) {
     String month = Month.getFullLabel(monthId);
-    if (!repository.contains(Transaction.TYPE)) {
+    Double position = panel.getPosition(monthId);
+    if (!repository.contains(Transaction.TYPE) || (position == null)) {
       panel.setToolTipText(Lang.get("timeView.tooltip.month.noData", month));
       return;
     }
 
     Glob balanceStat = repository.get(Key.create(BalanceStat.TYPE, monthId));
     Double balance = balanceStat.get(BalanceStat.MONTH_BALANCE);
-    Double position = balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
-
-    Color color = colors.getAmountColor(panel.getPosition(monthId) - panel.getPositionLimit(monthId));
+    double positionLimit = panel.getPositionLimit(monthId);
+    Color color = colors.getAmountColor(position - positionLimit);
     panel.setToolTipText(
       Lang.get("timeView.tooltip.month.standard",
                month,

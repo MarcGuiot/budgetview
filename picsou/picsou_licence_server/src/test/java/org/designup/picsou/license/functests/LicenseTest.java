@@ -104,7 +104,7 @@ public class LicenseTest extends LicenseTestCase {
     loginChecker.logUser("user", "passw@rd");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     OperationChecker operations = new OperationChecker(window);
-    operations.getPreferences().changeFutureMonth(3).validate();
+    operations.getPreferences().changeFutureMonth(3);
     checkLicenseExpiration();
   }
 

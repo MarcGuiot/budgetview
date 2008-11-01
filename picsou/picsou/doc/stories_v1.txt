@@ -23,15 +23,11 @@
                REGIS
 ====================================
 
-- look CategoryChooserDialog
-
-- bouton "annuler filtrage"
-
-- initialisation userPrefs show_xxx_message
-
 - pb occasional Severine
 
 - tooltips jauges / overrun partiels
+
+- bouton "annuler filtrage"
 
 - message budgetView/special + aide
 
