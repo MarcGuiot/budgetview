@@ -1,9 +1,11 @@
 package org.designup.picsou.gui.time;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.time.selectable.ChainedSelectableElement;
-import org.designup.picsou.gui.time.selectable.Selectable;
-import org.designup.picsou.gui.time.selectable.TransformationAdapter;
+import org.designup.picsou.gui.time.selectable.AbstractSelectable;
+import org.designup.picsou.gui.time.selectable.*;
+import org.designup.picsou.gui.time.selectable.DefaultCompositeSelectable;
+import org.designup.picsou.gui.time.utils.TimeViewColors;
+import org.designup.picsou.gui.time.utils.MonthFontMetricInfo;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 
@@ -11,40 +13,38 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 
-public class YearGraph extends DefaultCompositeComponent {
+public class YearGraph extends DefaultCompositeSelectable {
+
   private int year;
-  private MonthViewColors colors;
+
+  private TimeViewColors colors;
   private int yearCellHeight;
   private int yearWidth;
   private int shortYearWidth;
   private String yearText;
   private String shortYearText;
-  private MonthGraph[] monthsGraph;
+  private MonthGraph[] monthGraphs;
+  private int monthHeight;
+
   public static final int HEIGHT = 6;
   public static final int VERTICAL_MARGIN = 8;
   private static final int BALANCE_HEIGHT = 4;
-  private boolean isFirstYear;
-  private boolean isLastYear;
-  private int monthHeight;
-  private BalancesProvider balancesProvider;
 
   public YearGraph(boolean isFirstYear, boolean isLastYear, int year, java.util.List<Glob> months,
-                   MonthViewColors colors, ChainedSelectableElement monthElement,
-                   ChainedSelectableElement yearElement, TimeService timeService, BalancesProvider balancesProvider) {
+                   TimeViewColors colors, ChainedSelectableElement monthElement,
+                   ChainedSelectableElement yearElement, TimeService timeService,
+                   PositionProvider positionProvider) {
     super(monthElement, yearElement);
-    this.isFirstYear = isFirstYear;
-    this.isLastYear = isLastYear;
     this.year = year;
     this.colors = colors;
-    this.balancesProvider = balancesProvider;
-    this.monthsGraph = new MonthGraph[months.size()];
+    this.monthGraphs = new MonthGraph[months.size()];
     int i = 0;
     for (Glob month : months) {
-      this.monthsGraph[i] = new MonthGraph(month, colors, new DefaultChainedSelectableElement(i),
-                                           timeService, this.balancesProvider);
+      this.monthGraphs[i] = new MonthGraph(month, colors, new DefaultChainedSelectableElement(i),
+                                           timeService, positionProvider);
       i++;
     }
-    add(this.monthsGraph);
+    add(this.monthGraphs);
   }
 
   public void init(MonthFontMetricInfo monthFontMetricInfo, final FontMetrics yearFontMetrics) {
@@ -53,7 +53,7 @@ public class YearGraph extends DefaultCompositeComponent {
     yearWidth = yearFontMetrics.stringWidth(yearText);
     shortYearText = yearText.substring(2);
     shortYearWidth = yearFontMetrics.stringWidth(shortYearText);
-    for (MonthGraph month : monthsGraph) {
+    for (MonthGraph month : monthGraphs) {
       month.init(monthFontMetricInfo);
     }
     initMonthHeight();
@@ -61,7 +61,7 @@ public class YearGraph extends DefaultCompositeComponent {
 
   public int draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter, int height, int monthWidth,
                   int monthRank, Rectangle visibleRectangle) {
-    int monthDim = monthsGraph.length * monthWidth;
+    int monthDim = monthGraphs.length * monthWidth;
     transformationAdapter.save();
     clickableAreaTop = TimeGraph.getClickableArea(transformationAdapter.getTransform(), monthDim, height);
     Rectangle2D intersection = visibleRectangle.createIntersection(clickableAreaTop);
@@ -73,26 +73,23 @@ public class YearGraph extends DefaultCompositeComponent {
     }
     if (intersection.getWidth() < 0) {
       isVisible = Visibility.NOT_VISIBLE;
-      for (AbstractComponent month : monthsGraph) {
+      for (AbstractSelectable month : monthGraphs) {
         month.setNotVisible();
       }
       return monthDim;
     }
     try {
       transformationAdapter.translate(0, yearCellHeight);
+      Paint previousPaint = graphics2D.getPaint();
       if (selected) {
-        Paint paint = graphics2D.getPaint();
         graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedMonthTop, 0, HEIGHT, colors.selectedMonthBottom));
-        graphics2D.fillRect(0, monthHeight + BALANCE_HEIGHT, monthDim, HEIGHT);
-        graphics2D.setPaint(paint);
       }
       else {
-        Paint paint = graphics2D.getPaint();
         graphics2D.setPaint(colors.yearBackground);
-        graphics2D.fillRect(0, monthHeight + BALANCE_HEIGHT, monthDim, HEIGHT);
-        graphics2D.setPaint(paint);
       }
-      for (MonthGraph month : monthsGraph) {
+      graphics2D.fillRect(0, monthHeight + BALANCE_HEIGHT, monthDim, HEIGHT);
+      graphics2D.setPaint(previousPaint);
+      for (MonthGraph month : monthGraphs) {
         month.draw(graphics2D, transformationAdapter, monthHeight, monthWidth,
                    monthRank, visibleRectangle,
                    monthHeight, BALANCE_HEIGHT);
@@ -126,11 +123,11 @@ public class YearGraph extends DefaultCompositeComponent {
   }
 
   public int getMonthCount() {
-    return monthsGraph.length;
+    return monthGraphs.length;
   }
 
   public void getSelectedGlobs(Collection<Glob> selected) {
-    for (Selectable month : monthsGraph) {
+    for (Selectable month : monthGraphs) {
       month.getSelectedGlobs(selected);
     }
   }
@@ -141,14 +138,14 @@ public class YearGraph extends DefaultCompositeComponent {
 
   private void initMonthHeight() {
     monthHeight = 0;
-    for (MonthGraph month : monthsGraph) {
+    for (MonthGraph month : monthGraphs) {
       monthHeight = Math.max(monthHeight, month.getHeight());
     }
   }
 
   public int getMaxWidth() {
     int max = 0;
-    for (MonthGraph month : monthsGraph) {
+    for (MonthGraph month : monthGraphs) {
       max = Math.max(max, month.getMaxWidth());
     }
     return max;
@@ -156,14 +153,14 @@ public class YearGraph extends DefaultCompositeComponent {
 
   public int getMinWidth() {
     int max = shortYearWidth;
-    for (MonthGraph month : monthsGraph) {
+    for (MonthGraph month : monthGraphs) {
       max = Math.max(max, month.getMinWidth());
     }
     return max;
   }
 
   public void getSelected(java.util.List<Selectable> list) {
-    for (AbstractComponent month : monthsGraph) {
+    for (AbstractSelectable month : monthGraphs) {
       month.getSelected(list);
     }
   }
@@ -186,20 +183,20 @@ public class YearGraph extends DefaultCompositeComponent {
   }
 
   public void select(Glob selectedMonth, Collection<Selectable> selectable) {
-    for (MonthGraph month : monthsGraph) {
+    for (MonthGraph month : monthGraphs) {
       month.select(selectedMonth, selectable);
     }
   }
 
   public void getAllSelectableMonth(GlobList globList) {
-    for (MonthGraph month : monthsGraph) {
+    for (MonthGraph month : monthGraphs) {
       globList.add(month.getMonth());
     }
   }
 
   public int getMinMonthRank(int monthWidth) {
     int rank = 0;
-    for (MonthGraph month : monthsGraph) {
+    for (MonthGraph month : monthGraphs) {
       rank = Math.max(rank, month.getNearestRank(monthWidth));
     }
     return rank;
@@ -210,16 +207,16 @@ public class YearGraph extends DefaultCompositeComponent {
   }
 
   public Selectable getFirstMonth() {
-    return monthsGraph[0];
+    return monthGraphs[0];
   }
 
   public Selectable getLastMonth() {
-    return monthsGraph[monthsGraph.length - 1];
+    return monthGraphs[monthGraphs.length - 1];
   }
 
   public int getMonthHeight() {
     int maxMonthHeight = 0;
-    for (MonthGraph month : monthsGraph) {
+    for (MonthGraph month : monthGraphs) {
       maxMonthHeight = Math.max(maxMonthHeight, month.getHeight());
     }
     return maxMonthHeight;

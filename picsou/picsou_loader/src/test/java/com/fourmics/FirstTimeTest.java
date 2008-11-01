@@ -243,7 +243,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .check();
 
 
-    MonthChecker times = new MonthChecker(window);
+    TimeViewChecker times = new TimeViewChecker(window);
     times.selectMonth("2008/10");
 
     transaction.initAmountContent()

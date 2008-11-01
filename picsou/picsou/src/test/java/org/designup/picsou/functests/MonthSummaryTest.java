@@ -23,6 +23,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     balanceSummary
       .checkNoTotal()
       .checkNothingShown();
+    timeline.checkMonthTooltip("2008/08", "August 2008");
 
     String file = OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
@@ -46,6 +47,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkSavings(0.00)
       .checkProjects(0.00)
       .checkTotal(0.00);
+    timeline.checkYearTooltip(2008, "2008");
   }
 
   public void testNoSeries() throws Exception {
@@ -98,10 +100,13 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     categorization.setIncome("Salaire", "Salaire", true);
     categorization.setSpecial("Air France", "voyage", MasterCategory.LEISURES, true);
 
+    double balance = 1500 - (29.9 + 1500 + 60 + 20 + 10 + 23 + 200);
+
+    timeline.selectMonth("2008/07");
     views.selectHome();
     monthSummary
       .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 23 + 200))
-      .checkBalance(1500 - (29.9 + 1500 + 60 + 20 + 10 + 23 + 200))
+      .checkBalance(balance)
       .checkBalanceGraph(0.81, 1)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
@@ -111,6 +116,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkUncategorized("-23.00");
 
     accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "Air France");
+    timeline.checkMonthTooltip("2008/07", balance, 1000.00);    
 
     timeline.selectAll();
     balanceSummary
@@ -122,6 +128,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkOccasional(-10.00)
       .checkProjects(0.00)
       .checkTotal(880.10);
+
   }
 
   public void testTwoMonths() throws Exception {
@@ -149,9 +156,10 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
 
+    double balanceFor200807 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
     monthSummary
       .total(1500, (29.9 + 1500 + 60 + 20 + 10))
-      .checkBalance(1500 - (29.9 + 1500 + 60 + 20 + 10))
+      .checkBalance(balanceFor200807)
       .checkBalanceGraph(0.92, 1)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
@@ -164,6 +172,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkTotal(1529.90)
       .checkNothingShown();
 
+    timeline.checkMonthTooltip("2008/07", balanceFor200807, 1529.90);
+
     timeline.selectMonth("2008/08");
 
     views.selectCategorization();
@@ -172,20 +182,22 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .setRecurring("Loyer", "rental", MasterCategory.HOUSE, false);
 
     views.selectHome();
+    double balanceFor200808 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
     monthSummary
       .total(1500, (29.9 + 1500 + 60 + 20 + 10))
+      .checkBalance(balanceFor200808)
       .checkIncome(0)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(0)
       .checkOccasional(0);
-
     balanceSummary.checkEnvelope(-80)
-      .checkBalance(0.)
+      .checkBalance(0.0)
       .checkFixed(0)
       .checkEnvelope(-80)
       .checkOccasional(-10)
       .checkIncome(1500)
-      .checkTotal(1410.);
+      .checkTotal(1410.00);
+    timeline.checkMonthTooltip("2008/08", balanceFor200808, 1410.00);
 
     timeline.selectMonths("2008/07", "2008/08");
     monthSummary

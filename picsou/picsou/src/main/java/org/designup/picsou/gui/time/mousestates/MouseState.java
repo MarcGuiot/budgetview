@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.time.selectable;
+package org.designup.picsou.gui.time.mousestates;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;

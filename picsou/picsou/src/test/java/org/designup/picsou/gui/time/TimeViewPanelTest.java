@@ -2,8 +2,8 @@ package org.designup.picsou.gui.time;
 
 import junit.framework.TestCase;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.time.selectable.MouseState;
-import org.designup.picsou.gui.time.selectable.ReleasedMouseState;
+import org.designup.picsou.gui.time.mousestates.MouseState;
+import org.designup.picsou.gui.time.mousestates.ReleasedMouseState;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.SelectableContainer;
 import org.designup.picsou.gui.utils.PicsouColors;
@@ -126,20 +126,6 @@ public class TimeViewPanelTest extends TestCase {
       public void change(Selectable first, Selectable last) {
       }
     });
-    timeViewPanel.registerTooltips(new TooltipsHandler() {
-
-      public void enterMonth(int monthId) {
-        System.out.println("month " + monthId);
-      }
-
-      public void enterYear(int year) {
-        System.out.println("year " + year);
-      }
-
-      public void leave() {
-        System.out.println("leave");
-      }
-    });
     return jFrame;
   }
 
@@ -190,7 +176,7 @@ public class TimeViewPanelTest extends TestCase {
       return selected;
     }
 
-    public void setLastSeletected(Selectable selectable) {
+    public void setLastSelected(Selectable selectable) {
       selected = selectable;
     }
 

@@ -2,7 +2,14 @@ package org.designup.picsou.gui.time;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.model.BalanceStat;
-import org.designup.picsou.gui.time.selectable.*;
+import org.designup.picsou.gui.time.mousestates.MouseState;
+import org.designup.picsou.gui.time.mousestates.ReleasedMouseState;
+import org.designup.picsou.gui.time.selectable.Selectable;
+import org.designup.picsou.gui.time.selectable.SelectableContainer;
+import org.designup.picsou.gui.time.selectable.TransformationAdapter;
+import org.designup.picsou.gui.time.tooltip.TimeViewMouseHandler;
+import org.designup.picsou.gui.time.tooltip.TimeViewTooltipHandler;
+import org.designup.picsou.gui.time.utils.TimeViewColors;
 import org.designup.picsou.model.AccountBalanceLimit;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.UserPreferences;
@@ -20,9 +27,9 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionListener, KeyListener, FocusListener,
+public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionListener,
                                                      SelectableContainer,
-                                                     ChangeSetListener, GlobSelectionListener, BalancesProvider {
+                                                     ChangeSetListener, GlobSelectionListener, PositionProvider {
 
   private TimeGraph timeGraph;
   private Set<Selectable> currentlySelected = new TreeSet<Selectable>(new Comparator<Selectable>() {
@@ -39,9 +46,9 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private MouseState currentState = new ReleasedMouseState(this);
   private SelectionService selectionService;
   private GlobRepository repository;
-  private MonthViewColors colors;
+  private TimeViewColors colors;
   private Selectable selected;
-  int translation;
+  private int translation;
   private long id = 0;
   private ScrollAndRepaint scrollRunnable = new ScrollAndRepaint();
   private Timer timer = new Timer(250, new ActionListener() {
@@ -55,23 +62,22 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private int currentPaintCount = 0;
   private TimeService timeService;
   private VisibilityListener visibilityListener;
-  private TooltipsHandler tooltipsHandler;
-  private Selectable selectableForTooltips = null;
+  private TimeViewMouseHandler mouseOverHandler;
+  private Selectable lastMouseOverSelectable = null;
 
-  public TimeViewPanel(GlobRepository globRepository, Directory directory) {
-    this.tooltipsHandler = tooltipsHandler;
+  public TimeViewPanel(GlobRepository repository, Directory directory) {
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    this.repository = globRepository;
+    this.repository = repository;
     timeService = directory.get(TimeService.class);
     Font monthFont = getFont();
     Font yearFont = monthFont.deriveFont((float)monthFont.getSize() - 2);
-    colors = new MonthViewColors(directory, yearFont, monthFont);
-    GlobList list = globRepository.getAll(Month.TYPE).sort(Month.ID);
-    timeGraph = new TimeGraph(list, colors, timeService, getFontMetrics(yearFont),
-                              getFontMetrics(monthFont), this);
+    colors = new TimeViewColors(directory, yearFont, monthFont);
+    timeGraph = new TimeGraph(repository.getAll(Month.TYPE).sort(Month.ID),
+                              colors, timeService,
+                              getFontMetrics(yearFont), getFontMetrics(monthFont), this);
     selectionService = directory.get(SelectionService.class);
     setName("MonthSelector");
-    globRepository.addChangeListener(this);
+    repository.addChangeListener(this);
     enableEvents(AWTEvent.KEY_EVENT_MASK);
 
     selectionService.addListener(this, Month.TYPE, UserPreferences.TYPE);
@@ -79,12 +85,12 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     setFocusable(true);
     addMouseListener(this);
     addMouseMotionListener(this);
-    addKeyListener(this);
     Dimension dimension = new Dimension(50, timeGraph.getAbsoluteHeight());
     setMinimumSize(dimension);
     setPreferredSize(dimension);
-    addFocusListener(this);
     setOpaque(false);
+
+    mouseOverHandler = new TimeViewTooltipHandler(this, this.repository, colors);
   }
 
   public void paintComponent(Graphics g) {
@@ -102,20 +108,22 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       timeGraph.init(getWidth());
     }
     previousWidth = getWidth();
-    Graphics2D d = (Graphics2D)g.create();
-    d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+    Graphics2D g2d = (Graphics2D)g.create();
+    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     try {
       if (pendingOperation != null) {
         pendingOperation.run();
         pendingOperation = null;
       }
-      TransformationAdapter transformationAdapter = new TransformationAdapter(d);
+      TransformationAdapter transformationAdapter = new TransformationAdapter(g2d);
       transformationAdapter.translate(translation, 0);
-      timeGraph.draw(d, transformationAdapter, getWidth(), getHeight());
+      timeGraph.draw(g2d, transformationAdapter, getWidth(), getHeight());
     }
     finally {
-      d.dispose();
+      g2d.dispose();
     }
+
     if (shouldScroll) {
       scrollToLastVisible();
       repaint();
@@ -131,11 +139,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     this.visibilityListener = visibilityListener;
   }
 
-  public void registerTooltips(TooltipsHandler tooltipsHandler) {
-    this.tooltipsHandler = tooltipsHandler;
-  }
-
-  public Double getAccountBalance(int monthId) {
+  public Double getPosition(int monthId) {
     Glob balance = repository.find(Key.create(BalanceStat.TYPE, monthId));
     if (balance == null) {
       return 0.0;
@@ -143,7 +147,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     return balance.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
   }
 
-  public double getAccountBalanceLimit(int monthId) {
+  public double getPositionLimit(int monthId) {
     return AccountBalanceLimit.getLimit(repository);
   }
 
@@ -172,41 +176,46 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     for (Selectable selectable : currentlySelected) {
       selectable.getSelectedGlobs(selectedGlob);
       if (updateLastSelected) {
-        setLastSeletected(selectable);
+        setLastSelected(selectable);
       }
     }
     selectionService.select(selectedGlob, Month.TYPE);
   }
 
   public void mouseEntered(MouseEvent e) {
-    selectableForTooltips = timeGraph.getSelectableAt(e.getX(), e.getY());
-    sendTooltipEvent();
-  }
-
-  private void sendTooltipEvent() {
-    if (selectableForTooltips instanceof MonthGraph) {
-      tooltipsHandler.enterMonth(((MonthGraph)selectableForTooltips).getMonth().get(Month.ID));
-    }
-    else if (selectableForTooltips instanceof YearGraph) {
-      tooltipsHandler.enterYear(((YearGraph)selectableForTooltips).getYear());
-    }
+    lastMouseOverSelectable = timeGraph.getSelectableAt(e.getX(), e.getY());
+    sendMouseOverEvent();
   }
 
   public void mouseExited(MouseEvent e) {
-    tooltipsHandler.leave();
-    selectableForTooltips = null;
+    mouseOverHandler.leave();
+    lastMouseOverSelectable = null;
   }
 
   public void mouseMoved(MouseEvent e) {
-    if (selectableForTooltips == null) {
+    if (lastMouseOverSelectable == null) {
       return;
     }
     Selectable newSelectable = timeGraph.getSelectableAt(e.getX(), e.getY());
-    if (newSelectable == selectableForTooltips) {
+    if (newSelectable == lastMouseOverSelectable) {
       return;
     }
-    selectableForTooltips = newSelectable;
-    sendTooltipEvent();
+    lastMouseOverSelectable = newSelectable;
+    sendMouseOverEvent();
+  }
+
+  private void sendMouseOverEvent() {
+    if (lastMouseOverSelectable instanceof MonthGraph) {
+      mouseOverHandler.enterMonth(((MonthGraph)lastMouseOverSelectable).getMonth().get(Month.ID));
+    }
+    else if (lastMouseOverSelectable instanceof YearGraph) {
+      mouseOverHandler.enterYear(((YearGraph)lastMouseOverSelectable).getYear());
+    }
+  }
+
+  // For tests only
+  public TimeViewMouseHandler getMouseOverHandler() {
+    return mouseOverHandler;
   }
 
   public void mouseDragged(MouseEvent e) {
@@ -222,7 +231,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       }
     }
     else if (e.getPoint().getX() > getWidth()) {
-      if (scrollRigth(timeGraph.getMonthWidth())) {
+      if (scrollRight(timeGraph.getMonthWidth())) {
         scrollRunnable.set(id, e);
         timer.stop();
         timer.start();
@@ -239,7 +248,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     repaint();
   }
 
-  private boolean scrollRigth(int shift) {
+  private boolean scrollRight(int shift) {
     Selectable selected = timeGraph.getLastSelectable();
     if (!selected.isVisible().equals(Selectable.Visibility.FULLY)) {
       translation -= shift;
@@ -290,11 +299,11 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     return selected;
   }
 
-  public void setLastSeletected(Selectable selectable) {
+  public void setLastSelected(Selectable selectable) {
     selected = selectable;
   }
 
-  public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
+  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(Month.TYPE)) {
       reloadMonth();
       repaint();
@@ -305,7 +314,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     }
   }
 
-  public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     reloadMonth();
     repaint();
   }
@@ -383,12 +392,12 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       mostLeftSelectable = mostLeftSelectable.getRight();
       count++;
     }
-    scrollRigth(count * timeGraph.getMonthWidth());
+    scrollRight(count * timeGraph.getMonthWidth());
   }
 
-  public void selectMonth(int... indexes) {
+  public void selectMonth(int index) {
     clearSelection();
-    timeGraph.selectMonth(indexes, currentlySelected);
+    timeGraph.selectMonth(new int[]{index}, currentlySelected);
     sendSelectionEvent(true);
     repaint();
   }
@@ -415,58 +424,43 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     timeGraph.getAllSelectableMonth(globs);
   }
 
-  public void keyTyped(KeyEvent e) {
-  }
-
-  public void keyPressed(KeyEvent e) {
-  }
-
-  public void keyReleased(KeyEvent e) {
-  }
-
-  public void goToFirst() {
+  public void gotoFirst() {
     do {
     }
     while (scrollLeft(timeGraph.getMonthWidth()));
     repaint();
   }
 
-  public void goToLast() {
+  public void gotoLast() {
     do {
     }
-    while (scrollRigth(timeGraph.getMonthWidth()));
+    while (scrollRight(timeGraph.getMonthWidth()));
     repaint();
   }
 
-  public void goToPrevious() {
+  public void gotoPrevious() {
     scrollLeft(timeGraph.getYearWeigth());
     repaint();
   }
 
-  public void goToNext() {
-    scrollRigth(timeGraph.getYearWeigth());
+  public void gotoNext() {
+    scrollRight(timeGraph.getYearWeigth());
     repaint();
-  }
-
-  public void focusGained(FocusEvent e) {
-  }
-
-  public void focusLost(FocusEvent e) {
   }
 
   public TimeGraph getTimeGraph() {
     return timeGraph;
   }
 
-  public synchronized void savePaintPoint() {
+  public synchronized void savePaintCount() {
     currentPaintCount = paintCount;
   }
 
   public synchronized void waitRepaint() {
-    long mili = System.currentTimeMillis() + 100;
+    long milli = System.currentTimeMillis() + 100;
     while (currentPaintCount == paintCount) {
       try {
-        long duration = mili - System.currentTimeMillis();
+        long duration = milli - System.currentTimeMillis();
         if (duration > 0) {
           wait(duration);
         }

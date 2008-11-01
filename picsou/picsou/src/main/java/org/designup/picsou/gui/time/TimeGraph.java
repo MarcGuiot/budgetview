@@ -4,6 +4,8 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.ChainedSelectableElement;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.TransformationAdapter;
+import org.designup.picsou.gui.time.utils.TimeViewColors;
+import org.designup.picsou.gui.time.utils.MonthFontMetricInfo;
 import org.designup.picsou.model.Month;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -23,12 +25,10 @@ public class TimeGraph {
   private int monthWidth;
   private int totalHeight;
   private int monthRank;
-  private BalancesProvider balancesProvider;
 
-  public TimeGraph(GlobList months, MonthViewColors colors, TimeService timeService, FontMetrics yearFontMetrics,
-                   FontMetrics monthFontMetrics, BalancesProvider balancesProvider) {
+  public TimeGraph(GlobList months, TimeViewColors colors, TimeService timeService, FontMetrics yearFontMetrics,
+                   FontMetrics monthFontMetrics, PositionProvider positionProvider) {
     this.months = months;
-    this.balancesProvider = balancesProvider;
     this.yearGraphs = new ArrayList<YearGraph>();
     if (months.isEmpty()) {
       return;
@@ -49,7 +49,7 @@ public class TimeGraph {
                                      years.last().equals(currentYear),
                                      currentYear, monthForYear, colors,
                                      new MonthChainedSelectableElement(yearCount),
-                                     new YearChainedSelectableElement(yearCount), timeService, balancesProvider));
+                                     new YearChainedSelectableElement(yearCount), timeService, positionProvider));
         monthForYear.clear();
         currentYear = year;
         yearCount++;
@@ -59,7 +59,7 @@ public class TimeGraph {
     yearGraphs.add(new YearGraph(years.first().equals(currentYear), years.last().equals(currentYear),
                                  currentYear, monthForYear, colors,
                                  new MonthChainedSelectableElement(yearCount),
-                                 new YearChainedSelectableElement(yearCount), timeService, this.balancesProvider));
+                                 new YearChainedSelectableElement(yearCount), timeService, positionProvider));
     initFontMetrics(yearFontMetrics, monthFontMetrics);
   }
 

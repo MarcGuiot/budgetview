@@ -5,12 +5,7 @@
 
 - Gestion des licences : desactiver import + message jours restants
 
-- Sortir le contenu des mails dans le lang_fr.properties
-<<<<<<< local
-=======
-
 - charset/serialisation des strings => voir compatibilite ascendante
->>>>>>> other
 
 - Probleme de transaction plannifié a 0.
 
@@ -34,9 +29,11 @@
 
 - initialisation userPrefs show_xxx_message
 
-- jauges
-
 - pb occasional Severine
+
+- tooltips jauges / overrun partiels
+
+- message budgetView/special + aide
 
 
 ====================================
@@ -53,8 +50,6 @@ ce n'est plus vraiment un "planned" => trouver un moyen de le rendre clair pour 
 - BudgetView : quand on clique sur une serie, aucun moyen pour la supprimer a partir de la fenetre qui apparait 
 
 - Creation d'une serie OperationsSpeciales : selectionner le mois en cours dans la table
-
-- Gestion des licences : check mensuel ?
 
 - saisie balance : maj date
 
@@ -91,3 +86,4 @@ ce n'est plus vraiment un "planned" => trouver un moyen de le rendre clair pour 
 
 - categorizationGauge : mettre un tooltip avec le nombre de transactions non classees
 
+- Gestion des licences : check mensuel ?

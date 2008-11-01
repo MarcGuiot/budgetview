@@ -5,7 +5,6 @@ import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.model.Month;
 import org.globsframework.model.GlobList;
-import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Panel;
 import org.uispec4j.assertion.Assertion;
@@ -13,11 +12,11 @@ import org.uispec4j.assertion.UISpecAssert;
 
 import java.util.*;
 
-public class MonthChecker extends DataChecker {
+public class TimeViewChecker extends DataChecker {
   protected TimeViewPanel timeViewPanel;
 
-  public MonthChecker(Panel panel) {
-    Panel table = panel.getPanel("month");
+  public TimeViewChecker(Panel panel) {
+    Panel table = panel.getPanel("timeView");
     timeViewPanel = (TimeViewPanel)table.getAwtComponent();
   }
 
@@ -26,11 +25,11 @@ public class MonthChecker extends DataChecker {
     Assert.assertTrue("Contains: " + selectables, selectables.isEmpty());
   }
 
-  public void assertDisplays(String... elements) {
+  public void checkDisplays(String... months) {
     long end = System.currentTimeMillis() + 1000;
     GlobList list = new GlobList();
     timeViewPanel.getAllSelectableMonth(list);
-    while (list.size() != elements.length && System.currentTimeMillis() < end) {
+    while (list.size() != months.length && System.currentTimeMillis() < end) {
       try {
         Thread.sleep(50);
       }
@@ -40,12 +39,8 @@ public class MonthChecker extends DataChecker {
       timeViewPanel.getAllSelectableMonth(list);
     }
     List<Integer> ids = new ArrayList<Integer>();
-    for (String element : elements) {
-      int index = element.indexOf(" (");
-      if (index == -1) {
-        index = element.length();
-      }
-      ids.add(Month.getMonthId(Dates.parseMonth(element.substring(0, index))));
+    for (String month : months) {
+      ids.add(parseMonthId(month));
     }
     Set<Integer> valueSet = list.getValueSet(Month.ID);
     TestUtils.assertSetEquals(ids, valueSet);
@@ -86,7 +81,7 @@ public class MonthChecker extends DataChecker {
   public void selectMonths(String... yyyymm) {
     Set<Integer> monthIds = new HashSet<Integer>();
     for (String date : yyyymm) {
-      monthIds.add(Month.getMonthId(Dates.parseMonth(date)));
+      monthIds.add(parseMonthId(date));
     }
     timeViewPanel.selectMonth(monthIds);
   }
@@ -103,7 +98,7 @@ public class MonthChecker extends DataChecker {
     timeViewPanel.selectAll();
   }
 
-  public void assertSpanEquals(String fromYyyyMm, String toYyyyMm) {
+  public void checkSpanEquals(String fromYyyyMm, String toYyyyMm) {
     long end = System.currentTimeMillis() + 1000;
     GlobList list = new GlobList();
     timeViewPanel.getAllSelectableMonth(list);
@@ -119,5 +114,27 @@ public class MonthChecker extends DataChecker {
     Assert.assertTrue(list.size() >= 2);
     Assert.assertEquals(fromYyyyMm, Month.toString(list.get(0).get(Month.ID)));
     Assert.assertEquals(toYyyyMm, Month.toString(list.get(list.size() - 1).get(Month.ID)));
+  }
+
+  public TimeViewChecker checkMonthTooltip(String monthId, double balance, double position) {
+    timeViewPanel.getMouseOverHandler().enterMonth(parseMonthId(monthId));
+    String tooltip = timeViewPanel.getToolTipText();
+    Assert.assertTrue("Expected balance: " + balance + " - " + tooltip,
+                      tooltip.contains("Balance: " + toString(balance, true)));
+    Assert.assertTrue("Expected position: " + position + " - " + tooltip,
+                      tooltip.contains("Position: " + toString(position)));
+    return this;
+  }
+
+  public TimeViewChecker checkMonthTooltip(String monthId, String expectedTooltip) {
+    timeViewPanel.getMouseOverHandler().enterMonth(parseMonthId(monthId));
+    Assert.assertEquals(expectedTooltip, timeViewPanel.getToolTipText());
+    return this;
+  }
+
+  public TimeViewChecker checkYearTooltip(int year, String expectedTooltip) {
+    timeViewPanel.getMouseOverHandler().enterYear(year);
+    Assert.assertEquals(expectedTooltip, timeViewPanel.getToolTipText());
+    return this;
   }
 }

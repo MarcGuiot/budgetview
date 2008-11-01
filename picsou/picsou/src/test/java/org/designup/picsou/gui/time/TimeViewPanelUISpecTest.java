@@ -62,7 +62,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     assertTrue(i != -1);
     GlobList expected = allMonth.subList(i, allMonth.size() - 1);
     Mouse.pressed(panel, 200, 5);
-    timeViewPanel.savePaintPoint();
+    timeViewPanel.savePaintCount();
     Mouse.drag(panel, 400, 5);
     timeViewPanel.waitRepaint();
     Mouse.released(panel, 400, 5);
@@ -72,7 +72,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
   }
 
   private void paintAndWait() {
-    timeViewPanel.savePaintPoint();
+    timeViewPanel.savePaintCount();
     timeViewPanel.selectLastMonth();
     timeViewPanel.repaint();
     timeViewPanel.waitRepaint();
@@ -114,7 +114,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     }
     init(470);
     timeViewPanel.waitRepaint();
-    timeViewPanel.savePaintPoint();
+    timeViewPanel.savePaintCount();
     timeViewPanel.setSize(80, 40);
     timeViewPanel.waitRepaint();
     Selectable selectable = getLastSelected();
@@ -126,7 +126,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
       return;
     }
     init(170);
-    timeViewPanel.savePaintPoint();
+    timeViewPanel.savePaintCount();
     timeViewPanel.setSize(80, 40);
     timeViewPanel.waitRepaint();
     timeViewPanel.waitRepaint();
@@ -186,16 +186,6 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     repository.reset(months, Month.TYPE);
     timeViewPanel = new TimeViewPanel(repository, directory);
     jFrame.add(timeViewPanel);
-    timeViewPanel.registerTooltips(new TooltipsHandler() {
-      public void enterMonth(int monthId) {
-      }
-
-      public void enterYear(int year) {
-      }
-
-      public void leave() {
-      }
-    });
     return jFrame;
   }
 

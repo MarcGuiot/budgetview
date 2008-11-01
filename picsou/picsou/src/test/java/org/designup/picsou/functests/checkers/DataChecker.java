@@ -2,11 +2,13 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.utils.KeyUtils;
+import org.globsframework.utils.Dates;
 
 import javax.swing.*;
 import java.text.DecimalFormat;
@@ -40,5 +42,9 @@ public abstract class DataChecker {
   protected void pressEsc(final Window dialog) {
     final JDialog jDialog = (JDialog)dialog.getAwtComponent();
     KeyUtils.pressKey(jDialog.getRootPane(), Key.ESCAPE);
+  }
+
+  protected int parseMonthId(String date) {
+    return Month.getMonthId(Dates.parseMonth(date));
   }
 }

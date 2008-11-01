@@ -1,4 +1,7 @@
-package org.designup.picsou.gui.time.selectable;
+package org.designup.picsou.gui.time.mousestates;
+
+import org.designup.picsou.gui.time.selectable.SelectableContainer;
+import org.designup.picsou.gui.time.selectable.Selectable;
 
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -24,7 +27,7 @@ public class ReleasedMouseState extends AbstractMouseState {
       if (currentlySelected.contains(selectable)) {
         if (currentlySelected.size() > 1) {
           selectable.unSelect();
-          container.setLastSeletected(null);
+          container.setLastSelected(null);
           currentlySelected.remove(selectable);
           return this;
         }
@@ -41,7 +44,7 @@ public class ReleasedMouseState extends AbstractMouseState {
       currentlySelected.clear();
     }
     selectable.select();
-    container.setLastSeletected(selectable);
+    container.setLastSelected(selectable);
     return new PressedMouseState(container, selectable, e.getX(), e.getY());
   }
 

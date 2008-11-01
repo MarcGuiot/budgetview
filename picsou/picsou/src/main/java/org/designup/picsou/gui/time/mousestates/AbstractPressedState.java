@@ -1,4 +1,7 @@
-package org.designup.picsou.gui.time.selectable;
+package org.designup.picsou.gui.time.mousestates;
+
+import org.designup.picsou.gui.time.selectable.Selectable;
+import org.designup.picsou.gui.time.selectable.SelectableContainer;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -21,7 +24,7 @@ public class AbstractPressedState extends AbstractMouseState {
     if (selectable == null || currentlySelected == null) {
       return null;
     }
-    List<Selectable> leftPosibleSelection = search(currentlySelected, selectable, new Next() {
+    List<Selectable> leftPossibleSelection = search(currentlySelected, selectable, new Next() {
       public Selectable next(Selectable selectable) {
         return selectable.getLeft();
       }
@@ -31,14 +34,14 @@ public class AbstractPressedState extends AbstractMouseState {
         return selectable.getRight();
       }
     });
-    if (rightPosibleSelection.isEmpty() && leftPosibleSelection.isEmpty()) {
+    if (rightPosibleSelection.isEmpty() && leftPossibleSelection.isEmpty()) {
       return null;
     }
-    if (rightPosibleSelection.size() > leftPosibleSelection.size()) {
+    if (rightPosibleSelection.size() > leftPossibleSelection.size()) {
       selected.addAll(rightPosibleSelection);
     }
     else {
-      selected.addAll(leftPosibleSelection);
+      selected.addAll(leftPossibleSelection);
     }
     return selectable;
   }
@@ -70,7 +73,7 @@ public class AbstractPressedState extends AbstractMouseState {
     if (lastSelected == null) {
       return this;
     }
-    container.setLastSeletected(lastSelected);
+    container.setLastSelected(lastSelected);
 
     int removeCount = 0;
     Iterator<Selectable> listIterator = selected.iterator();

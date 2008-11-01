@@ -4,6 +4,9 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.ChainedSelectableElement;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.TransformationAdapter;
+import org.designup.picsou.gui.time.utils.MonthFontMetricInfo;
+import org.designup.picsou.gui.time.utils.TimeViewColors;
+import org.designup.picsou.gui.time.selectable.AbstractSelectable;
 import org.designup.picsou.model.Month;
 import org.globsframework.model.Glob;
 
@@ -11,21 +14,22 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 
-public class MonthGraph extends AbstractComponent implements Comparable<MonthGraph> {
+public class MonthGraph extends AbstractSelectable implements Comparable<MonthGraph> {
   private Glob month;
-  private MonthViewColors colors;
+  private TimeViewColors colors;
   private TimeService timeService;
   private MonthFontMetricInfo.MonthSizes monthSize;
-  private BalancesProvider balancesProvider;
+  private PositionProvider positionProvider;
+  
   private static final int MIN_WIDTH = 50;
 
-  public MonthGraph(Glob month, MonthViewColors colors, ChainedSelectableElement element,
-                    TimeService timeService, BalancesProvider balancesProvider) {
+  public MonthGraph(Glob month, TimeViewColors colors, ChainedSelectableElement element,
+                    TimeService timeService, PositionProvider positionProvider) {
     super(element);
     this.month = month;
     this.colors = colors;
     this.timeService = timeService;
-    this.balancesProvider = balancesProvider;
+    this.positionProvider = positionProvider;
   }
 
   public void init(MonthFontMetricInfo monthFontMetricInfo) {
@@ -85,8 +89,8 @@ public class MonthGraph extends AbstractComponent implements Comparable<MonthGra
       graphics2D.setPaint(selected ? colors.selectedMonthBottom : colors.yearBackground);
       graphics2D.fillRect(0, 0, width, heightGraph);
 
-      Double accountBalance = balancesProvider.getAccountBalance(this.month.get(Month.ID));
-      double accountBalanceLimit = balancesProvider.getAccountBalanceLimit(this.month.get(Month.ID));
+      Double accountBalance = positionProvider.getPosition(this.month.get(Month.ID));
+      double accountBalanceLimit = positionProvider.getPositionLimit(this.month.get(Month.ID));
 
       if (accountBalance != null) {
 

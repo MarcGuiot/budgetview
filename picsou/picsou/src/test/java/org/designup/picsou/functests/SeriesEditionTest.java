@@ -1322,7 +1322,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings().editSeries("epargne", true)
       .setEndDate(200810)
       .validate();
-    timeline.assertSpanEquals("2008/06", "2008/10");
+    timeline.checkSpanEquals("2008/06", "2008/10");
     views.selectData();
     timeline.selectAll();
     transactions.initContent()
@@ -1351,7 +1351,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
     operations.getPreferences().changeFutureMonth(2).validate();
     timeline.selectAll();
-    timeline.assertSpanEquals("2008/06", "2008/10");
+    timeline.checkSpanEquals("2008/06", "2008/10");
     transactions.initContent()
       .add("04/10/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne", MasterCategory.SAVINGS)
       .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne", MasterCategory.SAVINGS)
@@ -1386,7 +1386,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     System.out.println("SeriesEditionTest.testNoAutomaticAddMonth");
     operations.getPreferences().changeFutureMonth(2).validate();
     timeline.selectAll();
-    timeline.assertSpanEquals("2008/06", "2008/10");
+    timeline.checkSpanEquals("2008/06", "2008/10");
     transactions.initContent()
       .add("04/10/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne", MasterCategory.SAVINGS)
       .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne", MasterCategory.SAVINGS)

@@ -1,18 +1,18 @@
-package org.designup.picsou.gui.time;
+package org.designup.picsou.gui.time.selectable;
 
 import org.designup.picsou.gui.time.selectable.ChainedSelectableElement;
 import org.designup.picsou.gui.time.selectable.Selectable;
 
 import java.awt.*;
 
-public abstract class AbstractComponent implements Selectable {
+public abstract class AbstractSelectable implements Selectable {
   protected boolean selected = false;
   protected ChainedSelectableElement element;
   protected Rectangle clickableAreaTop = new Rectangle();
   protected Rectangle clickableAreaButton = new Rectangle();
   protected Visibility isVisible = Visibility.NOT_VISIBLE;
 
-  public AbstractComponent(ChainedSelectableElement element) {
+  public AbstractSelectable(ChainedSelectableElement element) {
     this.element = element;
   }
 
