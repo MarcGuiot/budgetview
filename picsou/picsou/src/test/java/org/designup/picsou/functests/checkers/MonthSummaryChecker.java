@@ -19,9 +19,11 @@ import java.awt.*;
 
 public class MonthSummaryChecker extends DataChecker {
   private Window window;
+  public final BalanceGraphChecker balanceGraph;
 
   public MonthSummaryChecker(Window window) {
     this.window = window;
+    this.balanceGraph = new BalanceGraphChecker(window);
   }
 
   public void gotoBudget(BudgetArea budgetArea) {

@@ -23,6 +23,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     balanceSummary
       .checkNoTotal()
       .checkNothingShown();
+    monthSummary.balanceGraph.checkHidden();
     timeline.checkMonthTooltip("2008/08", "August 2008");
 
     String file = OfxBuilder.init(this)
@@ -100,12 +101,14 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     categorization.setIncome("Salaire", "Salaire", true);
     categorization.setSpecial("Air France", "voyage", MasterCategory.LEISURES, true);
 
-    double balance = 1500 - (29.9 + 1500 + 60 + 20 + 10 + 23 + 200);
+    double incomeFor200807 = 1500;
+    double expensesFor200807 = 29.9 + 1500 + 60 + 20 + 10 + 23 + 200;
+    double balance = incomeFor200807 - expensesFor200807;
 
     timeline.selectMonth("2008/07");
     views.selectHome();
     monthSummary
-      .total(1500, (29.9 + 1500 + 60 + 20 + 10 + 23 + 200))
+      .total(incomeFor200807, expensesFor200807)
       .checkBalance(balance)
       .checkBalanceGraph(0.81, 1)
       .checkIncome(1500, 1500)
@@ -114,6 +117,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkOccasional(10)
       .checkProjects(200)
       .checkUncategorized("-23.00");
+    monthSummary.balanceGraph.checkTooltip(incomeFor200807, expensesFor200807);
 
     accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "Air France");
     timeline.checkMonthTooltip("2008/07", balance, 1000.00);    

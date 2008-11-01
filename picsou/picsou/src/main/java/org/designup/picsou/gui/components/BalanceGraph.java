@@ -1,7 +1,9 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -50,25 +52,30 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
   }
 
   private void update(Set<Integer> monthIds) {
-    double received = 0;
-    double spent = 0;
+    double income = 0;
+    double expenses = 0;
     for (Glob stat : repository.getAll(BalanceStat.TYPE, GlobMatchers.fieldIn(BalanceStat.MONTH, monthIds))) {
-      received += stat.get(BalanceStat.INCOME) + stat.get(BalanceStat.INCOME_REMAINING);
-      spent += stat.get(BalanceStat.EXPENSE) + stat.get(BalanceStat.EXPENSE_REMAINING);
+      income += stat.get(BalanceStat.INCOME) + stat.get(BalanceStat.INCOME_REMAINING);
+      expenses += stat.get(BalanceStat.EXPENSE) + stat.get(BalanceStat.EXPENSE_REMAINING);
     }
 
-    received = Math.abs(received);
-    spent = Math.abs(spent);
+    setToolTipText(Lang.get("balanceGraph.tooltip",
+                            Formatting.toString(income),
+                            Formatting.toString(-expenses)));
+    
+    income = Math.abs(income);
+    expenses = Math.abs(expenses);
 
-    double max = Math.max(received, spent);
+
+    double max = Math.max(income, expenses);
     if (max == 0) {
       incomePercent = 0;
       expensesPercent = 0;
       return;
     }
 
-    incomePercent = received / max;
-    expensesPercent = spent / max;
+    incomePercent = income / max;
+    expensesPercent = expenses / max;
 
     repaint();
   }
