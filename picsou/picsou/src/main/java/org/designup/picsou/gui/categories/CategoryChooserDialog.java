@@ -146,7 +146,7 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
   private JToggleButton createCategoryToggle(Glob category) {
     String name = categoryStringifier.toString(category, repository);
-    JToggleButton button = new JToggleButton(name);
+    JToggleButton button = new JCheckBox(name);
     if (buttonGroup != null) {
       buttonGroup.add(button);
     }

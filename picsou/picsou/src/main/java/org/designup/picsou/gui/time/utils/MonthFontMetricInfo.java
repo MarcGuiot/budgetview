@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.time;
+package org.designup.picsou.gui.time.utils;
 
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;

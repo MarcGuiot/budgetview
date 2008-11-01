@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.time;
+package org.designup.picsou.gui.time.utils;
 
 import org.designup.picsou.gui.utils.AmountColors;
 import org.designup.picsou.gui.utils.PicsouColors;
@@ -9,7 +9,7 @@ import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 
-public class MonthViewColors implements ColorChangeListener {
+public class TimeViewColors implements ColorChangeListener {
 
   public Color yearBackground;
   public Color yearSeparator;
@@ -32,7 +32,7 @@ public class MonthViewColors implements ColorChangeListener {
 
   private AmountColors amountColors;
 
-  public MonthViewColors(Directory directory, Font yearFont, Font monthFont) {
+  public TimeViewColors(Directory directory, Font yearFont, Font monthFont) {
     this.monthFont = monthFont;
     this.yearFont = yearFont;
     this.amountColors = new AmountColors(directory);

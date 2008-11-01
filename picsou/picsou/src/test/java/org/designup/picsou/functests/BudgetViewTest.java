@@ -236,7 +236,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("28/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
       .check();
 
-    timeline.assertSpanEquals("2008/07", "2008/08");
+    timeline.checkSpanEquals("2008/07", "2008/08");
 
     views.selectCategorization();
     categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);

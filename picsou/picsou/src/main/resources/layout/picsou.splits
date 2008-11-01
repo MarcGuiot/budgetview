@@ -97,7 +97,7 @@
       <row weightY="0.1" name="time" marginTop="20" marginLeft="20" marginRight="20">
         <button ref="firstPeriod" ui="doubleArrowLeft" styleClass="doublePeriodButton"/>
         <button ref="prevPeriod" ui="arrowLeft" styleClass="periodButton"/>
-        <component ref="month" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
+        <component ref="timeView" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
                    marginLeft="2" marginRight="2" weightX="1000.0" weightY="100.0" border="empty"/>
         <button ref="lastPeriod" ui="arrowRight" styleClass="periodButton"/>
         <button ref="nextPeriod" ui="doubleArrowRight" styleClass="doublePeriodButton"/>

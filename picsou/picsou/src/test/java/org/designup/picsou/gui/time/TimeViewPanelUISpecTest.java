@@ -64,7 +64,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     assertTrue(i != -1);
     final GlobList expected = allMonth.subList(i, allMonth.size());
     Mouse.pressed(panel, 200, 5);
-    timeViewPanel.savePaintPoint();
+    timeViewPanel.savePaintCount();
     Mouse.drag(panel, 400, 5);
     timeViewPanel.waitRepaint();
     Mouse.released(panel, 400, 5);
@@ -74,8 +74,8 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
   }
 
   private void paintAndWait() {
-    timeViewPanel.savePaintPoint();
-    timeViewPanel.selectMonth(4);
+    timeViewPanel.savePaintCount();
+    timeViewPanel.selectLastMonth();
     timeViewPanel.repaint();
     timeViewPanel.waitRepaint();
   }
@@ -197,16 +197,6 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     repository.reset(months, Month.TYPE);
     timeViewPanel = new TimeViewPanel(repository, directory);
     jFrame.add(timeViewPanel);
-    timeViewPanel.registerTooltips(new TooltipsHandler() {
-      public void enterMonth(int monthId) {
-      }
-
-      public void enterYear(int year) {
-      }
-
-      public void leave() {
-      }
-    });
     return jFrame;
   }
 

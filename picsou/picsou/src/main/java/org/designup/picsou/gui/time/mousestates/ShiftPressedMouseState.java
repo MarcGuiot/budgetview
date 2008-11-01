@@ -1,4 +1,7 @@
-package org.designup.picsou.gui.time.selectable;
+package org.designup.picsou.gui.time.mousestates;
+
+import org.designup.picsou.gui.time.selectable.SelectableContainer;
+import org.designup.picsou.gui.time.selectable.Selectable;
 
 public class ShiftPressedMouseState extends AbstractPressedState {
 

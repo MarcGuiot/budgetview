@@ -78,7 +78,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/02/10", -2.0, "MiamMiam")
       .load();
 
-    timeline.assertDisplays("2006/01 (0.00/1.00)", "2006/02 (0.00/2.00)");
+    timeline.checkDisplays("2006/01", "2006/02");
     timeline.selectMonth("2006/01");
     categories.select(MasterCategory.NONE);
     transactions

@@ -15,8 +15,7 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 public class BalanceStat {
   public static GlobType TYPE;
 
-  @Key
-  @Target(Month.class)
+  @Key @Target(Month.class)
   public static LinkField MONTH;
 
   @DefaultDouble(0.0)

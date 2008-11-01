@@ -89,6 +89,8 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
+      fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, false);
+      fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, false);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -98,6 +100,8 @@ public class UserPreferences {
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
       fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
+      fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, false);
+      fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, false);
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {

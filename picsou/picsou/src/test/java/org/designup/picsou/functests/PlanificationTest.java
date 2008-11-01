@@ -19,7 +19,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/07/08", -29.9, "free telecom")
       .load();
-    timeline.assertSpanEquals("2008/07", "2010/07");
+    timeline.checkSpanEquals("2008/07", "2010/07");
 
     views.selectCategorization();
     categorization.setRecurring(0, "Internet", MasterCategory.TELECOMS, true);
@@ -58,7 +58,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
     operations.getPreferences().changeFutureMonth(1).validate();
-    timeline.assertSpanEquals("2008/06", "2008/08");
+    timeline.checkSpanEquals("2008/06", "2008/08");
     timeline.selectAll();
     views.selectBudget();
     budgetView.envelopes.editSeriesList().selectSeries("Courant")

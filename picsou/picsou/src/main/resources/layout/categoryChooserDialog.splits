@@ -9,7 +9,7 @@
         <repeat ref="masterRepeat" margin="10">
         <column>
             <toggleButton ref="masterLabel" marginTop="10" styleClass="masterCategorySelector"/>
-            <repeat ref="subcatRepeat" layout="column" marginLeft="5">
+            <repeat ref="subcatRepeat" layout="column" marginLeft="15">
               <toggleButton ref="subcatLabel" styleClass="subCategorySelector"/>
             </repeat>
           </column>

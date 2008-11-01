@@ -11,6 +11,6 @@ public interface SelectableContainer {
 
   Selectable getLastSelected();
 
-  void setLastSeletected(Selectable selectable);
+  void setLastSelected(Selectable selectable);
 
 }

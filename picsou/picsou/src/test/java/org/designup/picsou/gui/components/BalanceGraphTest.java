@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import junit.framework.TestCase;
+import org.designup.picsou.functests.checkers.BalanceGraphChecker;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.model.Month;
 import org.globsframework.gui.SelectionService;
@@ -33,22 +34,17 @@ public class BalanceGraphTest extends TestCase {
                       value(BalanceStat.INCOME, 4.0),
                       value(BalanceStat.EXPENSE, 2.0));
 
-    BalanceGraph graph = new BalanceGraph(repository, directory);
+    BalanceGraphChecker graph = new BalanceGraphChecker(new BalanceGraph(repository, directory));
 
-    checkBalance(graph, 0.0, 0.0);
+    graph.checkBalance(0.0, 0.0);
 
     selectionService.select(month10);
-    checkBalance(graph, 0.5, 1.0);
+    graph.checkBalance(0.5, 1.0);
 
     selectionService.select(new GlobList(month10, month11), Month.TYPE);
-    checkBalance(graph, 1.0, 1.0);
+    graph.checkBalance(1.0, 1.0);
 
     selectionService.clear(Month.TYPE);
-    checkBalance(graph, 0.0, 0.0);
-  }
-
-  private void checkBalance(BalanceGraph graph, double receivedPercent, double spentPercent) {
-    assertEquals(receivedPercent, graph.getIncomePercent());
-    assertEquals(spentPercent, graph.getExpensesPercent());
+    graph.checkBalance(0.0, 0.0);
   }
 }

@@ -1,25 +1,26 @@
-package org.designup.picsou.gui.time;
+package org.designup.picsou.gui.time.selectable;
 
 import org.designup.picsou.gui.time.selectable.ChainedSelectableElement;
 import org.designup.picsou.gui.time.selectable.Selectable;
+import org.designup.picsou.gui.time.YearGraph;
 
-public abstract class DefaultCompositeComponent extends AbstractComponent implements Selectable, Comparable<YearGraph> {
+public abstract class DefaultCompositeSelectable extends AbstractSelectable implements Selectable, Comparable<YearGraph> {
   protected ChainedSelectableElement innerElements;
-  private AbstractComponent[] components;
+  private AbstractSelectable[] selectables;
 
-  public DefaultCompositeComponent(ChainedSelectableElement innerElements, ChainedSelectableElement yearElement) {
+  public DefaultCompositeSelectable(ChainedSelectableElement innerElements, ChainedSelectableElement yearElement) {
     super(yearElement);
     this.innerElements = innerElements;
   }
 
-  public void add(AbstractComponent[] components) {
-    this.components = components;
+  public void add(AbstractSelectable[] selectables) {
+    this.selectables = selectables;
   }
 
   public Selectable getSelectable(int x, int y) {
     Selectable selectable;
     if (clickableAreaTop != null && clickableAreaTop.contains(x, y)) {
-      for (Selectable month : components) {
+      for (Selectable month : selectables) {
         selectable = month.getSelectable(x, y);
         if (selectable != null) {
           return selectable;
@@ -42,14 +43,14 @@ public abstract class DefaultCompositeComponent extends AbstractComponent implem
       if (index == 0) {
         return innerElements.getLeft();
       }
-      return components[index - 1];
+      return selectables[index - 1];
     }
 
     public Selectable getRight() {
-      if (index == components.length - 1) {
+      if (index == selectables.length - 1) {
         return innerElements.getRight();
       }
-      return components[index + 1];
+      return selectables[index + 1];
     }
   }
 }

@@ -67,8 +67,8 @@ public class LicenseTest extends LicenseTestCase {
 
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
-    MonthChecker monthChecker = new MonthChecker(window);
-    monthChecker.assertSpanEquals("2008/07", "2010/07");
+    TimeViewChecker timeView = new TimeViewChecker(window);
+    timeView.checkSpanEquals("2008/07", "2010/07");
   }
 
   private void register(SqlConnection connection, String mail) throws InterruptedException {
@@ -87,8 +87,8 @@ public class LicenseTest extends LicenseTestCase {
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 1L);
     assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
     assertTrue(license.get(License.SIGNATURE).length > 1);
-    MonthChecker monthChecker = new MonthChecker(window);
-    monthChecker.assertSpanEquals("2008/07", "2010/07");
+    TimeViewChecker timeView = new TimeViewChecker(window);
+    timeView.checkSpanEquals("2008/07", "2010/07");
   }
 
   public void testMultipleAnonymousConnect() throws Exception {
@@ -104,7 +104,7 @@ public class LicenseTest extends LicenseTestCase {
     loginChecker.logUser("user", "passw@rd");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     OperationChecker operations = new OperationChecker(window);
-    operations.getPreferences().changeFutureMonth(3).validate();
+    operations.getPreferences().changeFutureMonth(3);
     checkLicenseExpiration();
   }
 
@@ -148,8 +148,8 @@ public class LicenseTest extends LicenseTestCase {
 
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
-    MonthChecker monthChecker = new MonthChecker(window);
-    monthChecker.assertSpanEquals("2008/07", "2010/07");
+    TimeViewChecker timeView = new TimeViewChecker(window);
+    timeView.checkSpanEquals("2008/07", "2010/07");
     OperationChecker operation = new OperationChecker(window);
     operation.openImportDialog()
       .close();
@@ -206,8 +206,8 @@ public class LicenseTest extends LicenseTestCase {
     startPicsou();
     LoginChecker login = new LoginChecker(window);
     login.logUser("user", "passw@rd");
-    MonthChecker monthChecker = new MonthChecker(window);
-    monthChecker.assertSpanEquals("2008/07", "2010/07");
+    TimeViewChecker timeView = new TimeViewChecker(window);
+    timeView.checkSpanEquals("2008/07", "2010/07");
     window.dispose();
   }
 
@@ -217,14 +217,14 @@ public class LicenseTest extends LicenseTestCase {
     startPicsou();
     LoginChecker login = new LoginChecker(window);
     login.logUser("user", "passw@rd");
-    MonthChecker monthChecker = new MonthChecker(window);
-    monthChecker.assertSpanEquals("2008/07", "2010/07");
+    TimeViewChecker timeView = new TimeViewChecker(window);
+    timeView.checkSpanEquals("2008/07", "2010/07");
     LicenseChecker license = new LicenseChecker(window);
     license.enterLicense(window, MAIL, code);
     OperationChecker operation = new OperationChecker(window);
     operation.getPreferences().changeFutureMonth(24).validate();
 
-    monthChecker.assertSpanEquals("2008/07", "2010/07");
+    timeView.checkSpanEquals("2008/07", "2010/07");
     window.dispose();
   }
 
@@ -234,12 +234,12 @@ public class LicenseTest extends LicenseTestCase {
     startPicsou();
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logUser("user", "passw@rd");
-    MonthChecker monthChecker = new MonthChecker(window);
+    TimeViewChecker timeView = new TimeViewChecker(window);
     if (lastMonth.equals("2008/07")) {
-      monthChecker.assertDisplays("2008/07");
+      timeView.checkDisplays("2008/07");
     }
     else {
-      monthChecker.assertSpanEquals("2008/07", lastMonth);
+      timeView.checkSpanEquals("2008/07", lastMonth);
     }
     window.dispose();
   }

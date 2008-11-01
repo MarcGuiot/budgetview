@@ -5,7 +5,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
-public class MonthManagementTest extends LoggedInFunctionalTestCase {
+public class TimeManagementTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     setCurrentMonth("2006/01/10");
@@ -23,7 +23,7 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/20", +5, "income")
       .load();
 
-    timeline.assertDisplays("2006/01 (5.00/10.00)");
+    timeline.checkDisplays("2006/01");
     timeline.checkSelection("2006/01");
   }
 
@@ -36,7 +36,7 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2006/02");
 
-    timeline.assertDisplays("2006/01 (0.00/10.00)", "2006/02 (5.00/0.00)");
+    timeline.checkDisplays("2006/01", "2006/02");
 
     timeline.selectAll();
     timeline.checkSelection("2006/01", "2006/02");
@@ -78,32 +78,6 @@ public class MonthManagementTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("20/03/2006", TransactionType.VIREMENT, "income", "", 5, MasterCategory.NONE)
       .check();
-  }
-
-  public void testInternalTransfersAreIgnoredInPeriodStats() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -10, "misc")
-      .addTransaction("2006/01/11", -50, "internal")
-      .load();
-    timeline.assertDisplays("2006/01 (0.00/60.00)");
-    transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "internal", "", -50, MasterCategory.NONE)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "misc", "", -10, MasterCategory.NONE)
-      .check();
-
-    views.selectCategorization();
-    categorization.setOccasional("internal", MasterCategory.INTERNAL);
-
-    views.selectData();
-    transactions
-      .initContent()
-      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "internal", "", -50, MasterCategory.INTERNAL)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "misc", "", -10, MasterCategory.NONE)
-      .check();
-
-    timeline.assertDisplays("2006/01 (0.00/10.00)");
   }
 
   public void testMultiselectionCumulatesTransactions() throws Exception {
