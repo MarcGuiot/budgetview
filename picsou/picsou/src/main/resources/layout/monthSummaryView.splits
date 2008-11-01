@@ -13,6 +13,10 @@
         topColor="viewselector.top" bottomColor="viewselector.bottom"
         borderColor="viewselector.border" borderWidth="1" cornerRadius="10"/>
 
+    <style selector=".introMessage" ui="mainPanelMessage" opaque="false" marginTop="20" margin="10" weightY="0"/>
+    <style selector=".introMessage label" margin="2" fill="horizontal" horizontalAlignment="center"
+           foreground="mainpanel.message" font="-,bold,14"/>
+
   </styles>
 
   <column name="monthSummary">
@@ -24,6 +28,9 @@
 
         <card name="noData">
           <column styleClass="message">
+            <panel styleClass="introMessage">
+              <label text="Initialisation"/>
+            </panel>
             <htmlEditorPane text="$monthsummary.noData.text" name="noDataMessage" hyperlinkListener="hyperlinkHandler"/>
             <button action="import"/>
             <filler fill="vertical"/>
@@ -32,7 +39,11 @@
 
         <card name="noSeries">
           <column styleClass="message">
-            <htmlEditorPane text="$monthsummary.noSeries.text" name="noSeriesMessage" hyperlinkListener="hyperlinkHandler"/>
+            <panel styleClass="introMessage">
+              <label text="Initialisation"/>
+            </panel>
+            <htmlEditorPane text="$monthsummary.noSeries.text" name="noSeriesMessage"
+                            hyperlinkListener="hyperlinkHandler"/>
             <button action="openSeriesWizard"/>
             <filler fill="vertical"/>
           </column>
