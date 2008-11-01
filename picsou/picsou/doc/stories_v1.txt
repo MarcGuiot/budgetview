@@ -5,12 +5,7 @@
 
 - Gestion des licences : desactiver import + message jours restants
 
-- Sortir le contenu des mails dans le lang_fr.properties
-<<<<<<< local
-=======
-
 - charset/serialisation des strings => voir compatibilite ascendante
->>>>>>> other
 
 - Probleme de transaction plannifié a 0.
 

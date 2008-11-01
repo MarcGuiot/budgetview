@@ -21,5 +21,5 @@ public interface Selectable extends ChainedSelectableElement {
 
   void getSelectedGlobs(Collection<Glob> selected);
 
-  Visibility isVisible();
+  Visibility getVisibility();
 }

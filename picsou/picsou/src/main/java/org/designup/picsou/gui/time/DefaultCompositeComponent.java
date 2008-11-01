@@ -18,8 +18,7 @@ public abstract class DefaultCompositeComponent extends AbstractComponent implem
 
   public Selectable getSelectable(int x, int y) {
     Selectable selectable;
-    if (clickableAreaButton != null && clickableAreaButton.contains(x, y) ||
-        clickableAreaTop != null && clickableAreaTop.contains(x, y)) {
+    if (clickableAreaTop != null && clickableAreaTop.contains(x, y)) {
       for (Selectable month : components) {
         selectable = month.getSelectable(x, y);
         if (selectable != null) {

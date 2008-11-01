@@ -9,7 +9,6 @@ public abstract class AbstractComponent implements Selectable {
   protected boolean selected = false;
   protected ChainedSelectableElement element;
   protected Rectangle clickableAreaTop = new Rectangle();
-  protected Rectangle clickableAreaButton = new Rectangle();
   protected Visibility isVisible = Visibility.NOT_VISIBLE;
 
   public AbstractComponent(ChainedSelectableElement element) {
@@ -17,10 +16,7 @@ public abstract class AbstractComponent implements Selectable {
   }
 
   public Selectable getSelectable(int x, int y) {
-    if (clickableAreaTop != null && clickableAreaTop.contains(x - 1, y - 1)) {
-      return this;
-    }
-    if (clickableAreaButton != null && clickableAreaButton.contains(x - 1, y - 1)) {
+    if (clickableAreaTop != null && clickableAreaTop.contains(x, y)) {
       return this;
     }
     return null;
@@ -38,7 +34,7 @@ public abstract class AbstractComponent implements Selectable {
     selected = !selected;
   }
 
-  public Visibility isVisible() {
+  public Visibility getVisibility() {
     return isVisible;
   }
 

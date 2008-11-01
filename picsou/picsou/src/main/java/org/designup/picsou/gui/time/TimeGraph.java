@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.List;
 
 public class TimeGraph {
-  protected List<YearGraph> yearGraphs = Collections.emptyList();
+  private List<YearGraph> yearGraphs = Collections.emptyList();
   private GlobList months;
   private MonthFontMetricInfo monthFontMetricInfo;
   private int monthWidth;
@@ -275,4 +275,10 @@ public class TimeGraph {
       return yearGraphs.get(yearCount + 1);
     }
   }
+
+  // pour les test
+  List<YearGraph> getYearGraphs() {
+    return yearGraphs;
+  }
 }
+

@@ -34,10 +34,10 @@ public class TimeView extends View {
     viewPanel.register(new TimeViewPanel.VisibilityListener() {
 
       public void change(Selectable first, Selectable last) {
-        gotoFirstButton.setVisible(first.isVisible() != Selectable.Visibility.FULLY);
-        gotoPrevButton.setVisible(first.isVisible() != Selectable.Visibility.FULLY);
-        gotoLastButton.setVisible(last.isVisible() != Selectable.Visibility.FULLY);
-        gotoNextButton.setVisible(last.isVisible() != Selectable.Visibility.FULLY);
+        gotoFirstButton.setVisible(first.getVisibility() != Selectable.Visibility.FULLY);
+        gotoPrevButton.setVisible(first.getVisibility() != Selectable.Visibility.FULLY);
+        gotoLastButton.setVisible(last.getVisibility() != Selectable.Visibility.FULLY);
+        gotoNextButton.setVisible(last.getVisibility() != Selectable.Visibility.FULLY);
       }
     });
     createNavigationButtons();

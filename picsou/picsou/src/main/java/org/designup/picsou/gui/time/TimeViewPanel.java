@@ -41,7 +41,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private GlobRepository repository;
   private MonthViewColors colors;
   private Selectable selected;
-  int translation;
+  double translation;
   private long id = 0;
   private ScrollAndRepaint scrollRunnable = new ScrollAndRepaint();
   private Timer timer = new Timer(250, new ActionListener() {
@@ -54,12 +54,14 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private int paintCount = 0;
   private int currentPaintCount = 0;
   private TimeService timeService;
-  private VisibilityListener visibilityListener;
+  private VisibilityListener visibilityListener = new VisibilityListener() {
+    public void change(Selectable first, Selectable last) {
+    }
+  };
   private TooltipsHandler tooltipsHandler;
   private Selectable selectableForTooltips = null;
 
   public TimeViewPanel(GlobRepository globRepository, Directory directory) {
-    this.tooltipsHandler = tooltipsHandler;
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     this.repository = globRepository;
     timeService = directory.get(TimeService.class);
@@ -88,15 +90,23 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void paintComponent(Graphics g) {
+    boolean scroll = false;
     if (previousWidth > 0 && getWidth() > previousWidth && translation < 0) {
-      translation += getWidth() - previousWidth;
+      translation += (getWidth() - previousWidth) / 2.;
+      double tmp = timeGraph.getWidth() + translation - getWidth();
+      if (tmp < 0) {
+        translation = translation - tmp;
+      }
       if (translation > 0) {
         translation = 0;
       }
+      scroll = true;
     }
-    boolean shouldScroll = false;
-    if (getWidth() < previousWidth) {
-      shouldScroll = true;
+    if (getWidth() < previousWidth || previousWidth == -1) {
+      if (getWidth() < timeGraph.getWidth()) {
+        translation += (getWidth() - previousWidth) / 2.;
+      }
+      scroll = true;
     }
     if (previousWidth != getWidth()) {
       timeGraph.init(getWidth());
@@ -116,8 +126,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     finally {
       d.dispose();
     }
-    if (shouldScroll) {
-      scrollToLastVisible();
+    if (scroll && scrollToLastVisible()) {
       repaint();
     }
     synchronized (this) {
@@ -240,36 +249,28 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   private boolean scrollRigth(int shift) {
-    Selectable selected = timeGraph.getLastSelectable();
-    if (!selected.isVisible().equals(Selectable.Visibility.FULLY)) {
-      translation -= shift;
-      if (-translation + getWidth() > timeGraph.getWidth()) {
-        translation = getWidth() - timeGraph.getWidth();
-        if (translation > 0) {
-          translation = 0;
-        }
-        return false;
+    translation -= shift;
+    if (-translation + getWidth() > timeGraph.getWidth()) {
+      translation = getWidth() - timeGraph.getWidth();
+      if (translation > 0) {
+        translation = 0;
       }
-      else {
-        return true;
-      }
+      return false;
     }
-    return false;
+    else {
+      return true;
+    }
   }
 
   private boolean scrollLeft(int shift) {
-    Selectable selected = timeGraph.getFirstSelectable();
-    if (!selected.isVisible().equals(Selectable.Visibility.FULLY)) {
-      translation += shift;
-      if (translation > 0) {
-        translation = 0;
-        return false;
-      }
-      else {
-        return true;
-      }
+    translation += shift;
+    if (translation > 0) {
+      translation = 0;
+      return false;
     }
-    return false;
+    else {
+      return true;
+    }
   }
 
   public Set<Selectable> getCurrentlySelectedToUpdate() {
@@ -358,32 +359,58 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     repaint();
   }
 
-  private void scrollToLastVisible() {
+  private boolean scrollToLastVisible() {
     if (previousWidth == -1) {
       pendingOperation = new Runnable() {
         public void run() {
           scrollToLastVisible();
         }
       };
-      return;
+      return false;
     }
     if (currentlySelected.isEmpty()) {
-      return;
+      return false;
     }
     Selectable lastSelected = null;
     for (Selectable selected : currentlySelected) {
       lastSelected = selected;
     }
-    if (lastSelected == null || lastSelected.isVisible().equals(Selectable.Visibility.FULLY)) {
-      return;
+    if (lastSelected == null || lastSelected.getVisibility().equals(Selectable.Visibility.FULLY)) {
+      return false;
     }
-    Selectable mostLeftSelectable = timeGraph.getFirstSelectable();
-    int count = 1;
-    while (mostLeftSelectable != lastSelected) {
-      mostLeftSelectable = mostLeftSelectable.getRight();
-      count++;
+
+    Selectable tmp = timeGraph.getLastSelectable();
+    boolean visibleOnRight = false;
+    while (tmp != lastSelected) {
+      if (tmp.getVisibility() != Selectable.Visibility.NOT_VISIBLE) {
+        visibleOnRight = true;
+        break;
+      }
+      tmp = tmp.getLeft();
     }
-    scrollRigth(count * timeGraph.getMonthWidth());
+
+    if (getWidth() / timeGraph.getMonthWidth() < 2) {
+      return false;
+    }
+    if (visibleOnRight) {
+      Selectable left = lastSelected.getRight();
+      int count = 1;
+      while (left != null && left.getVisibility() == Selectable.Visibility.NOT_VISIBLE) {
+        left = left.getRight();
+        count++;
+      }
+      scrollLeft(count * timeGraph.getMonthWidth());
+    }
+    else {
+      Selectable right = lastSelected.getLeft();
+      int count = 1;
+      while (right != null && right.getVisibility() == Selectable.Visibility.NOT_VISIBLE) {
+        right = right.getLeft();
+        count++;
+      }
+      scrollRigth(count * timeGraph.getMonthWidth());
+    }
+    return true;
   }
 
   public void selectMonth(int... indexes) {
@@ -425,26 +452,22 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void goToFirst() {
-    do {
-    }
-    while (scrollLeft(timeGraph.getMonthWidth()));
+    scrollLeft(timeGraph.getYearWeigth() / 2);
     repaint();
   }
 
   public void goToLast() {
-    do {
-    }
-    while (scrollRigth(timeGraph.getMonthWidth()));
+    scrollRigth(timeGraph.getYearWeigth() / 2);
     repaint();
   }
 
   public void goToPrevious() {
-    scrollLeft(timeGraph.getYearWeigth());
+    scrollLeft(timeGraph.getMonthWidth());
     repaint();
   }
 
   public void goToNext() {
-    scrollRigth(timeGraph.getYearWeigth());
+    scrollRigth(timeGraph.getMonthWidth());
     repaint();
   }
 
