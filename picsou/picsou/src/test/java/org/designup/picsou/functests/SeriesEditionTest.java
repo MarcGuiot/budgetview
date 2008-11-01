@@ -1383,7 +1383,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
       .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne", MasterCategory.SAVINGS)
       .check();
-    System.out.println("SeriesEditionTest.testNoAutomaticAddMonth");
     operations.getPreferences().changeFutureMonth(2).validate();
     timeline.selectAll();
     timeline.checkSpanEquals("2008/06", "2008/10");

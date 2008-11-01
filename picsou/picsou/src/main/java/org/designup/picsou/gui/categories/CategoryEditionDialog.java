@@ -93,8 +93,7 @@ public class CategoryEditionDialog {
     masterList.setFilter(PicsouMatchers.masterUserCategories());
     initListener(subList);
 
-    dialog = PicsouDialog.createWithButtons(
-      directory.get(JFrame.class),
+    dialog = PicsouDialog.createWithButtons(directory.get(JFrame.class),
                                             builder.<JPanel>load(),
                                             new ValidateAction(), new CancelAction(), directory);
     //On ecoute les creation apres la mise a jour de la listView.

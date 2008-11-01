@@ -53,6 +53,10 @@ public class CategoryEditionChecker extends DataChecker {
     return this;
   }
 
+  public CategoryEditionChecker deleteMasterCategoryWithTransactionUpdate(final MasterCategory newCategory) {
+    return deleteMasterCategoryWithTransactionUpdate(getCategoryName(newCategory));
+  }
+
   public CategoryEditionChecker deleteMasterCategoryWithTransactionUpdate(final String newCategory) {
     Trigger trigger = getDeleteMasterButton().triggerClick();
     deleteCategory(newCategory, trigger);

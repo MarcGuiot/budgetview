@@ -24,6 +24,10 @@ public class CategoryChooserChecker extends DataChecker {
     return this;
   }
 
+  public CategoryChooserChecker selectCategory(MasterCategory master) {
+    return selectCategory(getCategoryName(master));
+  }
+
   public CategoryChooserChecker selectCategory(String categoryName, boolean oneSelection) {
     selectCategory(window, categoryName, oneSelection);
     return this;

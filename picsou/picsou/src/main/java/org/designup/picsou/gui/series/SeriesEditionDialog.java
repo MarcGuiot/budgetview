@@ -32,8 +32,7 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -100,7 +99,7 @@ public class SeriesEditionDialog {
                 && (values.contains(Series.IS_AUTOMATIC)
                     || series.get(Series.IS_AUTOMATIC))) { // le trigger de passage en automatique peut ne pas etre encore appelle
               GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
-                                                         GlobMatchers.fieldEquals(SeriesBudget.SERIES, series.get(Series.ID)));
+                                                         fieldEquals(SeriesBudget.SERIES, series.get(Series.ID)));
               Glob currentMonth = repository.get(CurrentMonth.KEY);
               for (Glob budget : seriesBudgets) {
                 if (budget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.MONTH_ID)) {
@@ -176,7 +175,7 @@ public class SeriesEditionDialog {
         currentSeries = selection.getAll(Series.TYPE).getFirst();
         if (currentSeries != null) {
           assignCategoryAction.setEnabled(true);
-          multiCategoryList.setFilter(GlobMatchers.fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)));
+          multiCategoryList.setFilter(fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)));
         }
         else {
           assignCategoryAction.setEnabled(false);
@@ -203,7 +202,6 @@ public class SeriesEditionDialog {
                           localRepository.addChangeListener(updater);
                         }
                       });
-
 
     localRepository.addChangeListener(new OkButtonUpdater());
 
@@ -269,7 +267,7 @@ public class SeriesEditionDialog {
       protected Integer getMonthLimit() {
         GlobList transactions =
           localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, currentSeries.get(Series.ID))
-            .getGlobs().filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, false), localRepository)
+            .getGlobs().filterSelf(fieldEquals(Transaction.PLANNED, false), localRepository)
             .sort(Transaction.MONTH);
         Glob firstMonth = transactions.getFirst();
         if (firstMonth == null) {
@@ -430,17 +428,20 @@ public class SeriesEditionDialog {
 
     initCategorizeVisibility();
     GlobList seriesList =
-      repository.getAll(Series.TYPE, fieldEquals(Series.BUDGET_AREA, budgetArea.getId()));
+      repository.getAll(Series.TYPE, not(fieldEquals(Series.BUDGET_AREA, BudgetArea.UNCATEGORIZED.getId())));
 
     GlobList globsToLoad = new GlobList();
     for (Glob series : seriesList) {
       globsToLoad.add(series);
       globsToLoad.addAll(repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
                                                 series.get(Series.ID)).getGlobs());
-      globsToLoad.addAll(repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
-        .getGlobs().filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, false), repository));
+      ReadOnlyGlobRepository.MultiFieldIndexed index =
+        repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID));
+      globsToLoad.addAll(index.getGlobs().filterSelf(fieldEquals(Transaction.PLANNED, false), repository));
     }
     localRepository.reset(globsToLoad, SeriesBudget.TYPE, Series.TYPE, Transaction.TYPE);
+
+    this.seriesList.setFilter(fieldEquals(Series.BUDGET_AREA, budgetArea.getId()));
   }
 
   private void initCategorizeVisibility() {
@@ -551,7 +552,7 @@ public class SeriesEditionDialog {
         Integer defaultCategory = currentSeries.get(Series.DEFAULT_CATEGORY);
         if (budgetArea.isMultiCategories()) {
           Set<Integer> valueSet = localRepository.getAll(SeriesToCategory.TYPE,
-                                                         GlobMatchers.fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)))
+                                                         fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)))
             .getValueSet(SeriesToCategory.CATEGORY);
           if (defaultCategory != null) {
             valueSet.add(defaultCategory);
@@ -815,7 +816,8 @@ public class SeriesEditionDialog {
     private void update(GlobRepository repository) {
       GlobList series = repository.getAll(Series.TYPE);
       for (Glob glob : series) {
-        if (glob.get(Series.DEFAULT_CATEGORY) == null) {
+        if (!BudgetArea.UNCATEGORIZED.getId().equals(glob.get(Series.BUDGET_AREA)) &&
+            glob.get(Series.DEFAULT_CATEGORY) == null) {
           okAction.setEnabled(false);
           return;
         }
@@ -823,7 +825,6 @@ public class SeriesEditionDialog {
       okAction.setEnabled(true);
     }
   }
-
 
   private static class SeriesToCategoryStringifier extends AbstractGlobStringifier {
     private final GlobStringifier categoryStringifier;

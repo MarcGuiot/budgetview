@@ -2,6 +2,8 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategoryEditionChecker;
 import org.designup.picsou.functests.checkers.CategoryDeletionChecker;
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
+import org.designup.picsou.functests.checkers.CategoryChooserChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -192,6 +194,31 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries(0, "course");
     views.selectCategorization();
     categorization.checkEnvelopeSeriesIsSelected("course", MasterCategory.TELECOMS);
+  }
+
+  public void testCannotDeleteUsedCategoriesEvenFromAnotherBudgetArea() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/15", -2.0, "Auchan", MasterCategory.HOUSE)
+      .load();
+
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
+
+    views.selectBudget();
+    SeriesEditionDialogChecker seriesDialog = budgetView.recurring.createSeries();
+    CategoryChooserChecker categoryChooser = seriesDialog.openCategory();
+    categoryChooser
+      .openCategoryEdition()
+      .selectMaster(MasterCategory.FOOD)
+      .deleteMasterCategoryWithTransactionUpdate(MasterCategory.TRANSPORTS)
+      .validate();
+    categoryChooser.selectCategory(MasterCategory.TRANSPORTS).validate();
+    seriesDialog.setName("New series").validate();
+
+    budgetView.envelopes.editSeries("Courant")
+      .checkCategory(MasterCategory.TRANSPORTS)
+      .cancel();
   }
 
   public void testDeleteMasterCategoryUpdatesCategorizationOccasional() throws Exception {

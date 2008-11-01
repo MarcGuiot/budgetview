@@ -57,8 +57,7 @@ public class CategoryUpdater implements GlobSelectionListener, ChangeSetListener
       return;
     }
 
-    Glob category = repository.get(KeyBuilder.newKey(Category.TYPE, categoryId));
-
+    Glob category = repository.find(KeyBuilder.newKey(Category.TYPE, categoryId));
     boolean isGoodSeries = series.getKey().equals(seriesKey);
     boolean isGoodCategory = category.getKey().equals(categoryKey);
     if (isGoodSeries && isGoodCategory) {
