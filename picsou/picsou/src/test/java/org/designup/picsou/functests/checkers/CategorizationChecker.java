@@ -214,7 +214,7 @@ public class CategorizationChecker extends DataChecker {
 
   public CategorizationChecker selectRecurringSeries(String name) {
     Panel panel = getRecurringSeriesPanel();
-    panel.getToggleButton(name).click();
+    panel.getRadioButton(name).click();
     return this;
   }
 

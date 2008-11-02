@@ -16,8 +16,8 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.filtering.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HelpService;
-import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.LicenseDialog;
+import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
 import org.designup.picsou.gui.monthsummary.InfoView;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
@@ -148,7 +148,7 @@ public class MainPanel {
       licenseInfoView);
 
     createMenuBar(parent, directory);
-  //  timeView.selectLastMonth();
+    timeView.selectLastMonth();
   }
 
   private void selectLastMonthWithATransaction(GlobRepository repository, Directory directory) {
