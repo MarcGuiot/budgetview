@@ -111,13 +111,23 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   }
 
 
-  public void testSameDateKeepOfxOrder() throws Exception {
-    final String path1 = QifBuilder
+  public void testSameOperations() throws Exception {
+    final String path = QifBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .addTransaction("2006/01/09", -1.1, "Menu K")
       .save();
+
+    operations.importQifFile(path, SOCIETE_GENERALE, 0.);
+
+    views.selectData();
+    transactions
+      .initContent()
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
+      .add("09/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
+      .check();
   }
 
 

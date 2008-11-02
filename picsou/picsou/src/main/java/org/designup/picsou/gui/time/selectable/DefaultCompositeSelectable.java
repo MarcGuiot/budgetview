@@ -19,8 +19,7 @@ public abstract class DefaultCompositeSelectable extends AbstractSelectable impl
 
   public Selectable getSelectable(int x, int y) {
     Selectable selectable;
-    if (clickableAreaButton != null && clickableAreaButton.contains(x, y) ||
-        clickableAreaTop != null && clickableAreaTop.contains(x, y)) {
+    if (clickableAreaTop != null && clickableAreaTop.contains(x, y)) {
       for (Selectable month : selectables) {
         selectable = month.getSelectable(x, y);
         if (selectable != null) {

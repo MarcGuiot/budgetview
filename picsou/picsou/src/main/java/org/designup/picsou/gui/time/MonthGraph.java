@@ -22,6 +22,7 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
   private PositionProvider positionProvider;
   
   private static final int MIN_WIDTH = 50;
+  public static final int BALANCE_HEIGHT = 4;
 
   public MonthGraph(Glob month, TimeViewColors colors, ChainedSelectableElement element,
                     TimeService timeService, PositionProvider positionProvider) {
@@ -41,7 +42,7 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
   }
 
   public void draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter, int height, int width,
-                   int monthRank, Rectangle visibleRectangle, int topGraph, int heightGraph) {
+                   int monthRank, Rectangle visibleRectangle) {
     clickableAreaTop = TimeGraph.getClickableArea(transformationAdapter.getTransform(), width, height);
     Rectangle2D intersection = visibleRectangle.createIntersection(clickableAreaTop);
     if (intersection.getWidth() != clickableAreaTop.getWidth()) {
@@ -78,28 +79,21 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
 
     MonthFontMetricInfo.Size nearest = monthSize.getSize(monthRank);
     graphics2D.setFont(colors.getMonthFont());
-    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, getHeight() - 5, nearest.getName(),
+    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, height - 5 - 2 * BALANCE_HEIGHT, nearest.getName(),
                            colors.getMonthTextColor(this.month.get(Month.ID), timeService.getCurrentMonthId()), colors.textShadow);
 
     try {
       transformationAdapter.save();
-      transformationAdapter.translate(0, topGraph);
-      clickableAreaButton = TimeGraph.getClickableArea(transformationAdapter.getTransform(), width, heightGraph);
-
-      graphics2D.setPaint(selected ? colors.selectedMonthBottom : colors.yearBackground);
-      graphics2D.fillRect(0, 0, width, heightGraph);
-
+      transformationAdapter.translate(0, height - 2 * BALANCE_HEIGHT);
       Double accountBalance = positionProvider.getPosition(this.month.get(Month.ID));
       double accountBalanceLimit = positionProvider.getPositionLimit(this.month.get(Month.ID));
 
       if (accountBalance != null) {
-
         double diff = accountBalance - accountBalanceLimit;
-
         Color color = colors.getAmountColor(diff);
         graphics2D.setPaint(color);
         int barWidth = width / 4;
-        graphics2D.fillRect((width - barWidth) / 2, 0, barWidth, heightGraph);
+        graphics2D.fillRect((width - barWidth) / 2, 0, barWidth, BALANCE_HEIGHT);
       }
     }
     finally {
@@ -108,7 +102,7 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
   }
 
   public int getHeight() {
-    return monthSize.getHeight() + 4;
+    return monthSize.getHeight() + 4 + 2 * BALANCE_HEIGHT;
   }
 
   public int getMaxWidth() {

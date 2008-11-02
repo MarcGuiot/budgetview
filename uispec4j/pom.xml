@@ -5,11 +5,13 @@
 
     <!-- POM Relationships -->
     <groupId>org.uispec4j</groupId>
-    <artifactId>main-uispec4j-root</artifactId>
+    <artifactId>uispec4j-root</artifactId>
     <version>2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>root</module>
+        <module>uispec4j</module>
+        <module>addressbook</module>
+        <module>calculator</module>
     </modules>
 
     <!-- Project Information -->

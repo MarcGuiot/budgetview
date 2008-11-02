@@ -79,20 +79,21 @@ public class YearGraph extends DefaultCompositeSelectable {
       return monthDim;
     }
     try {
-      transformationAdapter.translate(0, yearCellHeight);
-      Paint previousPaint = graphics2D.getPaint();
-      if (selected) {
-        graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedMonthTop, 0, HEIGHT, colors.selectedMonthBottom));
-      }
-      else {
-        graphics2D.setPaint(colors.yearBackground);
-      }
-      graphics2D.fillRect(0, monthHeight + BALANCE_HEIGHT, monthDim, HEIGHT);
-      graphics2D.setPaint(previousPaint);
+      transformationAdapter.translate(0, getHeight() - monthHeight);
+//      if (selected) {
+//        Paint paint = graphics2D.getPaint();
+//        graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedMonthTop, 0, HEIGHT, colors.selectedMonthBottom));
+//        graphics2D.fillRect(0, monthHeight + BALANCE_HEIGHT, monthDim, HEIGHT);
+//        graphics2D.setPaint(paint);
+//      }
+//      else {
+//        Paint paint = graphics2D.getPaint();
+//        graphics2D.setPaint(colors.yearBackground);
+//        graphics2D.fillRect(0, monthHeight + BALANCE_HEIGHT, monthDim, HEIGHT);
+//        graphics2D.setPaint(paint);
+//      }
       for (MonthGraph month : monthGraphs) {
-        month.draw(graphics2D, transformationAdapter, monthHeight, monthWidth,
-                   monthRank, visibleRectangle,
-                   monthHeight, BALANCE_HEIGHT);
+        month.draw(graphics2D, transformationAdapter, monthHeight, monthWidth, monthRank, visibleRectangle);
         transformationAdapter.translate(monthWidth, 0);
       }
     }
@@ -133,7 +134,7 @@ public class YearGraph extends DefaultCompositeSelectable {
   }
 
   public int getHeight() {
-    return monthHeight + yearCellHeight + HEIGHT + BALANCE_HEIGHT;
+    return monthHeight + yearCellHeight + HEIGHT;
   }
 
   private void initMonthHeight() {
@@ -224,5 +225,10 @@ public class YearGraph extends DefaultCompositeSelectable {
 
   public int getYear() {
     return year;
+  }
+
+  //pour les test
+  MonthGraph[] getMonthsGraph() {
+    return monthGraphs;
   }
 }

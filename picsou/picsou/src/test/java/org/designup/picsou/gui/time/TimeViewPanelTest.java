@@ -110,13 +110,13 @@ public class TimeViewPanelTest extends TestCase {
     directory.add(TimeService.class, new TimeService());
     directory.add(ColorService.class, PicsouColors.createColorService());
     GlobList months = new GlobList();
-    for (int i = 4; i < 13; i++) {
+    for (int i = 10; i < 13; i++) {
       months.add(GlobBuilder.init(Month.TYPE).set(Month.ID, Month.toYyyyMm(2006, i)).get());
     }
     for (int i = 1; i < 13; i++) {
       months.add(GlobBuilder.init(Month.TYPE).set(Month.ID, Month.toYyyyMm(2007, i)).get());
     }
-    for (int i = 1; i < 5; i++) {
+    for (int i = 1; i < 3; i++) {
       months.add(GlobBuilder.init(Month.TYPE).set(Month.ID, Month.toYyyyMm(2008, i)).get());
     }
     repository.reset(months, Month.TYPE);
@@ -219,7 +219,7 @@ public class TimeViewPanelTest extends TestCase {
       public void getSelectedGlobs(Collection<Glob> selected) {
       }
 
-      public Visibility isVisible() {
+      public Visibility getVisibility() {
         return Visibility.FULLY;
       }
 

@@ -5,6 +5,8 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.gui.TimeService;
+import org.globsframework.utils.Dates;
 
 public class RestartTest extends LoggedInFunctionalTestCase {
 
@@ -203,6 +205,41 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.getGauge().checkProgressMessageHidden();
+  }
+
+  public void testResartInNewMonth() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/26", 1000, "Company")
+      .addTransaction("2008/08/10", -400.0, "Auchan")
+      .load();
+    views.selectCategorization();
+    categorization.setIncome("Company", "Salaire", true);
+    categorization.setEnvelope("Auchan", "Course", MasterCategory.FOOD, true);
+    operations.getPreferences().changeFutureMonth(2).validate();
+    views.selectData();
+    timeline.selectAll();
+    transactions.initContent()
+      .add("26/10/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire", MasterCategory.INCOME)
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course", MasterCategory.FOOD)
+      .add("26/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire", MasterCategory.INCOME)
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course", MasterCategory.FOOD)
+      .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salaire", MasterCategory.INCOME)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -400.00, "Course", MasterCategory.FOOD)
+      .check();
+    TimeService.setCurrentDate(Dates.parse("2008/09/02"));
+    restartApplication();
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("26/11/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire", MasterCategory.INCOME)
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course", MasterCategory.FOOD)
+      .add("26/10/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire", MasterCategory.INCOME)
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course", MasterCategory.FOOD)
+      .add("26/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire", MasterCategory.INCOME)
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course", MasterCategory.FOOD)
+      .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salaire", MasterCategory.INCOME)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -400.00, "Course", MasterCategory.FOOD)
+      .check();
   }
   
   protected void restartApplication() {

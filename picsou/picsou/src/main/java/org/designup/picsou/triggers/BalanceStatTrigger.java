@@ -65,7 +65,6 @@ public class BalanceStatTrigger implements ChangeSetListener {
     double uncategorized = 0;
     double beginOfMonth = 0;
     double endOfMonth = 0;
-    double lastKnownBalance = 0;
   }
 
   private static class BalanceStatCalculator implements GlobFunctor {
@@ -248,10 +247,12 @@ public class BalanceStatTrigger implements ChangeSetListener {
     }
 
     void createStat() {
-      for (Glob month : repository.getAll(Month.TYPE)) {
+      GlobList months = repository.getAll(Month.TYPE).sort(Month.ID);
+      for (Glob month : months) {
         Integer monthId = month.get(Month.ID);
         Glob beginOfMonthTransaction = firstTransactionForMonth.get(monthId);
         Glob endOfMonthTransaction = lastTransactionForMonth.get(monthId);
+
         Double beginOfMonthBalance = null;
         Double balance = null;
         Double endOfMonthBalance = null;
@@ -264,6 +265,10 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
 
         SeriesAmounts seriesAmounts = monthSeriesAmounts.get(monthId);
+
+        if (seriesAmounts == null) {
+          seriesAmounts = new SeriesAmounts();
+        }
 
         repository.create(Key.create(BalanceStat.TYPE, monthId),
                           value(BalanceStat.MONTH_BALANCE, balance),
@@ -304,12 +309,10 @@ public class BalanceStatTrigger implements ChangeSetListener {
           Integer currentMonthId = lastRealKnownTransaction.get(Transaction.BANK_MONTH);
           if (currentMonthId.equals(monthId)) {
             repository.update(Key.create(BalanceStat.TYPE, currentMonthId),
-                              value(
-                                BalanceStat.LAST_KNOWN_ACCOUNT_BALANCE,
-                                lastRealKnownTransaction.get(Transaction.BALANCE)),
-                              value(
-                                BalanceStat.LAST_KNOWN_ACCOUNT_BALANCE_DAY,
-                                lastRealKnownTransaction.get(Transaction.BANK_DAY)));
+                              value(BalanceStat.LAST_KNOWN_ACCOUNT_BALANCE,
+                                    lastRealKnownTransaction.get(Transaction.BALANCE)),
+                              value(BalanceStat.LAST_KNOWN_ACCOUNT_BALANCE_DAY,
+                                    lastRealKnownTransaction.get(Transaction.BANK_DAY)));
           }
         }
       }
