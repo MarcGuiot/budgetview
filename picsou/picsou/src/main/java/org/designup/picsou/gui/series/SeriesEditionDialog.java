@@ -406,16 +406,28 @@ public class SeriesEditionDialog {
                                               value(Series.DECEMBER, true)));
     if (budgetArea == BudgetArea.SPECIAL) {
       SelectionService selectionService = directory.get(SelectionService.class);
-      GlobList list = selectionService.getSelection(Month.TYPE).sort(Month.ID);
-      values.add(value(Series.IS_AUTOMATIC, false));
-      if (!list.isEmpty()) {
-        values.add(value(Series.FIRST_MONTH, list.getFirst().get(Month.ID)));
-        values.add(value(Series.LAST_MONTH, list.getLast().get(Month.ID)));
+      if (!selectedTransactions.isEmpty()) {
+        Integer first = Integer.MAX_VALUE;
+        Integer last = Integer.MIN_VALUE;
+        for (Glob transaction : selectedTransactions) {
+          first = Math.min(first, transaction.get(Transaction.MONTH));
+          last = Math.max(last, transaction.get(Transaction.MONTH));
+        }
+        values.add(value(Series.FIRST_MONTH, first));
+        values.add(value(Series.LAST_MONTH, last));
       }
       else {
-        int monthId = localDirectory.get(TimeService.class).getCurrentMonthId();
-        values.add(value(Series.FIRST_MONTH, monthId));
-        values.add(value(Series.LAST_MONTH, monthId));
+        GlobList list = selectionService.getSelection(Month.TYPE).sort(Month.ID);
+        values.add(value(Series.IS_AUTOMATIC, false));
+        if (!list.isEmpty()) {
+          values.add(value(Series.FIRST_MONTH, list.getFirst().get(Month.ID)));
+          values.add(value(Series.LAST_MONTH, list.getLast().get(Month.ID)));
+        }
+        else {
+          int monthId = localDirectory.get(TimeService.class).getCurrentMonthId();
+          values.add(value(Series.FIRST_MONTH, monthId));
+          values.add(value(Series.LAST_MONTH, monthId));
+        }
       }
     }
     if (budgetArea == BudgetArea.INCOME) {

@@ -393,6 +393,11 @@ public class FirstTimeTest extends UISpecTestCase {
       .add("Habille moi", -30.00, 1770.00, 1770.00)
       .add("EPARGNE", -100.00, 1800.00, 1800.00)
       .check();
+
+//    views.selectBudget();
+//    BudgetViewChecker budgetView = new BudgetViewChecker(window);
+//    budgetView.income.editSeries("Income 1").setName("Revenu").validate();
+
     window.dispose();
   }
 
@@ -467,6 +472,11 @@ public class FirstTimeTest extends UISpecTestCase {
       .add("Habille moi", -30.00, 1770.00, 1770.00)
       .add("EPARGNE", -100.00, 1800.00, 1800.00)
       .check();
+
+//    views.selectBudget();
+//    BudgetViewChecker budgetView = new BudgetViewChecker(window);
+//    budgetView.income.editSeries("Income 1").setName("Revenu").validate();
+
     window.dispose();
   }
 
