@@ -473,6 +473,38 @@ public class SplitsRepeatTest extends SplitsTestCase {
     assertFalse(panel.getTextBox("aa").isVisible());
   }
 
+  public void testUpdateNotCreatedPanelRepeat() throws Exception {
+    Repeat<String> repeat =
+      builder.addRepeat("myRepeat", Arrays.asList("aa"),
+                        new RepeatComponentFactory<String>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                            cellBuilder.add("label", new JLabel(object));
+                            cellBuilder.add("btn", new JButton(object));
+                          }
+                        });
+
+    repeat.insert("bb", 1);
+    repeat.insert("cc", 2);
+    repeat.remove(0);
+    repeat.move(1, 0);
+
+    JPanel panel = parse(
+      "<repeat ref='myRepeat'>" +
+      "  <row>" +
+      "    <label ref='label'/>" +
+      "    <button ref='btn'/>" +
+      "  </row>" +
+      "</repeat>");
+
+    checkPanel(panel,
+               "panel\n" +
+               "  label:cc\n" +
+               "  button:cc\n" +
+               "panel\n" +
+               "  label:bb\n" +
+               "  button:bb\n");
+  }
+
   private void checkButton(JPanel panel, int componentIndex, String label, int x, int y) {
     JButton button = (JButton)panel.getComponent(componentIndex);
     assertEquals(label, button.getText());
@@ -522,10 +554,10 @@ public class SplitsRepeatTest extends SplitsTestCase {
   }
 
   private static java.util.List<String> getItems(String item) {
-    if ("aa" .equals(item)) {
+    if ("aa".equals(item)) {
       return Arrays.asList("a1", "a2");
     }
-    if ("cc" .equals(item)) {
+    if ("cc".equals(item)) {
       return Arrays.asList("c1");
     }
     return Collections.emptyList();
