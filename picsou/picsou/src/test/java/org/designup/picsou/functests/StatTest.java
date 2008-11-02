@@ -105,10 +105,13 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     timeline.selectAll();
     timeline.selectMonth("2008/08");
+
     views.selectHome();
-    monthSummary.checkEnvelope(110, 110 + 80, 110 - 90);
+    monthSummary.checkEnvelopeOverrun(110, 90 + 80, 110 - 90);
+
     views.selectBudget();
     budgetView.envelopes.checkTotalAmounts(-110, -190);
+
     views.selectData();
     transactions.initContent()
       .add("15/08/2008", TransactionType.PLANNED, "Planned: Carouf", "", -80.00, "Carouf", MasterCategory.FOOD)

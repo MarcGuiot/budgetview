@@ -78,7 +78,7 @@
               <column border="empty(10)">
                 <repeat ref="budgetAreaRepeat" layout="verticalGrid">
                   <button ref="budgetAreaName" styleClass="itemLink"/>
-                  <button ref="budgetAreaAmount" styleClass="amountLink"/>
+                  <button ref="budgetAreaAmount" styleClass="amountLink" tooltipText="$monthsummary.observed.tooltip"/>
                   <component ref="budgetAreaGauge" styleClass="detailGauge"/>
                   <label ref="budgetAreaPlannedAmount" styleClass="amount" anchor="right"/>
                 </repeat>

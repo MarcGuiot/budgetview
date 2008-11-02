@@ -263,6 +263,23 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkTotal(500 - 75);
   }
 
+  public void testAdjustedValueShownAfterOverrunInABudgetArea() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/05", 1000, "WorldCo")
+      .addTransaction("2008/07/15", -100, "Auchan")
+      .addTransaction("2008/08/05", -80, "Auchan")
+      .addTransaction("2008/08/15", -70, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+
+    timeline.selectMonth("2008/08");
+    views.selectHome();
+    monthSummary
+      .checkEnvelopeOverrun(150, 100, 50);
+  }
+
   public void testUncategorized() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "MyCompany")

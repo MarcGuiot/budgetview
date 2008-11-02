@@ -4,6 +4,7 @@ import junit.framework.Assert;
 import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
@@ -83,11 +84,22 @@ public class MonthSummaryChecker extends DataChecker {
 
   public MonthSummaryChecker checkEnvelope(double amount, double planned) {
     checkBudgetArea(BudgetArea.ENVELOPES, amount, planned);
+
+    TextBox plannedLabel = getPlannedLabel(BudgetArea.ENVELOPES);
+    assertThat(plannedLabel.foregroundNear("222222"));
+    assertThat(plannedLabel.tooltipEquals(Lang.get("monthsummary.planned.tooltip.normal")));
     return this;
   }
 
-  public MonthSummaryChecker checkEnvelope(double amount, double planned, double overrunPart) {
-    checkBudgetArea(BudgetArea.ENVELOPES, amount, planned, overrunPart);
+  public MonthSummaryChecker checkEnvelopeOverrun(double amount, double planned, double overrunPart) {
+    check(BudgetArea.ENVELOPES, amount);
+    checkPlanned(BudgetArea.ENVELOPES, planned);
+    checkGauge(BudgetArea.ENVELOPES, amount, planned + overrunPart, overrunPart);
+
+    BudgetArea budgetArea = BudgetArea.ENVELOPES;
+    TextBox plannedLabel = getPlannedLabel(budgetArea);
+    assertThat(plannedLabel.foregroundNear("aa0000"));
+    assertThat(plannedLabel.tooltipContains("Overrun: " + toString(overrunPart)));
     return this;
   }
 
@@ -122,12 +134,6 @@ public class MonthSummaryChecker extends DataChecker {
     checkGauge(budgetArea, amount, planned);
   }
 
-  private void checkBudgetArea(BudgetArea budgetArea, double amount, double planned, double overrun) {
-    check(budgetArea, amount);
-    checkPlanned(budgetArea, planned);
-    checkGauge(budgetArea, amount, planned, overrun);
-  }
-
   public void gotoTransactions(BudgetArea budgetArea) {
     Button button = getPanel().getButton(budgetArea.getName() + ":budgetAreaAmount");
     button.click();
@@ -135,12 +141,16 @@ public class MonthSummaryChecker extends DataChecker {
 
   private void check(BudgetArea budgetArea, double amount) {
     Button button = getPanel().getButton(budgetArea.getName() + ":budgetAreaAmount");
-    assertThat(button.textEquals(MonthSummaryChecker.this.toString(amount)));
+    assertThat(button.textEquals(toString(amount)));
   }
 
   private void checkPlanned(BudgetArea budgetArea, double amount) {
-    TextBox textBox = getPanel().getTextBox(budgetArea.getName() + ":budgetAreaPlannedAmount");
-    assertThat(textBox.textEquals(MonthSummaryChecker.this.toString(amount)));
+    TextBox textBox = getPlannedLabel(budgetArea);
+    assertThat(textBox.textEquals(toString(amount)));
+  }
+
+  private TextBox getPlannedLabel(BudgetArea budgetArea) {
+    return getPanel().getTextBox(budgetArea.getName() + ":budgetAreaPlannedAmount");
   }
 
   private void checkGauge(BudgetArea budgetArea, double amount, double planned) {
