@@ -7,6 +7,7 @@ import org.designup.picsou.model.Month;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.gui.splits.SplitsEditor;
 
 import javax.swing.*;
 

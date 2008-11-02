@@ -13,7 +13,15 @@
     <style selector=".monthBlock"
            background="dialog.block" opaque="true" border="etched"/>
     <style selector=".monthBlock label" marginTop="10" marginBottom="5"/>
-    <style selector=".monthBlock repeat" margin="5"/>    
+    <style selector=".monthBlock repeat" margin="5"/>
+
+
+    <ui name="monthToggle" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
+        borderWidth="1" cornerRadius="10"
+        topColor="monthChooser.top"
+        bottomColor="monthChooser.bottom"
+        borderColor="monthChooser.border"/>
+    <style selector="toggleButton.monthSelector" ui="monthToggle" opaque="false" foreground="monthChooser.text"/>
   </styles>
 
   <panel styleClass="dialog" opaque="true">
@@ -31,21 +39,21 @@
         <column styleClass="monthBlock" marginLeft="0" marginRight="10">
           <label ref="previousYearLabel"/>
           <repeat ref="previousYearMonths">
-            <toggleButton ref="month" styleClass="selector"/>
+            <toggleButton ref="month" styleClass="monthSelector"/>
           </repeat>
         </column>
 
         <column styleClass="monthBlock" marginLeft="10" marginRight="10">
           <label ref="currentYearLabel"/>
           <repeat ref="currentYearMonths">
-            <toggleButton ref="month" styleClass="selector"/>
+            <toggleButton ref="month" styleClass="monthSelector"/>
           </repeat>
         </column>
 
         <column styleClass="monthBlock" marginLeft="10" marginRight="0">
           <label ref="nextYearLabel"/>
           <repeat ref="nextYearMonths">
-            <toggleButton ref="month" styleClass="selector"/>
+            <toggleButton ref="month" styleClass="monthSelector"/>
           </repeat>
         </column>
       </row>

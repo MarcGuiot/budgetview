@@ -4,6 +4,7 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -129,8 +130,8 @@ public class MonthChooserDialog implements ColorChangeListener {
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    todayColor = colorLocator.get("month.chooser.today.color");
-    defaultForegroundColor = colorLocator.get("toggle.selector.normal");
+    todayColor = colorLocator.get("monthChooser.today");
+    defaultForegroundColor = colorLocator.get("monthChooser.text");
     update();
   }
 
