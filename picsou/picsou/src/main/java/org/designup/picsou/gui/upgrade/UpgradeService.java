@@ -28,6 +28,12 @@ public class UpgradeService {
         plannedTransactionCorrecter.check();
         plannedTransactionCorrecter.correct();
       }
+//      if (version.get(VersionInformation.CURRENT_JAR_VERSION) <= 4){
+//        repository.update(Series.OCCASIONAL_SERIES,
+//                          FieldValue.value(Series.PROFILE_TYPE, ProfileType.EVERY_MONTH.getId()),
+//                          FieldValue.value(Series.DAY, 1),
+//                          FieldValue.value(Series.LABEL, "occasional"));
+//      }
       repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
     }
     finally {

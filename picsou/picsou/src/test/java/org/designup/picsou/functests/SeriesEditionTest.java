@@ -1414,4 +1414,24 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .add("28/08/2008", TransactionType.VIREMENT, "Complement", "", 5000.00, "Salaire sup", MasterCategory.INCOME)
       .check();
   }
+
+
+  public void testSpecial() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2007/05/04", -100.00, "Virement")
+      .addTransaction("2007/06/04", -100.00, "CENTER PARC")
+      .addTransaction("2007/11/04", -100.00, "CENTER PARC")
+      .addTransaction("2008/03/04", -100.00, "CENTER PARC")
+      .addTransaction("2008/07/04", -10.00, "McDo")
+      .load();
+    views.selectCategorization();
+    categorization.selectTableRows("CENTER PARC");
+    categorization.selectSpecial()
+      .createSpecialSeries()
+      .setName("Center Parc")
+      .setCategory(MasterCategory.LEISURES)
+      .checkStartDate("June 2007")
+      .checkEndDate("Mar 2008")
+      .validate();
+  }
 }

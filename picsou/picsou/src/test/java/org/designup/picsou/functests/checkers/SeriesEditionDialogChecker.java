@@ -434,13 +434,13 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkStartDate(String monthId) {
-    checkDate("beginSeriesDate", monthId);
+  public SeriesEditionDialogChecker checkStartDate(String date) {
+    checkDate("beginSeriesDate", date);
     return this;
   }
 
-  public SeriesEditionDialogChecker setEndDate(int monthId) {
-    setDate("endSeriesCalendar", monthId);
+  public SeriesEditionDialogChecker setEndDate(int date) {
+    setDate("endSeriesCalendar", date);
     return this;
   }
 
