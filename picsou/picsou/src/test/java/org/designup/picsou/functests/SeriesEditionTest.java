@@ -489,10 +489,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.income
       .createSeries()
-      .checkCategorizeEnable(true)
+      .checkCategorizeEnabled(true)
       .checkMultiCategorizeIsVisible(false)
-      .checkOkEnabled(false)
-      .setCategory(MasterCategory.INCOME)
+      .checkCategory(MasterCategory.INCOME)
       .checkOkEnabled(true)
       .switchToManual()
       .checkAmountLabel("Planned amount for august 2008")
@@ -503,13 +502,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.envelopes
       .createSeries().unselect()
-      .checkCategorizeEnable(false)
+      .checkCategorizeEnabled(false)
       .checkCategoryListEnable(true)
       .cancel();
 
     budgetView.income
       .createSeries().unselect()
-      .checkCategorizeEnable(false)
+      .checkCategorizeEnabled(false)
       .checkCategorizeLabelIsEmpty()
       .checkMultiCategorizeIsVisible(false)
       .cancel();
@@ -668,7 +667,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  public void testOkButtonIsReenabledWhenTheDialogIsReopened() throws Exception {
+  public void testOkButtonIsEnabledWhenACategoryIsSelectedAndReenabledWhenTheDialogIsReopened() throws Exception {
     views.selectBudget();
 
     budgetView.envelopes.createSeries()

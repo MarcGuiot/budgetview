@@ -418,6 +418,9 @@ public class SeriesEditionDialog {
         values.add(value(Series.LAST_MONTH, monthId));
       }
     }
+    if (budgetArea == BudgetArea.INCOME) {
+      values.add(value(Series.DEFAULT_CATEGORY, MasterCategory.INCOME.getId()));
+    }
     return localRepository.create(Series.TYPE, values.toArray(new FieldValue[values.size()]));
   }
 

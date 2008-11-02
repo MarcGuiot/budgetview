@@ -497,7 +497,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
     assertFalse(dialog.isVisible());
   }
 
-  public SeriesEditionDialogChecker checkCategorizeEnable(boolean enable) {
+  public SeriesEditionDialogChecker checkCategorizeEnabled(boolean enable) {
     Button categorizeButton = getCategorizeButton();
     if (enable) {
       assertThat(categorizeButton.isEnabled());

@@ -25,7 +25,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
     categorization.createIncomeSeries()
       .setName("Prime")
-      .setCategory(MasterCategory.INCOME)
+      .checkCategory(MasterCategory.INCOME)
       .validate();
 
     categorization.checkContainsIncomeSeries("Prime");
@@ -51,6 +51,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     categorization.selectRecurring();
     categorization.createRecurringSeries()
       .setName("Culture")
+      .checkNoCategory()
       .setCategory(MasterCategory.EDUCATION)
       .validate();
 
@@ -76,6 +77,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
     categorization.createEnvelopeSeries()
       .setName("Regime")
+      .checkNoCategory()
       .setCategory(MasterCategory.FOOD)
       .validate();
     categorization.selectEnvelopeSeries("Regime", MasterCategory.FOOD, false);
@@ -86,19 +88,23 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     transactions.checkCategory(0, MasterCategory.FOOD);
   }
 
-  public void testNewProject() throws Exception {
+  public void testNewSpecialSeries() throws Exception {
+
     views.selectBudget();
     budgetView.specials.createSeries()
       .setName("Machine a laver")
+      .checkNoCategory()
       .setCategory(MasterCategory.HOUSE)
       .checkStartDate("June 2008")
       .checkEndDate("June 2008")
       .checkTable(new Object[][]{{"2008", "June", "", "0"}})
       .cancel();
+
     OfxBuilder
       .init(this)
       .addTransaction("2008/08/30", -10, "mac")
       .load();
+
     timeline.selectMonths("2008/06", "2008/07");
     budgetView.specials.createSeries()
       .setName("Machine a laver")
