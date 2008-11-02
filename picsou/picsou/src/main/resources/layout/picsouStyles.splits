@@ -217,16 +217,16 @@
            triangleSignColor="gauge.detail.triangle.sign"/>
 
     <!-- Selection toggles -->
-    <style selector="toggleButton.budgetAreaSelector"
+    <style selector="toggleButton.budgetAreaSelector" opaque="false"
            foreground="toggle.selector.budgetArea" font="-,bold,12"
            marginRight="2" fill="horizontal" anchor="center" weightY="0"/>
-    <style selector="radioButton.selector"
+    <style selector="radioButton.selector" opaque="false"
            foreground="toggle.selector.normal" font="-,plain,12" cursor='hand'
            marginRight="2" fill="none" anchor="center" weightY="0"/>
-    <style selector=".masterCategorySelector"
+    <style selector=".masterCategorySelector" opaque="false"
            foreground="toggle.selector.categories.master" cursor='hand'
            fill="none" anchor="west" font="-,bold,13"/>
-    <style selector=".subCategorySelector"
+    <style selector=".subCategorySelector" opaque="false"
            foreground="toggle.selector.categories.sub" cursor='hand'
            font="-,plain,10" fill="none" anchor="west"/>
 

@@ -99,8 +99,8 @@
         <button ref="prevPeriod" ui="arrowLeft" styleClass="periodButton"/>
         <component ref="timeView" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
                    marginLeft="2" marginRight="2" weightX="1000.0" weightY="100.0" border="empty"/>
-        <button ref="lastPeriod" ui="arrowRight" styleClass="periodButton"/>
-        <button ref="nextPeriod" ui="doubleArrowRight" styleClass="doublePeriodButton"/>
+        <button ref="nextPeriod" ui="arrowRight" styleClass="periodButton"/>
+        <button ref="lastPeriod" ui="doubleArrowRight" styleClass="doublePeriodButton"/>
       </row>
 
       <cards ref="mainCards" opaque="false" marginTop="20" weightY="10.0">
