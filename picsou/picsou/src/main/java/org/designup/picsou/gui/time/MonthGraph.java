@@ -72,22 +72,21 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
       graphics2D.setPaint(colors.yearSeparator);
       graphics2D.drawLine(0, 0, 0, height - 1);
     }
-    if (month == 12) {
-      graphics2D.setPaint(colors.yearSeparator);
-      graphics2D.drawLine(width - 1, 0, width - 1, height - 1);
-    }
 
     MonthFontMetricInfo.Size nearest = monthSize.getSize(monthRank);
     graphics2D.setFont(colors.getMonthFont());
-    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, height - 4 - 2 * BALANCE_HEIGHT, nearest.getName(),
-                           colors.getMonthTextColor(this.month.get(Month.ID), timeService.getCurrentMonthId()), colors.textShadow);
+    TimeGraph.drawStringIn(graphics2D,
+                           (width - nearest.getWidth() + 2) / 2,
+                           height - 6 - 2 * BALANCE_HEIGHT,
+                           nearest.getName(),
+                           colors.getMonthTextColor(this.month.get(Month.ID), timeService.getCurrentMonthId()),
+                           colors.textShadow);
 
     try {
       transformationAdapter.save();
-      transformationAdapter.translate(0, height - 2 * BALANCE_HEIGHT);
+      transformationAdapter.translate(0, height - BALANCE_HEIGHT - 6);
       Double accountBalance = positionProvider.getPosition(this.month.get(Month.ID));
       double accountBalanceLimit = positionProvider.getPositionLimit(this.month.get(Month.ID));
-
       if (accountBalance != null) {
         double diff = accountBalance - accountBalanceLimit;
         Color color = colors.getAmountColor(diff);
@@ -102,7 +101,7 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
   }
 
   public int getHeight() {
-    return monthSize.getHeight() + 2 + 2 * BALANCE_HEIGHT;
+    return monthSize.getHeight() + 6 + 2 * BALANCE_HEIGHT;
   }
 
   public int getMinWidth() {
