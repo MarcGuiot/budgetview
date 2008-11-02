@@ -1,11 +1,9 @@
 package org.designup.picsou.gui.time;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.time.selectable.AbstractSelectable;
 import org.designup.picsou.gui.time.selectable.*;
-import org.designup.picsou.gui.time.selectable.DefaultCompositeSelectable;
-import org.designup.picsou.gui.time.utils.TimeViewColors;
 import org.designup.picsou.gui.time.utils.MonthFontMetricInfo;
+import org.designup.picsou.gui.time.utils.TimeViewColors;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 
@@ -26,8 +24,8 @@ public class YearGraph extends DefaultCompositeSelectable {
   private MonthGraph[] monthGraphs;
   private int monthHeight;
 
-  public static final int HEIGHT = 6;
-  public static final int VERTICAL_MARGIN = 8;
+  public static final int HEIGHT = 3;
+  public static final int VERTICAL_MARGIN = 4;
   private static final int BALANCE_HEIGHT = 4;
 
   public YearGraph(boolean isFirstYear, boolean isLastYear, int year, java.util.List<Glob> months,
@@ -134,7 +132,7 @@ public class YearGraph extends DefaultCompositeSelectable {
   }
 
   public int getHeight() {
-    return monthHeight + yearCellHeight + HEIGHT;
+    return monthHeight + yearCellHeight;
   }
 
   private void initMonthHeight() {
@@ -142,14 +140,6 @@ public class YearGraph extends DefaultCompositeSelectable {
     for (MonthGraph month : monthGraphs) {
       monthHeight = Math.max(monthHeight, month.getHeight());
     }
-  }
-
-  public int getMaxWidth() {
-    int max = 0;
-    for (MonthGraph month : monthGraphs) {
-      max = Math.max(max, month.getMaxWidth());
-    }
-    return max;
   }
 
   public int getMinWidth() {

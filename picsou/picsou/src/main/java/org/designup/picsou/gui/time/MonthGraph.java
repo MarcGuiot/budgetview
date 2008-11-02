@@ -1,12 +1,12 @@
 package org.designup.picsou.gui.time;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.selectable.AbstractSelectable;
 import org.designup.picsou.gui.time.selectable.ChainedSelectableElement;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.TransformationAdapter;
 import org.designup.picsou.gui.time.utils.MonthFontMetricInfo;
 import org.designup.picsou.gui.time.utils.TimeViewColors;
-import org.designup.picsou.gui.time.selectable.AbstractSelectable;
 import org.designup.picsou.model.Month;
 import org.globsframework.model.Glob;
 
@@ -20,7 +20,7 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
   private TimeService timeService;
   private MonthFontMetricInfo.MonthSizes monthSize;
   private PositionProvider positionProvider;
-  
+
   private static final int MIN_WIDTH = 50;
   public static final int BALANCE_HEIGHT = 4;
 
@@ -79,7 +79,7 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
 
     MonthFontMetricInfo.Size nearest = monthSize.getSize(monthRank);
     graphics2D.setFont(colors.getMonthFont());
-    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, height - 5 - 2 * BALANCE_HEIGHT, nearest.getName(),
+    TimeGraph.drawStringIn(graphics2D, (width - nearest.getWidth() + 2) / 2, height - 4 - 2 * BALANCE_HEIGHT, nearest.getName(),
                            colors.getMonthTextColor(this.month.get(Month.ID), timeService.getCurrentMonthId()), colors.textShadow);
 
     try {
@@ -102,11 +102,7 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
   }
 
   public int getHeight() {
-    return monthSize.getHeight() + 4 + 2 * BALANCE_HEIGHT;
-  }
-
-  public int getMaxWidth() {
-    return monthSize.getMaxWidth() + 4;
+    return monthSize.getHeight() + 2 + 2 * BALANCE_HEIGHT;
   }
 
   public int getMinWidth() {
