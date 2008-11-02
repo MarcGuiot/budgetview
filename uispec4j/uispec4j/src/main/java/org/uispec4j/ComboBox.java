@@ -23,7 +23,7 @@ import java.util.List;
  * a new {@link ListBoxCellValueConverter} implementation.
  * A {@link DefaultListBoxCellValueConverter} is set up by default.
  */
-public class ComboBox extends AbstractUIComponent {
+public class ComboBox extends AbstractSwingUIComponent {
 
   public static final String TYPE_NAME = "comboBox";
   public static final Class[] SWING_CLASSES = {JComboBox.class};
