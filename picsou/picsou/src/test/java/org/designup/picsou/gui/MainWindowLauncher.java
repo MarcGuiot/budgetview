@@ -71,5 +71,4 @@ public class MainWindowLauncher {
     }
     return defaultValue;
   }
-
 }
