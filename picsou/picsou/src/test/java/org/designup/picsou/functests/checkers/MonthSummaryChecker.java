@@ -86,7 +86,7 @@ public class MonthSummaryChecker extends DataChecker {
     checkBudgetArea(BudgetArea.ENVELOPES, amount, planned);
 
     TextBox plannedLabel = getPlannedLabel(BudgetArea.ENVELOPES);
-    assertThat(plannedLabel.foregroundNear("222222"));
+    assertThat(plannedLabel.foregroundNear("77787E"));
     assertThat(plannedLabel.tooltipEquals(Lang.get("monthsummary.planned.tooltip.normal")));
     return this;
   }

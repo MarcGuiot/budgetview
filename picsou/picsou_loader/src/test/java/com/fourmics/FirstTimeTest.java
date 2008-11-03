@@ -394,9 +394,9 @@ public class FirstTimeTest extends UISpecTestCase {
       .add("EPARGNE", -100.00, 1800.00, 1800.00)
       .check();
 
-//    views.selectBudget();
-//    BudgetViewChecker budgetView = new BudgetViewChecker(window);
-//    budgetView.income.editSeries("Income 1").setName("Revenu").validate();
+    views.selectBudget();
+    BudgetViewChecker budgetView = new BudgetViewChecker(window);
+    budgetView.income.editSeries("Income 1").setName("Revenu").validate();
 
     window.dispose();
   }
@@ -473,9 +473,88 @@ public class FirstTimeTest extends UISpecTestCase {
       .add("EPARGNE", -100.00, 1800.00, 1800.00)
       .check();
 
-//    views.selectBudget();
-//    BudgetViewChecker budgetView = new BudgetViewChecker(window);
-//    budgetView.income.editSeries("Income 1").setName("Revenu").validate();
+    views.selectBudget();
+    BudgetViewChecker budgetView = new BudgetViewChecker(window);
+    budgetView.income.editSeries("Income 1").setName("Revenu").validate();
+
+    window.dispose();
+  }
+
+  public void testReloadSnapshotV5() throws Exception {
+    Window window = WindowInterceptor.run(new Trigger() {
+      public void run() throws Exception {
+        String userId = "1801464342";
+        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "fourmics";
+        String tmpJarDir = tmpDir + File.separator + "jars";
+        File jarDir = new File(tmpJarDir);
+        File prevaylerDir = new File(tmpDir + File.separator + "data");
+        Files.deleteSubtree(prevaylerDir);
+        Files.deleteSubtree(jarDir);
+        jarDir.mkdirs();
+        prevaylerDir.mkdirs();
+        File userDir = new File(prevaylerDir + File.separator + "data" + File.separator + "users");
+        userDir.mkdirs();
+        File dataDir = new File(prevaylerDir + File.separator + "data" + File.separator + userId);
+        dataDir.mkdirs();
+
+        InputStream dataStream =
+          getClass().getResourceAsStream("/files/v5/data/" + userId + "/0000000000000000041.snapshot");
+        Files.copyStreamTofile(dataStream, dataDir.getAbsolutePath() + "/0000000000000000041.snapshot");
+
+        InputStream usersDataStream =
+          getClass().getResourceAsStream("/files/v5/data/users/0000000000000000003.snapshot");
+        Files.copyStreamTofile(usersDataStream, userDir.getAbsolutePath() + "/0000000000000000003.snapshot");
+
+        InputStream stream =
+          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "fourmics.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/fourmics1.jar");
+        System.setProperty("fourmics.exe.dir", jarDir.getAbsolutePath());
+        System.setProperty("fourmics.prevayler.path", prevaylerDir.getAbsolutePath());
+        Main.main(new String[0]);
+      }
+    });
+    LoginChecker login = new LoginChecker(window);
+    login.logUser("toto", "toto");
+
+    ViewSelectionChecker views = new ViewSelectionChecker(window);
+    views.selectHome();
+    BalanceSummaryChecker balance = new BalanceSummaryChecker(window);
+    balance.checkTotal(2311.10) //  2366.1)
+      .checkOccasional(-55)
+      .checkBalance(780.1)
+      .checkIncome(2000)
+      .checkFixed(-184)
+      .checkSavings(0)
+      .checkEnvelope(-230);
+
+    views.selectData();
+
+    TransactionChecker transaction = new TransactionChecker(window);
+    transaction.initAmountContent()
+      .add("Planned: Ecole", -40.00, 2311.10)
+      .add("Planned: Frais banque", -4.00, 2351.10)
+      .add("Planned: Income 1", 2000.00, 2355.10)
+      .add("Planned: Occasional", -55.00, 355.10)
+      .add("Planned: Assurance", -100.00, 410.10)
+      .add("Planned: Cell phone 1", -40.00, 510.10)
+      .add("Planned: Cash", -40.00, 550.10)
+      .add("Planned: Leisures", -10.00, 590.10)
+      .add("Planned: Groceries", -180.00, 600.10)
+      .add("Gaz de France", -60.00, 780.10, 780.10)
+      .add("Auchan", -30.00, 840.10, 840.10)
+      .add("Chausse moi", -60.00, 870.10, 870.10)
+      .add("Free telecom", -29.90, 930.10, 930.10)
+      .add("Institut pasteur", -40.00, 960.00, 960.00)
+      .add("Credit", -700.00, 1000.00, 1000.00)
+      .add("ED", -40.00, 1700.00, 1700.00)
+      .add("CHEQUE N. 34", -30.00, 1740.00, 1740.00)
+      .add("Habille moi", -30.00, 1770.00, 1770.00)
+      .add("EPARGNE", -100.00, 1800.00, 1800.00)
+      .check();
+
+    views.selectBudget();
+    BudgetViewChecker budgetView = new BudgetViewChecker(window);
+    budgetView.income.editSeries("Income 1").setName("Revenu").validate();
 
     window.dispose();
   }
