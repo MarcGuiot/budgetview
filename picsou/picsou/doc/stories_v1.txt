@@ -34,14 +34,9 @@
                RESTE
 ====================================
 
-- BudgetAreaSeriesView : quand on a des overrun partiels, on met a jour le planned en consequence, mais alors
-ce n'est plus vraiment un "planned" => trouver un moyen de le rendre clair pour l'utilisateur
-
 - Creation de compte
 
-- Revoir centrage par defaut de TimeView quand le nombre de mois est grand (> 3 ans) : plutot montrer le futur
-
-- BudgetView : quand on clique sur une serie, aucun moyen pour la supprimer a partir de la fenetre qui apparait 
+- BudgetView : quand on clique sur une serie, aucun moyen pour la supprimer a partir de la fenetre qui apparait
 
 - Creation d'une serie OperationsSpeciales : selectionner le mois en cours dans la table
 
