@@ -11,10 +11,7 @@ import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.CurrentMonth;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
+import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -189,9 +186,17 @@ public class BudgetAreaSeriesView extends View {
     seriesFilter = new GlobMatcher() {
       public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
         Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
-        return seriesDateFilter.matches(series, repository) &&
-               (periodSeriesStat.get(PeriodSeriesStat.AMOUNT) != 0.0 ||
-                periodSeriesStat.get(PeriodSeriesStat.PLANNED_AMOUNT) != 0.0);
+        ReadOnlyGlobRepository.MultiFieldIndexed seruesBudgetIndex = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
+                                                                                            series.get(Series.ID));
+        int notActive = 0;
+        for (Integer monthId : selectedMonthIds) {
+          GlobList seriesBudget =
+            seruesBudgetIndex.findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
+          if (seriesBudget.size() == 0 || !seriesBudget.get(0).get(SeriesBudget.ACTIVE)) {
+            notActive++;
+          }
+        }
+        return !(selectedMonthIds.size() == notActive) && seriesDateFilter.matches(series, repository);
       }
     };
   }

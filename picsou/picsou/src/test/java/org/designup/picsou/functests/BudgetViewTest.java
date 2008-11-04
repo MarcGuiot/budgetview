@@ -84,7 +84,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkTitle("Income");
     budgetView.income.checkTotalAmounts(0.0, 3540.00);
     budgetView.income.checkSeries("Salary", 0.0, 3540.0);
-    budgetView.income.checkSeriesNotPresent("Exceptional Income");
+    budgetView.income.checkSeries("Exceptional Income", 0, 0);
   }
 
   public void testOccasionalShowMasterCategory() throws Exception {
@@ -346,7 +346,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/08");
     budgetView.envelopes
-      .checkSeriesNotPresent("courantMonoprix");
+      .checkSeries("courantMonoprix", 0., 0.);
   }
 
   public void testEditingASeriesAmountHasNoImpactOnOtherSeries() throws Exception {
@@ -367,8 +367,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.TRANSPORTS)
       .validate();
 
-    budgetView.recurring.checkSeriesNotPresent("Groceries");
-    budgetView.recurring.checkSeriesNotPresent("Fuel");
+    budgetView.recurring.checkSeries("Groceries", 0, 0);
+    budgetView.recurring.checkSeries("Fuel", 0, 0);
 
     budgetView.recurring.editSeriesList().selectSeries("Groceries")
       .switchToManual()
@@ -377,7 +377,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.checkSeries("Groceries", 0.00, -200.00);
-    budgetView.recurring.checkSeriesNotPresent("Fuel");
+    budgetView.recurring.checkSeries("Fuel", 0, 0);
   }
 
   public void testReimbursementsAreShownWithAPlus() throws Exception {
@@ -473,8 +473,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.TRANSPORTS)
       .validate();
 
-    budgetView.recurring.checkSeriesNotPresent("Groceries");
-    budgetView.recurring.checkSeriesNotPresent("Fuel");
+    budgetView.recurring.checkSeries("Groceries", 0, 0);
+    budgetView.recurring.checkSeries("Fuel", 0, 0);
 
     budgetView.recurring.editSeriesList().selectSeries("Groceries")
       .switchToManual()
@@ -483,7 +483,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.checkSeries("Groceries", 0.00, -200.00);
-    budgetView.recurring.checkSeriesNotPresent("Fuel");
+    budgetView.recurring.checkSeries("Fuel", 0, 0);
 
     views.selectCategorization();
     categorization.selectTableRows("ELF")

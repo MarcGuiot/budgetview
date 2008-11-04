@@ -113,20 +113,38 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
           repository.update(budget.getKey(), SeriesBudget.AMOUNT, amount);
         }
         else {
-          Double seriesAmount = series.get(Series.INITIAL_AMOUNT);
+          Double seriesAmount = null; // pour les tests de triggers
 
           if (existingSeriesBudget.length != 0) {
             int pos = existingSeriesBudget.length - 1;
             while (pos >= 0) {
               Glob budgets = existingSeriesBudget[pos];
-              if (budgets.get(SeriesBudget.ACTIVE)) {
-                seriesAmount = budgets.get(SeriesBudget.AMOUNT);
-              }
-              if (budgets.get(SeriesBudget.MONTH) < monthId) {
+              pos--;
+              if (budgets.get(SeriesBudget.MONTH).equals(monthId)) {
                 break;
               }
-              pos--;
             }
+            while (pos >= 0) {
+              Glob budgets = existingSeriesBudget[pos];
+              if (budgets.get(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
+                seriesAmount = budgets.get(SeriesBudget.AMOUNT);
+                break;
+              }
+            }
+            if (seriesAmount == null) {
+              pos = pos < 0 ? 0 : pos;
+              while (pos < existingSeriesBudget.length - 1) {
+                Glob budgets = existingSeriesBudget[pos];
+                if (budgets.get(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
+                  seriesAmount = budgets.get(SeriesBudget.AMOUNT);
+                  break;
+                }
+                pos++;
+              }
+            }
+          }
+          if (seriesAmount == null) {
+            seriesAmount = series.get(Series.INITIAL_AMOUNT);
           }
           if (seriesAmount != null) {
             repository.update(budget.getKey(), SeriesBudget.AMOUNT, seriesAmount);
