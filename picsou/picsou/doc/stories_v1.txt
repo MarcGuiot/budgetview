@@ -23,8 +23,6 @@
                REGIS
 ====================================
 
-- pb occasional Severine
-
 - tooltips jauges / overrun partiels
 
 - bouton "annuler filtrage"

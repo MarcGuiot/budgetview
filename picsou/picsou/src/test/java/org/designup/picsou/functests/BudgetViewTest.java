@@ -97,12 +97,36 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.setOccasional("Auchan", MasterCategory.FOOD, "Apero");
     views.selectBudget();
     budgetView.occasional.check(MasterCategory.FOOD, -95.);
-    budgetView.occasional.checkNotContains("Apero");
+    budgetView.occasional.checkNotDisplayed("Apero");
     views.selectCategorization();
     categorization.setOccasional("Auchan", MasterCategory.HEALTH, "health.medecin");
     views.selectBudget();
     budgetView.occasional.check(MasterCategory.HEALTH, -95.);
-    budgetView.occasional.checkNotContains("health.medecin");
+    budgetView.occasional.checkNotDisplayed("health.medecin");
+  }
+
+  public void testOccasionalAreRemovedEvenInCaseOfRoundingErrors() throws Exception {
+    categories.createSubCategory(MasterCategory.FOOD, "Apero");
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.4600000001, "Auchan")
+      .addTransaction("2008/07/15", -100.17, "Carouf")
+      .addTransaction("2008/07/18", -10.00, "Ed")
+      .load();
+
+    timeline.selectMonth("2008/07");
+    views.selectCategorization();
+    categorization.setOccasional("Auchan", MasterCategory.FOOD);
+    categorization.setOccasional("Carouf", MasterCategory.FOOD);
+
+    views.selectBudget();
+    budgetView.occasional.check(MasterCategory.FOOD, -195.63);
+
+    views.selectCategorization();
+    categorization.getTable().selectRows(0, 1, 2);
+    categorization.setUncategorized();
+    
+    views.selectBudget();
+    budgetView.occasional.checkNotDisplayed(MasterCategory.FOOD);
   }
 
   public void testSpecialSeries() throws Exception {

@@ -181,5 +181,4 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     total.setText("");
     contentPanel.setVisible(false);
   }
-
 }
