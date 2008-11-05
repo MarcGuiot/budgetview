@@ -2,6 +2,8 @@ package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultBoolean;
+import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
@@ -46,6 +48,13 @@ public class Account {
 
   public static BooleanField IS_CARD_ACCOUNT;
 
+  @Target(AccountType.class)
+  @DefaultInteger(1)
+  public static LinkField ACCOUNT_TYPE;
+
+  @DefaultBoolean(true)
+  public static BooleanField IS_IMPORTED_ACCOUNT;
+
   static {
     GlobTypeLoader.init(Account.class, "account");
     SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, SUMMARY_ACCOUNT_ID);
@@ -78,6 +87,8 @@ public class Account {
       outputStream.writeInteger(values.get(TRANSACTION_ID));
       outputStream.writeDate(values.get(BALANCE_DATE));
       outputStream.writeBoolean(values.get(IS_CARD_ACCOUNT));
+      outputStream.writeInteger(values.get(ACCOUNT_TYPE));
+      outputStream.writeBoolean(values.get(IS_IMPORTED_ACCOUNT));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -87,6 +98,9 @@ public class Account {
       }
       else if (version == 2) {
         deserializeDataV2(fieldSetter, data);
+      }
+      else if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
       }
     }
 
@@ -100,6 +114,8 @@ public class Account {
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(BALANCE_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      fieldSetter.set(ACCOUNT_TYPE, AccountType.DAY.getId());
+      fieldSetter.set(IS_IMPORTED_ACCOUNT, true);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -112,10 +128,26 @@ public class Account {
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(BALANCE_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      fieldSetter.set(ACCOUNT_TYPE, AccountType.DAY.getId());
+      fieldSetter.set(IS_IMPORTED_ACCOUNT, true);
+    }
+
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BRANCH_ID, input.readInteger());
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(BALANCE, input.readDouble());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(BALANCE_DATE, input.readDate());
+      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
     }
 
     public int getWriteVersion() {
-      return 2;
+      return 3;
     }
   }
 

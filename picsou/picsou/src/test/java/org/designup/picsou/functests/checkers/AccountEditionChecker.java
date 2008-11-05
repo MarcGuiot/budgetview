@@ -1,10 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.ComboBox;
-import org.uispec4j.TextBox;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -59,6 +57,54 @@ public class AccountEditionChecker extends DataChecker {
     return this;
   }
 
+  public AccountEditionChecker setAsDay() {
+    getDayButton().click();
+    return this;
+  }
+
+  private RadioButton getDayButton() {
+    return dialog.getRadioButton("defautAccount");
+  }
+
+  public AccountEditionChecker setAsSaving() {
+    getSavingButton().click();
+    return this;
+  }
+
+  private RadioButton getSavingButton() {
+    return dialog.getRadioButton("savingAccount");
+  }
+
+  public AccountEditionChecker setAsCreditCard() {
+    getCardAccount().click();
+    return this;
+  }
+
+  private RadioButton getCardAccount() {
+    return dialog.getRadioButton("cardAccount");
+  }
+
+  public AccountEditionChecker checkIsDay() {
+    assertThat(getDayButton().isSelected());
+    assertFalse(getSavingButton().isSelected());
+    assertFalse(getCardAccount().isSelected());
+    return this;
+  }
+
+  public AccountEditionChecker checkIsSaving() {
+    assertFalse(getDayButton().isSelected());
+    assertThat(getSavingButton().isSelected());
+    assertFalse(getCardAccount().isSelected());
+    return this;
+  }
+
+  public AccountEditionChecker checkIsCard() {
+    assertFalse(getDayButton().isSelected());
+    assertFalse(getSavingButton().isSelected());
+    assertThat(getCardAccount().isSelected());
+    return this;
+  }
+
   public AccountEditionChecker checkValidationError(String message) {
     dialog.getButton("OK").click();
     UISpecAssert.assertTrue(dialog.isVisible());
@@ -71,11 +117,26 @@ public class AccountEditionChecker extends DataChecker {
 
   public void validate() {
     dialog.getButton("OK").click();
-    UISpecAssert.assertFalse(dialog.isVisible());
+    assertFalse(dialog.isVisible());
   }
 
   public void cancel() {
     dialog.getButton("Cancel").click();
-    UISpecAssert.assertFalse(dialog.isVisible());
+    assertFalse(dialog.isVisible());
+  }
+
+  public AccountEditionChecker checkIsImported() {
+    assertThat(dialog.getCheckBox("importedAccount").isSelected());
+    return this;
+  }
+
+  public AccountEditionChecker clickOnImported() {
+    dialog.getCheckBox().click();
+    return this;
+  }
+
+  public AccountEditionChecker checkNotImported() {
+    assertFalse(dialog.getCheckBox("importedAccount").isSelected());
+    return this;
   }
 }
