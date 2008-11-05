@@ -359,7 +359,6 @@ public class SeriesEditionDialog {
       localRepository.rollback();
       initBudgetAreaSeries(budgetArea);
 
-      Double initialAmount = computeMinAmountPerMonth(transactions);
       String label;
       if (!transactions.isEmpty()) {
         Glob firstTransaction = transactions.get(0);
@@ -370,7 +369,7 @@ public class SeriesEditionDialog {
       }
       SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
       Integer day = days.isEmpty() ? 1 : days.last();
-      createdSeries = createSeries(label, initialAmount, day);
+      createdSeries = createSeries(label, day);
     }
     finally {
       localRepository.completeBulkDispatchingMode();
@@ -386,10 +385,10 @@ public class SeriesEditionDialog {
     return null;
   }
 
-  private Glob createSeries(String label, Double initialAmount, Integer day) {
+  private Glob createSeries(String label, Integer day) {
     java.util.List<FieldValue> values =
       new ArrayList<FieldValue>(Arrays.asList(value(Series.BUDGET_AREA, budgetArea.getId()),
-                                              value(Series.INITIAL_AMOUNT, initialAmount),
+                                              value(Series.INITIAL_AMOUNT, 0.),
                                               value(Series.LABEL, label),
                                               value(Series.DAY, day),
                                               value(Series.JANUARY, true),
@@ -496,22 +495,6 @@ public class SeriesEditionDialog {
       }
     });
     GuiUtils.showCentered(dialog);
-  }
-
-  private Double computeMinAmountPerMonth(GlobList transactions) {
-    Map<Integer, Double> amounts = new HashMap<Integer, Double>();
-    Double min = 0.0;
-    for (Glob transaction : transactions) {
-      Integer month = transaction.get(Transaction.MONTH);
-      Double value = amounts.get(month);
-      Double amount = transaction.get(Transaction.AMOUNT);
-      min = (value == null ? 0.0 : value) + (amount == null ? 0.0 : amount);
-      amounts.put(month, min);
-    }
-    for (Double value : amounts.values()) {
-      min = Math.min(min, value);
-    }
-    return min;
   }
 
   public Window getDialog() {
@@ -632,7 +615,7 @@ public class SeriesEditionDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      Glob newSeries = createSeries(Lang.get("seriesEdition.newSeries"), 0.0, 1);
+      Glob newSeries = createSeries(Lang.get("seriesEdition.newSeries"), 1);
       selectionService.select(newSeries);
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
