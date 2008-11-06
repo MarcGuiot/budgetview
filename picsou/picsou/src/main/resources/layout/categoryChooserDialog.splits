@@ -8,7 +8,7 @@
       <scrollPane weightY="100" viewportBackground="dialog.block" verticalUnitIncrement="20">
         <repeat ref="masterRepeat" margin="10">
         <column>
-            <toggleButton ref="masterLabel" marginTop="10" styleClass="masterCategorySelector"/>
+            <toggleButton ref="masterLabel" marginTop="10" marginRight="10" styleClass="masterCategorySelector"/>
             <repeat ref="subcatRepeat" layout="column" marginLeft="15">
               <toggleButton ref="subcatLabel" styleClass="subCategorySelector"/>
             </repeat>
