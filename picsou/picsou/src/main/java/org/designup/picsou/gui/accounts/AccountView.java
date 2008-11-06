@@ -49,6 +49,15 @@ public class AccountView extends View {
     }).setAutoHideIfEmpty(true).forceSelection(summaryAccount);
     builder.addLabel("totalBalance", Account.BALANCE).setAutoHideIfEmpty(true).forceSelection(summaryAccount);
 
+    builder.add("createAccount", new AbstractAction() {
+
+      public void actionPerformed(ActionEvent e) {
+        AccountEditionDialog accountEditionDialog =
+          new AccountEditionDialog(directory.get(JFrame.class), repository, directory);
+        accountEditionDialog.showWithNewAccount();
+      }
+    });
+
     builder.addRepeat("accountRepeat", Account.TYPE, not(contains(summaryAccount)),
                       new AccountComparator(),
                       new AccountRepeatFactory());

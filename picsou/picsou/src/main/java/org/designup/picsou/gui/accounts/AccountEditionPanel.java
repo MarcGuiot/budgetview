@@ -63,17 +63,17 @@ public class AccountEditionPanel {
     saving = new JRadioButton(new AbstractAction(Lang.get("account.isSaving")) {
 
       public void actionPerformed(ActionEvent e) {
-        repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.SAVING.getId());
+        repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId());
       }
     });
     daily = new JRadioButton(new AbstractAction(Lang.get("account.isDay")) {
       public void actionPerformed(ActionEvent e) {
-        repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.DAY.getId());
+        repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
       }
     });
     creditCard = new JRadioButton(new AbstractAction(Lang.get("account.isCard")) {
       public void actionPerformed(ActionEvent e) {
-        repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.CREDIT_CARD.getId());
+        repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.CARD.getId());
       }
     });
     group.add(creditCard);
@@ -128,9 +128,9 @@ public class AccountEditionPanel {
       creditCard.setEnabled(true);
       daily.setEnabled(true);
       saving.setEnabled(true);
-      creditCard.setSelected(AccountType.CREDIT_CARD.getId().equals(account.get(Account.ACCOUNT_TYPE)));
-      daily.setSelected(AccountType.DAY.getId().equals(account.get(Account.ACCOUNT_TYPE)));
-      saving.setSelected(AccountType.SAVING.getId().equals(account.get(Account.ACCOUNT_TYPE)));
+      creditCard.setSelected(AccountType.CARD.getId().equals(account.get(Account.ACCOUNT_TYPE)));
+      daily.setSelected(AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)));
+      saving.setSelected(AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE)));
       importedCheckBox.setSelected(account.get(Account.IS_IMPORTED_ACCOUNT));
     }
   }

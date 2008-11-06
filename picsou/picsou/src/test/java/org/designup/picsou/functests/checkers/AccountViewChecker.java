@@ -101,4 +101,8 @@ public class AccountViewChecker extends DataChecker {
     }
     return account.getContainer("accountParent");
   }
+
+  public AccountEditionChecker create() {
+    return AccountEditionChecker.open(panel.getButton("createAccount").triggerClick());
+  }
 }

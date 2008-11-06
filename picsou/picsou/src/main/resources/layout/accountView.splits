@@ -30,7 +30,10 @@
                 </row>
               </column>
             </repeat>
-            <filler fill="vertical"/>
+            <row styleClass="iconButtonGroup">
+              <button action="createAccount" styleClass="create"/>
+              <filler fill="horizontal"/>
+            </row>
           </column>
         </scrollPane>
       </column>

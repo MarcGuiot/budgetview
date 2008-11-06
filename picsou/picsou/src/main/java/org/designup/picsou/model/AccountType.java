@@ -14,9 +14,9 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum AccountType implements GlobConstantContainer {
-  DAY("DAY", 1),
-  SAVING("SAVING", 2),
-  CREDIT_CARD("CREDIT_CARD", 3);
+  MAIN("MAIN", 1),
+  SAVINGS("SAVINGS", 2),
+  CARD("CARD", 3);
 
   public static GlobType TYPE;
 
@@ -32,6 +32,10 @@ public enum AccountType implements GlobConstantContainer {
   AccountType(String name, int id) {
     this.name = name;
     this.id = id;
+  }
+
+  static public Integer[] getAccountType() {
+    return new Integer[]{1, 2, 3};
   }
 
   static {
@@ -55,11 +59,11 @@ public enum AccountType implements GlobConstantContainer {
   public static AccountType get(int id) {
     switch (id) {
       case 1:
-        return DAY;
+        return MAIN;
       case 2:
-        return SAVING;
+        return SAVINGS;
       case 3:
-        return CREDIT_CARD;
+        return CARD;
     }
     throw new ItemNotFound(id + " not associated to any AccountType enum value");
   }

@@ -114,7 +114,7 @@ public class Account {
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(BALANCE_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
-      fieldSetter.set(ACCOUNT_TYPE, AccountType.DAY.getId());
+      fieldSetter.set(ACCOUNT_TYPE, AccountType.MAIN.getId());
       fieldSetter.set(IS_IMPORTED_ACCOUNT, true);
     }
 
@@ -128,7 +128,7 @@ public class Account {
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(BALANCE_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
-      fieldSetter.set(ACCOUNT_TYPE, AccountType.DAY.getId());
+      fieldSetter.set(ACCOUNT_TYPE, AccountType.MAIN.getId());
       fieldSetter.set(IS_IMPORTED_ACCOUNT, true);
     }
 

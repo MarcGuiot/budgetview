@@ -1,4 +1,8 @@
 
+Revoir l'affectation automatique par comptes (pour affecté a des series du bon comptes)
+
+
+
 ====================================
                MARC
 ====================================

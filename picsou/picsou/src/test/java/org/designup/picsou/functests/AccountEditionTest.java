@@ -52,15 +52,15 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     accounts.edit("Account n. 0000123")
       .checkAccountName("Account n. 0000123")
-      .checkIsDay()
+      .checkIsMain()
       .checkIsImported()
-      .setAsSaving()
+      .setAsSavings()
       .clickOnImported()
       .validate();
 
     accounts.edit("Account n. 0000123")
-      .checkIsSaving()
-      .setAsCreditCard()
+      .checkIsSavings()
+      .setAsCard()
       .checkNotImported()
       .validate();
 

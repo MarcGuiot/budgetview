@@ -57,25 +57,25 @@ public class AccountEditionChecker extends DataChecker {
     return this;
   }
 
-  public AccountEditionChecker setAsDay() {
-    getDayButton().click();
+  public AccountEditionChecker setAsMain() {
+    getMainButton().click();
     return this;
   }
 
-  private RadioButton getDayButton() {
+  private RadioButton getMainButton() {
     return dialog.getRadioButton("defautAccount");
   }
 
-  public AccountEditionChecker setAsSaving() {
-    getSavingButton().click();
+  public AccountEditionChecker setAsSavings() {
+    getSavingsButton().click();
     return this;
   }
 
-  private RadioButton getSavingButton() {
+  private RadioButton getSavingsButton() {
     return dialog.getRadioButton("savingAccount");
   }
 
-  public AccountEditionChecker setAsCreditCard() {
+  public AccountEditionChecker setAsCard() {
     getCardAccount().click();
     return this;
   }
@@ -84,23 +84,23 @@ public class AccountEditionChecker extends DataChecker {
     return dialog.getRadioButton("cardAccount");
   }
 
-  public AccountEditionChecker checkIsDay() {
-    assertThat(getDayButton().isSelected());
-    assertFalse(getSavingButton().isSelected());
+  public AccountEditionChecker checkIsMain() {
+    assertThat(getMainButton().isSelected());
+    assertFalse(getSavingsButton().isSelected());
     assertFalse(getCardAccount().isSelected());
     return this;
   }
 
-  public AccountEditionChecker checkIsSaving() {
-    assertFalse(getDayButton().isSelected());
-    assertThat(getSavingButton().isSelected());
+  public AccountEditionChecker checkIsSavings() {
+    assertFalse(getMainButton().isSelected());
+    assertThat(getSavingsButton().isSelected());
     assertFalse(getCardAccount().isSelected());
     return this;
   }
 
   public AccountEditionChecker checkIsCard() {
-    assertFalse(getDayButton().isSelected());
-    assertFalse(getSavingButton().isSelected());
+    assertFalse(getMainButton().isSelected());
+    assertFalse(getSavingsButton().isSelected());
     assertThat(getCardAccount().isSelected());
     return this;
   }
