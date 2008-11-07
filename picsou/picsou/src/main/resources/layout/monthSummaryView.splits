@@ -10,7 +10,7 @@
     <style selector="label.amount" font="-,plain,10"/>
 
     <ui name="introMessagePanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        borderWidth="1" cornerRadius="30"
+        borderWidth="1" cornerRadius="6"
         topColor="monthSummary.introMessage.top"
         bottomColor="monthSummary.introMessage.bottom"
         borderColor="monthSummary.introMessage.border"/>
