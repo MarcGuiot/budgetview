@@ -3,7 +3,7 @@
   <styles>
     <ui name="filterPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="filter.message.top" bottomColor="filter.message.bottom" borderColor="filter.message.border"
-        borderWidth="1" cornerRadius="30"/>
+        borderWidth="1" cornerRadius="6"/>
   </styles>
 
   <row ref="panel" ui="filterPanel" preferredSize="(150,20)">

@@ -11,6 +11,7 @@ public class StyledPanelUI extends BasicPanelUI {
   private Color topColor = Color.WHITE;
   private Color bottomColor = Color.WHITE;
   private Color borderColor = Color.BLACK;
+  private Color bevelTopColor;
 
   private int borderWidth = 0;
 
@@ -37,6 +38,11 @@ public class StyledPanelUI extends BasicPanelUI {
 
   public void setBottomColor(Color bottomColor) {
     this.bottomColor = bottomColor;
+    this.image = null;
+  }
+
+  public void setBevelTopColor(Color bevelTopColor) {
+    this.bevelTopColor = bevelTopColor;
     this.image = null;
   }
 
@@ -128,16 +134,35 @@ public class StyledPanelUI extends BasicPanelUI {
     if (cornerRadius > 0) {
       int widthRadius = Math.max(0, cornerRadius - borderWidth);
       int heightRadius = Math.max(0, cornerRadius - borderWidth);
-      g2d.fillRoundRect(x + borderWidth, y + borderWidth,
-                        innerWidth, innerHeight,
-                        widthRadius, heightRadius);
+      g2d.fillRoundRect(x + borderWidth, y + borderWidth, innerWidth, innerHeight, widthRadius, heightRadius);
+
+      if (bevelTopColor != null) {
+        paintBevel(x, y, innerHeight, g2d, innerWidth, rectHeight, widthRadius, heightRadius);
+      }
     }
     else {
-      g2d.fillRect(x + borderWidth, y + borderWidth,
-                   innerWidth, innerHeight);
+      g2d.fillRect(x + borderWidth, y + borderWidth, innerWidth, innerHeight);
     }
     if (image != null) {
       g2d.dispose();
     }
+  }
+
+  private void paintBevel(int x, int y, int innerHeight, Graphics2D g2d, int innerWidth, int rectHeight, int widthRadius, int heightRadius) {
+    Color smoothColor = new Color(bevelTopColor.getRGBColorComponents(null)[0],
+                                  bevelTopColor.getRGBColorComponents(null)[1],
+                                  bevelTopColor.getRGBColorComponents(null)[2],
+                                  .0f);
+
+    GradientPaint vPaint = new GradientPaint(x + borderWidth,
+                                             y + borderWidth,
+                                             bevelTopColor,
+                                             x + borderWidth,
+                                             y + innerHeight / 2,
+                                             smoothColor);
+    g2d.setPaint(vPaint);
+
+    g2d.clipRect(x + borderWidth, y + borderWidth, innerWidth, innerHeight / 2);
+    g2d.drawRoundRect(x + borderWidth, y + borderWidth, innerWidth - 1, rectHeight - 1, widthRadius, heightRadius - 1);
   }
 }

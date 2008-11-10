@@ -391,7 +391,7 @@ public class GlobStateChecker {
 
     public void addError(Integer seriesBudgetId, Integer seriesID, Integer monthId, Double plannedAmount,
                          Double observedAMount, Double budgetAmount) {
-      if (infos.size() == 0) {
+      if (infos.isEmpty()) {
         corrections.add(this);
       }
       infos.put(seriesID, new Info(seriesBudgetId, monthId, plannedAmount, observedAMount, budgetAmount));

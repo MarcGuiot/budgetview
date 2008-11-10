@@ -41,9 +41,10 @@
         <label ref="importMessage" styleClass="errorMessage"/>
       </panel>
 
-      <row styleClass="buttons">
-        <button action="finish"/>
-        <button action="skipFile"/>
+      <row>
+        <filler fill="horizontal"/>
+        <button action="finish" margin="10" fill="horizontal"/>
+        <button action="skipFile" margin="10" marginRight="0" fill="horizontal"/>
       </row>
 
     </column>

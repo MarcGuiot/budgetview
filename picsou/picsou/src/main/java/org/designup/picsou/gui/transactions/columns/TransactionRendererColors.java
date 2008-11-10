@@ -8,7 +8,6 @@ import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class TransactionRendererColors implements ColorChangeListener {
@@ -20,6 +19,7 @@ public class TransactionRendererColors implements ColorChangeListener {
   private Color transactionTextColor;
   private Color transactionSelectedTextColor;
   private Color transactionPlannedTextColor;
+  private Color transactionLinkTextColor;
   private Color categoryColor;
   private ColorService colorService;
 
@@ -37,6 +37,7 @@ public class TransactionRendererColors implements ColorChangeListener {
     transactionTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT);
     transactionSelectedTextColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_TEXT);
     transactionPlannedTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT_PLANNED);
+    transactionLinkTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT_LINK);
   }
 
   public Color getEvenRowsBgColor() {
@@ -64,20 +65,23 @@ public class TransactionRendererColors implements ColorChangeListener {
   }
 
   public void update(Component component, boolean isSelected, Glob transaction, int row) {
-    setForeground(component, isSelected, transaction);
+    setForeground(component, isSelected, transaction, false);
     setBackground(component, isSelected, row);
   }
 
-  public void setForeground(Component component, boolean isSelected, Glob transaction) {
-    component.setForeground(getForeground(transaction, isSelected));
+  public void setForeground(Component component, boolean isSelected, Glob transaction, boolean isLink) {
+    component.setForeground(getForeground(transaction, isSelected, isLink));
   }
 
-  private Color getForeground(Glob transaction, boolean isSelected) {
+  private Color getForeground(Glob transaction, boolean isSelected, boolean isLink) {
     if (isSelected) {
       return transactionSelectedTextColor;
     }
     if (Transaction.isPlanned(transaction)) {
       return transactionPlannedTextColor;
+    }
+    if (isLink) {
+      return transactionLinkTextColor;
     }
     return transactionTextColor;
   }

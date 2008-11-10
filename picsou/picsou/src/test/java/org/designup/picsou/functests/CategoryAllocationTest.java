@@ -110,7 +110,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     transactions.getTable().clearSelection();
     Button categorizedLink = new Panel((Container)transactions.getTable()
       .getSwingRendererComponentAt(0, TransactionView.SERIES_COLUMN_INDEX)).getButton();
-    assertTrue(categorizedLink.foregroundEquals("black"));
+    assertTrue(categorizedLink.foregroundNear("blue"));
   }
 
   private void assignCategory(String label, MasterCategory category) {

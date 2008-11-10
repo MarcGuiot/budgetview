@@ -95,12 +95,12 @@
       </row>
 
       <row weightY="0.1" name="time" marginTop="20" marginLeft="20" marginRight="20">
-        <button ref="firstPeriod" ui="doubleArrowLeft" styleClass="doublePeriodButton"/>
-        <button ref="prevPeriod" ui="arrowLeft" styleClass="periodButton"/>
+        <button ref="firstPeriod" ui="doubleArrowLeft" styleClass="doublePeriodButton" tooltipText="$timeView.tooltip.first"/>
+        <button ref="prevPeriod" ui="arrowLeft" styleClass="periodButton" tooltipText="$timeView.tooltip.previous"/>
         <component ref="timeView" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
                    marginLeft="2" marginRight="2" weightX="1000.0" weightY="100.0" border="empty"/>
-        <button ref="nextPeriod" ui="arrowRight" styleClass="periodButton"/>
-        <button ref="lastPeriod" ui="doubleArrowRight" styleClass="doublePeriodButton"/>
+        <button ref="nextPeriod" ui="arrowRight" styleClass="periodButton" tooltipText="$timeView.tooltip.next"/>
+        <button ref="lastPeriod" ui="doubleArrowRight" styleClass="doublePeriodButton" tooltipText="$timeView.tooltip.last"/>
       </row>
 
       <cards ref="mainCards" opaque="false" marginTop="20" weightY="10.0">
@@ -120,7 +120,7 @@
               </column>
 
               <column>
-                <panel ref="balanceSummaryView" minimumSize="(250,200)" preferredSize="(300,380)"/>
+                <panel ref="balanceSummaryView" minimumSize="(250,200)" preferredSize="(300,410)"/>
                 <filler fill="vertical"/>
               </column>
             </horizontalSplit>

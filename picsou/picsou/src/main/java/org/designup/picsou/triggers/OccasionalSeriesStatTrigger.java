@@ -150,7 +150,7 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
   private void updateStat(Glob stat, Integer categoryId, Integer monthId, int multiplier, Double amount, GlobRepository repository) {
     double newAmount = updateStat(stat, multiplier, amount, repository);
 
-    if (newAmount == 0.0) {
+    if (Math.abs(newAmount) < 1E-6) {
       GlobList transactions =
         repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.OCCASIONAL_SERIES_ID)
           .findByIndex(Transaction.MONTH, monthId).getGlobs()

@@ -4,6 +4,7 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.license.LicenseExpirationDialog;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.help.HelpService;
@@ -44,7 +45,8 @@ public class DialogDemo {
 
 //    showHelpDialog(repository, directory, frame);
 //    showSeriesWizardDialog(repository, directory, frame);
-    showSeriesEditionDialog(repository, directory, frame);
+//    showSeriesEditionDialog(repository, directory, frame);
+    showLicenseExpirationDialog(repository, directory, frame);
 //    showCategoriesEditionDialog(repository, directory);
   }
 
@@ -56,6 +58,11 @@ public class DialogDemo {
   private static void showSeriesWizardDialog(GlobRepository repository, Directory directory, JFrame frame) {
     SeriesWizardDialog dialog = new SeriesWizardDialog(repository, directory);
 //    SplitsEditor.show(dialog.getDialog(), directory);
+    dialog.show();
+  }
+
+  private static void showLicenseExpirationDialog(GlobRepository repository, Directory directory, JFrame frame) {
+    LicenseExpirationDialog dialog = new LicenseExpirationDialog(frame, repository, directory);
     dialog.show();
   }
 
