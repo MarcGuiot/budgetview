@@ -75,10 +75,10 @@ public class GlobComboViewTest extends GuiComponentTestCase {
                     "<dummyObject id='2' name='name2'/>");
     ComboBox combo = createCombo(repository);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.delete(key1);
     repository.create(DummyObject.TYPE, value(DummyObject.NAME, "newName1"));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     assertThat(combo.contentEquals("name2", "newName1"));
   }

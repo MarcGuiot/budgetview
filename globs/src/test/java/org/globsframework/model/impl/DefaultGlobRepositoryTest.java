@@ -399,11 +399,11 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
   public void testSequenceOfUpdatesPreservesThePreviousValue() throws Exception {
     init("<dummyObject id='0' name='name'/>");
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.update(getKey(0), DummyObject.NAME, "newName1");
     repository.update(getKey(0), DummyObject.NAME, "newName2");
     repository.update(getKey(0), DummyObject.NAME, "newName3");
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     checker.assertEquals(repository, "<dummyObject id='0' name='newName3'/>");
 
@@ -414,10 +414,10 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
   public void testCreateAndUpdateSequenceLeavesAnEmptyPreviousValue() throws Exception {
     initRepository();
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.create(getKey(0), value(DummyObject.NAME, "initialName"));
     repository.update(getKey(0), DummyObject.NAME, "newName");
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     checker.assertEquals(repository, "<dummyObject id='0' name='newName'/>");
 
     changeListener.assertLastChangesEqual(
@@ -428,10 +428,10 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
   public void testUpdateDeleteSequencePreservesPreviousValues() throws Exception {
     init("<dummyObject id='0' name='name' value='1.4'/>");
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.update(getKey(0), DummyObject.NAME, "newName");
     repository.delete(getKey(0));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     changeListener.assertLastChangesEqual(
       "<delete type='dummyObject' id='0' _name='name' _value='1.4'/>"
@@ -441,10 +441,10 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
   public void testDeleteCreateSequencePreservesPreviousValues() throws Exception {
     init("<dummyObject id='0' name='name' value='1.4'/>");
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.delete(getKey(0));
     repository.create(getKey(0), value(DummyObject.NAME, "newName"));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     checker.assertEquals(repository, "<dummyObject id='0' name='newName'/>");
 
     changeListener.assertLastChangesEqual(
@@ -610,10 +610,10 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     Key key1 = Key.create(DummyObject.TYPE, 1);
     Glob glob1 = repository.get(key1);
     Key key2 = Key.create(DummyObject.TYPE, 2);
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.deleteAll(DummyObject.TYPE);
     repository.create(key1, FieldValue.value(DummyObject.VALUE, 3.3));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     assertSame(glob1, repository.get(key1));
     assertEquals(3.3, glob1.get(DummyObject.VALUE));
   }
@@ -622,10 +622,10 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     Key key = Key.create(DummyObjectWithDefaultValues.TYPE, 1);
     repository = new DefaultGlobRepository();
     Glob glob = repository.create(key, FieldValue.value(DummyObjectWithDefaultValues.LONG, 23L));
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.deleteAll(DummyObjectWithDefaultValues.TYPE);
     repository.create(key);
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     assertSame(glob, repository.get(key));
     assertEquals(5L, glob.get(DummyObjectWithDefaultValues.LONG).longValue());
   }
@@ -663,7 +663,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
       "<dummyObject id='2' name='name2'/>"
     );
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     createDummyObject(repository, 3);
     repository.update(getKey(1), DummyObject.NAME, "newName");
     repository.delete(getKey(2));
@@ -673,7 +673,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                          "<dummyObject id='1' name='newName'/>" +
                          "<dummyObject id='3'/>");
 
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     changeListener.assertLastChangesEqual(
       "<create type='dummyObject' id='3'/>" +
       "<update type='dummyObject' id='1' name='newName' _name='name1'/>" +
@@ -687,13 +687,13 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
       "<dummyObject id='2' name='name2'/>"
     );
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     createDummyObject(repository, 3);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.update(getKey(1), DummyObject.NAME, "newName");
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.delete(getKey(2));
 
     checker.assertEquals(repository,
@@ -702,13 +702,13 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
     changeListener.assertNoChanges();
 
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     changeListener.assertNoChanges();
 
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     changeListener.assertNoChanges();
 
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     changeListener.assertLastChangesEqual(
       "<create type='dummyObject' id='3'/>" +
       "<update type='dummyObject' id='1' name='newName' _name='name1'/>" +
@@ -748,12 +748,12 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
       "<create type='dummyObject2' id='1' label='dummyObject[id=1] created'/>");
     clearTaggingObjects(repository, changeListener);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.create(DummyObject.TYPE,
                       value(DummyObject.ID, 2),
                       value(DummyObject.NAME, "name2"));
     repository.update(getKey(1), DummyObject.VALUE, 1.1);
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     changeListener.assertLastChangesEqual(
       "<create type='dummyObject' id='2' name='name2-created'/>" +
       "<create type='dummyObject2' id='1' label='dummyObject[id=1] updated'/>" +
@@ -773,7 +773,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     DummyChangeSetListener listener = new DummyChangeSetListener();
     repository.addTrigger(listener);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
 
     repository.create(DummyObject.TYPE, value(DummyObject.ID, 1), value(DummyObject.NAME, "obj1"));
 
@@ -788,7 +788,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
     repository.apply(changeSet);
 
-    repository.completeBulkDispatchingModeWithoutTriggers();
+    repository.completeChangeSetWithoutTriggers();
 
     listener.assertNoChanges();
     checker.assertEquals(repository,
@@ -799,10 +799,10 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
   public void testCompleteBulkDispatchingWithoutTriggersMustBeTheTopLevelComplete() throws Exception {
     init("<dummyObject id='1'/>");
 
-    repository.enterBulkDispatchingMode();
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
+    repository.startChangeSet();
     try {
-      repository.completeBulkDispatchingModeWithoutTriggers();
+      repository.completeChangeSetWithoutTriggers();
       fail();
     }
     catch (InvalidState e) {
@@ -1009,7 +1009,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
       "<dummyObject id='3' name='name3'/>"
     );
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.create(getKey(1));
     repository.update(getKey(2), DummyObject.NAME, "newName");
     repository.delete(getKey(3));
@@ -1018,7 +1018,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     repository.update(getKey(2), DummyObject.NAME, "name2");
     repository.create(getKey(3), value(DummyObject.NAME, "name3"));
 
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     changeListener.assertNoChanges();
   }

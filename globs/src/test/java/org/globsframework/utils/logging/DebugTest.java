@@ -26,13 +26,13 @@ public class DebugTest extends TestCase {
 
     Debug.print("Hello");
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.create(DummyObject2.TYPE,
                       value(DummyObject2.ID, 2),
                       value(DummyObject2.LABEL, "lbl"));
     repository.update(Key.create(DummyObject.TYPE, 2), DummyObject.NAME, "newObj2");
     repository.delete(Key.create(DummyObject.TYPE, 1));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     Debug.exit();
 

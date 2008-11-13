@@ -49,7 +49,7 @@ public class RemoteExecutorTest extends DbServicesTestCase {
       }
     });
 
-    globRepository.enterBulkDispatchingMode();
+    globRepository.startChangeSet();
 
     globRepository.create(DummyObject.TYPE,
                           value(DummyObject.ID, 2),
@@ -57,7 +57,7 @@ public class RemoteExecutorTest extends DbServicesTestCase {
                           value(DummyObject.PRESENT, Boolean.TRUE));
     globRepository.delete(newKey(DummyObject.TYPE, 3));
     globRepository.update(newKey(DummyObject.TYPE, 1), DummyObject.VALUE, 2.2);
-    globRepository.completeBulkDispatchingMode();
+    globRepository.completeChangeSet();
     checkDb(newKey(DummyObject.TYPE, 1), DummyObject.VALUE, 2.2, sqlConnection);
     checkDb(newKey(DummyObject.TYPE, 2), DummyObject.NAME, "a name", sqlConnection);
     assertTrue(sqlConnection.getQueryBuilder(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 3)).getQuery().executeAsGlobs().isEmpty());

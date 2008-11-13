@@ -320,16 +320,16 @@ public class ReplicationGlobRepository extends GlobRepositoryDecorator implement
     super.removeChangeListener(listener);
   }
 
-  public void enterBulkDispatchingMode() {
-    localRepository.enterBulkDispatchingMode();
+  public void startChangeSet() {
+    localRepository.startChangeSet();
   }
 
-  public void completeBulkDispatchingMode() {
-    localRepository.completeBulkDispatchingMode();
+  public void completeChangeSet() {
+    localRepository.completeChangeSet();
   }
 
-  public void completeBulkDispatchingModeWithoutTriggers() {
-    localRepository.completeBulkDispatchingModeWithoutTriggers();
+  public void completeChangeSetWithoutTriggers() {
+    localRepository.completeChangeSetWithoutTriggers();
   }
 
   public void reset(GlobList newGlobs, GlobType... changedTypes) {

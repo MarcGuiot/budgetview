@@ -63,14 +63,14 @@ class GlobTable extends Panel implements Submittable {
   public void submit() {
     GlobPage page = (GlobPage)getPage();
     GlobRepository repository = page.getRepository();
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     try {
       for (Submittable submittable : submittables) {
         submittable.submit();
       }
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
   }
 

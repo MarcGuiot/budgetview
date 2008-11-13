@@ -144,16 +144,16 @@ public class GlobRepositoryDecorator implements GlobRepository {
     getRepository().removeChangeListener(listener);
   }
 
-  public void enterBulkDispatchingMode() {
-    getRepository().enterBulkDispatchingMode();
+  public void startChangeSet() {
+    getRepository().startChangeSet();
   }
 
-  public void completeBulkDispatchingMode() {
-    getRepository().completeBulkDispatchingMode();
+  public void completeChangeSet() {
+    getRepository().completeChangeSet();
   }
 
-  public void completeBulkDispatchingModeWithoutTriggers() {
-    getRepository().completeBulkDispatchingModeWithoutTriggers();
+  public void completeChangeSetWithoutTriggers() {
+    getRepository().completeChangeSetWithoutTriggers();
   }
 
   public void reset(GlobList newGlobs, GlobType... changedTypes) {
