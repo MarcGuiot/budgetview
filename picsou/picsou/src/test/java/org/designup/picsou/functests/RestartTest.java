@@ -12,8 +12,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     setCurrentMonth("2008/08");
-    setInMemory("false");
-    setDeleteLocalPrevayler("false");
+    setInMemory(false);
+    setDeleteLocalPrevayler(false);
     super.setUp();
   }
 

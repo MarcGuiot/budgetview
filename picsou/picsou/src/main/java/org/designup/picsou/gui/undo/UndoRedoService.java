@@ -148,12 +148,12 @@ public class UndoRedoService {
     }
 
     private void applyChanges(ChangeSet changeSet) {
-      repository.enterBulkDispatchingMode();
+      repository.startChangeSet();
       try {
         repository.apply(changeSet);
       }
       finally {
-        repository.completeBulkDispatchingModeWithoutTriggers();
+        repository.completeChangeSetWithoutTriggers();
       }
     }
   }

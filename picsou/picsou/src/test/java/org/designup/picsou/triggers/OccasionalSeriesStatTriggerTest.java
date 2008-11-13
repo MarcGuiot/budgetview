@@ -165,10 +165,10 @@ public class OccasionalSeriesStatTriggerTest extends PicsouTestCase {
     Key subcatKey = repository.create(Category.TYPE, value(Category.MASTER, MasterCategory.FOOD.getId())).getKey();
     Glob transaction = createTransaction(200808, Series.OCCASIONAL_SERIES_ID, subcatKey.get(Category.ID), 10.0);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.delete(subcatKey);
     repository.setTarget(transaction.getKey(), Transaction.CATEGORY, MasterCategory.FOOD.getKey());
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     listener.assertNoChanges(OccasionalSeriesStat.TYPE);
   }
@@ -177,10 +177,10 @@ public class OccasionalSeriesStatTriggerTest extends PicsouTestCase {
     Key subcatKey = repository.create(Category.TYPE, value(Category.MASTER, MasterCategory.FOOD.getId())).getKey();
     Glob transaction = createTransaction(200808, Series.OCCASIONAL_SERIES_ID, subcatKey.get(Category.ID), 10.0);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.delete(subcatKey);
     repository.setTarget(transaction.getKey(), Transaction.CATEGORY, MasterCategory.HOUSE.getKey());
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     listener.assertLastChangesEqual(OccasionalSeriesStat.TYPE,
                                     "<delete type='occasionalSeriesStat' month='200808' " +
                                     "        category='" + MasterCategory.FOOD.getId() + "' " +

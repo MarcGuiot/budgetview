@@ -9,10 +9,10 @@ import org.globsframework.model.Key;
 public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
 
   public void testMonthChange() throws Exception {
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     createFreeSeries();
     createMonth(200807, 200808, 200809);
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     Integer[] plannedTransaction = getPlannedTransaction();
     listener.assertLastChangesEqual(
       Transaction.TYPE,
@@ -84,11 +84,11 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
   }
 
   public void testEnveloppeSeriesChangeWithIncome() throws Exception {
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     createEnveloppeSeries();
     createIncomeSeries();
     createMonth(200807, 200808, 200809);
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     Integer[] incomePlannedTransaction = getPlannedTransaction(INCOME_SERIES_ID);
     Integer[] enveloppePlannedTransaction = getPlannedTransaction(ENVELOPPE_SERIES_ID);
     listener.assertLastChangesEqual(
@@ -136,7 +136,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "        overrunAmount='0.0' series='1' type='seriesBudget'/>" +
       "<create active='true' amount='0.0' id='" + unknownBudgetIds[0] + "' day='1' month='200807'" +
       "        overrunAmount='0.0' series='1' type='seriesBudget'/>");
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.create(Transaction.TYPE,
                       value(Transaction.ID, 100),
                       value(Transaction.SERIES, INCOME_SERIES_ID),
@@ -155,7 +155,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.DAY, 1),
                       value(Transaction.BANK_DAY, 1),
                       value(Transaction.LABEL, "Auchan"));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "<update _amount='2000.0' amount='100.0' id='" + incomePlannedTransaction[0] + "' type='transaction'/>" +
@@ -164,7 +164,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "<create amount='1900.0' bankMonth='200808' bankDay='1' day='1' id='100' label='picsou' category='0'" +
       "        month='200808' planned='false' series='102' type='transaction'/>" +
       "<update _amount='-1000.0' amount='-700.0' id='" + enveloppePlannedTransaction[0] + "' type='transaction'/>");
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.update(Key.create(Transaction.TYPE, 101),
                       value(Transaction.SERIES, ENVELOPPE_SERIES_ID),
                       value(Transaction.AMOUNT, -200.),
@@ -180,7 +180,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.DAY, 1),
                       value(Transaction.BANK_DAY, 1),
                       value(Transaction.SERIES, Series.OCCASIONAL_SERIES_ID));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "<update _amount='-300.0' amount='-200.0' id='101' type='transaction'/>\n" +

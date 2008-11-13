@@ -30,11 +30,11 @@ public class DialogDemo {
     PicsouApplication.parseLanguage("-l", "fr");
     Directory directory = PicsouApplication.createDirectory();
     GlobRepository repository = PicsouInit.init(ServerAccess.NULL, "user", true, directory).getRepository();
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     for (int monthId = 200701; monthId < 200812; monthId = Month.next(monthId)) {
       repository.findOrCreate(Key.create(Month.TYPE, monthId));
     }
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     directory.add(new HelpService(repository, directory));
 
     PicsouSampleGenerator generator = new PicsouSampleGenerator(repository);

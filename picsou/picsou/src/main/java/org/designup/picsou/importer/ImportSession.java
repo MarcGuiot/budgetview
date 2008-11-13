@@ -56,12 +56,12 @@ public class ImportSession {
 
     importChangeSet = new DefaultChangeSet();
     importChangeSetAggregator = new ChangeSetAggregator(localRepository, importChangeSet);
-    localRepository.enterBulkDispatchingMode();
+    localRepository.startChangeSet();
 
     typedStream = new TypedInputStream(file);
     fileType = typedStream.getType();
     importService.run(typedStream, referenceRepository, localRepository);
-    localRepository.completeBulkDispatchingMode();
+    localRepository.completeChangeSet();
     load = true;
     return getImportedTransactionFormat();
   }
@@ -87,9 +87,9 @@ public class ImportSession {
     importChangeSetAggregator.dispose();
     try {
       DefaultChangeSet updateImportChangeSet = new DefaultChangeSet();
-      referenceRepository.enterBulkDispatchingMode();
+      referenceRepository.startChangeSet();
       ChangeSetAggregator updateImportAggregator = new ChangeSetAggregator(localRepository, updateImportChangeSet);
-      localRepository.enterBulkDispatchingMode();
+      localRepository.startChangeSet();
 // TODO:     importChangeSet.getCreated(BankEntity.TYPE);
       if (fileType.equals(BankFileType.QIF)) {
         for (Key key : importChangeSet.getCreated(Transaction.TYPE)) {
@@ -117,13 +117,13 @@ public class ImportSession {
         transactionAnalyzer.processTransactions(id, accountIdAndTransactions.getValue(),
                                                 localRepository);
       }
-      localRepository.completeBulkDispatchingMode();
+      localRepository.completeChangeSet();
       updateImportAggregator.dispose();
       referenceRepository.apply(importChangeSet);
       referenceRepository.apply(updateImportChangeSet);
     }
     finally {
-      referenceRepository.completeBulkDispatchingMode();
+      referenceRepository.completeChangeSet();
     }
     return importKey;
   }

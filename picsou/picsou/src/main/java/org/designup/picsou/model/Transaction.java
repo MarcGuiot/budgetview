@@ -94,14 +94,14 @@ public class Transaction {
   }
 
   public static void setCategory(Glob transaction, Integer categoryId, GlobRepository repository) {
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
 
     try {
       repository.setTarget(transaction.getKey(), CATEGORY, create(Category.TYPE, categoryId));
       repository.update(transaction.getKey(), Transaction.SERIES, Series.OCCASIONAL_SERIES_ID);
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
   }
 

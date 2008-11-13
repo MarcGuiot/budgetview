@@ -125,7 +125,7 @@ public class OccasionalSeriesView extends View {
       repository.getAll(OccasionalSeriesStat.TYPE, GlobMatchers.contained(OccasionalSeriesStat.MONTH, currentMonths));
 
     Set<Glob> newStats = new HashSet<Glob>();
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     try {
       repository.deleteAll(PeriodOccasionalSeriesStat.TYPE);
       for (Glob stat : stats) {
@@ -138,7 +138,7 @@ public class OccasionalSeriesView extends View {
       }
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
     GlobList orderedStat = new GlobList(newStats);
     orderedStat.sort(new Comparator<Glob>() {

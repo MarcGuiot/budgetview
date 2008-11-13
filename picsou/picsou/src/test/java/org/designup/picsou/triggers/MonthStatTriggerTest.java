@@ -53,9 +53,9 @@ public class MonthStatTriggerTest extends PicsouTestCase {
     else {
       MonthStatTrigger trigger = new MonthStatTrigger();
       repository.addChangeListener(trigger);
-      repository.enterBulkDispatchingMode();
+      repository.startChangeSet();
       checker.parse(repository, input);
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
     init(MonthStat.TOTAL_SPENT)
       .setMonths(200605, 200606, 200607, 200608)
@@ -83,9 +83,9 @@ public class MonthStatTriggerTest extends PicsouTestCase {
     updateStats();
     MonthStatTrigger trigger = new MonthStatTrigger();
     repository.addChangeListener(trigger);
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.delete(Key.create(Transaction.TYPE, 3));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     init(MonthStat.TOTAL_SPENT)
       .setMonths(200605)
@@ -127,9 +127,9 @@ public class MonthStatTriggerTest extends PicsouTestCase {
       updateStats();
       MonthStatTrigger trigger = new MonthStatTrigger();
       repository.addChangeListener(trigger);
-      repository.enterBulkDispatchingMode();
+      repository.startChangeSet();
       repository.update(Key.create(Transaction.TYPE, 2), Transaction.CATEGORY, null);
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
 
     init(MonthStat.TOTAL_SPENT)
@@ -191,14 +191,14 @@ public class MonthStatTriggerTest extends PicsouTestCase {
       updateStats();
       MonthStatTrigger trigger = new MonthStatTrigger();
       repository.addChangeListener(trigger);
-      repository.enterBulkDispatchingMode();
+      repository.startChangeSet();
       repository.update(Key.create(Transaction.TYPE, 2), Transaction.CATEGORY, 1000);
       repository.update(Key.create(Transaction.TYPE, 6),
                         FieldValue.value(Transaction.CATEGORY, 1001),
                         FieldValue.value(Transaction.AMOUNT, -40.)
       );
 
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
 
     init(MonthStat.TOTAL_SPENT)
@@ -248,13 +248,13 @@ public class MonthStatTriggerTest extends PicsouTestCase {
       updateStats();
       MonthStatTrigger trigger = new MonthStatTrigger();
       repository.addChangeListener(trigger);
-      repository.enterBulkDispatchingMode();
+      repository.startChangeSet();
       repository.update(Key.create(Transaction.TYPE, 2), Transaction.CATEGORY, MasterCategory.INTERNAL.getId());
       repository.update(Key.create(Transaction.TYPE, 3),
                         FieldValue.value(Transaction.CATEGORY, MasterCategory.HEALTH.getId()),
                         FieldValue.value(Transaction.AMOUNT, 15.)
       );
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
 
 
@@ -307,11 +307,11 @@ public class MonthStatTriggerTest extends PicsouTestCase {
       updateStats();
       MonthStatTrigger trigger = new MonthStatTrigger();
       repository.addChangeListener(trigger);
-      repository.enterBulkDispatchingMode();
+      repository.startChangeSet();
       repository.update(Key.create(Transaction.TYPE, 1), Transaction.AMOUNT, -10.);
       repository.update(Key.create(Transaction.TYPE, 2), Transaction.AMOUNT, -20.);
 
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
 
     init(MonthStat.TOTAL_SPENT)
@@ -371,10 +371,10 @@ public class MonthStatTriggerTest extends PicsouTestCase {
       updateStats();
       MonthStatTrigger trigger = new MonthStatTrigger();
       repository.addChangeListener(trigger);
-      repository.enterBulkDispatchingMode();
+      repository.startChangeSet();
       repository.update(Key.create(Transaction.TYPE, 1), Transaction.CATEGORY, MasterCategory.INTERNAL.getId());
       repository.update(Key.create(Transaction.TYPE, 3), Transaction.CATEGORY, MasterCategory.INTERNAL.getId());
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
 
     init(MonthStat.TOTAL_SPENT)
@@ -410,9 +410,9 @@ public class MonthStatTriggerTest extends PicsouTestCase {
 
   private void updateStats() {
     MonthStatTrigger trigger = new MonthStatTrigger();
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     trigger.run(repository);
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
   }
 
   private MonthStatChecker init(Field field) {

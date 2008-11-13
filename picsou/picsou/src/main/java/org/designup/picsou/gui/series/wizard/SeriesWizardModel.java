@@ -30,7 +30,7 @@ public class SeriesWizardModel {
   }
 
   public void createSeries(GlobRepository repository) {
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     try {
       for (BudgetArea budgetArea : budgetAreas) {
         for (SeriesWizardEntry entry : entries.get(budgetArea)) {
@@ -39,7 +39,7 @@ public class SeriesWizardModel {
       }
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
   }
 

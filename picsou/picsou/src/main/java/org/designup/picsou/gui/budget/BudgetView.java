@@ -123,7 +123,7 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
   }
 
   private void updateSelection() {
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     PeriodSeriesStatFunctor seriesStatFunctor = new PeriodSeriesStatFunctor(repository);
     try {
       repository.deleteAll(PeriodSeriesStat.TYPE);
@@ -133,7 +133,7 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
                            seriesStatFunctor);
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
 
     SelectionService localSelectionService = directory.get(SelectionService.class);

@@ -105,13 +105,13 @@ public class PicsouSampleGenerator {
   }
 
   public void run(int min, int max) {
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     for (Integer month : Month.range(min, max)) {
       for (MonthGenerator generator : generators) {
         generator.run(month, max);
       }
     }
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
   }
 
   public void write(String fileName) throws IOException {

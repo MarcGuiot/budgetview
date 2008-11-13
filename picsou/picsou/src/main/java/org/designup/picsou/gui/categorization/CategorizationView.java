@@ -387,7 +387,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
         if (category == null) {
           category = series.get(Series.DEFAULT_CATEGORY);
         }
-        repository.enterBulkDispatchingMode();
+        repository.startChangeSet();
         try {
           for (Glob transaction : currentTransactions) {
             repository.update(transaction.getKey(),
@@ -396,7 +396,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
           }
         }
         finally {
-          repository.completeBulkDispatchingMode();
+          repository.completeChangeSet();
         }
       }
     }

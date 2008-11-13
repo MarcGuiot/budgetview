@@ -81,11 +81,11 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
     Integer targetId;
     if (series.isEmpty() && transactions.isEmpty()) {
       try {
-        repository.enterBulkDispatchingMode();
+        repository.startChangeSet();
         delete(categories, seriesToCategory);
       }
       finally {
-        repository.completeBulkDispatchingMode();
+        repository.completeChangeSet();
       }
       return null;
     }
@@ -94,7 +94,7 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
     if (!categoryDeletionDialog.selectTargetCategory(categoryId, masterId, getParent())) {
       return null;
     }
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     try {
 
       targetId = categoryDeletionDialog.getTargetId();
@@ -123,7 +123,7 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
       delete(categories, seriesToCategory);
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
     return targetId;
   }

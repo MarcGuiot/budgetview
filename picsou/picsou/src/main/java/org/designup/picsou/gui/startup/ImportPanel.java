@@ -496,7 +496,7 @@ public class ImportPanel {
   }
 
   private Set<Integer> createMonth() {
-    localRepository.enterBulkDispatchingMode();
+    localRepository.startChangeSet();
     final SortedSet<Integer> monthIds = new TreeSet<Integer>();
     try {
       localRepository.safeApply(Transaction.TYPE,
@@ -520,7 +520,7 @@ public class ImportPanel {
       }
     }
     finally {
-      localRepository.completeBulkDispatchingMode();
+      localRepository.completeChangeSet();
     }
     return monthIds;
   }
