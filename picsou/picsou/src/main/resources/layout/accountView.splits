@@ -13,7 +13,7 @@
         <label ref="accountTotalTitle" styleClass="totalAmountTitle" autoHideSource="totalBalance"/>
         <label ref="totalBalance" styleClass="totalAmount" tooltipText="$account.total.tooltip"/>
 
-        <scrollPane>
+        <scrollPane marginBottom="0">
           <column>
             <repeat ref="accountRepeat" marginTop="5" marginBottom="15">
               <column name="accountParent" margin="5" marginBottom="10">
@@ -30,12 +30,14 @@
                 </row>
               </column>
             </repeat>
-            <row styleClass="iconButtonGroup">
-              <button action="createAccount" styleClass="create"/>
-              <filler fill="horizontal"/>
-            </row>
+            <filler fill="vertical"/>
           </column>
         </scrollPane>
+
+        <row styleClass="iconButtonGroup">
+          <button action="createAccount" styleClass="create"/>
+          <filler fill="horizontal"/>
+        </row>
       </column>
 
     </panel>

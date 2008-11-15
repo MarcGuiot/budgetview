@@ -47,6 +47,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   private Date currentDate = Dates.parse("2008/08/31");
   private boolean isInMemory = true;
   private boolean deleteLocalPrevayler = true;
+  private String localPrevaylerPath = FunctionalTestCase.getUrl();
 
   static public String SOCIETE_GENERALE = "Société Générale";
   private boolean notRegistered = false;
@@ -56,7 +57,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     super.setUp();
     TimeService.setCurrentDate(currentDate);
 
-    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, FunctionalTestCase.getUrl());
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, localPrevaylerPath);
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, Boolean.toString(deleteLocalPrevayler));
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, Boolean.toString(isInMemory));
@@ -71,7 +72,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
           mainWindow = WindowInterceptor.run(new Trigger() {
             public void run() throws Exception {
               clearDirectory();
-              directory = MainWindowLauncher.run("anonymous", "p@ssword");
+              directory = MainWindowLauncher.run("anonymous", "password");
             }
           });
         }
@@ -175,6 +176,10 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public void setDeleteLocalPrevayler(boolean deleteLocalPrevayler) {
     this.deleteLocalPrevayler = deleteLocalPrevayler;
+  }
+
+  public void setLocalPrevaylerPath(String localPrevaylerPath) {
+    this.localPrevaylerPath = localPrevaylerPath;
   }
 
   public void setNotRegistered() {

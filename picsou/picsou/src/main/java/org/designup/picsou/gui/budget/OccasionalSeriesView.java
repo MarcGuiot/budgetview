@@ -82,12 +82,8 @@ public class OccasionalSeriesView extends View {
 
                             final GlobButtonView amountLabel = addAmountButton("observedCategoryAmount", master, cellBuilder, "amount." + categoryName);
 
-                            cellBuilder.addDisposeListener(new Disposable() {
-                              public void dispose() {
-                                category.dispose();
-                                amountLabel.dispose();
-                              }
-                            });
+                            cellBuilder.addDisposeListener(category);
+                            cellBuilder.addDisposeListener(amountLabel);
                           }
                         });
 

@@ -5,6 +5,15 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 
 public class DemoGenerationTest extends LoggedInFunctionalTestCase {
+
+  protected void setUp() throws Exception {
+//    setLocalPrevaylerPath("tmp/demo/");
+//    setInMemory(false);
+//    setDeleteLocalPrevayler(true);
+    setCurrentMonth("2008/11");
+    super.setUp();
+  }
+
   public void test() throws Exception {
 
     String fileName = "tmp/demo.ofx";

@@ -10,7 +10,6 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.views.AbstractGlobTextView;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
@@ -20,8 +19,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
-import static org.globsframework.model.utils.GlobMatchers.contains;
-import static org.globsframework.model.utils.GlobMatchers.not;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -39,15 +37,13 @@ public class AccountView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountView.splits", repository, directory);
 
     Glob summaryAccount = repository.get(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID));
-    builder.addLabel("accountTotalTitle", Account.TYPE, new GlobListStringifier() {
-      public String toString(GlobList list, GlobRepository repository) {
-        if (list.isEmpty() || list.get(0).get(Account.BALANCE_DATE) == null) {
-          return "";
-        }
-        return Lang.get("account.total.title", Formatting.toString(list.get(0).get(Account.BALANCE_DATE)));
-      }
-    }).setAutoHideIfEmpty(true).forceSelection(summaryAccount);
-    builder.addLabel("totalBalance", Account.BALANCE).setAutoHideIfEmpty(true).forceSelection(summaryAccount);
+    builder.addLabel("accountTotalTitle", Account.TYPE, new TotalAmountStringifier())
+      .setAutoHideIfEmpty(true)
+      .forceSelection(summaryAccount);
+
+    builder.addLabel("totalBalance", Account.BALANCE)
+      .setAutoHideIfEmpty(true)
+      .forceSelection(summaryAccount);
 
     builder.add("createAccount", new AbstractAction() {
 
@@ -67,14 +63,17 @@ public class AccountView extends View {
 
   private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
-      add(GlobButtonView.init(Account.NAME, repository, directory, new EditAccountFunctor()),
-          "accountName", account, cellBuilder);
+      add("accountName",
+          GlobButtonView.init(Account.NAME, repository, directory, new EditAccountFunctor()),
+          account, cellBuilder);
 
-      add(GlobLabelView.init(Account.NUMBER, repository, directory),
-          "accountNumber", account, cellBuilder);
+      add("accountNumber",
+          GlobLabelView.init(Account.NUMBER, repository, directory),
+          account, cellBuilder);
 
-      add(GlobLabelView.init(Account.BALANCE_DATE, repository, directory),
-          "accountUpdateDate", account, cellBuilder);
+      add("accountUpdateDate",
+          GlobLabelView.init(Account.BALANCE_DATE, repository, directory),
+          account, cellBuilder);
 
       final GlobButtonView balance =
         GlobButtonView.init(Account.TYPE, repository, directory,
@@ -101,20 +100,13 @@ public class AccountView extends View {
 
       cellBuilder.add("gotoWebsite", new GotoWebsiteAction(account));
       cellBuilder.add("importData", ImportFileAction.init(Lang.get("account.import.data"), repository, directory, account));
-      cellBuilder.addDisposeListener(new Disposable() {
-        public void dispose() {
-          balance.dispose();
-        }
-      });
+      cellBuilder.addDisposeListener(balance);
     }
 
-    private void add(final AbstractGlobTextView globLabelView, String name, Glob account, RepeatCellBuilder cellBuilder) {
-      cellBuilder.add(name, globLabelView.forceSelection(account).getComponent());
-      cellBuilder.addDisposeListener(new Disposable() {
-        public void dispose() {
-          globLabelView.dispose();
-        }
-      });
+    private void add(String name, final AbstractGlobTextView labelView, Glob account, RepeatCellBuilder cellBuilder) {
+      labelView.forceSelection(account);
+      cellBuilder.add(name, labelView.getComponent());
+      cellBuilder.addDisposeListener(labelView);
     }
 
     private class GotoWebsiteAction extends AbstractAction {
@@ -136,6 +128,15 @@ public class AccountView extends View {
         AccountEditionDialog dialog = new AccountEditionDialog(directory.get(JFrame.class), repository, directory);
         dialog.show(list.get(0));
       }
+    }
+  }
+
+  private static class TotalAmountStringifier implements GlobListStringifier {
+    public String toString(GlobList list, GlobRepository repository) {
+      if (list.isEmpty() || list.get(0).get(Account.BALANCE_DATE) == null) {
+        return "";
+      }
+      return Lang.get("account.total.title", Formatting.toString(list.get(0).get(Account.BALANCE_DATE)));
     }
   }
 }

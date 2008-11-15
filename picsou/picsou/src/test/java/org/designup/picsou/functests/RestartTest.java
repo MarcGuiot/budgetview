@@ -207,7 +207,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     categorization.getGauge().checkProgressMessageHidden();
   }
 
-  public void testResartInNewMonth() throws Exception {
+  public void testRestartAfterCurrentMonthChanged() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
       .addTransaction("2008/08/10", -400.0, "Auchan")
