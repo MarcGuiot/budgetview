@@ -3,13 +3,14 @@ package org.globsframework.gui.views;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
+import org.globsframework.gui.splits.utils.Disposable;
 
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class GlobViewModel implements ChangeSetListener {
+public class GlobViewModel implements ChangeSetListener, Disposable {
   private SortedGlobList globs;
   private GlobType type;
   private GlobRepository repository;
