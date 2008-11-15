@@ -234,6 +234,7 @@
       <xs:attribute name="bottomColor" type="xs:string"/>
       <xs:attribute name="borderColor" type="xs:string"/>
       <xs:attribute name="borderWidth" type="xs:integer"/>
+      <xs:attribute name="bevelTopColor" type="xs:string"/>
       <xs:attribute name="cornerRadius" type="xs:integer"/>
       <xs:attribute name="shadowWidth" type="xs:integer"/>
       <xs:attribute name="opacity" type="xs:float"/>
