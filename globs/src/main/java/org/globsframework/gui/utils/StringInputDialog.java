@@ -7,7 +7,6 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -36,7 +35,7 @@ public abstract class StringInputDialog {
     builder.add("cancel", new CancelAction(cancelLabel));
     builder.setSource(
       "<splits>" +
-      "  <panel  opaque='true'>" +
+      "  <panel opaque='true'>" +
       "    <column marginLeft='20' marginRight='20' margin='5'>" +
       "      <row defaultMarginTop='5' defaultMarginBottom='5'>" +
       "        <label ref='inputLabel' marginRight='10'/>" +
@@ -45,8 +44,8 @@ public abstract class StringInputDialog {
       "      <label ref='label' foreground='red' marginTop='5' marginBottom='5'/>" +
       "      <row>" +
       "        <filler fill='horizontal'/>" +
-      "        <button action='ok'/>" +
-      "        <button action='cancel'/>" +
+      "        <button action='ok' opaque='false'/>" +
+      "        <button action='cancel' opaque='false'/>" +
       "      </row>" +
       "    </column>" +
       "  </panel>" +
