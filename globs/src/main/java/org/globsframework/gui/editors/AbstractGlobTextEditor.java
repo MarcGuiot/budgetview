@@ -144,13 +144,13 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       return;
     }
     try {
-      repository.enterBulkDispatchingMode();
+      repository.startChangeSet();
       for (Glob glob : currentGlobs) {
         repository.update(glob.getKey(), AbstractGlobTextEditor.this.field, value);
       }
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
   }
 

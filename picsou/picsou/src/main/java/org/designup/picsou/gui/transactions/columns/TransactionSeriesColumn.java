@@ -103,18 +103,20 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
     }
     if (Transaction.isPlanned(transaction)) {
       button.setEnabled(false);
-      rendererColors.setForeground(button, isSelected, transaction);
+      rendererColors.setForeground(button, isSelected, transaction, true);
       button.setDisabledColor(isSelected ? rendererColors.getTransactionSelectedTextColor() : rendererColors.getTransactionPlannedTextColor());
       button.setFont(normalFont);
       button.setUnderline(false);
       button.setText(seriesStringifier.toString(transaction, repository));
+      button.setToolTipText(null);
     }
     else if (!Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
       button.setEnabled(true);
-      rendererColors.setForeground(button, isSelected, transaction);
+      rendererColors.setForeground(button, isSelected, transaction, true);
       button.setFont(normalFont);
       button.setUnderline(false);
       button.setText(seriesStringifier.toString(transaction, repository));
+      button.setToolTipText(Lang.get("transaction.categorizationLink.tooltip"));
     }
     else {
       button.setEnabled(true);
@@ -122,6 +124,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
       button.setFont(toCategorizeFont);
       button.setUnderline(true);
       button.setText(Lang.get("category.assignement.required"));
+      button.setToolTipText(Lang.get("transaction.categorizationLink.tooltip"));
     }
     rendererColors.setBackground(panel, isSelected, row);
     return panel;

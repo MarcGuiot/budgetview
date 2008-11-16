@@ -19,7 +19,7 @@ public class UpgradeService {
   }
 
   public void upgrade(GlobRepository repository, Glob version) {
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     try {
       if (version.get(VersionInformation.CURRENT_JAR_VERSION) == 2) {
         PlannedTransactionCorrecter plannedTransactionCorrecter = new PlannedTransactionCorrecter(repository);
@@ -36,12 +36,12 @@ public class UpgradeService {
       repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
   }
 
   public void applyFilter(GlobRepository repository, Glob version) {
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     try {
       TransactionAnalyzerFactory analyzerFactory = directory.get(TransactionAnalyzerFactory.class);
       TransactionAnalyzer transactionAnalyzer = analyzerFactory.getAnalyzer();
@@ -59,7 +59,7 @@ public class UpgradeService {
                         version.get(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION));
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
   }
 }

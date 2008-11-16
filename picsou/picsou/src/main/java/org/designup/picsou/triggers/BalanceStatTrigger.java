@@ -26,7 +26,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
   }
 
   private void computeStat(GlobRepository repository) {
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     try {
       repository.deleteAll(BalanceStat.TYPE);
       BalanceStatCalculator balanceStatCalculator = new BalanceStatCalculator(repository);
@@ -36,7 +36,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
       }
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
   }
 

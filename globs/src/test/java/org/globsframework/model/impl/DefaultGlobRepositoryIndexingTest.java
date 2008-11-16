@@ -116,11 +116,11 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
 
   private void change(int id, int value1, int value2, String name) {
     Key key = Key.create(DummyObjectIndex.TYPE, id);
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     update(key, DummyObjectIndex.VALUE_2, value2);
     update(key, DummyObjectIndex.VALUE_1, value1);
     update(key, DummyObjectIndex.NAME, name);
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
   }
 
   private <T> void update(Key key, Field field, T value) {

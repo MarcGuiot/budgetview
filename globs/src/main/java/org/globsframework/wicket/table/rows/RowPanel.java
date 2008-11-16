@@ -71,7 +71,7 @@ public class RowPanel extends Panel implements Submittable {
   public void submit() {
     GlobPage page = (GlobPage)getPage();
     GlobRepository repository = page.getRepository();
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     try {
       repository.update(key, values.toArray());
       for (FormSubmitListener listener : submitListeners) {
@@ -79,7 +79,7 @@ public class RowPanel extends Panel implements Submittable {
       }
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
   }
 

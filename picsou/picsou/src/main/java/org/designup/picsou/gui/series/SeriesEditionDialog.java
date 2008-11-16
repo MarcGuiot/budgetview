@@ -376,12 +376,12 @@ public class SeriesEditionDialog {
 
   public void show(BudgetArea budgetArea, Set<Integer> monthIds, Integer seriesId) {
     try {
-      localRepository.enterBulkDispatchingMode();
+      localRepository.startChangeSet();
       localRepository.rollback();
       initBudgetAreaSeries(budgetArea);
     }
     finally {
-      localRepository.completeBulkDispatchingMode();
+      localRepository.completeChangeSet();
     }
     seriesPanel.setVisible(true);
     buttonSeriePanel.setVisible(true);
@@ -394,12 +394,12 @@ public class SeriesEditionDialog {
 
   public void show(Glob series, Set<Integer> monthIds) {
     try {
-      localRepository.enterBulkDispatchingMode();
+      localRepository.startChangeSet();
       localRepository.rollback();
       initBudgetAreaSeries(BudgetArea.get(series.get(Series.BUDGET_AREA)));
     }
     finally {
-      localRepository.completeBulkDispatchingMode();
+      localRepository.completeChangeSet();
     }
     seriesPanel.setVisible(false);
     buttonSeriePanel.setVisible(false);
@@ -411,7 +411,7 @@ public class SeriesEditionDialog {
     this.budgetArea = BudgetArea.get(budgetArea.getId());
     Glob createdSeries;
     try {
-      localRepository.enterBulkDispatchingMode();
+      localRepository.startChangeSet();
       localRepository.rollback();
       initBudgetAreaSeries(budgetArea);
 
@@ -428,7 +428,7 @@ public class SeriesEditionDialog {
       createdSeries = createSeries(label, day);
     }
     finally {
-      localRepository.completeBulkDispatchingMode();
+      localRepository.completeChangeSet();
     }
     seriesPanel.setVisible(false);
     buttonSeriePanel.setVisible(false);
@@ -581,7 +581,7 @@ public class SeriesEditionDialog {
 
     private class SeriesCategoryChooserCallback implements CategoryChooserCallback {
       public void processSelection(GlobList categories) {
-        localRepository.enterBulkDispatchingMode();
+        localRepository.startChangeSet();
         try {
           localRepository.delete(localRepository.getAll(SeriesToCategory.TYPE,
                                                         GlobMatchers.linkedTo(currentSeries, SeriesToCategory.SERIES)));
@@ -596,7 +596,7 @@ public class SeriesEditionDialog {
           }
         }
         finally {
-          localRepository.completeBulkDispatchingMode();
+          localRepository.completeChangeSet();
         }
 
         SeriesEditionDialog.this.multiCategoryList.selectFirst();
@@ -637,7 +637,7 @@ public class SeriesEditionDialog {
             currentlySelectedCategory = series.get(SeriesToCategory.CATEGORY);
           }
         }
-        localRepository.enterBulkDispatchingMode();
+        localRepository.startChangeSet();
         try {
           Set<Key> newSeries = localRepository.getCurrentChanges().getCreated(Series.TYPE);
           for (Key seriesKey : newSeries) {
@@ -665,7 +665,7 @@ public class SeriesEditionDialog {
           }
         }
         finally {
-          localRepository.completeBulkDispatchingMode();
+          localRepository.completeChangeSet();
         }
       }
       localRepository.commitChanges(false);
@@ -788,7 +788,7 @@ public class SeriesEditionDialog {
       if (updateInProgress) {
         return;
       }
-      localRepository.enterBulkDispatchingMode();
+      localRepository.startChangeSet();
       try {
         if (currentSeries != null) {
           BooleanField field = Series.getField(monthIndex);
@@ -807,7 +807,7 @@ public class SeriesEditionDialog {
         }
       }
       finally {
-        localRepository.completeBulkDispatchingMode();
+        localRepository.completeChangeSet();
       }
     }
 

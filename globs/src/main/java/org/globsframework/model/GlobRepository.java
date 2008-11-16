@@ -58,11 +58,11 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
 
   void removeChangeListener(ChangeSetListener listener);
 
-  void enterBulkDispatchingMode();
+  void startChangeSet();
 
-  void completeBulkDispatchingMode();
+  void completeChangeSet();
 
-  void completeBulkDispatchingModeWithoutTriggers();
+  void completeChangeSetWithoutTriggers();
 
   /**
    * @deprecated Unused - at least remove the "count" parameter (caching should be done at the

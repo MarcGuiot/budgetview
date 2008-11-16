@@ -101,14 +101,14 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
     final JRadioButton selector = new JRadioButton(new AbstractAction(label) {
       public void actionPerformed(ActionEvent e) {
         try {
-          repository.enterBulkDispatchingMode();
+          repository.startChangeSet();
           for (Glob transaction : currentTransactions) {
             repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
             repository.setTarget(transaction.getKey(), Transaction.CATEGORY, categoryKey);
           }
         }
         finally {
-          repository.completeBulkDispatchingMode();
+          repository.completeChangeSet();
         }
       }
     });

@@ -38,7 +38,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     UISpecAssert.assertTrue(box.textEquals("This is your last day with fourmics."));
   }
 
-  public void testNotValidAnymore() throws Exception {
+  public void testLicenseExpired() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/10/01"));
 
     // force call to update

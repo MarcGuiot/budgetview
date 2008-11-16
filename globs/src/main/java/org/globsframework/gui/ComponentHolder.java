@@ -1,11 +1,11 @@
 package org.globsframework.gui;
 
+import org.globsframework.gui.splits.utils.Disposable;
+
 import javax.swing.*;
 
-public interface ComponentHolder {
+public interface ComponentHolder extends Disposable {
   public JComponent getComponent();
-
-  void dispose();
 
   ComponentHolder setName(String name);
 }

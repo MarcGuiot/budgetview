@@ -80,10 +80,10 @@ public class GlobListViewTest extends GuiComponentTestCase {
     list.selectIndices(1);
     DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.delete(key1);
     repository.delete(key2);
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     assertTrue(list.selectionIsEmpty());
     listener.assertEquals("<log>" +
@@ -125,10 +125,10 @@ public class GlobListViewTest extends GuiComponentTestCase {
                     "<dummyObject id='2' name='name2'/>");
     ListBox list = createList(repository);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.delete(key1);
     repository.create(TYPE, value(NAME, "newName1"));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     assertTrue(list.contentEquals("name2", "newName1"));
   }
@@ -381,10 +381,10 @@ public class GlobListViewTest extends GuiComponentTestCase {
 
     DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.update(key1, DummyObject.NAME, "newName1");
     repository.update(key2, DummyObject.NAME, "aNewName2");
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     assertTrue(listBox.contentEquals("aNewName2", "newName1"));
     assertTrue(listBox.selectionEquals("newName1"));
     listener.assertEmpty();

@@ -18,14 +18,14 @@ public class GlobUtils {
   }
 
   public static void setValue(Glob glob, Double value, GlobRepository repository, DoubleField... fields) {
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     try {
       for (DoubleField field : fields) {
         repository.update(glob.getKey(), field, value);
       }
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
   }
 

@@ -111,10 +111,10 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                     "<dummyObject id='2' name='name2' value='2.2'/>");
     Table table = createTableWithNameAndValueColumns(repository);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.delete(key1);
     repository.create(TYPE, value(NAME, "newName1"), value(VALUE, 1.0));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     assertTrue(table.contentEquals(new String[][]{
       {"name2", "2.2"},
@@ -128,12 +128,12 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                     "<dummyObject id='2' name='name2' value='2.2'/>");
     Table table = createTableWithNameAndValueColumns(repository);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.delete(key1);
     repository.create(TYPE, value(NAME, "newName1"), value(VALUE, 1.0));
     repository.delete(key2);
     repository.create(TYPE, value(NAME, "newName2"), value(VALUE, 2.0));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     assertTrue(table.contentEquals(new String[][]{
       {"newName1", "1"},
@@ -544,11 +544,11 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     view.select(repository.get(key1));
 
     DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.update(Key.create(DummyObject.TYPE, 1), DummyObject.NAME, "newName");
     repository.update(Key.create(DummyObject.TYPE, 2), DummyObject.NAME, "newName");
     repository.update(Key.create(DummyObject.TYPE, 3), DummyObject.NAME, "newName");
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     listener.assertEquals("<log>" +
                           "  <selection types='dummyObject'/>" +
@@ -568,10 +568,10 @@ public class GlobTableViewTest extends GuiComponentTestCase {
 
     DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.update(glob1.getKey(), DummyObject.NAME, "newName1");
     repository.update(glob2.getKey(), DummyObject.NAME, "aNewName2");
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     listener.assertEmpty();
     assertTrue(table.contentEquals(new String[][]{
@@ -710,7 +710,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                     "<dummyObject id='2' name='name2' value='2.2'/>");
     Table table = createTableWithNameAndValueColumns(repository);
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.delete(key1);
 
     view.refresh();
@@ -855,11 +855,11 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       {"3", "name2"},
       {"4", "name2"},
     }));
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.update(key1, DummyObject.NAME, "name2");
     repository.update(key2, DummyObject.NAME, "name1");
     repository.update(key3, DummyObject.NAME, "name1");
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     assertTrue(table.contentEquals(new String[][]{
       {"1", "name2"},
       {"4", "name2"},
@@ -879,10 +879,10 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       .addColumn(DummyObject.NAME);
     Table table = new Table(view.getComponent());
     selectionService.select(repository.get(key2));
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.delete(key2);
     view.setFilter(GlobMatchers.fieldEquals(DummyObject.NAME, "name1"));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
   }
 
   private void checkColumnIsNotRightAligned(Table table, int column) {

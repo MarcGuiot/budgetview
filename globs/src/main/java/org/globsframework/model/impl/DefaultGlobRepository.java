@@ -310,14 +310,14 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   public void update(final Key key, FieldValue... values) throws ItemNotFound {
     final MutableGlob mutableGlob = getGlobForUpdate(key);
-    enterBulkDispatchingMode();
+    startChangeSet();
     try {
       for (FieldValue value : values) {
         doUpdate(mutableGlob, key, value.getField(), value.getValue());
       }
     }
     finally {
-      completeBulkDispatchingMode();
+      completeChangeSet();
     }
   }
 
@@ -392,7 +392,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   }
 
   public void delete(GlobList list) throws OperationDenied {
-    enterBulkDispatchingMode();
+    startChangeSet();
     OperationDenied exception = null;
     try {
       List<Pair<Key, FieldValues>> toBeRemoved = new ArrayList<Pair<Key, FieldValues>>();
@@ -418,7 +418,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       exception = e;
     }
     finally {
-      completeBulkDispatchingMode();
+      completeChangeSet();
     }
     if (exception != null) {
       throw exception;
@@ -426,7 +426,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   }
 
   public void deleteAll(GlobType... types) throws OperationDenied {
-    enterBulkDispatchingMode();
+    startChangeSet();
     OperationDenied exception = null;
     try {
       List<Pair<Key, FieldValues>> toBeRemoved = new ArrayList<Pair<Key, FieldValues>>();
@@ -455,7 +455,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       exception = e;
     }
     finally {
-      completeBulkDispatchingMode();
+      completeChangeSet();
     }
     if (exception != null) {
       throw exception;
@@ -484,11 +484,11 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     });
 
     try {
-      enterBulkDispatchingMode();
+      startChangeSet();
       changeSet.safeVisit(new ChangeSetExecutor());
     }
     finally {
-      completeBulkDispatchingMode();
+      completeChangeSet();
     }
   }
 
@@ -499,15 +499,15 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     }
   }
 
-  public void enterBulkDispatchingMode() {
+  public void startChangeSet() {
     bulkDispatchingModeLevel++;
   }
 
-  public void completeBulkDispatchingMode() {
+  public void completeChangeSet() {
     completeBulkDispatchingMode(true);
   }
 
-  public void completeBulkDispatchingModeWithoutTriggers() {
+  public void completeChangeSetWithoutTriggers() {
     if (bulkDispatchingModeLevel > 1) {
       throw new InvalidState("This method must be called for the outermost enterBulkDispatchingMode call");
     }
@@ -525,7 +525,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   }
 
   public void reset(GlobList newGlobs, GlobType... changedTypes) {
-    enterBulkDispatchingMode();
+    startChangeSet();
     Set<GlobType> typesList = new HashSet<GlobType>(Arrays.asList(changedTypes));
     for (GlobType type : changedTypes) {
       for (Map.Entry<Key, Glob> entry : globs.get(type).entrySet()) {
@@ -555,7 +555,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     for (ChangeSetListener listener : changeListeners) {
       listener.globsReset(this, typesList);
     }
-    completeBulkDispatchingMode();
+    completeChangeSet();
   }
 
   public GlobIdGenerator getIdGenerator() {

@@ -8,7 +8,6 @@ import org.designup.picsou.model.SeriesToCategory;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -47,11 +46,7 @@ public class MultiCategoriesSeriesComponentFactory extends AbstractSeriesCompone
                                 new GlobFieldComparator(SeriesToCategory.ID), repository, cellBuilder,
                                 new CategoriesComponentFactory(label, "categorySelector", budgetArea));
 
-    cellBuilder.addDisposeListener(new Disposable() {
-      public void dispose() {
-        globLabelView.dispose();
-      }
-    });
+    cellBuilder.addDisposeListener(globLabelView);
   }
 
   private class CategoriesComponentFactory implements RepeatComponentFactory<Glob> {

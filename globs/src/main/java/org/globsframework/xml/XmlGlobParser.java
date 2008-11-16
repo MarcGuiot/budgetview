@@ -33,12 +33,12 @@ public class XmlGlobParser {
   }
 
   private void parse(Reader reader, String rootTag) {
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     try {
       SaxStackParser.parse(XmlUtils.getXmlReader(), new XmlBootstrapNode(new RootProxyNode(), rootTag), reader);
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
   }
 

@@ -188,7 +188,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
 
     public void actionPerformed(ActionEvent e) {
       try {
-        repository.enterBulkDispatchingMode();
+        repository.startChangeSet();
         for (Glob transaction : selectedTransactions) {
           repository.update(transaction.getKey(),
                             value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
@@ -196,7 +196,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
         }
       }
       finally {
-        repository.completeBulkDispatchingMode();
+        repository.completeChangeSet();
       }
     }
   }

@@ -37,12 +37,11 @@
 
       <filler fill="vertical"/>
 
-      <row styleClass="buttons">
-        <button name="import" action="import" margin="5"/>
-        <button name="close" action="close" margin="5"/>
+      <row>
+        <filler fill="horizontal"/>
+        <button name="import" action="import" margin="10" fill="horizontal"/>
+        <button name="close" action="close" margin="10" marginRight="0" fill="horizontal"/>
       </row>
-
-      <filler fill="vertical"/>
 
     </column>
 

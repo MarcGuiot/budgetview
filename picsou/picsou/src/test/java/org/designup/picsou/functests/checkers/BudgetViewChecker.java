@@ -221,7 +221,11 @@ public class BudgetViewChecker extends DataChecker {
       return this;
     }
 
-    public OccasionalAreaChecker checkNotContains(String categoryName) {
+    public OccasionalAreaChecker checkNotDisplayed(MasterCategory master) {
+      return checkNotDisplayed(getCategoryName(master));
+    }
+
+    public OccasionalAreaChecker checkNotDisplayed(String categoryName) {
       Panel budgetPanel = getPanel();
       UISpecAssert.assertFalse(budgetPanel.containsUIComponent(TextBox.class, "categoryName." + categoryName));
       return this;

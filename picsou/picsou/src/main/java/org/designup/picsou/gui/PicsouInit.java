@@ -93,12 +93,12 @@ public class PicsouInit {
     serverAccess.applyChanges(changeSet, repository);
     Glob versionInfo;
     try {
-      repository.enterBulkDispatchingMode();
+      repository.startChangeSet();
       versionInfo = repository.find(VersionInformation.KEY);
       createDataForNewUser(user, repository);
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
 
     initDirectory(repository);

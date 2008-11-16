@@ -214,7 +214,7 @@ public class ConfigService {
   }
 
   private void computeResponse(GlobRepository repository, PostMethod postMethod) {
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     try {
       Header header = postMethod.getRequestHeader(HEADER_MAIL_UNKNOWN);
       if (header != null && "true".equalsIgnoreCase(header.getValue())) {
@@ -233,7 +233,7 @@ public class ConfigService {
       }
     }
     finally {
-      repository.completeBulkDispatchingMode();
+      repository.completeChangeSet();
     }
   }
 
@@ -450,14 +450,14 @@ public class ConfigService {
     }
 
     public UserState updateRegisteredUserValidity(Directory directory, GlobRepository repository) {
-      repository.enterBulkDispatchingMode();
+      repository.startChangeSet();
       try {
         repository.update(User.KEY, User.ACTIVATION_STATE,
                           User.ACTIVATED_AS_ANONYMOUS_BUT_REGISTERED_USER);
         repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
       }
       finally {
-        repository.completeBulkDispatchingMode();
+        repository.completeChangeSet();
       }
       return this;
     }
@@ -536,7 +536,7 @@ public class ConfigService {
     }
 
     public UserState updateRegisteredUserValidity(Directory directory, GlobRepository repository) {
-      repository.enterBulkDispatchingMode();
+      repository.startChangeSet();
       try {
         repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
         if (mailSent) {
@@ -544,13 +544,13 @@ public class ConfigService {
         }
       }
       finally {
-        repository.completeBulkDispatchingMode();
+        repository.completeChangeSet();
       }
       return new CompletedUserState();
     }
 
     public UserState updateNotRegisteredUser(Directory directory, GlobRepository repository) {
-      repository.enterBulkDispatchingMode();
+      repository.startChangeSet();
       try {
         repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
         if (mailSent) {
@@ -558,7 +558,7 @@ public class ConfigService {
         }
       }
       finally {
-        repository.completeBulkDispatchingMode();
+        repository.completeChangeSet();
       }
       return new CompletedUserState();
     }

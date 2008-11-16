@@ -98,8 +98,8 @@
     <!-- Blocks and inner blocks -->
 
     <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="block.top" bottomColor="block.bottom" borderColor="block.border" borderWidth="2"
-        cornerRadius="20"/>
+        topColor="block.top" bottomColor="block.bottom" borderColor="block.border" bevelTopColor="block.bevel.top"
+        borderWidth="1" cornerRadius="15"/>
     <style selector=".block" ui="block" opaque="false" marginBottom="5"/>
     <style selector=".block .innerBlock" margin="15" marginBottom="10"/>
     <style selector=".budgetAreaSelection" opaque="true" background="block.inner.bg"
@@ -137,7 +137,7 @@
 
     <!-- Main window message panel -->
     <ui name="mainPanelMessage" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        borderWidth="1" cornerRadius="30"
+        borderWidth="1" cornerRadius="6"
         topColor="mainpanel.message.top"
         bottomColor="mainpanel.message.bottom"
         borderColor="mainpanel.message.border"/>

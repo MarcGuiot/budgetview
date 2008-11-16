@@ -35,7 +35,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -193,7 +192,7 @@ public class SplitTransactionDialog {
     }
 
     try {
-      localRepository.enterBulkDispatchingMode();
+      localRepository.startChangeSet();
       if (amount == null) {
         localRepository.delete(splittedTransaction.getKey());
         splittedTransaction = null;
@@ -207,7 +206,7 @@ public class SplitTransactionDialog {
       }
     }
     finally {
-      localRepository.completeBulkDispatchingMode();
+      localRepository.completeChangeSet();
     }
 
     localRepository.commitChanges(false);

@@ -22,10 +22,10 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                                     "        amount='0.0' plannedAmount='0.0'/>" +
                                     "<create amount='0.0' month='200807' plannedAmount='0.0' series='1'" +
                                     "        type='seriesStat'/>");
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     createTransaction(10, 10, 200807, 10.0);
     createTransaction(11, 1, 200807, -20.0);
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<update type='seriesStat' series='10' month='200807'" +
                                     "        amount='10.0' _amount='0.0'/>" +
@@ -57,11 +57,11 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                                     "        amount='-50.0' plannedAmount='0.0'/>" +
                                     "");
 
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     repository.update(Key.create(Transaction.TYPE, 2), value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID));
     repository.delete(Key.create(Transaction.TYPE, 3));
     repository.delete(Key.create(Series.TYPE, 20));
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
 
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<delete type='seriesStat' series='20' month='200807'" +
@@ -85,10 +85,10 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     createSeries(20, 50.0);
     createMonth(200807);
     createTransaction(10, 10, 200807, 10.0);
-    repository.enterBulkDispatchingMode();
+    repository.startChangeSet();
     updateTransactionAmount(10, 5.0);
     updateTransactionSeries(10, 20);
-    repository.completeBulkDispatchingMode();
+    repository.completeChangeSet();
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<update type='seriesStat' series='10' month='200807'" +
                                     "        amount='0.0' _amount='10.0'/>" +

@@ -30,6 +30,15 @@ public class MultiMap<K, V> {
     return values;
   }
 
+  public boolean isEmpty() {
+    for (List<V> list : map.values()) {
+      if (!list.isEmpty()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public int size() {
     int result = 0;
     for (List<V> list : map.values()) {

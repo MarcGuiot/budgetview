@@ -45,37 +45,34 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected ServerAccess serverAccess;
 
   private Date currentDate = Dates.parse("2008/08/31");
-  private String isInMemory = "true";
-  private String deleteLocalPrevayler = "true";
+  private boolean isInMemory = true;
+  private boolean deleteLocalPrevayler = true;
+  private String localPrevaylerPath = FunctionalTestCase.getUrl();
 
   static public String SOCIETE_GENERALE = "Société Générale";
   private boolean notRegistered = false;
 
   protected void setUp() throws Exception {
 
-//    TimeService.setCurrentDate(currentDate);
-//    if (mainWindow != null) {
-//      reinitMainWindow();
-//      return;
-//    }
-
     super.setUp();
     TimeService.setCurrentDate(currentDate);
-    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, FunctionalTestCase.getUrl());
+
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, localPrevaylerPath);
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, deleteLocalPrevayler);
-    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, isInMemory);
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, Boolean.toString(deleteLocalPrevayler));
+    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, Boolean.toString(isInMemory));
     System.setProperty(PicsouApplication.LOG_SOUT, "true");
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(ConfigService.COM_PICSOU_LICENSE_URL, "");
     System.setProperty(ConfigService.COM_PICSOU_LICENSE_FTP_URL, "");
+
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
         if (mainWindow == null) {
           mainWindow = WindowInterceptor.run(new Trigger() {
             public void run() throws Exception {
               clearDirectory();
-              directory = MainWindowLauncher.run("anonymous", "p@ssword");
+              directory = MainWindowLauncher.run("anonymous", "password");
             }
           });
         }
@@ -132,7 +129,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void tearDown() throws Exception {
-//    mainWindow.getMenuBar().getMenu("Edit").getSubMenu("check").click();
     super.tearDown();
     if (mainWindow != null) {
       mainWindow.dispose();
@@ -174,12 +170,16 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     return DataChecker.getCategoryName(master);
   }
 
-  public void setInMemory(String inMemory) {
+  public void setInMemory(boolean inMemory) {
     isInMemory = inMemory;
   }
 
-  public void setDeleteLocalPrevayler(String deleteLocalPrevayler) {
+  public void setDeleteLocalPrevayler(boolean deleteLocalPrevayler) {
     this.deleteLocalPrevayler = deleteLocalPrevayler;
+  }
+
+  public void setLocalPrevaylerPath(String localPrevaylerPath) {
+    this.localPrevaylerPath = localPrevaylerPath;
   }
 
   public void setNotRegistered() {

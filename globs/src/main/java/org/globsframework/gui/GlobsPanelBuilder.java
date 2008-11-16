@@ -173,11 +173,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     final GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
     model.setFilter(matcher, true);
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
-    builder.addDisposeListener(new Disposable() {
-      public void dispose() {
-        model.dispose();
-      }
-    });
+    builder.addDisposeListener(model);
     listener.set(model, repeat);
     return listener;
   }

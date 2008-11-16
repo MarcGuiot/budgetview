@@ -46,7 +46,7 @@ class SeriesWrapperUpdater implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    localRepository.enterBulkDispatchingMode();
+    localRepository.startChangeSet();
     try {
       localRepository.deleteAll(SeriesWrapper.TYPE);
       localRepository.create(SeriesWrapper.TYPE,
@@ -93,7 +93,7 @@ class SeriesWrapperUpdater implements ChangeSetListener {
       }
     }
     finally {
-      localRepository.completeBulkDispatchingMode();
+      localRepository.completeChangeSet();
     }
   }
 }
