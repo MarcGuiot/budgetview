@@ -116,6 +116,10 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
     return this;
   }
 
+  public void setEnable(boolean enable) {
+    jComboBox.setEnabled(enable);
+  }
+
   public interface GlobSelectionHandler {
     void processSelection(Glob glob);
   }
@@ -155,11 +159,12 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
     }
   }
 
-  public void setFilter(GlobMatcher matcher) {
+  public GlobComboView setFilter(GlobMatcher matcher) {
     model.model.setFilter(matcher, true);
     if (model.model.size() != 0) {
       jComboBox.setSelectedIndex(0);
     }
+    return this;
   }
 
   public Glob getGlobAt(int index) {

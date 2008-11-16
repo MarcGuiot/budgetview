@@ -10,6 +10,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -63,6 +64,12 @@ public class GlobLinkComboEditor extends AbstractGlobComponentHolder implements 
     }
   }
 
+  public GlobLinkComboEditor setFilter(final GlobMatcher filter) {
+    globComboView.setFilter(filter);
+    return this;
+  }
+
+
   public GlobLinkComboEditor setRenderer(Field field) {
     globComboView.setRenderer(field);
     return this;
@@ -88,6 +95,11 @@ public class GlobLinkComboEditor extends AbstractGlobComponentHolder implements 
     return this;
   }
 
+  public GlobLinkComboEditor setEmptyOptionLabel(String label) {
+    globComboView.setEmptyOptionLabel(label);
+    return this;
+  }
+
   private void setSelectedGlob(Glob glob) {
     this.selectedGlob = glob;
     globComboView.getComponent().setEnabled(selectedGlob != null);
@@ -110,5 +122,9 @@ public class GlobLinkComboEditor extends AbstractGlobComponentHolder implements 
   public void dispose() {
     selectionService.removeListener(this);
     globComboView.dispose();
+  }
+
+  public void setEnable(boolean enable) {
+    globComboView.setEnable(enable);
   }
 }

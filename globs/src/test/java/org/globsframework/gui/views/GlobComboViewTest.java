@@ -313,6 +313,15 @@ public class GlobComboViewTest extends GuiComponentTestCase {
 
     combo.select("");
     assertThat(combo.selectionEquals(null));
+
+    repository.enterBulkDispatchingMode();
+    repository.update(key1, DummyObject.NAME, "name11");
+    repository.update(key2, DummyObject.NAME, "name12");
+    repository.completeBulkDispatchingMode();
+    combo.select("name11");
+    assertThat(combo.selectionEquals("name11"));
+    combo.select("");
+    assertThat(combo.selectionEquals(null));
   }
 
   public void testSettingANullOptionLabel() throws Exception {

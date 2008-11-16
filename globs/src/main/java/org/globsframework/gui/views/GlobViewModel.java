@@ -232,15 +232,17 @@ public class GlobViewModel implements ChangeSetListener {
         }
       }
       for (Glob glob : globs) {
-        if (updated.remove(glob.getKey())) {
-          toRemove.add(glob);
-          toAdd.add(repository.get(glob.getKey()));
-        }
-        else if (deleted.remove(glob.getKey())) {
-          toRemove.add(glob);
-        }
-        else if (deleted.size() == 0 && updated.size() == 0) {
-          break;
+        if (glob != null) {
+          if (updated.remove(glob.getKey())) {
+            toRemove.add(glob);
+            toAdd.add(repository.get(glob.getKey()));
+          }
+          else if (deleted.remove(glob.getKey())) {
+            toRemove.add(glob);
+          }
+          else if (deleted.size() == 0 && updated.size() == 0) {
+            break;
+          }
         }
       }
       for (Key key : updated) {
