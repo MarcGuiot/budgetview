@@ -6,11 +6,10 @@ import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.Directory;
@@ -75,7 +74,7 @@ public class AccountEditionDialog {
       }
       try {
         localRepository.commitChanges(true);
-        directory.get(SelectionService.class).select(currentAccount);
+//        directory.get(SelectionService.class).select(currentAccount);
       }
       finally {
         dialog.setVisible(false);

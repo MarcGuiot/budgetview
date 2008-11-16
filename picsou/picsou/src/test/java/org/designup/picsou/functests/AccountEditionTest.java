@@ -55,7 +55,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkIsMain()
       .checkIsImported()
       .setAsSavings()
-      .clickOnImported()
+      .setAsNotImported()
       .validate();
 
     accounts.edit("Account n. 0000123")

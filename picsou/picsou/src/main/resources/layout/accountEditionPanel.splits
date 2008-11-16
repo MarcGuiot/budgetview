@@ -18,9 +18,11 @@
         <textField ref="balance" gridPos="(1,3)"/>
 
       </grid>
-      <radioButton ref="defautAccount"/>
-      <radioButton ref="cardAccount"/>
-      <radioButton ref="savingAccount"/>
+      <column>
+        <radioButton ref="defautAccount"/>
+        <radioButton ref="cardAccount"/>
+        <radioButton ref="savingAccount"/>
+      </column>
       <checkBox ref="importedAccount"/>
     </row>
 

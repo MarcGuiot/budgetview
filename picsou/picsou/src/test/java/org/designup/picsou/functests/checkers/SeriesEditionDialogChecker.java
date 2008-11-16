@@ -685,4 +685,25 @@ public class SeriesEditionDialogChecker extends DataChecker {
     assertFalse(getAmount().isEnabled());
     return this;
   }
+
+  public SeriesEditionDialogChecker selectSavingsAccount(String accountName) {
+    dialog.getComboBox("savingsAccount").select(accountName);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker selectSavingsSeries(String name) {
+    dialog.getComboBox("savingsToSeries").select(name);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSavingsAccountIsHidden() {
+    assertFalse(dialog.getComboBox("savingsAccount").isVisible());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSavingSeriesIsHidden() {
+    assertFalse(dialog.getComboBox("savingsToSeries").isVisible());
+    return this;
+  }
+
 }

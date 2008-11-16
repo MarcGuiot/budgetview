@@ -51,7 +51,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
           TransactionPlannedTrigger.transfertAmount(
             repository.get(Key.create(Series.TYPE, series.get(Series.ID))), diff,
             seriesBudget.get(SeriesBudget.MONTH),
-            BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome(),
+            BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome() || series.get(Series.SAVINGS_ACCOUNT) != null,
             currentMonth.get(CurrentMonth.MONTH_ID),
             repository);
         }

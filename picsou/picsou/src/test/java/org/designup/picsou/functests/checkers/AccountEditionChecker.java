@@ -130,8 +130,13 @@ public class AccountEditionChecker extends DataChecker {
     return this;
   }
 
-  public AccountEditionChecker clickOnImported() {
-    dialog.getCheckBox().click();
+  public AccountEditionChecker setAsNotImported() {
+    dialog.getCheckBox().unselect();
+    return this;
+  }
+
+  public AccountEditionChecker setAsImported() {
+    dialog.getCheckBox().select();
     return this;
   }
 

@@ -70,6 +70,9 @@ public class Transaction {
   @DefaultBoolean(false)
   public static BooleanField PLANNED;
 
+  @Target(Transaction.class)
+  public static LinkField SAVINGS_TRANSACTION;
+
   public static NotUniqueIndex LABEL_FOR_CATEGORISATION_INDEX;
 
   public static MultiFieldNotUniqueIndex SERIES_INDEX;

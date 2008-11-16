@@ -57,6 +57,19 @@ public class Series {
   @DefaultBoolean(true)
   public static BooleanField IS_AUTOMATIC;
 
+  // cette series appartient au comptes SavingsAccount
+  @Target(Account.class)
+  public static LinkField SAVINGS_ACCOUNT;
+
+  // indique la series qui est le pendant dans l'autre comptes
+  // les deux series se reference mutuellement et on le meme contenu (voir il n'y a pas de SeriesBudget pour
+  // l'une des deux? sinon ils faut les synchroniser)
+  // Si this est de type series sur SavingsAccount et que le champs SAVINGS_SERIES est null
+  // et qu'on est pas en importe il faut genere les transaction associé
+  // sinon les transactions sont générés a partir de la categorization dans l'autre series.
+  @Target(Series.class)
+  public static LinkField SAVINGS_SERIES;
+
   @DefaultBoolean(true)
   public static BooleanField JANUARY;
 

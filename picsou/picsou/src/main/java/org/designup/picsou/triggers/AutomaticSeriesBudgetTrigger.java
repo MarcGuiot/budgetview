@@ -17,9 +17,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(Series.IS_AUTOMATIC)) {
-          if (values.get(Series.IS_AUTOMATIC))
-          //&& !values.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) 
-          {
+          if (values.get(Series.IS_AUTOMATIC)) {
             updateSeriesBudget(key, repository);
           }
         }
@@ -33,6 +31,11 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
   public static void updateSeriesBudget(Key seriesKey, GlobRepository repository) {
     final Glob currentMonth = repository.get(CurrentMonth.KEY);
     Integer seriesId = seriesKey.get(Series.ID);
+    Glob series = repository.get(seriesKey);
+    Glob account = repository.findLinkTarget(series, Series.SAVINGS_ACCOUNT);
+    if (account != null && !account.get(Account.IS_IMPORTED_ACCOUNT)) {
+      return;
+    }
     GlobList seriesBudgets =
       repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
         .getGlobs().sort(SeriesBudget.MONTH);

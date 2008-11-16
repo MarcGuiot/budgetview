@@ -23,12 +23,15 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         if (values.get(Transaction.PLANNED)) {
           return;
         }
-        Integer series = values.get(Transaction.SERIES);
-        if (series == null) {
+        Integer seriesId = values.get(Transaction.SERIES);
+        if (seriesId == null) {
           return;
         }
-        transfertFromPlanned(repository.get(Key.create(Series.TYPE, series)), values.get(Transaction.MONTH),
-                             values.get(Transaction.AMOUNT), repository);
+        Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+        transfertFromPlanned(series, values.get(Transaction.MONTH),
+                             values.get(Transaction.AMOUNT), repository,
+                             BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome()
+                             || series.get(Series.SAVINGS_ACCOUNT) != null);
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -72,10 +75,10 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
             return;
           }
           Glob series = repository.get(Key.create(Series.TYPE, newSeries));
-          boolean isIncome = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome();
+          boolean isIncome = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome()
+                             || series.get(Series.SAVINGS_ACCOUNT) != null;
           double amount = newAmount - previousAmount;
-          transfertAmount(series, amount, newMonth, isIncome,
-                          currentMonth.get(CurrentMonth.MONTH_ID),
+          transfertAmount(series, amount, newMonth, isIncome, currentMonth.get(CurrentMonth.MONTH_ID),
                           repository);
         }
         else if (!Utils.equal(previousMonth, newMonth) ||
@@ -84,15 +87,17 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           if (previousAmount != null && previousSeries != null) {
             Glob series = repository.find(Key.create(Series.TYPE, previousSeries));
             if (series != null) {
-              transfertAmount(series, -previousAmount,
-                              previousMonth, BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome(),
+              boolean isIncome = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome()
+                                 || series.get(Series.SAVINGS_ACCOUNT) != null;
+              transfertAmount(series, -previousAmount, previousMonth, isIncome,
                               currentMonth.get(CurrentMonth.MONTH_ID), repository);
             }
           }
           if (newAmount != null && newSeries != null) {
             Glob series = repository.get(Key.create(Series.TYPE, newSeries));
-            transfertAmount(series, newAmount,
-                            newMonth, BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome(),
+            boolean isIncome = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome()
+                               || series.get(Series.SAVINGS_ACCOUNT) != null;
+            transfertAmount(series, newAmount, newMonth, isIncome,
                             currentMonth.get(CurrentMonth.MONTH_ID), repository);
           }
         }
@@ -109,24 +114,24 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     if (isIncome) {
       if (amount < 0) {
         transfertToPlanned(series, monthId, amount, monthInCurrentMonth,
-                           repository);
+                           repository, true);
       }
       else if (amount > 0) {
-        transfertFromPlanned(series, monthId, amount, repository);
+        transfertFromPlanned(series, monthId, amount, repository, true);
       }
     }
     else {
       if (amount > 0) {
-        transfertToPlanned(series, monthId, amount, monthInCurrentMonth, repository);
+        transfertToPlanned(series, monthId, amount, monthInCurrentMonth, repository, false);
       }
       else if (amount < 0) {
-        transfertFromPlanned(series, monthId, amount, repository);
+        transfertFromPlanned(series, monthId, amount, repository, false);
       }
     }
   }
 
   private static void transfertToPlanned(Glob series, Integer monthId, Double amount,
-                                         int lastMonthInCurrentMonth, GlobRepository repository) {
+                                         int lastMonthInCurrentMonth, GlobRepository repository, boolean isIncome) {
     if (Series.UNCATEGORIZED_SERIES_ID.equals(series.get(Series.ID))) {
       return;
     }
@@ -145,7 +150,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         return;
       }
       Glob budget = budgets.get(0);
-      double multiplier = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome() ? -1 : 1;
+      double multiplier = isIncome ? -1 : 1;
       Double overBurnAmount = budget.get(SeriesBudget.OVERRUN_AMOUNT);
       Double amountToDeduce = overBurnAmount + amount;
       if (multiplier * amountToDeduce <= 10E-6) {
@@ -173,12 +178,12 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
   }
 
   private static void transfertFromPlanned(Glob series, Integer monthId,
-                                           Double amountToDeduce, GlobRepository repository) {
+                                           Double amountToDeduce, GlobRepository repository, boolean isIncome) {
     if (Series.UNCATEGORIZED_SERIES_ID.equals(series.get(Series.ID))) {
       return;
     }
     Integer seriesId = series.get(Series.ID);
-    double multiplier = BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome() ? -1 : 1;
+    double multiplier = isIncome ? -1 : 1;
     GlobList plannedTransaction = getPlannedTransactions(repository, seriesId, monthId);
     Double newAmount = amountToDeduce;
     for (Iterator it = plannedTransaction.iterator(); it.hasNext();) {
