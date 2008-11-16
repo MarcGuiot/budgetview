@@ -171,7 +171,6 @@ public class SeriesEditionDialog {
       new GlobLinkComboEditor(Series.PROFILE_TYPE, localRepository, localDirectory);
     periodCombo.setShowEmptyOption(false);
     periodCombo.setComparator(new Comparator<Glob>() {
-
       public int compare(Glob o1, Glob o2) {
         return ProfileType.get(o1.get(ProfileType.ID)).getOrder()
           .compareTo(ProfileType.get(o2.get(ProfileType.ID)).getOrder());
