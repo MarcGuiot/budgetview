@@ -178,6 +178,7 @@
                     <row marginBottom="5">
                       <label text="$transactionView.filter.label" styleClass="formLabelTop" marginRight="5"/>
                       <comboBox ref="accountFilterCombo"/>
+                      <filler fill="horizontal"/>
                     </row>
                     <scrollPane borderPos="center" viewportBackground="transactions.bg"
                                 border="line(transaction.border)" opaque="false"
@@ -196,12 +197,8 @@
               </panel>
             </column>
           </row>
-
         </card>
-
       </cards>
-
     </column>
-
   </panel>
 </splits>

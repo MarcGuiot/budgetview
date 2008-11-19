@@ -1,8 +1,7 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.AccountComparator;
-import org.designup.picsou.gui.accounts.AccountRenderer;
+import org.designup.picsou.gui.accounts.AccountFilteringCombo;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
@@ -64,7 +63,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private GlobTableView transactionTable;
   private JCheckBox autoSelectNextCheckBox;
   private JComboBox filteringModeCombo;
-  private GlobComboView accountFilterCombo;
+  private AccountFilteringCombo accountFilteringCombo;
   private java.util.List<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>> seriesRepeat =
     new ArrayList<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>>();
 
@@ -190,14 +189,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   private void addAccountCombo(GlobsPanelBuilder builder) {
-    accountFilterCombo = GlobComboView.init(Account.TYPE, repository, directory).setShowEmptyOption(false);
-    accountFilterCombo.setRenderer(new AccountRenderer(), new AccountComparator());
-    accountFilterCombo.setSelectionHandler(new GlobComboView.GlobSelectionHandler() {
+    accountFilteringCombo = new AccountFilteringCombo(repository, directory, new GlobComboView.GlobSelectionHandler() {
       public void processSelection(Glob glob) {
         updateTableFilter();
       }
     });
-    builder.add("accountFilterCombo", accountFilterCombo.getComponent());
+    builder.add("accountFilterCombo", accountFilteringCombo.getComponent());
   }
 
   private void addFilteringModeCombo(GlobsPanelBuilder builder) {
@@ -485,18 +482,10 @@ public class CategorizationView extends View implements TableView, Filterable, C
         filter,
         fieldEquals(Transaction.PLANNED, false),
         getCurrentFilteringMode(),
-        getCurrentAccountFilter()
+        accountFilteringCombo.getCurrentAccountFilter()
       );
 
     transactionTable.setFilter(matcher);
-  }
-
-  private GlobMatcher getCurrentAccountFilter() {
-    Integer accountId = accountFilterCombo.getCurrentSelection().get(Account.ID);
-    if (accountId.equals(Account.SUMMARY_ACCOUNT_ID)) {
-      return ALL;
-    }
-    return fieldEquals(Transaction.ACCOUNT, accountId);
   }
 
   private GlobMatcher getCurrentFilteringMode() {
