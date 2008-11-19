@@ -2,6 +2,7 @@ package org.designup.picsou.gui.accounts;
 
 import junit.framework.TestCase;
 import static org.designup.picsou.model.Account.*;
+import org.designup.picsou.gui.description.AccountComparator;
 import org.globsframework.model.*;
 import org.globsframework.model.impl.DefaultGlobRepository;
 import org.globsframework.utils.TestUtils;

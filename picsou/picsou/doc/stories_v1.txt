@@ -27,11 +27,13 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
                REGIS
 ====================================
 
-- tooltips jauges / overrun partiels
-
 - bouton "annuler filtrage"
 
 - message budgetView/special + aide
+
+- aide / jauges ?
+
+- compte demo
 
 
 ====================================

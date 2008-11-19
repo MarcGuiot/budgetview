@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.AccountComparator;
+import org.designup.picsou.gui.description.AccountComparator;
 import org.designup.picsou.gui.accounts.AccountRenderer;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.*;
