@@ -13,4 +13,8 @@ public class PicsouUtils {
     }
     return result.toString();
   }
+
+  public static boolean isNearZero(double val){
+    return val > -1E-6 && val < 1E-6;
+  }
 }
