@@ -22,7 +22,7 @@ public class MonthStatTriggerTest extends PicsouTestCase {
     String input =
       "<series name='salary' budgetAreaName='income'/>" +
       "<series name='groceries' budgetAreaName='envelopes'/>" +
-      "<account id='" + Account.SUMMARY_ACCOUNT_ID + "'/>" +
+      "<account id='" + Account.ALL_SUMMARY_ACCOUNT_ID + "'/>" +
       "<month id='200605'/>" +
       "<month id='200606'/>" +
       "<month id='200607'/>" +
@@ -155,7 +155,7 @@ public class MonthStatTriggerTest extends PicsouTestCase {
 
   public void checkManagesSubCategories(boolean isReset) throws Exception {
     String input =
-      "<account id='" + Account.SUMMARY_ACCOUNT_ID + "'/>" +
+      "<account id='" + Account.ALL_SUMMARY_ACCOUNT_ID + "'/>" +
       "<month id='200605'/>" +
       "<month id='200606'/>" +
       "<month id='200607'/>" +
@@ -287,7 +287,7 @@ public class MonthStatTriggerTest extends PicsouTestCase {
     checker.parse(repository,
                   "<account id='1'/>" +
                   "<month id='200605'/>" +
-                  "<account id='" + Account.SUMMARY_ACCOUNT_ID + "'/>" +
+                  "<account id='" + Account.ALL_SUMMARY_ACCOUNT_ID + "'/>" +
                   "<account id='1'/>" +
                   "<transaction id='1' month='200605' day='1' amount='-40.0' account='1' categoryName='health'/>" +
                   "<transaction id='2' month='200605' day='2' amount='-30.0' account='1'/>" +

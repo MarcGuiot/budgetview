@@ -93,7 +93,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
     Integer categoryId = getCategory(series, repository);
     Integer seriesId = series.get(Series.ID);
     repository.create(Transaction.TYPE,
-                      value(Transaction.ACCOUNT, Account.SUMMARY_ACCOUNT_ID),
+                      value(Transaction.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
                       value(Transaction.AMOUNT, amount),
                       value(Transaction.SERIES, seriesId),
                       value(Transaction.BANK_MONTH, monthId),

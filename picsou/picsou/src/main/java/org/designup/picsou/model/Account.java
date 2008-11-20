@@ -19,10 +19,18 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Account {
   public static final String SUMMARY_ACCOUNT_NUMBER = null;
-  public static final int SUMMARY_ACCOUNT_ID = -1;
-  public static org.globsframework.model.Key SUMMARY_KEY;
+  public static final int MAIN_SUMMARY_ACCOUNT_ID = -1;
+  public static final int SAVINGS_SUMMARY_ACCOUNT_ID = -2;
+  public static final int ALL_SUMMARY_ACCOUNT_ID = -3;
+  public static final Set<Integer> SUMMARY_ACCOUNT = new HashSet<Integer>();
+  public static org.globsframework.model.Key MAIN_SUMMARY_KEY;
+  public static org.globsframework.model.Key SAVINGS_SUMMARY_KEY;
+  public static org.globsframework.model.Key ALL_SUMMARY_KEY;
 
   public static GlobType TYPE;
 
@@ -57,12 +65,23 @@ public class Account {
 
   static {
     GlobTypeLoader.init(Account.class, "account");
-    SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, SUMMARY_ACCOUNT_ID);
+    MAIN_SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, MAIN_SUMMARY_ACCOUNT_ID);
+    SAVINGS_SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, SAVINGS_SUMMARY_ACCOUNT_ID);
+    ALL_SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, ALL_SUMMARY_ACCOUNT_ID);
+    SUMMARY_ACCOUNT.add(MAIN_SUMMARY_ACCOUNT_ID);
+    SUMMARY_ACCOUNT.add(SAVINGS_SUMMARY_ACCOUNT_ID);
+    SUMMARY_ACCOUNT.add(ALL_SUMMARY_ACCOUNT_ID);
   }
 
   public static void createSummary(GlobRepository repository) {
     repository.create(TYPE,
-                      value(ID, SUMMARY_ACCOUNT_ID),
+                      value(ID, MAIN_SUMMARY_ACCOUNT_ID),
+                      value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
+    repository.create(TYPE,
+                      value(ID, SAVINGS_SUMMARY_ACCOUNT_ID),
+                      value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
+    repository.create(TYPE,
+                      value(ID, ALL_SUMMARY_ACCOUNT_ID),
                       value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
   }
 

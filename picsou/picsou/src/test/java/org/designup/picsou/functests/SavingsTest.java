@@ -16,7 +16,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     timeline.selectAll();
     views.selectHome();
-    accounts.create()
+    accounts.createMain()
       .setAccountName("Epargne LCL")
       .setAccountNumber("1234")
       .selectBank("LCL")

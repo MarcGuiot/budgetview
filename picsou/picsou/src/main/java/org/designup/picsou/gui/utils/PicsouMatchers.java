@@ -16,9 +16,21 @@ public class PicsouMatchers {
   private PicsouMatchers() {
   }
 
-  public static GlobMatcher transactionsForAccounts(Set<Integer> accountIds) {
-    if (accountIds.contains(Account.SUMMARY_ACCOUNT_ID)) {
+  public static GlobMatcher transactionsForAccounts(Set<Integer> accountIds, GlobRepository repository) {
+    if (accountIds.contains(Account.ALL_SUMMARY_ACCOUNT_ID)) {
       return GlobMatchers.ALL;
+    }
+    if (accountIds.contains(Account.MAIN_SUMMARY_ACCOUNT_ID)) {
+      accountIds.addAll(
+        repository.getAll(Account.TYPE).filterSelf(
+          GlobMatchers.not(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId())), repository)
+          .getValueSet(Account.ID));
+    }
+    if (accountIds.contains(Account.SAVINGS_SUMMARY_ACCOUNT_ID)) {
+      accountIds.addAll(
+        repository.getAll(Account.TYPE)
+          .filterSelf(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()), repository)
+          .getValueSet(Account.ID));
     }
     return GlobMatchers.contained(Transaction.ACCOUNT, accountIds);
   }
@@ -126,7 +138,7 @@ public class PicsouMatchers {
 
     public void filterDates(Set<Integer> monthIds) {
       this.monthIds = monthIds;
-      }
+    }
 
     public boolean matches(Glob series, GlobRepository repository) {
       if (budgetAreaId.equals(series.get(Series.BUDGET_AREA))) {

@@ -14,7 +14,7 @@ public class AccountViewTest extends LoggedInFunctionalTestCase {
       .load();
     timeline.selectAll();
     views.selectHome();
-    accounts.create()
+    accounts.createSavings()
       .setAccountName("Saving")
       .setAccountNumber("123")
       .setAsSavings()

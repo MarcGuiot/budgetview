@@ -77,7 +77,7 @@ public class BalanceTrigger implements ChangeSetListener {
 
     Glob[] transactions = trs.toArray(new Glob[trs.size()]);
     boolean balanceComputed = true;
-    updatedAccount.remove(repository.get(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID)));
+    updatedAccount.remove(repository.get(Key.create(Account.TYPE, Account.MAIN_SUMMARY_ACCOUNT_ID)));
     for (Glob account : updatedAccount) {
       balanceComputed &= computeAccountBalance(repository, comparator, transactions, account);
     }
@@ -173,7 +173,7 @@ public class BalanceTrigger implements ChangeSetListener {
     }
     double balance = 0;
     if (updatePlannedOnly) {
-      Double summaryBalance = repository.get(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID))
+      Double summaryBalance = repository.get(Key.create(Account.TYPE, Account.MAIN_SUMMARY_ACCOUNT_ID))
         .get(Account.BALANCE);
       if (summaryBalance == null) {
         return;
@@ -211,7 +211,7 @@ public class BalanceTrigger implements ChangeSetListener {
       }
     }
     if (!updatePlannedOnly) {
-      repository.update(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID),
+      repository.update(Key.create(Account.TYPE, Account.MAIN_SUMMARY_ACCOUNT_ID),
                         FieldValue.value(Account.BALANCE, realBalance),
                         FieldValue.value(Account.BALANCE_DATE, balanceDate));
     }

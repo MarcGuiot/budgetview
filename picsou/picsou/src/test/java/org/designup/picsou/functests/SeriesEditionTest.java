@@ -1449,7 +1449,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/04", -100.00, "CIC")
       .load();
     views.selectHome();
-    accounts.create()
+    accounts.createMain()
       .setAsSavings()
       .selectBank("CIC")
       .setAccountName("CIC 1")
