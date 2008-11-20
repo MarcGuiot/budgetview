@@ -2,8 +2,12 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
+<<<<<<< local
 import org.designup.picsou.gui.accounts.AccountRenderer;
 import org.designup.picsou.gui.description.AccountComparator;
+=======
+import org.designup.picsou.gui.accounts.AccountFilteringCombo;
+>>>>>>> other
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.components.filtering.Filterable;
@@ -12,7 +16,6 @@ import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.Account;
 import static org.designup.picsou.model.Transaction.TYPE;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
@@ -20,8 +23,8 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.font.FontLocator;
-import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.GlobComboView;
+import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -31,8 +34,6 @@ import org.globsframework.model.utils.GlobLinkComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.ALL;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -54,7 +55,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   private static final int[] COLUMN_SIZES = {10, 10, 10, 10, 30, 9, 15, 10, 10};
 
   private GlobTableView view;
-  private GlobComboView accountFilterCombo;
+  private AccountFilteringCombo accountFilteringCombo;
   private TransactionRendererColors rendererColors;
   private TransactionSelection transactionSelection;
   private GlobMatcher filter = GlobMatchers.ALL;
@@ -88,27 +89,19 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   }
 
   private void updateFilter() {
-    view.setFilter(and(transactionSelection.getCurrentMatcher(), getCurrentAccountFilter(), this.filter));
+    view.setFilter(and(transactionSelection.getCurrentMatcher(),
+                       accountFilteringCombo.getCurrentAccountFilter(),
+                       this.filter));
     headerPainter.setFiltered((this.filter != null) && (this.filter != GlobMatchers.ALL));
   }
 
   private void addAccountCombo(GlobsPanelBuilder builder) {
-    accountFilterCombo = GlobComboView.init(Account.TYPE, repository, directory).setShowEmptyOption(false);
-    accountFilterCombo.setRenderer(new AccountRenderer(), new AccountComparator());
-    accountFilterCombo.setSelectionHandler(new GlobComboView.GlobSelectionHandler() {
+    accountFilteringCombo = new AccountFilteringCombo(repository, directory, new GlobComboView.GlobSelectionHandler() {
       public void processSelection(Glob glob) {
         updateFilter();
       }
     });
-    builder.add("accountFilterCombo", accountFilterCombo.getComponent());
-  }
-
-  private GlobMatcher getCurrentAccountFilter() {
-    Integer accountId = accountFilterCombo.getCurrentSelection().get(Account.ID);
-    if (accountId.equals(Account.SUMMARY_ACCOUNT_ID)) {
-      return ALL;
-    }
-    return fieldEquals(Transaction.ACCOUNT, accountId);
+    builder.add("accountFilterCombo", accountFilteringCombo.getComponent());
   }
 
   private JTable createTable() {
