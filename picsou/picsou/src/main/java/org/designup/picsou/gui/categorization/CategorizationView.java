@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.AccountFilteringCombo;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;

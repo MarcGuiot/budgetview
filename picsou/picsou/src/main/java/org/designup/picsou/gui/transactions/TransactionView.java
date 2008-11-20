@@ -2,12 +2,7 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
-<<<<<<< local
-import org.designup.picsou.gui.accounts.AccountRenderer;
-import org.designup.picsou.gui.description.AccountComparator;
-=======
 import org.designup.picsou.gui.accounts.AccountFilteringCombo;
->>>>>>> other
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.components.filtering.Filterable;
