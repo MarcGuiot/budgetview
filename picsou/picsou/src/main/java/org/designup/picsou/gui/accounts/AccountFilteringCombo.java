@@ -1,13 +1,12 @@
 package org.designup.picsou.gui.accounts;
 
+import org.designup.picsou.gui.description.AccountComparator;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.gui.description.AccountComparator;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
-import static org.globsframework.model.utils.GlobMatchers.ALL;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
