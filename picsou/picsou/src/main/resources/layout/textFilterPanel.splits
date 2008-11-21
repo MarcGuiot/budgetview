@@ -1,6 +1,8 @@
-<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+  <styleImport file="/layout/picsouStyles.splits"/>
+
   <row>
-    <label text="$transaction.details.search" styleClass="formLabel" border="empty(0,0,0,10)"/>
+    <label text="$transaction.details.search" styleClass="formLabelTop" border="empty(0,0,0,10)"/>
     <textField ref="searchField" columns="20"/>
   </row>
 </splits>

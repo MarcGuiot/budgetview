@@ -1,16 +1,20 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.model.Account;
+import org.designup.picsou.utils.Lang;
+import org.designup.picsou.gui.description.AccountStringifier;
 import org.globsframework.model.Glob;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class AccountRenderer extends DefaultListCellRenderer {
-
+  AccountStringifier stringifier = new AccountStringifier();
   public Component getListCellRendererComponent(JList list, Object object, int i, boolean b, boolean b1) {
-    Glob account = (Glob)object;
-    String name = (account != null ? account.get(Account.NAME) : "");
-    return super.getListCellRendererComponent(list, name, i, b, b1);
+    return super.getListCellRendererComponent(list, getValueToDisplay((Glob)object), i, b, b1);
+  }
+
+  private String getValueToDisplay(Glob account) {
+    return stringifier.toString(account, null);
   }
 }

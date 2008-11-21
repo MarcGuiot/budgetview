@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.AccountFilteringCombo;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
@@ -27,10 +28,12 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.utils.GlobRepeat;
+import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.*;
+import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -60,6 +63,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private GlobTableView transactionTable;
   private JCheckBox autoSelectNextCheckBox;
   private JComboBox filteringModeCombo;
+  private AccountFilteringCombo accountFilteringCombo;
   private java.util.List<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>> seriesRepeat =
     new ArrayList<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>>();
 
@@ -112,17 +116,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
     builder.add("progressMessage", gauge.getProgressMessage());
     builder.add("hideProgressMessage", gauge.getHideProgressMessageAction());
 
-    filteringModeCombo = builder.add("transactionFilterCombo", new JComboBox(TransactionFilteringMode.values()));
-    filteringModeCombo.addActionListener(new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        TransactionFilteringMode mode = (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
-          repository.update(UserPreferences.KEY, UserPreferences.CATEGORIZATION_FILTERING_MODE, mode.getId());
-        updateTableFilter();
-      }
-    });
-    Integer defaultFilteringModeId =
-      repository.get(UserPreferences.KEY).get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
-    filteringModeCombo.setSelectedItem(TransactionFilteringMode.get(defaultFilteringModeId));
+    addAccountCombo(builder);
+    addFilteringModeCombo(builder);
 
     Comparator<Glob> transactionComparator = getTransactionComparator();
     DescriptionService descriptionService = directory.get(DescriptionService.class);
@@ -191,6 +186,29 @@ public class CategorizationView extends View implements TableView, Filterable, C
     updateTableFilter();
 
     return builder;
+  }
+
+  private void addAccountCombo(GlobsPanelBuilder builder) {
+    accountFilteringCombo = new AccountFilteringCombo(repository, directory, new GlobComboView.GlobSelectionHandler() {
+      public void processSelection(Glob glob) {
+        updateTableFilter();
+      }
+    });
+    builder.add("accountFilterCombo", accountFilteringCombo.getComponent());
+  }
+
+  private void addFilteringModeCombo(GlobsPanelBuilder builder) {
+    filteringModeCombo = builder.add("transactionFilterCombo", new JComboBox(TransactionFilteringMode.values()));
+    filteringModeCombo.addActionListener(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        TransactionFilteringMode mode = (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
+        repository.update(UserPreferences.KEY, UserPreferences.CATEGORIZATION_FILTERING_MODE, mode.getId());
+        updateTableFilter();
+      }
+    });
+    Integer defaultFilteringModeId =
+      repository.get(UserPreferences.KEY).get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
+    filteringModeCombo.setSelectedItem(TransactionFilteringMode.get(defaultFilteringModeId));
   }
 
   private void installDoubleClickHandler() {
@@ -463,7 +481,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
       and(
         filter,
         fieldEquals(Transaction.PLANNED, false),
-        getCurrentFilteringMode()
+        getCurrentFilteringMode(),
+        accountFilteringCombo.getCurrentAccountFilter()
       );
 
     transactionTable.setFilter(matcher);

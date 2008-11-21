@@ -30,7 +30,7 @@ public class AccountEditionPanel {
   private JTextField balanceEditor;
   private JRadioButton saving;
   private JRadioButton daily;
-  private JRadioButton creditCard;
+  private JCheckBox creditCard;
   private JCheckBox importedCheckBox;
 
   public AccountEditionPanel(final GlobRepository repository, Directory directory, JLabel messageLabel) {
@@ -71,12 +71,11 @@ public class AccountEditionPanel {
         repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
       }
     });
-    creditCard = new JRadioButton(new AbstractAction(Lang.get("account.isCard")) {
+    creditCard = new JCheckBox(new AbstractAction(Lang.get("account.isCard")) {
       public void actionPerformed(ActionEvent e) {
-        repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.CARD.getId());
+        repository.update(account.getKey(), Account.IS_CARD_ACCOUNT, true);
       }
     });
-    group.add(creditCard);
     group.add(daily);
     group.add(saving);
 
@@ -128,7 +127,7 @@ public class AccountEditionPanel {
       creditCard.setEnabled(true);
       daily.setEnabled(true);
       saving.setEnabled(true);
-      creditCard.setSelected(AccountType.CARD.getId().equals(account.get(Account.ACCOUNT_TYPE)));
+      creditCard.setSelected(account.get(Account.IS_CARD_ACCOUNT));
       daily.setSelected(AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)));
       saving.setSelected(AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE)));
       importedCheckBox.setSelected(account.get(Account.IS_IMPORTED_ACCOUNT));

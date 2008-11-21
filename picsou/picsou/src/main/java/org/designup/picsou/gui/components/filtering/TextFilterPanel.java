@@ -2,10 +2,10 @@ package org.designup.picsou.gui.components.filtering;
 
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Strings;
@@ -13,7 +13,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 public abstract class TextFilterPanel {

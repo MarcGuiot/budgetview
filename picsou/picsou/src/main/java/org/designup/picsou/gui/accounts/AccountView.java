@@ -18,29 +18,27 @@ public class AccountView extends View {
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountView.splits", repository, directory);
     AccountViewPanel accountViewPanel = new AccountViewPanel(repository, directory,
-                                                             getMatcher(Account.MAIN_SUMMARY_ACCOUNT_ID),
+                                                             getMatcherFor(Account.MAIN_SUMMARY_ACCOUNT_ID),
                                                              Account.MAIN_SUMMARY_ACCOUNT_ID);
     builder.add("mainAccount", accountViewPanel.getPanel());
     AccountViewPanel savingsViewPanel = new AccountViewPanel(repository, directory,
-                                                             getMatcher(Account.SAVINGS_SUMMARY_ACCOUNT_ID),
+                                                             getMatcherFor(Account.SAVINGS_SUMMARY_ACCOUNT_ID),
                                                              Account.SAVINGS_SUMMARY_ACCOUNT_ID);
     builder.add("savingsAccount", savingsViewPanel.getPanel());
     parentBuilder.add("accountView", builder);
   }
 
-  private GlobMatcher getMatcher(int summaryId) {
+  private GlobMatcher getMatcherFor(int summaryId) {
     Integer accountType;
-    GlobMatcher cardMatcher;
     if (summaryId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
       accountType = AccountType.MAIN.getId();
-      cardMatcher = GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.CARD.getId());
     }
     else {
       accountType = AccountType.SAVINGS.getId();
-      cardMatcher = GlobMatchers.NONE;
     }
-    return GlobMatchers.and(GlobMatchers.or(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, accountType), cardMatcher),
-                            GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, summaryId)));
+    return GlobMatchers.and(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, accountType),
+                            GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, summaryId)),
+                            GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)));
   }
 
 }

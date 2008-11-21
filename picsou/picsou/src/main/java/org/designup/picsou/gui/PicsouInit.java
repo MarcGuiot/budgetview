@@ -157,6 +157,7 @@ public class PicsouInit {
                             FieldValue.value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
     repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
                             FieldValue.value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
+    repository.findOrCreate(Account.ALL_SUMMARY_KEY);
     InitialCategories.run(repository);
     InitialSeries.run(repository);
   }

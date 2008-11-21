@@ -2,6 +2,7 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.AccountFilteringCombo;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.components.filtering.Filterable;
@@ -17,6 +18,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.font.FontLocator;
+import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.model.Glob;
@@ -48,6 +50,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   private static final int[] COLUMN_SIZES = {10, 10, 10, 10, 30, 9, 15, 10, 10};
 
   private GlobTableView view;
+  private AccountFilteringCombo accountFilteringCombo;
   private TransactionRendererColors rendererColors;
   private TransactionSelection transactionSelection;
   private GlobMatcher filter = GlobMatchers.ALL;
@@ -67,6 +70,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
+    addAccountCombo(builder);
     builder.add(view.getComponent());
   }
 
@@ -80,8 +84,19 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   }
 
   private void updateFilter() {
-    view.setFilter(and(transactionSelection.getCurrentMatcher(), this.filter));
+    view.setFilter(and(transactionSelection.getCurrentMatcher(),
+                       accountFilteringCombo.getCurrentAccountFilter(),
+                       this.filter));
     headerPainter.setFiltered((this.filter != null) && (this.filter != GlobMatchers.ALL));
+  }
+
+  private void addAccountCombo(GlobsPanelBuilder builder) {
+    accountFilteringCombo = new AccountFilteringCombo(repository, directory, new GlobComboView.GlobSelectionHandler() {
+      public void processSelection(Glob glob) {
+        updateFilter();
+      }
+    });
+    builder.add("accountFilterCombo", accountFilteringCombo.getComponent());
   }
 
   private JTable createTable() {
