@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.accounts;
+package org.designup.picsou.gui.description;
 
 import static org.designup.picsou.model.Account.*;
 import org.globsframework.model.Glob;
@@ -27,6 +27,6 @@ public class AccountComparator implements Comparator<Glob> {
         && (account2.get(IS_CARD_ACCOUNT) == Boolean.TRUE)) {
       return -1;
     }
-    return Utils.compare(account1.get(NAME), account2.get(NAME));
+    return Utils.compareIgnoreCase(account1.get(NAME), account2.get(NAME));
   }
 }

@@ -2,12 +2,15 @@ package org.designup.picsou.gui.description;
 
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.gui.description.AccountComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.utils.AbstractGlobStringifier;
+import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.Strings;
 
-public class AccountStringifier extends AbstractGlobStringifier {
+import java.util.Comparator;
+
+public class AccountStringifier implements GlobStringifier {
   public String toString(Glob account, GlobRepository repository) {
     if (account == null) {
       return "";
@@ -33,5 +36,9 @@ public class AccountStringifier extends AbstractGlobStringifier {
       }
     }
     return number;
+  }
+
+  public Comparator<Glob> getComparator(GlobRepository repository) {
+    return new AccountComparator();
   }
 }

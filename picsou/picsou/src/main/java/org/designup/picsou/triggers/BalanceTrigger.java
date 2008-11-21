@@ -86,8 +86,10 @@ public class BalanceTrigger implements ChangeSetListener {
     }
 
     if (balanceComputed || updatePlannedOnly) {
-      computeTotalBalance(repository, transactions, new SameCheckerAccount(), updatePlannedOnly);
-      computeTotalBalance(repository, transactions, updatePlannedOnly);
+      computeTotalBalance(repository, transactions,
+                          new SameCheckerAccount(AccountType.MAIN.getId(), repository), updatePlannedOnly);
+      computeTotalBalance(repository, transactions,
+                          new SameCheckerAccount(AccountType.SAVINGS.getId(), repository), updatePlannedOnly);
     }
   }
 

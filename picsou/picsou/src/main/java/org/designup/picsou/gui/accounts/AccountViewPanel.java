@@ -3,6 +3,7 @@ package org.designup.picsou.gui.accounts;
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.description.AccountComparator;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;

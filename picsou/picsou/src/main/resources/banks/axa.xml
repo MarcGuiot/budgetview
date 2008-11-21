@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<globs>
+  <bank name="AXA Banque" id="9">
+    <bankEntity id="12548"/>
+
+    <transactionTypeMatcher bankType="[0-9]+" regexp="CHEQUE"
+                            transactionTypeName="check" label="CHEQUE N. $bankType"/>
+
+    <transactionTypeMatcher regexp="CARTE[\s]+(\d{2}/\d{2})[\s]+(.*)"
+                            transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM"/>
+
+    <transactionTypeMatcher regexp="CB ER[\s]+(\d{2}/\d{2})[\s]+(.*)"
+                            transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM"/>
+
+    <transactionTypeMatcher regexp="VIR RECU[\s]*(.*)"
+                            transactionTypeName="virement" label="$1"/>
+
+    <transactionTypeMatcher regexp="RETRAIT (.*)"
+                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+  </bank>
+</globs>

@@ -29,7 +29,6 @@
 
     <transactionTypeMatcher regexp="VIR (.*)"
                             transactionTypeName="virement" label="$1"/>
-
     <transactionTypeMatcher regexp="REM CHQ (.*)"
                             transactionTypeName="deposit" label="REMISE CHEQUES $1"/>
 
