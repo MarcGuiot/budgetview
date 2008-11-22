@@ -15,10 +15,10 @@ public class DefaultSplitterFactory implements SplitterFactory {
                               SplitProperties properties) {
 
     if (name.equals("row")) {
-      return new Sequence(subSplitters, Sequence.Direction.HORIZONTAL, properties);
+      return new GridBagSequence(subSplitters, Sequence.Direction.HORIZONTAL, properties);
     }
     if (name.equals("column")) {
-      return new Sequence(subSplitters, Sequence.Direction.VERTICAL, properties);
+      return new GridBagSequence(subSplitters, Sequence.Direction.VERTICAL, properties);
     }
     else if (name.equals("verticalSplit")) {
       return new MovableSplit(MovableSplit.Direction.VERTICAL, properties, subSplitters);
@@ -28,6 +28,12 @@ public class DefaultSplitterFactory implements SplitterFactory {
     }
     else if (name.equals("grid")) {
       return new Grid(properties, subSplitters);
+    }
+    if (name.equals("horizontalBoxes")) {
+      return new BoxSequence(subSplitters, Sequence.Direction.HORIZONTAL, properties);
+    }
+    if (name.equals("verticalBoxes")) {
+      return new BoxSequence(subSplitters, Sequence.Direction.VERTICAL, properties);
     }
     else if (name.equals("borderLayout")) {
       return new BorderLayoutComponent(properties, subSplitters);

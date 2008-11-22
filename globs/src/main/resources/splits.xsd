@@ -92,6 +92,8 @@
       <xs:element ref="column"/>
       <xs:element ref="row"/>
       <xs:element ref="grid"/>
+      <xs:element ref="horizontalBoxes"/>
+      <xs:element ref="verticalBoxes"/>
       <xs:element ref="borderLayout"/>
       <xs:element ref="horizontalSplit"/>
       <xs:element ref="verticalSplit"/>
@@ -191,6 +193,24 @@
       </xs:sequence>
       <xs:attributeGroup ref="componentAttributes"/>
       <xs:attributeGroup ref="gridContainerAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="horizontalBoxes">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="verticalBoxes">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="componentAttributes"/>
     </xs:complexType>
   </xs:element>
 

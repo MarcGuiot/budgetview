@@ -7,43 +7,35 @@ import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.layout.Fill;
-import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.DoubleOperation;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class Sequence extends AbstractSplitter {
-  private Direction direction;
+public abstract class Sequence extends AbstractSplitter {
+  protected Direction direction;
 
-  public enum Direction {
-    HORIZONTAL("row", DoubleOperation.SUM, DoubleOperation.MAX),
-    VERTICAL("column", DoubleOperation.MAX, DoubleOperation.SUM);
-
-    private String name;
-    private DoubleOperation weightXOperation;
-    private DoubleOperation weightYOperation;
-
-    Direction(String name, DoubleOperation weightXOperation, DoubleOperation weightYOperation) {
-      this.name = name;
-      this.weightXOperation = weightXOperation;
-      this.weightYOperation = weightYOperation;
-    }
-  }
-
-  public Sequence(Splitter[] subSplitters, Direction direction, SplitProperties properties) {
+  public Sequence(SplitProperties properties, Splitter[] subSplitters, Direction direction) {
     super(properties, subSplitters);
     this.direction = direction;
   }
 
-  public ComponentStretch createRawStretch(SplitsContext context) {
-    return createPanel(getSubSplitters(), direction, context, properties.get("ref"));
+  public interface SequenceBuilder {
+    void init(JPanel panel, Direction direction);
+
+    void add(ComponentStretch stretch, Direction direction, int position);
   }
 
-  public static ComponentStretch createPanel(Splitter[] subSplitters, Direction direction, SplitsContext context, String ref) {
+  protected abstract SequenceBuilder getSequenceBuilder();
+
+  public ComponentStretch createRawStretch(SplitsContext context) {
+    return createPanel(getSequenceBuilder(), getSubSplitters(), direction, context, properties.get("ref"));
+  }
+
+  protected static ComponentStretch createPanel(SequenceBuilder builder, Splitter[] subSplitters, Direction direction, SplitsContext context, String ref) {
     JPanel panel = getPanel(ref, context);
 
-    GridBagBuilder builder = GridBagBuilder.init(panel).setOpaque(false);
+    builder.init(panel, direction);
 
     double weightX = 0.0;
     double weightY = 0.0;
@@ -51,17 +43,11 @@ public class Sequence extends AbstractSplitter {
     int position = 0;
     for (Splitter splitter : subSplitters) {
       ComponentStretch stretch = splitter.createComponentStretch(context, true);
-      builder.add(stretch.getComponent(),
-                  direction == Direction.HORIZONTAL ? position++ : 0,
-                  direction == Direction.VERTICAL ? position++ : 0,
-                  1, 1,
-                  stretch.getWeightX(), stretch.getWeightY(),
-                  stretch.getFill(), stretch.getAnchor(),
-                  null);
+      builder.add(stretch, direction, position++);
       weightX = direction.weightXOperation.get(weightX, stretch.getWeightX());
       weightY = direction.weightYOperation.get(weightY, stretch.getWeightY());
     }
-    return new ComponentStretch(builder.getPanel(), Fill.BOTH, Anchor.CENTER, weightX, weightY);
+    return new ComponentStretch(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY);
   }
 
   private static JPanel getPanel(String ref, SplitsContext context) {
@@ -82,8 +68,16 @@ public class Sequence extends AbstractSplitter {
     return Grid.DEFAULT_GRIDBAG_PROPERTIES;
   }
 
-  public String getName() {
-    return direction.name;
-  }
+  public enum Direction {
+    HORIZONTAL(DoubleOperation.SUM, DoubleOperation.MAX),
+    VERTICAL(DoubleOperation.MAX, DoubleOperation.SUM);
 
+    private DoubleOperation weightXOperation;
+    private DoubleOperation weightYOperation;
+
+    Direction(DoubleOperation weightXOperation, DoubleOperation weightYOperation) {
+      this.weightXOperation = weightXOperation;
+      this.weightYOperation = weightYOperation;
+    }
+  }
 }

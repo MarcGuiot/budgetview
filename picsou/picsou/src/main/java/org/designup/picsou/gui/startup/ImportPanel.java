@@ -19,7 +19,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.layout.SingleComponentLayout;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobComboView;
@@ -123,7 +123,7 @@ public class ImportPanel {
 
   private void initMainPanel() {
     mainPanel = new JPanel();
-    mainPanel.setLayout(new GridBagBuilder.UniqueComponentLayoutManager(null));
+    mainPanel.setLayout(new SingleComponentLayout(null));
     mainPanel.add(panelStep1);
   }
 

@@ -1,7 +1,5 @@
 package org.globsframework.gui.splits.layout;
 
-import org.globsframework.gui.splits.exceptions.SplitsException;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -18,30 +16,14 @@ public class GridBagBuilder {
     return new GridBagBuilder(new JPanel());
   }
 
-  public static Container createSingleCell(Component component, Insets insets) {
-    return setSingleCell(new JPanel(), component, insets);
-  }
-
-  public static JPanel setSingleCell(JPanel containingPanel, Component component) {
-    return setSingleCell(containingPanel, component, new Insets(0, 0, 0, 0));
-  }
-
-  public static JPanel setSingleCell(JPanel containingPanel, Component component, Insets insets) {
-    containingPanel.removeAll();
-    containingPanel.setLayout(new UniqueComponentLayoutManager(insets));
-    containingPanel.add(component);
-    containingPanel.setOpaque(false);
-    return containingPanel;
+  public GridBagBuilder(JPanel panel) {
+    this.panel = panel;
+    panel.setLayout(new GridBagLayout());
   }
 
   public GridBagBuilder setDefaultInsets(int top, int left, int bottom, int right) {
     this.defaultInsets = new Insets(top, left, bottom, right);
     return this;
-  }
-
-  public GridBagBuilder(JPanel panel) {
-    this.panel = panel;
-    panel.setLayout(new GridBagLayout());
   }
 
   public GridBagBuilder add(ComponentStretch stretch,
@@ -114,56 +96,4 @@ public class GridBagBuilder {
     return panel;
   }
 
-  public static class UniqueComponentLayoutManager implements LayoutManager {
-    private static final Insets NULL_INSETS = new Insets(0, 0, 0, 0);
-    private Insets insets = NULL_INSETS;
-
-    public UniqueComponentLayoutManager(Insets insets) {
-      if (insets != null) {
-        this.insets = insets;
-      }
-    }
-
-    public void addLayoutComponent(String name, Component comp) {
-    }
-
-    public void removeLayoutComponent(Component comp) {
-    }
-
-    public Dimension preferredLayoutSize(Container parent) {
-      Component[] components = parent.getComponents();
-      if (components.length != 1) {
-        throw new SplitsException(components.length + " subcomponent but only 1 is expected");
-      }
-      Dimension size = components[0].getPreferredSize();
-      size.width += insets.right + insets.left;
-      size.height += insets.top + insets.bottom;
-      return size;
-    }
-
-    public Dimension minimumLayoutSize(Container parent) {
-      Component[] components = parent.getComponents();
-      if (components.length != 1) {
-        throw new SplitsException(components.length + " subcomponent but only 1 is expected");
-      }
-      Dimension size = components[0].getMinimumSize();
-      size.width += insets.right + insets.left;
-      size.height += insets.top + insets.bottom;
-      return size;
-    }
-
-    public void layoutContainer(Container parent) {
-      Component[] components = parent.getComponents();
-      if (components.length != 1) {
-        throw new SplitsException(components.length + " subcomponent but only 1 is expected");
-      }
-      components[0].setBounds(insets.left, insets.top,
-                              parent.getWidth() - insets.right - insets.left,
-                              parent.getHeight() - insets.top - insets.bottom);
-    }
-
-    public Insets getInsets() {
-      return insets;
-    }
-  }
 }

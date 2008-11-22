@@ -2,7 +2,7 @@ package org.designup.picsou.gui.experiment;
 
 import org.designup.picsou.gui.components.StackChart;
 import org.designup.picsou.gui.components.StackChartElement;
-import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.layout.SingleComponentPanels;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +26,7 @@ public class StackChartDemo {
     chart.setValues(elements);
 
     JFrame frame = new JFrame();
-    frame.setContentPane(GridBagBuilder.createSingleCell(chart, new Insets(20, 20, 20, 20)));
+    frame.setContentPane(SingleComponentPanels.create(chart, new Insets(20, 20, 20, 20)));
     frame.setSize(new Dimension(400, 500));
     frame.setVisible(true);
   }

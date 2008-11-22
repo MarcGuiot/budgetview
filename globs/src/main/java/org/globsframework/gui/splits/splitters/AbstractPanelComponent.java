@@ -5,7 +5,7 @@ import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
-import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.layout.SingleComponentLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,7 @@ public abstract class AbstractPanelComponent<T extends JPanel> extends DefaultCo
       if (subComponent instanceof JPanel) {
         ((JPanel)subComponent).setOpaque(false);
       }
-      component.setLayout(new GridBagBuilder.UniqueComponentLayoutManager(stretch.getInsets()));
+      component.setLayout(new SingleComponentLayout(stretch.getInsets()));
       component.add(subComponent);
     }
   }

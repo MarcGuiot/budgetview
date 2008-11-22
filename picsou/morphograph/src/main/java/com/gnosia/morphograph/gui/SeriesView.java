@@ -7,7 +7,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.layout.SingleComponentPanels;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -62,7 +62,7 @@ public class SeriesView implements GlobSelectionListener {
 
   private void updateExoPanel() {
     if (exercises.size() <= currentExerciseCount) {
-      GridBagBuilder.setSingleCell(exoPanelContainer, new JLabel("Aucun exercice")).setOpaque(true);
+      SingleComponentPanels.install(exoPanelContainer, new JLabel("Aucun exercice")).setOpaque(true);
       return;
     }
 
@@ -78,7 +78,7 @@ public class SeriesView implements GlobSelectionListener {
         break;
     }
 
-    GridBagBuilder.setSingleCell(exoPanelContainer, exoView.getPanel()).setOpaque(true);
+    SingleComponentPanels.install(exoPanelContainer, exoView.getPanel()).setOpaque(true);
     frame.validate();
     frame.repaint();
   }

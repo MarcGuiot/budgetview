@@ -50,15 +50,11 @@
       </card>
 
       <card name="selection">
-        <column>
-          <scrollPane styleClass="textArea">
-            <textArea ref="userLabel" styleClass="multiLineLabel"/>
-          </scrollPane>
+        <verticalBoxes>
+          <textArea ref="userLabel" styleClass="multiLineLabel"/>
 
-          <scrollPane styleClass="textArea" autoHideSource="originalLabel" marginTop="2">
-            <textArea ref="originalLabel" styleClass="multiLineLabel"
-                      foreground="transaction.detail.formLabel" font="-,plain,10"/>
-          </scrollPane>
+          <textArea ref="originalLabel" styleClass="multiLineLabel"
+                    foreground="transaction.detail.formLabel" font="-,plain,10"/>
 
           <row marginTop="2">
             <label ref="transactionType" styleClass="formLabel" marginRight="0"/>
@@ -83,7 +79,7 @@
                     tooltipText="$split.transaction.tooltip" marginBottom="3"/>
           </row>
 
-        </column>
+        </verticalBoxes>
 
       </card>
 

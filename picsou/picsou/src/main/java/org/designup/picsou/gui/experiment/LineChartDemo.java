@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.experiment;
 
 import org.designup.picsou.gui.components.LineChart;
-import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.layout.SingleComponentPanels;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ public class LineChartDemo {
     chart.setValues(VALUES);
 
     JFrame frame = new JFrame();
-    frame.setContentPane(GridBagBuilder.createSingleCell(chart, new Insets(20, 20, 20, 20)));
+    frame.setContentPane(SingleComponentPanels.create(chart, new Insets(20, 20, 20, 20)));
     frame.setSize(new Dimension(1200, 500));
     frame.setVisible(true);
   }

@@ -4,10 +4,7 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
-import org.globsframework.gui.splits.layout.Anchor;
-import org.globsframework.gui.splits.layout.ComponentStretch;
-import org.globsframework.gui.splits.layout.Fill;
-import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.layout.*;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.PropertySetter;
 import org.globsframework.gui.splits.utils.SplitsUtils;
@@ -152,7 +149,7 @@ public abstract class AbstractSplitter implements Splitter {
   private void addMargin(ComponentStretch innerComponent) {
     Insets insets = getMarginInsets();
     if (insets != null) {
-      innerComponent.setComponent(GridBagBuilder.createSingleCell(innerComponent.getComponent(), insets));
+      innerComponent.setComponent(SingleComponentPanels.create(innerComponent.getComponent(), insets));
     }
   }
 
