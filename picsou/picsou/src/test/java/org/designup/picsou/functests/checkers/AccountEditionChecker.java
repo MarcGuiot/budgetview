@@ -58,47 +58,37 @@ public class AccountEditionChecker extends DataChecker {
   }
 
   public AccountEditionChecker setAsMain() {
-    getMainButton().click();
+    getTypeCombo().select("Main");
     return this;
-  }
-
-  private RadioButton getMainButton() {
-    return dialog.getRadioButton("defautAccount");
-  }
-
-  public AccountEditionChecker setAsSavings() {
-    getSavingsButton().click();
-    return this;
-  }
-
-  private RadioButton getSavingsButton() {
-    return dialog.getRadioButton("savingAccount");
   }
 
   public AccountEditionChecker setAsCard() {
-    getCardAccount().click();
+    getTypeCombo().select("Card");
     return this;
   }
 
-  private CheckBox getCardAccount() {
-    return dialog.getCheckBox("cardAccount");
+  public AccountEditionChecker setAsSavings() {
+    getTypeCombo().select("Savings");
+    return this;
   }
 
   public AccountEditionChecker checkIsMain() {
-    assertThat(getMainButton().isSelected());
-    assertFalse(getSavingsButton().isSelected());
-    return this;
-  }
-
-  public AccountEditionChecker checkIsSavings() {
-    assertFalse(getMainButton().isSelected());
-    assertThat(getSavingsButton().isSelected());
+    assertThat(getTypeCombo().selectionEquals("Main"));
     return this;
   }
 
   public AccountEditionChecker checkIsCard() {
-    assertThat(getCardAccount().isSelected());
+    assertThat(getTypeCombo().selectionEquals("Card"));
     return this;
+  }
+
+  public AccountEditionChecker checkIsSavings() {
+    assertThat(getTypeCombo().selectionEquals("Savings"));
+    return this;
+  }
+
+  private ComboBox getTypeCombo() {
+    return dialog.getComboBox("type");
   }
 
   public AccountEditionChecker checkValidationError(String message) {
@@ -119,25 +109,5 @@ public class AccountEditionChecker extends DataChecker {
   public void cancel() {
     dialog.getButton("Cancel").click();
     assertFalse(dialog.isVisible());
-  }
-
-  public AccountEditionChecker checkIsImported() {
-    assertThat(dialog.getCheckBox("importedAccount").isSelected());
-    return this;
-  }
-
-  public AccountEditionChecker setAsNotImported() {
-    dialog.getCheckBox("importedAccount").unselect();
-    return this;
-  }
-
-  public AccountEditionChecker setAsImported() {
-    dialog.getCheckBox("importedAccount").select();
-    return this;
-  }
-
-  public AccountEditionChecker checkNotImported() {
-    assertFalse(dialog.getCheckBox("importedAccount").isSelected());
-    return this;
   }
 }

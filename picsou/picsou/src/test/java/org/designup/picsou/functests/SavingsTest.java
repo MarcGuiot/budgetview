@@ -22,8 +22,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectBank("LCL")
       .setAsSavings()
       .setBalance(1000)
-      .setAsNotImported()
-      .checkNotImported()
       .validate();
     views.selectCategorization();
     categorization

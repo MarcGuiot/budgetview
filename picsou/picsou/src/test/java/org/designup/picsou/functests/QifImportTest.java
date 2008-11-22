@@ -66,7 +66,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     accounts.changeBalance("Main account", 80, "Auchan");
     accounts.getBalance("Main account")
-      .checkAccountLabel("Account: Main account (11111)");
+      .checkAccountLabel("Account: Main account");
   }
 
   public void testImportAmountWithVariousDecimalSeparator() throws Exception {

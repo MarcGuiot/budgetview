@@ -9,8 +9,11 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.views.GlobComboView;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -18,7 +21,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Set;
+import java.awt.event.ActionListener;
 
 public class AccountEditionPanel {
   private JPanel panel;
@@ -28,10 +31,8 @@ public class AccountEditionPanel {
   private JLabel messageLabel;
   private GlobsPanelBuilder builder;
   private JTextField balanceEditor;
-  private JRadioButton saving;
-  private JRadioButton daily;
-  private JCheckBox creditCard;
-  private JCheckBox importedCheckBox;
+  private JComboBox accountTypeCombo;
+  private AccountTypeSelector[] accountTypeSelectors = createAccountTypeSelectors();
 
   public AccountEditionPanel(final GlobRepository repository, Directory directory, JLabel messageLabel) {
     this.repository = repository;
@@ -41,6 +42,18 @@ public class AccountEditionPanel {
     selectionService = new SelectionService();
     localDirectory.add(selectionService);
 
+    repository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if ((account != null) && changeSet.containsChanges(account.getKey())) {
+          updateCombo();
+        }
+      }
+    });
+
+    createPanel(localDirectory);
+  }
+
+  private void createPanel(Directory localDirectory) {
     builder = new GlobsPanelBuilder(getClass(), "/layout/accountEditionPanel.splits",
                                     repository, localDirectory);
 
@@ -58,53 +71,7 @@ public class AccountEditionPanel {
     });
     builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
     builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
-
-    ButtonGroup group = new ButtonGroup();
-    saving = new JRadioButton(new AbstractAction(Lang.get("account.isSaving")) {
-
-      public void actionPerformed(ActionEvent e) {
-        repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId());
-      }
-    });
-    daily = new JRadioButton(new AbstractAction(Lang.get("account.isDay")) {
-      public void actionPerformed(ActionEvent e) {
-        repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
-      }
-    });
-    creditCard = new JCheckBox(new AbstractAction(Lang.get("account.isCard")) {
-      public void actionPerformed(ActionEvent e) {
-        repository.update(account.getKey(), Account.IS_CARD_ACCOUNT, creditCard.isSelected());
-      }
-    });
-    group.add(daily);
-    group.add(saving);
-
-    builder.add("savingAccount", saving);
-    builder.add("defautAccount", daily);
-    builder.add("cardAccount", creditCard);
-
-    importedCheckBox = new JCheckBox(new AbstractAction(Lang.get("account.is.imported")) {
-      public void actionPerformed(ActionEvent e) {
-        if (account != null) {
-          repository.update(account.getKey(), Account.IS_IMPORTED_ACCOUNT, importedCheckBox.isSelected());
-        }
-      }
-    });
-    builder.add("importedAccount", importedCheckBox);
-
-    repository.addChangeListener(new ChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (account == null) {
-          return;
-        }
-        if (changeSet.containsChanges(account.getKey())) {
-          updateRadio();
-        }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-      }
-    });
+    builder.add("type", createAccountTypeCombo());
 
     balanceEditor = builder.addEditor("balance", Account.BALANCE).setNotifyOnKeyPressed(true).getComponent();
 
@@ -116,21 +83,69 @@ public class AccountEditionPanel {
     });
   }
 
-  private void updateRadio() {
+  private Component createAccountTypeCombo() {
+    accountTypeCombo = new JComboBox(accountTypeSelectors);
+
+    accountTypeCombo.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        AccountTypeSelector selector = (AccountTypeSelector)accountTypeCombo.getSelectedItem();
+        if (selector != null) {
+          selector.apply();
+        }
+      }
+    });
+    return accountTypeCombo;
+  }
+
+  private AccountTypeSelector[] createAccountTypeSelectors() {
+    return new AccountTypeSelector[]{
+      new AccountTypeSelector("account.type.main") {
+        protected void apply() {
+          repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
+          repository.update(account.getKey(), Account.IS_CARD_ACCOUNT, false);
+        }
+
+        protected boolean isApplied(Glob account) {
+          return AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
+                 !Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT));
+        }
+      },
+
+      new AccountTypeSelector("account.type.card") {
+        protected void apply() {
+          repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
+          repository.update(account.getKey(), Account.IS_CARD_ACCOUNT, true);
+        }
+
+        protected boolean isApplied(Glob account) {
+          return AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
+                 Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT));
+        }
+      },
+
+      new AccountTypeSelector("account.type.savings") {
+        protected void apply() {
+          repository.update(account.getKey(), Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId());
+          repository.update(account.getKey(), Account.IS_CARD_ACCOUNT, false);
+        }
+
+        protected boolean isApplied(Glob account) {
+          return AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE));
+        }
+      },
+    };
+  }
+
+  private void updateCombo() {
     if (account == null) {
-      creditCard.setEnabled(false);
-      daily.setEnabled(false);
-      saving.setEnabled(false);
-      importedCheckBox.setEnabled(false);
+      accountTypeCombo.setSelectedIndex(-1);
     }
     else {
-      creditCard.setEnabled(true);
-      daily.setEnabled(true);
-      saving.setEnabled(true);
-      creditCard.setSelected(account.get(Account.IS_CARD_ACCOUNT, false));
-      daily.setSelected(AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)));
-      saving.setSelected(AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE)));
-      importedCheckBox.setSelected(account.get(Account.IS_IMPORTED_ACCOUNT));
+      for (AccountTypeSelector selector : accountTypeSelectors) {
+        if (selector.isApplied(account)) {
+          accountTypeCombo.setSelectedItem(selector);
+        }
+      }
     }
   }
 
@@ -155,7 +170,7 @@ public class AccountEditionPanel {
 
   public void setAccount(Glob account) {
     this.account = account;
-    updateRadio();
+    updateCombo();
     if (account != null) {
       selectionService.select(account);
     }
@@ -183,5 +198,21 @@ public class AccountEditionPanel {
       return true;
     }
     return true;
+  }
+
+  private abstract static class AccountTypeSelector {
+    private String label;
+
+    protected AccountTypeSelector(String labelKey) {
+      this.label = Lang.get(labelKey);
+    }
+
+    protected abstract void apply();
+
+    protected abstract boolean isApplied(Glob account);
+
+    public String toString() {
+      return label;
+    }
   }
 }

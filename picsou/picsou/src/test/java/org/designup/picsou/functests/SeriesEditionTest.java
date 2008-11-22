@@ -1454,7 +1454,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectBank("CIC")
       .setAccountName("CIC 1")
       .setAccountNumber("111")
-      .setAsNotImported()
       .validate();
 
     views.selectBudget();
