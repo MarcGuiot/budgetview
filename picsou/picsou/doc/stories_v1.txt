@@ -27,7 +27,7 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
                REGIS
 ====================================
 
-- bouton "annuler filtrage"
+- bug bouton "annuler filtrage"
 
 - message budgetView/special + aide
 
@@ -35,20 +35,16 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
 
 - compte demo
 
+- Creation d'une serie OperationsSpeciales : selectionner le mois en cours dans la table
+
 
 ====================================
                RESTE
 ====================================
 
-- Creation de compte
-
 - BudgetView : quand on clique sur une serie, aucun moyen pour la supprimer a partir de la fenetre qui apparait
 
-- Creation d'une serie OperationsSpeciales : selectionner le mois en cours dans la table
-
 - saisie balance : maj date
-
-- TransactionView : Afficher la somme (total ou multi-selection)
 
 - tests d'undo/redo
 
@@ -58,7 +54,6 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
 
 - TransactionDetails : mettre le compte, la date et le montant (faire un seul label ?)
 
-- TransactionView : Filtrage transactions par Compte
 - TransactionView : Filtrage transactions par TransactionType
 - TransactionView : click sur serie d'une planned : ouvrir SED
 - transactionView : colonne compte
@@ -75,10 +70,8 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
 
 - Voir message dans l'appli si pb licence et reenvoi de mail
 
-- Backup/restore (fonctionnel precis a definir ensemble)
-
-- supprimer mode "selectionner automatiquement les operations suivantes" ?
-
 - categorizationGauge : mettre un tooltip avec le nombre de transactions non classees
 
 - Gestion des licences : check mensuel ?
+
+- Backup/restore (fonctionnel precis a definir ensemble)

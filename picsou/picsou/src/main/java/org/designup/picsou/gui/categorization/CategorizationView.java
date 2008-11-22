@@ -32,12 +32,10 @@ import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
-import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -61,7 +59,6 @@ import java.util.Set;
 public class CategorizationView extends View implements TableView, Filterable, ColorChangeListener {
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
-  private JCheckBox autoSelectNextCheckBox;
   private JComboBox filteringModeCombo;
   private AccountFilteringCombo accountFilteringCombo;
   private java.util.List<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>> seriesRepeat =
@@ -150,10 +147,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
       }
     });
 
-    autoSelectNextCheckBox = new JCheckBox();
-    autoSelectNextCheckBox.setSelected(false);
-    builder.add("autoSelectNext", autoSelectNextCheckBox);
-
     builder.addLabel("transactionLabel", Transaction.TYPE, new GlobListStringifier() {
       public String toString(GlobList list, GlobRepository repository) {
         if (list.isEmpty()) {
@@ -182,7 +175,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
     transactionDetailsView.registerComponents(builder);
 
     initSelectionListener();
-    initUpdateListener(repository);
     updateTableFilter();
 
     return builder;
@@ -240,17 +232,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
         }
       }
     }, Transaction.TYPE);
-  }
-
-  private void initUpdateListener(GlobRepository repository) {
-    repository.addChangeListener(new DefaultChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        Set<Key> updated = changeSet.getUpdated(Transaction.SERIES);
-        if ((updated.size() > 0) && (autoSelectNextCheckBox.isSelected())) {
-          selectNext(updated);
-        }
-      }
-    });
   }
 
   private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
@@ -342,39 +323,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
     SelectionService selectionService = new SelectionService();
     localDirectory.add(selectionService);
     return localDirectory;
-  }
-
-  private void selectNext(Set<Key> updated) {
-    int minIndex = -1;
-    for (Key key : updated) {
-      int index = transactionTable.indexOf(repository.get(key));
-      if ((index >= 0) && ((minIndex == -1) || (index < minIndex))) {
-        minIndex = index;
-      }
-    }
-    Glob transaction = findNextUncategorizedTransaction(minIndex);
-    if (transaction != null) {
-      selectionService.select(transaction);
-    }
-    else {
-      selectionService.clear(Transaction.TYPE);
-    }
-  }
-
-  private Glob findNextUncategorizedTransaction(int minIndex) {
-    for (int index = minIndex + 1; index < transactionTable.getRowCount(); index++) {
-      Glob transaction = transactionTable.getGlobAt(index);
-      if (Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
-        return transaction;
-      }
-    }
-    for (int index = 0; index < minIndex; index++) {
-      Glob transaction = transactionTable.getGlobAt(index);
-      if (Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
-        return transaction;
-      }
-    }
-    return null;
   }
 
   public void show(GlobList transactions) {

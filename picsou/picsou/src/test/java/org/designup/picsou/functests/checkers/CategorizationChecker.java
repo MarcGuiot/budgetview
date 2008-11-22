@@ -608,44 +608,6 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  /**
-   * @deprecated
-   */
-  public void checkAutoSelectSimilarEnabled(boolean enabled) {
-    assertEquals(enabled, getPanel().getCheckBox("similar").isSelected());
-  }
-
-  /**
-   * @deprecated
-   */
-  public void enableAutoSelectSimilar() {
-    getPanel().getCheckBox("similar").select();
-  }
-
-  /**
-   * @deprecated
-   */
-  public void disableAutoSelectSimilar() {
-    getPanel().getCheckBox("similar").unselect();
-  }
-
-  public void checkAutoHideEnabled(boolean enabled) {
-    assertEquals(enabled, getPanel().getCheckBox("hide").isSelected());
-  }
-
-  public void checkAutoSelectNextEnabled(boolean enabled) {
-    assertEquals(enabled, getPanel().getCheckBox("next").isSelected());
-  }
-
-  public void enableAutoSelectNext() {
-    getPanel().getCheckBox("next").select();
-  }
-
-  public CategorizationChecker disableAutoSelectNext() {
-    getPanel().getCheckBox("next").unselect();
-    return this;
-  }
-
   public CategoryEditionChecker editOccasionalCategories() {
     selectOccasional();
     Window editionDialog = WindowInterceptor.getModalDialog(getPanel().getButton("editCategories").triggerClick());
