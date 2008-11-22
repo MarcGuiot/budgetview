@@ -24,7 +24,7 @@ public class CategoryDataProvider implements ChangeSetListener, GlobSelectionLis
   private Set<Integer> currentMonths = Collections.emptySet();
   private Map<Integer, Double> categoryAmounts = new HashMap<Integer, Double>();
   private Map<Integer, Double> categoryDispensabilities = new HashMap<Integer, Double>();
-  private Integer currentAccountId = Account.ALL_SUMMARY_ACCOUNT_ID;
+  private Integer currentAccountId = Account.MAIN_SUMMARY_ACCOUNT_ID;
 
   public CategoryDataProvider(GlobRepository repository, Directory directory) {
     this.repository = repository;

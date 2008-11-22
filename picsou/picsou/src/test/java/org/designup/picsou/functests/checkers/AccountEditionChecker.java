@@ -80,27 +80,23 @@ public class AccountEditionChecker extends DataChecker {
     return this;
   }
 
-  private RadioButton getCardAccount() {
-    return dialog.getRadioButton("cardAccount");
+  private CheckBox getCardAccount() {
+    return dialog.getCheckBox("cardAccount");
   }
 
   public AccountEditionChecker checkIsMain() {
     assertThat(getMainButton().isSelected());
     assertFalse(getSavingsButton().isSelected());
-    assertFalse(getCardAccount().isSelected());
     return this;
   }
 
   public AccountEditionChecker checkIsSavings() {
     assertFalse(getMainButton().isSelected());
     assertThat(getSavingsButton().isSelected());
-    assertFalse(getCardAccount().isSelected());
     return this;
   }
 
   public AccountEditionChecker checkIsCard() {
-    assertFalse(getMainButton().isSelected());
-    assertFalse(getSavingsButton().isSelected());
     assertThat(getCardAccount().isSelected());
     return this;
   }
@@ -131,12 +127,12 @@ public class AccountEditionChecker extends DataChecker {
   }
 
   public AccountEditionChecker setAsNotImported() {
-    dialog.getCheckBox().unselect();
+    dialog.getCheckBox("importedAccount").unselect();
     return this;
   }
 
   public AccountEditionChecker setAsImported() {
-    dialog.getCheckBox().select();
+    dialog.getCheckBox("importedAccount").select();
     return this;
   }
 

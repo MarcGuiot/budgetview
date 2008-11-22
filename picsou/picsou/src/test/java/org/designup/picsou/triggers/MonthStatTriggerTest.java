@@ -22,7 +22,7 @@ public class MonthStatTriggerTest extends PicsouTestCase {
     String input =
       "<series name='salary' budgetAreaName='income'/>" +
       "<series name='groceries' budgetAreaName='envelopes'/>" +
-      "<account id='" + Account.ALL_SUMMARY_ACCOUNT_ID + "'/>" +
+      "<account id='" + Account.MAIN_SUMMARY_ACCOUNT_ID + "'/>" +
       "<month id='200605'/>" +
       "<month id='200606'/>" +
       "<month id='200607'/>" +

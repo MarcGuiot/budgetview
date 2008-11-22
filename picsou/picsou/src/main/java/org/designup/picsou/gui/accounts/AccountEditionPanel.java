@@ -73,7 +73,7 @@ public class AccountEditionPanel {
     });
     creditCard = new JCheckBox(new AbstractAction(Lang.get("account.isCard")) {
       public void actionPerformed(ActionEvent e) {
-        repository.update(account.getKey(), Account.IS_CARD_ACCOUNT, true);
+        repository.update(account.getKey(), Account.IS_CARD_ACCOUNT, creditCard.isSelected());
       }
     });
     group.add(daily);
@@ -127,7 +127,7 @@ public class AccountEditionPanel {
       creditCard.setEnabled(true);
       daily.setEnabled(true);
       saving.setEnabled(true);
-      creditCard.setSelected(account.get(Account.IS_CARD_ACCOUNT));
+      creditCard.setSelected(account.get(Account.IS_CARD_ACCOUNT, false));
       daily.setSelected(AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)));
       saving.setSelected(AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE)));
       importedCheckBox.setSelected(account.get(Account.IS_IMPORTED_ACCOUNT));

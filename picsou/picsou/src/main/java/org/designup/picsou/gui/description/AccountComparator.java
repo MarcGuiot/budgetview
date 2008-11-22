@@ -9,6 +9,15 @@ import java.util.Comparator;
 public class AccountComparator implements Comparator<Glob> {
 
   public int compare(Glob account1, Glob account2) {
+    if (account1 == null && account2 == null){
+      return 0;
+    }
+    if (account1 == null){
+      return -1;
+    }
+    if (account2 == null){
+      return 1;
+    }
     if (SUMMARY_ACCOUNT.contains(account1.get(ID)) &&
         SUMMARY_ACCOUNT.contains(account2.get(ID))) {
       return account1.get(ID) - account2.get(ID);

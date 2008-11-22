@@ -100,6 +100,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   }
 
   public void testPositiveBudgetInEnveloppe() throws Exception {
-    fail("view code, il y a peut-etre deja un test");
+    fail("vieux code, il y a peut-etre deja un test");
   }
 }

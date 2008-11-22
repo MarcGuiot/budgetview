@@ -54,6 +54,7 @@ public class Account {
 
   public static DateField CLOSED_DATE;
 
+  @DefaultBoolean(false)
   public static BooleanField IS_CARD_ACCOUNT;
 
   @Target(AccountType.class)

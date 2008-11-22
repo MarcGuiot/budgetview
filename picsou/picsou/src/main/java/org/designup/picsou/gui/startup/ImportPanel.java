@@ -552,8 +552,9 @@ public class ImportPanel {
   private void initCreationAccountFields(File file) {
     if (BankFileType.getTypeFromName(file.getAbsolutePath()).equals(BankFileType.QIF)) {
       GlobList accounts = sessionRepository.getAll(Account.TYPE);
-      accounts.remove(sessionRepository.get(Account.MAIN_SUMMARY_KEY));
-      accounts.remove(sessionRepository.get(Account.SAVINGS_SUMMARY_KEY));
+      for (Integer accountId : Account.SUMMARY_ACCOUNT) {
+        accounts.remove(sessionRepository.get(Key.create(Account.TYPE, accountId)));
+      }
       if (accounts.size() == 0) {
         Glob createdAccount = importSession.createDefaultAccount();
         accountEditionPanel.setAccount(createdAccount);

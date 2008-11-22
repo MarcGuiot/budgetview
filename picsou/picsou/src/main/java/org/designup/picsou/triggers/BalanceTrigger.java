@@ -95,13 +95,11 @@ public class BalanceTrigger implements ChangeSetListener {
 
   private boolean computeAccountBalance(GlobRepository repository, TransactionComparator comparator,
                                         Glob[] transactions, Glob account) {
-    SameCheckerAccount sameCheckerAccount = new SameCheckerAccount(account, repository);
     Integer transactionId = account.get(Account.TRANSACTION_ID);
     int pivot;
     Integer lastUpdateTransactionId = transactionId;
     double balanceLeft = 0;
     double balanceRigth;
-    Integer accountId = account.get(Account.ID);
     if (transactionId == null) {
       pivot = transactions.length - 1;
       Double balance = account.get(Account.BALANCE);
@@ -112,7 +110,7 @@ public class BalanceTrigger implements ChangeSetListener {
       for (; pivot >= 0; pivot--) {
         Glob transaction = transactions[pivot];
         Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-        if (transactionAccount != null && sameCheckerAccount.isSame(transactionAccount)) {
+        if (checkSameAccount(account, transactionAccount)) {
           balanceLeft = balanceRigth - transaction.get(Transaction.AMOUNT);
           repository.update(transaction.getKey(), Transaction.ACCOUNT_BALANCE, balanceRigth);
           if (!transaction.get(Transaction.PLANNED)) {
@@ -132,7 +130,7 @@ public class BalanceTrigger implements ChangeSetListener {
     for (int i = pivot - 1; i >= 0; i--) {
       Glob transaction = transactions[i];
       Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-      if (transactionAccount != null && sameCheckerAccount.isSame(accountId)) {
+      if (checkSameAccount(account, transactionAccount)) {
         repository.update(transaction.getKey(), Transaction.ACCOUNT_BALANCE, balanceLeft);
         balanceLeft = balanceLeft - transaction.get(Transaction.AMOUNT);
       }
@@ -140,7 +138,7 @@ public class BalanceTrigger implements ChangeSetListener {
     for (int i = pivot + 1; i < transactions.length; i++) {
       Glob transaction = transactions[i];
       Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-      if (transactionAccount != null && sameCheckerAccount.isSame(accountId)) {
+      if (checkSameAccount(account, transactionAccount)) {
         balanceRigth = balanceRigth + transaction.get(Transaction.AMOUNT);
         repository.update(transaction.getKey(), Transaction.ACCOUNT_BALANCE, balanceRigth);
         if (!transaction.get(Transaction.PLANNED)) {
@@ -156,6 +154,10 @@ public class BalanceTrigger implements ChangeSetListener {
                                      lastTransaction.get(Transaction.BANK_DAY)));
     }
     return true;
+  }
+
+  private boolean checkSameAccount(Glob account, Integer transactionAccount) {
+    return transactionAccount != null && transactionAccount.equals(account.get(Account.ID));
   }
 
   private void computeTotalBalance(GlobRepository repository, Glob[] transactions,
@@ -193,7 +195,7 @@ public class BalanceTrigger implements ChangeSetListener {
     Double realBalance = null;
     Date balanceDate = null;
     for (Glob transaction : transactions) {
-      if (sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
+      if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
         continue;
       }
       if (!transaction.get(Transaction.PLANNED)) {
