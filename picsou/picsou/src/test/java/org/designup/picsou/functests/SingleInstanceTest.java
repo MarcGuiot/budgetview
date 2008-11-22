@@ -225,6 +225,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     assertNotNull(newImportDialog);
     new ImportChecker(newImportDialog).close();
     picsouApplication.shutdown();
+    newApplication.clear();
   }
 
   public void testImportWithCategorizationDialogOpen() throws Exception {
@@ -258,6 +259,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
     new ImportChecker(dialog).checkSelectedFiles(initialFile).close();
     picsouApplication.shutdown();
+    newApplication.clear();
   }
 
   private String createQifFile(String discriminant, String content) {
@@ -272,6 +274,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     private PicsouApplication picsouApplication;
 
     private ApplicationThread(String... files) {
+      setDaemon(true);
       this.files = files;
     }
 
@@ -287,6 +290,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
     void shutdown() throws Exception {
       picsouApplication.shutdown();
+      picsouApplication = null;
     }
   }
 
@@ -302,6 +306,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     private WaitEndTriggerDecorator trigger;
 
     public NewApplicationThread(String file) {
+      setDaemon(true);
       this.file = file;
     }
 
@@ -316,6 +321,11 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
         this.importDialog = importDialog;
         notify();
       }
+    }
+
+    public void clear(){
+      importDialog = null;
+      trigger = null;
     }
 
     public NewApplicationThread checkNotOpen() {
