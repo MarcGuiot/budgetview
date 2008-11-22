@@ -109,7 +109,7 @@
           <column>
             <horizontalSplit>
               <column>
-                <panel ref="accountView" minimumSize="(250,200)" preferredSize="(300,350)"/>
+                <panel ref="accountView" minimumSize="(250,200)" preferredSize="(300,500)"/>
                 <panel ref="infoView" minimumSize="(250,100)" preferredSize="(300,100)"/>
                 <filler fill="vertical"/>
               </column>

@@ -21,6 +21,7 @@ public class AccountView extends View {
                                                              getMatcherFor(Account.MAIN_SUMMARY_ACCOUNT_ID),
                                                              Account.MAIN_SUMMARY_ACCOUNT_ID);
     builder.add("mainAccount", accountViewPanel.getPanel());
+
     AccountViewPanel savingsViewPanel = new AccountViewPanel(repository, directory,
                                                              getMatcherFor(Account.SAVINGS_SUMMARY_ACCOUNT_ID),
                                                              Account.SAVINGS_SUMMARY_ACCOUNT_ID);
