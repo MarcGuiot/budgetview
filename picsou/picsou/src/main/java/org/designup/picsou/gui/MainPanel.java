@@ -126,7 +126,8 @@ public class MainPanel {
     };
     builder.add("transactionSearch", search.getPanel());
     builder.addLabel("sum", Transaction.TYPE,
-                     GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, Transaction.AMOUNT));
+                     GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, Transaction.AMOUNT))
+      .setAutoHideIfEmpty(true);
 
     monthSummary = new MonthSummaryView(importFileAction, repository, directory);
 

@@ -176,9 +176,9 @@
                 <column>
                   <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
                     <row marginBottom="5">
+                      <filler fill="horizontal"/>
                       <label text="$transactionView.filter.label" styleClass="formLabelTop" marginRight="5"/>
                       <comboBox ref="accountFilterCombo"/>
-                      <filler fill="horizontal"/>
                     </row>
                     <scrollPane borderPos="center" viewportBackground="transactions.bg"
                                 border="line(transaction.border)" opaque="false"
@@ -187,7 +187,8 @@
                              autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
                     </scrollPane>
                     <row marginBottom="5">
-                      <label text="$amount" styleClass="formLabelTop" border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
+                      <label text="$amount" styleClass="formLabelTop" autoHideSource="sum"
+                             border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
                       <label ref="sum"/>
                       <filler fill="horizontal"/>
                       <component ref="transactionSearch"/>
