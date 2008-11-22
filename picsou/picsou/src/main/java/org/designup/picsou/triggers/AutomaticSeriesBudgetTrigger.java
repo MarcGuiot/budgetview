@@ -63,7 +63,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
         }
         if (seriesBudget.get(SeriesBudget.MONTH).equals(currentMonth.get(CurrentMonth.MONTH_ID))) {
           int multi = -1;
-          if (BudgetArea.get(repository.get(seriesKey).get(Series.BUDGET_AREA)).isIncome()) {
+          if (seriesBudget.get(SeriesBudget.AMOUNT) > 0) {
             multi = 1;
           }
           if (multi * amount < multi * previousAmount) {

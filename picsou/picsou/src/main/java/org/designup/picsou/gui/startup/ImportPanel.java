@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.accounts.BalanceEditionDialog;
 import org.designup.picsou.gui.accounts.NewAccountAction;
@@ -9,6 +8,7 @@ import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.importer.BankFileType;
@@ -205,7 +205,7 @@ public class ImportPanel {
     builder2.add("accountCombo", accountComboBox);
     comboView.setFilter(new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
-        return item != null && !item.get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID);
+        return item != null && !Account.SUMMARY_ACCOUNT.contains(item.get(Account.ID));
       }
     });
 
@@ -552,7 +552,10 @@ public class ImportPanel {
   private void initCreationAccountFields(File file) {
     if (BankFileType.getTypeFromName(file.getAbsolutePath()).equals(BankFileType.QIF)) {
       GlobList accounts = sessionRepository.getAll(Account.TYPE);
-      if (accounts.size() == 1 && accounts.get(0).get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID)) {
+      for (Integer accountId : Account.SUMMARY_ACCOUNT) {
+        accounts.remove(sessionRepository.get(Key.create(Account.TYPE, accountId)));
+      }
+      if (accounts.size() == 0) {
         Glob createdAccount = importSession.createDefaultAccount();
         accountEditionPanel.setAccount(createdAccount);
         accountComboBox.setVisible(false);
@@ -564,13 +567,8 @@ public class ImportPanel {
         if (defaultAccount != null) {
           account = sessionRepository.get(defaultAccount.getKey());
         }
-        else if (accounts.size() == 2) {
-          if (accounts.get(0).get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID)) {
-            account = accounts.get(1);
-          }
-          else {
-            account = accounts.get(0);
-          }
+        else if (accounts.size() == 1) {
+          account = accounts.get(0);
         }
         accountComboBox.setVisible(true);
         newAccountButton.setVisible(true);

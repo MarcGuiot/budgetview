@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
@@ -77,13 +78,18 @@ public class BalanceTrigger implements ChangeSetListener {
 
     Glob[] transactions = trs.toArray(new Glob[trs.size()]);
     boolean balanceComputed = true;
-    updatedAccount.remove(repository.get(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID)));
+    for (Integer accountId : Account.SUMMARY_ACCOUNT) {
+      updatedAccount.remove(repository.get(Key.create(Account.TYPE, accountId)));
+    }
     for (Glob account : updatedAccount) {
       balanceComputed &= computeAccountBalance(repository, comparator, transactions, account);
     }
 
     if (balanceComputed || updatePlannedOnly) {
-      computeTotalBalance(repository, transactions, updatePlannedOnly);
+      computeTotalBalance(repository, transactions,
+                          new SameCheckerAccount(AccountType.MAIN.getId(), repository), updatePlannedOnly);
+      computeTotalBalance(repository, transactions,
+                          new SameCheckerAccount(AccountType.SAVINGS.getId(), repository), updatePlannedOnly);
     }
   }
 
@@ -94,7 +100,6 @@ public class BalanceTrigger implements ChangeSetListener {
     Integer lastUpdateTransactionId = transactionId;
     double balanceLeft = 0;
     double balanceRigth;
-    Integer accountId = account.get(Account.ID);
     if (transactionId == null) {
       pivot = transactions.length - 1;
       Double balance = account.get(Account.BALANCE);
@@ -105,7 +110,7 @@ public class BalanceTrigger implements ChangeSetListener {
       for (; pivot >= 0; pivot--) {
         Glob transaction = transactions[pivot];
         Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-        if (transactionAccount != null && transactionAccount.equals(accountId)) {
+        if (checkSameAccount(account, transactionAccount)) {
           balanceLeft = balanceRigth - transaction.get(Transaction.AMOUNT);
           repository.update(transaction.getKey(), Transaction.ACCOUNT_BALANCE, balanceRigth);
           if (!transaction.get(Transaction.PLANNED)) {
@@ -125,7 +130,7 @@ public class BalanceTrigger implements ChangeSetListener {
     for (int i = pivot - 1; i >= 0; i--) {
       Glob transaction = transactions[i];
       Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-      if (transactionAccount != null && transactionAccount.equals(accountId)) {
+      if (checkSameAccount(account, transactionAccount)) {
         repository.update(transaction.getKey(), Transaction.ACCOUNT_BALANCE, balanceLeft);
         balanceLeft = balanceLeft - transaction.get(Transaction.AMOUNT);
       }
@@ -133,7 +138,7 @@ public class BalanceTrigger implements ChangeSetListener {
     for (int i = pivot + 1; i < transactions.length; i++) {
       Glob transaction = transactions[i];
       Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-      if (transactionAccount != null && transactionAccount.equals(accountId)) {
+      if (checkSameAccount(account, transactionAccount)) {
         balanceRigth = balanceRigth + transaction.get(Transaction.AMOUNT);
         repository.update(transaction.getKey(), Transaction.ACCOUNT_BALANCE, balanceRigth);
         if (!transaction.get(Transaction.PLANNED)) {
@@ -151,12 +156,17 @@ public class BalanceTrigger implements ChangeSetListener {
     return true;
   }
 
-  private void computeTotalBalance(GlobRepository repository, Glob[] transactions, boolean updatePlannedOnly) {
+  private boolean checkSameAccount(Glob account, Integer transactionAccount) {
+    return transactionAccount != null && transactionAccount.equals(account.get(Account.ID));
+  }
+
+  private void computeTotalBalance(GlobRepository repository, Glob[] transactions,
+                                   SameCheckerAccount sameCheckerAccount, boolean updatePlannedOnly) {
     GlobList accounts = repository.getAll(Account.TYPE);
     Map<Integer, Double> balances = new HashMap<Integer, Double>();
     GlobList closedAccount = new GlobList();
     for (Glob account : accounts) {
-      if (account.get(Account.CLOSED_DATE) != null) {
+      if (account.get(Account.CLOSED_DATE) != null && sameCheckerAccount.isSame(account.get(Account.ACCOUNT_TYPE))) {
         closedAccount.add(account);
       }
     }
@@ -173,7 +183,7 @@ public class BalanceTrigger implements ChangeSetListener {
     }
     double balance = 0;
     if (updatePlannedOnly) {
-      Double summaryBalance = repository.get(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID))
+      Double summaryBalance = repository.get(sameCheckerAccount.getSummary())
         .get(Account.BALANCE);
       if (summaryBalance == null) {
         return;
@@ -185,6 +195,9 @@ public class BalanceTrigger implements ChangeSetListener {
     Double realBalance = null;
     Date balanceDate = null;
     for (Glob transaction : transactions) {
+      if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
+        continue;
+      }
       if (!transaction.get(Transaction.PLANNED)) {
         Integer accountId = transaction.get(Transaction.ACCOUNT);
         if (accountId != null) {
@@ -211,9 +224,53 @@ public class BalanceTrigger implements ChangeSetListener {
       }
     }
     if (!updatePlannedOnly) {
-      repository.update(Key.create(Account.TYPE, Account.SUMMARY_ACCOUNT_ID),
+      repository.update(sameCheckerAccount.getSummary(),
                         FieldValue.value(Account.BALANCE, realBalance),
                         FieldValue.value(Account.BALANCE_DATE, balanceDate));
+    }
+  }
+
+  static class SameCheckerAccount {
+    Set<Integer> mains = new HashSet<Integer>();
+    private Key summaryAccountId;
+
+    public SameCheckerAccount(Glob account, GlobRepository repository) {
+      update(repository, account.get(Account.ACCOUNT_TYPE));
+    }
+
+    public SameCheckerAccount(Integer accountType, GlobRepository repository) {
+      update(repository, accountType);
+    }
+
+    private void update(GlobRepository repository, Integer accountType) {
+      if (accountType.equals(AccountType.MAIN.getId())) {
+        summaryAccountId = Account.MAIN_SUMMARY_KEY;
+      }
+      else {
+        summaryAccountId = Account.SAVINGS_SUMMARY_KEY;
+      }
+      GlobList accounts = repository.getAll(Account.TYPE);
+      for (Glob tmp : accounts) {
+        if (tmp.get(Account.ACCOUNT_TYPE).equals(accountType)) {
+          mains.add(tmp.get(Account.ID));
+        }
+      }
+    }
+
+    public static SameCheckerAccount getSameAsSavings(GlobRepository repository) {
+      return new SameCheckerAccount(AccountType.SAVINGS.getId(), repository);
+    }
+
+    public static SameCheckerAccount getSameAsMain(GlobRepository repository) {
+      return new SameCheckerAccount(AccountType.MAIN.getId(), repository);
+    }
+
+    public boolean isSame(Integer accountId) {
+      return mains.contains(accountId);
+    }
+
+    public Key getSummary() {
+      return summaryAccountId;
     }
   }
 }

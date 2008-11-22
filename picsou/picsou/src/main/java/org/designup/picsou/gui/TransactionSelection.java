@@ -1,8 +1,8 @@
 package org.designup.picsou.gui;
 
 import org.designup.picsou.gui.model.MonthStat;
-import static org.designup.picsou.gui.utils.PicsouMatchers.*;
 import org.designup.picsou.gui.utils.PicsouMatchers;
+import static org.designup.picsou.gui.utils.PicsouMatchers.*;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -23,7 +23,7 @@ import java.util.Set;
 
 public class TransactionSelection implements GlobSelectionListener {
 
-  private Set<Integer> currentAccounts = Collections.singleton(Account.SUMMARY_ACCOUNT_ID);
+  private Set<Integer> currentAccounts = Collections.singleton(Account.ALL_SUMMARY_ACCOUNT_ID);
   private Set<Integer> currentMonths = Collections.emptySet();
   private Set<Integer> currentCategories = Collections.singleton(Category.ALL);
   private Set<Integer> currentBudgetAreas = Collections.singleton(BudgetArea.ALL.getId());
@@ -59,7 +59,7 @@ public class TransactionSelection implements GlobSelectionListener {
 
     currentMatcher = and(transactionsForMonths(currentMonths),
                          transactionsForCategories(currentCategories, repository),
-                         transactionsForAccounts(currentAccounts),
+                         transactionsForAccounts(currentAccounts, repository),
                          PicsouMatchers.transactionsForSeries(currentBudgetAreas, currentSeries, repository));
 
     for (GlobSelectionListener listener : listeners) {

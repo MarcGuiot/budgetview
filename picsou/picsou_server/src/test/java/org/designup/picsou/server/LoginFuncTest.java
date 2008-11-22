@@ -1,6 +1,5 @@
 package org.designup.picsou.server;
 
-import org.designup.picsou.functests.checkers.ImportChecker;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
@@ -42,12 +41,13 @@ public class LoginFuncTest extends ServerFuncTestCase {
 
     UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
     OperationChecker operations = new OperationChecker(window);
-    ImportChecker checker = operations.openImportDialog();
-    checker.selectFiles(fileName);
-    checker.acceptFile();
-    checker.selectBank("Société Générale");
-    checker.enterAccountNumber("1111");
-    checker.doImport();
+    operations.openImportDialog()
+      .selectFiles(fileName)
+      .acceptFile()
+      .selectBank("Société Générale")
+      .enterAccountNumber("1111")
+      .doImportWithBalance()
+      .validate();
 
     assertTrue(getCategoryTable().cellEquals(0, 2, "-155"));
   }

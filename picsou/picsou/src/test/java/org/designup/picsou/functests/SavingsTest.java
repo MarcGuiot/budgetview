@@ -16,7 +16,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     timeline.selectAll();
     views.selectHome();
-    accounts.create()
+    accounts.createMain()
       .setAccountName("Epargne LCL")
       .setAccountNumber("1234")
       .selectBank("LCL")
@@ -100,6 +100,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   }
 
   public void testPositiveBudgetInEnveloppe() throws Exception {
-    fail("view code, il y a peut-etre deja un test");
+    fail("vieux code, il y a peut-etre deja un test");
   }
 }

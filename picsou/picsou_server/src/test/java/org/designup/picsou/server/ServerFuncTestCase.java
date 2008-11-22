@@ -10,6 +10,8 @@ import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.uispec4j.*;
 import org.uispec4j.interception.WindowInterceptor;
 
+import java.util.Locale;
+
 public abstract class ServerFuncTestCase extends UISpecTestCase {
   protected Window window;
   protected PicsouServer picsouServer;
@@ -19,6 +21,7 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
+    Locale.setDefault(Locale.ENGLISH);
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "http://localhost:8443");
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, "tmp/localprevayler");

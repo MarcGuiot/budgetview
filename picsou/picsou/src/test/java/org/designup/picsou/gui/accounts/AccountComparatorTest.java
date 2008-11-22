@@ -22,7 +22,7 @@ public class AccountComparatorTest extends TestCase {
     Glob account4 = createAccount("c", "cc", null, 4);
     Glob account6 = createAccount("bb", "bb", true, 1);
     Glob account2 = createAccount("a", "aa", null, 7);
-    Glob account1 = createAccount(SUMMARY_ACCOUNT_NUMBER, "blah", false, SUMMARY_ACCOUNT_ID);
+    Glob account1 = createAccount(SUMMARY_ACCOUNT_NUMBER, "blah", false, MAIN_SUMMARY_ACCOUNT_ID);
     Glob account5 = createAccount("aa", "aa", true, 6);
     Glob account7 = createAccount("cc", "cc", true, 5);
 

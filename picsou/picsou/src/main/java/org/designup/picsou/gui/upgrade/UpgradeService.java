@@ -47,7 +47,7 @@ public class UpgradeService {
       TransactionAnalyzer transactionAnalyzer = analyzerFactory.getAnalyzer();
       GlobList accounts = repository.getAll(Account.TYPE);
       for (Glob account : accounts) {
-        if (account.get(Account.ID) == Account.SUMMARY_ACCOUNT_ID) {
+        if (Account.SUMMARY_ACCOUNT.contains(account.get(Account.ID))) {
           continue;
         }
         Glob bank = Account.getBank(account, repository);

@@ -15,8 +15,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum AccountType implements GlobConstantContainer {
   MAIN("MAIN", 1),
-  SAVINGS("SAVINGS", 2),
-  CARD("CARD", 3);
+  SAVINGS("SAVINGS", 2);
 
   public static GlobType TYPE;
 
@@ -62,8 +61,6 @@ public enum AccountType implements GlobConstantContainer {
         return MAIN;
       case 2:
         return SAVINGS;
-      case 3:
-        return CARD;
     }
     throw new ItemNotFound(id + " not associated to any AccountType enum value");
   }

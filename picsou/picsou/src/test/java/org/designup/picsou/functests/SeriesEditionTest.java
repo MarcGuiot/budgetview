@@ -1257,6 +1257,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(0);
     categorization.selectSavings()
       .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+    views.selectData();
+    timeline.selectMonths("2008/06", "2008/07");
+    transactions.initContent()
+      .add("29/07/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .check();
+    views.selectCategorization();
     categorization.selectSavings().editSeries("epargne", true)
       .setUnknown()
       .checkTable(new Object[][]{
@@ -1442,7 +1449,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/04", -100.00, "CIC")
       .load();
     views.selectHome();
-    accounts.create()
+    accounts.createMain()
       .setAsSavings()
       .selectBank("CIC")
       .setAccountName("CIC 1")

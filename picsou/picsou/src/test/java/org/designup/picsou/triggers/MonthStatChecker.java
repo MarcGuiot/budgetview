@@ -22,7 +22,7 @@ class MonthStatChecker {
   private Field field;
   private int[] months;
   private Map<Integer, double[]> categoryValues = new HashMap<Integer, double[]>();
-  private int accountId = Account.SUMMARY_ACCOUNT_ID;
+  private int accountId = Account.MAIN_SUMMARY_ACCOUNT_ID;
 
   public MonthStatChecker(GlobRepository repository, Field field) {
     this.repository = repository;

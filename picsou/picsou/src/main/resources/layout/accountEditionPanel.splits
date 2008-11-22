@@ -20,10 +20,12 @@
       </grid>
       <column>
         <radioButton ref="defautAccount"/>
-        <radioButton ref="cardAccount"/>
         <radioButton ref="savingAccount"/>
       </column>
-      <checkBox ref="importedAccount"/>
+      <column>
+        <checkBox ref="cardAccount"/>
+        <checkBox ref="importedAccount"/>
+      </column>
     </row>
 
   </panel>

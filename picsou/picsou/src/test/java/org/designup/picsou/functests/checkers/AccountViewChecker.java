@@ -53,8 +53,8 @@ public class AccountViewChecker extends DataChecker {
   }
 
   public void checkSummary(double amount, String updateDate) {
-    assertThat(panel.getTextBox("totalBalance").textEquals(toString(amount)));
-    assertThat(panel.getTextBox("accountTotalTitle")
+    assertThat(panel.getPanel("mainAccount").getTextBox("totalBalance").textEquals(toString(amount)));
+    assertThat(panel.getPanel("mainAccount").getTextBox("accountTotalTitle")
       .textEquals("Total on " + updateDate));
   }
 
@@ -102,7 +102,12 @@ public class AccountViewChecker extends DataChecker {
     return account.getContainer("accountParent");
   }
 
-  public AccountEditionChecker create() {
-    return AccountEditionChecker.open(panel.getButton("createAccount").triggerClick());
+  public AccountEditionChecker createMain() {
+    return AccountEditionChecker.open(panel.getPanel("mainAccount").getButton("createAccount").triggerClick());
   }
+
+  public AccountEditionChecker createSavings() {
+    return AccountEditionChecker.open(panel.getPanel("savingsAccount").getButton("createAccount").triggerClick());
+  }
+
 }

@@ -1,0 +1,34 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <column styleClass="innerBlock">
+
+    <label ref="accountTotalTitle" styleClass="totalAmountTitle" autoHideSource="totalBalance"/>
+    <label ref="totalBalance" styleClass="totalAmount" tooltipText="$account.total.tooltip"/>
+
+    <scrollPane marginBottom="0">
+      <column>
+        <repeat ref="accountRepeat" marginTop="5" marginBottom="15">
+          <column name="accountParent" margin="5" marginBottom="10">
+            <grid>
+              <button ref="accountName" gridPos="(0,0)" anchor="west" styleClass="itemLink"/>
+              <label ref="accountNumber" gridPos="(0,1)" anchor="west" styleClass="subitem"/>
+              <button ref="accountBalance" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
+              <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
+            </grid>
+            <row>
+              <filler fill="horizontal"/>
+              <button action="gotoWebsite" styleClass="hyperlink"/>
+              <button action="importData" styleClass="hyperlink"/>
+            </row>
+          </column>
+        </repeat>
+      </column>
+    </scrollPane>
+
+    <row styleClass="iconButtonGroup">
+      <button action="createAccount" styleClass="create"/>
+      <filler fill="horizontal"/>
+    </row>
+  </column>
+</splits>

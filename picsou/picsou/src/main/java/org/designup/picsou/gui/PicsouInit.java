@@ -153,7 +153,11 @@ public class PicsouInit {
     repository.findOrCreate(CurrentMonth.KEY,
                             FieldValue.value(CurrentMonth.MONTH_ID, 0),
                             FieldValue.value(CurrentMonth.DAY, 0));
-    repository.findOrCreate(Account.SUMMARY_KEY);
+    repository.findOrCreate(Account.MAIN_SUMMARY_KEY,
+                            FieldValue.value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
+    repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
+                            FieldValue.value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
+    repository.findOrCreate(Account.ALL_SUMMARY_KEY);
     InitialCategories.run(repository);
     InitialSeries.run(repository);
   }

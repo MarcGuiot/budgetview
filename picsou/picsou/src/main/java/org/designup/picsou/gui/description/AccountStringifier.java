@@ -15,9 +15,16 @@ public class AccountStringifier implements GlobStringifier {
     if (account == null) {
       return "";
     }
-    if (account.get(Account.ID).equals(Account.SUMMARY_ACCOUNT_ID)) {
+    if (account.get(Account.ID).equals(Account.MAIN_SUMMARY_ACCOUNT_ID)) {
+      return Lang.get("account.main.summary.name");
+    }
+    if (account.get(Account.ID).equals(Account.SAVINGS_SUMMARY_ACCOUNT_ID)) {
+      return Lang.get("account.savings.summary.name");
+    }
+    if (account.get(Account.ID).equals(Account.ALL_SUMMARY_ACCOUNT_ID)) {
       return Lang.get("account.summary.name");
     }
+
     String number = account.get(Account.NUMBER);
     String name = account.get(Account.NAME);
     if (Strings.isNotEmpty(name)) {

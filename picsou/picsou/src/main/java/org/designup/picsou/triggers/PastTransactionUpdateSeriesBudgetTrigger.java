@@ -100,17 +100,15 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
       return;
     }
 
-    Glob currentBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
-      .findByIndex(SeriesBudget.MONTH, statMonthId).getGlobs().getFirst();
+    ReadOnlyGlobRepository.MultiFieldIndexed budgetIndex =
+      repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId);
+    Glob currentBudget = budgetIndex.findByIndex(SeriesBudget.MONTH, statMonthId).getGlobs().getFirst();
     if (currentBudget == null || !currentBudget.get(SeriesBudget.ACTIVE)) {
       return;
     }
 
-
     if (statMonthId.equals(currentMonthId)) {
-      ReadOnlyGlobRepository.MultiFieldIndexed index =
-        repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId);
-      GlobList seriesBudgets = index.getGlobs().sort(SeriesBudget.MONTH);
+      GlobList seriesBudgets = budgetIndex.getGlobs().sort(SeriesBudget.MONTH);
       Integer previousMonth = null;
       for (Glob glob : seriesBudgets) {
         if (glob.get(SeriesBudget.ACTIVE) && glob.get(SeriesBudget.MONTH) < statMonthId) {
@@ -121,11 +119,12 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
         }
       }
       if (previousMonth != null) {
-        Glob previousStat =
-          repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
-                                             SeriesStat.MONTH, previousMonth));
+        Glob previousStat = repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
+                                                               SeriesStat.MONTH, previousMonth));
+        Glob seriesBudget =
+          budgetIndex.findByIndex(SeriesBudget.MONTH, previousMonth).getGlobs().getFirst();
         int multi = -1;
-        if (BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome()) {
+        if (seriesBudget.get(SeriesBudget.AMOUNT) > 0) {
           multi = 1;
         }
 
@@ -177,7 +176,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
             repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
                                                SeriesStat.MONTH, currentMonthId));
           int multi = -1;
-          if (BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome()) {
+          if (budget.get(SeriesBudget.AMOUNT) > 0) {
             multi = 1;
           }
           if (multi * currentSeriesStat.get(SeriesStat.AMOUNT) > multi * amount) {

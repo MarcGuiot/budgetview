@@ -669,4 +669,162 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.hideHelpMessage();
     budgetView.checkHelpMessageDisplayed(false);
   }
+
+  public void testPositifEnvelopeBudgetDoNotCreateNegativePlannedTransaction() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", 15.00, "Loto")
+      .addTransaction("2008/07/05", 19.00, "Loto")
+      .load();
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("Loto")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount("15")
+      .selectPositiveAmounts()
+      .setCategory(MasterCategory.CLOTHING)
+      .validate();
+    views.selectData();
+    transactions.initContent()
+    .add("12/07/2008", TransactionType.PLANNED, "Planned: Loto", "", 15.00, "Loto", MasterCategory.CLOTHING)
+    .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
+    .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00)
+    .check();
+    views.selectCategorization();
+    categorization.setEnvelope("Loto", "Loto", MasterCategory.CLOTHING, false);
+    views.selectData();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00, "Loto", MasterCategory.CLOTHING)
+      .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00, "Loto", MasterCategory.CLOTHING)
+      .check();
+  }
+
+  public void testInvertSignOfBudget() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", 15.00, "Loto")
+      .addTransaction("2008/07/05", 19.00, "Loto")
+      .load();
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("Loto")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount("15")
+      .selectPositiveAmounts()
+      .setCategory(MasterCategory.CLOTHING)
+      .validate();
+    views.selectCategorization();
+    categorization.setEnvelope("Loto", "Loto", MasterCategory.CLOTHING, false);
+    views.selectData();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00, "Loto", MasterCategory.CLOTHING)
+      .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00, "Loto", MasterCategory.CLOTHING)
+      .check();
+    views.selectBudget();
+    budgetView.envelopes
+      .editSeries("Loto")
+      .selectAllMonths()
+      .selectNegativeAmounts()
+      .validate();
+
+    views.selectData();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.PLANNED, "Planned: Loto", "", -49.00, "Loto", MasterCategory.CLOTHING)
+      .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00, "Loto", MasterCategory.CLOTHING)
+      .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00, "Loto", MasterCategory.CLOTHING)
+      .check();
+
+    views.selectCategorization();
+    categorization.selectTableRows("Loto").setUncategorized();
+    views.selectData();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.PLANNED, "Planned: Loto", "", -15.00, "Loto", MasterCategory.CLOTHING)
+      .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
+      .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00)
+      .check();
+  }
+
+
+  public void testSeriesBudgetEqualZero() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", 15.00, "Loto")
+      .addTransaction("2008/07/05", -19.00, "Auchan")
+      .load();
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("ZeroSeries")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount("0")
+      .selectPositiveAmounts()
+      .setCategory(MasterCategory.CLOTHING)
+      .validate();
+    views.selectCategorization();
+    categorization.setEnvelope("Loto", "ZeroSeries", MasterCategory.CLOTHING, false);
+    views.selectData();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00, "ZeroSeries", MasterCategory.CLOTHING)
+      .add("05/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -19.00)
+      .check();
+
+    views.selectCategorization();
+    categorization
+      .selectTableRows("Loto")
+      .setUncategorized();
+    categorization.setEnvelope("Auchan", "ZeroSeries", MasterCategory.CLOTHING, false);
+    views.selectData();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
+      .add("05/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -19.00, "ZeroSeries", MasterCategory.CLOTHING)
+      .check();
+
+    views.selectBudget();
+    budgetView.envelopes.editSeries("ZeroSeries").selectAllMonths().setAmount("10").validate();
+    views.selectData();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
+      .add("05/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -19.00, "ZeroSeries", MasterCategory.CLOTHING)
+      .check();
+
+    views.selectBudget();
+    budgetView.envelopes.editSeries("ZeroSeries").selectAllMonths().setAmount("29").validate();
+    views.selectData();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.PLANNED, "Planned: ZeroSeries", "", -10.00, "ZeroSeries", MasterCategory.CLOTHING)
+      .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
+      .add("05/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -19.00, "ZeroSeries", MasterCategory.CLOTHING)
+      .check();
+
+  }
+
+  public void testMixPositifAndNegativeBudgetInTotalBudget() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", 15.00, "Loto")
+      .addTransaction("2008/07/05", -19.00, "Auchan")
+      .load();
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("Loto")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount("100")
+      .selectPositiveAmounts()
+      .setCategory(MasterCategory.GIFTS)
+      .createSeries()
+      .setName("Auchan")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount("100")
+      .selectNegativeAmounts()
+      .setCategory(MasterCategory.GIFTS)
+      .validate();
+    views.selectBudget();
+    budgetView.envelopes.checkTotalAmounts(0, 0);
+    views.selectCategorization();
+
+  }
 }
