@@ -102,7 +102,8 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
                       value(Transaction.DAY, day),
                       value(Transaction.LABEL, Series.getPlannedTransactionLabel(series.get(Series.ID), series)),
                       value(Transaction.PLANNED, true),
-                      value(Transaction.TRANSACTION_TYPE, TransactionType.PLANNED.getId()),
+                      value(Transaction.TRANSACTION_TYPE, 
+                            amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()),
                       value(Transaction.CATEGORY, categoryId));
   }
 

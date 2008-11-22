@@ -143,7 +143,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
   public void testAddButtonUnavailableIfNoAmountIsEntered() throws Exception {
     openDialogWith("2006/01/15", -20.0, "Auchan", MasterCategory.FOOD)
-      .assertOkDisabled();
+      .assertOkDisabled()
+      .close();
   }
 
   public void testAmountIsSubtractedWhateverTheSign() throws Exception {

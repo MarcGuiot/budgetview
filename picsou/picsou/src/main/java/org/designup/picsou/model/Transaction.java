@@ -143,7 +143,7 @@ public class Transaction {
   }
 
   public static boolean isPlanned(Glob transaction) {
-    return Utils.equal(TransactionType.PLANNED.getId(), transaction.get(Transaction.TRANSACTION_TYPE));
+    return transaction.get(Transaction.PLANNED);
   }
 
   public static String anonymise(String labelOrNote) {

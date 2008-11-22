@@ -63,7 +63,8 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       .checkEditMasterEnabled(true)
       .checkEditSubEnabled(true)
       .checkDeleteMasterEnabled(true)
-      .checkDeleteSubEnabled(true);
+      .checkDeleteSubEnabled(true)
+      .cancel();
 
     dialog.createMasterCategory("new Master")
       .checkCreateMasterEnabled(true)
@@ -71,7 +72,8 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       .checkEditMasterEnabled(true)
       .checkEditSubEnabled(false)
       .checkDeleteMasterEnabled(true)
-      .checkDeleteSubEnabled(false);
+      .checkDeleteSubEnabled(false)
+      .cancel();
 
     dialog.createSubCategory("sub")
       .checkCreateMasterEnabled(true)
@@ -79,7 +81,8 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       .checkEditMasterEnabled(true)
       .checkEditSubEnabled(true)
       .checkDeleteMasterEnabled(true)
-      .checkDeleteSubEnabled(true);
+      .checkDeleteSubEnabled(true)
+      .cancel();
   }
 
   public void testButtonStatusWithEmptyMasterCategory() throws Exception {
@@ -90,13 +93,15 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       .checkEditMasterEnabled(true)
       .checkEditSubEnabled(false)
       .checkDeleteMasterEnabled(true)
-      .checkDeleteSubEnabled(false);
+      .checkDeleteSubEnabled(false)
+      .cancel();
   }
 
   public void testRename() throws Exception {
     CategoryEditionChecker categoryEdition = categories.openEditionDialog();
     categoryEdition.selectMaster(MasterCategory.FOOD);
-    categoryEdition.renameMaster(getCategoryName(MasterCategory.FOOD), "Bouffe");
+    categoryEdition.renameMaster(getCategoryName(MasterCategory.FOOD), "Bouffe")
+      .validate();
     UISpecAssert.assertThat(categoryEdition.getMasterList().contains("Bouffe"));
   }
 

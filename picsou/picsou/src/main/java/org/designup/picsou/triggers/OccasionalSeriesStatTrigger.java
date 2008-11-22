@@ -66,7 +66,7 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
       }
 
       Glob transaction = repository.get(key);
-      if (Utils.equal(transaction.get(Transaction.TRANSACTION_TYPE), TransactionType.PLANNED.getId())) {
+      if (transaction.get(Transaction.PLANNED)) {
         return;
       }
 
