@@ -223,6 +223,14 @@ public class TransactionChecker extends ViewChecker {
       if (seriesAndCategory.length > 1) {
         category = seriesAndCategory[1];
       }
+      if (type == TransactionType.PLANNED){
+        if (amount > 0 ) {
+          type = TransactionType.VIREMENT;
+        }
+        else {
+          type = TransactionType.PRELEVEMENT;
+        }
+      }
       add(new Object[]{userDate, bankDate, "(" + type.getName() + ")" + series, category, label,
                        TransactionChecker.this.toString(amount),
                        note});
@@ -304,6 +312,9 @@ public class TransactionChecker extends ViewChecker {
         TransactionType type = TransactionType.getType(transaction.get(Transaction.TRANSACTION_TYPE));
         if (type == null) {
           return "";
+        }
+        if (transaction.get(Transaction.PLANNED)){
+          type = TransactionType.PLANNED;
         }
         return "TransactionType." + type.getName().toUpperCase();
       }
