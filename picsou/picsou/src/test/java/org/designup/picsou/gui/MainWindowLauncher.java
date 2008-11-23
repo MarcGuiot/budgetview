@@ -31,6 +31,8 @@ public class MainWindowLauncher {
   }
 
   public static Directory run(String user, String password) throws Exception {
+    PicsouApplication.clearRepositoryIfNeeded();
+
     ServerDirectory serverDirectory =
       new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), PicsouApplication.isDataInMemory());
     Directory directory = PicsouApplication.createDirectory(new OpenRequestManager());

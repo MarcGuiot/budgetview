@@ -81,6 +81,10 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return dialog.getInputTextBox("amountEditor");
   }
 
+  public SeriesEditionDialogChecker setAmount(double value) {
+    return setAmount(Double.toString(value));
+  }
+
   public SeriesEditionDialogChecker setAmount(String value) {
     getAmount().setText(value);
     return this;
@@ -316,7 +320,6 @@ public class SeriesEditionDialogChecker extends DataChecker {
     }
     return this;
   }
-
 
   public SeriesEditionDialogChecker checkMonthIsChecked(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
@@ -652,7 +655,6 @@ public class SeriesEditionDialogChecker extends DataChecker {
     getPeriodCombo().select(ProfileType.TWO_MONTHS.getLabel());
     return this;
   }
-
 
   public SeriesEditionDialogChecker setFourMonths() {
     getPeriodCombo().select(ProfileType.FOUR_MONTHS.getLabel());

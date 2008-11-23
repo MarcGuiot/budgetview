@@ -15,7 +15,6 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
-import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.AbstractButton;
@@ -345,10 +344,6 @@ public class CategorizationChecker extends DataChecker {
   public CategorizationChecker selectSpecialSeries(String seriesName, MasterCategory category, boolean createSeries) {
     Panel panel = getSpecialSeriesPanel();
     String name = seriesName + ":" + category.getName();
-    Component component = panel.findSwingComponent(ComponentMatchers.innerNameIdentity(name));
-    if (component != null) {
-      // TODO avec la multi affectation de category a une enveloppe
-    }
     if (createSeries) {
       createSpecialSeries()
         .setName(seriesName)
@@ -483,7 +478,6 @@ public class CategorizationChecker extends DataChecker {
     assertEquals(selected, panel.getRadioButton(seriesName + ":" + category.getName()).isSelected());
     return this;
   }
-
 
   public SeriesEditionDialogChecker createIncomeSeries() {
     return createSeries("income", true);
@@ -722,10 +716,9 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker setSpecial(String label, String seriesName, MasterCategory master, boolean createSeries) {
-    int[] indices = getRowIndices(label);
     boolean first = createSeries;
-    for (int indice : indices) {
-      setSpecial(indice, seriesName, master, first);
+    for (int index : getRowIndices(label)) {
+      setSpecial(index, seriesName, master, first);
       first = false;
     }
     return this;
