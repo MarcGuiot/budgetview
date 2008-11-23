@@ -4,6 +4,7 @@ import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
+import org.globsframework.utils.Utils;
 
 import java.util.*;
 
@@ -77,11 +78,10 @@ public class GlobUtils {
   public static <T> void diff(List<T> from, List<T> to, DiffFunctor<T> functor) {
     T[] fromArray = (T[])from.toArray(new Object[from.size() + to.size()]);
     int toPos = 0;
-    int added = 0;
 
     T fromT = fromArray.length == 0 ? null : fromArray[0];
     for (T element : to) {
-      if (!element.equals(fromT)) {
+      if (!Utils.equal(element, fromT)) {
         boolean moved = false;
         for (int i = toPos + 1; i < fromArray.length; i++) {
           T t = fromArray[i];
@@ -98,7 +98,6 @@ public class GlobUtils {
           functor.add(element, toPos);
           System.arraycopy(fromArray, toPos, fromArray, toPos + 1, fromArray.length - toPos - 1);
           fromArray[toPos] = element;
-          added++;
         }
       }
       toPos++;

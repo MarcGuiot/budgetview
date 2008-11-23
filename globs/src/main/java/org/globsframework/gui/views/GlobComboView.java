@@ -30,6 +30,7 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
   private boolean selectionEnabled = true;
   private String name;
   private String emptyOptionLabel = "";
+  private GlobMatcher matcher;
 
   public static GlobComboView init(GlobType type, GlobRepository globRepository, Directory directory) {
     return new GlobComboView(type, globRepository, directory);
@@ -160,9 +161,14 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
   }
 
   public GlobComboView setFilter(GlobMatcher matcher) {
-    model.model.setFilter(matcher, true);
-    if (model.model.size() != 0) {
-      jComboBox.setSelectedIndex(0);
+    if (jComboBox == null) {
+      this.matcher = matcher;
+    }
+    else {
+      model.model.setFilter(matcher, true);
+      if (model.model.size() != 0) {
+        jComboBox.setSelectedIndex(0);
+      }
     }
     return this;
   }
@@ -206,6 +212,9 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
           }
         }
       });
+      if (matcher != null) {
+        model.setFilter(matcher, false);
+      }
       if (model.size() > 0) {
         selected = model.get(0);
       }
