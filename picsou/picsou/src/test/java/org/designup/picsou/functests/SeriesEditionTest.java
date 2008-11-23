@@ -44,7 +44,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkAmountLabel("Planned amount for july 2008")
       .selectAllMonths()
       .checkAmountLabel("Planned amount for july - august 2008")
-      .checkSavingsAccountIsHidden()
       .validate();
 
     budgetView.recurring.checkSeries("Free", -29.00, -29.00);
@@ -106,6 +105,26 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2008/06", "2008/08");
     budgetView.recurring.checkSeries("Free", -58.00, -58.00);
+  }
+
+  public void testAllMonthsAreSelectedInBudgetTableIfCurrentMonthIsNotFound() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(4).validate();
+
+    views.selectBudget();
+    timeline.selectMonths("2008/10", "2008/11");
+    budgetView.specials.createSeries()
+      .setName("Plumber")
+      .setCategory(MasterCategory.HOUSE)
+      .checkMonthsSelected(0, 1)
+      .setAmount(200)
+      .validate();
+
+    timeline.selectMonth("2008/10");
+    budgetView.specials.checkSeries("Plumber", 0, -200.00);
+
+    timeline.selectMonth("2008/11");
+    budgetView.specials.checkSeries("Plumber", 0, -200.00);
   }
 
   public void testChangingTheAmountForAMonth() throws Exception {
@@ -552,7 +571,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
     budgetView.envelopes.createSeries()
       .unselect()
-      .checkCalendarsAreDisable()
+      .checkCalendarsAreDisabled()
       .cancel();
   }
 
@@ -937,7 +956,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker edition =
       budgetView.envelopes.createSeries()
         .setName("S1")
-        .checkPeriods("Every month", "Every two months", "Every three months", "Every four months", "Every six months",
+        .checkProfiles("Every month", "Every two months", "Every three months", "Every four months", "Every six months",
                       "Once a year", "Custom", "Irregular");
   }
 
@@ -1176,7 +1195,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
     timeline.selectMonth("2008/08");
     budgetView.envelopes.editSeriesList().selectSeries("S1")
-      .checkAmountIsDisable();
+      .checkAmountIsDisabled();
   }
 
   public void testAutomaticAndManual() throws Exception {
@@ -1325,7 +1344,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setUnknown()
       .setEndDate(200807)
       .validate();
-    operations.getPreferences().changeFutureMonth(2).validate();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
     categorization.selectSavings().editSeries("epargne", true)
       .setEndDate(200810)
       .validate();
@@ -1356,7 +1375,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
       .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne", MasterCategory.SAVINGS)
       .check();
-    operations.getPreferences().changeFutureMonth(2).validate();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
     timeline.selectAll();
     timeline.checkSpanEquals("2008/06", "2008/10");
     transactions.initContent()
@@ -1376,7 +1395,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows("Virement");
     categorization.selectSavings()
       .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
-    operations.getPreferences().changeFutureMonth(1).validate();
+    operations.openPreferences().setFutureMonthsCount(1).validate();
     categorization.selectSavings().editSeries("epargne", true)
       .switchToManual()
       .selectMonth(200809)
@@ -1390,7 +1409,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
       .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne", MasterCategory.SAVINGS)
       .check();
-    operations.getPreferences().changeFutureMonth(2).validate();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
     timeline.selectAll();
     timeline.checkSpanEquals("2008/06", "2008/10");
     transactions.initContent()

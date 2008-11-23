@@ -103,7 +103,7 @@ public class OperationChecker {
     return exportMenu.triggerClick();
   }
 
-  public PreferencesChecker getPreferences() {
+  public PreferencesChecker openPreferences() {
     return new PreferencesChecker(WindowInterceptor.getModalDialog(preferencesMenu.triggerClick()));
   }
 

@@ -42,7 +42,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     accounts.checkAccountNames("Account n. 0000123");
   }
 
-  public void testDayAccountTypeIsTheDefaultAndIsImported() throws Exception {
+  public void testMainAccountTypeIsTheDefault() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(30006, 10674, "0000123", 100.00, "15/10/2008")
       .addTransaction("2008/10/01", 15.00, "MacDo")
@@ -53,15 +53,12 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     accounts.edit("Account n. 0000123")
       .checkAccountName("Account n. 0000123")
       .checkIsMain()
-      .checkIsImported()
       .setAsSavings()
-      .setAsNotImported()
       .validate();
 
     accounts.edit("Account n. 0000123")
       .checkIsSavings()
       .setAsCard()
-      .checkNotImported()
       .validate();
 
     accounts.edit("Account n. 0000123")

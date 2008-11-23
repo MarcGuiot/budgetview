@@ -15,7 +15,7 @@ import org.uispec4j.utils.ThreadLauncherTrigger;
 
 import java.net.ServerSocket;
 
-public class SingleInstanceTest extends StartUpFunctionalTestCase {
+public abstract class SingleInstanceTest extends StartUpFunctionalTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();

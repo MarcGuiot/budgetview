@@ -5,7 +5,6 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.TimeService;
 import org.globsframework.utils.Dates;
 import org.uispec4j.TextBox;
-import org.uispec4j.UISpecAdapter;
 import org.uispec4j.assertion.UISpecAssert;
 
 public class LicenseTest extends LoggedInFunctionalTestCase {
@@ -32,7 +31,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     TimeService.setCurrentDate(Dates.parse("2008/09/30"));
 
     // force call to update
-    operations.getPreferences().changeFutureMonth(3).validate();
+    operations.openPreferences().setFutureMonthsCount(3).validate();
     TextBox box = mainWindow.getTextBox("licenseMessage");
     UISpecAssert.assertTrue(box.isVisible());
     UISpecAssert.assertTrue(box.textEquals("This is your last day with fourmics."));
@@ -42,7 +41,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     TimeService.setCurrentDate(Dates.parse("2008/10/01"));
 
     // force call to update
-    operations.getPreferences().changeFutureMonth(3).validate();
+    operations.openPreferences().setFutureMonthsCount(3).validate();
     TextBox box = mainWindow.getTextBox("licenseMessage");
     UISpecAssert.assertTrue(box.isVisible());
     UISpecAssert.assertTrue(box.textEquals("<html>Your free trial period is over. You can buy...</html>"));

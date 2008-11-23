@@ -136,7 +136,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
   }
 
   public void testTwoMonths() throws Exception {
-    operations.getPreferences().changeFutureMonth(12).validate();
+    operations.openPreferences().setFutureMonthsCount(12).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/07/07", -29.90, "free telecom")
       .addTransaction("2008/07/08", -1500, "Loyer")
@@ -443,7 +443,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/26", 1000, "WorldCo")
       .load();
 
-    operations.getPreferences().changeFutureMonth(1).validate();
+    operations.openPreferences().setFutureMonthsCount(1).validate();
 
     timeline.checkMonthTooltip("2008/07", 1000, 100);
     timeline.checkMonthTooltip("2008/08", "August 2008");

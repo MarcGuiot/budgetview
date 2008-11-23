@@ -46,20 +46,20 @@
 
                 <label gridPos="(0,4,2,1)" text="$balanceSummary.expected.expenses" styleClass="header"/>
 
-                <label gridPos="(0,5)" text="$balanceSummary.amount.fixed" styleClass="amountLabel"/>
-                <label gridPos="(1,5)" ref="fixedLabel" styleClass="amount"/>
+                <label gridPos="(0,5)" text="$balanceSummary.amount.savings" styleClass="amountLabel"/>
+                <label gridPos="(1,5)" ref="savingsLabel" styleClass="amount"/>
 
-                <label gridPos="(0,6)" text="$balanceSummary.amount.savings" styleClass="amountLabel"/>
-                <label gridPos="(1,6)" ref="savingsLabel" styleClass="amount"/>
+                <label gridPos="(0,6)" text="$balanceSummary.amount.fixed" styleClass="amountLabel"/>
+                <label gridPos="(1,6)" ref="fixedLabel" styleClass="amount"/>
 
-                <label gridPos="(0,7)" text="$balanceSummary.amount.special" styleClass="amountLabel"/>
-                <label gridPos="(1,7)" ref="specialLabel" styleClass="amount"/>
+                <label gridPos="(0,7)" text="$balanceSummary.amount.envelope" styleClass="amountLabel"/>
+                <label gridPos="(1,7)" ref="envelopeLabel" styleClass="amount"/>
 
-                <label gridPos="(0,8)" text="$balanceSummary.amount.envelope" styleClass="amountLabel"/>
-                <label gridPos="(1,8)" ref="envelopeLabel" styleClass="amount"/>
+                <label gridPos="(0,8)" text="$balanceSummary.amount.occasional" styleClass="amountLabel"/>
+                <label gridPos="(1,8)" ref="occasionalLabel" styleClass="amount"/>
 
-                <label gridPos="(0,9)" text="$balanceSummary.amount.occasional" styleClass="amountLabel"/>
-                <label gridPos="(1,9)" ref="occasionalLabel" styleClass="amount"/>
+                <label gridPos="(0,9)" text="$balanceSummary.amount.special" styleClass="amountLabel"/>
+                <label gridPos="(1,9)" ref="specialLabel" styleClass="amount"/>
               </grid>
               <filler fill="horizontal"/>
             </row>

@@ -30,7 +30,7 @@
       </scrollPane>
 
       <row styleClass="iconButtonGroup">
-        <button action="createAccount" styleClass="create"/>
+        <button action="createAccount" styleClass="create" tooltipText="$account.create.tooltip"/>
         <filler fill="horizontal"/>
       </row>
     </column>

@@ -9,7 +9,7 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
 
   public void testChangeFutureMonths() throws Exception {
     timeline.checkDisplays("2008/08");
-    operations.getPreferences().changeFutureMonth(24).validate();
+    operations.openPreferences().setFutureMonthsCount(24).validate();
     timeline.checkSpanEquals("2008/08", "2010/08");
   }
 
@@ -25,7 +25,7 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
     categorization.setRecurring("EDF", "EDF", MasterCategory.HOUSE, true);
     categorization.setIncome("Salaire Aout", "Salaire", true);
 
-    operations.getPreferences().changeFutureMonth(24).validate();
+    operations.openPreferences().setFutureMonthsCount(24).validate();
 
     timeline.selectLast();
     views.selectData();
@@ -35,7 +35,7 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
       .add("01/08/2010", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire", MasterCategory.INCOME)
       .check();
 
-    operations.getPreferences().changeFutureMonth(12).validate();
+    operations.openPreferences().setFutureMonthsCount(12).validate();
     timeline.checkSpanEquals("2008/08", "2009/08");
     timeline.selectLast();
     transactions.initContent()
@@ -44,7 +44,7 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
       .add("01/08/2009", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire", MasterCategory.INCOME)
       .check();
 
-    operations.getPreferences().changeFutureMonth(36).validate();
+    operations.openPreferences().setFutureMonthsCount(36).validate();
 
     timeline.selectLast();
     views.selectData();
@@ -54,7 +54,7 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
       .add("01/08/2011", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire", MasterCategory.INCOME)
       .check();
 
-    operations.getPreferences().changeFutureMonth(12).validate();
+    operations.openPreferences().setFutureMonthsCount(12).validate();
     timeline.assertEmpty();
   }
 }

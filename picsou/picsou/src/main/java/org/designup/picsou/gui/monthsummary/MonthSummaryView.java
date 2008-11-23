@@ -189,10 +189,12 @@ public class MonthSummaryView extends View implements GlobSelectionListener, Col
   }
 
   private List<BudgetArea> getBudgetAreas() {
-    List<BudgetArea> result = new ArrayList<BudgetArea>(Arrays.asList(BudgetArea.values()));
-    result.remove(BudgetArea.ALL);
-    result.remove(BudgetArea.UNCATEGORIZED);
-    return result;
+    return Arrays.asList(BudgetArea.INCOME,
+                         BudgetArea.SAVINGS,
+                         BudgetArea.RECURRING,
+                         BudgetArea.ENVELOPES,
+                         BudgetArea.OCCASIONAL,
+                         BudgetArea.SPECIAL);
   }
 
   private class BudgetAreaUpdater implements ChangeSetListener, GlobSelectionListener {

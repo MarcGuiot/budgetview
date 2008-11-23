@@ -15,7 +15,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testFirstSeriesInitialization() throws Exception {
-    operations.getPreferences().changeFutureMonth(24).validate();
+    operations.openPreferences().setFutureMonthsCount(24).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/07/08", -29.9, "free telecom")
       .load();
@@ -57,7 +57,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectCategorization();
     categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
-    operations.getPreferences().changeFutureMonth(1).validate();
+    operations.openPreferences().setFutureMonthsCount(1).validate();
     timeline.checkSpanEquals("2008/06", "2008/08");
     timeline.selectAll();
     views.selectBudget();
@@ -99,7 +99,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2008/06/20", -100., "Auchan")
       .load();
-    operations.getPreferences().changeFutureMonth(1).validate();
+    operations.openPreferences().setFutureMonthsCount(1).validate();
     views.selectCategorization();
     categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
     timeline.selectAll();
@@ -152,7 +152,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/20", -100., "Auchan")
       .load();
 
-    operations.getPreferences().changeFutureMonth(1);
+    operations.openPreferences().setFutureMonthsCount(1);
     views.selectCategorization();
     categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
     timeline.selectAll();

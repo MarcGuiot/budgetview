@@ -116,6 +116,7 @@ public class ImportSession {
         }
         transactionAnalyzer.processTransactions(id, accountIdAndTransactions.getValue(),
                                                 localRepository);
+        localRepository.update(account.getKey(), Account.IS_IMPORTED_ACCOUNT, false);
       }
       localRepository.completeChangeSet();
       updateImportAggregator.dispose();

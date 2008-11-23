@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(340,200)">
+  <panel styleClass="dialog" preferredSize="(340,240)">
     <column styleClass="innerDialog">
 
       <label text="$account.panel.title" styleClass="title"/>

@@ -98,6 +98,6 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     accounts.openImportForAccount("Main account")
       .selectFiles(path)
       .acceptFile()
-      .checkSelectedAccount("Main account (11111)");
+      .checkSelectedAccount("Main account");
   }
 }

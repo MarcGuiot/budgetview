@@ -171,7 +171,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     importDialog
       .doImportWithBalance()
-      .checkAccountLabel("Account: Main (12345)")
+      .checkAccountLabel("Account: Main")
       .checkCancelNotAvailable()
       .checkEscNotAvailable()
       .checkInitialAmountSelected("0.0")
@@ -204,9 +204,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(secondQif)
       .acceptFile()
-      .checkAvailableAccounts("Main account (00011)")
+      .checkAvailableAccounts("Main account")
       .createNewAccount(SOCIETE_GENERALE, "Second account", "00022", 12.30)
-      .checkSelectedAccount("Second account (00022)")
+      .checkSelectedAccount("Second account")
       .completeImport();
 
     views.selectHome();
@@ -265,8 +265,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(qifFile)
       .acceptFile()
-      .checkAvailableAccounts("Main account (12345)")
-      .selectAccount("Main account (12345)")
+      .checkAvailableAccounts("Main account")
+      .selectAccount("Main account")
       .completeImport();
 
     views.selectHome();

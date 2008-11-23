@@ -83,7 +83,7 @@ public class LicenseTest extends LicenseTestCase {
     connection.commit();
     LicenseChecker.enterLicense(window, mail, "1234");
     OperationChecker operation = new OperationChecker(window);
-    operation.getPreferences().changeFutureMonth(24).validate();
+    operation.openPreferences().setFutureMonthsCount(24).validate();
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 1L);
     assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
     assertTrue(license.get(License.SIGNATURE).length > 1);
@@ -104,7 +104,7 @@ public class LicenseTest extends LicenseTestCase {
     loginChecker.logUser("user", "passw@rd");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     OperationChecker operations = new OperationChecker(window);
-    operations.getPreferences().changeFutureMonth(3);
+    operations.openPreferences().setFutureMonthsCount(3);
     checkLicenseExpiration();
   }
 
@@ -222,7 +222,7 @@ public class LicenseTest extends LicenseTestCase {
     LicenseChecker license = new LicenseChecker(window);
     license.enterLicense(window, MAIL, code);
     OperationChecker operation = new OperationChecker(window);
-    operation.getPreferences().changeFutureMonth(24).validate();
+    operation.openPreferences().setFutureMonthsCount(24).validate();
 
     timeView.checkSpanEquals("2008/07", "2010/07");
     window.dispose();
@@ -258,7 +258,7 @@ public class LicenseTest extends LicenseTestCase {
     LicenseChecker checker = new LicenseChecker(window);
     checker.enterLicense(window, MAIL, "1234");
     OperationChecker operation = new OperationChecker(window);
-    operation.getPreferences().changeFutureMonth(24).validate();
+    operation.openPreferences().setFutureMonthsCount(24).validate();
 
     Glob license = getLicense(connection, MAIL, License.ACCESS_COUNT, 1L);
     assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());

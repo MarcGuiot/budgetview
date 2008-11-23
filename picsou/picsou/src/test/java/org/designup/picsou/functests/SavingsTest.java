@@ -8,7 +8,7 @@ import org.designup.picsou.model.TransactionType;
 public class SavingsTest extends LoggedInFunctionalTestCase {
 
   public void testCreateSavingsInMainAccount() throws Exception {
-    operations.getPreferences().changeFutureMonth(2).validate();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/06/10", -100.00, "Virement")
       .addTransaction("2008/07/10", -100.00, "Virement")
@@ -22,7 +22,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectBank("LCL")
       .setAsSavings()
       .setBalance(1000)
-      .setAsNotImported()
       .validate();
     views.selectCategorization();
     categorization
