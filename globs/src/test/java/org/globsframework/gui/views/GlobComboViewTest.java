@@ -362,6 +362,18 @@ public class GlobComboViewTest extends GuiComponentTestCase {
     assertTrue(globSelectionHandler.isEmpty());
   }
 
+  public void testInitFilterBeforeCreation() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject id='1' name='name1'/>" +
+                    "<dummyObject id='2' name='name2'/>");
+    view =
+      GlobComboView.init(DummyObject.TYPE, repository, directory)
+        .setShowEmptyOption(true)
+        .setFilter(GlobMatchers.fieldEquals(DummyObject.NAME, "name2"));
+    ComboBox combo = new ComboBox(view.getComponent());
+    combo.select("name2");
+  }
+
   private ComboBox createCombo(GlobRepository repository) {
     view = GlobComboView.init(DummyObject.TYPE, repository, directory).setRenderer(DummyObject.NAME);
     return new ComboBox(view.getComponent());

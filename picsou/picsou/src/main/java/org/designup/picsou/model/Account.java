@@ -61,7 +61,7 @@ public class Account {
   @DefaultInteger(1)
   public static LinkField ACCOUNT_TYPE;
 
-  @DefaultBoolean(true)
+  @DefaultBoolean(false)
   public static BooleanField IS_IMPORTED_ACCOUNT;
 
   static {

@@ -14,8 +14,8 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    accounts.checkAccount("Account n. 10101010", 1.23, "2006/01/10");
-    accounts.checkSummary(1.23, "10/01/2006");
+    mainAccounts.checkAccount("Account n. 10101010", 1.23, "2006/01/10");
+    mainAccounts.checkSummary(1.23, "10/01/2006");
     views.selectData();
     transactions.initAmountContent()
       .add("Blah", -1, 1.23, 1.23)
@@ -40,9 +40,9 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    accounts.checkSummary(20.0, "20/01/2006");
-    accounts.checkAccount("Account n. 123123123", 10, "2006/01/15");
-    accounts.checkAccount("Card n. 1000-2000-3000-4000", 10, "2006/01/20");
+    mainAccounts.checkSummary(20.0, "20/01/2006");
+    mainAccounts.checkAccount("Account n. 123123123", 10, "2006/01/15");
+    mainAccounts.checkAccount("Card n. 1000-2000-3000-4000", 10, "2006/01/20");
     views.selectData();
     transactions.initAmountContent()
       .add("Bar", -6.00, 10.00, 20.00)
@@ -65,8 +65,8 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    accounts.checkAccount("Account n. 10101010", 12345.60, "2006/05/01");
-    accounts.checkSummary(12345.60, "01/05/2006");
+    mainAccounts.checkAccount("Account n. 10101010", 12345.60, "2006/05/01");
+    mainAccounts.checkSummary(12345.60, "01/05/2006");
   }
 
   public void testNothingShownForQifFiles() throws Exception {
@@ -77,7 +77,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     operations.importQifFiles(SOCIETE_GENERALE, path);
 
     views.selectHome();
-    accounts.checkDisplayIsEmpty("Main account");
+    mainAccounts.checkDisplayIsEmpty("Main account");
   }
 
   public void testImportFromViewInitializesTheDefaultBankAndAccountForQifFiles() throws Exception {
@@ -95,7 +95,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    accounts.openImportForAccount("Main account")
+    mainAccounts.openImportForAccount("Main account")
       .selectFiles(path)
       .acceptFile()
       .checkSelectedAccount("Main account");

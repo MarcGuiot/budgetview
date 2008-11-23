@@ -90,7 +90,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     operations.importOfxFile(OFX_PATH);
 
     views.selectHome();
-    accounts.edit("Account n. 00000123456").setAccountName("Compte courant").validate();
+    mainAccounts.edit("Account n. 00000123456").setAccountName("Compte courant").validate();
 
     //======== CATEGORIZATION ===========
 

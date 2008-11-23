@@ -6,12 +6,12 @@
 
     <verticalSplit>
 
-      <column>
+      <column name="mainAccountView">
         <label text="$account.title.main" styleClass="blockTitle"/>
         <panel ref="mainAccount"/>
       </column>
 
-      <column>
+      <column name="savingsAccountView">
         <label text="$account.title.savings" styleClass="blockTitle"/>
         <panel ref="savingsAccount"/>
       </column>

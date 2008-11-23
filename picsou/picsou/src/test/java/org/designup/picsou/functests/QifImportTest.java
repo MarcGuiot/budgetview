@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
@@ -36,7 +35,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .check();
     views.selectHome();
 
-    accounts.changeBalance("Main account", 100, "SACLAY");
+    mainAccounts.changeBalance("Main account", 100, "SACLAY");
     views.selectData();
     transactions.initAmountContent()
       .add("SACLAY", -55.49, 100, 100)
@@ -64,8 +63,8 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .add("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, 236.64, 236.64)
       .check();
     views.selectHome();
-    accounts.changeBalance("Main account", 80, "Auchan");
-    accounts.getBalance("Main account")
+    mainAccounts.changeBalance("Main account", 80, "Auchan");
+    mainAccounts.getBalance("Main account")
       .checkAccountLabel("Account: Main account");
   }
 

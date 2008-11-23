@@ -182,7 +182,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     importDialog.checkClosed();
 
     views.selectHome();
-    accounts.checkAccount("Main", 12.33, "2006/01/10");
+    mainAccounts.checkAccount("Main", 12.33, "2006/01/10");
   }
 
   public void testImportTwoQifFilesInTwoDifferentAccounts() throws Exception {
@@ -210,7 +210,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .completeImport();
 
     views.selectHome();
-    accounts.checkAccountNames("Main account", "Second account");
+    mainAccounts.checkAccountNames("Main account", "Second account");
   }
 
   public void testSkipFirstQifFile() throws Exception {
@@ -270,7 +270,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .completeImport();
 
     views.selectHome();
-    accounts.checkAccountNames("Main account");
+    mainAccounts.checkAccountNames("Main account");
   }
 
   public void testImportWithCreateAccountChecksAccountBankIsFilled() throws Exception {

@@ -24,7 +24,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
 
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        if (values.get(Transaction.PLANNED)) {
+        if (values.get(Transaction.PLANNED) || Transaction.isCreatedTransaction(values)) {
           return;
         }
         Integer seriesId = values.get(Transaction.SERIES);
@@ -54,7 +54,9 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         Glob transaction = repository.find(key);
-        if (transaction == null || transaction.get(Transaction.PLANNED)) {
+        if (transaction == null ||
+            transaction.get(Transaction.PLANNED) ||
+            Transaction.isCreatedTransaction(transaction)) {
           return;
         }
         Integer previousSeries;
@@ -232,6 +234,8 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
                              GlobMatchers.and(
                                GlobMatchers.fieldEquals(Transaction.SERIES, series),
                                GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+                               GlobMatchers.not(
+                                 GlobMatchers.fieldEquals(Transaction.MIRROR, true)),
                                GlobMatchers.fieldEquals(Transaction.MONTH, month)))
       .sort(Transaction.DAY);
   }

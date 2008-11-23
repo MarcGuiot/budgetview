@@ -195,7 +195,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("essence", "Voiture", MasterCategory.TRANSPORTS, true);
     categorization.setRecurring("nounou", "Nounou", MasterCategory.EDUCATION, true);
     views.selectHome();
-    accounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_NAME, 500, "nounou");
+    mainAccounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_NAME, 500, "nounou");
     views.selectData();
     timeline.selectAll();
     transactions.initAmountContent()

@@ -703,9 +703,4 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkSavingsSeriesAreHidden() {
-    assertFalse(dialog.getComboBox("savingsToSeries").isVisible());
-    return this;
-  }
-
 }

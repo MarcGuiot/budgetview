@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.TransactionType;
 
 public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testEditingAnExistingAccount() throws Exception {
@@ -12,7 +13,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
 
-    accounts.edit("Account n. 0000123")
+    mainAccounts.edit("Account n. 0000123")
       .checkAccountName("Account n. 0000123")
       .checkAccountNumber("0000123")
       .checkBalanceDisplayed(false)
@@ -20,15 +21,15 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setAccountNumber("12345")
       .validate();
 
-    accounts.checkAccountNames("My account");
+    mainAccounts.checkAccountNames("My account");
 
-    accounts.checkAccountInformation("My account", "12345");
+    mainAccounts.checkAccountInformation("My account", "12345");
   }
 
-  public void testCreatingAnAccount() throws Exception {
+  public void testCreatingAMainAccount() throws Exception {
     views.selectHome();
 
-    accounts.createMain()
+    mainAccounts.createNewAccount()
       .checkAccountName("")
       .setAccountName("Main CIC account")
       .checkTypes("Main", "Card", "Savings")
@@ -36,7 +37,21 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkIsMain()
       .validate();
 
-    accounts.checkAccountNames("Main CIC account");
+    mainAccounts.checkAccountNames("Main CIC account");
+  }
+
+  public void testCreatingASavingsAccount() throws Exception {
+    views.selectHome();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Savings")
+      .setAccountNumber("123")
+      .setAsSavings()
+      .selectBank("cic")
+      .validate();
+
+    savingsAccounts.edit("Savings")
+      .checkIsSavings()
+      .cancel();
   }
 
   public void testEmptyAccountNamesAreNotAllowed() throws Exception {
@@ -47,13 +62,32 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
 
-    accounts.edit("Account n. 0000123")
+    mainAccounts.edit("Account n. 0000123")
       .checkAccountName("Account n. 0000123")
       .setAccountName("")
       .checkValidationError("You must enter a name for the account")
       .cancel();
 
-    accounts.checkAccountNames("Account n. 0000123");
+    mainAccounts.checkAccountNames("Account n. 0000123");
+  }
+
+  public void testChangingAMainAccountIntoASavingsAccount() throws Exception {
+    views.selectHome();
+
+    mainAccounts.createNewAccount()
+      .setAccountName("Main CIC account")
+      .selectBank("CIC")
+      .checkIsMain()
+      .validate();
+
+    savingsAccounts.checkNoAccountsDisplayed();
+
+    mainAccounts.edit("Main CIC account")
+      .setAsSavings()
+      .validate();
+
+    savingsAccounts.checkAccountNames("Main CIC account");
+    mainAccounts.checkNoAccountsDisplayed();
   }
 
   public void testMainAccountTypeIsTheDefault() throws Exception {
@@ -64,19 +98,19 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
 
-    accounts.edit("Account n. 0000123")
+    mainAccounts.edit("Account n. 0000123")
       .checkAccountName("Account n. 0000123")
       .checkIsMain()
-      .setAsSavings()
-      .validate();
-
-    accounts.edit("Account n. 0000123")
-      .checkIsSavings()
       .setAsCard()
       .validate();
 
-    accounts.edit("Account n. 0000123")
+    mainAccounts.edit("Account n. 0000123")
       .checkIsCard()
+      .setAsMain()
+      .validate();
+
+    mainAccounts.edit("Account n. 0000123")
+      .checkIsMain()
       .cancel();
   }
 }

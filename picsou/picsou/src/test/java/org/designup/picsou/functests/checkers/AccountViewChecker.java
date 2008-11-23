@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.utils.Dates;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.UIComponent;
@@ -20,8 +21,8 @@ import java.util.Set;
 public class AccountViewChecker extends DataChecker {
   private Panel panel;
 
-  public AccountViewChecker(Panel panel) {
-    this.panel = panel;
+  public AccountViewChecker(Panel panel, String panelName) {
+    this.panel = panel.getPanel(panelName);
   }
 
   public void checkAccountNames(String... expectedNames) {
@@ -37,6 +38,10 @@ public class AccountViewChecker extends DataChecker {
       existingNames.add(button.getLabel());
     }
     return existingNames;
+  }
+
+  public void checkNoAccountsDisplayed() {
+    TestUtils.assertEmpty(getDisplayedAccounts());
   }
 
   public void checkAccount(String accountName, double balance, String updateDate) {
@@ -102,12 +107,7 @@ public class AccountViewChecker extends DataChecker {
     return account.getContainer("accountParent");
   }
 
-  public AccountEditionChecker createMain() {
-    return AccountEditionChecker.open(panel.getPanel("mainAccount").getButton("createAccount").triggerClick());
+  public AccountEditionChecker createNewAccount() {
+    return AccountEditionChecker.open(panel.getButton("createAccount").triggerClick());
   }
-
-  public AccountEditionChecker createSavings() {
-    return AccountEditionChecker.open(panel.getPanel("savingsAccount").getButton("createAccount").triggerClick());
-  }
-
 }

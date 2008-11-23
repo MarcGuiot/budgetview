@@ -83,7 +83,9 @@ public class ComboBox extends AbstractSwingUIComponent {
         throw new ItemAmbiguityException(value, items);
       }
     }
-    AssertAdapter.fail(value + " not found in ComboBox");
+
+    List content = Arrays.asList(getContent());
+    AssertAdapter.fail(value + " not found in ComboBox - actual content: " + content);
   }
 
   /**

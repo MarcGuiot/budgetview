@@ -55,7 +55,6 @@ public class PicsouInit {
 
     repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
-    repository.addTrigger(new SavingsSeriesCreationTrigger());
     repository.addTrigger(new CurrentMonthTrigger());
     repository.addTrigger(new SeriesRenameTrigger());
     repository.addTrigger(new RegistrationTrigger(directory));
@@ -67,6 +66,7 @@ public class PicsouInit {
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetUpdateTransactionTrigger());
     repository.addTrigger(new TransactionPlannedTrigger());
+    repository.addTrigger(new SavingsTransactionTrigger());
     repository.addTrigger(new BalanceTrigger());
     repository.addTrigger(new MonthStatTrigger());
     repository.addTrigger(new PlannedSeriesStatTrigger());

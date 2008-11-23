@@ -23,7 +23,8 @@ public enum TransactionType implements GlobConstantContainer {
   CREDIT_CARD("CREDIT_CARD", 7),
   BANK_FEES("BANK_FEES", 9),
   INTERNAL_TRANSFER("INTERNAL_TRANSFER", 10),
-  PLANNED("PLANNED", 11);
+  PLANNED("PLANNED", 11),
+  MIRROR("MIRROR", 12);
 
   public static GlobType TYPE;
 

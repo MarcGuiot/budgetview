@@ -44,8 +44,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkAmountLabel("Planned amount for july 2008")
       .selectAllMonths()
       .checkAmountLabel("Planned amount for july - august 2008")
-      .checkSavingsAccountsAreHidden()
-      .checkSavingsSeriesAreHidden()
       .validate();
 
     budgetView.recurring.checkSeries("Free", -29.00, -29.00);
@@ -1461,27 +1459,5 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkStartDate("June 2007")
       .checkEndDate("Mar 2008")
       .validate();
-  }
-
-  public void testSavingsSeries() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/07/04", -100.00, "CIC")
-      .addTransaction("2008/08/04", -100.00, "CIC")
-      .load();
-    views.selectHome();
-    accounts.createMain()
-      .setAsSavings()
-      .selectBank("CIC")
-      .setAccountName("CIC 1")
-      .setAccountNumber("111")
-      .validate();
-
-    views.selectBudget();
-    budgetView.savings
-      .createSeries()
-      .setName("Epargne 1")
-      .setCategory(MasterCategory.SAVINGS)
-      .selectSavingsAccount("CIC 1");
-    fail("il faut pouvoir creer des series propres au compte d'epargne");
   }
 }
