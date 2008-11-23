@@ -4,7 +4,6 @@ TransactionDetails
 * Type
 
 SeriesEditionDialog
-* Bouton ou double-clic pour selectionner tout
 * Afficher/modifier le jour de debit pour les recurrences
 
 CategorizationView
@@ -16,23 +15,14 @@ CategorizationView
 TransactionView
 * Suppression de transactions ghost pour cloturer une serie ? (= alignement prevu / depense)
 
-SeriesView
-** Ajouter bouton ouverture SED
-
-
-
 AccountView
-** Creation de compte
 * Selection des comptes integres dans le total (exclusion comptes epargne)
 * Cloturer un compte (date de cloture)
-
 
 Home page
 ** Afficher un message avec une URL vers la page de changeLog en cas de changement de version
 
 Licence
-*** Apres expiration : la fonction "import" est bloquee (dialog avec message)
-** Afficher le nombre de jours restants
 ** Completer les messages pour les mails
 * Mettre une expiration sur detection de problemes de licence
 * Pb focus text editor
@@ -42,16 +32,9 @@ Licence
 
 CategoryEditionDialog
 * Selectionner la categorie suivante apres une suppression (propriete GlobListView ?)
-* Creation de series INCOME : preselectionner la categories par defaut
 * Titre
 * Label "renommer la categorie"
 * Modifier l'ordre des categories
-
-HistoricalChart
-*** Voir affichage avec ghosts
-
-RepartitionChart
-*** a completer
 
 Import
 * Memoriser dernier repertoire pour le filechooser
@@ -66,8 +49,6 @@ Packaging
 
 General
 * Supprimer les subcats par defaut (mode avance - apporte plus de confusion que de valeur pour les novices)
-* Serialisation : mettre en place des tests pour garantir l'upgrade data des utilisateurs
-* Tooltips sur les boutons
 * Copier les donnees des tables dans le clipboard
 * voir opacite/joliesse des fenetres Globs de creation/deletion
 
@@ -103,7 +84,6 @@ Legal
 Ameliorations
 -------------
 * Undo dans les boîtes de dialogue
-* Graphiques (camembert / histogramme)
 * Aide pour trouver les categories dans CategoriesChooserDialog (search)
 
 
@@ -129,15 +109,6 @@ Nouveau
 
 ----
 
-* Types de comptes (courant / carte / epargne)
-
-* Enlever contrainte sur password => indicateur "password strength"
-
-* messages “Vous avez dépense 150€ de trop dans la catégorie Alimentation”
-* messages “Vous avez économisé 54€ dans la catégorie Sport” (uniquement pour les mois terminés)
-* Sensibilité des messages : inutile de parler d’une économie de 3€
-
-* BalanceGraph : couleur si balance negative
 * CategoryView : boutons expand all / collapse all
 * TimeView : mettre en evidence les mois sans transactions
 * Memoriser taille et position appli dans les user prefs

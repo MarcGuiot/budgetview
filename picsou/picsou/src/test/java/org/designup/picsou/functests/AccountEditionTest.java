@@ -25,6 +25,20 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     accounts.checkAccountInformation("My account", "12345");
   }
 
+  public void testCreatingAnAccount() throws Exception {
+    views.selectHome();
+
+    accounts.createMain()
+      .checkAccountName("")
+      .setAccountName("Main CIC account")
+      .checkTypes("Main", "Card", "Savings")
+      .selectBank("CIC")
+      .checkIsMain()
+      .validate();
+
+    accounts.checkAccountNames("Main CIC account");
+  }
+
   public void testEmptyAccountNamesAreNotAllowed() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(30006, 10674, "0000123", 100.00, "15/10/2008")

@@ -57,6 +57,11 @@ public class AccountEditionChecker extends DataChecker {
     return this;
   }
 
+  public AccountEditionChecker checkTypes(String... expectedTypeNames) {
+    assertThat(getTypeCombo().contentEquals(expectedTypeNames));
+    return this;
+  }
+
   public AccountEditionChecker setAsMain() {
     getTypeCombo().select("Main");
     return this;

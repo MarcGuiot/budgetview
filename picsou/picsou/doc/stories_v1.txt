@@ -35,8 +35,6 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
 
 - compte demo
 
-- Creation d'une serie OperationsSpeciales : selectionner le mois en cours dans la table
-
 
 ====================================
                RESTE
@@ -65,8 +63,6 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
 - Fichier licences pour Package install / About / etc :
 
 - Message upgrade : lien vers http://www.fourmics.com/changes ou versions
-
-- Message d'aide dans CategoryChooserDialog + joliesse ?
 
 - Voir message dans l'appli si pb licence et reenvoi de mail
 
