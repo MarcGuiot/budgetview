@@ -8,7 +8,6 @@ import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
-import org.designup.picsou.triggers.SavingSeriesMirrorTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -25,7 +24,6 @@ import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.impl.StringListCellRenderer;
-import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -78,7 +76,6 @@ public class SeriesEditionDialog {
   private SeriesBudgetEditionPanel budgetEditionPanel;
   private GlobList selectedTransactions = new EmptyGlobList();
   private GlobComboView savingsAccount;
-  private GlobLinkComboEditor toSeries;
   private Map<Key, Key> savingAccountCacheForSavingSeries = new HashMap<Key, Key>();
 
 
@@ -157,15 +154,10 @@ public class SeriesEditionDialog {
 
     registerCategoryComponents(descriptionService, builder);
 
-    // Choix du comptes destination
-    // si vide pas de comptes ==> pas de series
     savingsAccount = GlobComboView.init(Account.TYPE, localRepository, localDirectory)
+      .setFilter(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()))
       .setShowEmptyOption(true);
     builder.add("savingsAccount", savingsAccount);
-
-    toSeries = new GlobLinkComboEditor(Series.SAVINGS_SERIES, localRepository, localDirectory)
-      .setEmptyOptionLabel(Lang.get("seriesEdition.createPendingSeries"));
-    builder.add("savingsToSeries", toSeries);
 
     GlobLinkComboEditor periodCombo =
       new GlobLinkComboEditor(Series.PROFILE_TYPE, localRepository, localDirectory);
@@ -204,13 +196,11 @@ public class SeriesEditionDialog {
             }
           }
           savingsAccount.setEnable(isSavingsSeries);
-          toSeries.setEnable(isSavingsSeries);
         }
         else {
           assignCategoryAction.setEnabled(false);
           multiCategoryList.setFilter(GlobMatchers.NONE);
           savingsAccount.setEnable(false);
-          toSeries.setEnable(false);
         }
         updateDateState();
         updateMonthChooser();
@@ -223,11 +213,9 @@ public class SeriesEditionDialog {
           Glob targetSavingAccount = selection.getAll(Account.TYPE).getFirst();
           if (targetSavingAccount != null) {
             savingAccountCacheForSavingSeries.put(currentSeries.getKey(), targetSavingAccount.getKey());
-            toSeries.setFilter(savingsSeriesFilter(targetSavingAccount));
           }
           else {
             savingAccountCacheForSavingSeries.put(currentSeries.getKey(), null);
-            toSeries.setFilter(NONE);
           }
         }
       }
@@ -269,7 +257,6 @@ public class SeriesEditionDialog {
     repository.addTrigger(new ProfileTypeSeriesTrigger(userMonth));
     repository.addTrigger(new AutomaticSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetTrigger());
-    repository.addTrigger(new SavingSeriesMirrorTrigger());
   }
 
   private void updateMonthChooser() {
@@ -641,24 +628,9 @@ public class SeriesEditionDialog {
           Set<Key> newSeries = localRepository.getCurrentChanges().getCreated(Series.TYPE);
           for (Key seriesKey : newSeries) {
             if (isSavingSeries(seriesKey)) {
-              Key pendingSeriesKey = savingAccountCacheForSavingSeries.get(seriesKey);
-              Glob currentSeries = localRepository.get(seriesKey);
-              if (pendingSeriesKey != null) {
-                if (currentSeries.get(Series.SAVINGS_SERIES) == null) {
-                  FieldValuesBuilder valuesBuilder = FieldValuesBuilder.init();
-                  valuesBuilder.set(Series.SAVINGS_ACCOUNT, pendingSeriesKey.get(Account.ID));
-                  valuesBuilder.set(Series.SAVINGS_SERIES, currentSeries.get(Series.ID));
-                  valuesBuilder.set(Series.NAME, Lang.get("budgetArea.savings") + ":" + currentSeries.get(Series.NAME));
-                  valuesBuilder.set(Series.LABEL, Lang.get("budgetArea.savings") + ":" + currentSeries.get(Series.LABEL));
-                  for (Field field : Series.TYPE.getFields()) {
-                    if (field != Series.ID && field != Series.SAVINGS_ACCOUNT && field != Series.SAVINGS_SERIES
-                        && field != Series.NAME && field != Series.LABEL) {
-                      valuesBuilder.setValue(field, currentSeries.getValue(field));
-                    }
-                  }
-                  Glob createdSeries = localRepository.create(Series.TYPE, valuesBuilder.toArray());
-                  localRepository.update(seriesKey, Series.SAVINGS_SERIES, createdSeries.get(Series.ID));
-                }
+              Key targetSavingsAccount = savingAccountCacheForSavingSeries.get(seriesKey);
+              if (targetSavingsAccount != null) {
+                localRepository.update(seriesKey, Series.SAVINGS_ACCOUNT, targetSavingsAccount.get(Account.ID));
               }
             }
           }

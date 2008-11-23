@@ -25,8 +25,8 @@ public class SavingsTransactionTrigger implements ChangeSetListener {
         Glob transaction = repository.get(key);
         Integer savingsTransactionId = transaction.get(Transaction.SAVINGS_TRANSACTION);
         if (values.contains(Transaction.SERIES)) {
-          Glob previousSeries = repository.get(Key.create(Series.TYPE,
-                                                          values.getPrevious(Transaction.SERIES)));
+          Glob previousSeries = repository.find(Key.create(Series.TYPE,
+                                                           values.getPrevious(Transaction.SERIES)));
           if (previousSeries != null) {
             if (savingsTransactionId != null) {
               repository.delete(Key.create(Transaction.TYPE, savingsTransactionId));
@@ -40,7 +40,7 @@ public class SavingsTransactionTrigger implements ChangeSetListener {
         }
         if (values.contains(Transaction.AMOUNT) && savingsTransactionId != null) {
           repository.update(Key.create(Transaction.TYPE, savingsTransactionId),
-                            Transaction.AMOUNT, values.get(Transaction.AMOUNT));
+                            Transaction.AMOUNT, -values.get(Transaction.AMOUNT));
         }
       }
 
@@ -57,18 +57,21 @@ public class SavingsTransactionTrigger implements ChangeSetListener {
     Glob series = repository.find(Key.create(Series.TYPE, seriesId));
     Glob savingsAccount = repository.findLinkTarget(series, Series.SAVINGS_ACCOUNT);
     if (savingsAccount != null && !savingsAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
+      Double amount = -values.get(Transaction.AMOUNT);
       Glob savingsTransaction =
         repository.create(Transaction.TYPE,
-                          FieldValue.value(Transaction.AMOUNT, values.get(Transaction.AMOUNT)),
+                          FieldValue.value(Transaction.AMOUNT, amount),
                           FieldValue.value(Transaction.BANK_DAY, values.get(Transaction.BANK_DAY)),
                           FieldValue.value(Transaction.BANK_MONTH, values.get(Transaction.BANK_MONTH)),
                           FieldValue.value(Transaction.DAY, values.get(Transaction.DAY)),
                           FieldValue.value(Transaction.MONTH, values.get(Transaction.MONTH)),
                           FieldValue.value(Transaction.TRANSACTION_TYPE,
-                                           TransactionType.VIREMENT.getId()),
+                                           amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()),
                           FieldValue.value(Transaction.CATEGORY,
                                            values.get(Transaction.CATEGORY)),
                           FieldValue.value(Transaction.LABEL, values.get(Transaction.LABEL)),
+                          FieldValue.value(Transaction.SERIES, values.get(Transaction.SERIES)),
+                          FieldValue.value(Transaction.MIRROR, true),
                           FieldValue.value(Transaction.PLANNED,
                                            values.get(Transaction.PLANNED)));
       repository.update(key, Transaction.SAVINGS_TRANSACTION,

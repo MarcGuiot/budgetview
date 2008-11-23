@@ -700,10 +700,4 @@ public class SeriesEditionDialogChecker extends DataChecker {
     assertFalse(dialog.getComboBox("savingsAccount").isVisible());
     return this;
   }
-
-  public SeriesEditionDialogChecker checkSavingSeriesIsHidden() {
-    assertFalse(dialog.getComboBox("savingsToSeries").isVisible());
-    return this;
-  }
-
 }

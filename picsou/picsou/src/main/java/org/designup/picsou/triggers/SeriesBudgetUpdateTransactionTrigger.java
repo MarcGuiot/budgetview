@@ -41,7 +41,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
                                      seriesBudget.get(SeriesBudget.AMOUNT));
           }
           else {
-            GlobList transactions = getPlannedTransactions(key, repository);
+            GlobList transactions = getPlanned(repository, repository.get(key));
             repository.delete(transactions);
           }
         }
@@ -57,11 +57,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        GlobList transactions =
-          repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, previousValues.get(SeriesBudget.SERIES))
-            .findByIndex(Transaction.MONTH, previousValues.get(SeriesBudget.MONTH)).getGlobs()
-            .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, true), repository)
-            .sort(Transaction.DAY); //??
+        GlobList transactions = getPlanned(repository, previousValues);
         repository.delete(transactions);
       }
     });
@@ -76,11 +72,12 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
            && !series.get(Series.ID).equals(Series.UNCATEGORIZED_SERIES_ID);
   }
 
-  private GlobList getPlannedTransactions(Key key, GlobRepository repository) {
-    Glob seriesBudget = repository.get(key);
+  private GlobList getPlanned(GlobRepository repository, FieldValues seriesBudget) {
     return repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesBudget.get(SeriesBudget.SERIES))
       .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
-      .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, true), repository)
+      .filterSelf(GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+                                   GlobMatchers.not(GlobMatchers.fieldEquals(Transaction.MIRROR, true))),
+                  repository)
       .sort(Transaction.DAY);
   }
 
@@ -102,7 +99,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
                       value(Transaction.DAY, day),
                       value(Transaction.LABEL, Series.getPlannedTransactionLabel(series.get(Series.ID), series)),
                       value(Transaction.PLANNED, true),
-                      value(Transaction.TRANSACTION_TYPE, 
+                      value(Transaction.TRANSACTION_TYPE,
                             amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()),
                       value(Transaction.CATEGORY, categoryId));
   }

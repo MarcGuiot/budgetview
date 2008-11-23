@@ -1,11 +1,13 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.utils.Utils;
 
 import java.util.Set;
 
@@ -28,7 +30,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
         }
 
         Glob transaction = repository.get(key);
-        if (transaction.get(Transaction.PLANNED)) {
+        if (transaction.get(Transaction.PLANNED) || Transaction.isCreatedTransaction(transaction)) {
           return;
         }
         Integer previousSeriesId;
@@ -90,7 +92,9 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
 
   private void processTransaction(FieldValues values, int multiplier, GlobRepository repository, boolean throwIfNull) {
     final Integer seriesId = values.get(Transaction.SERIES);
-    if (seriesId == null || values.get(Transaction.PLANNED)) {
+    if (seriesId == null
+        || values.get(Transaction.PLANNED)
+        || Transaction.isCreatedTransaction(values)) {
       return;
     }
 

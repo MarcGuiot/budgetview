@@ -7,7 +7,7 @@ import org.designup.picsou.model.TransactionType;
 
 public class SavingsTest extends LoggedInFunctionalTestCase {
 
-  public void testCreateSavingsInMainAccountCreateSeriesInSavingAccount() throws Exception {
+  public void testCreateSavingsInMainAccount() throws Exception {
     operations.getPreferences().changeFutureMonth(2).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/06/10", -100.00, "Virement")
@@ -23,7 +23,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAsSavings()
       .setBalance(1000)
       .setAsNotImported()
-      .checkNotImported()
       .validate();
     views.selectCategorization();
     categorization
@@ -36,19 +35,18 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectBudget();
     budgetView.savings
-      .checkSeries("Epargne", 300, 3000)
-      .checkSeries("Savings:Epargne", 300, 300);
+      .checkSeries("Epargne", -300, -500);
     views.selectData();
     transactions.initContent()
-      .add("10/10/2008", TransactionType.PLANNED, "Planned: Savings:Epargne", "", 100.00, "Savings:Epargne", MasterCategory.SAVINGS)
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Epargne", "", 100.00, "Epargne", MasterCategory.SAVINGS)
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Epargne", "", -100.00, "Epargne", MasterCategory.SAVINGS)
-      .add("10/09/2008", TransactionType.PLANNED, "Planned: Savings:Epargne", "", 100.00, "Savings:Epargne", MasterCategory.SAVINGS)
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Epargne", "", 100.00, "Epargne", MasterCategory.SAVINGS)
       .add("10/09/2008", TransactionType.PLANNED, "Planned: Epargne", "", -100.00, "Epargne", MasterCategory.SAVINGS)
-      .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "Savings:Epargne", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "Epargne", MasterCategory.SAVINGS)
       .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne", MasterCategory.SAVINGS)
-      .add("10/07/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "Savings:Epargne", MasterCategory.SAVINGS)
+      .add("10/07/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "Epargne", MasterCategory.SAVINGS)
       .add("10/07/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne", MasterCategory.SAVINGS)
-      .add("10/06/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "Savings:Epargne", MasterCategory.SAVINGS)
+      .add("10/06/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "Epargne", MasterCategory.SAVINGS)
       .add("10/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne", MasterCategory.SAVINGS)
       .check();
   }
