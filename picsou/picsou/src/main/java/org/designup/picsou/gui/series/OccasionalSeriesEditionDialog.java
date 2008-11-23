@@ -77,7 +77,7 @@ public class OccasionalSeriesEditionDialog {
     localDirectory.get(SelectionService.class).select(series);
     SortedSet<Integer> selectedMonthId = directory.get(SelectionService.class)
       .getSelection(Month.TYPE).getSortedSet(Month.ID);
-    budgetEditionPanel.selectBudgets(selectedMonthId);
+    budgetEditionPanel.selectMonths(selectedMonthId);
     dialog.pack();
     GuiUtils.showCentered(dialog);
   }

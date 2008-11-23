@@ -767,7 +767,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutomaticBudget() throws Exception {
-    operations.getPreferences().changeFutureMonth(2).validate();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("Courant")
       .setCategory(MasterCategory.FOOD)
@@ -892,7 +892,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testInAutomaticBudgetOverrunInCurrentUpdateFuture() throws Exception {
-    operations.getPreferences().changeFutureMonth(2).validate();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("Courant")
       .setCategory(MasterCategory.FOOD)
@@ -956,7 +956,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testInAutomaticUpdateImmediatelyPreviousFromCurrentImpactFutur() throws Exception {
-    operations.getPreferences().changeFutureMonth(2).validate();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("Courant")
       .setCategory(MasterCategory.FOOD)
@@ -1011,7 +1011,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testInAutomaticNewMonthUpdateFuture() throws Exception {
-    operations.getPreferences().changeFutureMonth(2).validate();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("Courant")
       .setCategory(MasterCategory.FOOD)

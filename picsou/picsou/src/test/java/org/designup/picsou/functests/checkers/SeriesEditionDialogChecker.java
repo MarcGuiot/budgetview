@@ -560,7 +560,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkCalendarsAreDisable() {
+  public SeriesEditionDialogChecker checkCalendarsAreDisabled() {
     assertFalse(dialog.getButton("beginSeriesCalendar").isEnabled());
     assertFalse(dialog.getButton("endSeriesCalendar").isEnabled());
     return this;
@@ -607,13 +607,13 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return new SeriesDeleteDialogChecker(WindowInterceptor.getModalDialog(dialog.getButton("delete").triggerClick()));
   }
 
-  public SeriesEditionDialogChecker checkPeriods(String... periods) {
-    UISpecAssert.assertThat(getPeriodCombo().contentEquals(periods));
+  public SeriesEditionDialogChecker checkProfiles(String... profiles) {
+    UISpecAssert.assertThat(getProfileCombo().contentEquals(profiles));
     return this;
   }
 
-  public SeriesEditionDialogChecker checkSelectedPeriod(String period) {
-    UISpecAssert.assertThat(getPeriodCombo().selectionEquals(period));
+  public SeriesEditionDialogChecker checkSelectedProfile(String profile) {
+    UISpecAssert.assertThat(getProfileCombo().selectionEquals(profile));
     return this;
   }
 
@@ -627,8 +627,8 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  private ComboBox getPeriodCombo() {
-    return dialog.getComboBox("periodCombo");
+  private ComboBox getProfileCombo() {
+    return dialog.getComboBox("profileCombo");
   }
 
   public SeriesEditionDialogChecker monthsAreHidden() {
@@ -642,32 +642,32 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker setUnknown() {
-    getPeriodCombo().select(ProfileType.IRREGULAR.getLabel());
+    getProfileCombo().select(ProfileType.IRREGULAR.getLabel());
     return this;
   }
 
   public SeriesEditionDialogChecker setSixMonths() {
-    getPeriodCombo().select(ProfileType.SIX_MONTHS.getLabel());
+    getProfileCombo().select(ProfileType.SIX_MONTHS.getLabel());
     return this;
   }
 
   public SeriesEditionDialogChecker setTwoMonths() {
-    getPeriodCombo().select(ProfileType.TWO_MONTHS.getLabel());
+    getProfileCombo().select(ProfileType.TWO_MONTHS.getLabel());
     return this;
   }
 
   public SeriesEditionDialogChecker setFourMonths() {
-    getPeriodCombo().select(ProfileType.FOUR_MONTHS.getLabel());
+    getProfileCombo().select(ProfileType.FOUR_MONTHS.getLabel());
     return this;
   }
 
   public SeriesEditionDialogChecker setCustom() {
-    getPeriodCombo().select(ProfileType.CUSTOM.getLabel());
+    getProfileCombo().select(ProfileType.CUSTOM.getLabel());
     return this;
   }
 
   public SeriesEditionDialogChecker setEveryMonth() {
-    getPeriodCombo().select(ProfileType.EVERY_MONTH.getLabel());
+    getProfileCombo().select(ProfileType.EVERY_MONTH.getLabel());
     return this;
   }
 
@@ -683,7 +683,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkAmountIsDisable() {
+  public SeriesEditionDialogChecker checkAmountIsDisabled() {
     assertFalse(getAmount().isEnabled());
     return this;
   }
@@ -698,12 +698,12 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkSavingsAccountIsHidden() {
+  public SeriesEditionDialogChecker checkSavingsAccountsAreHidden() {
     assertFalse(dialog.getComboBox("savingsAccount").isVisible());
     return this;
   }
 
-  public SeriesEditionDialogChecker checkSavingSeriesIsHidden() {
+  public SeriesEditionDialogChecker checkSavingsSeriesAreHidden() {
     assertFalse(dialog.getComboBox("savingsToSeries").isVisible());
     return this;
   }

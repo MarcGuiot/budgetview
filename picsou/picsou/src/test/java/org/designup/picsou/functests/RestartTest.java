@@ -58,7 +58,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSeries() throws Exception {
-    operations.getPreferences().changeFutureMonth(1).validate();
+    operations.openPreferences().setFutureMonthsCount(1).validate();
 
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
@@ -215,7 +215,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.setIncome("Company", "Salaire", true);
     categorization.setEnvelope("Auchan", "Course", MasterCategory.FOOD, true);
-    operations.getPreferences().changeFutureMonth(2).validate();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectData();
     timeline.selectAll();
     transactions.initContent()

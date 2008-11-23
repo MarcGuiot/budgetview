@@ -10,7 +10,7 @@ public class PreferencesChecker extends DataChecker {
     this.window = window;
   }
 
-  public PreferencesChecker changeFutureMonth(int month) {
+  public PreferencesChecker setFutureMonthsCount(int month) {
     window.getComboBox("futureMonth").select(Integer.toString(month));
     return this;
   }

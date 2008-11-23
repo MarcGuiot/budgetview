@@ -45,8 +45,8 @@
             <row styleClass="separator">
               <column marginTop="5" weightX="0" preferredSize="(200,400)">
 
-                <label text="$seriesEdition.period" styleClass="formLabelTop" marginTop="5" marginBottom="5"/>
-                <comboBox ref="periodCombo"/>
+                <label text="$seriesEdition.profile" styleClass="formLabelTop" marginTop="5" marginBottom="5"/>
+                <comboBox ref="profileCombo"/>
                 <panel ref="monthSelectionPanel" opaque="false">
                   <column>
                     <repeat ref="monthRepeat" styleClass="innerBlock" margin="5" marginTop="2"

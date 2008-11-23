@@ -29,7 +29,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   public void test() throws Exception {
 
-    operations.getPreferences().changeFutureMonth(12).validate();
+    operations.openPreferences().setFutureMonthsCount(12).validate();
 
     OfxBuilder.init(OFX_PATH)
       .addBankAccount(30006, 10678, "00000123456", 1410.20, "2008/11/15")

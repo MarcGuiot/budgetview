@@ -81,7 +81,6 @@ public class SeriesEditionDialog {
   private GlobLinkComboEditor toSeries;
   private Map<Key, Key> savingAccountCacheForSavingSeries = new HashMap<Key, Key>();
 
-
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
@@ -167,16 +166,16 @@ public class SeriesEditionDialog {
       .setEmptyOptionLabel(Lang.get("seriesEdition.createPendingSeries"));
     builder.add("savingsToSeries", toSeries);
 
-    GlobLinkComboEditor periodCombo =
+    GlobLinkComboEditor profileCombo =
       new GlobLinkComboEditor(Series.PROFILE_TYPE, localRepository, localDirectory);
-    periodCombo.setShowEmptyOption(false);
-    periodCombo.setComparator(new Comparator<Glob>() {
+    profileCombo.setShowEmptyOption(false);
+    profileCombo.setComparator(new Comparator<Glob>() {
       public int compare(Glob o1, Glob o2) {
         return ProfileType.get(o1.get(ProfileType.ID)).getOrder()
           .compareTo(ProfileType.get(o2.get(ProfileType.ID)).getOrder());
       }
     });
-    builder.add("periodCombo", periodCombo);
+    builder.add("profileCombo", profileCombo);
 
     monthSelectionPanel = new JPanel();
     builder.add("monthSelectionPanel", monthSelectionPanel);
@@ -461,14 +460,9 @@ public class SeriesEditionDialog {
     if (budgetArea == BudgetArea.SPECIAL) {
       SelectionService selectionService = directory.get(SelectionService.class);
       if (!selectedTransactions.isEmpty()) {
-        Integer first = Integer.MAX_VALUE;
-        Integer last = Integer.MIN_VALUE;
-        for (Glob transaction : selectedTransactions) {
-          first = Math.min(first, transaction.get(Transaction.MONTH));
-          last = Math.max(last, transaction.get(Transaction.MONTH));
-        }
-        values.add(value(Series.FIRST_MONTH, first));
-        values.add(value(Series.LAST_MONTH, last));
+        SortedSet<Integer> months = selectedTransactions.getSortedSet(Transaction.MONTH);
+        values.add(value(Series.FIRST_MONTH, months.first()));
+        values.add(value(Series.LAST_MONTH, months.last()));
       }
       else {
         GlobList list = selectionService.getSelection(Month.TYPE).sort(Month.ID);
@@ -533,7 +527,7 @@ public class SeriesEditionDialog {
       seriesList.selectFirst();
     }
     if (currentSeries != null) {
-      budgetEditionPanel.selectBudgets(monthIds);
+      budgetEditionPanel.selectMonths(monthIds);
     }
     dialog.pack();
     SwingUtilities.invokeLater(new Runnable() {

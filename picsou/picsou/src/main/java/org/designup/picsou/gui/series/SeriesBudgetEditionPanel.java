@@ -29,7 +29,7 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.ReverseGlobFieldComparator;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -47,11 +47,13 @@ public class SeriesBudgetEditionPanel {
   private GlobRepository localRepository;
   private Directory directory;
   private TimeService timeService;
-  private Glob series;
+  private Glob currentSeries;
   private boolean isAutomatic;
   private BudgetArea budgetArea;
   private SelectionService selectionService;
   private CardHandler modeCard;
+  private GlobTableView budgetTable;
+  private SwitchToAutomaticAction switchToAutomaticAction = new SwitchToAutomaticAction();
 
   public SeriesBudgetEditionPanel(Window container, final GlobRepository repository,
                                   final GlobRepository localRepository, Directory directory) {
@@ -65,9 +67,9 @@ public class SeriesBudgetEditionPanel {
                                                       localRepository, directory);
 
     modeCard = builder.addCardHandler("modeCard");
-    builder.add("manual", new GotoManualAction());
-    final GotoAutomaticAction automaticAction = new GotoAutomaticAction();
-    builder.add("automatic", automaticAction);
+
+    builder.add("manual", new SwitchToManualAction());
+    builder.add("automatic", switchToAutomaticAction);
 
     amountEditor = new AmountEditor(SeriesBudget.AMOUNT, localRepository, directory);
     builder.add("amountEditor", amountEditor.getNumericEditor());
@@ -76,8 +78,8 @@ public class SeriesBudgetEditionPanel {
 
     builder.addLabel("seriesBudgetEditionAmountLabel", SeriesBudget.TYPE, new AmountLabelStringifier());
 
-    final GlobTableView budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE,
-                                                       new ReverseGlobFieldComparator(SeriesBudget.MONTH))
+    budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE,
+                                   new ReverseGlobFieldComparator(SeriesBudget.MONTH))
       .setFilter(fieldEquals(SeriesBudget.ACTIVE, true))
       .setDefaultBackgroundPainter(new TableBackgroundPainter())
       .setDefaultLabelCustomizer(new SeriesBudgetLabelCustomizer())
@@ -92,46 +94,21 @@ public class SeriesBudgetEditionPanel {
     selectionService = directory.get(SelectionService.class);
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        GlobList series = selection.getAll(Series.TYPE);
-        SeriesBudgetEditionPanel.this.series = series.getFirst();
-        if (SeriesBudgetEditionPanel.this.series == null) {
-          budgetTable.setFilter(GlobMatchers.NONE);
-        }
-        else {
-          budgetTable.setFilter(
-            GlobMatchers.and(fieldEquals(SeriesBudget.ACTIVE, true),
-                             fieldEquals(SeriesBudget.SERIES, SeriesBudgetEditionPanel.this.series.get(Series.ID))));
-
-          budgetArea = BudgetArea.get(SeriesBudgetEditionPanel.this.series.get(Series.BUDGET_AREA));
-          amountEditor.setBudgetArea(budgetArea);
-          if (SeriesBudgetEditionPanel.this.series.get(Series.IS_AUTOMATIC)) {
-            modeCard.show("automatic");
-            isAutomatic = true;
-            if (SeriesBudgetEditionPanel.this.series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
-              automaticAction.setEnabled(false);
-            }
-            else {
-              automaticAction.setEnabled(true);
-            }
-          }
-          else {
-            modeCard.show("manual");
-            isAutomatic = false;
-          }
-        }
+        SeriesBudgetEditionPanel.this.currentSeries = selection.getAll(Series.TYPE).getFirst();
+        processSeriesSelection();
       }
     }, Series.TYPE);
 
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (series == null) {
+        if (currentSeries == null) {
           return;
         }
-        if (changeSet.containsChanges(series.getKey())) {
-          FieldValues previousValue = changeSet.getPreviousValue(series.getKey());
+        if (changeSet.containsChanges(currentSeries.getKey())) {
+          FieldValues previousValue = changeSet.getPreviousValue(currentSeries.getKey());
           if (previousValue.contains(Series.PROFILE_TYPE)) {
             if (previousValue.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
-              repository.update(series.getKey(), Series.IS_AUTOMATIC, isAutomatic);
+              repository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, isAutomatic);
               if (isAutomatic) {
                 modeCard.show("automatic");
               }
@@ -139,8 +116,8 @@ public class SeriesBudgetEditionPanel {
                 modeCard.show("manual");
               }
             }
-            else if (series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
-              repository.update(series.getKey(), Series.IS_AUTOMATIC, false);
+            else if (currentSeries.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
+              repository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, false);
               modeCard.show("manual");
             }
           }
@@ -151,27 +128,60 @@ public class SeriesBudgetEditionPanel {
     panel = builder.load();
   }
 
-  public JPanel getPanel() {
-    return panel;
+  private void processSeriesSelection() {
+    if (currentSeries == null) {
+      budgetTable.setFilter(GlobMatchers.NONE);
+      return;
+    }
+
+    budgetTable.setFilter(
+      and(fieldEquals(SeriesBudget.ACTIVE, true),
+          fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID))));
+
+    budgetArea = BudgetArea.get(currentSeries.get(Series.BUDGET_AREA));
+    amountEditor.setBudgetArea(budgetArea);
+
+    if (currentSeries.get(Series.IS_AUTOMATIC)) {
+      modeCard.show("automatic");
+      isAutomatic = true;
+      if (currentSeries.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
+        switchToAutomaticAction.setEnabled(false);
+      }
+      else {
+        switchToAutomaticAction.setEnabled(true);
+      }
+    }
+    else {
+      modeCard.show("manual");
+      isAutomatic = false;
+    }
   }
 
-  public void update(Glob series) {
-    this.series = series;
+  public JPanel getPanel() {
+    return panel;
   }
 
   public void selectAmountEditor() {
     amountEditor.selectAll();
   }
 
-  public void selectBudgets(Set<Integer> monthIds) {
-    if (series != null) {
-      GlobList budgets =
-        localRepository.getAll(SeriesBudget.TYPE,
-                               GlobMatchers.and(fieldEquals(SeriesBudget.SERIES, series.get(Series.ID)),
-                                                GlobMatchers.fieldIn(SeriesBudget.MONTH, monthIds),
-                                                fieldEquals(SeriesBudget.ACTIVE, true)));
-      selectionService.select(budgets, SeriesBudget.TYPE);
+  public void selectMonths(Set<Integer> monthIds) {
+    if (currentSeries == null) {
+      return;
     }
+
+    GlobList budgets =
+      localRepository.getAll(SeriesBudget.TYPE,
+                             and(fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID)),
+                                 fieldIn(SeriesBudget.MONTH, monthIds),
+                                 fieldEquals(SeriesBudget.ACTIVE, true)));
+    if (budgets.isEmpty()) {
+      budgets = localRepository.getAll(SeriesBudget.TYPE,
+                                       and(fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID)),
+                                           fieldEquals(SeriesBudget.ACTIVE, true)));
+    }
+
+    selectionService.select(budgets, SeriesBudget.TYPE);
   }
 
   private class YearStringifier extends AbstractGlobStringifier {
@@ -279,7 +289,7 @@ public class SeriesBudgetEditionPanel {
       Integer seriesId = glob.get(SeriesBudget.SERIES);
       Glob seriesStat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
       if (seriesStat != null) {
-        if (!BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome()) {
+        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome()) {
           if (seriesStat.get(SeriesStat.AMOUNT) < glob.get(SeriesBudget.AMOUNT)) {
             label.setForeground(color);
           }
@@ -312,11 +322,11 @@ public class SeriesBudgetEditionPanel {
       Glob seriesStat = this.repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
       if (seriesStat != null) {
         Double amount = seriesStat.get(SeriesStat.AMOUNT);
-        if (!BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome() && amount != 0.0) {
+        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome() && amount != 0.0) {
           amount = -amount;
         }
         String str = format.format(amount);
-        if (!BudgetArea.get(series.get(Series.BUDGET_AREA)).isIncome()) {
+        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome()) {
           if (amount < 0) {
             return str.replace("-", "+");
           }
@@ -340,8 +350,8 @@ public class SeriesBudgetEditionPanel {
     }
   }
 
-  private class GotoAutomaticAction extends AbstractAction {
-    public GotoAutomaticAction() {
+  private class SwitchToAutomaticAction extends AbstractAction {
+    public SwitchToAutomaticAction() {
       super(Lang.get("seriesEdition.goto.automatic"));
     }
 
@@ -350,7 +360,7 @@ public class SeriesBudgetEditionPanel {
                                                           "seriesEdition.goto.automatic.warning",
                                                           container, directory) {
         protected void postValidate() {
-          localRepository.update(series.getKey(), Series.IS_AUTOMATIC, true);
+          localRepository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, true);
           modeCard.show("automatic");
           isAutomatic = true;
         }
@@ -359,13 +369,13 @@ public class SeriesBudgetEditionPanel {
     }
   }
 
-  private class GotoManualAction extends AbstractAction {
-    private GotoManualAction() {
+  private class SwitchToManualAction extends AbstractAction {
+    private SwitchToManualAction() {
       super(Lang.get("seriesEdition.goto.manual"));
     }
 
     public void actionPerformed(ActionEvent e) {
-      localRepository.update(series.getKey(), Series.IS_AUTOMATIC, false);
+      localRepository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, false);
       modeCard.show("manual");
       isAutomatic = false;
     }

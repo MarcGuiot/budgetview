@@ -85,7 +85,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     initCheckers();
     if (!notRegistered) {
       LicenseChecker.enterLicense(mainWindow, "admin", "zz");
-      operations.getPreferences().changeFutureMonth(0).validate();
+      operations.openPreferences().setFutureMonthsCount(0).validate();
     }
     selectInitialView();
   }

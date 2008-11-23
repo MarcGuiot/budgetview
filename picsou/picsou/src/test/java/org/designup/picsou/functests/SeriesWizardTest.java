@@ -39,40 +39,40 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
     budgetView.income.editSeriesList()
       .checkSeriesListEquals("Exceptional Income", "Income 1")
       .selectSeries("Income 1")
-      .checkSelectedPeriod("Every month")
+      .checkSelectedProfile("Every month")
       .checkCategory(MasterCategory.INCOME)
       .selectSeries("Exceptional Income")
-      .checkSelectedPeriod("Irregular")
+      .checkSelectedProfile("Irregular")
       .checkCategory(MasterCategory.INCOME)
       .cancel();
 
     budgetView.recurring.editSeriesList()
       .checkSeriesListEquals("Cell phone 1", "Rent")
       .selectSeries("Rent")
-      .checkSelectedPeriod("Every month")
+      .checkSelectedProfile("Every month")
       .checkCategory("Rent")
       .selectSeries("Cell phone 1")
-      .checkSelectedPeriod("Every month")
+      .checkSelectedProfile("Every month")
       .checkCategory(MasterCategory.TELECOMS)
       .cancel();
 
     budgetView.envelopes.editSeriesList()
       .checkSeriesListContains("Groceries", "Health")
       .selectSeries("Groceries")
-      .checkSelectedPeriod("Every month")
+      .checkSelectedProfile("Every month")
       .checkCategory(MasterCategory.FOOD)
       .selectSeries("Health")
-      .checkSelectedPeriod("Every month")
+      .checkSelectedProfile("Every month")
       .checkCategory("Doctor", "Health", "Mutuelle", "Pharmacy", "Reimboursements")
       .cancel();
 
     budgetView.savings.editSeriesList()
       .checkSeriesListEquals("Irregular savings", "Regular savings")
       .selectSeries("Regular savings")
-      .checkSelectedPeriod("Every month")
+      .checkSelectedProfile("Every month")
       .checkCategory(MasterCategory.SAVINGS)
       .selectSeries("Irregular savings")
-      .checkSelectedPeriod("Irregular")
+      .checkSelectedProfile("Irregular")
       .checkCategory(MasterCategory.SAVINGS)
       .cancel();
 
