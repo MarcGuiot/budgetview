@@ -120,7 +120,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary.balanceGraph.checkTooltip(incomeFor200807, expensesFor200807);
 
     mainAccounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "Air France");
-    timeline.checkMonthTooltip("2008/07", balance, 1000.00);    
+    timeline.checkMonthTooltip("2008/07", balance, 1000.00);
 
     timeline.selectAll();
     balanceSummary

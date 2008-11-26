@@ -72,7 +72,7 @@ public class BudgetLabel implements GlobSelectionListener, ChangeSetListener {
       .append("</b>")
       .append(SEPARATOR);
 
-    Double amount = balanceStats.getLast().get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
+    Double amount = balanceStats.getLast().get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
     if (amount != null) {
       builder
         .append(Lang.get("budgetLabel.endBalance")).append(" <b>")

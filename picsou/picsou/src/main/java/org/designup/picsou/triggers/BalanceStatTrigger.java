@@ -81,10 +81,12 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
     private GlobRepository repository;
     private boolean nullBalance = false;
+    private SameAccountChecker mainAccountChecker;
 
     private BalanceStatCalculator(GlobRepository repository) {
       this.repository = repository;
 
+      mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
       for (Glob series : repository.getAll(Series.TYPE)) {
         if (BudgetArea.INCOME.getId().equals(series.get(Series.BUDGET_AREA))) {
           incomeSeries.add(series.get(Series.ID));
@@ -150,6 +152,10 @@ public class BalanceStatTrigger implements ChangeSetListener {
     public void run(Glob transaction, GlobRepository repository) throws Exception {
       if (transaction.get(Transaction.BALANCE) == null) {
         nullBalance = true;
+      }
+
+      if (!mainAccountChecker.isSame(transaction.get(Transaction.ACCOUNT))) {
+        return;
       }
 
       Integer monthId = transaction.get(Transaction.BANK_MONTH);
@@ -253,14 +259,14 @@ public class BalanceStatTrigger implements ChangeSetListener {
         Glob beginOfMonthTransaction = firstTransactionForMonth.get(monthId);
         Glob endOfMonthTransaction = lastTransactionForMonth.get(monthId);
 
-        Double beginOfMonthBalance = null;
+        Double beginOfMonthPosition = null;
         Double balance = null;
-        Double endOfMonthBalance = null;
+        Double endOfMonthPosition = null;
         if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
-          endOfMonthBalance = endOfMonthTransaction.get(Transaction.BALANCE);
-          beginOfMonthBalance = beginOfMonthTransaction.get(Transaction.BALANCE) -
-                                beginOfMonthTransaction.get(Transaction.AMOUNT);
-          balance = endOfMonthBalance - beginOfMonthBalance;
+          endOfMonthPosition = endOfMonthTransaction.get(Transaction.BALANCE);
+          beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.BALANCE) -
+                                 beginOfMonthTransaction.get(Transaction.AMOUNT);
+          balance = endOfMonthPosition - beginOfMonthPosition;
         }
 
 
@@ -302,16 +308,16 @@ public class BalanceStatTrigger implements ChangeSetListener {
                           value(BalanceStat.SPECIAL_PLANNED, seriesAmounts.plannedSpecial),
 
                           value(BalanceStat.UNCATEGORIZED, seriesAmounts.uncategorized),
-                          value(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_BALANCE, beginOfMonthBalance),
-                          value(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE, endOfMonthBalance)
+                          value(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_POSITION, beginOfMonthPosition),
+                          value(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION, endOfMonthPosition)
         );
         if (lastRealKnownTransaction != null) {
           Integer currentMonthId = lastRealKnownTransaction.get(Transaction.BANK_MONTH);
           if (currentMonthId.equals(monthId)) {
             repository.update(Key.create(BalanceStat.TYPE, currentMonthId),
-                              value(BalanceStat.LAST_KNOWN_ACCOUNT_BALANCE,
+                              value(BalanceStat.LAST_KNOWN_ACCOUNT_POSITION,
                                     lastRealKnownTransaction.get(Transaction.BALANCE)),
-                              value(BalanceStat.LAST_KNOWN_ACCOUNT_BALANCE_DAY,
+                              value(BalanceStat.LAST_KNOWN_ACCOUNT_POSITION_DAY,
                                     lastRealKnownTransaction.get(Transaction.BANK_DAY)));
           }
         }

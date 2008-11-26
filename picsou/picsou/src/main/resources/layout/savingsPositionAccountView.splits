@@ -1,0 +1,18 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="block">
+    <column styleClass="innerBlock">
+      <panel>
+        <repeat ref="repeatAccount">
+          <row>
+            <label ref="accountName"/>
+            <label ref="accountPosition"/>
+          </row>
+        </repeat>
+      </panel>
+    </column>
+  </panel>
+
+</splits>

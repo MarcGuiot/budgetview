@@ -703,4 +703,8 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker checkSavingsAccountIsSelected(String accountName) {
+    assertTrue(dialog.getComboBox("savingsAccount").selectionEquals(accountName));
+    return this;
+  }
 }

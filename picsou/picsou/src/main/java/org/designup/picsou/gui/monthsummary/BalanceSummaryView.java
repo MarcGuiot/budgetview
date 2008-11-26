@@ -120,7 +120,7 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     if (currentMonths.last() < currentMonth.get(CurrentMonth.MONTH_ID)) {
       contentPanel.setVisible(false);
       Glob balanceStat = balanceStats[balanceStats.length - 1];
-      Double amount = balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
+      Double amount = balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
       if (amount != null) {
         updateTotal(amount);
         amountSummaryLabel.setText(Lang.get("balanceSummary.title.past",
@@ -141,9 +141,9 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
         break;
       }
     }
-    amount = balanceStats[firstBalanceIndex].get(BalanceStat.LAST_KNOWN_ACCOUNT_BALANCE);
+    amount = balanceStats[firstBalanceIndex].get(BalanceStat.LAST_KNOWN_ACCOUNT_POSITION);
     if (amount == null) {
-      amount = balanceStats[firstBalanceIndex].get(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_BALANCE);
+      amount = balanceStats[firstBalanceIndex].get(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_POSITION);
     }
     if (amount == null) {
       contentPanel.setVisible(false);

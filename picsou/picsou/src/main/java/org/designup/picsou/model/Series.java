@@ -61,15 +61,6 @@ public class Series {
   @Target(Account.class)
   public static LinkField SAVINGS_ACCOUNT;
 
-  // indique la series qui est le pendant dans l'autre comptes
-  // les deux series se reference mutuellement et on le meme contenu (voir il n'y a pas de SeriesBudget pour
-  // l'une des deux? sinon ils faut les synchroniser)
-  // Si this est de type series sur SavingsAccount et que le champs SAVINGS_SERIES est null
-  // et qu'on est pas en importe il faut genere les transaction associé
-  // sinon les transactions sont générés a partir de la categorization dans l'autre series.
-  @Target(Series.class)
-  public static LinkField SAVINGS_SERIES;
-
   @DefaultBoolean(true)
   public static BooleanField JANUARY;
 
@@ -186,6 +177,7 @@ public class Series {
       output.writeBoolean(fieldValues.get(Series.OCTOBER));
       output.writeBoolean(fieldValues.get(Series.NOVEMBER));
       output.writeBoolean(fieldValues.get(Series.DECEMBER));
+      output.writeInteger(fieldValues.get(Series.SAVINGS_ACCOUNT));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -198,6 +190,9 @@ public class Series {
       }
       if (version == 3) {
         deserializeDataV3(fieldSetter, data);
+      }
+      if (version == 4) {
+        deserializeDataV4(fieldSetter, data);
       }
     }
 
@@ -301,8 +296,44 @@ public class Series {
       fieldSetter.set(Series.DECEMBER, input.readBoolean());
     }
 
+    private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Series.LABEL, input.readUtf8String());
+      fieldSetter.set(Series.NAME, input.readUtf8String());
+      fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
+      fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
+      Integer profileType = input.readInteger();
+      if (profileType == null) {
+        profileType = ProfileType.CUSTOM.getId();
+      }
+      fieldSetter.set(Series.PROFILE_TYPE, profileType);
+      fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
+      fieldSetter.set(Series.LAST_MONTH, input.readInteger());
+      fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
+      fieldSetter.set(Series.DAY, input.readInteger());
+      fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
+      Boolean isAutomatic = input.readBoolean();
+      if (isAutomatic == null) {
+        isAutomatic = false;
+      }
+      fieldSetter.set(Series.IS_AUTOMATIC, isAutomatic);
+      fieldSetter.set(Series.JANUARY, input.readBoolean());
+      fieldSetter.set(Series.FEBRUARY, input.readBoolean());
+      fieldSetter.set(Series.MARCH, input.readBoolean());
+      fieldSetter.set(Series.APRIL, input.readBoolean());
+      fieldSetter.set(Series.MAY, input.readBoolean());
+      fieldSetter.set(Series.JUNE, input.readBoolean());
+      fieldSetter.set(Series.JULY, input.readBoolean());
+      fieldSetter.set(Series.AUGUST, input.readBoolean());
+      fieldSetter.set(Series.SEPTEMBER, input.readBoolean());
+      fieldSetter.set(Series.OCTOBER, input.readBoolean());
+      fieldSetter.set(Series.NOVEMBER, input.readBoolean());
+      fieldSetter.set(Series.DECEMBER, input.readBoolean());
+      fieldSetter.set(Series.SAVINGS_ACCOUNT, input.readInteger());
+    }
+
     public int getWriteVersion() {
-      return 3;
+      return 4;
     }
   }
 }

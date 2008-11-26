@@ -24,7 +24,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
 
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        if (values.get(Transaction.PLANNED) || Transaction.isCreatedTransaction(values)) {
+        if (values.get(Transaction.PLANNED) || Transaction.isMirrorTransaction(values)) {
           return;
         }
         Integer seriesId = values.get(Transaction.SERIES);
@@ -56,7 +56,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         Glob transaction = repository.find(key);
         if (transaction == null ||
             transaction.get(Transaction.PLANNED) ||
-            Transaction.isCreatedTransaction(transaction)) {
+            Transaction.isMirrorTransaction(transaction)) {
           return;
         }
         Integer previousSeries;

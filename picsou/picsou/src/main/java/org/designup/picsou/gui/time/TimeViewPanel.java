@@ -151,7 +151,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     if (balance == null) {
       return 0.0;
     }
-    return balance.get(BalanceStat.END_OF_MONTH_ACCOUNT_BALANCE);
+    return balance.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
   }
 
   public double getPositionLimit(int monthId) {

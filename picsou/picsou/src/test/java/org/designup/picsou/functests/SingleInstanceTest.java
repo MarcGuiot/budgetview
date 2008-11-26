@@ -323,7 +323,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       }
     }
 
-    public void clear(){
+    public void clear() {
       importDialog = null;
       trigger = null;
     }

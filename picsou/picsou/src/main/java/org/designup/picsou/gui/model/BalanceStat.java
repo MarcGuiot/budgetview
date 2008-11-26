@@ -15,21 +15,22 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 public class BalanceStat {
   public static GlobType TYPE;
 
-  @Key @Target(Month.class)
+  @Key
+  @Target(Month.class)
   public static LinkField MONTH;
 
   @DefaultDouble(0.0)
-  public static DoubleField BEGIN_OF_MONTH_ACCOUNT_BALANCE;
+  public static DoubleField BEGIN_OF_MONTH_ACCOUNT_POSITION;
 
   @DefaultDouble(0.0)
-  public static DoubleField END_OF_MONTH_ACCOUNT_BALANCE;
+  public static DoubleField END_OF_MONTH_ACCOUNT_POSITION;
 
   @DefaultDouble(0.0)
   public static DoubleField MONTH_BALANCE;
 
-  public static DoubleField LAST_KNOWN_ACCOUNT_BALANCE;
+  public static DoubleField LAST_KNOWN_ACCOUNT_POSITION;
 
-  public static IntegerField LAST_KNOWN_ACCOUNT_BALANCE_DAY;
+  public static IntegerField LAST_KNOWN_ACCOUNT_POSITION_DAY;
 
   @DefaultDouble(0.0)
   public static DoubleField INCOME;

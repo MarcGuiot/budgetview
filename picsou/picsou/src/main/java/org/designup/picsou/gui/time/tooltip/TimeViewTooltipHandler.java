@@ -7,10 +7,10 @@ import org.designup.picsou.gui.time.utils.TimeViewColors;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.gui.splits.color.Colors;
 
 import java.awt.*;
 
@@ -34,7 +34,10 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
       return;
     }
 
-    Glob balanceStat = repository.get(Key.create(BalanceStat.TYPE, monthId));
+    Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, monthId));
+    if (balanceStat == null) {
+      return;
+    }
     Double balance = balanceStat.get(BalanceStat.MONTH_BALANCE);
     double positionLimit = panel.getPositionLimit(monthId);
     Color color = colors.getAmountColor(position - positionLimit);

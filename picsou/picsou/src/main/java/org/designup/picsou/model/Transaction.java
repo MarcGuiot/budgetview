@@ -186,7 +186,7 @@ public class Transaction {
     return anonymise(labelOrNote);
   }
 
-  public static boolean isCreatedTransaction(FieldValues values) {
+  public static boolean isMirrorTransaction(FieldValues values) {
     return values.get(MIRROR);
   }
 

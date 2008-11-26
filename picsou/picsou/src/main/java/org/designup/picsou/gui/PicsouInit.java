@@ -72,6 +72,7 @@ public class PicsouInit {
     repository.addTrigger(new PlannedSeriesStatTrigger());
     repository.addTrigger(new OccasionalSeriesStatTrigger());
     repository.addTrigger(new BalanceStatTrigger());
+    repository.addTrigger(new SavingsBalanceStatTrigger());
 
     if (!newUser) {
       repository.create(User.KEY, value(User.NAME, user));

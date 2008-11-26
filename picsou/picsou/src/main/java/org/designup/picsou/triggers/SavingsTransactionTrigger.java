@@ -53,7 +53,8 @@ public class SavingsTransactionTrigger implements ChangeSetListener {
     });
   }
 
-  private Integer createSavingsTransactionIfSavingsSeries(Key key, FieldValues values, Integer seriesId, GlobRepository repository) {
+  private Integer createSavingsTransactionIfSavingsSeries(Key key, FieldValues values, Integer seriesId,
+                                                          GlobRepository repository) {
     Glob series = repository.find(Key.create(Series.TYPE, seriesId));
     Glob savingsAccount = repository.findLinkTarget(series, Series.SAVINGS_ACCOUNT);
     if (savingsAccount != null && !savingsAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
@@ -61,6 +62,7 @@ public class SavingsTransactionTrigger implements ChangeSetListener {
       Glob savingsTransaction =
         repository.create(Transaction.TYPE,
                           FieldValue.value(Transaction.AMOUNT, amount),
+                          FieldValue.value(Transaction.ACCOUNT, savingsAccount.get(Account.ID)),
                           FieldValue.value(Transaction.BANK_DAY, values.get(Transaction.BANK_DAY)),
                           FieldValue.value(Transaction.BANK_MONTH, values.get(Transaction.BANK_MONTH)),
                           FieldValue.value(Transaction.DAY, values.get(Transaction.DAY)),

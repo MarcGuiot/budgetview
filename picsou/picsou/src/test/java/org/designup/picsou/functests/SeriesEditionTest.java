@@ -957,7 +957,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       budgetView.envelopes.createSeries()
         .setName("S1")
         .checkProfiles("Every month", "Every two months", "Every three months", "Every four months", "Every six months",
-                      "Once a year", "Custom", "Irregular");
+                       "Once a year", "Custom", "Irregular");
   }
 
   public void testSeriesListVisibility() throws Exception {
@@ -1458,6 +1458,29 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.LEISURES)
       .checkStartDate("June 2007")
       .checkEndDate("Mar 2008")
+      .validate();
+  }
+
+  public void testSavings() throws Exception {
+    timeline.selectLast();
+    views.selectHome();
+    savingsAccounts.createNewAccount().setAsSavings()
+      .setAccountName("Epargne LCL")
+      .selectBank("LCL")
+      .setBalance(1000)
+      .validate();
+
+    views.selectBudget();
+    budgetView.savings
+      .createSeries()
+      .setName("Epargne")
+      .setCategory(MasterCategory.SAVINGS)
+      .selectSavingsAccount("Epargne LCL")
+      .validate();
+
+    budgetView.savings
+      .editSeries("Epargne")
+      .checkSavingsAccountIsSelected("Epargne LCL")
       .validate();
   }
 }

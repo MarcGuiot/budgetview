@@ -16,11 +16,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     timeline.selectAll();
     views.selectHome();
-    mainAccounts.createNewAccount()
+    savingsAccounts.createNewAccount()
       .setAccountName("Epargne LCL")
       .setAccountNumber("1234")
       .selectBank("LCL")
       .setAsSavings()
+      .checkIsSavings()
       .setBalance(1000)
       .validate();
     views.selectCategorization();
@@ -48,6 +49,13 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "Epargne", MasterCategory.SAVINGS)
       .add("10/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne", MasterCategory.SAVINGS)
       .check();
+    views.selectHome();
+    timeline.selectMonth("2008/08");
+    savingsAccountView.checkPosition("Epargne", 1000);
+    timeline.selectMonth("2008/09");
+    savingsAccountView.checkPosition("Epargne", 1100);
+    timeline.selectMonth("2008/10");
+    savingsAccountView.checkPosition("Epargne", 1200);
   }
 
   public void testCreateSavingsAndReEdit() throws Exception {
