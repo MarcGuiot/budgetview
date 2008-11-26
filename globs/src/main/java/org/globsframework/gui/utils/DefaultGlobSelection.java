@@ -30,6 +30,16 @@ public class DefaultGlobSelection implements GlobSelection {
     return this;
   }
 
+  public DefaultGlobSelection add(Glob glob, GlobType type) {
+    GlobList globList = this.globs.get(type);
+    if (globList == null) {
+      globList = new GlobList();
+      this.globs.put(type, globList);
+    }
+    globList.add(glob);
+    return this;
+  }
+
   public GlobType[] getRelevantTypes() {
     return globs.keySet().toArray(new GlobType[globs.size()]);
   }

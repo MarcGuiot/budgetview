@@ -28,7 +28,10 @@ public class GlobSelectionBuilder {
   }
 
   public GlobSelectionBuilder add(Glob glob) {
-    selection.add(new GlobList(glob), glob.getType());
+    if (glob == null) {
+      return this;
+    }
+    selection.add(glob, glob.getType());
     return this;
   }
 
