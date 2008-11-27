@@ -34,20 +34,20 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(OFX_PATH)
       .addBankAccount(30006, 10678, "00000123456", 1410.20, "2008/11/15")
         // Income
-      .addTransaction("2008/10/28", 2360.50, "WORLDCO")
-      .addTransaction("2008/10/29", 1912.80, "BIGCORP")
+      .addTransaction("2008/10/28", 1760.50, "WORLDCO")
+      .addTransaction("2008/10/29", 1312.80, "BIGCORP")
         // Fixed
-      .addTransaction("2008/10/09", -1410.00, "PRET IMMO N.3325566")
-      .addTransaction("2008/11/09", -1410.00, "PRET IMMO N.3325566")
-      .addTransaction("2008/10/20", -359.75, "PRET CONSO N.6784562 F657")
+      .addTransaction("2008/10/09", -1010.00, "PRET IMMO N.3325566")
+      .addTransaction("2008/11/09", -1010.00, "PRET IMMO N.3325566")
+      .addTransaction("2008/10/20", -289.75, "PRET CONSO N.6784562 F657")
       .addTransaction("2008/10/13", -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
       .addTransaction("2008/11/15", -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
-      .addTransaction("2008/10/05", -270.70, "TRESOR PUBLIC I.R. 23225252323")
-      .addTransaction("2008/11/05", -270.70, "TRESOR PUBLIC I.R. 23225252323")
+      .addTransaction("2008/10/05", -210.70, "TRESOR PUBLIC I.R. 23225252323")
+      .addTransaction("2008/11/05", -210.70, "TRESOR PUBLIC I.R. 23225252323")
       .addTransaction("2008/10/02", -70.30, "RATP NAVIGO 10/08")
       .addTransaction("2008/11/02", -70.30, "RATP NAVIGO 11/08")
-      .addTransaction("2008/10/17", -97.00, "GROUPE SCOLAIRE R.L OCT. 2008")
-      .addTransaction("2008/11/17", -97.00, "GROUPE SCOLAIRE R.L NOV. 2008")
+      .addTransaction("2008/10/17", -67.00, "GROUPE SCOLAIRE R.L OCT. 2008")
+      .addTransaction("2008/11/17", -67.00, "GROUPE SCOLAIRE R.L NOV. 2008")
       .addTransaction("2008/10/11", -25.50, "TVSAT")
       .addTransaction("2008/11/12", -25.50, "TVSAT")
       .addTransaction("2008/10/08", -45.30, "RED TELECOMS")
@@ -59,7 +59,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/10/02", -122.60, "HYPER M")
       .addTransaction("2008/10/07", -260.30, "HYPER M")
       .addTransaction("2008/10/15", -160.00, "HYPER M")
-      .addTransaction("2008/10/23", -260.30, "HYPER M")
+      .addTransaction("2008/10/23", -220.30, "HYPER M")
       .addTransaction("2008/10/19", -35.50, "BIO PLUS")
       .addTransaction("2008/10/11", -41.15, "BIO PLUS")
       .addTransaction("2008/10/08", -20.00, "RETRAIT GAB 4463")
@@ -83,8 +83,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
         // SPECIAL
       .addTransaction("2008/10/28", -680.50, "PLOMBERIE 24/7")
         // SAVINGS
-      .addTransaction("2008/10/03", -250.00, "VIRT MENS. LIVRET")
-      .addTransaction("2008/11/28", -250.00, "VIRT MENS. LIVRET")
+      .addTransaction("2008/10/03", -200.00, "VIRT MENS. LIVRET")
+      .addTransaction("2008/11/28", -200.00, "VIRT MENS. LIVRET")
       .save();
 
     operations.importOfxFile(OFX_PATH);
@@ -141,7 +141,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.editSeries("Courses")
       .switchToManual()
       .selectAllMonths()
-      .setAmount(1000.0)
+      .setAmount(850.0)
       .validate();
 
     budgetView.envelopes.editSeries("Habillement")

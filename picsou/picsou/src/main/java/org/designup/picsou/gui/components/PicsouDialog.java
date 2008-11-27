@@ -66,6 +66,16 @@ public class PicsouDialog extends JDialog {
     return dialog;
   }
 
+  public void setPanelAndButton(JPanel panel, Action closeAction) {
+    this.closeAction = closeAction;
+    JPanel contentPane = GridBagBuilder.init()
+      .add(panel, 0, 0, 2, 1, Gui.NO_INSETS)
+      .add(Box.createHorizontalGlue(), 0, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER)
+      .add(createButton(closeAction), 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS)
+      .getPanel();
+    setContentPane(contentPane);
+  }
+
   public void addPanelWithButtons(JPanel panel, Action ok, Action cancel) {
     closeAction = cancel;
     int buttonCount = 0;
@@ -126,16 +136,6 @@ public class PicsouDialog extends JDialog {
     if (b && !openRequestIsManaged) {
       requestManager.popCallback();
     }
-  }
-
-  public void setPanelAndButton(JPanel panel, Action closeAction) {
-    this.closeAction = closeAction;
-    JPanel contentPane = GridBagBuilder.init()
-      .add(panel, 0, 0, 2, 1, Gui.NO_INSETS)
-      .add(Box.createHorizontalGlue(), 0, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER)
-      .add(createButton(closeAction), 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS)
-      .getPanel();
-    setContentPane(contentPane);
   }
 
   private JButton createButton(Action action) {

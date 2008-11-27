@@ -12,6 +12,7 @@ import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.Set;
 
 public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponentFactory {
 
@@ -36,7 +37,7 @@ public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponen
         }
         if (changeSet.containsChanges(Transaction.TYPE)) {
           GlobList transactions = selectionService.getSelection(Transaction.TYPE);
-          updateSelector(selector, transactions, seriesKey);
+          updateToggleSelection(selector, transactions, seriesKey);
         }
       }
     };
@@ -45,7 +46,7 @@ public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponen
     final GlobSelectionListener listener = new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         GlobList transactions = selection.getAll(Transaction.TYPE);
-        updateSelector(selector, transactions, seriesKey);
+        updateToggleSelection(selector, transactions, seriesKey);
       }
     };
     selectionService.addListener(listener, Transaction.TYPE);
@@ -64,11 +65,12 @@ public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponen
       }
     });
 
-    updateSelector(selector, selectionService.getSelection(Transaction.TYPE), seriesKey);
+    updateToggleSelection(selector, selectionService.getSelection(Transaction.TYPE), seriesKey);
   }
 
-  private void updateSelector(JToggleButton selector, GlobList transactions, Key seriesKey) {
-    if (transactions.size() != 1) {
+  private void updateToggleSelection(JToggleButton selector, GlobList transactions, Key seriesKey) {
+    Set<Integer> transactionSeriesKeys = transactions.getValueSet(Transaction.SERIES);
+    if (transactionSeriesKeys.size() != 1) {
       return;
     }
 
@@ -77,7 +79,7 @@ public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponen
       return;
     }
 
-    Glob transactionSeries = repository.findLinkTarget(transactions.get(0), Transaction.SERIES);
+    Glob transactionSeries = repository.find(Key.create(Series.TYPE, transactionSeriesKeys.iterator().next()));
     if (transactionSeries.get(Series.BUDGET_AREA).equals(selectorSeries.get(Series.BUDGET_AREA)) &&
         !Series.UNCATEGORIZED_SERIES_ID.equals(transactionSeries.get(Series.ID))) {
       boolean select = transactionSeries.getKey().equals(seriesKey);

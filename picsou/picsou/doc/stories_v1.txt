@@ -7,10 +7,6 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
                MARC
 ====================================
 
-- Gestion des licences : desactiver import + message jours restants
-
-- charset/serialisation des strings => voir compatibilite ascendante
-
 - Probleme de transaction plannifié a 0.
 
 
@@ -18,20 +14,18 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
                SEB
 ====================================
 
-- CategorizationView : revoir les UI des toggles de selection
-
-- CategorizationView : ajouter des boutons "edit" a cote des series (sauf occasional ?)
-
 
 ====================================
                REGIS
 ====================================
 
+- CategorizationView : bug lors de la selection de deux transactions 
+
+- BudgetView : quand on clique sur une serie, aucun moyen pour la supprimer a partir de la fenetre qui apparait
+
 - bug bouton "annuler filtrage"
 
 - message budgetView/special + aide
-
-- aide / jauges ?
 
 - compte demo
 
@@ -39,8 +33,6 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
 ====================================
                RESTE
 ====================================
-
-- BudgetView : quand on clique sur une serie, aucun moyen pour la supprimer a partir de la fenetre qui apparait
 
 - saisie balance : maj date
 
@@ -71,3 +63,5 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
 - Gestion des licences : check mensuel ?
 
 - Backup/restore (fonctionnel precis a definir ensemble)
+
+- Buf / DemoGenerationTest : serie EDF calee sur nov au lieu de oct

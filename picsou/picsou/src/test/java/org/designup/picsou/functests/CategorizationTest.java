@@ -146,7 +146,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"25/06/2008", "", "France Telecom", -59.90},
       {"30/06/2008", "", "Free", -29.90},
     });
-    categorization.selectTableRows(0);
+    categorization.selectTableRow(0);
     categorization.checkLabel("Auchan");
     categorization.checkBudgetAreaSelectionPanelDisplayed();
     categorization.selectEnvelopes();
@@ -158,7 +158,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "", "Free", -29.90},
     });
 
-    categorization.selectTableRows(2);
+    categorization.selectTableRow(2);
     categorization.checkLabel("Free");
     categorization.checkBudgetAreaSelectionPanelDisplayed();
     categorization.selectRecurring();
@@ -170,7 +170,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "Internet", "Free", -29.90},
     });
 
-    categorization.selectTableRows(1);
+    categorization.selectTableRow(1);
     categorization.checkLabel("France Telecom");
     categorization.checkBudgetAreaSelectionPanelDisplayed();
     categorization.selectRecurring();
@@ -183,10 +183,54 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "Internet", "Free", -29.90},
     });
 
-    categorization.selectTableRows(0);
+    categorization.selectTableRow(0);
     categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
     categorization.selectTableRow(1);
     categorization.checkRecurringSeriesIsSelected("Internet");
+  }
+
+  public void testAssigningSeveralTransactionsAtOnce() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -29.90, "Free")
+      .addTransaction("2008/06/25", -59.90, "France Telecom")
+      .addTransaction("2008/06/15", -40, "Auchan")
+      .addTransaction("2008/06/15", -60, "Monops")
+      .load();
+
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"25/06/2008", "", "France Telecom", -59.90},
+      {"30/06/2008", "", "Free", -29.90},
+      {"15/06/2008", "", "Monops", -60.00},
+    });
+
+    categorization.selectTableRows(1, 2);
+    categorization.selectRecurring();
+    categorization.selectRecurringSeries("Comm", MasterCategory.TELECOMS, true);
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"25/06/2008", "Comm", "France Telecom", -59.90},
+      {"30/06/2008", "Comm", "Free", -29.90},
+      {"15/06/2008", "", "Monops", -60.00},
+    });
+
+    categorization.selectTableRows(0, 3);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "Groceries", "Auchan", -40.00},
+      {"25/06/2008", "Comm", "France Telecom", -59.90},
+      {"30/06/2008", "Comm", "Free", -29.90},
+      {"15/06/2008", "Groceries", "Monops", -60.00},
+    });
+
+    categorization.selectTableRows(1, 2);
+    categorization.checkRecurringSeriesIsSelected("Comm");
+
+    categorization.selectTableRows(0, 3);
+    categorization.checkEnvelopeSeriesIsSelected("Groceries", MasterCategory.FOOD);
   }
 
   public void testSelectingASeriesInABudgetAreaUnselectsPreviousSeriesInOtherBudgetAreas() throws Exception {
