@@ -16,14 +16,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     timeline.selectAll();
     views.selectHome();
-    savingsAccounts.createNewAccount()
-      .setAccountName("Epargne LCL")
-      .setAccountNumber("1234")
-      .selectBank("LCL")
-      .setAsSavings()
-      .checkIsSavings()
-      .setBalance(1000)
-      .validate();
+    createSavingsAccount("Epargne LCL", 1000);
     views.selectCategorization();
     categorization
       .selectTableRows("Virement")
@@ -56,6 +49,51 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccountView.checkPosition("Epargne", 1100);
     timeline.selectMonth("2008/10");
     savingsAccountView.checkPosition("Epargne", 1200);
+  }
+
+  private void createSavingsAccount(final String name, final int balance) {
+    savingsAccounts.createNewAccount()
+      .setAccountName(name)
+      .setAccountNumber("1234")
+      .selectBank("LCL")
+      .setAsSavings()
+      .checkIsSavings()
+      .setBalance(balance)
+      .validate();
+  }
+
+  public void testCreateSavingsSeriesAndPayFromSavings() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/10", -100.00, "Virement")
+      .addTransaction("2008/07/10", -100.00, "Virement")
+      .addTransaction("2008/08/10", -100.00, "Virement")
+      .load();
+    timeline.selectAll();
+    views.selectHome();
+    createSavingsAccount("Epargne LCL", 1000);
+    views.selectCategorization();
+    categorization
+      .selectTableRows("Virement")
+      .selectSavings()
+      .createSavingsSeries()
+      .setName("Epargne")
+      .setCategories(MasterCategory.SAVINGS)
+      .selectSavingsAccount("Epargne LCL")
+      .validate();
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("Achat Tele")
+      .setCategories(MasterCategory.EQUIPMENT)
+      .selectSavingsAccount("Epargne LCL")
+      .setSavingsToMain()
+      .switchToManual()
+      .selectMonth(200810)
+      .setAmount(300)
+      .validate();
+    timeline.selectMonth("2008/10");
+    views.selectHome();
+    savingsAccountView.checkPosition("Epargne", 900);
   }
 
   public void testCreateSavingsAndReEdit() throws Exception {

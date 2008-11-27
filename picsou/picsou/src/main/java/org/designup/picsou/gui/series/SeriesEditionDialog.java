@@ -19,8 +19,6 @@ import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.utils.GlobSelectionBuilder;
-import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.impl.StringListCellRenderer;
@@ -75,8 +73,7 @@ public class SeriesEditionDialog {
   private JPanel buttonSeriePanel;
   private SeriesBudgetEditionPanel budgetEditionPanel;
   private GlobList selectedTransactions = new EmptyGlobList();
-  private GlobComboView savingsAccount;
-  private Map<Key, Key> savingAccountCacheForSavingSeries = new HashMap<Key, Key>();
+  private GlobLinkComboEditor savingsAccount;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -153,7 +150,29 @@ public class SeriesEditionDialog {
 
     registerCategoryComponents(descriptionService, builder);
 
-    savingsAccount = GlobComboView.init(Account.TYPE, localRepository, localDirectory)
+    ButtonGroup group = new ButtonGroup();
+
+    JToggleButton fromMainToSavingsToggle = new JToggleButton(new AbstractAction(">>") {
+
+      public void actionPerformed(ActionEvent e) {
+        if (currentSeries != null) {
+          localRepository.update(currentSeries.getKey(), Series.TO_SAVINGS, true);
+        }
+      }
+    });
+    builder.add("fromMainToSavings", fromMainToSavingsToggle);
+    group.add(fromMainToSavingsToggle);
+
+    JToggleButton fromSavingsToMainToggle = new JToggleButton(new AbstractAction("<<") {
+      public void actionPerformed(ActionEvent e) {
+        if (currentSeries != null) {
+          localRepository.update(currentSeries.getKey(), Series.TO_SAVINGS, false);
+        }
+      }
+    });
+    builder.add("fromSavingsToMain", fromSavingsToMainToggle);
+    group.add(fromSavingsToMainToggle);
+    savingsAccount = new GlobLinkComboEditor(Series.SAVINGS_ACCOUNT, localRepository, localDirectory)
       .setFilter(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()))
       .setShowEmptyOption(true);
     builder.add("savingsAccount", savingsAccount);
@@ -185,15 +204,6 @@ public class SeriesEditionDialog {
           assignCategoryAction.setEnabled(true);
           multiCategoryList.setFilter(fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)));
           boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
-          if (isSavingsSeries) {
-            Key savingAccount = savingAccountCacheForSavingSeries.get(currentSeries.getKey());
-            if (savingAccount == null) {
-              selectionService.clear(Account.TYPE);
-            }
-            else {
-              selectionService.select(GlobSelectionBuilder.create(localRepository.get(savingAccount)));
-            }
-          }
           savingsAccount.setEnable(isSavingsSeries);
         }
         else {
@@ -205,20 +215,6 @@ public class SeriesEditionDialog {
         updateMonthChooser();
       }
     }, Series.TYPE);
-
-    selectionService.addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        if (currentSeries != null) {
-          Glob targetSavingAccount = selection.getAll(Account.TYPE).getFirst();
-          if (targetSavingAccount != null) {
-            savingAccountCacheForSavingSeries.put(currentSeries.getKey(), targetSavingAccount.getKey());
-          }
-          else {
-            savingAccountCacheForSavingSeries.put(currentSeries.getKey(), null);
-          }
-        }
-      }
-    }, Account.TYPE);
 
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -244,18 +240,39 @@ public class SeriesEditionDialog {
     dialog.addPanelWithButtons(panel, okAction, new CancelAction());
   }
 
-  private GlobMatcher savingsSeriesFilter(Glob account) {
-    if (currentSeries != null) {
-      return GlobMatchers.fieldEquals(Series.SAVINGS_ACCOUNT, account.get(Account.ID));
-    }
-    return NONE;
-  }
-
   public static void addSeriesCreationTriggers(GlobRepository repository,
                                                final ProfileTypeSeriesTrigger.UserMonth userMonth) {
     repository.addTrigger(new ProfileTypeSeriesTrigger(userMonth));
     repository.addTrigger(new AutomaticSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetTrigger());
+    repository.addTrigger(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
+        changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
+          public void visitCreation(Key key, FieldValues values) throws Exception {
+          }
+
+          public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+            if (values.contains(Series.TO_SAVINGS)) {
+              Glob series = repository.get(key);
+              if (series.get(Series.IS_AUTOMATIC)) {
+                return;
+              }
+              GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
+                                                         GlobMatchers.fieldEquals(SeriesBudget.SERIES, key.get(Series.ID)));
+              for (Glob budget : seriesBudgets) {
+                repository.update(budget.getKey(), SeriesBudget.AMOUNT, -budget.get(SeriesBudget.AMOUNT));
+              }
+            }
+          }
+
+          public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+          }
+        });
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      }
+    });
   }
 
   private void updateMonthChooser() {
@@ -617,29 +634,10 @@ public class SeriesEditionDialog {
             currentlySelectedCategory = series.get(SeriesToCategory.CATEGORY);
           }
         }
-        localRepository.startChangeSet();
-        try {
-          Set<Key> newSeries = localRepository.getCurrentChanges().getCreated(Series.TYPE);
-          for (Key seriesKey : newSeries) {
-            if (isSavingSeries(seriesKey)) {
-              Key targetSavingsAccount = savingAccountCacheForSavingSeries.get(seriesKey);
-              if (targetSavingsAccount != null) {
-                localRepository.update(seriesKey, Series.SAVINGS_ACCOUNT, targetSavingsAccount.get(Account.ID));
-              }
-            }
-          }
-        }
-        finally {
-          localRepository.completeChangeSet();
-        }
       }
       localRepository.commitChanges(false);
       localRepository.rollback();
       dialog.setVisible(false);
-    }
-
-    private boolean isSavingSeries(Key key) {
-      return localRepository.get(key).get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
     }
 
     private void trimNames() {
@@ -671,7 +669,6 @@ public class SeriesEditionDialog {
 
     public void actionPerformed(ActionEvent e) {
       Glob newSeries = createSeries(Lang.get("seriesEdition.newSeries"), 1);
-      savingAccountCacheForSavingSeries.put(newSeries.getKey(), null);
       selectionService.select(newSeries);
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {

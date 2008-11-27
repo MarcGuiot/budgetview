@@ -603,6 +603,17 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker checkPositiveAmountsNotSelected() {
+    assertFalse(dialog.getRadioButton("positiveAmounts").isSelected());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkAmountsRadioAreNotVisible() {
+    assertFalse(dialog.getRadioButton("negativeAmounts").isVisible());
+    assertFalse(dialog.getRadioButton("positiveAmounts").isVisible());
+    return this;
+  }
+
   public SeriesDeleteDialogChecker deleteSeriesWithConfirmation() {
     return new SeriesDeleteDialogChecker(WindowInterceptor.getModalDialog(dialog.getButton("delete").triggerClick()));
   }
@@ -705,6 +716,26 @@ public class SeriesEditionDialogChecker extends DataChecker {
 
   public SeriesEditionDialogChecker checkSavingsAccountIsSelected(String accountName) {
     assertTrue(dialog.getComboBox("savingsAccount").selectionEquals(accountName));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker setMainToSavings() {
+    dialog.getToggleButton("fromMainToSavings").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker setSavingsToMain() {
+    dialog.getToggleButton("fromSavingsToMain").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkIsMainToSavings() {
+    assertThat(dialog.getToggleButton("fromMainToSavings").isSelected());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSavingsToMain() {
+    assertThat(dialog.getToggleButton("fromSavingsToMain").isSelected());
     return this;
   }
 }

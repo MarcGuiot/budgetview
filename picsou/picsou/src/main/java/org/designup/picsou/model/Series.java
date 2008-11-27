@@ -57,9 +57,12 @@ public class Series {
   @DefaultBoolean(true)
   public static BooleanField IS_AUTOMATIC;
 
-  // cette series appartient au comptes SavingsAccount
+  // cette series appartient au compte courant mais ses transactions impactent le compte courant pointé
   @Target(Account.class)
   public static LinkField SAVINGS_ACCOUNT;
+
+  @DefaultBoolean(true)
+  public static BooleanField TO_SAVINGS; // ToSavings == true, FromSavings == false
 
   @DefaultBoolean(true)
   public static BooleanField JANUARY;
@@ -178,6 +181,7 @@ public class Series {
       output.writeBoolean(fieldValues.get(Series.NOVEMBER));
       output.writeBoolean(fieldValues.get(Series.DECEMBER));
       output.writeInteger(fieldValues.get(Series.SAVINGS_ACCOUNT));
+      output.writeBoolean(fieldValues.get(Series.TO_SAVINGS));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -330,6 +334,7 @@ public class Series {
       fieldSetter.set(Series.NOVEMBER, input.readBoolean());
       fieldSetter.set(Series.DECEMBER, input.readBoolean());
       fieldSetter.set(Series.SAVINGS_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.TO_SAVINGS, input.readBoolean());
     }
 
     public int getWriteVersion() {

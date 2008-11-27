@@ -121,6 +121,9 @@ public class SeriesBudgetEditionPanel {
               modeCard.show("manual");
             }
           }
+          if (previousValue.contains(Series.TO_SAVINGS) && currentSeries.get(Series.SAVINGS_ACCOUNT) != null) {
+            updatePositiveOrNegativeRadio();
+          }
         }
       }
     });
@@ -139,7 +142,7 @@ public class SeriesBudgetEditionPanel {
           fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID))));
 
     budgetArea = BudgetArea.get(currentSeries.get(Series.BUDGET_AREA));
-    amountEditor.setBudgetArea(budgetArea);
+    updatePositiveOrNegativeRadio();
 
     if (currentSeries.get(Series.IS_AUTOMATIC)) {
       modeCard.show("automatic");
@@ -155,6 +158,11 @@ public class SeriesBudgetEditionPanel {
       modeCard.show("manual");
       isAutomatic = false;
     }
+  }
+
+  private void updatePositiveOrNegativeRadio() {
+    Boolean isPositive = currentSeries.get(Series.SAVINGS_ACCOUNT) != null && !currentSeries.get(Series.TO_SAVINGS);
+    amountEditor.update(budgetArea.isIncome() || isPositive, currentSeries.get(Series.SAVINGS_ACCOUNT) != null);
   }
 
   public JPanel getPanel() {

@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.metamodel.Field;
@@ -10,8 +9,8 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class AmountEditor {
   private NumericEditor numericEditor;
@@ -19,7 +18,7 @@ public class AmountEditor {
   private JRadioButton positiveRadio = new JRadioButton(new RadioAction(Lang.get("amount.positive"), true));
   private JRadioButton negativeRadio = new JRadioButton(new RadioAction(Lang.get("amount.negative"), false));
   private boolean updateInProgress = false;
-  private BudgetArea budgetArea;
+  private boolean preferedPositive;
 
   public AmountEditor(DoubleField field, GlobRepository repository, Directory directory) {
     numericEditor = new NumericEditor(field, repository, directory);
@@ -33,9 +32,11 @@ public class AmountEditor {
     group.add(negativeRadio);
   }
 
-  public void setBudgetArea(BudgetArea budgetArea) {
-    this.budgetArea = budgetArea;
-    updateRadios(budgetArea.isIncome());
+  public void update(boolean preferedPositive, boolean hideRadio) {
+    this.preferedPositive = preferedPositive;
+    updateRadios(preferedPositive);
+    positiveRadio.setVisible(!hideRadio);
+    negativeRadio.setVisible(!hideRadio);
   }
 
   private void updateRadios(boolean positive) {
@@ -89,7 +90,6 @@ public class AmountEditor {
       if (value == null) {
         return null;
       }
-      double absValue = Math.abs(value);
       return positiveMode ? value : -value;
     }
 
@@ -97,7 +97,7 @@ public class AmountEditor {
       super.setDisplayedValue(value);
       if (value != null) {
         double amount = (Double)value;
-        boolean positive = (amount > 0) || ((amount == 0) && budgetArea.isIncome());
+        boolean positive = (amount > 0) || ((amount == 0) && preferedPositive);
         updateInProgress = true;
         try {
           updateRadios(positive);

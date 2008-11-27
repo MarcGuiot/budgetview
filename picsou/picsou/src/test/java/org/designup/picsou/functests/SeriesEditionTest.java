@@ -1473,6 +1473,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings
       .createSeries()
+      .setMainToSavings()
       .setName("Epargne")
       .setCategory(MasterCategory.SAVINGS)
       .selectSavingsAccount("Epargne LCL")
@@ -1481,6 +1482,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .editSeries("Epargne")
       .checkSavingsAccountIsSelected("Epargne LCL")
+      .checkIsMainToSavings()
+      .switchToManual()
+      .checkNegativeAmountsSelected()
+      .checkPositiveAmountsNotSelected()
+      .setSavingsToMain()
+      .checkPositiveAmountsSelected()
+      .checkAmountsRadioAreNotVisible()
       .validate();
   }
 }
