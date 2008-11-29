@@ -51,7 +51,7 @@
     <style selector="button.iconOnly" weightX="0"
            text="" opaque="false" borderPainted="false"/>
 
-    <style selector="button.editIcon" marginLeft="5" weightX="0" cursor='hand'
+    <style selector="button.editIcon" marginLeft="5" weightX="0" cursor="hand"
            icon="magnifier_small.png" rolloverIcon="magnifier_rollover.png" pressedIcon="magnifier_rollover.png"
            preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
 

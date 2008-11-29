@@ -10,20 +10,15 @@
 
     <style selector="#budgetAreas label.title" font="-,bold,12"
            fill="none" anchor="center" marginTop="10" marginBottom="20"/>
-    <ui name="budgetAreaSelector" class="org.globsframework.gui.splits.components.StyledPanelUI"
+
+    <ui name="budgetAreaSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
         borderWidth="1" cornerRadius="10"
         topColor="categorization.budgetAreaSelector.top"
         bottomColor="categorization.budgetAreaSelector.bottom"
         borderColor="categorization.budgetAreaSelector.border"/>
-    <style selector="column.budgetAreaSelector" ui="budgetAreaSelector" margin="5" marginBottom="15"/>
-    <ui name="budgetAreaButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
-        underline="false"/>
-    <style selector="column.budgetAreaSelector button" ui="budgetAreaButton"
-           margin="10" marginBottom="0" font="-,bold,12"/>
-    <style selector="column.budgetAreaSelector textArea"
-           editable="false" lineWrap="true" wrapStyleWord="true" margin="10" font="-,plain,10"
-           foreground="categorization.budgetAreaSelector.description"/>
-
+    <style selector="toggleButton.budgetAreaSelector" ui="budgetAreaSelector" margin="0"
+           font="-,bold,12" cursor="hand"/>
+    
   </styles>
 
   <column styleClass="main">
