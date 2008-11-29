@@ -126,7 +126,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
       button.setText(Lang.get("category.assignement.required"));
       button.setToolTipText(Lang.get("transaction.categorizationLink.tooltip"));
     }
-    rendererColors.setBackground(panel, isSelected, row);
+    rendererColors.setBackground(panel, transaction, isSelected, row);
     return panel;
   }
 

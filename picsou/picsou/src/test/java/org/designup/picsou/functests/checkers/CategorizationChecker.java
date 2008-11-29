@@ -22,6 +22,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 public class CategorizationChecker extends DataChecker {
   private Window mainWindow;
@@ -840,6 +841,19 @@ public class CategorizationChecker extends DataChecker {
 
   public void showUncategorizedTransactionsOnly() {
     selectTransactionFilterMode(TransactionFilteringMode.UNCATEGORIZED);
+  }
+
+  public void checkTableBackground(String... colors) {
+    Table table = getTable();
+    assertThat(table.rowCountEquals(colors.length));
+
+    String[][] cellColors = new String[table.getRowCount()][table.getColumnCount()];
+    for (int i = 0; i < colors.length; i++) {
+      String color = colors[i];
+      Arrays.fill(cellColors[i], color);
+    }
+    
+    assertThat(table.backgroundEquals(cellColors));
   }
 
   public class CategorizationTableChecker extends TableChecker {

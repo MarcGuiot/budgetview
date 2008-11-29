@@ -18,9 +18,12 @@ public class TransactionAmountColumn implements TableCellRenderer {
   private GlobRepository repository;
   private JLabel label = new JLabel();
 
-  public TransactionAmountColumn(GlobTableView view, DoubleField amountField, TransactionRendererColors transactionRendererColors,
-                                 DescriptionService descriptionService, GlobRepository repository, Directory directory
-  ) {
+  public TransactionAmountColumn(GlobTableView view,
+                                 DoubleField amountField,
+                                 TransactionRendererColors transactionRendererColors,
+                                 DescriptionService descriptionService,
+                                 GlobRepository repository,
+                                 Directory directory) {
     this.repository = repository;
     amountStringifier = descriptionService.getStringifier(amountField);
     label.setName("amount");

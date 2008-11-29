@@ -70,6 +70,35 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .close();
   }
 
+  public void testSplittedTransactionsAreHighlightedInTheCategorizationTable() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/15", -200.0, "Auchan")
+      .addTransaction("2006/01/20", -20.0, "Monops")
+      .load();
+
+    categorization.selectTableRow(0);
+    transactionDetails.split("25", "1st");
+    categorization.selectTableRow(0);
+    transactionDetails.split("100", "1st");
+
+    categorization.selectTableRow(0);
+    categorization.checkTable(new Object[][]{
+      {"15/01/2006", "", "Auchan", -75.0},
+      {"15/01/2006", "", "Auchan", -25.0},
+      {"15/01/2006", "", "Auchan", -100.0},
+      {"20/01/2006", "", "Monops", -20.0}
+    });
+
+    categorization.selectTableRow(1);
+    categorization.checkTableBackground(
+      "C3D5F7",
+      "3C6CC6",
+      "DCE6FA",
+      "F5F5F6"
+    );
+  }
+
   public void testCancelReallyCancels() throws Exception {
     OfxBuilder
       .init(this)
@@ -271,7 +300,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
     transactionDetails.openSplitDialog()
       .deleteRow(1)
       .ok();
-    
+
     categorization
       .initContent()
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0)
@@ -319,8 +348,11 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .close();
   }
 
-  private SplitDialogChecker openDialogWith(final String date, final double amount,
-                                                             final String label, final MasterCategory category) {
+  private SplitDialogChecker openDialogWith(
+    final String date,
+    final double amount,
+    final String label,
+    final MasterCategory category) {
     OfxBuilder
       .init(this)
       .addTransaction(date, amount, label, category)

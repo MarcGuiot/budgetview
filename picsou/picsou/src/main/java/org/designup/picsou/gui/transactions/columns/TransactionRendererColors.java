@@ -20,8 +20,12 @@ public class TransactionRendererColors implements ColorChangeListener {
   private Color transactionSelectedTextColor;
   private Color transactionPlannedTextColor;
   private Color transactionLinkTextColor;
+  private Color transactionErrorTextColor;
+  private Color splitSourceColor;
+  private Color splitChildColor;
   private Color categoryColor;
   private ColorService colorService;
+  private Integer splitGroupSourceId;
 
   public TransactionRendererColors(Directory directory) {
     colorService = directory.get(ColorService.class);
@@ -38,6 +42,9 @@ public class TransactionRendererColors implements ColorChangeListener {
     transactionSelectedTextColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_TEXT);
     transactionPlannedTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT_PLANNED);
     transactionLinkTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT_LINK);
+    transactionErrorTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT_ERROR);
+    splitSourceColor = colorLocator.get(PicsouColors.TRANSACTION_SPLIT_SOURCE_BG);
+    splitChildColor = colorLocator.get(PicsouColors.TRANSACTION_SPLIT_BG);
   }
 
   public Color getEvenRowsBgColor() {
@@ -56,6 +63,10 @@ public class TransactionRendererColors implements ColorChangeListener {
     return categoryColor;
   }
 
+  public Color getTransactionTextColor() {
+    return transactionTextColor;
+  }
+
   public Color getTransactionSelectedTextColor() {
     return transactionSelectedTextColor;
   }
@@ -64,9 +75,13 @@ public class TransactionRendererColors implements ColorChangeListener {
     return transactionPlannedTextColor;
   }
 
+  public Color getTransactionErrorTextColor() {
+    return transactionErrorTextColor;
+  }
+
   public void update(Component component, boolean isSelected, Glob transaction, int row) {
     setForeground(component, isSelected, transaction, false);
-    setBackground(component, isSelected, row);
+    setBackground(component, transaction, isSelected, row);
   }
 
   public void setForeground(Component component, boolean isSelected, Glob transaction, boolean isLink) {
@@ -86,13 +101,27 @@ public class TransactionRendererColors implements ColorChangeListener {
     return transactionTextColor;
   }
 
-  public void setBackground(Component component, boolean isSelected, int row) {
+  public void setBackground(Component component, Glob transaction, boolean isSelected, int row) {
     if (isSelected) {
       component.setBackground(selectionBgColor);
+    }
+    else if ((splitGroupSourceId != null)
+             && (transaction != null)
+             && transaction.get(Transaction.ID).equals(splitGroupSourceId)) {
+      component.setBackground(splitSourceColor);
+    }
+    else if ((splitGroupSourceId != null)
+             && (transaction != null)
+             && splitGroupSourceId.equals(transaction.get(Transaction.SPLIT_SOURCE))) {
+      component.setBackground(splitChildColor);
     }
     else {
       component.setBackground((row % 2) == 0 ? getEvenRowsBgColor() : getOddRowsBgColor());
     }
+  }
+
+  public void setSplitGroupSourceId(Integer splitGroupSourceId) {
+    this.splitGroupSourceId = splitGroupSourceId;
   }
 
   protected void finalize() throws Throwable {

@@ -358,7 +358,7 @@ public class SplitTransactionDialog {
       panel.add(Box.createRigidArea(new Dimension(3, 0)));
       addDeleteButton(panel, transaction);
       panel.add(Box.createRigidArea(new Dimension(3, 0)));
-      rendererColors.setBackground(panel, isSelected, row);
+      rendererColors.setBackground(panel, transaction, isSelected, row);
       return panel;
     }
 

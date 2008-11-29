@@ -10,14 +10,14 @@ import java.awt.*;
 public class TransactionTableRenderer implements TableCellRenderer {
   private TableCellRenderer renderer;
   private TransactionRendererColors rendererColors;
-  private int categoryColumnIndex;
+  private int seriesColumnIndex;
   private Border border = BorderFactory.createEmptyBorder(0, 3, 0, 3);
 
   public TransactionTableRenderer(TableCellRenderer renderer, TransactionRendererColors rendererColors,
-                                  int categoryColumnIndex) {
+                                  int seriesColumnIndex) {
     this.renderer = renderer;
     this.rendererColors = rendererColors;
-    this.categoryColumnIndex = categoryColumnIndex;
+    this.seriesColumnIndex = seriesColumnIndex;
   }
 
   public Component getTableCellRendererComponent(JTable table,
@@ -27,7 +27,7 @@ public class TransactionTableRenderer implements TableCellRenderer {
                                                  int row,
                                                  int column) {
     Component component = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-    if (column == categoryColumnIndex) {
+    if (column == seriesColumnIndex) {
       return component;
     }
     if (component instanceof JLabel) {

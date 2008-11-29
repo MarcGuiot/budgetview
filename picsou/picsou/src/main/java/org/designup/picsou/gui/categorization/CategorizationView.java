@@ -14,6 +14,7 @@ import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
+import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.PicsouMatchers;
@@ -25,8 +26,6 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
@@ -56,7 +55,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CategorizationView extends View implements TableView, Filterable, ColorChangeListener {
+public class CategorizationView extends View implements TableView, Filterable {
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
   private JComboBox filteringModeCombo;
@@ -69,8 +68,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private static final int[] COLUMN_SIZES = {10, 12, 28, 10};
   private SeriesEditionDialog seriesEditionDialog;
 
-  private Color transactionColorNormal;
-  private Color transactionColorError;
+  private TransactionRendererColors colors;
   private PicsouTableHeaderPainter headerPainter;
   private FilterSet filterSet;
   private GlobMatcher filter = GlobMatchers.ALL;
@@ -85,7 +83,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
       }
     }, Month.TYPE);
 
-    colorService.addListener(this);
+    colors = new TransactionRendererColors(directory);
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -213,11 +211,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
     });
   }
 
-  public void colorsChanged(ColorLocator colorLocator) {
-    transactionColorNormal = colorLocator.get("categorization.transactions.normal");
-    transactionColorError = colorLocator.get("categorization.transactions.error");
-  }
-
   private void initSelectionListener() {
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -230,8 +223,24 @@ public class CategorizationView extends View implements TableView, Filterable, C
           filter.getFirst().filterDates(months);
           filter.getSecond().setFilter(filter.getFirst());
         }
+        colors.setSplitGroupSourceId(getSplitGroupSourceId());
+        transactionTable.getComponent().repaint();
       }
     }, Transaction.TYPE);
+  }
+
+  private Integer getSplitGroupSourceId() {
+    if (currentTransactions.size() != 1) {
+      return null;
+    }
+    Glob transaction = currentTransactions.getFirst();
+    if (transaction == null) {
+      return null;
+    }
+    if (Boolean.TRUE.equals(transaction.get(Transaction.SPLIT))) {
+      return transaction.get(Transaction.ID);
+    }
+    return transaction.get(Transaction.SPLIT_SOURCE);
   }
 
   private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
@@ -458,11 +467,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
         label.setForeground(Color.WHITE);
       }
       else if ((transaction != null) && Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
-        label.setForeground(transactionColorError);
+        label.setForeground(colors.getTransactionErrorTextColor());
       }
       else {
-        label.setForeground(transactionColorNormal);
+        label.setForeground(colors.getTransactionTextColor());
       }
+      colors.setBackground(label, transaction, isSelected, row);
     }
   }
 
