@@ -4,12 +4,15 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 
+import java.util.Locale;
+
 public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private static final String PREVAYLER_DIR = "tmp/demo/";
   private static final String OFX_PATH = "tmp/demo.ofx";
 
   protected void setUp() throws Exception {
     super.setUp();
+    Locale.setDefault(Locale.FRENCH);
   }
 
   public static void main(String[] args) throws Exception {
@@ -90,7 +93,13 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     operations.importOfxFile(OFX_PATH);
 
     views.selectHome();
-    mainAccounts.edit("Account n. 00000123456").setAccountName("Compte courant").validate();
+    mainAccounts.edit("Account n. 00000123456")
+      .setAccountName("Compte courant")
+      .validate();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Livret")
+      .selectBank("CIC")
+      .validate();
 
     //======== CATEGORIZATION ===========
 
@@ -166,8 +175,33 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setAmount(2250)
       .validate();
 
-    //======== LEVEL ===========
+    //======== POSITION LEVEL ===========
+
     views.selectHome();
     balanceSummary.setLimit(4100, false);
+
+    //======== SAVINGS ===========
+
+    views.selectBudget();
+    timeline.selectMonth("2008/12");
+    budgetView.savings.createSeries()
+      .setName("Provisions vacances aout")
+      .setCategory(MasterCategory.SAVINGS)
+      .setStartDate(200811)
+      .setEndDate(200907)
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount(-150)
+      .validate();
+
+    budgetView.savings.createSeries()
+      .setName("Reglement vacances")
+      .setCategory(MasterCategory.SAVINGS)
+      .setStartDate(200908)
+      .setEndDate(200908)
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount(2000)
+      .validate();
   }
 }

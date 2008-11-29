@@ -2,17 +2,25 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="block">
-    <column styleClass="innerBlock">
-      <panel>
-        <repeat ref="repeatAccount">
-          <row>
-            <label ref="accountName"/>
-            <label ref="accountPosition"/>
-          </row>
-        </repeat>
-      </panel>
-    </column>
-  </panel>
+  <column>
+    <label text="$savingsPositionAccountView.title" styleClass="blockTitle"/>
+    <panel styleClass="block">
+      <column styleClass="innerBlock">
+        <scrollPane verticalUnitIncrement="10">
+          <column>
+            <repeat ref="repeatAccount">
+              <row>
+                <label ref="accountName"/>
+                <filler fill="horizontal"/>
+                <label ref="accountPosition"/>
+              </row>
+            </repeat>
+            <filler fill="vertical"/>
+          </column>
+        </scrollPane>
+
+      </column>
+    </panel>
+  </column>
 
 </splits>
