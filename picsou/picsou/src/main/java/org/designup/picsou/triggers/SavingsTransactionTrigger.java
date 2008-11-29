@@ -16,8 +16,8 @@ public class SavingsTransactionTrigger implements ChangeSetListener {
 
         Integer oppositeTransaction = values.get(Transaction.SAVINGS_TRANSACTION);
         Integer seriesId = values.get(Transaction.SERIES);
-        if (seriesId != null && oppositeTransaction == null) {
-          createSavingsTransactionIfSavingsSeries(key, values, seriesId, repository);
+        if (seriesId != null && oppositeTransaction == null && !values.get(Transaction.MIRROR)) {
+          createSavingsTransactionIfSavingsSeries(key, values, repository.findLinkTarget(repository.find(Key.create(Series.TYPE, seriesId)), Series.SAVINGS_ACCOUNT), repository);
         }
       }
 
@@ -35,7 +35,7 @@ public class SavingsTransactionTrigger implements ChangeSetListener {
           Integer newSeriesId = values.get(Transaction.SERIES);
           if (newSeriesId != null) {
             savingsTransactionId =
-              createSavingsTransactionIfSavingsSeries(key, transaction, newSeriesId, repository);
+              createSavingsTransactionIfSavingsSeries(key, transaction, repository.findLinkTarget(repository.find(Key.create(Series.TYPE, newSeriesId)), Series.SAVINGS_ACCOUNT), repository);
           }
         }
         if (values.contains(Transaction.AMOUNT) && savingsTransactionId != null) {
@@ -53,10 +53,8 @@ public class SavingsTransactionTrigger implements ChangeSetListener {
     });
   }
 
-  private Integer createSavingsTransactionIfSavingsSeries(Key key, FieldValues values, Integer seriesId,
-                                                          GlobRepository repository) {
-    Glob series = repository.find(Key.create(Series.TYPE, seriesId));
-    Glob savingsAccount = repository.findLinkTarget(series, Series.SAVINGS_ACCOUNT);
+  public static Integer createSavingsTransactionIfSavingsSeries(Key key, FieldValues values,
+                                                                final Glob savingsAccount, GlobRepository repository) {
     if (savingsAccount != null && !savingsAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
       Double amount = -values.get(Transaction.AMOUNT);
       Glob savingsTransaction =

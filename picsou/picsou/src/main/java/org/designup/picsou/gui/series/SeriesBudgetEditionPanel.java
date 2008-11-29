@@ -54,6 +54,7 @@ public class SeriesBudgetEditionPanel {
   private CardHandler modeCard;
   private GlobTableView budgetTable;
   private SwitchToAutomaticAction switchToAutomaticAction = new SwitchToAutomaticAction();
+  private Boolean isNormalyPositive;
 
   public SeriesBudgetEditionPanel(Window container, final GlobRepository repository,
                                   final GlobRepository localRepository, Directory directory) {
@@ -121,7 +122,7 @@ public class SeriesBudgetEditionPanel {
               modeCard.show("manual");
             }
           }
-          if (previousValue.contains(Series.TO_SAVINGS) && currentSeries.get(Series.SAVINGS_ACCOUNT) != null) {
+          if (previousValue.contains(Series.TO_SAVINGS)) {
             updatePositiveOrNegativeRadio();
           }
         }
@@ -161,8 +162,9 @@ public class SeriesBudgetEditionPanel {
   }
 
   private void updatePositiveOrNegativeRadio() {
-    Boolean isPositive = currentSeries.get(Series.SAVINGS_ACCOUNT) != null && !currentSeries.get(Series.TO_SAVINGS);
-    amountEditor.update(budgetArea.isIncome() || isPositive, currentSeries.get(Series.SAVINGS_ACCOUNT) != null);
+    isNormalyPositive = budgetArea.isIncome() || (budgetArea == BudgetArea.SAVINGS
+                                                  && !currentSeries.get(Series.TO_SAVINGS));
+    amountEditor.update(isNormalyPositive, budgetArea == BudgetArea.SAVINGS);
   }
 
   public JPanel getPanel() {
@@ -211,10 +213,10 @@ public class SeriesBudgetEditionPanel {
         return "0";
       }
       StringBuilder builder = new StringBuilder();
-      if ((value < 0) && budgetArea.isIncome()) {
+      if ((value < 0) && isNormalyPositive) {
         builder.append("-");
       }
-      if ((value > 0) && !budgetArea.isIncome()) {
+      if ((value > 0) && !isNormalyPositive) {
         builder.append("+");
       }
       builder.append(Formatting.DECIMAL_FORMAT.format(Math.abs(value)));

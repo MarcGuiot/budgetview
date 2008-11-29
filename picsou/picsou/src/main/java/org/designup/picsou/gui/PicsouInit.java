@@ -66,6 +66,7 @@ public class PicsouInit {
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetUpdateTransactionTrigger());
     repository.addTrigger(new TransactionPlannedTrigger());
+    repository.addTrigger(new SavingsSeriesTrigger());
     repository.addTrigger(new SavingsTransactionTrigger());
     repository.addTrigger(new BalanceTrigger());
     repository.addTrigger(new MonthStatTrigger());

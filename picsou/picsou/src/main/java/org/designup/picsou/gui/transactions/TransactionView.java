@@ -137,9 +137,9 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
     TransactionAmountColumn amountColumn =
       new TransactionAmountColumn(view, Transaction.AMOUNT, rendererColors, descriptionService, repository, directory);
     TransactionAmountColumn accountBalanceColumn =
-      new TransactionAmountColumn(view, Transaction.ACCOUNT_BALANCE, rendererColors, descriptionService, repository, directory);
+      new TransactionAmountColumn(view, Transaction.ACCOUNT_POSITION, rendererColors, descriptionService, repository, directory);
     TransactionAmountColumn balanceColumn =
-      new TransactionAmountColumn(view, Transaction.BALANCE, rendererColors, descriptionService, repository, directory);
+      new TransactionAmountColumn(view, Transaction.SUMMARY_POSITION, rendererColors, descriptionService, repository, directory);
 
     FontLocator fontLocator = directory.get(FontLocator.class);
     Font dateFont = fontLocator.get("transactionView.date");
