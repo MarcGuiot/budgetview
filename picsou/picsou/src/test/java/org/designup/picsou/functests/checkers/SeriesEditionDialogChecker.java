@@ -545,7 +545,8 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkOkEnabled(boolean isEnabled) {
-    UISpecAssert.assertEquals(isEnabled, dialog.getButton("ok").isEnabled());
+    UISpecAssert.assertEquals(isEnabled ? "ok is disable" : "ok is enable",
+                              isEnabled, dialog.getButton("ok").isEnabled());
     return this;
 
   }

@@ -1477,6 +1477,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Epargne")
       .setCategory(MasterCategory.SAVINGS)
       .selectSavingsAccount("Epargne LCL")
+      .checkOkEnabled(true)
       .validate();
 
     budgetView.savings
@@ -1489,6 +1490,11 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setSavingsToMain()
       .checkPositiveAmountsSelected()
       .checkAmountsRadioAreNotVisible()
+      .selectMonth(200808)
+      .setAmount("100")
+      .checkAmount("100")
+      .setMainToSavings()
+      .checkAmount("100")
       .validate();
   }
 }

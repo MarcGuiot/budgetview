@@ -47,7 +47,7 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(SeriesStat.TYPE) ||
-            changeSet.containsUpdates(Transaction.BALANCE) ||
+            changeSet.containsUpdates(Transaction.SUMMARY_POSITION) ||
             changeSet.containsUpdates(AccountBalanceLimit.LIMIT)) {
           updateDetails();
         }

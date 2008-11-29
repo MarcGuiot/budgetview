@@ -150,7 +150,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
     }
 
     public void run(Glob transaction, GlobRepository repository) throws Exception {
-      if (transaction.get(Transaction.BALANCE) == null) {
+      if (transaction.get(Transaction.SUMMARY_POSITION) == null) {
         nullBalance = true;
       }
 
@@ -263,8 +263,8 @@ public class BalanceStatTrigger implements ChangeSetListener {
         Double balance = null;
         Double endOfMonthPosition = null;
         if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
-          endOfMonthPosition = endOfMonthTransaction.get(Transaction.BALANCE);
-          beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.BALANCE) -
+          endOfMonthPosition = endOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
+          beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.SUMMARY_POSITION) -
                                  beginOfMonthTransaction.get(Transaction.AMOUNT);
           balance = endOfMonthPosition - beginOfMonthPosition;
         }
@@ -316,7 +316,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
           if (currentMonthId.equals(monthId)) {
             repository.update(Key.create(BalanceStat.TYPE, currentMonthId),
                               value(BalanceStat.LAST_KNOWN_ACCOUNT_POSITION,
-                                    lastRealKnownTransaction.get(Transaction.BALANCE)),
+                                    lastRealKnownTransaction.get(Transaction.SUMMARY_POSITION)),
                               value(BalanceStat.LAST_KNOWN_ACCOUNT_POSITION_DAY,
                                     lastRealKnownTransaction.get(Transaction.BANK_DAY)));
           }

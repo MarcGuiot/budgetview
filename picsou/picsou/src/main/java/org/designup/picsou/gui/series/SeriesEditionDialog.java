@@ -173,7 +173,11 @@ public class SeriesEditionDialog {
     builder.add("fromSavingsToMain", fromSavingsToMainToggle);
     group.add(fromSavingsToMainToggle);
     savingsAccount = new GlobLinkComboEditor(Series.SAVINGS_ACCOUNT, localRepository, localDirectory)
-      .setFilter(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()))
+      .setFilter(
+        GlobMatchers.and(
+          GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()),
+          GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)))
+      )
       .setShowEmptyOption(true);
     builder.add("savingsAccount", savingsAccount);
 
@@ -867,8 +871,7 @@ public class SeriesEditionDialog {
     private void update(GlobRepository repository) {
       GlobList series = repository.getAll(Series.TYPE);
       for (Glob glob : series) {
-        if (!BudgetArea.UNCATEGORIZED.getId().equals(glob.get(Series.BUDGET_AREA)) &&
-            glob.get(Series.DEFAULT_CATEGORY) == null) {
+        if (!BudgetArea.UNCATEGORIZED.getId().equals(glob.get(Series.BUDGET_AREA)) && glob.get(Series.DEFAULT_CATEGORY) == null) {
           okAction.setEnabled(false);
           return;
         }

@@ -156,8 +156,8 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
         Double balance = null;
         Double endOfMonthPosition = null;
         if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
-          endOfMonthPosition = endOfMonthTransaction.get(Transaction.BALANCE);
-          beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.BALANCE) -
+          endOfMonthPosition = endOfMonthTransaction.get(Transaction.ACCOUNT_POSITION);
+          beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.ACCOUNT_POSITION) -
                                  beginOfMonthTransaction.get(Transaction.AMOUNT);
           balance = endOfMonthPosition - beginOfMonthPosition;
         }
@@ -178,7 +178,7 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
           if (currentMonthId.equals(monthId)) {
             repository.update(entry.getKey(),
                               value(SavingsBalanceStat.LAST_KNOWN_ACCOUNT_POSITION,
-                                    lastRealKnownTransaction.get(accountId).get(Transaction.BALANCE)),
+                                    lastRealKnownTransaction.get(accountId).get(Transaction.ACCOUNT_POSITION)),
                               value(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY,
                                     lastRealKnownTransaction.get(accountId).get(Transaction.BANK_DAY)));
           }
