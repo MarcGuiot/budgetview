@@ -53,8 +53,9 @@ public class SeriesBudgetEditionPanel {
   private SelectionService selectionService;
   private CardHandler modeCard;
   private GlobTableView budgetTable;
-  private SwitchToAutomaticAction switchToAutomaticAction = new SwitchToAutomaticAction();
   private Boolean isNormalyPositive;
+  private SwitchToAutomaticAction switchToAutomaticAction = new SwitchToAutomaticAction();
+  private SwitchToManualAction switchToManualAction = new SwitchToManualAction();
 
   public SeriesBudgetEditionPanel(Window container, final GlobRepository repository,
                                   final GlobRepository localRepository, Directory directory) {
@@ -69,7 +70,7 @@ public class SeriesBudgetEditionPanel {
 
     modeCard = builder.addCardHandler("modeCard");
 
-    builder.add("manual", new SwitchToManualAction());
+    builder.add("manual", switchToManualAction);
     builder.add("automatic", switchToAutomaticAction);
 
     amountEditor = new AmountEditor(SeriesBudget.AMOUNT, localRepository, directory);
@@ -135,6 +136,7 @@ public class SeriesBudgetEditionPanel {
   private void processSeriesSelection() {
     if (currentSeries == null) {
       budgetTable.setFilter(GlobMatchers.NONE);
+      switchToManualAction.setEnabled(false);
       return;
     }
 
@@ -145,6 +147,7 @@ public class SeriesBudgetEditionPanel {
     budgetArea = BudgetArea.get(currentSeries.get(Series.BUDGET_AREA));
     updatePositiveOrNegativeRadio();
 
+    switchToManualAction.setEnabled(true);
     if (currentSeries.get(Series.IS_AUTOMATIC)) {
       modeCard.show("automatic");
       isAutomatic = true;

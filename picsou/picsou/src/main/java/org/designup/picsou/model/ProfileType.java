@@ -13,14 +13,15 @@ import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.exceptions.InvalidData;
 
 public enum ProfileType implements GlobConstantContainer {
-  CUSTOM("CUSTOM", 0, 1, 7),
-  IRREGULAR("UNKNOWN", 1, -1, 8),
+  CUSTOM("CUSTOM", 0, 1, 8),
+  IRREGULAR("UNKNOWN", 1, -1, 9),
   EVERY_MONTH("EVERY_MONTH", 2, -1, 1),
-  TWO_MONTHS("TWO_MONTH", 3, 2, 2),
-  THREE_MONTHS("THREE_MONTH", 4, 3, 3),
-  FOUR_MONTHS("FOUR_MONTH", 5, 4, 4),
-  SIX_MONTHS("SIX_MONTH", 6, 6, 5),
-  ONCE_A_YEAR("ONE_TIME_A_YEAR", 7, 12, 6),;
+  TWO_MONTHS("EVERY_TWO_MONTHS", 3, 2, 2),
+  THREE_MONTHS("EVERY_THREE_MONTHS", 4, 3, 3),
+  FOUR_MONTHS("EVERY_FOUR_MONTHS", 5, 4, 4),
+  SIX_MONTHS("EVERY_SIX_MONTHS", 6, 6, 5),
+  ONCE_A_YEAR("ONCE_A_YEAR", 7, 12, 6),
+  SINGLE_MONTH("SINGLE_MONTH", 8, -1, 7);
 
   public static GlobType TYPE;
 
@@ -31,15 +32,15 @@ public enum ProfileType implements GlobConstantContainer {
   public static StringField NAME;
 
   private int id;
-  private int monthStep;
   private String name;
+  private int monthStep;
   private int order;
 
   ProfileType(String name, int id, int monthStep, int order) {
-    this.order = order;
     this.name = name.toLowerCase();
     this.id = id;
     this.monthStep = monthStep;
+    this.order = order;
   }
 
   static {
@@ -70,6 +71,8 @@ public enum ProfileType implements GlobConstantContainer {
         return SIX_MONTHS;
       case 7:
         return ONCE_A_YEAR;
+      case 8:
+        return SINGLE_MONTH;
     }
     throw new InvalidData(id + " not associated to any ProfileType enum value");
   }

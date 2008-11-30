@@ -32,8 +32,8 @@ public class ProfileTypeSeriesTrigger implements ChangeSetListener {
         ProfileType profileType = ProfileType.get(values.get(Series.PROFILE_TYPE));
         if (profileType == ProfileType.IRREGULAR ||
             profileType == ProfileType.EVERY_MONTH) {
-          for (BooleanField field : Series.getMonths()) {
-            repository.update(key, field, true);
+          for (BooleanField monthField : Series.getMonths()) {
+            repository.update(key, monthField, true);
           }
           return;
         }
@@ -91,7 +91,7 @@ public class ProfileTypeSeriesTrigger implements ChangeSetListener {
             for (int i = 1; i < 12; i++) {
               int id = ((i + month) % 12) + 1;
               boolean value = (i % profileType.getMonthStep()) == 0;
-              repository.update(series.getKey(), Series.getField(id), value);
+              repository.update(series.getKey(), Series.getMonthField(id), value);
             }
             return;
           }
@@ -110,12 +110,12 @@ public class ProfileTypeSeriesTrigger implements ChangeSetListener {
     }
     if (series.get(Series.PROFILE_TYPE).equals(ProfileType.CUSTOM.getId())) {
       for (Integer monthId : months) {
-        repository.update(series.getKey(), Series.getField(monthId), true);
+        repository.update(series.getKey(), Series.getMonthField(monthId), true);
       }
     }
     else {
       Integer monthId = months.iterator().next();
-      repository.update(series.getKey(), Series.getField(monthId), true);
+      repository.update(series.getKey(), Series.getMonthField(monthId), true);
     }
   }
 

@@ -25,7 +25,7 @@
     <label text="$monthsummary.title" styleClass="blockTitle"/>
 
     <panel styleClass="block">
-      <cards ref="cards" styleClass="innerBlock" opaque="false">
+      <cards ref="cards" styleClass="innerBlock">
 
         <card name="noData">
           <column styleClass="message">

@@ -76,7 +76,8 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
     }
     int toIndex = monthIds.length - 1;
     Integer lastMonth = series.get(Series.LAST_MONTH);
-    Integer toDate = lastMonth == null ? monthIds[monthIds.length - 1] :
+    Integer toDate = lastMonth == null ?
+                     monthIds[monthIds.length - 1] :
                      Math.min(lastMonth, monthIds[monthIds.length - 1]);
     if (toDate != null) {
       toIndex = Arrays.binarySearch(monthIds, toDate);
@@ -87,14 +88,12 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
       Calendar calendar = Calendar.getInstance();
       for (int i = fromIndex; i <= toIndex; i++) {
         int monthId = monthIds[i];
-        BooleanField monthField = Series.getField(monthId);
-        Boolean active = series.get(monthField);
+        Boolean active = series.get(Series.getMonthField(monthId));
         Glob seriesBudget = monthWithBudget.remove(monthId);
         if (seriesBudget == null) {
           repository.create(SeriesBudget.TYPE,
                             value(SeriesBudget.SERIES, seriesId),
-                            value(SeriesBudget.AMOUNT,
-                                  getInitialAmount(series, active)),
+                            value(SeriesBudget.AMOUNT, getInitialAmount(series, active)),
                             value(SeriesBudget.MONTH, monthId),
                             value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
                             value(SeriesBudget.ACTIVE, active));

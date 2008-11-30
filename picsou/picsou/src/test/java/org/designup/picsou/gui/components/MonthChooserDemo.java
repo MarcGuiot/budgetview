@@ -22,6 +22,6 @@ public class MonthChooserDemo {
 
     PicsouDialog.FORCE_NONMODAL = true;
     MonthChooserDialog chooser = new MonthChooserDialog(new JFrame(), directory);
-    chooser.show(200806, -1, 200904);
+    chooser.show(200806, MonthRangeBound.LOWER, 200904);
   }
 }

@@ -65,19 +65,19 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkAmount(String displayedValue) {
-    TextBox getAmount = getAmount();
+    TextBox getAmount = getAmountTextBox();
     assertThat(getAmount.textEquals(displayedValue));
     return this;
   }
 
   public SeriesEditionDialogChecker checkAmountDisabled() {
-    assertFalse(getAmount().isEnabled());
+    assertFalse(getAmountTextBox().isEnabled());
     assertFalse(dialog.getRadioButton("positiveAmounts").isEnabled());
     assertFalse(dialog.getRadioButton("negativeAmounts").isEnabled());
     return this;
   }
 
-  public TextBox getAmount() {
+  public TextBox getAmountTextBox() {
     return dialog.getInputTextBox("amountEditor");
   }
 
@@ -86,7 +86,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker setAmount(String value) {
-    getAmount().setText(value);
+    getAmountTextBox().setText(value);
     return this;
   }
 
@@ -253,6 +253,11 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker checkMonthSelectorsVisible(boolean visible) {
+    checkComponentVisible(dialog, JPanel.class, "monthSelectionPanel", visible);
+    return this;
+  }
+
   public SeriesEditionDialogChecker checkMonthSelected(int index) {
     assertThat(getTable().rowIsSelected(index));
     return this;
@@ -298,7 +303,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
       case 12:
         return DEC;
     }
-    fail(month + " unknown");
+    Assert.fail(month + " unknown");
     return "";
   }
 
@@ -342,14 +347,14 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMonthIsEnabled(String... monthsLabel) {
+  public SeriesEditionDialogChecker checkMonthsEnabled(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
       assertThat(monthLabel + " is disabled", getMonthCheckBox(monthLabel).isEnabled());
     }
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMonthIsDisabled(String... monthsLabel) {
+  public SeriesEditionDialogChecker checkMonthsDisabled(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
       assertFalse(monthLabel + " is enabled", getMonthCheckBox(monthLabel).isEnabled());
     }
@@ -377,6 +382,11 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesEditionDialogChecker checkNoSeries() {
     assertThat(dialog.getListBox().isEmpty());
     return this;
+  }
+
+
+  public SeriesEditionDialogChecker checkSeriesListIsEmpty() {
+    return checkSeriesListEquals();
   }
 
   public SeriesEditionDialogChecker checkSeriesListEquals(String... names) {
@@ -427,49 +437,61 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker setStartDate(int monthId) {
-    setDate("beginSeriesCalendar", monthId);
+    setDate("seriesStartDateChooser", monthId);
     return this;
   }
 
   public SeriesEditionDialogChecker checkNoStartDate() {
-    assertTrue(dialog.getTextBox("beginSeriesDate").isVisible());
-    assertFalse(dialog.getButton("deleteBeginSeriesDate").isVisible());
+    assertTrue(dialog.getTextBox("seriesStartDate").isVisible());
+    assertFalse(dialog.getButton("deleteSeriesStartDate").isVisible());
     return this;
   }
 
   public SeriesEditionDialogChecker checkStartDate(String date) {
-    checkDate("beginSeriesDate", date);
+    checkDate("seriesStartDate", date);
     return this;
   }
 
   public SeriesEditionDialogChecker setEndDate(int date) {
-    setDate("endSeriesCalendar", date);
+    setDate("seriesEndDateChooser", date);
     return this;
   }
 
   public SeriesEditionDialogChecker checkNoEndDate() {
-    assertTrue(dialog.getTextBox("endSeriesDate").isVisible());
-    assertFalse(dialog.getButton("deleteEndSeriesDate").isVisible());
+    assertTrue(dialog.getTextBox("seriesEndDate").isVisible());
+    assertFalse(dialog.getButton("deleteSeriesEndDate").isVisible());
     return this;
   }
 
   public SeriesEditionDialogChecker checkEndDate(String monthId) {
-    checkDate("endSeriesDate", monthId);
+    checkDate("seriesEndDate", monthId);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker setSingleMonthDate(int monthId) {
+    setDate("singleMonthChooser", monthId);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSingleMonthDate(String date) {
+    checkDate("singleMonthDate", date);
+    checkComponentVisible(dialog, JTextField.class, "seriesStartDate", false);
+    checkComponentVisible(dialog, JTextField.class, "seriesEndDate", false);
     return this;
   }
 
   private void setDate(String labelName, int monthId) {
     MonthChooserChecker month = getMonthChooser(labelName);
-    month.centerTo(monthId)
+    month.centerOn(monthId)
       .selectMonthInCurrent(Month.toMonth(monthId));
   }
 
-  public MonthChooserChecker getStartCalendar() {
-    return getMonthChooser("beginSeriesCalendar");
+  public MonthChooserChecker editStartDate() {
+    return getMonthChooser("seriesStartDateChooser");
   }
 
-  public MonthChooserChecker getEndCalendar() {
-    return getMonthChooser("endSeriesCalendar");
+  public MonthChooserChecker editEndDate() {
+    return getMonthChooser("seriesEndDateChooser");
   }
 
   private MonthChooserChecker getMonthChooser(String labelName) {
@@ -484,14 +506,6 @@ public class SeriesEditionDialogChecker extends DataChecker {
   public SeriesEditionDialogChecker checkAllMonthsDisabled() {
     for (UIComponent checkBox : dialog.getUIComponents(CheckBox.class)) {
       assertFalse(checkBox.isEnabled());
-    }
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkAllFieldsDisabled() {
-    for (Component component : dialog.getSwingComponents(JTextField.class)) {
-      TextBox textBox = new TextBox((JTextField)component);
-      assertFalse(textBox.isEnabled());
     }
     return this;
   }
@@ -552,18 +566,18 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker removeBeginDate() {
-    dialog.getButton("deleteBeginSeriesDate").click();
+    dialog.getButton("deleteSeriesStartDate").click();
     return this;
   }
 
   public SeriesEditionDialogChecker removeEndDate() {
-    dialog.getButton("deleteEndSeriesDate").click();
+    dialog.getButton("deleteSeriesEndDate").click();
     return this;
   }
 
   public SeriesEditionDialogChecker checkCalendarsAreDisabled() {
-    assertFalse(dialog.getButton("beginSeriesCalendar").isEnabled());
-    assertFalse(dialog.getButton("endSeriesCalendar").isEnabled());
+    assertFalse(dialog.getButton("seriesStartDateChooser").isEnabled());
+    assertFalse(dialog.getButton("seriesEndDateChooser").isEnabled());
     return this;
   }
 
@@ -683,6 +697,21 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker checkEveryMonthSelected() {
+    assertThat(getProfileCombo().selectionEquals(ProfileType.EVERY_MONTH.getLabel()));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker setSingleMonth() {
+    getProfileCombo().select(ProfileType.SINGLE_MONTH.getLabel());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSingleMonthSelected() {
+    assertThat(getProfileCombo().selectionEquals(ProfileType.SINGLE_MONTH.getLabel()));
+    return this;
+  }
+
   public SeriesEditionDialogChecker checkSeriesListIsHidden() {
     checkComponentVisible(dialog, JPanel.class, "buttonSeriesPanel", false);
     checkComponentVisible(dialog, JPanel.class, "seriesPanel", false);
@@ -696,7 +725,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkAmountIsDisabled() {
-    assertFalse(getAmount().isEnabled());
+    assertFalse(getAmountTextBox().isEnabled());
     return this;
   }
 

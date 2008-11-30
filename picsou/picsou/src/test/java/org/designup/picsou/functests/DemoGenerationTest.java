@@ -18,6 +18,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   public static void main(String[] args) throws Exception {
 
     System.setProperty("uispec4j.test.library", "junit");
+    Locale.setDefault(Locale.FRENCH);
 
     DemoGenerationTest test = new DemoGenerationTest();
     test.setLocalPrevaylerPath(PREVAYLER_DIR);

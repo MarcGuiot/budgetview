@@ -355,7 +355,9 @@ public class CategorizationView extends View implements TableView, Filterable {
     }
 
     public void actionPerformed(ActionEvent e) {
-      Key key = seriesEditionDialog.showNewSeries(currentTransactions, budgetArea);
+      Key key = seriesEditionDialog.showNewSeries(currentTransactions, 
+                                                  selectionService.getSelection(Month.TYPE),
+                                                  budgetArea);
       Glob series = repository.find(key);
       if (key != null && series != null) {
         Integer category = seriesEditionDialog.getCurrentCategory();

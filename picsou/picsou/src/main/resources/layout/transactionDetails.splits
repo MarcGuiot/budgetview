@@ -33,7 +33,7 @@
 
   <column name="transactionDetails">
 
-    <cards ref="cards" opaque="false">
+    <cards ref="cards">
 
       <card name="noData">
         <column marginBottom="10">

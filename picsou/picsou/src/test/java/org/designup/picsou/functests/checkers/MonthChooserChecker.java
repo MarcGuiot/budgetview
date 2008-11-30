@@ -1,16 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.model.Month;
-import org.uispec4j.Key;
 import org.uispec4j.TextBox;
 import org.uispec4j.ToggleButton;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
-import org.uispec4j.utils.KeyUtils;
-
-import javax.swing.*;
 
 public class MonthChooserChecker extends DataChecker {
   private Window dialog;
@@ -126,7 +122,7 @@ public class MonthChooserChecker extends DataChecker {
 
   public MonthChooserChecker checkIsEnabled(int... monthIds) {
     for (int monthId : monthIds) {
-      centerTo(monthId);
+      centerOn(monthId);
       assertTrue(getButtonInCurrentYear(Month.toMonth(monthId)).isEnabled());
     }
     return this;
@@ -134,13 +130,13 @@ public class MonthChooserChecker extends DataChecker {
 
   public MonthChooserChecker checkIsDisabled(int... monthIds) {
     for (int monthId : monthIds) {
-      centerTo(monthId);
+      centerOn(monthId);
       assertFalse(monthId + " is enable.", getButtonInCurrentYear(Month.toMonth(monthId)).isEnabled());
     }
     return this;
   }
 
-  public MonthChooserChecker centerTo(int monthId) {
+  public MonthChooserChecker centerOn(int monthId) {
     int currentYear = Integer.parseInt(getCurrentYear().getText());
     int year = Month.toYear(monthId);
     for (; year < currentYear; year++) {
@@ -163,7 +159,7 @@ public class MonthChooserChecker extends DataChecker {
   }
 
   public MonthChooserChecker selectMonth(int monthId) {
-    centerTo(monthId);
+    centerOn(monthId);
     selectMonthInCurrent(Month.toMonth(monthId));
     return this;
   }

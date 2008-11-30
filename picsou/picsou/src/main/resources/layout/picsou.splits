@@ -105,7 +105,7 @@
                 tooltipText="$timeView.tooltip.last"/>
       </row>
 
-      <cards ref="mainCards" opaque="false" marginTop="20" weightY="10.0">
+      <cards ref="mainCards" marginTop="20" weightY="10.0">
 
         <card name="home">
           <column>

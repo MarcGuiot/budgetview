@@ -10,7 +10,7 @@
 
   <panel name="seriesBudgetEdition" opaque="false">
     <column>
-      <cards ref="modeCard" opaque="false">
+      <cards ref="modeCard">
         <card name="manual">
           <column margin="10" marginBottom="0" weightX="7">
             <label ref="seriesBudgetEditionAmountLabel" styleClass="formLabelTop" fill="horizontal"/>

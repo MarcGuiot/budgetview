@@ -55,6 +55,8 @@
            icon="magnifier_small.png" rolloverIcon="magnifier_rollover.png" pressedIcon="magnifier_rollover.png"
            preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
 
+    <style selector="cards" opaque="false"/>
+
     <!-- Main panel -->
 
     <style selector="panel.main" opaque="false"/>

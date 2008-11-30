@@ -67,7 +67,7 @@
 
             <panel ref="transactionDetails" weightY="0.1"/>
 
-            <cards ref="budgetAreaCard" opaque="false">
+            <cards ref="budgetAreaCard">
 
               <card name="noSelection">
                 <panel styleClass="innerBlockBackground">
@@ -88,7 +88,7 @@
                     </repeat>
                   </row>
 
-                  <cards ref="seriesCard" weightY="100" opaque="false">
+                  <cards ref="seriesCard" weightY="100">
 
                     <card name="uncategorized">
                       <column styleClass="budgetAreaSelection">

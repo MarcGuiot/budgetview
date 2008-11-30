@@ -26,7 +26,6 @@ public class ReadOnlyGlobTextFieldView extends AbstractGlobTextView<ReadOnlyGlob
   public ReadOnlyGlobTextFieldView(GlobType type, GlobRepository repository, Directory directory, GlobListStringifier stringifier) {
     super(type, repository, directory, stringifier);
     textField.setEditable(false);
-    textField.setEnabled(false);
   }
 
   protected void doUpdate(String text) {

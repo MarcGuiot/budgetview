@@ -4,7 +4,6 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -21,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MonthChooserDialog implements ColorChangeListener {
+
   private JLabel nextYearLabel = new JLabel();
   private JLabel previousYearLabel = new JLabel();
   private JLabel currentYearLabel = new JLabel();
@@ -30,7 +30,7 @@ public class MonthChooserDialog implements ColorChangeListener {
   private int selectedMonth = -1;
   private int currentYear;
   private Directory directory;
-  private int direction;
+  private MonthRangeBound bound;
   private int yearLimit;
   private int monthLimit;
   private int newMonth;
@@ -89,14 +89,24 @@ public class MonthChooserDialog implements ColorChangeListener {
     return builder.load();
   }
 
-  public int show(int selectedMonthId, int direction, int limitMonthId) {
+  public int show(int selectedMonthId, MonthRangeBound bound, int limitMonthId) {
     this.newMonth = -1;
-    this.direction = direction;
+    this.bound = bound;
     this.yearLimit = Month.toYear(limitMonthId);
     this.monthLimit = Month.toMonth(limitMonthId);
     this.selectedMonth = Month.toMonth(selectedMonthId);
     this.selectedYear = Month.toYear(selectedMonthId);
-    this.currentYear = direction == 0 ? selectedYear : direction == -1 ? yearLimit - 1 : yearLimit + 1;
+    switch (bound) {
+      case NONE:
+        this.currentYear = selectedYear;
+        break;
+      case LOWER:
+        this.currentYear = yearLimit - 1;
+        break;
+      case UPPER:
+        this.currentYear = yearLimit + 1;
+        break;
+    }
 
     update();
 
@@ -167,12 +177,13 @@ public class MonthChooserDialog implements ColorChangeListener {
       for (int i = 0; i < buttons.length; i++) {
         buttons[i].setSelected(currentYear == selectedYear && selectedMonth == i + 1);
         int currentMonthId = Month.toMonthId(currentYear, i + 1);
-        if (direction < 0) {
-          boolean b = currentMonthId <= Month.toMonthId(yearLimit, monthLimit);
-          buttons[i].setEnabled(b);
-        }
-        else if (direction > 0) {
-          buttons[i].setEnabled(currentMonthId >= Month.toMonthId(yearLimit, monthLimit));
+        switch (bound) {
+          case LOWER:
+            buttons[i].setEnabled(currentMonthId <= Month.toMonthId(yearLimit, monthLimit));
+            break;
+          case UPPER:
+            buttons[i].setEnabled(currentMonthId >= Month.toMonthId(yearLimit, monthLimit));
+            break;
         }
         if (todayId == currentMonthId) {
           buttons[i].setForeground(todayColor);

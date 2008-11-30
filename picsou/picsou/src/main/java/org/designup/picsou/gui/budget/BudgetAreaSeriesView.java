@@ -230,7 +230,9 @@ public class BudgetAreaSeriesView extends View {
 
   private class CreateSeriesAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
-      seriesEditionDialog.showNewSeries(GlobList.EMPTY, budgetArea);
+      seriesEditionDialog.showNewSeries(GlobList.EMPTY,
+                                        selectionService.getSelection(Month.TYPE),
+                                        budgetArea);
     }
   }
 }

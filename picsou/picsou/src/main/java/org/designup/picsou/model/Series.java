@@ -110,7 +110,7 @@ public class Series {
     OCCASIONAL_SERIES = org.globsframework.model.Key.create(TYPE, OCCASIONAL_SERIES_ID);
   }
 
-  public static BooleanField getField(int monthId) {
+  public static BooleanField getMonthField(int monthId) {
     switch (Month.toMonth(monthId)) {
       case 1:
         return JANUARY;

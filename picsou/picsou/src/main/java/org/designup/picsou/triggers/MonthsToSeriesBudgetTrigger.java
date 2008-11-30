@@ -86,7 +86,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
         Glob[] existingSeriesBudget = globs.sort(SeriesBudget.MONTH).toArray(new Glob[globs.size()]);
 
         Glob budget = repository.create(SeriesBudget.TYPE,
-                                        value(SeriesBudget.ACTIVE, series.get(Series.getField(monthId))),
+                                        value(SeriesBudget.ACTIVE, series.get(Series.getMonthField(monthId))),
                                         value(SeriesBudget.SERIES, series.get(Series.ID)),
                                         value(SeriesBudget.DAY, series.get(Series.DAY)),
                                         value(SeriesBudget.MONTH, monthId));
