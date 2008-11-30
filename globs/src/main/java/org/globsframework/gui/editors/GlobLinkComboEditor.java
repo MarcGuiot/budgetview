@@ -124,7 +124,7 @@ public class GlobLinkComboEditor extends AbstractGlobComponentHolder implements 
     globComboView.dispose();
   }
 
-  public void setEnable(boolean enable) {
+  public void setEnabled(boolean enable) {
     globComboView.setEnable(enable);
   }
 }
