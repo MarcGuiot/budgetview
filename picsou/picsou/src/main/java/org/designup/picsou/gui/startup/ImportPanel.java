@@ -2,7 +2,7 @@ package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.accounts.AccountEditionPanel;
-import org.designup.picsou.gui.accounts.BalanceEditionDialog;
+import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
@@ -488,8 +488,8 @@ public class ImportPanel {
     for (Integer accountId : accounts) {
       Glob account = localRepository.get(Key.create(Account.TYPE, accountId));
       if (account.get(Account.BALANCE) == null) {
-        BalanceEditionDialog dialog =
-          new BalanceEditionDialog(account, true, localRepository, localDirectory, this.dialog);
+        AccountPositionEditionDialog dialog =
+          new AccountPositionEditionDialog(account, true, localRepository, localDirectory, this.dialog);
         dialog.show();
       }
     }

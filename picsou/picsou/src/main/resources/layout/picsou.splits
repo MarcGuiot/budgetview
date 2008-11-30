@@ -124,7 +124,7 @@
               <column weightX="1">
                 <verticalSplit>
                   <panel ref="balanceSummaryView" minimumSize="(250,200)" preferredSize="(300,410)"/>
-                  <panel ref="savingsPositionAccountView" minimumSize="(250,200)" preferredSize="(300,300)"/>
+                  <panel ref="savingsAccountPositionView" minimumSize="(250,200)" preferredSize="(300,300)"/>
                 </verticalSplit>
               </column>
             </horizontalSplit>

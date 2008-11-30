@@ -24,13 +24,13 @@ import java.awt.event.ActionEvent;
 import java.util.Date;
 import java.util.SortedSet;
 
-public class BalanceEditionDialog {
+public class AccountPositionEditionDialog {
   private PicsouDialog dialog;
   private LocalGlobRepository localRepository;
   private Glob account;
   private Date balanceDate;
 
-  public BalanceEditionDialog(Glob account, boolean accountInitialization,
+  public AccountPositionEditionDialog(Glob account, boolean accountInitialization,
                               GlobRepository repository, Directory directory, Window parent) {
     this.account = account;
 
@@ -39,7 +39,7 @@ public class BalanceEditionDialog {
         .copy(Account.TYPE)
         .get();
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/balanceEditionDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountPositionEditionDialog.splits",
                                                       localRepository, directory);
 
     ValidateAction validateAction = new ValidateAction();
@@ -53,7 +53,7 @@ public class BalanceEditionDialog {
     JTextArea initialMessage = builder.add("initialMessage", new JTextArea());
 
     AccountStringifier accountStringifier = new AccountStringifier();
-    builder.add("accountName", new JLabel(Lang.get("balance.edition.account.name",
+    builder.add("accountName", new JLabel(Lang.get("accountPositionEdition.account.name",
                                                    accountStringifier.toString(account, repository))));
 
     JLabel date = builder.add("dateInfo", new JLabel());

@@ -108,9 +108,9 @@ public class AccountViewPanel {
                             },
                             new GlobListFunctor() {
                               public void run(GlobList list, GlobRepository repository) {
-                                BalanceEditionDialog balanceEditor =
-                                  new BalanceEditionDialog(account, false, repository, directory, directory.get(JFrame.class));
-                                balanceEditor.show();
+                                AccountPositionEditionDialog accountPositionEditor =
+                                  new AccountPositionEditionDialog(account, false, repository, directory, directory.get(JFrame.class));
+                                accountPositionEditor.show();
                               }
                             }).forceSelection(account);
       cellBuilder.add("accountBalance", balance.getComponent());

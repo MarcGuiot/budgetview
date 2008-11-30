@@ -19,8 +19,6 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
                REGIS
 ====================================
 
-- CategorizationView : bug lors de la selection de deux transactions 
-
 - BudgetView : quand on clique sur une serie, aucun moyen pour la supprimer a partir de la fenetre qui apparait
 
 - bug bouton "annuler filtrage"
@@ -28,6 +26,9 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
 - message budgetView/special + aide
 
 - compte demo
+
+- revoir explication seuil
+
 
 
 ====================================

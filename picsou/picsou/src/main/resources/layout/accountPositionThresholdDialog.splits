@@ -5,12 +5,12 @@
   <panel styleClass="dialog" preferredSize="(400,180)">
     <column styleClass="innerDialog">
 
-      <label text="$accountLimitDialog.title" styleClass="title"/>
+      <label text="$accountPositionThresholdDialog.title" styleClass="title"/>
 
-      <htmlEditorPane text="$accountLimitDialog.message"/>
+      <htmlEditorPane text="$accountPositionThresholdDialog.message"/>
 
       <row marginTop="10">
-        <label text="$accountLimitDialog.editor"  foreground="gauge.categorization.label" styleClass="formLabel"/>
+        <label text="$accountPositionThresholdDialog.editor"  foreground="gauge.categorization.label" styleClass="formLabel"/>
         <textField ref="editor"/>
       </row>
 

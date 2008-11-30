@@ -2,7 +2,7 @@ package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.components.CloseAction;
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.model.AccountBalanceLimit;
+import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobNumericEditor;
@@ -14,30 +14,30 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class AccountBalanceLimitDialog {
+public class AccountPositionThresholdDialog {
   private PicsouDialog dialog;
   private LocalGlobRepository localRepository;
   private Directory directory;
   private GlobNumericEditor editor;
 
-  public AccountBalanceLimitDialog(GlobRepository repository, Directory directory) {
+  public AccountPositionThresholdDialog(GlobRepository repository, Directory directory) {
     this.directory = directory;
     localRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(AccountBalanceLimit.TYPE)
+      .copy(AccountPositionThreshold.TYPE)
       .get();
 
     createDialog();
   }
 
   private void createDialog() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountBalanceLimitDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountPositionThresholdDialog.splits",
                                                       localRepository, directory);
 
     OkAction okAction = new OkAction();
 
-    editor = builder.addEditor("editor", AccountBalanceLimit.LIMIT)
+    editor = builder.addEditor("editor", AccountPositionThreshold.THRESHOLD)
       .setValidationAction(okAction)
-      .forceSelection(localRepository.findOrCreate(AccountBalanceLimit.KEY));
+      .forceSelection(localRepository.findOrCreate(AccountPositionThreshold.KEY));
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
     dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CloseAction(dialog));

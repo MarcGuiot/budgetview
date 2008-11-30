@@ -86,7 +86,7 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
       transformationAdapter.save();
       transformationAdapter.translate(0, height - BALANCE_HEIGHT - 6);
       Double accountBalance = positionProvider.getPosition(this.month.get(Month.ID));
-      double accountBalanceLimit = positionProvider.getPositionLimit(this.month.get(Month.ID));
+      double accountBalanceLimit = positionProvider.getPositionThreshold(this.month.get(Month.ID));
       if (accountBalance != null) {
         double diff = accountBalance - accountBalanceLimit;
         Color color = colors.getAmountColor(diff);

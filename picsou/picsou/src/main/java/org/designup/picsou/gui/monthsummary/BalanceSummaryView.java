@@ -5,7 +5,7 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.utils.AmountColors;
-import org.designup.picsou.model.AccountBalanceLimit;
+import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -48,7 +48,7 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(SeriesStat.TYPE) ||
             changeSet.containsUpdates(Transaction.SUMMARY_POSITION) ||
-            changeSet.containsUpdates(AccountBalanceLimit.LIMIT)) {
+            changeSet.containsUpdates(AccountPositionThreshold.THRESHOLD)) {
           updateDetails();
         }
       }
@@ -56,7 +56,7 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
         if (changedTypes.contains(SeriesStat.TYPE) ||
             changedTypes.contains(Transaction.TYPE) ||
-            changedTypes.contains(AccountBalanceLimit.TYPE)) {
+            changedTypes.contains(AccountPositionThreshold.TYPE)) {
           updateDetails();
         }
       }
@@ -86,7 +86,7 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     contentPanel = builder.add("content", new JPanel());
     contentPanel.setVisible(false);
 
-    builder.add("accountBalanceLimit", new AccountBalanceLimitAction(repository, directory));
+    builder.add("accountBalanceLimit", new AccountPositionThresholdAction(repository, directory));
 
     parentBuilder.add("balanceSummaryView", builder);
   }
@@ -169,7 +169,7 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
   private void updateTotal(Double amount) {
     total.setText(Formatting.toString(amount));
 
-    Double limit = AccountBalanceLimit.getLimit(repository);
+    Double limit = AccountPositionThreshold.getValue(repository);
     Color color = amountColors.get(amount - limit);
     total.setForeground(color);
 

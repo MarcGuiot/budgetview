@@ -22,7 +22,7 @@ import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
 import org.designup.picsou.gui.monthsummary.InfoView;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
-import org.designup.picsou.gui.savings.SavingsPositionAccountView;
+import org.designup.picsou.gui.savings.SavingsAccountPositionView;
 import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
@@ -143,7 +143,7 @@ public class MainPanel {
       new AccountView(repository, directory),
       monthSummary,
       new BalanceSummaryView(repository, directory),
-      new SavingsPositionAccountView(repository, directory),
+      new SavingsAccountPositionView(repository, directory),
       categorizationView,
       new CardView(repository, directory),
       new BudgetView(repository, directory),

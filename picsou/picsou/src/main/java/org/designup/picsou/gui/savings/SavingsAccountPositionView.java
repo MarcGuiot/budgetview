@@ -22,16 +22,16 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
-public class SavingsPositionAccountView extends View {
+public class SavingsAccountPositionView extends View {
   private SelectionService localSelectionService;
 
-  public SavingsPositionAccountView(GlobRepository repository, Directory directory) {
+  public SavingsAccountPositionView(GlobRepository repository, Directory directory) {
     super(repository, directory);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/savingsPositionAccountView.splits", repository, directory);
+      new GlobsPanelBuilder(getClass(), "/layout/savingsAccountPositionView.splits", repository, directory);
     final Directory localDirectory = new DefaultDirectory(directory);
     localSelectionService = new SelectionService();
     localDirectory.add(localSelectionService);
@@ -68,6 +68,6 @@ public class SavingsPositionAccountView extends View {
         localSelectionService.select(selectionBuilder.get());
       }
     }, Month.TYPE);
-    parentBuilder.add("savingsPositionAccountView", builder);
+    parentBuilder.add("savingsAccountPositionView", builder);
   }
 }

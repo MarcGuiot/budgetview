@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.monthsummary;
 
-import org.designup.picsou.model.AccountBalanceLimit;
+import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.metamodel.GlobType;
@@ -13,11 +13,11 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-public class AccountBalanceLimitAction extends AbstractAction implements ChangeSetListener {
+public class AccountPositionThresholdAction extends AbstractAction implements ChangeSetListener {
   private GlobRepository repository;
   private Directory directory;
 
-  public AccountBalanceLimitAction(GlobRepository repository, Directory directory) {
+  public AccountPositionThresholdAction(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
     repository.addChangeListener(this);
@@ -25,24 +25,24 @@ public class AccountBalanceLimitAction extends AbstractAction implements ChangeS
   }
 
   public void actionPerformed(ActionEvent e) {
-    AccountBalanceLimitDialog dialog = new AccountBalanceLimitDialog(repository, directory);
+    AccountPositionThresholdDialog dialog = new AccountPositionThresholdDialog(repository, directory);
     dialog.show();
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(AccountBalanceLimit.TYPE)) {
+    if (changeSet.containsChanges(AccountPositionThreshold.TYPE)) {
       updateName();
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(AccountBalanceLimit.TYPE)) {
+    if (changedTypes.contains(AccountPositionThreshold.TYPE)) {
       updateName();
     }
   }
 
   private void updateName() {
-    double limit = AccountBalanceLimit.getLimit(repository);
-    this.putValue(NAME, Lang.get("accountLimitAction.label", Formatting.DECIMAL_FORMAT.format(limit)));
+    double limit = AccountPositionThreshold.getValue(repository);
+    this.putValue(NAME, Lang.get("accountPositionThresholdAction.label", Formatting.DECIMAL_FORMAT.format(limit)));
   }
 }

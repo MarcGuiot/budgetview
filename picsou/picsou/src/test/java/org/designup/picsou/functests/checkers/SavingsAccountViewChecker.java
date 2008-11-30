@@ -8,7 +8,7 @@ public class SavingsAccountViewChecker extends DataChecker {
   private Panel panel;
 
   public SavingsAccountViewChecker(Window window) {
-    panel = window.getPanel("savingsPositionAccountView");
+    panel = window.getPanel("savingsAccountPositionView");
   }
 
 

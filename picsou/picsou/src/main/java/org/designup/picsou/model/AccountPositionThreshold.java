@@ -16,7 +16,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
-public class AccountBalanceLimit {
+public class AccountPositionThreshold {
   public static final Integer SINGLETON_ID = 0;
   public static org.globsframework.model.Key KEY;
 
@@ -26,16 +26,16 @@ public class AccountBalanceLimit {
   public static IntegerField ID;
 
   @DefaultDouble(0.0)
-  public static DoubleField LIMIT;
+  public static DoubleField THRESHOLD;
 
   static {
-    GlobTypeLoader.init(AccountBalanceLimit.class, "accountBalanceLimit");
+    GlobTypeLoader.init(AccountPositionThreshold.class, "accountBalanceLimit");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 
-  public static Double getLimit(GlobRepository repository) {
+  public static Double getValue(GlobRepository repository) {
     Glob limit = repository.findOrCreate(KEY);
-    return limit.get(LIMIT);
+    return limit.get(THRESHOLD);
   }
 
   public static class Serializer implements PicsouGlobSerializer {
@@ -43,7 +43,7 @@ public class AccountBalanceLimit {
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
-      outputStream.writeDouble(values.get(LIMIT));
+      outputStream.writeDouble(values.get(THRESHOLD));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -55,7 +55,7 @@ public class AccountBalanceLimit {
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(LIMIT, input.readDouble());
+      fieldSetter.set(THRESHOLD, input.readDouble());
     }
 
     public int getWriteVersion() {

@@ -4,9 +4,9 @@
 
   <panel styleClass="dialog">
     <column styleClass="innerDialog">
-      <label text="$balance.edition.title" styleClass="title"/>
+      <label text="$accountPositionEdition.title" styleClass="title"/>
 
-      <textArea ref="initialMessage" text="$balance.edition.initialMessage" 
+      <textArea ref="initialMessage" text="$accountPositionEdition.initialMessage"
                 styleClass="multiLineLabel" anchor="left" border="empty(0,0,10,0)"
                 preferredSize="(250,50)"/>
 
@@ -14,18 +14,18 @@
              marginBottom="10"/>
 
       <row marginBottom="10">
-        <label text="$balance.edition.label" styleClass="formLabel"/>
+        <label text="$accountPositionEdition.label" styleClass="formLabel"/>
         <textField ref="amountField"/>
       </row>
 
-      <label text="$balance.edition.operation" styleClass="separatorTitle"/>
+      <label text="$accountPositionEdition.operation" styleClass="separatorTitle"/>
       <row styleClass="separator">
         <grid>
-          <label gridPos="(0,0)" text="$balance.edition.transaction.date" styleClass="formLabel"/>
+          <label gridPos="(0,0)" text="$accountPositionEdition.transaction.date" styleClass="formLabel"/>
           <label gridPos="(1,0)" ref="dateInfo" styleClass="formLabel" anchor="left"/>
-          <label gridPos="(0,1)" text="$balance.edition.transaction.label" styleClass="formLabel"/>
+          <label gridPos="(0,1)" text="$accountPositionEdition.transaction.label" styleClass="formLabel"/>
           <label gridPos="(1,1)" ref="labelInfo" styleClass="formLabel" anchor="left"/>
-          <label gridPos="(0,2)" text="$balance.edition.transaction.amount" styleClass="formLabel"/>
+          <label gridPos="(0,2)" text="$accountPositionEdition.transaction.amount" styleClass="formLabel"/>
           <label gridPos="(1,2)" ref="amountInfo" styleClass="formLabel" anchor="left"/>
         </grid>
         <filler fill="horizontal"/>

@@ -3,7 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <column>
-    <label text="$savingsPositionAccountView.title" styleClass="blockTitle"/>
+    <label text="$savingsAccountPositionView.title" styleClass="blockTitle"/>
     <panel styleClass="block">
       <column styleClass="innerBlock">
         <scrollPane verticalUnitIncrement="10">

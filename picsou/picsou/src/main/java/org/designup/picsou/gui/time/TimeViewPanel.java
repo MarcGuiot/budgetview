@@ -10,7 +10,7 @@ import org.designup.picsou.gui.time.selectable.TransformationAdapter;
 import org.designup.picsou.gui.time.tooltip.TimeViewMouseHandler;
 import org.designup.picsou.gui.time.tooltip.TimeViewTooltipHandler;
 import org.designup.picsou.gui.time.utils.TimeViewColors;
-import org.designup.picsou.model.AccountBalanceLimit;
+import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.UserPreferences;
 import org.globsframework.gui.GlobSelection;
@@ -154,8 +154,8 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     return balance.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
   }
 
-  public double getPositionLimit(int monthId) {
-    return AccountBalanceLimit.getLimit(repository);
+  public double getPositionThreshold(int monthId) {
+    return AccountPositionThreshold.getValue(repository);
   }
 
   public interface VisibilityListener {
@@ -308,7 +308,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       repaint();
       return;
     }
-    if (changeSet.containsChanges(BalanceStat.TYPE) || changeSet.containsChanges(AccountBalanceLimit.TYPE)) {
+    if (changeSet.containsChanges(BalanceStat.TYPE) || changeSet.containsChanges(AccountPositionThreshold.TYPE)) {
       repaint();
     }
   }
