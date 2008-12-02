@@ -731,11 +731,6 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker selectSavingsSeries(String name) {
-    dialog.getComboBox("savingsToSeries").select(name);
-    return this;
-  }
-
   public SeriesEditionDialogChecker checkSavingsAccountsAreHidden() {
     assertFalse(dialog.getComboBox("savingsAccount").isVisible());
     return this;

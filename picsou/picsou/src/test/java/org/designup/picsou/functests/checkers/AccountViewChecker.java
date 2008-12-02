@@ -110,4 +110,16 @@ public class AccountViewChecker extends DataChecker {
   public AccountEditionChecker createNewAccount() {
     return AccountEditionChecker.open(panel.getButton("createAccount").triggerClick());
   }
+
+  public void createSavingsAccount(final String name, final int balance) {
+    createNewAccount()
+      .setAccountName(name)
+      .setAccountNumber("1234")
+      .selectBank("LCL")
+      .setAsSavings()
+      .checkIsSavings()
+      .setBalance(balance)
+      .validate();
+  }
+
 }

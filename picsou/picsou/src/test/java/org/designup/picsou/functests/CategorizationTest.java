@@ -245,7 +245,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.selectEnvelopes();
     categorization.setEnvelope("France Telecom", "Phone", MasterCategory.TELECOMS, true);
-    
+
     categorization.selectRecurring();
     categorization.checkRecurringSeriesIsNotSelected("Telephone");
     categorization.setRecurring("France Telecom", "Telephone", MasterCategory.TELECOMS, false);
@@ -1121,4 +1121,28 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkTitle("Categorization")
       .close();
   }
+
+  public void testCreatedSavingTransactionAreNotVisibleInCategorization() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/10", -100.00, "Virement")
+      .load();
+    timeline.selectAll();
+    views.selectHome();
+    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    views.selectCategorization();
+    categorization
+      .selectTableRows("Virement")
+      .selectSavings()
+      .createSavingsSeries()
+      .selectSavingsAccount("Epargne")
+      .setName("Epargne")
+      .setCategories(MasterCategory.SAVINGS)
+      .validate();
+
+    categorization.initContent()
+      .add("10/08/2008", "Epargne", "Virement", -100)
+      .check();
+
+  }
+
 }

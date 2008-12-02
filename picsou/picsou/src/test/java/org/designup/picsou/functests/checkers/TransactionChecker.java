@@ -76,6 +76,11 @@ public class TransactionChecker extends ViewChecker {
     return this;
   }
 
+  public TransactionChecker checkCategorizeIsDisable(int row) {
+    UISpecAssert.assertFalse(getTable().editCell(row, TransactionView.SERIES_COLUMN_INDEX).getButton().isEnabled());
+    return this;
+  }
+
   public void checkSeries(String transactionLabel, String seriesName) {
     checkSeries(getIndexOf(transactionLabel), seriesName);
   }
@@ -223,8 +228,8 @@ public class TransactionChecker extends ViewChecker {
       if (seriesAndCategory.length > 1) {
         category = seriesAndCategory[1];
       }
-      if (type == TransactionType.PLANNED){
-        if (amount > 0 ) {
+      if (type == TransactionType.PLANNED) {
+        if (amount > 0) {
           type = TransactionType.VIREMENT;
         }
         else {
@@ -313,7 +318,7 @@ public class TransactionChecker extends ViewChecker {
         if (type == null) {
           return "";
         }
-        if (transaction.get(Transaction.PLANNED)){
+        if (transaction.get(Transaction.PLANNED)) {
           type = TransactionType.PLANNED;
         }
         return "TransactionType." + type.getName().toUpperCase();

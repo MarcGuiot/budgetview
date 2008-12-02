@@ -1029,7 +1029,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition
       .selectSeries("S2")
       .monthsAreVisible()
-      .checkMonthIsChecked(2, 6, 10);
+      .checkMonthIsChecked(2, 6, 10)
+      .cancel();
   }
 
   public void testPeriodOrder() throws Exception {
