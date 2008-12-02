@@ -4,9 +4,7 @@ import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.ProfileType;
-import org.uispec4j.Button;
 import org.uispec4j.*;
-import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
@@ -14,7 +12,6 @@ import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
-import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 public class SeriesEditionDialogChecker extends DataChecker {
@@ -759,7 +756,7 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkIsMainToSavings() {
+  public SeriesEditionDialogChecker checkMainToSavings() {
     assertThat(dialog.getToggleButton("fromMainToSavings").isSelected());
     return this;
   }
