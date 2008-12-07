@@ -42,9 +42,20 @@ public class UtilsTest extends TestCase {
     assertTrue(Utils.compareIgnoreCase("a", null) > 0);
   }
 
-
   public void testAppend() throws Exception {
     ArrayTestUtils.assertEquals(new int[]{1, 3, 1, 5, 6},
                                 Utils.append(new int[]{1, 3}, new int[]{1, 5, 6}));
+  }
+
+  public void testRange() throws Exception {
+    ArrayTestUtils.assertEquals(new Integer[]{1}, Utils.range(1, 1));
+    ArrayTestUtils.assertEquals(new Integer[]{-1, 0, 1, 2}, Utils.range(-1, 2));
+
+    try {
+      Utils.range(2, 1);
+    }
+    catch (Exception e) {
+      assertEquals("Lower bound 2 should be less than 1", e.getMessage());
+    }
   }
 }
