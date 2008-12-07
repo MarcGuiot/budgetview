@@ -129,9 +129,9 @@ public class Gui {
   }
 
   public static void installRolloverOnButtons(final JTable table, final int... editorColumns) {
-    final TableColumnModel columnModel = table.getColumnModel();
     table.addMouseMotionListener(new MouseMotionAdapter() {
       public void mouseMoved(MouseEvent e) {
+        final TableColumnModel columnModel = table.getColumnModel();
         int graphicalColumnIndex = columnModel.getColumnIndexAtX(e.getX());
         int modelColumnIndex = columnModel.getColumn(graphicalColumnIndex).getModelIndex();
         if (modelColumnIndex < 0) {
@@ -139,13 +139,13 @@ public class Gui {
         }
         for (int column : editorColumns) {
           if (modelColumnIndex == column) {
-            int rowIndex = e.getY() / table.getRowHeight();
+            int row = e.getY() / table.getRowHeight();
             if (table.isEditing() &&
                 (table.getEditingColumn() == modelColumnIndex) &&
-                (table.getEditingRow() == rowIndex)) {
+                (table.getEditingRow() == row)) {
               return;
             }
-            table.editCellAt(rowIndex, column);
+            table.editCellAt(row, column);
             return;
           }
         }

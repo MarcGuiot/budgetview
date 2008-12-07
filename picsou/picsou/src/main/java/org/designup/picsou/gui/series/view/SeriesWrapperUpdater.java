@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-class SeriesWrapperUpdater implements ChangeSetListener {
+public class SeriesWrapperUpdater implements ChangeSetListener {
 
   private GlobRepository localRepository;
 
-  SeriesWrapperUpdater(GlobRepository localRepository) {
+  public SeriesWrapperUpdater(GlobRepository localRepository) {
     this.localRepository = localRepository;
   }
 

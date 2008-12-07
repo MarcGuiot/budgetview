@@ -79,7 +79,7 @@ public class CategoryView extends View implements ExpandableTable {
       .addColumn(" ", expandColumn, expandColumn, categoryStringifier.getComparator(repository))
       .addColumn(Lang.get("category"), categoryStringifier, customizer)
       .addColumn(Lang.get("amount"), amountStringifier, ALIGN_RIGHT)
-      .hideHeader()
+      .setHeaderHidden()
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
     provider.setView(globTable);

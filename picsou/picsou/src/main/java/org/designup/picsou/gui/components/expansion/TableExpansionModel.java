@@ -18,14 +18,14 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
   private IntegerField idField;
   private GlobType type;
 
-  public TableExpansionModel(GlobType type, IntegerField idField, GlobRepository repository, ExpandableTable table) {
+  public TableExpansionModel(GlobType type, IntegerField idField, GlobRepository repository, ExpandableTable table, final boolean isInitiallyExpanded) {
     this.idField = idField;
     this.repository = repository;
     this.table = table;
     repository.addChangeListener(this);
     this.type = type;
     for (Glob master : repository.getAll(type, getMasterMatcher())) {
-      expandedMap.put(master.get(idField), false);
+      expandedMap.put(master.get(idField), isInitiallyExpanded);
     }
     updateExpandabilities();
   }
@@ -86,10 +86,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
       return false;
     }
     Boolean status = expandableMap.get(glob.get(idField));
-    if (status == null) {
-      return false;
-    }
-    return status;
+    return Boolean.TRUE.equals(status);
   }
 
   public boolean matches(Glob glob, GlobRepository repository) {

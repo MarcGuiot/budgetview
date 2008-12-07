@@ -4,6 +4,7 @@ import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.gui.splits.painters.GradientPainter;
 import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.utils.directory.Directory;
 
@@ -191,5 +192,12 @@ public enum PicsouColors {
         css.addRule("a." + cssClass + " { color: #" + Colors.toString(color) + "; }");
       }
     });
+  }
+
+  public static GradientPainter createTableSelectionBackgroundPainter(ColorService colorService) {
+    return new GradientPainter(CATEGORIES_SELECTED_BG_TOP,
+                               CATEGORIES_SELECTED_BG_BOTTOM,
+                               CATEGORIES_SELECTED_BORDER,
+                                           colorService);
   }
 }

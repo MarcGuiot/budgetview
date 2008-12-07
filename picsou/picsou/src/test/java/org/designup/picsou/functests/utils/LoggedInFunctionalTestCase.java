@@ -40,7 +40,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected BudgetViewChecker budgetView;
   protected CategorizationChecker categorization;
   protected SeriesViewChecker series;
+  protected SeriesEvolutionChecker seriesEvolution;
   protected InfoChecker infochecker;
+
 
   protected GlobRepository repository;
   private Directory directory;
@@ -128,6 +130,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     budgetView = new BudgetViewChecker(mainWindow);
     categorization = new CategorizationChecker(mainWindow);
     series = new SeriesViewChecker(mainWindow);
+    seriesEvolution = new SeriesEvolutionChecker(mainWindow);
     license = new LicenseChecker(mainWindow);
     infochecker = new InfoChecker(mainWindow);
   }
@@ -154,6 +157,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     budgetView = null;
     categorization = null;
     series = null;
+    seriesEvolution = null;
     license = null;
 
     repository = null;

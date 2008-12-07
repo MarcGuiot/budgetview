@@ -2,6 +2,8 @@ package org.designup.picsou.gui.components;
 
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
+import org.globsframework.gui.splits.painters.PaintablePanel;
+import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -69,13 +71,6 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     return true;
   }
 
-  protected JLabel createLabel(String text, Color selectionForeground, Color foreground) {
-    JLabel label = new JLabel(text);
-    label.setFont(tableView.getDefaultFont());
-    label.setForeground(isSelected ? selectionForeground : foreground);
-    return label;
-  }
-
   protected void refreshDisplay(int row, int column) {
     tableView.getComponent().editCellAt(row, column);
   }
@@ -103,6 +98,35 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     this.row = row;
     this.column = column;
     return getComponent((Glob)value, isRender);
+  }
+
+  protected JLabel createLabel(String text, Color selectionForeground, Color foreground) {
+    JLabel label = new JLabel(text);
+    label.setFont(tableView.getDefaultFont());
+    label.setForeground(isSelected ? selectionForeground : foreground);
+    return label;
+  }
+
+  protected PaintablePanel createCellPanel(JComponent component, boolean leftAlign) {
+    PaintablePanel panel = new PaintablePanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+    if (leftAlign) {
+      panel.add(component);
+      panel.add(Box.createHorizontalGlue());
+    }
+    else {
+      panel.add(Box.createHorizontalGlue());
+      panel.add(component);
+    }
+    return panel;
+  }
+
+  protected HyperlinkButton createHyperlinkButton(Action action) {
+    HyperlinkButton button = new HyperlinkButton(action);
+    button.setOpaque(false);
+    button.setAutoHide(false);
+    button.setUnderline(false);
+    return button;
   }
 
   private class SelectionUpdaterListener implements ListSelectionListener {

@@ -20,6 +20,10 @@ public class ViewSelectionChecker extends DataChecker {
     select("categorization");
   }
 
+  public void selectEvolution() {
+    select("seriesEvolution");
+  }
+
   public void selectBudget() {
     select("budget");
   }

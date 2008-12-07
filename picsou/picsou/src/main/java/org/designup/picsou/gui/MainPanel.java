@@ -24,6 +24,7 @@ import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.savings.SavingsAccountPositionView;
 import org.designup.picsou.gui.series.view.SeriesView;
+import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -148,6 +149,7 @@ public class MainPanel {
       new CardView(repository, directory),
       new BudgetView(repository, directory),
       seriesView,
+      new SeriesEvolutionView(repository, directory),
       licenseInfoView);
 
     createMenuBar(parent, directory);

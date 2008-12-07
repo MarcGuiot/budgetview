@@ -11,6 +11,7 @@
            minimumSize="(40,40)" preferredSize="(40,40)" margin="0" marginLeft="5" weightX="0" fill="none"/>
     <style selector="toggleButton#homeCardToggle" icon="card_home.png"/>
     <style selector="toggleButton#categorizationCardToggle" icon="card_categorization.png"/>
+    <style selector="toggleButton#seriesEvolutionCardToggle" icon="card_budget.png"/>
     <style selector="toggleButton#budgetCardToggle" icon="card_budget.png"/>
     <style selector="toggleButton#dataCardToggle" icon="card_list.png"/>
 
@@ -90,6 +91,7 @@
         <button name="forward" action="forward" styleClass="backforward" tooltipText="$forward"/>
         <toggleButton ref="homeCardToggle" styleClass="masterViewSelector"/>
         <toggleButton ref="budgetCardToggle" styleClass="masterViewSelector"/>
+        <toggleButton ref="seriesEvolutionCardToggle" styleClass="masterViewSelector"/>
         <toggleButton ref="dataCardToggle" styleClass="masterViewSelector"/>
         <toggleButton ref="categorizationCardToggle" styleClass="masterViewSelector"/>
       </row>
@@ -140,6 +142,10 @@
 
         <card name="budget">
           <panel ref="budgetView"/>
+        </card>
+
+        <card name="seriesEvolution">
+          <panel ref="seriesEvolutionView"/>
         </card>
 
         <card name="data">

@@ -1,42 +1,47 @@
-package org.designup.picsou.gui.series.view;
+package org.designup.picsou.gui.series.evolution;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.CustomBoldLabelCustomizer;
-import org.designup.picsou.gui.components.SelectorBackgroundPainter;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.ExpandableTable;
 import org.designup.picsou.gui.components.expansion.TableExpansionColumn;
 import org.designup.picsou.gui.components.expansion.TableExpansionInstaller;
+import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.view.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.utils.GlobSelectionBuilder;
+import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
-import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedSet;
 
-public class SeriesView extends View {
+public class SeriesEvolutionView extends View {
+
   public static final int LABEL_COLUMN_INDEX = 1;
   private GlobRepository parentRepository;
   private SelectionService parentSelectionService;
 
   private GlobTableView globTable;
-  private SeriesExpansionModel expansionModel;
   private JTable table;
+  private List<SeriesEvolutionMonthColumn> monthColumns = new ArrayList<SeriesEvolutionMonthColumn>();
 
-  public SeriesView(GlobRepository repository, Directory directory) {
+  public SeriesEvolutionView(GlobRepository repository, Directory directory) {
     super(createLocalRepository(repository), createLocalDirectory(directory));
     this.parentRepository = repository;
     this.parentSelectionService = directory.get(SelectionService.class);
@@ -58,18 +63,25 @@ public class SeriesView extends View {
     return localRepository;
   }
 
-  public void registerComponents(GlobsPanelBuilder builder) {
-    registerSelectionUpdater();
+  public void registerComponents(GlobsPanelBuilder parentBuilder) {
+    parentBuilder.add("seriesEvolutionView", createLocalPanel());
+  }
+
+  private GlobsPanelBuilder createLocalPanel() {
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/seriesEvolutionView.splits",
+                                                      repository, directory);
+
+    SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(directory.get(JFrame.class), parentRepository, directory);
 
     ExpandableTableAdapter tableAdapter = new ExpandableTableAdapter();
 
     // attention CategoryExpansionModel doit etre enregistré comme listener de changetSet avant la table.
-    expansionModel = new SeriesExpansionModel(repository, tableAdapter, false);
+    SeriesExpansionModel expansionModel = new SeriesExpansionModel(repository, tableAdapter, true);
 
     SeriesWrapperStringifier stringifier = new SeriesWrapperStringifier(parentRepository, directory);
 
-    globTable = GlobTableView.init(SeriesWrapper.TYPE, repository,
-                                   new SeriesWrapperComparator(parentRepository, repository, stringifier), directory);
+    SeriesWrapperComparator comparator = new SeriesWrapperComparator(parentRepository, repository, stringifier);
+    globTable = GlobTableView.init(SeriesWrapper.TYPE, repository, comparator, directory);
 
     CustomBoldLabelCustomizer customizer = new CustomBoldLabelCustomizer(directory) {
       protected boolean isBold(Glob glob) {
@@ -77,17 +89,34 @@ public class SeriesView extends View {
       }
     };
 
-    SelectorBackgroundPainter backgroundPainter = new SelectorBackgroundPainter(directory);
+    SeriesEvolutionColors colors = new SeriesEvolutionColors(directory);
+    CellPainter backgroundPainter = new SeriesEvolutionBackgroundPainter(colors);
     TableExpansionColumn expandColumn = new TableExpansionColumn(backgroundPainter);
 
     globTable
       .setDefaultBackgroundPainter(backgroundPainter)
-      .addColumn(" ", expandColumn, expandColumn, stringifier.getComparator(repository))
-      .addColumn(Lang.get("series"), stringifier, customizer)
-      .setHeaderHidden()
+      .setHeaderActionsDisabled()
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
+    globTable
+      .addColumn("", expandColumn, expandColumn, stringifier.getComparator(repository))
+      .addColumn("", stringifier, customizer);
+
+    for (int offset = -1; offset < 7; offset++) {
+      SeriesEvolutionMonthColumn monthColumn =
+        new SeriesEvolutionMonthColumn(offset, globTable, parentRepository, directory, colors, seriesEditionDialog);
+      monthColumns.add(monthColumn);
+      globTable.addColumn(monthColumn);
+    }
+
+    PicsouTableHeaderPainter.install(globTable, directory);
+
     table = globTable.getComponent();
+
+    Gui.installRolloverOnButtons(table, Utils.intRange(2, 10));
+    table.setDragEnabled(false);
+    table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    ToolTipManager.sharedInstance().unregisterComponent(table.getTableHeader());
 
     tableAdapter.setFilter(expansionModel);
 
@@ -97,46 +126,22 @@ public class SeriesView extends View {
 
     expansionModel.completeInit();
 
-    builder.add("seriesView", table);
-  }
+    builder.add("seriesEvolutionTable", table);
 
-  private void registerSelectionUpdater() {
-    directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
+    parentSelectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        GlobSelectionBuilder newSelection = new GlobSelectionBuilder();
-        for (Glob wrapper : selection.getAll(SeriesWrapper.TYPE)) {
-          Integer itemId = wrapper.get(SeriesWrapper.ITEM_ID);
-          if (Boolean.TRUE.equals(wrapper.get(SeriesWrapper.IS_BUDGET_AREA))) {
-            Glob budgetArea = parentRepository.get(Key.create(BudgetArea.TYPE, itemId));
-            newSelection.add(budgetArea);
+        SortedSet<Integer> monthIds = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
+        if (!monthIds.isEmpty()) {
+          Integer referenceMonth = monthIds.iterator().next();
+          for (SeriesEvolutionMonthColumn column : monthColumns) {
+            column.setReferenceMonthId(referenceMonth);
           }
-          else {
-            Glob series = parentRepository.get(Key.create(Series.TYPE, itemId));
-            newSelection.add(series);
-          }
+          globTable.refresh();
         }
-        parentSelectionService.select(newSelection.get());
       }
-    }, SeriesWrapper.TYPE);
-  }
+    }, Month.TYPE);
 
-  public void selectBudgetArea(BudgetArea budgetArea) {
-    Glob wrapper = SeriesWrapper.find(repository, true, budgetArea.getId());
-    globTable.select(wrapper);
-  }
-
-  public void selectSeries(Glob series) {
-    Glob wrapper = SeriesWrapper.find(repository, false, series.get(Series.ID));
-    Glob master = repository.findLinkTarget(wrapper, SeriesWrapper.MASTER);
-    if (master != null) {
-      expansionModel.setExpanded(master);
-    }
-
-    globTable.select(wrapper);
-  }
-
-  public void selectAll() {
-    globTable.selectFirst();
+    return builder;
   }
 
   private class ExpandableTableAdapter implements ExpandableTable {
@@ -152,4 +157,5 @@ public class SeriesView extends View {
       globTable.setFilter(matcher);
     }
   }
+
 }

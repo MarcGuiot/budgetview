@@ -30,6 +30,7 @@ public class Month {
   }
 
   private static NumberFormat MONTH_FORMAT = new DecimalFormat("00");
+  private static NumberFormat TWO_DIGITS_YEAR_FORMAT = new DecimalFormat("00");
   private static final Calendar CALENDAR = Calendar.getInstance();
 
   public static String toString(int yyyymm) {
@@ -133,18 +134,41 @@ public class Month {
   }
 
   public static String getFullLabel(Integer monthId) {
+    if (monthId == null) {
+      return "";
+    }
     int month = toMonth(monthId);
     int year = toYear(monthId);
     return Lang.get("month." + toMonth(month) + ".long") + " " + year;
   }
 
   public static String getFullMonthLabel(Integer monthId) {
+    if (monthId == null) {
+      return "";
+    }
     int month = toMonth(monthId);
     return Lang.get("month." + toMonth(month) + ".long");
   }
 
-  public static String getShortMonthLabel(Integer month) {
+  public static String getShortMonthLabel(Integer monthId) {
+    if (monthId == null) {
+      return "";
+    }
+    int month = toMonth(monthId);
     return Lang.get("month." + toMonth(month) + ".medium");
+  }
+
+  public static String getShortMonthLabelWithYear(Integer monthId) {
+    if (monthId == null) {
+      return "";
+    }
+    int month = toMonth(monthId);
+    int year = toYear(monthId);
+    return Lang.get("month." + toMonth(month) + ".medium") + " " + getTwoDigitsYearLabel(year);
+  }
+
+  private static String getTwoDigitsYearLabel(int year) {
+    return TWO_DIGITS_YEAR_FORMAT.format(year % 100);
   }
 
   public static String getOneLetterMonthLabel(Integer month) {
@@ -175,7 +199,6 @@ public class Month {
     }
     return monthIds;
   }
-
 
   public static Date getLastDay(int monthId) {
     CALENDAR.setTime(toDate(monthId, 1));

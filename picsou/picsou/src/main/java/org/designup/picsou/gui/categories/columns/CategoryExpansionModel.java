@@ -11,7 +11,7 @@ import org.globsframework.model.utils.GlobMatcher;
 public class CategoryExpansionModel extends TableExpansionModel {
 
   public CategoryExpansionModel(GlobRepository repository, CategoryView view) {
-    super(Category.TYPE, Category.ID, repository, view);
+    super(Category.TYPE, Category.ID, repository, view, false);
   }
 
   protected GlobMatcher getMasterMatcher() {
