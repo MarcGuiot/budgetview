@@ -78,6 +78,7 @@ public class MonthChooserChecker extends DataChecker {
 
   public MonthChooserChecker selectMonthInCurrent(int month) {
     ToggleButton button = getButtonInCurrentYear(month);
+    UISpecAssert.assertThat("Month " + month + " cannot be selected", button.isEnabled());
     button.click();
     assertFalse(dialog.isVisible());
     return this;

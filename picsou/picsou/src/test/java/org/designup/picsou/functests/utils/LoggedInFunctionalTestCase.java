@@ -107,11 +107,11 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void setCurrentMonth(String monthId) {
-    setCurrentDate(Dates.parseMonth(monthId));
+    setCurrentDate(monthId + "/15");
   }
 
-  protected void setCurrentDate(Date currentDate) {
-    this.currentDate = currentDate;
+  protected void setCurrentDate(String date) {
+    this.currentDate = Dates.parse(date);
   }
 
   protected void initCheckers() {

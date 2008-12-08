@@ -3,9 +3,7 @@ package org.designup.picsou.gui.series.evolution;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.CustomBoldLabelCustomizer;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
-import org.designup.picsou.gui.components.expansion.ExpandableTable;
-import org.designup.picsou.gui.components.expansion.TableExpansionColumn;
-import org.designup.picsou.gui.components.expansion.TableExpansionInstaller;
+import org.designup.picsou.gui.components.expansion.*;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.view.*;
 import org.designup.picsou.gui.utils.Gui;
@@ -35,9 +33,11 @@ import java.util.SortedSet;
 public class SeriesEvolutionView extends View {
 
   public static final int LABEL_COLUMN_INDEX = 1;
-  private GlobRepository parentRepository;
-  private SelectionService parentSelectionService;
+  public static final int MONTH_COLUMNS_COUNT = 8;
 
+  private GlobRepository parentRepository;
+
+  private SelectionService parentSelectionService;
   private GlobTableView globTable;
   private JTable table;
   private List<SeriesEvolutionMonthColumn> monthColumns = new ArrayList<SeriesEvolutionMonthColumn>();
@@ -105,7 +105,7 @@ public class SeriesEvolutionView extends View {
       .addColumn("", expandColumn, expandColumn, stringifier.getComparator(repository))
       .addColumn("", stringifier, customizer);
 
-    for (int offset = -1; offset < 7; offset++) {
+    for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
       SeriesEvolutionMonthColumn monthColumn =
         new SeriesEvolutionMonthColumn(offset, globTable, parentRepository, directory, colors, seriesEditionDialog);
       monthColumns.add(monthColumn);
@@ -144,6 +144,9 @@ public class SeriesEvolutionView extends View {
         }
       }
     }, Month.TYPE);
+
+    builder.add("expand", new ExpandTableAction(expansionModel));
+    builder.add("collapse", new CollapseTableAction(expansionModel));
 
     return builder;
   }

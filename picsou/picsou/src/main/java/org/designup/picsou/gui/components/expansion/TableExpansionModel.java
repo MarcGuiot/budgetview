@@ -73,6 +73,22 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     table.select(glob);
   }
 
+  public void expandAll() {
+    setExpanded(true);
+  }
+
+  public void collapseAll() {
+    setExpanded(false);
+  }
+
+  private void setExpanded(boolean expanded) {
+    for (Map.Entry<Integer, Boolean> entry : expandedMap.entrySet()) {
+      Boolean expandable = expandableMap.get(entry.getKey());
+      entry.setValue(expandable && expanded);
+    }
+    table.setFilter(this);
+  }
+
   public boolean isExpanded(Glob glob) {
     if (!isMaster(glob)) {
       return false;

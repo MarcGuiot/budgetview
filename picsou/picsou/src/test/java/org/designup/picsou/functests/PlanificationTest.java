@@ -10,7 +10,7 @@ import org.globsframework.utils.Dates;
 public class PlanificationTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    setCurrentDate(Dates.parse("2008/07/01"));
+    setCurrentDate("2008/07/01");
     super.setUp();
   }
 

@@ -112,12 +112,15 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
         label.setText(format(balanceStat, BalanceStat.getPlanned(budgetArea)));
       }
       else {
-        label.setText("nothing");
+        label.setText("");
       }
     }
   }
 
   private String format(Glob glob, DoubleField field) {
+    if (glob == null) {
+      return "";
+    }
     Double value = glob.get(field);
     if ((value == null) || Math.abs(value) < 0.001) {
       return "";
@@ -141,11 +144,11 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
   private void updateSummaryLabel(Glob seriesWrapper) {
     Integer id = seriesWrapper.get(SeriesWrapper.ID);
     if (id.equals(SeriesWrapper.BALANCE_SUMMARY_ID)) {
-      Glob balanceStat = repository.get(Key.create(BalanceStat.TYPE, referenceMonthId));
+      Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
       label.setText(format(balanceStat, BalanceStat.MONTH_BALANCE));
     }
     else if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
-      Glob balanceStat = repository.get(Key.create(BalanceStat.TYPE, referenceMonthId));
+      Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
       label.setText(format(balanceStat, BalanceStat.END_OF_MONTH_ACCOUNT_POSITION));
     }
     else if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {

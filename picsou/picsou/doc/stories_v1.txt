@@ -21,6 +21,8 @@
 
 - SED: Changement d'un mois sur une serie SINGLE_MONTH : preserver le montant et la selection
 
+- Bug : NPE sur restriction du nombre de mois futurs  
+
 ========================================================================================================
 
 ====================================
