@@ -1,10 +1,13 @@
 package org.designup.picsou.gui.time;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -38,8 +41,8 @@ public class TimeView extends View {
     builder.add(gotoFirstButton, gotoLastButton, gotoNextButton, gotoPrevButton);
   }
 
-  public void selectLastMonth() {
-    viewPanel.selectLastMonth();
+  public void selectCurrentMonth() {
+    viewPanel.selectMonth(directory.get(TimeService.class).getCurrentMonthId());
   }
 
   private void createNavigationButtons() {

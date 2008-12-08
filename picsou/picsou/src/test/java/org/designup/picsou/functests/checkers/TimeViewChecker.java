@@ -70,7 +70,7 @@ public class TimeViewChecker extends DataChecker {
    * @deprecated
    */
   public void selectCell(int index) {
-    timeViewPanel.selectMonth(index);
+    timeViewPanel.selectMonthByIndex(index);
   }
 
   public void selectMonth(String yyyymm) {
@@ -83,7 +83,7 @@ public class TimeViewChecker extends DataChecker {
     for (String date : yyyymm) {
       monthIds.add(parseMonthId(date));
     }
-    timeViewPanel.selectMonth(monthIds);
+    timeViewPanel.selectMonths(monthIds);
   }
 
   public void selectLast() {
@@ -91,7 +91,7 @@ public class TimeViewChecker extends DataChecker {
   }
 
   public void selectNone() {
-    timeViewPanel.selectMonth(Collections.<Integer>emptySet());
+    timeViewPanel.selectMonths(Collections.<Integer>emptySet());
   }
 
   public void selectAll() {

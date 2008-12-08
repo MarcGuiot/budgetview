@@ -21,6 +21,7 @@ public class SeriesEvolutionColors implements ColorChangeListener {
   private Color summaryText;
   private Painter summaryBg;
   private Painter summaryCurrentBg;
+  private Color uncategorizedText;
 
   private Color budgetAreaText;
   private Painter budgetAreaBg;
@@ -61,6 +62,7 @@ public class SeriesEvolutionColors implements ColorChangeListener {
     budgetAreaText = colors.get("seriesEvolution.budgetArea.text");
     seriesText = colors.get("seriesEvolution.series.text");
     selectionText = colors.get(PicsouColors.CATEGORIES_SELECTED_FG);
+    uncategorizedText = colors.get("seriesEvolution.uncategorized");
   }
 
   public void setColors(Glob seriesWrapper, int row, int monthOffset, boolean selected,
@@ -77,7 +79,7 @@ public class SeriesEvolutionColors implements ColorChangeListener {
           setSummaryColors(component, background, monthOffset);
         }
         else if (SeriesWrapper.UNCATEGORIZED_ID.equals(seriesWrapper.get(SeriesWrapper.ID))) {
-          setSummaryColors(component, background, monthOffset);
+          setColors(uncategorizedText, summaryBg, summaryCurrentBg, component, background, monthOffset);
         }
         else {
           setBudgetAreaColors(component, background, monthOffset);

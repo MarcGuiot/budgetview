@@ -15,8 +15,6 @@
 
 - Revoir explication seuil
 
-- Rollovers / selecteurs de tab
-
 - AccountView : creation d'un compte d'epargne => le mettre directement en "epargne"
 
 - SED: Changement d'un mois sur une serie SINGLE_MONTH : preserver le montant et la selection

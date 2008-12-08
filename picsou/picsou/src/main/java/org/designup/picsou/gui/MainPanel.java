@@ -153,7 +153,7 @@ public class MainPanel {
       licenseInfoView);
 
     createMenuBar(parent, directory);
-    timeView.selectLastMonth();
+    timeView.selectCurrentMonth();
   }
 
   private void selectLastMonthWithATransaction(GlobRepository repository, Directory directory) {

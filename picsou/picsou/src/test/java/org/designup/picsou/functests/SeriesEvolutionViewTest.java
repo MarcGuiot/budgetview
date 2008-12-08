@@ -62,16 +62,15 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void IN_PROGRESS_testNoData() throws Exception {
+  public void testNoData() throws Exception {
     timeline.checkSelection("2008/07");
     views.selectEvolution();
     seriesEvolution.checkColumnNames(
       "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
     );
-    seriesEvolution.checkRowLabels(
+    seriesEvolution.checkTableIsEmpty(
       "Balance", "Main account", "Savings account", "To categorize",
       "Income", "Recurring", "Envelopes", "Occasional", "Special", "Savings");
-
   }
 
   public void testColumnNamesAreUpdatedOnMonthSelection() throws Exception {

@@ -12,6 +12,7 @@ import org.globsframework.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 public class SeriesEvolutionChecker extends DataChecker {
   private Table table;
@@ -77,6 +78,16 @@ public class SeriesEvolutionChecker extends DataChecker {
     table.selectRow(row);
     Window window = WindowInterceptor.getModalDialog(table.editCell(row, column).getButton().triggerClick());
     return new SeriesEditionDialogChecker(window, false);
+  }
+
+  public void checkTableIsEmpty(String... labels) {
+    SeriesEvolutionChecker.SeriesTableChecker checker = initContent();
+    String[] values = new String[SeriesEvolutionView.MONTH_COLUMNS_COUNT];
+    Arrays.fill(values, "");
+    for (String label : labels) {
+      checker.add(label, values);
+    }
+    checker.check();
   }
 
   public class SeriesTableChecker extends TableChecker {
