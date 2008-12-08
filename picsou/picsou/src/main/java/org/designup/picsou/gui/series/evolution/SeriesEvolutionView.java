@@ -16,6 +16,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
@@ -58,6 +59,8 @@ public class SeriesEvolutionView extends View {
     GlobRepository localRepository = GlobRepositoryBuilder.createEmpty();
 
     SeriesWrapperUpdater updater = new SeriesWrapperUpdater(localRepository);
+    updater.setExcludeBudgetAreaAll(true);
+    updater.setCreateSummaries(true);
     updater.globsReset(parentRepository, Utils.set(BudgetArea.TYPE, Series.TYPE));
     parentRepository.addChangeListener(updater);
     return localRepository;
@@ -123,6 +126,7 @@ public class SeriesEvolutionView extends View {
     expandColumn.init(tableAdapter, expansionModel);
     TableExpansionInstaller.setUp(tableAdapter, expansionModel, table, expandColumn, LABEL_COLUMN_INDEX);
     table.setDragEnabled(false);
+    TableUtils.setSize(table, LABEL_COLUMN_INDEX, 150);
 
     expansionModel.completeInit();
 

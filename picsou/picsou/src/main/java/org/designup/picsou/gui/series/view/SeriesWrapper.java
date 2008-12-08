@@ -3,7 +3,6 @@ package org.designup.picsou.gui.series.view;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
-import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -17,7 +16,8 @@ public class SeriesWrapper {
   @Key
   public static IntegerField ID;
 
-  public static BooleanField IS_BUDGET_AREA;
+  @Target(SeriesWrapperType.class)
+  public static LinkField ITEM_TYPE;
 
   public static IntegerField ITEM_ID;
 
@@ -26,14 +26,18 @@ public class SeriesWrapper {
 
   public static final Integer ALL_ID = 0;
   public static final Integer UNCATEGORIZED_ID = 1;
+  
+  public static final Integer BALANCE_SUMMARY_ID = -2;
+  public static final Integer MAIN_POSITION_SUMMARY_ID = -3;
+  public static final Integer SAVINGS_POSITION_SUMMARY_ID = -4;
 
   static {
     GlobTypeLoader.init(SeriesWrapper.class);
   }
 
-  public static Glob find(GlobRepository repository, boolean isBudgetArea, Integer itemId) {
+  public static Glob find(GlobRepository repository, SeriesWrapperType type, Integer itemId) {
     return repository.findUnique(SeriesWrapper.TYPE,
-                                 FieldValue.value(SeriesWrapper.IS_BUDGET_AREA, isBudgetArea),
+                                 FieldValue.value(SeriesWrapper.ITEM_TYPE, type.getId()),
                                  FieldValue.value(SeriesWrapper.ITEM_ID, itemId));
   }
 

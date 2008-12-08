@@ -3,9 +3,12 @@ package org.designup.picsou.gui.series.evolution;
 import org.designup.picsou.gui.components.AbstractRolloverEditor;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.model.SavingsBalanceStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
+import org.designup.picsou.gui.series.view.SeriesWrapperType;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.globsframework.gui.splits.components.HyperlinkButton;
@@ -18,6 +21,8 @@ import org.globsframework.model.Key;
 import org.globsframework.model.KeyBuilder;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.metamodel.fields.DoubleField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,21 +75,54 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
     }
 
     Integer itemId = seriesWrapper.get(SeriesWrapper.ITEM_ID);
-    if (seriesWrapper.get(SeriesWrapper.IS_BUDGET_AREA)) {
-      updateBudgetAreaLabel(BudgetArea.get(itemId));
-      colors.setColors(seriesWrapper, row, offset, isSelected, label, labelPanel);
-      return labelPanel;
-    }
-
     if (!render) {
       currentSeries = repository.get(Key.create(Series.TYPE, itemId));
     }
 
-    JButton button = render ? rendererButton : editorButton;
-    PaintablePanel panel = render ? rendererPanel : editorPanel;
-    updateSeriesButton(itemId, button, panel);
-    colors.setColors(seriesWrapper, row, offset, isSelected, button, panel);
-    return panel;
+    switch (SeriesWrapperType.get(seriesWrapper)) {
+      case BUDGET_AREA:
+        updateBudgetAreaLabel(BudgetArea.get(itemId));
+        colors.setColors(seriesWrapper, row, offset, isSelected, label, labelPanel);
+        return labelPanel;
+
+      case SERIES:
+        JButton button = render ? rendererButton : editorButton;
+        PaintablePanel panel = render ? rendererPanel : editorPanel;
+        updateSeriesButton(itemId, button, panel);
+        colors.setColors(seriesWrapper, row, offset, isSelected, button, panel);
+        return panel;
+
+      case SUMMARY:
+        updateSummaryLabel(seriesWrapper);
+        colors.setColors(seriesWrapper, row, offset, isSelected, label, labelPanel);
+        return labelPanel;
+
+      default:
+        throw new InvalidParameter("Unexpected type: " + SeriesWrapperType.get(seriesWrapper));
+    }
+  }
+
+  private void updateBudgetAreaLabel(BudgetArea budgetArea) {
+    Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
+    if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
+      label.setText(format(balanceStat, BalanceStat.UNCATEGORIZED));
+    }
+    else {
+      if (balanceStat != null) {
+        label.setText(format(balanceStat, BalanceStat.getPlanned(budgetArea)));
+      }
+      else {
+        label.setText("nothing");
+      }
+    }
+  }
+
+  private String format(Glob glob, DoubleField field) {
+    Double value = glob.get(field);
+    if ((value == null) || Math.abs(value) < 0.001) {
+      return "";
+    }
+    return Formatting.toString(value);
   }
 
   private void updateSeriesButton(Integer itemId, JButton button, PaintablePanel panel) {
@@ -96,25 +134,32 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
       button.setText("");
     }
     else {
-      button.setText(Formatting.toString(seriesStat.get(SeriesStat.PLANNED_AMOUNT)));
+      button.setText(format(seriesStat, SeriesStat.PLANNED_AMOUNT));
     }
   }
 
-  private void updateBudgetAreaLabel(BudgetArea budgetArea) {
-    if (budgetArea.equals(BudgetArea.ALL)) {
-      label.setText("x");
+  private void updateSummaryLabel(Glob seriesWrapper) {
+    Integer id = seriesWrapper.get(SeriesWrapper.ID);
+    if (id.equals(SeriesWrapper.BALANCE_SUMMARY_ID)) {
+      Glob balanceStat = repository.get(Key.create(BalanceStat.TYPE, referenceMonthId));
+      label.setText(format(balanceStat, BalanceStat.MONTH_BALANCE));
     }
-    else if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
-      label.setText("?");
+    else if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
+      Glob balanceStat = repository.get(Key.create(BalanceStat.TYPE, referenceMonthId));
+      label.setText(format(balanceStat, BalanceStat.END_OF_MONTH_ACCOUNT_POSITION));
     }
-    else {
-      Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
+    else if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
+      Glob balanceStat = repository.find(Key.create(SavingsBalanceStat.MONTH, referenceMonthId,
+                                                    SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
       if (balanceStat != null) {
-        label.setText(Formatting.toString(balanceStat.get(BalanceStat.getPlanned(budgetArea))));
+        label.setText(format(balanceStat, SavingsBalanceStat.END_OF_MONTH_POSITION));
       }
       else {
-        label.setText("nothing");
+        label.setText(null);
       }
+    }
+    else {
+      throw new InvalidParameter("Unexpected ID: " + id);
     }
   }
 

@@ -23,6 +23,19 @@ public class SeriesWrapperComparator implements Comparator<Glob> {
   }
 
   public int compare(Glob wrapper1, Glob wrapper2) {
+    SeriesWrapperType type1 = SeriesWrapperType.get(wrapper1);
+    SeriesWrapperType type2 = SeriesWrapperType.get(wrapper2);
+
+    if ((type1 == SeriesWrapperType.SUMMARY) && (type2 != SeriesWrapperType.SUMMARY)) {
+      return -1;
+    }
+    if ((type1 != SeriesWrapperType.SUMMARY) && (type2 == SeriesWrapperType.SUMMARY)) {
+      return 1;
+    }
+    if ((type1 == SeriesWrapperType.SUMMARY) && (type2 == SeriesWrapperType.SUMMARY)) {
+      return Integer.signum(wrapper2.get(SeriesWrapper.ID) - wrapper1.get(SeriesWrapper.ID));
+    }
+
     if (Utils.equal(wrapper1.get(SeriesWrapper.ID), ALL_CATEGORY_ID)) {
       return -1;
     }

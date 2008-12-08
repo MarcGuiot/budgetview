@@ -1,11 +1,13 @@
 package org.designup.picsou.gui.series.evolution;
 
 import org.designup.picsou.gui.series.view.SeriesWrapper;
+import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.painters.FillPainter;
+import org.globsframework.gui.splits.painters.GradientPainter;
 import org.globsframework.gui.splits.painters.Paintable;
 import org.globsframework.gui.splits.painters.Painter;
 import org.globsframework.model.Glob;
@@ -16,13 +18,9 @@ import java.awt.*;
 
 public class SeriesEvolutionColors implements ColorChangeListener {
 
-  private Color balanceText;
-  private Painter balanceBg;
-  private Painter balanceCurrentBg;
-
-  private Color positionText;
-  private Painter positionBg;
-  private Painter positionCurrentBg;
+  private Color summaryText;
+  private Painter summaryBg;
+  private Painter summaryCurrentBg;
 
   private Color budgetAreaText;
   private Painter budgetAreaBg;
@@ -31,35 +29,35 @@ public class SeriesEvolutionColors implements ColorChangeListener {
   private Color seriesText;
   private Painter seriesEvenBg;
   private Painter seriesOddBg;
-  private Painter seriesCurrentBg;
-
-  private Painter emptyCell;
-  private Painter emptyCurrentCell;
+  private Painter seriesCurrentEvenBg;
+  private Painter seriesCurrentOddBg;
 
   private Color selectionText;
-
   private Painter selectionBackground;
 
   public SeriesEvolutionColors(Directory directory) {
     ColorService colorService = directory.get(ColorService.class);
     colorService.addListener(this);
     selectionBackground = PicsouColors.createTableSelectionBackgroundPainter(colorService);
-    balanceBg = new FillPainter("seriesEvolution.balance.bg", colorService);
-    balanceCurrentBg = new FillPainter("seriesEvolution.balance.bg.current", colorService);
-    positionBg = new FillPainter("seriesEvolution.position.bg", colorService);
-    positionCurrentBg = new FillPainter("seriesEvolution.position.bg.current", colorService);
-    budgetAreaBg = new FillPainter("seriesEvolution.budgetArea.bg", colorService);
-    budgetAreaCurrentBg = new FillPainter("seriesEvolution.budgetArea.bg.current", colorService);
+    summaryBg = new FillPainter("seriesEvolution.summary.bg", colorService);
+    summaryCurrentBg = new FillPainter("seriesEvolution.summary.bg.current", colorService);
+    budgetAreaBg = new GradientPainter("seriesEvolution.budgetArea.bg.top",
+                                       "seriesEvolution.budgetArea.bg.bottom",
+                                       "seriesEvolution.budgetArea.bg.border",
+                                       colorService);
+    budgetAreaCurrentBg = new GradientPainter("seriesEvolution.budgetArea.current.bg.top",
+                                              "seriesEvolution.budgetArea.current.bg.bottom",
+                                              "seriesEvolution.budgetArea.current.bg.border",
+                                              colorService);
     seriesEvenBg = new FillPainter("seriesEvolution.series.bg.even", colorService);
     seriesOddBg = new FillPainter("seriesEvolution.series.bg.odd", colorService);
-    seriesCurrentBg = new FillPainter("seriesEvolution.series.bg.current", colorService);
-    emptyCell = new FillPainter("seriesEvolution.empty.bg", colorService);
-    emptyCurrentCell = new FillPainter("seriesEvolution.empty.bg.current", colorService);
+    seriesCurrentEvenBg = new FillPainter("seriesEvolution.series.bg.current.even", colorService);
+    seriesCurrentOddBg = new FillPainter("seriesEvolution.series.bg.current.odd", colorService);
+
   }
 
   public void colorsChanged(ColorLocator colors) {
-    balanceText = colors.get("seriesEvolution.balance.text");
-    positionText = colors.get("seriesEvolution.position.text");
+    summaryText = colors.get("seriesEvolution.summary.text");
     budgetAreaText = colors.get("seriesEvolution.budgetArea.text");
     seriesText = colors.get("seriesEvolution.series.text");
     selectionText = colors.get(PicsouColors.CATEGORIES_SELECTED_FG);
@@ -69,29 +67,35 @@ public class SeriesEvolutionColors implements ColorChangeListener {
                         JComponent component, Paintable background) {
     if (selected) {
       setColors(component, selectionText, background, selectionBackground);
+      return;
     }
-    else if (Boolean.TRUE.equals(seriesWrapper.get(SeriesWrapper.IS_BUDGET_AREA))) {
-      if (SeriesWrapper.ALL_ID.equals(seriesWrapper.get(SeriesWrapper.ID))) {
-        setBalanceColors(component, background, monthOffset);
-      }
-      else if (SeriesWrapper.UNCATEGORIZED_ID.equals(seriesWrapper.get(SeriesWrapper.ID))) {
-        setBalanceColors(component, background, monthOffset);
-      }
-      else {
-        setBudgetAreaColors(component, background, monthOffset);
-      }
-    }
-    else {
-      setSeriesColors(component, background, monthOffset, row);
+
+    switch (SeriesWrapperType.get(seriesWrapper)) {
+
+      case BUDGET_AREA:
+        if (SeriesWrapper.ALL_ID.equals(seriesWrapper.get(SeriesWrapper.ID))) {
+          setSummaryColors(component, background, monthOffset);
+        }
+        else if (SeriesWrapper.UNCATEGORIZED_ID.equals(seriesWrapper.get(SeriesWrapper.ID))) {
+          setSummaryColors(component, background, monthOffset);
+        }
+        else {
+          setBudgetAreaColors(component, background, monthOffset);
+        }
+        break;
+
+      case SERIES:
+        setSeriesColors(component, background, monthOffset, row);
+        break;
+
+      case SUMMARY:
+        setSummaryColors(component, background, monthOffset);
+        break;
     }
   }
 
-  private void setBalanceColors(JComponent component, Paintable panel, int monthOffset) {
-    setColors(balanceText, balanceBg, balanceCurrentBg, component, panel, monthOffset);
-  }
-
-  private void setPositionColors(JComponent component, Paintable panel, int monthOffset) {
-    setColors(positionText, positionBg, positionCurrentBg, component, panel, monthOffset);
+  private void setSummaryColors(JComponent component, Paintable panel, int monthOffset) {
+    setColors(summaryText, summaryBg, summaryCurrentBg, component, panel, monthOffset);
   }
 
   private void setBudgetAreaColors(JComponent component, Paintable panel, int monthOffset) {
@@ -100,19 +104,11 @@ public class SeriesEvolutionColors implements ColorChangeListener {
 
   private void setSeriesColors(JComponent component, Paintable panel, int monthOffset, int row) {
     if (row % 2 == 0) {
-      setColors(seriesText, seriesEvenBg, seriesCurrentBg, component, panel, monthOffset);
+      setColors(seriesText, seriesEvenBg, seriesCurrentEvenBg, component, panel, monthOffset);
     }
     else {
-      setColors(seriesText, seriesOddBg, seriesCurrentBg, component, panel, monthOffset);
+      setColors(seriesText, seriesOddBg, seriesCurrentOddBg, component, panel, monthOffset);
     }
-  }
-
-  private void setColors(JComponent component, Color foreground,
-                         Paintable background, Painter backgroundPainter) {
-    if (component != null) {
-      component.setForeground(foreground);
-    }
-    background.setPainter(backgroundPainter);
   }
 
   private void setColors(Color textColor, Painter bgPainter, Painter currentMonthBgPainter,
@@ -123,5 +119,13 @@ public class SeriesEvolutionColors implements ColorChangeListener {
     else {
       setColors(component, textColor, panel, bgPainter);
     }
+  }
+
+  private void setColors(JComponent component, Color componentForeground,
+                         Paintable background, Painter backgroundPainter) {
+    if (component != null) {
+      component.setForeground(componentForeground);
+    }
+    background.setPainter(backgroundPainter);
   }
 }

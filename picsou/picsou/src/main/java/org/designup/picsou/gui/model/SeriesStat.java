@@ -13,12 +13,10 @@ import org.globsframework.metamodel.utils.GlobTypeLoader;
 public class SeriesStat {
   public static GlobType TYPE;
 
-  @Key
-  @Target(Series.class)
+  @Key @Target(Series.class)
   public static LinkField SERIES;
 
-  @Key
-  @Target(Month.class)
+  @Key @Target(Month.class)
   public static LinkField MONTH;
 
   @DefaultDouble(0.0)

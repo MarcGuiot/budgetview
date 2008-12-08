@@ -6,6 +6,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -13,9 +14,19 @@ import java.util.Set;
 public class SeriesWrapperUpdater implements ChangeSetListener {
 
   private GlobRepository localRepository;
+  private boolean excludeBudgetAreaAll = false;
+  private boolean createSummaries = false;
 
   public SeriesWrapperUpdater(GlobRepository localRepository) {
     this.localRepository = localRepository;
+  }
+
+  public void setExcludeBudgetAreaAll(boolean excludeBudgetAreaAll) {
+    this.excludeBudgetAreaAll = excludeBudgetAreaAll;
+  }
+
+  public void setCreateSummaries(boolean createSummaries) {
+    this.createSummaries = createSummaries;
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -25,11 +36,11 @@ public class SeriesWrapperUpdater implements ChangeSetListener {
 
         Glob budgetAreaWrapper =
           localRepository.findUnique(SeriesWrapper.TYPE,
-                                     value(SeriesWrapper.IS_BUDGET_AREA, true),
+                                     value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
                                      value(SeriesWrapper.ITEM_ID, values.get(Series.BUDGET_AREA)));
 
         localRepository.create(SeriesWrapper.TYPE,
-                               value(SeriesWrapper.IS_BUDGET_AREA, false),
+                               value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
                                value(SeriesWrapper.ITEM_ID, seriesId),
                                value(SeriesWrapper.MASTER, budgetAreaWrapper.get(SeriesWrapper.ID)));
       }
@@ -39,7 +50,7 @@ public class SeriesWrapperUpdater implements ChangeSetListener {
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         Integer seriesId = key.get(Series.ID);
-        Glob wrapper = SeriesWrapper.find(localRepository, false, seriesId);
+        Glob wrapper = SeriesWrapper.find(localRepository, SeriesWrapperType.SERIES, seriesId);
         localRepository.delete(wrapper.getKey());
       }
     });
@@ -49,14 +60,28 @@ public class SeriesWrapperUpdater implements ChangeSetListener {
     localRepository.startChangeSet();
     try {
       localRepository.deleteAll(SeriesWrapper.TYPE);
-      localRepository.create(SeriesWrapper.TYPE,
-                             value(SeriesWrapper.ID, SeriesWrapper.ALL_ID),
-                             value(SeriesWrapper.IS_BUDGET_AREA, true),
-                             value(SeriesWrapper.ITEM_ID, BudgetArea.ALL.getId()));
+
+      if (!excludeBudgetAreaAll) {
+        localRepository.create(SeriesWrapper.TYPE,
+                               value(SeriesWrapper.ID, SeriesWrapper.ALL_ID),
+                               value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
+                               value(SeriesWrapper.ITEM_ID, BudgetArea.ALL.getId()));
+      }
       localRepository.create(SeriesWrapper.TYPE,
                              value(SeriesWrapper.ID, SeriesWrapper.UNCATEGORIZED_ID),
-                             value(SeriesWrapper.IS_BUDGET_AREA, true),
+                             value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
                              value(SeriesWrapper.ITEM_ID, BudgetArea.UNCATEGORIZED.getId()));
+
+      if (createSummaries) {
+        for (Integer id : Arrays.asList(SeriesWrapper.BALANCE_SUMMARY_ID,
+                                        SeriesWrapper.MAIN_POSITION_SUMMARY_ID,
+                                        SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
+          localRepository.create(SeriesWrapper.TYPE,
+                                 value(SeriesWrapper.ID, id),
+                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUMMARY.getId()),
+                                 value(SeriesWrapper.ITEM_ID, null));
+        }
+      }
 
       Map<Integer, Integer> budgetAreaIds = new HashMap<Integer, Integer>();
 
@@ -71,7 +96,7 @@ public class SeriesWrapperUpdater implements ChangeSetListener {
         }
         else {
           Glob wrapper = localRepository.create(SeriesWrapper.TYPE,
-                                                value(SeriesWrapper.IS_BUDGET_AREA, true),
+                                                value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
                                                 value(SeriesWrapper.ITEM_ID, budgetAreaId),
                                                 value(SeriesWrapper.MASTER, null));
           wrapperId = wrapper.get(SeriesWrapper.ID);
@@ -87,7 +112,7 @@ public class SeriesWrapperUpdater implements ChangeSetListener {
         }
         Integer budgetAreaWrapperId = budgetAreaIds.get(budgetAreaId);
         localRepository.create(SeriesWrapper.TYPE,
-                               value(SeriesWrapper.IS_BUDGET_AREA, false),
+                               value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
                                value(SeriesWrapper.ITEM_ID, series.get(Series.ID)),
                                value(SeriesWrapper.MASTER, budgetAreaWrapperId));
       }

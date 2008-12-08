@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.series.evolution;
 
-import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.Month;
 import org.globsframework.gui.views.GlobTableColumn;
 import org.globsframework.gui.views.GlobTableView;
@@ -56,6 +56,6 @@ public class SeriesEvolutionMonthColumn implements GlobTableColumn {
   }
 
   public boolean isEditable(int row, Glob seriesWrapper) {
-    return seriesWrapper != null && Boolean.FALSE.equals(seriesWrapper.get(SeriesWrapper.IS_BUDGET_AREA));
+    return SeriesWrapperType.SERIES.isOfType(seriesWrapper);
   }
 }
