@@ -9,11 +9,11 @@
 
     <style selector="toggleButton.masterViewSelector" ui="masterViewSelector" opaque="false"
            minimumSize="(40,40)" preferredSize="(40,40)" margin="0" marginLeft="5" weightX="0" fill="none"/>
-    <style selector="toggleButton#homeCardToggle" icon="card_home.png"/>
-    <style selector="toggleButton#categorizationCardToggle" icon="card_categorization.png"/>
-    <style selector="toggleButton#seriesEvolutionCardToggle" icon="card_line.png"/>
-    <style selector="toggleButton#budgetCardToggle" icon="card_budget.png"/>
-    <style selector="toggleButton#dataCardToggle" icon="card_list.png"/>
+    <style selector="toggleButton#homeCardToggle" icon="card_home.png" rolloverIcon="card_home_rollover.png"/>
+    <style selector="toggleButton#categorizationCardToggle" icon="card_categorization.png" rolloverIcon="card_categorization_rollover.png"/>
+    <style selector="toggleButton#seriesEvolutionCardToggle" icon="card_line.png" rolloverIcon="card_line_rollover.png"/>
+    <style selector="toggleButton#budgetCardToggle" icon="card_budget.png" rolloverIcon="card_budget_rollover.png"/>
+    <style selector="toggleButton#dataCardToggle" icon="card_list.png" rolloverIcon="card_list_rollover.png"/>
 
     <style selector="#time button" minimumSize="(15,20)" preferredSize="(15,20)" fill="none"/>
 

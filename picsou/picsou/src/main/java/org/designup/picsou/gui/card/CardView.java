@@ -38,6 +38,7 @@ public class CardView extends View implements GlobSelectionListener {
     ButtonGroup secondaryGroup = new ButtonGroup();
     for (Card card : Card.values()) {
       JToggleButton toggle = new JToggleButton(new ToggleAction(card));
+      toggle.setRolloverEnabled(true);
       toggle.setToolTipText(card.getTooltip());
       String name = card.getName() + "CardToggle";
       Gui.configureIconButton(toggle, name, new Dimension(45, 45));
