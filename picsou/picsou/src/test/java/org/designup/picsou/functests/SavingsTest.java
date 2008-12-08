@@ -16,7 +16,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     timeline.selectAll();
     views.selectHome();
-    createSavingsAccount("Epargne LCL", 1000);
+    savingsAccounts.createSavingsAccount("Epargne LCL", 1000);
     views.selectCategorization();
     categorization
       .selectTableRows("Virement")
@@ -51,17 +51,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccountView.checkPosition("Epargne", 1200);
   }
 
-  private void createSavingsAccount(final String name, final int balance) {
-    savingsAccounts.createNewAccount()
-      .setAccountName(name)
-      .setAccountNumber("1234")
-      .selectBank("LCL")
-      .setAsSavings()
-      .checkIsSavings()
-      .setBalance(balance)
-      .validate();
-  }
-
   public void testCreateSavingsSeriesAndPayFromSavings() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder.init(this)
@@ -71,7 +60,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     timeline.selectAll();
     views.selectHome();
-    createSavingsAccount("Epargne LCL", 1000);
+    savingsAccounts.createSavingsAccount("Epargne LCL", 1000);
     views.selectCategorization();
     categorization
       .selectTableRows("Virement")
@@ -192,10 +181,37 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSplitPreviouslyCategorizedInSavings() throws Exception {
-    fail("codé");
-  }
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/10", -100.00, "Virement")
+      .load();
+    timeline.selectAll();
+    views.selectHome();
 
-  public void testPositiveBudgetInEnveloppe() throws Exception {
-    fail("vieux code, il y a peut-etre deja un test");
+    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    views.selectCategorization();
+    categorization
+      .selectTableRows("Virement")
+      .selectSavings()
+      .createSavingsSeries()
+      .setName("Epargne")
+      .selectSavingsAccount("Epargne")
+      .setCategories(MasterCategory.SAVINGS)
+      .validate();
+    views.selectData();
+    transactions.initContent()
+      .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "Epargne", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne", MasterCategory.SAVINGS)
+      .check();
+
+    views.selectCategorization();
+    categorization.selectTableRows("Virement");
+    transactionDetails.split("50", "Comportement impossible?");
+    categorization.selectOccasionalSeries(MasterCategory.LEISURES);
+    views.selectData();
+    transactions.initContent()
+      .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 50.00, "Epargne", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -50.00, "Epargne", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "Comportement impossible?", -50.00, "Occasional", MasterCategory.LEISURES)
+      .check();
   }
 }

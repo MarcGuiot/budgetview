@@ -2,7 +2,6 @@ package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;

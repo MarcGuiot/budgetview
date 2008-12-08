@@ -325,7 +325,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("series")
       .setCategory(MasterCategory.FOOD)
       .validate();
-    
+
     budgetView.recurring.editSeriesList()
       .unselect()
       .checkAllMonthsDisabled()
@@ -691,19 +691,19 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .switchToManual()
       .setSingleMonth()
       .checkSingleMonthDate("June 2008")
-      .checkTable(new Object[][] {
-        {"2008",	"June",	"",	"0"}
+      .checkTable(new Object[][]{
+        {"2008", "June", "", "0"}
       })
       .validate();
-    
+
     budgetView.envelopes.createSeries()
       .setName("singleMonthThenManual")
       .setCategory(MasterCategory.MISC_SPENDINGS)
       .setSingleMonth()
       .switchToManual()
       .checkSingleMonthDate("June 2008")
-      .checkTable(new Object[][] {
-        {"2008",	"June",	"",	"0"}
+      .checkTable(new Object[][]{
+        {"2008", "June", "", "0"}
       })
       .validate();
 
@@ -1029,7 +1029,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition
       .selectSeries("S2")
       .monthsAreVisible()
-      .checkMonthIsChecked(2, 6, 10);
+      .checkMonthIsChecked(2, 6, 10)
+      .cancel();
   }
 
   public void testPeriodOrder() throws Exception {
@@ -1573,6 +1574,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings
       .createSeries()
+      .checkMainToSavings()
       .setMainToSavings()
       .setName("Epargne")
       .setCategory(MasterCategory.SAVINGS)
@@ -1583,7 +1585,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .editSeries("Epargne")
       .checkSavingsAccountIsSelected("Epargne LCL")
-      .checkIsMainToSavings()
+      .checkMainToSavings()
       .switchToManual()
       .checkNegativeAmountsSelected()
       .checkPositiveAmountsNotSelected()
@@ -1595,6 +1597,85 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkAmount("100")
       .setMainToSavings()
       .checkAmount("100")
+      .validate();
+  }
+
+  public void testSwitchBetweenSavingsSeries() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(3).validate();
+    timeline.selectLast();
+    views.selectHome();
+    savingsAccounts.createNewAccount().setAsSavings()
+      .setAccountName("Epargne LCL")
+      .selectBank("LCL")
+      .setBalance(1000)
+      .validate();
+
+    savingsAccounts.createNewAccount().setAsSavings()
+      .setAccountName("Epargne CA")
+      .selectBank("CA")
+      .setBalance(1000)
+      .validate();
+
+    views.selectBudget();
+    budgetView.savings
+      .createSeries()
+      .checkMainToSavings()
+      .setName("Epargne")
+      .setCategory(MasterCategory.SAVINGS)
+      .selectSavingsAccount("Epargne LCL")
+      .checkOkEnabled(true)
+      .validate();
+
+    budgetView.savings
+      .createSeries()
+      .setSavingsToMain()
+      .setName("Veranda")
+      .setCategory(MasterCategory.HOUSE)
+      .selectSavingsAccount("Epargne CA")
+      .switchToManual()
+      .setSingleMonth()
+      .setSingleMonthDate(200810)
+      .selectMonth(200810)
+      .setAmount(10000)
+      .validate();
+
+    budgetView.savings.editSeriesList()
+      .selectSeries("Veranda")
+      .checkSingleMonthSelected()
+      .checkSingleMonthDate("Oct 2008")
+      .checkSavingsToMain()
+      .checkSavingsAccountIsSelected("Epargne CA")
+      .checkSingleMonthSelected()
+      .selectSeries("Epargne")
+      .checkMainToSavings()
+      .checkSavingsAccountIsSelected("Epargne LCL")
+      .checkInAutomatic()
+      .cancel();
+  }
+
+  public void testUseSingleMonthCreateSeriesBudget() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(3).validate();
+    timeline.selectLast();
+    views.selectHome();
+    savingsAccounts.createNewAccount().setAsSavings()
+      .setAccountName("Epargne LCL")
+      .selectBank("LCL")
+      .setBalance(1000)
+      .validate();
+    views.selectBudget();
+
+    budgetView.savings
+      .createSeries()
+      .checkMainToSavings()
+      .setName("Epargne")
+      .setCategory(MasterCategory.SAVINGS)
+      .selectSavingsAccount("Epargne LCL")
+      .setSixMonths()
+      .setSingleMonth()
+      .setSingleMonthDate(200810)
+      .switchToManual()
+      .checkTable(new Object[][]{
+        {"2008", "October", "", "0"}})
       .validate();
   }
 }

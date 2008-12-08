@@ -152,6 +152,34 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     views.checkCategorizationSelected();
   }
 
+  public void testNavigatingInCategoriszationIsDisableForMirroir() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/11", -100.0, "Virement")
+      .load();
+
+    views.selectHome();
+    savingsAccounts.createSavingsAccount("Epargne", 1000);
+
+    transactions.categorize(0);
+    categorization
+      .selectSavings()
+      .createSavingsSeries()
+      .setName("Epargne")
+      .setCategories(MasterCategory.SAVINGS)
+      .selectSavingsAccount("Epargne")
+      .validate();
+
+    views.selectData();
+    transactions
+      .initContent()
+      .add("11/01/2006", TransactionType.VIREMENT, "Virement", "", 100.00, "Epargne", MasterCategory.SAVINGS)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne", MasterCategory.SAVINGS)
+      .check();
+
+    transactions.checkCategorizeIsDisable(0);
+  }
+
   public void testMultiCategorization() throws Exception {
 
     transactions.initContent()

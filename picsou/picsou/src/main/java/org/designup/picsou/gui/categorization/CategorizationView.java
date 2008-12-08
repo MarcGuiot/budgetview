@@ -31,7 +31,8 @@ import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.*;
+import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -355,7 +356,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     }
 
     public void actionPerformed(ActionEvent e) {
-      Key key = seriesEditionDialog.showNewSeries(currentTransactions, 
+      Key key = seriesEditionDialog.showNewSeries(currentTransactions,
                                                   selectionService.getSelection(Month.TYPE),
                                                   budgetArea);
       Glob series = repository.find(key);
@@ -440,6 +441,7 @@ public class CategorizationView extends View implements TableView, Filterable {
       and(
         filter,
         fieldEquals(Transaction.PLANNED, false),
+        fieldEquals(Transaction.MIRROR, false),
         getCurrentFilteringMode(),
         accountFilteringCombo.getCurrentAccountFilter()
       );

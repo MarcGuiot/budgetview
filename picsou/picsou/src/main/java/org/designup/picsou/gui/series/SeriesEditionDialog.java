@@ -80,6 +80,8 @@ public class SeriesEditionDialog {
   private GlobList selectedTransactions = new EmptyGlobList();
   private GlobLinkComboEditor savingsAccountsCombo;
   private CardHandler monthSelectionCards;
+  private JToggleButton fromMainToSavingsToggle;
+  private JToggleButton fromSavingsToMainToggle;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -137,7 +139,7 @@ public class SeriesEditionDialog {
 
     ButtonGroup group = new ButtonGroup();
 
-    JToggleButton fromMainToSavingsToggle = new JToggleButton(new AbstractAction(">>") {
+    fromMainToSavingsToggle = new JToggleButton(new AbstractAction(">>") {
       public void actionPerformed(ActionEvent e) {
         if (currentSeries != null) {
           localRepository.update(currentSeries.getKey(), Series.TO_SAVINGS, true);
@@ -147,7 +149,7 @@ public class SeriesEditionDialog {
     builder.add("fromMainToSavings", fromMainToSavingsToggle);
     group.add(fromMainToSavingsToggle);
 
-    JToggleButton fromSavingsToMainToggle = new JToggleButton(new AbstractAction("<<") {
+    fromSavingsToMainToggle = new JToggleButton(new AbstractAction("<<") {
       public void actionPerformed(ActionEvent e) {
         if (currentSeries != null) {
           localRepository.update(currentSeries.getKey(), Series.TO_SAVINGS, false);
@@ -193,6 +195,8 @@ public class SeriesEditionDialog {
           multiCategoryList.setFilter(fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)));
           boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
           savingsAccountsCombo.setEnabled(isSavingsSeries);
+          fromMainToSavingsToggle.setSelected(currentSeries.get(Series.TO_SAVINGS));
+          fromSavingsToMainToggle.setSelected(!currentSeries.get(Series.TO_SAVINGS));
         }
         else {
           multiCategoryList.setFilter(GlobMatchers.NONE);
@@ -200,6 +204,7 @@ public class SeriesEditionDialog {
         }
         updateDateSelectors();
         updateMonthChooser();
+        updateMonthSelectionCard();
       }
     }, Series.TYPE);
 
@@ -515,10 +520,6 @@ public class SeriesEditionDialog {
     this.multiCategoryList.setVisible(budgetArea.isMultiCategories());
   }
 
-  private Set<Integer> getCurrentMonthId() {
-    return Collections.singleton(localDirectory.get(TimeService.class).getCurrentMonthId());
-  }
-
   private void doShow(Set<Integer> monthIds, Glob series, final Boolean selectName) {
     this.currentSeries = series;
     this.currentMonthIds = new TreeSet<Integer>(monthIds);
@@ -550,11 +551,13 @@ public class SeriesEditionDialog {
   }
 
   private void updateMonthSelectionCard() {
-    if (ProfileType.SINGLE_MONTH.getId().equals(currentSeries.get(Series.PROFILE_TYPE))) {
-      monthSelectionCards.show("singleMonthSelection");
-    }
-    else {
-      monthSelectionCards.show("monthRangeSelection");
+    if (currentSeries != null) {
+      if (ProfileType.SINGLE_MONTH.getId().equals(currentSeries.get(Series.PROFILE_TYPE))) {
+        monthSelectionCards.show("singleMonthSelection");
+      }
+      else {
+        monthSelectionCards.show("monthRangeSelection");
+      }
     }
   }
 
@@ -931,6 +934,7 @@ public class SeriesEditionDialog {
       repository.update(seriesKey, Series.FIRST_MONTH, firstMonth);
     }
     repository.update(seriesKey, Series.LAST_MONTH, series.get(Series.FIRST_MONTH));
+    repository.update(seriesKey, Series.getMonthField(series.get(Series.FIRST_MONTH)), true);
   }
 
   private class SingleMonthProfileTypeUpdater extends DefaultChangeSetListener {
