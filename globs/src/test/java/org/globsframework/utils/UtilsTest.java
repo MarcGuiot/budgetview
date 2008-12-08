@@ -10,6 +10,13 @@ public class UtilsTest extends TestCase {
     TestUtils.assertEquals(result, Utils.join("a", input));
   }
 
+  public void testJoinWithArrays() throws Exception {
+    String[] first = {"a", "b"};
+    String[] second = {"c", "d", "e"};
+    String[] result = {"a", "b", "c", "d", "e"};
+    TestUtils.assertEquals(result, Utils.join(first, second));
+  }
+
   public void testMinMax() throws Exception {
     assertEquals(null, Utils.min());
     assertEquals("a", Utils.min("a", "b"));

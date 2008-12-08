@@ -115,6 +115,13 @@ public class Utils {
     return (int)Math.round(Math.random() * max);
   }
 
+  public static String[] join(String[] first, String[] second) {
+    String[] result = new String[first.length + second.length];
+    System.arraycopy(first, 0, result, 0, first.length);
+    System.arraycopy(second, 0, result, first.length, second.length);
+    return result;
+  }
+
   public static String[] join(String first, String[] other) {
     String[] result = new String[other.length + 1];
     result[0] = first;
