@@ -665,7 +665,16 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
   public void testHelpMessage() throws Exception {
     views.selectBudget();
+    budgetView.checkHelpMessageDisplayed(false);
+
+    budgetView.recurring.createSeries()
+      .setName("Taxes")
+      .setCategory(MasterCategory.TAXES)
+      .switchToManual()
+      .setAmount(100)
+      .validate();
     budgetView.checkHelpMessageDisplayed(true);
+
     budgetView.hideHelpMessage();
     budgetView.checkHelpMessageDisplayed(false);
   }
