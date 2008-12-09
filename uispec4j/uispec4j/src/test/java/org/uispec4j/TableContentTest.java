@@ -603,12 +603,16 @@ public class TableContentTest extends TableTestCase {
     assertTrue(table.containsRow(new Object[]{
       "c", Boolean.FALSE, "4"
     }));
-  }
-
-  public void testContainsRowFailsBecauseOfWrongData() throws Exception {
     assertFalse(table.containsRow(new Object[]{
       "Wrong", Boolean.TRUE, "3"
     }));
+  }
+
+  public void testContainsRowWithCellContent() throws Exception {
+    assertTrue(table.containsRow(0, "a"));
+    assertTrue(table.containsRow(1, Boolean.FALSE));
+    checkAssertionFails(table.containsRow(0, Boolean.TRUE),
+                        "No row found with 'true' in column 0");
   }
 
   public void testRowIndex() throws Exception {

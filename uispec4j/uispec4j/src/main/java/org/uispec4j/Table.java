@@ -161,7 +161,7 @@ public class Table extends AbstractSwingUIComponent {
   }
 
   /**
-   * Returns the displayed in a given cell using a specific converter.
+   * Returns the value displayed in a given cell using a specific converter.
    */
   public Object getContentAt(int row, int column, TableCellValueConverter converter) {
     return converter.getValue(row, column,
@@ -429,7 +429,7 @@ public class Table extends AbstractSwingUIComponent {
         catch (Error e) {
           StringBuffer buffer = new StringBuffer();
           dumpColumn(jTable, columnIndex, buffer, ",");
-          AssertAdapter.assertEquals(ArrayUtils.toString(expectedColumn), buffer);
+          AssertAdapter.assertEquals(ArrayUtils.toString(expectedColumn), buffer.toString());
         }
       }
     };
@@ -449,7 +449,7 @@ public class Table extends AbstractSwingUIComponent {
   }
 
   /**
-   * Checks the foreground color of the table cells
+   * Checks the foreground color of the table cells using either Color or String objects
    *
    * @see <a href="http://www.uispec4j.org/usingcolors.html">Using colors</a>
    */
@@ -466,7 +466,7 @@ public class Table extends AbstractSwingUIComponent {
   }
 
   /**
-   * Checks the background color of the table cells
+   * Checks the background color of the table cells using either Color or String objects
    *
    * @see <a href="http://www.uispec4j.org/usingcolors.html">Using colors</a>
    */
@@ -770,17 +770,14 @@ public class Table extends AbstractSwingUIComponent {
    * Asserts that the contents of the table starts with the specified rows.
    * This is useful for dealing with tables with hundreds of rows, as you can
    * just check that the first few are correct.
-   *
-   * @param expectedContent the rows at the start of the table
-   * @return An assertion that will check the first rows of the table.
    */
-  public Assertion startsWith(final Object[][] expectedContent) {
+  public Assertion startsWith(final Object[][] expectedFirstRows) {
     return new Assertion() {
       public void check() throws Exception {
-        int expectedLength = expectedContent.length;
+        int expectedLength = expectedFirstRows.length;
         checkLengthGreaterThan(expectedLength);
         for (int i = 0; i < expectedLength; i++) {
-          rowEquals(i, expectedContent[i]).check();
+          rowEquals(i, expectedFirstRows[i]).check();
         }
       }
     };
@@ -790,27 +787,21 @@ public class Table extends AbstractSwingUIComponent {
    * Asserts that the contents of the table ends with the specified rows.
    * This is useful for dealing with tables with hundreds of rows, as you can
    * just check that the last few are correct.
-   *
-   * @param expectedContent the rows at the end of the table
-   * @return An assertion that will check the first rows of the table.
    */
-  public Assertion endsWith(final Object[][] expectedContent) {
+  public Assertion endsWith(final Object[][] expectedEndRows) {
     return new Assertion() {
       public void check() throws Exception {
-        int expectedLength = expectedContent.length;
+        int expectedLength = expectedEndRows.length;
         checkLengthGreaterThan(expectedLength);
         for (int i = 0; i < expectedLength; i++) {
-          rowEquals(i + getRowCount() - expectedLength, expectedContent[i]).check();
+          rowEquals(i + getRowCount() - expectedLength, expectedEndRows[i]).check();
         }
       }
     };
   }
 
   /**
-   * Checks that the specified table contains a row.
-   *
-   * @param expectedRow The row the table should contain
-   * @return An assertion that checks the contents of the table.
+   * Checks that the table contains a complete row.
    */
   public Assertion containsRow(final Object[] expectedRow) {
     return new Assertion() {
@@ -826,8 +817,19 @@ public class Table extends AbstractSwingUIComponent {
   }
 
   /**
-   * Helper interface for manipulating the table header, if any
+   * Checks that the table contains a row with a given cell.
    */
+  public Assertion containsRow(final int columnIndex, final Object cellContent) {
+    return new Assertion() {
+      public void check() throws Exception {
+        int index = getRowIndex(columnIndex, cellContent);
+        if (index < 0) {
+          AssertAdapter.fail("No row found with '" + cellContent + "' in column " + columnIndex);
+        }
+      }
+    };
+  }
+
   public class Header {
 
     private Header() {
