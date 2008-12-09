@@ -4,12 +4,14 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.CustomBoldLabelCustomizer;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
+import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.view.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -17,9 +19,8 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -41,6 +42,7 @@ public class SeriesEvolutionView extends View {
   private GlobTableView globTable;
   private JTable table;
   private List<SeriesEvolutionMonthColumn> monthColumns = new ArrayList<SeriesEvolutionMonthColumn>();
+  private Integer referenceMonthId;
 
   public SeriesEvolutionView(GlobRepository repository, Directory directory) {
     super(createLocalRepository(repository), createLocalDirectory(directory));
@@ -80,6 +82,7 @@ public class SeriesEvolutionView extends View {
 
     // attention CategoryExpansionModel doit etre enregistré comme listener de changetSet avant la table.
     SeriesExpansionModel expansionModel = new SeriesExpansionModel(repository, tableAdapter, true);
+    expansionModel.setBaseMatcher(new ActiveSeriesMatcher());
 
     SeriesWrapperStringifier stringifier = new SeriesWrapperStringifier(parentRepository, directory);
 
@@ -136,14 +139,23 @@ public class SeriesEvolutionView extends View {
       public void selectionUpdated(GlobSelection selection) {
         SortedSet<Integer> monthIds = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
         if (!monthIds.isEmpty()) {
-          Integer referenceMonth = monthIds.iterator().next();
+          referenceMonthId = monthIds.iterator().next();
           for (SeriesEvolutionMonthColumn column : monthColumns) {
-            column.setReferenceMonthId(referenceMonth);
+            column.setReferenceMonthId(referenceMonthId);
           }
-          globTable.refresh();
+          globTable.reset();
         }
       }
     }, Month.TYPE);
+
+    parentRepository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (!changeSet.containsCreationsOrDeletions(SeriesWrapper.TYPE) &&
+            changeSet.containsChanges(SeriesStat.TYPE)) {
+          globTable.reset();
+        }
+      }
+    });
 
     builder.add("expand", new ExpandTableAction(expansionModel));
     builder.add("collapse", new CollapseTableAction(expansionModel));
@@ -162,6 +174,29 @@ public class SeriesEvolutionView extends View {
 
     public void setFilter(GlobMatcher matcher) {
       globTable.setFilter(matcher);
+    }
+  }
+
+  private class ActiveSeriesMatcher implements GlobMatcher {
+    public boolean matches(Glob wrapper, GlobRepository repository) {
+      if (!SeriesWrapperType.SERIES.isOfType(wrapper)) {
+        return true;
+      }
+
+      if (referenceMonthId == null) {
+        return false;
+      }
+
+      for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
+        int monthId = Month.normalize(referenceMonthId + offset);
+        Glob seriesStat = parentRepository.find(Key.create(SeriesStat.SERIES, wrapper.get(SeriesWrapper.ITEM_ID),
+                                                           SeriesStat.MONTH, monthId));
+        if ((seriesStat != null) && Amounts.isNotZero(seriesStat.get(SeriesStat.PLANNED_AMOUNT))) {
+          return true;
+        }
+      }
+
+      return false;
     }
   }
 

@@ -5,6 +5,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
   private ExpandableTable table;
   private IntegerField idField;
   private GlobType type;
+  private GlobMatcher baseMatcher = GlobMatchers.ALL;
 
   public TableExpansionModel(GlobType type, IntegerField idField, GlobRepository repository, ExpandableTable table, final boolean isInitiallyExpanded) {
     this.idField = idField;
@@ -28,6 +30,10 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
       expandedMap.put(master.get(idField), isInitiallyExpanded);
     }
     updateExpandabilities();
+  }
+
+  public void setBaseMatcher(GlobMatcher baseMatcher) {
+    this.baseMatcher = baseMatcher;
   }
 
   public void completeInit() {
@@ -106,6 +112,9 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
   }
 
   public boolean matches(Glob glob, GlobRepository repository) {
+    if (!baseMatcher.matches(glob, repository)) {
+      return false;
+    }
     if (isMaster(glob)) {
       return true;
     }

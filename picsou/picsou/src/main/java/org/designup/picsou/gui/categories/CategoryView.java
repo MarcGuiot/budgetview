@@ -13,6 +13,7 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Category;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.utils.TableUtils;
@@ -134,7 +135,7 @@ public class CategoryView extends View implements ExpandableTable {
   }
 
   private String format(double amount) {
-    if (amount == 0.0) {
+    if (Amounts.isNearZero(amount)) {
       return "";
     }
     return Formatting.INTEGER_FORMAT.format(amount);

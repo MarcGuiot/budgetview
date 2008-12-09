@@ -11,6 +11,7 @@ import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.splits.painters.PaintablePanel;
 import org.globsframework.gui.views.GlobTableView;
@@ -122,7 +123,7 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
       return "";
     }
     Double value = glob.get(field);
-    if ((value == null) || Math.abs(value) < 0.001) {
+    if (Amounts.isNullOrZero(value)) {
       return "";
     }
     return Formatting.toString(value);
@@ -133,7 +134,7 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
       .set(SeriesStat.MONTH, referenceMonthId)
       .set(SeriesStat.SERIES, itemId)
       .get());
-    if (seriesStat == null || Math.abs(seriesStat.get(SeriesStat.PLANNED_AMOUNT)) < 0.01) {
+    if (seriesStat == null || Amounts.isNullOrZero(seriesStat.get(SeriesStat.PLANNED_AMOUNT))) {
       button.setText("");
     }
     else {

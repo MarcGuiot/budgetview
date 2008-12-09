@@ -4,7 +4,7 @@ import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.utils.PicsouUtils;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
@@ -43,7 +43,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         }
 
         Glob seriesBudget = budgets.get(0);
-        if (PicsouUtils.isNearZero(seriesBudget.get(SeriesBudget.AMOUNT))) {
+        if (Amounts.isNearZero(seriesBudget.get(SeriesBudget.AMOUNT))) {
           repository.update(seriesBudget.getKey(), SeriesBudget.OVERRUN_AMOUNT,
                             seriesBudget.get(SeriesBudget.AMOUNT) - values.get(Transaction.AMOUNT));
         }
@@ -136,7 +136,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
 
     Glob seriesBudget = budgets.get(0);
     boolean isPositiveBudget = seriesBudget.get(SeriesBudget.AMOUNT) > 0;
-    if (PicsouUtils.isNearZero(seriesBudget.get(SeriesBudget.AMOUNT))) {
+    if (Amounts.isNearZero(seriesBudget.get(SeriesBudget.AMOUNT))) {
       repository.update(seriesBudget.getKey(), SeriesBudget.OVERRUN_AMOUNT,
                         seriesBudget.get(SeriesBudget.OVERRUN_AMOUNT) + amount);
       GlobList plannedTransaction = getPlannedTransactions(repository, seriesId, monthId);
@@ -190,7 +190,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       Key plannedTransactionKeyToUpdate = plannedTransaction.get(0).getKey();
       Double currentAmount = repository.get(plannedTransactionKeyToUpdate).get(Transaction.AMOUNT);
       double newAmount = currentAmount - amount;
-      if (PicsouUtils.isNearZero(newAmount)) {
+      if (Amounts.isNearZero(newAmount)) {
         repository.delete(plannedTransactionKeyToUpdate);
       }
       else {
@@ -221,7 +221,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         repository.delete(transaction.getKey());
         it.remove();
       }
-      if (PicsouUtils.isNearZero(newAmount)) {
+      if (Amounts.isNearZero(newAmount)) {
         return;
       }
       newAmount *= -1;

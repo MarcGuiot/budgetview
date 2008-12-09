@@ -9,6 +9,7 @@ import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -212,7 +213,7 @@ public class SeriesBudgetEditionPanel {
   private class AmountStringifier extends AbstractGlobStringifier {
     public String toString(Glob glob, GlobRepository repository) {
       Double value = glob.get(SeriesBudget.AMOUNT);
-      if ((value == null) || (value == 0.0)) {
+      if (Amounts.isNullOrZero(value)) {
         return "0";
       }
       StringBuilder builder = new StringBuilder();
@@ -335,7 +336,7 @@ public class SeriesBudgetEditionPanel {
       Glob seriesStat = this.repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
       if (seriesStat != null) {
         Double amount = seriesStat.get(SeriesStat.AMOUNT);
-        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome() && amount != 0.0) {
+        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome() && !Amounts.isNullOrZero(amount)) {
           amount = -amount;
         }
         String str = format.format(amount);

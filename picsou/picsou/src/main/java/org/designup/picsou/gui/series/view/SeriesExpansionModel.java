@@ -8,6 +8,7 @@ import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 
 public class SeriesExpansionModel extends TableExpansionModel {
+
   public SeriesExpansionModel(GlobRepository repository, ExpandableTable table, final boolean initiallyExpanded) {
     super(SeriesWrapper.TYPE, SeriesWrapper.ID, repository, table, initiallyExpanded);
   }

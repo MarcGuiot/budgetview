@@ -139,20 +139,19 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
       .addTransaction("2008/07/05", -29.00, "Free Telecom")
-      .addTransaction("2008/07/02", 200.00, "WorldCo - Bonus")
+      .addTransaction("2008/07/02", 200.00, "GlobalCorp")
       .addTransaction("2008/07/01", 3540.00, "WorldCo")
       .load();
 
     views.selectCategorization();
     categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
     categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
-    categorization.setExceptionalIncome("WorldCo - Bonus", "Exceptional Income", true);
     categorization.setIncome("WorldCo", "Salary", true);
+    categorization.setIncome("GlobalCorp", "Salary 2", true);
 
     views.selectEvolution();
-
     String[] expanded = {"Balance", "Main account", "Savings account", "To categorize",
-                         "Income", "Exceptional Income", "Salary",
+                         "Income", "Salary", "Salary 2",
                          "Recurring", "Internet",
                          "Envelopes", "Groceries",
                          "Occasional",
@@ -213,5 +212,43 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkRow(
       "Groceries", "", "-100.00", "-100.00", "-150.00", "-100.00", "", "", ""
     );
+  }
+
+  public void testOnlySeriesWithDataForTheDisplayedPeriodAreShown() throws Exception {
+    views.selectBudget();
+    budgetView.recurring.createSeries()
+      .setName("Taxes")
+      .setCategory(MasterCategory.TAXES)
+      .validate();
+
+    views.selectEvolution();
+    seriesEvolution.checkSeriesNotShown("Taxes");
+
+    views.selectBudget();
+    budgetView.recurring.editSeries("Taxes")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount(200)
+      .validate();
+
+    views.selectEvolution();
+    seriesEvolution.checkRow(
+      "Taxes", "", "-200.00", "-200.00", "-200.00", "-200.00", "-200.00", "-200.00", "-200.00"
+    );
+
+    views.selectBudget();
+    budgetView.recurring.editSeries("Taxes")
+      .setEndDate(200808)
+      .validate();
+
+    timeline.selectMonth("2008/10");
+    views.selectEvolution();
+    seriesEvolution.checkSeriesNotShown("Taxes");
+
+    timeline.selectMonth("2008/08");
+    seriesEvolution.checkRow(
+      "Taxes", "-200.00", "-200.00", "", "", "", "", "", ""
+    );
+
   }
 }

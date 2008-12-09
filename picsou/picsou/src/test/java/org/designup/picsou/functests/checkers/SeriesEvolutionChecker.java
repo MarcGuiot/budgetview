@@ -1,14 +1,15 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.uispec4j.Panel;
 import org.uispec4j.Table;
 import org.uispec4j.TableCellValueConverter;
 import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import org.globsframework.utils.Strings;
-import org.globsframework.utils.Utils;
+import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,6 +89,10 @@ public class SeriesEvolutionChecker extends DataChecker {
       checker.add(label, values);
     }
     checker.check();
+  }
+
+  public void checkSeriesNotShown(String seriesName) {
+    UISpecAssert.assertFalse(getTable().containsRow(SeriesEvolutionView.LABEL_COLUMN_INDEX, seriesName));
   }
 
   public class SeriesTableChecker extends TableChecker {
