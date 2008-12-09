@@ -625,6 +625,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
 
     public void reset() {
       model.globsReset(repository, Collections.singleton(type));
+      refreshColumnNames();      
     }
 
     public int getRowCount() {
