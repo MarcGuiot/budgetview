@@ -8,6 +8,10 @@ public class SingleComponentLayout implements LayoutManager {
   private static final Insets NULL_INSETS = new Insets(0, 0, 0, 0);
   private Insets insets = NULL_INSETS;
 
+  public SingleComponentLayout() {
+    this(null);
+  }
+
   public SingleComponentLayout(Insets insets) {
     if (insets != null) {
       this.insets = insets;

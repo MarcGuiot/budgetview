@@ -14,11 +14,11 @@ import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.event.HyperlinkEvent;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 
 public class SplitsComponentsTest extends SplitsTestCase {
@@ -190,7 +190,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
     assertEquals("text/html", editorPane.getContentType());
     TextBox textBox = new TextBox(editorPane);
     textBox.clickOnHyperlink("Click me");
-    
+
     assertEquals("link", log.toString());
   }
 
@@ -367,6 +367,36 @@ public class SplitsComponentsTest extends SplitsTestCase {
       "  <button/>" +
       "</scrollPane>");
     assertFalse(scrollPane.getViewport().isOpaque());
+  }
+
+  public void testScrollPaneWithForcedVerticalScroll() throws Exception {
+    JScrollPane scrollPane = parse(
+      "<scrollPane forceVerticalScroll='true'>" +
+      "  <button/>" +
+      "</scrollPane>");
+
+    JPanel panel = (JPanel)scrollPane.getViewport().getView();
+    assertFalse(panel.isOpaque());
+
+    assertTrue(panel instanceof Scrollable);
+    Scrollable scrollable = (Scrollable)panel;
+    assertTrue(scrollable.getScrollableTracksViewportWidth());
+    assertFalse(scrollable.getScrollableTracksViewportHeight());
+  }
+
+  public void testScrollPaneWithForcedVerticalScrollErrors() throws Exception {
+    checkParsingError(
+      "<scrollPane forceVerticalScroll='true' horizontalScrollbarPolicy='always'>" +
+      "  <button/>" +
+      "</scrollPane>",
+      "horizontalScrollbarPolicy cannot be set when forceVerticalScroll is set to true");
+
+    checkParsingError(
+      "<scrollPane forceVerticalScroll='true' horizontalUnitIncrement='10'>" +
+      "  <button/>" +
+      "</scrollPane>",
+      "horizontalUnitIncrement cannot be set when forceVerticalScroll is set to true");
+
   }
 
   public void testTabs() throws Exception {
@@ -611,13 +641,13 @@ public class SplitsComponentsTest extends SplitsTestCase {
   public void testCardContainedComponentsHaveTheNameOfTheCard() throws Exception {
     CardHandler handler = builder.addCardHandler("myHandler");
     JPanel jPanel = parse("<cards ref='myHandler'>" +
-                         "  <card name='a'>" +
-                         "    <button/>" +
-                         "  </card>" +
-                         "  <card name='b'>" +
-                         "    <label name='label'/>" +
-                         "  </card>" +
-                         "</cards>");
+                          "  <card name='a'>" +
+                          "    <button/>" +
+                          "  </card>" +
+                          "  <card name='b'>" +
+                          "    <label name='label'/>" +
+                          "  </card>" +
+                          "</cards>");
 
     handler.show("a");
     JButton button = (JButton)jPanel.getComponent(0);
