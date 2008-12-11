@@ -65,8 +65,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1000.0);
     mainAccounts.openEstimatedPositionDetails().checkIncome(1000.0).close();
 
-    System.out.println("--------- RestartTest.testSeries: -------");
-
     timeline.selectMonth("2008/08");
     views.selectHome();
     monthSummary.checkIncome(1000.0, 1000.0);

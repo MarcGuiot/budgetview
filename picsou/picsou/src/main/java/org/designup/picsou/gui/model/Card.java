@@ -44,8 +44,8 @@ public enum Card implements GlobConstantContainer {
     return Lang.get("cards." + getName());
   }
 
-  public String getTooltip() {
-    return Lang.get("cards." + getName() + ".tooltip");
+  public String getDescription() {
+    return Lang.get("cards." + getName() + ".description");
   }
 
   public ReadOnlyGlob getGlob() {

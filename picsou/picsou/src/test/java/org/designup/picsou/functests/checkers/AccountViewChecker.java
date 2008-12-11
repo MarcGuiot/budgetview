@@ -65,8 +65,7 @@ public class AccountViewChecker extends DataChecker {
 
   public ImportChecker openImportForAccount(String accountName) {
     Button importButton = getAccountPanel(accountName).getButton("Import data");
-    Window dialog = WindowInterceptor.getModalDialog(importButton.triggerClick());
-    return new ImportChecker(dialog);
+    return ImportChecker.open(importButton.triggerClick());
   }
 
   public BalanceEditionChecker getBalance(String accountName) {

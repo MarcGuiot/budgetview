@@ -5,43 +5,46 @@
   <panel styleClass="block">
     <column styleClass="innerBlock">
 
-      <grid ref="header">
-        <label text="$accountView.reference.title" gridPos="(0,0)"
-               styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
-        <label ref="referencePosition" gridPos="(0,1)"
-               styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"/>
+      <grid ref="header" marginLeft="10" marginRight="10" marginBottom="5">
+
+        <label ref="referencePosition" gridPos="(0,0)"
+               styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"
+               marginTop="0" marginBottom="0"
+               anchor="north"/>
+        <label text="$accountView.reference.title" gridPos="(0,1)"
+               styleClass="totalAmountTitle" autoHideSource="referencePosition"
+               marginTop="0" marginBottom="0" weightY="0"/>
         <label ref="referencePositionDate" gridPos="(0,2)"
-               styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
+               styleClass="totalAmountTitle" autoHideSource="referencePosition"
+               marginTop="0" marginBottom="0" weightY="0"/>
 
         <filler fill="horizontal" gridPos="(1,0,1,3)"/>
 
-        <label text="$accountView.estimated.title" gridPos="(2,0)"
-               styleClass="totalAmountTitle" autoHideSource="estimatedPosition"/>
-        <component ref="estimatedPosition" gridPos="(2,1)"
-                   styleClass="totalAmount" foreground="" tooltipText="$accountView.estimated.tooltip"/>
+        <component ref="estimatedPosition" gridPos="(2,0)"
+                   styleClass="totalAmount" foreground="" tooltipText="$accountView.estimated.tooltip"
+                   marginTop="0" marginBottom="0"
+                   anchor="north"/>
+        <label text="$accountView.estimated.title" gridPos="(2,1)"
+               styleClass="totalAmountTitle" autoHideSource="estimatedPosition"
+               marginTop="0" marginBottom="0" weightY="0"/>
         <label ref="estimatedPositionDate" gridPos="(2,2)"
-               styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
-
+               styleClass="totalAmountTitle" autoHideSource="referencePosition"
+               marginTop="0" marginBottom="0" weightY="0"/>
       </grid>
 
-      <scrollPane marginBottom="0">
+      <scrollPane marginTop="0" marginBottom="0">
         <column>
           <repeat ref="accountRepeat" marginTop="5" marginBottom="15">
             <column name="accountParent" margin="5" marginBottom="10">
               <grid>
                 <button ref="accountName" gridPos="(0,0)" anchor="west" styleClass="itemLink"/>
-                <label ref="accountNumber" gridPos="(0,1)" anchor="west" styleClass="subitem"/>
+                <label ref="accountNumber" gridPos="(0,1)" anchor="west" styleClass="subitem" visible="false"/>
                 <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
                 <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
                 <label ref="estimatedAccountPosition" gridPos="(2,0)" anchor="east" styleClass="subitem"/>
                 <label ref="estimatedAccountPositionDate" gridPos="(2,1)" anchor="east" styleClass="subitem"
                        autoHideSource="estimatedAccountPosition"/>
               </grid>
-              <row>
-                <filler fill="horizontal"/>
-                <button action="gotoWebsite" styleClass="hyperlink"/>
-                <button action="importData" styleClass="hyperlink"/>
-              </row>
             </column>
           </repeat>
           <filler fill="vertical"/>

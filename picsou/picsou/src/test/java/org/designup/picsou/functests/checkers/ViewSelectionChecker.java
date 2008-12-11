@@ -74,6 +74,6 @@ public class ViewSelectionChecker extends DataChecker {
   }
 
   public HelpChecker openHelp() {
-    return HelpChecker.open(window.getButton("Help").triggerClick());
+    return HelpChecker.open(window.getPanel("mainWindowHeader").getButton("Help").triggerClick());
   }
 }

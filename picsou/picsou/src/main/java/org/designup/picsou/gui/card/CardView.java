@@ -10,20 +10,24 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
 public class CardView extends View implements GlobSelectionListener {
   private CardHandler cards;
 
   private Card lastSelectedCard = NavigationService.INITIAL_CARD;
   private JToggleButton[] toggles = new JToggleButton[Card.values().length];
+  private static final Card[] CARDS = {Card.HOME, Card.BUDGET, Card.SERIES_EVOLUTION, Card.DATA, Card.CATEGORIZATION};
 
   public CardView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -34,18 +38,26 @@ public class CardView extends View implements GlobSelectionListener {
 
     cards = builder.addCardHandler("mainCards");
 
-    ButtonGroup masterGroup = new ButtonGroup();
-    ButtonGroup secondaryGroup = new ButtonGroup();
-    for (Card card : Card.values()) {
+    final ButtonGroup masterGroup = new ButtonGroup();
+    final ButtonGroup secondaryGroup = new ButtonGroup();
+    final ImageLocator images = directory.get(ImageLocator.class);
+    for (Card card : CARDS) {
       JToggleButton toggle = new JToggleButton(new ToggleAction(card));
+      toggle.setIcon(NavigationIcons.get(images, card));
       toggle.setRolloverEnabled(true);
-      toggle.setToolTipText(card.getTooltip());
+      toggle.setRolloverIcon(NavigationIcons.getRollover(images, card));
+      toggle.setToolTipText("<html>Vue <b>" + card.getLabel() + "</b></html>");
       String name = card.getName() + "CardToggle";
-      Gui.configureIconButton(toggle, name, new Dimension(45, 45));
-      builder.add(name, toggle);
+      Gui.configureIconButton(toggle, name, NavigationIcons.DIMENSION);
       masterGroup.add(toggle);
       toggles[card.getId()] = toggle;
     }
+
+    builder.addRepeat("cards", Arrays.asList(CARDS), new RepeatComponentFactory<Card>() {
+      public void registerComponents(RepeatCellBuilder cellBuilder, Card card) {
+        cellBuilder.add("toggle", toggles[card.getId()]);
+      }
+    });
 
     addBackForwardActions(builder);
 

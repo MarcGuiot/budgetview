@@ -10,10 +10,8 @@ import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.and;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
-import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -213,8 +211,7 @@ public class MonthSummaryChecker extends DataChecker {
   }
 
   public ImportChecker openImport() {
-    Window dialog = WindowInterceptor.getModalDialog(getPanel().getButton("import").triggerClick());
-    return new ImportChecker(dialog);
+    return ImportChecker.open(getPanel().getButton("import").triggerClick());
   }
 
   private Panel getPanel() {

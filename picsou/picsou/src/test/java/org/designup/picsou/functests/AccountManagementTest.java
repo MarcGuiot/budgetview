@@ -79,25 +79,4 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     mainAccounts.checkDisplayIsEmpty("Main account");
   }
-
-  public void testImportFromViewInitializesTheDefaultBankAndAccountForQifFiles() throws Exception {
-    String path = QifBuilder.init(this)
-      .addTransaction("2006/01/01", 12.35, "foo")
-      .addTransaction("2006/02/01", -7.50, "foo")
-      .save();
-
-    operations.importQifFiles(SOCIETE_GENERALE, path);
-
-    OfxBuilder
-      .init(this)
-      .addBankAccount(30003, 12345, "10101010", 12345.60, "2006/05/30")
-      .addTransaction("2006/05/01", -10, "Foo")
-      .load();
-
-    views.selectHome();
-    mainAccounts.openImportForAccount("Main account")
-      .selectFiles(path)
-      .acceptFile()
-      .checkSelectedAccount("Main account");
-  }
 }

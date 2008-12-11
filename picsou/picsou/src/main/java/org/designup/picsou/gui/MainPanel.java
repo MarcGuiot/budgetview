@@ -9,6 +9,7 @@ import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.card.NavigationView;
 import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
@@ -143,6 +144,7 @@ public class MainPanel {
       monthSummary,
       categorizationView,
       new CardView(repository, directory),
+      new NavigationView(repository, directory),
       new BudgetView(repository, directory),
       seriesView,
       new SeriesEvolutionView(repository, directory),

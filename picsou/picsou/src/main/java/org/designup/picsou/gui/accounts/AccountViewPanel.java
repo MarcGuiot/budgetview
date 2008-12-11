@@ -184,8 +184,6 @@ public abstract class AccountViewPanel {
       cellBuilder.add("estimatedAccountPosition", getEstimatedAccountPositionLabel(account));
       cellBuilder.add("estimatedAccountPositionDate", getEstimatedAccountPositionDateLabel(account));
 
-      cellBuilder.add("gotoWebsite", new GotoWebsiteAction(account));
-      cellBuilder.add("importData", ImportFileAction.init(Lang.get("accountView.import.data"), repository, directory, account));
       cellBuilder.addDisposeListener(balance);
     }
 
