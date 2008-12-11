@@ -213,7 +213,8 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkOccasional(55, 55) //126.1)
       .checkSavings(100, 100);
 
-    BalanceSummaryChecker balance = new BalanceSummaryChecker(window);
+    MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
+    EstimatedPositionDetailsChecker balance = mainAccounts.openEstimatedPositionDetails();
     balance.checkTotal(1900.);
 
     transaction.initAmountContent()
@@ -265,7 +266,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .check();
 
     balance.checkTotal(2351.1)
-      .checkBalance(1900)
+      .checkInitialPosition(1900)
       .checkEnvelope(-380)
       .checkFixed(-1013.9)
       .checkSavings(-100)
@@ -291,7 +292,7 @@ public class FirstTimeTest extends UISpecTestCase {
 
     views.selectHome();
     balance.checkTotal(2311.1)
-      .checkBalance(780.1)
+      .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
       .checkSavings(0)
@@ -362,9 +363,9 @@ public class FirstTimeTest extends UISpecTestCase {
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
-    BalanceSummaryChecker balance = new BalanceSummaryChecker(window);
+    EstimatedPositionDetailsChecker balance = new EstimatedPositionDetailsChecker(window);
     balance.checkTotal(2366.1)
-      .checkBalance(780.1)
+      .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
       .checkSavings(0)
@@ -439,10 +440,10 @@ public class FirstTimeTest extends UISpecTestCase {
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
-    BalanceSummaryChecker balance = new BalanceSummaryChecker(window);
+    EstimatedPositionDetailsChecker balance = new EstimatedPositionDetailsChecker(window);
     balance.checkTotal(2311.10) //  2366.1)
       .checkOccasional(-55)
-      .checkBalance(780.1)
+      .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
       .checkSavings(0)
@@ -518,10 +519,10 @@ public class FirstTimeTest extends UISpecTestCase {
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
-    BalanceSummaryChecker balance = new BalanceSummaryChecker(window);
+    EstimatedPositionDetailsChecker balance = new EstimatedPositionDetailsChecker(window);
     balance.checkTotal(2311.10) //  2366.1)
       .checkOccasional(-55)
-      .checkBalance(780.1)
+      .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
       .checkSavings(0)

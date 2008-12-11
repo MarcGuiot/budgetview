@@ -18,11 +18,9 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.license.LicenseInfoView;
-import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
 import org.designup.picsou.gui.monthsummary.InfoView;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
-import org.designup.picsou.gui.savings.SavingsAccountPositionView;
 import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
 import org.designup.picsou.gui.time.TimeView;
@@ -143,8 +141,6 @@ public class MainPanel {
       new InfoView(repository, directory),
       new AccountView(repository, directory),
       monthSummary,
-      new BalanceSummaryView(repository, directory),
-      new SavingsAccountPositionView(repository, directory),
       categorizationView,
       new CardView(repository, directory),
       new BudgetView(repository, directory),

@@ -266,4 +266,10 @@ public class Gui {
            ((e.getModifiers() & InputEvent.ALT_MASK) == InputEvent.ALT_MASK) ||
            ((e.getModifiers() & InputEvent.META_MASK) == InputEvent.META_MASK);
   }
+
+  public static JLabel createInvisibleLabel() {
+    JLabel empty = new JLabel();
+    empty.setVisible(false);
+    return empty;
+  }
 }

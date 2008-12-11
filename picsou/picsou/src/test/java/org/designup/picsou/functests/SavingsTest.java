@@ -44,11 +44,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .check();
     views.selectHome();
     timeline.selectMonth("2008/08");
-    savingsAccountView.checkPosition("Epargne", 1000);
+    savingsAccounts.checkPosition("Epargne", 1000);
     timeline.selectMonth("2008/09");
-    savingsAccountView.checkPosition("Epargne", 1100);
+    savingsAccounts.checkPosition("Epargne", 1100);
     timeline.selectMonth("2008/10");
-    savingsAccountView.checkPosition("Epargne", 1200);
+    savingsAccounts.checkPosition("Epargne", 1200);
   }
 
   public void testCreateSavingsSeriesAndPayFromSavings() throws Exception {
@@ -82,7 +82,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     timeline.selectMonth("2008/10");
     views.selectHome();
-    savingsAccountView.checkPosition("Epargne", 900);
+    savingsAccounts.checkPosition("Epargne", 900);
   }
 
   public void testSavingsAccountBalance() throws Exception {
@@ -122,7 +122,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     timeline.selectMonth("2008/10");
-    savingsAccountView.checkPosition("Epargne LCL", 1200);
+    savingsAccounts.checkPosition("Epargne LCL", 1200);
   }
 
   public void testCreateSavingsSeriesAndAssociateLaterToAccount() throws Exception {

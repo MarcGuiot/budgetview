@@ -57,4 +57,4 @@
 
 - Backup/restore (fonctionnel precis a definir ensemble)
 
-- Buf / DemoGenerationTest : serie EDF calee sur nov au lieu de oct
+- Bug / DemoGenerationTest : serie EDF calee sur nov au lieu de oct

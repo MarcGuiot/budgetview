@@ -1,12 +1,28 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
-  
+
   <panel styleClass="block">
     <column styleClass="innerBlock">
 
-      <label ref="accountTotalTitle" styleClass="totalAmountTitle" autoHideSource="totalBalance"/>
-      <label ref="totalBalance" styleClass="totalAmount" tooltipText="$account.total.tooltip"/>
+      <grid ref="header">
+        <label text="$accountView.reference.title" gridPos="(0,0)"
+               styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
+        <label ref="referencePosition" gridPos="(0,1)"
+               styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"/>
+        <label ref="referencePositionDate" gridPos="(0,2)"
+               styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
+
+        <filler fill="horizontal" gridPos="(1,0,1,3)"/>
+
+        <label text="$accountView.estimated.title" gridPos="(2,0)"
+               styleClass="totalAmountTitle" autoHideSource="estimatedPosition"/>
+        <component ref="estimatedPosition" gridPos="(2,1)"
+                   styleClass="totalAmount" foreground="" tooltipText="$accountView.estimated.tooltip"/>
+        <label ref="estimatedPositionDate" gridPos="(2,2)"
+               styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
+
+      </grid>
 
       <scrollPane marginBottom="0">
         <column>
@@ -15,8 +31,11 @@
               <grid>
                 <button ref="accountName" gridPos="(0,0)" anchor="west" styleClass="itemLink"/>
                 <label ref="accountNumber" gridPos="(0,1)" anchor="west" styleClass="subitem"/>
-                <button ref="accountBalance" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
+                <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
                 <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
+                <label ref="estimatedAccountPosition" gridPos="(2,0)" anchor="east" styleClass="subitem"/>
+                <label ref="estimatedAccountPositionDate" gridPos="(2,1)" anchor="east" styleClass="subitem"
+                       autoHideSource="estimatedAccountPosition"/>
               </grid>
               <row>
                 <filler fill="horizontal"/>
@@ -29,9 +48,12 @@
         </column>
       </scrollPane>
 
-      <row styleClass="iconButtonGroup">
-        <button action="createAccount" styleClass="create" tooltipText="$account.create.tooltip"/>
+      <row>
+        <row styleClass="iconButtonGroup">
+          <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
+        </row>
         <filler fill="horizontal"/>
+        <button action="accountPositionThreshold" styleClass="hyperlink"/>
       </row>
     </column>
   </panel>

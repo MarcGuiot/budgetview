@@ -1,0 +1,75 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label#message" foreground="estimatedPosition.message"
+           fill="horizontal" anchor="center" horizontalAlignment="center"
+           font="-,plain,10" marginBottom="5"/>
+
+    <style selector="label.header" foreground="estimatedPosition.header" font="-,bold,12"
+           fill="horizontal" anchor="center" horizontalAlignment="center"/>
+
+    <style selector="label.amountLabel" foreground="estimatedPosition.label" font="-,plain,10"
+           fill="horizontal" anchor="center" horizontalAlignment="right" weightX="10"/>
+
+    <style selector="label.amount" foreground="estimatedPosition.amount"
+           fill="none" anchor="right" marginLeft="15" marginRight="10" weightX="0"
+           border="empty(5,0,5,0)"/>
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(400,420)">
+    <column styleClass="innerDialog">
+
+      <label text="$estimatedPositionDetails.title" styleClass="title"/>
+
+      <scrollPane>
+        <column margin="10" opaque="false">
+
+          <label ref="estimatedPosition" styleClass="totalAmount"/>
+          <label ref="estimatedPositionDate" styleClass="totalAmount"/>
+
+
+          <label name="message" text="$estimatedPositionDetails.message"/>
+
+          <row>
+            <filler fill="horizontal"/>
+            <grid weightX="1">
+              <label gridPos="(0,0,2,1)" text="$estimatedPositionDetails.initial.balance" styleClass="header"/>
+
+              <label gridPos="(0,1)" text="$estimatedPositionDetails.amount.balance" styleClass="amountLabel"/>
+              <label gridPos="(1,1)" ref="initialPosition" styleClass="amount"/>
+
+              <label gridPos="(0,2,2,1)" text="$estimatedPositionDetails.expected.income" styleClass="header"/>
+
+              <label gridPos="(0,3)" text="$estimatedPositionDetails.amount.income" styleClass="amountLabel"/>
+              <label gridPos="(1,3)" ref="remainingIncome" styleClass="amount"/>
+
+              <label gridPos="(0,4,2,1)" text="$estimatedPositionDetails.expected.expenses" styleClass="header"/>
+
+              <label gridPos="(0,5)" text="$estimatedPositionDetails.amount.savings" styleClass="amountLabel"/>
+              <label gridPos="(1,5)" ref="remainingSavings" styleClass="amount"/>
+
+              <label gridPos="(0,6)" text="$estimatedPositionDetails.amount.fixed" styleClass="amountLabel"/>
+              <label gridPos="(1,6)" ref="remainingFixed" styleClass="amount"/>
+
+              <label gridPos="(0,7)" text="$estimatedPositionDetails.amount.envelope" styleClass="amountLabel"/>
+              <label gridPos="(1,7)" ref="remainingEnvelope" styleClass="amount"/>
+
+              <label gridPos="(0,8)" text="$estimatedPositionDetails.amount.occasional" styleClass="amountLabel"/>
+              <label gridPos="(1,8)" ref="remainingOccasional" styleClass="amount"/>
+
+              <label gridPos="(0,9)" text="$estimatedPositionDetails.amount.special" styleClass="amountLabel"/>
+              <label gridPos="(1,9)" ref="remainingSpecial" styleClass="amount"/>
+            </grid>
+            <filler fill="horizontal"/>
+          </row>
+          <filler fill="vertical"/>
+        </column>
+      </scrollPane>
+
+      <row>
+        <filler fill="horizontal"/>
+      </row>
+    </column>
+  </panel>
+</splits>

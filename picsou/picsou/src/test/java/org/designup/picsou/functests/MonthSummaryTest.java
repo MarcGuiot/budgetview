@@ -20,13 +20,12 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkNoBudgetAreasDisplayed()
       .checkNoDataMessage();
     monthSummary.openImportHelp().checkContains("import").close();
-    balanceSummary
-      .checkNoTotal()
-      .checkNothingShown();
+    mainAccounts.checkNoEstimatedPosition();
     monthSummary.balanceGraph.checkHidden();
     timeline.checkMonthTooltip("2008/08", "August 2008");
 
     String file = OfxBuilder.init(this)
+      .addBankAccount(12345, 456456, "120901111", 125.00, "2008/08/25")
       .addTransaction("2008/08/26", 1000, "Company")
       .save();
 
@@ -41,13 +40,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary
       .checkNoBudgetAreasDisplayed()
       .checkNoSeriesMessage();
-    balanceSummary
-      .checkBalance(00.00)
-      .checkIncome(0.00)
-      .checkFixed(0.00)
-      .checkSavings(0.00)
-      .checkProjects(0.00)
-      .checkTotal(0.00);
+    mainAccounts
+      .checkEstimatedPosition(125.00);
     timeline.checkYearTooltip(2008, "2008");
   }
 
@@ -123,16 +117,17 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     timeline.checkMonthTooltip("2008/07", balance, 1000.00);
 
     timeline.selectAll();
-    balanceSummary
-      .checkBalance(1000.00)
+    mainAccounts
+      .checkEstimatedPosition(880.10);
+    mainAccounts.openEstimatedPositionDetails()
+      .checkInitialPosition(1000.00)
       .checkIncome(1500.00)
       .checkFixed(-1529.90)
       .checkEnvelope(-80)
       .checkSavings(0.00)
       .checkOccasional(-10.00)
       .checkProjects(0.00)
-      .checkTotal(880.10);
-
+      .close();
   }
 
   public void testTwoMonths() throws Exception {
@@ -171,10 +166,10 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkOccasional(10)
       .checkNoUncategorized();
 
-    balanceSummary
-      .checkTotalLabel(200807)
-      .checkTotal(1529.90)
-      .checkNothingShown();
+    mainAccounts
+      .checkEstimatedPosition(1529.90)
+      .checkEstimatedPositionDate("31/07/2008")
+      .checkNoEstimatedPositionDetails();
 
     timeline.checkMonthTooltip("2008/07", balanceFor200807, 1529.90);
 
@@ -194,13 +189,15 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(0)
       .checkOccasional(0);
-    balanceSummary.checkEnvelope(-80)
-      .checkBalance(0.0)
+    mainAccounts.checkEstimatedPosition(1410.00);
+    mainAccounts.openEstimatedPositionDetails()
+      .checkEnvelope(-80)
+      .checkInitialPosition(0.0)
       .checkFixed(0)
       .checkEnvelope(-80)
       .checkOccasional(-10)
       .checkIncome(1500)
-      .checkTotal(1410.00);
+      .close();
     timeline.checkMonthTooltip("2008/08", balanceFor200808, 1410.00);
 
     timeline.selectMonths("2008/07", "2008/08");
@@ -210,25 +207,31 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkRecurring(1500 + 29.90 + 1500 + 29.90)
       .checkEnvelope(80)
       .checkOccasional(10);
-    balanceSummary
-      .checkFutureTotalLabel(200808)
-      .checkEnvelope(-80)
-      .checkBalance(0.)
-      .checkFixed(0)
-      .checkOccasional(-10)
-      .checkEnvelope(-80)
+    mainAccounts
+      .checkEstimatedPosition(1410)
+      .checkEstimatedPositionDate("31/08/2008");
+
+    System.out.println("========= MonthSummaryTest.testTwoMonths: ");
+
+    mainAccounts.openEstimatedPositionDetails()
+      .checkInitialPosition(0)
       .checkIncome(1500)
-      .checkTotal(1410.);
+      .checkFixed(0)
+      .checkEnvelope(-80)
+      .checkOccasional(-10)
+      .close();
 
     timeline.selectMonth("2008/09");
-    balanceSummary
-      .checkFutureTotalLabel(200809)
-      .checkEnvelope(-80)
-      .checkBalance(1410.)
-      .checkFixed(-1529.90)
+    mainAccounts
+      .checkEstimatedPositionDate("30/09/2008")
+      .checkEstimatedPosition(1420 + 1500 - 1529.90 - 80 - 10 - 10);
+    mainAccounts.openEstimatedPositionDetails()
+      .checkInitialPosition(1410)
       .checkIncome(1500)
+      .checkFixed(-1529.90)
+      .checkEnvelope(-80)
       .checkOccasional(-10)
-      .checkTotal(1420 + 1500 - 1529.90 - 80 - 10 - 10);
+      .close();
   }
 
   public void testOccasionalIsTakenIntoAccountWhenComputingFuturePosition() throws Exception {
@@ -250,17 +253,17 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary
       .total(1000, 100)
       .checkOccasional(100, 100);
-    balanceSummary
-      .checkOccasional(0)
-      .checkTotal((500 - 75) - (1000 - 100));
+    mainAccounts.checkEstimatedPosition((500 - 75) - (1000 - 100));
+    mainAccounts.checkNoEstimatedPositionDetails();
 
     timeline.selectMonth("2008/08");
     monthSummary
       .total(1000, 100)
       .checkOccasional(25, 100);
-    balanceSummary
+    mainAccounts.checkEstimatedPosition(500 - 75);
+    mainAccounts.openEstimatedPositionDetails()
       .checkOccasional(-75)
-      .checkTotal(500 - 75);
+      .close();
   }
 
   public void testAdjustedValueShownAfterOverrunInABudgetArea() throws Exception {
@@ -415,26 +418,27 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     timeline.selectMonth("2008/08");
 
-    balanceSummary.checkTotal(100)
-      .checkTotalColor("darkGreen")
+    mainAccounts
+      .checkEstimatedPosition(100)
+      .checkEstimatedPositionColor("darkGreen")
       .checkLimit(0);
 
-    balanceSummary
+    mainAccounts
       .setLimit(1000, true)
       .checkLimit(1000)
-      .checkTotalColor("red");
+      .checkEstimatedPositionColor("red");
 
-    balanceSummary.setLimit(-2000, false)
+    mainAccounts.setLimit(-2000, false)
       .checkLimit(-2000)
-      .checkTotalColor("green");
+      .checkEstimatedPositionColor("green");
 
-    balanceSummary.setLimit(0, false)
-      .checkTotalColor("darkGreen");
+    mainAccounts.setLimit(0, false)
+      .checkEstimatedPositionColor("darkGreen");
 
     timeline.selectMonth("2008/07");
-    balanceSummary
-      .checkTotal(-100)
-      .checkTotalColor("darkRed");
+    mainAccounts
+      .checkEstimatedPosition(-100)
+      .checkEstimatedPositionColor("darkRed");
   }
 
   public void testMonthTooltipWithNoPositionAvailable() throws Exception {
