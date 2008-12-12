@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.description.AccountComparator;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.monthsummary.AccountPositionThresholdAction;
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
@@ -23,7 +23,6 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Strings;
@@ -74,13 +73,8 @@ public abstract class AccountViewPanel {
                       new AccountComparator(),
                       new AccountRepeatFactory());
 
-    builder.add("createAccount", new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        AccountEditionDialog accountEditionDialog =
-          new AccountEditionDialog(directory.get(JFrame.class), repository, directory);
-        accountEditionDialog.showWithNewAccount();
-      }
-    });
+    builder.add("createAccount",
+                new NewAccountAction(getAccountType(), repository, directory, directory.get(JFrame.class)));
 
     AccountPositionThresholdAction action = new AccountPositionThresholdAction(repository, directory);
     action.setEnabled(showPositionThreshold());
@@ -90,6 +84,8 @@ public abstract class AccountViewPanel {
 
     updateEstimatedPosition();
   }
+
+  protected abstract AccountType getAccountType();
 
   protected abstract boolean showPositionThreshold();
 

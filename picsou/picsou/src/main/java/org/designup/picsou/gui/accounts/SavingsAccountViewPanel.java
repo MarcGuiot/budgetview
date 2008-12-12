@@ -117,4 +117,8 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
   protected Double getEndOfMonthPosition(Glob balanceStat) {
     return balanceStat.get(SavingsBalanceStat.END_OF_MONTH_POSITION);
   }
+
+  protected AccountType getAccountType() {
+    return AccountType.SAVINGS;
+  }
 }

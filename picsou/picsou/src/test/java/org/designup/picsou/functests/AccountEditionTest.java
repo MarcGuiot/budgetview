@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.TransactionType;
 
 public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testEditingAnExistingAccount() throws Exception {
@@ -45,7 +44,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount()
       .setAccountName("Savings")
       .setAccountNumber("123")
-      .setAsSavings()
+      .checkIsSavings()
       .selectBank("cic")
       .validate();
 

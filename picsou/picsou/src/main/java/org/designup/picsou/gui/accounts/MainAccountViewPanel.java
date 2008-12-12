@@ -102,6 +102,10 @@ public class MainAccountViewPanel extends AccountViewPanel {
     return true;
   }
 
+  protected AccountType getAccountType() {
+    return AccountType.MAIN;
+  }
+
   private class OpenDetailsAction extends AbstractAction {
 
     private GlobList selectedMonths;

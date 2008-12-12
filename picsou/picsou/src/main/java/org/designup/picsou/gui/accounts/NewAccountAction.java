@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.model.AccountType;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -9,12 +10,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class NewAccountAction extends AbstractAction {
+  private AccountType accountType;
   private GlobRepository repository;
   private Directory directory;
   private final Window owner;
 
-  public NewAccountAction(GlobRepository repository, Directory directory, Window owner) {
+  public NewAccountAction(AccountType accountType, GlobRepository repository, Directory directory, Window owner) {
     super(Lang.get("new.account"));
+    this.accountType = accountType;
     this.repository = repository;
     this.directory = directory;
     this.owner = owner;
@@ -22,6 +25,6 @@ public class NewAccountAction extends AbstractAction {
 
   public void actionPerformed(ActionEvent e) {
     AccountEditionDialog dialog = new AccountEditionDialog(owner, repository, directory);
-    dialog.showWithNewAccount();
+    dialog.showWithNewAccount(accountType);
   }
 }

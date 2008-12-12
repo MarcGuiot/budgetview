@@ -197,8 +197,9 @@ public class ImportPanel {
     builder2.add("table", transactionTable);
     builder2.add("fileName", fileNameLabel);
 
-    newAccountButton = new JButton(new NewAccountAction(sessionRepository, sessionDirectory, dialog));
-    builder2.add("newAccount", newAccountButton);
+    NewAccountAction newAccountAction =
+      new NewAccountAction(AccountType.MAIN, sessionRepository, sessionDirectory, dialog);
+    newAccountButton = builder2.add("newAccount", new JButton(newAccountAction));
 
     GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory);
     accountComboBox = comboView.getComponent();

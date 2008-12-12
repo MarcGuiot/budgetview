@@ -4,12 +4,15 @@ import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
+import org.designup.picsou.model.AccountType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.FieldValue;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.Directory;
@@ -52,8 +55,8 @@ public class AccountEditionDialog {
     doShow(localRepository.get(account.getKey()));
   }
 
-  public void showWithNewAccount() {
-    doShow(localRepository.create(Account.TYPE));
+  public void showWithNewAccount(AccountType type) {
+    doShow(localRepository.create(Account.TYPE, value(Account.ACCOUNT_TYPE, type.getId())));
   }
 
   private void doShow(Glob localAccount) {
