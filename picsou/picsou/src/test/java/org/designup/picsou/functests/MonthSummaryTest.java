@@ -71,7 +71,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     monthSummary
       .checkNoHelpMessageDisplayed()
-      .checkIncome(1000.0, 0.0);
+      .checkIncomeOverrun(1000.0, 1000.0, 1000.0);
   }
 
   public void testOneMonth() throws Exception {
@@ -211,8 +211,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkEstimatedPosition(1410)
       .checkEstimatedPositionDate("31/08/2008");
 
-    System.out.println("========= MonthSummaryTest.testTwoMonths: ");
-
     mainAccounts.openEstimatedPositionDetails()
       .checkInitialPosition(0)
       .checkIncome(1500)
@@ -232,6 +230,20 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkEnvelope(-80)
       .checkOccasional(-10)
       .close();
+  }
+
+  public void testSpecialWithAPositiveAmount() throws Exception {
+    views.selectBudget();
+    budgetView.specials.createSeries()
+      .setName("Reimbursement")
+      .setCategory(MasterCategory.GIFTS)
+      .selectPositiveAmounts()
+      .setAmount(2000)
+      .validate();
+
+    views.selectHome();
+    monthSummary.checkProjects("0.00");
+    monthSummary.checkProjectsPlanned("+2000.00");
   }
 
   public void testOccasionalIsTakenIntoAccountWhenComputingFuturePosition() throws Exception {
@@ -266,21 +278,24 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .close();
   }
 
-  public void testAdjustedValueShownAfterOverrunInABudgetArea() throws Exception {
+  public void testAdjustedValueShownAfterOverrun() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/05", 1000, "WorldCo")
       .addTransaction("2008/07/15", -100, "Auchan")
+      .addTransaction("2008/08/05", 1200, "WorldCo")
       .addTransaction("2008/08/05", -80, "Auchan")
       .addTransaction("2008/08/15", -70, "Auchan")
       .load();
 
     views.selectCategorization();
+    categorization.setIncome("WorldCo", "Salary", true);
     categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
 
     timeline.selectMonth("2008/08");
     views.selectHome();
     monthSummary
-      .checkEnvelopeOverrun(150, 100, 50);
+      .checkIncomeOverrun(1200, 1200, 200)
+      .checkEnvelopeOverrun(150, 150, 50);
   }
 
   public void testUncategorized() throws Exception {

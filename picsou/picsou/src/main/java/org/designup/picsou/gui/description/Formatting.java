@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.description;
 
 import org.globsframework.utils.Strings;
+import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.util.Amounts;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -43,5 +45,20 @@ public class Formatting {
     GregorianCalendar calendar =
       new GregorianCalendar(year, month - 1, 1);
     return Strings.capitalize(YEAR_MONTH_FORMAT.format(calendar.getTime()));
+  }
+
+  public static String toString(Double value, BudgetArea area) {
+    if (area.isIncome()) {
+      return toString(value);
+    }
+    else if (Amounts.isNearZero(value)) {
+      return "0.00";
+    }
+    else if (value < 0) {
+      return toString(-value);
+    }
+    else {
+      return "+" + toString(value);
+    }
   }
 }

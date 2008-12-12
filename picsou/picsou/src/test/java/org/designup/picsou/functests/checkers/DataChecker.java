@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.Key;
 import org.uispec4j.Panel;

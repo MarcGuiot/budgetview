@@ -15,6 +15,7 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -33,8 +34,8 @@ import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -47,7 +48,7 @@ import java.util.List;
 
 public class MonthSummaryView extends View implements GlobSelectionListener, ColorChangeListener {
   private static final GlobMatcher USER_SERIES_MATCHER =
-    GlobMatchers.fieldIn(Series.BUDGET_AREA,
+    fieldIn(Series.BUDGET_AREA,
                          BudgetArea.INCOME.getId(),
                          BudgetArea.RECURRING.getId(),
                          BudgetArea.ENVELOPES.getId(),
@@ -202,7 +203,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener, Col
     private JButton amountLabel;
     private JLabel plannedLabel;
     private Gauge gauge;
-    private int multiplier;
     private SortedSet<Integer> selectedMonths = new TreeSet<Integer>();
 
     public BudgetAreaUpdater(BudgetArea budgetArea, JButton amountLabel, JLabel plannedLabel, Gauge gauge) {
@@ -210,7 +210,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener, Col
       this.amountLabel = amountLabel;
       this.plannedLabel = plannedLabel;
       this.gauge = gauge;
-      this.multiplier = budgetArea.isIncome() ? 1 : -1;
       directory.get(SelectionService.class).addListener(this, Month.TYPE);
       repository.addChangeListener(this);
       update();
@@ -241,31 +240,41 @@ public class MonthSummaryView extends View implements GlobSelectionListener, Col
       Double remaining = 0.0;
       Double observed = 0.0;
       Double planned = 0.0;
-      for (Glob balanceStat : repository.getAll(BalanceStat.TYPE,
-                                                GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonths))) {
-        observed += multiplier * balanceStat.get(BalanceStat.getObserved(budgetArea));
-        planned += multiplier * balanceStat.get(BalanceStat.getPlanned(budgetArea));
-        remaining += multiplier * balanceStat.get(BalanceStat.getRemaining(budgetArea));
+      for (Glob balanceStat : repository.getAll(BalanceStat.TYPE, fieldIn(BalanceStat.MONTH, selectedMonths))) {
+        observed += balanceStat.get(BalanceStat.getObserved(budgetArea));
+        planned += balanceStat.get(BalanceStat.getPlanned(budgetArea));
+        remaining += balanceStat.get(BalanceStat.getRemaining(budgetArea));
       }
-      amountLabel.setText(Formatting.DECIMAL_FORMAT.format(observed));
+      double overrunPart = (remaining + observed) - planned;
+      double adjustedPlanned = Amounts.isNotZero(overrunPart) ? planned + overrunPart : planned;
+
+      amountLabel.setText(format(observed));
       amountLabel.setVisible(true);
       amountLabel.setBackground(Color.RED);
-      double overrunPart = multiplier * (planned - (remaining + observed));
-      double adjustedPlanned = overrunPart > 10E-6 ? planned + overrunPart : planned;
-      plannedLabel.setText(Formatting.toString(planned));
-      if (overrunPart > 10E-6) {
+      plannedLabel.setText(format(adjustedPlanned));
+      
+      if (Amounts.isNotZero(overrunPart)) {
         plannedLabel.setForeground(overrunAmountColor);
         plannedLabel.setToolTipText(Lang.get("monthsummary.planned.tooltip.overrun",
-                                             Formatting.toString(overrunPart),
-                                             Formatting.toString(adjustedPlanned)));
+                                             format(planned),
+                                             Formatting.toString(Math.abs(overrunPart))));
       }
       else {
         plannedLabel.setForeground(normalAmountColor);
         plannedLabel.setToolTipText(Lang.get("monthsummary.planned.tooltip.normal"));
       }
 
-      gauge.setValues(observed, adjustedPlanned, overrunPart);
+      gauge.setValues(updateSign(observed), updateSign(adjustedPlanned), Math.abs(overrunPart));
     }
+
+    private double updateSign(double value) {
+      return budgetArea.isIncome() ? value : -value;
+    }
+
+    private String format(Double value) {
+      return Formatting.toString(value, budgetArea);
+    }
+
   }
 
   public void selectionUpdated(GlobSelection selection) {

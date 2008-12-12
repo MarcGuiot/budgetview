@@ -165,7 +165,11 @@ public class SeriesEvolutionView extends View {
 
   private class ExpandableTableAdapter implements ExpandableTable {
     public Glob getSelectedGlob() {
-      return globTable.getGlobAt(table.getSelectedRow());
+      int index = table.getSelectedRow();
+      if (index < 0) {
+        return null;
+      }
+      return globTable.getGlobAt(index);
     }
 
     public void select(Glob seriesWrapper) {

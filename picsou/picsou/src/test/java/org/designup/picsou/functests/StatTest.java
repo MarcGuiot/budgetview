@@ -107,7 +107,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
 
     views.selectHome();
-    monthSummary.checkEnvelopeOverrun(110, 90 + 80, 110 - 90);
+    monthSummary.checkEnvelopeOverrun(110, 110 + 80, 110 - 90);
 
     views.selectBudget();
     budgetView.envelopes.checkTotalAmounts(-110, -190);
