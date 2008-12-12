@@ -47,9 +47,6 @@
               <label text="$categorization.filter.label" styleClass="formLabel"
                      foreground="gauge.categorization.label" marginRight="5"/>
               <comboBox ref="transactionFilterCombo"/>
-              <label text="$categorization.account.label" styleClass="formLabel" 
-                     foreground="gauge.categorization.label" marginRight="5" marginLeft="5"/>
-              <comboBox ref="accountFilterCombo"/>
             </row>
             <scrollPane viewportBackground="#FFFFFF" marginBottom="0">
               <table ref="transactionTable" rowHeight="20"/>

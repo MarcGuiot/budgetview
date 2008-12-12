@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.AccountFilteringCombo;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
@@ -27,12 +26,10 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.GlobRepeat;
-import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
-import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -60,7 +57,6 @@ public class CategorizationView extends View implements TableView, Filterable {
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
   private JComboBox filteringModeCombo;
-  private AccountFilteringCombo accountFilteringCombo;
   private java.util.List<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>> seriesRepeat =
     new ArrayList<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>>();
 
@@ -112,7 +108,6 @@ public class CategorizationView extends View implements TableView, Filterable {
     builder.add("progressMessage", gauge.getProgressMessage());
     builder.add("hideProgressMessage", gauge.getHideProgressMessageAction());
 
-    addAccountCombo(builder);
     addFilteringModeCombo(builder);
 
     Comparator<Glob> transactionComparator = getTransactionComparator();
@@ -177,15 +172,6 @@ public class CategorizationView extends View implements TableView, Filterable {
     updateTableFilter();
 
     return builder;
-  }
-
-  private void addAccountCombo(GlobsPanelBuilder builder) {
-    accountFilteringCombo = new AccountFilteringCombo(repository, directory, new GlobComboView.GlobSelectionHandler() {
-      public void processSelection(Glob glob) {
-        updateTableFilter();
-      }
-    });
-    builder.add("accountFilterCombo", accountFilteringCombo.getComponent());
   }
 
   private void addFilteringModeCombo(GlobsPanelBuilder builder) {
@@ -442,8 +428,7 @@ public class CategorizationView extends View implements TableView, Filterable {
         filter,
         fieldEquals(Transaction.PLANNED, false),
         fieldEquals(Transaction.MIRROR, false),
-        getCurrentFilteringMode(),
-        accountFilteringCombo.getCurrentAccountFilter()
+        getCurrentFilteringMode()
       );
 
     transactionTable.setFilter(matcher);
