@@ -112,7 +112,6 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
         }
       }
     });
-    buttonGroup.add(selector);
     return selector;
   }
 
