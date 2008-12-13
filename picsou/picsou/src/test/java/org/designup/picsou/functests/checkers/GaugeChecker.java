@@ -44,16 +44,6 @@ public class GaugeChecker extends DataChecker {
     return this;
   }
 
-  public GaugeChecker checkWarningShown() {
-    Assert.assertTrue(gauge.isWarningShown());
-    return this;
-  }
-
-  public GaugeChecker checkWarningNotShown() {
-    Assert.assertFalse(gauge.isWarningShown());
-    return this;
-  }
-
   public void checkTooltip(String text) {
     Assert.assertEquals(text, gauge.getToolTipText());
   }

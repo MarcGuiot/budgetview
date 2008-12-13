@@ -6,13 +6,10 @@ import org.designup.picsou.model.util.Amounts;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
 
 public class Gauge extends JPanel {
 
   private final boolean overrunIsAnError;
-  private final boolean showWarningForErrors;
   private final boolean invertedSignIsAnError;
 
   private double actualValue;
@@ -23,7 +20,6 @@ public class Gauge extends JPanel {
   private double overrunPercent = 0;
   private double emptyPercent = 1.0;
   private boolean overrunError = false;
-  private boolean warningShown = false;
 
   private Color borderColor = Color.DARK_GRAY;
   private Color filledColorTop = Color.BLUE.brighter();
@@ -34,23 +30,17 @@ public class Gauge extends JPanel {
   private Color overrunColorBottom = Color.CYAN.darker();
   private Color overrunErrorColorTop = Color.RED.brighter();
   private Color overrunErrorColorBottom = Color.RED.darker();
-  private Color triangleTopColor = Color.YELLOW.brighter();
-  private Color triangleBottomColor = Color.YELLOW.darker();
-  private Color triangleBorderColor = Color.LIGHT_GRAY;
-  private Color triangleShadowColor = Color.DARK_GRAY;
-  private Color triangleSignColor = Color.DARK_GRAY;
 
   private static final int BAR_HEIGHT = 10;
   private static final float TRIANGLE_HEIGHT = 16f;
   private static final float TRIANGLE_WIDTH = 16f;
 
   public Gauge() {
-    this(true, true, true);
+    this(true, true);
   }
 
-  public Gauge(boolean overrunIsAnError, boolean showWarningForErrors, boolean invertedSignIsAnError) {
+  public Gauge(boolean overrunIsAnError, boolean invertedSignIsAnError) {
     this.overrunIsAnError = overrunIsAnError;
-    this.showWarningForErrors = showWarningForErrors;
     this.invertedSignIsAnError = invertedSignIsAnError;
 
     setMinimumSize(new Dimension(60, 28));
@@ -81,7 +71,6 @@ public class Gauge extends JPanel {
     overrunPercent = Math.abs(overrunPart / targetValue);
     emptyPercent = 1 - overrunPercent - fillPercent;
     overrunError = overrunIsAnError;
-    warningShown = overrunError && showWarningForErrors;
     double remainingValue = targetValue - actualValue;
     setToolTip("gauge.partial.overrun." + (overrunIsAnError ? "error" : "ok"),
                remainingValue, Math.abs(overrunPart));
@@ -99,7 +88,6 @@ public class Gauge extends JPanel {
       overrunPercent = 0;
       emptyPercent = 1;
       overrunError = false;
-      warningShown = false;
       setToolTip("gauge.unset");
     }
     else if (absTarget == 0) {
@@ -107,7 +95,6 @@ public class Gauge extends JPanel {
       overrunPercent = 1;
       emptyPercent = 0;
       overrunError = overrunIsAnError;
-      warningShown = overrunError && showWarningForErrors;
       setToolTip("gauge.overrun." + (overrunIsAnError ? "error" : "ok"), absActual);
     }
     else if (!sameSign) {
@@ -115,7 +102,6 @@ public class Gauge extends JPanel {
       overrunPercent = absActual / (absActual + absTarget);
       emptyPercent = 1 - overrunPercent;
       overrunError = invertedSignIsAnError;
-      warningShown = overrunError && showWarningForErrors;
       setToolTip("gauge.inverted." + (invertedSignIsAnError ? "error" : "ok"), absActual);
     }
     else if (absActual - absTarget >= 0.01) {
@@ -123,7 +109,6 @@ public class Gauge extends JPanel {
       overrunPercent = 1 - fillPercent;
       emptyPercent = 0;
       overrunError = overrunIsAnError;
-      warningShown = overrunError && showWarningForErrors;
       setToolTip("gauge.overrun." + (overrunIsAnError ? "error" : "ok"), absActual - absTarget);
     }
     else if (Amounts.isNearZero(absTarget - absActual)) {
@@ -131,7 +116,6 @@ public class Gauge extends JPanel {
       overrunPercent = 0;
       emptyPercent = 0;
       overrunError = false;
-      warningShown = false;
       setToolTip("gauge.complete");
     }
     else {
@@ -142,7 +126,6 @@ public class Gauge extends JPanel {
       overrunPercent = 0;
       emptyPercent = 1 - fillPercent;
       overrunError = false;
-      warningShown = false;
       setToolTip("gauge.partial", absTarget - absActual);
     }
   }
@@ -195,80 +178,11 @@ public class Gauge extends JPanel {
     }
 
     drawBorder(g2, width, barTop, BAR_HEIGHT);
-    if (warningShown) {
-      drawWarning(g2, width, height);
-    }
   }
 
   private void drawBorder(Graphics2D g2, int width, int barTop, int barHeight) {
     g2.setColor(borderColor);
     g2.drawRect(0, barTop, width, barHeight);
-  }
-
-  private void drawWarning(Graphics2D g2, int width, int height) {
-    GeneralPath shape = createWarningShape();
-
-    Rectangle rectangle = shape.getBounds();
-    AffineTransform scaling =
-      AffineTransform.getScaleInstance(TRIANGLE_WIDTH / (float)rectangle.width,
-                                       TRIANGLE_HEIGHT / (float)rectangle.height);
-    shape.transform(scaling);
-
-    rectangle = shape.getBounds();
-    float middleX = (float)width / 2.0f;
-    float middleY = (float)height / 2;
-    AffineTransform translation =
-      AffineTransform.getTranslateInstance(middleX - TRIANGLE_WIDTH / 2.0f - rectangle.x,
-                                           middleY - TRIANGLE_HEIGHT / 2 - rectangle.y);
-    shape.transform(translation);
-
-    shape.transform(AffineTransform.getTranslateInstance(2, 2));
-    g2.setColor(triangleShadowColor);
-    g2.fill(shape);
-
-    shape.transform(AffineTransform.getTranslateInstance(-2, -2));
-    g2.setPaint(new GradientPaint(0, 0, triangleTopColor, 0, height, triangleBottomColor));
-    g2.fill(shape);
-
-    g2.setColor(triangleBorderColor);
-    g2.draw(shape);
-
-    g2.setColor(triangleSignColor);
-    GeneralPath sign = createWarningSign();
-    sign.transform(scaling);
-    sign.transform(translation);
-    g2.fill(sign);
-  }
-
-  private GeneralPath createWarningShape() {
-    GeneralPath shape = new GeneralPath();
-    shape.moveTo(1, 9);
-    shape.lineTo(5.5f, 1.0f);
-    shape.curveTo(5.75f, 0.4f, 6.25f, 0.4f, 6.5f, 1.0f);
-    shape.lineTo(11, 9);
-    shape.curveTo(11.3f, 9.5f, 11.5f, 10.0f, 11f, 10f);
-    shape.lineTo(1, 10);
-    shape.moveTo(1, 9);
-    shape.curveTo(0.7f, 9.5f, 0.5f, 10.0f, 1.0f, 10.0f);
-    shape.closePath();
-    return shape;
-  }
-
-  private GeneralPath createWarningSign() {
-    GeneralPath shape = new GeneralPath();
-    shape.moveTo(5, 4);
-    shape.lineTo(6, 3);
-    shape.lineTo(7, 4);
-    shape.lineTo(6, 8);
-    shape.closePath();
-
-    shape.moveTo(5, 8.5f);
-    shape.lineTo(6, 8.0f);
-    shape.lineTo(7, 8.5f);
-    shape.lineTo(6, 9.5f);
-    shape.closePath();
-
-    return shape;
   }
 
   private void fillBar(Graphics2D g2, Color topColor, Color bottomColor, int barX, int barWidth, int barTop, int barBottom) {
@@ -298,10 +212,6 @@ public class Gauge extends JPanel {
 
   public double getEmptyPercent() {
     return emptyPercent;
-  }
-
-  public boolean isWarningShown() {
-    return warningShown;
   }
 
   public boolean isOverrunErrorShown() {
@@ -342,25 +252,5 @@ public class Gauge extends JPanel {
 
   public void setOverrunErrorColorBottom(Color overrunErrorColorBottom) {
     this.overrunErrorColorBottom = overrunErrorColorBottom;
-  }
-
-  public void setTriangleTopColor(Color triangleTopColor) {
-    this.triangleTopColor = triangleTopColor;
-  }
-
-  public void setTriangleBottomColor(Color triangleBottomColor) {
-    this.triangleBottomColor = triangleBottomColor;
-  }
-
-  public void setTriangleBorderColor(Color triangleBorderColor) {
-    this.triangleBorderColor = triangleBorderColor;
-  }
-
-  public void setTriangleShadowColor(Color triangleShadowColor) {
-    this.triangleShadowColor = triangleShadowColor;
-  }
-
-  public void setTriangleSignColor(Color triangleSignColor) {
-    this.triangleSignColor = triangleSignColor;
   }
 }

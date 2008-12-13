@@ -59,7 +59,7 @@ public class GaugeDemo {
           addLabel(row, column++, invertedSignIsAnError);
 
           for (double[] pair : pairs) {
-            Gauge gauge = new Gauge(overrunIsAnError, showWarningForErrors, invertedSignIsAnError);
+            Gauge gauge = new Gauge(overrunIsAnError, invertedSignIsAnError);
             gauge.setPreferredSize(new Dimension(100, 28));
             gauge.setMaximumSize(new Dimension(100, 28));
             gauge.setValues(pair[0], pair[1]);
@@ -67,7 +67,7 @@ public class GaugeDemo {
                         new Insets(5, 5, 5, 5));
           }
           for (double[] triple : triples) {
-            Gauge gauge = new Gauge(overrunIsAnError, showWarningForErrors, invertedSignIsAnError);
+            Gauge gauge = new Gauge(overrunIsAnError, invertedSignIsAnError);
             gauge.setPreferredSize(new Dimension(100, 28));
             gauge.setMaximumSize(new Dimension(100, 28));
             gauge.setValues(triple[0], triple[1], triple[2]);

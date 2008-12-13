@@ -18,6 +18,8 @@
     <style selector=".introMessage label" margin="2" fill="horizontal" horizontalAlignment="center"
            foreground="monthSummary.introMessage.text" font="-,bold,14"/>
 
+    <style selector="label.plannedAmount" foreground="" font="-,bold,10"/>
+
   </styles>
 
   <column name="monthSummary">
@@ -80,7 +82,7 @@
                   <button ref="budgetAreaName" styleClass="itemLink" tooltipText="$monthsummary.series.tooltip"/>
                   <button ref="budgetAreaAmount" styleClass="amountLink" tooltipText="$monthsummary.observed.tooltip"/>
                   <component ref="budgetAreaGauge" styleClass="detailGauge"/>
-                  <label ref="budgetAreaPlannedAmount" styleClass="amount" foreground="" anchor="right"/>
+                  <label ref="budgetAreaPlannedAmount" styleClass="plannedAmount" anchor="right"/>
                 </repeat>
                 <filler fill="vertical"/>
                 <row margin="10" autoHideSource="uncategorizedAmountLabel">
