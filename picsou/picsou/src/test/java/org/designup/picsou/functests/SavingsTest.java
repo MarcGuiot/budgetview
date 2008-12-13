@@ -264,6 +264,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .createSavingsSeries()
       .setName("Epargne")
+      .setFromAccount("Main account")
       .setToAccount("Epargne")
       .setCategories(MasterCategory.SAVINGS)
       .validate();
@@ -340,4 +341,60 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccountView.checkPosition("Epargne", 1100);
   }
 
+  // ==> test de l'effet de suppression de transaction référencé dans account
+  public void testUpdateAccountOnSeriesChangeFrom() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/10", -100.00, "Caf")
+      .load();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectHome();
+    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("CAF")
+      .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("External account")
+      .setToAccount("Epargne")
+      .selectAllMonths()
+      .setAmount("100")
+      .setDate("5")
+      .validate();
+    views.selectHome();
+    timeline.selectMonth("2008/08");
+    savingsAccountView.checkPosition("Epargne", 1000);
+    timeline.selectMonth("2008/09");
+    savingsAccountView.checkPosition("Epargne", 1100);
+    views.selectBudget();
+    budgetView.savings
+      .editSeriesList()
+      .selectSeries("CAF")
+      .switchToAutomatic()
+      .setFromAccount("Main account")
+      .validate();
+    timeline.selectAll();
+//    views.selectData();
+//    transactions.initContent().dumpCode();
+//    views.selectHome();
+//    timeline.selectMonth("2008/08");
+//    savingsAccountView.checkPosition("Epargne", 1000);
+//    timeline.selectMonth("2008/09");
+//    savingsAccountView.checkPosition("Epargne", 1100);
+//    views.selectBudget();
+//    views.selectData();
+//    transactions.initContent().dumpCode();
+    views.selectCategorization();
+    categorization
+      .selectTableRows("Caf")
+      .selectSavings()
+      .selectSavingsSeries("CAF", MasterCategory.SAVINGS, false);
+
+    views.selectData();
+    transactions.initContent().dumpCode();
+    views.selectBudget();
+    timeline.selectMonth("2008/08");
+    savingsAccountView.checkPosition("Epargne", 1000);
+    timeline.selectMonth("2008/09");
+    savingsAccountView.checkPosition("Epargne", 1100);
+
+  }
 }
