@@ -607,15 +607,20 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       return;
     }
     MutableChangeSet currentChangeSetToDispatch = this.changeSetToDispatch;
+//    System.out.println("DefaultGlobRepository.notifyListeners " + changeSetToDispatch);
     try {
       bulkDispatchingModeLevel++;
       if (applyTriggers) {
         for (ChangeSetListener trigger : triggers) {
           this.changeSetToDispatch = new DefaultChangeSet();
           trigger.globsChanged(currentChangeSetToDispatch, this);
+//          if (!changeSetToDispatch.isEmpty()) {
+//            System.out.println(trigger + " : " + changeSetToDispatch);
+//          }
           currentChangeSetToDispatch.merge(changeSetToDispatch);
         }
       }
+//      System.out.println("------------------------------------------------------------");
     }
     finally {
       bulkDispatchingModeLevel--;
@@ -642,11 +647,12 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       throw new ItemNotFound("Object '" + key + "' does not exist");
     }
 
-    // optimization (class.isInstance is expensive)
-    if (!glob.getClass().equals(DefaultGlob.class) && !MutableGlob.class.isInstance(glob)) {
+    try {
+      return (MutableGlob)glob;
+    }
+    catch (ClassCastException e) {
       throw new OperationDenied("Object '" + key + "' cannot be modified");
     }
-    return (MutableGlob)glob;
   }
 
   private void checkKeyDoesNotExist(Key key) throws ItemAlreadyExists {
