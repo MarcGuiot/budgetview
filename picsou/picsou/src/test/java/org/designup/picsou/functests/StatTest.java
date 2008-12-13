@@ -107,7 +107,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
 
     views.selectHome();
-    monthSummary.checkEnvelopeOverrun(110, 90 + 80, 110 - 90);
+    monthSummary.checkEnvelopeOverrun(110, 110 + 80, 110 - 90);
 
     views.selectBudget();
     budgetView.envelopes.checkTotalAmounts(-110, -190);
@@ -134,9 +134,9 @@ public class StatTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     views.selectHome();
     monthSummary.checkBalance(200 - 90);  //balance banque du mois : ne prends pas en compte les 80
-    balanceSummary.checkTotal(80);
+    mainAccounts.checkEstimatedPosition(80);
     timeline.selectMonth("2008/07");
-    balanceSummary.checkTotal(200 - 170);
+    mainAccounts.checkEstimatedPosition(200 - 170);
     monthSummary.checkBalance(200 - 80 - 170);  //-50 ==> prends en comptes les 80
   }
 
@@ -153,9 +153,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     monthSummary
       .checkBalance(110);
-    balanceSummary
-      .checkBalance(0)
-      .checkTotal(0);
+    mainAccounts.checkEstimatedPosition(0);
 
     OfxBuilder
       .init(this)
@@ -173,9 +171,11 @@ public class StatTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     monthSummary
       .checkBalance(110);
-    balanceSummary
-      .checkBalance(-290)
-      .checkTotal(110);
+    mainAccounts
+      .checkEstimatedPosition(110);
+    mainAccounts.openEstimatedPositionDetails()
+      .checkInitialPosition(-290)
+      .close();
     views.selectBudget();
     budgetView.income.editSeriesList()
       .switchToManual()
@@ -191,8 +191,10 @@ public class StatTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     monthSummary
       .checkBalance(-290);
-    balanceSummary
-      .checkBalance(-290)
-      .checkTotal(-290);
+    mainAccounts
+      .checkEstimatedPosition(-290);
+    mainAccounts.openEstimatedPositionDetails()
+      .checkInitialPosition(-290)
+      .close();      
   }
 }

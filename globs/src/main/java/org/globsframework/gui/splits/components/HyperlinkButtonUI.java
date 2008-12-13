@@ -19,6 +19,7 @@ public class HyperlinkButtonUI extends BasicButtonUI {
   private int fontHeight;
   private int descent;
   private boolean underline = true;
+  private boolean autoHideIfDisabled = true;
   private Color rolloverColor = Color.BLUE.brighter();
   private Color disabledColor = Color.GRAY;
   private PropertyChangeListener autoHideListener;
@@ -57,13 +58,17 @@ public class HyperlinkButtonUI extends BasicButtonUI {
   }
 
   private void updateVisibility(AbstractButton button) {
-    button.setVisible(button.isEnabled());
+    button.setVisible(button.isEnabled() || !autoHideIfDisabled);
   }
 
   protected void uninstallListeners(AbstractButton button) {
     super.uninstallListeners(button);
     button.removePropertyChangeListener(autoHideListener);
     button.removePropertyChangeListener(fontMetricsUpdater);
+  }
+
+  public void setAutoHideIfDisabled(boolean autoHideIfDisabled) {
+    this.autoHideIfDisabled = autoHideIfDisabled;
   }
 
   public void setUnderline(boolean underline) {

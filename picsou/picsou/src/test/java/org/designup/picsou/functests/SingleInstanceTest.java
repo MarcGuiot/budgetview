@@ -79,7 +79,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .add("01/01/2000", TransactionType.VIREMENT, "mac do", "", 1.20)
       .check();
 
-    ImportChecker importerForPathCheck = new ImportChecker(WindowInterceptor.getModalDialog(new OperationChecker(window).getImportTrigger()));
+    ImportChecker importerForPathCheck = ImportChecker.open(new OperationChecker(window).getImportTrigger());
     importerForPathCheck.checkDirectory(System.getProperty("user.home"))
       .close();
 
@@ -108,9 +108,8 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
         PicsouApplication.main(initialFile);
       }
     });
-    Window importDialog = WindowInterceptor.getModalDialog(trigger);
 
-    ImportChecker importer = new ImportChecker(importDialog);
+    ImportChecker importer = ImportChecker.open(trigger);
     importer.checkSelectedFiles(initialFile);
 
     String step1File = OfxBuilder.init(this)
@@ -209,8 +208,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
                     "MFAC.FRANCE 4561409787231717 19/04/06 STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS\n" +
                     "^");
     OperationChecker operations = new OperationChecker(window);
-    Window importDialog = WindowInterceptor.getModalDialog(operations.getImportTrigger());
-    ImportChecker importer = new ImportChecker(importDialog);
+    ImportChecker importer = ImportChecker.open(operations.getImportTrigger());
     BalanceEditionChecker balance = importer.selectFiles(file)
       .acceptFile()
       .selectBank(LoggedInFunctionalTestCase.SOCIETE_GENERALE)

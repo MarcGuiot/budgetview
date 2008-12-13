@@ -80,7 +80,7 @@
                   <button ref="budgetAreaName" styleClass="itemLink" tooltipText="$monthsummary.series.tooltip"/>
                   <button ref="budgetAreaAmount" styleClass="amountLink" tooltipText="$monthsummary.observed.tooltip"/>
                   <component ref="budgetAreaGauge" styleClass="detailGauge"/>
-                  <label ref="budgetAreaPlannedAmount" styleClass="amount" anchor="right"/>
+                  <label ref="budgetAreaPlannedAmount" styleClass="amount" foreground="" anchor="right"/>
                 </repeat>
                 <filler fill="vertical"/>
                 <row margin="10" autoHideSource="uncategorizedAmountLabel">

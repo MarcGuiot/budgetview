@@ -9,6 +9,7 @@ import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.color.utils.BackgroundColorUpdater;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.SingleComponentLayout;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -27,7 +28,14 @@ public class ScrollPaneComponent extends AbstractSplitter {
   protected ComponentStretch createRawStretch(SplitsContext context) {
     ComponentStretch subStretch = getSubSplitters()[0].createComponentStretch(context, true);
     JScrollPane scrollPane = findOrCreateComponent(context);
-    scrollPane.setViewportView(subStretch.getComponent());
+    boolean forceVerticalScroll = Boolean.TRUE.equals(properties.getBoolean("forceVerticalScroll"));
+    if (forceVerticalScroll) {
+      VerticalScrollPanel panel = new VerticalScrollPanel(subStretch.getComponent());
+      scrollPane.setViewportView(panel);
+    }
+    else {
+      scrollPane.setViewportView(subStretch.getComponent());
+    }
 
     ComponentStretch stretch = new ComponentStretch(scrollPane,
                                                     subStretch.getFill(),
@@ -59,11 +67,19 @@ public class ScrollPaneComponent extends AbstractSplitter {
 
     Integer horizontalUnitIncrement = properties.getInt("horizontalUnitIncrement");
     if (horizontalUnitIncrement != null) {
+      if (forceVerticalScroll) {
+        throw new SplitsException("horizontalUnitIncrement cannot be set when forceVerticalScroll is set to true" +
+                                  context.dump());
+      }
       scrollPane.getHorizontalScrollBar().setUnitIncrement(horizontalUnitIncrement);
     }
 
     String horizontalPolicy = properties.getString("horizontalScrollbarPolicy");
     if (horizontalPolicy != null) {
+      if (forceVerticalScroll) {
+        throw new SplitsException("horizontalScrollbarPolicy cannot be set when forceVerticalScroll is set to true" +
+                                  context.dump());
+      }
       scrollPane.setHorizontalScrollBarPolicy(getHorizontalPolicy(horizontalPolicy));
     }
 
@@ -88,7 +104,8 @@ public class ScrollPaneComponent extends AbstractSplitter {
   protected String[] getExcludedParameters() {
     return new String[]{"viewportBackground", "viewportOpaque",
                         "verticalUnitIncrement", "horizontalUnitIncrement",
-                        "verticalScrollbarPolicy", "horizontalScrollbarPolicy"};
+                        "verticalScrollbarPolicy", "horizontalScrollbarPolicy",
+                        "forceVerticalScroll"};
   }
 
   private int getHorizontalPolicy(String policy) {
@@ -115,6 +132,35 @@ public class ScrollPaneComponent extends AbstractSplitter {
       return ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER;
     }
     throw new InvalidParameter("Invalid vertical scrollbar policy: " + policy);
+  }
+
+  private static class VerticalScrollPanel extends JPanel implements Scrollable {
+
+    private VerticalScrollPanel(Component innerComponent) {
+      super(new SingleComponentLayout());
+      add(innerComponent);
+      setOpaque(false);
+    }
+
+    public Dimension getPreferredScrollableViewportSize() {
+      return getPreferredSize();
+    }
+
+    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+      return 10;
+    }
+
+    public boolean getScrollableTracksViewportHeight() {
+      return false;
+    }
+
+    public boolean getScrollableTracksViewportWidth() {
+      return true;
+    }
+
+    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+      return 10;
+    }
   }
 
 }

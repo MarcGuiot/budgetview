@@ -115,9 +115,8 @@ public class GlobTableColumnBuilder {
       return comparator;
     }
 
-    public boolean isEditable() {
+    public boolean isEditable(int row, Glob glob) {
       return editor != null;
     }
-
   }
 }

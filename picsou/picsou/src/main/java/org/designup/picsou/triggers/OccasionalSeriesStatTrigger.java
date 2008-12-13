@@ -4,13 +4,11 @@ import org.designup.picsou.gui.model.OccasionalSeriesStat;
 import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import org.globsframework.utils.Utils;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -150,7 +148,7 @@ public class OccasionalSeriesStatTrigger implements ChangeSetListener {
   private void updateStat(Glob stat, Integer categoryId, Integer monthId, int multiplier, Double amount, GlobRepository repository) {
     double newAmount = updateStat(stat, multiplier, amount, repository);
 
-    if (Math.abs(newAmount) < 1E-6) {
+    if (Amounts.isNearZero(newAmount)) {
       GlobList transactions =
         repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.OCCASIONAL_SERIES_ID)
           .findByIndex(Transaction.MONTH, monthId).getGlobs()

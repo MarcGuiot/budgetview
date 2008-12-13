@@ -8,6 +8,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -33,6 +34,10 @@ public class CurrentMonth {
   static {
     GlobTypeLoader.init(CurrentMonth.class, "currentMonth");
     KEY = org.globsframework.model.Key.create(TYPE, 0);
+  }
+
+  public static Integer get(GlobRepository repository) {
+    return repository.get(CurrentMonth.KEY).get(ID);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

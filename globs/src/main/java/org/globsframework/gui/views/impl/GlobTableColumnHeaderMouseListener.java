@@ -19,7 +19,7 @@ public class GlobTableColumnHeaderMouseListener extends MouseAdapter {
   public GlobTableColumnHeaderMouseListener(JTable table, SortableTableModel model) {
     this.table = table;
     this.model = model;
-    columnModel = table.getColumnModel();
+    this.columnModel = table.getColumnModel();
   }
 
   public void mousePressed(MouseEvent e) {

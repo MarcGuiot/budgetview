@@ -1,0 +1,70 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.sectionTitle" font="-,bold,12"
+           marginLeft="10" marginTop="5" marginBottom="0"/>
+
+    <style selector="button.icon"
+           gridPos="(0,0,1,2)"
+           text="" opaque="false" borderPainted="false"
+           anchor="north" minimumSize="(50,50)" preferredSize="(50,50)" weightX="0"/>
+
+    <style selector="button.rowTitle"
+           gridPos="(1,0)"
+           horizontalAlignment="right"
+           ui="hyperlinkButtonWithoutUnderline" foreground="block.item.link"
+           marginTop="10" marginBottom="0" anchor="northwest" fill="none" weightX="10"/>
+
+    <style selector="textArea.text"
+           gridPos="(1,1)"
+           foreground="navigationView.text" opaque="false"
+           editable="false" lineWrap="true" wrapStyleWord="true"
+           fill="both" margin="0" weightX="10"/>
+  </styles>
+
+  <column>
+
+    <label text="$navigationView.title" styleClass="blockTitle"/>
+
+    <panel styleClass="block">
+
+      <scrollPane margin="15" marginBottom="20" verticalUnitIncrement="10"
+                  forceVerticalScroll="true">
+
+        <verticalBoxes border="empty(10,2,10,8)">
+
+          <label text="$navigationView.actions" styleClass="sectionTitle"/>
+          <grid>
+            <button action="importFileAction" styleClass="icon"
+                    icon="card_folder_large.png" rolloverIcon="card_folder_large_rollover.png"/>
+            <button action="importFileAction" styleClass="rowTitle"/>
+            <textArea text="$navigationView.import.text" styleClass="text"/>
+          </grid>
+
+          <grid>
+            <button action="openHelpAction" styleClass="icon"
+                    icon="card_help_large.png" rolloverIcon="card_help_large_rollover.png"/>
+            <button action="openHelpAction" styleClass="rowTitle"/>
+            <textArea text="$navigationView.help.text" styleClass="text"/>
+          </grid>
+
+          <label text="$navigationView.views" styleClass="sectionTitle" marginTop="15"/>
+
+          <repeat ref="cards">
+            <grid>
+              <button ref="icon" styleClass="icon"/>
+              <button action="gotoCardAction" styleClass="rowTitle"/>
+              <textArea ref="text" styleClass="text"/>
+            </grid>
+          </repeat>
+
+          <filler fill="vertical"/>
+          
+        </verticalBoxes>
+      </scrollPane>
+
+    </panel>
+
+  </column>
+</splits>

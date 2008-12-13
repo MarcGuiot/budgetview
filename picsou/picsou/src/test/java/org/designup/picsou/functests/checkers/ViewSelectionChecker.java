@@ -20,6 +20,10 @@ public class ViewSelectionChecker extends DataChecker {
     select("categorization");
   }
 
+  public void selectEvolution() {
+    select("seriesEvolution");
+  }
+
   public void selectBudget() {
     select("budget");
   }
@@ -70,6 +74,6 @@ public class ViewSelectionChecker extends DataChecker {
   }
 
   public HelpChecker openHelp() {
-    return HelpChecker.open(window.getButton("Help").triggerClick());
+    return HelpChecker.open(window.getPanel("mainWindowHeader").getButton("Help").triggerClick());
   }
 }

@@ -26,6 +26,7 @@ public class SingleCategorySeriesComponentFactory extends AbstractSeriesComponen
     final Key seriesKey = series.getKey();
     final Key categoryKey = series.getTargetKey(Series.DEFAULT_CATEGORY);
     final JRadioButton selector = createSeriesSelector(seriesLabel, seriesKey, categoryKey);
+    buttonGroup.add(selector);
 
     final DefaultChangeSetListener seriesUpdateListener = new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

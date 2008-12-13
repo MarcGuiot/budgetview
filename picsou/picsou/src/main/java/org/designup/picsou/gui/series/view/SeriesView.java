@@ -64,7 +64,7 @@ public class SeriesView extends View {
     ExpandableTableAdapter tableAdapter = new ExpandableTableAdapter();
 
     // attention CategoryExpansionModel doit etre enregistré comme listener de changetSet avant la table.
-    expansionModel = new SeriesExpansionModel(repository, tableAdapter);
+    expansionModel = new SeriesExpansionModel(repository, tableAdapter, false);
 
     SeriesWrapperStringifier stringifier = new SeriesWrapperStringifier(parentRepository, directory);
 
@@ -84,7 +84,7 @@ public class SeriesView extends View {
       .setDefaultBackgroundPainter(backgroundPainter)
       .addColumn(" ", expandColumn, expandColumn, stringifier.getComparator(repository))
       .addColumn(Lang.get("series"), stringifier, customizer)
-      .hideHeader()
+      .setHeaderHidden()
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
     table = globTable.getComponent();
@@ -106,11 +106,11 @@ public class SeriesView extends View {
         GlobSelectionBuilder newSelection = new GlobSelectionBuilder();
         for (Glob wrapper : selection.getAll(SeriesWrapper.TYPE)) {
           Integer itemId = wrapper.get(SeriesWrapper.ITEM_ID);
-          if (Boolean.TRUE.equals(wrapper.get(SeriesWrapper.IS_BUDGET_AREA))) {
+          if (SeriesWrapperType.BUDGET_AREA.isOfType(wrapper)) {
             Glob budgetArea = parentRepository.get(Key.create(BudgetArea.TYPE, itemId));
             newSelection.add(budgetArea);
           }
-          else {
+          else if (SeriesWrapperType.SERIES.isOfType(wrapper)) {
             Glob series = parentRepository.get(Key.create(Series.TYPE, itemId));
             newSelection.add(series);
           }
@@ -121,12 +121,12 @@ public class SeriesView extends View {
   }
 
   public void selectBudgetArea(BudgetArea budgetArea) {
-    Glob wrapper = SeriesWrapper.find(repository, true, budgetArea.getId());
+    Glob wrapper = SeriesWrapper.find(repository, SeriesWrapperType.BUDGET_AREA, budgetArea.getId());
     globTable.select(wrapper);
   }
 
   public void selectSeries(Glob series) {
-    Glob wrapper = SeriesWrapper.find(repository, false, series.get(Series.ID));
+    Glob wrapper = SeriesWrapper.find(repository, SeriesWrapperType.SERIES, series.get(Series.ID));
     Glob master = repository.findLinkTarget(wrapper, SeriesWrapper.MASTER);
     if (master != null) {
       expansionModel.setExpanded(master);

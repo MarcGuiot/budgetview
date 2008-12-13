@@ -271,6 +271,7 @@
       <xs:attribute name="viewportOpaque" type="xs:boolean"/>
       <xs:attribute name="verticalUnitIncrement" type="xs:integer"/>
       <xs:attribute name="horizontalUnitIncrement" type="xs:integer"/>
+      <xs:attribute name="forceVerticalScroll" type="xs:boolean"/>
       <xs:attribute name="verticalScrollbarPolicy">
         <xs:simpleType>
           <xs:restriction base="xs:NMTOKEN">

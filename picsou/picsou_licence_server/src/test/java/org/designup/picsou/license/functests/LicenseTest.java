@@ -108,7 +108,7 @@ public class LicenseTest extends LicenseTestCase {
     checkLicenseExpiration();
   }
 
-  public void testResendActivationKeyIfCountDecrease() throws Exception {
+  public void testResendsActivationKeyIfCountDecreases() throws Exception {
     String repoId = startFirstPicsou();
     window.dispose();
     restartPicsouToIncrementCount();

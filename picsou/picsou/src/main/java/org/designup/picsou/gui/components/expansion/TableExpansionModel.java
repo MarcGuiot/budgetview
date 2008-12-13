@@ -5,6 +5,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,17 +18,22 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
   private ExpandableTable table;
   private IntegerField idField;
   private GlobType type;
+  private GlobMatcher baseMatcher = GlobMatchers.ALL;
 
-  public TableExpansionModel(GlobType type, IntegerField idField, GlobRepository repository, ExpandableTable table) {
+  public TableExpansionModel(GlobType type, IntegerField idField, GlobRepository repository, ExpandableTable table, final boolean isInitiallyExpanded) {
     this.idField = idField;
     this.repository = repository;
     this.table = table;
     repository.addChangeListener(this);
     this.type = type;
     for (Glob master : repository.getAll(type, getMasterMatcher())) {
-      expandedMap.put(master.get(idField), false);
+      expandedMap.put(master.get(idField), isInitiallyExpanded);
     }
     updateExpandabilities();
+  }
+
+  public void setBaseMatcher(GlobMatcher baseMatcher) {
+    this.baseMatcher = baseMatcher;
   }
 
   public void completeInit() {
@@ -73,6 +79,22 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     table.select(glob);
   }
 
+  public void expandAll() {
+    setExpanded(true);
+  }
+
+  public void collapseAll() {
+    setExpanded(false);
+  }
+
+  private void setExpanded(boolean expanded) {
+    for (Map.Entry<Integer, Boolean> entry : expandedMap.entrySet()) {
+      Boolean expandable = expandableMap.get(entry.getKey());
+      entry.setValue(expandable && expanded);
+    }
+    table.setFilter(this);
+  }
+
   public boolean isExpanded(Glob glob) {
     if (!isMaster(glob)) {
       return false;
@@ -86,13 +108,13 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
       return false;
     }
     Boolean status = expandableMap.get(glob.get(idField));
-    if (status == null) {
-      return false;
-    }
-    return status;
+    return Boolean.TRUE.equals(status);
   }
 
   public boolean matches(Glob glob, GlobRepository repository) {
+    if (!baseMatcher.matches(glob, repository)) {
+      return false;
+    }
     if (isMaster(glob)) {
       return true;
     }

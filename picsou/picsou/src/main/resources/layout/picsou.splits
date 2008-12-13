@@ -9,24 +9,8 @@
 
     <style selector="toggleButton.masterViewSelector" ui="masterViewSelector" opaque="false"
            minimumSize="(40,40)" preferredSize="(40,40)" margin="0" marginLeft="5" weightX="0" fill="none"/>
-    <style selector="toggleButton#homeCardToggle" icon="card_home.png"/>
-    <style selector="toggleButton#categorizationCardToggle" icon="card_categorization.png"/>
-    <style selector="toggleButton#budgetCardToggle" icon="card_budget.png"/>
-    <style selector="toggleButton#dataCardToggle" icon="card_list.png"/>
 
     <style selector="#time button" minimumSize="(15,20)" preferredSize="(15,20)" fill="none"/>
-
-    <style selector="component#categoriesChart"
-           color1="repartition.chart.color1"
-           color2="repartition.chart.color2"
-           color3="repartition.chart.color3"
-           color4="repartition.chart.color4"
-           color5="repartition.chart.color5"
-           color6="repartition.chart.color6"
-           remainderColor="repartition.chart.remainder"
-           labelColor="repartition.chart.label"
-           percentLabelColor="repartition.chart.percent"
-           fill="both"/>
 
     <!-- Timeview buttons -->
     <ui name="arrowLeft" class="org.designup.picsou.gui.components.ArrowButtonUI"
@@ -79,7 +63,7 @@
   <panel styleClass="main" ui="wave">
     <column marginTop="20" marginLeft="20" marginRight="20" marginBottom="10">
 
-      <row weightY="0.1">
+      <row weightY="0.1" name="mainWindowHeader">
         <column>
           <label ref="title" opaque="false" font="Arial,bold,22" weightX="0"
                  horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
@@ -88,10 +72,9 @@
         <filler fill="horizontal"/>
         <button name="back" action="back" styleClass="backforward" tooltipText="$back"/>
         <button name="forward" action="forward" styleClass="backforward" tooltipText="$forward"/>
-        <toggleButton ref="homeCardToggle" styleClass="masterViewSelector"/>
-        <toggleButton ref="budgetCardToggle" styleClass="masterViewSelector"/>
-        <toggleButton ref="dataCardToggle" styleClass="masterViewSelector"/>
-        <toggleButton ref="categorizationCardToggle" styleClass="masterViewSelector"/>
+        <repeat ref="cards" layout="row" weightX="0">
+          <toggleButton ref="toggle" styleClass="masterViewSelector"/>
+        </repeat>
       </row>
 
       <row weightY="0.1" name="time" marginTop="20" marginLeft="20" marginRight="20">
@@ -110,26 +93,24 @@
         <card name="home">
           <column>
             <horizontalSplit>
+
               <column weightX="1">
-                <panel ref="accountView" minimumSize="(250,200)" preferredSize="(300,500)"/>
+                <panel ref="accountView" minimumSize="(250,200)" preferredSize="(300,700)"/>
+              </column>
+
+              <column weightX="1">
+                <panel ref="monthSummaryView" minimumSize="(300,360)" preferredSize="(350,430)"/>
                 <panel ref="infoView" minimumSize="(250,100)" preferredSize="(300,100)"/>
                 <filler fill="vertical"/>
               </column>
 
               <column weightX="1">
-                <panel ref="monthSummaryView" minimumSize="(300,360)" preferredSize="(350,430)"/>
-                <filler fill="vertical"/>
+                <panel ref="navigationView" minimumSize="(300,360)" preferredSize="(350,700)"/>
               </column>
 
-              <column weightX="1">
-                <verticalSplit>
-                  <panel ref="balanceSummaryView" minimumSize="(250,200)" preferredSize="(300,410)"/>
-                  <panel ref="savingsAccountPositionView" minimumSize="(250,200)" preferredSize="(300,300)"/>
-                </verticalSplit>
-              </column>
             </horizontalSplit>
 
-            <label ref="licenseMessage"/>
+            <label ref="licenseMessage" border="empty(10,0,0,0)"/>
 
           </column>
         </card>
@@ -140,6 +121,10 @@
 
         <card name="budget">
           <panel ref="budgetView"/>
+        </card>
+
+        <card name="seriesEvolution">
+          <panel ref="seriesEvolutionView"/>
         </card>
 
         <card name="data">

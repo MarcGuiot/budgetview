@@ -9,6 +9,7 @@ import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.card.NavigationView;
 import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
@@ -18,12 +19,11 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.license.LicenseInfoView;
-import org.designup.picsou.gui.monthsummary.BalanceSummaryView;
 import org.designup.picsou.gui.monthsummary.InfoView;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
-import org.designup.picsou.gui.savings.SavingsAccountPositionView;
 import org.designup.picsou.gui.series.view.SeriesView;
+import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -142,16 +142,16 @@ public class MainPanel {
       new InfoView(repository, directory),
       new AccountView(repository, directory),
       monthSummary,
-      new BalanceSummaryView(repository, directory),
-      new SavingsAccountPositionView(repository, directory),
       categorizationView,
       new CardView(repository, directory),
+      new NavigationView(repository, directory),
       new BudgetView(repository, directory),
       seriesView,
+      new SeriesEvolutionView(repository, directory),
       licenseInfoView);
 
     createMenuBar(parent, directory);
-    timeView.selectLastMonth();
+    timeView.selectCurrentMonth();
   }
 
   private void selectLastMonthWithATransaction(GlobRepository repository, Directory directory) {

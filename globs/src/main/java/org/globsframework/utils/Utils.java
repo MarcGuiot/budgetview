@@ -2,6 +2,7 @@ package org.globsframework.utils;
 
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.utils.SplitsUtils;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.util.*;
 
@@ -114,6 +115,13 @@ public class Utils {
     return (int)Math.round(Math.random() * max);
   }
 
+  public static String[] join(String[] first, String[] second) {
+    String[] result = new String[first.length + second.length];
+    System.arraycopy(first, 0, result, 0, first.length);
+    System.arraycopy(second, 0, result, first.length, second.length);
+    return result;
+  }
+
   public static String[] join(String first, String[] other) {
     String[] result = new String[other.length + 1];
     result[0] = first;
@@ -200,6 +208,28 @@ public class Utils {
       if (value != null) {
         result += value;
       }
+    }
+    return result;
+  }
+
+  public static Integer[] range(int min, int max) {
+    if (min > max) {
+      throw new InvalidParameter("Lower bound " + min + " should be less than " + max);
+    }
+    Integer[] result = new Integer[max - min + 1];
+    for (int i = min; i <= max; i++) {
+      result[i - min] = i;
+    }
+    return result;
+  }
+
+  public static int[] intRange(int min, int max) {
+    if (min > max) {
+      throw new InvalidParameter("Lower bound " + min + " should be less than " + max);
+    }
+    int[] result = new int[max - min + 1];
+    for (int i = min; i <= max; i++) {
+      result[i - min] = i;
     }
     return result;
   }

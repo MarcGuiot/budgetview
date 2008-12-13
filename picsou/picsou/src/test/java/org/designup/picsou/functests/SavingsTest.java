@@ -46,11 +46,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .check();
     views.selectHome();
     timeline.selectMonth("2008/08");
-    savingsAccountView.checkPosition("Epargne", 1000);
+    savingsAccounts.checkPosition("Epargne", 1000);
     timeline.selectMonth("2008/09");
-    savingsAccountView.checkPosition("Epargne", 1100);
+    savingsAccounts.checkPosition("Epargne", 1100);
     timeline.selectMonth("2008/10");
-    savingsAccountView.checkPosition("Epargne", 1200);
+    savingsAccounts.checkPosition("Epargne", 1200);
   }
 
   public void testCreateSavingsSeriesAndPayFromSavings() throws Exception {
@@ -102,7 +102,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/10");
     views.selectHome();
-    savingsAccountView.checkPosition("Epargne", 900);
+    savingsAccounts.checkPosition("Epargne", 900);
   }
 
   public void testSavingsAccountFillFromExternalAccountBalance() throws Exception {
@@ -136,7 +136,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     timeline.selectMonth("2008/10");
-    savingsAccountView.checkPosition("Epargne LCL", 1000);
+    savingsAccounts.checkPosition("Epargne LCL", 1000);
   }
 
   public void testCreateSavingsSeriesAndAssociateLaterToAccount() throws Exception {
@@ -309,9 +309,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectSavingsSeries("CAF", MasterCategory.SAVINGS, false);
     views.selectHome();
     timeline.selectMonth("2008/08");
-    savingsAccountView.checkPosition("Account n. 111", 1000);
+    savingsAccounts.checkPosition("Account n. 111", 1000);
     timeline.selectMonth("2008/09");
-    savingsAccountView.checkPosition("Account n. 111", 1100);
+    savingsAccounts.checkPosition("Account n. 111", 1100);
     timeline.selectAll();
     views.selectData();
     transactions.initContent()
@@ -336,9 +336,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectHome();
     timeline.selectMonth("2008/08");
-    savingsAccountView.checkPosition("Epargne", 1000);
+    savingsAccounts.checkPosition("Epargne", 1000);
     timeline.selectMonth("2008/09");
-    savingsAccountView.checkPosition("Epargne", 1100);
+    savingsAccounts.checkPosition("Epargne", 1100);
   }
 
   // ==> test de l'effet de suppression de transaction référencé dans account
@@ -361,9 +361,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectHome();
     timeline.selectMonth("2008/08");
-    savingsAccountView.checkPosition("Epargne", 1000);
+    savingsAccounts.checkPosition("Epargne", 1000);
     timeline.selectMonth("2008/09");
-    savingsAccountView.checkPosition("Epargne", 1100);
+    savingsAccounts.checkPosition("Epargne", 1100);
     views.selectBudget();
     budgetView.savings
       .editSeriesList()
@@ -392,9 +392,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     transactions.initContent().dumpCode();
     views.selectBudget();
     timeline.selectMonth("2008/08");
-    savingsAccountView.checkPosition("Epargne", 1000);
+    savingsAccounts.checkPosition("Epargne", 1000);
     timeline.selectMonth("2008/09");
-    savingsAccountView.checkPosition("Epargne", 1100);
+    savingsAccounts.checkPosition("Epargne", 1100);
 
   }
 }

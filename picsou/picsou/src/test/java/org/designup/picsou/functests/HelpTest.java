@@ -9,7 +9,7 @@ public class HelpTest extends LoggedInFunctionalTestCase {
   }
 
   public void testHelpMenu() throws Exception {
-    operations.openHelp().checkTitle("Index");
+    operations.openHelp().checkTitle("Index").close();
   }
 
   public void testHelpForCards() throws Exception {

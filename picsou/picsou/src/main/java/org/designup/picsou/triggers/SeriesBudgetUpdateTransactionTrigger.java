@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
@@ -66,10 +67,10 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
   private boolean generatesPlannedTransactions(FieldValues values, Glob series, int lastAvailableTransactionMonthId) {
     return values.get(SeriesBudget.ACTIVE) &&
            (values.get(SeriesBudget.AMOUNT) != null) &&
-           (Math.abs(values.get(SeriesBudget.AMOUNT)) != 0.0) &&
-           (values.get(SeriesBudget.DAY) != null) &&
-           values.get(SeriesBudget.MONTH) >= lastAvailableTransactionMonthId
-           && !series.get(Series.ID).equals(Series.UNCATEGORIZED_SERIES_ID);
+           (!Amounts.isNearZero(values.get(SeriesBudget.AMOUNT)) &&
+            (values.get(SeriesBudget.DAY) != null) &&
+            values.get(SeriesBudget.MONTH) >= lastAvailableTransactionMonthId
+            && !series.get(Series.ID).equals(Series.UNCATEGORIZED_SERIES_ID));
   }
 
   private GlobList getPlanned(GlobRepository repository, FieldValues seriesBudget) {

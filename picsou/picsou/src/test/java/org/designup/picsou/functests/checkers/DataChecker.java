@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.Key;
 import org.uispec4j.Panel;
@@ -36,7 +37,7 @@ public abstract class DataChecker {
                                                               String componentName,
                                                               boolean visible) {
     JComponent component = panel.findSwingComponent(swingComponentClass, componentName);
-    Assert.assertEquals(!visible, component == null || !component.isVisible());
+    Assert.assertEquals(visible, component != null && component.isVisible());
   }
 
   protected void pressEsc(final Window dialog) {

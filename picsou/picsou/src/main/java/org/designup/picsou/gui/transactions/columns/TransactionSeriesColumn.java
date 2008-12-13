@@ -56,17 +56,13 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
     normalFont = fontLocator.get("transactionView.category");
     toCategorizeFont = fontLocator.get("transactionView.category.error");
 
-    rendererButton = createHyperlink();
-    rendererPanel = new JPanel();
-    rendererPanel.setLayout(new BoxLayout(rendererPanel, BoxLayout.X_AXIS));
-    rendererPanel.add(rendererButton);
-    rendererPanel.add(Box.createHorizontalGlue());
+    GotoCategorizationAction gotoCategorizationAction = new GotoCategorizationAction();
 
-    editorButton = createHyperlink();
-    editorPanel = new JPanel();
-    editorPanel.setLayout(new BoxLayout(editorPanel, BoxLayout.X_AXIS));
-    editorPanel.add(editorButton);
-    editorPanel.add(Box.createHorizontalGlue());
+    rendererButton = createHyperlinkButton(gotoCategorizationAction);
+    rendererPanel = createCellPanel(rendererButton, true);
+
+    editorButton = createHyperlinkButton(gotoCategorizationAction);
+    editorPanel = createCellPanel(editorButton, true);
 
     colorService = directory.get(ColorService.class);
     colorService.addListener(this);
@@ -79,14 +75,6 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
   public void colorsChanged(ColorLocator colorLocator) {
     selectedColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_TEXT);
     toCategorizeColor = colorLocator.get(PicsouColors.TRANSACTION_ERROR_TEXT);
-  }
-
-  private HyperlinkButton createHyperlink() {
-    HyperlinkButton button = new HyperlinkButton(new OpenChooserAction());
-    button.setOpaque(false);
-    button.setAutoHide(false);
-    button.setUnderline(false);
-    return button;
   }
 
   protected Component getComponent(final Glob transaction, boolean render) {
@@ -131,7 +119,7 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
     return panel;
   }
 
-  private class OpenChooserAction extends AbstractAction {
+  private class GotoCategorizationAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       if (Transaction.isPlanned(transaction)) {
         return;

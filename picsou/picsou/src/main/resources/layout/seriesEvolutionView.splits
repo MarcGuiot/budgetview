@@ -1,0 +1,28 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+
+  </styles>
+
+  <column styleClass="main">
+
+    <label text="$seriesEvolution.title" styleClass="blockTitle" marginTop="5"/>
+
+    <panel styleClass="block">
+      <column margin="15" marginBottom="10">
+        <scrollPane marginBottom="0" verticalUnitIncrement="10" border="matte(1,1,1,1,seriesEvolution.border)">
+          <table ref="seriesEvolutionTable" rowHeight="20"/>
+        </scrollPane>
+
+        <row styleClass="iconButtonGroup">
+          <button action="expand" styleClass="expand" tooltipText="$seriesEvolution.expand.tooltip"/>
+          <button action="collapse" styleClass="collapse" tooltipText="$seriesEvolution.collapse.tooltip"/>
+          <filler fill="horizontal"/>
+        </row>
+
+      </column>
+    </panel>
+
+  </column>
+</splits>

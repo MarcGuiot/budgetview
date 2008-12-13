@@ -37,8 +37,7 @@ public class OperationChecker {
   }
 
   public ImportChecker openImportDialog() {
-    Window dialog = WindowInterceptor.getModalDialog(importMenu.triggerClick());
-    return new ImportChecker(dialog);
+    return ImportChecker.open(importMenu.triggerClick());
   }
 
   public void importOfxFile(String name) {

@@ -10,7 +10,7 @@ import org.globsframework.utils.Dates;
 public class PlanificationTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    setCurrentDate(Dates.parse("2008/07/01"));
+    setCurrentDate("2008/07/01");
     super.setUp();
   }
 
@@ -184,6 +184,24 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .add("20/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant", MasterCategory.FOOD)
       .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant", MasterCategory.FOOD)
       .add("10/06/2008", TransactionType.PRELEVEMENT, "EDF", "", -100.00, "EDF", MasterCategory.EQUIPMENT)
+      .check();
+  }
+
+  public void testSpecialSeriesWithSingleMonthProfile() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    timeline.selectMonth("2008/09");
+    views.selectBudget();
+    budgetView.specials.createSeries()
+      .setName("Miami trip")
+      .setCategory(MasterCategory.LEISURES)
+      .setAmount(2000.00)
+      .validate();
+
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: Miami trip", "", -2000.00, "Miami trip", MasterCategory.LEISURES)
       .check();
   }
 }

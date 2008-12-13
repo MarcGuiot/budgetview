@@ -28,10 +28,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -50,7 +47,8 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   private boolean selectionEnabled = true;
   private Font defaultFont = new JTable().getFont();
   private String name;
-  private boolean hiddenHeader;
+  private boolean headerHidden;
+  private boolean headerActionsDisabled;
   private CellPainter defaultBackgroundPainter = CellPainter.NULL;
   private LabelCustomizer defaultLabelCustomizer = LabelCustomizer.NULL;
 
@@ -190,8 +188,13 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     return builder;
   }
 
-  public GlobTableView hideHeader() {
-    this.hiddenHeader = true;
+  public GlobTableView setHeaderHidden() {
+    this.headerHidden = true;
+    return this;
+  }
+
+  public GlobTableView setHeaderActionsDisabled() {
+    this.headerActionsDisabled = true;
     return this;
   }
 
@@ -413,7 +416,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   private void initHeader() {
-    if (hiddenHeader) {
+    if (headerHidden) {
       table.setTableHeader(null);
       return;
     }
@@ -424,7 +427,10 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     header.setDefaultRenderer(
       new LabelTableCellRenderer(chain(headerRenderer, headerLabelCustomizer), headerBackgroundPainter));
     header.setReorderingAllowed(false);
-    header.addMouseListener(new GlobTableColumnHeaderMouseListener(table, tableModel));
+
+    if (!headerActionsDisabled) {
+      header.addMouseListener(new GlobTableColumnHeaderMouseListener(table, tableModel));
+    }
   }
 
   private void initPopupFactory() {
@@ -494,7 +500,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
         label.setBackground(header.getBackground());
         label.setFont(header.getFont());
         Object value = header.getColumnModel().getColumn(column).getHeaderValue();
-        label.setText((value == null) ? " " : value.toString());
+        label.setText(value == null || "".equals(value) ? " " : value.toString());
       }
 
       label.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
@@ -600,11 +606,26 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
 
     public void refresh() {
       model.refresh();
+      refreshColumnNames();
       fireTableDataChanged();
+    }
+
+    private void refreshColumnNames() {
+      if (headerHidden) {
+        return;
+      }
+
+      int index = 0;
+      for (GlobTableColumn column : columns) {
+        TableColumn tableColumn = table.getColumnModel().getColumn(index++);
+        tableColumn.setHeaderValue(column.getName());
+      }
+      table.getTableHeader().repaint();
     }
 
     public void reset() {
       model.globsReset(repository, Collections.singleton(type));
+      refreshColumnNames();      
     }
 
     public int getRowCount() {
@@ -624,7 +645,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     }
 
     public boolean isCellEditable(int row, int column) {
-      return columns.get(column).isEditable();
+      return columns.get(column).isEditable(row, getValueAt(row, column));
     }
 
     public Glob getValueAt(int row, int column) {

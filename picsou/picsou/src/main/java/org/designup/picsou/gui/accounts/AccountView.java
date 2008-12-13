@@ -17,29 +17,13 @@ public class AccountView extends View {
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountView.splits", repository, directory);
-    AccountViewPanel accountViewPanel = new AccountViewPanel(repository, directory,
-                                                             getMatcherFor(Account.MAIN_SUMMARY_ACCOUNT_ID),
-                                                             Account.MAIN_SUMMARY_ACCOUNT_ID);
+
+    AccountViewPanel accountViewPanel = new MainAccountViewPanel(repository, directory);
     builder.add("mainAccount", accountViewPanel.getPanel());
 
-    AccountViewPanel savingsViewPanel = new AccountViewPanel(repository, directory,
-                                                             getMatcherFor(Account.SAVINGS_SUMMARY_ACCOUNT_ID),
-                                                             Account.SAVINGS_SUMMARY_ACCOUNT_ID);
+    AccountViewPanel savingsViewPanel = new SavingsAccountViewPanel(repository, directory);
     builder.add("savingsAccount", savingsViewPanel.getPanel());
+
     parentBuilder.add("accountView", builder);
   }
-
-  private GlobMatcher getMatcherFor(int summaryId) {
-    Integer accountType;
-    if (summaryId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
-      accountType = AccountType.MAIN.getId();
-    }
-    else {
-      accountType = AccountType.SAVINGS.getId();
-    }
-    return GlobMatchers.and(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, accountType),
-                            GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, summaryId)),
-                            GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)));
-  }
-
 }

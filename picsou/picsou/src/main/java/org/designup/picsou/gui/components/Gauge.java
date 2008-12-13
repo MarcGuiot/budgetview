@@ -2,6 +2,7 @@ package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.model.util.Amounts;
 
 import javax.swing.*;
 import java.awt.*;
@@ -125,7 +126,7 @@ public class Gauge extends JPanel {
       warningShown = overrunError && showWarningForErrors;
       setToolTip("gauge.overrun." + (overrunIsAnError ? "error" : "ok"), absActual - absTarget);
     }
-    else if (Math.abs(absTarget - absActual) <= 0.01) {
+    else if (Amounts.isNearZero(absTarget - absActual)) {
       fillPercent = 1;
       overrunPercent = 0;
       emptyPercent = 0;

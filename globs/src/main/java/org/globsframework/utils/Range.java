@@ -12,7 +12,6 @@ public class Range<T extends Comparable> {
     }
     this.min = min;
     this.max = max;
-
   }
 
   public T getMin() {

@@ -1,35 +1,29 @@
 
-Revoir l'affectation automatique par comptes (pour affecté a des series du bon comptes)
+- Marc : Revoir l'affectation automatique par comptes (pour affecter a des series du bon comptes)
 
+- Marc: Probleme de transaction plannifié a 0 (?)
 
+- Memory leak
 
-====================================
-               MARC
-====================================
+- Gestion des transactions decalees en debut de mois suivant
 
-- Probleme de transaction plannifié a 0.
+- SED: suppression de serie quand la liste n'est pas affichee
 
+- Bug bouton "annuler filtrage"
 
-====================================
-               SEB
-====================================
+- Compte demo
 
+- Revoir explication seuil
 
-====================================
-               REGIS
-====================================
+- AccountView : creation d'un compte d'epargne => le mettre directement en "epargne"
 
-- BudgetView : quand on clique sur une serie, aucun moyen pour la supprimer a partir de la fenetre qui apparait
+- SED: Changement d'un mois sur une serie SINGLE_MONTH : preserver le montant et la selection
 
-- bug bouton "annuler filtrage"
+- SED: passage en Irregular => preserver les montants
 
-- message budgetView/special + aide
+- Bug : NPE sur restriction du nombre de mois futurs  
 
-- compte demo
-
-- revoir explication seuil
-
-
+========================================================================================================
 
 ====================================
                RESTE
@@ -65,4 +59,4 @@ Revoir l'affectation automatique par comptes (pour affecté a des series du bon 
 
 - Backup/restore (fonctionnel precis a definir ensemble)
 
-- Buf / DemoGenerationTest : serie EDF calee sur nov au lieu de oct
+- Bug / DemoGenerationTest : serie EDF calee sur nov au lieu de oct

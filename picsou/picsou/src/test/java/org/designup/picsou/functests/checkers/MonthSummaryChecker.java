@@ -10,10 +10,8 @@ import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.and;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
-import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,7 +56,7 @@ public class MonthSummaryChecker extends DataChecker {
   }
 
   public MonthSummaryChecker checkRecurring(double amount) {
-    check(BudgetArea.RECURRING, amount);
+    checkObserved(BudgetArea.RECURRING, amount);
     return this;
   }
 
@@ -78,7 +76,7 @@ public class MonthSummaryChecker extends DataChecker {
   }
 
   public MonthSummaryChecker checkEnvelope(double amount) {
-    check(BudgetArea.ENVELOPES, amount);
+    checkObserved(BudgetArea.ENVELOPES, amount);
     return this;
   }
 
@@ -91,12 +89,19 @@ public class MonthSummaryChecker extends DataChecker {
     return this;
   }
 
-  public MonthSummaryChecker checkEnvelopeOverrun(double amount, double planned, double overrunPart) {
-    check(BudgetArea.ENVELOPES, amount);
-    checkPlanned(BudgetArea.ENVELOPES, planned);
-    checkGauge(BudgetArea.ENVELOPES, amount, planned + overrunPart, overrunPart);
+  public MonthSummaryChecker checkIncomeOverrun(double amount, double adjustedPlanned, double overrunPart) {
+    return checkOverrun(BudgetArea.INCOME, amount, adjustedPlanned, overrunPart);
+  }
 
-    BudgetArea budgetArea = BudgetArea.ENVELOPES;
+  public MonthSummaryChecker checkEnvelopeOverrun(double amount, double adjustedPlanned, double overrunPart) {
+    return checkOverrun(BudgetArea.ENVELOPES, amount, adjustedPlanned, overrunPart);
+  }
+
+  private MonthSummaryChecker checkOverrun(BudgetArea budgetArea, double amount, double adjustedPlanned, double overrunPart) {
+    checkObserved(budgetArea, amount);
+    checkPlanned(budgetArea, adjustedPlanned);
+    checkGauge(budgetArea, amount, adjustedPlanned, overrunPart);
+
     TextBox plannedLabel = getPlannedLabel(budgetArea);
     assertThat(plannedLabel.foregroundNear("aa0000"));
     assertThat(plannedLabel.tooltipContains("Overrun: " + toString(overrunPart)));
@@ -109,7 +114,7 @@ public class MonthSummaryChecker extends DataChecker {
   }
 
   public MonthSummaryChecker checkOccasional(double amount) {
-    check(BudgetArea.OCCASIONAL, amount);
+    checkObserved(BudgetArea.OCCASIONAL, amount);
     return this;
   }
 
@@ -119,17 +124,32 @@ public class MonthSummaryChecker extends DataChecker {
   }
 
   public MonthSummaryChecker checkIncome(double amount) {
-    check(BudgetArea.INCOME, amount);
+    checkObserved(BudgetArea.INCOME, amount);
     return this;
   }
 
   public MonthSummaryChecker checkProjects(double amount) {
-    check(BudgetArea.SPECIAL, amount);
+    checkObserved(BudgetArea.SPECIAL, amount);
+    return this;
+  }
+
+  public MonthSummaryChecker checkProjects(String amount) {
+    checkObserved(BudgetArea.SPECIAL, amount);
+    return this;
+  }
+
+  public MonthSummaryChecker checkProjectsPlanned(String amount) {
+    checkPlanned(BudgetArea.SPECIAL, amount);
+    return this;
+  }
+
+  public MonthSummaryChecker checkProjects(double amount, double planned) {
+    checkBudgetArea(BudgetArea.SPECIAL, amount, planned);
     return this;
   }
 
   private void checkBudgetArea(BudgetArea budgetArea, double amount, double planned) {
-    check(budgetArea, amount);
+    checkObserved(budgetArea, amount);
     checkPlanned(budgetArea, planned);
     checkGauge(budgetArea, amount, planned);
   }
@@ -139,14 +159,24 @@ public class MonthSummaryChecker extends DataChecker {
     button.click();
   }
 
-  private void check(BudgetArea budgetArea, double amount) {
+  private void checkObserved(BudgetArea budgetArea, double amount) {
+    final String text = toString(amount);
+    checkObserved(budgetArea, text);
+  }
+
+  private void checkObserved(BudgetArea budgetArea, String text) {
     Button button = getPanel().getButton(budgetArea.getName() + ":budgetAreaAmount");
-    assertThat(button.textEquals(toString(amount)));
+    assertThat(button.textEquals(text));
   }
 
   private void checkPlanned(BudgetArea budgetArea, double amount) {
+    final String text = toString(amount);
+    checkPlanned(budgetArea, text);
+  }
+
+  private void checkPlanned(BudgetArea budgetArea, String text) {
     TextBox textBox = getPlannedLabel(budgetArea);
-    assertThat(textBox.textEquals(toString(amount)));
+    assertThat(textBox.textEquals(text));
   }
 
   private TextBox getPlannedLabel(BudgetArea budgetArea) {
@@ -213,8 +243,7 @@ public class MonthSummaryChecker extends DataChecker {
   }
 
   public ImportChecker openImport() {
-    Window dialog = WindowInterceptor.getModalDialog(getPanel().getButton("import").triggerClick());
-    return new ImportChecker(dialog);
+    return ImportChecker.open(getPanel().getButton("import").triggerClick());
   }
 
   private Panel getPanel() {

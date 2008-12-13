@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AccountViewChecker extends DataChecker {
-  private Panel panel;
+  protected Panel panel;
 
   public AccountViewChecker(Panel panel, String panelName) {
     this.panel = panel.getPanel(panelName);
@@ -46,32 +46,31 @@ public class AccountViewChecker extends DataChecker {
 
   public void checkAccount(String accountName, double balance, String updateDate) {
     Panel parentPanel = getAccountPanel(accountName);
-    assertThat(parentPanel.getButton("accountBalance").textEquals(toString(balance)));
+    assertThat(parentPanel.getButton("accountPosition").textEquals(toString(balance)));
     Date date = Dates.parse(updateDate);
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(Formatting.toString(date)));
   }
 
   public void checkDisplayIsEmpty(String accountName) {
     Panel parentPanel = getAccountPanel(accountName);
-    UISpecAssert.assertTrue(parentPanel.getButton("accountBalance").textEquals("0.0"));
+    UISpecAssert.assertTrue(parentPanel.getButton("accountPosition").textEquals("0.0"));
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textIsEmpty());
   }
 
   public void checkSummary(double amount, String updateDate) {
-    assertThat(panel.getPanel("mainAccount").getTextBox("totalBalance").textEquals(toString(amount)));
-    assertThat(panel.getPanel("mainAccount").getTextBox("accountTotalTitle")
-      .textEquals("Total on " + updateDate));
+    assertThat(panel.getPanel("mainAccount").getTextBox("referencePosition").textEquals(toString(amount)));
+    assertThat(panel.getPanel("mainAccount").getTextBox("referencePositionDate")
+      .textEquals("on " + updateDate));
   }
 
   public ImportChecker openImportForAccount(String accountName) {
     Button importButton = getAccountPanel(accountName).getButton("Import data");
-    Window dialog = WindowInterceptor.getModalDialog(importButton.triggerClick());
-    return new ImportChecker(dialog);
+    return ImportChecker.open(importButton.triggerClick());
   }
 
   public BalanceEditionChecker getBalance(String accountName) {
     Panel parentPanel = getAccountPanel(accountName);
-    Window window = WindowInterceptor.getModalDialog(parentPanel.getButton("accountBalance").triggerClick());
+    Window window = WindowInterceptor.getModalDialog(parentPanel.getButton("accountPosition").triggerClick());
     return new BalanceEditionChecker(window);
   }
 

@@ -15,6 +15,11 @@ public class ImportChecker {
   private TextBox fileField;
   private Button importButton;
 
+  public static ImportChecker open(Trigger trigger) {
+    Window window = WindowInterceptor.getModalDialog(trigger);
+    return new ImportChecker(window);
+  }
+
   public ImportChecker(Panel dialog) {
     this.dialog = dialog;
     fileField = dialog.getInputTextBox("fileField");
@@ -80,10 +85,9 @@ public class ImportChecker {
     return this;
   }
 
-  public ImportChecker completeImport() {
+  public void completeImport() {
     dialog.getButton(Lang.get("import.ok")).click();
     UISpecAssert.assertFalse(dialog.isVisible());
-    return this;
   }
 
   public BalanceEditionChecker doImportWithBalance() {

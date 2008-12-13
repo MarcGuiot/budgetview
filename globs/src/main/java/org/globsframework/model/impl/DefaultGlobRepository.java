@@ -607,20 +607,20 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       return;
     }
     MutableChangeSet currentChangeSetToDispatch = this.changeSetToDispatch;
-    System.out.println("DefaultGlobRepository.notifyListeners " + changeSetToDispatch);
+//    System.out.println("DefaultGlobRepository.notifyListeners " + changeSetToDispatch);
     try {
       bulkDispatchingModeLevel++;
       if (applyTriggers) {
         for (ChangeSetListener trigger : triggers) {
           this.changeSetToDispatch = new DefaultChangeSet();
           trigger.globsChanged(currentChangeSetToDispatch, this);
-          if (!changeSetToDispatch.isEmpty()) {
-            System.out.println(trigger + " : " + changeSetToDispatch);
-          }
+//          if (!changeSetToDispatch.isEmpty()) {
+//            System.out.println(trigger + " : " + changeSetToDispatch);
+//          }
           currentChangeSetToDispatch.merge(changeSetToDispatch);
         }
       }
-      System.out.println("------------------------------------------------------------");
+//      System.out.println("------------------------------------------------------------");
     }
     finally {
       bulkDispatchingModeLevel--;

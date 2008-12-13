@@ -15,9 +15,9 @@ public class LabelCustomizers {
   public static final AligmentCustomizer ALIGN_LEFT = new AligmentCustomizer(JLabel.LEFT);
   public static final AligmentCustomizer ALIGN_CENTER = new AligmentCustomizer(JLabel.CENTER);
   public static final AligmentCustomizer ALIGN_RIGHT = new AligmentCustomizer(JLabel.RIGHT);
-  public static final LabelCustomizer BOLD = createCustomizer(Font.BOLD);
-  public static final LabelCustomizer PLAIN = createCustomizer(Font.PLAIN);
-  public static final LabelCustomizer ITALIC = createCustomizer(Font.ITALIC);
+  public static final StaticLabelCustomizer BOLD = createCustomizer(Font.BOLD);
+  public static final StaticLabelCustomizer PLAIN = createCustomizer(Font.PLAIN);
+  public static final StaticLabelCustomizer ITALIC = createCustomizer(Font.ITALIC);
 
   public static LabelCustomizer chain(Iterable<LabelCustomizer> customizers) {
     final java.util.List<LabelCustomizer> reducedList = new ArrayList<LabelCustomizer>();
@@ -39,8 +39,8 @@ public class LabelCustomizers {
     return chain(Arrays.asList(customizers));
   }
 
-  private static LabelCustomizer createCustomizer(final int style) {
-    return new LabelCustomizer() {
+  private static StaticLabelCustomizer createCustomizer(final int style) {
+    return new StaticLabelCustomizer() {
       private Font boldFont;
 
       public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -97,7 +97,7 @@ public class LabelCustomizers {
     };
   }
 
-  private static class AligmentCustomizer implements LabelCustomizer {
+  private static class AligmentCustomizer extends StaticLabelCustomizer {
     private int alignment;
 
     public AligmentCustomizer(int alignment) {

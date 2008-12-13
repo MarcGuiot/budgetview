@@ -10,6 +10,7 @@ import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.SetFieldValueAction;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.UserPreferences;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -18,9 +19,12 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.ReplicationGlobRepository;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -30,6 +34,7 @@ import java.util.Set;
 
 public class BudgetView extends View implements GlobSelectionListener, ChangeSetListener {
   private GlobList selectedMonths = GlobList.EMPTY;
+  private GlobRepository parentRepository;
   private Directory parentDirectory;
   private JEditorPane helpMessage;
 
@@ -38,8 +43,16 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
                                         PeriodSeriesStat.TYPE,
                                         PeriodOccasionalSeriesStat.TYPE),
           createLocalDirectory(parentDirectory));
+    this.parentRepository = repository;
     this.parentDirectory = parentDirectory;
     parentDirectory.get(SelectionService.class).addListener(this, Month.TYPE);
+    parentRepository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsCreationsOrDeletions(Series.TYPE)) {
+          updateHelpMessage();
+        }
+      }
+    });
   }
 
   private static DefaultDirectory createLocalDirectory(Directory directory) {
@@ -69,7 +82,7 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
 
     createHelpMessage();
     builder.add("helpMessage", helpMessage);
-    builder.add("hideHelpMessage", 
+    builder.add("hideHelpMessage",
                 new SetFieldValueAction(UserPreferences.KEY, UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE,
                                         false, repository));
 
@@ -113,7 +126,11 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
   private void updateHelpMessage() {
     Glob prefs = repository.find(UserPreferences.KEY);
     if (prefs != null) {
-      helpMessage.setVisible(Boolean.TRUE.equals(prefs.get(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)));
+      helpMessage.setVisible(Boolean.TRUE.equals(prefs.get(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)) &&
+                             parentRepository.contains(Series.TYPE,
+                                  not(fieldIn(Series.ID,
+                                              Series.OCCASIONAL_SERIES_ID,
+                                              Series.UNCATEGORIZED_SERIES_ID))));
     }
   }
 

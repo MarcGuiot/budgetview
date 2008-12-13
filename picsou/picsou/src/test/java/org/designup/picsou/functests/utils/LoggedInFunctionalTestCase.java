@@ -25,9 +25,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected Window mainWindow;
 
   protected ViewSelectionChecker views;
-  protected AccountViewChecker mainAccounts;
-  protected AccountViewChecker savingsAccounts;
-  protected SavingsAccountViewChecker savingsAccountView;
+  protected MainAccountViewChecker mainAccounts;
+  protected SavingsAccountViewChecker savingsAccounts;
   protected CategoryChecker categories;
   protected TimeViewChecker timeline;
   protected TransactionChecker transactions;
@@ -36,11 +35,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected TitleChecker title;
   protected LicenseChecker license;
   protected MonthSummaryChecker monthSummary;
-  protected BalanceSummaryChecker balanceSummary;
   protected BudgetViewChecker budgetView;
   protected CategorizationChecker categorization;
   protected SeriesViewChecker series;
+  protected SeriesEvolutionChecker seriesEvolution;
   protected InfoChecker infochecker;
+  protected NavigationViewChecker navigation;
 
   protected GlobRepository repository;
   private Directory directory;
@@ -105,18 +105,17 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void setCurrentMonth(String monthId) {
-    setCurrentDate(Dates.parseMonth(monthId));
+    setCurrentDate(monthId + "/15");
   }
 
-  protected void setCurrentDate(Date currentDate) {
-    this.currentDate = currentDate;
+  protected void setCurrentDate(String date) {
+    this.currentDate = Dates.parse(date);
   }
 
   protected void initCheckers() {
     views = new ViewSelectionChecker(mainWindow);
-    mainAccounts = new AccountViewChecker(mainWindow, "mainAccountView");
-    savingsAccounts = new AccountViewChecker(mainWindow, "savingsAccountView");
-    savingsAccountView = new SavingsAccountViewChecker(mainWindow);
+    mainAccounts = new MainAccountViewChecker(mainWindow);
+    savingsAccounts = new SavingsAccountViewChecker(mainWindow);
     operations = new OperationChecker(mainWindow);
     categories = new CategoryChecker(mainWindow);
     timeline = new TimeViewChecker(mainWindow);
@@ -124,12 +123,13 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     transactionDetails = new TransactionDetailsChecker(mainWindow);
     title = new TitleChecker(mainWindow);
     monthSummary = new MonthSummaryChecker(mainWindow);
-    balanceSummary = new BalanceSummaryChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
     categorization = new CategorizationChecker(mainWindow);
     series = new SeriesViewChecker(mainWindow);
+    seriesEvolution = new SeriesEvolutionChecker(mainWindow);
     license = new LicenseChecker(mainWindow);
     infochecker = new InfoChecker(mainWindow);
+    navigation = new NavigationViewChecker(mainWindow);
   }
 
   protected void tearDown() throws Exception {
@@ -141,7 +141,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     views = null;
     mainAccounts = null;
     savingsAccounts = null;
-    savingsAccountView = null;
     categories = null;
     timeline = null;
     transactions = null;
@@ -150,11 +149,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     title = null;
     infochecker = null;
     monthSummary = null;
-    balanceSummary = null;
     budgetView = null;
     categorization = null;
     series = null;
+    seriesEvolution = null;
     license = null;
+    navigation = null;
 
     repository = null;
     clearDirectory();

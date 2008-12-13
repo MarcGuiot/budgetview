@@ -12,8 +12,9 @@ public class TimeManagementTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
-  public void testEmpty() throws Exception {
-    timeline.assertEmpty();
+  public void testInitialState() throws Exception {
+    timeline.checkSelection("2006/01");
+    timeline.checkDisplays("2006/01");
   }
 
   public void testSingleMonth() throws Exception {

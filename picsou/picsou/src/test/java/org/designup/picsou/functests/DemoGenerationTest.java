@@ -179,7 +179,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     //======== POSITION LEVEL ===========
 
     views.selectHome();
-    balanceSummary.setLimit(4100, false);
+    mainAccounts.setLimit(4100, false);
 
     //======== SAVINGS ===========
 
@@ -204,5 +204,20 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .selectAllMonths()
       .setAmount(2000)
       .validate();
+
+    views.selectCategorization();
+  }
+
+  // affectations en boucle pour identifier les memory leaks
+  private void runCategorizationPerfLoop() {
+    for (;;) {
+      categorization.setEnvelope("PRET CONSO N.6784562 F657", "Loisirs", MasterCategory.LEISURES, false);
+      categorization.setRecurring("GROUPE CINE SPECT.", "Credit auto", MasterCategory.TRANSPORTS, false);
+      categorization.setRecurring("PRET CONSO N.6784562 F657", "Credit auto", MasterCategory.TRANSPORTS, false);
+      categorization.setEnvelope("GROUPE CINE SPECT.", "Loisirs", MasterCategory.LEISURES, false);
+
+      categorization.setOccasional("PRET CONSO N.6784562 F657", MasterCategory.GIFTS);
+      categorization.setRecurring("PRET CONSO N.6784562 F657", "Credit auto", MasterCategory.TRANSPORTS, false);
+    }
   }
 }

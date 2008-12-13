@@ -18,7 +18,11 @@
         borderColor="categorization.budgetAreaSelector.border"/>
     <style selector="toggleButton.budgetAreaSelector" ui="budgetAreaSelector" margin="0"
            font="-,bold,12" cursor="hand"/>
-    
+
+    <ui name="budgetAreaSelectionPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="categorization.budgetAreaSelectionPanel.top"
+        bottomColor="categorization.budgetAreaSelectionPanel.bottom"/>
+    <style selector="#budgetAreaSelectionPanel" ui="budgetAreaSelectionPanel"/>
   </styles>
 
   <column styleClass="main">
@@ -43,9 +47,6 @@
               <label text="$categorization.filter.label" styleClass="formLabel"
                      foreground="gauge.categorization.label" marginRight="5"/>
               <comboBox ref="transactionFilterCombo"/>
-              <label text="$categorization.account.label" styleClass="formLabel" 
-                     foreground="gauge.categorization.label" marginRight="5" marginLeft="5"/>
-              <comboBox ref="accountFilterCombo"/>
             </row>
             <scrollPane viewportBackground="#FFFFFF" marginBottom="0">
               <table ref="transactionTable" rowHeight="20"/>
@@ -82,7 +83,7 @@
               <card name="series">
 
                 <column weightY="0.1">
-                  <row border="matte(1,1,0,1,#999999)" background="categorization.budgetAreas.bg" opaque="true">
+                  <row name="budgetAreaSelectionPanel" border="matte(1,1,0,1,#999999)">
                     <repeat ref="budgetAreaToggles" layout="horizontalGrid" gridWrapLimit="4" margin="5">
                       <toggleButton ref="budgetAreaToggle" styleClass="budgetAreaSelector" anchor="left"/>
                     </repeat>

@@ -95,8 +95,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .setName("Machine a laver")
       .checkNoCategory()
       .setCategory(MasterCategory.HOUSE)
-      .checkStartDate("June 2008")
-      .checkEndDate("June 2008")
+      .checkSingleMonthDate("June 2008")
       .checkTable(new Object[][]{{"2008", "June", "", "0"}})
       .cancel();
 
@@ -109,6 +108,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     budgetView.specials.createSeries()
       .setName("Machine a laver")
       .setCategory(MasterCategory.HOUSE)
+      .setEveryMonth()
       .checkStartDate("June 2008")
       .checkEndDate("Jul 2008")
       .checkTable(new Object[][]{

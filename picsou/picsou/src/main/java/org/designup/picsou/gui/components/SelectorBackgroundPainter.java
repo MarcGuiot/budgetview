@@ -1,53 +1,32 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.painters.FillPainter;
+import org.globsframework.gui.splits.painters.Painter;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 
-public class SelectorBackgroundPainter implements CellPainter, ColorChangeListener {
-  private Color selectionBorder;
-  private Color background;
-  private Color selectionTop;
-  private Color selectionBottom;
-  private ColorService colorService;
+public class SelectorBackgroundPainter implements CellPainter {
+  private Painter normalPainter;
+  private Painter selectionPainter;
 
   public SelectorBackgroundPainter(Directory directory) {
-    colorService = directory.get(ColorService.class);
-    colorService.addListener(this);
-  }
-
-  public void colorsChanged(ColorLocator colorLocator) {
-    selectionBorder = colorLocator.get(PicsouColors.CATEGORIES_SELECTED_BORDER);
-    selectionTop = colorLocator.get(PicsouColors.CATEGORIES_SELECTED_BG_TOP);
-    selectionBottom = colorLocator.get(PicsouColors.CATEGORIES_SELECTED_BG_BOTTOM);
-    background = colorLocator.get(PicsouColors.CATEGORIES_BG);
+    ColorService colorService = directory.get(ColorService.class);
+    normalPainter = new FillPainter(PicsouColors.CATEGORIES_BG, colorService);
+    selectionPainter = PicsouColors.createTableSelectionBackgroundPainter(colorService);
   }
 
   public void paint(Graphics g, Glob glob, int row, int column,
                     boolean isSelected, boolean hasFocus, int width, int height) {
-    Graphics2D g2 = (Graphics2D)g;
-
-    if (!isSelected) {
-      g2.setColor(background);
-      g2.fillRect(0, 0, width, height);
+    if (isSelected) {
+      selectionPainter.paint(g, width, height);
     }
     else {
-      g2.setPaint(new GradientPaint(0, 0, selectionTop, 0, height, selectionBottom));
-      g2.fillRect(0, 0, width, height);
-      g2.setColor(selectionBorder);
-      g2.drawLine(0, 0, width, 0);
-      g2.drawLine(0, height - 1, width, height - 1);
+      normalPainter.paint(g, width, height);
     }
-  }
-
-  protected void finalize() throws Throwable {
-    super.finalize();
-    colorService.removeListener(this);
   }
 }

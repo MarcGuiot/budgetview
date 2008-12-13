@@ -30,9 +30,11 @@ import org.uispec4j.interception.WindowInterceptor;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class GlobTableViewTest extends GuiComponentTestCase {
   private GlobTableView view;
@@ -704,6 +706,37 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     listener.assertEmpty();
   }
 
+  public void testSortingDisabled() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='thisIsAName' value='0.23'/>" +
+                    "<dummyObject id='2' name='aName' value='0.1'/>" +
+                    "<dummyObject id='3' name='yetAnotherName' value='2.2'/>");
+
+    GlobTableView view =
+      GlobTableView.init(TYPE, repository, new GlobFieldComparator(ID), directory)
+        .setHeaderActionsDisabled()
+        .addColumn(ID)
+        .addColumn(NAME)
+        .addColumn(VALUE);
+
+    Table table = new Table(view.getComponent());
+    assertTrue(table.getHeader().contentEquals(
+      "id", "name", "value"));
+    assertTrue(table.contentEquals(new String[][]{
+      {"1", "thisIsAName", "0.23"},
+      {"2", "aName", "0.1"},
+      {"3", "yetAnotherName", "2.2"},
+    }));
+
+    table.getHeader().click("name");
+    assertTrue(table.contentEquals(new String[][]{
+      {"1", "thisIsAName", "0.23"},
+      {"2", "aName", "0.1"},
+      {"3", "yetAnotherName", "2.2"},
+    }));
+
+  }
+
   public void testRefreshRemovesDeletedGlobs() throws Exception {
     repository =
       checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
@@ -717,6 +750,58 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     assertTrue(table.contentEquals(new String[][]{
       {"name2", "2.2"}
     }));
+  }
+
+  public void testRefreshUpdatesColumnNames() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
+                    "<dummyObject id='2' name='name2' value='2.2'/>");
+
+    DummyTableColumn column1 = new DummyTableColumn("Col1");
+    DummyTableColumn column2 = new DummyTableColumn("Col2");
+
+    GlobTableView view =
+      GlobTableView.init(TYPE, repository, new GlobFieldComparator(ID), directory)
+        .addColumn(column1)
+        .addColumn(column2);
+
+    Table table = new Table(view.getComponent());
+    assertThat(table.getHeader().contentEquals("Col1", "Col2"));
+
+    column1.name = "Col A";
+    column2.name = "Col B";
+
+    view.refresh();
+    assertThat(table.getHeader().contentEquals("Col A", "Col B"));
+  }
+
+  private static class DummyTableColumn implements GlobTableColumn {
+
+    private String name;
+
+    private DummyTableColumn(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public TableCellRenderer getRenderer() {
+      return new DefaultTableCellRenderer();
+    }
+
+    public TableCellEditor getEditor() {
+      return null;
+    }
+
+    public Comparator<Glob> getComparator() {
+      return null;
+    }
+
+    public boolean isEditable(int row, Glob glob) {
+      return false;
+    }
   }
 
   public void testHeaderDisplaysIconsAccordingToColumnSorting() throws Exception {

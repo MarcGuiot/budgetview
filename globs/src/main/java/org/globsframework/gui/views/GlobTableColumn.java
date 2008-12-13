@@ -16,5 +16,5 @@ public interface GlobTableColumn {
 
   Comparator<Glob> getComparator();
 
-  boolean isEditable();
+  boolean isEditable(int row, Glob glob);
 }
