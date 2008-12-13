@@ -152,7 +152,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     views.checkCategorizationSelected();
   }
 
-  public void testNavigatingInCategoriszationIsDisableForMirroir() throws Exception {
+  public void testNavigatingInCategoriszationIsDisableForMirroirAndCreatedFromSeries() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/11", -100.0, "Virement")
@@ -167,7 +167,8 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .createSavingsSeries()
       .setName("Epargne")
       .setCategories(MasterCategory.SAVINGS)
-      .selectSavingsAccount("Epargne")
+      .setFromAccount("Main accounts")
+      .setToAccount("Epargne")
       .validate();
 
     views.selectData();
@@ -175,6 +176,22 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("11/01/2006", TransactionType.VIREMENT, "Virement", "", 100.00, "Epargne", MasterCategory.SAVINGS)
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne", MasterCategory.SAVINGS)
+      .check();
+
+    transactions.checkCategorizeIsDisable(0);
+
+    views.selectBudget();
+    budgetView.savings.editSeries("Epargne")
+      .setFromAccount("External account")
+      .selectAllMonths()
+      .setAmount("100")
+      .validate();
+
+    views.selectData();
+    transactions
+      .initContent()
+      .add("11/01/2006", TransactionType.VIREMENT, "Epargne", "", 100.00, "Epargne", MasterCategory.SAVINGS)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Virement", "", -100.00)
       .check();
 
     transactions.checkCategorizeIsDisable(0);

@@ -726,38 +726,33 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker selectSavingsAccount(String accountName) {
-    dialog.getComboBox("savingsAccount").select(accountName);
+  public SeriesEditionDialogChecker checkFromAccount(String account) {
+    assertThat(dialog.getComboBox("fromAccount").selectionEquals(account));
     return this;
   }
 
-  public SeriesEditionDialogChecker checkSavingsAccountsAreHidden() {
-    assertFalse(dialog.getComboBox("savingsAccount").isVisible());
+  public SeriesEditionDialogChecker checkToAccount(String account) {
+    assertThat(dialog.getComboBox("toAccount").selectionEquals(account));
     return this;
   }
 
-  public SeriesEditionDialogChecker checkSavingsAccountIsSelected(String accountName) {
-    assertTrue(dialog.getComboBox("savingsAccount").selectionEquals(accountName));
+  public SeriesEditionDialogChecker setToAccount(String account) {
+    dialog.getComboBox("toAccount").select(account);
     return this;
   }
 
-  public SeriesEditionDialogChecker setMainToSavings() {
-    dialog.getToggleButton("fromMainToSavings").click();
+  public SeriesEditionDialogChecker setFromAccount(String account) {
+    dialog.getComboBox("fromAccount").select(account);
     return this;
   }
 
-  public SeriesEditionDialogChecker setSavingsToMain() {
-    dialog.getToggleButton("fromSavingsToMain").click();
+  public SeriesEditionDialogChecker checkDateChooserIsHidden() {
+    assertFalse(dialog.getComboBox("dateChooser").isVisible());
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMainToSavings() {
-    assertThat(dialog.getToggleButton("fromMainToSavings").isSelected());
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkSavingsToMain() {
-    assertThat(dialog.getToggleButton("fromSavingsToMain").isSelected());
+  public SeriesEditionDialogChecker setDate(String date) {
+    dialog.getComboBox("dateChooser").select(date);
     return this;
   }
 }

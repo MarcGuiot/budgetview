@@ -1,5 +1,6 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
@@ -19,9 +20,13 @@ public class CurrentMonth {
   @Key
   public static IntegerField ID;
 
-  public static IntegerField MONTH_ID;
+  public static IntegerField LAST_TRANSACTION_MONTH;
 
-  public static IntegerField DAY;
+  public static IntegerField LAST_TRANSACTION_DAY;
+
+  public static IntegerField CURRENT_MONTH;
+
+  public static IntegerField CURRENT_DAY;
 
   public static org.globsframework.model.Key KEY;
 
@@ -36,8 +41,10 @@ public class CurrentMonth {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeInteger(values.get(ID));
-      outputStream.writeInteger(values.get(MONTH_ID));
-      outputStream.writeInteger(values.get(DAY));
+      outputStream.writeInteger(values.get(LAST_TRANSACTION_MONTH));
+      outputStream.writeInteger(values.get(LAST_TRANSACTION_DAY));
+      outputStream.writeInteger(values.get(CURRENT_MONTH));
+      outputStream.writeInteger(values.get(CURRENT_DAY));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -45,17 +52,31 @@ public class CurrentMonth {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+      else if (version == 2) {
+        deserializeDataV2(fieldSetter, data);
+      }
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(ID, input.readInteger());
-      fieldSetter.set(MONTH_ID, input.readInteger());
-      fieldSetter.set(DAY, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION_MONTH, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION_DAY, input.readInteger());
+      fieldSetter.set(CURRENT_MONTH, TimeService.getCurrentMonth());
+      fieldSetter.set(CURRENT_DAY, TimeService.getCurrentDay());
+    }
+
+    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION_MONTH, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION_DAY, input.readInteger());
+      fieldSetter.set(CURRENT_MONTH, input.readInteger());
+      fieldSetter.set(CURRENT_DAY, input.readInteger());
     }
 
     public int getWriteVersion() {
-      return 1;
+      return 2;
     }
   }
 }

@@ -27,6 +27,7 @@ public class Account {
   public static final int MAIN_SUMMARY_ACCOUNT_ID = -1;
   public static final int SAVINGS_SUMMARY_ACCOUNT_ID = -2;
   public static final int ALL_SUMMARY_ACCOUNT_ID = -3;
+  public static final int EXERNAL_ACCOUNT_ID = -4;
   public static final Set<Integer> SUMMARY_ACCOUNT = new HashSet<Integer>();
   public static org.globsframework.model.Key MAIN_SUMMARY_KEY;
   public static org.globsframework.model.Key SAVINGS_SUMMARY_KEY;
@@ -77,7 +78,8 @@ public class Account {
   public static void createSummary(GlobRepository repository) {
     repository.create(TYPE,
                       value(ID, MAIN_SUMMARY_ACCOUNT_ID),
-                      value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
+                      value(NUMBER, SUMMARY_ACCOUNT_NUMBER),
+                      value(IS_IMPORTED_ACCOUNT, true));
     repository.create(TYPE,
                       value(ID, SAVINGS_SUMMARY_ACCOUNT_ID),
                       value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
@@ -92,6 +94,47 @@ public class Account {
       throw new ItemNotFound("Account with no bank entity: " + account);
     }
     return BankEntity.getBank(bankEntity, repository);
+  }
+
+  public static boolean shoudCreateMirror(Glob fromAccount, Glob toAccount) {
+
+    return (fromAccount != null) && (toAccount != null) &&
+           ((fromAccount.get(Account.IS_IMPORTED_ACCOUNT) && !toAccount.get(Account.IS_IMPORTED_ACCOUNT))
+            ||
+            (!fromAccount.get(Account.IS_IMPORTED_ACCOUNT) && toAccount.get(Account.IS_IMPORTED_ACCOUNT)));
+  }
+
+  public static boolean areNoneImported(Glob fromAccount, Glob toAccount) {
+    if (fromAccount == null && toAccount == null) {
+      return false;
+    }
+    if (fromAccount != null && toAccount == null) {
+      return !fromAccount.get(Account.IS_IMPORTED_ACCOUNT);
+    }
+    if (fromAccount == null) {
+      return !toAccount.get(Account.IS_IMPORTED_ACCOUNT);
+    }
+    return !toAccount.get(Account.IS_IMPORTED_ACCOUNT) && !fromAccount.get(Account.IS_IMPORTED_ACCOUNT);
+  }
+
+  public static double getMultiplierForInOrOutputOfTheAccount(Glob fromAccount, Glob toAccount, Glob forAccount) {
+
+    if (fromAccount == null && toAccount == null) {
+      throw new RuntimeException("Should not be call if both account are null");
+    }
+    if (fromAccount != null && toAccount == null) {
+      return -1;
+    }
+    if (fromAccount == null) {
+      return 1;
+    }
+    if (forAccount.getKey().equals(toAccount.getKey())) {
+      return 1;
+    }
+    if (forAccount.getKey().equals(fromAccount.getKey())) {
+      return -1;
+    }
+    throw new RuntimeException("Call with bad for account");
   }
 
   public static class Serializer implements PicsouGlobSerializer {

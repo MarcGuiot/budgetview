@@ -109,7 +109,7 @@ public class BudgetAreaSeriesView extends View {
       observed += multiplier * balanceStat.get(BalanceStat.getObserved(budgetArea));
       planned += multiplier * balanceStat.get(BalanceStat.getPlanned(budgetArea));
       remaining += multiplier * balanceStat.get(BalanceStat.getRemaining(budgetArea));
-      if (balanceStat.get(BalanceStat.MONTH) >= currentMonth.get(CurrentMonth.MONTH_ID)) {
+      if (balanceStat.get(BalanceStat.MONTH) >= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
         overrunPart += multiplier * (planned - (remaining + observed));
       }
     }

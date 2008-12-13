@@ -96,7 +96,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           }
           Glob series = repository.get(Key.create(Series.TYPE, newSeries));
           double amount = newAmount - previousAmount;
-          transfertAmount(series, amount, newMonth, currentMonth.get(CurrentMonth.MONTH_ID),
+          transfertAmount(series, amount, newMonth, currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH),
                           repository);
         }
         else if (!Utils.equal(previousMonth, newMonth) ||
@@ -106,13 +106,13 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
             Glob series = repository.find(Key.create(Series.TYPE, previousSeries));
             if (series != null) {
               transfertAmount(series, -previousAmount, previousMonth,
-                              currentMonth.get(CurrentMonth.MONTH_ID), repository);
+                              currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH), repository);
             }
           }
           if (newAmount != null && newSeries != null) {
             Glob series = repository.get(Key.create(Series.TYPE, newSeries));
             transfertAmount(series, newAmount, newMonth,
-                            currentMonth.get(CurrentMonth.MONTH_ID), repository);
+                            currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH), repository);
           }
         }
       }

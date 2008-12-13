@@ -11,7 +11,6 @@ public class SavingsAccountViewChecker extends DataChecker {
     panel = window.getPanel("savingsAccountPositionView");
   }
 
-
   public SavingsAccountViewChecker checkPosition(String accountName, double position) {
     UISpecAssert.assertThat(panel.getTextBox("accountPosition." + accountName).textEquals(toString(position)));
     return this;

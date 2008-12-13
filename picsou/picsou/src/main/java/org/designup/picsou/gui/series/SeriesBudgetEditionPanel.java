@@ -9,6 +9,7 @@ import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
+import org.designup.picsou.triggers.SameAccountChecker;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -108,6 +109,15 @@ public class SeriesBudgetEditionPanel {
         }
         if (changeSet.containsChanges(currentSeries.getKey())) {
           FieldValues previousValue = changeSet.getPreviousValue(currentSeries.getKey());
+          if (previousValue.contains(Series.IS_AUTOMATIC)) {
+            isAutomatic = currentSeries.get(Series.IS_AUTOMATIC);
+            if (isAutomatic) {
+              modeCard.show("automatic");
+            }
+            else {
+              modeCard.show("manual");
+            }
+          }
           if (previousValue.contains(Series.PROFILE_TYPE)) {
             if (previousValue.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
               repository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, isAutomatic);
@@ -123,7 +133,7 @@ public class SeriesBudgetEditionPanel {
               modeCard.show("manual");
             }
           }
-          if (previousValue.contains(Series.TO_SAVINGS)) {
+          if (previousValue.contains(Series.FROM_ACCOUNT) || previousValue.contains(Series.TO_ACCOUNT)) {
             updatePositiveOrNegativeRadio();
           }
         }
@@ -165,8 +175,31 @@ public class SeriesBudgetEditionPanel {
   }
 
   private void updatePositiveOrNegativeRadio() {
-    isNormalyPositive = budgetArea.isIncome() || (budgetArea == BudgetArea.SAVINGS
-                                                  && !currentSeries.get(Series.TO_SAVINGS));
+    Glob fromAccount = localRepository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT);
+    Glob toAccount = localRepository.findLinkTarget(currentSeries, Series.TO_ACCOUNT);
+//    boolean isFromToSeries = Account.shoudCreateMirror(fromAccount, toAccount) ||
+//                             Account.areNoneImported(fromAccount, toAccount);
+
+    SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(localRepository);
+
+    Integer forAccountId = currentSeries.get(Series.TO_ACCOUNT) == null ?
+                           currentSeries.get(Series.FROM_ACCOUNT) : currentSeries.get(Series.TO_ACCOUNT);
+    if (mainAccountChecker.isSame(currentSeries.get(Series.FROM_ACCOUNT))) {
+      forAccountId = currentSeries.get(Series.FROM_ACCOUNT);
+    }
+    if (mainAccountChecker.isSame(currentSeries.get(Series.TO_ACCOUNT))) {
+      forAccountId = currentSeries.get(Series.TO_ACCOUNT);
+    }
+
+    double multiplier = 1;
+    if (forAccountId != null) {
+      multiplier = Account.getMultiplierForInOrOutputOfTheAccount(fromAccount, toAccount,
+                                                                  localRepository.get(Key.create(Account.TYPE,
+                                                                                                 forAccountId)));
+    }
+
+    isNormalyPositive = budgetArea.isIncome() ||
+                        (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
     amountEditor.update(isNormalyPositive, budgetArea == BudgetArea.SAVINGS);
   }
 

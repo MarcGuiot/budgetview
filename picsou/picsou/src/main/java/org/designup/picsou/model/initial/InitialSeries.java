@@ -10,7 +10,7 @@ import org.globsframework.model.Key;
 
 public class InitialSeries {
   public static void run(GlobRepository repository) {
-    repository.findOrCreate(Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID),
+    repository.findOrCreate(Series.OCCASIONAL_SERIES,
                             value(Series.BUDGET_AREA, BudgetArea.OCCASIONAL.getId()),
                             value(Series.PROFILE_TYPE, ProfileType.EVERY_MONTH.getId()),
                             value(Series.DEFAULT_CATEGORY, MasterCategory.NONE.getId()),

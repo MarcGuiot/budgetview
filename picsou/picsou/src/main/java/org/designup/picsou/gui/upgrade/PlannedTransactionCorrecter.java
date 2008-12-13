@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.upgrade;
 
+import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.Transaction;
@@ -11,6 +12,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.MultiMap;
 
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -76,7 +78,8 @@ public class PlannedTransactionCorrecter {
           else {
             Glob series = repository.get(Key.create(Series.TYPE, seriesId));
             SeriesBudgetUpdateTransactionTrigger
-              .createPlannedTransaction(series, repository, info.monthId, series.get(Series.DAY),
+              .createPlannedTransaction(series, repository, info.monthId,
+                                        Month.getDay(series.get(Series.DAY), info.monthId, Calendar.getInstance()),
                                         info.budgetAmount - info.observedAmount);
           }
         }

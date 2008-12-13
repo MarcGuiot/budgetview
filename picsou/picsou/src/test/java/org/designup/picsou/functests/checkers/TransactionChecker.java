@@ -188,7 +188,7 @@ public class TransactionChecker extends ViewChecker {
         buffer.append(")\n");
       }
       buffer.append(".check();\n");
-      System.out.println(buffer.toString());
+      Assert.fail("Use this code:\n" + buffer.toString());
     }
   }
 

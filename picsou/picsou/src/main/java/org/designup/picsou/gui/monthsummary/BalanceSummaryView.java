@@ -117,7 +117,7 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     selectionService.select(tmp, BalanceStat.TYPE);
 
     Glob currentMonth = repository.get(CurrentMonth.KEY);
-    if (currentMonths.last() < currentMonth.get(CurrentMonth.MONTH_ID)) {
+    if (currentMonths.last() < currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
       contentPanel.setVisible(false);
       Glob balanceStat = balanceStats[balanceStats.length - 1];
       Double amount = balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
@@ -137,7 +137,7 @@ public class BalanceSummaryView extends View implements GlobSelectionListener {
     int firstBalanceIndex;
     for (firstBalanceIndex = 0; firstBalanceIndex < balanceStats.length; firstBalanceIndex++) {
       Glob balanceStat = balanceStats[firstBalanceIndex];
-      if (balanceStat.get(BalanceStat.MONTH) >= currentMonth.get(CurrentMonth.MONTH_ID)) {
+      if (balanceStat.get(BalanceStat.MONTH) >= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
         break;
       }
     }

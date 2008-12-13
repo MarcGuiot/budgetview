@@ -30,8 +30,8 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
     repository.addTrigger(new PlannedSeriesStatTrigger());
     repository.addTrigger(new OccasionalSeriesStatTrigger());
     repository.create(CurrentMonth.KEY,
-                      FieldValue.value(CurrentMonth.MONTH_ID, 200808),
-                      FieldValue.value(CurrentMonth.DAY, 1)
+                      FieldValue.value(CurrentMonth.LAST_TRANSACTION_MONTH, 200808),
+                      FieldValue.value(CurrentMonth.LAST_TRANSACTION_DAY, 1)
     );
     repository.create(Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID),
                       value(Series.PROFILE_TYPE, ProfileType.IRREGULAR.getId()),

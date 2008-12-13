@@ -33,6 +33,9 @@ public class UpgradeService {
                           FieldValue.value(Series.DAY, 1),
                           FieldValue.value(Series.LABEL, "occasional"));
       }
+      if (version.get(VersionInformation.CURRENT_JAR_VERSION) <= 7) {
+        repository.update(Account.MAIN_SUMMARY_KEY, Account.IS_IMPORTED_ACCOUNT, true);
+      }
       repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
     }
     finally {

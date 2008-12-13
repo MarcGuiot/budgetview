@@ -1,7 +1,6 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
@@ -16,7 +15,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
 
     changeSet.safeVisit(SeriesStat.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        Integer currentMonthId = repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID);
+        Integer currentMonthId = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
         Glob series = repository.find(Key.create(Series.TYPE, key.get(SeriesStat.SERIES)));
         if (series == null) {
           return;
@@ -29,7 +28,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        Integer currentMonthId = repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID);
+        Integer currentMonthId = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
         Glob series = repository.find(Key.create(Series.TYPE, key.get(SeriesStat.SERIES)));
         if (series == null) {
           return;
@@ -50,7 +49,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (!values.contains(CurrentMonth.MONTH_ID)) {
+        if (!values.contains(CurrentMonth.LAST_TRANSACTION_MONTH)) {
           return;
         }
         GlobList series = repository.getAll(Series.TYPE);
@@ -58,7 +57,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
           if (!oneSeries.get(Series.IS_AUTOMATIC)) {
             continue;
           }
-          Integer currentMonthId = values.get(CurrentMonth.MONTH_ID);
+          Integer currentMonthId = values.get(CurrentMonth.LAST_TRANSACTION_MONTH);
           ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgets =
             repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, oneSeries.get(Series.ID));
           Glob currentSeriesBudget = seriesBudgets.findByIndex(SeriesBudget.MONTH, currentMonthId)

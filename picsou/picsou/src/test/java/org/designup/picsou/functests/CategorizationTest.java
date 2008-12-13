@@ -1134,7 +1134,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectTableRows("Virement")
       .selectSavings()
       .createSavingsSeries()
-      .selectSavingsAccount("Epargne")
+      .setToAccount("Epargne")
       .setName("Epargne")
       .setCategories(MasterCategory.SAVINGS)
       .validate();

@@ -77,7 +77,8 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
                           value(SeriesBudget.AMOUNT, 0.),
                           value(SeriesBudget.ACTIVE, true),
                           value(SeriesBudget.SERIES, series.get(Series.ID)),
-                          value(SeriesBudget.DAY, series.get(Series.DAY)),
+                          value(SeriesBudget.DAY,
+                                Month.getDay(series.get(Series.DAY), monthId, Calendar.getInstance())),
                           value(SeriesBudget.MONTH, monthId));
       }
       else {
@@ -88,7 +89,9 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
         Glob budget = repository.create(SeriesBudget.TYPE,
                                         value(SeriesBudget.ACTIVE, series.get(Series.getMonthField(monthId))),
                                         value(SeriesBudget.SERIES, series.get(Series.ID)),
-                                        value(SeriesBudget.DAY, series.get(Series.DAY)),
+                                        value(SeriesBudget.DAY,
+                                              Month.getDay(series.get(Series.DAY), monthId,
+                                                           Calendar.getInstance())),
                                         value(SeriesBudget.MONTH, monthId));
 
         // attention les creation de mois arrive dans un ordre aleatoire

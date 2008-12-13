@@ -442,6 +442,7 @@ public class CategorizationView extends View implements TableView, Filterable {
         filter,
         fieldEquals(Transaction.PLANNED, false),
         fieldEquals(Transaction.MIRROR, false),
+        fieldEquals(Transaction.CREATED_BY_SERIES, false),
         getCurrentFilteringMode(),
         accountFilteringCombo.getCurrentAccountFilter()
       );

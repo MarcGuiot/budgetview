@@ -103,7 +103,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
                             value(SeriesBudget.ACTIVE, active));
           if (!active ||
               (series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId()) &&
-               seriesBudget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.MONTH_ID))) {
+               seriesBudget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))) {
             repository.update(seriesBudget.getKey(), SeriesBudget.AMOUNT, 0.0);
           }
         }
