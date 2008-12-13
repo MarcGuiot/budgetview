@@ -157,7 +157,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setName("Epargne")
       .setCategories(MasterCategory.SAVINGS)
       .validate();
-    System.out.println("SavingsTest.testCreateSavingsSeriesAndAssociateLaterToAccount CREATE SERIE");
     views.selectData();
     transactions.initContent()
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Epargne", "", -100.00, "Epargne", MasterCategory.SAVINGS)
@@ -175,18 +174,16 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setBalance(1000)
       .validate();
 
-    System.out.println("SavingsTest.testCreateSavingsSeriesAndAssociateLaterToAccount ACCOUNT CREATED CREATE SERIES 2");
     views.selectBudget();
     budgetView.savings.editSeries("Epargne")
       .setFromAccount("Main accounts")
       .setToAccount("Epargne LCL")
       .validate();
 
-    System.out.println("SavingsTest.testCreateSavingsSeriesAndAssociateLaterToAccount CATEGO");
     views.selectCategorization();
     categorization
       .selectSavings()
-      .selectSavingsSeries("Epargne", MasterCategory.SAVINGS, false);
+      .selectSavingsSeries("Epargne");
 
     views.selectData();
     transactions.initContent()
@@ -306,7 +303,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows("CAF")
       .selectSavings()
-      .selectSavingsSeries("CAF", MasterCategory.SAVINGS, false);
+      .selectSavingsSeries("CAF");
     views.selectHome();
     timeline.selectMonth("2008/08");
     savingsAccounts.checkPosition("Account n. 111", 1000);
@@ -386,7 +383,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization
       .selectTableRows("Caf")
       .selectSavings()
-      .selectSavingsSeries("CAF", MasterCategory.SAVINGS, false);
+      .selectSavingsSeries("CAF");
 
     views.selectData();
     transactions.initContent().dumpCode();

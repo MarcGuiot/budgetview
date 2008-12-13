@@ -137,7 +137,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     categorization.setSpecial("PLOMBERIE 24/7", "Plombier", MasterCategory.HOUSE, true);
 
-    categorization.setSavings("VIRT MENS. LIVRET", "Virt. auto livret", MasterCategory.SAVINGS, true);
+    categorization.createAndSetSavings("VIRT MENS. LIVRET", "Virt. auto livret", "Main account");
 
     categorization.getGauge().hideProgressMessage();
 
@@ -210,7 +210,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   // affectations en boucle pour identifier les memory leaks
   private void runCategorizationPerfLoop() {
-    for (;;) {
+    for (; ;) {
       categorization.setEnvelope("PRET CONSO N.6784562 F657", "Loisirs", MasterCategory.LEISURES, false);
       categorization.setRecurring("GROUPE CINE SPECT.", "Credit auto", MasterCategory.TRANSPORTS, false);
       categorization.setRecurring("PRET CONSO N.6784562 F657", "Credit auto", MasterCategory.TRANSPORTS, false);

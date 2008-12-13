@@ -1358,7 +1358,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+      .selectAndCreateSavingsSeries("epargne", "Main account");
     views.selectData();
     timeline.selectMonths("2008/06", "2008/07");
     transactions.initContent()
@@ -1388,7 +1388,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+      .selectAndCreateSavingsSeries("epargne", "Main account");
 
     SeriesEditionDialogChecker edition = categorization.selectSavings()
       .editSeries("epargne", true)
@@ -1425,7 +1425,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+      .selectAndCreateSavingsSeries("epargne", "Main account");
     categorization.selectSavings().editSeries("epargne", true)
       .checkInAutomatic()
       .setUnknown()
@@ -1451,7 +1451,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows("Virement");
     categorization.selectSavings()
-      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+      .selectAndCreateSavingsSeries("epargne", "Main account");
     categorization.selectSavings().editSeries("epargne", true)
       .setTwoMonths()
       .validate();
@@ -1481,7 +1481,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows("Virement");
     categorization.selectSavings()
-      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+      .selectAndCreateSavingsSeries("epargne", "Main account");
     operations.openPreferences().setFutureMonthsCount(1).validate();
     categorization.selectSavings().editSeries("epargne", true)
       .switchToManual()

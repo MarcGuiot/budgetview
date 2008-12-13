@@ -124,7 +124,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.getTable().selectRows(0, 1, 2);
     categorization.setUncategorized();
-    
+
     views.selectBudget();
     budgetView.occasional.checkNotDisplayed(MasterCategory.FOOD);
   }
@@ -164,7 +164,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.setSavings("Virt Compte Epargne", "Epargne", MasterCategory.SAVINGS, true);
+    categorization.createAndSetSavings("Virt Compte Epargne", "Epargne", "Main account");
 
     views.selectBudget();
 
@@ -696,10 +696,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectData();
     transactions.initContent()
-    .add("12/07/2008", TransactionType.PLANNED, "Planned: Loto", "", 15.00, "Loto", MasterCategory.CLOTHING)
-    .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
-    .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00)
-    .check();
+      .add("12/07/2008", TransactionType.PLANNED, "Planned: Loto", "", 15.00, "Loto", MasterCategory.CLOTHING)
+      .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
+      .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00)
+      .check();
     views.selectCategorization();
     categorization.setEnvelope("Loto", "Loto", MasterCategory.CLOTHING, false);
     views.selectData();
