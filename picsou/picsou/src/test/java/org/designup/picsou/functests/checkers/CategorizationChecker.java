@@ -21,8 +21,8 @@ import javax.swing.AbstractButton;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 public class CategorizationChecker extends DataChecker {
   private Window mainWindow;
@@ -366,17 +366,18 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationChecker selectSavingsSeries(String savingsName, MasterCategory category, boolean createSeries) {
+  public CategorizationChecker selectSavingsSeries(String savingsName) {
     Panel panel = getSavingsSeriesPanel();
-    if (createSeries) {
-      createSavingsSeries()
-        .setName(savingsName)
-        .setCategory(category)
-        .validate();
-    }
-    else {
-      panel.getRadioButton(savingsName).click();
-    }
+    panel.getRadioButton(savingsName).click();
+    return this;
+  }
+
+  public CategorizationChecker selectAndCreateSavingsSeries(String savingsName, String toAccount) {
+    createSavingsSeries()
+      .setName(savingsName)
+      .setFromAccount(toAccount)
+      .setCategory(MasterCategory.SAVINGS)
+      .validate();
     return this;
   }
 
@@ -738,21 +739,36 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationChecker setSavings(String label, String seriesName, MasterCategory master, boolean createSeries) {
+  public CategorizationChecker setSavings(String label, String seriesName) {
     int[] indices = getRowIndices(label);
-    boolean first = createSeries;
     for (int indice : indices) {
-      setSavings(indice, seriesName, master, first);
-      first = false;
+      setSavings(indice, seriesName);
     }
     return this;
   }
 
-  public CategorizationChecker setSavings(int rowIndex, String seriesName, MasterCategory master, boolean createSeries) {
-    int[] rows = new int[]{rowIndex};
-    selectTableRows(rows);
+  public CategorizationChecker createAndSetSavings(String label, String seriesName, String toAccount) {
+    int[] indices = getRowIndices(label);
+    boolean first = true;
+    for (int indice : indices) {
+      if (first) {
+        selectTableRows(indice);
+        selectSavings();
+        selectAndCreateSavingsSeries(seriesName, toAccount);
+        first = false;
+      }
+      else {
+        setSavings(indice, seriesName);
+      }
+    }
+    return this;
+  }
+
+
+  private CategorizationChecker setSavings(int rowIndex, String seriesName) {
+    selectTableRows(rowIndex);
     selectSavings();
-    selectSavingsSeries(seriesName, master, createSeries);
+    selectSavingsSeries(seriesName);
     return this;
   }
 
@@ -850,7 +866,7 @@ public class CategorizationChecker extends DataChecker {
       String color = colors[i];
       Arrays.fill(cellColors[i], color);
     }
-    
+
     assertThat(table.backgroundEquals(cellColors));
   }
 

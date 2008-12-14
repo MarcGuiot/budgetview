@@ -179,6 +179,11 @@ public class DefaultChangeSet implements MutableChangeSet {
     return result;
   }
 
+  public boolean isCreated(Key key) {
+    DefaultDeltaGlob defaultDeltaGlob = deltaGlobsByKey.get(key.getGlobType(), key);
+    return defaultDeltaGlob != null && defaultDeltaGlob.isCreated();
+  }
+
   public FieldValues getPreviousValue(Key key) {
     Map<Key, DefaultDeltaGlob> keyDefaultDeltaGlobMap = deltaGlobsByKey.get(key.getGlobType());
     if (keyDefaultDeltaGlobMap != null) {

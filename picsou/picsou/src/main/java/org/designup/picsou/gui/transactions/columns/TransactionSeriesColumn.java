@@ -89,7 +89,8 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
       button = this.editorButton;
       panel = this.editorPanel;
     }
-    if (Transaction.isPlanned(transaction) || Transaction.isMirrorTransaction(transaction)) {
+    if (Transaction.isPlanned(transaction) || Transaction.isMirrorTransaction(transaction)
+        || Transaction.isCreatedBySeries(transaction)) {
       button.setEnabled(false);
       rendererColors.setForeground(button, isSelected, transaction, true);
       button.setDisabledColor(isSelected ? rendererColors.getTransactionSelectedTextColor() : rendererColors.getTransactionPlannedTextColor());

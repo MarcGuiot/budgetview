@@ -60,7 +60,7 @@ public class Transaction {
   public static BooleanField SPLIT;
 
   @Target(Transaction.class)
-  public static LinkField SPLIT_SOURCE;
+  public static LinkField SPLIT_SOURCE; //TODO si mirror et split supprimer le liens vers NOT_IMPORTED_TRANSACTION
 
   @Target(Series.class)
   @Required()
@@ -73,8 +73,11 @@ public class Transaction {
   @DefaultBoolean(false)
   public static BooleanField MIRROR;
 
+  @DefaultBoolean(false)
+  public static BooleanField CREATED_BY_SERIES;
+
   @Target(Transaction.class)
-  public static LinkField SAVINGS_TRANSACTION;
+  public static LinkField NOT_IMPORTED_TRANSACTION;
 
   public static NotUniqueIndex LABEL_FOR_CATEGORISATION_INDEX;
 
@@ -190,6 +193,11 @@ public class Transaction {
     return values.get(MIRROR);
   }
 
+  public static boolean isCreatedBySeries(Glob transaction) {
+    return transaction.get(CREATED_BY_SERIES);
+  }
+
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues fieldValues) {
@@ -215,6 +223,7 @@ public class Transaction {
       output.writeInteger(fieldValues.get(Transaction.SERIES));
       output.writeBoolean(fieldValues.get(Transaction.PLANNED));
       output.writeBoolean(fieldValues.get(Transaction.MIRROR));
+      output.writeBoolean(fieldValues.get(Transaction.CREATED_BY_SERIES));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -263,6 +272,7 @@ public class Transaction {
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
       fieldSetter.set(Transaction.SERIES, input.readInteger());
       fieldSetter.set(Transaction.PLANNED, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, false);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -298,6 +308,7 @@ public class Transaction {
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
       fieldSetter.set(Transaction.SERIES, input.readInteger());
       fieldSetter.set(Transaction.PLANNED, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, false);
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
@@ -322,6 +333,7 @@ public class Transaction {
       fieldSetter.set(Transaction.SERIES, input.readInteger());
       fieldSetter.set(Transaction.PLANNED, input.readBoolean());
       fieldSetter.set(Transaction.MIRROR, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
     }
 
     public int getWriteVersion() {

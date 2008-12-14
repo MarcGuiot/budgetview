@@ -13,10 +13,7 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.SortedSet;
+import java.util.*;
 
 public class GlobStateChecker {
   private GlobRepository repository;
@@ -77,8 +74,8 @@ public class GlobStateChecker {
   private void checkPlannedTransaction() {
     MonthPlannedChecker monthPlannedChecker = new MonthPlannedChecker();
     Glob currentMonth = repository.get(CurrentMonth.KEY);
-    Integer currentMonthId = currentMonth.get(CurrentMonth.MONTH_ID);
-    Integer lastDay = currentMonth.get(CurrentMonth.DAY);
+    Integer currentMonthId = currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH);
+    Integer lastDay = currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY);
     GlobList planneds = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true));
     for (Glob planned : planneds) {
       if (planned.get(Transaction.MONTH) < currentMonthId ||
@@ -104,11 +101,11 @@ public class GlobStateChecker {
     }
     missingMonthonth.addToErrorList(corrections);
 
-    Integer currentMonth = repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID);
+    Integer currentMonth = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
     if (currentMonth != 0 && !months.contains(currentMonth)) {
       corrections.add(new Correction() {
         public String info(GlobRepository repository, Directory directory) {
-          return "" + GlobStateChecker.this.repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID) + " not in existing month";
+          return "" + GlobStateChecker.this.repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH) + " not in existing month";
         }
 
         public void correct(GlobRepository repository) {
@@ -381,7 +378,8 @@ public class GlobStateChecker {
             else {
               Glob series = repository.get(Key.create(Series.TYPE, seriesId));
               SeriesBudgetUpdateTransactionTrigger
-                .createPlannedTransaction(series, repository, info.monthId, series.get(Series.DAY),
+                .createPlannedTransaction(series, repository, info.monthId,
+                                          Month.getDay(series.get(Series.DAY), info.monthId, Calendar.getInstance()),
                                           info.budgetAmount - info.observedAmount);
             }
           }

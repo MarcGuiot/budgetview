@@ -66,8 +66,10 @@ public class PicsouInit {
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetUpdateTransactionTrigger());
     repository.addTrigger(new TransactionPlannedTrigger());
-    repository.addTrigger(new SavingsSeriesTrigger());
-    repository.addTrigger(new SavingsTransactionTrigger());
+//    repository.addTrigger(new SavingsSeriesTrigger());
+    repository.addTrigger(new ImportedToNotImportedAccountTransactionTrigger());
+    repository.addTrigger(new NotImportedTransactionAccountTrigger());
+    repository.addTrigger(new UpdateAccountOnTransactionDelete());
     repository.addTrigger(new BalanceTrigger());
     repository.addTrigger(new MonthStatTrigger());
     repository.addTrigger(new PlannedSeriesStatTrigger());
@@ -111,6 +113,17 @@ public class PicsouInit {
 
     checkForUpgrade(repository, versionInfo == null && !newUser);
 
+    try {
+      repository.startChangeSet();
+      repository.update(CurrentMonth.KEY,
+                        value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
+                        value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
+    }
+    finally {
+      repository.completeChangeSet();
+    }
+
+
     LicenseCheckerThread licenseCheckerThread = new LicenseCheckerThread(directory, repository);
     licenseCheckerThread.setDaemon(true);
     licenseCheckerThread.start();
@@ -153,10 +166,13 @@ public class PicsouInit {
     }
 
     repository.findOrCreate(CurrentMonth.KEY,
-                            FieldValue.value(CurrentMonth.MONTH_ID, 0),
-                            FieldValue.value(CurrentMonth.DAY, 0));
+                            value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),
+                            value(CurrentMonth.LAST_TRANSACTION_DAY, 0),
+                            value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
+                            value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
     repository.findOrCreate(Account.MAIN_SUMMARY_KEY,
-                            FieldValue.value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
+                            value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
+                            value(Account.IS_IMPORTED_ACCOUNT, true));
     repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
                             FieldValue.value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
     repository.findOrCreate(Account.ALL_SUMMARY_KEY);

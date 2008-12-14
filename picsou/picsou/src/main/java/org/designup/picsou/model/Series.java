@@ -57,12 +57,17 @@ public class Series {
   @DefaultBoolean(true)
   public static BooleanField IS_AUTOMATIC;
 
+  @Target(Account.class)
+  public static LinkField FROM_ACCOUNT;
+
+  // gestion des comptes carte
+  // calculé le montant de la transaction de prelevement
+  // on impute sur le mois n+1 des que la transaction est passée
+  // offrir un filtrage par numero de carte (meme sur un meme compte)
+
   // cette series appartient au compte courant mais ses transactions impactent le compte courant pointé
   @Target(Account.class)
-  public static LinkField SAVINGS_ACCOUNT;
-
-  @DefaultBoolean(true)
-  public static BooleanField TO_SAVINGS; // ToSavings == true, FromSavings == false
+  public static LinkField TO_ACCOUNT;
 
   @DefaultBoolean(true)
   public static BooleanField JANUARY;
@@ -180,8 +185,9 @@ public class Series {
       output.writeBoolean(fieldValues.get(Series.OCTOBER));
       output.writeBoolean(fieldValues.get(Series.NOVEMBER));
       output.writeBoolean(fieldValues.get(Series.DECEMBER));
-      output.writeInteger(fieldValues.get(Series.SAVINGS_ACCOUNT));
-      output.writeBoolean(fieldValues.get(Series.TO_SAVINGS));
+      output.writeInteger(fieldValues.get(Series.TO_ACCOUNT));
+      output.writeInteger(fieldValues.get(Series.FROM_ACCOUNT));
+//      output.writeBoolean(fieldValues.get(Series.TO_SAVINGS));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -333,8 +339,9 @@ public class Series {
       fieldSetter.set(Series.OCTOBER, input.readBoolean());
       fieldSetter.set(Series.NOVEMBER, input.readBoolean());
       fieldSetter.set(Series.DECEMBER, input.readBoolean());
-      fieldSetter.set(Series.SAVINGS_ACCOUNT, input.readInteger());
-      fieldSetter.set(Series.TO_SAVINGS, input.readBoolean());
+      fieldSetter.set(Series.TO_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.FROM_ACCOUNT, input.readInteger());
+//      fieldSetter.set(Series.TO_SAVINGS, input.readBoolean());
     }
 
     public int getWriteVersion() {

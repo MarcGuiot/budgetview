@@ -104,7 +104,7 @@ public class EstimatedPositionDetailsDialog {
         return "";
       }
 
-      Integer currentMonthId = CurrentMonth.get(repository);
+      Integer currentMonthId = CurrentMonth.getLastTransactionMonth(repository);
       Glob balanceStat = null;
       for (Glob stat : balanceStats) {
         balanceStat = stat;

@@ -82,7 +82,7 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
     categorization.setRecurring("Rent for june", "Rent", MasterCategory.HOUSE, false);
     categorization.setRecurring("SFR", "Cell phone 1", MasterCategory.TELECOMS, false);
     categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, false);
-    categorization.setSavings("ING", "Regular savings", MasterCategory.SAVINGS, false);
+    categorization.setSavings("ING", "Regular savings");
 
     views.selectData();
     timeline.selectMonths("2008/06", "2008/07", "2008/08");

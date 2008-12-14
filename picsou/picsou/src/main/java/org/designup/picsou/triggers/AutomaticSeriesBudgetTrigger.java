@@ -1,9 +1,13 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -31,16 +35,14 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
   public static void updateSeriesBudget(Key seriesKey, GlobRepository repository) {
     final Glob currentMonth = repository.get(CurrentMonth.KEY);
     Integer seriesId = seriesKey.get(Series.ID);
-    Glob series = repository.get(seriesKey);
-    Glob account = repository.findLinkTarget(series, Series.SAVINGS_ACCOUNT);
-    if (account != null && !account.get(Account.IS_IMPORTED_ACCOUNT)) {
-      return;
-    }
     GlobList seriesBudgets =
       repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
         .getGlobs().sort(SeriesBudget.MONTH);
     Iterator<Glob> transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
-      .getGlobs().sort(TransactionComparator.ASCENDING).iterator();
+      .getGlobs().filterSelf(GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.MIRROR, false),
+                                              GlobMatchers.fieldEquals(Transaction.CREATED_BY_SERIES, false)),
+                             repository)
+      .sort(TransactionComparator.ASCENDING).iterator();
     Glob currentTransaction = transactions.hasNext() ? transactions.next() : null;
     Double amount = 0.;
     boolean firstUpdate = false;
@@ -53,7 +55,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
         repository.update(seriesBudget.getKey(),
                           FieldValue.value(SeriesBudget.AMOUNT, amount));
         Double previousAmount = amount;
-        if (seriesBudget.get(SeriesBudget.MONTH) <= currentMonth.get(CurrentMonth.MONTH_ID)) {
+        if (seriesBudget.get(SeriesBudget.MONTH) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
           amount = 0.;
           while (currentTransaction != null &&
                  currentTransaction.get(Transaction.MONTH).equals(seriesBudget.get(SeriesBudget.MONTH))) {
@@ -61,7 +63,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
             currentTransaction = transactions.hasNext() ? transactions.next() : null;
           }
         }
-        if (seriesBudget.get(SeriesBudget.MONTH).equals(currentMonth.get(CurrentMonth.MONTH_ID))) {
+        if (seriesBudget.get(SeriesBudget.MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))) {
           int multi = -1;
           if (seriesBudget.get(SeriesBudget.AMOUNT) > 0) {
             multi = 1;

@@ -122,7 +122,7 @@ public class MainAccountViewPanel extends AccountViewPanel {
           }
 
           Integer monthId = selectedMonths.getLast().get(Month.ID);
-          Integer currentMonthId = CurrentMonth.get(repository);
+          Integer currentMonthId = CurrentMonth.getLastTransactionMonth(repository);
           boolean enabled = monthId >= currentMonthId;
           setEnabled(enabled);
         }

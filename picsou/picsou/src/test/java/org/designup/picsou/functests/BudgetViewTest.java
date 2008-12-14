@@ -167,7 +167,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.setSavings("Virt Compte Epargne", "Epargne", MasterCategory.SAVINGS, true);
+    categorization.createAndSetSavings("Virt Compte Epargne", "Epargne", "Main account");
 
     views.selectBudget();
 

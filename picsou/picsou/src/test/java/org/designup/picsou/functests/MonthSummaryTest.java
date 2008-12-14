@@ -171,8 +171,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     mainAccounts
       .checkEstimatedPosition(1529.90)
-      .checkEstimatedPositionDate("31/07/2008")
-      .checkNoEstimatedPositionDetails();
+      .checkEstimatedPositionDate("31/07/2008");
+//      .checkNoEstimatedPositionDetails();
 
     timeline.checkMonthTooltip("2008/07", balanceFor200807, 1529.90);
 
@@ -270,7 +270,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkValues(100, 100)
       .checkGauge(-100, -100);
     mainAccounts.checkEstimatedPosition((500 - 75) - (1000 - 100));
-    mainAccounts.checkNoEstimatedPositionDetails();
+//    mainAccounts.checkNoEstimatedPositionDetails();
 
     timeline.selectMonth("2008/08");
     monthSummary.total(1000, 100);

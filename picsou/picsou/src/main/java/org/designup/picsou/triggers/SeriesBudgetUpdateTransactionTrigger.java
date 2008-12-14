@@ -20,7 +20,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Glob series = repository.get(Key.create(Series.TYPE, values.get(SeriesBudget.SERIES)));
         if (generatesPlannedTransactions(values, series,
-                                         repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID))) {
+                                         repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH))) {
           Integer monthId = values.get(SeriesBudget.MONTH);
           createPlannedTransaction(series, repository, monthId,
                                    values.get(SeriesBudget.DAY),
@@ -30,7 +30,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         Glob seriesBudget = repository.get(key);
-        if (seriesBudget.get(SeriesBudget.MONTH) < repository.get(CurrentMonth.KEY).get(CurrentMonth.MONTH_ID)) {
+        if (seriesBudget.get(SeriesBudget.MONTH) < repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
           return;
         }
         Glob series = repository.get(Key.create(Series.TYPE, seriesBudget.get(SeriesBudget.SERIES)));
@@ -52,7 +52,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
           TransactionPlannedTrigger.transfertAmount(
             repository.get(Key.create(Series.TYPE, series.get(Series.ID))), diff,
             seriesBudget.get(SeriesBudget.MONTH),
-            currentMonth.get(CurrentMonth.MONTH_ID),
+            currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH),
             repository);
         }
       }
@@ -77,7 +77,9 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
     return repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesBudget.get(SeriesBudget.SERIES))
       .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
       .filterSelf(GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
-                                   GlobMatchers.not(GlobMatchers.fieldEquals(Transaction.MIRROR, true))),
+                                   GlobMatchers.ALL
+//                                   GlobMatchers.not(GlobMatchers.fieldEquals(Transaction.MIRROR, true))
+      ),
                   repository)
       .sort(Transaction.DAY);
   }
@@ -85,13 +87,38 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
   public static void createPlannedTransaction(Glob series, GlobRepository repository, int monthId,
                                               Integer day, Double amount) {
     Glob month = repository.get(CurrentMonth.KEY);
-    if (month.get(CurrentMonth.MONTH_ID) == monthId && (day == null || day < month.get(CurrentMonth.DAY))) {
-      day = month.get(CurrentMonth.DAY);
+    if (month.get(CurrentMonth.LAST_TRANSACTION_MONTH) == monthId && (day == null || day < month.get(CurrentMonth.LAST_TRANSACTION_DAY))) {
+      day = month.get(CurrentMonth.LAST_TRANSACTION_DAY);
+    }
+    int account;
+    Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+    Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+    if (fromAccount == null && toAccount == null) {
+      account = Account.MAIN_SUMMARY_ACCOUNT_ID;
+    }
+    else {
+      if (Account.areNoneImported(fromAccount, toAccount)) {
+        return;
+      }
+      if (fromAccount != null && Account.MAIN_SUMMARY_ACCOUNT_ID == fromAccount.get(Account.ID)) {
+        account = fromAccount.get(Account.ID);
+      }
+      else if (toAccount != null && Account.MAIN_SUMMARY_ACCOUNT_ID == toAccount.get(Account.ID)) {
+        account = toAccount.get(Account.ID);
+      }
+      else {
+        if (fromAccount == null) {
+          account = toAccount.get(Account.ID);
+        }
+        else { //if (toAccount == null)
+          account = fromAccount.get(Account.ID);
+        }
+      }
     }
     Integer categoryId = getCategory(series, repository);
     Integer seriesId = series.get(Series.ID);
     repository.create(Transaction.TYPE,
-                      value(Transaction.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
+                      value(Transaction.ACCOUNT, account),
                       value(Transaction.AMOUNT, amount),
                       value(Transaction.SERIES, seriesId),
                       value(Transaction.BANK_MONTH, monthId),

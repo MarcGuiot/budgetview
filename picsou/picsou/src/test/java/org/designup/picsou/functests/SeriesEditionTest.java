@@ -1358,7 +1358,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+      .selectAndCreateSavingsSeries("epargne", "Main account");
     views.selectData();
     timeline.selectMonths("2008/06", "2008/07");
     transactions.initContent()
@@ -1388,12 +1388,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+      .selectAndCreateSavingsSeries("epargne", "Main account");
 
-    SeriesEditionDialogChecker edition = categorization.selectSavings().editSeries("epargne", true)
+    SeriesEditionDialogChecker edition = categorization.selectSavings()
+      .editSeries("epargne", true)
       .checkInAutomatic()
       .setUnknown()
-      .setTwoMonths();
+      .setTwoMonths()
+      .checkInAutomatic();
     edition
       .checkInAutomatic()
       .switchToManual()
@@ -1423,7 +1425,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+      .selectAndCreateSavingsSeries("epargne", "Main account");
     categorization.selectSavings().editSeries("epargne", true)
       .checkInAutomatic()
       .setUnknown()
@@ -1449,7 +1451,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows("Virement");
     categorization.selectSavings()
-      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+      .selectAndCreateSavingsSeries("epargne", "Main account");
     categorization.selectSavings().editSeries("epargne", true)
       .setTwoMonths()
       .validate();
@@ -1479,7 +1481,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows("Virement");
     categorization.selectSavings()
-      .selectSavingsSeries("epargne", MasterCategory.SAVINGS, true);
+      .selectAndCreateSavingsSeries("epargne", "Main account");
     operations.openPreferences().setFutureMonthsCount(1).validate();
     categorization.selectSavings().editSeries("epargne", true)
       .switchToManual()
@@ -1563,6 +1565,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSavings() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/04", -10.00, "McDo")
+      .load();
+
     timeline.selectLast();
     views.selectHome();
     savingsAccounts.createNewAccount().setAsSavings()
@@ -1574,33 +1580,34 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings
       .createSeries()
-      .checkMainToSavings()
-      .setMainToSavings()
+      .setFromAccount("Main accounts")
+      .setToAccount("Epargne LCL")
       .setName("Epargne")
       .setCategory(MasterCategory.SAVINGS)
-      .selectSavingsAccount("Epargne LCL")
       .checkOkEnabled(true)
       .validate();
 
     budgetView.savings
       .editSeries("Epargne")
-      .checkSavingsAccountIsSelected("Epargne LCL")
-      .checkMainToSavings()
+      .checkToAccount("Epargne LCL")
       .switchToManual()
-      .checkNegativeAmountsSelected()
-      .checkPositiveAmountsNotSelected()
-      .setSavingsToMain()
-      .checkPositiveAmountsSelected()
+      .setToAccount("Main accounts")
+      .setFromAccount("Epargne LCL")
       .checkAmountsRadioAreNotVisible()
       .selectMonth(200808)
       .setAmount("100")
       .checkAmount("100")
-      .setMainToSavings()
+      .setFromAccount("Main accounts")
+      .setToAccount("Epargne LCL")
       .checkAmount("100")
       .validate();
   }
 
   public void testSwitchBetweenSavingsSeries() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/04", -10.00, "McDo")
+      .load();
+
     operations.openPreferences().setFutureMonthsCount(3).validate();
     timeline.selectLast();
     views.selectHome();
@@ -1619,19 +1626,19 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings
       .createSeries()
-      .checkMainToSavings()
       .setName("Epargne")
+      .setFromAccount("Main accounts")
+      .setToAccount("Epargne LCL")
       .setCategory(MasterCategory.SAVINGS)
-      .selectSavingsAccount("Epargne LCL")
       .checkOkEnabled(true)
       .validate();
 
     budgetView.savings
       .createSeries()
-      .setSavingsToMain()
       .setName("Veranda")
+      .setToAccount("Main accounts")
+      .setFromAccount("Epargne CA")
       .setCategory(MasterCategory.HOUSE)
-      .selectSavingsAccount("Epargne CA")
       .switchToManual()
       .setSingleMonth()
       .setSingleMonthDate(200810)
@@ -1643,17 +1650,21 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectSeries("Veranda")
       .checkSingleMonthSelected()
       .checkSingleMonthDate("Oct 2008")
-      .checkSavingsToMain()
-      .checkSavingsAccountIsSelected("Epargne CA")
+      .checkFromAccount("Epargne CA")
+      .checkToAccount("Main accounts")
       .checkSingleMonthSelected()
       .selectSeries("Epargne")
-      .checkMainToSavings()
-      .checkSavingsAccountIsSelected("Epargne LCL")
+      .checkFromAccount("Main accounts")
+      .checkToAccount("Epargne LCL")
       .checkInAutomatic()
       .cancel();
   }
 
   public void testUseSingleMonthCreateSeriesBudget() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/04", -10.00, "McDo")
+      .load();
+
     operations.openPreferences().setFutureMonthsCount(3).validate();
     timeline.selectLast();
     views.selectHome();
@@ -1666,10 +1677,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.savings
       .createSeries()
-      .checkMainToSavings()
+      .setFromAccount("Main accounts")
+      .setToAccount("Epargne LCL")
       .setName("Epargne")
       .setCategory(MasterCategory.SAVINGS)
-      .selectSavingsAccount("Epargne LCL")
       .setSixMonths()
       .setSingleMonth()
       .setSingleMonthDate(200810)

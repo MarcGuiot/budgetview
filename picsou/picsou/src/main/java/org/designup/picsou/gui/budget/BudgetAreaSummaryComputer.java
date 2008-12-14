@@ -175,7 +175,7 @@ public class BudgetAreaSummaryComputer implements ColorChangeListener {
   }
 
   private boolean isPastMonths(GlobList balanceStats) {
-    Integer currentMonthId = CurrentMonth.get(repository);
+    Integer currentMonthId = CurrentMonth.getLastTransactionMonth(repository);
     if (currentMonthId == null) {
       return false;
     }

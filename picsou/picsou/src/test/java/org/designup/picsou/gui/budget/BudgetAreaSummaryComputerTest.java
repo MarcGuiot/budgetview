@@ -195,7 +195,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
                         value(BalanceStat.getPlanned(budgetArea), planned),
                         value(BalanceStat.getRemaining(budgetArea), remaining));
 
-    repository.create(CurrentMonth.KEY, value(CurrentMonth.MONTH_ID, currentMonth));
+    repository.create(CurrentMonth.KEY, value(CurrentMonth.LAST_TRANSACTION_MONTH, currentMonth));
 
     return new Checker(budgetArea, balanceStat, repository);
   }

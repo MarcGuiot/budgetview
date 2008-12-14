@@ -125,7 +125,7 @@ public class FirstTimeTest extends UISpecTestCase {
     CategorizationChecker categorization = new CategorizationChecker(window);
     categorization
       .setEnvelope("MUTUELLE", "Health", MasterCategory.HEALTH, false)
-      .setSavings("EPARGNE", "Regular savings", MasterCategory.SAVINGS, false);
+      .setSavings("EPARGNE", "Regular savings");
     categorization.selectTableRows("Habille moi", "Chausse moi");
     categorization
       .selectEnvelopes()

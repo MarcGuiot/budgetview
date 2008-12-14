@@ -33,10 +33,16 @@ public class AmountEditor {
   }
 
   public void update(boolean preferedPositive, boolean hideRadio) {
-    this.preferedPositive = preferedPositive;
-    updateRadios(preferedPositive);
-    positiveRadio.setVisible(!hideRadio);
-    negativeRadio.setVisible(!hideRadio);
+    try {
+      updateInProgress = true;
+      this.preferedPositive = preferedPositive;
+      updateRadios(preferedPositive);
+      positiveRadio.setVisible(!hideRadio);
+      negativeRadio.setVisible(!hideRadio);
+    }
+    finally {
+      updateInProgress = false;
+    }
   }
 
   private void updateRadios(boolean positive) {
