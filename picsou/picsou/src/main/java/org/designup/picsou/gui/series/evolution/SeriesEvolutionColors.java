@@ -35,6 +35,7 @@ public class SeriesEvolutionColors implements ColorChangeListener {
 
   private Color selectionText;
   private Painter selectionBackground;
+  private Painter plainSelectionBackground;
 
   public SeriesEvolutionColors(Directory directory) {
     ColorService colorService = directory.get(ColorService.class);
@@ -54,7 +55,7 @@ public class SeriesEvolutionColors implements ColorChangeListener {
     seriesOddBg = new FillPainter("seriesEvolution.series.bg.odd", colorService);
     seriesCurrentEvenBg = new FillPainter("seriesEvolution.series.bg.current.even", colorService);
     seriesCurrentOddBg = new FillPainter("seriesEvolution.series.bg.current.odd", colorService);
-
+    plainSelectionBackground = new FillPainter(PicsouColors.TRANSACTION_SELECTED_BG, colorService);
   }
 
   public void colorsChanged(ColorLocator colors) {
@@ -68,7 +69,13 @@ public class SeriesEvolutionColors implements ColorChangeListener {
   public void setColors(Glob seriesWrapper, int row, int monthOffset, boolean selected,
                         JComponent component, Paintable background) {
     if (selected) {
-      setColors(component, selectionText, background, selectionBackground);
+      if (SeriesWrapperType.BUDGET_AREA.isOfType(seriesWrapper)
+          && !seriesWrapper.get(SeriesWrapper.ID).equals(SeriesWrapper.UNCATEGORIZED_ID)) {
+        setColors(component, selectionText, background, selectionBackground);
+      }
+      else {
+        setColors(component, selectionText, background, plainSelectionBackground);
+      }
       return;
     }
 
